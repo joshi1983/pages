@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Playstation Logo Spinner</title>
+		<script>
+			var versions = [{
+				'id': 'playstation-1',
+				'source': 'https://commons.wikimedia.org/wiki/File:PlayStation_logo.svg',
+			}, {
+				'id': 'playstation-2',
+				'source': 'https://en.wikipedia.org/wiki/File:PlayStation_2_logo.svg'
+			}, {
+				'id': 'playstation-3',
+				'source': 'https://en.wikipedia.org/wiki/File:PlayStation_3_logo_(2009).svg'
+			}, {
+				'id': 'playstation-4',
+				'source': 'https://en.wikipedia.org/wiki/File:PlayStation_4_logo_and_wordmark.svg'
+			}, {
+				'id': 'playstation-5',
+				'source': 'https://en.wikipedia.org/wiki/File:PS5_logo.svg'
+			}];
+			var logoVersion = 5;
+			
+			document.addEventListener('DOMContentLoaded', function() {
+				var next = document.getElementById('next');
+				var previous = document.getElementById('previous');
+				var logosContainer = document.querySelector('.playstation-logos');
+				var versionNumberElement = document.querySelector('.version-number');
+				var logoVersionNumberElement = document.getElementById('logo-version-number');
+				var source = document.getElementById('source');
+				function updateActive() {
+					logosContainer.setAttribute('class', 'playstation-logos active-' + Math.min(logoVersion, 6));
+					versionNumberElement.innerText = logoVersion;
+					logoVersionNumberElement.innerText = logoVersion;
+					source.setAttribute('href', versions[Math.min(5, logoVersion) - 1].source);
+				}
+				
+				function nextClicked() {
+					logoVersion++;
+					updateActive();
+				}
+				
+				function previousClicked() {
+					if (logoVersion > 1)
+					{
+						logoVersion--;
+						updateActive();
+					}
+				}
+
+				updateActive();
+				next.addEventListener('click', nextClicked);
+				previous.addEventListener('click', previousClicked);
+			});
+		</script>
+		<style>
+			html, body {
+				margin: 0;
+				padding: 0;
+			}
+
+			body {
+				background-color: #f8f8f8;
+			}
+
+			@font-face {
+			  font-family: 'PlaystationFont';
+			  src: url(data:application/x-font-woff;charset=utf-8;base64,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) format('woff');
+			}
+			
+			.top-logo-display {
+				background-color: #fff;
+				height: 210px;
+				padding-top: 7px;
+			}
+
+			.playstation-logos {
+				position: relative;
+			}
+
+			.playstation-logos > div {
+				opacity: 0;
+				position: absolute;
+				top: 0;
+				left: 50%;
+				margin-left: -350px;
+				transition: opacity 0.3s;
+			}
+
+			.playstation-logos.active-1 > div:nth-of-type(1) {
+				opacity: 1;
+			}
+
+			.playstation-logos.active-2 > div:nth-of-type(2) {
+				opacity: 1;
+			}
+
+			.playstation-logos.active-3 > div:nth-of-type(3) {
+				opacity: 1;
+			}
+
+			.playstation-logos.active-4 > div:nth-of-type(4) {
+				opacity: 1;
+			}
+
+			.playstation-logos.active-5 > div:nth-of-type(5) {
+				opacity: 1;
+			}
+
+			.playstation-logos.active-6 > div:nth-of-type(6) {
+				opacity: 1;
+			}
+
+			#next {
+				float: right;
+			}
+
+			nav.navbar {
+				width: 95%;
+				margin-left: auto;
+				margin-right: auto;
+				margin-top: 10px;
+				display: flex;
+			}
+
+			nav.navbar button {
+				margin-bottom: 3px;
+				cursor: pointer;
+				text-align: center;
+				flex-grow: 0;
+			}
+
+			.version-number {
+				flex-grow: 1;
+				text-align: center;
+			}
+
+			#logo-version-number {
+				position: absolute;
+				top: -39px;
+				left: 445px;
+				font-family: 'PlaystationFont';
+				font-size: 211px;
+				pointer-events: none;
+			}
+			
+			.copyright {
+				text-align: center;
+				font-family: arial;
+			}
+			
+			.copyright a {
+				color: #111;
+				font-weight: bold;
+			}
+			@media screen and (max-width: 1000px) {
+				.copyright {
+					font-size: 3vmin;
+				}
+				nav.navbar button {
+					font-size: 3.5vmin;
+					width: 25vmin;
+				}
+				.version-number {
+					font-size: 3.5vmin;
+				}
+			}
+			@media screen and (min-width: 3000px) {
+				.top-logo-display > div {
+					transform: scale(2);
+				}
+				.top-logo-display {
+					height: 320px;
+				}
+			}
+			@media screen and (min-width: 2000px) and (max-width: 3000px) {
+				.top-logo-display > div {
+					transform: scale(1.5);
+				}
+				.top-logo-display {
+					height: 260px;
+				}
+			}
+			@media screen and (min-width: 1600px) and (max-width: 2000px) {
+				.top-logo-display > div {
+					transform: scale(1.3);
+				}
+				.top-logo-display {
+					height: 230px;
+				}
+			}
+			@media screen and (min-width: 1200px) and (max-width: 1600px) {
+				.top-logo-display > div {
+					transform: scale(1.10);
+				}
+				.top-logo-display {
+					height: 200px;
+				}
+			}
+			@media screen and (min-width: 600px) and (max-width: 800px) {
+				.top-logo-display > div {
+					transform: scale(0.72);
+				}
+				.top-logo-display {
+					height: 140px;
+				}
+			}
+			@media screen and (min-width: 450px) and (max-width: 600px) {
+				.top-logo-display > div {
+					transform: scale(0.60);
+				}
+				.top-logo-display {
+					height: 100px;
+				}
+			}
+			@media screen and (min-width: 350px) and (max-width: 450px) {
+				.top-logo-display > div {
+					transform: scale(0.42);
+				}
+				.top-logo-display {
+					height: 60px;
+				}
+			}
+			@media screen and (max-width: 350px) {
+				.top-logo-display > div {
+					transform: scale(0.32);
+				}
+				.top-logo-display {
+					height: 30px;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<div class="top-logo-display">
+			<div class="playstation-logos">
+				<div id="playstation-1">
+					<svg
+					   xmlns:svg="http://www.w3.org/2000/svg"
+					   xmlns="http://www.w3.org/2000/svg"
+					   version="1.0"
+					   width="700"
+					   height="200"
+					   viewBox="0 0 700 200"
+					   xml:space="preserve">
+					<g
+					   transform="translate(250,-80) scale(0.3)">
+						<path
+					   clip-rule="evenodd"
+					   d="M 395.06807,434.21345 L 394.60021,863.39514 L 279.61012,825.99696 L 279.61012,321.53515 L 426.38841,360.34125 C 520.34231,385.59251 577.83949,434.67697 576.90381,520.70189 C 575.96956,620.75529 529.69221,660.95773 439.47538,634.77658 L 439.47538,437.47977 C 439.47538,413.635 395.06807,412.23866 395.06807,434.21345 L 395.06807,434.21345 z "
+					   style="fill:#de0029;fill-opacity:1;fill-rule:evenodd" />
+						<path
+					   clip-rule="evenodd"
+					   d="M 226.78568,742.76757 L 172.56056,761.00535 C 137.49733,773.16387 107.58489,744.64627 139.83807,732.95128 L 166.01346,723.60717 L 67.381005,692.27665 C 36.994899,702.56663 8.4787729,724.53999 10.3531,755.3983 C 12.223081,786.7187 83.74009,794.20296 138.90381,803.08643 C 190.32031,811.49773 237.06553,806.82349 279.60869,791.86223 L 279.60869,759.60031 L 226.78568,742.76757 L 226.78568,742.76757 z M 395.53446,863.39514 L 496.03688,828.32754 L 394.60021,796.07291 L 394.60021,861.05298 L 395.53446,863.39514 L 395.53446,863.39514 z "
+					   style="fill:#f3c202;fill-opacity:1;fill-rule:evenodd" />
+						<path
+					   clip-rule="evenodd"
+					   d="M 662.91715,769.42531 L 664.78565,768.95457 C 708.72663,753.53123 727.42501,732.01703 722.75363,711.92089 C 715.27373,678.26121 661.51646,660.02348 578.77524,653.9442 C 519.41092,649.73926 460.98092,662.82627 403.95154,682.46035 L 394.60164,685.73681 L 496.97405,717.52794 L 556.80624,697.42166 C 619.44554,685.73681 644.69244,706.30513 584.38808,725.47573 L 554.46981,735.75553 L 662.91715,769.42531 L 662.91715,769.42531 z M 279.61012,620.75529 L 234.26272,636.17869 L 279.61012,650.2057 L 279.61012,620.75529 L 279.61012,620.75529 z "
+					   style="fill:#326db3;fill-opacity:1;fill-rule:evenodd" />
+						<path
+					   clip-rule="evenodd"
+					   d="M 496.03688,828.32754 L 662.91715,769.42531 L 554.46695,735.75553 L 394.60021,790.45575 L 394.60021,796.07291 L 496.03688,828.32754 L 496.03688,828.32754 z M 279.61012,725.00349 L 226.78712,742.76906 L 279.61012,759.60031 L 279.61012,725.00349 L 279.61012,725.00349 z M 394.60021,752.5955 L 394.60021,685.73681 L 496.97262,717.52794 L 394.60021,752.5955 L 394.60021,752.5955 z M 166.01492,723.60717 L 279.60869,682.93251 L 279.60869,650.2057 L 234.26272,636.17869 L 69.718853,691.81461 C 69.250983,691.81461 68.316721,692.27665 67.38246,692.27665 L 166.01492,723.60717 L 166.01492,723.60717 z "
+					   style="fill:#00aa9e;fill-opacity:1;fill-rule:evenodd" />
+					</g>
+					</svg>
+				</div>
+				<div id="playstation-2">
+					<svg
+					   xmlns:svg="http://www.w3.org/2000/svg"
+					   xmlns="http://www.w3.org/2000/svg"
+					   version="1.0"
+					   width="700"
+					   height="200"
+					   viewBox="0 0 700 200"
+					   id="Layer_1"
+					   xml:space="preserve">
+					   <g transform="scale(0.928)">
+						<polygon
+					   points="0,0 0,9.149 225.361,9.149 225.361,59.874 0,59.874 0,129.721 9.143,129.721 9.143,69.021 233.679,69.021 233.679,0 0,0 "
+					   style="fill:#13007c;fill-rule:evenodd"
+					   />
+						<polygon
+					   points="517.252,0 517.252,9.149 742.62,9.149 742.62,59.874 517.252,59.874 517.252,129.721 751.764,129.721 751.764,120.584 527.237,120.584 527.237,69.021 751.764,69.021 751.764,0 517.252,0 "
+					   style="fill:#13007c;fill-rule:evenodd"
+					   />
+						<polygon
+					   points="353.431,0 353.431,120.584 233.679,120.584 233.679,129.721 363.407,129.721 363.407,9.149 482.325,9.149 482.325,0 353.431,0 "
+					   style="fill:#13007c;fill-rule:evenodd"
+					   />
+					</g>
+					</svg>		
+				</div>
+				<div id="playstation-3">
+					<svg
+					   xmlns:svg="http://www.w3.org/2000/svg"
+					   xmlns="http://www.w3.org/2000/svg"
+					   version="1.0"
+					   x="0px"
+					   y="0px"
+					   width="700"
+					   height="200"
+					   viewBox="0 0 700 200"
+					   xml:space="preserve">
+					<g
+					   transform="translate(-18.609,-19.551) scale(1.105)">
+						<path
+			   d="m 421.659,19.551 h -82.591 c -25.474,0 -37.958,15.741 -37.958,36.179 v 62.087 c 0,12.684 -5.989,21.788 -18.631,21.788 h -72.24 c -0.506,0 -0.925,0.419 -0.925,0.9 v 12.53 c 0,0.512 0.419,0.941 0.925,0.941 h 81.768 c 25.464,0 37.979,-15.67 37.979,-36.118 V 55.73 c 0,-12.694 5.943,-21.818 18.657,-21.818 h 73.017 c 0.573,0 1.023,-0.409 1.023,-0.921 V 20.482 c 0,-0.491 -0.451,-0.931 -1.024,-0.931 z" />
+						<path
+			   d="M 178.54,19.551 H 19.607 c -0.578,0 -0.998,0.44 -0.998,0.931 v 12.509 c 0,0.512 0.419,0.941 0.998,0.941 h 149.374 c 12.627,0 18.621,9.104 18.621,21.797 0,12.643 -5.994,21.726 -18.621,21.726 H 50.81 c -18.351,0 -32.2,15.415 -32.2,35.862 v 39.687 c 0,0.543 0.419,0.973 0.998,0.973 h 26.927 c 0.527,0 0.967,-0.43 0.967,-0.973 v -39.687 c 0,-12.612 7.247,-21.511 17.762,-21.511 H 178.54 c 25.423,0 37.887,-15.62 37.887,-36.067 0,-20.415 -12.464,-36.188 -37.887,-36.188 z" />
+						<path
+			   d="m 636.409,85.086 c -0.356,-0.399 -0.356,-1.084 0,-1.473 7.917,-6.557 11.835,-16.438 11.835,-27.874 0,-20.416 -12.438,-36.188 -37.938,-36.188 H 451.414 c -0.542,0 -0.94,0.44 -0.94,0.972 v 12.468 c 0,0.512 0.398,0.941 0.94,0.941 h 149.35 c 12.591,0 18.667,9.104 18.667,21.797 0,12.643 -6.035,21.726 -18.667,21.726 h -0.185 l -149.165,0.031 c -0.542,0 -0.94,0.389 -0.94,0.961 v 12.459 c 0,0.501 0.398,0.9 0.94,0.9 h 149.35 C 617.232,92 619.4,108.038 619.4,116.242 l 0.031,1.544 c 0,12.714 -6.076,21.859 -18.667,21.859 h -149.35 c -0.542,0 -0.94,0.388 -0.94,0.899 v 12.49 c 0,0.512 0.398,0.941 0.94,0.941 h 158.893 c 25.521,0 37.938,-16.939 37.938,-36.189 v -1.544 c -10e-4,-12.274 -3.919,-23.996 -11.836,-31.156 z" />
+						</g>
+					</svg>
+				</div>
+				<div id="playstation-4">
+					<svg version="1.2" baseProfile="tiny" 
+					xmlns="http://www.w3.org/2000/svg" 
+						 x="0px" y="0px" width="700" height="200" viewBox="0 0 700 200" 
+						 xml:space="preserve">
+						 <g transform="scale(2.3) translate(-179 -23)">
+							<path d="M335.361,71.101V41.126c0-6.115,2.854-10.494,8.941-10.494h37.547c0.23,0,0.451-0.228,0.451-0.454v-5.964
+								c0-0.052-0.015-0.103-0.035-0.152h-45.909c-9.951,1.265-14.812,8.2-14.812,17.064v29.974c0,6.115-2.934,10.495-8.94,10.495
+								h-39.652c-0.225,0-0.451,0.151-0.451,0.453v5.965c0,0.247,0.152,0.436,0.33,0.499h45.019
+								C329.584,88.204,335.361,80.713,335.361,71.101z"/>
+							<path d="M181.104,88.513h13.183c0.178-0.063,0.33-0.252,0.33-0.499V68.911c0-6.115,3.454-10.344,8.486-10.344h54.301
+								c12.242,0,18.176-7.55,18.176-17.441c0-8.864-4.857-15.799-14.813-17.064H180.86c-0.023,0.05-0.062,0.089-0.062,0.152v5.964
+								c0,0.302,0.15,0.454,0.45,0.454h71.574c6.084,0,8.938,4.379,8.938,10.494c0,6.116-2.854,10.495-8.938,10.495h-56.628
+								c-8.787,0-15.396,7.476-15.396,17.29v19.103C180.797,88.261,180.903,88.449,181.104,88.513z"/>
+							<g>
+								<path fill="none" d="M393.714,74.649h60.465c0.221,0,0.451-0.227,0.451-0.453V36.974c0-0.83-0.752-0.906-1.131-0.604
+									l-60.156,37.223c-0.381,0.227-0.531,0.453-0.451,0.755C392.962,74.499,393.193,74.649,393.714,74.649z"/>
+								<path d="M382.08,81.596h72.1c0.221,0,0.371,0.151,0.371,0.302v6.116c0,0.302,0.23,0.453,0.451,0.453h12.996
+									c0.23,0,0.449-0.151,0.449-0.453v-5.965c0-0.227,0.23-0.453,0.451-0.453h12.916c0.301,0,0.451-0.227,0.451-0.452v-6.041
+									c0-0.227-0.15-0.453-0.451-0.453h-12.916c-0.221,0-0.451-0.227-0.451-0.453V30.632c0-3.555-1.321-5.819-3.542-6.57h-3.76
+									c-1.172,0.301-2.446,0.84-3.812,1.661l-77.656,47.945c-3.004,1.887-4.057,4-3.305,5.586
+									C376.972,80.614,378.695,81.596,382.08,81.596z M393.343,73.593L453.5,36.37c0.379-0.302,1.131-0.226,1.131,0.604v37.223
+									c0,0.227-0.23,0.453-0.451,0.453h-60.465c-0.521,0-0.752-0.15-0.822-0.302C392.812,74.046,392.962,73.819,393.343,73.593z"/>
+							</g>
+						</g>
+					</svg>
+				</div>
+				<div id="playstation-5">
+					<svg
+					   xmlns:svg="http://www.w3.org/2000/svg"
+					   xmlns="http://www.w3.org/2000/svg"
+					   viewBox="0 0 700 200"
+					   height="200"
+					   width="700"
+					   version="1.1">
+					  <g
+						 transform="translate(-352,169) scale(0.87)">
+						<path
+						   d="m 406.898738,-53.69354 c 0.44136,-31.506833 0.46229,-31.704763 4.14628,-39.214313 4.65316,-9.48513 12.16455,-17.29031 21.24251,-22.07336 l 7.0458,-3.71233 81.33333,-0.66667 81.33333,-0.66667 6.29789,-3.7021 c 19.1073,-11.23187 18.20987,-38.26503 -1.63122,-49.1379 -2.70434,-1.48197 -21.8259,-1.95246 -101.33333,-2.49333 l -98,-0.66666 -0.39426,-9 -0.39425,-9 h 105.81892 c 114.6163,0 113.2247,-0.0809 124.84821,7.25671 6.67259,4.21222 14.55357,13.25726 17.93153,20.58008 4.39372,9.52485 4.07096,27.57284 -0.6741,37.69382 -4.3016,9.17509 -12.02412,17.13792 -21.42386,22.09052 l -7.04553,3.7122 -81.33333,0.66666 c -89.9272,0.73711 -84.66767,0.20294 -93.78149,9.52478 -6.92136,7.07934 -8.21851,14.03192 -8.21851,44.050563 v 26.42466 h -18.10576 -18.10576 z m 240.03914,22.7187 0.39544,-9.05204 49.33333,-0.66666 c 48.82767,-0.65984 49.38471,-0.6986 54.34514,-3.78271 2.75648,-1.71381 6.65648,-5.91381 8.66666,-9.33333 l 3.65487,-6.2173 0.66667,-49.366843 0.66666,-49.36683 4.34624,-8.82301 c 5.05851,-10.2689 12.29126,-17.32295 22.82708,-22.26309 l 7.49335,-3.51356 59.66666,-0.3852 59.6667,-0.3852 v 9.3852 9.3852 h -48.04286 c -40.34688,0 -48.834,0.33058 -52.9818,2.06364 -6.31998,2.64066 -10.50246,6.57541 -14.10513,13.2697 -2.75381,5.117 -2.89728,7.36143 -3.5369,55.33333 l -0.66667,50.000003 -3.7122,7.04553 c -4.9526,9.39973 -12.91543,17.12225 -22.09052,21.42385 l -7.53061,3.53062 -59.72878,0.38537 -59.72877,0.38536 z m 309.3337,-0.0141 0.3951,-9.0379 97.3333,-0.66666 c 108.9631,-0.74632 101.2285,-0.001 110.3188,-10.6216 13.2112,-15.43434 8.5078,-37.113063 -10.2278,-47.141633 -5.3742,-2.87664 -6.2306,-2.9096 -92.7576,-3.57011 -86.9288,-0.66357 -87.3551,-0.68017 -92.0197,-3.58154 -5.48,-3.40858 -9.5603,-8.60015 -11.7506,-14.95075 -1.038,-3.00991 -1.5631,-16.10998 -1.5631,-39 v -34.46774 h 122.6667 122.6667 v 9.3252 9.32521 l -104.3334,0.34146 -104.3333,0.34146 -0.4061,20 c -0.4564,22.4768 0.7385,28.84531 6.0676,32.33872 3.2575,2.13536 10.6155,2.38309 88.9449,2.99461 l 85.3936,0.66667 7.3365,3.44173 c 9.3615,4.39175 18.7772,13.80747 23.5723,23.57236 3.3226,6.76624 3.7579,9.12289 3.7579,20.347283 0,11.62769 -0.3642,13.43452 -4.3333,21.49677 -5.1373,10.43528 -13.5057,18.62828 -24.0999,23.59464 l -7.5668,3.54722 -107.7285,0.37122 -107.7284,0.37122 z"
+						   style="fill:#000000;stroke-width:1.33333" />
+					  </g>
+					</svg>
+				</div>
+				<div id="playstation-n">
+					<svg
+					   xmlns:svg="http://www.w3.org/2000/svg"
+					   xmlns="http://www.w3.org/2000/svg"
+					   viewBox="0 0 700 200"
+					   height="200"
+					   width="700"
+					   version="1.1">
+					  <g
+						 transform="translate(-352,169) scale(0.87)">
+						<path
+						   d="m 406.898738,-53.69354 c 0.44136,-31.506833 0.46229,-31.704763 4.14628,-39.214313 4.65316,-9.48513 12.16455,-17.29031 21.24251,-22.07336 l 7.0458,-3.71233 81.33333,-0.66667 81.33333,-0.66667 6.29789,-3.7021 c 19.1073,-11.23187 18.20987,-38.26503 -1.63122,-49.1379 -2.70434,-1.48197 -21.8259,-1.95246 -101.33333,-2.49333 l -98,-0.66666 -0.39426,-9 -0.39425,-9 h 105.81892 c 114.6163,0 113.2247,-0.0809 124.84821,7.25671 6.67259,4.21222 14.55357,13.25726 17.93153,20.58008 4.39372,9.52485 4.07096,27.57284 -0.6741,37.69382 -4.3016,9.17509 -12.02412,17.13792 -21.42386,22.09052 l -7.04553,3.7122 -81.33333,0.66666 c -89.9272,0.73711 -84.66767,0.20294 -93.78149,9.52478 -6.92136,7.07934 -8.21851,14.03192 -8.21851,44.050563 v 26.42466 h -18.10576 -18.10576 z m 240.03914,22.7187 0.39544,-9.05204 49.33333,-0.66666 c 48.82767,-0.65984 49.38471,-0.6986 54.34514,-3.78271 2.75648,-1.71381 6.65648,-5.91381 8.66666,-9.33333 l 3.65487,-6.2173 0.66667,-49.366843 0.66666,-49.36683 4.34624,-8.82301 c 5.05851,-10.2689 12.29126,-17.32295 22.82708,-22.26309 l 7.49335,-3.51356 59.66666,-0.3852 59.6667,-0.3852 v 9.3852 9.3852 h -48.04286 c -40.34688,0 -48.834,0.33058 -52.9818,2.06364 -6.31998,2.64066 -10.50246,6.57541 -14.10513,13.2697 -2.75381,5.117 -2.89728,7.36143 -3.5369,55.33333 l -0.66667,50.000003 -3.7122,7.04553 c -4.9526,9.39973 -12.91543,17.12225 -22.09052,21.42385 l -7.53061,3.53062 -59.72878,0.38537 -59.72877,0.38536 z"
+						   style="fill:#000000;stroke-width:1.33333" />
+					  </g>
+					</svg>
+					<div id="logo-version-number"></div>
+				</div>
+			</div>
+		</div>
+		<nav class="navbar">
+			<button id="previous">&lt; Previous</button>
+			<div class="version-number"></div>
+			<button id="next">&gt; Next</button>
+		</nav>
+		<div class="copyright">
+			<p>See <a id="source">the logo's source</a> for proof that this is public domain.</p>
+			<p>The Playstation font came from <a href="https://fontsme.com/slim-play.font">slim-play</a></p>
+		</div>
+	</body>
+</html>
