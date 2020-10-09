@@ -1,0 +1,152 @@
+html, body {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+	background-color: #000;
+}
+
+/* 
+Animate the "Click the peddle" message initially to get the user's attention.
+Hide the message a few seconds later so it stops obstructing the view of the flower.
+*/
+body > p {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    color: transparent;
+    animation: fadeout 10s;
+}
+
+@keyframes fadeout {
+    from { color: #fff; }
+    25%  { 
+        color: rgb(255,50,50);
+        font-size: 1.1em;
+    }
+    35%  { color: #fff; }
+    to   { color: transparent; }
+}
+
+.rose {
+    position: relative;
+    margin-left: 50%;
+    margin-top: 20%;
+}
+
+/* Initialize some CSS variables that can be controlled by JavaScript. */
+:root {
+  --peddle-colour: rgb(255,50,50);
+  --peddle-highlight-colour: rgb(255, 120, 120);
+}
+
+.rose .peddles div {
+    position: absolute;
+    border-bottom-right-radius: 10%;
+    border-bottom-left-radius: 10%;
+    box-shadow: 0 0 5px #000;
+    cursor: pointer;
+
+    background: linear-gradient(to bottom,
+        rgb(21,77,126) 0%,
+        var(--peddle-colour) 80%,
+        var(--peddle-highlight-colour) 91%,
+        var(--peddle-colour) 100%);
+}
+
+.rose .peddles div:hover {
+    background: linear-gradient(to bottom, rgb(11,57,106) 0%,rgb(255,70,70) 80%,rgb(255,190,190) 91%,rgb(255,80,80) 100%);    
+}
+
+.rose-centre {
+    position: absolute;
+    box-shadow: 0px 0px 8vmin 8vmin rgba(0, 255, 255, 0.4);
+}
+
+.rose .leaf-1, .rose .leaf-2 {
+   background-color: #061;
+   width: 15vmin;
+   height: 15vmin;
+   position: absolute;
+   top: 40vmin;
+   left: 12vmin;
+    background-image: linear-gradient(to top left, #061 0%, #061 47%, #485 50%, #061 52%);
+   border-radius: 15vmin 0;
+    box-shadow: 0 0 2vw #000 inset;
+}
+
+.rose .leaf-1:hover {
+    background-image: linear-gradient(to top left, #072 0%, #072 47%, #4A5 50%, #072 52%);
+}
+
+.rose .leaf-2 {
+   border-radius: 0 15vmin;
+   left: -9vmin;
+   top: 50vmin;
+    background-image: linear-gradient(to top right, #061 0%, #061 47%, #485 50%, #061 52%);
+}
+
+.rose .leaf-2:hover {
+    background-image: linear-gradient(to top right, #072 0%, #072 47%, #4A5 50%, #072 52%);
+}
+
+.rose .stem {
+   background-color: #061;
+   left: 8vw;
+   top: 0;
+   margin-left: -1.5vw;
+    width: 2vmin;
+    height: 90vh;
+    position: absolute;
+    box-shadow: 0 0 1vw #000 inset;
+}
+
+.dialog {
+    display: none;
+    width: 300px;
+    height: 150px;
+    left: 50%;
+    top: 50%;
+    position: fixed;
+    margin-left: -150px;
+    margin-right: -75px;
+    padding: 5px;
+    background-color: rgba(0, 0, 0, 0.4);
+    border: 1px solid #000;
+    border-radius: 10px;
+    box-shadow: 0 0 5px #666 inset;
+}
+
+.dialog p {
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 0;
+    font-size: 10px;
+    transition: color 0.4s;
+}
+
+.dialog p:hover {
+    color: #fff;
+}
+
+.dialog input {
+    width: 100%;
+    margin-bottom: 5px;
+}
+
+.dialog .peddle-colours {
+    display: flex;
+}
+
+.dialog div.footer {
+    margin-top: 15px;
+}
+
+.dialog button {
+    background-color: #444;
+    border-color: #333;
+}
+
+.dialog.open {
+    display: block;
+}
