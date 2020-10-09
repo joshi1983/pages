@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>4D Grapher</title>
+		<script
+  src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+  integrity="sha256-4+XzXVhsDmqanXGHaHvgh1gMQKX40OUvDEBTu8JcmNs="
+  crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css">
+		<link rel="stylesheet" href="https://esironal.github.io/cmtouch/lib/codemirror.css">
+		<script src="https://cdn.rawgit.com/eligrey/FileSaver.js/master/src/FileSaver.js"></script>
+		<script src="https://esironal.github.io/cmtouch/lib/codemirror.js"></script>
+		<script src="https://esironal.github.io/cmtouch/mode/javascript/javascript.js"></script>
+		<script src="grapher.js"></script>
+		<link rel="stylesheet" href="style.css">
+	</head>
+	<body>
+	    <div class="main">
+    	    <div id="inputs">
+    	        <div>
+    	            // The following function is being graphed.
+    	            <button id="example-loader">Other Examples</button>
+					<button id="edit-colours-button">Colours</button>
+					<button id="download-button"><span class="fa fa-download"></span></button>
+    	        </div>
+    	        function f(x, z, t) {
+        	    <textarea id="function"></textarea>
+        	    <footer>
+        	        <div class="wide">
+                	    }
+                	    <div id="error-message"></div>
+        	        </div>
+        	        <button id="expand-collapse-inputs"><span class="fa fa-arrows-alt-v"></span></button>
+        	    </footer>
+    	    </div>
+    		<canvas></canvas>
+	    </div>
+	    <div id="example-selector">
+	        <div class="dialog">
+	            <div>
+	                Which example do you want to load?
+	                <select id="example-selection">
+	                </select>
+	            </div>
+	            <footer>
+	                <button id="example-select-ok">OK</button>
+	                <button id="example-select-cancel">Cancel</button>
+	            </footer>
+	        </div>
+	    </div>
+		<div id="colour-map-selector">
+	        <div class="dialog">
+	            <div>
+	                <p>How do you want to map real numbers to red, green, and blue values?</p>
+					
+					<div>
+					function(v) {
+					</div>
+	                <textarea id="colour-map-code">var r = v * 20;
+var g = v * 5;
+var b = v;
+return [r, g, b];
+					</textarea>
+					<div>
+					}
+					</div>
+					<div id="colour-map-error-message"></div>
+	            </div>
+	            <footer>
+					<button id="colour-map-select-reset">Reset</button>
+	                <button id="colour-map-select-ok">OK</button>
+	            </footer>
+	        </div>
+		</div>
+		<div id="download-dialog">
+			<div class="dialog">
+				<div>
+					<div>
+						<label for="download-resolution">Resolution</label>
+						<select id="download-resolution">
+							<option value="1280x720">High Definition (1280x720)</option>
+							<option value="1920x1080">Full HD (1920x1080)</option>
+							<option value="3840x2160">4K Ultra HD (3840x2160)</option>
+							<option value="7680x4320">8K UHD (7680x4320)</option>
+						</select>
+					</div>
+					<div>
+					    <label for="download-t">T Value</label>
+					    <input id="download-t" type="number" step="1">
+					</div>
+					<progress id="download-progress" max="100"></progress>
+				</div>
+				<footer>
+					<button id="download-cancel">Cancel</button>
+					<button id="download-download"><span class="fa fa-download"></span><span class="download-text">Download</span></button>
+				</footer>
+			</div>
+		</div>
+	</body>
+</html>
