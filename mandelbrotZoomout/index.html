@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>
+            Mandelbrot Zoomout Using Shaders
+        </title>
+		<link rel="stylesheet" href="style.css">
+		<script src="script.js"></script>		
+    </head>
+	<body>
+<canvas>Your browser does not seem to support 
+    HTML5 canvas.</canvas>
+<script type="x-shader/x-vertex" id="vertex-shader">
+#version 100
+
+uniform float width;
+
+void main() {
+  gl_Position = vec4(0.0, 0.0, 0.0, 1.0);
+  gl_PointSize = width;
+}
+</script>
+<script type="x-shader/x-fragment" id="fragment-shader">
+#version 100
+
+precision mediump float;  
+
+uniform float scale;
+uniform float offsetX;
+uniform float offsetY;
+
+float getValueAt(float cx, float cy) {
+    float xt;
+    float zx = 0.0;
+    float zy = 0.0;
+    for (float i = 0.0; i < 0.99; i += 0.01) {
+        
+        xt = zx * zy;
+        zx = zx * zx - zy * zy + cx;
+        zy = 2.0 * xt + cy;
+        if (zy > 2.0) {
+            return i;
+        }
+    }
+    return 0.99;
+}
+
+void main() {
+    float cx = (gl_FragCoord[0]) * scale - offsetX;
+    float cy = (gl_FragCoord[1]) * scale - offsetY;
+    float result = getValueAt(cx, cy);
+  gl_FragColor = vec4(min(result * 3.0, 0.99), min(result * 1.0, 0.99), result, 1.0);
+}
+</script>
+	<div class="final-message">
+		<p>Let me know if you liked it.</p>
+		<p>More fractals are at:</p>
+		<p>
+			<a class="sololearnski" href="https://code.sololearn.com/WVhoMHzy3K81/" target="_empty"></a>
+		</p>
+	</div>
+	</body>
+</html>
