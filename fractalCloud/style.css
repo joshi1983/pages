@@ -1,0 +1,98 @@
+html, body {
+    /* Bring the display right out to the edges of the viewport */
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+    background-color: #000;
+    transition: background-color 0.5s; /* Make it smoother to switch from showing instructions to not */
+}
+
+.showing-instructions {
+    background-color: #000;
+}
+
+header {
+    text-align: center;
+    background-color: #111;
+}
+
+header button {
+    background-color: #444;
+    border-color: #333;
+    color: #ddd;
+    cursor: pointer;
+}
+
+canvas {
+    border: 1px solid black;
+    width: 100%;
+    height: 99vh;
+    touch-action: none;
+}
+
+.filled .instructions {
+    box-shadow: 0 0 10px #500 inset, 0 0 25px #005;
+}
+
+.filled button.filled, .wire button.wire {
+    color: #fff;
+    background-color: #111;
+}
+
+.instructions {
+    position: fixed;
+    padding: 10px;
+    background-color: rgba(0, 0, 0, 0.85);
+    color: #fff;
+    top: 50%;
+    left: 50%;
+    bottom: 0;
+    
+    /* Centre the dialog by offsetting margins by half of the dialog's dimensions */
+    margin-left: -150px;
+    margin-top: -100px;
+    height: 200px;
+    width: 300px;
+
+    font-size: 13px;
+    font-family: arial;
+    box-shadow: 0 0 10px #333 inset, 0 0 25px #555;
+    border: 1px solid #666;
+    border-radius: 8px;
+}
+
+.instructions p {
+    line-height: 1.1;
+}
+
+.instructions .footer {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.instructions button {
+    border-radius: 3px;
+    padding-left: 20px;
+    padding-right: 20px;
+    background-color: #ccc;
+    cursor: pointer;
+}
+
+/*
+We want the user to be able to drag around without selecting anything 
+while the instructions are showing so disable text selection. 
+
+This snippet was copied from an answer at: https://stackoverflow.com/questions/826782/how-to-disable-text-selection-highlighting
+*/
+* {
+   -moz-user-select: none;
+   -khtml-user-select: none;
+   -webkit-user-select: none;
+
+   /*
+     Introduced in IE 10.
+     See http://ie.microsoft.com/testdrive/HTML5/msUserSelect/
+   */
+   -ms-user-select: none;
+   user-select: none;
+}
