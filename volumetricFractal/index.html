@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Volumetric JuliaSet Fractal Viewer</title>
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+		<script src="script.js"></script>
+		<link rel="stylesheet" href="style.css">
+	</head>
+	<body>
+		<div id="settings">
+			<div class="row">
+				<div class="col-md-3">
+					<div class="labelled-input-pair">
+						<label for="show-outline">Show Sphere Outline</label>
+						<input id="show-outline" type="checkbox" checked>
+					</div>
+				</div>
+				<div class="col-md-3">
+					<div class="labelled-input-pair">
+						<label for="sphere-radius">Sphere Radius</label>
+						<input id="sphere-radius" type="range" value="2.0" step="0.1" min="0.1" max="10.0">
+					</div>
+				</div>
+				<div class="col-md-3">
+					<div class="labelled-input-pair">
+						<label for="max-iterations">Max Iterations</label>
+						<input id="max-iterations" type="range" value="50" step="1" min="5" max="100">
+					</div>
+				</div>
+				<div class="col-md-3">
+					<div class="labelled-input-pair">
+						<label for="c-real">c Real</label>
+						<input id="c-real" type="range" value="0.3" step="0.01" min="-5" max="5">
+					</div>
+				</div>
+				<div class="col-sm-12">
+					<div class="collapsible-row">
+						<fieldset>
+							<legend>Light Direction</legend>
+							<div class="row">
+								<div class="col-sm-4">
+									<div class="labelled-input-pair">
+										<label for="light-x">X</label>
+										<input id="light-x" type="range" value="0" min="-5" max="5">
+									</div>
+								</div>
+								<div class="col-sm-4">
+									<div class="labelled-input-pair">
+										<label for="light-y">Y</label>
+										<input id="light-y" type="range" value="5" min="-5" max="5">
+									</div>
+								</div>
+								<div class="col-sm-4">
+									<div class="labelled-input-pair">
+										<label for="light-z">Z</label>
+										<input id="light-z" type="range" value="1" min="-5" max="5">
+									</div>
+								</div>
+							</div>
+						</fieldset>
+						<div class="toggler-container">
+							<button id="collapse-settings-button" class="fa fa-arrow-circle-o-up"><span class="sr-only">Toggle</span></button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<button id="expand-settings-button" class="fa fa-cog"><span class="sr-only">Settings</span></button>
+		<canvas></canvas>
+
+<script type='glsl/vertex'>
+  attribute vec2 coords;
+  
+  void main(void) {
+    gl_Position = vec4(coords.xy, 0.0, 1.0);
+  }
+</script>
+
+<script type="glsl/fragment">
+// <![CDATA[
+precision mediump float;
+
+uniform vec2 centre;
+uniform vec3 position3D;
+uniform vec2 viewRotation;
+uniform float scale;
+uniform float sphereRadius;
+uniform bool isShowingCircumference;
+uniform vec3 lightDirection;
+uniform float fractalIterationDelta;
+uniform float cReal;
+
+float getValue(vec3);
+
+vec3 rotatePoint(vec3 p)
+{
+	return vec3(
+		p.x * viewRotation.x + p.z * viewRotation.y,
+		p.y,
+		p.z * viewRotation.x - p.x * viewRotation.y
+	);
+}
+
+float getLightObstruction(vec3 p)
+{
+	vec3 position = vec3(p);
+	vec3 delta = vec3(lightDirection * 0.1);
+	float result = 0.0;
+	
+	for (float i = 0.01; i < 1.0; i += 0.001)
+	{
+		position += delta;
+		if (length(position) > sphereRadius)
+			break;
+		result += getValue(position);
+		if (result >= 1.0)
+			return 1.0;
+	}
+	return result;
+}
+
+float getJuliaSetValue(vec3 p)
+{
+	vec2 c = vec2(
+		cReal,
+		p.z
+		);
+	vec2 newP = vec2(p);
+	float ratio = 0.0;
+
+	for (float i = 0.0; i < 1.0; i += 0.001)
+	{
+	  //remember value of previous iteration
+	  //the actual iteration, the real and imaginary part are calculated
+	  newP = vec2(
+		newP.x * newP.x - newP.y * newP.y + c.x,
+		2.0 * newP.x * newP.y + c.y
+		);
+	  //if the point is outside the circle with radius 2: stop
+		if (dot(newP, newP) > 4.0) {
+			return ratio;
+		}
+		ratio += fractalIterationDelta;
+		if (ratio >= 1.0)
+			return ratio;
+	}
+}
+
+float getValue(vec3 p)
+{
+	return getJuliaSetValue(p);
+}
+
+// Assumes direction is a unit-vector.
+vec2 getSphereIntersectionDistances(vec3 direction)
+{
+	float twoA_Reciprical = 0.5;
+	float b = 2.0 * dot(position3D, direction);
+	float c = dot(position3D, position3D) - sphereRadius;
+	float discriminant = b * b - 4.0 * c;
+	if (discriminant <= 0.0) {
+		return vec2(-1.0, -1.0);
+	}
+	else {
+		discriminant = sqrt(discriminant);
+		vec2 result;
+		result.y = (-b + discriminant) * twoA_Reciprical;
+		if (result.y < 0.0) {
+			return vec2(-1.0, -1.0); // both will be negative so no point in continuing.
+		}
+		result.x = max(0.0, (-b - discriminant) * twoA_Reciprical);
+		return result;
+	}
+}
+
+vec3 getColourAt(vec3 direction)
+{
+	vec3 result;
+	vec3 gasColour = vec3(1.0, 0.0, 0.0);
+	vec3 denseGasColour = vec3(1.0, 1.0, 1.0);
+	vec3 mediumGasColour = vec3(1.0, 1.0, 1.0);
+	float remainingOpacity = 1.0;
+	float scaledI = 0.1;
+	float delta = 0.01;
+	float totalRatio = 0.0;
+	
+	// Calculate min and max value for scaleI to scan volume of a sphere around (0, 0, 0).
+	vec2 iScaleRange = getSphereIntersectionDistances(direction);
+	if (iScaleRange.y < 0.0)
+		return vec3(0.0, 0.0, 0.0);
+
+	if (isShowingCircumference && iScaleRange.y - iScaleRange.x < 0.2 && iScaleRange.x > 0.01) {
+		result = result + vec3(2.5 * (0.2 - (iScaleRange.y - iScaleRange.x)) * vec3(1.0, 0.5, 0.1));
+	}
+	
+	scaledI = iScaleRange.x;
+	for (float i = 0.01; i < 2.0; i += 0.001) {
+		vec3 point = vec3(position3D + scaledI * direction);
+		float density = getValue(point) * 0.5;
+		if (density > 0.01) {
+			float ratio = remainingOpacity * density;
+			vec3 colour;
+			if (density > 0.7) {
+				colour = ratio * denseGasColour;
+			}
+			else if (density > 0.1) {
+				colour = ratio * mediumGasColour;
+			}
+			else {
+				colour = ratio * gasColour;
+			}
+			colour *= (1.0 - getLightObstruction(point));
+			result += colour;
+			totalRatio += ratio;
+			remainingOpacity = remainingOpacity * (1.0 - density);
+			if (remainingOpacity < 0.01) {
+				result = result / totalRatio;
+				break;
+			}
+		}
+		scaledI += delta;
+		if (scaledI >= iScaleRange.y)
+			break;
+	}
+	if (remainingOpacity > 0.95) {
+		return result;
+	}
+	return result * (1.0 - remainingOpacity) / totalRatio;
+}
+
+void main(void) {
+	vec2 p = gl_FragCoord.xy;
+	vec3 direction = vec3((p.x - centre.x) * scale, (p.y - centre.y) * scale, 1.0);
+	direction = normalize(direction);
+	direction = rotatePoint(direction);
+	
+	vec3 c = getColourAt(direction);
+	gl_FragColor = vec4(c.x, c.y, c.z, 1.0);
+}
+// ]]>
+</script>
+	</body>
+</html>
