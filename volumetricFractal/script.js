@@ -14,10 +14,8 @@ window.addEventListener("DOMContentLoaded", function() {
   let locationOfCentre = gl.getUniformLocation(pid, "centre");
   let locationOfPosition = gl.getUniformLocation(pid, "position3D");
   let locationOfViewRotation = gl.getUniformLocation(pid, "viewRotation");
-  let locationOfViewRotation2 = gl.getUniformLocation(pid, "viewRotation2");
   let locationOfScale = gl.getUniformLocation(pid, "scale");
   let rotationAngle = 0;
-  let rotationAngle2 = 0;
   resized();
 
   let array = new Float32Array([-1,  3, -1, -1, 3, -1]);
@@ -28,9 +26,8 @@ window.addEventListener("DOMContentLoaded", function() {
   gl.enableVertexAttribArray(al);
  
   var times = [];
-  var rotationRadius = 1.5;
+  var rotationRadius = 2.0;
   var oldMouseX, oldMouseY, oldTouchX, oldTouchY;
-  draw();
   
   function resized() {
 	  w = window.innerWidth;
@@ -78,13 +75,19 @@ window.addEventListener("DOMContentLoaded", function() {
     gl.compileShader(sid);
     gl.attachShader(pid, sid);
   }
+  
+  function processDrag(dx, dy) {
+		rotationAngle += dx * 0.002;
+		rotationRadius += dy * 0.002;
+  }
 
   function mouseMoved(event) {
 	  if (typeof oldMouseX === 'number') {
-		  rotationAngle += (oldMouseX - event.clientX) * 0.001;
-		  rotationAngle2 += (oldMouseY - event.clientY) * 0.001;
-		  oldMouseX = event.clientX;
-		  oldMouseY = event.clientY;
+			var x = event.clientX;
+			var y = event.clientY;
+			processDrag(oldMouseX - x, oldMouseY - y);
+			oldMouseX = x;
+			oldMouseY = y;
 	  }
   }
 
@@ -99,26 +102,126 @@ window.addEventListener("DOMContentLoaded", function() {
   }
   
   function touchMove(event) {
+	if (event.targetTouches.length === 0) {
+		/* rarely happens but I hit this case 
+		while touching and dragging a few times quickly.
+		*/
+		return;
+	}
 	var x = event.targetTouches[0].pageX;
 	var y = event.targetTouches[0].pageY;
-	if (typeof x === 'number' && typeof y === 'number') {
-		rotationAngle += (oldTouchX - x) * 0.001;
-		rotationAngle2 += (oldTouchY - y) * 0.001;
+	if (typeof x === 'number' && typeof y === 'number' 
+	&& typeof oldTouchX === 'number' && typeof oldTouchY === 'number') {
+		processDrag(oldTouchX - x, oldTouchY - y);
 		oldTouchX = x;
 		oldTouchY = y;
 	}
   }
-  
+
   function touchStart(event) {
 	  oldTouchX = event.targetTouches[0].pageX;
 	  oldTouchY = event.targetTouches[0].pageY;
   }
+  
+  function touchEnd(event) {
+	  oldTouchX = undefined;
+	  oldTouchY = undefined;
+  }
+  
+  function initSettings() {
+	  var body = document.querySelector('body');
+	  var settingsCloseButton = document.getElementById('collapse-settings-button');
+	  var settingsExpandButton = document.getElementById('expand-settings-button');
+	  var sphereRadiusInput = document.getElementById('sphere-radius');
+	  var cRealInput = document.getElementById('c-real');
+	  var showSphereOutlineInput = document.getElementById('show-outline');
+	  var lightDirectionX = document.getElementById('light-x');
+	  var lightDirectionY = document.getElementById('light-y');
+	  var lightDirectionZ = document.getElementById('light-z');
+	  var maxIterations = document.getElementById('max-iterations');
+	  let locationOfFractalIterationDeltas = gl.getUniformLocation(pid, "fractalIterationDelta");
+	  let locationOfShowingCircumference = gl.getUniformLocation(pid, "isShowingCircumference");
+	  let locationOfSphereRadius = gl.getUniformLocation(pid, "sphereRadius");
+	  let locationOfLightDirection = gl.getUniformLocation(pid, "lightDirection");
+	  let locationOfCReal = gl.getUniformLocation(pid, "cReal");
+	  
+	  function sphereRadiusChanged() {
+			let val = sphereRadiusInput.value;
+			if (typeof val === 'string')
+				val = parseFloat(val.trim());
+			else
+				val = 2;
+			gl.uniform1f(locationOfSphereRadius, val);
+	  }
 
+	  function showSphereOutlineChanged() {
+		  gl.uniform1i(locationOfShowingCircumference, !!showSphereOutlineInput.checked);
+	  }
+	  
+	  function lightDirectionChanged() {
+		  var x = parseFloat(lightDirectionX.value);
+		  var y = parseFloat(lightDirectionY.value);
+		  var z = parseFloat(lightDirectionZ.value);
+		  var m = Math.sqrt(x * x + y * y + z * z);
+		  if (m === 0) {
+			  x = 1;
+		  }
+		  else {
+			  x /= m;
+			  y /= m;
+			  z /= m;
+		  }
+		  gl.uniform3fv(locationOfLightDirection, [x, y, z]);
+	  }
+	  
+	  function maxIterationsChanged() {
+			var val = parseInt(maxIterations.value);
+			if (typeof val !== 'number' || isNaN(val))
+				val = 20;
+
+			gl.uniform1f(locationOfFractalIterationDeltas, 1.0 / val);
+	  }
+	  
+	  function cRealChanged() {
+		  var val = parseFloat(cRealInput.value);
+		  if (typeof val !== 'number' && !isNaN(val)) {
+			  val = 0.7;
+		  }
+		  gl.uniform1f(locationOfCReal, val);
+	  }
+	  
+	  function settingsClose() {
+		  body.setAttribute('class', 'settings-collapsed');
+	  }
+	  
+	  function settingsExpand() {
+		  body.setAttribute('class', '');
+	  }
+
+	  sphereRadiusInput.addEventListener('input', sphereRadiusChanged);
+	  showSphereOutlineInput.addEventListener('change', showSphereOutlineChanged);
+	  [lightDirectionX, lightDirectionY, lightDirectionZ].forEach(function(input) {
+		input.addEventListener('input', lightDirectionChanged);
+	  });
+	  maxIterations.addEventListener('input', maxIterationsChanged);
+	  cRealInput.addEventListener('input', cRealChanged);
+	  settingsCloseButton.addEventListener('click', settingsClose);
+	  settingsExpandButton.addEventListener('click', settingsExpand);
+	  sphereRadiusChanged();
+	  showSphereOutlineChanged();
+	  lightDirectionChanged();
+	  maxIterationsChanged();
+	  cRealChanged();
+  }
+
+	initSettings();
   window.addEventListener('resize', resized);
   canvas.addEventListener('mousemove', mouseMoved);
   canvas.addEventListener('mousedown', mouseDown);
   canvas.addEventListener('mouseup', mouseUp);
   canvas.addEventListener('touchstart', touchStart);
   canvas.addEventListener('touchmove', touchMove);
+  canvas.addEventListener('touchend', touchEnd);
   resized();
+  draw();
 });
