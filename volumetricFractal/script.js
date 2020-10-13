@@ -3,9 +3,9 @@
 window.addEventListener("DOMContentLoaded", function() {
   let canvas = document.querySelector('canvas');
   let gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+  let pid = gl.createProgram();
   var h;
   var w;
-  let pid = gl.createProgram();
   shader('glsl/vertex', gl.VERTEX_SHADER);
   shader('glsl/fragment', gl.FRAGMENT_SHADER);
   gl.linkProgram(pid);
@@ -16,6 +16,7 @@ window.addEventListener("DOMContentLoaded", function() {
   let locationOfViewRotation = gl.getUniformLocation(pid, "viewRotation");
   let locationOfScale = gl.getUniformLocation(pid, "scale");
   let rotationAngle = 0;
+  let pixelStretch = 1;
   resized();
 
   let array = new Float32Array([-1,  3, -1, -1, 3, -1]);
@@ -28,12 +29,67 @@ window.addEventListener("DOMContentLoaded", function() {
   var times = [];
   var rotationRadius = 2.0;
   var oldMouseX, oldMouseY, oldTouchX, oldTouchY;
+
+	class LightObstructionDelta {
+		constructor() {
+			this.LOWEST_QUALITY = 0.3;
+			this.DEFAULT_QUALITY = 0.1;
+			this.DOWNLOAD_QUALITY = 0.01;
+			this.ratio = this.DEFAULT_QUALITY;
+			this.uniformLocation = gl.getUniformLocation(pid, "lightObstructionDeltaRatio");
+			this._ratioUpdated();
+		}
+		
+		_ratioUpdated() {
+			if (typeof this.ratio !== 'number' || isNaN(this.ratio) || this.ratio < this.DOWNLOAD_QUALITY) {
+				throw new Error('Invalid ratio: ' + this.ratio);
+			}
+			gl.uniform1f(this.uniformLocation, this.ratio);
+		}
+		
+		decreaseQuality() {
+			if (this.ratio < this.DEFAULT_QUALITY) {
+				this.ratio = this.DEFAULT_QUALITY;
+			}
+			else {
+				this.ratio = this.LOWEST_QUALITY;
+			}
+			this._ratioUpdated();
+		}
+		
+		increaseQuality() {
+			if (this.ratio > this.DEFAULT_QUALITY)
+				this.ratio = this.DEFAULT_QUALITY;
+			else
+				this.ratio = Math.max(this.DOWNLOAD_QUALITY, this.ratio * 0.9);
+			this._ratioUpdated();
+		}
+
+		isLowestQuality() {
+			return this.ratio >= this.LOWEST_QUALITY - 0.0001;
+		}
+
+		setToLowestQuality() {
+			this.ratio = this.LOWEST_QUALITY;
+			this._ratioUpdated();
+		}
+		
+		setToDownloadQuality() {
+			this.ratio = this.DOWNLOAD_QUALITY;
+			this._ratioUpdated();
+		}
+	}
+  var lightObstructionDeltaRatio = new LightObstructionDelta();
   
   function resized() {
 	  w = window.innerWidth;
 	  h = window.innerHeight;
-	  canvas.setAttribute('width', w);
-	  canvas.setAttribute('height', h);
+	  
+	  w /= pixelStretch;
+	  h /= pixelStretch;
+	  
+	  canvas.setAttribute('width', Math.round(w));
+	  canvas.setAttribute('height', Math.round(h));
 	  gl.uniform2fv(locationOfCentre, [w / 2, h / 2]);
 	  gl.uniform1f(locationOfScale, 10.0 / (w + h));
   }
@@ -43,6 +99,29 @@ window.addEventListener("DOMContentLoaded", function() {
 	gl.uniform2fv(locationOfViewRotation, [Math.cos(a), Math.sin(a)]);
 	gl.uniform3fv(locationOfPosition, [rotationRadius * Math.sin(newAngle), 0, rotationRadius * Math.cos(newAngle)]);
   }
+  
+  function improveFrameRateInResponseTo(currentFrameRate) {
+	  if (currentFrameRate < 10) {
+		  if (pixelStretch === 1 && !lightObstructionDeltaRatio.isLowestQuality()) {
+			lightObstructionDeltaRatio.decreaseQuality();
+			
+			// If the frame rate is terrible, increase pixelStretch immediately.
+			if (currentFrameRate < 5)
+				pixelStretch++;
+		  }
+		  else {
+			pixelStretch++;
+		  }
+	  }
+	  else if (currentFrameRate > 40) {
+		  if (pixelStretch > 1) {
+			  pixelStretch--;
+		  }
+		  else {
+			  lightObstructionDeltaRatio.increaseQuality();
+		  }
+	  }
+  }
 
   function processTimeChange() {
 	var t = new Date().getTime();
@@ -50,7 +129,8 @@ window.addEventListener("DOMContentLoaded", function() {
 	  return t - time1 < 1000;
 	});
 	if (times.length > 0 && Math.floor(times[times.length - 1] / 3000) !== Math.floor(t / 3000)) {
-	  console.log(times.length + "fps");
+		//console.log(times.length + "fps");
+		improveFrameRateInResponseTo(times.length);
 	}
 	var rotationPeriod = 500000;
 	if (times.length > 0) {
@@ -62,6 +142,7 @@ window.addEventListener("DOMContentLoaded", function() {
 
   function draw() {
 	processTimeChange();
+	resized();
 	gl.viewport(0, 0, w, h);
 	gl.clearColor(0, 0, 0, 0);
 	gl.drawArrays(gl.TRIANGLES, 0, 3);
