@@ -11,55 +11,67 @@
 	<body>
 		<div id="settings">
 			<div class="row">
-				<div class="col-md-3">
+				<div class="col-md-4">
 					<div class="labelled-input-pair">
 						<label for="show-outline">Show Sphere Outline</label>
 						<input id="show-outline" type="checkbox" checked>
 					</div>
 				</div>
-				<div class="col-md-3">
+				<div class="col-md-4">
 					<div class="labelled-input-pair">
 						<label for="sphere-radius">Sphere Radius</label>
-						<input id="sphere-radius" type="range" value="2.0" step="0.1" min="0.1" max="10.0">
+						<input id="sphere-radius" type="range" value="1.5" step="0.01" min="0.1" max="10.0">
 					</div>
 				</div>
-				<div class="col-md-3">
+				<div class="col-md-4">
 					<div class="labelled-input-pair">
 						<label for="max-iterations">Max Iterations</label>
 						<input id="max-iterations" type="range" value="50" step="1" min="5" max="100">
 					</div>
 				</div>
-				<div class="col-md-3">
+				<div class="col-md-6">
 					<div class="labelled-input-pair">
 						<label for="c-real">c Real</label>
 						<input id="c-real" type="range" value="0.3" step="0.01" min="-5" max="5">
 					</div>
 				</div>
+				<div class="col-md-6">
+					<div class="labelled-input-pair">
+						<label for="show-plane">Show Plane</label>
+						<input type="checkbox" id="show-plane">
+					</div>
+				</div>
 				<div class="col-sm-12">
 					<div class="collapsible-row">
-						<fieldset>
-							<legend>Light Direction</legend>
-							<div class="row">
-								<div class="col-sm-4">
-									<div class="labelled-input-pair">
-										<label for="light-x">X</label>
-										<input id="light-x" type="range" value="0" min="-5" max="5">
-									</div>
-								</div>
-								<div class="col-sm-4">
-									<div class="labelled-input-pair">
-										<label for="light-y">Y</label>
-										<input id="light-y" type="range" value="5" min="-5" max="5">
-									</div>
-								</div>
-								<div class="col-sm-4">
-									<div class="labelled-input-pair">
-										<label for="light-z">Z</label>
-										<input id="light-z" type="range" value="1" min="-5" max="5">
-									</div>
-								</div>
+						<div id="wide-column" class="show-light-settings">
+							<div id="cut-plane-settings">
+								<label for="plane-cut-value">Plane Cut Value</label>
+								<input type="range" id="plane-cut-value" value="0" step="0.01" min="-5" max="5">
 							</div>
-						</fieldset>
+							<fieldset id="light-settings">
+								<legend>Light Direction</legend>
+								<div class="row">
+									<div class="col-sm-4">
+										<div class="labelled-input-pair">
+											<label for="light-x">X</label>
+											<input id="light-x" type="range" value="0" step="0.01" min="-5" max="5">
+										</div>
+									</div>
+									<div class="col-sm-4">
+										<div class="labelled-input-pair">
+											<label for="light-y">Y</label>
+											<input id="light-y" type="range" value="5" step="0.01" min="-5" max="5">
+										</div>
+									</div>
+									<div class="col-sm-4">
+										<div class="labelled-input-pair">
+											<label for="light-z">Z</label>
+											<input id="light-z" type="range" value="0" step="0.01" min="-5" max="5">
+										</div>
+									</div>
+								</div>
+							</fieldset>
+						</div>
 						<div class="toggler-container">
 							<button id="collapse-settings-button" class="fa fa-arrow-circle-o-up"><span class="sr-only">Toggle</span></button>
 						</div>
@@ -87,6 +99,9 @@ uniform vec3 position3D;
 uniform vec2 viewRotation;
 uniform float scale;
 uniform float sphereRadius;
+uniform float sphereRadiusSquared;
+uniform float planeCutValue;
+uniform bool isShowingPlaneCut;
 uniform bool isShowingCircumference;
 uniform vec3 lightDirection;
 uniform float fractalIterationDelta;
@@ -129,10 +144,10 @@ float getJuliaSetValue(vec3 p)
 		cReal,
 		p.z
 		);
-	vec2 newP = vec2(p);
+	vec2 newP = vec2(p.x, p.y);
 	float ratio = 0.0;
 
-	for (float i = 0.0; i < 1.0; i += 0.001)
+	for (int i = 0; i < 10000; i++)
 	{
 	  //remember value of previous iteration
 	  //the actual iteration, the real and imaginary part are calculated
@@ -142,6 +157,8 @@ float getJuliaSetValue(vec3 p)
 		);
 	  //if the point is outside the circle with radius 2: stop
 		if (dot(newP, newP) > 4.0) {
+			if (ratio < 0.2)
+				return ratio * 0.5;
 			return ratio;
 		}
 		ratio += fractalIterationDelta;
@@ -160,7 +177,7 @@ vec2 getSphereIntersectionDistances(vec3 direction)
 {
 	float twoA_Reciprical = 0.5;
 	float b = 2.0 * dot(position3D, direction);
-	float c = dot(position3D, position3D) - sphereRadius;
+	float c = dot(position3D, position3D) - sphereRadiusSquared;
 	float discriminant = b * b - 4.0 * c;
 	if (discriminant <= 0.0) {
 		return vec2(-1.0, -1.0);
@@ -177,43 +194,50 @@ vec2 getSphereIntersectionDistances(vec3 direction)
 	}
 }
 
+vec3 getColourFromDensity(float density)
+{
+	if (density > 0.7) {
+		return vec3(1.0, 1.0, 1.0);
+	}
+	else if (density > 0.1) {
+		return vec3(1.0, 1.0, 1.0);
+	}
+	else {
+		return vec3(1.0, 0.0, 0.0);
+	}
+}
+
 vec3 getColourAt(vec3 direction)
 {
 	vec3 result;
-	vec3 gasColour = vec3(1.0, 0.0, 0.0);
-	vec3 denseGasColour = vec3(1.0, 1.0, 1.0);
-	vec3 mediumGasColour = vec3(1.0, 1.0, 1.0);
-	float remainingOpacity = 1.0;
-	float scaledI = 0.1;
-	float delta = 0.01;
-	float totalRatio = 0.0;
-	
+
 	// Calculate min and max value for scaleI to scan volume of a sphere around (0, 0, 0).
 	vec2 iScaleRange = getSphereIntersectionDistances(direction);
 	if (iScaleRange.y < 0.0)
-		return vec3(0.0, 0.0, 0.0);
+		return result;
+
+	if (isShowingCircumference && iScaleRange.y - iScaleRange.x < 0.2 && iScaleRange.x > 0.01) {
+		result = result + vec3(2.5 * (0.2 - (iScaleRange.y - iScaleRange.x)) * vec3(1.0, 0.5, 0.1));
+	}
+
+	vec3 point;
+	float remainingOpacity = 1.0;
+	float scaledI = iScaleRange.x;
+	float delta = 0.01;
+	vec3 deltaVector = direction * delta;
+	float totalRatio = 0.0;
 
 	if (isShowingCircumference && iScaleRange.y - iScaleRange.x < 0.2 && iScaleRange.x > 0.01) {
 		result = result + vec3(2.5 * (0.2 - (iScaleRange.y - iScaleRange.x)) * vec3(1.0, 0.5, 0.1));
 	}
 	
-	scaledI = iScaleRange.x;
-	for (float i = 0.01; i < 2.0; i += 0.001) {
-		vec3 point = vec3(position3D + scaledI * direction);
-		float density = getValue(point) * 0.5;
+	point = position3D + iScaleRange.x * direction;
+	for (int i = 0; i < 10000; i++) {
+		point += deltaVector;
+		float density = getValue(point);
 		if (density > 0.01) {
 			float ratio = remainingOpacity * density;
-			vec3 colour;
-			if (density > 0.7) {
-				colour = ratio * denseGasColour;
-			}
-			else if (density > 0.1) {
-				colour = ratio * mediumGasColour;
-			}
-			else {
-				colour = ratio * gasColour;
-			}
-			colour *= (1.0 - getLightObstruction(point));
+			vec3 colour = ratio * (1.0 - getLightObstruction(point)) * getColourFromDensity(density);
 			result += colour;
 			totalRatio += ratio;
 			remainingOpacity = remainingOpacity * (1.0 - density);
@@ -232,13 +256,47 @@ vec3 getColourAt(vec3 direction)
 	return result * (1.0 - remainingOpacity) / totalRatio;
 }
 
+vec3 getDiscColour(vec3 direction) {
+	vec3 result;
+
+	float distanceToPlane = (-position3D.x - planeCutValue) / direction.x;
+	if (distanceToPlane < 0.0)
+		return result;
+
+	vec3 intersectionPoint = position3D + direction * distanceToPlane;
+	if (length(intersectionPoint) > sphereRadius)
+		return result;
+
+	float density = length(intersectionPoint) * 0.5;
+	// does the range include the distance to the plane?
+	density = getValue(intersectionPoint);	
+	vec3 colour = getColourFromDensity(density);
+
+	if (density > 0.7) {
+		density = (density - 0.7) / 0.3;
+	}
+	else if (density > 0.1) {
+		density *= 1.0 / 0.7;
+	}
+	else {
+		density *= 10.0;
+	}
+	
+	return colour * density;
+}
+
 void main(void) {
 	vec2 p = gl_FragCoord.xy;
 	vec3 direction = vec3((p.x - centre.x) * scale, (p.y - centre.y) * scale, 1.0);
 	direction = normalize(direction);
 	direction = rotatePoint(direction);
 	
-	vec3 c = getColourAt(direction);
+	vec3 c;
+	if (isShowingPlaneCut)
+		c = getDiscColour(direction);
+	else
+		c = getColourAt(direction);
+	
 	gl_FragColor = vec4(c.x, c.y, c.z, 1.0);
 }
 // ]]>
