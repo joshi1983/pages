@@ -15,7 +15,10 @@ window.addEventListener("DOMContentLoaded", function() {
   let locationOfPosition = gl.getUniformLocation(pid, "position3D");
   let locationOfViewRotation = gl.getUniformLocation(pid, "viewRotation");
   let locationOfScale = gl.getUniformLocation(pid, "scale");
+  let locationOfIsShowingPlaneCut = gl.getUniformLocation(pid, "isShowingPlaneCut");
+  let locationOfPlaneCutValue = gl.getUniformLocation(pid, "planeCutValue");
   let rotationAngle = 0;
+  var planeCutValue = document.getElementById('plane-cut-value');
   let pixelStretch = 1;
   resized();
 
@@ -68,6 +71,11 @@ window.addEventListener("DOMContentLoaded", function() {
 		isLowestQuality() {
 			return this.ratio >= this.LOWEST_QUALITY - 0.0001;
 		}
+		
+		setToDefaultQuality() {
+			this.ratio = this.DEFAULT_QUALITY;
+			this._ratioUpdated();
+		}
 
 		setToLowestQuality() {
 			this.ratio = this.LOWEST_QUALITY;
@@ -100,9 +108,13 @@ window.addEventListener("DOMContentLoaded", function() {
 	gl.uniform3fv(locationOfPosition, [rotationRadius * Math.sin(newAngle), 0, rotationRadius * Math.cos(newAngle)]);
   }
   
+  function isPlaneCut() {
+	  return document.getElementById('show-plane').checked;
+  }
+  
   function improveFrameRateInResponseTo(currentFrameRate) {
 	  if (currentFrameRate < 10) {
-		  if (pixelStretch === 1 && !lightObstructionDeltaRatio.isLowestQuality()) {
+		  if (pixelStretch === 1 && !isPlaneCut() && !lightObstructionDeltaRatio.isLowestQuality()) {
 			lightObstructionDeltaRatio.decreaseQuality();
 			
 			// If the frame rate is terrible, increase pixelStretch immediately.
@@ -117,7 +129,7 @@ window.addEventListener("DOMContentLoaded", function() {
 		  if (pixelStretch > 1) {
 			  pixelStretch--;
 		  }
-		  else {
+		  else if (!isPlaneCut()) {
 			  lightObstructionDeltaRatio.increaseQuality();
 		  }
 	  }
@@ -129,12 +141,7 @@ window.addEventListener("DOMContentLoaded", function() {
 	  return t - time1 < 1000;
 	});
 	if (times.length > 0 && Math.floor(times[times.length - 1] / 3000) !== Math.floor(t / 3000)) {
-		//console.log(times.length + "fps");
 		improveFrameRateInResponseTo(times.length);
-	}
-	var rotationPeriod = 500000;
-	if (times.length > 0) {
-		rotationAngle += (t - times[times.length - 1]) * Math.PI * 2 / rotationPeriod;
 	}
 	times.push(t);
 	setRotationAngle(rotationAngle);
@@ -209,37 +216,69 @@ window.addEventListener("DOMContentLoaded", function() {
 	  oldTouchY = undefined;
   }
   
+  function initPlaneCutSettings() {
+		var lightSettings = document.getElementById('light-settings');
+		var showPlane = document.getElementById('show-plane');
+		var wideColumn = document.getElementById('wide-column');
+
+		function showPlaneCutUpdated() {
+			gl.uniform1i(locationOfIsShowingPlaneCut, isPlaneCut());
+			if (isPlaneCut()) {
+				wideColumn.setAttribute('class', 'show-plane-cut-settings');
+			}
+			else {
+				wideColumn.setAttribute('class', 'show-light-settings');
+			}
+		}
+
+		function planeCutChanged() {
+			var val = parseFloat(planeCutValue.value);
+			if (!isNaN(val)) {
+				gl.uniform1f(locationOfPlaneCutValue, val);
+			}
+		}
+
+		showPlane.addEventListener('change', showPlaneCutUpdated);
+		planeCutValue.addEventListener('input', planeCutChanged);
+		planeCutChanged();
+  }
+  
   function initSettings() {
-	  var body = document.querySelector('body');
-	  var settingsCloseButton = document.getElementById('collapse-settings-button');
-	  var settingsExpandButton = document.getElementById('expand-settings-button');
-	  var sphereRadiusInput = document.getElementById('sphere-radius');
-	  var cRealInput = document.getElementById('c-real');
-	  var showSphereOutlineInput = document.getElementById('show-outline');
-	  var lightDirectionX = document.getElementById('light-x');
-	  var lightDirectionY = document.getElementById('light-y');
-	  var lightDirectionZ = document.getElementById('light-z');
-	  var maxIterations = document.getElementById('max-iterations');
-	  let locationOfFractalIterationDeltas = gl.getUniformLocation(pid, "fractalIterationDelta");
-	  let locationOfShowingCircumference = gl.getUniformLocation(pid, "isShowingCircumference");
-	  let locationOfSphereRadius = gl.getUniformLocation(pid, "sphereRadius");
-	  let locationOfLightDirection = gl.getUniformLocation(pid, "lightDirection");
-	  let locationOfCReal = gl.getUniformLocation(pid, "cReal");
-	  
-	  function sphereRadiusChanged() {
+	var body = document.querySelector('body');
+	var settingsCloseButton = document.getElementById('collapse-settings-button');
+	var settingsExpandButton = document.getElementById('expand-settings-button');
+	var sphereRadiusInput = document.getElementById('sphere-radius');
+	var cRealInput = document.getElementById('c-real');
+	var showSphereOutlineInput = document.getElementById('show-outline');
+	var lightDirectionX = document.getElementById('light-x');
+	var lightDirectionY = document.getElementById('light-y');
+	var lightDirectionZ = document.getElementById('light-z');
+	var maxIterations = document.getElementById('max-iterations');
+	let locationOfFractalIterationDeltas = gl.getUniformLocation(pid, "fractalIterationDelta");
+	let locationOfShowingCircumference = gl.getUniformLocation(pid, "isShowingCircumference");
+	let locationOfSphereRadius = gl.getUniformLocation(pid, "sphereRadius");
+	let locationOfSphereRadiusSquared = gl.getUniformLocation(pid, "sphereRadiusSquared");
+	let locationOfLightDirection = gl.getUniformLocation(pid, "lightDirection");
+	let locationOfCReal = gl.getUniformLocation(pid, "cReal");
+
+	function sphereRadiusChanged() {
 			let val = sphereRadiusInput.value;
 			if (typeof val === 'string')
 				val = parseFloat(val.trim());
 			else
 				val = 2;
 			gl.uniform1f(locationOfSphereRadius, val);
-	  }
+			gl.uniform1f(locationOfSphereRadiusSquared, val * val);
+			planeCutValue.setAttribute('min', -val);
+			planeCutValue.setAttribute('max', val);
+			planeCutValue.value = Math.max(-val, Math.min(val, planeCutValue.value));
+	}
 
-	  function showSphereOutlineChanged() {
+	function showSphereOutlineChanged() {
 		  gl.uniform1i(locationOfShowingCircumference, !!showSphereOutlineInput.checked);
-	  }
+	}
 	  
-	  function lightDirectionChanged() {
+	function lightDirectionChanged() {
 		  var x = parseFloat(lightDirectionX.value);
 		  var y = parseFloat(lightDirectionY.value);
 		  var z = parseFloat(lightDirectionZ.value);
@@ -253,15 +292,15 @@ window.addEventListener("DOMContentLoaded", function() {
 			  z /= m;
 		  }
 		  gl.uniform3fv(locationOfLightDirection, [x, y, z]);
-	  }
+	}
 	  
-	  function maxIterationsChanged() {
+	function maxIterationsChanged() {
 			var val = parseInt(maxIterations.value);
 			if (typeof val !== 'number' || isNaN(val))
 				val = 20;
 
 			gl.uniform1f(locationOfFractalIterationDeltas, 1.0 / val);
-	  }
+	}
 	  
 	  function cRealChanged() {
 		  var val = parseFloat(cRealInput.value);
@@ -278,21 +317,22 @@ window.addEventListener("DOMContentLoaded", function() {
 	  function settingsExpand() {
 		  body.setAttribute('class', '');
 	  }
-
+	  
 	  sphereRadiusInput.addEventListener('input', sphereRadiusChanged);
 	  showSphereOutlineInput.addEventListener('change', showSphereOutlineChanged);
 	  [lightDirectionX, lightDirectionY, lightDirectionZ].forEach(function(input) {
 		input.addEventListener('input', lightDirectionChanged);
 	  });
-	  maxIterations.addEventListener('input', maxIterationsChanged);
-	  cRealInput.addEventListener('input', cRealChanged);
-	  settingsCloseButton.addEventListener('click', settingsClose);
-	  settingsExpandButton.addEventListener('click', settingsExpand);
-	  sphereRadiusChanged();
-	  showSphereOutlineChanged();
-	  lightDirectionChanged();
-	  maxIterationsChanged();
-	  cRealChanged();
+	maxIterations.addEventListener('input', maxIterationsChanged);
+	cRealInput.addEventListener('input', cRealChanged);
+	settingsCloseButton.addEventListener('click', settingsClose);
+	settingsExpandButton.addEventListener('click', settingsExpand);
+	sphereRadiusChanged();
+	showSphereOutlineChanged();
+	lightDirectionChanged();
+	maxIterationsChanged();
+	cRealChanged();
+	initPlaneCutSettings();
   }
 
 	initSettings();
