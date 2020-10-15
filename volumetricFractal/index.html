@@ -11,13 +11,13 @@
 	<body>
 		<div id="settings">
 			<div class="row">
-				<div class="col-md-4">
+				<div class="col-md-3">
 					<div class="labelled-input-pair">
 						<label for="show-outline">Show Sphere Outline</label>
 						<input id="show-outline" type="checkbox" checked>
 					</div>
 				</div>
-				<div class="col-md-4">
+				<div class="col-md-5">
 					<div class="labelled-input-pair">
 						<label for="sphere-radius">Sphere Radius</label>
 						<input id="sphere-radius" type="range" value="1.5" step="0.01" min="0.1" max="10.0">
@@ -29,13 +29,13 @@
 						<input id="max-iterations" type="range" value="50" step="1" min="5" max="100">
 					</div>
 				</div>
-				<div class="col-md-6">
+				<div class="col-md-10">
 					<div class="labelled-input-pair">
 						<label for="c-real">c Real</label>
-						<input id="c-real" type="range" value="0.3" step="0.01" min="-5" max="5">
+						<input id="c-real" type="range" value="0.3" step="0.001" min="-5" max="5">
 					</div>
 				</div>
-				<div class="col-md-6">
+				<div class="col-md-2">
 					<div class="labelled-input-pair">
 						<label for="show-plane">Show Plane</label>
 						<input type="checkbox" id="show-plane">
@@ -46,22 +46,33 @@
 						<div id="wide-column" class="show-light-settings">
 							<div id="cut-plane-settings">
 								<div id="axis-selector">
-									<label>Axis</label>
-									<select id="plane-cut-axis">
-										<option value="1">X</option>
-										<option value="2">Y</option>
-										<option value="3">Z</option>
-									</select>
+									<fieldset>
+										<legend>Cut Axis</legend>
+										<div class="row">
+											<div class="col-4">
+												<label for="plane-cut-axis-x">X</label>
+												<input type="radio" id="plane-cut-axis-x" name="plane-cut-axis" value="1">
+											</div>
+											<div class="col-4">
+												<label for="plane-cut-axis-y">Y</label>
+												<input type="radio" id="plane-cut-axis-y" name="plane-cut-axis" value="2">
+											</div>
+											<div class="col-4">
+												<label for="plane-cut-axis-z">Z</label>
+												<input type="radio" id="plane-cut-axis-z" checked name="plane-cut-axis" value="3">
+											</div>
+										</div>
+									</fieldset>
 								</div>
 								<div id="plane-cut-value-selector">
 									<div class="labelled-input-pair">
 										<label for="plane-cut-value">Plane Cut Value</label>
-										<input type="range" id="plane-cut-value" value="0" step="0.01" min="-5" max="5">
+										<input type="range" id="plane-cut-value" value="0.3" step="0.001" min="-5" max="5">
 									</div>
 								</div>
 							</div>
 							<fieldset id="light-settings">
-								<legend>Light Direction</legend>
+								<legend>Light Settings</legend>
 								<div class="row">
 									<div class="col-sm-4">
 										<div class="labelled-input-pair">
@@ -79,6 +90,12 @@
 										<div class="labelled-input-pair">
 											<label for="light-z">Z</label>
 											<input id="light-z" type="range" value="0" step="0.01" min="-5" max="5">
+										</div>
+									</div>
+									<div class="col-sm-12">
+										<div class="labelled-input-pair">
+											<label for="ambient">Ambient</label>
+											<input id="ambient" type="range" value="0.05" step="0.001" min="0" max="1">
 										</div>
 									</div>
 								</div>
@@ -112,6 +129,7 @@ uniform vec2 viewRotation;
 uniform float scale;
 uniform float sphereRadius;
 uniform float sphereRadiusSquared;
+uniform float sphereRadiusWithPlaneLineSquared;
 uniform float planeCutValue;
 uniform int planeCutAxis;
 uniform bool isShowingPlaneCut;
@@ -122,6 +140,7 @@ uniform vec3 lightDirection;
 uniform float fractalIterationDelta;
 uniform float cReal;
 uniform float lightObstructionDeltaRatio;
+uniform float ambientFactor;
 
 float getValue(vec3);
 
@@ -240,17 +259,22 @@ vec3 getColourAt(vec3 direction)
 	vec3 point;
 	float remainingOpacity = 1.0;
 	float scaledI = iScaleRange.x;
-	float delta = 0.01;
+	float delta = lightObstructionDeltaRatio * 0.15;
 	vec3 deltaVector = direction * delta;
 	float totalRatio = 0.0;
 
 	point = position3D + iScaleRange.x * direction;
 	for (int i = 0; i < 10000; i++) {
 		point += deltaVector;
-		float density = getValue(point);
+		float density = getValue(point) * lightObstructionDeltaRatio;
 		if (density > 0.01) {
 			float ratio = remainingOpacity * density;
-			vec3 colour = ratio * (1.0 - getLightObstruction(point)) * getColourFromDensity(density);
+			vec3 colour;
+			if (ambientFactor > 0.01)
+				colour = ratio * (1.0 - ambientFactor * getLightObstruction(point)) * getColourFromDensity(density);
+			else
+				colour = ratio * getColourFromDensity(density);
+
 			result += colour;
 			totalRatio += ratio;
 			remainingOpacity = remainingOpacity * (1.0 - density);
@@ -282,8 +306,12 @@ vec3 getDiscColour(vec3 direction) {
 		return result;
 
 	vec3 intersectionPoint = position3D + direction * distanceToPlane;
-	if (dot(intersectionPoint, intersectionPoint) > sphereRadiusSquared)
+	float lenSquared = dot(intersectionPoint, intersectionPoint);
+	
+	if (lenSquared > sphereRadiusWithPlaneLineSquared)
 		return result;
+	else if (lenSquared > sphereRadiusSquared)
+		return vec3(1.0, 1.0, 0.0);
 
 	float density = getValue(intersectionPoint);	
 	vec3 colour = getColourFromDensity(density);
