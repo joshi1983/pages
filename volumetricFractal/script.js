@@ -1,6 +1,7 @@
 "use strict"
 
 window.addEventListener("DOMContentLoaded", function() {
+  let showSphereOutlineInput = document.getElementById('show-outline');
   let canvas = document.querySelector('canvas');
   let gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
   let pid = gl.createProgram();
@@ -18,7 +19,10 @@ window.addEventListener("DOMContentLoaded", function() {
   let locationOfIsShowingPlaneCut = gl.getUniformLocation(pid, "isShowingPlaneCut");
   let locationOfPlaneCutValue = gl.getUniformLocation(pid, "planeCutValue");
   let locationOfPlaneCutAxis = gl.getUniformLocation(pid, "planeCutAxis");
+  let locationOfCircleRadiusRange = gl.getUniformLocation(pid, "circleRadiusRange");
+  let locationOfShowingCircumference = gl.getUniformLocation(pid, "isShowingCircumference");
   let rotationAngle = 0;
+  let scaleValue = 100;
   var planeCutValue = document.getElementById('plane-cut-value');
   let pixelStretch = 1;
   resized();
@@ -118,8 +122,54 @@ window.addEventListener("DOMContentLoaded", function() {
 		}
 	}
 
+	class SphereRadius {
+		constructor() {
+			this.sphereRadiusInput = document.getElementById('sphere-radius');
+			this.locationOfSphereRadius = gl.getUniformLocation(pid, "sphereRadius");
+			this.locationOfSphereRadiusSquared = gl.getUniformLocation(pid, "sphereRadiusSquared");
+			let outer = this;
+			this.sphereRadiusInput.addEventListener('input', function() {
+				outer._updated();
+			});
+			this._updated();
+		}
+
+		_updated() {
+			let val = this.getValue();
+			gl.uniform1f(this.locationOfSphereRadius, val);
+			gl.uniform1f(this.locationOfSphereRadiusSquared, val * val);
+			planeCutValue.setAttribute('min', -val);
+			planeCutValue.setAttribute('max', val);
+			planeCutValue.value = Math.max(-val, Math.min(val, planeCutValue.value));
+		}
+
+		getValue() {
+			return sanitizeFloat(this.sphereRadiusInput.value, 2);
+		}
+	}
+
+  var sphereRadius = new SphereRadius();
   var lightObstructionDeltaRatio = new LightObstructionDelta();
   var pixelSubsampling = new PixelSubsampling();
+
+	function setSphereOutlineUniformOnly(newValue) {
+	  gl.uniform1i(locationOfShowingCircumference, newValue);
+	}
+
+	function showSphereOutlineChanged() {
+		  setSphereOutlineUniformOnly(!!showSphereOutlineInput.checked);
+	}
+
+	function sanitizeFloat(v, defaultVal) {
+		if (typeof v === 'string') {
+			v = v.trim();
+			v = parseFloat(v);
+		}
+		if (typeof v !== 'number' || isNaN(v))
+			return defaultVal;
+		else
+			return v;
+	}
   
   function resized() {
 	  w = window.innerWidth;
@@ -131,9 +181,10 @@ window.addEventListener("DOMContentLoaded", function() {
 	  canvas.setAttribute('width', Math.round(w));
 	  canvas.setAttribute('height', Math.round(h));
 	  gl.uniform2fv(locationOfCentre, [w / 2, h / 2]);
-	  gl.uniform1f(locationOfScale, 10.0 / (w + h));
+	  scaleValue = 10.0 / (w + h);
+	  gl.uniform1f(locationOfScale, scaleValue);
   }
-  
+
   function setPixelSubsampling(newValue) {
 	isPixelSubsampling = newValue;
 	gl.uniform1i(locationOfIsPixelSubsampling, newValue);
@@ -195,9 +246,30 @@ window.addEventListener("DOMContentLoaded", function() {
 	setRotationAngle(rotationAngle);
   }
 
+  function updateCircleRadiusRange() {
+	var r = sphereRadius.getValue();
+	if (r > 0.95 * rotationRadius) {
+		setSphereOutlineUniformOnly(false);
+		var size = sanitizeFloat(w + h, 8000);
+		gl.uniform2fv(locationOfCircleRadiusRange, [size, size]);
+	}
+	else {
+		showSphereOutlineChanged();
+		// rotationRadius
+		var sinA = r / rotationRadius;
+		var a = Math.asin(sinA);
+		var rad = Math.tan(a) / scaleValue;
+		var thickness = (w + h) * 0.001;
+		var min = rad;
+		var max = rad + thickness;
+		gl.uniform2fv(locationOfCircleRadiusRange, [min, max]);
+	}
+  }
+
   function draw() {
 	processTimeChange();
 	resized();
+	updateCircleRadiusRange();
 	gl.viewport(0, 0, w, h);
 	gl.clearColor(0, 0, 0, 0);
 	gl.drawArrays(gl.TRIANGLES, 0, 3);
@@ -284,10 +356,8 @@ window.addEventListener("DOMContentLoaded", function() {
 		}
 
 		function planeCutChanged() {
-			var val = parseFloat(planeCutValue.value);
-			if (!isNaN(val)) {
-				gl.uniform1f(locationOfPlaneCutValue, val);
-			}
+			var val = sanitizeFloat(planeCutValue.value, 0);
+			gl.uniform1f(locationOfPlaneCutValue, val);
 		}
 		
 		function planeCutAxisChanged() {
@@ -306,41 +376,19 @@ window.addEventListener("DOMContentLoaded", function() {
 	var body = document.querySelector('body');
 	var settingsCloseButton = document.getElementById('collapse-settings-button');
 	var settingsExpandButton = document.getElementById('expand-settings-button');
-	var sphereRadiusInput = document.getElementById('sphere-radius');
 	var cRealInput = document.getElementById('c-real');
-	var showSphereOutlineInput = document.getElementById('show-outline');
 	var lightDirectionX = document.getElementById('light-x');
 	var lightDirectionY = document.getElementById('light-y');
 	var lightDirectionZ = document.getElementById('light-z');
 	var maxIterations = document.getElementById('max-iterations');
 	let locationOfFractalIterationDeltas = gl.getUniformLocation(pid, "fractalIterationDelta");
-	let locationOfShowingCircumference = gl.getUniformLocation(pid, "isShowingCircumference");
-	let locationOfSphereRadius = gl.getUniformLocation(pid, "sphereRadius");
-	let locationOfSphereRadiusSquared = gl.getUniformLocation(pid, "sphereRadiusSquared");
 	let locationOfLightDirection = gl.getUniformLocation(pid, "lightDirection");
 	let locationOfCReal = gl.getUniformLocation(pid, "cReal");
 
-	function sphereRadiusChanged() {
-			let val = sphereRadiusInput.value;
-			if (typeof val === 'string')
-				val = parseFloat(val.trim());
-			else
-				val = 2;
-			gl.uniform1f(locationOfSphereRadius, val);
-			gl.uniform1f(locationOfSphereRadiusSquared, val * val);
-			planeCutValue.setAttribute('min', -val);
-			planeCutValue.setAttribute('max', val);
-			planeCutValue.value = Math.max(-val, Math.min(val, planeCutValue.value));
-	}
-
-	function showSphereOutlineChanged() {
-		  gl.uniform1i(locationOfShowingCircumference, !!showSphereOutlineInput.checked);
-	}
-	  
 	function lightDirectionChanged() {
-		  var x = parseFloat(lightDirectionX.value);
-		  var y = parseFloat(lightDirectionY.value);
-		  var z = parseFloat(lightDirectionZ.value);
+		  var x = sanitizeFloat(lightDirectionX.value, 0);
+		  var y = sanitizeFloat(lightDirectionY.value, 0);
+		  var z = sanitizeFloat(lightDirectionZ.value, 0);
 		  var m = Math.sqrt(x * x + y * y + z * z);
 		  if (m === 0) {
 			  x = 1;
@@ -362,10 +410,7 @@ window.addEventListener("DOMContentLoaded", function() {
 	}
 	  
 	  function cRealChanged() {
-		  var val = parseFloat(cRealInput.value);
-		  if (typeof val !== 'number' && !isNaN(val)) {
-			  val = 0.7;
-		  }
+		  var val = sanitizeFloat(cRealInput.value, 0.7);
 		  gl.uniform1f(locationOfCReal, val);
 	  }
 	  
@@ -377,7 +422,6 @@ window.addEventListener("DOMContentLoaded", function() {
 		  body.setAttribute('class', '');
 	  }
 	  
-	  sphereRadiusInput.addEventListener('input', sphereRadiusChanged);
 	  showSphereOutlineInput.addEventListener('change', showSphereOutlineChanged);
 	  [lightDirectionX, lightDirectionY, lightDirectionZ].forEach(function(input) {
 		input.addEventListener('input', lightDirectionChanged);
@@ -386,7 +430,6 @@ window.addEventListener("DOMContentLoaded", function() {
 	cRealInput.addEventListener('input', cRealChanged);
 	settingsCloseButton.addEventListener('click', settingsClose);
 	settingsExpandButton.addEventListener('click', settingsExpand);
-	sphereRadiusChanged();
 	showSphereOutlineChanged();
 	lightDirectionChanged();
 	maxIterationsChanged();
