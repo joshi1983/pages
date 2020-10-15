@@ -143,7 +143,7 @@ float getLightObstruction(vec3 p)
 	for (int i = 0; i < 1000; i++)
 	{
 		position += delta;
-		if (length(position) > sphereRadius)
+		if (dot(position, position) > sphereRadiusSquared)
 			break;
 		result += getValue(position) * opacityDelta;
 		if (result >= 1.0)
@@ -179,6 +179,7 @@ float getJuliaSetValue(vec3 p)
 		if (ratio >= 1.0)
 			return ratio;
 	}
+	return ratio;
 }
 
 float getValue(vec3 p)
@@ -190,7 +191,6 @@ float getValue(vec3 p)
 // Returns the 2 distances to intersections with the sampled sphere.
 vec2 getSphereIntersectionDistances(vec3 direction)
 {
-	float twoA_Reciprical = 0.5;
 	float b = 2.0 * dot(position3D, direction);
 	float c = dot(position3D, position3D) - sphereRadiusSquared;
 	float discriminant = b * b - 4.0 * c;
@@ -200,11 +200,12 @@ vec2 getSphereIntersectionDistances(vec3 direction)
 	else {
 		discriminant = sqrt(discriminant);
 		vec2 result;
-		result.y = (-b + discriminant) * twoA_Reciprical;
+		result.y = (-b + discriminant) * 0.5;
+        // 2a would be 2 so * 0.5 is like dividing by (2*a).
 		if (result.y < 0.0) {
 			return vec2(-1.0, -1.0); // both will be negative so no point in continuing.
 		}
-		result.x = max(0.0, (-b - discriminant) * twoA_Reciprical);
+		result.x = max(0.0, (-b - discriminant) * 0.5);
 		return result;
 	}
 }
@@ -265,10 +266,7 @@ vec3 getColourAt(vec3 direction)
 		if (scaledI >= iScaleRange.y)
 			break;
 	}
-	if (remainingOpacity > 0.95) {
-		return result;
-	}
-	return result * (1.0 - remainingOpacity) / totalRatio;
+	return result;
 }
 
 vec3 getDiscColour(vec3 direction) {
@@ -287,16 +285,14 @@ vec3 getDiscColour(vec3 direction) {
 		return result;
 
 	vec3 intersectionPoint = position3D + direction * distanceToPlane;
-	if (length(intersectionPoint) > sphereRadius)
+	if (dot(intersectionPoint, intersectionPoint) > sphereRadiusSquared)
 		return result;
 
-	float density = length(intersectionPoint) * 0.5;
-	// does the range include the distance to the plane?
-	density = getValue(intersectionPoint);	
+	float density = getValue(intersectionPoint);	
 	vec3 colour = getColourFromDensity(density);
 
 	if (density > 0.7) {
-		density = (density - 0.7) / 0.3;
+		density = (density - 0.6) / 0.4;
 	}
 	else if (density > 0.1) {
 		density *= 1.0 / 0.7;
