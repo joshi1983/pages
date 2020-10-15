@@ -41,6 +41,7 @@ window.addEventListener("DOMContentLoaded", function() {
 	class LightObstructionDelta {
 		constructor() {
 			this.LOWEST_QUALITY = 0.3;
+			this.LOWEST_1_PIXELSTRETCH_QUALITY = 0.2;
 			this.DEFAULT_QUALITY = 0.1;
 			this.DOWNLOAD_QUALITY = 0.01;
 			this.ratio = this.DEFAULT_QUALITY;
@@ -59,6 +60,9 @@ window.addEventListener("DOMContentLoaded", function() {
 			if (this.ratio < this.DEFAULT_QUALITY) {
 				this.ratio = this.DEFAULT_QUALITY;
 			}
+			else if (this.ratio < this.LOWEST_1_PIXELSTRETCH_QUALITY) {
+				this.ratio = this.LOWEST_1_PIXELSTRETCH_QUALITY;
+			}
 			else {
 				this.ratio = this.LOWEST_QUALITY;
 			}
@@ -75,6 +79,10 @@ window.addEventListener("DOMContentLoaded", function() {
 
 		isLowestQuality() {
 			return this.ratio >= this.LOWEST_QUALITY - 0.0001;
+		}
+		
+		isLowest1PixelStretchQuality() {
+			return this.ratio >= this.LOWEST_1_PIXELSTRETCH_QUALITY - 0.0001;
 		}
 		
 		setToDefaultQuality() {
@@ -127,6 +135,7 @@ window.addEventListener("DOMContentLoaded", function() {
 			this.sphereRadiusInput = document.getElementById('sphere-radius');
 			this.locationOfSphereRadius = gl.getUniformLocation(pid, "sphereRadius");
 			this.locationOfSphereRadiusSquared = gl.getUniformLocation(pid, "sphereRadiusSquared");
+			this.locationOfSphereRadiusWithPlaneLineSquared = gl.getUniformLocation(pid, "sphereRadiusWithPlaneLineSquared");
 			let outer = this;
 			this.sphereRadiusInput.addEventListener('input', function() {
 				outer._updated();
@@ -136,8 +145,10 @@ window.addEventListener("DOMContentLoaded", function() {
 
 		_updated() {
 			let val = this.getValue();
+			let val2 = val * (1 + getOutlineThickness() * scaleValue);
 			gl.uniform1f(this.locationOfSphereRadius, val);
 			gl.uniform1f(this.locationOfSphereRadiusSquared, val * val);
+			gl.uniform1f(this.locationOfSphereRadiusWithPlaneLineSquared, val2 * val2);
 			planeCutValue.setAttribute('min', -val);
 			planeCutValue.setAttribute('max', val);
 			planeCutValue.value = Math.max(-val, Math.min(val, planeCutValue.value));
@@ -181,7 +192,7 @@ window.addEventListener("DOMContentLoaded", function() {
 	  canvas.setAttribute('width', Math.round(w));
 	  canvas.setAttribute('height', Math.round(h));
 	  gl.uniform2fv(locationOfCentre, [w / 2, h / 2]);
-	  scaleValue = 10.0 / (w + h);
+	  scaleValue = 7.0 / (w + h);
 	  gl.uniform1f(locationOfScale, scaleValue);
   }
 
@@ -208,7 +219,8 @@ window.addEventListener("DOMContentLoaded", function() {
 			else
 				pixelSubsampling.useLowestQuality();
 		  }
-		  if (pixelStretch === 1 && !isPlaneCut() && !lightObstructionDeltaRatio.isLowestQuality()) {
+		  if (pixelStretch === 1 && !isPlaneCut() && !lightObstructionDeltaRatio.isLowest1PixelStretchQuality()) {
+			  
 			lightObstructionDeltaRatio.decreaseQuality();
 			
 			// If the frame rate is terrible, increase pixelStretch immediately.
@@ -245,23 +257,30 @@ window.addEventListener("DOMContentLoaded", function() {
 	times.push(t);
 	setRotationAngle(rotationAngle);
   }
+  
+  function getOutlineThickness() {
+	  return (w + h) * 0.001;
+  }
+  
+  function getRadiusFromSphereRadius(sr) {
+		var sinA = sr / rotationRadius;
+		var a = Math.asin(sinA);
+		var rad = Math.tan(a) / scaleValue;
+		return rad;
+  }
 
   function updateCircleRadiusRange() {
 	var r = sphereRadius.getValue();
-	if (r > 0.95 * rotationRadius) {
+	if (r > 0.97 * rotationRadius) {
 		setSphereOutlineUniformOnly(false);
-		var size = sanitizeFloat(w + h, 8000);
+		var size = sanitizeFloat(w + h, 18000);
 		gl.uniform2fv(locationOfCircleRadiusRange, [size, size]);
 	}
 	else {
 		showSphereOutlineChanged();
 		// rotationRadius
-		var sinA = r / rotationRadius;
-		var a = Math.asin(sinA);
-		var rad = Math.tan(a) / scaleValue;
-		var thickness = (w + h) * 0.001;
-		var min = rad;
-		var max = rad + thickness;
+		var min = getRadiusFromSphereRadius(r);
+		var max = getRadiusFromSphereRadius(r * (1 + getOutlineThickness() * scaleValue));
 		gl.uniform2fv(locationOfCircleRadiusRange, [min, max]);
 	}
   }
@@ -340,7 +359,6 @@ window.addEventListener("DOMContentLoaded", function() {
 		var lightSettings = document.getElementById('light-settings');
 		var showPlane = document.getElementById('show-plane');
 		var wideColumn = document.getElementById('wide-column');
-		var planeCutAxis = document.getElementById('plane-cut-axis');
 
 		function showPlaneCutUpdated() {
 			if (!isPlaneCut()) {
@@ -361,13 +379,17 @@ window.addEventListener("DOMContentLoaded", function() {
 		}
 		
 		function planeCutAxisChanged() {
-			var val = parseInt(planeCutAxis.value);
+			var checkedPlaneCutAxisInput = document.querySelector('[name="plane-cut-axis"]:checked');
+			var val = parseInt(checkedPlaneCutAxisInput.value);
 			gl.uniform1i(locationOfPlaneCutAxis, val);
 		}
 
 		showPlane.addEventListener('change', showPlaneCutUpdated);
 		planeCutValue.addEventListener('input', planeCutChanged);
-		planeCutAxis.addEventListener('change', planeCutAxisChanged);
+		['x', 'y', 'z'].forEach(function(axisName) {
+			var planeCutAxis = document.getElementById('plane-cut-axis-' + axisName);
+			planeCutAxis.addEventListener('change', planeCutAxisChanged);
+		});
 		planeCutChanged();
 		planeCutAxisChanged();
   }
@@ -377,6 +399,7 @@ window.addEventListener("DOMContentLoaded", function() {
 	var settingsCloseButton = document.getElementById('collapse-settings-button');
 	var settingsExpandButton = document.getElementById('expand-settings-button');
 	var cRealInput = document.getElementById('c-real');
+	var ambientInput = document.getElementById('ambient');
 	var lightDirectionX = document.getElementById('light-x');
 	var lightDirectionY = document.getElementById('light-y');
 	var lightDirectionZ = document.getElementById('light-z');
@@ -384,6 +407,7 @@ window.addEventListener("DOMContentLoaded", function() {
 	let locationOfFractalIterationDeltas = gl.getUniformLocation(pid, "fractalIterationDelta");
 	let locationOfLightDirection = gl.getUniformLocation(pid, "lightDirection");
 	let locationOfCReal = gl.getUniformLocation(pid, "cReal");
+	let locationOfAmbient = gl.getUniformLocation(pid, "ambientFactor");
 
 	function lightDirectionChanged() {
 		  var x = sanitizeFloat(lightDirectionX.value, 0);
@@ -399,6 +423,11 @@ window.addEventListener("DOMContentLoaded", function() {
 			  z /= m;
 		  }
 		  gl.uniform3fv(locationOfLightDirection, [x, y, z]);
+	}
+
+	function ambientChanged() {
+	  var val = sanitizeFloat(ambientInput.value);
+	  gl.uniform1f(locationOfAmbient, 1 - val);
 	}
 	  
 	function maxIterationsChanged() {
@@ -430,10 +459,12 @@ window.addEventListener("DOMContentLoaded", function() {
 	cRealInput.addEventListener('input', cRealChanged);
 	settingsCloseButton.addEventListener('click', settingsClose);
 	settingsExpandButton.addEventListener('click', settingsExpand);
+	ambientInput.addEventListener('input', ambientChanged);
 	showSphereOutlineChanged();
 	lightDirectionChanged();
 	maxIterationsChanged();
 	cRealChanged();
+	ambientChanged();
 	initPlaneCutSettings();
   }
 
