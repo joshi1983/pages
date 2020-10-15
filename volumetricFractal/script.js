@@ -17,6 +17,7 @@ window.addEventListener("DOMContentLoaded", function() {
   let locationOfScale = gl.getUniformLocation(pid, "scale");
   let locationOfIsShowingPlaneCut = gl.getUniformLocation(pid, "isShowingPlaneCut");
   let locationOfPlaneCutValue = gl.getUniformLocation(pid, "planeCutValue");
+  let locationOfPlaneCutAxis = gl.getUniformLocation(pid, "planeCutAxis");
   let rotationAngle = 0;
   var planeCutValue = document.getElementById('plane-cut-value');
   let pixelStretch = 1;
@@ -220,6 +221,7 @@ window.addEventListener("DOMContentLoaded", function() {
 		var lightSettings = document.getElementById('light-settings');
 		var showPlane = document.getElementById('show-plane');
 		var wideColumn = document.getElementById('wide-column');
+		var planeCutAxis = document.getElementById('plane-cut-axis');
 
 		function showPlaneCutUpdated() {
 			gl.uniform1i(locationOfIsShowingPlaneCut, isPlaneCut());
@@ -237,10 +239,17 @@ window.addEventListener("DOMContentLoaded", function() {
 				gl.uniform1f(locationOfPlaneCutValue, val);
 			}
 		}
+		
+		function planeCutAxisChanged() {
+			var val = parseInt(planeCutAxis.value);
+			gl.uniform1i(locationOfPlaneCutAxis, val);
+		}
 
 		showPlane.addEventListener('change', showPlaneCutUpdated);
 		planeCutValue.addEventListener('input', planeCutChanged);
+		planeCutAxis.addEventListener('change', planeCutAxisChanged);
 		planeCutChanged();
+		planeCutAxisChanged();
   }
   
   function initSettings() {

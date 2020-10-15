@@ -45,8 +45,20 @@
 					<div class="collapsible-row">
 						<div id="wide-column" class="show-light-settings">
 							<div id="cut-plane-settings">
-								<label for="plane-cut-value">Plane Cut Value</label>
-								<input type="range" id="plane-cut-value" value="0" step="0.01" min="-5" max="5">
+								<div id="axis-selector">
+									<label>Axis</label>
+									<select id="plane-cut-axis">
+										<option value="1">X</option>
+										<option value="2">Y</option>
+										<option value="3">Z</option>
+									</select>
+								</div>
+								<div id="plane-cut-value-selector">
+									<div class="labelled-input-pair">
+										<label for="plane-cut-value">Plane Cut Value</label>
+										<input type="range" id="plane-cut-value" value="0" step="0.01" min="-5" max="5">
+									</div>
+								</div>
 							</div>
 							<fieldset id="light-settings">
 								<legend>Light Direction</legend>
@@ -101,6 +113,7 @@ uniform float scale;
 uniform float sphereRadius;
 uniform float sphereRadiusSquared;
 uniform float planeCutValue;
+uniform int planeCutAxis;
 uniform bool isShowingPlaneCut;
 uniform bool isShowingCircumference;
 uniform vec3 lightDirection;
@@ -259,7 +272,15 @@ vec3 getColourAt(vec3 direction)
 vec3 getDiscColour(vec3 direction) {
 	vec3 result;
 
-	float distanceToPlane = (-position3D.x - planeCutValue) / direction.x;
+	float distanceToPlane;
+
+	if (planeCutAxis == 1)
+		distanceToPlane = (-position3D.x - planeCutValue) / direction.x;
+	else if (planeCutAxis == 2)
+		distanceToPlane = (-position3D.y - planeCutValue) / direction.y;
+	else
+		distanceToPlane = (-position3D.z - planeCutValue) / direction.z;
+	
 	if (distanceToPlane < 0.0)
 		return result;
 
