@@ -88,7 +88,38 @@ window.addEventListener("DOMContentLoaded", function() {
 			this._ratioUpdated();
 		}
 	}
+	class PixelSubsampling {
+		constructor() {
+			this.DEFAULT_QUALITY = 1;
+			this.DOWNLOAD_QUALITY = 2;
+			this.MAX_QUALITY = 5;
+			this.value = this.DEFAULT_QUALITY;
+			this.locationOfPixelSubsampling = gl.getUniformLocation(pid, "pixelSubsampling");
+			this._valueUpdated();
+		}
+		
+		_valueUpdated() {
+			gl.uniform1i(this.locationOfPixelSubsampling, this.value);
+		}
+		
+		useLowestQuality() {
+			this.value = this.DEFAULT_QUALITY;
+			this._valueUpdated();
+		}
+		
+		decreaseQuality() {
+			this.value = Math.max(this.DEFAULT_QUALITY, this.value - 1);
+			this._valueUpdated();
+		}
+		
+		increaseQuality() {
+			this.value = Math.min(this.MAX_QUALITY, this.value + 1);
+			this._valueUpdated();
+		}
+	}
+
   var lightObstructionDeltaRatio = new LightObstructionDelta();
+  var pixelSubsampling = new PixelSubsampling();
   
   function resized() {
 	  w = window.innerWidth;
@@ -101,6 +132,11 @@ window.addEventListener("DOMContentLoaded", function() {
 	  canvas.setAttribute('height', Math.round(h));
 	  gl.uniform2fv(locationOfCentre, [w / 2, h / 2]);
 	  gl.uniform1f(locationOfScale, 10.0 / (w + h));
+  }
+  
+  function setPixelSubsampling(newValue) {
+	isPixelSubsampling = newValue;
+	gl.uniform1i(locationOfIsPixelSubsampling, newValue);
   }
 
   function setRotationAngle(newAngle) {
@@ -115,6 +151,12 @@ window.addEventListener("DOMContentLoaded", function() {
   
   function improveFrameRateInResponseTo(currentFrameRate) {
 	  if (currentFrameRate < 10) {
+		  if (isPlaneCut()) {
+			if (pixelStretch === 1)
+				pixelSubsampling.decreaseQuality();
+			else
+				pixelSubsampling.useLowestQuality();
+		  }
 		  if (pixelStretch === 1 && !isPlaneCut() && !lightObstructionDeltaRatio.isLowestQuality()) {
 			lightObstructionDeltaRatio.decreaseQuality();
 			
@@ -132,6 +174,11 @@ window.addEventListener("DOMContentLoaded", function() {
 		  }
 		  else if (!isPlaneCut()) {
 			  lightObstructionDeltaRatio.increaseQuality();
+		  }
+		  else {
+			  if (currentFrameRate > 55) {
+				pixelSubsampling.increaseQuality();
+			  }
 		  }
 	  }
   }
@@ -224,6 +271,9 @@ window.addEventListener("DOMContentLoaded", function() {
 		var planeCutAxis = document.getElementById('plane-cut-axis');
 
 		function showPlaneCutUpdated() {
+			if (!isPlaneCut()) {
+				pixelSubsampling.useLowestQuality();
+			}
 			gl.uniform1i(locationOfIsShowingPlaneCut, isPlaneCut());
 			if (isPlaneCut()) {
 				wideColumn.setAttribute('class', 'show-plane-cut-settings');
