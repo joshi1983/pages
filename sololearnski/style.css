@@ -1,0 +1,189 @@
+html, body {
+	padding: 0;
+	margin: 0;
+	background-color: #000;
+}
+
+header {
+    padding-top: 7px;
+    padding-right: 5px;
+    text-align: right;
+    height: 30px;
+    background-color: #333;
+    user-select: none;    /* 
+    Prevent cursor dragging from selecting anything in the header.
+    It is easy to mistakenly drag the cursor there while zooming in and out.
+    */
+}
+
+canvas {
+    background-color: #000;
+    width: 100%;
+    height: calc(100vh - 40px);
+}
+
+header {
+    padding-top: 2px;
+}
+
+header button, header select, .dialog button, .dialog input {
+    background-color: #222;
+    padding: 5px;
+    color: #ddd;
+    border: #ddd;
+    cursor: pointer;
+    transition: color 0.3s, background-color 0.3s;
+}
+
+header button:hover, header select:hover, .dialog .text-center button:hover, .dialog input:hover {
+    background-color: #000;
+    color: #fff;
+}
+
+header button, header select {
+    height: 27px;
+    margin-top: 0;
+}
+
+header button {
+    font-size: 15px;
+}
+
+.resolution-buttons {
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+
+.progress-bar, .percentage-complete {
+    height: 10px;
+    background-color: #555;
+}
+
+.progress-bar .percentage-complete {
+    background-color: #fff;
+}
+
+.display {
+    position: relative;
+    overflow: hidden;
+}
+
+.zoom-in-box {
+    position: absolute;
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.2) inset, 0 0 5px rgba(0,0,0,0.2);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.dialog {
+    position: fixed;
+    display: none;
+    height: 200px;
+    width: 300px;
+    left: 50%;
+    top: 50%;
+    margin-left: -150px;
+    margin-top: -100px;
+    padding-left: 5px;
+    padding-right: 5px;
+    background-color: rgba(0, 0, 0, 0.7);
+    box-shadow: 0 0 5px #000 inset, 0 0 10px rgba(255, 255, 255, 0.3);
+    border: 1px solid #000;
+    border-radius: 5px;
+}
+
+body .dialog p.show-only-for-sololearnski {
+    display: none;
+}
+
+body.sololearnski .dialog.open:not(.open-to-download-picture) p.show-only-for-sololearnski {
+    display: inline-block;
+}
+
+.dialog .picture-download-options, .dialog .cancel {
+    display: none; /* Don't show these options by default.  Only when opening the dialog to download a picture */
+}
+
+.dialog .picture-download-options label {
+    width: 100px;
+}
+
+.dialog.open-to-download-picture .picture-download-options {
+    display: block;
+}
+
+.dialog.open-to-download-picture .cancel {
+    display: inline-block;
+}
+
+.dialog p {
+    display: none;
+}
+
+.dialog.no-inputs p {
+    display: block;
+    color: #fff;
+}
+
+.dialog label {
+    color: #fff;
+}
+
+.dialog.open {
+    display: block;
+}
+
+.dialog.open .inputs > div {
+    display: flex;
+    margin-bottom: 5px;
+}
+
+.dialog.open .inputs > div input {
+    width: 60%;
+    flex-grow: 1;
+    flex-shrink: 0;
+}
+
+.dialog .text-center {
+    text-align: center;
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    padding-bottom: 5px;
+}
+
+.vote-message {
+    text-align: center;
+    position: absolute;
+    top: 50%;
+    margin-top: -55px;
+    width: 100%;
+    font-size: 20px;
+    font-family: Consolas;
+    text-transform: uppercase;
+    opacity: 0;
+    background-color: rgba(0, 0, 0, 0.3);
+    padding: 5px;
+    box-shadow: 0 0 5px #000;
+    text-shadow: 0 0 15px #000, 0 0 10px #000, 0 0 8px #000, 0 0 5px #000;
+    animation: fadeout 8s;
+}
+
+.vote-message .vote {
+    color: #17a68a; 
+}
+
+.vote-message .instruction {
+    color: #fff;
+}
+
+a {
+    color: #ddd;
+}
+
+@keyframes fadeout {
+    from { opacity: 1;}
+    85%  { opacity: 1;}
+    to   { opacity: 0;}
+}
+
+
