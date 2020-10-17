@@ -351,7 +351,29 @@ window.addEventListener("DOMContentLoaded", function() {
 	  
 	  canvas.setAttribute('width', Math.round(w));
 	  canvas.setAttribute('height', Math.round(h));
-	  gl.uniform2fv(locationOfCentre, [w / 2, h / 2]);
+	  var cy = h / 2;
+	  var body = document.querySelector('body');
+	  var bodyClass = body.class;
+	  if (!bodyClass)
+		bodyClass = '';
+
+	  // if the settings are showing and it is more than 0.3 * h,
+	  // look for a better cy.
+	  if (bodyClass.indexOf('settings-collapsed') === -1 && sphereRadius !== undefined) {
+		  var settings = document.getElementById('settings');
+		  var settingsHeight = settings.clientHeight;
+		  if (settingsHeight > 0.3 * h) {
+			  	var r = sphereRadius.getValue();
+				if (r < 0.9 * rotationRadius && r < 0.5 * h) {
+					r = getRadiusFromSphereRadius(r, scaleValue);
+					var remainingHeight = h - settingsHeight;
+					if (remainingHeight > r * 2) {
+						cy = remainingHeight / 2;
+					}
+				}
+		  }
+	  }
+	  gl.uniform2fv(locationOfCentre, [w / 2, cy]);
 	  scaleValue = getScaleFromDimensions(w, h);
 	  gl.uniform1f(locationOfScale, scaleValue);
   }
