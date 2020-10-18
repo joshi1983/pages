@@ -36,6 +36,8 @@ window.addEventListener("DOMContentLoaded", function() {
 
 	class DownloadRenderer {
 		constructor() {
+			this.downloadBar = document.getElementById('render-and-download-progress');
+			this.progressBar = document.getElementById('download-progress-bar');
 			this.downloadButton = document.getElementById('download-image');
 			var outer = this;
 			this.downloadButton.addEventListener('click', function() {
@@ -43,8 +45,10 @@ window.addEventListener("DOMContentLoaded", function() {
 			});
 
 			this.isRenderingOrDownloading = false;
-			this.canvas = document.createElement('canvas');
-			this.gl = this.canvas.getContext('webgl', {
+			this.canvas2D = document.createElement('canvas');
+			this.g = this.canvas2D.getContext('2d');
+			this.canvasWebGL = document.createElement('canvas');
+			this.gl = this.canvasWebGL.getContext('webgl', {
 				'preserveDrawingBuffer': false
 			});
 			this.pid = this.gl.createProgram();
@@ -72,19 +76,32 @@ window.addEventListener("DOMContentLoaded", function() {
 			return result;
 		}
 		
+		_showDownloadProgress() {
+			this.downloadBar.setAttribute('class', 'shown');
+		}
+		
+		_hideDownloadProgress() {
+			this.downloadBar.setAttribute('class', '');
+		}
+		
+		_updateProgress() {
+			this.progressBar.setAttribute('value', 100.0 * this.left / this.w);
+		}
+		
 		startDownload() {
+			this._showDownloadProgress();
 			this.w = 1920;
 			this.h = 1080;
-			var lightObstructionDeltaRatio = 0.05;
+			var lightObstructionDeltaRatio = 0.04;
 			this.isRenderingOrDownloading = true;
-			this.canvas.setAttribute('width', this.w);
-			this.canvas.setAttribute('height', this.h);
+			this.canvas2D.setAttribute('width', this.w);
+			this.canvas2D.setAttribute('height', this.h);
 			var scaleValue = getScaleFromDimensions(this.w, this.h);
 			this.gl.uniform1f(this.uniforms.scale, scaleValue);
 			updateCircleRadiusRange(this.gl, this.w, this.h, scaleValue, this.uniforms.circleRadiusRange);
 			var pixelSubsamplingQuality = pixelSubsampling.DEFAULT_QUALITY;
 			if (isPlaneCut())
-				pixelSubsamplingQuality = 4;
+				pixelSubsamplingQuality = 5;
 			this.gl.uniform1i(this.uniforms.pixelSubsampling, pixelSubsamplingQuality);
 			this.gl.uniform2fv(this.uniforms.centre, [this.w / 2, this.h / 2]);
 			this.gl.uniform1f(this.uniforms.scale, getScaleFromDimensions(this.w, this.h));
@@ -123,22 +140,43 @@ window.addEventListener("DOMContentLoaded", function() {
 				}
 				uniformFunc.call(outer.gl, destinationOfUniform, val);
 			});
+			this.left = 0;
+			this.intervalSize = 5;
+			this.canvasWebGL.setAttribute('width', this.intervalSize);
+			this.canvasWebGL.setAttribute('height', this.h);
 			requestAnimationFrame(function() {
 				outer.updateDrawing();
 			});
 		}
 		
 		updateDrawing() {
-			drawGraphics(this.gl, this.w, this.h);
-			
-			this.downloadCanvas();
+			this.gl.uniform2fv(this.uniforms.centre, [this.w / 2 - this.left, this.h / 2]);
+			drawGraphics(this.gl, this.intervalSize, this.h);
+			var dataURL = this.canvasWebGL.toDataURL("image/png", 1.0);
+			var img = new Image();
+			var outer = this;
+			img.onload = function() {
+				outer.g.drawImage(img, outer.left, 0);
+				outer._updateProgress();
+				if (outer.left + outer.intervalSize >= outer.w) {
+					outer.downloadCanvas();
+				}
+				else {
+					outer.left += outer.intervalSize;
+					requestAnimationFrame(function() {
+						outer.updateDrawing();
+					});
+				}
+			}
+			img.src = dataURL;
 		}
 		
 		downloadCanvas() {
 			var outer = this;
-			this.canvas.toBlob(function(blob) {
+			this.canvas2D.toBlob(function(blob) {
 				saveAs(blob, 'cloud.png');
 				outer.isRenderingOrDownloading = false;
+				outer._hideDownloadProgress();
 			}, 'image/png', 0.98);
 		}
 
