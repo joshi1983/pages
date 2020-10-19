@@ -22,9 +22,11 @@ window.addEventListener("DOMContentLoaded", function() {
   let locationOfPlaneCutAxis = gl.getUniformLocation(pid, "planeCutAxis");
   let locationOfCircleRadiusRange = gl.getUniformLocation(pid, "circleRadiusRange");
   let locationOfShowingCircumference = gl.getUniformLocation(pid, "isShowingCircumference");
+  let locationOfOpacityCutOff = gl.getUniformLocation(pid, "opacityCutOff");
   let rotationAngle = 0;
   let scaleValue = 100;
   var planeCutValue = document.getElementById('plane-cut-value');
+  var peakOpacityInput = document.getElementById('peak-opacity');
   let pixelStretch = 1;
   var ambientInput = document.getElementById('ambient');
   resized();
@@ -58,7 +60,7 @@ window.addEventListener("DOMContentLoaded", function() {
 			this.uniforms = this.getUniforms([
 				'ambientFactor', 'centre', 'circleRadiusRange', 'cReal',
 				'fractalIterationDelta', 'isShowingCircumference', 'isShowingPlaneCut',
-				'lightDirection', 'lightObstructionDeltaRatio', 'peakSampleOpacity',
+				'lightDirection', 'lightObstructionDeltaRatio', 'opacityCutOff', 'peakSampleOpacity',
 				'pixelSubsampling', 'planeCutValue', 'planeCutAxis',
 				'position3D', 'scale', 
 				'sphereRadius', 'sphereRadiusSquared',
@@ -92,7 +94,7 @@ window.addEventListener("DOMContentLoaded", function() {
 			this._showDownloadProgress();
 			this.w = 1920;
 			this.h = 1080;
-			var lightObstructionDeltaRatio = 0.04;
+			var lightObstructionDeltaRatio = 0.02;
 			this.isRenderingOrDownloading = true;
 			this.canvas2D.setAttribute('width', this.w);
 			this.canvas2D.setAttribute('height', this.h);
@@ -106,7 +108,9 @@ window.addEventListener("DOMContentLoaded", function() {
 			this.gl.uniform2fv(this.uniforms.centre, [this.w / 2, this.h / 2]);
 			this.gl.uniform1f(this.uniforms.scale, getScaleFromDimensions(this.w, this.h));
 			this.gl.uniform1f(this.uniforms.lightObstructionDeltaRatio, lightObstructionDeltaRatio);
-			this.gl.uniform1f(this.uniforms.peakSampleOpacity, getPeakOpacityForLightObstructionDeltaRatio(lightObstructionDeltaRatio));
+			var peakSampleOpacity = getPeakOpacityForLightObstructionDeltaRatio(lightObstructionDeltaRatio);
+			this.gl.uniform1f(this.uniforms.peakSampleOpacity, peakSampleOpacity);
+			this.gl.uniform1f(this.uniforms.opacityCutOff, getOpacityCutOffFromPeakSampleOpacity(peakSampleOpacity));
 			
 			sphereRadius.updateUniforms(this.gl, this.w, this.h, this.uniforms.sphereRadiusSquared,
 				this.uniforms.sphereRadiusWithPlaneLineSquared);
@@ -150,6 +154,9 @@ window.addEventListener("DOMContentLoaded", function() {
 		}
 		
 		updateDrawing() {
+			if (this.updateLoopStartTime === undefined) {
+				this.updateLoopStartTime = new Date().getTime();
+			}
 			this.gl.uniform2fv(this.uniforms.centre, [this.w / 2 - this.left, this.h / 2]);
 			drawGraphics(this.gl, this.intervalSize, this.h);
 			var dataURL = this.canvasWebGL.toDataURL("image/png", 1.0);
@@ -157,15 +164,26 @@ window.addEventListener("DOMContentLoaded", function() {
 			var outer = this;
 			img.onload = function() {
 				outer.g.drawImage(img, outer.left, 0);
-				outer._updateProgress();
 				if (outer.left + outer.intervalSize >= outer.w) {
 					outer.downloadCanvas();
 				}
 				else {
 					outer.left += outer.intervalSize;
-					requestAnimationFrame(function() {
+					var newTime = new Date().getTime();
+					var maxLoopTime = 50;
+					if (newTime - outer.updateLoopStartTime > maxLoopTime) {
+						outer._updateProgress();
+						this.updateLoopStartTime = undefined;
+						requestAnimationFrame(function() {
+							outer.updateDrawing();
+						});
+					}
+					else {
+						// no delay.  continue immediately so the 
+						// render completes faster.
 						outer.updateDrawing();
-					});
+					}
+					
 				}
 			}
 			img.src = dataURL;
@@ -194,6 +212,10 @@ window.addEventListener("DOMContentLoaded", function() {
 			this.ratio = this.DEFAULT_QUALITY;
 			this.uniformLocation = gl.getUniformLocation(pid, "lightObstructionDeltaRatio");
 			this._ratioUpdated();
+			var outer = this;
+			peakOpacityInput.addEventListener('input', function() {
+				outer._ratioUpdated();
+			});
 		}
 		
 		_ratioUpdated() {
@@ -313,15 +335,8 @@ window.addEventListener("DOMContentLoaded", function() {
 		}
 	}
 	
-	// This is an approximation.
-	// The exact relationship wasn't found.
 	function getPeakOpacityForLightObstructionDeltaRatio(lightObstructionDeltaRatio) {
-		var x = lightObstructionDeltaRatio;
-		var result = 0.1 + x * 0.6 + 3.2 * x * x;
-
-		// sanitize into a valid range.
-		result = Math.max(0.001, Math.min(1, result));
-		return result;
+		return lightObstructionDeltaRatio * getPeakOpacityInputValue();
 	}
 	
 	class SampleOpacity {
@@ -334,6 +349,7 @@ window.addEventListener("DOMContentLoaded", function() {
 		_updated() {
 			var newOpacity = getPeakOpacityForLightObstructionDeltaRatio(this.lightObstructionRatio);
 			gl.uniform1f(this.locationOfPeakSampleOpacity, newOpacity);
+			gl.uniform1f(locationOfOpacityCutOff, getOpacityCutOffFromPeakSampleOpacity(newOpacity));
 		}
 
 		setValueFromLightObstructionRatio(lightObstructionRatio) {
@@ -374,6 +390,14 @@ window.addEventListener("DOMContentLoaded", function() {
 			return defaultVal;
 		else
 			return v;
+	}
+	
+	function getPeakOpacityInputValue() {
+		return sanitizeFloat(peakOpacityInput.value, 2.0);
+	}
+
+	function getOpacityCutOffFromPeakSampleOpacity(newOpacity) {
+		return 0.05 * newOpacity;
 	}
 	
 	function getScaleFromDimensions(w, h) {

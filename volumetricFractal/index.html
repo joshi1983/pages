@@ -94,17 +94,23 @@
 											<input id="light-z" type="range" value="0" step="0.001" min="-1" max="1">
 										</div>
 									</div>
-									<div class="col-sm-12">
+									<div class="col-sm-6">
 										<div class="labelled-input-pair">
 											<label for="ambient">Ambient</label>
 											<input id="ambient" type="range" value="0.05" step="0.001" min="0" max="1">
+										</div>
+									</div>
+									<div class="col-sm-6">
+										<div class="labelled-input-pair">
+											<label for="peak-opacity">Opacity</label>
+											<input id="peak-opacity" type="range" value="2.0" step="0.001" min="0.001" max="10">
 										</div>
 									</div>
 								</div>
 							</fieldset>
 						</div>
 						<div class="toggler-container">
-							<button id="download-image" class="fa fa-download"></button>
+							<button id="download-image" class="fa fa-download" title="Download High Quality HD image"></button>
 							<button id="collapse-settings-button" class="fa fa-arrow-circle-o-up"><span class="sr-only">Toggle</span></button>
 						</div>
 					</div>
@@ -140,6 +146,7 @@ uniform bool isShowingPlaneCut;
 uniform vec3 lightDirection;
 uniform float lightObstructionDeltaRatio;
 uniform float peakSampleOpacity;
+uniform float opacityCutOff;
 uniform int pixelSubsampling;
 uniform int planeCutAxis;
 uniform float planeCutValue;
@@ -269,7 +276,7 @@ vec3 getColourAt(vec3 direction)
 		point += deltaVector;
 		float sampledValue = getValue(point);
 		float density = sampledValue * peakSampleOpacity;
-		if (density > 0.01) {
+		if (density > opacityCutOff) {
 			float ratio = remainingOpacity * density;
 			vec3 colour = getColourFromDensity(sampledValue);
 			if (ambientFactor > 0.01)
@@ -278,7 +285,7 @@ vec3 getColourAt(vec3 direction)
 			result += colour * ratio;
 			totalRatio += ratio;
 			remainingOpacity = remainingOpacity * (1.0 - density);
-			if (remainingOpacity < 0.01) {
+			if (remainingOpacity < opacityCutOff) {
 				break;
 			}
 		}
