@@ -559,14 +559,14 @@ window.addEventListener("DOMContentLoaded", function() {
   }
   
   function loadShaders(gl, pid) {
-	  shader(gl, pid, 'glsl/vertex', gl.VERTEX_SHADER);
-	  shader(gl, pid, 'glsl/fragment', gl.FRAGMENT_SHADER);
+	  shader(gl, pid, 'script[type="glsl/vertex"]', gl.VERTEX_SHADER);
+	  shader(gl, pid, '#main-fragment-shader', gl.FRAGMENT_SHADER);
 	  gl.linkProgram(pid);
 	  gl.useProgram(pid);
   }
 
-  function shader(gl, pid, name, type) {
-    let src = [].slice.call(document.scripts).find(s => s.type === name).innerText;
+  function shader(gl, pid, cssSelector, type) {
+    let src = document.querySelector(cssSelector).innerText;
     let sid = gl.createShader(type);
     gl.shaderSource(sid, src);
     gl.compileShader(sid);
