@@ -90,6 +90,15 @@ window.addEventListener("DOMContentLoaded", function() {
 			this.progressBar.setAttribute('value', 100.0 * this.left / this.w);
 		}
 		
+		_fillBlackBackground() {
+			var g = this.g;
+			g.fillStyle = '#000';
+			g.beginPath();
+			g.rect(0, 0, this.w, this.h);
+			g.closePath();
+			g.fill();
+		}
+		
 		startDownload() {
 			this._showDownloadProgress();
 			this.w = 1920;
@@ -100,7 +109,7 @@ window.addEventListener("DOMContentLoaded", function() {
 			this.canvas2D.setAttribute('height', this.h);
 			var scaleValue = getScaleFromDimensions(this.w, this.h);
 			this.gl.uniform1f(this.uniforms.scale, scaleValue);
-			updateCircleRadiusRange(this.gl, this.w, this.h, scaleValue, this.uniforms.circleRadiusRange);
+			var maxPixelRadius = updateCircleRadiusRange(this.gl, this.w, this.h, scaleValue, this.uniforms.circleRadiusRange);
 			var pixelSubsamplingQuality = pixelSubsampling.DEFAULT_QUALITY;
 			if (isPlaneCut())
 				pixelSubsamplingQuality = 5;
@@ -144,7 +153,9 @@ window.addEventListener("DOMContentLoaded", function() {
 				}
 				uniformFunc.call(outer.gl, destinationOfUniform, val);
 			});
-			this.left = 0;
+			this._fillBlackBackground();
+			this.left = Math.floor(Math.max(0, this.w / 2 - maxPixelRadius));
+			this.maxToRender = Math.ceil(Math.min(this.w, this.w / 2 + maxPixelRadius));
 			this.intervalSize = 5;
 			this.canvasWebGL.setAttribute('width', this.intervalSize);
 			this.canvasWebGL.setAttribute('height', this.h);
@@ -164,7 +175,7 @@ window.addEventListener("DOMContentLoaded", function() {
 			var outer = this;
 			img.onload = function() {
 				outer.g.drawImage(img, outer.left, 0);
-				if (outer.left + outer.intervalSize >= outer.w) {
+				if (outer.left + outer.intervalSize >= outer.maxToRender) {
 					outer.downloadCanvas();
 				}
 				else {
@@ -519,6 +530,7 @@ window.addEventListener("DOMContentLoaded", function() {
 		setSphereOutlineUniformOnly(gl, locationOfShowingCircumference, false);
 		var size = sanitizeFloat(w + h, 18000);
 		gl.uniform2fv(locationOfCircleRadiusRange, [size, size]);
+		return size;
 	}
 	else {
 		showSphereOutlineChanged(gl, locationOfShowingCircumference, w, h);
@@ -526,6 +538,7 @@ window.addEventListener("DOMContentLoaded", function() {
 		var min = getRadiusFromSphereRadius(r, scaleValue);
 		var max = getRadiusFromSphereRadius(r * (1 + getOutlineThickness(w, h) * scaleValue), scaleValue);
 		gl.uniform2fv(locationOfCircleRadiusRange, [min, max]);
+		return max;
 	}
   }
   
