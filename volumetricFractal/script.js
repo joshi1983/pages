@@ -6,11 +6,11 @@ Written by Josh Greig around October 17, 2020.
 
 window.addEventListener("DOMContentLoaded", function() {
   let showSphereOutlineInput = document.getElementById('show-outline');
-  let canvas = document.querySelector('canvas');
+  let canvas = document.querySelector('#main-canvas');
   let gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
   let pid = gl.createProgram();
-  var h;
-  var w;
+  var h = canvas.clientHeight;
+  var w = canvas.clientWidth;
   loadShaders(gl, pid);
   let coords = gl.getAttribLocation(pid, "coords");
   let locationOfCentre = gl.getUniformLocation(pid, "centre");
@@ -27,14 +27,218 @@ window.addEventListener("DOMContentLoaded", function() {
   let scaleValue = 100;
   var planeCutValue = document.getElementById('plane-cut-value');
   var peakOpacityInput = document.getElementById('peak-opacity');
+	var cRealInput = document.getElementById('c-real');
   let pixelStretch = 1;
   var ambientInput = document.getElementById('ambient');
-  resized();
 
 	initCoords(gl, coords);
   var times = [];
   var rotationRadius = 2.0;
   var oldMouseX, oldMouseY, oldTouchX, oldTouchY;
+
+	// This is important for managing browser view zoom.
+	// A zoom other than 100% causes canvas.clientWidth != viewport width.
+	function getViewportDimensions() {
+		var vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
+		var vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);	
+		return [vw, vh];
+	}
+
+	class MandelbrotDisplay {
+		constructor() {
+			this.div = document.getElementById('mandelbrot-display');
+			this.canvas = this.div.querySelector('canvas');
+			this.g = this.canvas.getContext('2d');
+			this.canvasWebGL = document.createElement('canvas');
+			var options = {
+				'preserveDrawingBuffer': false
+			};
+			this.gl = this.canvasWebGL.getContext('webgl', options) || this.canvasWebGL.getContext('experimental-webgl', options);
+			this.pid = this.gl.createProgram();
+			this.loadShaders(this.gl, this.pid);
+			this.coords = this.gl.getAttribLocation(this.pid, 'coords');
+			initCoords(this.gl, this.coords);
+			this.uniforms = {};
+			var uniformKeys = ['centre', 'fractalIterationDelta',
+				'pixelSubsampling', 'scale'];
+			var outer = this;
+			uniformKeys.forEach(function(key) {
+				outer.uniforms[key] = outer.gl.getUniformLocation(outer.pid, key);
+			});
+			document.addEventListener('sphere-radius-change', function() {
+				outer.sphereRadiusChanged();
+			});
+			this.isVisible = false;
+			this.updateVisibility();
+		}
+
+		loadShaders(gl, pid) {
+			shader(gl, pid, 'script[type="glsl/vertex"]', gl.VERTEX_SHADER);
+			shader(gl, pid, '#mandelbrot-fragment-shader', gl.FRAGMENT_SHADER);
+			gl.linkProgram(pid);
+			gl.useProgram(pid);
+		}
+
+		_drawMandelbrot(glDestination, pidDestination, w, h, uniforms) {
+			var r = 2;
+			if (sphereRadius !== undefined)
+				r = sphereRadius.getValue();
+			this.scale = getScaleFromDimensions(w, h) * 0.8 * r / 2.0;
+			glDestination.uniform1i(uniforms.pixelSubsampling, 2);
+			glDestination.uniform1f(uniforms.scale, this.scale);
+			glDestination.uniform2fv(uniforms.centre, [w/2, h/2]);
+			['fractalIterationDelta'].forEach(function(key) {
+				copyUniform(gl, glDestination, pid, pidDestination, key);
+			});
+			drawGraphics(glDestination, w, h);
+		}
+		
+		shouldBeVisible() {
+			// would this mandelbrot display overlap the sphere?
+			var dimensions = getViewportDimensions();
+			var w = dimensions[0];
+			var h = dimensions[1];
+			var size = this._getSizeFromFullCanvas(w, h);
+			var scaleValue = getScaleFromDimensions(w, h);
+			var radius = getMaxCircleRadius(w, h, scaleValue);
+			var centre = getCentre();
+			centre = [centre[0] * pixelStretch, centre[1] * pixelStretch];
+			var x = size;
+			var y = h - size;
+			var dx = centre[0] - x;
+			var dy = centre[1] - y;
+			return Math.sqrt(dx * dx + dy * dy) > radius;
+		}
+
+		updateVisibility() {
+			var shouldShow = this.shouldBeVisible();
+			if (shouldShow !== this.isVisible) {
+				this.isVisible = shouldShow;
+				if (shouldShow) {
+					this.div.style.display = 'block';
+					this.updateSize();
+				}
+				else {
+					this.div.style.display = 'none';
+				}
+				return true;
+			}
+			return false;
+		}
+		
+		cRealUpdated() {
+			this._drawCRealAndDot();
+		}
+		
+		planeCutAxisChanged() {
+			this._drawCRealAndDot();
+		}
+		
+		sphereRadiusChanged() {
+			if (!this.updateVisibility())
+				this._drawAll();
+		}
+		
+		maxIterationsChanged() {
+			this._drawAll();
+		}
+
+		_replaceWebGLImage() {
+			this.latestImgLoaded = false;
+			this.latestImg = new Image();
+			var dataURL = this.canvasWebGL.toDataURL('image/png', 1.0);
+			var outer = this;
+			this.latestImg.addEventListener('load', function() {
+				outer.latestImgLoaded = true;
+			});
+			this.latestImg.src = dataURL;
+		}
+
+		// The callback function is to simulate an async function.
+		// I just don't want this to break if the browser doesn't 
+		// support keywords like async and await.
+		_copyWebGLCanvas(successCallback) {
+			var outer = this;
+			if (this.latestImgLoaded) {
+				outer.g.clearRect(0,0,outer.w, outer.h);
+				outer.g.drawImage(outer.latestImg, 0, 0);
+				if (successCallback)
+					successCallback();
+			}
+			else
+			this.latestImg.addEventListener('load', function() {
+				outer.g.clearRect(0,0,outer.w, outer.h);
+				outer.g.drawImage(outer.latestImg, 0, 0);
+				if (successCallback)
+					successCallback();
+			});
+		}
+
+		_drawCRealAndDot() {
+			if (!this.isVisible) {
+				return; // don't waste time if it won't show.
+			}
+			var outer = this;
+			this._copyWebGLCanvas(function() {
+				var rv = getCRealValue();
+				var scale = outer.scale;
+				rv = (rv / scale) + outer.w / 2;
+				var lineThickness = 0.03 / scale;
+				var circleRadius = 0.05 / scale;
+				outer.g = outer.canvas.getContext('2d');
+				outer.g.fillStyle = '#fff';
+				outer.g.strokeStyle = '#000';
+				outer.g.lineWidth = 0.01 / scale;
+				outer.g.beginPath();
+				outer.g.rect(rv, 0, lineThickness, outer.h);
+				outer.g.closePath();
+				outer.g.fill();
+				outer.g.stroke();
+				
+				// if the cut plane is showing and the axis is z, show a dot.
+				if (isPlaneCut() && getPlaneCutAxisValue() === 3) {
+					var mandelbrotY = getPlaneCutValue() / outer.scale + outer.h / 2;
+					outer.g.fillStyle = '#00f';
+					outer.g.beginPath();
+					outer.g.arc(rv, mandelbrotY, circleRadius, 0, Math.PI * 2);
+					outer.g.closePath();
+					outer.g.fill();
+					outer.g.stroke();
+				}
+			});
+		}
+		
+		_drawAll() {
+			this._drawMandelbrot(this.gl, this.pid, this.w, this.h, this.uniforms);
+			this.gl.finish();
+			this._replaceWebGLImage();
+			this._drawCRealAndDot();
+		}
+
+		_getSizeFromFullCanvas(w, h) {
+			return Math.round(Math.min(w, h) * 0.3);
+		}
+
+		updateSize() {
+			if (!this.isVisible || this.updateVisibility()) {
+				return; // don't waste time if it won't show.
+			}
+			var dimensions = getViewportDimensions();
+			var size = this._getSizeFromFullCanvas(dimensions[0], dimensions[1]);
+			var s = size + 'px';
+			[this.div, this.canvas].forEach(function(e) {
+				e.style.height = s;
+				e.style.width = s;
+			});
+			this.w = size;
+			this.h = size;
+			[this.canvasWebGL, this.canvas].forEach(function(c) {
+				c.setAttribute('width', size);
+				c.setAttribute('height', size);
+			});
+			this._drawAll();
+		}
+	}
 
 	class DownloadRenderer {
 		constructor() {
@@ -66,7 +270,7 @@ window.addEventListener("DOMContentLoaded", function() {
 				'sphereRadius', 'sphereRadiusSquared',
 				'sphereRadiusWithPlaneLineSquared',
 				'viewRotation'
-				]);
+			]);
 		}
 		
 		getUniforms(keys) {
@@ -129,29 +333,7 @@ window.addEventListener("DOMContentLoaded", function() {
 			'lightDirection',
 			'planeCutAxis', 'planeCutValue', 'sphereRadiusSquared',
 			'sphereRadiusWithPlaneLineSquared', 'position3D', 'viewRotation'].forEach(function(key) {
-				var locationOfUniform = gl.getUniformLocation(pid, key);
-				var destinationOfUniform = outer.gl.getUniformLocation(outer.pid, key);
-				if (!locationOfUniform) {
-					console.log('Weird.  Not found: ' + key + ', locationOfUniform: ', locationOfUniform);
-				}
-				var val = gl.getUniform(pid, locationOfUniform);
-				var uniformFunc;
-				if (typeof val === 'boolean') {
-					uniformFunc = outer.gl.uniform1i;
-				}
-				else if (typeof val === 'number') {
-					if (Math.floor(val) !== val)
-						uniformFunc = outer.gl.uniform1f;
-					else
-						uniformFunc = outer.gl.uniform1i;
-				}
-				else if (val instanceof Float32Array) {
-					if (val.length === 2)
-						uniformFunc = outer.gl.uniform2fv;
-					else
-						uniformFunc = outer.gl.uniform3fv;
-				}
-				uniformFunc.call(outer.gl, destinationOfUniform, val);
+				copyUniform(gl, outer.gl, pid, outer.pid, key);
 			});
 			this._fillBlackBackground();
 			this.left = Math.floor(Math.max(0, this.w / 2 - maxPixelRadius));
@@ -194,7 +376,6 @@ window.addEventListener("DOMContentLoaded", function() {
 						// render completes faster.
 						outer.updateDrawing();
 					}
-					
 				}
 			}
 			img.src = dataURL;
@@ -206,7 +387,7 @@ window.addEventListener("DOMContentLoaded", function() {
 				saveAs(blob, 'cloud.png');
 				outer.isRenderingOrDownloading = false;
 				outer._hideDownloadProgress();
-			}, 'image/png', 0.98);
+			}, 'image/png', 0.99);
 		}
 
 		isDownloading() {
@@ -338,7 +519,8 @@ window.addEventListener("DOMContentLoaded", function() {
 				this.locationOfSphereRadiusWithPlaneLineSquared);
 			planeCutValue.setAttribute('min', -val);
 			planeCutValue.setAttribute('max', val);
-			planeCutValue.value = Math.max(-val, Math.min(val, planeCutValue.value));
+			planeCutValue.value = Math.max(-val, Math.min(val, getPlaneCutValue()));
+			document.dispatchEvent(new Event('sphere-radius-change'));
 		}
 
 		getValue() {
@@ -346,8 +528,44 @@ window.addEventListener("DOMContentLoaded", function() {
 		}
 	}
 	
+	function getPlaneCutValue() {
+		return sanitizeFloat(planeCutValue.value, 0);
+	}
+	
 	function getPeakOpacityForLightObstructionDeltaRatio(lightObstructionDeltaRatio) {
 		return lightObstructionDeltaRatio * getPeakOpacityInputValue();
+	}
+	
+	function copyUniform(glFrom, glDestination, pidFrom, pidDestination, key) {
+		var locationOfUniform = glFrom.getUniformLocation(pidFrom, key);
+		var destinationOfUniform = glDestination.getUniformLocation(pidDestination, key);
+		if (!locationOfUniform) {
+			console.log('Weird.  Not found: ' + key + ', locationOfUniform: ', locationOfUniform);
+		}
+		var val = gl.getUniform(pid, locationOfUniform);
+		var uniformFunc;
+		if (typeof val === 'boolean') {
+			uniformFunc = glDestination.uniform1i;
+		}
+		else if (typeof val === 'number') {
+			if (Math.floor(val) !== val || [
+			'cReal', 'sphereRadiusSquared', 'peakSampleOpacity', 'planeCutValue', 
+			'fractalIterationDelta', 'scale', 'ambientFactor', 'sphereRadiusWithPlaneLineSquared'
+			].indexOf(key) !== -1)
+				uniformFunc = glDestination.uniform1f;
+			else
+				uniformFunc = glDestination.uniform1i;
+		}
+		else if (val instanceof Float32Array) {
+			if (val.length === 2)
+				uniformFunc = glDestination.uniform2fv;
+			else
+				uniformFunc = glDestination.uniform3fv;
+		}
+		else {
+			throw new Error('Unrecognized uniform type for: ', val);
+		}
+		uniformFunc.call(glDestination, destinationOfUniform, val);
 	}
 	
 	class SampleOpacity {
@@ -369,6 +587,8 @@ window.addEventListener("DOMContentLoaded", function() {
 		}
 	}
 
+  var mandelBrotDisplay = new MandelbrotDisplay();
+  resized();
   var downloader = new DownloadRenderer();
   var sampleOpacity = new SampleOpacity();
   var sphereRadius = new SphereRadius();
@@ -414,16 +634,11 @@ window.addEventListener("DOMContentLoaded", function() {
 	function getScaleFromDimensions(w, h) {
 		return 7.0 / (w + h);
 	}
-  
-  function resized() {
-	  w = window.innerWidth;
-	  h = window.innerHeight;
-	  
-	  w /= pixelStretch;
-	  h /= pixelStretch;
-	  
-	  canvas.setAttribute('width', Math.round(w));
-	  canvas.setAttribute('height', Math.round(h));
+	
+	// returns value to be used in shader's uniform.
+	// In other words, this isn't returning pixel coordinates.
+	// You need the multiply the values by pixelStretch to get the pixel coordinates.
+	function getCentre() {
 	  var cy = h / 2;
 	  var body = document.querySelector('body');
 	  var bodyClass = body.class;
@@ -434,7 +649,7 @@ window.addEventListener("DOMContentLoaded", function() {
 	  // look for a better cy.
 	  if (bodyClass.indexOf('settings-collapsed') === -1 && sphereRadius !== undefined) {
 		  var settings = document.getElementById('settings');
-		  var settingsHeight = settings.clientHeight;
+		  var settingsHeight = settings.clientHeight / pixelStretch;
 		  if (settingsHeight > 0.3 * h) {
 			  	var r = sphereRadius.getValue();
 				if (r < 0.9 * rotationRadius && r < 0.5 * h) {
@@ -446,9 +661,32 @@ window.addEventListener("DOMContentLoaded", function() {
 				}
 		  }
 	  }
-	  gl.uniform2fv(locationOfCentre, [w / 2, cy]);
+	  return [w / 2, cy];
+	}
+
+  function updateCentre() {
+	  var newCentre = getCentre();
+	  gl.uniform2fv(locationOfCentre, newCentre);
+	  mandelBrotDisplay.updateVisibility();
+  }
+  
+  function refreshPixelStretchCentreAndScale() {
+	  w = window.innerWidth;
+	  h = window.innerHeight;
+	  
+	  w /= pixelStretch;
+	  h /= pixelStretch;
+	  updateCentre();
+	  
+	  canvas.setAttribute('width', Math.round(w));
+	  canvas.setAttribute('height', Math.round(h));
 	  scaleValue = getScaleFromDimensions(w, h);
 	  gl.uniform1f(locationOfScale, scaleValue);
+  }
+  
+  function resized() {
+	  refreshPixelStretchCentreAndScale();
+	  mandelBrotDisplay.updateSize();
   }
 
   function setPixelSubsampling(newValue) {
@@ -479,16 +717,20 @@ window.addEventListener("DOMContentLoaded", function() {
 			lightObstructionDeltaRatio.decreaseQuality();
 			
 			// If the frame rate is terrible, increase pixelStretch immediately.
-			if (currentFrameRate < 5)
+			if (currentFrameRate < 5) {
 				pixelStretch++;
+				refreshPixelStretchCentreAndScale();
+			}
 		  }
 		  else {
 			pixelStretch++;
+			refreshPixelStretchCentreAndScale();
 		  }
 	  }
 	  else if (currentFrameRate > 40) {
 		  if (pixelStretch > 1) {
-			  pixelStretch--;
+				pixelStretch--;
+				refreshPixelStretchCentreAndScale();
 		  }
 		  else if (!isPlaneCut()) {
 			  lightObstructionDeltaRatio.increaseQuality();
@@ -523,23 +765,46 @@ window.addEventListener("DOMContentLoaded", function() {
 		var rad = Math.tan(a) / scaleValue;
 		return rad;
   }
+  
+  function getCircleRadius(w, h, scaleValue) {
+	var r = 2;
+	if (sphereRadius)
+		r = sphereRadius.getValue();
+	if (r > 0.97 * rotationRadius) {
+		return sanitizeFloat(w + h, 18000);
+	}
+	else {
+		return getRadiusFromSphereRadius(r, scaleValue);
+	}
+  }
+  
+  function getMaxCircleRadius(w, h, scaleValue) {
+	var r = 2;
+	if (sphereRadius)
+		r = sphereRadius.getValue();
+	var min = getCircleRadius(w, h, scaleValue);
+	if (r > 0.97 * rotationRadius) {
+		return min;
+	}
+	else {
+		var max = getRadiusFromSphereRadius(r * (1 + getOutlineThickness(w, h) * scaleValue), scaleValue);
+		return max;
+	}
+  }
 
   function updateCircleRadiusRange(gl, w, h, scaleValue, locationOfCircleRadiusRange, locationOfShowingCircumference) {
 	var r = sphereRadius.getValue();
+	var min = getCircleRadius(w, h, scaleValue);
+	var max = getMaxCircleRadius(w, h, scaleValue);
 	if (r > 0.97 * rotationRadius) {
 		setSphereOutlineUniformOnly(gl, locationOfShowingCircumference, false);
-		var size = sanitizeFloat(w + h, 18000);
-		gl.uniform2fv(locationOfCircleRadiusRange, [size, size]);
-		return size;
 	}
 	else {
 		showSphereOutlineChanged(gl, locationOfShowingCircumference, w, h);
-		// rotationRadius
-		var min = getRadiusFromSphereRadius(r, scaleValue);
-		var max = getRadiusFromSphereRadius(r * (1 + getOutlineThickness(w, h) * scaleValue), scaleValue);
 		gl.uniform2fv(locationOfCircleRadiusRange, [min, max]);
-		return max;
 	}
+	gl.uniform2fv(locationOfCircleRadiusRange, [min, max]);
+	return max;
   }
   
   function drawGraphics(gl, w, h) {
@@ -551,7 +816,6 @@ window.addEventListener("DOMContentLoaded", function() {
   function draw() {
 	  if (!downloader.isDownloading()) {
 		processTimeChange();
-		resized();
 		updateCircleRadiusRange(gl, w, h, scaleValue, locationOfCircleRadiusRange);
 		drawGraphics(gl, w, h);
 	  }
@@ -574,8 +838,9 @@ window.addEventListener("DOMContentLoaded", function() {
   }
   
   function processDrag(dx, dy) {
-		rotationAngle += dx * 0.002;
-		rotationRadius += dy * 0.004;
+	rotationAngle += dx * 0.002;
+	rotationRadius += dy * 0.004;
+	mandelBrotDisplay.updateVisibility();
   }
 
   function mouseMoved(event) {
@@ -625,6 +890,19 @@ window.addEventListener("DOMContentLoaded", function() {
 	  oldTouchY = undefined;
   }
   
+  function getPlaneCutValue() {
+	return sanitizeFloat(planeCutValue.value, 0);
+  }
+  
+  function getPlaneCutAxisValue() {
+		var checkedPlaneCutAxisInput = document.querySelector('[name="plane-cut-axis"]:checked');
+		return parseInt(checkedPlaneCutAxisInput.value);
+  }
+  
+  function getCRealValue() {
+	return sanitizeFloat(cRealInput.value, 0.7);
+  }
+  
   function initPlaneCutSettings() {
 		var lightSettings = document.getElementById('light-settings');
 		var showPlane = document.getElementById('show-plane');
@@ -641,17 +919,19 @@ window.addEventListener("DOMContentLoaded", function() {
 			else {
 				wideColumn.setAttribute('class', 'show-light-settings');
 			}
+			mandelBrotDisplay.planeCutAxisChanged();
 		}
 
 		function planeCutChanged() {
-			var val = sanitizeFloat(planeCutValue.value, 0);
+			var val = getPlaneCutValue();
 			gl.uniform1f(locationOfPlaneCutValue, val);
+			mandelBrotDisplay.cRealUpdated();
 		}
 		
 		function planeCutAxisChanged() {
-			var checkedPlaneCutAxisInput = document.querySelector('[name="plane-cut-axis"]:checked');
-			var val = parseInt(checkedPlaneCutAxisInput.value);
+			var val = getPlaneCutAxisValue();
 			gl.uniform1i(locationOfPlaneCutAxis, val);
+			mandelBrotDisplay.planeCutAxisChanged();
 		}
 
 		showPlane.addEventListener('change', showPlaneCutUpdated);
@@ -673,7 +953,6 @@ window.addEventListener("DOMContentLoaded", function() {
 	var body = document.querySelector('body');
 	var settingsCloseButton = document.getElementById('collapse-settings-button');
 	var settingsExpandButton = document.getElementById('expand-settings-button');
-	var cRealInput = document.getElementById('c-real');
 	var lightDirectionX = document.getElementById('light-x');
 	var lightDirectionY = document.getElementById('light-y');
 	var lightDirectionZ = document.getElementById('light-z');
@@ -709,11 +988,13 @@ window.addEventListener("DOMContentLoaded", function() {
 				val = 20;
 
 			gl.uniform1f(locationOfFractalIterationDeltas, 1.0 / val);
+			mandelBrotDisplay.maxIterationsChanged();
 	}
 	  
 	  function cRealChanged() {
-		  var val = sanitizeFloat(cRealInput.value, 0.7);
+		  var val = getCRealValue();
 		  gl.uniform1f(locationOfCReal, val);
+		  mandelBrotDisplay.cRealUpdated();
 	  }
 	  
 	  function settingsClose() {
@@ -753,4 +1034,5 @@ window.addEventListener("DOMContentLoaded", function() {
   canvas.addEventListener('touchend', touchEnd);
   resized();
   draw();
+  mandelBrotDisplay.updateSize();
 });
