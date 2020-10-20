@@ -118,11 +118,97 @@
 			</div>
 		</div>
 		<button id="expand-settings-button" class="fa fa-cog"><span class="sr-only">Settings</span></button>
-		<canvas></canvas>
+		<canvas id="main-canvas"></canvas>
 		<div id="render-and-download-progress">
 			Rendering and Downloading...
 			<progress id="download-progress-bar" min="0" max="100"></progress>
 		</div>
+		<div id="mandelbrot-display">
+			<canvas></canvas>
+		</div>
+
+<script id="mandelbrot-fragment-shader" type="glsl/fragment">
+// <![CDATA[
+precision lowp float;
+
+uniform vec2 centre;
+uniform float scale;
+uniform float fractalIterationDelta;
+uniform int pixelSubsampling;
+
+// copied from main fragment shader.
+// These should be copies of each other.
+vec3 getColourFromDensity(float density)
+{
+	if (density > 0.95) {
+		return vec3(1.0, 1.0, 1.0);
+	}
+	else if (density > 0.2) {
+		return vec3(1.0, 1.0, 0.5);
+	}
+	else {
+		return vec3(1.0, 0.0, 0.0);
+	}
+}
+
+vec3 valueToColour(float density) {
+	vec3 colour = getColourFromDensity(density);
+
+	if (density > 0.7) {
+		density = (density - 0.6) / 0.4;
+	}
+	else if (density > 0.1) {
+		density *= 1.0 / 0.7;
+	}
+	else {
+		density *= 10.0;
+	}
+	
+	return colour * density;
+}
+
+float getMandelbrotValue(vec2 p) {
+	float xt;
+	float zx, zy, cx, cy;
+	float ratio = 0.0;
+	cy = p.y;
+	cx = p.x;
+
+	for (int i = 0; i < 10000; i++)
+	{
+		xt = zx * zy;
+		zx = zx * zx - zy * zy + cx;
+		zy = 2.0 * xt + cy;
+		ratio += fractalIterationDelta;
+		if (ratio >= 1.0 || abs(zx) > 2.0)
+			break;
+	}
+	return ratio;
+}
+
+void main(void) {
+	vec2 p = gl_FragCoord.xy - centre;
+	p *= scale;
+	vec3 c;
+	float delta = scale / float(pixelSubsampling);
+	float dx = 0.0, dy = 0.0;
+	for (int i = 0; i < 1000; i++) {
+		if (i >= pixelSubsampling)
+			break;
+		dy = 0.0;
+		for (int j = 0; j < 1000; j++) {
+			if (j >= pixelSubsampling)
+				break;
+			c += valueToColour(getMandelbrotValue(vec2(p.x + dx, p.y + dy)));
+			dy += delta;
+		}
+		dx += delta; 
+	}
+	c = c / float(pixelSubsampling * pixelSubsampling);
+	gl_FragColor = vec4(c.x, c.y, c.z, 1.0);
+}
+// ]]>
+</script>
 
 <script type="glsl/vertex">
   attribute vec2 coords;
