@@ -22,19 +22,24 @@ window.addEventListener("DOMContentLoaded", function() {
   let locationOfCircleRadiusRange = gl.getUniformLocation(pid, "circleRadiusRange");
   let locationOfShowingCircumference = gl.getUniformLocation(pid, "isShowingCircumference");
   let locationOfOpacityCutOff = gl.getUniformLocation(pid, "opacityCutOff");
+  let locationOfAmbient = gl.getUniformLocation(pid, "ambientFactor");
   let rotationAngle = 0;
   let scaleValue = 100;
   var planeCutValue = document.getElementById('plane-cut-value');
+  var showPlane = document.getElementById('show-plane');
   var peakOpacityInput = document.getElementById('peak-opacity');
   var cRealInput = document.getElementById('c-real');
   let pixelStretch = 3; 
   // start fairly low quality to safely know we won't crash the browser to start with.
   
   var ambientInput = document.getElementById('ambient');
+  var positionY = 0;
 
 	initCoords(gl, pid);
+  var scaleFactor = 1;
   var times = [];
   var rotationRadius = 2.0;
+  var deltaT = document.getElementById('deltaT');
   var oldMouseX, oldMouseY, oldTouchX, oldTouchY;
 
 	// This is important for managing browser view zoom.
@@ -141,6 +146,10 @@ window.addEventListener("DOMContentLoaded", function() {
 			this._drawCRealAndDot();
 		}
 		
+		planeCutValueUpdated() {
+			this._drawCRealAndDot();
+		}
+		
 		planeCutAxisChanged() {
 			this._drawCRealAndDot();
 		}
@@ -198,7 +207,7 @@ window.addEventListener("DOMContentLoaded", function() {
 			g.stroke();
 			
 			// if the cut plane is showing and the axis is z, show a dot.
-			if (isPlaneCut() && getPlaneCutAxisValue() === 3) {
+			if (isPlaneCut() && getPlaneCutAxisValue() === 3 && circleRadius > 0) {
 				var mandelbrotY = offsetY + getPlaneCutValue() / scale + h / 2;
 				g.fillStyle = '#00f';
 				g.beginPath();
@@ -288,6 +297,7 @@ window.addEventListener("DOMContentLoaded", function() {
 
 	class DownloadRenderer {
 		constructor() {
+			this.filename = 'cloud.png';
 			this.downloadBar = document.getElementById('render-and-download-progress');
 			this.progressBar = document.getElementById('download-progress-bar');
 			this.downloadButton = document.getElementById('download-image');
@@ -345,6 +355,20 @@ window.addEventListener("DOMContentLoaded", function() {
 			g.rect(0, 0, w, h);
 			g.closePath();
 			g.fill();
+		}
+		
+		download(filename) {
+			this.filename = filename;
+			var outer = this;
+			var promise = new Promise(function(resolver, rejecter) {
+				outer.downloadCompleteCallback = function() {
+					outer.downloadCompleteCallback = undefined;
+					outer.filename = 'cloud.png';
+					resolver();
+				};
+				outer.startDownload();
+			});
+			return promise;
 		}
 
 		startDownload() {
@@ -433,9 +457,12 @@ window.addEventListener("DOMContentLoaded", function() {
 		downloadCanvas() {
 			var outer = this;
 			this.canvas2D.toBlob(function(blob) {
-				saveAs(blob, 'cloud.png');
+				saveAs(blob, outer.filename);
 				outer.isRenderingOrDownloading = false;
 				outer._hideDownloadProgress();
+				if (typeof outer.downloadCompleteCallback === 'function') {
+					outer.downloadCompleteCallback();
+				}
 			}, 'image/png', 0.99);
 		}
 
@@ -455,8 +482,12 @@ window.addEventListener("DOMContentLoaded", function() {
 			this._ratioUpdated();
 			var outer = this;
 			peakOpacityInput.addEventListener('input', function() {
-				outer._ratioUpdated();
+				outer.peakOpacityInputChanged();
 			});
+		}
+		
+		peakOpacityInputChanged() {
+			this._ratioUpdated();
 		}
 		
 		_ratioUpdated() {
@@ -575,6 +606,14 @@ window.addEventListener("DOMContentLoaded", function() {
 		getValue() {
 			return sanitizeFloat(this.sphereRadiusInput.value, 2);
 		}
+		
+		setValue(newValue) {
+			// For efficiency's sake, check that the value actually changed.
+			if (newValue !== this.getValue()) {
+				this.sphereRadiusInput.value = newValue;
+				this._updated();
+			}
+		}
 	}
 	
 	function getPlaneCutValue() {
@@ -614,6 +653,7 @@ window.addEventListener("DOMContentLoaded", function() {
 		else {
 			throw new Error('Unrecognized uniform type for: ', val);
 		}
+		console.log('got uniform method: ' + uniformFunc + ' for ' + key);
 		uniformFunc.call(glDestination, destinationOfUniform, val);
 	}
 	
@@ -629,7 +669,7 @@ window.addEventListener("DOMContentLoaded", function() {
 			gl.uniform1f(this.locationOfPeakSampleOpacity, newOpacity);
 			gl.uniform1f(locationOfOpacityCutOff, getOpacityCutOffFromPeakSampleOpacity(newOpacity));
 		}
-
+		
 		setValueFromLightObstructionRatio(lightObstructionRatio) {
 			this.lightObstructionRatio = lightObstructionRatio;
 			this._updated();
@@ -676,13 +716,21 @@ window.addEventListener("DOMContentLoaded", function() {
 	function getPeakOpacityInputValue() {
 		return sanitizeFloat(peakOpacityInput.value, 2.0);
 	}
+	
+	function setPeakOpacityInputValue(newValue, forceChange) {
+		var val = getPeakOpacityInputValue();
+		if (forceChange || val !== newValue) {
+			peakOpacityInput.value = newValue;
+			lightObstructionDeltaRatio.peakOpacityInputChanged();
+		}
+	}
 
 	function getOpacityCutOffFromPeakSampleOpacity(newOpacity) {
 		return 0.05 * newOpacity;
 	}
 	
 	function getScaleFromDimensions(w, h) {
-		return 7.0 / (w + h);
+		return 7.0 * scaleFactor / (w + h);
 	}
 	
 	// returns value to be used in shader's uniform.
@@ -747,11 +795,11 @@ window.addEventListener("DOMContentLoaded", function() {
   function setRotationAngle(newAngle) {
 	var a = Math.PI + newAngle;
 	gl.uniform2fv(locationOfViewRotation, [Math.cos(a), Math.sin(a)]);
-	gl.uniform3fv(locationOfPosition, [rotationRadius * Math.sin(newAngle), 0, rotationRadius * Math.cos(newAngle)]);
+	gl.uniform3fv(locationOfPosition, [rotationRadius * Math.sin(newAngle), positionY, rotationRadius * Math.cos(newAngle)]);
   }
   
   function isPlaneCut() {
-	  return document.getElementById('show-plane').checked;
+	  return showPlane.checked;
   }
   
   function improveFrameRateInResponseTo(currentFrameRate) {
@@ -794,6 +842,7 @@ window.addEventListener("DOMContentLoaded", function() {
   }
 
   function processTimeChange() {
+	document.dispatchEvent(new CustomEvent('time-changed', {}));
 	var t = new Date().getTime();
 	times = times.filter(function(time1) {
 	  return t - time1 < 1000;
@@ -939,9 +988,25 @@ window.addEventListener("DOMContentLoaded", function() {
 	  oldTouchX = undefined;
 	  oldTouchY = undefined;
   }
+
+	function setShowingPlaneCut(newValue, forceUpdate) {
+		var val = isPlaneCut();
+		if (forceUpdate || val !== newValue) {
+			showPlane.checked = newValue;
+			gl.uniform1i(locationOfIsShowingPlaneCut, isPlaneCut());
+		}
+	}
   
   function getPlaneCutValue() {
 	return sanitizeFloat(planeCutValue.value, 0);
+  }
+
+  function setPlaneCutValue(newValue, forceUpdate) {
+	if (forceUpdate || newValue !== getPlaneCutValue()) {
+		planeCutValue.value = newValue;
+		gl.uniform1f(locationOfPlaneCutValue, newValue);
+		mandelBrotDisplay.planeCutValueUpdated();
+	}
   }
   
   function getPlaneCutAxisValue() {
@@ -955,14 +1020,13 @@ window.addEventListener("DOMContentLoaded", function() {
   
   function initPlaneCutSettings() {
 		var lightSettings = document.getElementById('light-settings');
-		var showPlane = document.getElementById('show-plane');
 		var wideColumn = document.getElementById('wide-column');
-
+		
 		function showPlaneCutUpdated() {
 			if (!isPlaneCut()) {
 				pixelSubsampling.useLowestQuality();
 			}
-			gl.uniform1i(locationOfIsShowingPlaneCut, isPlaneCut());
+			setShowingPlaneCut(isPlaneCut(), true);
 			if (isPlaneCut()) {
 				wideColumn.setAttribute('class', 'show-plane-cut-settings');
 			}
@@ -973,9 +1037,7 @@ window.addEventListener("DOMContentLoaded", function() {
 		}
 
 		function planeCutChanged() {
-			var val = getPlaneCutValue();
-			gl.uniform1f(locationOfPlaneCutValue, val);
-			mandelBrotDisplay.cRealUpdated();
+			setPlaneCutValue(getPlaneCutValue(), true);
 		}
 		
 		function planeCutAxisChanged() {
@@ -993,25 +1055,35 @@ window.addEventListener("DOMContentLoaded", function() {
 		planeCutChanged();
 		planeCutAxisChanged();
   }
-
-  function updateAmbientUniform(gl, locationOfAmbient) {
+  
+  function setAmbientValue(newAmbientValue, forceUpdate) {
 	  var val = sanitizeFloat(ambientInput.value);
-	  gl.uniform1f(locationOfAmbient, 1 - val);
+	  if (newAmbientValue !== val || forceUpdate) {
+		  gl.uniform1f(locationOfAmbient, 1 - newAmbientValue);
+		  ambientInput.value = newAmbientValue;
+	  }
   }
   
   function initSettings() {
 	var body = document.querySelector('body');
 	var settingsCloseButton = document.getElementById('collapse-settings-button');
 	var settingsExpandButton = document.getElementById('expand-settings-button');
+	var maxIterationsInput = document.getElementById('max-iterations');
 	var lightDirectionX = document.getElementById('light-x');
 	var lightDirectionY = document.getElementById('light-y');
 	var lightDirectionZ = document.getElementById('light-z');
-	var maxIterations = document.getElementById('max-iterations');
 	let locationOfFractalIterationDeltas = gl.getUniformLocation(pid, "fractalIterationDelta");
 	let locationOfLightDirection = gl.getUniformLocation(pid, "lightDirection");
 	let locationOfCReal = gl.getUniformLocation(pid, "cReal");
-	let locationOfAmbient = gl.getUniformLocation(pid, "ambientFactor");
+	var animationDownloadButton = document.getElementById('downloadAnimationHD');
 
+  function setCRealValue(newValue, forceUpdate) {
+	  if (getCRealValue() !== newValue || forceUpdate) {
+		cRealInput.value = newValue;
+		gl.uniform1f(locationOfCReal, newValue);
+		mandelBrotDisplay.cRealUpdated();
+	  }
+  }
 	function lightDirectionChanged() {
 		  var x = sanitizeFloat(lightDirectionX.value, 0);
 		  var y = sanitizeFloat(lightDirectionY.value, 0);
@@ -1029,16 +1101,29 @@ window.addEventListener("DOMContentLoaded", function() {
 	}
 
 	function ambientChanged() {
-		updateAmbientUniform(gl, locationOfAmbient);
+		setAmbientValue(sanitizeFloat(ambientInput.value, 0.05), true);
 	}
-	  
-	function maxIterationsChanged() {
-			var val = parseInt(maxIterations.value);
-			if (typeof val !== 'number' || isNaN(val))
-				val = 20;
-
-			gl.uniform1f(locationOfFractalIterationDeltas, 1.0 / val);
+	
+	function getMaxIterations() {
+		var val = parseInt(maxIterationsInput.value);
+		if (typeof val !== 'number' || isNaN(val))
+			val = 20;
+		return val;
+	}
+	
+	function setMaxIterations(newMaxIterations, forceChange) {
+		var val = getMaxIterations();
+		if (val !== newMaxIterations || forceChange) {
+			gl.uniform1f(locationOfFractalIterationDeltas, 1.0 / newMaxIterations);
 			mandelBrotDisplay.maxIterationsChanged();
+		}
+		if (!forceChange) {
+			maxIterationsInput.value = newMaxIterations;
+		}
+	}
+
+	function maxIterationsChanged() {
+		setMaxIterations(getMaxIterations(), true);
 	}
 	  
 	  function cRealChanged() {
@@ -1055,13 +1140,85 @@ window.addEventListener("DOMContentLoaded", function() {
 		  body.setAttribute('class', '');
 	  }
 	  
+	  function downloadAnimation() {
+		  var animation = new Animation();
+		  var fps = 60;
+		  var frameIndex = 0;
+		  
+			function isFrameToSkip() {
+				if (frameIndex === 668 || frameIndex === 667)
+					return false;
+				
+				return frameIndex < 699;
+			}
+
+			function processTimeChange(deltaT) {
+				var eventData = new CustomEvent('animation-update', {
+					'detail': {
+						'props': animation.getPropertiesForTime(deltaT),
+						'deltaT': deltaT
+						}
+				});
+				animationUpdated(eventData);
+			}
+
+			function getFormattedFrameIndex() {
+				var result = '' + (frameIndex + 1);
+				while (result.length < 8) {
+					result = '0' + result;
+				}
+				return result;
+			}
+
+			function downloadFrame() {
+				while (isFrameToSkip()) {
+					frameIndex++;
+				}
+			  var frameName = 'cloud_frame_' + getFormattedFrameIndex() + '.png';
+				var deltaT = frameIndex * 1000 / fps;
+				processTimeChange(deltaT);
+			  downloader.download(frameName).then(function() {
+				  if (deltaT <= animation.getMaxTime()) {
+					  frameIndex++;
+						// continue downloading frames.
+						// use setTimeout to give events a chance to be processed.
+					  setTimeout(downloadFrame, 10);
+				  }
+			  });
+			}
+			
+			downloadFrame();
+	  }
+  
+		function animationUpdated(event) {
+		  if (event.detail) {
+			  var uiSettings = event.detail.props.uiSettings;
+			  rotationAngle = getDefaultedNumber(uiSettings.rotationAngle, rotationAngle);
+			  rotationRadius = getDefaultedNumber(uiSettings.rotationRadius, rotationRadius);
+			  sphereRadius.setValue(uiSettings.sphereRadius, sphereRadius.getValue());
+			  setMaxIterations(getDefaultedInteger(uiSettings.maxIterations, getMaxIterations()));
+			  setPeakOpacityInputValue(getDefaultedNumber(uiSettings.peakOpacity, getPeakOpacityInputValue()));
+			  setPlaneCutValue(getDefaultedNumber(uiSettings.planeCutValue, getPlaneCutValue()));
+			  setCRealValue(getDefaultedNumber(uiSettings.cReal, getCRealValue()));
+			  setAmbientValue(getDefaultedNumber(uiSettings.ambient, sanitizeFloat(ambientInput.value, 0.05)));
+			  positionY = getDefaultedNumber(uiSettings.positionY, positionY);
+			  scaleFactor = getDefaultedNumber(uiSettings.scaleFactor, scaleFactor);
+			  setShowingPlaneCut(getDefaultedBool(uiSettings.isShowingPlaneCut, isPlaneCut()));
+
+
+			  setRotationAngle(rotationAngle); // update based on rotationRadius and rotationAngle.
+			  deltaT.innerText = event.detail.deltaT;
+		  }
+		}
+	  
 	  showSphereOutlineInput.addEventListener('change', function() {
 		showSphereOutlineChanged(gl, locationOfShowingCircumference, w, h);
 	  });
 	  [lightDirectionX, lightDirectionY, lightDirectionZ].forEach(function(input) {
 		input.addEventListener('input', lightDirectionChanged);
 	  });
-	maxIterations.addEventListener('input', maxIterationsChanged);
+	  animationDownloadButton.addEventListener('click', downloadAnimation);
+	maxIterationsInput.addEventListener('input', maxIterationsChanged);
 	cRealInput.addEventListener('input', cRealChanged);
 	settingsCloseButton.addEventListener('click', settingsClose);
 	settingsExpandButton.addEventListener('click', settingsExpand);
@@ -1072,9 +1229,28 @@ window.addEventListener("DOMContentLoaded", function() {
 	cRealChanged();
 	ambientChanged();
 	initPlaneCutSettings();
+	document.addEventListener('animation-update', animationUpdated);
   }
 
-	initSettings();
+  function getDefaultedNumber(val1, defaultVal) {
+	if (typeof val1 === 'number' && !isNaN(val1))
+		return val1;
+	else
+		return defaultVal;
+  }
+  
+  function getDefaultedInteger(val1, defaultVal) {
+	  return parseInt(getDefaultedNumber(val1, defaultVal));
+  }
+  
+  function getDefaultedBool(val1, defaultVal) {
+	if (typeof val1 === 'boolean')
+		return val1;
+	else
+		return defaultVal;
+  }
+
+  initSettings();
   window.addEventListener('resize', resized);
   canvas.addEventListener('mousemove', mouseMoved);
   canvas.addEventListener('mousedown', mouseDown);
