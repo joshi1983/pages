@@ -12,7 +12,6 @@ window.addEventListener("DOMContentLoaded", function() {
   var h = canvas.clientHeight;
   var w = canvas.clientWidth;
   loadShaders(gl, pid);
-  let coords = gl.getAttribLocation(pid, "coords");
   let locationOfCentre = gl.getUniformLocation(pid, "centre");
   let locationOfPosition = gl.getUniformLocation(pid, "position3D");
   let locationOfViewRotation = gl.getUniformLocation(pid, "viewRotation");
@@ -33,7 +32,7 @@ window.addEventListener("DOMContentLoaded", function() {
   
   var ambientInput = document.getElementById('ambient');
 
-	initCoords(gl, coords);
+	initCoords(gl, pid);
   var times = [];
   var rotationRadius = 2.0;
   var oldMouseX, oldMouseY, oldTouchX, oldTouchY;
@@ -51,27 +50,33 @@ window.addEventListener("DOMContentLoaded", function() {
 			this.div = document.getElementById('mandelbrot-display');
 			this.canvas = this.div.querySelector('canvas');
 			this.g = this.canvas.getContext('2d');
-			this.canvasWebGL = document.createElement('canvas');
-			var options = {
-				'preserveDrawingBuffer': false
-			};
-			this.gl = this.canvasWebGL.getContext('webgl', options) || this.canvasWebGL.getContext('experimental-webgl', options);
-			this.pid = this.gl.createProgram();
-			this.loadShaders(this.gl, this.pid);
-			this.coords = this.gl.getAttribLocation(this.pid, 'coords');
-			initCoords(this.gl, this.coords);
-			this.uniforms = {};
-			var uniformKeys = ['centre', 'fractalIterationDelta',
-				'pixelSubsampling', 'scale'];
+			var info = this._createWebGLCanvas();
+			Object.assign(this, info);
 			var outer = this;
-			uniformKeys.forEach(function(key) {
-				outer.uniforms[key] = outer.gl.getUniformLocation(outer.pid, key);
-			});
 			document.addEventListener('sphere-radius-change', function() {
 				outer.sphereRadiusChanged();
 			});
 			this.isVisible = false;
 			this.updateVisibility();
+		}
+		
+		_createWebGLCanvas() {
+			var result = {};
+			result.canvasWebGL = document.createElement('canvas');
+			var options = {
+				'preserveDrawingBuffer': false
+			};
+			result.gl = result.canvasWebGL.getContext('webgl', options) || result.canvasWebGL.getContext('experimental-webgl', options);
+			result.pid = result.gl.createProgram();
+			this.loadShaders(result.gl, result.pid);
+			initCoords(result.gl, result.pid);
+			result.uniforms = {};
+			var uniformKeys = ['centre', 'fractalIterationDelta',
+				'pixelSubsampling', 'scale'];
+			uniformKeys.forEach(function(key) {
+				result.uniforms[key] = result.gl.getUniformLocation(result.pid, key);
+			});
+			return result;
 		}
 
 		loadShaders(gl, pid) {
@@ -80,12 +85,16 @@ window.addEventListener("DOMContentLoaded", function() {
 			gl.linkProgram(pid);
 			gl.useProgram(pid);
 		}
-
-		_drawMandelbrot(glDestination, pidDestination, w, h, uniforms) {
+		
+		_getScaleFrom(w, h) {
 			var r = 2;
 			if (sphereRadius !== undefined)
 				r = sphereRadius.getValue();
-			this.scale = getScaleFromDimensions(w, h) * 0.8 * r / 2.0;
+			return getScaleFromDimensions(w, h) * 0.8 * r / 2.0;
+		}
+
+		_drawMandelbrot(glDestination, pidDestination, w, h, uniforms) {
+			this.scale = this._getScaleFrom(w, h);
 			glDestination.uniform1i(uniforms.pixelSubsampling, 2);
 			glDestination.uniform1f(uniforms.scale, this.scale);
 			glDestination.uniform2fv(uniforms.centre, [w/2, h/2]);
@@ -162,18 +171,42 @@ window.addEventListener("DOMContentLoaded", function() {
 		_copyWebGLCanvas(successCallback) {
 			var outer = this;
 			if (this.latestImgLoaded) {
-				outer.g.clearRect(0,0,outer.w, outer.h);
 				outer.g.drawImage(outer.latestImg, 0, 0);
 				if (successCallback)
 					successCallback();
 			}
 			else
 			this.latestImg.addEventListener('load', function() {
-				outer.g.clearRect(0,0,outer.w, outer.h);
 				outer.g.drawImage(outer.latestImg, 0, 0);
 				if (successCallback)
 					successCallback();
 			});
+		}
+		
+		_drawLineAndDot(g, scale, w, h, offsetY) {
+			var rv = getCRealValue();
+			rv = (rv / scale) + w / 2;
+			var lineThickness = 0.03 / scale;
+			var circleRadius = 0.05 / scale;
+			g.fillStyle = '#fff';
+			g.strokeStyle = '#000';
+			g.lineWidth = 0.01 / scale;
+			g.beginPath();
+			g.rect(rv - lineThickness * 0.5, offsetY, lineThickness, h);
+			g.closePath();
+			g.fill();
+			g.stroke();
+			
+			// if the cut plane is showing and the axis is z, show a dot.
+			if (isPlaneCut() && getPlaneCutAxisValue() === 3) {
+				var mandelbrotY = offsetY + getPlaneCutValue() / scale + h / 2;
+				g.fillStyle = '#00f';
+				g.beginPath();
+				g.arc(rv, mandelbrotY, circleRadius, 0, Math.PI * 2);
+				g.closePath();
+				g.fill();
+				g.stroke();
+			}
 		}
 
 		_drawCRealAndDot() {
@@ -182,31 +215,7 @@ window.addEventListener("DOMContentLoaded", function() {
 			}
 			var outer = this;
 			this._copyWebGLCanvas(function() {
-				var rv = getCRealValue();
-				var scale = outer.scale;
-				rv = (rv / scale) + outer.w / 2;
-				var lineThickness = 0.03 / scale;
-				var circleRadius = 0.05 / scale;
-				outer.g = outer.canvas.getContext('2d');
-				outer.g.fillStyle = '#fff';
-				outer.g.strokeStyle = '#000';
-				outer.g.lineWidth = 0.01 / scale;
-				outer.g.beginPath();
-				outer.g.rect(rv, 0, lineThickness, outer.h);
-				outer.g.closePath();
-				outer.g.fill();
-				outer.g.stroke();
-				
-				// if the cut plane is showing and the axis is z, show a dot.
-				if (isPlaneCut() && getPlaneCutAxisValue() === 3) {
-					var mandelbrotY = getPlaneCutValue() / outer.scale + outer.h / 2;
-					outer.g.fillStyle = '#00f';
-					outer.g.beginPath();
-					outer.g.arc(rv, mandelbrotY, circleRadius, 0, Math.PI * 2);
-					outer.g.closePath();
-					outer.g.fill();
-					outer.g.stroke();
-				}
+				outer._drawLineAndDot(outer.g, outer.scale, outer.w, outer.h, 0);
 			});
 		}
 		
@@ -215,6 +224,41 @@ window.addEventListener("DOMContentLoaded", function() {
 			this.gl.finish();
 			this._replaceWebGLImage();
 			this._drawCRealAndDot();
+		}
+
+		// Used for high quality download.
+		drawAll(canvas) {
+			// draw mandelbrot
+			var outer = this;
+			return new Promise(function(resolve, reject) {
+				var w = canvas.getAttribute('width');
+				var h = canvas.getAttribute('height');
+				var size = outer._getSizeFromFullCanvas(w, h);
+				var info = outer._createWebGLCanvas();
+
+				info.canvasWebGL.setAttribute('width', size);
+				info.canvasWebGL.setAttribute('height', size);
+				outer._drawMandelbrot(info.gl, info.pid, size, size, info.uniforms);
+
+				var latestImg = new Image();
+				var dataURL = info.canvasWebGL.toDataURL('image/png', 1.0);
+				latestImg.addEventListener('load', function() {
+					var g = canvas.getContext('2d');
+					g.drawImage(latestImg, 0, h - size);
+					var scale = outer._getScaleFrom(size, size);
+					// draw the line and dot.
+					outer._drawLineAndDot(g, scale, size, size, h - size);
+
+					// Free up the context, if the extension is supported.
+					var ext = info.gl.getExtension('WEBGL_lose_context');
+					if (typeof ext === 'object' && typeof ext.loseContext === 'function') {
+						info.gl.getExtension('WEBGL_lose_context').loseContext();
+					}
+					
+					resolve();
+				});
+				latestImg.src = dataURL;
+			});
 		}
 
 		_getSizeFromFullCanvas(w, h) {
@@ -261,8 +305,7 @@ window.addEventListener("DOMContentLoaded", function() {
 			});
 			this.pid = this.gl.createProgram();
 			loadShaders(this.gl, this.pid);
-			this.coords = this.gl.getAttribLocation(this.pid, 'coords');
-			initCoords(this.gl, this.coords);
+			initCoords(this.gl, this.pid);
 			this.uniforms = this.getUniforms([
 				'ambientFactor', 'centre', 'circleRadiusRange', 'cReal',
 				'fractalIterationDelta', 'isShowingCircumference', 'isShowingPlaneCut',
@@ -296,15 +339,14 @@ window.addEventListener("DOMContentLoaded", function() {
 			this.progressBar.setAttribute('value', 100.0 * this.left / this.w);
 		}
 		
-		_fillBlackBackground() {
-			var g = this.g;
+		_fillBlackBackground(g, w, h) {
 			g.fillStyle = '#000';
 			g.beginPath();
-			g.rect(0, 0, this.w, this.h);
+			g.rect(0, 0, w, h);
 			g.closePath();
 			g.fill();
 		}
-		
+
 		startDownload() {
 			this._showDownloadProgress();
 			this.w = 1920;
@@ -337,7 +379,7 @@ window.addEventListener("DOMContentLoaded", function() {
 			'sphereRadiusWithPlaneLineSquared', 'position3D', 'viewRotation'].forEach(function(key) {
 				copyUniform(gl, outer.gl, pid, outer.pid, key);
 			});
-			this._fillBlackBackground();
+			this._fillBlackBackground(this.g, this.w, this.h);
 			this.left = Math.floor(Math.max(0, this.w / 2 - maxPixelRadius));
 			this.maxToRender = Math.ceil(Math.min(this.w, this.w / 2 + maxPixelRadius));
 			this.intervalSize = 5;
@@ -360,7 +402,12 @@ window.addEventListener("DOMContentLoaded", function() {
 			img.onload = function() {
 				outer.g.drawImage(img, outer.left, 0);
 				if (outer.left + outer.intervalSize >= outer.maxToRender) {
-					outer.downloadCanvas();
+					if (mandelBrotDisplay.shouldBeVisible())
+						mandelBrotDisplay.drawAll(outer.canvas2D).then(function() {
+							outer.downloadCanvas();
+						});
+					else
+						outer.downloadCanvas();
 				}
 				else {
 					outer.left += outer.intervalSize;
@@ -597,7 +644,8 @@ window.addEventListener("DOMContentLoaded", function() {
   var lightObstructionDeltaRatio = new LightObstructionDelta();
   var pixelSubsampling = new PixelSubsampling();
 
-	function initCoords(gl, coords) {
+	function initCoords(gl, pid) {
+	 let coords = gl.getAttribLocation(pid, 'coords');
 	  let array = new Float32Array([-1,  3, -1, -1, 3, -1]);
 	  gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
 	  gl.bufferData(gl.ARRAY_BUFFER, array, gl.STATIC_DRAW);
