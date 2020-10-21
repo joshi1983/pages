@@ -421,6 +421,17 @@ vec3 getDiscColour(vec3 direction) {
 	return colour * density;
 }
 
+vec3 getPixelColourWithoutCircle(vec2 p) {
+	vec3 direction = vec3(p.x * scale, p.y * scale, 1.0);
+	direction = normalize(direction);
+	direction = rotatePoint(direction);
+	
+	if (isShowingPlaneCut)
+		return getDiscColour(direction);
+	else
+		return getColourAt(direction);
+}
+
 vec3 getPixelColourFor(vec2 p) {
 	float len = length(p);
 	if (len > circleRadiusRange.y) {
@@ -432,34 +443,37 @@ vec3 getPixelColourFor(vec2 p) {
 		else
 			return vec3(0.0, 0.0, 0.0);
 	}
-	vec3 direction = vec3(p.x * scale, p.y * scale, 1.0);
-	direction = normalize(direction);
-	direction = rotatePoint(direction);
-	
-	if (isShowingPlaneCut)
-		return getDiscColour(direction);
-	else
-		return getColourAt(direction);
+	return getPixelColourWithoutCircle(p);
 }
 
 void main(void) {
 	vec2 p = gl_FragCoord.xy - centre;
 	vec3 c;
 	float len = length(p);
+	int subsampling = pixelSubsampling;
 	if (len - 1.0 < circleRadiusRange.y) {
-		if (pixelSubsampling > 1)
+
+		// antialias the circle.
+		// This isn't optimal efficiency, though.
+		if (subsampling == 1 && isShowingCircumference && 
+		(len + 1.0 > circleRadiusRange.y ||
+		(len - 1.0 < circleRadiusRange.x && len + 1.0 > circleRadiusRange.x))) {
+			subsampling = 3;
+		}
+
+		if (subsampling > 1)
 		{
-			float delta = 1.0 / float(pixelSubsampling);
-			int a = pixelSubsampling * pixelSubsampling;
+			float delta = 1.0 / float(subsampling);
+			int a = subsampling * subsampling;
 			float fx = p.x, fy;
 
 			for (int x = 0; x < 1000; x++) {
-				if (x >= pixelSubsampling)
+				if (x >= subsampling)
 					break;
 
 				fy = p.y;
 				for (int y = 0; y < 1000; y++) {
-					if (y >= pixelSubsampling)
+					if (y >= subsampling)
 						break;
 
 					c += getPixelColourFor(vec2(fx, fy));
@@ -469,8 +483,9 @@ void main(void) {
 			}
 			c /= float(a);
 		}
-		else
+		else {
 			c = getPixelColourFor(p);
+		}
 	}
 	gl_FragColor = vec4(c.x, c.y, c.z, 1.0);
 }
