@@ -36,7 +36,7 @@ function getSplineCurveValue(points, x) {
 		if (prevP.ignorePreviousSlope) {
 			// calculate slope.
 			var m = (p.y - prevP.y) / (p.x - prevP.x);
-			var yWhenXIsZero = p.y - m * (p.x - prevP.x);
+			var yWhenXIsZero = p.y - m * p.x;
 			abc = [0, m, yWhenXIsZero];
 		}
 		else {
@@ -81,16 +81,18 @@ function getCurveValue(points, x) {
 
 class Animation {
 	getDefaultProperties(deltaT) {
-		return {
+		var result = {
 			'uiSettings': {
 				'sphereRadius': getCurveValue([
-					{'x': 0, 'y': 2, 'ignorePreviousSlope': true},
-					{'x': 30000, 'y': 2},
-					{'x': 60000, 'y': 3},
-					{'x': 70000, 'y': 15},
-					{'x': 80000, 'y': 7.9},
-					{'x': 81000, 'y': 6},
-					{'x': 85000, 'y': 6}
+					{'x': 0, 'y': 3, 'ignorePreviousSlope': true},
+					{'x': 7149, 'y': 3, 'ignorePreviousSlope': true},
+					{'x': 7150, 'y': 6, 'ignorePreviousSlope': true},
+					{'x': 35160, 'y': 6, 'ignorePreviousSlope': true},
+					{'x': 35161, 'y': 3, 'ignorePreviousSlope': true},
+					{'x': 60000, 'y': 6},
+					{'x': 70000, 'y': 15, 'ignorePreviousSlope': true},
+					{'x': 80000, 'y': 15},
+					{'x': 85000, 'y': 15}
 					], deltaT),
 				'cReal': getCurveValue([
 					{'x': 0, 'y': -1.63, 'ignorePreviousSlope': true},
@@ -100,7 +102,8 @@ class Animation {
 					{'x': 25000, 'y': 0.35},
 					{'x': 38000, 'y': 0.35},
 					{'x': 40000, 'y': 0.32},
-					{'x': 55000, 'y': 0.2}
+					{'x': 55000, 'y': 0.2, 'ignorePreviousSlope': true},
+					{'x': 100000, 'y': 0.2}
 					], deltaT),
 				'rotationAngle': getCurveValue([
 					{'x': 0, 'y': 0},
@@ -132,16 +135,22 @@ class Animation {
 					{'x': 43000, 'y': 0},
 					{'x': 55000, 'y': 0},
 					{'x': 65000, 'y': -2.5},
-					{'x': 69000.9, 'y': -5, 'ignorePreviousSlope': true},
-					{'x': 69001, 'y': 8, 'ignorePreviousSlope': true},
-					{'x': 69050, 'y': 8},
-					{'x': 85000, 'y': 8},
+					{'x': 69049, 'y': -3, 'ignorePreviousSlope': true},
+					{'x': 69050, 'y': -2, 'ignorePreviousSlope': true},
+					{'x': 81049.9, 'y': 6, 'ignorePreviousSlope': true},
+					{'x': 81050, 'y': 2, 'ignorePreviousSlope': true},
+					{'x': 93050, 'y': 2},
 					], deltaT),
 				'planeCutValue': getCurveValue([
-					{'x': 0, 'y': -6, 'ignorePreviousSlope': true},
-					{'x': 69049, 'y': -6, 'ignorePreviousSlope': true},
-					{'x': 69050, 'y': -6},
-					{'x': 85000, 'y': 6},
+					{'x': 0, 'y': 5, 'ignorePreviousSlope': true},
+					{'x': 30000, 'y': 5},
+					{'x': 69049, 'y': 5},
+					{'x': 69050, 'y': 4, 'ignorePreviousSlope': true},
+					{'x': 81049, 'y': -4, 'ignorePreviousSlope': true},
+					{'x': 81050, 'y': 4, 'ignorePreviousSlope': true},
+					{'x': 93050, 'y': -4, 'ignorePreviousSlope': true},
+					{'x': 93051, 'y': 0, 'ignorePreviousSlope': true},
+					{'x': 100000, 'y': 0},
 					], deltaT),
 				'positionY': getCurveValue([
 					{'x': 0, 'y': 0, 'ignorePreviousSlope': true},
@@ -155,9 +164,11 @@ class Animation {
 					{'x': 55000, 'y': 1.13},
 					{'x': 58500, 'y': 1.182},
 					{'x': 65000, 'y': 1.5},
-					{'x': 69000, 'y': 2.2},
-					{'x': 69000, 'y': 0, 'ignorePreviousSlope': true},
-					{'x': 75000, 'y': 0}
+					{'x': 69049.9, 'y': 2.2, 'ignorePreviousSlope': true},
+					{'x': 69050, 'y': 0, 'ignorePreviousSlope': true},
+					{'x': 75000, 'y': 0},
+					{'x': 81050, 'y': 0},
+					{'x': 93050, 'y': 0},
 					], deltaT),
 				'peakOpacity': getCurveValue([
 					{'x': 0, 'y': 0.1, 'ignorePreviousSlope': true},
@@ -182,21 +193,29 @@ class Animation {
 				], deltaT),
 				'scaleFactor': getCurveValue([
 					{'x': 0, 'y': 1},
-					{'x': 45000, 'y': 0.7},
+					{'x': 45000, 'y': 0.73},
 					{'x': 50000, 'y': 0.7},
-					{'x': 69049, 'y': 1, 'ignorePreviousSlope': true},
-					{'x': 69050, 'y': 1},
-					{'x': 85000, 'y': 1},
+					{'x': 69049.9, 'y': 0.7, 'ignorePreviousSlope': true},
+					{'x': 69050, 'y': 1, 'ignorePreviousSlope': true},
+					{'x': 200000, 'y': 1},
 				], deltaT),
-				'isShowingPlaneCut': false
+				'isShowingPlaneCut': false,
+				'lineThicknessFactor': 0.0005
 			}
 		};
+		if (deltaT < 81050)
+			result.uiSettings.planeCutAxis = 3;
+		else if (deltaT < 93050)
+			result.uiSettings.planeCutAxis = 2;
+		else {
+			result.uiSettings.planeCutAxis = 1;
+		}
+		return result;
 	}
 
 	getIntroProperties(deltaT) {
 		return {
 			'uiSettings': {
-				'sphereRadius': 3,
 				'maxIterations': 50
 			}
 		};
@@ -206,7 +225,6 @@ class Animation {
 		deltaT -= 15000;
 		return {
 			'uiSettings': {
-				'sphereRadius': 2
 			}
 		};
 	}
@@ -296,7 +314,7 @@ class Animation {
 		else if (deltaT < 69050) {
 			this._deepCopy(result, this.toTheEdge(deltaT));
 		}
-		else if (deltaT < 85 * 1000) {
+		else if (deltaT < 93050) {
 			this._deepCopy(result, this.cutFromTheEdge(deltaT));
 		}
 		return result;
@@ -307,6 +325,6 @@ class Animation {
 	}
 
 	getMaxTime() {
-		return 85 * 1000;
+		return 95 * 1000;
 	}
 }

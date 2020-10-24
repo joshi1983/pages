@@ -5,11 +5,16 @@ document.addEventListener('DOMContentLoaded', function() {
 	function playAnimation() {
 		var url = animation.getMusicURL();
 		var audio;
+		var startTimeOffset = 60000;
 		if (url !== undefined) {
 			audio = new Audio(url);
-			audio.play();
+			audio.currentTime = startTimeOffset * 0.001;
 		}
 		var startTime = new Date().getTime();
+		startTime -= startTimeOffset;
+		if (url !== undefined) {
+			audio.play();
+		}
 		function updateAnimation() {
 			var t = new Date().getTime();
 			var deltaT = t - startTime;
@@ -23,7 +28,7 @@ document.addEventListener('DOMContentLoaded', function() {
 					'detail': {
 						'props': animation.getPropertiesForTime(deltaT),
 						'deltaT': deltaT
-						}
+					}
 				});
 				document.dispatchEvent(eventData);
 			}

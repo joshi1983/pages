@@ -37,6 +37,7 @@ window.addEventListener("DOMContentLoaded", function() {
 
 	initCoords(gl, pid);
   var scaleFactor = 1;
+  var lineThicknessFactor = 0.001;
   var times = [];
   var rotationRadius = 2.0;
   var deltaT = document.getElementById('deltaT');
@@ -384,7 +385,7 @@ window.addEventListener("DOMContentLoaded", function() {
 			var maxPixelRadius = updateCircleRadiusRange(this.gl, this.w, this.h, scaleValue, this.uniforms.circleRadiusRange);
 			var pixelSubsamplingQuality = pixelSubsampling.DEFAULT_QUALITY;
 			if (isPlaneCut())
-				pixelSubsamplingQuality = 5;
+				pixelSubsamplingQuality = 7;
 			this.gl.uniform1i(this.uniforms.pixelSubsampling, pixelSubsamplingQuality);
 			this.gl.uniform2fv(this.uniforms.centre, [this.w / 2, this.h / 2]);
 			this.gl.uniform1f(this.uniforms.scale, getScaleFromDimensions(this.w, this.h));
@@ -855,7 +856,7 @@ window.addEventListener("DOMContentLoaded", function() {
   }
   
   function getOutlineThickness(w, h) {
-	  return (w + h) * 0.001;
+	  return (w + h) * lineThicknessFactor;
   }
   
   function getRadiusFromSphereRadius(sr, scaleValue) {
@@ -1013,6 +1014,18 @@ window.addEventListener("DOMContentLoaded", function() {
 		var checkedPlaneCutAxisInput = document.querySelector('[name="plane-cut-axis"]:checked');
 		return parseInt(checkedPlaneCutAxisInput.value);
   }
+		
+	function setPlaneCutAxis(newPlaneCutAxis, forceUpdate) {
+		var val = getPlaneCutAxisValue();
+		if (forceUpdate || val !== newPlaneCutAxis) {
+			if (val !== newPlaneCutAxis) {
+				var planeCutAxisInput = document.querySelector('[name="plane-cut-axis"][value="' + newPlaneCutAxis + '"]');
+				planeCutAxisInput.checked = true;
+			}
+			gl.uniform1i(locationOfPlaneCutAxis, newPlaneCutAxis);
+			mandelBrotDisplay.planeCutAxisChanged();
+		}
+	}
   
   function getCRealValue() {
 	return sanitizeFloat(cRealInput.value, 0.7);
@@ -1041,9 +1054,7 @@ window.addEventListener("DOMContentLoaded", function() {
 		}
 		
 		function planeCutAxisChanged() {
-			var val = getPlaneCutAxisValue();
-			gl.uniform1i(locationOfPlaneCutAxis, val);
-			mandelBrotDisplay.planeCutAxisChanged();
+			setPlaneCutAxis(getPlaneCutAxisValue(), true);
 		}
 
 		showPlane.addEventListener('change', showPlaneCutUpdated);
@@ -1062,6 +1073,10 @@ window.addEventListener("DOMContentLoaded", function() {
 		  gl.uniform1f(locationOfAmbient, 1 - newAmbientValue);
 		  ambientInput.value = newAmbientValue;
 	  }
+  }
+  
+  function setLineThicknessFactor(newLineThicknessFactor) {
+	  lineThicknessFactor = newLineThicknessFactor;
   }
   
   function initSettings() {
@@ -1146,10 +1161,10 @@ window.addEventListener("DOMContentLoaded", function() {
 		  var frameIndex = 0;
 		  
 			function isFrameToSkip() {
-				if (frameIndex === 668 || frameIndex === 667)
-					return false;
+				if (frameIndex < 4863)
+					return true;
 				
-				return frameIndex < 699;
+				return false;
 			}
 
 			function processTimeChange(deltaT) {
@@ -1171,8 +1186,11 @@ window.addEventListener("DOMContentLoaded", function() {
 			}
 
 			function downloadFrame() {
-				while (isFrameToSkip()) {
+				while (isFrameToSkip() && frameIndex * 1000 / fps < animation.getMaxTime()) {
 					frameIndex++;
+				}
+				if (frameIndex * 1000 / fps > animation.getMaxTime()) {
+					return;
 				}
 			  var frameName = 'cloud_frame_' + getFormattedFrameIndex() + '.png';
 				var deltaT = frameIndex * 1000 / fps;
@@ -1182,7 +1200,7 @@ window.addEventListener("DOMContentLoaded", function() {
 					  frameIndex++;
 						// continue downloading frames.
 						// use setTimeout to give events a chance to be processed.
-					  setTimeout(downloadFrame, 10);
+					  downloadFrame();
 				  }
 			  });
 			}
@@ -1197,6 +1215,7 @@ window.addEventListener("DOMContentLoaded", function() {
 			  rotationRadius = getDefaultedNumber(uiSettings.rotationRadius, rotationRadius);
 			  sphereRadius.setValue(uiSettings.sphereRadius, sphereRadius.getValue());
 			  setMaxIterations(getDefaultedInteger(uiSettings.maxIterations, getMaxIterations()));
+			  setPlaneCutAxis(getDefaultedInteger(uiSettings.planeCutAxis, getPlaneCutAxisValue()), false);
 			  setPeakOpacityInputValue(getDefaultedNumber(uiSettings.peakOpacity, getPeakOpacityInputValue()));
 			  setPlaneCutValue(getDefaultedNumber(uiSettings.planeCutValue, getPlaneCutValue()));
 			  setCRealValue(getDefaultedNumber(uiSettings.cReal, getCRealValue()));
@@ -1204,7 +1223,7 @@ window.addEventListener("DOMContentLoaded", function() {
 			  positionY = getDefaultedNumber(uiSettings.positionY, positionY);
 			  scaleFactor = getDefaultedNumber(uiSettings.scaleFactor, scaleFactor);
 			  setShowingPlaneCut(getDefaultedBool(uiSettings.isShowingPlaneCut, isPlaneCut()));
-
+			  setLineThicknessFactor(getDefaultedNumber(uiSettings.lineThicknessFactor, 0.001));
 
 			  setRotationAngle(rotationAngle); // update based on rotationRadius and rotationAngle.
 			  deltaT.innerText = event.detail.deltaT;
