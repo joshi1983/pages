@@ -27,8 +27,10 @@ window.addEventListener("DOMContentLoaded", function() {
   let scaleValue = 100;
   var planeCutValue = document.getElementById('plane-cut-value');
   var peakOpacityInput = document.getElementById('peak-opacity');
-	var cRealInput = document.getElementById('c-real');
-  let pixelStretch = 1;
+  var cRealInput = document.getElementById('c-real');
+  let pixelStretch = 3; 
+  // start fairly low quality to safely know we won't crash the browser to start with.
+  
   var ambientInput = document.getElementById('ambient');
 
 	initCoords(gl, coords);
