@@ -16,7 +16,7 @@ window.addEventListener("DOMContentLoaded", function() {
   let locationOfPosition = gl.getUniformLocation(pid, "position3D");
   let locationOfViewRotation = gl.getUniformLocation(pid, "viewRotation");
   let locationOfScale = gl.getUniformLocation(pid, "scale");
-  let locationOfIsShowingPlaneCut = gl.getUniformLocation(pid, "isShowingPlaneCut");
+  let locationOfDisplayMode = gl.getUniformLocation(pid, "displayMode");
   let locationOfPlaneCutValue = gl.getUniformLocation(pid, "planeCutValue");
   let locationOfPlaneCutAxis = gl.getUniformLocation(pid, "planeCutAxis");
   let locationOfCircleRadiusRange = gl.getUniformLocation(pid, "circleRadiusRange");
@@ -319,7 +319,7 @@ window.addEventListener("DOMContentLoaded", function() {
 			initCoords(this.gl, this.pid);
 			this.uniforms = this.getUniforms([
 				'ambientFactor', 'centre', 'circleRadiusRange', 'cReal',
-				'fractalIterationDelta', 'isShowingCircumference', 'isShowingPlaneCut',
+				'fractalIterationDelta', 'isShowingCircumference', 'displayMode',
 				'lightDirection', 'lightObstructionDeltaRatio', 'opacityCutOff', 'peakSampleOpacity',
 				'pixelSubsampling', 'planeCutValue', 'planeCutAxis',
 				'position3D', 'scale', 
@@ -398,7 +398,7 @@ window.addEventListener("DOMContentLoaded", function() {
 				this.uniforms.sphereRadiusWithPlaneLineSquared);
 			var outer = this;
 			['ambientFactor', 'cReal', 'fractalIterationDelta',
-			'isShowingCircumference', 'isShowingPlaneCut',
+			'isShowingCircumference', 'displayMode',
 			'lightDirection',
 			'planeCutAxis', 'planeCutValue', 'sphereRadiusSquared',
 			'sphereRadiusWithPlaneLineSquared', 'position3D', 'viewRotation'].forEach(function(key) {
@@ -1002,9 +1002,13 @@ window.addEventListener("DOMContentLoaded", function() {
 		var val = isPlaneCut();
 		if (forceUpdate || val !== newValue) {
 			showPlane.checked = newValue;
-			gl.uniform1i(locationOfIsShowingPlaneCut, isPlaneCut());
-			if (newValue !== val && newValue === false) {
+			var newMode = 1;
+			if (newValue)
+				newMode = 2;
+			gl.uniform1i(locationOfDisplayMode, newMode);
+			if (newValue !== val && newMode === 1) {
 				// volumetric rendering can't run at the same quality.
+				// prevent the browser from crashing.
 				decreaseQuality(1);
 			}
 		}
