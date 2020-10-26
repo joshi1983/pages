@@ -227,13 +227,16 @@ void main(void) {
 // <![CDATA[
 precision mediump float;
 
+#define DEFAULT_DISPLAY_MODE 1
+#define PLANE_CUT_DISPLAY_MODE 2
+
 uniform float ambientFactor;
 uniform vec2 centre;
 uniform vec2 circleRadiusRange;
 uniform float cReal;
 uniform float fractalIterationDelta;
 uniform bool isShowingCircumference;
-uniform bool isShowingPlaneCut;
+uniform int displayMode;
 uniform vec3 lightDirection;
 uniform float lightObstructionDeltaRatio;
 uniform float peakSampleOpacity;
@@ -431,7 +434,7 @@ vec3 getPixelColourWithoutCircle(vec2 p) {
 	direction = normalize(direction);
 	direction = rotatePoint(direction);
 	
-	if (isShowingPlaneCut)
+	if (displayMode == PLANE_CUT_DISPLAY_MODE)
 		return getDiscColour(direction);
 	else
 		return getColourAt(direction);
