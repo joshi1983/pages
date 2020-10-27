@@ -1161,10 +1161,10 @@ window.addEventListener("DOMContentLoaded", function() {
 		  var frameIndex = 0;
 		  
 			function isFrameToSkip() {
-				if (frameIndex === 668 || frameIndex === 667)
-					return false;
+				if (frameIndex < 4863)
+					return true;
 				
-				return frameIndex < 699;
+				return false;
 			}
 
 			function processTimeChange(deltaT) {
@@ -1186,8 +1186,11 @@ window.addEventListener("DOMContentLoaded", function() {
 			}
 
 			function downloadFrame() {
-				while (isFrameToSkip()) {
+				while (isFrameToSkip() && frameIndex * 1000 / fps < animation.getMaxTime()) {
 					frameIndex++;
+				}
+				if (frameIndex * 1000 / fps > animation.getMaxTime()) {
+					return;
 				}
 			  var frameName = 'cloud_frame_' + getFormattedFrameIndex() + '.png';
 				var deltaT = frameIndex * 1000 / fps;
@@ -1197,7 +1200,7 @@ window.addEventListener("DOMContentLoaded", function() {
 					  frameIndex++;
 						// continue downloading frames.
 						// use setTimeout to give events a chance to be processed.
-					  setTimeout(downloadFrame, 10);
+					  downloadFrame();
 				  }
 			  });
 			}
