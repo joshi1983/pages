@@ -36,17 +36,34 @@
 						<input id="max-iterations" type="range" value="50" step="1" min="5" max="100">
 					</div>
 				</div>
-				<div class="col-md-10">
+				<div class="col-md-6">
 					<div class="labelled-input-pair">
 						<label for="c-real">c Real</label>
 						<input id="c-real" type="range" value="0.3" step="0.0001" min="-5" max="5">
 					</div>
 				</div>
-				<div class="col-md-2">
-					<div class="labelled-input-pair">
-						<label for="show-plane">Show Plane</label>
-						<input type="checkbox" id="show-plane">
-					</div>
+				<div class="col-md-6">
+					<fieldset id="display-mode">
+						<legend>Display Mode</legend>
+						<div class="row">
+							<div class="col-sm-3">
+								<label for="display-mode-volume">Volumetric</label>
+								<input type="radio" name="display-mode" id="display-mode-volume" value="1" checked>
+							</div>
+							<div class="col-sm-3">
+								<label for="display-mode-plane-cut">Planar Cut</label>
+								<input type="radio" name="display-mode" id="display-mode-plane-cut" value="2">
+							</div>
+							<div class="col-sm-3">
+								<label for="display-mode-max-cut-volume">Max Cut Volume</label>
+								<input type="radio" name="display-mode" id="display-mode-max-cut-volume" value="3">
+							</div>
+							<div class="col-sm-3">
+								<label for="display-mode-min-cut-volume">Min Cut Volume</label>
+								<input type="radio" name="display-mode" id="display-mode-min-cut-volume" value="4">
+							</div>
+						</div>
+					</fieldset>
 				</div>
 				<div class="col-sm-12">
 					<div class="collapsible-row">
@@ -229,6 +246,12 @@ precision mediump float;
 
 #define DEFAULT_DISPLAY_MODE 1
 #define PLANE_CUT_DISPLAY_MODE 2
+#define MAX_CUT_VOLUME_DISPLAY_MODE 3
+#define MIN_CUT_VOLUME_DISPLAY_MODE 4
+
+#define X_AXIS 1
+#define Y_AXIS 2
+#define Z_AXIS 3
 
 uniform float ambientFactor;
 uniform vec2 centre;
@@ -310,6 +333,30 @@ float getJuliaSetValue(vec3 p)
 
 float getValue(vec3 p)
 {
+	if (displayMode == MAX_CUT_VOLUME_DISPLAY_MODE) {
+		if (planeCutAxis == X_AXIS) {
+			if (p.x > planeCutValue)
+				return 0.0;
+		}
+		else if (planeCutAxis == Y_AXIS) {
+			if (p.y > planeCutValue)
+				return 0.0;
+		}
+		else if (p.z > planeCutValue)
+			return 0.0;
+	}
+	else if (displayMode == MIN_CUT_VOLUME_DISPLAY_MODE) {
+		if (planeCutAxis == X_AXIS) {
+			if (p.x < planeCutValue)
+				return 0.0;
+		}
+		else if (planeCutAxis == Y_AXIS) {
+			if (p.y < planeCutValue)
+				return 0.0;
+		}
+		else if (p.z < planeCutValue)
+			return 0.0;
+	}
 	return getJuliaSetValue(p);
 }
 
@@ -332,6 +379,7 @@ vec2 getSphereIntersectionDistances(vec3 direction)
 			return vec2(-1.0, -1.0); // both will be negative so no point in continuing.
 		}
 		result.x = max(0.0, (-b - discriminant) * 0.5);
+
 		return result;
 	}
 }
