@@ -205,7 +205,6 @@ class Animation {
 	getIntroProperties(deltaT) {
 		return {
 			'uiSettings': {
-				'sphereRadius': 3,
 				'maxIterations': 50
 			}
 		};
@@ -215,7 +214,6 @@ class Animation {
 		deltaT -= 15000;
 		return {
 			'uiSettings': {
-				'sphereRadius': 2
 			}
 		};
 	}
@@ -305,7 +303,7 @@ class Animation {
 		else if (deltaT < 69050) {
 			this._deepCopy(result, this.toTheEdge(deltaT));
 		}
-		else if (deltaT < 85 * 1000) {
+		else if (deltaT < 93050) {
 			this._deepCopy(result, this.cutFromTheEdge(deltaT));
 		}
 		return result;
