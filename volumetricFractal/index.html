@@ -425,12 +425,21 @@ vec3 getDiscColour(vec3 direction) {
 
 	float distanceToPlane;
 
-	if (planeCutAxis == X_AXIS)
+	if (planeCutAxis == X_AXIS) {
+		if (direction.x == 0.0)
+			return result;
 		distanceToPlane = -(position3D.x - planeCutValue) / direction.x;
-	else if (planeCutAxis == Y_AXIS)
+	}
+	else if (planeCutAxis == Y_AXIS) {
+		if (direction.y == 0.0)
+			return result;
 		distanceToPlane = -(position3D.y - planeCutValue) / direction.y;
-	else
+	}
+	else {
+		if (direction.z == 0.0)
+			return result;
 		distanceToPlane = -(position3D.z - planeCutValue) / direction.z;
+	}
 	
 	if (distanceToPlane < 0.0)
 		return result;
