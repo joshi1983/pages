@@ -199,7 +199,7 @@ class Animation {
 					{'x': 69050, 'y': 1, 'ignorePreviousSlope': true},
 					{'x': 200000, 'y': 1},
 				], deltaT),
-				'isShowingPlaneCut': false,
+				'displayMode': 1,
 				'lineThicknessFactor': 0.0005
 			}
 		};
@@ -273,7 +273,16 @@ class Animation {
 		deltaT -= 69050;
 		return {
 			'uiSettings': {
-				'isShowingPlaneCut': true
+				'displayMode': 2
+			}
+		};
+	}
+	
+	startVolumetricCut(deltaT) {
+		deltaT -= 93050;
+		return {
+			'uiSettings': {
+				'displayMode': 3
 			}
 		};
 	}

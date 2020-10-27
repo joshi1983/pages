@@ -26,7 +26,6 @@ window.addEventListener("DOMContentLoaded", function() {
   let rotationAngle = 0;
   let scaleValue = 100;
   var planeCutValue = document.getElementById('plane-cut-value');
-  var showPlane = document.getElementById('show-plane');
   var peakOpacityInput = document.getElementById('peak-opacity');
   var cRealInput = document.getElementById('c-real');
   let pixelStretch = 3; 
@@ -42,6 +41,10 @@ window.addEventListener("DOMContentLoaded", function() {
   var rotationRadius = 2.0;
   var deltaT = document.getElementById('deltaT');
   var oldMouseX, oldMouseY, oldTouchX, oldTouchY;
+  const DEFAULT_DISPLAY_MODE = 1;
+  const PLANE_CUT_DISPLAY_MODE = 2;
+  const MAX_CUT_VOLUME_DISPLAY_MODE = 3;
+  const MIN_CUT_VOLUME_DISPLAY_MODE = 4;
 
 	// This is important for managing browser view zoom.
 	// A zoom other than 100% causes canvas.clientWidth != viewport width.
@@ -617,10 +620,6 @@ window.addEventListener("DOMContentLoaded", function() {
 		}
 	}
 	
-	function getPlaneCutValue() {
-		return sanitizeFloat(planeCutValue.value, 0);
-	}
-	
 	function getPeakOpacityForLightObstructionDeltaRatio(lightObstructionDeltaRatio) {
 		return lightObstructionDeltaRatio * getPeakOpacityInputValue();
 	}
@@ -632,6 +631,9 @@ window.addEventListener("DOMContentLoaded", function() {
 			console.log('Weird.  Not found: ' + key + ', locationOfUniform: ', locationOfUniform);
 		}
 		var val = gl.getUniform(pid, locationOfUniform);
+		if (key === 'fractalIterationDelta') {
+			console.log('copying fractalIntervalDelta of ' + val);
+		}
 		var uniformFunc;
 		if (typeof val === 'boolean') {
 			uniformFunc = glDestination.uniform1i;
@@ -780,6 +782,7 @@ window.addEventListener("DOMContentLoaded", function() {
 	  canvas.setAttribute('width', Math.round(w));
 	  canvas.setAttribute('height', Math.round(h));
 	  scaleValue = getScaleFromDimensions(w, h);
+	  console.log('scaleValue updating to ' + scaleValue);
 	  gl.uniform1f(locationOfScale, scaleValue);
   }
   
@@ -799,10 +802,34 @@ window.addEventListener("DOMContentLoaded", function() {
 	gl.uniform3fv(locationOfPosition, [rotationRadius * Math.sin(newAngle), positionY, rotationRadius * Math.cos(newAngle)]);
   }
   
-  function isPlaneCut() {
-	  return showPlane.checked;
+  function getDisplayMode() {
+	  var input = document.querySelector('[name="display-mode"]:checked');
+	  return parseInt(input.value);
   }
   
+  function setDisplayMode(newDisplayMode, forceUpdate) {
+	  var currentValue = getDisplayMode();
+	  if (forceUpdate || currentValue !== newDisplayMode) {
+		  var id = 'display-mode-volume';
+		  if (newDisplayMode === PLANE_CUT_DISPLAY_MODE)
+			  id = 'display-mode-plane-cut';
+		  else if (newDisplayMode === MAX_CUT_VOLUME_DISPLAY_MODE)
+			  id = 'display-mode-max-cut-volume';
+		  else if (newDisplayMode === MIN_CUT_VOLUME_DISPLAY_MODE)
+			  id = 'display-mode-min-cut-volume';
+
+		  if (currentValue !== newDisplayMode) {
+			  var input = document.getElementById(id);
+			  input.checked = true;
+		  }
+		  gl.uniform1i(locationOfDisplayMode, newDisplayMode);
+	  }
+  }
+
+  function isPlaneCut() {
+	  return getDisplayMode() === PLANE_CUT_DISPLAY_MODE;
+  }
+
   function improveFrameRateInResponseTo(currentFrameRate) {
 	  if (currentFrameRate < 10) {
 		  if (isPlaneCut()) {
@@ -989,17 +1016,6 @@ window.addEventListener("DOMContentLoaded", function() {
 	  oldTouchX = undefined;
 	  oldTouchY = undefined;
   }
-
-	function setShowingPlaneCut(newValue, forceUpdate) {
-		var val = isPlaneCut();
-		if (forceUpdate || val !== newValue) {
-			showPlane.checked = newValue;
-			var newMode = 1;
-			if (newValue)
-				newMode = 2;
-			gl.uniform1i(locationOfDisplayMode, newMode);
-		}
-	}
   
   function getPlaneCutValue() {
 	return sanitizeFloat(planeCutValue.value, 0);
@@ -1038,12 +1054,12 @@ window.addEventListener("DOMContentLoaded", function() {
 		var lightSettings = document.getElementById('light-settings');
 		var wideColumn = document.getElementById('wide-column');
 		
-		function showPlaneCutUpdated() {
+		function displayModeUpdated() {
 			if (!isPlaneCut()) {
 				pixelSubsampling.useLowestQuality();
 			}
-			setShowingPlaneCut(isPlaneCut(), true);
-			if (isPlaneCut()) {
+			setDisplayMode(getDisplayMode(), true);
+			if (getDisplayMode() !== DEFAULT_DISPLAY_MODE) {
 				wideColumn.setAttribute('class', 'show-plane-cut-settings');
 			}
 			else {
@@ -1060,7 +1076,10 @@ window.addEventListener("DOMContentLoaded", function() {
 			setPlaneCutAxis(getPlaneCutAxisValue(), true);
 		}
 
-		showPlane.addEventListener('change', showPlaneCutUpdated);
+		['volume', 'plane-cut', 'max-cut-volume', 'min-cut-volume'].forEach(function(displayModeName) {
+			var input = document.getElementById('display-mode-' + displayModeName);
+			input.addEventListener('change', displayModeUpdated);
+		});
 		planeCutValue.addEventListener('input', planeCutChanged);
 		['x', 'y', 'z'].forEach(function(axisName) {
 			var planeCutAxis = document.getElementById('plane-cut-axis-' + axisName);
@@ -1130,8 +1149,12 @@ window.addEventListener("DOMContentLoaded", function() {
 	}
 	
 	function setMaxIterations(newMaxIterations, forceChange) {
+		if (typeof newMaxIterations !== 'number' || isNaN(newMaxIterations))
+			throw new Error('MaxIterations must be set to a number.  Not: ' + newMaxIterations);
 		var val = getMaxIterations();
 		if (val !== newMaxIterations || forceChange) {
+			if (newMaxIterations > 300)
+				throw new Error('MaxIterations can not be set to such a large number. ' + newMaxIterations);
 			gl.uniform1f(locationOfFractalIterationDeltas, 1.0 / newMaxIterations);
 			mandelBrotDisplay.maxIterationsChanged();
 		}
@@ -1207,7 +1230,7 @@ window.addEventListener("DOMContentLoaded", function() {
 				  }
 			  });
 			}
-			
+
 			downloadFrame();
 	  }
   
@@ -1225,7 +1248,7 @@ window.addEventListener("DOMContentLoaded", function() {
 			  setAmbientValue(getDefaultedNumber(uiSettings.ambient, sanitizeFloat(ambientInput.value, 0.05)));
 			  positionY = getDefaultedNumber(uiSettings.positionY, positionY);
 			  scaleFactor = getDefaultedNumber(uiSettings.scaleFactor, scaleFactor);
-			  setShowingPlaneCut(getDefaultedBool(uiSettings.isShowingPlaneCut, isPlaneCut()));
+			  setDisplayMode(getDefaultedInteger(uiSettings.displayMode, getDisplayMode()));
 			  setLineThicknessFactor(getDefaultedNumber(uiSettings.lineThicknessFactor, 0.001));
 
 			  setRotationAngle(rotationAngle); // update based on rotationRadius and rotationAngle.
