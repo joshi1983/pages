@@ -188,7 +188,8 @@ class Animation {
 					{'x': 69050, 'y': 1},
 					{'x': 85000, 'y': 1},
 				], deltaT),
-				'isShowingPlaneCut': false
+				'isShowingPlaneCut': false,
+				'lineThicknessFactor': 0.0005
 			}
 		};
 	}
