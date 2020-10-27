@@ -1,88 +1,10 @@
-function getAbcFromPoints(points) {
-	// implementation taken from: 
-	// http://smackaay.com/2009/04/29/3-point-quadratic-regression-formula/
-	var denominator = (points[0].x - points[1].x) *
-		(points[0].x - points[2].x) *
-		(points[1].x - points[2].x);
-
-	var aTop = points[2].x * (-points[0].y + points[1].y) +
-		points[1].x * (points[0].y - points[2].y) +
-		points[0].x * (-points[1].y + points[2].y);
-
-	var bTop = points[2].x * points[2].x * 
-		(points[0].y - points[1].y) +
-		points[0].x * points[0].x * (points[1].y - points[2].y) +
-		points[1].x * points[1].x * (-points[0].y + points[2].y);
-	
-	var cTop = points[2].x *
-		(points[1].x * (points[1].x - points[2].x) * points[0].y + 
-			points[0].x * (-points[0].x + points[2].x) * points[1].y
-		) + 
-		points[0].x * (points[0].x - points[1].x) * points[1].x * points[2].y;
-	
-	var a = aTop / denominator;
-	var b = bTop / denominator;
-	var c = cTop / denominator;
-	return [a, b, c];
-}
-
-function getSplineCurveValue(points, x) {
-	var slope = 0;
-	var delta = 0.1;
-	for (var i = 1; i < points.length; i++) {
-		var p = points[i];
-		var prevP = points[i - 1];
-		var abc;
-		if (prevP.ignorePreviousSlope) {
-			// calculate slope.
-			var m = (p.y - prevP.y) / (p.x - prevP.x);
-			var yWhenXIsZero = p.y - m * p.x;
-			abc = [0, m, yWhenXIsZero];
-		}
-		else {
-			var slopePoint = {
-				'x': prevP.x + delta,
-				'y': prevP.y + delta * slope
-			};
-			abc = getAbcFromPoints([prevP, slopePoint, p]);
-		}
-		if (p.x > x) {
-			// return result.
-			return abc[0] * x * x + abc[1] * x + abc[2];
-		}
-		slope = 2 * abc[0] * p.x + abc[1];
-	}
-	// use a straight line after.
-	return slope * (x - points[points.length - 1].x) + points[points.length - 1].y;
-}
-
-function getCurveValue(points, x) {
-	if (points.length === 1) {
-		return points[0].y;
-	}
-	else if (points.length === 2) {
-		// solve straight line.
-		var dx = points[1].x - points[0].x;
-		// avoid division by zero.
-		if (dx === 0)
-			return points[0].y;
-		var dy = points[1].y - points[0].y;
-		var s = (x - points[1].x) / dx;
-		return s * dy + points[1].y;
-	}
-	else if (points.length === 3) {
-		var abc = getAbcFromPoints(points);
-		return abc[0] * x * x + abc[1] * x + abc[2];
-	}
-	else {
-		return getSplineCurveValue(points, x);
-	}
-}
-
 class Animation {
 	getDefaultProperties(deltaT) {
 		var result = {
 			'uiSettings': {
+				'lightDirectionX': -0.1808,
+				'lightDirectionY': 0.9151,
+				'lightDirectionZ': 0.2093,
 				'sphereRadius': getCurveValue([
 					{'x': 0, 'y': 3, 'ignorePreviousSlope': true},
 					{'x': 7149, 'y': 3, 'ignorePreviousSlope': true},
@@ -90,9 +12,9 @@ class Animation {
 					{'x': 35160, 'y': 6, 'ignorePreviousSlope': true},
 					{'x': 35161, 'y': 3, 'ignorePreviousSlope': true},
 					{'x': 60000, 'y': 6},
+					{'x': 69050, 'y': 15, 'ignorePreviousSlope': true},
 					{'x': 70000, 'y': 15, 'ignorePreviousSlope': true},
-					{'x': 80000, 'y': 15},
-					{'x': 85000, 'y': 15}
+					{'x': 81040, 'y': 15, 'ignorePreviousSlope': true}
 					], deltaT),
 				'cReal': getCurveValue([
 					{'x': 0, 'y': -1.63, 'ignorePreviousSlope': true},
@@ -103,7 +25,9 @@ class Animation {
 					{'x': 38000, 'y': 0.35},
 					{'x': 40000, 'y': 0.32},
 					{'x': 55000, 'y': 0.2, 'ignorePreviousSlope': true},
-					{'x': 100000, 'y': 0.2}
+					{'x': 69049.99, 'y': 0.2, 'ignorePreviousSlope': true},
+					{'x': 69050, 'y': 0.34, 'ignorePreviousSlope': true},
+					{'x': 81040, 'y': 0.34, 'ignorePreviousSlope': true}
 					], deltaT),
 				'rotationAngle': getCurveValue([
 					{'x': 0, 'y': 0},
@@ -118,9 +42,12 @@ class Animation {
 					{'x': 52800, 'y': 1.27 * Math.PI},
 					{'x': 55000, 'y': 0.99 * Math.PI},
 					{'x': 65000, 'y': 0.9280643189806786 * Math.PI},
-					{'x': 69048, 'y': 0.9280643189806786 * Math.PI},
+					{'x': 69048, 'y': 0.9280643189806786 * Math.PI, 'ignorePreviousSlope': true},
 					{'x': 69049, 'y': 0, 'ignorePreviousSlope': true},
-					{'x': 85000, 'y': 0}
+					{'x': 81040, 'y': 0, 'ignorePreviousSlope': true},
+					{'x': 91000, 'y': 0},
+					{'x': 92000, 'y': Math.PI * 0.08},
+					{'x': 93050, 'y': Math.PI * 0.25}
 				], deltaT),
 				'rotationRadius': getCurveValue([
 					{'x': 0, 'y': 5, 'ignorePreviousSlope': true},
@@ -135,22 +62,22 @@ class Animation {
 					{'x': 43000, 'y': 0},
 					{'x': 55000, 'y': 0},
 					{'x': 65000, 'y': -2.5},
-					{'x': 69049, 'y': -3, 'ignorePreviousSlope': true},
-					{'x': 69050, 'y': -2, 'ignorePreviousSlope': true},
-					{'x': 81049.9, 'y': 6, 'ignorePreviousSlope': true},
-					{'x': 81050, 'y': 2, 'ignorePreviousSlope': true},
-					{'x': 93050, 'y': 2},
+					{'x': 69049.9, 'y': -5.5, 'ignorePreviousSlope': true},
+					{'x': 69050, 'y': 5.5, 'ignorePreviousSlope': true},
+					{'x': 81040, 'y': -2.5, 'ignorePreviousSlope': true},
+					{'x': 91050, 'y': 1.1},
+					{'x': 93050, 'y': 1.458, 'ignorePreviousSlope': true},
+					{'x': 105050, 'y': 1.458, 'ignorePreviousSlope': true},
 					], deltaT),
 				'planeCutValue': getCurveValue([
 					{'x': 0, 'y': 5, 'ignorePreviousSlope': true},
 					{'x': 30000, 'y': 5},
-					{'x': 69049, 'y': 5},
+					{'x': 69049.9, 'y': 5, 'ignorePreviousSlope': true},
 					{'x': 69050, 'y': 4, 'ignorePreviousSlope': true},
-					{'x': 81049, 'y': -4, 'ignorePreviousSlope': true},
-					{'x': 81050, 'y': 4, 'ignorePreviousSlope': true},
-					{'x': 93050, 'y': -4, 'ignorePreviousSlope': true},
-					{'x': 93051, 'y': 0, 'ignorePreviousSlope': true},
-					{'x': 100000, 'y': 0},
+					{'x': 81040, 'y': -4, 'ignorePreviousSlope': true},
+					{'x': 93050, 'y': 0.9, 'ignorePreviousSlope': true},
+					{'x': 105050, 'y': -1.6, 'ignorePreviousSlope': true},
+					{'x': 117050, 'y': 1.6, 'ignorePreviousSlope': true},
 					], deltaT),
 				'positionY': getCurveValue([
 					{'x': 0, 'y': 0, 'ignorePreviousSlope': true},
@@ -166,23 +93,29 @@ class Animation {
 					{'x': 65000, 'y': 1.5},
 					{'x': 69049.9, 'y': 2.2, 'ignorePreviousSlope': true},
 					{'x': 69050, 'y': 0, 'ignorePreviousSlope': true},
-					{'x': 75000, 'y': 0},
-					{'x': 81050, 'y': 0},
-					{'x': 93050, 'y': 0},
+					{'x': 81040, 'y': 0}
 					], deltaT),
 				'peakOpacity': getCurveValue([
 					{'x': 0, 'y': 0.1, 'ignorePreviousSlope': true},
-					{'x': 10000, 'y': 1.6},
-					{'x': 15000, 'y': 2},
-					{'x': 29000, 'y': 2},
-					{'x': 33000, 'y': 1.85},
-					{'x': 35000, 'y': 1.6},
-					{'x': 36500, 'y': 1.6},
-					{'x': 38000, 'y': 1.8},
-					{'x': 42000, 'y': 2},
-					{'x': 55000, 'y': 2},
-					{'x': 65000, 'y': 10.0, 'ignorePreviousSlope': true},
-					{'x': 75000, 'y': 10.0},
+					{'x': 10000, 'y': 1.8},
+					{'x': 15000, 'y': 2.6},
+					{'x': 29000, 'y': 3},
+					{'x': 33000, 'y': 2.3},
+					{'x': 35000, 'y': 2},
+					{'x': 36500, 'y': 2},
+					{'x': 38000, 'y': 2.3},
+					{'x': 42000, 'y': 3},
+					{'x': 55000, 'y': 3},
+					{'x': 65000, 'y': 15.0, 'ignorePreviousSlope': true},
+					{'x': 69050, 'y': 15.0, 'ignorePreviousSlope': true},
+					{'x': 81040, 'y': 15.0, 'ignorePreviousSlope': true},
+					{'x': 90000, 'y': 3.5},
+					{'x': 93050, 'y': 2.2},
+					{'x': 105050, 'y': 10, 'ignorePreviousSlope': true},
+					{'x': 117049.9, 'y': 2.5, 'ignorePreviousSlope': true},
+					{'x': 117050, 'y': 2.5, 'ignorePreviousSlope': true},
+					{'x': 130000, 'y': 1.8},
+					{'x': 141050, 'y': 0.3},
 					], deltaT),
 				'ambient': getCurveValue([
 					{'x': 0, 'y': 0.05},
@@ -190,6 +123,12 @@ class Animation {
 					{'x': 50000, 'y': 0.3},
 					{'x': 55000, 'y': 1.0, 'ignorePreviousSlope': true},
 					{'x': 69050, 'y': 1.0},
+					{'x': 81040, 'y': 1.0},
+					{'x': 117050, 'y': 1.0},
+					{'x': 117500, 'y': 0.8695},
+					{'x': 120000, 'y': 0.1},
+					{'x': 122000, 'y': 0.05},
+					{'x': 129050, 'y': 0.0},
 				], deltaT),
 				'scaleFactor': getCurveValue([
 					{'x': 0, 'y': 1},
@@ -197,16 +136,14 @@ class Animation {
 					{'x': 50000, 'y': 0.7},
 					{'x': 69049.9, 'y': 0.7, 'ignorePreviousSlope': true},
 					{'x': 69050, 'y': 1, 'ignorePreviousSlope': true},
-					{'x': 200000, 'y': 1},
+					{'x': 81040, 'y': 1},
 				], deltaT),
 				'displayMode': 1,
 				'lineThicknessFactor': 0.0005
 			}
 		};
-		if (deltaT < 81050)
+		if (deltaT < 105050)
 			result.uiSettings.planeCutAxis = 3;
-		else if (deltaT < 93050)
-			result.uiSettings.planeCutAxis = 2;
 		else {
 			result.uiSettings.planeCutAxis = 1;
 		}
@@ -216,7 +153,7 @@ class Animation {
 	getIntroProperties(deltaT) {
 		return {
 			'uiSettings': {
-				'maxIterations': 50
+				'maxIterations': 75
 			}
 		};
 	}
@@ -270,10 +207,19 @@ class Animation {
 	}
 	
 	cutFromTheEdge(deltaT) {
+		deltaT -= 81050;
+		return {
+			'uiSettings': {
+				'displayMode': DisplayMode.PLANE_CUT
+			}
+		};
+	}
+	
+	volumetricCutFromTheEdge(deltaT) {
 		deltaT -= 69050;
 		return {
 			'uiSettings': {
-				'displayMode': 2
+				'displayMode': DisplayMode.MAX_CUT_VOLUME
 			}
 		};
 	}
@@ -282,7 +228,42 @@ class Animation {
 		deltaT -= 93050;
 		return {
 			'uiSettings': {
-				'displayMode': 3
+				'displayMode': 3 // cut MAX
+			}
+		};
+	}
+	
+	volumetricCutY(deltaT) {
+		deltaT -= 93050;
+		return {
+			'uiSettings': {
+				'displayMode': DisplayMode.MAX_CUT_VOLUME,
+				'planeCutAxis': 2
+			}
+		};
+	}
+	
+	rotatingCutY(deltaT) {
+		deltaT -= 105050;
+		return {
+			'uiSettings': {
+				'displayMode': DisplayMode.PLANE_CUT,
+				'planeCutAxis': 2
+			}
+		};
+	}
+	
+	lightSourceMovement(deltaT) {
+		deltaT -= 105050;
+		var angle = deltaT * 0.0005 + 7.125;
+		var angle2 = angle - Math.PI * 0.5;
+		return {
+			'uiSettings': {
+				'rotationAngle': angle,
+				'displayMode': DisplayMode.DEFAULT,
+				'lightDirectionY': 0.5,
+				'lightDirectionX': Math.sin(angle2),
+				'lightDirectionZ': Math.cos(angle2)
 			}
 		};
 	}
@@ -323,8 +304,20 @@ class Animation {
 		else if (deltaT < 69050) {
 			this._deepCopy(result, this.toTheEdge(deltaT));
 		}
-		else if (deltaT < 93050) {
+		else if (deltaT < 81050) {
 			this._deepCopy(result, this.cutFromTheEdge(deltaT));
+		}
+		else if (deltaT < 93050) {
+			this._deepCopy(result, this.volumetricCutFromTheEdge(deltaT));
+		}
+		else if (deltaT < 105050) {
+			this._deepCopy(result, this.volumetricCutY(deltaT));
+		}
+		else if (deltaT < 117050) {
+			this._deepCopy(result, this.rotatingCutY(deltaT));
+		}
+		else {
+			this._deepCopy(result, this.lightSourceMovement(deltaT));
 		}
 		return result;
 	}
@@ -334,6 +327,19 @@ class Animation {
 	}
 
 	getMaxTime() {
-		return 95 * 1000;
+		return 142050;
+	}
+	
+	getKeyTimes() {
+		return [
+			69050,
+			81040,
+			 93050,
+			105050,
+			117050,
+			129050,
+			141050,
+			153050
+		];
 	}
 }
