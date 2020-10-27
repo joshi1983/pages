@@ -7,16 +7,34 @@
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 		<script src="https://cdn.rawgit.com/eligrey/FileSaver.js/master/src/FileSaver.js"></script>
+		<script src="displayMode.js"></script>
 		<script src="slowAnimation.js"></script>
-		<script src="animation.js"></script>
+		<script src="planeCutValue.js"></script>
+		<script src="bezier.js"></script>
+		<script src="animationUI.js"></script>
+		<script src="webglUtils.js"></script>
+		<script src="sanitizationUtils.js"></script>
+		<script src="mouseTouchUtils.js"></script>
+		<script src="pixelSubsampling.js"></script>
+		<script src="sampleOpacity.js"></script>
+		<script src="downloadRenderer.js"></script>
+		<script src="lightObstructionDelta.js"></script>
+		<script src="lightDirection.js"></script>
+		<script src="ambientLight.js"></script>
+		<script src="maxIterations.js"></script>
+		<script src="sphereRadius.js"></script>
+		<script src="mandelbrotDisplay.js"></script>
+		<script src="cRealValue.js"></script>
+		<script src="planeCutAxis.js"></script>
+		<script src="peakOpacity.js"></script>
+		<script src="scale.js"></script>
+		<script src="camera.js"></script>
+		<script src="circles.js"></script>
 		<script src="script.js"></script>
 		<link rel="stylesheet" href="style.css">
 	</head>
 	<body>
 		<div id="settings">
-			<button id="playAnimation">Play</button>
-			<span id="deltaT"></span>
-			<button id="downloadAnimationHD">Download HD Frame Sequence</button>
 			<div class="row">
 				<div class="col-md-3">
 					<div class="labelled-input-pair">
@@ -148,24 +166,23 @@
 		<div id="mandelbrot-display">
 			<canvas></canvas>
 		</div>
-
-<script id="mandelbrot-fragment-shader" type="glsl/fragment">
+<script id="common-fragment-shader" type="glsl/fragment">
 // <![CDATA[
-precision lowp float;
+precision mediump float;
 
 uniform vec2 centre;
 uniform float scale;
-uniform float fractalIterationDelta;
 uniform int pixelSubsampling;
+uniform float fractalIterationDelta;
 
 // copied from main fragment shader.
 // These should be copies of each other.
 vec3 getColourFromDensity(float density)
 {
-	if (density > 0.95) {
+	if (density > 0.96) {
 		return vec3(1.0, 1.0, 1.0);
 	}
-	else if (density > 0.2) {
+	else if (density > 0.15) {
 		return vec3(1.0, 1.0, 0.5);
 	}
 	else {
@@ -189,7 +206,12 @@ vec3 valueToColour(float density) {
 	return colour * density;
 }
 
-float getMandelbrotValue(vec2 p) {
+// ]]>
+</script>
+<script id="mandelbrot-fragment-shader" type="glsl/fragment">
+// <![CDATA[
+
+float getPixelColourFor(vec2 p) {
 	float xt;
 	float zx, zy, cx, cy;
 	float ratio = 0.0;
@@ -221,7 +243,7 @@ void main(void) {
 		for (int j = 0; j < 1000; j++) {
 			if (j >= pixelSubsampling)
 				break;
-			c += valueToColour(getMandelbrotValue(vec2(p.x + dx, p.y + dy)));
+			c += valueToColour(getPixelColourFor(vec2(p.x + dx, p.y + dy)));
 			dy += delta;
 		}
 		dx += delta; 
@@ -242,7 +264,6 @@ void main(void) {
 
 <script id="main-fragment-shader" type="glsl/fragment">
 // <![CDATA[
-precision mediump float;
 
 #define DEFAULT_DISPLAY_MODE 1
 #define PLANE_CUT_DISPLAY_MODE 2
@@ -254,21 +275,17 @@ precision mediump float;
 #define Z_AXIS 3
 
 uniform float ambientFactor;
-uniform vec2 centre;
 uniform vec2 circleRadiusRange;
 uniform float cReal;
-uniform float fractalIterationDelta;
 uniform bool isShowingCircumference;
 uniform int displayMode;
 uniform vec3 lightDirection;
 uniform float lightObstructionDeltaRatio;
 uniform float peakSampleOpacity;
 uniform float opacityCutOff;
-uniform int pixelSubsampling;
 uniform int planeCutAxis;
 uniform float planeCutValue;
 uniform vec3 position3D;
-uniform float scale;
 uniform float sphereRadiusSquared;
 uniform float sphereRadiusWithPlaneLineSquared;
 uniform vec2 viewRotation;
@@ -381,19 +398,6 @@ vec2 getSphereIntersectionDistances(vec3 direction)
 		result.x = max(0.0, (-b - discriminant) * 0.5);
 
 		return result;
-	}
-}
-
-vec3 getColourFromDensity(float density)
-{
-	if (density > 0.95) {
-		return vec3(1.0, 1.0, 1.0);
-	}
-	else if (density > 0.2) {
-		return vec3(1.0, 1.0, 0.5);
-	}
-	else {
-		return vec3(1.0, 0.0, 0.0);
 	}
 }
 
