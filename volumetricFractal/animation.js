@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', function() {
 					'detail': {
 						'props': animation.getPropertiesForTime(deltaT),
 						'deltaT': deltaT
-						}
+					}
 				});
 				document.dispatchEvent(eventData);
 			}
