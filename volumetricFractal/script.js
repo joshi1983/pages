@@ -803,42 +803,50 @@ window.addEventListener("DOMContentLoaded", function() {
 	  return showPlane.checked;
   }
   
-  function improveFrameRateInResponseTo(currentFrameRate) {
-	  if (currentFrameRate < 10) {
-		  if (isPlaneCut()) {
-			if (pixelStretch === 1)
-				pixelSubsampling.decreaseQuality();
-			else
-				pixelSubsampling.useLowestQuality();
-		  }
-		  if (pixelStretch === 1 && !isPlaneCut() && !lightObstructionDeltaRatio.isLowest1PixelStretchQuality()) {
-			  
-			lightObstructionDeltaRatio.decreaseQuality();
-			
-			// If the frame rate is terrible, increase pixelStretch immediately.
-			if (currentFrameRate < 5) {
-				pixelStretch++;
-				refreshPixelStretchCentreAndScale();
-			}
-		  }
-		  else {
+  function decreaseQuality(currentFrameRate) {
+	  if (isPlaneCut()) {
+		if (pixelStretch === 1)
+			pixelSubsampling.decreaseQuality();
+		else
+			pixelSubsampling.useLowestQuality();
+	  }
+	  if (pixelStretch === 1 && !isPlaneCut() && !lightObstructionDeltaRatio.isLowest1PixelStretchQuality()) {
+		  
+		lightObstructionDeltaRatio.decreaseQuality();
+		
+		// If the frame rate is terrible, increase pixelStretch immediately.
+		if (currentFrameRate < 5) {
 			pixelStretch++;
 			refreshPixelStretchCentreAndScale();
+		}
+	  }
+	  else {
+		pixelStretch++;
+		refreshPixelStretchCentreAndScale();
+	  }
+  }
+  
+  function increaseQuality(currentFrameRate) {
+	  if (pixelStretch > 1) {
+			pixelStretch--;
+			refreshPixelStretchCentreAndScale();
+	  }
+	  else if (!isPlaneCut()) {
+		  lightObstructionDeltaRatio.increaseQuality();
+	  }
+	  else {
+		  if (currentFrameRate > 55) {
+			pixelSubsampling.increaseQuality();
 		  }
 	  }
-	  else if (currentFrameRate > 40) {
-		  if (pixelStretch > 1) {
-				pixelStretch--;
-				refreshPixelStretchCentreAndScale();
-		  }
-		  else if (!isPlaneCut()) {
-			  lightObstructionDeltaRatio.increaseQuality();
-		  }
-		  else {
-			  if (currentFrameRate > 55) {
-				pixelSubsampling.increaseQuality();
-			  }
-		  }
+  }
+  
+  function improveFrameRateInResponseTo(currentFrameRate) {
+	  if (currentFrameRate < 20) {
+		  decreaseQuality(currentFrameRate);
+	  }
+	  else if (currentFrameRate > 50) {
+		  increaseQuality(currentFrameRate);
 	  }
   }
 
@@ -995,6 +1003,10 @@ window.addEventListener("DOMContentLoaded", function() {
 		if (forceUpdate || val !== newValue) {
 			showPlane.checked = newValue;
 			gl.uniform1i(locationOfIsShowingPlaneCut, isPlaneCut());
+			if (newValue !== val && newValue === false) {
+				// volumetric rendering can't run at the same quality.
+				decreaseQuality(1);
+			}
 		}
 	}
   
