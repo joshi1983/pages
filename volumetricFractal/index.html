@@ -395,19 +395,19 @@ vec3 getDiscColour(vec3 direction) {
 
 	float distanceToPlane;
 
-	if (planeCutAxis == 1)
-		distanceToPlane = (-position3D.x - planeCutValue) / direction.x;
-	else if (planeCutAxis == 2)
-		distanceToPlane = (-position3D.y - planeCutValue) / direction.y;
+	if (planeCutAxis == X_AXIS)
+		distanceToPlane = -(position3D.x - planeCutValue) / direction.x;
+	else if (planeCutAxis == Y_AXIS)
+		distanceToPlane = -(position3D.y - planeCutValue) / direction.y;
 	else
-		distanceToPlane = (-position3D.z - planeCutValue) / direction.z;
+		distanceToPlane = -(position3D.z - planeCutValue) / direction.z;
 	
 	if (distanceToPlane < 0.0)
 		return result;
 
 	vec3 intersectionPoint = position3D + direction * distanceToPlane;
 	float lenSquared = dot(intersectionPoint, intersectionPoint);
-	
+
 	if (lenSquared > sphereRadiusWithPlaneLineSquared)
 		return result;
 	else if (isShowingCircumference && lenSquared > sphereRadiusSquared)
