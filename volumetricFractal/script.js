@@ -37,6 +37,7 @@ window.addEventListener("DOMContentLoaded", function() {
 
 	initCoords(gl, pid);
   var scaleFactor = 1;
+  var lineThicknessFactor = 0.001;
   var times = [];
   var rotationRadius = 2.0;
   var deltaT = document.getElementById('deltaT');
@@ -384,7 +385,7 @@ window.addEventListener("DOMContentLoaded", function() {
 			var maxPixelRadius = updateCircleRadiusRange(this.gl, this.w, this.h, scaleValue, this.uniforms.circleRadiusRange);
 			var pixelSubsamplingQuality = pixelSubsampling.DEFAULT_QUALITY;
 			if (isPlaneCut())
-				pixelSubsamplingQuality = 5;
+				pixelSubsamplingQuality = 7;
 			this.gl.uniform1i(this.uniforms.pixelSubsampling, pixelSubsamplingQuality);
 			this.gl.uniform2fv(this.uniforms.centre, [this.w / 2, this.h / 2]);
 			this.gl.uniform1f(this.uniforms.scale, getScaleFromDimensions(this.w, this.h));
@@ -855,7 +856,7 @@ window.addEventListener("DOMContentLoaded", function() {
   }
   
   function getOutlineThickness(w, h) {
-	  return (w + h) * 0.001;
+	  return (w + h) * lineThicknessFactor;
   }
   
   function getRadiusFromSphereRadius(sr, scaleValue) {
@@ -1063,7 +1064,11 @@ window.addEventListener("DOMContentLoaded", function() {
 		  ambientInput.value = newAmbientValue;
 	  }
   }
-  
+
+  function setLineThicknessFactor(newLineThicknessFactor) {
+	  lineThicknessFactor = newLineThicknessFactor;
+  }
+
   function initSettings() {
 	var body = document.querySelector('body');
 	var settingsCloseButton = document.getElementById('collapse-settings-button');
@@ -1204,7 +1209,7 @@ window.addEventListener("DOMContentLoaded", function() {
 			  positionY = getDefaultedNumber(uiSettings.positionY, positionY);
 			  scaleFactor = getDefaultedNumber(uiSettings.scaleFactor, scaleFactor);
 			  setShowingPlaneCut(getDefaultedBool(uiSettings.isShowingPlaneCut, isPlaneCut()));
-
+			  setLineThicknessFactor(getDefaultedNumber(uiSettings.lineThicknessFactor, 0.001));
 
 			  setRotationAngle(rotationAngle); // update based on rotationRadius and rotationAngle.
 			  deltaT.innerText = event.detail.deltaT;
