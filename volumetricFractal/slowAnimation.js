@@ -81,7 +81,7 @@ function getCurveValue(points, x) {
 
 class Animation {
 	getDefaultProperties(deltaT) {
-		return {
+		var result = {
 			'uiSettings': {
 				'sphereRadius': getCurveValue([
 					{'x': 0, 'y': 2, 'ignorePreviousSlope': true},
@@ -192,6 +192,14 @@ class Animation {
 				'lineThicknessFactor': 0.0005
 			}
 		};
+		if (deltaT < 81050)
+			result.uiSettings.planeCutAxis = 3;
+		else if (deltaT < 93050)
+			result.uiSettings.planeCutAxis = 2;
+		else {
+			result.uiSettings.planeCutAxis = 1;
+		}
+		return result;
 	}
 
 	getIntroProperties(deltaT) {

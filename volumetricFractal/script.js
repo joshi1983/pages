@@ -1014,7 +1014,19 @@ window.addEventListener("DOMContentLoaded", function() {
 		var checkedPlaneCutAxisInput = document.querySelector('[name="plane-cut-axis"]:checked');
 		return parseInt(checkedPlaneCutAxisInput.value);
   }
-  
+
+	function setPlaneCutAxis(newPlaneCutAxis, forceUpdate) {
+		var val = getPlaneCutAxisValue();
+		if (forceUpdate || val !== newPlaneCutAxis) {
+			if (val !== newPlaneCutAxis) {
+				var planeCutAxisInput = document.querySelector('[name="plane-cut-axis"][value="' + newPlaneCutAxis + '"]');
+				planeCutAxisInput.checked = true;
+			}
+			gl.uniform1i(locationOfPlaneCutAxis, newPlaneCutAxis);
+			mandelBrotDisplay.planeCutAxisChanged();
+		}
+	}
+
   function getCRealValue() {
 	return sanitizeFloat(cRealInput.value, 0.7);
   }
@@ -1042,9 +1054,7 @@ window.addEventListener("DOMContentLoaded", function() {
 		}
 		
 		function planeCutAxisChanged() {
-			var val = getPlaneCutAxisValue();
-			gl.uniform1i(locationOfPlaneCutAxis, val);
-			mandelBrotDisplay.planeCutAxisChanged();
+			setPlaneCutAxis(getPlaneCutAxisValue(), true);
 		}
 
 		showPlane.addEventListener('change', showPlaneCutUpdated);
@@ -1202,6 +1212,7 @@ window.addEventListener("DOMContentLoaded", function() {
 			  rotationRadius = getDefaultedNumber(uiSettings.rotationRadius, rotationRadius);
 			  sphereRadius.setValue(uiSettings.sphereRadius, sphereRadius.getValue());
 			  setMaxIterations(getDefaultedInteger(uiSettings.maxIterations, getMaxIterations()));
+			  setPlaneCutAxis(getDefaultedInteger(uiSettings.planeCutAxis, getPlaneCutAxisValue()), false);
 			  setPeakOpacityInputValue(getDefaultedNumber(uiSettings.peakOpacity, getPeakOpacityInputValue()));
 			  setPlaneCutValue(getDefaultedNumber(uiSettings.planeCutValue, getPlaneCutValue()));
 			  setCRealValue(getDefaultedNumber(uiSettings.cReal, getCRealValue()));
