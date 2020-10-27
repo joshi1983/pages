@@ -229,6 +229,12 @@ precision mediump float;
 
 #define DEFAULT_DISPLAY_MODE 1
 #define PLANE_CUT_DISPLAY_MODE 2
+#define MAX_CUT_VOLUME_DISPLAY_MODE 3
+#define MIN_CUT_VOLUME_DISPLAY_MODE 4
+
+#define X_AXIS 1
+#define Y_AXIS 2
+#define Z_AXIS 3
 
 uniform float ambientFactor;
 uniform vec2 centre;
@@ -310,6 +316,30 @@ float getJuliaSetValue(vec3 p)
 
 float getValue(vec3 p)
 {
+	if (displayMode == MAX_CUT_VOLUME_DISPLAY_MODE) {
+		if (planeCutAxis == X_AXIS) {
+			if (p.x > planeCutValue)
+				return 0.0;
+		}
+		else if (planeCutAxis == Y_AXIS) {
+			if (p.y > planeCutValue)
+				return 0.0;
+		}
+		else if (p.z > planeCutValue)
+			return 0.0;
+	}
+	else if (displayMode == MIN_CUT_VOLUME_DISPLAY_MODE) {
+		if (planeCutAxis == X_AXIS) {
+			if (p.x < planeCutValue)
+				return 0.0;
+		}
+		else if (planeCutAxis == Y_AXIS) {
+			if (p.y < planeCutValue)
+				return 0.0;
+		}
+		else if (p.z < planeCutValue)
+			return 0.0;
+	}
 	return getJuliaSetValue(p);
 }
 
