@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			var t = new Date().getTime();
 			var deltaT = t - startTime;
 			if (deltaT > animation.getMaxTime()) {
+				console.log('about to pause the audio and remove the time-changed listener.');
 				if (audio !== undefined)
 					audio.pause();
 				document.removeEventListener('time-changed', updateAnimation);
