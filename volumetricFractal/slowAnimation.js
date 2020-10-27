@@ -91,8 +91,7 @@ class Animation {
 					{'x': 35161, 'y': 3, 'ignorePreviousSlope': true},
 					{'x': 60000, 'y': 6},
 					{'x': 70000, 'y': 15, 'ignorePreviousSlope': true},
-					{'x': 80000, 'y': 15},
-					{'x': 85000, 'y': 15}
+					{'x': 100000, 'y': 15}
 					], deltaT),
 				'cReal': getCurveValue([
 					{'x': 0, 'y': -1.63, 'ignorePreviousSlope': true},
@@ -135,11 +134,12 @@ class Animation {
 					{'x': 43000, 'y': 0},
 					{'x': 55000, 'y': 0},
 					{'x': 65000, 'y': -2.5},
-					{'x': 69049, 'y': -3, 'ignorePreviousSlope': true},
-					{'x': 69050, 'y': -2, 'ignorePreviousSlope': true},
+					{'x': 69049.9, 'y': 3, 'ignorePreviousSlope': true},
+					{'x': 69050, 'y': 2, 'ignorePreviousSlope': true},
 					{'x': 81049.9, 'y': 6, 'ignorePreviousSlope': true},
 					{'x': 81050, 'y': 2, 'ignorePreviousSlope': true},
 					{'x': 93050, 'y': 2},
+					{'x': 100000, 'y': 5},
 					], deltaT),
 				'planeCutValue': getCurveValue([
 					{'x': 0, 'y': 5, 'ignorePreviousSlope': true},
@@ -149,8 +149,8 @@ class Animation {
 					{'x': 81049, 'y': -4, 'ignorePreviousSlope': true},
 					{'x': 81050, 'y': 4, 'ignorePreviousSlope': true},
 					{'x': 93050, 'y': -4, 'ignorePreviousSlope': true},
-					{'x': 93051, 'y': 0, 'ignorePreviousSlope': true},
-					{'x': 100000, 'y': 0},
+					{'x': 100000, 'y': 4, 'ignorePreviousSlope': true},
+					{'x': 105000, 'y': 0},
 					], deltaT),
 				'positionY': getCurveValue([
 					{'x': 0, 'y': 0, 'ignorePreviousSlope': true},
@@ -326,6 +326,9 @@ class Animation {
 		else if (deltaT < 93050) {
 			this._deepCopy(result, this.cutFromTheEdge(deltaT));
 		}
+		else if (deltaT < 100000) {
+			this._deepCopy(result, this.startVolumetricCut(deltaT));
+		}
 		return result;
 	}
 
@@ -334,6 +337,6 @@ class Animation {
 	}
 
 	getMaxTime() {
-		return 95 * 1000;
+		return 105 * 1000;
 	}
 }
