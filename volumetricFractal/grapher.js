@@ -180,12 +180,17 @@ document.addEventListener('DOMContentLoaded', function() {
 			
 			if (clearCanvas) {
 				var extraPoints = [
-					{'x': 0, 'y': 6, 'ignorePreviousSlope': true},
-					{'x': 30000, 'y': 6},
-					{'x': 69049, 'y': 6},
-					{'x': 69050, 'y': 6, 'ignorePreviousSlope': true},
-					{'x': 85000, 'y': -6},
-
+					{'x': 0, 'y': 5, 'ignorePreviousSlope': true},
+					{'x': 30000, 'y': 5},
+					{'x': 69049.9, 'y': 5, 'ignorePreviousSlope': true},
+					{'x': 69050, 'y': 4, 'ignorePreviousSlope': true},
+					{'x': 81049.9, 'y': -4, 'ignorePreviousSlope': true},
+					{'x': 81050, 'y': 4, 'ignorePreviousSlope': true},
+					{'x': 92849.9, 'y': -4, 'ignorePreviousSlope': true},
+					{'x': 92850, 'y': -1.5, 'ignorePreviousSlope': true},
+					{'x': 93500, 'y': 0.2},
+					{'x': 95300, 'y': 1.5, 'ignorePreviousSlope': true},
+					{'x': 105000, 'y': 3},
 ];
 				g.strokeStyle = '#f00';
 				extraPoints.forEach(function(p) {
