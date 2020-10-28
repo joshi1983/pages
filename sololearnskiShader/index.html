@@ -26,6 +26,7 @@ uniform float circles[6 * 125];
 uniform vec2 centre;
 uniform float scale;
 uniform vec2 cutOffs;
+uniform bool isSubpixelSampling;
 
 vec3 getCircleInLeaf(vec2 p) {
 	for (int i = 0; i < 375; i += 3) {
@@ -114,7 +115,19 @@ float getValueAt(vec2 p) {
 
 void main(void) {
 	vec2 p = (gl_FragCoord.xy - centre) * scale;
-	float val = getValueAt(p);
+	float val;
+	if (isSubpixelSampling) {
+		for (float xDelta = 0.0; xDelta < 0.99; xDelta+= 0.5) {
+			for (float yDelta = 0.0; yDelta < 0.99; yDelta+= 0.5) {
+				val += getValueAt(vec2(p.x + xDelta * scale, p.y + yDelta * scale));
+			}
+		}
+		val *= 0.35;
+	}
+	else {
+		val = getValueAt(p);
+	}
+	
 	gl_FragColor = vec4(val, val, val, 1.0);
 }
 // ]]>
@@ -125,6 +138,8 @@ void main(void) {
 		<div id="dialog">
 			<p>This is a WebGL shader for the Sololearnski Carpet Fractal.</p>
 			<ul>
+				<li>Click or touch to zoom in.</li>
+				<li>Hit Backspace to zoom out.</li>
 				<li><a href="https://www.youtube.com/watch?v=6oTEzDDTsnU" target="_empty">Sololearnski Fractal - zoom video</a></li>
 				<li><a href="https://code.sololearn.com/WVhoMHzy3K81" target="_empty">Interactive Sololearnski Fractal Viewer</a></li>
 			</ul>

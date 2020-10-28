@@ -9,12 +9,18 @@ window.addEventListener("DOMContentLoaded", function() {
 	let pid = gl.createProgram();
 	var h = canvas.clientHeight;
 	var w = canvas.clientWidth;
+	var centreOffset = [0, 0];
 	loadShaders();
 	let locationOfCentre = gl.getUniformLocation(pid, 'centre');
 	let locationOfScale = gl.getUniformLocation(pid, 'scale');
 	let locationOfCutoffs = gl.getUniformLocation(pid, 'cutOffs');
+	let locationOfIsSubpixelSampling = gl.getUniformLocation(pid, 'isSubpixelSampling');
 	var pixelStretch = 1;
 	var times = [];
+	var pixelStretchDrawTimings = {};
+	var scaleFactor = 2.5;
+	var lastZoomTime = undefined;
+	var isDrawnHighQuality = false;
   	initCoords();
 
 	function initCoords() {
@@ -44,17 +50,21 @@ window.addEventListener("DOMContentLoaded", function() {
 
 	function optimizeFrameRateAndQuality() {
 		var t = new Date().getTime();
-		var processInterval = 3000;
+		var processInterval = 1000;
 		// Do nothing except every few seconds.
-		if (times.length === 0 || Math.floor(t / processInterval) !== Math.floor(times[times.length - 1] / processInterval)) {
+		if (times.length === 0 || 
+		Math.floor(t / processInterval) !== Math.floor(times[times.length - 1] / processInterval)) {
 			times = times.filter(function(t2) {
 				return t - t2 < 1000;
 			});
+			if (!zoomedRecently())
+				drawHighQuality();
+
 			var newPixelStretch = pixelStretch;
-			if (times.length < 24) {
+			if (pixelStretchDrawTimings[pixelStretch] > 30) {
 				newPixelStretch = pixelStretch + 1;
 			}
-			else if (times.length > 55) {
+			else if (pixelStretchDrawTimings[pixelStretch] < 15) {
 				newPixelStretch = Math.max(1, pixelStretch - 1);
 			}
 			if (newPixelStretch !== pixelStretch) {
@@ -64,26 +74,128 @@ window.addEventListener("DOMContentLoaded", function() {
 		}
 		times.push(t);
 	}
+	
+	var scaleFactorBeforeZoom;
+	var zoomScaleTime = undefined;
+	var offsetBeforeZoom;
+	var zoomFinalOffset;
+	var finalZoomFactor;
+	var zoomOffsets = [];
+	function updateZoom() {
+		if (zoomScaleTime === undefined)
+			return; // not zooming so do nothing.
+		var t = new Date().getTime();
+		var deltaT = t - zoomScaleTime;
+		var maxDeltaT = 400;
+		var ratio = Math.min(maxDeltaT, t - zoomScaleTime) / maxDeltaT;
+		var ratio2 = 1 - ratio;
+		var newZoomScaleFactor = scaleFactorBeforeZoom * ratio2 + finalZoomFactor * ratio;
+		scaleFactor = newZoomScaleFactor;
+		
+		centreOffset = [
+			offsetBeforeZoom[0] * ratio2 + zoomFinalOffset[0] * ratio,
+			offsetBeforeZoom[1] * ratio2 + zoomFinalOffset[1] * ratio,
+		];
+		
+		// if zooming complete, reset the variables.
+		if (deltaT > maxDeltaT)	{
+			zoomScaleTime = undefined;
+			scaleFactorBeforeZoom = undefined;
+			offsetBeforeZoom = undefined;
+			zoomFinalOffset = undefined;
+			finalZoomFactor = undefined;
+		}
+		updateLastZoomTime();
+	}
+	
+	function updateLastZoomTime() {
+		lastZoomTime = new Date().getTime();
+	}
+	
+	function startZoomIn(finalOffset) {
+		// don't allow more than one zoom at a time.
+		if (zoomScaleTime !== undefined)
+			return;
+		scaleFactorBeforeZoom = scaleFactor;
+		finalZoomFactor = scaleFactor * 0.4;
+		zoomScaleTime = new Date().getTime();
+		offsetBeforeZoom = centreOffset;
+		zoomFinalOffset = finalOffset;
+		zoomOffsets.push(zoomFinalOffset);
+	}
+	
+	function startZoomOut() {
+		// don't allow more than one zoom at a time.
+		if (zoomScaleTime !== undefined)
+			return;
+		scaleFactorBeforeZoom = scaleFactor;
+		finalZoomFactor = scaleFactor / 0.4;
+		zoomScaleTime = new Date().getTime();
+		offsetBeforeZoom = centreOffset;
+		if (zoomOffsets.length > 0)
+			zoomFinalOffset = zoomOffsets.pop();
+		else
+			zoomFinalOffset = [0,0];
+	}
+	
+	function zoomedRecently() {
+		return lastZoomTime !== undefined && new Date().getTime() - lastZoomTime < 500;
+	}
+	
+	function drawHighQuality() {
+		// Don't needlessly draw in high quality.
+		if (isDrawnHighQuality)
+			return;
+		var originalPixelStretch = pixelStretch;
+		pixelStretch = 0.5;
+		gl.uniform1i(locationOfIsSubpixelSampling, 1);
+		drawWebGLGraphics();
+		gl.uniform1i(locationOfIsSubpixelSampling, 0);
+		pixelStretch = originalPixelStretch;
+	}
 
-	function drawGraphics() {
-		optimizeFrameRateAndQuality();
-		updateScale();
+	function drawWebGLGraphics() {
+		isDrawnHighQuality = pixelStretch < 1;
+		var tStart = new Date().getTime();
 		gl.viewport(0, 0, w, h);
 		gl.clearColor(0, 0, 0, 0);
 		gl.drawArrays(gl.TRIANGLES, 0, 3);
+		var tEnd = new Date().getTime();
+		var tDelta = tEnd - tStart;
+		var ratio = 0.1;
+		var ratio2 = 1 - ratio;
+		if (pixelStretchDrawTimings[pixelStretch] === undefined)
+			pixelStretchDrawTimings[pixelStretch] = tDelta;
+		else
+			pixelStretchDrawTimings[pixelStretch] = pixelStretchDrawTimings[pixelStretch] * ratio2 + tDelta * ratio;
+	}
+
+	function drawGraphics() {
+		updateZoom();
+		optimizeFrameRateAndQuality();
+		updateScale();
+		resized();
+
+		if (zoomedRecently()) {
+			drawWebGLGraphics();
+		}
 		requestAnimationFrame(drawGraphics);
 	}
 	
 	function getScaleValue() {
-		var t = new Date().getTime();
-		return (3 + Math.sin(t * 0.001)) / Math.min(w, h);
+		return scaleFactor / Math.min(w, h);
 	}
 	
 	function updateScale() {
 		var scaleValue = getScaleValue();
 		gl.uniform1f(locationOfScale, scaleValue);
-		var cutOffs = [scaleValue * 0.2, scaleValue * 1];
+		var cutOffs = [scaleValue * scaleValue * 0.2, scaleValue * scaleValue * 1];
 		gl.uniform2fv(locationOfCutoffs, cutOffs);
+	}
+	
+	function getCentre() {
+		var scaleValue = getScaleValue();
+		return [w / 2 - centreOffset[0] / scaleValue, h / 2 - centreOffset[1] / scaleValue];
 	}
 
 	// called every time the window resizes or pixelStretch is changed.
@@ -96,9 +208,8 @@ window.addEventListener("DOMContentLoaded", function() {
 		
 		canvas.setAttribute('width', Math.round(w));
 		canvas.setAttribute('height', Math.round(h));
-		var centre = [w / 2, h / 2];
 		updateScale();
-		gl.uniform2fv(locationOfCentre, centre);
+		gl.uniform2fv(locationOfCentre, getCentre());
 	}
 
 	// Passes the circles data to the circles uniform in the shader.
@@ -107,7 +218,7 @@ window.addEventListener("DOMContentLoaded", function() {
 		var circleData = [];
 		var sololearnCx = circles[1].cx * 0.8788;
         var sololearnCy = circles[1].cx * 1.6835;
-        var sololearnRadius = sololearnCy * 1.02;
+        var sololearnRadius = sololearnCy * 1.022;
 
 		var a = 1.55 * Math.PI / 3;
 		var sinA = Math.sin(a);
@@ -126,10 +237,39 @@ window.addEventListener("DOMContentLoaded", function() {
 	function okClicked() {
 		document.getElementById('dialog').setAttribute('class', 'closed');
 	}
+		
+	function zoomInClick(event) {
+		var x = event.clientX;
+		var y = event.clientY;
+		if (x === undefined && event.targetTouches.length > 0) {
+			var touch = event.targetTouches[0];
+			x = touch.pageX;
+			y = touch.pageY;
+		}
+		if (x !== undefined && y !== undefined) {
+			var scaleValue = getScaleValue();
+			var centre = getCentre();
+			var dx = x / pixelStretch - w/2;
+			var dy = y / pixelStretch - h/2;
+			// convert to the coordinates used in the shader.
+			
+			resized();
+			startZoomIn([centreOffset[0] + dx * scaleValue, centreOffset[1] - dy * scaleValue]);
+		}
+	}
+	
+	function keyDown(event) {
+		if (event.keyCode === 8)
+			startZoomOut();
+	}
 
 	initCircles();
 	resized();
 	window.addEventListener('resize', resized);
+	updateLastZoomTime();
 	drawGraphics();
 	document.getElementById('ok-button').addEventListener('click', okClicked);
+	canvas.addEventListener('click', zoomInClick);
+	canvas.addEventListener('touchstart', zoomInClick);
+	window.addEventListener('keydown', keyDown);
 });
