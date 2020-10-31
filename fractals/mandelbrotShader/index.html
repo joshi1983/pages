@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<title>Mandelbrot Shader</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<script src="script.js"></script>
+		<link rel="stylesheet" href="style.css">
+	</head>
+	<body>
+		<script type="glsl/vertex">
+  attribute vec2 coords;
+  
+  void main(void) {
+    gl_Position = vec4(coords.xy, 0.0, 1.0);
+  }
+</script>
+<script type="glsl/fragment">
+// <![CDATA[
+precision mediump float;
+
+uniform vec2 centre;
+uniform float scale;
+uniform bool isSubpixelSampling;
+
+vec3 getValueAt(vec2 p) {
+	float xt;
+	float zx, zy, cx, cy;
+	float ratio = 0.0;
+	float fractalIterationDelta = 0.01;
+	cy = p.y;
+	cx = p.x;
+
+	for (int i = 0; i < 10000; i++)
+	{
+		xt = zx * zy;
+		zx = zx * zx - zy * zy + cx;
+		zy = 2.0 * xt + cy;
+		ratio += fractalIterationDelta;
+		if (ratio >= 1.0 || (zx * zx + zy * zy) > 65563.0)
+			break;
+	}
+	if (ratio < 0.99) {
+		// 0.69314718055994530941723212145818 is log(2.0), the natural log of n.
+		ratio = ratio + 0.01 - 0.01 * log(log(zx * zx + zy * zy)) / 0.69314718055994530941723212145818;
+	}
+	return vec3(ratio, zx, zy);
+}
+
+
+vec3 getColourAt(vec2 p) {
+	vec3 v = getValueAt(p);
+	float vy = log(abs(log(abs(v.y))));
+	float vz = log(abs(log(abs(v.z))));
+	v.x *= 0.9;
+	float red = v.x * 10.0 + 0.1 * sin((vy*vy + vz*vz));
+	float green = v.x * 3.0 + 0.1 * sin(vy * 50.0);
+	float blue = v.x * 1.0 + 0.1 * sin((vz + vy) * 50.0);
+	
+	return vec3(clamp(red, 0.0, 1.0), clamp(green, 0.0, 1.0), clamp(blue, 0.0, 1.0));
+}
+
+
+void main(void) {
+	vec2 p = (gl_FragCoord.xy - centre) * scale;
+	vec3 val;
+	if (isSubpixelSampling) {
+		for (float xDelta = 0.0; xDelta < 0.99; xDelta+= 0.67) {
+			for (float yDelta = 0.0; yDelta < 0.99; yDelta+= 0.67) {
+				val += getColourAt(vec2(p.x + xDelta * scale, p.y + yDelta * scale));
+			}
+		}
+		val *= 0.25;
+	}
+	else {
+		val = getColourAt(p);
+	}
+	
+	gl_FragColor = vec4(val.x, val.y, val.z, 1.0);
+}
+// ]]>
+</script>
+
+		<canvas></canvas>
+		
+		<div id="dialog">
+			<p>This is a WebGL shader for the Mandelbrot Fractal.</p>
+			<ul>
+				<li>Click or touch to zoom in.</li>
+				<li>Hit Backspace to zoom out.</li>
+				<li><a href="https://code.sololearn.com/WVhoMHzy3K81" target="_empty">Interactive Fractal Viewer</a></li>
+			</ul>
+			<footer>
+				<button id="ok-button">OK</button>
+			</footer>
+		</div>
+	</body>
+</html>
