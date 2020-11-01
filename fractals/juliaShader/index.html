@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<title>Julia Set Shader</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<script
+			src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+			integrity="sha256-4+XzXVhsDmqanXGHaHvgh1gMQKX40OUvDEBTu8JcmNs="
+			crossorigin="anonymous"></script>
+		<script src="script.js"></script>
+		<link rel="stylesheet" href="style.css">
+	</head>
+	<body class="show-mandelbrot">
+		<script type="glsl/vertex">
+  attribute vec2 coords;
+  
+  void main(void) {
+    gl_Position = vec4(coords.xy, 0.0, 1.0);
+  }
+</script>
+<script id="juliaset" type="glsl/fragment">
+// <![CDATA[
+uniform vec2 mandelbrotOffset;
+
+float getValueAt(vec2 p) {
+	float ratio = 0.0;
+	float fractalIterationDelta = 0.003;
+
+	for (int i = 0; i < 10000; i++)
+	{
+	  //remember value of previous iteration
+	  //the actual iteration, the real and imaginary part are calculated
+	  p = vec2(
+		p.x * p.x - p.y * p.y + mandelbrotOffset.x,
+		2.0 * p.x * p.y + mandelbrotOffset.y
+		);
+	  //if the point is outside the circle with radius 2: stop
+		if (dot(p, p) > 65563.0) {
+			break;
+		}
+		ratio += fractalIterationDelta;
+		if (ratio >= 1.0)
+			return ratio;
+	}
+	// smoothen the result.
+	if (ratio < 1.0 - fractalIterationDelta) {
+		// 0.69314718055994530941723212145818 is log(2.0), the natural log of n.
+		ratio = ratio + fractalIterationDelta - fractalIterationDelta * log(log(dot(p, p))) / 0.69314718055994530941723212145818;
+	}
+	return ratio;
+}
+// ]]>
+
+</script>
+<script id="mandelbrot" type="glsl/fragment">
+// <![CDATA[
+
+float getValueAt(vec2 p) {
+	float xt;
+	vec2 z, c = p;
+	float ratio = 0.0;
+	float fractalIterationDelta = 0.003;
+
+	for (int i = 0; i < 10000; i++)
+	{
+		xt = z.x * z.y;
+		z.x = z.x * z.x - z.y * z.y + c.x;
+		z.y = 2.0 * xt + c.y;
+		ratio += fractalIterationDelta;
+		if (ratio >= 1.0)
+			break;
+		// check if we should perform a more precise check for escaping loop.
+		if (abs(z.x) > 2.0 || abs(z.y) > 2.0) {
+			// Get a smooth result.
+			float dotResult = dot(z, z);
+			if (dotResult > 65536.0) {
+				ratio += fractalIterationDelta - fractalIterationDelta * log(log(dotResult)) / 0.69314718;
+				break;
+			}
+		}
+	}
+	return ratio;
+}
+// ]]>
+</script>
+<script id="fragment-common-uniforms" type="glsl/fragment">
+// <![CDATA[
+precision mediump float;
+
+uniform vec2 centre;
+uniform float scale;
+uniform bool isSubpixelSampling;
+
+// ]]>
+</script>
+<script id="fragment-common" type="glsl/fragment">
+// <![CDATA[
+
+vec3 getColourAt(vec2 p) {
+	float v = getValueAt(p);
+	float red = v * 10.0;
+	float green = v * 3.0;
+	float blue = v * 1.0;
+	
+	return vec3(clamp(red, 0.0, 1.0), clamp(green, 0.0, 1.0), clamp(blue, 0.0, 1.0));
+}
+
+void main(void) {
+	vec2 p = (gl_FragCoord.xy - centre) * scale;
+	vec3 val;
+	if (isSubpixelSampling) {
+		for (float xDelta = 0.0; xDelta < 0.99; xDelta+= 0.67) {
+			for (float yDelta = 0.0; yDelta < 0.99; yDelta+= 0.67) {
+				val += getColourAt(vec2(p.x + xDelta * scale, p.y + yDelta * scale));
+			}
+		}
+		val *= 0.25;
+	}
+	else {
+		val = getColourAt(p);
+	}
+	
+	gl_FragColor = vec4(val.x, val.y, val.z, 1.0);
+}
+
+// ]]>
+</script>
+		<div id="mandelbrot-display">
+			<canvas title="Click to select a point"></canvas>
+			<div class="crosshairs"></div>		
+		</div>
+		<canvas id="juliaset-display"></canvas>
+		
+		<div id="dialog">
+			<p>This is a WebGL shader for the Julia Set Fractal.</p>
+			<ul>
+				<li>Click or touch to zoom in.</li>
+				<li>Hit Backspace to zoom out.</li>
+				<li><a href="https://www.youtube.com/watch?v=1WUIMCowlbc" target="_empty">Flaming Julia Set Zoom Video</a></li>
+				<li><a href="https://code.sololearn.com/WVhoMHzy3K81" target="_empty">Interactive Fractal Viewer</a></li>
+			</ul>
+			<footer>
+				<button id="ok-button">OK</button>
+			</footer>
+		</div>
+	</body>
+</html>
