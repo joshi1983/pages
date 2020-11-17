@@ -297,7 +297,7 @@ float getLightObstruction(vec3 p)
 		if (dot(position, position) > sphereRadiusSquared)
 			break;
 		result += getValue(position) * opacityDelta;
-		if (result >= 1.0)
+		if (result >= 0.995) // for performance's sake, cut loop off a little before 1.
 			return 1.0;
 	}
 	return result;
