@@ -69,7 +69,7 @@ class AnimationUI {
 		var outer = this;
 		  
 		function isFrameToSkip() {
-			return frameIndex < 974;
+			return frameIndex * fps < parseFloat(outer.deltaTSpinner.value);
 		}
 
 		function processTimeChange(deltaT) {

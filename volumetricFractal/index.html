@@ -301,7 +301,7 @@ vec3 rotatePoint(vec3 p)
 	);
 }
 
-float getLightObstruction(vec3 p)
+float getLightObstruction(vec3 p, float loopCutoff)
 {
 	vec3 position = p;
 	vec3 delta = lightDirection * lightObstructionDeltaRatio;
@@ -314,7 +314,7 @@ float getLightObstruction(vec3 p)
 		if (dot(position, position) > sphereRadiusSquared)
 			break;
 		result += getValue(position) * opacityDelta;
-		if (result >= 0.995) // for performance's sake, cut loop off a little before 1.
+		if (result >= loopCutoff) // for performance's sake, cut loop off a little before 1.
 			return 1.0;
 	}
 	return result;
@@ -426,7 +426,7 @@ vec3 getColourAt(vec3 direction)
 			float ratio = remainingOpacity * density;
 			vec3 colour = getColourFromDensity(sampledValue);
 			if (ambientFactor > 0.01)
-				colour *= (1.0 - ambientFactor * getLightObstruction(point));
+				colour *= (1.0 - ambientFactor * getLightObstruction(point, 0.99 - 0.005 / ambientFactor));
 
 			result += colour * ratio;
 			totalRatio += ratio;
