@@ -69,7 +69,7 @@ class AnimationUI {
 		var outer = this;
 		  
 		function isFrameToSkip() {
-			return frameIndex * fps < parseFloat(outer.deltaTSpinner.value);
+			return frameIndex * 1000 / fps < parseFloat(outer.deltaTSpinner.value);
 		}
 
 		function processTimeChange(deltaT) {
@@ -108,6 +108,7 @@ class AnimationUI {
 	}
 	
 	setAnimationTime(deltaT) {
+		console.log('setAnimationTime called with deltaT = ' + deltaT);
 		var eventData = new CustomEvent('animation-update', {
 			'detail': {
 				'props': this.animation.getPropertiesForTime(deltaT),
