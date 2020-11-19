@@ -53,10 +53,12 @@ class DownloadRenderer {
 	
 	_showDownloadProgress() {
 		this.downloadBar.setAttribute('class', 'shown');
+		this.downloadButton.disabled = true;
 	}
 	
 	_hideDownloadProgress() {
 		this.downloadBar.setAttribute('class', '');
+		this.downloadButton.disabled = false;
 	}
 	
 	_updateProgress() {
@@ -85,25 +87,40 @@ class DownloadRenderer {
 		return promise;
 	}
 
-	startDownload() {
-		this._showDownloadProgress();
-		this.w = 1920;
-		this.h = 1080;
-		var lightObstructionDeltaRatio = 0.01;
+	startDownload(downloadConfigOverrides) {
+		if (this.isRenderingOrDownloading) {
+			console.log('Can not download because we are already downloading.');
+			return;
+		}
+		var defaultDownloadConfig = {
+			'w': 1920,
+			'h': 1080,
+			'lightObstructionDeltaRatio': 0.01,
+			'pixelSubsamplingQuality': this.pixelSubsampling.DEFAULT_QUALITY,
+			'isBenchmarking': false
+		};
+		if (this.displayMode.isPlaneCut())
+			defaultDownloadConfig.pixelSubsamplingQuality = 7;
+		var config = defaultDownloadConfig;
+		if (typeof downloadConfigOverrides === 'object') {
+			Object.assign(config, downloadConfigOverrides);
+		}
+		if (!config.isBenchmarking)
+			this._showDownloadProgress();
+		this.isBenchmarking = config.isBenchmarking;
+		this.w = config.w;
+		this.h = config.h;
 		this.isRenderingOrDownloading = true;
 		this.canvas2D.setAttribute('width', this.w);
 		this.canvas2D.setAttribute('height', this.h);
 		var scaleValue = this.scale.getScaleFromDimensions(this.w, this.h);
 		this.gl.uniform1f(this.uniforms.scale, scaleValue);
 		var maxPixelRadius = this.circles.updateCircleRadiusRange(this.gl, this.w, this.h, scaleValue, this.uniforms.circleRadiusRange);
-		var pixelSubsamplingQuality = this.pixelSubsampling.DEFAULT_QUALITY;
-		if (this.displayMode.isPlaneCut())
-			pixelSubsamplingQuality = 7;
-		this.gl.uniform1i(this.uniforms.pixelSubsampling, pixelSubsamplingQuality);
+		this.gl.uniform1i(this.uniforms.pixelSubsampling, config.pixelSubsamplingQuality);
 		this.gl.uniform2fv(this.uniforms.centre, [this.w / 2, this.h / 2]);
 		this.gl.uniform1f(this.uniforms.scale, this.scale.getScaleFromDimensions(this.w, this.h));
-		this.gl.uniform1f(this.uniforms.lightObstructionDeltaRatio, lightObstructionDeltaRatio);
-		var peakSampleOpacity = this.peakOpacity.getPeakOpacityForLightObstructionDeltaRatio(lightObstructionDeltaRatio);
+		this.gl.uniform1f(this.uniforms.lightObstructionDeltaRatio, config.lightObstructionDeltaRatio);
+		var peakSampleOpacity = this.peakOpacity.getPeakOpacityForLightObstructionDeltaRatio(config.lightObstructionDeltaRatio);
 		this.gl.uniform1f(this.uniforms.peakSampleOpacity, peakSampleOpacity);
 		this.gl.uniform1f(this.uniforms.opacityCutOff, this.peakOpacity.getOpacityCutOffFromPeakSampleOpacity(peakSampleOpacity));
 		
@@ -123,22 +140,23 @@ class DownloadRenderer {
 		this.intervalSize = 1;
 		this.canvasWebGL.setAttribute('width', this.intervalSize);
 		this.canvasWebGL.setAttribute('height', this.h);
-		requestAnimationFrame(function() {
-			outer.updateDrawing();
+		return new Promise(function(resolver, rejecter) {
+			requestAnimationFrame(function() {
+				outer.updateDrawing(resolver, rejecter);
+			});
 		});
 	}
-	
-	updateDrawing() {
+
+	updateDrawing(resolver, rejecter) {
 		if (this.updateLoopStartTime === undefined) {
 			this.updateLoopStartTime = new Date().getTime();
 		}
 		this.gl.uniform2fv(this.uniforms.centre, [this.w / 2 - this.left, this.h / 2]);
 		drawGraphics(this.gl, this.intervalSize, this.h);
-		var dataURL = this.canvasWebGL.toDataURL("image/png", 1.0);
-		var img = new Image();
 		var outer = this;
-		img.onload = function() {
-			outer.g.drawImage(img, outer.left, 0);
+		console.log('updateDrawing called.  this.left = ' + this.left);
+		setTimeout(function() {
+			outer.g.drawImage(outer.canvasWebGL, outer.left, 0);
 			if (outer.left + outer.intervalSize >= outer.maxToRender) {
 				if (outer.mandelbrotDisplay.shouldBeVisible())
 					outer.mandelbrotDisplay.drawAll(outer.canvas2D).then(function() {
@@ -146,6 +164,7 @@ class DownloadRenderer {
 					});
 				else
 					outer.downloadCanvas();
+				resolver();
 			}
 			else {
 				outer.left += outer.intervalSize;
@@ -159,20 +178,23 @@ class DownloadRenderer {
 					outer._updateProgress();
 					outer.updateLoopStartTime = undefined;
 					requestAnimationFrame(function() {
-						outer.updateDrawing();
+						outer.updateDrawing(resolver, rejecter);
 					});
 				}
 				else {
 					// no delay.  continue immediately so the 
 					// render completes faster.
-					outer.updateDrawing();
+					outer.updateDrawing(resolver, rejecter);
 				}
 			}
-		}
-		img.src = dataURL;
+		}, 0);
 	}
 	
 	downloadCanvas() {
+		if (this.isBenchmarking) {
+			this.isRenderingOrDownloading = false;
+			return;
+		}
 		var outer = this;
 		this.canvas2D.toBlob(function(blob) {
 			saveAs(blob, outer.filename);
@@ -181,7 +203,7 @@ class DownloadRenderer {
 			if (typeof outer.downloadCompleteCallback === 'function') {
 				outer.downloadCompleteCallback();
 			}
-		}, 'image/png', 0.99);
+		}, 'image/png', 1.0);
 	}
 
 	isDownloading() {
