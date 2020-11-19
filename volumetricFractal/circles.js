@@ -24,7 +24,7 @@ class Circles {
 	getMaxCircleRadius(w, h, scaleValue) {
 		var r = 2;
 		if (this.sphereRadius)
-			r = this.sphereRadius.getValue();
+			r = this.sphereRadius.get();
 		var min = this.getCircleRadius(w, h, scaleValue);
 		if (r > 0.97 * this.camera.rotationRadius) {
 			return min;
@@ -38,7 +38,7 @@ class Circles {
 	getCircleRadius(w, h, scaleValue) {
 		var r = 2;
 		if (this.sphereRadius)
-			r = this.sphereRadius.getValue();
+			r = this.sphereRadius.get();
 		if (r > 0.97 * this.camera.rotationRadius) {
 			return sanitizeFloat(w + h, 18000);
 		}
@@ -50,7 +50,7 @@ class Circles {
 	getMaxCircleRadius(w, h, scaleValue) {
 		var r = 2;
 		if (this.sphereRadius)
-			r = this.sphereRadius.getValue();
+			r = this.sphereRadius.get();
 		var min = this.getCircleRadius(w, h, scaleValue);
 		if (r > 0.97 * this.camera.rotationRadius) {
 			return min;
@@ -73,7 +73,7 @@ class Circles {
 	}
 
 	updateCircleRadiusRange(gl, w, h, scaleValue, locationOfCircleRadiusRange, locationOfShowingCircumference) {
-		var r = this.sphereRadius.getValue();
+		var r = this.sphereRadius.get();
 		var min = this.getCircleRadius(w, h, scaleValue);
 		var max = this.getMaxCircleRadius(w, h, scaleValue);
 		if (r > 0.97 * this.camera.rotationRadius) {

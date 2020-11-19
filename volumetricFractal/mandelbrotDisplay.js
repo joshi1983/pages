@@ -58,7 +58,7 @@ class MandelbrotDisplay {
 	_getScaleFrom(w, h) {
 		var r = 2;
 		if (this.sphereRadius !== undefined)
-			r = this.sphereRadius.getValue();
+			r = this.sphereRadius.get();
 		return this.scale.getScaleFromDimensions(w, h) * 0.8 * r / 2.0;
 	}
 

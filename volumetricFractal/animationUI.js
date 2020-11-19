@@ -1,7 +1,7 @@
 class AnimationUI {
-	constructor(animationUpdated, downloader) {
+	constructor(renderSettings, downloader) {
 		if (this.shouldBeActive()) {
-			this.animationUpdated = animationUpdated;
+			this.renderSettings = renderSettings;
 			this.downloader = downloader;
 			this.addElementsToDOM();
 		}
@@ -64,6 +64,11 @@ class AnimationUI {
 	}
 	
 	downloadAnimation() {
+		if (this.isDownloadingAnimation) {
+			console.log('Unable to download animation because we already are downloading one.');
+			return;
+		}
+		this.isDownloadingAnimation = true;
 		var fps = 60;
 		var frameIndex = 0;
 		var outer = this;
@@ -89,6 +94,7 @@ class AnimationUI {
 				frameIndex++;
 			}
 			if (frameIndex * 1000 / fps > outer.animation.getMaxTime()) {
+				outer.isDownloadingAnimation = false;
 				return;
 			}
 		  var frameName = 'cloud_frame_' + getFormattedFrameIndex() + '.png';
@@ -108,15 +114,9 @@ class AnimationUI {
 	}
 	
 	setAnimationTime(deltaT) {
-		console.log('setAnimationTime called with deltaT = ' + deltaT);
-		var eventData = new CustomEvent('animation-update', {
-			'detail': {
-				'props': this.animation.getPropertiesForTime(deltaT),
-				'deltaT': deltaT
-			}
-		});
+		var newSettings = this.animation.getPropertiesForTime(deltaT);
 		this.deltaTSpinner.value = deltaT;
-		this.animationUpdated(eventData);
+		this.renderSettings.setAll(newSettings.uiSettings);
 	}
 
 	playAnimation() {
@@ -131,18 +131,16 @@ class AnimationUI {
 			this.audio.currentTime = startDeltaT * 0.001;
 			this.audio.play();
 		}
-		function updateAnimation() {
-			var t = new Date().getTime();
-			var deltaT = (t - outer.startTime);
-			if (deltaT > outer.animation.getMaxTime() || outer.isPaused) {
-				outer.stop();
-				document.removeEventListener('time-changed', updateAnimation);
-			}
-			else {
-				outer.setAnimationTime(deltaT);
-			}
+	}
+
+	updateAnimation() {
+		var t = new Date().getTime();
+		var deltaT = (t - this.startTime);
+		if (deltaT > this.animation.getMaxTime() || this.isPaused) {
+			this.stop();
 		}
-		
-		document.addEventListener('time-changed', updateAnimation);
+		else {
+			this.setAnimationTime(deltaT);
+		}
 	}
 }

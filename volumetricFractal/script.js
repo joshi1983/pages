@@ -66,6 +66,10 @@ window.addEventListener("DOMContentLoaded", function() {
   var downloader = new DownloadRenderer(gl, pid, mandelBrotDisplay, pixelSubsampling, sphereRadius, displayMode, scale,
 	peakOpacity, circles);
 	sphereRadius._updated();
+  var renderSettings = new RenderSettings(ambientLight, camera, circles, cRealValue, displayMode, 
+	lightDirection, maxIterations, peakOpacity, planeCutAxis, planeCutValue, scale, sphereRadius);
+  var benchmarker = new Benchmarker(renderSettings, downloader);
+  var animation = new AnimationUI(renderSettings, downloader);
 	
 	// returns value to be used in shader's uniform.
 	// In other words, this isn't returning pixel coordinates.
@@ -83,7 +87,7 @@ window.addEventListener("DOMContentLoaded", function() {
 		  var settings = document.getElementById('settings');
 		  var settingsHeight = settings.clientHeight / pixelStretch;
 		  if (settingsHeight > 0.3 * h) {
-			  	var r = sphereRadius.getValue();
+			  	var r = sphereRadius.get();
 				if (r < 0.9 * camera.rotationRadius && r < 0.5 * h) {
 					r = circles.getRadiusFromSphereRadius(r, scale.get());
 					var remainingHeight = h - settingsHeight;
@@ -173,7 +177,7 @@ window.addEventListener("DOMContentLoaded", function() {
   }
 
   function processTimeChange() {
-	document.dispatchEvent(new CustomEvent('time-changed', {}));
+	animation.updateAnimation();
 	var t = new Date().getTime();
 	times = times.filter(function(time1) {
 	  return t - time1 < 1000;
@@ -211,40 +215,15 @@ window.addEventListener("DOMContentLoaded", function() {
 	  function settingsExpand() {
 		  body.setAttribute('class', '');
 	  }
-  
-		function animationUpdated(event) {
-		  if (event.detail) {
-			  var uiSettings = event.detail.props.uiSettings;
-			  camera.rotationAngle = getDefaultedNumber(uiSettings.rotationAngle, camera.rotationAngle);
-			  camera.rotationRadius = getDefaultedNumber(uiSettings.rotationRadius, camera.rotationRadius);
-			  sphereRadius.setValue(uiSettings.sphereRadius, sphereRadius.getValue());
-			  maxIterations.set(getDefaultedInteger(uiSettings.maxIterations, maxIterations.get()));
-			  planeCutAxis.set(getDefaultedInteger(uiSettings.planeCutAxis, planeCutAxis.get()), false);
-			  peakOpacity.set(getDefaultedNumber(uiSettings.peakOpacity, peakOpacity.get()));
-			  planeCutValue.set(getDefaultedNumber(uiSettings.planeCutValue, planeCutValue.get()));
-			  cRealValue.set(getDefaultedNumber(uiSettings.cReal, cRealValue.get()));
-			  ambientLight.set(getDefaultedNumber(uiSettings.ambient, sanitizeFloat(ambientLight.get(), 0.05)));
-			  camera.setPositionY(getDefaultedNumber(uiSettings.positionY, camera.positionY));
-			  scale.setScaleFactor(getDefaultedNumber(uiSettings.scaleFactor, scale.scaleFactor));
-			  displayMode.set(getDefaultedInteger(uiSettings.displayMode, displayMode.get()));
-			  circles.setLineThicknessFactor(getDefaultedNumber(uiSettings.lineThicknessFactor, 0.001));
-			  lightDirection.setX(getDefaultedNumber(uiSettings.lightDirectionX, lightDirection.getX()));
-			  lightDirection.setY(getDefaultedNumber(uiSettings.lightDirectionY, lightDirection.getY()));
-			  lightDirection.setZ(getDefaultedNumber(uiSettings.lightDirectionZ, lightDirection.getZ()));
-
-			  camera.changed();
-		  }
-		}
 
 	settingsCloseButton.addEventListener('click', settingsClose);
 	settingsExpandButton.addEventListener('click', settingsExpand);
-	new AnimationUI(animationUpdated, downloader);
   }
 
   initSettings();
   new MouseTouchUtils(canvas, processDrag);
   window.addEventListener('resize', resized);
   resized();
-  draw();
+  benchmarker.initScreenRefreshRate().then(draw);
   mandelBrotDisplay.updateSize();
 });
