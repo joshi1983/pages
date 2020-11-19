@@ -26,7 +26,7 @@ class SphereRadius {
 	}
 
 	_updated() {
-		let val = this.getValue();
+		let val = this.get();
 		this.updateUniforms(this.mainGL, this.getWidth(), this.getHeight(), this.locationOfSphereRadiusSquared, 
 			this.locationOfSphereRadiusWithPlaneLineSquared);
 		this.planeCutValue.inputElement.setAttribute('min', -val);
@@ -35,13 +35,13 @@ class SphereRadius {
 		document.dispatchEvent(new Event('sphere-radius-change'));
 	}
 
-	getValue() {
+	get() {
 		return sanitizeFloat(this.sphereRadiusInput.value, 2);
 	}
 	
-	setValue(newValue) {
+	set(newValue) {
 		// For efficiency's sake, check that the value actually changed.
-		if (newValue !== this.getValue()) {
+		if (newValue !== this.get()) {
 			this.sphereRadiusInput.value = newValue;
 			this._updated();
 		}
