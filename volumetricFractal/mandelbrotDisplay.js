@@ -232,12 +232,7 @@ class MandelbrotDisplay {
 				// draw the line and dot.
 				outer._drawLineAndDot(g, scale, size, size, h - size);
 
-				// Free up the context, if the extension is supported.
-				var ext = info.gl.getExtension('WEBGL_lose_context');
-				if (typeof ext === 'object' && typeof ext.loseContext === 'function') {
-					info.gl.getExtension('WEBGL_lose_context').loseContext();
-				}
-				
+				freeWebGLContext(info.gl);
 				resolve();
 			});
 			latestImg.src = dataURL;
