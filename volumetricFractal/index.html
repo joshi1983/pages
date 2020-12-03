@@ -4,7 +4,12 @@
 	<head>
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title>Volumetric JuliaSet Fractal Viewer</title>
+		<script
+  src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+  integrity="sha256-4+XzXVhsDmqanXGHaHvgh1gMQKX40OUvDEBTu8JcmNs="
+  crossorigin="anonymous"></script>
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 		<script src="https://cdn.rawgit.com/eligrey/FileSaver.js/master/src/FileSaver.js"></script>
 		<script src="displayMode.js"></script>
@@ -36,128 +41,173 @@
 		<script src="script.js"></script>
 		<link rel="stylesheet" href="style.css">
 	</head>
-	<body>
+	<body class="show-volumetric-settings show-cut-settings">
 		<div id="settings">
-			<div class="row">
-				<div class="col-md-3">
-					<div class="labelled-input-pair">
-						<label for="show-outline">Show Sphere Outline</label>
-						<input id="show-outline" type="checkbox" checked>
-					</div>
-				</div>
-				<div class="col-md-5">
-					<div class="labelled-input-pair">
-						<label for="sphere-radius">Sphere Radius</label>
-						<input id="sphere-radius" type="range" value="1.5" step="0.0001" min="0.1" max="10.0">
-					</div>
-				</div>
-				<div class="col-md-4">
-					<div class="labelled-input-pair">
-						<label for="max-iterations">Max Iterations</label>
-						<input id="max-iterations" type="range" value="50" step="1" min="5" max="100">
-					</div>
-				</div>
-				<div class="col-md-6">
-					<div class="labelled-input-pair">
-						<label for="c-real">c Real</label>
-						<input id="c-real" type="range" value="0.3" step="0.0001" min="-5" max="5">
-					</div>
-				</div>
-				<div class="col-md-6">
-					<fieldset id="display-mode">
-						<legend>Display Mode</legend>
+			<ul class="nav nav-tabs" id="settings-tab" role="tablist">
+				<li class="nav-item">
+					<a class="nav-link active" id="basic-settings-tab" data-toggle="tab" href="#basic-settings" role="tab" aria-controls="basic-settings" aria-selected="true">Basic Settings</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" id="volumetric-settings-tab" data-toggle="tab" href="#volumetric-settings" role="tab" aria-controls="volumetric-settings" aria-selected="false">Volumetric</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" id="cut-settings-tab" data-toggle="tab" href="#cut-settings" role="tab" aria-controls="cut-settings" aria-selected="false">Cut Settings</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" id="animation-tab" data-toggle="tab" href="#animation" role="tab" aria-controls="animation" aria-selected="false">Animation</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" id="download-tab" data-toggle="tab" href="#download" role="tab" aria-controls="download" aria-selected="false">Download</a>
+				</li>
+			</ul>
+			<div class="tab-content" id="settings-tabContent">
+				<div class="tab-pane fade show active" id="basic-settings" role="tabpanel" aria-labelledby="basic-settings-tab">
+					<div class="row">
+						<div class="col-md-3">
+							<div class="labelled-input-pair">
+								<label for="show-outline">Show Sphere Outline</label>
+								<input id="show-outline" type="checkbox" checked>
+							</div>
+						</div>
+						<div class="col-md-5">
+							<div class="labelled-input-pair">
+								<label for="sphere-radius">Sphere Radius</label>
+								<input id="sphere-radius" type="range" value="1.5" step="0.0001" min="0.1" max="10.0">
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="labelled-input-pair">
+								<label for="max-iterations">Max Iterations</label>
+								<input id="max-iterations" type="range" value="50" step="1" min="5" max="100">
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="labelled-input-pair">
+								<label for="c-real">c Real</label>
+								<input id="c-real" type="range" value="0.3" step="0.0001" min="-5" max="5">
+							</div>
+						</div>
+						<div class="col-md-6">
+							<fieldset id="display-mode">
+								<legend>Display Mode</legend>
+								<div class="row">
+									<div class="col-sm-3">
+										<label for="display-mode-volume">Volumetric</label>
+										<input type="radio" name="display-mode" id="display-mode-volume" value="1" checked>
+									</div>
+									<div class="col-sm-3">
+										<label for="display-mode-plane-cut">Planar Cut</label>
+										<input type="radio" name="display-mode" id="display-mode-plane-cut" value="2">
+									</div>
+									<div class="col-sm-3">
+										<label for="display-mode-max-cut-volume">Max Cut Volume</label>
+										<input type="radio" name="display-mode" id="display-mode-max-cut-volume" value="3">
+									</div>
+									<div class="col-sm-3">
+										<label for="display-mode-min-cut-volume">Min Cut Volume</label>
+										<input type="radio" name="display-mode" id="display-mode-min-cut-volume" value="4">
+									</div>
+								</div>
+							</fieldset>
+						</div><!-- end .col-md-6 -->
+					</div><!-- end .row -->
+				</div><!-- end .tab-pane -->
+				<div class="tab-pane fade" id="volumetric-settings" role="tabpanel" aria-labelledby="volumetric-settings-tab">
+					<fieldset id="light-settings">
+						<legend>Light Settings</legend>
 						<div class="row">
-							<div class="col-sm-3">
-								<label for="display-mode-volume">Volumetric</label>
-								<input type="radio" name="display-mode" id="display-mode-volume" value="1" checked>
+							<div class="col-sm-4">
+								<div class="labelled-input-pair">
+									<label for="light-x">X</label>
+									<input id="light-x" type="range" value="-0.1" step="0.0001" min="-1" max="1">
+								</div>
 							</div>
-							<div class="col-sm-3">
-								<label for="display-mode-plane-cut">Planar Cut</label>
-								<input type="radio" name="display-mode" id="display-mode-plane-cut" value="2">
+							<div class="col-sm-4">
+								<div class="labelled-input-pair">
+									<label for="light-y">Y</label>
+									<input id="light-y" type="range" value="1" step="0.0001" min="-1" max="1">
+								</div>
 							</div>
-							<div class="col-sm-3">
-								<label for="display-mode-max-cut-volume">Max Cut Volume</label>
-								<input type="radio" name="display-mode" id="display-mode-max-cut-volume" value="3">
+							<div class="col-sm-4">
+								<div class="labelled-input-pair">
+									<label for="light-z">Z</label>
+									<input id="light-z" type="range" value="0.12" step="0.0001" min="-1" max="1">
+								</div>
 							</div>
-							<div class="col-sm-3">
-								<label for="display-mode-min-cut-volume">Min Cut Volume</label>
-								<input type="radio" name="display-mode" id="display-mode-min-cut-volume" value="4">
+							<div class="col-sm-6">
+								<div class="labelled-input-pair">
+									<label for="ambient">Ambient</label>
+									<input id="ambient" type="range" value="0.05" step="0.00001" min="0" max="1">
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="labelled-input-pair">
+									<label for="peak-opacity">Opacity</label>
+									<input id="peak-opacity" type="range" value="2.0" step="0.0001" min="0.001" max="10">
+								</div>
 							</div>
 						</div>
 					</fieldset>
 				</div>
-				<div class="col-sm-12">
-					<div class="collapsible-row">
-						<div id="wide-column" class="show-light-settings">
-							<div id="cut-plane-settings">
-								<div id="axis-selector">
-									<fieldset>
-										<legend>Cut Axis</legend>
-										<div class="row">
-											<div class="col-4">
-												<label for="plane-cut-axis-x">X</label>
-												<input type="radio" id="plane-cut-axis-x" name="plane-cut-axis" value="1">
-											</div>
-											<div class="col-4">
-												<label for="plane-cut-axis-y">Y</label>
-												<input type="radio" id="plane-cut-axis-y" name="plane-cut-axis" value="2">
-											</div>
-											<div class="col-4">
-												<label for="plane-cut-axis-z">Z</label>
-												<input type="radio" id="plane-cut-axis-z" checked name="plane-cut-axis" value="3">
-											</div>
-										</div>
-									</fieldset>
-								</div>
-								<div id="plane-cut-value-selector">
-									<div class="labelled-input-pair">
-										<label for="plane-cut-value">Plane Cut Value</label>
-										<input type="range" id="plane-cut-value" value="0.3" step="0.0001" min="-5" max="5">
-									</div>
-								</div>
-							</div>
-							<fieldset id="light-settings">
-								<legend>Light Settings</legend>
+				<div class="tab-pane fade" id="cut-settings" role="tabpanel" aria-labelledby="cut-settings-tab">
+					<div>
+						<div id="axis-selector">
+							<fieldset>
+								<legend>Cut Axis</legend>
 								<div class="row">
-									<div class="col-sm-4">
-										<div class="labelled-input-pair">
-											<label for="light-x">X</label>
-											<input id="light-x" type="range" value="-0.1" step="0.0001" min="-1" max="1">
-										</div>
+									<div class="col-4">
+										<label for="plane-cut-axis-x">X</label>
+										<input type="radio" id="plane-cut-axis-x" name="plane-cut-axis" value="1">
 									</div>
-									<div class="col-sm-4">
-										<div class="labelled-input-pair">
-											<label for="light-y">Y</label>
-											<input id="light-y" type="range" value="1" step="0.0001" min="-1" max="1">
-										</div>
+									<div class="col-4">
+										<label for="plane-cut-axis-y">Y</label>
+										<input type="radio" id="plane-cut-axis-y" name="plane-cut-axis" value="2">
 									</div>
-									<div class="col-sm-4">
-										<div class="labelled-input-pair">
-											<label for="light-z">Z</label>
-											<input id="light-z" type="range" value="0.12" step="0.0001" min="-1" max="1">
-										</div>
-									</div>
-									<div class="col-sm-6">
-										<div class="labelled-input-pair">
-											<label for="ambient">Ambient</label>
-											<input id="ambient" type="range" value="0.05" step="0.00001" min="0" max="1">
-										</div>
-									</div>
-									<div class="col-sm-6">
-										<div class="labelled-input-pair">
-											<label for="peak-opacity">Opacity</label>
-											<input id="peak-opacity" type="range" value="2.0" step="0.0001" min="0.001" max="10">
-										</div>
+									<div class="col-4">
+										<label for="plane-cut-axis-z">Z</label>
+										<input type="radio" id="plane-cut-axis-z" checked name="plane-cut-axis" value="3">
 									</div>
 								</div>
 							</fieldset>
 						</div>
-						<div class="toggler-container">
-							<button id="download-image" class="fa fa-download" title="Download High Quality HD image"></button>
-							<button id="collapse-settings-button" class="fa fa-arrow-circle-o-up"><span class="sr-only">Toggle</span></button>
+						<div id="plane-cut-value-selector">
+							<div class="labelled-input-pair">
+								<label for="plane-cut-value">Plane Cut Value</label>
+								<input type="range" id="plane-cut-value" value="0.3" step="0.0001" min="-5" max="5">
+							</div>
 						</div>
 					</div>
 				</div>
+				<div class="tab-pane fade" id="animation" role="tabpanel" aria-labelledby="animation-tab">
+				</div>
+				<div class="tab-pane fade" id="download" role="tabpanel" aria-labelledby="download-tab">
+					<div class="row">
+						<div class="col-md-2 col-sm-6">
+							<label for="resolution">Resolution</label>
+						</div>
+						<div class="col-md-4 col-sm-6">
+							<select id="resolution">
+								<option value="1280x720">1280 x 720 (High Definition)</option>
+								<option selected value="1920x1080">1920 x 1080 (Full High Definition)</option>
+								<option value="3840x2160">3840 x 2160 (Ultra-High Definition)</option>
+							</select>
+						</div>
+						<div class="col-md-2 col-sm-6">
+							<label for="sample-interval">Volumetric Sample Interval</label>
+						</div>
+						<div class="col-md-4 col-sm-6">
+							<select id="sample-interval">
+								<option selected value="0.008">Very High Quality</option>
+								<option value="0.01">High Quality</option>
+								<option value="0.02">Fast Render</option>
+							</select>
+						</div>
+					</div>
+					<button id="download-image" class="fa fa-download" title="Download High Quality HD image"></button>
+				</div>
+			</div>
+			<div class="toggler-container">
+				<button id="collapse-settings-button" class="fa fa-arrow-circle-o-up"><span class="sr-only">Toggle</span></button>
 			</div>
 		</div>
 		<button id="expand-settings-button" class="fa fa-cog"><span class="sr-only">Settings</span></button>

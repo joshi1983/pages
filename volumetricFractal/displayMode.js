@@ -26,23 +26,23 @@ class DisplayMode {
 	  this.setUniform(newDisplayMode);
 	  this.realtimeRenderer.redraw();
 	}
-	
+
 	get() {
 	  var input = document.querySelector('[name="display-mode"]:checked');
 	  return parseInt(input.value);
 	}
-	
+
 	isPlaneCut() {
 		return this.get() === DisplayMode.PLANE_CUT;
 	}
-	
+
 	getInputForDisplayMode(displayMode) {
 		return document.querySelector('input[name="display-mode"][value="' + displayMode + '"]');
 	}
 
 	initSettingsToggler(mandelBrotDisplay, pixelSubsampling) {
-		var lightSettings = document.getElementById('light-settings');
-		var wideColumn = document.getElementById('wide-column');
+		var lightSettings = document.getElementById('volumetric-settings');
+		var body = document.querySelector('body');
 		var outer = this;
 		
 		function displayModeUpdated() {
@@ -51,10 +51,10 @@ class DisplayMode {
 			}
 			outer.set(outer.get(), true);
 			if (outer.get() !== DisplayMode.DEFAULT) {
-				wideColumn.setAttribute('class', 'show-plane-cut-settings');
+				body.setAttribute('class', 'show-cut-settings');
 			}
-			else {
-				wideColumn.setAttribute('class', 'show-light-settings');
+			if (outer.get() !== DisplayMode.PLANE_CUT) {
+				$(body).addClass('show-volumetric-settings');
 			}
 			mandelBrotDisplay.planeCutAxisChanged();
 		}
@@ -63,6 +63,7 @@ class DisplayMode {
 			var input = document.getElementById('display-mode-' + displayModeName);
 			input.addEventListener('change', displayModeUpdated);
 		});
+		displayModeUpdated();
   }
 }
 
