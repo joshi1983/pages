@@ -40,6 +40,7 @@ class RenderSettings {
 		this.camera.setPositionY(getDefaultedNumber(uiSettings.positionY, this.camera.positionY));
 		this.scale.setScaleFactor(getDefaultedNumber(uiSettings.scaleFactor, this.scale.scaleFactor));
 		this.circles.setLineThicknessFactor(getDefaultedNumber(uiSettings.lineThicknessFactor, 0.001));
+		this.circles.setShowSphereOutline(getDefaultedNumber(uiSettings.isShowingCircumference, 1));
 		this.lightDirection.setX(getDefaultedNumber(uiSettings.lightDirectionX, this.lightDirection.getX()));
 		this.lightDirection.setY(getDefaultedNumber(uiSettings.lightDirectionY, this.lightDirection.getY()));
 		this.lightDirection.setZ(getDefaultedNumber(uiSettings.lightDirectionZ, this.lightDirection.getZ()));

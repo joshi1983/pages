@@ -139,7 +139,8 @@ class Animation {
 					{'x': 81040, 'y': 1},
 				], deltaT),
 				'displayMode': 1,
-				'lineThicknessFactor': 0.0005
+				'lineThicknessFactor': 0.0005,
+				'isShowingCircumference': 1
 			}
 		};
 		if (deltaT < 105050)
@@ -153,7 +154,8 @@ class Animation {
 	getIntroProperties(deltaT) {
 		return {
 			'uiSettings': {
-				'maxIterations': 75
+				'maxIterations': 75,
+				'isShowingCircumference': 0
 			}
 		};
 	}

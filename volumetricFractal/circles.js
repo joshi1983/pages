@@ -1,6 +1,8 @@
 class Circles {
 	constructor(gl, pid, camera, getWidth, getHeight, realtimeRenderer) {
 		this.gl = gl;
+		this.getWidth = getWidth;
+		this.getHeight = getHeight;
 		this.camera = camera;
 		this.realtimeRenderer = realtimeRenderer;
 		this.lineThicknessFactor = 0.001;
@@ -95,5 +97,10 @@ class Circles {
 
 	showSphereOutlineChanged(gl, locationOfShowingCircumference, w, h) {
 		this.setSphereOutlineUniformOnly(gl, locationOfShowingCircumference, !!this.showSphereOutlineInput.checked);
+	}
+	
+	setShowSphereOutline(newValue) {
+		this.showSphereOutlineInput.checked = newValue;
+		this.showSphereOutlineChanged(this.gl, this.locationOfShowingCircumference, this.getWidth(), this.getHeight());
 	}
 }
