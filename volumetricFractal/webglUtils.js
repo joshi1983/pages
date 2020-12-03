@@ -65,3 +65,13 @@ function copyUniform(glFrom, glDestination, pidFrom, pidDestination, key) {
 	}
 	uniformFunc.call(glDestination, destinationOfUniform, val);
 }
+
+function freeWebGLContext(gl) {
+	// Free up the context, if the extension is supported.
+	var ext = gl.getExtension('WEBGL_lose_context');
+	if (typeof ext === 'object' && typeof ext.loseContext === 'function') {
+		var extension = gl.getExtension('WEBGL_lose_context');
+		if (extension)
+			extension.loseContext();
+	}
+}
