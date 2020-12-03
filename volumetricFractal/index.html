@@ -470,6 +470,8 @@ vec3 getColourAt(vec3 direction)
 	float delta = lightObstructionDeltaRatio * 0.15;
 	vec3 deltaVector = direction * delta;
 	float totalRatio = 0.0;
+	int sampleShadow = 0;
+	float lightObstruction = 0.0;
 
 	point = position3D + iScaleRange.x * direction;
 	for (int i = 0; i < 10000; i++) {
@@ -479,9 +481,18 @@ vec3 getColourAt(vec3 direction)
 		if (density > opacityCutOff) {
 			float ratio = remainingOpacity * density;
 			vec3 colour = getColourFromDensity(sampledValue);
-			if (ambientFactor > 0.01)
-				colour *= (1.0 - ambientFactor * getLightObstruction(point, 0.99 - 0.005 / ambientFactor));
-
+			if (ambientFactor > 0.01) {
+				if (sampleShadow == 0) {
+					lightObstruction = getLightObstruction(point, 0.99 - 0.005 / ambientFactor / remainingOpacity);
+				}
+				colour *= (1.0 - ambientFactor * lightObstruction);
+				sampleShadow++;
+				// sample the light obstruction only once every 4 sampled points.
+				// This is to strike a balance between image quality and the expensive time 
+				// spent calculating light obstruction.
+				if (sampleShadow == 4)
+					sampleShadow = 0;
+			}
 			result += colour * ratio;
 			totalRatio += ratio;
 			remainingOpacity = remainingOpacity * (1.0 - density);
