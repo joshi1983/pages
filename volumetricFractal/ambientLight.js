@@ -1,6 +1,7 @@
 class AmbientLight {
-	constructor(gl, pid) {
+	constructor(gl, pid, realtimeRenderer) {
 		this.gl = gl;
+		this.realtimeRenderer = realtimeRenderer;
 		this.inputElement = document.getElementById('ambient');
 		this.locationOfAmbient = gl.getUniformLocation(pid, "ambientFactor");
 		var outer = this;
@@ -19,6 +20,7 @@ class AmbientLight {
 		if (newAmbientValue !== val || forceUpdate) {
 			this.gl.uniform1f(this.locationOfAmbient, 1 - newAmbientValue);
 			this.inputElement.value = newAmbientValue;
+			this.realtimeRenderer.redraw();
 		}
 	}
 

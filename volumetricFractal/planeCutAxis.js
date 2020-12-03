@@ -1,7 +1,8 @@
 class PlaneCutAxis {
-	constructor(gl, pid) {
+	constructor(gl, pid, realtimeRenderer) {
 		this.gl = gl;
 		this.locationOfPlaneCutAxis = gl.getUniformLocation(pid, "planeCutAxis");
+		this.realtimeRenderer = realtimeRenderer;
 		var outer = this;
 		['x', 'y', 'z'].forEach(function(axisName) {
 			var planeCutAxis = document.getElementById('plane-cut-axis-' + axisName);
@@ -31,6 +32,7 @@ class PlaneCutAxis {
 			this.gl.uniform1i(this.locationOfPlaneCutAxis, newPlaneCutAxis);
 			if (this.mandelBrotDisplay !== undefined)
 				this.mandelBrotDisplay.planeCutAxisChanged();
+			this.realtimeRenderer.redraw();
 		}
 	}
 	

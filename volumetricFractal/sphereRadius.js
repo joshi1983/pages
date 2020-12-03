@@ -1,6 +1,6 @@
 class SphereRadius {
 	constructor(gl, pid, planeCutValue, scale, circles,
-	getWidth, getHeight) {
+	getWidth, getHeight, realtimeRenderer) {
 		this.planeCutValue = planeCutValue;
 		this.mainGL = gl;
 		this.circles = circles;
@@ -10,6 +10,7 @@ class SphereRadius {
 		this.sphereRadiusInput = document.getElementById('sphere-radius');
 		this.locationOfSphereRadiusSquared = gl.getUniformLocation(pid, "sphereRadiusSquared");
 		this.locationOfSphereRadiusWithPlaneLineSquared = gl.getUniformLocation(pid, "sphereRadiusWithPlaneLineSquared");
+		this.realtimeRenderer = realtimeRenderer;
 		let outer = this;
 		this.sphereRadiusInput.addEventListener('input', function() {
 			outer._updated();
@@ -33,6 +34,7 @@ class SphereRadius {
 		this.planeCutValue.inputElement.setAttribute('max', val);
 		this.planeCutValue.inputElement.value = Math.max(-val, Math.min(val, this.planeCutValue.get()));
 		document.dispatchEvent(new Event('sphere-radius-change'));
+		this.realtimeRenderer.redraw();
 	}
 
 	get() {

@@ -1,6 +1,7 @@
 class PlaneCutValue {
-	constructor(gl, pid) {
+	constructor(gl, pid, realtimeRenderer) {
 		this.gl = gl;
+		this.realtimeRenderer = realtimeRenderer;
 		this.locationOfPlaneCutValue = gl.getUniformLocation(pid, "planeCutValue");
 		var outer = this;
 		this.inputElement = document.getElementById('plane-cut-value');
@@ -25,6 +26,7 @@ class PlaneCutValue {
 			if (this.mandelBrotDisplay !== undefined) {
 				this.mandelBrotDisplay.planeCutValueUpdated();
 			}
+			this.realtimeRenderer.redraw();
 		}
 	}
 

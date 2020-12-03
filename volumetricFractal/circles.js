@@ -1,7 +1,8 @@
 class Circles {
-	constructor(gl, pid, camera, getWidth, getHeight) {
+	constructor(gl, pid, camera, getWidth, getHeight, realtimeRenderer) {
 		this.gl = gl;
 		this.camera = camera;
+		this.realtimeRenderer = realtimeRenderer;
 		this.lineThicknessFactor = 0.001;
 		this.locationOfCircleRadiusRange = gl.getUniformLocation(pid, "circleRadiusRange");
 		this.locationOfShowingCircumference = gl.getUniformLocation(pid, "isShowingCircumference");
@@ -9,6 +10,7 @@ class Circles {
 		var outer = this;
 		this.showSphereOutlineInput.addEventListener('change', function() {
 			outer.showSphereOutlineChanged(gl, outer.locationOfShowingCircumference, getWidth(), getHeight());
+			outer.realtimeRenderer.redraw();
 		});
 		this.showSphereOutlineChanged(this.gl, this.locationOfShowingCircumference, getWidth(), getHeight());
 	}
