@@ -1,7 +1,7 @@
 
 class DownloadRenderer {
 	constructor(gl, pid, mandelbrotDisplay, pixelSubsampling, sphereRadius, displayMode,
-		scale, peakOpacity, circles) {
+		scale, peakOpacity, circles, realtimeRenderer) {
 		this.mainGL = gl;
 		this.mainPID = pid;
 		this.mandelbrotDisplay = mandelbrotDisplay;
@@ -10,6 +10,7 @@ class DownloadRenderer {
 		this.displayMode = displayMode;
 		this.scale = scale;
 		this.circles = circles;
+		this.realtimeRenderer = realtimeRenderer;
 		this.peakOpacity = peakOpacity;
 		this.filename = 'cloud.png';
 		this.downloadBar = document.getElementById('render-and-download-progress');
@@ -193,6 +194,7 @@ class DownloadRenderer {
 	downloadCanvas() {
 		if (this.isBenchmarking) {
 			this.isRenderingOrDownloading = false;
+			this.realtimeRenderer.checkIfBusy();
 			return;
 		}
 		var outer = this;
@@ -203,6 +205,7 @@ class DownloadRenderer {
 			if (typeof outer.downloadCompleteCallback === 'function') {
 				outer.downloadCompleteCallback();
 			}
+			outer.realtimeRenderer.checkIfBusy();
 		}, 'image/png', 1.0);
 	}
 

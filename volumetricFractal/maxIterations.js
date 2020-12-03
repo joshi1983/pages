@@ -1,7 +1,8 @@
 class MaxIterations {
-	constructor(gl, pid, mandelBrotDisplay) {
+	constructor(gl, pid, mandelBrotDisplay, realtimeRenderer) {
 		this.gl = gl;
 		this.mandelBrotDisplay = mandelBrotDisplay;
+		this.realtimeRenderer = realtimeRenderer;
 		this.maxIterationsInput = document.getElementById('max-iterations');
 		this.locationOfFractalIterationDeltas = gl.getUniformLocation(pid, "fractalIterationDelta");
 		var outer = this;
@@ -27,6 +28,7 @@ class MaxIterations {
 				throw new Error('MaxIterations can not be set to such a large number. ' + newMaxIterations);
 			this.gl.uniform1f(this.locationOfFractalIterationDeltas, 1.0 / newMaxIterations);
 			this.mandelBrotDisplay.maxIterationsChanged();
+			this.realtimeRenderer.redraw();
 		}
 		if (!forceChange) {
 			this.maxIterationsInput.value = newMaxIterations;

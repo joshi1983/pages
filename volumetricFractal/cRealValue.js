@@ -1,6 +1,7 @@
 class CRealValue {
-	constructor(gl, pid) {
+	constructor(gl, pid, realtimeRenderer) {
 		this.gl = gl;
+		this.realtimeRenderer = realtimeRenderer;
 		this.locationOfCReal = gl.getUniformLocation(pid, "cReal");
 		this.inputElement = document.getElementById('c-real');
 		var outer = this;
@@ -30,6 +31,7 @@ class CRealValue {
 		var val = this.get();
 		this.gl.uniform1f(this.locationOfCReal, val);
 		if (this.mandelBrotDisplay !== undefined)
-			this.mandelBrotDisplay.cRealUpdated();	  
+			this.mandelBrotDisplay.cRealUpdated();
+		this.realtimeRenderer.redraw();
 	}
 }
