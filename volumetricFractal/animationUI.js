@@ -6,6 +6,11 @@ class AnimationUI {
 			this.realtimeRenderer = realtimeRenderer;
 			this.addElementsToDOM();
 		}
+		else {
+			// remove the animation tab.
+			var animationTab = document.getElementById('animation-tab');
+			animationTab.remove();
+		}
 	}
 
 	addElementsToDOM() {
@@ -15,7 +20,7 @@ class AnimationUI {
 		if (url !== undefined) {
 			this.audio = new Audio(url);
 		}
-		var settings = document.getElementById('settings');
+		var settings = document.getElementById('animation');
 		var div = document.createElement('div');
 		div.innerHTML = `<button id="playAnimation">Play</button>
 			<button id="downloadAnimationHD">Download HD Frame Sequence</button>
