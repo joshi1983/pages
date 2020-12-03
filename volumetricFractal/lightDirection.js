@@ -1,6 +1,7 @@
 class LightDirection {
-	constructor(gl, pid) {
+	constructor(gl, pid, realtimeRenderer) {
 		this.gl = gl;
+		this.realtimeRenderer = realtimeRenderer;
 		this.locationOfLightDirection = gl.getUniformLocation(pid, "lightDirection");
 		this.lightDirectionX = document.getElementById('light-x');
 		this.lightDirectionY = document.getElementById('light-y');
@@ -55,5 +56,6 @@ class LightDirection {
 			z /= m;
 		}
 		this.gl.uniform3fv(this.locationOfLightDirection, [x, y, z]);
+		this.realtimeRenderer.redraw();
 	}
 }

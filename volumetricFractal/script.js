@@ -12,7 +12,8 @@ window.addEventListener("DOMContentLoaded", function() {
   var w = canvas.clientWidth;
   loadShaders(gl, pid);
   let locationOfCentre = gl.getUniformLocation(pid, "centre");
-  var ambientLight = new AmbientLight(gl, pid);
+  var realtimeRenderer = new RealtimeRenderer();
+  var ambientLight = new AmbientLight(gl, pid, realtimeRenderer);
   var camera = new Camera(gl, pid);
   let pixelStretch = 3;
   // start fairly low quality to safely know we won't crash the browser to start with.
@@ -23,7 +24,7 @@ window.addEventListener("DOMContentLoaded", function() {
   var scale = new Scale(gl, pid);
   var lineThicknessFactor = 0.001;
   var times = [];
-  var lightDirection = new LightDirection(gl, pid);
+  var lightDirection = new LightDirection(gl, pid, realtimeRenderer);
 
 	// This is important for managing browser view zoom.
 	// A zoom other than 100% causes canvas.clientWidth != viewport width.
@@ -41,35 +42,35 @@ window.addEventListener("DOMContentLoaded", function() {
 		return h;
 	}
 
- var displayMode = new DisplayMode(gl, pid);
- var planeCutValue = new PlaneCutValue(gl, pid);
-  var circles = new Circles(gl, pid, camera, getWidth, getHeight);
+ var displayMode = new DisplayMode(gl, pid, realtimeRenderer);
+ var planeCutValue = new PlaneCutValue(gl, pid, realtimeRenderer);
+  var circles = new Circles(gl, pid, camera, getWidth, getHeight, realtimeRenderer);
   var sphereRadius = new SphereRadius(gl, pid, planeCutValue, scale, 
-	circles, getWidth, getHeight);
+	circles, getWidth, getHeight, realtimeRenderer);
 	circles.setSphereRadius(sphereRadius);
-  var cRealValue = new CRealValue(gl, pid);
-  var planeCutAxis = new PlaneCutAxis(gl, pid);
+  var cRealValue = new CRealValue(gl, pid, realtimeRenderer);
+  var planeCutAxis = new PlaneCutAxis(gl, pid, realtimeRenderer);
   var mandelBrotDisplay = new MandelbrotDisplay(gl, pid, pixelStretch, sphereRadius, displayMode,
 	planeCutValue, cRealValue, planeCutAxis, scale, circles, getViewportDimensions, 
 	getCentre);
   planeCutAxis.setMandelBrotDisplay(mandelBrotDisplay);
   cRealValue.setMandelBrotDisplay(mandelBrotDisplay);
   planeCutValue.setMandelBrotDisplay(mandelBrotDisplay);
-  var maxIterations = new MaxIterations(gl, pid, mandelBrotDisplay);
+  var maxIterations = new MaxIterations(gl, pid, mandelBrotDisplay, realtimeRenderer);
   resized();
   var peakOpacity = new PeakOpacity();
-  var sampleOpacity = new SampleOpacity(gl, pid, peakOpacity);
-  var lightObstructionDeltaRatio = new LightObstructionDelta(gl, pid, sampleOpacity, peakOpacity);
+  var sampleOpacity = new SampleOpacity(gl, pid, peakOpacity, realtimeRenderer);
+  var lightObstructionDeltaRatio = new LightObstructionDelta(gl, pid, sampleOpacity, peakOpacity, realtimeRenderer);
   peakOpacity.setLightObstructionDeltaRatio(lightObstructionDeltaRatio);
   var pixelSubsampling = new PixelSubsampling(gl, pid);
   displayMode.initSettingsToggler(mandelBrotDisplay, pixelSubsampling);
   var downloader = new DownloadRenderer(gl, pid, mandelBrotDisplay, pixelSubsampling, sphereRadius, displayMode, scale,
-	peakOpacity, circles);
+	peakOpacity, circles, realtimeRenderer);
 	sphereRadius._updated();
   var renderSettings = new RenderSettings(ambientLight, camera, circles, cRealValue, displayMode, 
 	lightDirection, maxIterations, peakOpacity, planeCutAxis, planeCutValue, scale, sphereRadius);
   var benchmarker = new Benchmarker(renderSettings, downloader);
-  var animation = new AnimationUI(renderSettings, downloader);
+  var animation = new AnimationUI(renderSettings, downloader, realtimeRenderer);
 	
 	// returns value to be used in shader's uniform.
 	// In other words, this isn't returning pixel coordinates.
@@ -122,6 +123,7 @@ window.addEventListener("DOMContentLoaded", function() {
   function resized() {
 	  refreshPixelStretchCentreAndScale();
 	  mandelBrotDisplay.updateSize();
+	  realtimeRenderer.redraw();
   }
   
   function decreaseQuality(currentFrameRate) {
@@ -176,31 +178,16 @@ window.addEventListener("DOMContentLoaded", function() {
 	  }
   }
 
-  function processTimeChange() {
-	animation.updateAnimation();
-	var t = new Date().getTime();
-	times = times.filter(function(time1) {
-	  return t - time1 < 1000;
-	});
-	if (times.length > 0 && Math.floor(times[times.length - 1] / 3000) !== Math.floor(t / 3000)) {
-		improveFrameRateInResponseTo(times.length);
-	}
-	times.push(t);
-	camera.changed();
-  }
-
   function draw() {
-	  if (!downloader.isDownloading()) {
-		processTimeChange();
 		circles.updateCircleRadiusRange(gl, w, h, scale.get(), circles.locationOfCircleRadiusRange);
+		camera.changed();
 		drawGraphics(gl, w, h);
-	  }
-	requestAnimationFrame(draw);
   }
 
   function processDrag(dx, dy) {
 	camera.addAngleAndRadius(dx * 0.002, dy * 0.004);
 	mandelBrotDisplay.updateVisibility();
+	realtimeRenderer.redraw();
   }
 
   function initSettings() {
@@ -224,6 +211,6 @@ window.addEventListener("DOMContentLoaded", function() {
   new MouseTouchUtils(canvas, processDrag);
   window.addEventListener('resize', resized);
   resized();
-  benchmarker.initScreenRefreshRate().then(draw);
   mandelBrotDisplay.updateSize();
+  realtimeRenderer.init(benchmarker, draw, downloader, animation);
 });

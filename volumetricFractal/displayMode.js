@@ -1,13 +1,14 @@
 class DisplayMode {
-	constructor(gl, pid) {
+	constructor(gl, pid, realtimeRenderer) {
 		this.gl = gl;
 		this.locationOfDisplayMode = gl.getUniformLocation(pid, "displayMode");
+		this.realtimeRenderer = realtimeRenderer;
 	}
-	
+
 	setUniform(newDisplayMode) {
 		this.gl.uniform1i(this.locationOfDisplayMode, newDisplayMode);
 	}
-	
+
 	set(newDisplayMode, forceUpdate) {
 	  var currentValue = this.get();
 	  if (forceUpdate || currentValue !== newDisplayMode) {
@@ -23,6 +24,7 @@ class DisplayMode {
 		  }
 	  }
 	  this.setUniform(newDisplayMode);
+	  this.realtimeRenderer.redraw();
 	}
 	
 	get() {

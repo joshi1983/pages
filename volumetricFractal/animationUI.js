@@ -1,8 +1,9 @@
 class AnimationUI {
-	constructor(renderSettings, downloader) {
+	constructor(renderSettings, downloader, realtimeRenderer) {
 		if (this.shouldBeActive()) {
 			this.renderSettings = renderSettings;
 			this.downloader = downloader;
+			this.realtimeRenderer = realtimeRenderer;
 			this.addElementsToDOM();
 		}
 	}
@@ -131,6 +132,18 @@ class AnimationUI {
 			this.audio.currentTime = startDeltaT * 0.001;
 			this.audio.play();
 		}
+		function animationLoop() {
+			outer.updateAnimation();
+			outer.realtimeRenderer.redraw();
+			if (outer.realtimeRenderer.canDraw() && !outer.isPaused) {
+				requestAnimationFrame(animationLoop);
+			}
+		}
+		animationLoop();
+	}
+	
+	isBusy() {
+		return this.isDownloadingAnimation;
 	}
 
 	updateAnimation() {
