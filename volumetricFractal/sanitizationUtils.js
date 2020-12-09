@@ -10,6 +10,10 @@ function sanitizeFloat(v, defaultVal) {
 }
 
 function getDefaultedNumber(val1, defaultVal) {
+	if (typeof val1 === 'string') {
+		val1 = val1.trim();
+		val1 = parseFloat(val1);
+	}
 	if (typeof val1 === 'number' && !isNaN(val1))
 		return val1;
 	else
