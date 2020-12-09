@@ -163,7 +163,7 @@ class DownloadRenderer {
 		'sphereRadiusWithPlaneLineSquared', 'position3D', 'viewRotation'].forEach(function(key) {
 			copyUniform(outer.mainGL, outer.gl, outer.mainPID, outer.pid, key);
 		});
-		this.canvasWebGL.setAttribute('width', this.intervalSize);
+		this.canvasWebGL.setAttribute('width', this.intervalSizeX);
 		this.canvasWebGL.setAttribute('height', this.h);
 	}
 
@@ -181,7 +181,7 @@ class DownloadRenderer {
 			this._showDownloadProgress();
 		this.canvas2D.setAttribute('class', 'visible');
 		this.config = config;
-		this.intervalSize = 1;
+		this.intervalSizeX = 1;
 		this.initWebGLContextForDownload();
 		this._fillBlackBackground(this.g, this.w, this.h);
 		var scaleValue = this.scale.getScaleFromDimensions(this.w, this.h);
@@ -199,11 +199,12 @@ class DownloadRenderer {
 			this.updateLoopStartTime = new Date().getTime();
 		}
 		this.gl.uniform2fv(this.uniforms.centre, [this.w / 2 - this.left, this.h / 2]);
-		drawGraphics(this.gl, this.intervalSize, this.h);
+		drawGraphics(this.gl, this.intervalSizeX, this.h);
+		this.gl.finish();
 		var outer = this;
 		console.log('updateDrawing called.  this.left = ' + this.left);
 		outer.g.drawImage(outer.canvasWebGL, outer.left, 0);
-		if (outer.left + outer.intervalSize >= outer.maxToRender) {
+		if (outer.left + outer.intervalSizeX >= outer.maxToRender) {
 			this.freeWebGLContext();
 			if (outer.mandelbrotDisplay.shouldBeVisible()) {
 				outer.mandelbrotDisplay.drawAll(outer.canvas2D).then(function() {
@@ -218,7 +219,7 @@ class DownloadRenderer {
 			
 		}
 		else {
-			outer.left += outer.intervalSize;
+			outer.left += outer.intervalSizeX;
 			var newTime = new Date().getTime();
 			var maxLoopTime = 50;
 			var renderTime = newTime - outer.updateLoopStartTime;
