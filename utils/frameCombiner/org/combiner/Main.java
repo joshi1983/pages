@@ -11,7 +11,7 @@ public class Main {
 		Graphics g = newImage.getGraphics();
 		
 		g.drawImage(leftImage, 0, 0, null);
-		int clipWidth = 30;
+		int clipWidth = 40;
 		// draw only the last 30 pixels or so of the right image.
 		int clipLeft = 1920 - clipWidth;
 		g.setClip(new Rectangle(clipLeft, 0, clipWidth, leftImage.getHeight()));
