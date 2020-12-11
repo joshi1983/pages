@@ -16,6 +16,7 @@ class DownloadRenderer {
 		this.downloadBar = document.getElementById('render-and-download-progress');
 		this.progressBar = document.getElementById('download-progress-bar');
 		this.downloadButton = document.getElementById('download-image');
+		this.renderUnitSize = document.getElementById('render-slice-size');
 		var outer = this;
 		this.downloadButton.addEventListener('click', function() {
 			outer.startDownload();
@@ -115,18 +116,28 @@ class DownloadRenderer {
 		return this.isBenchmarking || this.isRenderingOrDownloading;
 	}
 
-	_getResolution() {
-		var resolution = this.resolutionSelector.value;
-		return resolution.split('x').map(function(s) {
+	_splitDimensions(dimensionString) {
+		return dimensionString.split('x').map(function(s) {
 			return parseInt(s.trim());
 		});
 	}
 
+	_getResolution() {
+		return this._splitDimensions(this.resolutionSelector.value);
+	}
+
+	_getIntervalSize() {
+		return this._splitDimensions(this.renderUnitSize.value);
+	}
+
 	_getDefaultConfig() {
 		var resolution = this._getResolution();
+		var intervalSize = this._getIntervalSize();
 		var defaultDownloadConfig = {
 			'w': resolution[0],
 			'h': resolution[1],
+			'intervalSizeX': intervalSize[0],
+			'intervalSizeY': intervalSize[1],
 			'lightObstructionDeltaRatio': parseFloat(this.sampleIntervalSelect.value),
 			'pixelSubsamplingQuality': this.pixelSubsampling.DEFAULT_QUALITY,
 			'isBenchmarking': false
@@ -185,8 +196,8 @@ class DownloadRenderer {
 			this.canvasPreviewParent.appendChild(this.canvas2D);
 		}
 		this.config = config;
-		this.intervalSizeX = 10;
-		this.intervalSizeY = 10; // Math.ceil(config.h);
+		this.intervalSizeX = config.intervalSizeX;
+		this.intervalSizeY = config.intervalSizeY;
 		this.initWebGLContextForDownload();
 		this._fillBlackBackground(this.g, this.w, this.h);
 		var scaleValue = this.scale.getScaleFromDimensions(this.w, this.h);
@@ -209,7 +220,7 @@ class DownloadRenderer {
 		this.gl.finish();
 		var outer = this;
 		outer.g.drawImage(outer.canvasWebGL, outer.left, outer.top);
-		if (outer.left + outer.intervalSizeX >= outer.maxToRender) {
+		if (outer.left >= outer.maxToRender || (outer.left + outer.intervalSizeX >= outer.maxToRender && outer.top + outer.intervalSizeY >= outer.h)) {
 			this.freeWebGLContext();
 			if (false && outer.mandelbrotDisplay.shouldBeVisible()) {
 				outer.mandelbrotDisplay.drawAll(outer.canvas2D).then(function() {
@@ -229,7 +240,6 @@ class DownloadRenderer {
 				outer.top = 0;
 			}
 			else {
-				//console.log('about to update outer.top.  outer.top = ' + outer.top + ', outer.intervalSizeY = ' + outer.intervalSizeY);
 				outer.top += outer.intervalSizeY;
 			}
 			if (isNaN(outer.top)) {
@@ -246,7 +256,7 @@ class DownloadRenderer {
 				outer.updateLoopStartTime = undefined;
 				setTimeout(function() {
 					outer.updateDrawing(resolver, rejecter);
-				}, 10);
+				}, 0);
 			}
 			else {
 				// no delay.  continue immediately so the 
