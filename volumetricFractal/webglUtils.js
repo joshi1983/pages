@@ -34,6 +34,13 @@ function drawGraphics(gl, w, h) {
 	gl.drawArrays(gl.TRIANGLES, 0, 3);
 }
 
+function preventWebGLContextLoss(canvas) {
+	canvas.addEventListener("webglcontextlost", function(event) {
+		console.error('webglContextLost event caught.');
+		event.preventDefault();
+	}, false);
+}
+
 function copyUniform(glFrom, glDestination, pidFrom, pidDestination, key) {
 	var locationOfUniform = glFrom.getUniformLocation(pidFrom, key);
 	var destinationOfUniform = glDestination.getUniformLocation(pidDestination, key);

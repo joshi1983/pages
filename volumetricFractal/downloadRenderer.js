@@ -25,6 +25,7 @@ class DownloadRenderer {
 		this.g = this.canvas2D.getContext('2d');
 		this.resolutionSelector = document.getElementById('resolution');
 		this.sampleIntervalSelect = document.getElementById('sample-interval');
+		this.canvasPreviewParent = document.getElementById('canvas-preview');
 	}
 
 	freeWebGLContext() {
@@ -45,6 +46,7 @@ class DownloadRenderer {
 			this.freeWebGLContext();
 		}
 		this.canvasWebGL = document.createElement('canvas');
+		preventWebGLContextLoss(this.canvasWebGL);
 		this.gl = this.canvasWebGL.getContext('webgl', {
 			'preserveDrawingBuffer': false
 		});
@@ -164,7 +166,7 @@ class DownloadRenderer {
 			copyUniform(outer.mainGL, outer.gl, outer.mainPID, outer.pid, key);
 		});
 		this.canvasWebGL.setAttribute('width', this.intervalSizeX);
-		this.canvasWebGL.setAttribute('height', this.h);
+		this.canvasWebGL.setAttribute('height', this.intervalSizeY);
 	}
 
 	startDownload(downloadConfigOverrides) {
@@ -177,17 +179,21 @@ class DownloadRenderer {
 		if (typeof downloadConfigOverrides === 'object') {
 			Object.assign(config, downloadConfigOverrides);
 		}
-		if (!config.isBenchmarking)
+		if (!config.isBenchmarking) {
 			this._showDownloadProgress();
-		this.canvas2D.setAttribute('class', 'visible');
+			this.canvasPreviewParent.innerHTML = ''; // no children.
+			this.canvasPreviewParent.appendChild(this.canvas2D);
+		}
 		this.config = config;
-		this.intervalSizeX = 1;
+		this.intervalSizeX = 10;
+		this.intervalSizeY = 10; // Math.ceil(config.h);
 		this.initWebGLContextForDownload();
 		this._fillBlackBackground(this.g, this.w, this.h);
 		var scaleValue = this.scale.getScaleFromDimensions(this.w, this.h);
 		var maxPixelRadius = this.circles.updateCircleRadiusRange(this.gl, this.w, this.h, scaleValue, this.uniforms.circleRadiusRange);
 		this.maxToRender = Math.ceil(Math.min(this.w, this.w / 2 + maxPixelRadius));
 		this.left = Math.floor(Math.max(0, this.w / 2 - maxPixelRadius));
+		this.top = 0;
 		var outer = this;
 		return new Promise(function(resolver, rejecter) {
 			outer.updateDrawing(resolver, rejecter);
@@ -198,15 +204,14 @@ class DownloadRenderer {
 		if (this.updateLoopStartTime === undefined) {
 			this.updateLoopStartTime = new Date().getTime();
 		}
-		this.gl.uniform2fv(this.uniforms.centre, [this.w / 2 - this.left, this.h / 2]);
-		drawGraphics(this.gl, this.intervalSizeX, this.h);
+		this.gl.uniform2fv(this.uniforms.centre, [this.w / 2 - this.left, (this.intervalSizeY - this.h / 2) + this.top]);
+		drawGraphics(this.gl, this.intervalSizeX, this.intervalSizeY);
 		this.gl.finish();
 		var outer = this;
-		console.log('updateDrawing called.  this.left = ' + this.left);
-		outer.g.drawImage(outer.canvasWebGL, outer.left, 0);
+		outer.g.drawImage(outer.canvasWebGL, outer.left, outer.top);
 		if (outer.left + outer.intervalSizeX >= outer.maxToRender) {
 			this.freeWebGLContext();
-			if (outer.mandelbrotDisplay.shouldBeVisible()) {
+			if (false && outer.mandelbrotDisplay.shouldBeVisible()) {
 				outer.mandelbrotDisplay.drawAll(outer.canvas2D).then(function() {
 					outer.downloadCanvas(resolver, rejecter);
 					resolver();
@@ -219,9 +224,19 @@ class DownloadRenderer {
 			
 		}
 		else {
-			outer.left += outer.intervalSizeX;
+			if (outer.top + outer.intervalSizeY >= outer.h) {
+				outer.left += outer.intervalSizeX;
+				outer.top = 0;
+			}
+			else {
+				//console.log('about to update outer.top.  outer.top = ' + outer.top + ', outer.intervalSizeY = ' + outer.intervalSizeY);
+				outer.top += outer.intervalSizeY;
+			}
+			if (isNaN(outer.top)) {
+				throw new Error('outer.top = ' + outer.top);
+			}
 			var newTime = new Date().getTime();
-			var maxLoopTime = 50;
+			var maxLoopTime = 30;
 			var renderTime = newTime - outer.updateLoopStartTime;
 			if (renderTime > maxLoopTime) {
 				if (renderTime > 200) {
@@ -231,12 +246,14 @@ class DownloadRenderer {
 				outer.updateLoopStartTime = undefined;
 				setTimeout(function() {
 					outer.updateDrawing(resolver, rejecter);
-				}, 20);
+				}, 10);
 			}
 			else {
 				// no delay.  continue immediately so the 
 				// render completes faster.
-				outer.updateDrawing(resolver, rejecter);
+				setTimeout(function() {
+					outer.updateDrawing(resolver, rejecter);
+				}, 0);
 			}
 		}
 	}
