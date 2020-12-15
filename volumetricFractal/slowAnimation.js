@@ -116,6 +116,7 @@ class Animation {
 					{'x': 117050, 'y': 2.5, 'ignorePreviousSlope': true},
 					{'x': 130000, 'y': 1.8},
 					{'x': 141050, 'y': 0.3},
+					{'x': 142050, 'y': 0.165},
 					], deltaT),
 				'ambient': getCurveValue([
 					{'x': 0, 'y': 0.05},
@@ -325,11 +326,11 @@ class Animation {
 	}
 
 	getMusicURL() {
-		return 'https://www.bensound.com/bensound-music/bensound-slowmotion.mp3';
+		return 'bensound-slowmotion-edited.mp3';
 	}
 
 	getMaxTime() {
-		return 142050;
+		return 145050;
 	}
 	
 	getKeyTimes() {
