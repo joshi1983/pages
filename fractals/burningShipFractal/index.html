@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<title>Burning Ship Fractal Shader</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<script src="script.js"></script>
+		<link rel="stylesheet" href="style.css">
+	</head>
+	<body>
+		<script type="glsl/vertex">
+  attribute vec2 coords;
+  
+  void main(void) {
+    gl_Position = vec4(coords.xy, 0.0, 1.0);
+  }
+</script>
+<script type="glsl/fragment">
+// <![CDATA[
+precision mediump float;
+
+uniform vec2 centre;
+uniform float scale;
+uniform bool isSubpixelSampling;
+
+vec3 getValueAt(vec2 p) {
+	float xt;
+	vec2 z;
+	float ratio = 0.0;
+	float fractalIterationDelta = 0.01;
+
+	for (int i = 0; i < 10000; i++)
+	{
+        xt = z.x*z.x - z.y*z.y + p.x; 
+        z.y = abs(2.0*z.x*z.y) + p.y;
+        z.x = xt;
+		ratio += fractalIterationDelta;
+		if (ratio > 0.99)
+			break;
+		// save time by computing the dot product only if there's a change it'll escape.
+		if (abs(z.x) > 181.0 || abs(z.y) > 181.0) {
+			float dotResult = dot(z, z);
+			if (dotResult > 65536.0) {
+				ratio = ratio + fractalIterationDelta - fractalIterationDelta * log(log(dotResult)) / 0.69314718;
+				break;
+			}
+		}
+	}
+	return vec3(ratio, z.x, z.y);
+}
+
+vec3 getColourAt(vec2 p) {
+	vec3 v = getValueAt(p);
+	v.y = log(abs(log(abs(v.y))));
+	v.z = log(abs(log(abs(v.z))));
+	float r = v.y * v.y + v.z * v.z;
+	float red = v.x * 10.0 + sin(r * 20.0) * 0.05;
+	float green = v.x * 3.0 + sin(r * 10.0) * 0.1;
+	float blue = v.x * 1.0;
+	
+	return vec3(clamp(red, 0.0, 1.0), clamp(green, 0.0, 1.0), clamp(blue, 0.0, 1.0));
+}
+
+
+void main(void) {
+	vec2 p = (gl_FragCoord.xy - centre) * scale;
+	vec3 val;
+	p.y = -p.y;
+	if (isSubpixelSampling) {
+		for (float xDelta = 0.0; xDelta < 0.99; xDelta+= 0.67) {
+			for (float yDelta = 0.0; yDelta < 0.99; yDelta+= 0.67) {
+				val += getColourAt(vec2(p.x + xDelta * scale, p.y + yDelta * scale));
+			}
+		}
+		val *= 0.25;
+	}
+	else {
+		val = getColourAt(p);
+	}
+	
+	gl_FragColor = vec4(val.x, val.y, val.z, 1.0);
+}
+// ]]>
+</script>
+
+		<canvas></canvas>
+		
+		<div id="dialog">
+			<p>This is a WebGL shader for the <a target="_empty" href="https://en.wikipedia.org/wiki/Burning_Ship_fractal">Burning Ship Fractal</a>.</p>
+			<ul>
+				<li>Click or touch to zoom in.</li>
+				<li>Hit Backspace to zoom out.</li>
+			</ul>
+			<footer>
+				<button id="ok-button">OK</button>
+			</footer>
+		</div>
+	</body>
+</html>
