@@ -32,6 +32,28 @@ function MandelbrotSet() {
     };
 }
 
+function BurningShip() {
+    var self = this;
+
+    self.name = 'Burning Ship';
+
+    self.getValueAt = function(x, y) {
+        var xt;
+        var zx = 0, zy = 0;
+        var cy = y;
+        var cx = x;
+		var i = 0;
+
+        for (; i < 255 && zx*zx + zy*zy < 4.0; i++) {
+			xt = zx*zx - zy*zy + x; 
+			zy = Math.abs(2.0*zx*zy) + y;
+			zx = xt;
+        }
+
+        return i;
+    };
+}
+
 function JuliaSet() {
     var self = this;
     
@@ -998,7 +1020,7 @@ function Renderer(zoom, selectedFractal) {
 $(function() {
     SololearnskiCarpet.init();
     var fractals = [new  SololearnskiCarpet(), new SierpinskiCarpet(), 
-        new SierpinskiTriangle(), new Kosh(), new MandelbrotSet(), new JuliaSet(), new HexFractal()];
+        new SierpinskiTriangle(), new Kosh(), new MandelbrotSet(), new JuliaSet(), new BurningShip(), new HexFractal()];
     var colourPalettes = [valueToLightGray, valueToColourful, valueToGray, valueToSololearnColours];
     var zoom = new Zoom();
     var renderer = new Renderer(zoom, fractals[0]);
