@@ -59,7 +59,7 @@ class DownloadRenderer {
 			'fractalIterationDelta', 'isShowingCircumference', 'displayMode',
 			'lightDirection', 'lightObstructionDeltaRatio', 'opacityCutOff', 'peakSampleOpacity',
 			'pixelSubsampling', 'planeCutValue', 'planeCutAxis',
-			'position3D', 'scale', 
+			'position3D', 'scale', 'smoothenColours',
 			'sphereRadius', 'sphereRadiusSquared',
 			'sphereRadiusWithPlaneLineSquared',
 			'viewRotation'
@@ -172,7 +172,7 @@ class DownloadRenderer {
 		['ambientFactor', 'cReal', 'fractalIterationDelta',
 		'isShowingCircumference', 'displayMode',
 		'lightDirection',
-		'planeCutAxis', 'planeCutValue', 'sphereRadiusSquared',
+		'planeCutAxis', 'planeCutValue', 'smoothenColours', 'sphereRadiusSquared',
 		'sphereRadiusWithPlaneLineSquared', 'position3D', 'viewRotation'].forEach(function(key) {
 			copyUniform(outer.mainGL, outer.gl, outer.mainPID, outer.pid, key);
 		});
