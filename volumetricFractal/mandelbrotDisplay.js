@@ -41,7 +41,7 @@ class MandelbrotDisplay {
 		initCoords(result.gl, result.pid);
 		result.uniforms = {};
 		var uniformKeys = ['centre', 'fractalIterationDelta',
-			'pixelSubsampling', 'scale'];
+			'pixelSubsampling', 'scale', 'smoothenColours'];
 		uniformKeys.forEach(function(key) {
 			result.uniforms[key] = result.gl.getUniformLocation(result.pid, key);
 		});
@@ -70,7 +70,7 @@ class MandelbrotDisplay {
 		this.sphereRadius.updateUniforms(glDestination, w, h,
 			uniforms.sphereRadiusSquared, uniforms.sphereRadiusWithPlaneLineSquared);
 		var outer = this;
-		['fractalIterationDelta'].forEach(function(key) {
+		['fractalIterationDelta', 'smoothenColours'].forEach(function(key) {
 			copyUniform(outer.mainGL, glDestination, outer.mainPID, pidDestination, key);
 		});
 		drawGraphics(glDestination, w, h);
@@ -115,25 +115,29 @@ class MandelbrotDisplay {
 		}
 		return false;
 	}
-	
+
 	cRealUpdated() {
 		this._drawCRealAndDot();
 	}
-	
+
 	planeCutValueUpdated() {
 		this._drawCRealAndDot();
 	}
-	
+
 	planeCutAxisChanged() {
 		this._drawCRealAndDot();
 	}
-	
+
 	sphereRadiusChanged() {
 		if (!this.updateVisibility())
 			this._drawAll();
 	}
-	
+
 	maxIterationsChanged() {
+		this._drawAll();
+	}
+
+	smoothenedColoursChanged() {
 		this._drawAll();
 	}
 

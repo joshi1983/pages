@@ -1,6 +1,6 @@
 class RenderSettings {
 	constructor(ambientLight, camera, circles, cRealValue, displayMode, 
-	lightDirection, maxIterations, peakOpacity, planeCutAxis, planeCutValue, scale, sphereRadius) {
+	lightDirection, maxIterations, peakOpacity, planeCutAxis, planeCutValue, scale, smoothenColours, sphereRadius) {
 		this.ambientLight = ambientLight;
 		this.camera = camera;
 		this.circles = circles;
@@ -12,6 +12,7 @@ class RenderSettings {
 		this.planeCutAxis = planeCutAxis;
 		this.planeCutValue = planeCutValue;
 		this.scale = scale;
+		this.smoothenColours = smoothenColours;
 		this.sphereRadius = sphereRadius;
 		this.uiSettingsKeyToProp = {
 			'ambientLight': {'propKey': 'ambientLight', 'sanitization': getDefaultedNumber},
@@ -21,6 +22,7 @@ class RenderSettings {
 			'peakOpacity': {'propKey': 'peakOpacity', 'sanitization': getDefaultedNumber},
 			'planeCutAxis': {'propKey': 'planeCutAxis', 'sanitization': getDefaultedInteger},
 			'planeCutValue': {'propKey': 'planeCutValue', 'sanitization': getDefaultedNumber},
+			'smoothenColours': {'propKey': 'smoothenColours', 'sanitization': getDefaultedInteger},
 			'sphereRadius': {'propKey': 'sphereRadius', 'sanitization': getDefaultedNumber},
 		};
 	}

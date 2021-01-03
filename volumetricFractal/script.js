@@ -56,6 +56,7 @@ window.addEventListener("DOMContentLoaded", function() {
   planeCutAxis.setMandelBrotDisplay(mandelBrotDisplay);
   cRealValue.setMandelBrotDisplay(mandelBrotDisplay);
   planeCutValue.setMandelBrotDisplay(mandelBrotDisplay);
+  var smoothenColours = new SmoothenColours(gl, pid, realtimeRenderer, mandelBrotDisplay);
   var maxIterations = new MaxIterations(gl, pid, mandelBrotDisplay, realtimeRenderer);
   resized();
   var peakOpacity = new PeakOpacity();
@@ -68,7 +69,7 @@ window.addEventListener("DOMContentLoaded", function() {
 	peakOpacity, circles, realtimeRenderer);
 	sphereRadius._updated();
   var renderSettings = new RenderSettings(ambientLight, camera, circles, cRealValue, displayMode, 
-	lightDirection, maxIterations, peakOpacity, planeCutAxis, planeCutValue, scale, sphereRadius);
+	lightDirection, maxIterations, peakOpacity, planeCutAxis, planeCutValue, scale, smoothenColours, sphereRadius);
   var benchmarker = new Benchmarker(renderSettings, downloader);
   var animation = new AnimationUI(renderSettings, downloader, realtimeRenderer);
 	
