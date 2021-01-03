@@ -287,19 +287,26 @@ vec3 valueToColour(float density) {
 
 float getPixelColourFor(vec2 p) {
 	float xt;
-	float zx, zy, cx, cy;
+	vec2 z, c = p;
 	float ratio = 0.0;
-	cy = p.y;
-	cx = p.x;
 
 	for (int i = 0; i < 10000; i++)
 	{
-		xt = zx * zy;
-		zx = zx * zx - zy * zy + cx;
-		zy = 2.0 * xt + cy;
+		xt = z.x * z.y;
+		z.x = z.x * z.x - z.y * z.y + c.x;
+		z.y = 2.0 * xt + c.y;
 		ratio += fractalIterationDelta;
-		if (ratio >= 1.0 || abs(zx) > 2.0)
+		if (ratio >= 1.0)
 			break;
+		// avoid computing dot result in most iterations.
+		if (abs(z.x) > 2.0 || abs(z.y) > 2.0) {
+			float dotResult = dot(z, z);
+			if (dotResult > 65536.0) {
+				// smoothen the result.
+				ratio = ratio + fractalIterationDelta - fractalIterationDelta * log(log(dotResult)) / 0.693147;
+				break;
+			}
+		}
 	}
 	return ratio;
 }
@@ -402,6 +409,7 @@ float getJuliaSetValue(vec3 p)
 		);
 	vec2 newP = vec2(p.x, p.y);
 	float ratio = 0.0;
+	float dotResult;
 
 	for (int i = 0; i < 10000; i++)
 	{
@@ -412,7 +420,10 @@ float getJuliaSetValue(vec3 p)
 		2.0 * newP.x * newP.y + c.y
 		);
 	  //if the point is outside the circle with radius 2: stop
-		if (dot(newP, newP) > 4.0) {
+		dotResult = dot(newP, newP);
+		if (dotResult > 65536.0) {
+			// smoothen the result.
+			ratio = ratio + fractalIterationDelta - fractalIterationDelta * log(log(dotResult)) / 0.693147;
 			return ratio;
 		}
 		ratio += fractalIterationDelta;
