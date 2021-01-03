@@ -36,8 +36,12 @@ float getValueAt(vec2 p) {
 		zx = zx * zx - zy * zy + cx;
 		zy = 2.0 * xt + cy;
 		ratio += fractalIterationDelta;
-		if (ratio >= 1.0 || abs(zx) > 2.0)
+		if (ratio >= 1.0 || (zx * zx + zy * zy) > 65563.0)
 			break;
+	}
+	if (ratio < 0.99) {
+		// 0.69314718055994530941723212145818 is log(2.0), the natural log of n.
+		ratio = ratio + 0.01 - 0.01 * log(log(zx * zx + zy * zy)) / 0.69314718055994530941723212145818;
 	}
 	return ratio;
 }
