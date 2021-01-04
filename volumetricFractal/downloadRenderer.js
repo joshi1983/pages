@@ -178,6 +178,7 @@ class DownloadRenderer {
 		});
 		this.canvasWebGL.setAttribute('width', this.intervalSizeX);
 		this.canvasWebGL.setAttribute('height', this.intervalSizeY);
+		this._updateCanvas2DAspectRatio();
 	}
 
 	startDownload(downloadConfigOverrides) {
@@ -217,7 +218,6 @@ class DownloadRenderer {
 		}
 		this.gl.uniform2fv(this.uniforms.centre, [this.w / 2 - this.left, (this.intervalSizeY - this.h / 2) + this.top]);
 		drawGraphics(this.gl, this.intervalSizeX, this.intervalSizeY);
-		this.gl.finish();
 		var outer = this;
 		outer.g.drawImage(outer.canvasWebGL, outer.left, outer.top);
 		if (outer.left >= outer.maxToRender || (outer.left + outer.intervalSizeX >= outer.maxToRender && outer.top + outer.intervalSizeY >= outer.h)) {
@@ -249,23 +249,34 @@ class DownloadRenderer {
 			var maxLoopTime = 30;
 			var renderTime = newTime - outer.updateLoopStartTime;
 			if (renderTime > maxLoopTime) {
-				if (renderTime > 200) {
+				if (renderTime > 500) {
 					console.log('Rendering slice took ' + renderTime + 'ms.  May need to reduce slice size.');
 				}
 				outer._updateProgress();
 				outer.updateLoopStartTime = undefined;
-				setTimeout(function() {
-					outer.updateDrawing(resolver, rejecter);
-				}, 0);
 			}
-			else {
-				// no delay.  continue immediately so the 
-				// render completes faster.
-				setTimeout(function() {
-					outer.updateDrawing(resolver, rejecter);
-				}, 0);
-			}
+			// no delay.  continue immediately so the 
+			// render completes faster.
+			setTimeout(function() {
+				outer.updateDrawing(resolver, rejecter);
+			}, 0);
 		}
+	}
+	
+	_updateCanvas2DAspectRatio() {
+		var aspectRatio = this.w / this.h;
+		var newHeight, newWidth;
+		var maxDimension = 170;
+		if (this.w > this.h) {
+			newWidth = maxDimension;
+			newHeight = newWidth / aspectRatio;
+		}
+		else {
+			newHeight = maxDimension;
+			newWidth = newHeight * aspectRatio;
+		}
+		this.canvas2D.style.height = Math.round(newHeight) + 'px';
+		this.canvas2D.style.width = Math.round(newWidth) + 'px';
 	}
 
 	downloadCanvas(resolver, rejecter) {
