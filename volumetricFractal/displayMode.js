@@ -10,21 +10,15 @@ class DisplayMode {
 	}
 
 	set(newDisplayMode, forceUpdate) {
-	  var currentValue = this.get();
-	  if (forceUpdate || currentValue !== newDisplayMode) {
-		  if (currentValue !== newDisplayMode) {
-			  var input = this.getInputForDisplayMode(newDisplayMode);
-			  input.checked = true;
-
-			  if (this.decreaseQuality !== undefined && currentValue === DisplayMode.PLANE_CUT && newDisplayMode !== currentValue) {
-				// volumetric rendering can't run at the same quality.
-				// prevent the browser from crashing.
-				this.decreaseQuality(2);
-			  }
-		  }
-	  }
-	  this.setUniform(newDisplayMode);
-	  this.realtimeRenderer.redraw();
+		var currentValue = this.get();
+		if (forceUpdate || currentValue !== newDisplayMode) {
+			if (currentValue !== newDisplayMode) {
+				var input = this.getInputForDisplayMode(newDisplayMode);
+				input.checked = true;
+			}
+		}
+		this.setUniform(newDisplayMode);
+		this.realtimeRenderer.redraw();
 	}
 
 	get() {
@@ -57,6 +51,10 @@ class DisplayMode {
 				$(body).addClass('show-volumetric-settings');
 			}
 			mandelBrotDisplay.planeCutAxisChanged();
+			if (outer.get() === DisplayMode.PLANE_CUT)
+				outer.realtimeRenderer.planeCutModeSelected();
+			else
+				outer.realtimeRenderer.volumetricModeSelected();
 		}
 
 		['volume', 'plane-cut', 'max-cut-volume', 'min-cut-volume'].forEach(function(displayModeName) {

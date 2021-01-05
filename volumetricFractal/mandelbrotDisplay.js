@@ -2,7 +2,7 @@
 class MandelbrotDisplay {
 	constructor(gl, pid, pixelStretch, sphereRadius, displayMode, 
 	planeCutValue, cRealValue, planeCutAxis, scale, circles,
-	getViewportDimensions, getCentre) {
+	getViewportDimensions, centre) {
 		this.mainGL = gl;
 		this.mainPID = pid;
 		this.pixelStretch = pixelStretch;
@@ -14,7 +14,7 @@ class MandelbrotDisplay {
 		this.scale = scale;
 		this.circles = circles;
 		this.getViewportDimensions = getViewportDimensions;
-		this.getCentre = getCentre;
+		this.centre = centre;
 
 		this.div = document.getElementById('mandelbrot-display');
 		this.canvas = this.div.querySelector('canvas');
@@ -88,7 +88,7 @@ class MandelbrotDisplay {
 		var radius = this.circles.getMaxCircleRadius(w, h, scaleValue);
 		if (typeof radius !== 'number' || isNaN(radius))
 			throw new Error('radius must be a number.');
-		var centre = this.getCentre();
+		var centre = this.centre.getCentre();
 		if (!(centre instanceof Array) || centre.length !== 2) {
 			throw new Error('centre must be an Array of length 2.');
 		}
