@@ -11,11 +11,9 @@ window.addEventListener("DOMContentLoaded", function() {
   var h = canvas.clientHeight;
   var w = canvas.clientWidth;
   loadShaders(gl, pid);
-  let locationOfCentre = gl.getUniformLocation(pid, "centre");
   var realtimeRenderer = new RealtimeRenderer();
   var ambientLight = new AmbientLight(gl, pid, realtimeRenderer);
   var camera = new Camera(gl, pid);
-  let pixelStretch = 3;
   // start fairly low quality to safely know we won't crash the browser to start with.
 
   var positionY = 0;
@@ -50,9 +48,11 @@ window.addEventListener("DOMContentLoaded", function() {
 	circles.setSphereRadius(sphereRadius);
   var cRealValue = new CRealValue(gl, pid, realtimeRenderer);
   var planeCutAxis = new PlaneCutAxis(gl, pid, realtimeRenderer);
-  var mandelBrotDisplay = new MandelbrotDisplay(gl, pid, pixelStretch, sphereRadius, displayMode,
+  var centre = new Centre(gl, pid, getWidth, getHeight, camera, circles, realtimeRenderer, scale, sphereRadius);
+  var mandelBrotDisplay = new MandelbrotDisplay(gl, pid, realtimeRenderer.pixelStretch, sphereRadius, displayMode,
 	planeCutValue, cRealValue, planeCutAxis, scale, circles, getViewportDimensions, 
-	getCentre);
+	centre);
+	centre.mandelBrotDisplay = mandelBrotDisplay;
   planeCutAxis.setMandelBrotDisplay(mandelBrotDisplay);
   cRealValue.setMandelBrotDisplay(mandelBrotDisplay);
   planeCutValue.setMandelBrotDisplay(mandelBrotDisplay);
@@ -72,49 +72,14 @@ window.addEventListener("DOMContentLoaded", function() {
 	lightDirection, maxIterations, peakOpacity, planeCutAxis, planeCutValue, scale, smoothenColours, sphereRadius);
   var benchmarker = new Benchmarker(renderSettings, downloader);
   var animation = new AnimationUI(renderSettings, downloader, realtimeRenderer);
-	
-	// returns value to be used in shader's uniform.
-	// In other words, this isn't returning pixel coordinates.
-	// You need the multiply the values by pixelStretch to get the pixel coordinates.
-	function getCentre() {
-	  var cy = h / 2;
-	  var body = document.querySelector('body');
-	  var bodyClass = body.class;
-	  if (!bodyClass)
-		bodyClass = '';
 
-	  // if the settings are showing and it is more than 0.3 * h,
-	  // look for a better cy.
-	  if (bodyClass.indexOf('settings-collapsed') === -1 && sphereRadius !== undefined) {
-		  var settings = document.getElementById('settings');
-		  var settingsHeight = settings.clientHeight / pixelStretch;
-		  if (settingsHeight > 0.3 * h) {
-			  	var r = sphereRadius.get();
-				if (r < 0.9 * camera.rotationRadius && r < 0.5 * h) {
-					r = circles.getRadiusFromSphereRadius(r, scale.get());
-					var remainingHeight = h - settingsHeight;
-					if (remainingHeight > r * 2) {
-						cy = remainingHeight / 2;
-					}
-				}
-		  }
-	  }
-	  return [w / 2, cy];
-	}
-
-  function updateCentre() {
-	  var newCentre = getCentre();
-	  gl.uniform2fv(locationOfCentre, newCentre);
-	  mandelBrotDisplay.updateVisibility();
-  }
-  
   function refreshPixelStretchCentreAndScale() {
 	  w = window.innerWidth;
 	  h = window.innerHeight;
 	  
-	  w /= pixelStretch;
-	  h /= pixelStretch;
-	  updateCentre();
+	  w /= realtimeRenderer.pixelStretch;
+	  h /= realtimeRenderer.pixelStretch;
+	  centre.updateCentre();
 	  
 	  canvas.setAttribute('width', Math.round(w));
 	  canvas.setAttribute('height', Math.round(h));
@@ -125,58 +90,6 @@ window.addEventListener("DOMContentLoaded", function() {
 	  refreshPixelStretchCentreAndScale();
 	  mandelBrotDisplay.updateSize();
 	  realtimeRenderer.redraw();
-  }
-  
-  function decreaseQuality(currentFrameRate) {
-	  if (displayMode.isPlaneCut()) {
-		if (pixelStretch === 1)
-			pixelSubsampling.decreaseQuality();
-		else
-			pixelSubsampling.useLowestQuality();
-	  }
-	  if (pixelStretch === 1 && !displayMode.isPlaneCut() && !lightObstructionDeltaRatio.isLowest1PixelStretchQuality()) {
-		  
-		lightObstructionDeltaRatio.decreaseQuality();
-		
-		// If the frame rate is terrible, increase pixelStretch immediately.
-		if (currentFrameRate < 5) {
-				pixelStretch++;
-				refreshPixelStretchCentreAndScale();
-		}
-		else {
-			pixelStretch++;
-			refreshPixelStretchCentreAndScale();
-		}
-	  }
-	  else {
-		pixelStretch++;
-		refreshPixelStretchCentreAndScale();
-	  }
-  }
-  displayMode.decreaseQuality = decreaseQuality;
-
-  function increaseQuality(currentFrameRate) {
-	  if (pixelStretch > 1) {
-			pixelStretch--;
-			refreshPixelStretchCentreAndScale();
-	  }
-	  else if (!displayMode.isPlaneCut()) {
-		  lightObstructionDeltaRatio.increaseQuality();
-	  }
-	  else {
-		  if (currentFrameRate > 55) {
-			pixelSubsampling.increaseQuality();
-		  }
-	  }
-  }
-
-  function improveFrameRateInResponseTo(currentFrameRate) {
-	  if (currentFrameRate < 20) {
-		  decreaseQuality(currentFrameRate);
-	  }
-	  else if (currentFrameRate > 50) {
-		  increaseQuality(currentFrameRate);
-	  }
   }
 
   function draw() {
@@ -213,5 +126,5 @@ window.addEventListener("DOMContentLoaded", function() {
   window.addEventListener('resize', resized);
   resized();
   mandelBrotDisplay.updateSize();
-  realtimeRenderer.init(benchmarker, draw, downloader, animation);
+  realtimeRenderer.init(benchmarker, draw, downloader, animation, displayMode, pixelSubsampling, refreshPixelStretchCentreAndScale);
 });
