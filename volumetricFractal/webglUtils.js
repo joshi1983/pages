@@ -36,7 +36,6 @@ function drawGraphics(gl, w, h) {
 
 function preventWebGLContextLoss(canvas) {
 	canvas.addEventListener("webglcontextlost", function(event) {
-		console.error('webglContextLost event caught.');
 		event.preventDefault();
 	}, false);
 }
