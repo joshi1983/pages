@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<title>Realistic Earth Shader</title>
+		<script src="textureData.js"></script>
+		<script src="textures.js"></script>
+		<script src="script.js"></script>
+		<script src="viewport.js"></script>
+		<script src="viewPoint.js"></script>
+		<script src="lighting.js"></script>
+		<script src="overallBrightness.js"></script>
+		<script src="surfaceRotation.js"></script>
+		<script src="dialog.js"></script>
+		<script src="settingsUI.js"></script>
+		<link rel="stylesheet" href="style.css">
+		<script type="x-shader/x-vertex">
+attribute vec2 position;
+
+void main() {
+  gl_Position = vec4(position, 0.0, 1.0);
+}
+		</script>
+		<script type="x-shader/x-fragment">
+precision mediump float;
+#define PI_RECIP 0.31830988618379067153776752674503
+#define TWO_PI_RECIP 0.15915494309189533576888376337251
+
+uniform sampler2D surfaceSampler;
+uniform sampler2D cloudSampler;
+uniform vec2 centre;
+uniform vec3 viewPoint;
+uniform vec3 lightDirection;
+uniform float viewPointMagnitudeSquared;
+uniform float scale;
+uniform float overallBrightnessCoefficient;
+uniform float surfaceRotation;
+
+// get intersection point with sphere.
+
+vec3 getDirectionFromPoint(vec2 point) {
+	point = (point - centre) * scale;
+	return normalize(vec3(point.xy, 1.0));
+}
+
+float getMinimumPositiveSolution(float a, float b, float c) {
+	float discriminant = b * b - 4.0 * a * c;
+	float result = -1.0;
+	float twoA_Reciprical = 0.5 / a;
+
+	if (discriminant == 0.0) {
+		return -b * twoA_Reciprical;
+	}
+	else if (discriminant < 0.0) {
+		return -1.0; // no intersection
+	}
+	else {
+		discriminant = sqrt(discriminant);
+		float v2 = (-b + discriminant) * twoA_Reciprical;
+		if (v2 < 0.0) {
+			return -1.0; // both will be negative so no point in continuing.
+		}
+		float v1 = (-b - discriminant) * twoA_Reciprical;
+		if (v1 >= 0.0) {
+			return v1;
+		}
+		else {
+			return v2;
+		}
+	}		
+	return result;
+}
+
+/*
+Can be used for getting point intersecting surface of Earth from any point.
+
+Centre of the sphere is still assumed to be (0, 0, 0).
+*/
+float getDistanceToSphereIntersection(vec3 position, vec3 direction, float radius) {
+	const float a = 1.0;
+	float b = 2.0 * dot(position, direction);
+	float c = dot(position, position) - radius * radius;
+	return getMinimumPositiveSolution(a, b, c);
+}
+
+/*
+Distance to intersection with the atmosphere
+*/
+float getDistanceToSphereIntersection(vec3 direction) {
+	const float a = 1.0;
+	float b = 2.0 * dot(viewPoint, direction);
+	float c = viewPointMagnitudeSquared - 1.0;
+	return getMinimumPositiveSolution(a, b, c);
+}
+
+bool isWater(vec3 colour) {
+	bool isOcean = (colour.b < 0.31 && colour.b > 0.285) && colour.r < 0.055 && colour.r > 0.05;
+	if (isOcean)
+		return true;
+	bool isLake = (colour.b < 0.43 && colour.b > 0.42 && colour.r < 0.11 && colour.r > 0.10);
+	return isLake;
+}
+
+float rotateSurface(float x) {
+	x += surfaceRotation;
+	x = mod(x, 1.0);
+	return x;
+}
+
+vec2 getAtmosphereVolumeInfo(vec3 surfacePoint) {
+	vec3 delta = normalize(viewPoint - surfacePoint);
+	float dotResult = abs(dot(delta, surfacePoint));
+	float spaceRatio = 1.0;
+	if (dotResult < 0.1) {
+		spaceRatio = dotResult * 10.0;
+	}
+	return vec2((1.0 - dotResult) * 0.7 + 0.08, spaceRatio);
+}
+
+vec3 getColourFromPoint(vec2 point) {
+  vec3 dir = getDirectionFromPoint(point);
+  float distance = getDistanceToSphereIntersection(dir);
+  if (distance >= 0.0) {
+		vec3 cloudPoint = distance * dir + viewPoint;
+		float x = atan(cloudPoint.x, cloudPoint.z);
+		float y = asin(cloudPoint.y);
+		x *= TWO_PI_RECIP;
+		y *= PI_RECIP;
+		y += 0.5;
+		x += 0.5;
+	  float lighting = dot(cloudPoint, -lightDirection);
+	  if (lighting >= 0.0) {
+		vec3 atmosphereColour = vec3(0.4, 0.6, 1.0);
+		x = rotateSurface(x);
+		  vec4 textureColour = texture2D(surfaceSampler, vec2(x, clamp(y, 0.0, 1.0)));
+		  vec4 cloudColour = texture2D(cloudSampler, vec2(x, clamp(y, 0.0, 1.0)));
+		  // simulate dispersion in atmosphere in areas of sun rising or setting
+		  float ratio1 = -0.1;
+		  if (lighting < 0.2) {
+			ratio1 = lighting * 5.0;
+		  }
+		lighting *= overallBrightnessCoefficient;
+		vec3 surfaceColour = textureColour.rgb;
+		
+		  // if this is water, treat it as such.
+		  if (isWater(textureColour.rgb)) {
+		    // calculate reflected ray.
+			vec3 reflectedDirection = reflect(dir, cloudPoint);
+			float reflectedPrecision = 1.0 - dot(reflectedDirection, lightDirection);
+			vec3 c1 = textureColour.rgb * lighting;
+			if (reflectedPrecision > 0.0) {
+				reflectedPrecision *= reflectedPrecision;
+				vec3 c2 = c1 * reflectedPrecision;
+				surfaceColour = mix(c1, c2, 0.2);
+			}
+			else
+				surfaceColour = c1;
+		  }
+		  // simulate effects of light coming from the atmosphere
+		  vec2 atmosphereVolumeInfo = getAtmosphereVolumeInfo(cloudPoint);
+		  surfaceColour = mix(surfaceColour, atmosphereColour, atmosphereVolumeInfo.x);
+		  if (ratio1 > 0.0) {
+			// simulate dispersion in atmosphere in areas of sun rising or setting
+			// Red isn't filtered as much as blue.
+			surfaceColour.g *= mix(0.5, 1.0, ratio1);
+			surfaceColour.b *= mix(0.2, 1.0, ratio1);
+			if (atmosphereVolumeInfo.y < 1.0) {
+				atmosphereColour.g *= mix(0.5, 1.0, ratio1);
+				atmosphereColour.b *= mix(0.2, 1.0, ratio1);
+			}
+		  }
+
+		  surfaceColour += cloudColour.rgb * cloudColour.a;
+		  if (atmosphereVolumeInfo.y < 1.0) {
+			surfaceColour = mix(atmosphereColour, surfaceColour, atmosphereVolumeInfo.y * atmosphereVolumeInfo.y);
+		  }
+		  vec3 result = surfaceColour * lighting * atmosphereVolumeInfo.y;
+
+		  return result;
+	  }
+	  else {
+		return vec3(0.0, 0.0, 0.0);
+	  }
+  }
+  else {
+	return vec3(0.0, 0.0, 0.0);
+  }
+}
+
+void main() {
+  const float delta = 0.3;
+  vec3 totalColour;
+  vec2 p = gl_FragCoord.xy;
+  for (float dx = 0.0; dx < 0.8; dx += delta) {
+    p = gl_FragCoord.xy;
+	p.x += dx;
+	for (float dy = 0.0; dy < 0.8; dy += delta) {
+		totalColour += getColourFromPoint(p);
+		p.y += delta;
+	}
+  }
+
+  gl_FragColor.rgb = totalColour * 0.111111;
+  gl_FragColor.a = 1.0;
+}
+		</script>
+	</head>
+	<body>
+		<canvas>Loading textures...</canvas>
+		<div id="dialog">
+			<h1>Realistic Earth Shader</h1>
+			<p>This is a demo of a realistic WebGL fragment shader for Earth.
+			The following features make this very realistic.</p>
+			<div class="scrollable">
+				<ul>
+					<li>No polygons are used.  Every pixel is calculated according to a 
+					sphere's geometry and not a polygon.  In other words, 
+					this sphere is as smooth as an infinite-sided polygon.</li>
+					<li>
+						Water is treated as a more glossy/mirror-like material than land.
+					</li>
+					<li>Filtering of blue and green light is simulated 
+					where the Sun is close to horizon.  
+					You'll see colours more orange and red near the edge of lit areas.</li>
+					<li>Light is mixed with the colour of the atmosphere more near the horizon of Earth like happens in real space photos of Earth.
+					This mixing happens less for clouds than Earth's surface because clouds are above the most dense layers of the atmosphere.
+					</li>
+					<li>
+					Very near the horizon, the atmosphere fades into black.
+					This is to simulate the atmosphere thinning out into space.
+					This effect is kept at a realistic few km of thickness so you'll need to get close to notice.
+					</li>
+					<li>
+					4 colour samples are calculated per pixel.
+					This creates an antialiased effect and helps reveal finer details 
+					when the screen's pixels are large enough to see.
+					</li>
+				</ul>
+			</div>
+			<footer>
+				<button id="dialog-ok">OK</button>
+			</footer>
+		</div>
+	</body>
+</html>
