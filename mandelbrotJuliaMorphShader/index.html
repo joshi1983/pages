@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<title>Mandelbrot-Julia Morph Viewer</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<script src="script.js"></script>
+		<link rel="stylesheet" href="style.css">
+	</head>
+	<body>
+		<script type="glsl/vertex">
+  attribute vec2 coords;
+  
+  void main(void) {
+    gl_Position = vec4(coords.xy, 0.0, 1.0);
+  }
+</script>
+<script type="glsl/fragment">
+// <![CDATA[
+precision mediump float;
+
+uniform vec2 centre;
+uniform float scale;
+uniform vec2 mandelbrotOffset;
+uniform float morphRatio;
+uniform float fractalIterationDelta;
+uniform bool isSubpixelSampling;
+
+vec3 getValueAt(vec2 p) {
+	vec2 z, z1, z2 = p;
+	float dotValue;
+	float ratio = 0.0;
+
+	for (int i = 0; i < 10000; i++)
+	{
+		// mandelbrot
+		z1 = vec2(z.x * z.x - z.y * z.y + p.x, 2.0 * z.x * z.y + p.y) * ( 1.0 - morphRatio);
+		
+		// julia set
+		z2 = vec2(
+		z2.x * z2.x - z2.y * z2.y + mandelbrotOffset.x,
+		2.0 * z2.x * z2.y + mandelbrotOffset.y
+		) * morphRatio;
+		z = z1 + z2;
+		ratio += fractalIterationDelta;
+		if (ratio >= 1.0)
+			break;
+		if (abs(z.x) > 181.0 || abs(z.y) > 181.0) {
+			dotValue = dot(z, z);
+			if  (dotValue > 65563.0)
+				break;
+		}
+	}
+	if (ratio < 0.99) {
+		// 0.69314718055994530941723212145818 is log(2.0), the natural log of n.
+		ratio = ratio + 0.01 - 0.01 * log(abs(log(dotValue))) / 0.69314718055994530941723212145818;
+	}
+	return vec3(ratio, z.x, z.y);
+}
+
+
+vec3 getColourAt(vec2 p) {
+	vec3 v = getValueAt(p);
+	float vy = log(abs(log(abs(v.y))));
+	float vz = log(abs(log(abs(v.z))));
+	v.x *= 0.9;
+	float red = v.x * 10.0 + 0.1 * sin((vy*vy + vz*vz));
+	float green = v.x * 3.0 + 0.1 * sin(vy * 50.0);
+	float blue = v.x * 1.0 + 0.1 * sin((vz + vy) * 50.0);
+	
+	return vec3(clamp(red, 0.0, 1.0), clamp(green, 0.0, 1.0), clamp(blue, 0.0, 1.0));
+}
+
+
+void main(void) {
+	vec2 p = (gl_FragCoord.xy - centre) * scale;
+	vec3 val;
+	if (isSubpixelSampling) {
+		for (float xDelta = 0.0; xDelta < 0.99; xDelta+= 0.67) {
+			for (float yDelta = 0.0; yDelta < 0.99; yDelta+= 0.67) {
+				val += getColourAt(vec2(p.x + xDelta * scale, p.y + yDelta * scale));
+			}
+		}
+		val *= 0.25;
+	}
+	else {
+		val = getColourAt(p);
+	}
+	
+	gl_FragColor = vec4(val.x, val.y, val.z, 1.0);
+}
+// ]]>
+</script>
+		<div id="settings" class="expanded">
+			<div class="toggled-content">
+				<fieldset>
+					<legend>Mandelbrot-Julia Morph Ratio</legend>
+					<input type="range" id="morph-ratio" min="-4" max="5" step="0.0001">
+					<button id="use-julia-ratio">Julia Set</button>
+					<button id="use-mandelbrot-ratio">Mandelbrot Set</button>
+				</fieldset>
+				<fieldset>
+					<legend>Mandelbrot Number</legend>
+					<div class="labelled-range">
+						<label for="mandelbrot-x">X</label>
+						<input type="range" id="mandelbrot-x" min="-4" max="4" step="0.0001" value="-2">
+					</div>
+					<div class="labelled-range">
+						<label for="mandelbrot-y">Y</label>
+						<input type="range" id="mandelbrot-y" min="-4" max="4" step="0.0001" value="2.4">
+					</div>
+				</fieldset>
+				<div class="labelled-range max-iterations">
+					<label for="max-iterations">Max Iterations</label>
+					<input type="range" id="max-iterations" min="1" max="4600" step="0.0001" value="100">
+				</div>
+				<fieldset>
+					<legend>Zoom</legend>
+					<button id="zoom-out">Zoom Out</button>
+					<button id="reset-zoom">Reset</button>
+				</fieldset>
+			</div>
+			<button id="toggle-settings">Toggle Settings</button>
+		</div>
+		<canvas></canvas>
+		
+		<div id="dialog">
+			<h1>Mandelbrot-Julia Morph</h1>
+			<p>
+			This viewer's purpose is to explore
+			fractals that mix some of Mandelbrot's and Julia set's formulas.
+			</p>
+			<h3>Quick Tips</h3>
+			<ul>
+				<li>Use the "Toggle Settings" button if you want a full screen view of the fractal.</li>
+				<li>Click or touch to zoom in.</li>
+				<li>Hit Backspace or "Zoom Out" button to zoom out.</li>
+			</ul>
+			<footer>
+				<button id="ok-button">OK</button>
+			</footer>
+		</div>
+	</body>
+</html>
