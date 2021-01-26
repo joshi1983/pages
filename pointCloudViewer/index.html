@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<!-- 
+		Josh Greig started this on February 1, 2021.
+
+		This is an extension of loading coloured vertices 
+		from file formats in https://joshi1983.github.io/pages/pointCloudLoaderPrototype/index.html.
+
+		This applies some lessons learned about blending and discarding fragment shader pixels in
+		https://joshi1983.github.io/pages/fractalCloud2/index.html.
+		-->
+		<title>Point Cloud Viewer</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<script src="https://unpkg.com/mathjs@9.2.0/lib/browser/math.js"></script>
+		<script src="https://joshi1983.github.io/pages/pointCloudLoaderPrototype/X3DUtils.js"></script>
+		<script src="https://joshi1983.github.io/pages/pointCloudLoaderPrototype/WRLUtils.js"></script>
+		<script src="https://joshi1983.github.io/pages/pointCloudLoaderPrototype/arbitraryAxisRotation.js"></script>
+		<script src="https://joshi1983.github.io/pages/pointCloudLoaderPrototype/decompressLZF.js"></script>
+		<script src="https://joshi1983.github.io/pages/pointCloudLoaderPrototype/PointCloudFileFormat.js"></script>
+		<script src="https://joshi1983.github.io/pages/pointCloudLoaderPrototype/MOLFileFormat.js"></script>
+		<script src="https://joshi1983.github.io/pages/pointCloudLoaderPrototype/OBJFileFormat.js"></script>
+		<script src="https://joshi1983.github.io/pages/pointCloudLoaderPrototype/OFFFileFormat.js"></script>
+		<script src="https://joshi1983.github.io/pages/pointCloudLoaderPrototype/OSMFileFormat.js"></script>
+		<script src="https://joshi1983.github.io/pages/pointCloudLoaderPrototype/PCDFileFormat.js"></script>
+		<script src="https://joshi1983.github.io/pages/pointCloudLoaderPrototype/PLYFileFormat.js"></script>
+		<script src="https://joshi1983.github.io/pages/pointCloudLoaderPrototype/STLFileFormat.js"></script>
+		<script src="https://joshi1983.github.io/pages/pointCloudLoaderPrototype/TRIFileFormat.js"></script>
+		<script src="https://joshi1983.github.io/pages/pointCloudLoaderPrototype/VEFFileFormat.js"></script>
+		<script src="https://joshi1983.github.io/pages/pointCloudLoaderPrototype/WRLFileFormat.js"></script>
+		<script src="https://joshi1983.github.io/pages/pointCloudLoaderPrototype/X3DFileFormat.js"></script>
+		<script src="https://joshi1983.github.io/pages/pointCloudLoaderPrototype/XYZFileFormat.js"></script>
+		<script src="https://joshi1983.github.io/pages/pointCloudLoaderPrototype/PointCloudFileFormats.js"></script>
+		<script src="https://joshi1983.github.io/pages/pointCloudLoaderPrototype/point.js"></script>
+		<script src="pointCloudModel.js"></script>
+		<script src="shaders.js"></script>
+		<script src="points.js"></script>
+		<script src="script.js"></script>
+		<script src="dragUI.js"></script>
+		<script src="webglUtils.js"></script>
+		<script src="fileSelector.js"></script>
+		<script src="dialog.js"></script>
+		<link rel="stylesheet" type="text/css" href="style.css">
+	</head>
+	<body>
+		<div id="file-selector">
+			<div class="input-and-download">
+				<input type="file" id="cloud-file">
+				<a title="If you do not already have 3D models to test with, download from artec.com" 
+				href="https://www.artec3d.com/3d-models/" target="_empty">Find 3D models</a>
+			</div>
+			<canvas></canvas>
+		</div>
+		<div id="dialog-backdrop"></div>
+		<div id="dialog">
+			<div class="body">
+				<h1>Point Cloud Viewer</h1>
+				<p>This lets you view point clouds from various standard 3D mesh formats.</p>
+				<p>Drag mouse or touch up or down to move vertically.</p>
+				<p>This may crash if the model contains more than a few thousand points.</p>
+			</div>
+			<footer>
+				<button id="dialog-ok">OK</button>
+			</footer>
+		</div>
+	</body>
+</html>
