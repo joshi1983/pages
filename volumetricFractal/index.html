@@ -385,7 +385,7 @@ uniform vec2 viewRotation;
 
 float getValue(vec3);
 
-vec3 rotatePoint(vec3 p)
+vec3 rotatePoint(in vec3 p)
 {
 	return vec3(
 		p.x * viewRotation.x + p.z * viewRotation.y,
@@ -394,7 +394,7 @@ vec3 rotatePoint(vec3 p)
 	);
 }
 
-float getLightObstruction(vec3 p, float loopCutoff)
+float getLightObstruction(in vec3 p, float loopCutoff)
 {
 	vec3 position = p;
 	vec3 delta = lightDirection * lightObstructionDeltaRatio;
@@ -413,13 +413,13 @@ float getLightObstruction(vec3 p, float loopCutoff)
 	return result;
 }
 
-float getJuliaSetValue(vec3 p)
+float getJuliaSetValue(in vec3 p)
 {
 	vec2 c = vec2(
 		cReal,
 		p.z
 		);
-	vec2 newP = vec2(p.x, p.y);
+	vec2 newP = p.xy;
 	float ratio = 0.0;
 	float dotResult;
 	float escapeThreshold = 4.0;
@@ -450,7 +450,7 @@ float getJuliaSetValue(vec3 p)
 	return ratio;
 }
 
-float getValue(vec3 p)
+float getValue(in vec3 p)
 {
 	if (displayMode == MAX_CUT_VOLUME_DISPLAY_MODE) {
 		if (planeCutAxis == X_AXIS) {
@@ -481,7 +481,7 @@ float getValue(vec3 p)
 
 // Assumes direction is a unit-vector.
 // Returns the 2 distances to intersections with the sampled sphere.
-vec2 getSphereIntersectionDistances(vec3 direction)
+vec2 getSphereIntersectionDistances(in vec3 direction)
 {
 	float b = 2.0 * dot(position3D, direction);
 	float c = dot(position3D, position3D) - sphereRadiusSquared;
@@ -503,7 +503,7 @@ vec2 getSphereIntersectionDistances(vec3 direction)
 	}
 }
 
-vec3 getColourAt(vec3 direction)
+vec3 getColourAt(in vec3 direction)
 {
 	vec3 result;
 
@@ -555,7 +555,7 @@ vec3 getColourAt(vec3 direction)
 	return result;
 }
 
-vec3 getDiscColour(vec3 direction) {
+vec3 getDiscColour(in vec3 direction) {
 	vec3 result;
 
 	float distanceToPlane;
@@ -603,7 +603,7 @@ vec3 getDiscColour(vec3 direction) {
 	return colour * density;
 }
 
-vec3 getPixelColourWithoutCircle(vec2 p) {
+vec3 getPixelColourWithoutCircle(in vec2 p) {
 	vec3 direction = vec3(p.x * scale, p.y * scale, 1.0);
 	direction = normalize(direction);
 	direction = rotatePoint(direction);
@@ -614,7 +614,7 @@ vec3 getPixelColourWithoutCircle(vec2 p) {
 		return getColourAt(direction);
 }
 
-vec3 getPixelColourFor(vec2 p) {
+vec3 getPixelColourFor(in vec2 p) {
 	float len = length(p);
 	if (len > circleRadiusRange.y) {
 		return vec3(0.0, 0.0, 0.0);
