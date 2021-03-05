@@ -1,4 +1,7 @@
-class PLYFileFormatExporter {
+import { Triangle } from './Triangle.js'
+import { Vertex } from './Vertex.js'
+
+export class PLYFileFormatExporter {
 	_getHeader(triangles, verticesInfo, format) {
 		var result = 'ply\n';
 		result += 'format ' + format + '\n';

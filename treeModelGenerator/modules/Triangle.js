@@ -1,3 +1,5 @@
+import { Vertex } from './Vertex.js'
+
 class Triangle {
 	/*
 	vertices should be an Array of Vertex.
@@ -40,3 +42,5 @@ Triangle.getVertices = function(triangles) {
 	}
 	return result;
 };
+
+export { Triangle };

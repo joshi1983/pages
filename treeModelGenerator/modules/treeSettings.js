@@ -1,4 +1,6 @@
-function initTreeSettings(renderer) {
+import { Tree } from './Tree.js'
+
+export function initTreeSettings(renderer) {
 	var numBranches = document.getElementById('num-branches');
 	var spread = document.getElementById('branch-spread');
 	var scaleFactor = document.getElementById('branch-scale-ratio');

@@ -87,3 +87,5 @@ Vertex.scaleAndTranslate = function(vertices, targetLength) {
 			vertex.position.pop();
 	});
 };
+
+export { Vertex };

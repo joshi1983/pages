@@ -1,3 +1,6 @@
+import { Triangle } from './Triangle.js'
+import { Vertex } from './Vertex.js'
+
 class Cylinder {
 	_getVal() {
 		return 0.5 + Math.random() * 0.5;
@@ -47,3 +50,5 @@ Cylinder.getTriangles = function(radius, height, numSides) {
 	}
 	return result;
 };
+
+export { Cylinder };
