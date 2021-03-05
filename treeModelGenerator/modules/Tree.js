@@ -1,4 +1,8 @@
-class Tree {
+import { Triangle } from './Triangle.js'
+import { Vertex } from './Vertex.js'
+import { Cylinder } from './Cylinder.js'
+
+export class Tree {
 	constructor(numBranches, spread, scaleFactor, minBranchLength) {
 		if (numBranches === undefined)
 			numBranches = 3;

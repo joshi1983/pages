@@ -1,3 +1,7 @@
+import { PLYFileFormatExporter } from './modules/PLYFileFormatExporter.js'
+import { Renderer } from './modules/Renderer.js'
+import { initTreeSettings } from './modules/treeSettings.js'
+
 document.addEventListener('DOMContentLoaded', function() {
 	var renderer = new Renderer();
 	setUpDragUI(renderer);

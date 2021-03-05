@@ -1,4 +1,8 @@
-class Renderer {
+import { Tree } from './Tree.js'
+import { Triangle } from './Triangle.js'
+import { Vertex } from './Vertex.js'
+
+export class Renderer {
 	constructor() {
 		this.rotation = [0, 0, 0];
 		this.canvas = document.querySelector('canvas');
