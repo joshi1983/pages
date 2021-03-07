@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<title>Peer Chat</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<link rel="shortcut icon" type="image/png" href="images/favicon.ico">
+		<script src="utils.js"></script>
+		<script src="temporaryMessage.js"></script>
+		<script src="UIMode.js"></script>
+		<script src="Username.js"></script>
+		<script src="ChatPartnerSelector.js"></script>
+		<script src="ChatInvitation.js"></script>
+		<script src="Chat.js"></script>
+		<script src="UIModeSelector.js"></script>
+		<script src="PeerChatConnection.js"></script>
+		<script src="script.js"></script>
+		<link rel="stylesheet" href="style.css">
+	</head>
+	<body>
+		<div>
+			<header>
+				<h1>Peer Chat</h1>
+				<span id="username"></span>
+			</header>
+			<main>
+				<div class="bordered" id="username-prompt">
+					<h2>Select Your Username</h2>
+					<label for="username-prompt-username">Username</label>
+					<input type="text" id="username-prompt-username" maxlength="50">
+					<button id="username-prompt-ok">OK</button>
+					<div id="username-temporary-message">
+					</div>
+				</div>
+				<div class="bordered closed" id="select-chat-partner">
+					<h2>Select Chat Partner</h2>
+					<div class="closed" id="select-chat-partner-no-partners">
+						<p>
+						Waiting for another person to chat with.
+						</p>
+						<p>
+						There are currently no live chat partners but
+						they may arrive any second.
+						</p>
+					</div>
+					<ul id="select-chat-partner-list"></ul>
+				</div>
+				<div class="bordered closed" id="chat">
+					<div class="header">
+						<h2>
+							Chat with <span id="chat-partner-username"></span>
+						</h2>
+						<span id="chat-close">X</span>
+					</div>
+					<div id="chat-conversation">
+						<p id="chat-message-when-no-messages-yet">
+						Type a message and click the Send button to send the first message.
+						</p>
+						<p id="chat-message-when-invitation-pending">
+						Wait for <span id="chat-message-when-invitation-pending-username"></span> to accept the invitation.
+						</p>
+						<div id="chat-conversation-messages"></div>
+					</div>
+					<footer>
+						<textarea id="chat-text"></textarea>
+						<button id="chat-send" disabled>Send</button>
+					</footer>
+				</div>
+			</main>
+			<footer>
+				<span id="temporary-message"></span>
+			</footer>
+			<div id="chat-invitation" class="closed">
+				<div id="chat-invitation-backdrop"></div>
+				<div id="chat-invitation-messages"></div>
+			</div>
+		</div>
+	</body>
+</html>
