@@ -54,10 +54,10 @@ def merge_javascript(folder):
 			if 'https:' not in src and 'http:' not in src:
 				src = folder + '/' + src
 				with open(src, 'r') as f:
-					s += f.read()
+					s += f.read() + "\n\n"
 
 	with open('sololearn/script.js', 'w') as f:
-		f.write(s)
+		f.write(s + "\n")
 
 	# remove all script and link elements.
 	elements_to_remove = doc.cssselect('script[src],link[rel="stylesheet"][href]')
@@ -66,7 +66,7 @@ def merge_javascript(folder):
 			e.getparent().remove(e)
 
 	with open('sololearn/index.html', 'w') as f:
-		f.write(html.tostring(doc))
+		f.write(html.tostring(doc, with_tail=False).decode('utf-8'))
 
 
 def export(folder):
