@@ -1,6 +1,9 @@
 import { getInitialModelTriangles } from './InitialModel.js';
 import { Triangle } from './Triangle.js';
 import { Vertex } from './Vertex.js';
+import { loadShader } from './shaders.js';
+import { vertexShaderCode, fragmentShaderCode } from './shaderCode.js';
+import { flattenArray, getRotationMatrix } from './utils.js';
 
 export class Renderer {
 	constructor() {

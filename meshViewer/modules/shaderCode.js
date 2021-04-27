@@ -36,3 +36,5 @@ void main() {
 	float dotResult = 0.2 + 0.8 * clamp(abs(dot(normalizedDirection, normalizedNormal)), 0.0, 1.0);
 	gl_FragColor = vec4(vColour * dotResult, 1.0);
 }`;
+
+export { vertexShaderCode, fragmentShaderCode };

@@ -1,4 +1,5 @@
 import { Vertex } from './Vertex.js';
+import { flattenArray } from './utils.js';
 
 class Triangle {
 	/*

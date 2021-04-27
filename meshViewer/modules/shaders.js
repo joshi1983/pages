@@ -1,4 +1,4 @@
-function loadShader(gl, program, src, type) {
+export function loadShader(gl, program, src, type) {
 	let sid = gl.createShader(type);
 	gl.shaderSource(sid, src);
 	gl.compileShader(sid);

@@ -1,4 +1,4 @@
-function setUpDragUI(renderer) {
+export function setUpDragUI(renderer) {
 	var angle = 0;
 	var previousMousePosition;
 	

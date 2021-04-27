@@ -82,3 +82,5 @@ function getRandomColour() {
 		getRandomColourValue()
 	];
 }
+
+export { flattenArray, getRandomColour, mixVectors, getRotationMatrix, getRotationMatrixForAxis };
