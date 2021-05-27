@@ -1,7 +1,7 @@
-import {initMeshLoader} from './modules/meshLoader.js';
-import {Renderer} from './modules/Renderer.js';
+import {initMeshLoader} from './meshLoader.js';
+import {Renderer} from './Renderer.js';
 import {PLYFileFormatExporter} from 'https://joshi1983.github.io/pages/treeModelGenerator/modules/PLYFileFormatExporter.js';
-import {setUpDragUI} from './modules/dragUI.js';
+import {setUpDragUI} from './dragUI.js';
 
 document.addEventListener('DOMContentLoaded', function() {
 	var renderer = new Renderer();
