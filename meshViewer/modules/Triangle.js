@@ -44,6 +44,12 @@ class Triangle {
 		result = math.multiply(result, 1 / m);
 		return result;
 	}
+
+	getDeepCopy() {
+		return new Triangle(this.vertices.map(function(v) {
+			return new Vertex(v.position.slice(0), v.colour.slice(0));
+		}));
+	}
 }
 
 Triangle.getNormalsData = function(triangles) {

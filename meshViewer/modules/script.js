@@ -2,9 +2,11 @@ import {initMeshLoader} from './meshLoader.js';
 import {Renderer} from './Renderer.js';
 import {PLYFileFormatExporter} from 'https://joshi1983.github.io/pages/treeModelGenerator/modules/PLYFileFormatExporter.js';
 import {setUpDragUI} from './dragUI.js';
+import {StatsMode} from './StatsMode.js';
 
 document.addEventListener('DOMContentLoaded', function() {
 	var renderer = new Renderer();
+	new StatsMode(renderer);
 	setUpDragUI(renderer);
 	initMeshLoader(renderer);
 	var scaleFactor = document.getElementById('scale-factor');
