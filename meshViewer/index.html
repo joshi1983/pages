@@ -10,28 +10,46 @@
 		<script type="module" src="https://joshi1983.github.io/pages/meshViewer/modules/script.js"></script>
 		<script src="https://unpkg.com/mathjs@9.2.0/lib/browser/math.js"></script>
 		<link rel="stylesheet" type="text/css" href="style.css">
+		<link rel="stylesheet" type="text/css" href="dialog.css">
 	</head>
 	<body>
-		<header>
-			<label for="upload-mesh">Select File To View</label><input type="file" id="upload-mesh">
-			<div class="stretched">
-				<label for="scale-factor">Zoom</label>
-				<input type="range" id="scale-factor" value="0.003" min="0.0001" max="0.01" step="0.000001">
+		<div>
+			<header>
+				<label for="upload-mesh">Select File To View</label><input type="file" id="upload-mesh">
+				<div class="stretched">
+					<label for="scale-factor">Zoom</label>
+					<input type="range" id="scale-factor" value="0.003" min="0.0001" max="0.01" step="0.000001">
+				</div>
+				<button id="display-mode-toggler">Toggle Display</button>
+				<button id="download-mesh">Export Mesh</button>
+			</header>
+			<div id="display">
+				<canvas></canvas>
+				<div id="stats">
+					<div class="upper-row">
+						<div id="statistics">
+						</div>
+						<div id="display-settings">
+							<select id="display-axis"></select>
+							<button id="flip-horizontal">-</button>
+							<button id="flip-vertical">|</button>
+							<span id="cursor-coordinates"></span>
+						</div>
+					</div>
+					<canvas></canvas>
+				</div>
 			</div>
-			<button id="download-mesh">Export Mesh</button>
-		</header>
-		<canvas></canvas>
-		
-		<div id="dialog-backdrop"></div>
-		<div id="dialog">
-			<div class="body">
-				<h1>Mesh Viewer</h1>
-				<p>View the triangular mesh from various standard 3D mesh file formats.</p>
-				<p>This also lets you convert any of your loaded models into PLY format.</p>
-			</div>
-		    <footer>
-		        <button id="dialog-ok">OK</button>
-		    </footer>
-		</div>		
+			<div id="dialog-backdrop"></div>
+			<div id="dialog">
+				<div class="body">
+					<h1>Mesh Viewer</h1>
+					<p>View the triangular mesh from various standard 3D mesh file formats.</p>
+					<p>This also lets you convert any of your loaded models into PLY format.</p>
+				</div>
+				<footer>
+					<button id="dialog-ok">OK</button>
+				</footer>
+			</div>		
+		</div>
 	</body>
 </html>

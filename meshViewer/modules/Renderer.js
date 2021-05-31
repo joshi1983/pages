@@ -8,7 +8,9 @@ import { flattenArray, getRotationMatrix } from './utils.js';
 export class Renderer {
 	constructor() {
 		this.rotation = [0, 0, 0];
-		this.canvas = document.querySelector('canvas');
+		this.eventListeners = [];
+		this.display = document.getElementById('display');
+		this.canvas = document.querySelector('#display > canvas');
 		this._initWebGLContext();
 		this.scaleFactor = 1;
 		this.setTriangles(getInitialModelTriangles());
@@ -17,7 +19,7 @@ export class Renderer {
 		function resized() {
 			outer.resized();
 		}
-		
+
 		window.addEventListener('resize', resized);
 		resized();
 		this._initRotation();
@@ -112,10 +114,31 @@ export class Renderer {
 		this._bindVectorAttribute('normal', Triangle.getNormalsData(this.triangles));
 	}
 
+	addEventListener(key, callback) {
+		this.eventListeners.push({'key': key, 'callback': callback});
+	}
+
+	_dispatchEvent(eventInfo) {
+		var eventKey;
+		if (typeof eventInfo === 'string')
+			eventKey = eventInfo;
+		else if (typeof eventInfo.key === 'string')
+			eventKey = eventInfo.key;
+		this.eventListeners.filter(function(listener) {
+			return listener.key === eventKey;
+		}).forEach(function(listener) {
+			listener.callback(eventInfo);
+		});
+	}
+
 	setTriangles(newTriangles) {
 		this.triangles = newTriangles;
+		this.originalTriangles = newTriangles.map(function(t) {
+			return t.getDeepCopy();
+		});
 		Vertex.scaleAndTranslate(Triangle.getVertices(newTriangles), 0.2);
 		this._initAttributes();
+		this._dispatchEvent('trianglesChanged');
 	}
 
 	_positionTransformUpdated() {
@@ -129,6 +152,8 @@ export class Renderer {
 	}
 
 	draw() {
+		if (this.display.classList.contains('stats'))
+			return;
 		this.gl.clear(this.gl.DEPTH_BUFFER_BIT | this.gl.COLOR_BUFFER_BIT);
 		this.gl.drawArrays(this.gl.TRIANGLES, 0, this.triangles.length * 3);
 	}
