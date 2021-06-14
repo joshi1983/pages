@@ -1,6 +1,6 @@
 class PointCloudFileFormats {
 	constructor() {
-		this.fileFormats = [new MOLFileFormat(), new OBJFileFormat(), 
+		this.fileFormats = [new GLBFileFormat(), new GLTFFileFormat(), new MOLFileFormat(), new OBJFileFormat(), 
 			new OFFFileFormat(), new OSMFileFormat(), new PCDFileFormat(), new PLYFileFormat(),
 			new STLFileFormat(), new TRIFileFormat(), new VEFFileFormat(),
 			new WRLFileFormat(), new X3DFileFormat(), new XYZFileFormat()];
