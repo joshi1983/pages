@@ -1,3 +1,4 @@
+import { GLBFileFormatImporter } from './GLBFileFormatImporter.js';
 import { MeshFileFormatImporter } from './MeshFileFormatImporter.js';
 import { OBJFileFormatImporter } from './OBJFileFormatImporter.js';
 import { PLYFileFormatImporter } from './PLYFileFormatImporter.js';
@@ -10,7 +11,8 @@ import { X3DFileFormatImporter } from './X3DFileFormatImporter.js';
 export class CompositeMeshFileFormatImporter extends MeshFileFormatImporter {
 	constructor() {
 		super();
-		this.fileFormats = [new OBJFileFormatImporter(),
+		this.fileFormats = [new GLBFileFormatImporter(), 
+			new OBJFileFormatImporter(),
 			new PLYFileFormatImporter(), new STLFileFormatImporter(),
 			new TRIFileFormatImporter(), new VEFFileFormatImporter(),
 			new WRLFileFormatImporter(), new X3DFileFormatImporter()];
