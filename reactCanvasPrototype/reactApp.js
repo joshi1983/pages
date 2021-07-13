@@ -5,17 +5,21 @@ class CanvasPrototype extends React.Component {
 	}
 
 	componentDidMount() {
+		console.log('componentDidMount called.  canvasWidth = ' + this.state.canvasWidth + ', canvasHeight = ' + this.state.canvasHeight);
         const canvas = this.refs.canvas;
 		const box = canvas.getBoundingClientRect();
 		const width = Math.round(box.width);
 		const height = Math.round(box.height);
 		if (width !== this.state.canvasWidth || height !== this.state.canvasHeight) {
-			this.setState({
+			var newState = {
 				'canvasWidth': width,
 				'canvasHeight': height
-			});
+			};
+			this.setState(newState);
+			console.log('Tried setting state to ' + JSON.stringify(newState));
 		}
 		else {
+			console.log('YAY!  We are ready to draw!!!');
 			const ctx = canvas.getContext('2d');
 			ctx.clearRect(0, 0, width, height);
 			ctx.strokeStyle = '#000';
@@ -35,6 +39,7 @@ class CanvasPrototype extends React.Component {
     }
 
 	render() {
+		console.log('render called.  canvasWidth = ' + this.state.canvasWidth + ', canvasHeight = ' + this.state.canvasHeight);
 		return React.createElement('canvas', {
 			'key': 'canvas',
 			'ref': 'canvas',
