@@ -1,0 +1,58 @@
+to drawCrescent :radius :phaseAngle :backgroundColor
+	localmake "oldState turtleState
+	jumpForward :radius
+	setPenSize 0
+	setFillColor penColor
+	circle :radius
+	jumpForward :radius * ( 1 + sin 180 + :phaseAngle)
+	setFillColor :backgroundColor
+	circle :radius * 0.7
+
+	setTurtleState :oldState
+end
+
+; Inspired by animation at:
+; https://ca.pinterest.com/pin/19773685858462489
+to moonPhases :height :time
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "moonRadius :height * 0.008
+	localmake "numAngles 120
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize :height * 0.0035
+	localmake "radius (:height - penSize) / 2
+	setPenColor "black
+	setFillColor transparent
+	circle :radius
+	circle :radius * 0.985
+
+	repeat :numAngles [
+		localmake "angle 360 * (:time + 12 * repcount / :numAngles)
+		localmake "radius1 :radius * (0.63 + 0.133 * sin :angle) 
+		setHeading :oldHeading + repcount * 360 / :numAngles
+		forward :radius1
+		drawCrescent :moonRadius :angle "white
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+make "time animation.clampedTimeRatio
+moonPhases 100 :time
+
+to animation.snapshotstyle
+	output createPList2 [
+		["position.y 50]
+		["zoom.scale 5]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 1
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

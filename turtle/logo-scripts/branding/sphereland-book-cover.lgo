@@ -1,0 +1,41 @@
+; Inspired by a drawing on the cover 
+; of a book mentioned at:
+; https://alchetron.com/Sphereland
+to spherelandCover :height
+	localmake "oldState turtleState
+	localmake "bottom pos
+	localmake "orangeSize :height * 0.71
+	localmake "numLines 36
+	stripes :height :height ["yellow]
+	jumpRight :height / 2
+	localmake "bottomRight pos
+	jumpForward :height
+	localmake "topRight pos
+	jumpLeft :height / 2
+	localmake "top pos
+	jumpBackward :height / 2
+	localmake "center pos
+	
+	setPenSize 0
+	setFillColor "orange
+	roundRect :orangeSize :orangeSize :height * 0.22
+	setFillColor "red
+	circle :height * 0.19
+	setPenSize :height * 0.002
+	setLineCap "butt
+	setPenColor "black
+	repeat :numLines [
+		localmake "len distanceToLines [
+			[:bottom :bottomRight] [:bottomRight :topRight]
+			[:top :topRight]
+		]
+		jumpBackward :len
+		forward :len * 2
+		jumpTo :center
+		right 180 / :numLines
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+spherelandCover 100

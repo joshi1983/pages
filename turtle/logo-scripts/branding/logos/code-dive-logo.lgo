@@ -1,0 +1,33 @@
+; Inspired by logo at
+; https://www.youtube.com/@codediveconference
+to codeDiveLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	jumpForward :height / 2
+	setLineCap "butt
+	setLineJoinStyle "miter
+	setPenSize :height * 0.05
+	setPenColor "white
+	localmake "center pos
+	repeat 4 [
+		setHeading :oldHeading + repcount * 360 / 4
+		jumpRight :height * 0.235
+		left 45
+		forward :height * 0.443
+		left 90
+		forward :height * 0.571
+		jumpForward :height * 0.001
+		right 135
+		jumpForward :height * 0.155
+		right 45
+		jumpForward :height * 0.001
+		forward :height * 0.5805
+		right 45
+		forward :height * 0.1537
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "#4e67e6
+codeDiveLogo 100

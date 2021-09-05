@@ -1,0 +1,54 @@
+; Inspired by logo at:
+; https://www.youtube.com/@marvelousdecay
+to dimitrisKatsafourosLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "dLen1 0.11
+	localmake "thicknessFactor 0.261
+	localmake "dkWhite "#f1f3f2
+	localmake "dkFaint "#b799f9
+	localmake "dRadius (1 - :thicknessFactor) / 2
+	localmake "kOuterRadius 0.51
+	localmake "kLen1 0.02
+	localmake "thicknessFactor2 0.29
+	localmake "kInnerRadius :kOuterRadius - :thicknessFactor2
+	localmake "height1 :height * 0.3
+	localmake "smallRadius 0.12
+	setPenSize :height * :thicknessFactor
+	jumpLeft :height * 0.53
+
+	jumpForward :height - :height1 - penSize / 2
+	setPenColor :dkFaint
+	forward :height1
+	setLineCap "round
+	setPenColor :dkWhite
+	arcLines [[-90 0] [:dLen1] [-180 :dRadius] [:dLen1]] :height
+
+	setFillColor :dkFaint
+	setPenSize 0
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpRight :height * 0.524
+	polyStart
+	arcLines [[-90 0] [90 :thicknessFactor / 2]
+		[:kLen1] [90 :kOuterRadius] [90 0] [:thicknessFactor2]] :height
+	localmake "pos1 pos
+	arcLines [
+		[90 0] [0.015] [-90 :kInnerRadius] 
+		[0.005] [90 :thicknessFactor2 / 2]
+		] :height
+	polyEnd
+	setFillColor :dkWhite
+	jumpTo :pos1
+	setHeading :oldHeading
+	drawArcLineShape [0 0 
+		[[:thicknessFactor2] [-90 0] [90 :kInnerRadius]
+		[-90 :smallRadius] [:thicknessFactor2 - :smallRadius * 2]
+		[-90 :smallRadius] [-90 :kOuterRadius]]
+		] :height
+	setTurtleState :oldState
+end
+
+setScreenColor "#854bff
+dimitrisKatsafourosLogo 100

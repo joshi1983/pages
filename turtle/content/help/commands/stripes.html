@@ -1,0 +1,45 @@
+<div class="svg-container">
+	<img src="content/help/commands/images/stripes.svg" alt="Stripes Examples">
+<code>; Draws the code in the image above
+make "height 45
+make "width 50
+make "separation 80
+stripes :width :height ["red]
+jumpRight :separation
+stripes :width :height ["black "blue "green]
+jumpRight :separation
+stripes :width :height ["green "black "white "blue "yellow]
+jumpRight :separation
+
+; Draw perpendicular stripes.
+jumpForward :height / 2
+jumpLeft :height / 2
+right 90
+stripes :height :width ["black "blue "green]</code>
+<code>stripes 50 100 ["red "black "blue]
+; Draws stripes of red, black, and blue.
+; red at bottom, then black, then blue</code>
+<code>; myStripes procedure behaves exactly like stripes command.
+; The stripes command is available so you don't need to implement it yourself.
+; Reviewing this implementation could help you implement something similar using procedures, though.
+to myStripes :width :height :colors
+	localmake "oldState turtleState
+	localmake "numColors count :colors
+	localmake "stripeWidth :height / :numColors
+	setLineCap "butt
+	setPenSize :width
+	repeat :numColors [
+		setPenColor item repcount :colors
+		forward :stripeWidth
+	]
+	setTurtleState :oldState
+end
+
+; The following will look similar to the other example
+; because myStripes works the same way as the stripes command.
+myStripes 50 100 ["red "black "blue]
+
+jumpRight 60
+; use stripes command for comparison
+stripes 50 100 ["red "black "blue]</code>
+</div>
