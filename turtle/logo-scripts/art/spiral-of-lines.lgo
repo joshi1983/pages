@@ -1,0 +1,29 @@
+; Inspired by:
+; https://www.pinterest.ca/pin/40532465386634758/
+
+to spiralOfLines :size
+	localmake "oldPos pos
+	localmake "numSizes 20
+	localmake "numSpiralArms 10
+	localmake "innerRadius :size * 0.5
+	localmake "outerRadius :size
+	setPenColor "white
+	setPenSize :size * 0.05
+	repeat :numSizes [
+		localmake "ratio repRatio
+		localmake "outerRadius1 mix :innerRadius :outerRadius :ratio
+		setPenColor mix "white "#222 :ratio
+		repeat :numSpiralArms [
+			jumpForward :innerRadius
+			forward :outerRadius1 - :innerRadius
+			jumpTo :oldPos
+			right 360 / :numSpiralArms
+		]
+		right 360 * 3 / :numSpiralArms / :numSizes
+	]
+	setPenSize :size * 0.01
+	circle :innerRadius + :size * 0.005
+end
+
+setScreenColor "black
+spiralOfLines 200
