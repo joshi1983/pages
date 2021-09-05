@@ -1,0 +1,145 @@
+make "sunPos [0.25 0.5]
+
+to drawSun :height
+	localmake "oldPos pos
+	localmake "glareRadius :height * 0.3
+	localmake "colorStops createPList2 [
+		[0 "white] [0.6 "white] [0.61 "yellow]
+		[0.63 "#8fff] [1 "#0fff]
+	]
+	jumpForward :height * last :sunPos
+	jumpLeft :height * first :sunPos
+	setPenSize 0
+	setFillGradient createRadialGradient pos :glareRadius :colorStops
+	circle :glareRadius
+	jumpTo :oldPos
+end
+
+to drawLensFlareAndBloom :width :height
+	localmake "oldState turtleState
+	jumpRight :width / 2
+	localmake "bottomRightCorner pos
+	setTurtleState :oldState
+	jumpForward :height * last :sunPos
+	jumpLeft :height * first :sunPos
+	setPenSize 0
+	setHeading towards :bottomRightCorner
+	localmake "step (distance :bottomRightCorner) / 7
+	repeat 6 [
+		jumpForward :step
+		setFillColor [20 128 + random 128 127 + random 127 128 + random 127]
+		circle :height * (0.02 + 0.08 * randomRatio)
+	]
+	setTurtleState :oldState
+end
+
+to drawRandomStars :width :height
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "visibleSkyHeight :height * 0.4
+	localmake "numStars 200
+	localmake "starSize :height * 0.01
+	setPenSize :height * 0.0005
+	setPenColor "white
+	repeat :numStars [
+		localmake "x :width * (randomRatio - 0.5)
+		localmake "y :visibleSkyHeight * randomRatio + (:height - :visibleSkyHeight - :starSize)
+		jumpRight :x
+		jumpForward :y
+		setHeading random 360
+		forward :starSize
+		jumpBackward :starSize / 2
+		right 90
+		jumpBackward :starSize / 2
+		forward :starSize
+		jumpTo :oldPos
+		setHeading :oldHeading
+	]
+end
+
+to drawSky :width :height
+	localmake "oldPos pos
+	localmake "colorStops createPList2 [
+		[0.3 "white] [0.38 "#ff0] [0.53 "#ba222c]
+		[0.67 "#960065] [1 "#000072]
+	]
+	setLineCap "butt
+	setPenSize :width
+	jumpForward :height
+	setPenGradient createLinearGradient :oldPos pos :colorStops "pad
+	backward :height
+	drawRandomStars :width :height
+	drawSun :height
+end
+
+to computeRandomMountainPoints :width :height :initialY :minY_
+	localmake "oldPos pos
+	localmake "maxY :height * 0.05
+	localmake "minY :minY_ - :initialY
+	localmake "yRandomness (:maxY - :minY) / 2
+	localmake "midY (:maxY + :minY) / 2
+	localmake "numMountainSteps 96
+	localmake "step :width / :numMountainSteps
+	localmake "y 0
+	localmake "result []
+	jumpLeft :width
+	jumpForward :initialY
+	repeat :numMountainSteps [
+		localmake "bias (:y - :midY) / (:maxY - :minY)
+		localmake "bias mix 0.5 :bias 0.5
+		localmake "randomOffset :yRandomness * (randomRatio - :bias)
+		localmake "y :y + :randomOffset
+		jumpRight :step
+		jumpForward :randomOffset
+		queue2 "result pos
+	]
+	jumpTo :oldPos
+	output :result
+end
+
+to drawMountains :width :height
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	jumpRight :width / 2
+	localmake "bottomRightCorner pos
+	setPenSize 0
+	repeat 5 [
+		localmake "t power 1 - repRatio 2
+		setFillColor vectorScale [
+			:t * 0.20 + 0.05
+			:t * 0.16 + 0.01
+			:t * 0.10 + 0.02
+		] 255
+		localmake "mountainHeight :height * 0.28 * (1.2 - repRatio)
+		localmake "minY :mountainHeight * clamp (0.98 - power repRatio 2) 0 1
+		localmake "points computeRandomMountainPoints :width :height :mountainHeight :minY
+		polyStart
+		jumpLeft :width
+		jumpForward :mountainHeight
+		repeat count :points [
+			localmake "p item repcount :points
+			setHeading towards :p
+			jumpForward distance :p
+		]
+		polyEnd
+		setHeading :oldHeading
+		jumpTo :bottomRightCorner
+	]
+	jumpTo :oldPos
+end
+
+; Inspired by a randomized drawing at
+; https://casual-effects.com/codeheart/turtle/examples/sunset.html
+; The source drawing was written in Morgan McGuire's TurtleScript language.
+; WebLogo's Edit -> Auto-fix Code feature can help you translate some of 
+; his TurtleScript examples.
+; The following code was written manually for better performance and clarity, though.
+to casualEffectsSunset :height
+	localmake "width :height *  2
+	drawSky :width :height
+	drawMountains :width :height
+	drawLensFlareAndBloom :width :height
+end
+
+setScreenColor "black
+casualEffectsSunset 100
