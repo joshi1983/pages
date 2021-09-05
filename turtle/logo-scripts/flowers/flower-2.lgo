@@ -1,0 +1,126 @@
+; Inspired by:
+; https://www.pinterest.ca/pin/487866572131392161/
+
+to peddle :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	setPenColor fillColor
+	left 10
+	penDown
+	setPenSize :size * 0.004
+	arcLeft 30 :size * 0.6
+	arcRight 39 :size * 0.29
+	right 151
+	setPenSize 0
+	polyStart
+	arcLeft 13.5 :size * 0.45
+	arcRight 47.35 :size * 0.5
+	left 174
+	arcLeft 30 :size * 0.44
+	arcLeft 12 :size * 0.8
+	arcRight 16.7 :size * 0.55
+	localmake "pos1 pos
+	localmake "heading1 heading
+	left 108
+	arcLeft 40 :size * 0.1
+	polyEnd
+	penUp
+	setPos :pos1
+	setHeading :heading1
+	penDown
+	polyStart
+	arcRight 50 :size * 0.34
+	arcLeft 45 :size * 0.07
+	localmake "pos1 pos
+	localmake "heading1 heading
+	right 173
+	arcRight 50 :size * 0.08
+	arcLeft 42 :size * 0.36
+	polyEnd
+	setPos :pos1
+	setHeading :heading1 + 175
+	polyStart
+	arcRight 36 :size * 0.14
+	arcLeft 50 :size * 0.24
+	arcLeft 4 :size * 3
+	right 150
+	forward :size * 0.025
+	right 33
+	localmake "pos1 pos
+	localmake "heading1 heading + 180
+	arcLeft 2.5 :size * 3
+	arcRight 17 :size * 0.55
+	arcRight 50 :size * 0.14
+	arcLeft 40 :size * 0.116
+	polyEnd
+	setPos :pos1
+	setHeading :heading1
+	polyStart
+	arcRight 40 :size * 0.35
+	arcRight 11.07 :size * 0.9
+	left 171
+	arcLeft 45 :size * 0.7
+	arcLeft 20 :size * 0.35
+	arcLeft 14 :size * 0.1
+	arcLeft 45 :size * 0.02
+	localmake "pos1 pos
+	localmake "heading1 heading
+	left 95
+	arcRight 15 :size * 0.4
+	arcLeft 16 :size * 0.5
+	polyEnd
+	setPos :pos1
+	setHeading :heading1
+	polyStart
+	arcRight 70 :size * 0.02
+	arcRight 40 :size * 0.13
+	arcRight 3 :size * 0.9
+	arcLeft 13 :size * 0.2
+	right 173
+	arcRight 7 :size
+	arcLeft 17 :size * 0.2
+	arcLeft 34.7 :size * 0.0164
+	polyEnd
+	setPos :oldPos
+	setHeading :oldHeading
+	forward :size
+	localmake "pos1 pos
+	setHeading :oldHeading - 157
+	polyStart
+	arcLeft 39 :size * 0.81
+	left 20
+	forward :size * 0.025
+	left 160
+	arcRight 35.7 :size * 0.9125
+	polyEnd
+	setPos :pos1
+	setHeading :oldHeading + 178
+	polyStart
+	arcLeft 22 :size * 0.4
+	arcRight 19.5 :size * 1.2
+	left 170
+	arcLeft 8 :size * 1.35
+	arcLeft 30 :size * 0.24
+	right 170
+	arcRight 54 :size * 0.38
+	arcRight 24.78 :size * 1.1
+	right 176
+	arcLeft 12 :size
+	arcLeft 45 :size * 0.52
+	arcLeft 2 :size * 2
+	arcRight 37.3 :size * 0.5554
+	polyEnd
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to flower :size
+	localmake "numPeddles 8
+	repeat :numPeddles [
+		peddle :size
+		right 360 / :numPeddles
+	]
+end
+
+setFillColor "black
+flower 150

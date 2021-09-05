@@ -1,0 +1,85 @@
+; The only difference I see between the 2015 and 2017 versions
+; are the color of the circle.
+; This procedure will draw it with any color of circle.
+to grammarly2015CustomBackgroundColorLogo :height :color
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "arcRadius :height * 0.259
+	localmake "thicknessRatio 0.066
+	localmake "arcs [
+		[90 0] [0.183] [180 :thicknessRatio / 2] [0.04]
+		[6 0] [0.0868] [-51 0]
+	]
+	jumpForward :height / 2
+	setPenSize 0
+	setFillColor :color
+	circle :height / 2
+	setPenColor "white
+	right 57
+	jumpForward :arcRadius
+	left 90
+	setPenSize :height * :thicknessRatio
+	setLineCap "round
+	arcLeft 304.3 :arcRadius
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.4327
+	jumpRight :height * 0.282
+	setFillColor penColor
+	setPenSize 0
+	polyStart
+	arcLines :arcs :height
+	arcLines reverse :arcs :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by a logo at:
+; https://logos.fandom.com/wiki/Grammarly
+to grammarly2015Logo :height
+	grammarly2015CustomBackgroundColorLogo :height "#2BB673
+end
+
+; Inspired by a logo at:
+; https://logos.fandom.com/wiki/Grammarly
+to grammarly2017Logo :height
+	grammarly2015CustomBackgroundColorLogo :height "#15c39a
+end
+
+; Inspired by:
+; https://en.wikipedia.org/wiki/Grammarly#/media/File:Grammarly_logo_2024.svg
+to grammarly2024Logo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	jumpLeft :height / 2
+	setPenSize 0
+	setFillColor "#027E6F
+	polyStart
+	jumpForward :height / 2
+	arcRight 270 :height / 2
+	polyEnd
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.4563
+	jumpRight :height * 0.067
+	setFillColor "white
+	polyStart
+	arcLines [[-90 0] [0.186] [-100 0] 
+	[-308.4 0.258] [108.5 0] [0.095]
+	[77 0] [321 0.346] [81.9 0] [0.227]
+	] :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 4
+jumpLeft :separation
+grammarly2015Logo :height
+jumpRight :separation
+grammarly2017Logo :height
+jumpRight :separation
+grammarly2024Logo :height
