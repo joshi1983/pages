@@ -1,0 +1,189 @@
+!
+! HEXLIB
+!
+! Version 1.0
+! Copyright 1987 and 1997 by True BASIC, Inc.
+! All rights reserved
+!
+!
+! Bit manipulation routines - And, Or, Xor
+!
+! (These routines work properly only when used with integers.)
+!
+!
+! Conversion functions from numbers to strings:
+!
+! Convert$(a,b)   converts the integer n to any base b 2 through 16
+! Bin$(n)         converts n to base 2
+! Oct$(n)         converts n to base 8
+! Hex$(n)         converts n to base 16
+! Hexw$(n)        converts n to 4 base 16 digits, with negative
+!                 numbers treated as two's complement, i.e,
+!                 0 -> "0000" and -1 -> "FFFF".
+!
+!
+! Conversion function from strings to numbers:
+!
+! Convert(s$)     converts the string s$ to a number, where s$ contains
+!                 one of the standard radix marks to indicate the base.
+!                 (Unix, Pascal, MS-BASIC, 8086 or 68000 assembler
+!                 formats).
+!
+!
+! The string to number and number to string are not inverses.  To
+! convert to hex, use Hex$.  To convert a hex string to a number
+! you need to add a radix character if none is present. E.g.
+! LET num = Convert("$" & hexnum$)
+!
+EXTERNAL
+
+DEF Convert$(number,base)
+   LET number = round(number)
+   IF number < 0 then
+      LET number = -number
+      LET sign$ = "-"
+   END IF
+   DO
+      CALL divide(number,base,number,digit)
+      LET digit = digit + 1
+      LET c$ = "0123456789ABCDEF"[digit:digit] & c$
+   LOOP while number <> 0
+   LET Convert$ = sign$ & c$
+END DEF
+
+DEF Hex$(n)
+   DECLARE DEF Convert$
+   LET Hex$ = Convert$(n,16)
+END DEF
+
+DEF Oct$(n)
+   DECLARE DEF Convert$
+   LET Oct$ = Convert$(n,8)
+END DEF
+
+DEF Bin$(n)
+   DECLARE DEF Convert$
+   LET Bin$ = Convert$(n,2)
+END DEF
+
+DEF Hexw$(n)
+   LET n = Round(n)
+   FOR i = 1 to 4
+      CALL Divide(n,16,n,digit)
+      LET digit = digit + 1
+      LET c$ = "0123456789ABCDEF"[digit:digit] & c$
+   NEXT i
+   LET Hexw$ = c$
+END DEF
+!
+! Convert returns the value of a string as a number (like Val).  The
+! string may represent a binary, octal, decimal or hexadecimal number.
+! Hex is represented by a leading  or trailing "H", "$", "X".
+! Octal is repesented by a leading or trailing "O" or "Q" or by a
+! leading zero or "&".  Binary is represented by a trailing "B".
+! Any of these letters may be upper or lower case.  If none of these
+! forms is used, the number is assumed to be decimal.  Any sign
+! ("+" or "-") must be the first character.
+!
+! Any illegal character encountered will cause an exception (4001,
+! Illegal Val argument).
+!
+DEF Convert(s$)
+
+    LET digits$ = "0123456789ABCDEF"
+
+    LET s$ = Ucase$(s$)
+    LET base = 0
+    LET sign = 1
+    LET c$ = s$[1:1]
+
+    IF Pos("+-",c$) > 0 then
+       IF c$ = "-" then LET sign = -1
+       LET s$[1:1] = ""
+       LET c$ = s$[1:1]
+    END IF
+
+    LET l = len(s$)
+    LET d$ = s$[l:l]
+
+    LET d = pos("HX$OQB", c$)
+    IF d > 0 then
+       LET s$[1:1] = ""
+    ELSE
+       LET d = pos("HX$OQB", d$)
+       IF d > 0 then LET s$[l:l] = ""
+    END IF
+
+    IF d > 0 then LET base = 2*val("888441"[d:d])
+
+    IF base = 0 and c$ = "&" then
+       IF s$[2:2] = "H" then
+          LET base = 16
+          LET s$[1:2] = ""
+
+       ELSE IF pos("01234567", s$[2:2]) > 0 then
+          LET base = 8
+          LET s$[1:1] = ""
+
+       END IF
+
+    ELSE IF base = 0 and c$ = "0" then
+       IF s$[2:2] = "X" then
+          LET base = 16
+          LET s$[1:2] = ""
+
+       ELSE IF pos("01234567", s$[2:2]) > 0 then
+          LET base = 8
+          LET s$[1:1] = ""
+
+       END IF
+
+    END IF
+
+    IF base = 0 then LET base = 10
+
+    LET digits$ = digits$[1:base]
+
+    LET value = 0
+    FOR i = 1 to Len(s$)
+        LET d = Pos(digits$,s$[i:i]) - 1
+        IF d < 0 then CAUSE ERROR 4001
+        LET value = value*base + d
+    NEXT i
+
+    LET convert = sign * value
+
+END DEF
+!
+! Logical functions
+!
+!
+! And(a,b)      returns bitwise logical and of a,b
+! Or(a,b)       returns bitwise logical or of a,b
+! Xor(a,b)      returns bitwise logical xor of a,b
+!
+DEF And(a,b)
+   LET m = 1
+   LET b = Int(b)
+   DO
+      CALL Divide(a,2,a,aa)
+      CALL Divide(b,2,b,bb)
+      LET r = r + m*aa*bb         ! multiply is like AND
+      LET m = 2*m                 ! m = current bit position
+      IF b = -1 then
+         LET r = r + m*a          ! if negative, treat as 2's complement
+         EXIT DO
+      END IF
+   LOOP while b <> 0              ! loop till all bits of b are used
+   LET And = r
+END DEF
+
+DEF Or(a,b)
+   DECLARE DEF And
+   LET Or = a + b - And(a,b)
+END DEF
+
+DEF Xor(a,b)
+   DECLARE DEF And
+   LET Xor = a + b - 2*And(a,b)
+END DEF

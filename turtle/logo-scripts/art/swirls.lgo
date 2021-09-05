@@ -1,0 +1,57 @@
+to setFillGradientForPoint :size
+	localmake "oldPos pos
+	jumpForward :size * 0.75
+	localmake "colorStops createPList2 [
+		[0 "white] [0.1 "red] [0.2 "blue] [0.3 "aqua]
+		[0.4 "purple] [1 "#000]
+	]
+	setFillGradient createRadialGradient2 pos pos :size * 0.21
+		:colorStops "reflect
+	jumpTo :oldPos
+end
+
+to fillDropPath :size
+	localmake "arcRadius1 0.28935
+	setPenSize 0
+	drawArcLineShape [0 0
+		[[-55 0] [127 :arcRadius1] [-240 0.25] [-49.43 0.895]
+		[-21.49 :arcRadius1]]
+		] :size
+end
+
+to curvedArmWithGradient :size
+	setFillGradientForPoint :size
+	fillDropPath :size
+end
+
+to curvedArm :size
+	setFillColor "black
+	fillDropPath :size
+end
+
+to dropSwirl :size :numAngles
+	repeat :numAngles [
+		curvedArm :size
+		right 360 / :numAngles
+	]
+end
+
+to dropSwirlWithGradient :size :numAngles
+	repeat :numAngles [
+		curvedArmWithGradient :size
+		right 360 / :numAngles
+	]
+end
+
+make "separation 230
+make "numSamples 6
+right 90
+jumpBackward :separation * (:numSamples - 0.5)
+repeat :numSamples [
+	dropSwirlWithGradient 100 :numSamples + 3 - repcount
+	jumpForward :separation
+]
+repeat :numSamples [
+	dropSwirl 100 2 + repcount
+	jumpForward :separation
+]

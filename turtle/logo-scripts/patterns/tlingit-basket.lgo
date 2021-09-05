@@ -1,0 +1,104 @@
+to fillArcShape :innerRadius :outerRadius :arcAngle1 :arcAngle2 :len1Ratio
+	localmake "oldState turtleState
+	localmake "center pos
+	localmake "thickness :outerRadius - :innerRadius
+	localmake "len1 :thickness * :len1Ratio
+	jumpForward :innerRadius
+	localmake "startPos pos
+	polyStart
+	jumpForward :len1
+	right 90
+	arcRight :arcAngle1 distance :center
+	jumpLeft :outerRadius - distance :center
+	arcRight :arcAngle2 :outerRadius
+	right 90
+	jumpForward :len1
+	right 90
+	arcLeft :arcAngle1 distance :center
+	jumpLeft (distance :center) - :innerRadius
+	localmake "angle1 2 * arcSin (distance :startPos) / 2 / :innerRadius
+	arcLeft :angle1 :innerRadius
+	polyEnd
+	setTurtleState :oldState
+end
+
+to drawPattern :radius
+	localmake "oldState turtleState
+	localmake "center pos
+	localmake "oldHeading heading
+	localmake "numAngles 7
+	localmake "outerRadius :radius + penSize / 2
+	localmake "innerRadius :radius - penSize / 2
+	localmake "arcAngle 0.6 * 360 / :numAngles
+	localmake "arcAngle2 :arcAngle * 0.4
+	localmake "arcAngle3 :arcAngle2 / 3
+
+	setPenSize 0
+	repeat :numAngles [
+		setHeading :oldHeading + repcount * 360 / :numAngles
+		setFillColor "black
+		fillArcShape :innerRadius :outerRadius :arcAngle :arcAngle2 2/3
+		setFillColor "brown
+		right (:arcAngle2 - :arcAngle3) / 2
+		fillArcShape :innerRadius :outerRadius :arcAngle * 0.98 :arcAngle3 0.58
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+to drawRadiatingBeedLines :radius
+	localmake "oldState turtleState
+	localmake "center pos
+	localmake "numLines 360
+	localmake "triangleWidth :radius / 2 * sin 360 * 0.3 / :numLines
+	localmake "numCircles 8
+	setPenSize 0
+	setFillColor "black
+	repeat :numLines [
+		jumpForward :radius
+		right 180
+		isoTriangle :triangleWidth :radius
+		jumpTo :center
+		right 360 / :numLines
+	]
+	setPenColor "black
+	setFillColor transparent
+	repeat :numCircles [
+		localmake "radius1 :radius * repcount / :numCircles
+		setPenSize :radius1 * 0.001
+		circle :radius1
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by an image at:
+; https://en.wikipedia.org/wiki/Tlingit#/media/File:Northwest_Coast,_Tlingit,_late_19th_century_-_Tray_-_1942.337_-_Cleveland_Museum_of_Art.jpg
+to tlingitBasket :height
+	localmake "oldState turtleState
+	localmake "innerRadius :height * 0.2
+	localmake "outerMostThickness :height * 0.01
+
+	jumpForward :height / 2
+
+	setPenSize :outerMostThickness
+	setPenColor "#ffd
+	localmake "outerMostRadius (:height - penSize) / 2
+	setFillColor "#7B2F2F
+	circle :outerMostRadius
+
+	setPenColor "#DEC9AB
+	setPenSize :height * 0.12
+	setFillColor transparent
+	localmake "radius :outerMostRadius - (:outerMostThickness + penSize) / 2
+	circle :radius
+	drawPattern :radius
+	
+	circle :innerRadius
+	drawPattern :innerRadius
+	drawRadiatingBeedLines :outerMostRadius
+
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+tlingitBasket 100

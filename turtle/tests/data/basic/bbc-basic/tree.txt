@@ -1,0 +1,24 @@
+REM ----------RECURSIVE TREE-------------
+REM    BY ANDY Fandango @PIXEL_FANDANGO
+REM
+REM copied from https://youtu.be/178wzJ4jtzI?t=311
+REM In case that video becomes unavailable, it is from a youtube channel called
+REM Pixel Fandango.  https://www.youtube.com/@pixel_fandango
+
+MODE 0
+TIME=0
+MOVE 600,0
+PROC_DrawTree(6,600,300,PI/2,100)
+@%=&0002020A
+PRINT "TIME TAKEN: "; TIME/100
+@%=0
+END
+
+DEF PROC_DrawTree(i, x, y, a, l)
+da=0.4
+DRAW x,y
+IF i=0 ENDPROC
+PROC_DrawTree(i-1, x+l*COS(a-da), y+l*SIN(a-da), a-da, l*0.9)
+MOVE x,y
+PROC_DrawTree(i-1, x+l*COS(a+da), y+l*SIN(a+da), a+da, l*0.9)
+ENDPROC

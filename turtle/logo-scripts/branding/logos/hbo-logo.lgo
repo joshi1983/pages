@@ -1,0 +1,76 @@
+make "bottomGapRatio 0.0055
+make "height1Ratio 0.98
+
+to drawH :height
+	localmake "oldState turtleState
+	localmake "height1 :height * :height1Ratio
+	localmake "separation :height * 0.439
+	localmake "thickness :height * 0.27
+	localmake "middleThickness :height * 0.235
+	jumpForward :height * :bottomGapRatio
+	localmake "startPos pos
+	jumpLeft :separation / 2
+	repeat 2 [
+		stripes :thickness :height1 [fillColor]
+		jumpRight :separation
+	]
+	jumpTo :startPos
+	jumpForward (:height1 - :middleThickness) / 2 + :height * 0.008
+	stripes :separation :middleThickness [fillColor]
+	setTurtleState :oldState
+end
+
+to drawB :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "height1 :height * :height1Ratio
+	localmake "arcsInfo [[0.29] [85 0.295] [95 0.222] [0.3]
+		[90 0] [0.117] [90 0] [0.195] [-40 0.06]
+		[-100 0.09] [-40 0.06] [0.2]
+	]
+	jumpForward :height * :bottomGapRatio
+	jumpLeft :height * 0.16
+	localmake "startPos pos
+	stripes :height * 0.25 :height1 [fillColor]
+	right 90
+	setPenSize 0
+	polyStart
+	arcLines :arcsInfo :height
+	polyEnd
+	jumpTo :startPos
+	setHeading :oldHeading
+	jumpForward :height1
+	right 90
+	polyStart
+	arcLines :arcsInfo :height * -0.995
+	polyEnd
+	setTurtleState :oldState
+end
+
+to drawO :height
+	localmake "oldState turtleState
+	jumpForward :height / 2
+	setPenSize 0
+	circle :height * 0.195
+	setPenColor fillColor
+	setFillColor transparent
+	setPenSize :height * 0.25
+	circle (:height - penSize) / 2
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://en.wikipedia.org/wiki/HBO#/media/File:HBO_logo.svg
+to hboLogo :height
+	localmake "oldState turtleState
+	jumpLeft :height * 0.856
+	setFillColor "black
+	drawH :height
+	jumpRight :height * 0.7
+	drawB :height
+	jumpRight :height * 0.872
+	drawO :height
+	setTurtleState :oldState
+end
+
+hboLogo 100

@@ -1,0 +1,50 @@
+; Inspired by flag at:
+; https://upload.wikimedia.org/wikipedia/commons/3/3e/Flag_of_the_Chulym_People.svg
+to chulymPeopleFlag :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "width :height * 3 / 2
+	localmake "leftWidth :height * 0.403125
+	localmake "chulymRedColor "#E10000
+	localmake "height1 :height * 0.45875
+	localmake "radius1Ratio 0.09
+	localmake "circlesInfo [
+		[:radius1Ratio 0.005]
+		[0.049 0.01]
+	]
+	stripes :width :height ["white]
+	stripes :width :height1 ["#0094FF]
+	jumpForward :height
+	right 180
+	stripes :width :height1 ["#00990F]
+	jumpRight (:width - :leftWidth) / 2
+	stripes :leftWidth :height [:chulymRedColor]
+	jumpForward :height / 2
+	setFillColor "#FFC90E
+	setPenSize 0
+	circle :height * 0.13
+	localmake "center pos
+	setPenColor :chulymRedColor
+	repeat count :circlesInfo [
+		localmake "circleInfo item repcount :circlesInfo
+		setPenSize :height * last :circleInfo
+		circle :height * first :circleInfo
+	]
+	setFillColor :chulymRedColor
+	setPenSize 0
+	repeat 2 [
+		setHeading :oldHeading + repcount * 360 / 2
+		jumpForward :height * :radius1Ratio
+		repeat 2 [
+			isoTriangle :height * 0.04 :height * 0.025
+			right 180
+		]
+		jumpTo :center
+	]	
+	
+	setTurtleState :oldState
+end
+
+; Use a screen color that doesn't exactly match a color in the flag.
+setScreenColor "gray
+chulymPeopleFlag 100

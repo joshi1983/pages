@@ -1,0 +1,44 @@
+! Check balance program - keeps current data in a text file
+
+! Open the data file and get existing values, if any
+OPEN #1: name "ChkData", create newold
+
+! If file contains data, get it & report current amounts
+IF more #1 then
+   LINE INPUT #1: bal_date$
+   INPUT #1: curbal, lastcheck_amt, lastdep_amt
+   PRINT "As of "; bal_date$; ", your balance was $"; curbal
+   PRINT "Your last check was $"; lastcheck_amt
+   PRINT "Your last deposit was $"; lastdep_amt
+   PRINT
+   PRINT "Input all checks and deposits since "; bal_date$
+ELSE
+   PRINT "Input all checks and deposits."
+END IF
+
+! Get new transactions
+
+PRINT "Enter one per line: use - for checks, + for deposits"
+PRINT "Enter 0 (zero) when done"
+
+DO                                   ! Get new transaction
+   INPUT amount
+   LET curbal = curbal + amount      ! Update balance
+   IF amount < 0 THEN
+      LET lastcheck_amt = amount * (-1)
+   ELSE IF amount > 0 THEN
+      LET lastdep_amt = amount
+   END IF
+LOOP UNTIL amount = 0
+
+LINE INPUT PROMPT "Date of last transaction: ": bal_date$
+PRINT "Your current balance is $"; curbal
+
+! Clear data file and enter new amounts
+ERASE #1                             ! Remove any existing data
+PRINT #1: bal_date$
+PRINT #1: curbal; ","; lastcheck_amt; ","; lastdep_amt
+CLOSE #1
+
+END
+

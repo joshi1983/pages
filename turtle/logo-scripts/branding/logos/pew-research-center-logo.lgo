@@ -1,0 +1,54 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Pew_Research_Center#/media/File:Pew_Research_Center.svg
+to pewResearchCenterLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "outerRadius :height / 2
+	localmake "gap :height * 0.1
+	localmake "angle1 22.2
+	localmake "arcAngle1 13
+	localmake "midArcRadius :height * 0.276
+	;localmake "arcAngle2 17.4
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+
+	; Calculate an angle using the turtle.
+	setHeading 0
+	jumpForward :gap
+	left :angle1
+	jumpForward distanceToCircle :center :outerRadius
+	setHeading (towards :center) - 90
+	arcRight :arcAngle1 :outerRadius
+	setHeading 180
+	jumpForward distanceToCircle :center :midArcRadius
+	localmake "arcAngle2 (180 - (towards :center)) * 2
+
+	jumpTo :center
+	setHeading :oldHeading
+	setFillColor "black
+	repeat 8 [
+		localmake "heading1 :oldHeading + repcount * 360 / 8
+		setHeading :heading1
+		jumpForward :gap
+		left :angle1
+		polyStart
+		jumpForward distanceToCircle :center :outerRadius
+		setHeading (towards :center) - 90
+		arcRight :arcAngle1 :outerRadius
+		setHeading :heading1 + 180
+		jumpForward distanceToCircle :center :midArcRadius
+		setHeading (towards :center) - 90
+		arcRight :arcAngle2 :midArcRadius
+		setHeading :heading1
+		jumpForward distanceToCircle :center :outerRadius
+		setHeading (towards :center) - 90
+		arcRight :arcAngle1 :outerRadius
+		polyEnd
+		jumpTo :center
+	]
+	circle :height * 0.141
+	setTurtleState :oldState
+end
+
+pewResearchCenterLogo 100

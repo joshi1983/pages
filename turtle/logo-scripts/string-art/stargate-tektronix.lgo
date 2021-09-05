@@ -1,0 +1,66 @@
+to getPoints :len :numPoints
+	localmake "result []
+	localmake "oldPos pos
+	repeat :numPoints [
+		jumpForward :len / :numPoints
+		queue2 "result pos
+	]
+	jumpTo :oldPos
+	output :result
+end
+
+to drawInnerLines :size
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	repeat 4 [
+		setHeading :oldHeading + repcount * 360 / 4
+		localmake "points1 getPoints :size 8
+		right 90
+		localmake "points2 getPoints :size 8
+		repeat count :points1 [
+			localmake "index2 9 - repcount 
+			jumpTo item repcount :points1
+			setPos item :index2 :points2
+		]
+		jumpTo :oldPos
+	]
+
+	setTurtleState :oldState
+end
+
+; Inspired by drawing at:
+; https://github.com/mmcgraw74/Tektronix-4051-4052-4054-Program-Files/blob/2b4c36c9adc99724ef54d77cf053cd019659e467/Computer-Art/Stargate%20art%20-%20Creative%20Computing%20May-June%201978.png
+; That program from Joe Jakobson was implemented with Tektronix BASIC in 1978.
+; Tektronix 4051 one of the first personal computers.
+; This WebLogo version was implemented by Josh Greig in 2025.
+to starGateTektronix :height
+	localmake "oldState turtleState
+	localmake "radii vectorScale [0.42 0.3 0.25 0.215 0.185 0.16 0.135] :height
+	localmake "lines1 [[-178 0] [0.2] [30 0.4] [13 0.10875134]]
+	localmake "lines2 combine :lines1 reverse :lines1
+	localmake "linesPair (combine :lines2 [[180 0]] :lines2 [[180 0]])
+	localmake "backgroundColorStops createPList2 [
+		[0 "#2000] [1 "#0000]
+	]
+	setPenColor "black
+	setFillColor transparent
+	jumpForward :height / 2
+	setPenSize 0
+	setFillGradient createRadialGradient pos :height * 0.4 :backgroundColorStops
+	setPenSize :height * 0.005
+	repeat count :radii [
+		circle item repcount :radii
+	]
+	setFillColor "black
+	setLineJoinStyle "round
+	setPenColor "#b00
+	drawArcLineShape [0 0.5
+		combine :linesPair :linesPair
+	] :height
+	setPenColor "white
+	drawInnerLines :height * 0.26
+	setTurtleState :oldState
+end
+
+starGateTektronix 100

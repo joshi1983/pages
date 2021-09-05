@@ -1,0 +1,64 @@
+to setBalloonFillGradient :size :color
+	localmake "colorStops createPList2 [
+		[0 mix :color "white 0.5] [1 [:color easeIn]]
+	]
+	setFillGradient createRadialGradient pos :size :colorStops
+end
+
+to curvedString :len :arcAngle :numRepeats
+	localmake "arcRadius (:len / :numRepeats) * 0.25 / sin :arcAngle / 2
+	left :arcAngle / 2
+	repeat :numRepeats [
+		arcRight :arcAngle :arcRadius
+		arcLeft :arcAngle :arcRadius
+	]
+end
+
+to circleBalloon :size :color
+	localmake "oldState turtleState
+	setBalloonFillGradient :size :color
+	setPenSize 0
+	circle :size
+	jumpBackward :size
+	setPenSize :size * 0.05
+	setPenColor "black
+	right 180
+	setLineCap "round
+	curvedString :size * 2 60 3
+	setTurtleState :oldState
+end
+
+to longBalloon :size :color
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "originalSize :size
+	localmake "size :size * 2 * 0.6762
+	localmake "arcs [[40 0.3] [20 0.9] [50 1]]
+	setBalloonFillGradient :size :color
+	jumpBackward :originalSize
+	setPenSize :size * 0.01
+	left 90
+	polyStart
+	arcsRight :arcs :size
+	arcRight 140 :size * 0.49741533
+	arcsRight reverse :arcs :size
+	polyEnd
+	setHeading :oldHeading + 180
+	setPenSize :size * 0.03
+	curvedString :originalSize * 2 60 3
+	setTurtleState :oldState
+end
+
+setScreenColor "skyBlue
+make "size 100
+make "separation :size * 4
+jumpLeft :separation * 2
+longBalloon :size "navy
+jumpRight :separation
+circleBalloon :size "lime
+jumpRight :separation
+circleBalloon :size "red
+jumpRight :separation
+circleBalloon :size "white
+jumpRight :separation
+longBalloon :size "black

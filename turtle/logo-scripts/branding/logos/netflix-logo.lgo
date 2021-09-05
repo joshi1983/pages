@@ -1,0 +1,66 @@
+to fillPolygon :points :scale
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "positions []
+	repeat count :points [
+		localmake "point item repcount :points
+		jumpRight :scale * first :point
+		jumpForward :scale * last :point
+		queue2 "positions pos
+		jumpTo :oldPos
+		setHeading :oldHeading
+	]
+	jumpTo first :positions
+	polyStart
+	for ["i 2 count :positions] [
+		localmake "next item :i :positions
+		setHeading towards :next
+		jumpForward distance :next
+	]
+	polyEnd
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Netflix#/media/File:Netflix_2015_logo.svg
+to netflixLogo :height
+	localmake "oldState turtleState
+	localmake "shapes [
+		; N
+		[[-1.808 0] [-1.808 1] [-1.662 1] [-1.463 0.433] [-1.463 1] [-1.31 1]
+		[-1.31 0.0645] [-1.477 0.0436] [-1.6517 0.5667] [-1.6517 0.0216]]
+
+		; E
+		[[-1.162 0.077] [-1.162 1] [-0.7395 1] [-0.7395 0.8438] [-1.0094 0.8438]
+		[-1.0094 0.633] [-0.8055 0.637] [-0.8055 0.481] [-1.0094 0.478]
+		[-1.0094 0.245] [-0.7395 0.262] [-0.7395 0.1115]]
+
+		; T
+		[ [-0.6411 0.8442] [-0.6411 1] [-0.1722 1] [-0.1722 0.8436]
+		[-0.3304 0.8436] [-0.3304 0.125] [-0.4829 0.1231] [-0.4829 0.8436]]
+
+		; F
+		[[-0.0739 0.1338] [-0.0739 1] [0.3522 1] [0.3522 0.8439] [0.0755 0.8439]
+		[0.0755 0.6444] [0.2845 0.6444] [0.2845 0.4888] [0.0755 0.4888] [0.0755 0.134]]
+
+		; L
+		[[0.4479 0.1235] [0.4479 1] [0.6 1] [0.6 0.2701] [0.8595 0.2566] [0.8595 0.1021]]
+
+		; I
+		[[0.988 0.0924] [0.988 1] [1.138 1] [1.138 0.08]]
+
+		; X
+		[[1.2497 0.0729] [1.64 1] [1.805 1] [1.4135 0.0518]]
+		[[1.635 0.02834] [1.2687 1] [1.43287 1] [1.8067 0]] 
+	]
+	setPenSize 0
+	setFillColor "#d81f26
+	repeat count :shapes [
+		localmake "shape item repcount :shapes
+		fillPolygon :shape :height
+	]
+	setTurtleState :oldState
+end
+
+netflixLogo 100

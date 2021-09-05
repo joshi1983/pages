@@ -1,0 +1,59 @@
+make "simonsGreenColor "#007853
+
+; Inspired by logo at
+; https://www.simons.com
+to simonsLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "outlinesInfo [
+		[0.53] [-30 0.365] [-60 0.375] [0.112] [-45 0.39]
+	]
+	localmake "crossesInfo [0.44 0.62 0.79 0.967]
+	setLineCap "butt
+	setLineJoinStyle "miter
+	jumpLeft :height * 0.456
+	setPenSize :height * 0.1
+	jumpForward penSize / 2
+	localmake "lowerLeft pos
+	arcLines :outlinesInfo :height
+	setItem 4 "outlinesInfo [0.1363]
+	localmake "outlinesInfo butFirst :outlinesInfo
+	arcLines reverse :outlinesInfo :height
+	closePath
+	jumpTo :lowerLeft
+	setHeading :oldHeading + 45
+	setPenSize :height * 0.065
+	forward :height * 1.29
+	setPenSize :height * 0.04
+	repeat count :crossesInfo [
+		localmake "len :height * item repcount :crossesInfo
+		localmake "shortLen (:len * cos 45) - penSize * 0.2
+		jumpTo :lowerLeft
+		jumpForward :len
+		left 45
+		jumpBackward :shortLen
+		forward :shortLen
+		left 90
+		forward :shortLen
+		setHeading :oldHeading + 45
+	]
+	setTurtleState :oldState
+end
+
+to simonsLogoGreenForeground :height
+	setPenColor :simonsGreenColor
+	simonsLogo :height
+end
+
+to simonsLogoWhiteForeground :height
+	stripes :height * 3 :height [:simonsGreenColor]
+	setPenColor "white
+	simonsLogo :height
+end
+
+make "height 100
+make "separation :height * 5
+jumpLeft :separation * 0.5
+simonsLogoGreenForeground :height
+jumpRight :separation
+simonsLogoWhiteForeground :height

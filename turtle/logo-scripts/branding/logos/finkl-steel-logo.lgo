@@ -1,0 +1,45 @@
+to conicGradient :radius :fromColor :toColor :angle :numDivisions
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angleStep :angle / :numDivisions
+	; The 0.3 degrees is added to create a little overlap.
+	; The overlap reduces artifacts from background colors
+	; leaking through between slices of the gradient.
+	localmake "angleStep2 :angleStep + 0.3
+	setPenSize 0
+	repeat :numDivisions [
+		setHeading :oldHeading - ( repcount - 1 ) * :angleStep
+		setFillColor mix :toColor :fromColor repRatio
+		polyStart
+		jumpForward :radius
+		left 90
+		arcLeft :angleStep2 :radius
+		polyEnd
+		jumpTo :oldPos
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by logo at
+; https://www.finkl.com
+to finklSteelLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "radius :height * 0.2925
+	localmake "numDivisions 50
+	jumpForward :radius
+	setPenSize 0
+	setFillColor "#e53323
+	circle :radius
+	left 45
+	conicGradient :radius "#a21a15 fillColor 180 :numDivisions
+	setHeading :oldHeading
+	jumpForward :height - :radius * 2
+	circle :radius
+	right 135
+	conicGradient :radius "#fdd201 fillColor 180 :numDivisions
+	setTurtleState :oldState
+end
+
+finklSteelLogo 100

@@ -1,0 +1,77 @@
+to drawG :height
+	localmake "oldState turtleState
+	localmake "lowerRightArcRadiusFactor 0.255
+	localmake "widthFactor 0.445
+	localmake "len1 0.11
+	localmake "startX :widthFactor / 2 - :len1 - :lowerRightArcRadiusFactor
+	localmake "height1 0.4
+	localmake "width1 0.133
+	localmake "thickness1 0.13
+	localmake "width2 0.09
+	localmake "tinyArcRadius 0.055
+	localmake "upperRadiusFactor 0.16
+	localmake "innerHeight :height1 + 2 * (:upperRadiusFactor - :thickness1 - :tinyArcRadius)
+	localmake "lowerInnerArcRadius :lowerRightArcRadiusFactor - :thickness1
+	localmake "tallHeight 1 - :thickness1 * 2 - :lowerInnerArcRadius
+	localmake "gLines [[-90 0] [:len1] [90 :lowerRightArcRadiusFactor]
+		[1 - :lowerRightArcRadiusFactor] [90 0]
+		[:widthFactor - :upperRadiusFactor] [90 :upperRadiusFactor]
+		[:height1] [90 :upperRadiusFactor] [:width1]
+		[180 :thickness1 / 2] [:width2] [-90 :tinyArcRadius]
+		[:innerHeight] [-90 :tinyArcRadius] [:width2] [-90 0]
+		[:tallHeight] [-90 :lowerInnerArcRadius]
+		[0.088]]
+	setFillColor penColor
+	setPenSize 0
+	drawArcLineShape [:startX 0
+		:gLines
+	] :height
+
+	setTurtleState :oldState
+end
+
+to drawM :height
+	localmake "oldState turtleState
+	localmake "width :height * 0.745
+	localmake "thickness :height * 0.13
+	localmake "thickness2 :height * 0.15
+	localmake "lowerGap :height * 0.28
+	localmake "upperHeight :height - :lowerGap
+	localmake "separation (:width - :thickness2) / 2
+	localmake "arcRadius :height * 0.09
+	stripes :width :thickness [penColor]
+	jumpForward :lowerGap
+	jumpLeft :separation
+	repeat 2 [
+		stripes :thickness2 :upperHeight [penColor]
+		jumpRight :separation
+	]
+	setLineCap "butt
+	setPenSize :thickness2
+	forward :upperHeight - :arcRadius - penSize / 2
+	arcLeft 90 :arcRadius
+	forward :width - :arcRadius - penSize / 2
+
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://en.wikipedia.org/wiki/General_Motors#/media/File:General_Motors_(logo_with_wordmark,_horizontal).svg
+to gmLogo :height
+	localmake "oldState turtleState
+	localmake "fontHeight :height * 0.48
+	setPenSize :height * 0.0651
+	localmake "squareSize :height - penSize
+	setFillColor transparent
+	setPenColor "#0372CF
+	jumpForward :height / 2
+	roundRect :squareSize :squareSize :height * 0.1
+	jumpBackward :fontHeight * 0.495
+	jumpLeft :height * 0.207
+	drawG :fontHeight
+	jumpRight :height * 0.34
+	drawM :fontHeight
+	setTurtleState :oldState
+end
+
+gmLogo 100

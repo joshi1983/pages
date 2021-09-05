@@ -1,0 +1,236 @@
+to fillBackground :width :height :horizonHeight :time
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "horizonRatio :horizonHeight / :height
+	localmake "skyTopColor mix "#C9A7FB "#B8E0FF :time
+	localmake "bottomGreen mix "#79a16D "#49C16D :time
+	localmake "colorStops createPList2 [
+		[0 :bottomGreen] [:horizonRatio "#56E6BB]
+		[:horizonRatio * 1.05 
+		mix "#FDF2FB "#E5F4FF :time]
+		[1 :skyTopColor]
+	]	
+	jumpForward :height
+	setPenGradient createLinearGradient :oldPos pos :colorStops "pad
+	setLineCap "butt
+	setPenSize :width
+	backward :height
+	setTurtleState :oldState
+end
+
+to createVolcanoGradient :height :time
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "colorStops createPList2 [
+		[0 mix "#579E57 "#6FBE6F :time]
+		[0.5 mix "#7D4F4F "#AF6A6A :time]
+		[0.8 mix "#856F6F "#B19595 :time]
+		[1 mix "gray "white :time]
+	]
+	jumpForward :height
+	localmake "result createLinearGradient :oldPos pos :colorStops "pad
+	setTurtleState :oldState
+	output :result
+end
+
+to drawVolcano :height :time
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "smokeColorStops createPList2 [
+		[0 "#5000] [1 "#0000]
+	]
+	setFillGradient createVolcanoGradient :height :time
+	setPenSize :height * 0.02
+	jumpRight :height
+	localmake "startPos pos
+	polyStart
+	jumpLeft :height * 2.4
+	localmake "secondPos pos
+	right 53
+	jumpForward :height * 1.65
+	setHeading :oldHeading
+	localmake "topPos1 pos
+	jumpRight :height * 0.21
+	polyEnd
+	localmake "finalPos pos
+
+	; Draw the lava
+	setFillColor mix "#ff9900 "#FF6600 :time
+	setPenSize 0
+	polygon [
+		mix :secondPos :topPos1 0.5 * :time
+		:topPos1 :finalPos
+		mix :topPos1 :startPos 1 - 0.3 * :time]
+
+	; Draw the smoke.
+	right 7
+	localmake "smokeHeight1 :height * (mix 1.2 0.2 :time)
+	localmake "smokeMaxLen :height * 1
+	jumpForward :smokeHeight1
+	localmake "smokePos1 pos
+	right 50
+	jumpForward :smokeMaxLen
+	localmake "smokePos1Final pos
+	jumpLeft :height * mix 0.4 0.25 :time
+	localmake "smokePos2Final pos
+	jumpBackward :smokeMaxLen + :height * 0.1
+	localmake "smokePos2 pos
+	localmake "topSmokePos mix :smokePos2Final :smokePos2 :time
+	setPenSize 0
+	setFillGradient createLinearGradient :topPos1 :topSmokePos :smokeColorStops "pad
+	polygon [
+		:topPos1 :finalPos
+		:smokePos1
+		mix :smokePos1Final :smokePos1 :time
+		:topSmokePos
+		:smokePos2
+	]	
+
+	setTurtleState :oldState
+end
+
+to drawSun :radius
+	localmake "oldState turtleState
+	setFillColor "yellow
+	setPenSize :radius * 0.05
+	setPenColor "brown
+	circle :radius
+	setTurtleState :oldState
+end
+
+to drawTreeShadow :height :sunPosition
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldPenSize penSize
+	localmake "colorStops createPList2 [
+		[0 "#8000] [1 "#0000]
+	]
+	localmake "parallelogramHeight :height * 0.2
+	localmake "angle (towards :sunPosition) - heading
+	jumpBackward :parallelogramHeight
+	setFillGradient createLinearGradient :oldPos pos :colorStops "pad
+	setPenSize 0
+	jumpTo :oldPos
+	right 180
+	parallelogram :oldPenSize :parallelogramHeight / cos :angle :angle	
+	setTurtleState :oldState
+end
+
+to drawTree :height :sunPosition :time
+	localmake "oldState turtleState
+	localmake "trunkWidth :height * 0.13
+	setPenSize :trunkWidth
+	setPenColor mix "#702810 "brown :time
+	setLineCap "butt
+	drawTreeShadow :height :sunPosition
+
+	; draw trunk
+	forward :height * 0.6
+
+	setPenColor mix "#8f0 "#37A037 :time
+	setFillColor mix "green "#8FE670 :time
+	setPenSize :height * 0.01
+	jumpForward :height * 0.1
+	right 13
+	isotoxalStar :height * 0.3 :height * 0.14 7
+	setTurtleState :oldState
+end
+
+to drawFootPrint :length
+	localmake "oldState turtleState
+	localmake "toeLength :length * 0.7
+	localmake "angle 30
+	setPenSize :length * 0.2
+	setPenColor "#050
+	setLineCap "round
+	forward :length
+	jumpBackward :length * 0.8
+	localmake "pos1 pos
+	setPenSize penSize * 0.6
+	left :angle
+	forward :toeLength
+	jumpTo :pos1
+	right :angle * 2
+	forward :toeLength
+	setTurtleState :oldState
+end
+
+to drawFootprints :height
+	localmake "oldState turtleState
+	localmake "vSeparation :height * 0.13
+	localmake "horizontalSeparation :height * 0.18
+	jumpLeft :height * 0.85
+	jumpForward :height * 0.13
+	right 90
+	repeat 5 [
+		if even? repcount [
+			jumpLeft :vSeparation
+		]
+		jumpRight :vSeparation / 2
+		jumpForward :horizontalSeparation
+		drawFootPrint :height * 0.08
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by drawing at:
+; https://www.youtube.com/watch?v=5AVEJ3XQchY
+;
+; Nerdorama uses LogoWriter to recreate the drawing but
+; this uses WebLogo to do similar.
+to nerdoramaRetroJurassicPark :height :time
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "width :height * 2
+	localmake "horizonHeight :height * 0.23
+	fillBackground :width :height :horizonHeight :time
+	jumpForward :height * 0.9
+	jumpLeft :width * 0.33
+	setFontSize :height * 0.08
+	setPenSize 0
+	setFillColor "#000
+	right 90
+	label 'Jurassic Park!'
+
+	setHeading :oldHeading
+	jumpTo :oldPos
+	jumpRight :height * mix 0.68 0.4 :time
+	jumpForward :height * mix 0.4 0.88 :time
+	drawSun :height * 0.11
+	localmake "sunPosition pos
+
+	jumpTo :oldPos
+	jumpForward :horizonHeight
+	jumpRight :height * 0.25
+	drawTree :height * 0.57 :sunPosition :time
+
+	jumpTo :oldPos
+	jumpForward :horizonHeight
+	jumpLeft :height * 0.4
+	drawVolcano :height * 0.24 :time
+
+	jumpTo :oldPos
+	drawFootprints :height
+
+	setTurtleState :oldState
+end
+
+make "time animation.clampedTimeRatio
+nerdoramaRetroJurassicPark 100 :time
+
+to animation.snapshotstyle
+	output createPList2 [
+		["position.y 50]
+		["zoom.scale 5.5]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 3
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

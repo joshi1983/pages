@@ -1,0 +1,49 @@
+' copied from https://basicfusion.org/tutorial.html
+SCREEN 12
+
+' Player sprite (ID 1) — 4x4
+DEFSPRITE 1, 4, 4
+SPRITEROW 1,0,0, ",lime,lime,"
+SPRITEROW 1,0,1, "lime,lime,lime,lime"
+SPRITEROW 1,0,2, "lime,lime,lime,lime"
+SPRITEROW 1,0,3, ",lime,lime,"
+
+' Enemy sprite (ID 2) — 4x4
+DEFSPRITE 2, 4, 4
+SPRITEROW 2,0,0, ",red,red,"
+SPRITEROW 2,0,1, "red,red,red,red"
+SPRITEROW 2,0,2, "red,red,red,red"
+SPRITEROW 2,0,3, ",red,red,"
+
+PX = 100 : PY = 220   ' player position
+EX = 400 : EY = 220   ' enemy position
+EVX = -2               ' enemy moves left
+HIT = 0
+
+GL:
+  PAINT "#0a0a1a"
+
+  ' Move player
+  IF KEY("ARROWLEFT")  THEN PX = PX - 4
+  IF KEY("ARROWRIGHT") THEN PX = PX + 4
+  IF KEY("ARROWUP")    THEN PY = PY - 4
+  IF KEY("ARROWDOWN")  THEN PY = PY + 4
+
+  ' Move enemy
+  EX = EX + EVX
+  IF EX < 0 THEN EX = 640
+
+  ' Draw sprites (scale 8)
+  DRAWSPRITE 1, PX, PY, 0, 8
+  DRAWSPRITE 2, EX, EY, 0, 8
+
+  ' Collision check
+  IF SPRITECOL(1, PX, PY, 2, EX, EY) THEN
+    FONTSIZE 28
+    TEXT (220,50), "HIT!", "red"
+  END IF
+
+  FONTSIZE 16
+  TEXT (10,22), "Arrows = move | avoid the red enemy", "gray"
+  SYNC
+GOTO GL

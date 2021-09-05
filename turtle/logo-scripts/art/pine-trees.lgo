@@ -1,0 +1,103 @@
+; inspired by
+; https://www.pinterest.ca/pin/5066618324279811/
+
+to pineTree :size :trunkColor :pineNeedleColor
+	localmake "oldState turtleState
+	localmake "initialSize1 :size * 0.3
+	localmake "angle1 40
+	localmake "angle2 150
+	localmake "angle3 20
+	localmake "angle4 130
+	localmake "angle9 116.753
+	localmake "arcsInfo [
+		[20 0] [10 0.4] [-130 0] [-68.37645 0.22]
+	]
+	setPenSize :size * 0.05
+	setPenColor :trunkColor
+	setLineCap "butt
+	; draw tree trunk
+	
+	forward :size * 0.5
+	jumpForward :size * 0.5
+	setPenSize 0
+	setFillColor :pineNeedleColor
+	polyStart
+	right 160
+	localmake "size1 :initialSize1
+	localmake "numBranches 4
+	repeat :numBranches [
+		localmake "size1 :size1 * 1.17
+		localmake "size2 :size1
+		arcLeft :angle1 :size1
+		right :angle2
+		arcRight :angle3 :size2
+		left :angle4
+	]
+	arcsLeft :arcsInfo :size
+	; point of symmetry
+	left :angle9
+	arcsLeft reverse :arcsInfo :size
+	repeat :numBranches [
+		left :angle4
+		arcRight :angle3 :size2
+		right :angle2
+		arcLeft :angle1 :size1
+		localmake "size1 :size1 / 1.17
+		localmake "size2 :size1
+	]
+	polyEnd ; fill in the green shape.
+
+	setTurtleState :oldState
+end
+
+to drawSkyHalfCircle :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "colorStops createPList2 [
+		[0 "#def] [0.5 "#eee] [1 "skyBlue]
+	]
+	setPenSize 0
+	jumpForward :size
+	setFillGradient createLinearGradient :oldPos pos :colorStops "pad
+	left 90
+	arcLeft 90 :size
+	right 180
+	polyStart
+	arcRight 180 :size
+	polyEnd
+
+	; restore original heading and position.
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to drawRandomTrees :maxSize :numTrees
+	localmake "minSize :maxSize * 0.5
+	localmake "sizeRangeScale (:maxSize - :minSize) / 100
+	localmake "trunkColors ["brown "saddleBrown "darkRed "#611 "#522]
+	localmake "pineNeedleColors ["#494 "green "darkGreen "#060 "#090]
+
+	drawSkyHalfCircle :maxSize
+
+	; draw some ground.
+	setFillColor "darkGreen
+	setPenSize 0
+	ellipse :maxSize :maxSize * 0.05
+
+	repeat :numTrees [
+		; move to a random x position.
+		setX :maxSize * (random 1000) / 1000 - :maxSize * 0.5
+
+		; select a random size between minSize and maxSize.
+		localmake "treeSize :minSize + :sizeRangeScale * random 100
+
+		; randomly pick colors for the trunk and pine needles.
+		localmake "trunkColor pick :trunkColors
+		localmake "pineNeedleColor pick :pineNeedleColors
+
+		; draw the randomly positioned, colored, and sized tree.
+		pineTree :treeSize :trunkColor :pineNeedleColor
+	]
+end
+
+drawRandomTrees 150 5

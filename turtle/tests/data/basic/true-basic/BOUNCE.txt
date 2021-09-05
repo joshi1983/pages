@@ -1,0 +1,104 @@
+REM: based on the original BOUNCE program
+REM: Revised 21 APR 2004 uses default window
+
+REM: dimension the working variables
+DIM qx1(20)
+DIM qy1(20)
+DIM qx2(20)
+DIM qy2(20)
+
+RANDOMIZE                         ! initialize the random number generator
+
+REM: randomly select a starting line
+LET x1 = rnd
+LET y1 = rnd
+LET x2 = rnd
+LET y2 = rnd
+
+REM: set counters
+LET c=200                         ! line drawing counter
+LET k=0                           ! color counter
+
+REM: randomly select starting color between 1 and 14
+DO
+   LET kolor=INT(rnd*13)+1
+   IF kolor>8 and color<15 then
+      EXIT DO                     ! exit loop if kolor is a bright color
+   END IF
+LOOP
+
+REM: set initial drawing color
+SET COLOR kolor
+
+REM: set background color in window
+REM: can be set to any color NB black=-1:white=-2
+LET back=-1                       ! black
+SET BACKGROUND COLOR back         ! user can specify
+!******IMPORTANT********
+CLEAR                             ! this instruction is essential
+!***********************
+
+DO
+   IF key input then
+      EXIT DO                     ! if user presses any key then stop program
+   END IF
+
+   IF k=20 then                   ! change color after drawing 20 lines
+      LET kolor=kolor+1
+      LET k=0
+   END IF
+   IF kolor>15 then               ! make sure kolor is a bright color > 8
+      LET kolor=9
+   END IF
+
+   IF c>=200 then                 ! restart counter
+      LET c = 0
+      LET xv1 = rnd/20
+      LET xv2 = rnd/20
+      LET yv1 = rnd/20
+      LET yv2 = rnd/20
+   END IF
+
+   REM: rub out previous lines by re-plotting in the background color
+   LET qp = mod(qp,ubound(qx1))+1
+   SET COLOR back
+   PLOT qx1(qp),qy1(qp); qx2(qp),qy2(qp)
+
+   REM: draw a new line in the current color
+   LET qx1(qp) = x1
+   LET qx2(qp) = x2
+   LET qy1(qp) = y1
+   LET qy2(qp) = y2
+   SET COLOR kolor
+   PLOT x1,y1; x2,y2
+
+   REM: move line to new position for next plot
+   CALL move(x1,xv1)
+   CALL move(x2,xv2)
+   CALL move(y1,yv1)
+   CALL move(y2,yv2)
+
+   REM: add a time delay to make smooth motion
+pause .05
+ !  FOR t=1 to 10000
+ !      REM:do waste of time calculation
+ !      LET d=pi/27
+ !  NEXT t
+
+   LET c=c+1                      ! increment line drawing counter
+   LET k=k+1                      ! increment color counter
+LOOP
+
+SUB move(x,v)
+    LET x = x+v
+    IF x>1 then
+       LET x = 2-x
+    ELSE IF x < 0 then
+       LET x = -x
+    ELSE
+       EXIT SUB
+    END IF
+    LET v = -v
+END SUB
+
+END

@@ -1,0 +1,66 @@
+; Inspired by flag at:
+; https://en.wikipedia.org/wiki/Flag_of_Montana#/media/File:Proposed_Montana_Flag_(1974).svg
+to jamesCroftMontanaFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 1.622
+	localmake "skyBlueColor "#2ec5f7
+	localmake "mountainCapLines [
+		[139 0] [0.1435] [-99 0] [0.0684] [104.3 0] [0.21] [125.7 0]
+		[0.2606546]
+	]
+	stripes :width :height ["#106529 :skyBlueColor :skyBlueColor]
+	setPenSize 0
+	setFillColor "white
+	drawArcLineShape [-0.43 0.8345
+		combine :mountainCapLines reverse :mountainCapLines
+	] :height
+	jumpForward :height * 0.2688
+	stripes :width :height * 0.075 ["white]
+	setTurtleState :oldState
+end
+
+; Inspired by flag at:
+; https://en.wikipedia.org/wiki/Flag_of_Montana#/media/File:Proposed_Montana_Flag_(1979).svg
+to edwardMooneyMontanaFlag :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "width :height * 5 / 3
+	localmake "len1 0.46
+	localmake "len2 0.18
+	localmake "offset1 0.05
+	localmake "offset2 0.37
+	localmake "lines [
+		[-90 0] [:offset1] [45 0] [:len1] [-90 0] [:len2] [90 0] [:len2]
+		[-90 0] [:len1] [45 0]
+		[:width / :height - :offset1 - 2 * (:len1 + :len2) * cos 45]
+	]
+	stripes :width :height ["#4247cf]
+	jumpLeft :width / 2 - :height * (:offset1 + (:len1 + :len2) * cos 45)
+	jumpForward :height * 0.86666667
+	setPenSize 0
+	setFillColor "white
+	regularStar :height * 0.088 5	
+
+	jumpTo :oldPos
+	setFillColor "#328b3b
+	drawArcLineShape [-:width / :height / 2 0
+		(combine [[:offset2]] :lines [[-90 0] [:offset2]])
+	] :height
+	setPenSize :height * 0.08
+	setLineCap "butt
+	setPenColor "white
+	setLineJoinStyle "miter
+	jumpLeft :width / 2
+	jumpForward :offset2 * :height
+	arcLines :lines :height
+
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+make "height 100
+make "separation :height * 5
+jumpLeft :separation / 2
+jamesCroftMontanaFlag :height
+jumpRight :separation
+edwardMooneyMontanaFlag :height

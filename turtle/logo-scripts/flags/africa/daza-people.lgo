@@ -1,0 +1,26 @@
+; Inspired by flag at:
+; https://en.wikipedia.org/wiki/File:Flag_of_the_Daza_People.svg
+to dazaPeopleFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 3 / 2
+	localmake "starRadius :height * 0.1
+	stripes :width :height ["black "yellow]
+	jumpForward :height / 2
+	localmake "center pos
+	right 180
+	setPenSize :width
+	setLineCap "butt
+	setPenColor "red
+	forward :height * 0.05
+	setPenColor "#0070C0
+	forward :height * 0.1
+	jumpTo :center
+	left 180
+	jumpForward :height / 4 - :starRadius * (1 - cos 180 / 5) / 2
+	setFillColor "black
+	setPenSize 0
+	regularStar :height * 0.1 5
+	setTurtleState :oldState
+end
+
+dazaPeopleFlag 100

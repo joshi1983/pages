@@ -1,0 +1,136 @@
+to reflectX :p :mirrorPoint :mirrorDirection
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	jumpTo :mirrorPoint
+	localmake "distance distance :p
+	localmake "h towards :p
+	setHeading :mirrorDirection * 2 - :h
+	jumpForward :distance
+	setItem 1 "p xCor
+	setItem 2 "p yCor
+	setItem 3 "p zCor
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to heartShape :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	jumpBackward :size * 0.5
+	localmake "size :size / 1.1649
+	localmake "angle1 55
+	localmake "numPoints 100
+	localmake "pos1 pos
+	
+	; calculate the bezier points
+	localmake "points [pos]
+	jumpForward :size
+	localmake "finalPos pos
+	jumpTo :pos1
+	right :angle1
+	jumpForward :size * 1.5
+	queue2 "points pos
+	setHeading :oldHeading - 60
+	jumpForward :size * 1.2
+	queue2 "points pos
+	queue2 "points :finalPos
+	jumpTo :pos1
+
+	polyStart
+	; draw right side of heart.
+	repeat :numPoints [
+		localmake "ratio repcount / :numPoints
+		localmake "p bezier :points :ratio
+		setHeading towards :p
+		forward distance :p
+	]
+
+	; Draw left side of heart.
+	repeat :numPoints [
+		localmake "ratio 1 - repcount / :numPoints
+		localmake "p bezier :points :ratio
+		reflectX :p :pos1 :oldHeading
+		setHeading towards :p
+		forward distance :p
+	]
+	polyEnd
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to heartFractal :size
+	localmake "size :size * 0.9
+	localmake "innerSize :size * 0.6
+	localmake "xDelta abs xCor * :zoomScale
+	; Save some time.
+	; Don't draw things that won't show in the animation.
+	if :xDelta > 600 [
+		stop
+	]
+	if and :timeRatio > 0.4 yCor < 0 [
+		stop
+	]
+	ifelse :size > :minSize [
+		localmake "oldPos pos
+		localmake "oldHeading heading
+		setFillColor "red
+		setPenSize 0
+		; polar coordinates and sizes for each
+		; The format of each is:
+		; [degrees distanceRatio sizeRatio]
+		localmake "childHearts [
+			[0 0.4 0.05]
+			[15 0.5 0.1]
+			[-15 0.5 0.1]
+			[40 0.52 0.15]
+			[-40 0.52 0.15]
+			[65 0.5 0.15]
+			[-65 0.5 0.15]
+			[90 0.45 0.15]
+			[-90 0.45 0.15]
+			[120 0.4 0.1]
+			[-120 0.4 0.1]
+			[150 0.4 0.1]
+			[-150 0.4 0.1]
+			[180 0.45 0.2]
+		]
+		heartShape :innerSize
+		repeat count :childHearts [
+			localmake "childHeart item repcount :childHearts
+			jumpTo :oldPos
+			setHeading :oldHeading + item 1 :childHeart
+			jumpForward :size * item 2 :childHeart
+			heartFractal :size * item 3 :childHeart
+		]
+		jumpTo :oldPos
+		setHeading :oldHeading
+	] [
+		; give the impression of a tiny heart 
+		; without the complexity of a heart.
+		circle :innerSize
+	]
+end
+
+make "size 200
+make "separation :size * 2
+make "timeRatio interpolateRatio easeInOut animation.clampedTimeRatio
+make "zoomScale 2 * power 22.06641 :timeRatio
+make "minSize 0.7 * 2 / :zoomScale
+heartFractal :size
+
+to animation.snapshotstyle
+	localmake "timeRatio interpolateRatio easeInOut animation.clampedTimeRatio
+	output createPList2 [
+		["position.y mix 72.00 0 interpolateRatio easeOutCirc :timeRatio]
+		["zoom.scale 2 * power 22.06641 :timeRatio]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 4
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

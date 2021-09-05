@@ -1,0 +1,89 @@
+to drawWhiteStrings :height :numAngles
+	localmake "oldState turtleState
+	localmake "outerRadius :height / 2 / cos 180 / :numAngles
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "pair []
+	right 180 / :numAngles
+	jumpForward :outerRadius
+	queue2 "pair pos
+	jumpTo :oldPos
+	setHeading :oldHeading - 180 / :numAngles
+	jumpForward :outerRadius
+	queue2 "pair pos
+
+	setHeading :oldHeading
+	jumpTo :oldPos
+	jumpForward :height * 0.04
+	localmake "startPos pos
+	repeat count :pair [
+		localmake "endPos item repcount :pair
+		jumpTo :startPos
+		repeat 12 [
+			jumpForward :height * 0.02
+			setHeading towards :endPos
+			stripes penSize distance :endPos ["white]
+			setHeading :oldHeading
+		]
+	]
+	setTurtleState :oldState
+end
+
+to drawColorStrings :height :numAngles
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "numPoints 24
+	localmake "startGap :height * 0.05
+	localmake "len :height / 2 - :startGap
+	jumpForward :startGap
+	localmake "startPos1 pos
+	jumpForward :len
+	localmake "endPos1 pos
+	jumpTo :oldPos
+	right 360 / :numAngles
+	jumpForward :startGap
+	localmake "startPos2 pos
+	jumpForward :len
+	localmake "endPos2 pos
+
+	repeat :numPoints [
+		localmake "fromPos mix :endPos1 :startPos1 repRatio
+		localmake "toPos mix :endPos2 :startPos2 1 - repRatio
+		jumpTo :fromPos
+		setHeading towards :toPos
+		forward distance :toPos
+	]
+
+	setTurtleState :oldState
+end
+
+; Inspired by:
+; https://ca.pinterest.com/pin/4602608568572133632
+to vibrantStringArt :height
+	localmake "oldState turtleState
+	localmake "numAngles 12
+	localmake "stringColorSizePairs [
+		["black 1]
+		["purple 0.95]
+		["red 0.9]
+		["yellow 0.85]
+	]
+	setPenSize :height * 0.002
+	jumpForward :height / 2
+	repeat :numAngles [
+		drawWhiteStrings :height :numAngles
+		right 360 / :numAngles
+	]
+	repeat :numAngles [
+		repeat count :stringColorSizePairs [
+			localmake "pair item repcount :stringColorSizePairs
+			setPenColor first :pair
+			drawColorStrings :height * last :pair :numAngles
+		]
+		right 360 / :numAngles
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+vibrantStringArt 100

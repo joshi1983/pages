@@ -1,0 +1,105 @@
+make "darkColor "#780
+
+to drawCrescent :height
+	localmake "oldState turtleState
+	localmake "innerArcAngle 110
+	localmake "innerRadius :height * 0.055
+	localmake "chordLength 2 * :innerRadius * sin :innerArcAngle / 2
+	localmake "outerRadius :chordLength / 2
+	jumpBackward :height * 0.245
+	jumpRight :height * 0.135
+	left 130
+	setFillColor :darkColor
+	setPenSize 0
+	polyStart
+	arcRight :innerArcAngle :innerRadius
+	left 90 + :innerArcAngle / 2
+	arcLeft 180 :outerRadius
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by:
+; https://ca.pinterest.com/pin/552746554279988484/
+; Also, shown at:
+; https://thetarotroom.com/2011/08/13/crop-circle-music/
+; The circles were reported on July 22, 1994
+; The location is West Stowell, Wiltshire
+;
+; Some noteworthy differences are:
+; The outer arcs might have been simpler shapes but
+; it was difficult to reverse distortion of the aerial 
+; photos of the crop circles enough to be sure.
+; The following code roughly lines up the outer arcs with the photos but
+; it would likely look better and cleaner if more time was invested to edit 
+; the photos to a likely ideal top-down perspective.
+to westStowellCropCircles :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "lightColor "#ef8
+	localmake "innerRadius :height * 0.35
+	localmake "thickness :height * 0.02
+	localmake "tiny 0.008
+	localmake "large 0.035
+	localmake "circlesInfo [
+		[-0.24 -0.167 :tiny] [-0.073 -0.13 :tiny] [-0.22 -0.05 :tiny]
+		[-0.13 0.059 :tiny] [-0.16 0.15 :tiny] [-0.2 0.2 :tiny]
+		[-0.05 0.18 :tiny] [0.04 0.2 :tiny] [0.07 0.305 :tiny]
+		[0.13 0.325 :tiny] [0.095 0.1 :tiny] [0.2 0.064 :tiny]
+		[0.2 -0.115 :tiny] [0.24 -0.135 :tiny] [0.06 -0.34 :tiny]
+		[-0.09 -0.27 :large] [-0.24 0.1 :large] [0.19 -0.03 :large]
+	]
+	localmake "smallRadius :height * 0.02
+	jumpForward :height / 2
+	jumpRight :height * 0.026
+	localmake "center pos
+	setPenSize 0
+	setFillColor :lightColor
+	circle :innerRadius
+	repeat 2 [
+		setHeading :oldHeading - 135 + (repcount - 1) * 360 / 2
+		polyStart
+		jumpForward :innerRadius
+		right 89
+		arcsRight [[50 0.4] [50 0.32] [140 0.44] [40 0.4] [40 0.604]
+		[34 0.41]] :height
+		right 175
+		arcsLeft [[50 0.45] [30 0.6] [85 0.35] [10 0.35]] :height
+		polyEnd
+		jumpTo :center
+	]
+	setHeading :oldHeading
+	setPenColor :darkColor
+	repeat count :circlesInfo [
+		localmake "circleInfo item repcount :circlesInfo
+		localmake "radius :height * item 3 :circleInfo
+		jumpRight :height * first :circleInfo
+		jumpForward :height * item 2 :circleInfo
+		ifelse :radius < :thickness [
+			setPenSize 0
+			setFillColor :darkColor
+			localmake "radius :radius + :thickness / 2
+		] [
+			setPenSize :thickness
+			setFillColor transparent
+		]
+		circle :radius
+		jumpTo :center
+	]
+	setHeading :oldHeading
+	drawCrescent :height
+	jumpTo :oldPos
+	jumpForward :height - :smallRadius
+	jumpLeft :height * 0.44
+	setPenSize 0
+	setFillColor :lightColor
+	circle :smallRadius
+	jumpBackward :height * 0.05
+	jumpLeft :height * 0.03
+	circle :smallRadius
+	setTurtleState :oldState
+end
+
+setScreenColor :darkColor
+westStowellCropCircles 100

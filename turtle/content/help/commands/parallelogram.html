@@ -1,0 +1,33 @@
+<code>parallelogram 200 100 45
+; Draws a parallelogram
+; The bottom line spans from x of -100 to 100
+; The diagonal line's slope is 45 degrees so toward upper right.
+; The length of the diagonal line is 100
+
+; Draws a pattern out of 10 parallelograms
+jumpForward 120
+repeat 18 [
+	parallelogram 100 50 360 * repRatio
+]</code>
+<code>; myParallelogram procedure works exactly like the parallelogram command.
+; The parallelogram command is available so you don't need to implement it yourself.
+; Reviewing this implementation could help you implement something similar using procedures, though.
+to myParallelogram :width :slantedHeight :angle
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	jumpLeft :width / 2
+	polyStart
+	jumpRight :width
+	right :angle
+	jumpForward :slantedHeight
+	setHeading :oldHeading
+	jumpLeft :width
+	polyEnd
+	setTurtleState :oldState
+end
+
+myParallelogram 200 100 45
+; Draws a parallelogram
+; The bottom line spans from x of -100 to 100
+; The diagonal line's slope is 45 degrees so toward upper right.
+; The length of the diagonal line is 100</code>

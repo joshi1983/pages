@@ -1,0 +1,29 @@
+REM copied from https://www.schoolfreeware.com/assets/files/CircleRefresh.bas
+DIM DH AS INTEGER
+DIM DW AS INTEGER
+DIM col AS INTEGER
+DIM x AS INTEGER
+
+DW = _DESKTOPWIDTH
+DH = _DESKTOPHEIGHT
+
+SCREEN _NEWIMAGE(DW, DH, 256)
+_MOUSEHIDE
+_FULLSCREEN
+
+DO
+    CLS
+    col = 0
+    FOR x = 1 TO DW / 1.5
+        _LIMIT 100
+        CIRCLE (DW / 2 - 1, DH / 2 - 1), x, col
+        _DISPLAY
+
+        col = col + 1
+        IF col = 256 THEN
+            col = 0
+        END IF
+
+    NEXT
+LOOP WHILE INKEY$ = ""
+_MOUSESHOW

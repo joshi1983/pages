@@ -1,0 +1,63 @@
+// copied from https://turtletoy.net/turtle/c2884c54e1
+// TurtleToy - Spider Web
+// 
+
+// User-defined parameters
+const numRings  = 7; // min=1 max=20 step=1   // Number of concentric rings
+const numSpokes = 12; // min=3 max=24 step=1   // Number of radial spokes
+const curve  = -1.25; // min=-5.0 max=5.0 step=0.05 // Arc bow amount (0=straight)
+const size      = 90; // min=20 max=120 step=5  // Overall radius / scale
+
+const turtle = new Turtle();
+turtle.penup();
+
+const spokeAngle = (2 * Math.PI) / numSpokes;
+
+function drawArcBetween(ax, ay, bx, by) {
+  const mx = (ax + bx) / 2;
+  const my = (ay + by) / 2;
+  const len = Math.sqrt(mx * mx + my * my);
+  const nx = mx / len;
+  const ny = my / len;
+  const chord = Math.sqrt((bx - ax) ** 2 + (by - ay) ** 2);
+  const bulge = chord * curve * 0.35;
+
+  const cx = mx + nx * bulge;
+  const cy = my + ny * bulge;
+
+  const steps = 20;
+  turtle.penup();
+  turtle.goto(ax, ay);
+  turtle.pendown();
+  for (let i = 1; i <= steps; i++) {
+    const t = i / steps;
+    const px = (1 - t) ** 2 * ax + 2 * (1 - t) * t * cx + t ** 2 * bx;
+    const py = (1 - t) ** 2 * ay + 2 * (1 - t) * t * cy + t ** 2 * by;
+    turtle.goto(px, py);
+  }
+  turtle.penup();
+}
+
+// Draw spokes
+for (let s = 0; s < numSpokes; s++) {
+  const angle = s * spokeAngle;
+  turtle.penup();
+  turtle.goto(0, 0);
+  turtle.pendown();
+  turtle.goto(Math.cos(angle) * size, Math.sin(angle) * size);
+  turtle.penup();
+}
+
+// Draw web rings
+for (let ring = 1; ring <= numRings; ring++) {
+  const R = (ring / numRings) * size;
+  for (let s = 0; s < numSpokes; s++) {
+    const a1 = s * spokeAngle;
+    const a2 = (s + 1) * spokeAngle;
+    const ax = Math.cos(a1) * R;
+    const ay = Math.sin(a1) * R;
+    const bx = Math.cos(a2) * R;
+    const by = Math.sin(a2) * R;
+    drawArcBetween(ax, ay, bx, by);
+  }
+}

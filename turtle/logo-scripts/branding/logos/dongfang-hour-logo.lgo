@@ -1,0 +1,40 @@
+; Inspired by logo at:
+; https://www.youtube.com/@DongfangHour
+to dongfangHourLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "color "black
+	localmake "height1 :height * 0.148
+	localmake "width1 :height * 0.205
+	localmake "gap1 :height * 0.275
+	localmake "maxLen (:height) / 2 / (cos 45) - :width1 / 2
+	localmake "separation1 :maxLen - :gap1 - :height1
+	localmake "dHeight :height * 0.35
+	localmake "dArcs [[0.37] [90 0.5]]
+	jumpForward :height / 2
+	right 45
+	localmake "center pos
+	repeat 2 [
+		jumpForward :gap1
+		stripes :width1 :height1 [:color]
+		jumpForward :separation1
+		stripes :width1 :height1 [:color]
+		
+		jumpTo :center
+		right 180
+	]
+
+	setHeading :oldHeading + 90
+	jumpRight :dHeight / 2
+	jumpBackward :height * 0.115
+	setPenSize 0
+	setFillColor :color
+	polyStart
+	arcLines :dArcs :dHeight
+	arcLines reverse :dArcs :dHeight
+	polyEnd
+	setTurtleState :oldState
+end
+
+setScreenColor "#fec90b
+dongfangHourLogo 100

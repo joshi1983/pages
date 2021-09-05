@@ -1,0 +1,24 @@
+to getMandelbrotValue :x :y
+	localmake "zx 0
+	localmake "zy 0
+	repeat 25 [
+		localmake "xt :zx * :zy
+		localmake "zx :zx * :zx - :zy * :zy + :x
+		localmake "zy 2 * :xt + :y
+		if :zx > 2 [
+			output repcount
+		]
+	]
+	output 25
+end
+
+setPenSize 1.4
+for [ "x -100 100 1] [
+	jumpTo [:x 0]
+	for [ "y -100 100 1] [
+		make "v 10 * getMandelbrotValue :x * 0.01 :y * 0.01
+		make "c [:v :v :v]
+		setPenColor :c
+		forward 1
+	]
+]

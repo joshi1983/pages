@@ -1,0 +1,49 @@
+to halfRoundRect :width :height :direction
+	localmake "straightLength :width / :height - 0.5
+	drawArcLineShape [0 1
+		[[90 0] [:straightLength] [180 0.5] [:straightLength]]]
+		:height * :direction
+end
+
+; Inspired by logo at:
+; https://www.figma.com
+; Some subtle differences include:
+; - The middle-right circle was more of a rounded 
+; rectangle in the original logo.  
+; This uses a circle because a circle is simpler and the 
+; difference is so subtle that the logo designer might 
+; have intended on an exact circle anyway.
+; - The upper-right orange shape was a little wider 
+; in the original logo.  This code makes it the exact same width
+; as similer shapes on the left because it too is such 
+; a subtle difference that it is hard to notice and may 
+; have been unintentional.
+to figmaLogo :height
+	localmake "oldState turtleState
+	localmake "radius :height / 6
+	; The overlap is to prevent small amounts of background color
+	; getting between the upper left and right shapes.
+	localmake "overlap :height * 0.1
+	setPenSize 0
+	jumpForward :height - :radius * 2
+	setFillColor "#FF3737
+	jumpRight :overlap
+	halfRoundRect :radius * 2 + :overlap :radius * 2 1
+	jumpLeft :overlap
+	setFillColor "#FF7237
+	halfRoundRect :radius * 2 :radius * 2 -1
+	jumpBackward :radius
+	setFillColor "#00B6FF
+	jumpRight :radius
+	circle :radius
+	jumpLeft :radius
+	jumpBackward :radius
+	setFillColor "#874FFF
+	halfRoundRect :radius * 2 :radius * 2 1
+	setFillColor "#24CB71
+	drawArcLineShape [0 0
+		[[90 0] [1] [270 1]]] :radius
+	setTurtleState :oldState
+end
+
+figmaLogo 100

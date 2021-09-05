@@ -1,0 +1,24 @@
+REM Copied from: https://www.ninerpedia.org/wiki/Basic_Joystick_Programming#Joystick_and_Keyboard_control_program
+100 CALL CLEAR 
+110 RW=12
+120 CL=16
+130 CALL HCHAR(RW,CL,42)
+140 CALL KEY(1,K,ST)
+150 CALL JOYST(1,CR,RR)
+160 CALL JOYST(2,CR2,RR2)
+170 IF (CR+2*RR<>0)+(CR2+2*RR2<>0)+(ST<>0)THEN 180 ELSE 140
+180 IF ST THEN 240
+190 CALL HCHAR(RW,CL,32)
+200 RW=RW-RR/4-RR2/4+(RW=1)*((RR=4)+(RR2=4))-(RW=24)*((RR<0)+
+  (RR2<0))
+210 CL=CL+CR/4+CR2/4+(CL=1)*((CR<0)+(CR2<2))-(CL=32)*((CR>0)+
+  (CR2>0))
+220 CALL HCHAR(RW,CL,42)
+230 GOTO 140
+240 CALL HCHAR(RW,CL,32)
+250 RW=RW-(RW<>1)*((K=5)+(K=4)+(K=6))+(RW<>24)*((K=15)+(K+1=1)+
+  (K=14))
+260 CL=CL-(CL<>1)*((K=4)+(K=2)+(K=15))+(CL<>32)*((K=6)+(K=3)+
+ (K=14))
+270 CALL HCHAR(RW,CL,42)
+280 GOTO 140

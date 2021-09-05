@@ -1,0 +1,231 @@
+// asteroids.bas
+// pBasic 0.8.30 — Milestone 30
+// Classic Asteroids ship dynamics.
+// Arrow Left/Right: rotate ship 22.5°
+// X key:           thrust (adds velocity in facing direction, decays over ~1 sec)
+// Z key:           fire bullet (travels until off screen)
+// ESC:             quit
+
+// ── Canvas bounds ─────────────────────────────────────────────────────────────
+var xMin : Float = 0.0
+var xMax : Float = 1260.0
+var yMin : Float = 0.0
+var yMax : Float = 1000.0
+
+// ── Ship state ────────────────────────────────────────────────────────────────
+var shipX   : Float = 630.0
+var shipY   : Float = 500.0
+var shipRot : Float = 0.0
+var velX    : Float = 0.0
+var velY    : Float = 0.0
+var thrust  : Float = 0.0
+
+// ── Scratch vars (declared globally — VAR inside timer callbacks not supported)
+var tx  : Float = 0.0
+var ty  : Float = 0.0
+var spd : Float = 0.0
+var bvx : Float = 0.0
+var bvy : Float = 0.0
+var bsx : Float = 0.0
+var bsy : Float = 0.0
+
+// ── Bullet pool (4 bullets, sprites ID 10-13) ─────────────────────────────────
+var b0x  : Float = 0.0
+var b0y  : Float = 0.0
+var b0vx : Float = 0.0
+var b0vy : Float = 0.0
+var b0on : Int   = 0
+
+var b1x  : Float = 0.0
+var b1y  : Float = 0.0
+var b1vx : Float = 0.0
+var b1vy : Float = 0.0
+var b1on : Int   = 0
+
+var b2x  : Float = 0.0
+var b2y  : Float = 0.0
+var b2vx : Float = 0.0
+var b2vy : Float = 0.0
+var b2on : Int   = 0
+
+var b3x  : Float = 0.0
+var b3y  : Float = 0.0
+var b3vx : Float = 0.0
+var b3vy : Float = 0.0
+var b3on : Int   = 0
+
+var bulletSlot : Int = 0
+
+// ── Physics constants ─────────────────────────────────────────────────────────
+var thrustPower : Float = 12.0
+var thrustDecay : Float = 0.92
+var bulletSpeed : Float = 22.0
+var rotStep     : Float = 22.5
+var maxSpeed    : Float = 18.0
+var degToRad    : Float = 0.01745329
+
+// ── State ─────────────────────────────────────────────────────────────────────
+var running : Int    = 1
+var k$      : String = ""
+
+// ── Declare sprites ───────────────────────────────────────────────────────────
+SPRITE(1,  630.0, 500.0, 0, 2.5, 1, 1.0, "@⧋")
+SPRITE(10, 0.0,   0.0,   0, 1.8, 0, 1.0, "@•")
+SPRITE(11, 0.0,   0.0,   0, 1.8, 0, 1.0, "@•")
+SPRITE(12, 0.0,   0.0,   0, 1.8, 0, 1.0, "@•")
+SPRITE(13, 0.0,   0.0,   0, 1.8, 0, 1.0, "@•")
+
+cls
+print "ASTEROIDS  •  ⬅️ ➡️ Rotate  ⬆️ Thrust   SPACE Fire   ESC Quit"
+
+// ── Game loop ─────────────────────────────────────────────────────────────────
+func gameLoop() {
+    k$ = INKEY$
+
+    if k$ == "ESC" then running = 0
+    if k$ == "^L"  then shipRot = shipRot - rotStep
+    if k$ == "^R"  then shipRot = shipRot + rotStep
+
+    if shipRot < 0.0    then shipRot = shipRot + 360.0
+    if shipRot >= 360.0 then shipRot = shipRot - 360.0
+
+    if k$ == "^U" then thrust = thrust + thrustPower
+
+    tx = SIN(shipRot * degToRad) * thrust
+    ty = 0.0 - COS(shipRot * degToRad) * thrust
+    velX = velX + tx * 0.1
+    velY = velY + ty * 0.1
+
+    spd = SQR(velX * velX + velY * velY)
+    if spd > maxSpeed then velX = velX * maxSpeed / spd
+    if spd > maxSpeed then velY = velY * maxSpeed / spd
+
+    thrust = thrust * thrustDecay
+    if thrust < 0.1 then thrust = 0.0
+
+    shipX = shipX + velX
+    shipY = shipY + velY
+
+    if shipX < xMin then shipX = xMax
+    if shipX > xMax then shipX = xMin
+    if shipY < yMin then shipY = yMax
+    if shipY > yMax then shipY = yMin
+
+    SPRITE(1, shipX, shipY, shipRot, , , , )
+
+    if k$ == " " then spawnBullet()
+
+    updateBullets()
+
+    if running == 0 then timeroff
+}
+
+// ── Spawn bullet ──────────────────────────────────────────────────────────────
+func spawnBullet() {
+    bvx = velX + SIN(shipRot * degToRad) * bulletSpeed
+    bvy = velY - COS(shipRot * degToRad) * bulletSpeed
+    bsx = shipX + SIN(shipRot * degToRad) * 30.0
+    bsy = shipY - COS(shipRot * degToRad) * 30.0
+
+    if bulletSlot == 0 then b0x  = bsx
+    if bulletSlot == 0 then b0y  = bsy
+    if bulletSlot == 0 then b0vx = bvx
+    if bulletSlot == 0 then b0vy = bvy
+    if bulletSlot == 0 then b0on = 1
+    if bulletSlot == 0 then SPRITE(10, bsx, bsy, 0, 1.8, 1, 1.0, )
+
+    if bulletSlot == 1 then b1x  = bsx
+    if bulletSlot == 1 then b1y  = bsy
+    if bulletSlot == 1 then b1vx = bvx
+    if bulletSlot == 1 then b1vy = bvy
+    if bulletSlot == 1 then b1on = 1
+    if bulletSlot == 1 then SPRITE(11, bsx, bsy, 0, 1.8, 1, 1.0, )
+
+    if bulletSlot == 2 then b2x  = bsx
+    if bulletSlot == 2 then b2y  = bsy
+    if bulletSlot == 2 then b2vx = bvx
+    if bulletSlot == 2 then b2vy = bvy
+    if bulletSlot == 2 then b2on = 1
+    if bulletSlot == 2 then SPRITE(12, bsx, bsy, 0, 1.8, 1, 1.0, )
+
+    if bulletSlot == 3 then b3x  = bsx
+    if bulletSlot == 3 then b3y  = bsy
+    if bulletSlot == 3 then b3vx = bvx
+    if bulletSlot == 3 then b3vy = bvy
+    if bulletSlot == 3 then b3on = 1
+    if bulletSlot == 3 then SPRITE(13, bsx, bsy, 0, 1.8, 1, 1.0, )
+
+    bulletSlot = bulletSlot + 1
+    if bulletSlot > 3 then bulletSlot = 0
+}
+
+// ── Update bullets ────────────────────────────────────────────────────────────
+func updateBullets() {
+    if b0on == 1 then b0x = b0x + b0vx
+    if b0on == 1 then b0y = b0y + b0vy
+    if b0on == 1 then SPRITE(10, b0x, b0y, , , , , )
+    if b0on == 1 then checkBulletEdge0()
+
+    if b1on == 1 then b1x = b1x + b1vx
+    if b1on == 1 then b1y = b1y + b1vy
+    if b1on == 1 then SPRITE(11, b1x, b1y, , , , , )
+    if b1on == 1 then checkBulletEdge1()
+
+    if b2on == 1 then b2x = b2x + b2vx
+    if b2on == 1 then b2y = b2y + b2vy
+    if b2on == 1 then SPRITE(12, b2x, b2y, , , , , )
+    if b2on == 1 then checkBulletEdge2()
+
+    if b3on == 1 then b3x = b3x + b3vx
+    if b3on == 1 then b3y = b3y + b3vy
+    if b3on == 1 then SPRITE(13, b3x, b3y, , , , , )
+    if b3on == 1 then checkBulletEdge3()
+}
+
+func checkBulletEdge0() {
+    if b0x < xMin then b0on = 0
+    if b0x > xMax then b0on = 0
+    if b0y < yMin then b0on = 0
+    if b0y > yMax then b0on = 0
+    if b0on == 0 then SPRITE(10, , , , , 0, , )
+}
+
+func checkBulletEdge1() {
+    if b1x < xMin then b1on = 0
+    if b1x > xMax then b1on = 0
+    if b1y < yMin then b1on = 0
+    if b1y > yMax then b1on = 0
+    if b1on == 0 then SPRITE(11, , , , , 0, , )
+}
+
+func checkBulletEdge2() {
+    if b2x < xMin then b2on = 0
+    if b2x > xMax then b2on = 0
+    if b2y < yMin then b2on = 0
+    if b2y > yMax then b2on = 0
+    if b2on == 0 then SPRITE(12, , , , , 0, , )
+}
+
+func checkBulletEdge3() {
+    if b3x < xMin then b3on = 0
+    if b3x > xMax then b3on = 0
+    if b3y < yMin then b3on = 0
+    if b3y > yMax then b3on = 0
+    if b3on == 0 then SPRITE(13, , , , , 0, , )
+}
+
+// ── Start timer ───────────────────────────────────────────────────────────────
+timer 0.0333 gameLoop
+timeron
+
+while (running == 1) {
+}
+
+// ── Clean exit ────────────────────────────────────────────────────────────────
+SPRITE(1,  , , , , 0, , )
+SPRITE(10, , , , , 0, , )
+SPRITE(11, , , , , 0, , )
+SPRITE(12, , , , , 0, , )
+SPRITE(13, , , , , 0, , )
+print ""
+print "Game over!"

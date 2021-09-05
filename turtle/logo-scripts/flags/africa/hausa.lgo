@@ -1,0 +1,54 @@
+; Inspired by
+; https://commons.wikimedia.org/wiki/File:Flag_of_the_Hausa_people.svg
+; Referenced from:
+; https://en.wikipedia.org/wiki/Hausa_people
+to hausaEmblem :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "arcRadius1 :height * 0.5
+	localmake "arcRadius2 :height * 0.095
+	localmake "size1 :height * 0.376
+	localmake "angle 90 + arcSin :arcRadius2 / :arcRadius1
+	localmake "size2a (:height / sqrt 2) ;- :arcRadius1 * 2
+	localmake "size2 :size2a - sqrt :arcRadius1 * :arcRadius1 - :arcRadius2 * :arcRadius2
+	setLineJoinStyle "miter
+	setPenSize :height * 0.03
+	setPenColor "black
+	setFillColor "#008c00
+	polyStart
+	repeat 4 [
+		arcLeft 90 :arcRadius1
+		right 180
+	]
+	polyEnd
+	jumpForward :height / 2
+	localmake "center pos
+	repeat 2 [
+		setHeading :oldHeading + 45 + repcount * 90
+		jumpRight :arcRadius2
+		jumpBackward :size1
+		repeat 2 [
+			forward :size1 * 2
+			arcLeft 180 :arcRadius2
+		]
+		closePath
+		jumpTo :center
+	]
+	setFillColor "white
+	repeat 4 [
+		setHeading :oldHeading + (repcount - 0.5) * 360 / 4
+		jumpRight :arcRadius2
+		jumpForward :size2
+		left :angle
+		polyStart
+		arcRight 2 * (:angle - 90) :arcRadius1
+		left :angle
+		jumpForward :size2 - :arcRadius2
+		jumpLeft :arcRadius2 * 2
+		polyEnd
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+hausaEmblem 100

@@ -1,0 +1,51 @@
+; Inspired by:
+; https://www.pinterest.ca/pin/11259067809690266/
+
+to circlesOfEllipses :maxRadius :timeRatio
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "numCircles 15
+	localmake "ellipseSize :maxRadius * 0.7 / :numCircles
+	localmake "rotation mix -90 90 :timeRatio
+	setPenSize 0
+	setFillColor "white
+	repeat :numCircles [
+		localmake "radius repcount * :maxRadius / :numCircles
+		localmake "offsetRadius :radius * 1 * :timeRatio
+		localmake "numPieces :radius * 10 / :ellipseSize
+		localmake "angleStep 360 / :numPieces
+		repeat :numPieces [
+			localmake "heading1 heading
+			jumpForward :radius
+			right :rotation
+			jumpForward :offsetRadius * (1 + modulo repcount 5)
+			setHeading :heading1		
+			ellipse :ellipseSize :ellipseSize * 0.3
+			jumpTo :oldPos
+			right :angleStep
+		]
+		setHeading :oldHeading
+	]
+end
+
+setScreenColor "black
+circlesOfEllipses 100 interpolateRatio easeInOutQuad sin 180 * animation.clampedTimeRatio
+
+to animation.snapshotstyle
+	localmake "ratio animation.timeRatio
+	localmake "ratio 1 - power (:ratio - 0.5) 2
+	localmake "minScale 0.5
+	localmake "maxScale 6
+	output createPList2 [
+		["zoom.scale mix :minScale :maxScale :ratio]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 5
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

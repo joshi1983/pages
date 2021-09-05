@@ -1,0 +1,25 @@
+; Inspired by logo at:
+; https://en.wikipedia.org/wiki/Prisma_(chain_store)#/media/File:PRISMA.png
+to prismaLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "colors ["#e10d7b "#f9d132 "#ec8123]
+	localmake "cornerRadius :height * 0.045
+	localmake "radius :height * 0.363
+	localmake "offset :height * 0.333
+	jumpForward :height * 0.348
+	localmake "center pos
+	setPenSize 0
+	repeat count :colors [
+		setHeading :oldHeading + 360 * (repcount - 1) / count :colors
+		setFillColor item repcount :colors
+		jumpForward :offset
+		setHeading :oldHeading
+		roundRegularPolygon :radius 3 :cornerRadius
+		jumpTo :center
+	]
+
+	setTurtleState :oldState
+end
+
+prismaLogo 100

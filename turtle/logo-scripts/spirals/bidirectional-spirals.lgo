@@ -1,0 +1,41 @@
+; Inspired by a drawing from:
+; https://jaoart.com/how-to-draw-opposing-fibonacci-spirals/
+;
+; More specifically at:
+; https://jaoart.com/wp-content/uploads/20Fibonacci-5_8-spiralw.jpg
+to bidirectionalSpirals :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "line [
+		[-28 0] [60 0.08] [30 0.09] 
+		[30 0.092] [30 0.14] [30 0.15]
+		[30 0.19] [30 0.21] [30 0.23] [25 0.25]
+		[15 0.35] [25 0.55]
+	]
+	localmake "numAngles 5
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize :height * 0.004
+	setPenBlendMode "darken
+	localmake "scale :height * 1.34
+	localmake "angle 0
+	setPenColor "navy
+	setLineCap "round
+	repeat 2 [
+		repeat :numAngles [
+			setHeading :oldHeading + repcount * 360 / :numAngles
+			jumpRight :height * 0.026
+			jumpBackward :height * 0.023
+			right :angle
+			arcLines :line :scale
+			jumpTo :center
+		]
+		localmake "scale -:scale
+		localmake "angle -100
+		setPenColor "red
+		localmake "numAngles 2 * :numAngles
+	]
+	setTurtleState :oldState
+end
+
+bidirectionalSpirals 100
