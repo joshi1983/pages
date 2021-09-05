@@ -1,0 +1,127 @@
+to connectPoints :points :colorChangeIndex
+	localmake "oldState turtleState
+	localmake "oldPenSize penSize
+	localmake "changed? false
+	jumpTo first :points
+	if :colorChangeIndex > 1 [
+		polyStart
+	]
+	for ["index 2 count :points] [
+		if and (not :changed?) :colorChangeIndex <= :index [
+			if :colorChangeIndex > 2 [
+				setPenSize 0
+				polyEnd
+			]
+			setPenColor "black
+			setPenSize :oldPenSize / 2
+			localmake "changed? true
+		]
+		localmake "p item :index :points
+		setHeading towards :p
+		ifelse :index = 2 [
+			jumpForward distance :p
+		] [
+			forward distance :p
+		]
+	]
+	if (count :points) > 2 [
+		localmake "p item 2 :points
+		setHeading towards :p
+		forward distance :p
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by
+; http://www.maecla.it/tartapelago/museo/curve/rose/bici15.gif
+; Referenced from:
+; http://www.maecla.it/tartapelago.htm
+to cycloidRose :size :timeRatio
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "mainHeading :oldHeading + 180
+	localmake "radius1 :size * 0.3
+
+	; The larger radius1 is in relation to tinyRadius,
+	; the more loops you'll see.
+	localmake "tinyRadius :radius1 / 5
+	localmake "drawRadius :size * 0.3
+
+	; The higher numPoints, the smoother the path looks
+	; but it also gets slower to draw
+	localmake "numPoints 500
+	localmake "colorChangeIndex int :numPoints * :timeRatio
+	localmake "dotSize1 :size * 0.005
+	localmake "dotSize2 :dotSize1 * 2
+	jumpForward :size / 2
+	localmake "center pos
+	setPenSize :size * 0.002
+	circle :radius1
+	setFillColor "black
+	localmake "points []
+	setPenSize :size * 0.002
+	localmake "angle1 360 * :timeRatio
+	setHeading :mainHeading + :angle1
+	jumpForward :radius1 - :tinyRadius
+	queue2 "points pos
+	jumpTo :center
+	repeat :numPoints [
+		localmake "angle1 360 * repcount / :numPoints
+		localmake "angle2 180 - :angle1 * :radius1 / :tinyRadius
+		setHeading :mainHeading + :angle1
+		jumpForward :radius1 - :tinyRadius
+		setHeading :mainHeading + :angle2
+		jumpForward :drawRadius
+		queue2 "points pos
+		jumpTo :center
+	]
+	setPenSize :size * 0.008
+	setFillColor "#4f00
+	connectPoints :points :colorChangeIndex
+	localmake "angle1 360 * :timeRatio
+	localmake "angle2 180 - :angle1 * :radius1 / :tinyRadius
+	setHeading :mainHeading + :angle1
+	jumpForward :radius1 - :tinyRadius
+	setPenColor "navy
+	setFillColor "#3000
+	setPenSize :size * 0.005
+	circle :tinyRadius
+	setHeading :mainHeading + :angle2
+	setPenColor "black
+	localmake "center2 pos
+	repeat 3 [
+		right 90
+		forward :tinyRadius
+		jumpTo :center2
+	]
+	right 90
+	setPenSize :size * 0.005
+	setPenColor "blue
+	forward :drawRadius
+	setPenSize 0
+	setFillColor "red
+	circle :dotSize2
+
+	setTurtleState :oldState
+end
+
+make "timeRatio animation.time / animation.duration
+make "timeRatio clamp :timeRatio 0 1
+make "timeRatio interpolateRatio easeInOut :timeRatio
+cycloidRose 100 :timeRatio
+
+to animation.snapshotstyle
+	localmake "result createPList
+	setProperty "result "zoom.scale 5
+	setProperty "result "position.y 50
+	output :result
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 3
+	; Edit this if you want to change the length of your animation.
+	localmake "result createPList
+	setProperty "result "duration :minutes * 60 + :seconds
+	output :result
+end

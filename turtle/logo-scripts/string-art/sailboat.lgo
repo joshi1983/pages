@@ -1,0 +1,165 @@
+; Inspired by:
+; https://www.youtube.com/watch?v=yff93j-dZ9Y
+;
+; Check the video tutorial and use 
+; WebLogo's String Art Template feature to
+; recreate this using real string.
+; Drawing -> Download
+; Select String Art Template.
+
+to drawBackground :size
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#22b
+	setProperty "colorStops 0.98 "#a69
+	setProperty "colorStops 1 "#946694
+	localmake "gradient createLinearGradient [0 :size] [0 0] :colorStops "reflect
+	setFillGradient :gradient
+	setPenColor "black
+	setPenSize :size * 0.02
+	circle :size
+end
+
+to gridPattern :size1 :size2 :angle :numLines
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "step1 :size1 / :numLines
+	localmake "step2 :size2 / :numLines
+	localmake "points []
+	; store points along 1 direction.
+	repeat :numLines [
+		queue "points pos
+		jumpForward :step1
+	]
+	right :angle
+	penDown
+	forward :size2
+	; draw line through one side of end-points.
+	jumpBackward :size2
+	localmake "rightHeading heading
+	repeat :numLines [
+		localmake "fromPos1 pos
+		localmake "toPos item repcount :points
+
+		; draw line between fromPos1 and 
+		; corresponding point from :points.
+		setHeading towards :toPos
+		penDown
+		forward distance :toPos
+		penUp
+		jumpTo :fromPos1
+		setHeading :rightHeading
+		jumpForward :step2
+	]
+	; restore original position and heading.
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to drawRigidBoat :size
+	localmake "boatLength :size
+	localmake "boatHeight :boatLength * 0.12
+	localmake "boatAngle1 30
+	localmake "boatHeight1 :boatHeight / cos :boatAngle1
+	localmake "boatLengthAtWater :boatLength - 2 * :boatHeight1 * sin :boatAngle1
+	localmake "numCrossLines 5
+	localmake "stepSize :boatHeight1 / :numCrossLines
+
+	penDown
+	forward :boatLength ; horizontal on top
+	left 90 + :boatAngle1
+	localmake "points []
+	repeat :numCrossLines [
+		forward :stepSize
+		queue "points pos
+	]
+	left 90 - :boatAngle1
+	forward :boatLengthAtWater ; water line
+	left 90 - :boatAngle1
+	forward :boatHeight1 ; diagonal at right
+	right 180
+	localmake "diagonalHeading heading
+
+	; Draw lines the full length of the boat
+	; to fill in the rigid area of the boat.
+	repeat :numCrossLines [
+		jumpForward :stepSize
+		localmake "returnPoint pos
+		jumpBackward :stepSize
+		localmake "toPoint item repcount :points
+		setHeading towards :toPoint 
+		penDown
+		forward distance :toPoint
+		setHeading towards :returnPoint
+		forward distance :returnPoint
+		setHeading :diagonalHeading
+	]
+end
+
+to drawWaterReflection :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "numCrossLines 7
+	localmake "startSize :size * 0.6
+	localmake "step1 :size * 0.6 / :numCrossLines
+	localmake "step2 :size * 0.4 / :numCrossLines
+	localmake "angle 10
+	right 90
+	jumpForward :startSize * 0.6
+	right 90 - :angle
+	localmake "points []
+	jumpBackward :step1 * 0.5
+	repeat :numCrossLines [
+		jumpForward :step1
+		queue "points pos
+	]
+	jumpTo :oldPos
+	setHeading :oldHeading - 90
+	jumpForward :startSize
+	left 90 - :angle
+	localmake "diagonalHeading heading
+	repeat :numCrossLines [
+		jumpForward :step2
+		localmake "returnPoint pos
+		jumpBackward :step2
+		localmake "toPoint item repcount :points
+		setHeading towards :toPoint
+		forward distance :toPoint
+		setHeading towards :returnPoint
+		forward distance :returnPoint
+		setHeading :diagonalHeading
+	]
+end
+
+to sailboat :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "sailSize1 :size * 0.5
+	localmake "sailSize2 :size * 0.8
+	localmake "sailSize3 :size * 0.93
+	localmake "sailSize4 :size * 0.55
+
+	drawBackground :size
+	setPenSize :size * 0.005
+	setPenColor "white
+	right 90
+	jumpBackward :sailSize1
+	gridPattern :sailSize1 :sailSize2 -90 22
+	jumpForward :sailSize1
+	jumpLeft :sailSize2
+	right 70
+	gridPattern :sailSize3 :sailSize4 110 25
+	jumpForward :sailSize3 * 1.03 
+	; move to just below sail on the right corner.
+	right 110
+	drawRigidBoat :size * 0.84
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpBackward :size * 0.23
+	drawWaterReflection :size * 0.8
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+setScreenColor "#22b
+sailboat 200
