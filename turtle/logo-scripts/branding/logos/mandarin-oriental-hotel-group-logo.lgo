@@ -1,0 +1,72 @@
+to fanPiece :height
+	localmake "oldState turtleState
+	localmake "innerGap :height * 0.1
+	localmake "height1 :height - :innerGap
+	localmake "size2 :height * 0.18
+	localmake "size1 :size2 * :innerGap / :height
+	jumpForward :innerGap
+	jumpRight :size1
+	polyStart
+	jumpLeft :size1
+	jumpForward :height1
+	right 102
+	jumpForward :size2
+	polyEnd
+	setTurtleState :oldState	
+end
+
+; Inspired by logo at:
+; https://www.mandarinoriental.com/en/
+; The final state of the animation looks very similar to the logo.
+; Animation illustrates opening the fan.
+; I didn't see a similar animation on the site but it seemed 
+; like a good animated variant of their logo.
+to mandarinOrientalHotelGroupLogo :height :openRatio
+	localmake "oldState turtleState
+	localmake "maxSpreadAngle 135
+	localmake "spreadAngle :maxSpreadAngle * :openRatio
+	localmake "numPieces 11
+	localmake "angleGap1 10
+	localmake "fanPieceSize :height * 0.96
+	localmake "arcRadius :height * 0.3
+	left :maxSpreadAngle / 2
+	localmake "startHeading heading
+	setFillColor "white
+	setPenSize :height * 0.01
+	repeat :numPieces [
+		fanPiece :fanPieceSize
+		right :spreadAngle / :numPieces
+	]
+	setHeading :startHeading
+	jumpForward :arcRadius
+	right 90
+	setPenColor "black
+	setPenSize :height * 0.03
+	arcRight :spreadAngle * 10 / 11 + :angleGap1 :arcRadius
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+; Multiply by 1.1 is to stop at the end of the animation.
+; This reduces motion blur on the last frame of an exported video.  
+make "openRatio clamp animation.time * 1.1 / animation.duration 0 1
+; easeInOut will make the movement feel softer and more natural.
+make "openRatio interpolateRatio easeInOut :openRatio
+mandarinOrientalHotelGroupLogo 100 :openRatio
+
+to animation.snapshotstyle
+	localmake "result createPList
+	setProperty "result "zoom.scale 5
+	setProperty "result "position.y 50
+	output :result
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 1
+	; Edit this if you want to change the length of your animation.
+	localmake "result createPList
+	setProperty "result "duration :minutes * 60 + :seconds
+	setProperty "result "thumbnailTime :seconds
+	output :result
+end
