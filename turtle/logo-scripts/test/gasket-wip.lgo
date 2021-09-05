@@ -1,0 +1,85 @@
+to distance2 :circleInfo
+	localmake "r distance [item 1 :circleInfo item 2 :circleInfo zCor]
+	localmake "r :r - item 3 :circleInfo
+	output :r
+end
+
+; Math from
+; https://mathworld.wolfram.com/SoddyCircles.html
+to soddyRadius :circles
+	localmake "r1 item 3 item 1 :circles
+	localmake "r2 item 3 item 2 :circles
+	localmake "r3 item 3 item 3 :circles
+	localmake "top :r1 * :r2 * :r3
+	localmake "sqrtVal 2 * sqrt :top * (:r1 + :r2 + :r3)
+	localmake "val1 :r1 * :r2 + :r1 * :r3 + :r2 * :r3
+	localmake "result1 :top / (:val1 + :sqrtVal)
+	output :result1
+end
+
+to findIntersectionPoint :circleInfo1 :circleInfo2
+	localmake "oldState turtleState
+	jumpTo [item 1 :circleInfo1 item 2 :circleInfo1]
+	setHeading towards [item 1 :circleInfo2 item 2 :circleInfo2]
+	jumpForward item 3 :circleInfo1
+	localmake "pos1 pos
+	setTurtleState :oldState
+	output :pos1
+end
+
+to findCenter :circles
+	localmake "circleInfo item 1 :circles
+	localmake "circleInfo2 item 2 :circles
+	localmake "circleInfo3 item 3 :circles
+	localmake "pos1 findIntersectionPoint :circleInfo :circleInfo2
+	jumpTo [item 1 :circleInfo3 item 2 :circleInfo3]
+	setHeading towards :pos1
+	localmake "r soddyRadius :circles
+	jumpForward :r + item 3 :circleInfo3
+	localmake "result pos
+	output :result
+end
+
+; Inspired by
+; https://www.pinterest.ca/pin/226094843766530968/
+to triGasket :circles
+	localmake "minRadius soddyRadius :circles
+	localmake "p findCenter :circles
+	localmake "x item 1 :p
+	localmake "y item 2 :p
+	jumpTo [:x :y]
+	repeat 3 [
+		localmake "circleInfo item repcount :circles
+		jumpTo [item 1 :circleInfo item 2 :circleInfo]
+		circle item 3 :circleInfo
+	]
+	if :minRadius < 1 [
+		stop
+	]
+	jumpTo :p
+	localmake "newCircle [:x :y :minRadius]
+	circle :minRadius
+	repeat 3 [
+		localmake "outerIndex repcount
+		localmake "circles2 [:newCircle]
+		repeat 3 [
+			localmake "circleInfo item repcount :circles
+			if repcount <> :outerIndex [
+				queue2 "circles2 :circleInfo
+			]
+		]
+		triGasket :circles2
+	]
+end
+
+make "size 200
+make "size1 :size * sin 60
+make "circles []
+repeat 3 [
+	jumpTo [0 0]
+	right 120
+	jumpForward :size
+	queue2 "circles [xCor yCor :size1]
+]
+setPenSize 0.1
+triGasket :circles
