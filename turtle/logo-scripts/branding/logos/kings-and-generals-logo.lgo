@@ -1,0 +1,104 @@
+to drawKingsAndGeneralsSides :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "separation1 :height * 0.62
+	localmake "vSeparation :height * 0.32
+	localmake "offset1 :height * 0.023
+
+	; The radius is a little over :height * 0.5
+	; to overlap the edge instead of just reaching it.
+	; Overlapping the edge prevents
+	; antialiased pixels from showing some red.
+	localmake "radius :height * 0.503
+	jumpForward :height / 2
+	localmake "center pos
+
+	jumpTo :oldPos
+	jumpForward :height * 0.371
+	jumpLeft :separation1 / 2
+	setFillColor "white
+	repeat 2 [
+		localmake "pos1 pos
+		localmake "sign sign repcount - 1.5
+		repeat 2 [
+			localmake "startPos pos
+			right 90 * :sign
+			localmake "len distanceToCircle :center :radius
+			jumpForward :len
+			localmake "pos2 pos
+			jumpTo :startPos
+			right :sign * 45
+			localmake "len2 distanceToCircle :center :radius
+			polyStart
+			jumpForward :len2
+			localmake "arcAngle 2 * arcSin (distance :pos2) / 2 / :radius
+			setHeading (towards :pos2) + :sign * :arcAngle / 2
+			arcLeft :sign * :arcAngle :radius
+			polyEnd
+
+			jumpTo :startPos
+			setHeading :oldHeading
+			jumpForward :vSeparation
+			jumpRight :offset1 * :sign
+		]
+		jumpTo :pos1
+		jumpRight :separation1
+	]
+	setTurtleState :oldState
+end
+
+to drawCrownedHead :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "shapes [
+		; crown
+		[0.697 [[90 0] [0.3] [-90 0] [-70 0.02] [72 0]
+		[0.28] [-130 0] [0.226] [89 0]]]
+
+		[0.28 [[45 0] [0.07] [-48 0] [0.173] [65 0] [0.215]
+			[120 0] [0.087] [54 0] [0.185] [-56 0] [0.42] 
+			[-143 0] [0.36] [-39 0] [0.17] [45 0] [0.045] 
+			[-50 0] [0.18] [58 0] [-50 0.02] [-91 0]]]
+	]
+	jumpForward :height
+	localmake "top pos
+	repeat count :shapes [
+		localmake "shapeInfo item repcount :shapes
+		localmake "arcsInfo last :shapeInfo
+		jumpTo :oldPos
+		jumpForward :height * first :shapeInfo
+		polyStart
+		arcLines :arcsInfo :height
+		localmake "len distanceToLine :oldPos :top 
+		jumpForward :len
+		queue2 "arcsInfo [:len / :height]
+		queue2 "arcsInfo [(90 - (:oldHeading - heading)) * 2 0]
+		arcLines reverse :arcsInfo :height
+		polyEnd
+		
+		setHeading :oldHeading
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://www.youtube.com/@KingsandGenerals
+to kingsAndGeneralsLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "radius :height / 2
+	jumpForward :height / 2
+	setPenSize 0
+	setFillColor "#c52225
+	circle :radius
+	setFillColor "white
+	jumpTo :oldPos
+	drawKingsAndGeneralsSides :height
+	jumpForward :height * 0.095
+	drawCrownedHead :height * 0.765
+	setTurtleState :oldState
+end
+
+kingsAndGeneralsLogo 100
