@@ -1,0 +1,126 @@
+EXTERNAL
+
+SUB Num (line$(), arg$)
+
+    ! Num
+    !
+    ! a True BASIC(tm), Inc. product
+    !
+    ! ABSTRACT
+    !    Adds line numbers to a file, whether or not
+    !    the file already has line numbers.
+    ! 
+    !    arg$ = [startline [,increment]]
+    !
+    ! EXAMPLES:
+    !    10000                       starts numbers at 10000
+    !    1000,5                      starts numbers at 1000, steps by 5
+    !
+    ! Copyright (c) 1985, 1995, and 1997 by True BASIC, Incorporated
+
+    LET error = 0
+    CALL Parameters
+
+    IF error = 1 then EXIT SUB
+
+    CALL Add_Number
+
+    SUB Parameters
+
+        LET n = ubound(line$)
+        CALL Next_Word (arg$, p1, p2, first_param$)
+        IF first_param$ = "" then
+           CALL Empty_Line
+        ELSE
+           CALL Command_Line
+        END IF
+
+    END SUB
+
+    SUB Empty_Line
+
+        IF n <= 90 then LET start = 100 else LET start = 1000
+        LET increment = 10
+
+    END SUB
+
+    SUB Command_Line
+
+        WHEN exception in
+             LET start = val(first_param$)
+        USE
+             PRINT "Sorry, "; extext$
+             STOP
+        END WHEN
+        CALL Next_Word (arg$, p1, p2, second_param$)
+        IF second_param$ = "" then
+           LET increment = 10
+
+        ELSE
+           WHEN exception in
+                LET increment = val(second_param$)
+           USE
+                PRINT "Sorry, "; extext$
+                STOP
+           END WHEN
+
+        END IF
+        CALL Check
+
+    END SUB
+
+    SUB Check
+
+        IF sgn(start) <> 1 or sgn(increment) <> 1 then
+           PRINT "Must use positive numbers as arguments."
+           LET error = 1
+           EXIT SUB
+
+        END IF
+
+        IF mod(start,1) <> 0 or mod(increment,1) <> 0 then
+           PRINT "Must use integers as arguments."
+           LET error = 1
+           EXIT SUB
+
+        END IF
+
+        IF start + (increment*n) >= 1000000 then
+           PRINT "Must use smaller start and increment;"
+           PRINT "Maximum line number is 999999."
+           LET error = 1
+           EXIT SUB
+
+        END IF
+
+    END SUB
+
+    SUB Add_Number                ! Number the file
+
+        LET line_number = start
+        FOR i = 1 to n
+            IF line$(i)[1:1]<>"&" then
+               LET line$(i)[0:0] = str$(line_number) & " "
+               LET line_number = line_number + increment
+
+            END IF
+
+        NEXT i
+
+    END SUB
+
+END SUB
+
+! External subroutines
+
+SUB Next_Word (line$, p1, p2, word$)
+
+    ! word$ = next word AFTER character p2
+    ! p1 points to begin, p2 to end of word$
+
+    LET tab$ = chr$(9)
+    LET p1 = ncpos(line$&"x"," ,"&tab$,p2+1)
+    LET p2 = cpos(line$ & " ", " ,", p1) - 1
+    LET word$ = line$[p1:p2]
+
+END SUB

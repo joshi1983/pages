@@ -1,0 +1,28 @@
+; Inspired by:
+; https://www.facebook.com/photo/?fbid=10153261577620627
+; It is a drawing I(Josh Greig) made from JavaScript on canvas in 2013.
+to gradientRainbowFlower :height
+	localmake "oldState turtleState
+	localmake "colors ["#0080 "#0b0 "yellow "#fc0 "#f80 "#f40 "red]
+	localmake "numPedals 8
+	localmake "numIterations 100
+	setPenSize 0
+	jumpForward :height / 2
+	localmake "center pos
+	repeat :numIterations [
+		localmake "radius1 :height * mix 0.04 0.25 repRatio
+		setFillColor mixItems2 :colors repRatio
+		repeat :numPedals [
+			jumpForward :radius1
+			ellipse :radius1 * 0.4 :radius1
+			jumpTo :center
+			right 360 / :numPedals
+		]
+		left 10 / :numIterations
+	]
+
+	setTurtleState :oldState
+end
+
+setScreenColor "#cd32aa
+gradientRainbowFlower 100

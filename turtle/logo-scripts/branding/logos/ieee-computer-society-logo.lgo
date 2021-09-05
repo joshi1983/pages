@@ -1,0 +1,42 @@
+; Inspired by logo at:
+; https://www.youtube.com/@IEEEComputerSociety
+to ieeeComputerSocietyLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "bottomArcs1 [
+		[90 0] [0.17] [-174 0.024] [0.065]
+		[80 0.03] [0.08] [-86 0] [0.075493174410191]
+	]
+	localmake "midArcs1 [
+		[30 0.41] [30 0.17] [23 0.2]
+	]
+	localmake "midArcs2 combine :midArcs1 reverse :midArcs1
+	localmake "midLowerArcs [[14 0.88]]
+	localmake "midOuterArcs (combine :midArcs2 :midLowerArcs :midArcs2)
+	localmake "midInnerArcs1 [[-82.5 0.14] [0.03]]
+	localmake "midInnerArcs2 combine :midInnerArcs1 reverse :midInnerArcs1
+	localmake "whiteShapes [
+		[0 0.135
+			combine :bottomArcs1 reverse :bottomArcs1
+		]
+		[-0.105 0.723
+			(combine [[97 0]] :midOuterArcs
+			[[7 0.88] [90 0] [0.06] [90 0] [-7.25 0.8]]
+			:midInnerArcs2 [[-14.5 0.8]] :midInnerArcs2)
+		]
+		[0.085 0.875
+			[[110 0.025] [-15.1 0.85] [170 0.027] [0.058]
+			[-84.7 0.03] [0.415] [80 0] [20 0.47]]
+		]
+	]
+	setFillColor "#f9a31a
+	setPenSize 0
+	jumpForward :height / 2
+	ellipse :height * 0.55 :height / 2
+	jumpTo :oldPos
+	setFillColor "white
+	drawArcLineShapes :whiteShapes :height
+	setTurtleState :oldState
+end
+
+ieeeComputerSocietyLogo 100

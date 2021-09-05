@@ -1,0 +1,118 @@
+to drawWrenches :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "thickness :height * 0.126
+	localmake "arcRadius :height * 0.12
+	localmake "angle 41.3
+	localmake "arcAngle 360 - 2 * arcSin :thickness / 2 / :arcRadius
+	setFillColor "white
+	setPenSize 0
+	right :angle
+	repeat 2 [
+		localmake "heading1 :oldHeading + :angle * sign repcount - 1.5
+		setHeading :heading1
+		jumpBackward :thickness / 2
+		stripes :height * 0.9 :thickness [fillColor]
+		repeat 2 [
+			localmake "heading2 :heading1 + 180 * repcount
+			setHeading :heading2
+			jumpTo :oldPos
+			jumpRight :height * 0.465
+			localmake "center2 pos
+			jumpForward :thickness / 2
+			right 90
+			polyStart
+			localmake "len1 distanceToCircle :center2 :arcRadius
+			jumpForward :len1
+			setHeading (towards :center2) + 90
+			arcLeft :arcAngle :arcRadius
+			setHeading :heading2 - 90
+			jumpForward :len1
+			polyEnd
+		]
+		jumpTo :oldPos
+	]
+	setTurtleState :oldState
+end
+
+to drawSkull :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "toothRadius :height * 0.0416
+	localmake "toothSeparation :toothRadius * 2.164
+	localmake "backgroundArcs1 [
+		[90 0] [0.11] [-34 0] [-20 0.3] [-20 0.23] [-20 0.3]
+		[-20 0.28] [-20 0.23] [-23 0.26908235] [-23 0.19]
+	]
+	localmake "eyeSeparation :height * 0.073
+	localmake "eyeSocketArcs [
+		[30 0.03] [20 0.07] [30 0.052] [24 0.08] [30 0.045]
+		[25 0.097] [30 0.055] [25 0.09] [32 0.045] [115 0.007]
+		[-30 0.035] [-37 0.022] [0.04] [20 0.07] [30 0.032] [16 0.02]
+	]
+	localmake "noseArcs [
+		[90 0] [30 0.004] [25 0.01] [10 0.038] [7 0.1] [-10 0.04]
+		[-40 0.0028] [-40 0.001] [-42 0.0018] [-20 0.02] [-15 0.04]
+		[-10 0.18] [-10 0.106] [-10 0.05] [-10 0.015] [-20 0.01] [-25 0.00234757]
+	]
+
+	jumpBackward :height * 0.239
+	localmake "basePos pos
+	setFillColor "white
+	setPenColor "black
+	setPenSize :height * 0.02
+	
+	polyStart
+	arcLines :backgroundArcs1 :height
+	arcLines reverse :backgroundArcs1 :height
+	polyEnd
+
+	setHeading :oldHeading
+	jumpTo :basePos
+	jumpForward :height * 0.242
+	jumpLeft :eyeSeparation / 2
+	setFillColor "black
+	setPenSize 0
+	repeat 2 [
+		localmake "pos1 pos
+		polyStart
+		arcLines :eyeSocketArcs :height	* sign 1.5 - repcount
+		polyEnd
+		setHeading :oldHeading
+		jumpTo :pos1
+		jumpRight :eyeSeparation
+	]
+
+	setHeading :oldHeading
+	jumpTo :basePos
+	jumpForward :height * 0.1128
+	polyStart
+	arcLines :noseArcs :height
+	arcLines reverse :noseArcs :height
+	polyEnd
+
+	setFillColor "white
+	setHeading :oldHeading
+	setPenSize 0
+	jumpTo :basePos
+	jumpLeft :toothSeparation
+	repeat 3 [
+		circle :toothRadius
+		jumpRight :toothSeparation
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Hackaday#/media/File:Hackaday_Jolly_Wrencher_BBG.svg
+to hackadayLogo :height
+	localmake "oldState turtleState
+	stripes :height :height ["black]
+	jumpForward :height / 2
+	drawWrenches :height
+	drawSkull :height
+	setTurtleState :oldState
+end
+
+hackadayLogo 100

@@ -1,0 +1,46 @@
+make "rogersRed "#ee2722
+
+; Inspired by:
+; https://en.wikipedia.org/wiki/Rogers_Communications#/media/File:Rogers_Communications_(2015).svg
+to rogersLogo :height :color
+	localmake "oldState turtleState
+	localmake "shape [0.307 0.029
+		[[23 0] [40 0.63] [52 0.42] [-159.7 0] [-55 0.505]
+			[-25 0.4] [-60 0.265] [-20 0.352] [-10 0.22]]
+	]
+	jumpForward :height / 2
+	setFillColor :color
+	setPenSize 0
+	repeat 4 [
+		drawArcLineShape :shape :height
+		right 360 / 4
+	]
+	setTurtleState :oldState
+end
+
+to rogersRedOnWhiteLogo :height
+	localmake "oldState turtleState
+	localmake "innerHeight :height * 0.8
+	stripes :height :height ["white]
+	jumpForward (:height - :innerHeight) / 2
+	rogersLogo :innerHeight :rogersRed
+	setTurtleState :oldState
+end
+
+to rogersWhiteOnRedLogo :height
+	localmake "oldState turtleState
+	localmake "innerHeight :height * 0.8
+	stripes :height :height [:rogersRed]
+	jumpForward (:height - :innerHeight) / 2
+	rogersLogo :innerHeight "white
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 4
+jumpLeft :separation
+rogersRedOnWhiteLogo :height
+jumpRight :separation
+rogersWhiteOnRedLogo :height
+jumpRight :separation
+rogersLogo :height :rogersRed

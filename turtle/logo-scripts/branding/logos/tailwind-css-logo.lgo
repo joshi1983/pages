@@ -1,0 +1,30 @@
+to drawWave :height
+	localmake "oldState turtleState
+	polyStart
+	arcLines [[-90 0] [10 1.2] [20 0.79] [20 0.66]
+	[15 0.88] [11.7 1.108] [156.5 0]
+	[-10 0.91] [-15 0.62] [-20 0.45] [-53 0.5] [0.1]
+	[2.3 5] [40 0.97] [30 0.9] [41 0.8] [9.5 1] [158 0]
+	[-30 0.65] [-30 0.47] [-20 0.5] [-20 0.45] [0.315]
+	[30 0.8715] [14 1.09]
+	] :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by logo at
+; https://tailwindcss.com/
+to tailwindCSSLogo :height
+	localmake "oldState turtleState
+	localmake "waveHeight :height * 0.5
+	setPenSize 0
+	setFillColor "#38bdf8
+	drawWave :waveHeight
+	jumpForward :height * 0.495
+	jumpRight :height * 0.417
+	drawWave :waveHeight
+
+	setTurtleState :oldState
+end
+
+tailwindCSSLogo 100

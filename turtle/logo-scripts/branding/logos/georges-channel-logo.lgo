@@ -1,0 +1,59 @@
+make "pixelData [
+'## #### #### ##'
+'# #    #    # #'
+'# # # # # # # #'
+'  # ### ### #'
+'  #    #    #'
+'   #  # #  #'
+'    #######'
+'   #     # #'
+'  #   #  # #'
+'  #  #  #  #'
+'  # #  #  #'
+' # #  #  #'
+'#   ##  #'
+'####   #'
+'  #    #'
+'  # # # #'
+]
+
+; Inspired by logo at:
+; https://www.youtube.com/@GeorgesChannel
+; George has a video on Commodore's Logo programming tool at:
+; https://www.youtube.com/watch?v=8ia5jntBUZc
+to georgesChannelLogo :height :color
+	localmake "oldState turtleState
+	localmake "pixelSize :height / count :pixelData
+	jumpForward :height - :pixelSize
+	jumpLeft :pixelSize * (-0.5 + count first :pixelData) / 2
+	repeat count :pixelData [
+		localmake "rowStart pos
+		localmake "pixelRowData item repcount :pixelData
+		repeat count :pixelRowData [
+			localmake "pixel item repcount :pixelRowData
+			if '#' = :pixel [
+				stripes :pixelSize :pixelSize [:color]
+			]
+			jumpRight :pixelSize
+		]
+		jumpTo :rowStart
+		jumpBackward :pixelSize
+	]
+	setTurtleState :oldState
+end
+
+to georgesChannelGreenOnBlackLogo :height
+	localmake "oldState turtleState
+	localmake "innerHeight :height * 0.8
+	stripes :height :height ["black]
+	jumpForward (:height - :innerHeight) / 2
+	georgesChannelLogo :innerHeight "#55be5a
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 5
+jumpLeft :separation / 2
+georgesChannelLogo :height "black
+jumpRight :separation
+georgesChannelGreenOnBlackLogo :height

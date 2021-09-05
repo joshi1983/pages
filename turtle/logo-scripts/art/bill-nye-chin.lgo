@@ -1,0 +1,233 @@
+; Inspired by photo at:
+; https://crosscut.com/2017/11/bill-nye-the-science-guy-new-documentary-climate-science
+; Used for a crosshatching pattern
+to straightJaggedEdgePath :len :width :numPoints
+	localmake "step :len / :numPoints
+	localmake "angle arcTan :width / ( :step * 0.5 )
+	localmake "sideStepLength :step * 0.5 / cos :angle
+	repeat :numPoints [
+		right :angle
+		forward :sideStepLength
+		left :angle * 2
+		forward :sideStepLength
+		right :angle
+	]
+end
+
+to arc2JaggedEdgePath :angle :radius :jaggedWidth :numPoints
+	localmake "stepAngle :angle / :numPoints
+	localmake "step 2 * :radius * sin ( :stepAngle * 0.5 )
+	repeat :numPoints [
+		straightJaggedEdgePath :step :jaggedWidth 1
+		right :stepAngle
+	]
+end
+
+to arcLeftJaggedEdgePath :angle :radius :jaggedWidth :numPoints
+	localmake "stepAngle :angle / :numPoints
+	localmake "step 2 * :radius * sin ( :stepAngle * 0.5 )
+	repeat :numPoints [
+		straightJaggedEdgePath :step :jaggedWidth 1
+		left :stepAngle
+	]
+end
+
+to chinGradient1 :nyeSize
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	left 15
+	forward :nyeSize * 0.24
+	localmake "fromPos pos
+	setHeading :oldHeading + 110
+	forward :nyeSize * 0.138
+	localmake "colorStops createPList2 [
+		[0 "#ad755d] [0.2 "#e4b799] [0.3 "#e9b99d] [0.4 "#e6b398]
+		[0.7 "#915948] [0.9 "#905f50] [0.92 "#a1725e] [0.95 "#7b4b3d]
+		[0.965 "#663f32] [0.98 "#774f43] [1 "#563a2e]
+	]
+	localmake "gradient createLinearGradient :fromPos pos :colorStops
+	"pad
+	setFillGradient :gradient
+	setPos :fromPos
+	setHeading :oldHeading
+	polyStart
+	arcLines [[-80 0.012] [-10 0.2] [-50 0.005] [50 0.08] [45 0.022] [-130 0]
+		[-14 0.1] [120 0] [9 0.1] [-140 0] [-16 0.1] [-140 0] [9 0.1] [70 0]
+		[-10 0.1] [-33 0] [-5 0.1] [40 0] [-15 0.1] [50 0] [-35 0.1] [-40 0.026]
+		[-35 0.012]
+		] :nyeSize
+	polyEnd
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to chinGradient2 :nyeSize
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	left 15
+	forward :nyeSize * 0.234
+	localmake "fromPos pos
+	setHeading :oldHeading + 105
+	forward :nyeSize * 0.13
+	localmake "colorStops createPList2 [
+		[0 "#aa785d] [0.1 "#c49277] [0.25 "#e9b59d] [0.4 "#eabda8]
+		[0.5 "#edc6c0] [0.8 "#c59581] [0.9 "#a07061] [0.95 "#936857]
+		[1 "#623e32]
+	]
+	localmake "gradient createLinearGradient :fromPos pos :colorStops "pad
+	setFillGradient :gradient
+	setPos :fromPos
+	setHeading :oldHeading + 45
+	polyStart
+	arcLines [[-55 0.01] [-20 0.1] [7 0.1] [30 0] [13.5 0.1] [-50.5 0] [15.2 0.1]
+		[-40 0] [5 0.1] [33 0] [10 0.1] [-70 0] [-4 0.1] [-100 0] [-18 0.2] [8 0.1]
+		[-10.5 0.2] [-15 0.05] [-70 0.005]
+	] :nyeSize
+	polyEnd
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to chinGradient3 :nyeSize
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	left 16
+	forward :nyeSize * 0.234
+	localmake "fromPos pos
+	setHeading :oldHeading + 105
+	backward :nyeSize * 0.005
+	localmake "gradientFromPos pos
+	forward :nyeSize * 0.135
+	localmake "colorStops createPList2 [
+		[0 "#9e7158] [0.12 "#a5775e] [0.3 "#ddb496] [0.45 "#dcaf98]
+		[0.55 "#e0af98] [0.75 "#c88a7f] [0.94 "#9a6b5b] [0.99 "#643c34]
+		[1 "#604638]
+	]
+	localmake "gradient createLinearGradient :gradientFromPos pos :colorStops "pad
+	setFillGradient :gradient
+	setPos :fromPos
+	setHeading :oldHeading + 119
+	polyStart
+	arcLines [[17 0.2] [-6 0.1] [14.9 0.245] [-80 0] [0.006] [-93 0] [-30 0.2]
+		[-6.7 0.3] [-170 0.0025]] :nyeSize
+	polyEnd
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to chinGradient4 :nyeSize
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	left 16
+	forward :nyeSize * 0.221
+	localmake "fromPos pos
+	setHeading :oldHeading + 100
+	forward :nyeSize * 0.13
+	localmake "colorStops createPList2 [
+		[0 "#8d5d4a] [0.25 "#d2967e] [0.4 "#d7a48f] [0.8 "#8d5c58]
+		[0.9 "#714842] [1 "#4a2b26]
+	]
+	localmake "gradient createLinearGradient :fromPos pos :colorStops "pad
+	setFillGradient :gradient
+	setPos :fromPos
+	setHeading :oldHeading
+	polyStart
+	arcLines [[-120 0.003] [32 0.22] [-176.8 0.002] [-36.1 0.2] [-40 0.0035]
+		] :nyeSize
+	polyEnd
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to drawChin :nyeSize
+	chinGradient1 :nyeSize
+	chinGradient2 :nyeSize
+	chinGradient3 :nyeSize
+	chinGradient4 :nyeSize
+end
+
+to chinAndRightCheekOutline :nyeSize
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	setPenSize 0
+	left 7.1
+	jumpForward :nyeSize * 0.18
+	localmake "fromPos pos
+	right 56.1	
+	jumpForward :nyeSize * 0.1705
+	localmake "colorStops createPList2 [
+		[0 "#462e2c] [0.1 "#574143] [0.5 "#472f2b] [0.9 "#352224]
+		[1 "#4b3327]
+	]
+	localmake "gradient createLinearGradient :fromPos pos :colorStops "pad
+	setFillGradient :gradient
+	jumpTo :fromPos
+	setHeading :oldHeading
+	drawArcLineShape [0 0
+		[[-104.9 0] [0.02] [20 0.03] [-52 0.017] [55 0.005] [18 0.1] [40 0.02] [0.02]
+		[-5 0.01] [15 0.05] [5.1 0.5] [-70 0.01] [50 0.004] [13 0.1] [-162 0]
+		[-25 0.03] [-4 0.1] [9 0.2] [-2 0.5] [7 0.15] [-15 0.03] [0.022] [-40 0.02]
+		[6 0.18] [-40 0.02] [-8.8 0.3] [-54 0.00458]
+		]] :nyeSize
+	jumpTo :oldPos
+end
+
+to jawGradient1 :nyeSize
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "radius :nyeSize * 0.126
+	right 5
+	jumpForward :nyeSize * 0.27
+	localmake "colorStops createPList2 [
+	[0 "#a9725a] [0.8 "#a46b52] [0.9 "#7e5342] [1 "#37201a]
+	]
+	setFillGradient createRadialGradient pos :radius :colorStops
+	jumpTo :oldPos
+	setHeading :oldHeading - 18
+	jumpForward :nyeSize * 0.24
+	polyStart
+	arcLines [[-10 0] [-15 0.2] [35 0.04] [115 0]] :nyeSize
+	straightJaggedEdgePath :nyeSize * 0.033 :nyeSize * 0.006 25
+	straightJaggedEdgePath :nyeSize * 0.002 :nyeSize * 0.004 1
+	arcLines [[0.003] [40 0] [7.1 0.435] [100 0.004]] :nyeSize
+	polyEnd
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to neckGradient2 :nyeSize
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	left 16
+	forward :nyeSize * 0.38
+	localmake "gradientFromPos pos
+	right 170
+	setPenSize 0
+	jumpForward :nyeSize * 0.277
+	localmake "colorStops createPList2 [
+		[0 "#846552] [0.05 "#967561] [0.11 "#9c7d6b] [0.13 "#5a3628]
+		[0.143 "#8b5e4a] [0.2 "#8b5e4a] [0.25 "#8b5e4a] [0.33 "#502f28]
+		[0.5 "#37201a] [0.7 "#37201a] [0.8 "#502f28] [0.9 "#37211f] [1 "#291315]
+	]
+	localmake "gradient createLinearGradient :gradientFromPos pos :colorStops "pad
+	setFillGradient :gradient
+	jumpTo :gradientFromPos
+	setHeading :oldHeading + 70
+	polyStart
+	arcLines [[0.022] [-90 0] [-40 0.01] [30 0.06] [0.015] [30 0.01] [-90 0.018]
+		[17 0.07] [33 0.01] [9 0.3] [120 0.005] [-75 0.008] [8.7 0.5] [60 0.005]
+		[-60 0.008] [60 0.009] [-120 0.002] [60 0.005] [-4.6 0.3] [-90.8 0] [0.068]
+		[-67 0] [20 0.031] [-90 0] [45 0.12] [27 0.045] [-85 0.026] [7 0.5]
+		[-15 0.08] [23 0.16]
+		] :nyeSize
+	polyEnd
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+image 888 600 'weblogo://images/bill-nye-extended.jpg'
+setPenSize 0
+neckGradient2 888
+chinAndRightCheekOutline 888
+jawGradient1 888
+drawChin 888

@@ -1,0 +1,78 @@
+make "darkColor "#680
+make "lightColor "#ffa
+
+; Inspired by
+; https://cdn.nexusnewsfeed.com/images/2023/5/Ro1-1686551108298.jpg
+; which is mentioned at:
+; https://nexusnewsfeed.com/article/unexplained/crop-circle-roundway-down-near-devizes-wiltshire/
+; Drone footage of the field is at:
+; https://www.youtube.com/watch?v=zNXUUOyymIA
+;
+; This was reported June 11, 2023.
+; The location was Roundway Down, near Devizes, Wiltshire.
+to roundwayDown2023cropCircles :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "outerRadius1 :height * 0.032
+	localmake "outerRadius2 :height * 0.045
+	localmake "thickness :outerRadius2
+	localmake "largeRadius (:height - :thickness) / 2 - (:outerRadius1 + :outerRadius2) * 2
+	localmake "maxLen :height * 0.235
+	localmake "arcRadiusStep :maxLen / 4
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	setFillColor :lightColor
+	repeat 4 [
+		jumpForward :height / 2 - :outerRadius1
+		circle :outerRadius1
+		jumpBackward :outerRadius1 + :outerRadius2
+		circle :outerRadius2
+		jumpTo :center
+		right 360 / 8
+		jumpForward :largeRadius
+		isoTriangle :height * 0.23 :height * 0.13
+		jumpTo :center
+		right 360 / 8
+	]
+	circle :height * 0.062
+	setPenSize :height * 0.01
+	setPenColor :lightColor
+	setLineCap "butt
+	setLineJoinStyle "miter
+	repeat 2 [
+		setHeading :oldHeading + 45 + repcount * 360 / 2
+		forward :maxLen
+		right 90
+		arcRight 90 :maxLen
+		right 90
+		forward :maxLen
+		closePath
+	]
+	repeat 4 [
+		localmake "heading1 :oldHeading + 45 + repcount * 360 / 4
+		setHeading :heading1
+		localmake "radius :maxLen - :arcRadiusStep
+		localmake "numArcs 2
+		if odd? repcount [
+			localmake "radius :maxLen - :arcRadiusStep / 2
+			localmake "numArcs 3
+		]
+		repeat :numArcs [
+			jumpTo :center
+			setHeading :heading1
+			jumpForward :radius
+			right 90
+			arcRight 90 :radius
+			localmake "radius :radius - :arcRadiusStep
+		]
+		jumpTo :center
+	]
+	setFillColor transparent
+	setPenSize :thickness
+	circle :largeRadius
+	setTurtleState :oldState
+end
+
+setScreenColor :darkColor
+roundwayDown2023cropCircles 100

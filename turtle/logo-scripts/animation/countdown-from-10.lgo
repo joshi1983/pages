@@ -1,0 +1,66 @@
+; Draws a pie-graph-like background for the countdown
+to drawCountBackground :size :timeRatio
+	localmake "oldState turtleState
+	localmake "timeRatio (:timeRatio * 10 - int :timeRatio * 10)
+	localmake "angle :timeRatio * 360
+	localmake "radius :size / 2
+	setPenSize :size * 0.01
+	localmake "radius1 :radius - penSize / 2
+	setFillColor "#eee
+	circle :radius1
+	if :angle > 0 [
+		setFillColor "#ccc
+		polyStart
+		jumpForward :radius1
+		right 90
+		arcRight :angle :radius1
+		polyEnd
+	]
+	setTurtleState :oldState
+end
+
+to drawCount :size :timeRatio
+	; Make sure timeRatio is between 0 and 1.
+	localmake "timeRatio clamp :timeRatio 0 1
+
+	; Calculate the numbers 10..0 from 
+	; timeRatio which starts at 0 and increases to 1.
+	; Use int to eliminate decimal and fractional parts of the number.
+	localmake "numberToShow 10 - int 10 * :timeRatio
+	
+	drawCountBackground :size :timeRatio
+
+	; Start with red and transition to navy blue 
+	;throughout the animation.
+	setFillColor mix "red "navy :timeRatio
+	setFontSize :size * 0.8
+	jumpLeft :size * 0.22
+
+	; If the number is 10, 
+	; it is wider than single digit numbers.
+	; Jump left a bit more for 10 so it looks centered 
+	; like other numbers.
+	if :numberToShow = 10 [
+		jumpLeft :size * 0.22
+	]
+	jumpBackward :size * 0.3
+
+	; Draw text horizontally.
+	right 90
+	label str :numberToShow
+end
+
+drawCount 600 animation.timeRatio
+
+to animation.snapshotstyle
+	output createPList
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 10
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

@@ -1,0 +1,38 @@
+REM copied from: https://www.tapatalk.com/groups/qbasic/fractale-t36046.html
+SCREEN 12
+DEFLNG A
+DEFDBL G, P-Z
+DATA 0,0,0,0,31,63,0,63,63,0,63,0,31,63,0,63,63,0,63,31,0,63,0,0,63,47,47,63,63,63
+FOR I = 0 TO 9
+READ A1, A2, A3
+PALETTE I, A1 * 65536 + A2 * 256 + A3
+NEXT I
+RANDOMIZE TIMER
+PI = 3.1415927#
+N = 3
+mm = 1
+M = 1
+DIM X(N), Y(N)
+FOR I = 1 TO N
+Y(I) = COS(2 * PI * I / N)
+X(I) = SIN(2 * PI * I / N)
+NEXT I
+FOR j = 1 TO N
+k = j + 1
+IF k > N THEN k = 1
+LINE (300 + 240 * X(j), 230 - (Y(j) * 230))-(300 + 240 * X(k), 230 - (230 * Y(k)))
+NEXT j
+QX = RND * 620 + 10
+QY = RND * 460 + 10
+QX = X(1): QY = Y(1)
+FOR I = 1 TO 150000
+F = INT(RND * N) + 1
+GX = (mm * QX + M * X(F)) / (mm + M)
+GY = (mm * QY + M * Y(F)) / (mm + M)
+IGX = 300 + INT(240 * GX + .5): IGY = 230 - INT(230 * GY + .5)
+Z = POINT(IGX, IGY) + 1
+IF Z > 9 THEN Z = 1
+IF I > 10 THEN PSET (IGX, IGY), Z
+QX = GX: QY = GY
+NEXT I
+END

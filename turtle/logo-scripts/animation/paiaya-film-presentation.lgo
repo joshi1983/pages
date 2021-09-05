@@ -1,0 +1,62 @@
+; Inspired by logo at:
+; https://www.youtube.com/watch?v=mQb7aqDcRDw
+to paiayaFilmPresentationLogo :height :timeRatio
+	localmake "oldState turtleState
+	localmake "newHeight :height * mixItems2 [1 1 0] :timeRatio
+	jumpForward (:height - :newHeight) / 2
+	localmake "oldPos pos
+	localmake "height :newHeight
+	localmake "rectHeight :height * 0.24
+	localmake "rectWidth :height * 0.61
+	localmake "squareHeight :height * 0.36
+	localmake "squareWidth :height * 0.378
+	localmake "gap (:height - :squareHeight * 2 - :rectHeight) / 2
+	localmake "x1 :height * 0.2
+	localmake "x2 :x1 - (:rectWidth + :squareWidth) / 2 - :gap
+	localmake "shapes [
+		[:x1 :height - :rectHeight / 2 :rectWidth :rectHeight]
+		[:x2 :height - :squareHeight / 2 :squareWidth :squareHeight]
+		[:x2 + (:rectWidth - :squareWidth) / 2 :height - :squareHeight - :gap - :rectHeight / 2
+		:rectWidth :rectHeight]
+		[:x1 + (:rectWidth - :squareWidth) / 2 :height - :rectHeight - :gap - :squareHeight / 2
+			:squareWidth :squareHeight
+		]
+		[:x2 :squareHeight / 2 :squareWidth :squareHeight]
+	]
+	localmake "sublistTimeRatio clamp :timeRatio * 2.2 0 1
+	localmake "len floor :sublistTimeRatio * count :shapes
+	if :len = 0 [
+		stop
+	]
+	localmake "shapes sublist :shapes 1 :len
+	setPenSize 0
+	setFillColor "#eba602
+	repeat count :shapes [
+		localmake "info item repcount :shapes
+		jumpRight first :info
+		jumpForward item 2 :info
+		rect item 3 :info item 4 :info
+		jumpTo :oldPos
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+paiayaFilmPresentationLogo 100 animation.timeRatio
+
+to animation.snapshotstyle
+	output createPList2 [
+		["position.y 50]
+		["zoom.scale 5]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 6
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+		["thumbnailTime :seconds * 0.5]
+	]
+end

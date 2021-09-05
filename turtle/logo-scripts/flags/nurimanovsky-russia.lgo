@@ -1,0 +1,46 @@
+; Inspired by flag at:
+; https://en.wikipedia.org/wiki/Nurimanovsky_District#/media/File:Flag_of_Nurimanovsky_rayon.svg
+to nurimanovskyRayonFlag :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "width :height * 3 / 2
+	localmake "lightYellowColor "#EDDB80
+	localmake "darkRedColor "#B72928
+	localmake "radius :height * 0.188
+	localmake "numTriangles 13
+	localmake "triangleOffset :radius * cos 180 / :numTriangles
+	localmake "triangleWidth :radius * 2 * sin 180 / :numTriangles
+	localmake "numNotches 48
+	stripes :width :height [:lightYellowColor "white "white "white]
+	jumpForward :height / 5
+	stripes :width :height * 0.1 [:darkRedColor]
+	setPenSize :height * 0.028
+	setPenColor "#C98624
+	setFillColor :lightYellowColor
+	jumpTo :oldPos
+	jumpForward :height * 0.65
+	localmake "center pos
+	circle :radius - penSize / 2
+	setFillColor :darkRedColor
+	setPenSize 0
+	repeat :numTriangles [
+		jumpForward :triangleOffset
+		isoTriangle :triangleWidth :height * 0.043
+		jumpTo :center
+		right 360 / :numTriangles
+	]
+	setLineCap "butt
+	setPenColor :darkRedColor
+	setPenSize :height * 0.01
+	repeat :numNotches [
+		localmake "length :height * item 1 + bitAnd repcount 1 [0.068 0.0765]
+		jumpForward :height * 0.24
+		forward :length
+		jumpTo :center
+		right 360 / :numNotches
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "#ddd
+nurimanovskyRayonFlag 100

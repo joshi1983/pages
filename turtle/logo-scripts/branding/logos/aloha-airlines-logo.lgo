@@ -1,0 +1,42 @@
+to drawSingleShape :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "startAngle 17
+	localmake "startRadius1 0.7
+	jumpForward :height * 0.01
+	setPenSize 0
+	setHeading :oldHeading
+	setFillColor "#ba2016
+	drawArcLineShape [0 0
+		[[:startAngle 0] [30 :startRadius1] [5 0.6] [-282 0.3627]
+		[4 :startRadius1] [-110 0] [25 :startRadius1] [-115 0] [0.005] [282 0.065] [0.37]
+		[-77.5 0] [25 :startRadius1]]
+	] :height
+	setFillColor "#da4115
+	drawArcLineShape [0.048 0.1305
+		[[20 0] [33.5 0.6] [-290.1 0.265] [-91.5 0] [10 :startRadius1] [-90 0] [0.04]
+		[268 0.14] [0.361] [-79 0] [13 :startRadius1]]
+	] :height
+	setFillColor "#dd9e13
+	drawArcLineShape [0.1077 0.23
+		[[25 0] [25 0.8] [-288.8 0.155] [-80.4 0] [9 :startRadius1] [-115 0]
+		[0.014] [297 0.053] [-29.2 :startRadius1] [-68 0] [7 :startRadius1]]
+	] :height
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://ca.pinterest.com/pin/53832158038439045/
+to alohaAirlinesLogo :height
+	localmake "oldState turtleState
+	localmake "shapeHeight :height * 0.531
+	localmake "numAngles 5
+	jumpForward :height - :shapeHeight
+	repeat :numAngles [
+		drawSingleShape :shapeHeight
+		right 360 / :numAngles
+	]
+	setTurtleState :oldState
+end
+
+alohaAirlinesLogo 100

@@ -1,0 +1,424 @@
+; Inspired by letters shown at:
+; https://archive.org/details/ataricomputercampspilotturtledrawing
+;
+; That is a sheet from
+; Atari Computer Camps Pilot Turtle Drawing
+to drawBlockF :height
+	localmake "oldState turtleState
+	localmake "height1 :height - penSize
+	localmake "widthFactor 0.5
+	localmake "thicknessFactor 0.2
+	localmake "midWidthFactor (:widthFactor - :thicknessFactor) * 0.7
+	localmake "len1 (1 - :thicknessFactor * 2) * 0.35
+	setLineJoinStyle "miter
+	setFillColor transparent
+	drawArcLineShape [-:widthFactor / 2 penSize / 2 / :height1
+		[[1] [-90 0] [:widthFactor] [-90 0] [:thicknessFactor] [-90 0]
+		[:widthFactor - :thicknessFactor] [90 0] [:len1] [90 0]
+		[:midWidthFactor] [-90 0] [:thicknessFactor] [-90 0] [:midWidthFactor]
+		[90 0] [1 - :thicknessFactor * 2 - :len1]]
+	] :height1
+	setTurtleState :oldState
+end
+
+to drawBlockT :height
+	localmake "oldState turtleState
+	localmake "thicknessFactor 0.2
+	localmake "height1 :height - penSize
+	localmake "heightFactor 1 - :thicknessFactor
+	localmake "widthFactor 0.3
+	setLineJoinStyle "miter
+	setFillColor transparent
+	drawArcLineShape [0 penSize / 2 / :height1
+		pathMirror [
+			[:thicknessFactor / 2] [90 0]
+			[:heightFactor] [-90 0] [:widthFactor]
+			[90 0] [:thicknessFactor] [90 0]
+			[:thicknessFactor / 2 + :widthFactor]
+		]
+	] :height1
+
+	setTurtleState :oldState
+end
+
+to drawE :height
+	localmake "oldState turtleState
+	localmake "width :height * 0.7
+	localmake "height1 :height - penSize
+	setLineCap "butt
+	jumpLeft :width / 2
+	forward :height
+	jumpBackward penSize / 2
+
+	right 90
+	repeat 3 [
+		stripes penSize :width [penColor]
+		jumpRight :height1 / 2
+	]
+
+	setTurtleState :oldState
+end
+
+to drawK :height
+	localmake "oldState turtleState
+	localmake "height1 :height - penSize
+	localmake "width :height * 0.6
+	jumpForward penSize / 2
+	jumpRight :width / 2
+	localmake "bottomRight pos
+	jumpLeft :width
+	forward :height1
+	localmake "top1 pos
+	jumpRight :width
+	localmake "top2 pos
+	jumpTo :top1
+	jumpBackward :height1 * 0.55
+	localmake "middlePos pos
+	setPos :top2
+	jumpTo mix :middlePos :top2 0.3
+	setPos :bottomRight
+
+	setTurtleState :oldState
+end
+
+to drawL :height
+	localmake "oldState turtleState
+	localmake "heightFactor (:height - penSize / 2) / :height
+	localmake "widthFactor 0.5
+	setLineJoinStyle "miter
+	setLineCap "butt
+	jumpRight :widthFactor * :height / 2
+	jumpForward penSize / 2
+	arcLines [[90 0] [:widthFactor] [-90 0] [:heightFactor]] :height
+	setTurtleState :oldState
+end
+
+to drawN :height
+	localmake "oldState turtleState
+	localmake "width :height * 0.5
+	localmake "heightFactor (:height - penSize / 2) / :height
+	localmake "angle1 140
+	localmake "len (abs (:height - penSize) / cos :angle1) / :height
+	jumpLeft :width / 2
+	setLineJoinStyle "round
+	setLineCap "butt
+	arcLines [[:heightFactor] [-:angle1 0] [:len] [:angle1 0] [:heightFactor]] :height	
+
+	setTurtleState :oldState
+end
+
+to drawS :height
+	localmake "oldState turtleState
+	localmake "height1 :height - penSize
+	localmake "widthFactor 0.5
+	localmake "cornerLen 0.1
+	localmake "width2 :height1 * (:widthFactor + :cornerLen * cos 45) + penSize / 2
+	localmake "heightFactor (1 - :cornerLen * 4 * cos 45) / 2
+	localmake "lines1 [
+		[45 0] [:cornerLen] [45 0]
+		[:heightFactor] [45 0] [:cornerLen] [45 0]
+	]
+	jumpForward penSize / 2
+	jumpLeft :height * :widthFactor / 2
+	right 90
+	setLineCap "butt
+	setLineJoinStyle "miter
+	forward :width2
+	arcLines :lines1 :height1
+	forward :height1 * :widthFactor
+	arcLines reverse :lines1 -:height1
+	forward :width2
+	setTurtleState :oldState
+end
+
+to drawT :height
+	localmake "oldState turtleState
+	localmake "width :height * 0.8
+	setLineCap "butt
+	forward :height - penSize / 2
+	right 90
+	jumpBackward :width / 2
+	forward :width	
+
+	setTurtleState :oldState
+end
+
+to drawW :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "height1 :height - penSize
+	localmake "angle1 155
+	localmake "angle2 -135
+	localmake "len abs :height1 / :height / cos :angle1
+	localmake "len2 abs :height1 / :height / cos (:angle1 + :angle2)
+	jumpForward :height - penSize / 2
+	setLineJoinStyle "round
+	setLineCap "round
+	localmake "top pos
+	repeat 2 [
+		arcLines [[:angle1 0] [:len] [:angle2 0] [:len2]] :height * sign repcount - 1.5
+		jumpTo :top
+		setHeading :oldHeading
+	]
+
+	setTurtleState :oldState
+end
+
+to drawY :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "bottomHeight :height * 0.4
+	localmake "vAngle 30
+	localmake "height1 :height - penSize
+	localmake "vLength (:height1 - :bottomHeight) / cos :vAngle
+	setLineCap "round
+	setLineJoinStyle "round
+	jumpForward penSize / 2
+	forward :bottomHeight
+	localmake "middlePos pos
+	repeat 2 [
+		setHeading :oldHeading + :vAngle * sign repcount - 1.5
+		forward :vLength
+		jumpTo :middlePos
+	]
+
+	setTurtleState :oldState
+end
+
+to drawCross :height
+	localmake "oldState turtleState
+	localmake "len (:height - penSize) / 2
+	setLineCap "round
+	jumpForward :height / 2
+	localmake "center pos
+	repeat 2 [
+		jumpBackward :len
+		forward :len * 2
+		jumpTo :center
+		right 90
+	]
+
+	setTurtleState :oldState
+end
+
+to drawArrow :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "width :height
+	jumpForward :height / 2
+	jumpLeft :width / 2
+	right 90
+	setLineJoinStyle "round
+	setLineCap "round
+	forward :width
+	localmake "arrowPoint pos
+	repeat 2 [
+		setHeading :oldHeading + 90 + 160 * sign repcount - 1.5
+		forward :height * 0.6
+		jumpTo :arrowPoint
+	]
+
+	setTurtleState :oldState
+end
+
+to drawOctagon :height
+	localmake "oldState turtleState
+	localmake "radius (:height - penSize) / 2 / cos 180 / 8 
+	jumpForward :height / 2
+	right 180 / 8
+	setLineJoinStyle "miter
+	setFillColor transparent
+	regularPolygon :radius 8	
+
+	setTurtleState :oldState
+end
+
+to drawPentagon :height
+	localmake "oldState turtleState
+	localmake "radius (:height - penSize) / (1 + cos 180 / 5)
+	jumpForward :height - :radius - penSize / 2 / cos 180 / 5
+	setFillColor transparent
+	setLineJoinStyle "miter
+	regularPolygon :radius 5
+	setTurtleState :oldState
+end
+
+to drawSpiral :height
+	localmake "oldState turtleState
+	jumpForward penSize / 2
+	jumpRight :height / 2
+	setLineJoinStyle "miter
+	setLineCap "butt
+	left 90
+	forward :height
+	right 90
+	localmake "height :height - penSize
+	
+	repeat 6 [
+		forward :height
+		right 90
+		localmake "height :height * 0.8
+	]
+
+	setTurtleState :oldState
+end
+
+to drawSquare :height
+	localmake "oldState turtleState
+	jumpForward :height / 2
+	setFillColor transparent
+	square :height - penSize
+	setTurtleState :oldState
+end
+
+to drawPentagram :height
+	localmake "oldState turtleState
+	localmake "len (:height - penSize) / cos 36 / 2 
+	jumpForward :height - penSize / 2
+	setLineJoinStyle "round
+	right 180 - 36 / 2
+	repeat 5 [
+		forward :len
+		right 180 - 36
+	]
+
+	setTurtleState :oldState
+end
+
+to drawTriangle :height
+	localmake "oldState turtleState
+	localmake "angle 30
+	localmake "height1 :height - penSize / 2 * (1 + 1 / (sin :angle))
+	setFillColor transparent
+	setLineJoinStyle "miter
+	jumpForward penSize / 2
+	isoTriangle :height1 * 2 * tan :angle :height1
+	setTurtleState :oldState
+end
+
+to drawParallelogram :height
+	localmake "oldState turtleState
+	localmake "angle 20
+	localmake "height1 :height - penSize
+	jumpForward penSize / 2 
+	jumpLeft :height1 / 2 * sin :angle
+	setLineJoinStyle "miter
+	setFillColor transparent
+	parallelogram :height * 0.8 :height1 / cos :angle :angle
+
+	setTurtleState :oldState
+end
+
+to drawTree :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "startAngle 140
+	localmake "height1 :height - penSize
+	localmake "totalLength abs 1 / (sin :startAngle - 90)
+	localmake "len1 :totalLength * 0.5
+	localmake "len2 :totalLength - :len1
+	setLineJoinStyle "round
+	jumpForward :height - penSize / 2
+	localmake "top pos
+	repeat 2 [
+		arcLines [[:startAngle 0] [:len1] [270 - :startAngle 0]
+		[0.3] [:startAngle + 90 0] [:len2]] :height1 * sign repcount - 1.5
+		jumpTo :top
+		setHeading :oldHeading
+	]
+
+	setTurtleState :oldState
+end
+
+to drawLineWave :height
+	localmake "oldState turtleState
+	localmake "width :height * 0.8
+	localmake "angle 60
+	localmake "numPeaks 3
+	localmake "len :width / :numPeaks / 2 / cos :angle
+	jumpLeft :width / 2
+	jumpForward penSize / 2
+	setLineJoinStyle "round
+	right 90 - :angle
+	repeat :numPeaks [
+		forward :len
+		right :angle * 2
+		forward :len
+		left :angle * 2
+	]
+
+	setTurtleState :oldState
+end
+
+to drawSquareCross :height
+	localmake "oldState turtleState
+	localmake "squareSize :height - penSize
+	localmake "len :squareSize / 2 / cos 45
+	setLineJoinStyle "miter
+	setLineCap "butt
+	jumpForward :height / 2
+	square :squareSize
+	right 45
+	localmake "center pos
+	repeat 2 [
+		jumpBackward :len
+		forward :len * 2
+		jumpTo :center
+		right 90
+	]
+	setTurtleState :oldState
+end
+
+to drawCircle :height
+	localmake "oldState turtleState
+	jumpForward :height / 2
+	setFillColor transparent
+	circle (:height - penSize) / 2	
+
+	setTurtleState :oldState
+end
+
+to drawBoldH :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "width :height * 0.8
+	localmake "thickness :height * 0.27
+	localmake "width1 (:width - :thickness) / 2 
+	jumpLeft :width1
+	repeat 2 [
+		stripes :thickness :height [penColor]
+		jumpRight :width1 * 2
+	]
+	jumpTo :oldPos
+	setFillColor penColor
+	jumpForward :height / 2
+	setPenSize 0
+	rect :width1 * 2 :thickness
+
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 1.22
+
+; listing out the procedure names like this
+; and using the invoke command seemed like less duplicated code
+; than typing something like this for each and every procedure:
+; drawE :height
+; jumpRight :separation
+
+make "procedureNames [
+	"drawE "drawK "drawL "drawN "drawS "drawT "drawW "drawY
+	"drawBlockF "drawBlockT
+	"drawCross "drawArrow "drawSquare "drawTriangle "drawParallelogram
+	"drawSpiral "drawTree "drawLineWave
+	"drawOctagon "drawPentagon "drawPentagram
+	"drawSquareCross "drawCircle "drawBoldH
+]
+setPenSize 5
+jumpLeft :separation * (-1 + count :procedureNames) / 2
+repeat count :procedureNames [
+	make "name item repcount :procedureNames
+	(invoke :name :height)
+	jumpRight :separation
+]

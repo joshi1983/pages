@@ -1,0 +1,40 @@
+; Inspired by logo at:
+; https://vinceferro.com/
+;
+; The main difference with what this code draws is:
+; - The drawing is symmetrical.  
+; The original logo on that site has a smaller light gray side.
+to vinceFerroConstructionLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "colors ["#a7a9ad "black]
+	localmake "angle1 35
+	localmake "angle2 90 - :angle1
+	localmake "angle3 90 + :angle1
+	localmake "thickness 0.195
+	localmake "len1 0.53
+	localmake "shortLen :len1 - :thickness
+	localmake "startOffset 1 - :thickness * 3 - :len1 * sin :angle1
+	localmake "baseHeight :startOffset + :shortLen * sin :angle1
+	localmake "outerHeight 1 - :thickness * sin :angle1
+	jumpForward :height * :startOffset
+	localmake "startPos pos
+	setPenSize 0
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		setFillColor item repcount :colors
+		polyStart
+		arcLines [[:angle2 0] [:shortLen] [:angle3 0] [:baseHeight]
+		[-:angle3 0] [:thickness] [-:angle2 0] [:outerHeight]
+		[-:angle3 0] [:len1] [-:angle2 0] [:thickness] [-:angle3 0]
+		[:shortLen] [:angle3 0] 
+		[:thickness] [:angle2 0] [:shortLen]
+		] :sign * :height
+		polyEnd
+		jumpTo :startPos
+		setHeading :oldHeading
+	]
+	setTurtleState :oldState
+end
+
+vinceFerroConstructionLogo 100

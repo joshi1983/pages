@@ -1,0 +1,30 @@
+; Follows construction sheet at
+; https://en.wikipedia.org/wiki/Flag_of_the_Gambia
+; The colors red, green, and blue are mentioned in 
+; the wikipedia article the same article.
+;
+; Those words aren't very precise, though.
+; Exact colors were copied from:
+; https://en.wikipedia.org/wiki/Flag_of_the_Gambia#/media/File:Flag_of_The_Gambia.svg
+to gambiaFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 3 / 2
+	localmake "stripesInfo [
+		["#3a7728 6/18]
+		["white 1/18]
+		["#0c1c8c 4/18]
+		["white 1/18]
+		["#ce1126 6/18]
+	]
+	setLineCap "butt
+	setPenSize :width
+	repeat count :stripesInfo [
+		localmake "stripeInfo item repcount :stripesInfo
+		setPenColor item 1 :stripeInfo
+		forward :height * item 2 :stripeInfo
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "#ddd ; avoid matching the white in the flag
+gambiaFlag 100

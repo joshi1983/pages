@@ -1,0 +1,69 @@
+; Inspired by logo at:
+; https://en.wikipedia.org/wiki/Domino%27s#/media/File:DominosPizza.svg
+;
+; Some little differences include:
+; - The upper white circle is exactly centered in the red rectangle.
+; The actual logo places the white circle slightly lower.  
+; - All rounded corners have the exact same radius.
+; The actual logo has some small variation in corner radius.
+to dominosPizzaLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "cornerRatio 0.04
+	localmake "straightLengthRatio1 0.4257
+	localmake "straightLengthRatio2 0.3996
+	localmake "gapRatio 0.0174
+	localmake "gap :height * :gapRatio
+	localmake "halfWidth :height * (:cornerRatio + :straightLengthRatio2 / 2)
+
+	; Calculate startYOffset such that the top rounded corner exactly reaches y=100.
+	localmake "startYOffset :height - (:halfWidth * 2 + :height * :straightLengthRatio1)
+	 * (cos 45) - :height * :cornerRatio * (1 - cos 45)
+
+	; Calculate blueLengthRatio1 such that the bottom corner exactly reaches y=0.
+	localmake "blueLengthRatio1 (:startYOffset / :height - :cornerRatio * (1 - cos 45))
+	 / (cos 45) - :gapRatio
+	jumpRight :height * 0.3
+	setTurtleState :oldState
+	localmake "circleRadius :height * 0.082
+	localmake "separation :height * 0.252
+	jumpForward :startYOffset
+	jumpRight :height * 0.1859
+	localmake "startPos pos
+	setFillColor "#e3163d
+	setPenSize 0
+	polyStart
+	arcLines [[-45 0] [:straightLengthRatio1]
+	[90 :cornerRatio] [:straightLengthRatio2]
+	[90 :cornerRatio] [:straightLengthRatio1]
+	] :height
+	polyEnd
+	jumpForward :gap
+	setFillColor "#017eb4
+	polyStart
+	arcLines [[:blueLengthRatio1] [90 :cornerRatio] [:straightLengthRatio2]
+	[90 :cornerRatio] [:blueLengthRatio1]] :height
+	polyEnd
+	setFillColor "white
+	jumpTo :startPos
+	setHeading :oldHeading + 45
+	jumpLeft :halfWidth
+	jumpForward :height * (:cornerRatio + :straightLengthRatio1) / 2
+	circle :circleRadius
+
+	jumpTo :startPos
+	jumpLeft :halfWidth
+	jumpBackward :gap + :height * (:blueLengthRatio1 + :cornerRatio + 0.014) / 2
+
+	; The + 4 degrees are added to match the actual logo better.
+	; The lower circles are not positioned exactly horizontal to each other.
+	setHeading :oldHeading + 4
+	jumpLeft :separation / 2 + :height * 0.003
+	repeat 2 [
+		circle :circleRadius
+		jumpRight :separation
+	]
+	setTurtleState :oldState
+end
+
+dominosPizzaLogo 100

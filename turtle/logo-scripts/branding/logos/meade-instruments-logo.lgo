@@ -1,0 +1,37 @@
+; Inspired by logo at:
+; https://en.wikipedia.org/wiki/Meade_Instruments#/media/File:Meadelogo.jpg
+;
+; A similar logo is also at:
+; https://www.meadeuk.com
+;
+; There are likely a lot of differences from the original Meade logo.
+; The main reason for these differences was that I couldn't see a lot of
+; detail in the low resolution source images.
+to meadeLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	jumpForward :height / 2
+	setPenSize 0
+	setFillColor "white
+	isotoxalStar :height * 0.35 :height * 0.02 4
+	right 360 / 8
+	isotoxalStar :height * 0.13 :height * 0.02 4
+	right 360 / 16
+	repeat 2 [
+		isotoxalStar :height * 0.2 :height * 0.02 4
+		left 360 / 8
+	]
+
+	setHeading :oldHeading
+	setPenSize :height * 0.04
+	setPenColor "white
+	setFillColor transparent
+	circle (:height - penSize) / 2
+	setLineJoinStyle "miter
+	setPenSize :height * 0.03
+	isotoxalStar :height * 0.16 :height * 0.35 8
+	setTurtleState :oldState
+end
+
+setScreenColor "#004
+meadeLogo 100

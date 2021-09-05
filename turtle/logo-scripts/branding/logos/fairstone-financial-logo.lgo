@@ -1,0 +1,36 @@
+; Inspired by logo at:
+; https://www.fairstone.ca
+to fairstoneFinancialLogo :height
+	localmake "oldState turtleState
+	localmake "radius1 0.019
+	localmake "leftLen1 (0.5 - :radius1) / cos 45
+	localmake "leftLen2 0.2
+	localmake "leftLen3 0.217
+	localmake "leftLen4 :leftLen1 - :radius1 * 4 - :leftLen2 - :leftLen3
+	localmake "leftLines1 [
+		[-45 :radius1] [:leftLen1]
+		[-90 :radius1] [:leftLen2] [-90 :radius1]
+		[:leftLen3] [90 :radius1] [:leftLen4]
+		[-45 :radius1]
+	]
+	localmake "rightLen1 0.383
+	localmake "rightLen2 0.15808
+	localmake "rightLen3 :rightLen1 - :rightLen2 - :radius1 * 2
+	localmake "rightLines1 [
+		[45 :radius1] [:rightLen1] [90 :radius1]
+		[:rightLen2] [90 :radius1] [:rightLen3]
+		[-45 :radius1]
+	]
+	setPenSize 0
+	setFillColor "#52366E
+	drawArcLineShape [-0.5 0.5
+		combine :leftLines1 reverse :leftLines1
+	] :height
+	setFillColor "#F26757
+	drawArcLineShape [0.5 0.5
+		combine :rightLines1 reverse :rightLines1
+	] :height
+	setTurtleState :oldState
+end
+
+fairstoneFinancialLogo 100

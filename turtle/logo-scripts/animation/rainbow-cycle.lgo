@@ -1,0 +1,57 @@
+; Inspired by image at:
+; https://angulargeometry.tumblr.com/post/166023361639/love-is-a-cycle
+to rainbowCycle :height :time
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "s 12
+	localmake "stepY :height / 2 / :s
+	localmake "stepX :stepY
+	localmake "dotRadius :height / 8 / :s
+	localmake "colors ["blue "green "yellow "red "violet]
+	localmake "cutOff 0.9
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	setFillColor "lime
+	for ["x -:s :s] [
+		localmake "yOffset (remainder :x 2) * :stepY / 2
+		for ["y -:s :s] [
+			jumpTo :center
+			setHeading :oldHeading
+			jumpRight :x * :stepX
+			jumpForward :y * :stepY + :yOffset
+			localmake "d (distance :center) / (:height / 2)
+			if :d < 0.9 [
+				localmake "ratio 1 + :d
+				setHeading towards :center
+				localmake "dRatio :d / :cutOff
+				localmake "colorRatio 2 + :dRatio - :time
+				localmake "colorRatio :colorRatio - int :colorRatio
+				setFillColor mixItems :colors :colorRatio
+				setFillColor mix fillColor transparent mixItems2 [1 1 1 1 0] :dRatio
+				ellipse :dotRadius :dotRadius * :ratio
+			]
+		]
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+make "time animation.timeRatio
+rainbowCycle 100 :time
+
+to animation.snapshotstyle
+	output createPList2 [
+		["position.y 50]
+		["zoom.scale 7]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 5
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

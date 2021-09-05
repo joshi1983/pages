@@ -1,0 +1,82 @@
+make "centerOffsetRatio 0.4764
+
+to drawPetal :size :innerColor
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "arcsInfo [
+	[-180 / 5 0] [0.3301] [26 0.4] [30 0.25] [6.87 2] [0.19786]
+	[63.13 0.07659]
+	]
+	setPenSize 0
+	jumpTo :oldPos
+	polyStart
+	arcLines :arcsInfo :size
+	arcLines reverse :arcsInfo :size
+	polyEnd
+	jumpTo :oldPos
+	setHeading :oldHeading
+	setFillColor :innerColor
+	jumpForward :size * 0.23
+	ellipse :size * 0.054 :size * 0.133
+	setTurtleState :oldState
+end
+
+to adafruitLogoCustomColors :height :outerColor :innerColor
+	localmake "oldState turtleState
+	localmake "petalSize :height * 0.5298
+	jumpForward :height * :centerOffsetRatio
+	setFillColor :outerColor
+	setPenSize 0
+	circle :height * 0.18
+	right 9
+	repeat 5 [
+		drawPetal :petalSize :innerColor
+		right 360 / 5
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Adafruit_Industries#/media/File:Adafruit_logo.svg
+to adafruitLogoBlack :height
+	adafruitLogoCustomColors :height "black "white
+end
+
+; Inspired by logo at:
+; https://www.adafruit.com/
+to adafruitLogoWhite :height
+	stripes :height * 3 :height ["black]
+	adafruitLogoCustomColors :height "white "black
+end
+
+to adafruitIOLogo :height
+	localmake "oldState turtleState
+	localmake "height1 :height * 0.8
+	localmake "width :height * 64 / 48
+	localmake "width1 :height * 0.271
+	localmake "innerLogoSize :height * 0.52
+	stripes :width :height ["black]
+	jumpForward :height / 2
+	jumpRight :height * 0.132
+	setPenSize 0
+	setFillColor "white
+	circle :height1 / 2
+	localmake "center pos
+	jumpLeft (:height1 + :width1) / 2 - :height * 0.005
+	roundRect :width1 :height1 :height * 0.065
+
+	jumpTo :center
+	jumpBackward :innerLogoSize * :centerOffsetRatio
+	adafruitLogoBlack :innerLogoSize
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 5
+jumpLeft :separation
+adafruitLogoBlack :height
+jumpRight :separation
+adafruitLogoWhite :height
+jumpRight :separation
+adafruitIOLogo :height

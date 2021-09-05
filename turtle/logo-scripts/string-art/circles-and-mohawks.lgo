@@ -1,0 +1,36 @@
+; Inspired by drawing at:
+; https://ca.pinterest.com/pin/4503668374316691/
+to circlesAndMohawks :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "numLines 60
+	localmake "arcRadius :height * 0.106
+	localmake "colors ["black "white]
+	jumpForward :height / 2
+	localmake "center pos
+	setLineCap "round
+	repeat 2 [
+		setHeading :oldHeading - 45 + repcount * 360 / 2
+		jumpForward :arcRadius
+		localmake "center1 pos
+		left 90
+		setPenSize :height * 0.003
+		setPenColor item 3 - repcount :colors
+		repeat :numLines [
+			jumpTo :center1
+			jumpLeft :arcRadius
+			forward :height * 0.333
+			right 180 / :numLines
+		]
+		jumpTo :center1
+		setPenSize 0
+		setFillColor item repcount :colors
+		circle :arcRadius * 0.82
+		jumpTo :center
+	]
+
+	setTurtleState :oldState
+end
+
+setScreenColor "#888
+circlesAndMohawks 100

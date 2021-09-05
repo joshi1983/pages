@@ -1,0 +1,49 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_the_Republic_of_Artsakh#/media/File:Flag_of_Armenia.svg
+to armeniaFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 2
+	stripes :width :height ["#F2A800 "#0033A0 "#D90012]
+	setTurtleState :oldState
+end
+
+to artsakhFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 2
+	localmake "stepWidth :height / 3
+	localmake "stepHeight :height / 9
+	armeniaFlag :height
+
+	jumpRight :width / 2
+	setFillColor "white
+	setPenSize 0
+	polyStart
+	repeat 4 [
+		jumpForward :stepHeight
+		jumpLeft :stepWidth / 2
+	]
+	repeat 4 [
+		jumpForward :stepHeight
+		jumpRight :stepWidth / 2
+	]
+	jumpForward :stepHeight
+	jumpLeft :stepWidth
+	repeat 4 [
+		jumpBackward :stepHeight
+		jumpLeft :stepWidth / 2
+	]
+	repeat 5 [
+		jumpBackward :stepHeight
+		jumpRight :stepWidth / 2
+	]
+	polyEnd
+	setTurtleState :oldState
+end
+
+setScreenColor "#ddd
+make "height 100
+make "separation :height * 5
+jumpLeft :separation * 0.5
+armeniaFlag :height
+jumpRight :separation
+artsakhFlag :height

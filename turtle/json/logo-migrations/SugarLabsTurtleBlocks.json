@@ -1,0 +1,629 @@
+{
+	"name": "Sugar Labs - Turtle Blocks",
+	"description": "A block-based/visual programming language inspired by Logo that is used mostly for turtle graphics, creating music, and teaching young children.  The code is saved in JSON-formatted tb and ta files.",
+	"externalLink": "https://people.sugarlabs.org/walter/TurtleBlocksIntroductoryManual.pdf",
+	"alternativeLinks": [
+		"https://github.com/Anubhav-J/turtleart",
+		"https://turtle.sugarlabs.org"
+	],
+	"caseSensitiveCommandNames": true,
+	"toProcPath": "logo-scripts/sugarlabs-turtle-blocks-content",
+	"commands": [
+		{
+			"primaryName": "activeturtle",
+			"args": [],
+			"description": "Returns name of the active turtle",
+			"returnTypes": "string",
+			"migrateToCode": "\"theOneAndOnly"
+		},
+		{
+			"primaryName": "addturtle",
+			"args": [
+				{
+					"name": "numberOrId", "types": "int|string"
+				}
+			],
+			"description": "Likely adds a turtle. (This is a guess based on the name but we should confirm this by reading documentation)",
+			"returnTypes": null,
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "and2",
+			"to": "and"
+		},
+		{
+			"primaryName": "arc",
+			"to": "arcRight"
+		},
+		{
+			"primaryName": "back",
+			"to": "backward"
+		},
+		{
+			"primaryName": "black",
+			"args": [],
+			"description": "Returns the black color",
+			"returnTypes": "colorstring",
+			"migrateToCode": "\"black"
+		},
+		{
+			"primaryName": "blue",
+			"args": [],
+			"description": "Returns the blue color",
+			"returnTypes": "colorstring",
+			"migrateToCode": "\"blue"
+		},
+		{
+			"primaryName": "bottompos",
+			"args": [],
+			"description": "ycor of bottom of screen",
+			"migrateToCode": "-400"
+		},
+		{
+			"primaryName": "cartesian",
+			"args": [],
+			"description": "displays Cartesian coordinates"
+		},
+		{
+			"primaryName": "chr",
+			"args": [
+				{"name": "asciiCode", "types": "int"}
+			],
+			"to": "char"
+		},
+		{
+			"primaryName": "clean",
+			"to": "clearScreen"
+		},
+		{
+			"primaryName": "color", 
+			"to": "penColor"
+		},
+		{
+			"primaryName": "cyan",
+			"args": [],
+			"description": "Returns the cyan color",
+			"returnTypes": "colorstring",
+			"migrateToCode": "\"cyan"
+		},
+		{
+			"primaryName": "divide",
+			"names": ["division2"],
+			"args": [
+				{"name": "num1"},
+				{"name": "num2"}
+			],
+			"description": "Divides a number by another",
+			"returnTypes": "num",
+			"migrateToOperator": "/"
+		},
+		{
+			"primaryName": "equal",
+			"args": [
+				{"name": "num1"},
+				{"name": "num2"}
+			],
+			"description": "Returns true if and only if the 2 values are equal",
+			"returnTypes": "bool",
+			"migrateToOperator": "="
+		},
+		{
+			"primaryName": "fillscreen",
+			"names": ["fillscreen2"],
+			"to": "setScreenColor"
+		},
+		{
+			"primaryName": "forever",
+			"to": "forever"
+		},
+		{
+			"primaryName": "forward",
+			"to": "forward"
+		},
+		{
+			"primaryName": "fullscreen",
+			"args": [],
+			"description": "hides the Sugar toolbars",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "greater",
+			"names": ["greater2"],
+			"args": [
+				{"name": "num1"},
+				{"name": "num2"}
+			],
+			"description": "Checks if num1 is greater than num2",
+			"returnTypes": "num",
+			"migrateToOperator": ">"
+		},
+		{
+			"primaryName": "heading",
+			"names": ["turtleh"],
+			"to": "heading"
+		},
+		{
+			"primaryName": "height",
+			"args": [],
+			"description": "the canvas height",
+			"returnTypes": "int",
+			"migrateToCode": "800"
+		},
+		{
+			"primaryName": "hideblocks",
+			"args": [],
+			"description": "Declutters canvas by hiding blocks",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "if",
+			"to": "if"
+		},
+		{
+			"primaryName": "ifelse",
+			"names": ["ifthenelse"],
+			"to": "ifelse"
+		},
+		{
+			"primaryName": "isheapempty",
+			"names": ["isheapempty2"],
+			"args": [],
+			"description": "returns True if heap is empty",
+			"returnTypes": "bool",
+			"migrateToCode": "true"
+		},
+		{
+			"primaryName": "kbinput",
+			"args": [],
+			"description": "query for keyboard input (results stored in keyboard block)"
+		},
+		{
+			"primaryName": "keyboard",
+			"args": [],
+			"description": "Returns a character code from the keyboard",
+			"returnTypes": "int",
+			"migrateToCode": "65"
+		},
+		{
+			"primaryName": "left",
+			"to": "left"
+		},
+		{
+			"primaryName": "leftpos",
+			"args": [],
+			"description": "xcor of left of screen",
+			"returnTypes": "num",
+			"migrateToCode": "-400"
+		},
+		{
+			"primaryName": "less",
+			"names": ["less2"],
+			"args": [
+				{"name": "num1"},
+				{"name": "num2"}
+			],
+			"description": "Returns true if and only if num1 is strictly less than num2",
+			"returnTypes": "bool",
+			"migrateToOperator": "<"
+		},
+		{
+			"primaryName": "list",
+			"description": "presentation template: list of bullets"
+		},
+		{
+			"primaryName": "loadpalette",
+			"args": [
+				{"name": "paletteName", "types": "string"}
+			],
+			"description": "selects a palette",
+			"returnTypes": null
+		},
+		{
+			"primaryName": "mediapause",
+			"args": [],
+			"description": "Pauses video or audio",
+			"returnTypes": null
+		},
+		{
+			"primaryName": "mediastop",
+			"args": [],
+			"description": "stops video or audio",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "mediawait",
+			"args": [],
+			"description": "Waits for current video or audio to complete",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "minus",
+			"names": ["minus2"],
+			"args": [
+				{"name": "num1"},
+				{"name": "num2"}
+			],
+			"description": "Subtracts a number from another",
+			"returnTypes": "num",
+			"migrateToOperator": "-"
+		},
+		{
+			"primaryName": "mousebutton",
+			"args": [],
+			"description": "returns 1 if mouse button is pressed",
+			"returnTypes": "int",
+			"migrateToCode": "0"
+		},
+		{
+			"primaryName": "mousebutton2",
+			"args": [],
+			"description": "Checks if a mouse button is down",
+			"returnTypes": "bool",
+			"migrateToCode": "false"
+		},
+		{
+			"primaryName": "mousex",
+			"args": [],
+			"description": "Returns the current x-coordinate of the mouse",
+			"returnTypes": "num",
+			"migrateToCode": "0"
+		},
+		{
+			"primaryName": "mousey",
+			"args": [],
+			"description": "Returns the current y-coordinate of the mouse",
+			"returnTypes": "num",
+			"migrateToCode": "0"
+		},
+		{
+			"primaryName": "multiply",
+			"names": ["product2"],
+			"args": [
+				{"name": "num1"},
+				{"name": "num2"}
+			],
+			"description": "Multiplies numbers together",
+			"returnTypes": "num",
+			"migrateToOperator": "*"
+		},
+		{
+			"primaryName": "myfunc1arg",
+			"args": [
+				{"name": "implementation"},
+				{"name": "x"}
+			],
+			"description": "a programmable block: used to add advanced multi-variable math equations, e.g., sin(x)"
+		},
+		{
+			"primaryName": "myfunc2arg",
+			"args": [
+				{"name": "implementation"},
+				{"name": "x"},
+				{"name": "y"}
+			],
+			"description": "a programmable block: used to add advanced multi-variable math equations, e.g., sqrt(x*x+y*y)"
+		},
+		{
+			"primaryName": "myfunc3arg",
+			"args": [
+				{"name": "implementation"},
+				{"name": "x"},
+				{"name": "y"},
+				{"name": "z"}
+			],
+			"description": "a programmable block: used to add advanced multi-variable math equations, e.g., sqrt(x*x+y*y+z*z)"
+		},
+		{
+			"primaryName": "oneOf",
+			"args": [
+				{"name": "val1", "types": "num"},
+				{"name": "val2", "types": "num"}
+			],
+			"description": "Returns one of the 2 specified values randomly",
+			"returnTypes": "num"
+		},
+		{
+			"primaryName": "orange",
+			"args": [],
+			"description": "Returns the orange color",
+			"returnTypes": "colorstring",
+			"migrateToCode": "\"orange"
+		},
+		{
+			"primaryName": "pendown",
+			"to": "penDown"
+		},
+		{
+			"primaryName": "penup",
+			"to": "penUp"
+		},
+		{
+			"primaryName": "plus",
+			"names": ["plus2"],
+			"args": [
+				{"name": "num1"},
+				{"name": "num2"}
+			],
+			"description": "Adds numbers together",
+			"returnTypes": "num",
+			"migrateToOperator": "+"
+		},
+		{
+			"primaryName": "polar",
+			"args": [],
+			"description": "displays polar coordinates"
+		},
+		{
+			"primaryName": "pop",
+			"args": [],
+			"description": "pops value off FILO (first-in last-out heap)"
+		},
+		{
+			"primaryName": "print",
+			"to": "print"
+		},
+		{
+			"primaryName": "printheap",
+			"args": [],
+			"description": "shows values in FILO (first-in last-out heap)",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "purple",
+			"args": [],
+			"description": "Returns the purple color",
+			"returnTypes": "colorstring",
+			"migrateToCode": "\"purple"
+		},
+		{
+			"primaryName": "random",
+			"args": [
+				{"name": "min", "types": "num"},
+				{"name": "max", "types": "num"}
+			],
+			"description": "Returns a random number from the specified range",
+			"returnTypes": "num",
+			"toProc": "turtleBlocksRandom"
+		},
+		{
+			"primaryName": "readpixel",
+			"args": [],
+			"description": "Reads a pixel colour",
+			"returnTypes": "colorstring",
+			"migrateToCode": "\"black"
+		},
+		{
+			"primaryName": "red",
+			"args": [],
+			"description": "Returns the red color",
+			"returnTypes": "colorstring",
+			"migrateToCode": "\"red"
+		},
+		{
+			"primaryName": "repeat",
+			"to": "repeat"
+		},
+		{
+			"primaryName": "right",
+			"to": "right"
+		},
+		{
+			"primaryName": "rightpos",
+			"args": [],
+			"description": "xcor of right of screen",
+			"migrateToCode": "400"
+		},
+		{
+			"primaryName": "savepix",
+			"args": [
+				{"name": "filename", "types": "string"}
+			],
+			"description": "saves turtle graphics as a file in the Sugar Journal",
+			"returnTypes": null,
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "savesvg",
+			"args": [
+				{"name": "filename", "types": "string"}
+			],
+			"description": "saves turtle graphics as an SVG file in the Sugar Journal",
+			"returnTypes": null,
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "scale",
+			"args": [],
+			"description": "Returns current scale value",
+			"returnTypes": "num",
+			"migrateToCode": "1"
+		},
+		{
+			"primaryName": "scroll",
+			"args": [
+				{"name": "xOffset", "types": "num"},
+				{"name": "yOffset", "types": "num"}
+			],
+			"description": "Scrolls the drawing by the specified amounts but does not move the turtle",
+			"returnTypes": null,
+			"toProc": "turtleBlocksScroll"
+		},
+		{
+			"primaryName": "see",
+			"args": [],
+			"description": "Returns the color that the turtle sees",
+			"migrateToCode": "\"black"
+		},
+		{
+			"primaryName": "setcolor",
+			"to": "setPenColor"
+		},
+		{
+			"primaryName": "setfont",
+			"to": "setFontFamily"
+		},
+		{
+			"primaryName": "setheading",
+			"names": ["seth"],
+			"to": "setHeading"
+		},
+		{
+			"primaryName": "setpensize",
+			"to": "setPenSize"
+		},
+		{
+			"primaryName": "setscale",
+			"args": [
+				{"name": "newScale", "types": "num"}
+			],
+			"description": "Sets scale of the current transform",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "setturtlecolor",
+			"args": [
+				{"name": "newColor"}
+			],
+			"description": "Sets the color of the current turtle's graphic.",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "setturtlename",
+			"names": ["seturtlename2"],
+			"args": [
+				{"name": "newName"}
+			],
+			"description": "Sets the name of the turtle",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "setxy",
+			"to": "setXY"
+		},
+		{
+			"primaryName": "setxy2",
+			"to": "setXY"
+		},
+		{
+			"primaryName": "show",
+			"description": "draws text or show media from the Journal",
+			"to": "show"
+		},
+		{
+			"primaryName": "showblocks",
+			"args": [],
+			"description": "restores hidden blocks",
+			"returnTypes": null,
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "sinewave",
+			"args": [
+				{"name": "frequency", "types": "num"},
+				{"name": "amplitude", "types": "num"},
+				{"name": "durationSeconds", "types": "num"}
+			],
+			"description": "plays a sinewave at frequency, amplitude, and duration (in seconds)",
+			"returnTypes": null,
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "speak",
+			"args": [
+				{"name": "text", "types": "string"}
+			],
+			"description": "Speaks text",
+			"removeInMigration": true,
+			"returnTypes": null
+		},
+		{
+			"primaryName": "startfill",
+			"to": "polyStart"
+		},
+		{
+			"primaryName": "stopfill",
+			"to": "polyEnd"
+		},
+		{
+			"primaryName": "storein",
+			"to": "make"
+		},
+		{
+			"primaryName": "time",
+			"args": [],
+			"description": "elapsed time (in seconds) since program started",
+			"to": "animation.time"
+		},
+		{
+			"primaryName": "titlex",
+			"args": [],
+			"description": "title x",
+			"returnTypes": "int",
+			"migrateToCode": "100"
+		},
+		{
+			"primaryName": "titley",
+			"args": [],
+			"description": "title y",
+			"returnTypes": "int",
+			"migrateToCode": "300"
+		},
+		{
+			"primaryName": "toppos",
+			"args": [],
+			"description": "ycor of top of screen",
+			"migrateToCode": "400"
+		},
+		{
+			"primaryName": "turtlename",
+			"args": [],
+			"description": "Returns the name of the current turtle",
+			"returnTypes": "string",
+			"migrateToCode": "\"turtleName"
+		},
+		{
+			"primaryName": "until",
+			"description": "do-until-True operator",
+			"to": "until"
+		},
+		{
+			"primaryName": "wait",
+			"args": [
+				{"name": "interval"}
+			],
+			"description": "Waits a specified interval",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "while",
+			"returnTypes": null,
+			"to": "while"
+		},
+		{
+			"primaryName": "white",
+			"args": [],
+			"description": "Returns the white color",
+			"returnTypes": "colorstring",
+			"migrateToCode": "\"white"
+		},
+		{
+			"primaryName": "xcor",
+			"names": ["turtlex"],
+			"to": "xCor"
+		},
+		{
+			"primaryName": "ycor",
+			"names": ["turtley"],
+			"to": "yCor"
+		},
+		{
+			"primaryName": "yellow",
+			"args": [],
+			"description": "Returns the yellow color",
+			"returnTypes": "colorstring",
+			"migrateToCode": "\"yellow"
+		}
+	],
+	"operators": [],
+	"keywords": []
+}

@@ -1,0 +1,53 @@
+; Inspired by logo at:
+; https://www.youtube.com/@CaptainCommodore
+to captainCommodoreLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "thickness 0.148
+	localmake "outerArcAngle 270
+	localmake "innerRadius 0.167
+	localmake "cOuterRadius :innerRadius + :thickness
+	localmake "innerArcAngle 122
+	localmake "cOffset :innerRadius * sin :innerArcAngle - 90
+	localmake "len1 (sqrt :cOuterRadius * :cOuterRadius - :cOffset * :cOffset) -
+		(sqrt :innerRadius * :innerRadius - :cOffset * :cOffset)
+	localmake "outerAngle1 arcSin :cOffset / :cOuterRadius
+	localmake "cLines [
+		[-:innerArcAngle :innerRadius] [:innerArcAngle 0]
+		[:len1] [90 - :outerAngle1 0]
+		[90 + :outerAngle1 :cOuterRadius]
+	]
+	localmake "rightThickness :height * 0.11
+	localmake "angle1 45
+	setPenColor "white
+	setLineCap "butt
+	jumpForward :height / 2
+	setPenSize :height * :thickness
+	left (:outerArcAngle - 180) / 2
+	arc :outerArcAngle (:height - penSize) / 2
+	setPenSize 0
+	setFillColor penColor
+	setHeading :oldHeading
+	drawArcLineShape [-:innerRadius 0
+		combine :cLines reverse :cLines
+	] :height
+	right 90
+	jumpForward :height * :cOffset
+	localmake "pos1 pos
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		jumpTo :pos1
+		setHeading :oldHeading + 90
+		jumpRight :height * 0.012 * :sign
+		polyStart
+		jumpRight :rightThickness * :sign
+		jumpForward :height * 0.24
+		left (90 + :angle1) * :sign
+		jumpForward :rightThickness / cos :angle1
+		polyEnd
+	]	
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+captainCommodoreLogo 100

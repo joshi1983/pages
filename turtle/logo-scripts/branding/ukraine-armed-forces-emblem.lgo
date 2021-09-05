@@ -1,0 +1,82 @@
+make "ukraineYellow "#ffdf00
+make "ukraineDarkYellow "#806600
+make "ukraineBlue "#001788
+make "thicknessRatio 0.004
+make "bladesSizeRatio 0.324
+make "thicknessRatio2 :thicknessRatio / :bladesSizeRatio
+
+to emblemBackground :height
+	localmake "oldState turtleState
+	localmake "ukraineYellow "#ffdf00
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize :height * :thicknessRatio
+	setPenColor :ukraineDarkYellow
+	setLineJoinStyle "round
+	repeat 4 [
+		setFillColor :ukraineYellow
+		isoTrapezoid :height * 0.105 :height * 0.348 :height * 0.498
+		setFillColor "#d50663
+		isoTrapezoid :height * 0.0632 :height * 0.3 :height * 0.478
+		jumpTo :center
+		right 90
+	]
+	setFillColor :ukraineYellow
+	circle :height * 0.196
+	setFillColor :ukraineBlue
+	circle :height * 0.176
+	setTurtleState :oldState
+end
+
+to drawBlades :height
+	localmake "oldState turtleState
+	localmake "arcs1 [[44 0] [5 0.4] [0.007] [-10 0.4] [-17 0.21]
+		[-13.4 0.29] [81.5 0] [0.168] [-90 0] [0.706] [-119.5 0.0058]
+		 [-39 0.29]
+		[-13 0.5] [-4.62 2.3] [-99 0] [40 0.065] [50 0.045] [30 0.045]
+		[30 0.059] [35.1 0.075] [60 0] [22 0.63] [13 0.7] [0.126] [-39 0.148]
+		[0.02]
+	]
+	localmake "shape [0 :thicknessRatio2 / 2 (combine :arcs1 [[-112.1 0]] reverse :arcs1)]
+	localmake "blueArcs1 [[-90 0] [0.03] [77 0] [-50 0.095] [69 0] [0.11]
+		[25.2 0.45] [0.012]]
+	localmake "blueArcs2 [[3 0] [-21.5 0.2] [100 0] [-15 0.17] [-24 0.08]
+		[-24 0.12] [71 0] [0.027] [90 0] [0.149]
+	]
+	localmake "blueArcs3 [[-168 0] [33.5 0.2] [134.5 0] [0.1015]]
+	localmake "blueArcs4 [[70 0.06] [0.0155] [103 0] [0.062]]
+	localmake "blueArcs5 [[30 0] [26 0.07] [21 0.1] [-110 0] [18 0.43]
+		[-74.9 0]
+	]
+	localmake "blueShapes [
+		[-0.246 0.45 :blueArcs1]
+		[0.246 0.45 flipAngles :blueArcs1]
+		[-0.135 0.253 :blueArcs2]
+		[0.135 0.253 flipAngles :blueArcs2]
+		[-0.08 0.203 :blueArcs3]
+		[0.08 0.203 flipAngles :blueArcs3]
+		[-0.019 0.253 :blueArcs4]
+		[0.019 0.253 flipAngles :blueArcs4]
+		[0 0.32 (combine :blueArcs5 reverse :blueArcs5)]
+	]
+	setLineJoinStyle "round
+	setPenSize :height * :thicknessRatio2
+	setPenColor :ukraineDarkYellow
+	setFillColor :ukraineYellow
+	drawArcLineShape :shape :height
+	setFillColor :ukraineBlue
+	drawArcLineShapes :blueShapes :height	
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Armed_Forces_of_Ukraine#/media/File:Emblem_of_the_Ukrainian_Armed_Forces.svg
+to ukraineArmedForcesEmblem :height
+	localmake "oldState turtleState
+	emblemBackground :height
+	jumpForward :height * 0.338
+	drawBlades :height * :bladesSizeRatio
+	setTurtleState :oldState
+end
+
+ukraineArmedForcesEmblem 100

@@ -1,0 +1,43 @@
+; Inspired by logo at:
+; https://timbermart.ca
+to anolaTimberMartLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "cornerRadius1 0.07
+	localmake "lowCornerRadius 0.05
+	localmake "roofSlantedLength 0.44
+	localmake "width :roofSlantedLength * (sin 45) +
+		:cornerRadius1 * (cos 45) +
+		:cornerRadius1 * (1 - cos 45) -
+		:lowCornerRadius
+	localmake "sideHeight 1 - :roofSlantedLength * (sin 45) -
+		:cornerRadius1 * (1 - cos 45) - :cornerRadius1 * (sin 45) -
+		:lowCornerRadius
+	localmake "lines1 [
+		[90 0] [45 :cornerRadius1] [:roofSlantedLength] [45 :cornerRadius1]
+		[:sideHeight] [90 :lowCornerRadius]
+	]
+	localmake "sideHeight2 :sideHeight + :lowCornerRadius
+	localmake "separation :height * 0.365
+	setPenSize 0
+	setFillColor "#C8102E
+	jumpLeft :height * 0.33
+	drawArcLineShape [0 1
+		(combine :lines1 [[:width * 2]] reverse :lines1)
+	] :height
+	jumpForward :height
+	repeat 2 [
+		jumpRight :separation
+		localmake "pos1 pos
+		polyStart
+		arcLines :lines1 -:height
+		arcLines [[0.22] [-90 0] [:sideHeight2] [45 :cornerRadius1] [0.32]
+		[-90 0] [0.12] [-45 :cornerRadius1]] :height
+		polyEnd
+		jumpTo :pos1
+		setHeading :oldHeading
+	]
+	setTurtleState :oldState
+end
+
+anolaTimberMartLogo 100

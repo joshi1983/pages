@@ -1,0 +1,29 @@
+to drawCircularPattern :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "numShapes 13
+	setPenSize 0
+	repeat :numShapes [
+		drawArcLineShape [0.0223 0.506
+			[[-0.299] [180 0] [154 0.003] [0.235] [147 0] [0.041]
+			[-100 0.015]]
+		] :height
+		jumpTo :oldPos
+		right 360 / :numShapes
+	]
+
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://centre.irpp.org
+to centreOfExcellenceLogo :height
+	localmake "oldState turtleState
+	jumpForward :height * 0.495
+	setFillColor "white
+	drawCircularPattern :height
+	setTurtleState :oldState
+end
+
+setScreenColor "#C4122F
+centreOfExcellenceLogo 100

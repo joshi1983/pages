@@ -1,0 +1,17 @@
+; Implemented to be similar to the 
+; nf function from Processing.
+; https://processing.org/reference/nf_.html
+; This is for cases with 3 parameters.
+to pNumberFormat3 :num :numDigits :numFloatingDigits
+	localmake "result pNumberFormat2 :num :numDigits
+	if :numFloatingDigits > 0 [
+		localmake "result word :result ".
+		repeat :numFloatingDigits [
+			localmake "num :num * 10
+			localmake "digitVal int modulo :num 10
+			localmake "digitChar char :digitVal + ascii "0
+			localmake "result word :result :digitChar
+		]
+	]
+	output :result
+end

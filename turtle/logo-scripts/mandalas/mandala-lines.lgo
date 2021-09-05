@@ -1,0 +1,105 @@
+to deepClone :list
+	localmake "result []
+	repeat count :list [
+		queue2 "result clone item repcount :list
+	]
+	output :result
+end
+
+to drawInnerDesign :radius
+	localmake "oldState turtleState
+	localmake "center pos
+	localmake "oldHeading heading
+	localmake "numArcs 16
+	setFillColor transparent
+	repeat :numArcs [
+		setHeading :oldHeading + repcount * 180 / :numArcs
+		setPenColor ifelse odd? repcount "red "aqua
+		jumpForward :radius
+		right 180
+		arcPair :radius * 2 60
+		jumpTo :center
+	]		
+
+	setTurtleState :oldState
+end
+
+to drawDome :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "lines [
+		[30 0.15] [33 0.5] [-10 0.75] [-45 0.64]
+		[-6 2] [-2 0.84]
+	]
+	localmake "linesInfo arcLinesInfo :lines
+	localmake "width abs 2 * :height * (item 2 :linesInfo) * sin last :linesInfo
+	setFillColor "black
+	drawArcLineShape [0 1
+		(combine [[180 0]] :lines [[-90 0] [:width / :height] [-90 0]] reverse :lines) 
+	] :height
+	forward :height
+	localmake "top pos
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		repeat 3 [
+			setHeading :oldHeading + 180
+			localmake "lines1 deepClone :lines
+			localmake "angleScale mix 0.8 0.3 repRatio
+			repeat count :lines1 [
+				localmake "pair item repcount :lines1
+				if 2 = count :pair [
+					setItem 1 "pair (first :pair) * :angleScale
+				]
+			]
+			localmake "linesInfo arcLinesInfo :lines1
+			localmake "heightFactor abs (item 2 :linesInfo) * cos last :linesInfo
+			localmake "scale :height / :heightFactor
+			arcLines :lines1 :scale * :sign
+			jumpTo :top
+		]
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by:
+; https://ca.pinterest.com/pin/4574037106324944
+; In case that pin gets deleted, it was uploaded by
+; Sunil Ģorawara.
+to mandalaLines :height
+	localmake "oldState turtleState
+	localmake "domes [
+		["aqua 0.23 0.5]
+		["violet 0.15 0.38]
+		["yellow 0.15 0.3]
+		["orange 0.15 0.3]
+	]
+	localmake "thickness :height * 0.002
+	setPenBlendMode "lighter
+	setPenSize :thickness
+	setLineCap "round
+	setLineJoinStyle "round
+	jumpForward :height / 2
+	localmake "center pos
+	repeat count :domes [
+		localmake "domeInfo item repcount :domes
+		setPenColor first :domeInfo
+		localmake "domeHeight1 :height * item 2 :domeInfo
+		localmake "outerGap :height * last :domeInfo
+		repeat 8 [
+			jumpForward :outerGap - :domeHeight1
+			drawDome :domeHeight1
+			jumpTo :center
+			right 360 / 8
+		]
+		right 180 / 8
+	]
+	setPenSize 0
+	setFillColor "black
+	circle :height * 0.2
+	setPenSize :thickness
+	drawInnerDesign :height * 0.17
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+mandalaLines 100

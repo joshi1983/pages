@@ -1,0 +1,24 @@
+; Made following instructions at:
+; https://upload.wikimedia.org/wikipedia/commons/2/2b/Flag_of_Somalia_%28construction%29.jpg
+; and
+; https://en.wikipedia.org/wiki/Flag_of_Somalia
+; At the time of implementing this, the star at
+; https://commons.wikimedia.org/wiki/File:Flag_of_Somalia.svg
+; did not match the size of the star in the construction sheet.
+; I went with the size described in the construction sheet
+to somaliaFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 3 / 2
+	localmake "d :height * 13 / 27
+	; fill background.
+	stripes :width :height ["#4189dd]
+	jumpForward :height / 2
+	setPenSize 0
+
+	setFillColor "white
+	regularStar :d / 2 5
+
+	setTurtleState :oldState
+end
+
+somaliaFlag 100

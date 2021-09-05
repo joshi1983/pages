@@ -1,0 +1,26 @@
+; Inspired by:
+; https://ca.pinterest.com/pin/192247477812855796
+to bombardierLogo :height
+	localmake "oldState turtleState
+	jumpForward :height / 2
+	localmake "center pos
+	right 90
+	setFillColor "black
+	setPenSize 0
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		repeat 2 [
+			jumpLeft :sign * :height * item repcount [1 / 2 0.243]
+			jumpBackward :height * item repcount [0.55 0.315]
+			drawArcLineShape [0 0
+				[[0.47] [-45 0.31] [0.21525] [-135 0] [0.01] [-35 0]
+				[35 0.37] [0.3] [-45 0.35]]
+			] :sign * :height 
+			jumpTo :center
+		]
+	]
+
+	setTurtleState :oldState
+end
+
+bombardierLogo 100

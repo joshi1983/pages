@@ -1,0 +1,42 @@
+; Inspired by a spiral in some Head n' Shoulders containers.
+; Here are a few links to images showing it on the container.
+; These links work as I type this but I'm giving more than 
+; 1 link in case some links break by the time you read this.
+; https://www.kroger.com/product/images/large/back/0003077206279
+; https://i5.peapod.com/c/YM/YMASZ.png
+; https://images.ctfassets.net/96bre0uq5ome/3gyKOKGyKRl4gR9oZECVr3/bbef2e4744676608c1370165ef55c709/HeadShoulders_2in1_ClassicClean_front.png
+to headNShouldersSpiral :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "numAngles 10
+	localmake "circles [
+		[0.082 0.3 0.06]
+		[0 0.418 0.04]
+		[-0.11 0.47 0.02]
+		[-0.195 0.45779 0.015]
+	]
+	localmake "stopColors createPList2 [
+		[0 "blue] [0.5 "#01a8ff] [1 "blue]
+	]
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	left 45
+	jumpBackward :height / 2
+	localmake "fromPos pos
+	jumpForward :height
+	setFillGradient createLinearGradient :fromPos pos :stopColors "pad
+	repeat :numAngles [
+		setHeading :oldHeading + repcount * 360 / :numAngles
+		repeat count :circles [
+			jumpTo :center
+			localmake "info vectorScale (item repcount :circles) :height
+			jumpRight first :info
+			jumpForward item 2 :info
+			circle last :info
+		]		
+	]
+	setTurtleState :oldState
+end
+
+headNShouldersSpiral 100

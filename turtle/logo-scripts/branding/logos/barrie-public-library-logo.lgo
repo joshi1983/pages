@@ -1,0 +1,48 @@
+; Inspired by logo at
+; https://en.wikipedia.org/wiki/Barrie_Public_Library#/media/File:Barrie_Public_Library_Current_Logo.png
+to barriePublicLibraryLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading2 heading - 96
+	localmake "colors ["#00beb3 "#003864 "#e0523c "#cedc00]
+	localmake "arcAngle1 180
+	localmake "arcAngle2 80
+	localmake "radius1Ratio 0.176
+	localmake "radius1 :height * :radius1Ratio
+	localmake "arcsInfo [
+		[:arcAngle1 :radius1Ratio] [68 0.145] [-120 0.085] [6 0.1]
+		[88.884 0.005] [15 0.21] [59 0.005] [63 0.3683]
+	]
+	jumpForward :height / 2
+	localmake "center pos
+	setFillColor "black
+	setPenSize 0
+	; Draw opaque.
+	for ["offset 0 1] [
+		repeat 2 [
+			localmake "index 1 + remainder repcount * 2 + :offset 4
+			setHeading :oldHeading2 + :index * 360 / 4
+			setFillColor item :index :colors
+			arcRight :arcAngle2 :radius1
+			right 180
+			polyStart
+			arcsLeft :arcsInfo :height
+			polyEnd
+			jumpTo :center
+		]
+	]
+	; Draw semitransparent shapes.
+	repeat 2 [
+		localmake "index 1 + remainder repcount * 2 4
+		setHeading :oldHeading2 + :index * 360 / 4
+		setFillColor mix item :index :colors transparent 0.5
+		arcRight :arcAngle2 :radius1
+		right 180
+		polyStart
+		arcsLeft :arcsInfo :height
+		polyEnd
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+barriePublicLibraryLogo 100

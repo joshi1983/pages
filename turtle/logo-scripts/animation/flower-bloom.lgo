@@ -1,0 +1,40 @@
+to pathRainbow :height :ratio
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "path [
+		[0.05] [60 0.04] [-60 0.04] [60 0.1] [-60 0.1] [-180 0.2]
+	]
+	localmake "cutPath pathCutFromStart :path :ratio
+	localmake "numAngles 12
+	jumpForward :height / 2
+	localmake "center pos
+	setLineCap "round
+	setLineJoinStyle "round
+	repeat :numAngles [
+		setHeading :oldHeading + repcount * 360 / :numAngles
+		arcLines :cutPath :height
+		jumpTo :center
+	]
+
+	setTurtleState :oldState
+end
+
+make "ratio interpolateRatio easeInOut animation.clampedTimeRatio
+pathRainbow 100 :ratio
+
+to animation.snapshotstyle
+	output createPList2 [
+		["position.y 50]
+		["zoom.scale 6]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 3
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+		["thumbnailTime :seconds]
+	]
+end

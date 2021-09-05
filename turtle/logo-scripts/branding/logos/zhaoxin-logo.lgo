@@ -1,0 +1,30 @@
+; Inspired logo at:
+; https://en.wikipedia.org/wiki/Zhaoxin#/media/File:Zhaoxin-logo-high.png
+to zhaoxinLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "foregroundColor "white
+	localmake "thickness :height * 0.09
+	jumpForward :height / 2
+	setPenSize 0
+	setFillColor "#ab1d22
+	circle :height / 2
+	localmake "center pos
+	jumpForward :height * 0.0936
+	stripes :height * 0.7 :thickness [:foregroundColor]
+
+	setLineCap "butt
+	setPenSize :thickness * 0.9
+	setPenColor :foregroundColor
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		jumpTo :center
+		jumpForward :height * 0.388
+		jumpRight :sign * :height * 0.087
+		arcLines [[180 0] [0.553] [270 0.125] [0.3]] :sign * :height
+		setHeading :oldHeading
+	]
+	setTurtleState :oldState
+end
+
+zhaoxinLogo 100

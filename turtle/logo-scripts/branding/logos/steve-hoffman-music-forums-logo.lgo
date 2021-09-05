@@ -1,0 +1,35 @@
+; Inspired by logo at:
+; https://forums.stevehoffman.tv
+to steveHoffmanMusicForumsLogo :height
+	localmake "oldState turtleState
+	localmake "lines1 [
+		[90 0] [-8 0.3] [-52 0] [-23 0.5]
+		[-77 0.01] [-20 0.288015]
+	]
+	setPenSize 0
+	setFillColor "#b8935d
+	jumpForward :height / 2
+	localmake "center pos
+	circle :height / 2
+	setFillColor "black
+	circle :height * 0.145
+	setPenSize 0
+	right 42
+	repeat 3 [
+		drawArcLineShape [0 0.21
+			combine :lines1 reverse :lines1
+		] :height
+		right 360 / 3
+	]
+	setPenSize :height * 0.03
+	setLineCap "round
+	setPenColor fillColor
+	repeat 3 [
+		forward :height * 0.15
+		jumpTo :center
+		right 360 / 3
+	]
+	setTurtleState :oldState
+end
+
+steveHoffmanMusicForumsLogo 100

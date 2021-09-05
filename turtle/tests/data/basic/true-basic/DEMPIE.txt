@@ -1,0 +1,71 @@
+PROGRAM DemPie
+
+! This program demonstrates how to construct and show the
+! several pie-shaped graphics objects.
+
+LIBRARY "TrueCtrl.trc"
+
+CALL TC_Init
+
+SET WINDOW -3, 3, -2, 2
+
+CALL TC_Show (0)                  ! Use the default output window
+CALL TC_Win_Active (0)
+
+CALL TC_Show_Default (0)          ! Don't show objects upon creation
+
+! We will now create and display three pie segments,
+! whose coordinates are now given.
+
+DIM id(3), starta(3), stopa(3)
+MAT READ starta, stopa
+DATA -45, 45, 180
+DATA 45, 180, -45
+
+LET width = 3                     ! Pen is 3 pixels wide
+LET color = 12                    ! Should be bright red
+LET backcolor = 3                 ! Should be cyan
+LET brushcolor = 1                ! Blue
+
+PRINT "Three pie segments."
+
+FOR i = 1 to 3
+    CALL TC_Graph_Create (id(i), "PIE", -1, 1, -1, 1)
+    CALL TC_Graph_SetPen (id(i), width, color, "", "")
+    CALL TC_Graph_SetBrush (id(i), backcolor, -1, "DIAGCROSS")
+    CALL TC_Graph_SetArc (id(i), starta(i), stopa(i))
+    CALL TC_Show (id(i))
+NEXT i
+
+PAUSE 2
+
+! Now, explode the pie segments
+
+PRINT "The three segments exploded."
+
+LET delta = .25
+CALL TC_Graph_Shift (id(1), 0.6*delta,  0)
+CALL TC_Graph_Shift (id(2), -delta,  delta)
+CALL TC_Graph_Shift (id(3), -delta, -delta)
+
+PAUSE 2
+
+! Now expand the first segment
+
+PRINT "The first segment expanded."
+
+CALL TC_Graph_Scale (id(1), 1.5, 1.5)
+
+PRINT "Press Escape to quit."
+DO
+
+   CALL TC_Event (0, event$, window, x1, x2)
+
+   IF event$ = "HIDE" then EXIT DO
+   IF event$ = "KEYPRESS" and x1 = 27 then EXIT DO    ! Escape key
+
+LOOP
+
+CALL TC_Cleanup
+
+END
