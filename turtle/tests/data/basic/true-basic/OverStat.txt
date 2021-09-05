@@ -1,0 +1,35 @@
+!
+!  OVERSTAT.  Overlay two cumulative frequency plots.
+!  Male and female death age distributions, 1965.
+!  Source: Beginning Statistics, Mosteller, pp. 6,11.
+!
+LIBRARY "Stat2Lib.trc"
+
+DIM int$(21),r(21),freq(0,0)
+
+MAT READ int$, r
+DATA 0:4, 5:9, 10:14, 15:19, 20:24, 25:29, 30:34, 35:39, 40:44, 45:49, 50:54
+DATA 55:59, 60:64, 65:69, 70:74, 75:79, 80:84, 85:89, 90:94, 95:99, 100:110
+
+DATA 2.39, 0.18, 0.15, 0.26, 0.34, 0.42, 0.61, 0.89, 1.31, 1.96, 2.84
+DATA 3.99, 5.69, 8.41, 11.16, 14.68, 17.19, 17.05, 8.00, 2.14, 0.35
+
+CALL SetGrid ("h.v.")
+CALL ReserveLegend
+
+CALL AddLegend ("Women", 3, 6, "black")
+CALL SetTitle ("Cumulative Death Age Distribution 1965")
+CALL TableToFreq (int$(), r(), freq(,))     ! Convert to freq table
+CALL PlotCumFPFromFreq (freq(,), 6, 1, "black")  ! Plot women's FP
+
+MAT READ r
+DATA 3.05, 0.24, 0.25, 0.66, 0.89, 0.87, 1.00, 1.40, 2.11, 3.28, 5.11
+DATA 7.35, 9.72, 12.46, 13.51, 13.29, 11.78, 8.76, 3.41, 0.76, 0.10
+
+CALL SetOverlay (1)
+CALL AddLegend ("Men", 3, 11, "black")
+CALL TableToFreq (int$(), r(), freq(,))     ! Convert to freq table
+CALL PlotCumFPFromFreq (freq(,), 11, 1, "black")      ! Plot men's FP
+CALL DrawLegend                   ! Now show the legend
+
+END

@@ -1,0 +1,19 @@
+REM copied from https://qb64.com/wiki/DRAW
+SCREEN _NEWIMAGE(800, 800, 12)
+PRINT _ALPHA(10), _RED(10), _GREEN(10), _BLUE(10)
+
+SLEEP
+
+SCREEN _NEWIMAGE(800, 800, 32) 'comment out this line to use the non-32 bit screen mode 12
+PRINT _ALPHA(10), _RED(10), _GREEN(10), _BLUE(10)
+
+PSET (400, 400), 0 ' move to 320, 240... draw will start where pset leaves off
+c = 14
+DIM k AS _UNSIGNED LONG
+k = _RGB(80, 255, 80)
+FOR repeat = 1 TO 16
+  FOR p = 0 TO 359
+    c = c + 1: d = c / 14
+    DRAW "c" + STR$(k) + " ta" + STR$(p) + " bu " + STR$(d) + "l7 u7 r7 d7 bd " + STR$(d)
+  NEXT p
+NEXT repeat

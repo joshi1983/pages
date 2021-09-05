@@ -1,0 +1,57 @@
+
+			 
+
+    ; ---------------------------------------------------
+    ; Example: Insertion Sort with Before / After Output
+    ; ---------------------------------------------------
+
+    ; Create an array to hold 10 numbers
+    Dim Numbers(10)
+
+    ; Fill the array with random numbers between 0 and 100
+    For lp = 1 To 10
+        Numbers(lp) = Rnd(100)
+    Next
+
+    ; -----------------------------------------------
+    ; Show the list BEFORE sorting
+    ; -----------------------------------------------
+    Print "Numbers BEFORE sorting:"
+    For lp = 1 To 10
+        Print Numbers(lp)
+    Next
+    Print "---------------------------------"
+
+    ; -----------------------------------------------
+    ; Sort the numbers using Insertion Sort
+    ; -----------------------------------------------
+    For lp = 1 To 10
+
+        ; Bubble the current number backwards if needed
+        For SearchLP = lp To 2 Step -1
+
+            ; Compare with the number before it
+            If Numbers(SearchLP) < Numbers(SearchLP - 1)
+
+                ; Swap the numbers if out of order
+                A = Numbers(SearchLP)
+                B = Numbers(SearchLP - 1)
+
+                Numbers(SearchLP)     = B
+                Numbers(SearchLP - 1) = A
+            EndIf
+
+        Next
+    Next
+
+    ; -----------------------------------------------
+    ; Show the list AFTER sorting
+    ; -----------------------------------------------
+    Print "Numbers AFTER sorting:"
+    For lp = 1 To 10
+        Print Numbers(lp)
+    Next
+
+    ; Wait for a key before closing
+    Sync
+    WaitKey

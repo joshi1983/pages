@@ -1,0 +1,63 @@
+PROGRAM DemRect
+
+! This program demonstrates how to construct and show the
+! graphics object Rectangle.
+
+LIBRARY "TrueCtrl.trc"
+
+CALL TC_Init
+
+SET WINDOW 0, 2, 0, 1
+
+CALL TC_Show (0)                  ! Use the default output window
+CALL TC_Win_Active (0)
+PRINT "Press Escape to quit."
+
+CALL TC_Show_Default (0)          ! Don't show objects upon creation
+
+CALL TC_Graph_Create (rect1, "RECTANGLE", .25, .75, .25, .75)
+LET width = 10                    ! Pen is 10 pixels wide
+LET color = 4                     ! Should be red
+CALL TC_Graph_SetPen (rect1, width, color, "", "")
+LET backcolor = 3                 ! Should be cyan
+CALL TC_Graph_SetBrush (rect1, backcolor, backcolor, "")
+CALL TC_Show (rect1)
+
+CALL TC_Graph_Create (rect2, "RECTANGLE", 1.25, 1.75, .25, .75)
+LET width = 1
+LET color = 10                     ! Green
+LET style$ = "SOLID"
+LET pattern$ = "RUBBER"
+CALL TC_Graph_SetPen (rect2, width, color, style$, pattern$)
+CALL TC_Show (rect2)
+
+LET size = .5                     ! To change the size of the rubber rectangle
+LET delta = -.1
+
+LET starttime = time
+DO
+
+   CALL TC_Event (0, event$, window, x1, x2)
+
+   IF event$ = "HIDE" then EXIT DO
+   IF event$ = "KEYPRESS" and x1 = 27 then EXIT DO    ! Escape key
+
+   ! Reposition the Rectangle randomly
+
+   IF time > starttime + 1 then   ! Seconds
+      CALL TC_SetRect (rect1, rnd, rnd, rnd, rnd)
+      LET size = size + delta
+      IF size >= .45 then          ! If large, make it smaller next
+         LET delta = -.1
+      ELSE IF size <= .15 then     ! If small, make it larger next
+         LET delta = +.1
+      END IF
+      CALL TC_SetRect (rect2, 1.25, 1.25 + size, .25, .25 + size)
+      LET starttime = time
+   END IF
+
+LOOP
+
+CALL TC_Cleanup
+
+END
