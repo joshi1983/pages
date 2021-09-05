@@ -1,0 +1,23 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_the_Federated_States_of_Micronesia#/media/File:Flag_of_the_Federated_States_of_Micronesia.svg
+to micronesiaFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 19 / 10
+	localmake "angles [0 21 42 -21]
+	localmake "starDistance :height * 0.3
+	localmake "starSize1 :height * 0.1
+	stripes :width :height ["#75b2dd]
+	setPenSize 0
+	setFillColor "white
+	jumpForward :height / 2
+	localmake "center pos
+	repeat count :angles [
+		jumpForward :starDistance
+		regularStar :starSize1 5
+		jumpTo :center
+		right 360 / count :angles
+	]
+	setTurtleState :oldState
+end
+
+micronesiaFlag 100

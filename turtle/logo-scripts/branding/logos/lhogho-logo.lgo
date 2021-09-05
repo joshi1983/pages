@@ -1,0 +1,44 @@
+; Inspired by a font-like on the first page of:
+; https://lhogho.sourceforge.net/docs/lhogho.pdf
+to lhoghoVertical :height
+	localmake "oldState turtleState
+	localmake "thickness1Factor 0.074
+	localmake "thickness1 :height * :thickness1Factor
+	localmake "radius1 :height * 0.073
+	localmake "outerRadius1 :radius1 + :thickness1 / 2
+	localmake "hShape1 [:thickness1Factor / 2 0
+		[[-180 0.024] [0.117] [90 0] [0.075] [90 0] [0.14] [180 0.075]]
+	]
+	setPenSize :thickness1
+	setPenColor "black
+	setFillColor transparent
+	jumpForward :outerRadius1
+	setLineCap "butt
+	repeat 2 [
+		circle :radius1
+		jumpForward :radius1
+		forward :height / 2 - :radius1 * 2 - :thickness1 / 2
+		if repcount = 1 [
+			forward :thickness1 / 2
+		]
+		jumpForward :radius1
+	]
+	jumpBackward :height * 0.248
+	setFillColor penColor
+	setPenSize 0
+	drawArcLineShape :hShape1 :height
+	localmake "pos1 pos
+	jumpBackward :height / 2
+	drawArcLineShape :hShape1 :height
+	drawArcLineShape [-:thickness1Factor / 2 0.01
+		[[25 0] [280 0.033] [-125 0.003] [0.062] [-75.2 0.005] [-230 0.104]]
+	] :height
+
+	jumpTo :pos1
+	right 180
+	jumpBackward :height * 0.05786
+	drawArcLineShape :hShape1 :height
+	setTurtleState :oldState
+end
+
+lhoghoVertical 100
