@@ -1,0 +1,35 @@
+! DemSText
+
+! Demonstrates a Static Text box.
+
+LIBRARY "TrueCtrl.trc"
+
+CALL TC_Init
+
+CALL TC_Show (0)                  ! Default output window
+CALL TC_Win_Active (0)
+PRINT "Press the ESC key to quit."
+
+LET t$ = time$
+
+! Create two static text boxes with a default upper dimension.
+
+CALL TC_SText_Create (stid0, "The time is now:", .15, .35, .44, -99999)
+CALL TC_SText_Create (stid, t$, .38, .50, .44, -99999)
+
+DO
+   IF t$ <> time$ then   ! Change only if a new time.
+      LET t$ = time$
+      CALL TC_SetText (stid, t$)
+   END IF
+
+   CALL TC_Event (0, event$, window, x1, x2)
+
+   IF event$ = "HIDE" then EXIT DO
+   IF event$ = "KEYPRESS" and x1 = 27 then EXIT DO
+
+LOOP
+
+CALL TC_Cleanup
+
+END

@@ -1,0 +1,72 @@
+; This was translated and adapted from code at:
+; https://github.com/oonap0oo/QB64-projects/blob/main/own_shape.bas
+;
+; The link was shared by Kurt Moerman on facebook at:
+; https://www.facebook.com/share/p/1MBRjmDcgX/
+
+; Similar to QB64 function at:
+; https://qb64.com/wiki/_RGB.html
+to _rgb32_3 :redValue :greenValue :blueValue
+	localmake "redValue clamp int :redValue 0 255
+	localmake "greenValue clamp int :greenValue 0 255
+	localmake "blueValue clamp int :blueValue 0 255
+	localmake "alpha bitShiftLeft 255 24
+	output ( bitOr :redValue bitShiftLeft :greenValue 8 bitShiftLeft
+		:blueValue 16 :alpha )
+end
+
+setScreenColor "black
+setPenBlendMode "lighter
+setLineJoinStyle "round
+
+; Simple swimmer                        K Moerman 2026
+; Own creation attempt inspired by the work of yuruyurau https://x.com/yuruyurau
+make "t animation.timeRatio * 2 * pi
+for [ "a 0 1 1 / 2999 ]
+; loop for drawing shape, STEP 1/Npoints
+[
+	make "at 2 * :a * pi - 8 * :t
+	make "b ( radSin 450 * :a ) * ( .7 + radSin 930 * :a )
+	; main shape of body
+	make "e 2 * :a * exp -:a * 8
+	; envelope applied to body
+	make "l 1.5 * ( 0.7 - :a ) * ( 1 - :b * :b / 8 ) + :t
+	; constructing shape along its length
+	make "w :e * :b - ( radSin :at ) / 12 + 0.75
+	; constructing shape in direction of it's width
+	make "x :w * radCos :l
+	; polar to rectangular
+	make "y :w * radSin :l
+	make "col 128 + 127 * radCos 4 * :b - :a * 6
+	make "p vectorScale [:x :y] 100
+	; making up a color, changes across width of body
+	ifelse :a = 0 [
+		jumpTo :p
+		setPenSize 0
+		circle 0.3
+	] [
+		setPenColor _rgb32_3 :col 255 1 - :col
+		setPenSize 0.3
+		setPos :p 
+	]
+]
+
+to animation.snapshotstyle
+	localmake "box drawing.box
+	localmake "averageX mix (getProperty "box "minX) (getProperty "box "maxX) 0.5
+	localmake "averageY mix (getProperty "box "minY) (getProperty "box "maxY) 0.5
+	output createPList2 [
+		["position.x :averageX]
+		["position.y :averageY]
+		["zoom.scale 6]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 10
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

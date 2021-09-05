@@ -1,0 +1,104 @@
+to drawA :fontHeight
+	localmake "oldState turtleState
+	localmake "angle1 -158
+	localmake "angle2 180 + :angle1
+	localmake "innerY 0.73
+	jumpForward :fontHeight * 0.01
+	localmake "lines1 [[:angle1 0] [:innerY / cos :angle2]
+		[90 - :angle2 0] [0.29] [113 0] [1.07] [67 0] [0.16685684]]
+
+	drawArcLineShape [0 :innerY
+		combine :lines1 reverse :lines1
+	] :fontHeight
+	jumpForward :fontHeight * 0.19
+	stripes :fontHeight * 0.8 :fontHeight * 0.2 [fillColor]
+	setTurtleState :oldState
+end
+
+to drawD :fontHeight
+	localmake "oldState turtleState
+	localmake "arcs1 [[0.365] [-90 0] [0.46] [-90 0.3] [0.065]]
+	setPenColor fillColor
+	setPenSize :fontHeight * 0.25
+	setLineJoinStyle "miter
+	setFillColor transparent
+	drawArcLineShape [-0.37 0.5
+		combine :arcs1 reverse :arcs1
+	] :fontHeight
+	setTurtleState :oldState
+end
+
+to drawK :fontHeight
+	localmake "oldState turtleState
+	localmake "fontHeight2 :fontHeight * 0.97
+	localmake "overlap :fontHeight * 0.02 
+	; a small overlap to prevent background colours from blending
+	; through.
+
+	localmake "slantedLength (:fontHeight2 / 2 + :overlap) / cos 45
+	jumpForward :fontHeight * 0.01
+	jumpLeft :fontHeight * 0.37
+	stripes :fontHeight * 0.27 :fontHeight2 [fillColor]
+	jumpRight :fontHeight * 0.24
+	jumpForward :fontHeight2 / 2
+	localmake "center pos
+	repeat 2 [
+		localmake "angle -45 * sign repcount - 1.5
+		jumpBackward :overlap
+		parallelogram :fontHeight * 0.36 :slantedLength :angle
+		jumpTo :center
+		right 180
+	]
+	setTurtleState :oldState
+end
+
+to drawO :fontHeight
+	localmake "oldState turtleState
+	jumpForward :fontHeight / 2
+	setPenSize :fontHeight * 0.25
+	localmake "height1 :fontHeight - penSize
+	setPenColor fillColor
+	setFillColor transparent
+	roundRect :height1 * 1.1 :height1 :height1 * 0.45
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://en.wikipedia.org/wiki/Kodak#/media/File:Eastman_Kodak_Company_logo_(2016).svg
+to kodakLogo :height
+	localmake "oldState turtleState
+	localmake "width :height * 1000 / 905
+	localmake "kodakYellow "#fab617
+	localmake "kodakRed "#e30613
+	localmake "redArcs1 [[0.307] [-90 0.06] [0.237] [-125.6 0.0155]
+		[0.4] [35.6 0.02961022]]
+	localmake "rightArcs [[-49.8 0.01] [0.534] [-40.2 0.06] [0.241]
+		[-90 0.053] [0.3134846038]]
+	localmake "redShapes [
+		[-0.417 0.5
+			combine :redArcs1 reverse :redArcs1
+		]
+		[-0.3185 0.5
+			combine :rightArcs reverse :rightArcs
+		]
+	]
+	localmake "fontSeparation :height * 0.13
+	localmake "fontHeight :height * 0.092
+	stripes :width :height [:kodakYellow]
+	setPenSize 0
+	setFillColor :kodakRed
+	drawArcLineShapes :redShapes :height
+	jumpRight :height * 0.304
+	jumpForward :height * 0.714
+	setFillColor :kodakYellow
+	localmake "msg "kodak
+	repeat count :msg [
+		localmake "letter item repcount :msg
+		localmake "procName word "draw :letter
+		(invoke :procName :fontHeight)
+		jumpBackward :fontSeparation
+	]
+	setTurtleState :oldState
+end
+
+kodakLogo 100

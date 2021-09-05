@@ -1,0 +1,56 @@
+make "ipcGreenColor "#046530
+
+to investmentPlanningCounselLogoCustomColor :height :backgroundColor
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "centerYOffset :height * 0.532
+	localmake "radius :height * 0.428
+	stripes :height :height [:backgroundColor]
+	jumpLeft :height * 0.03
+	localmake "bottomLeft pos
+	jumpTo :oldPos
+	jumpForward :centerYOffset
+	setFillColor transparent
+	setPenColor "white
+	setPenSize :height * 0.021
+	circle :radius
+	localmake "center pos
+	repeat 4 [
+		jumpBackward :radius
+		forward :radius * 2
+		jumpTo :center
+		right 45
+	]
+	setPenSize 0
+	setFillColor "white
+	setHeading :oldHeading
+	jumpForward :height * 0.12
+	setHeading towards :bottomLeft
+	polyStart
+	jumpForward distance :bottomLeft
+	setHeading :oldHeading
+	jumpRight :height * 0.09
+	polyEnd
+	setFillColor :backgroundColor
+	jumpTo :oldPos
+	isoTriangle :height * 0.02 :centerYOffset
+	setTurtleState :oldState
+end
+
+; Inspired by logo at
+; https://www.ipcc.ca
+to ipcLogoGreenBackground :height
+	investmentPlanningCounselLogoCustomColor :height :ipcGreenColor
+end
+
+to ipcLogoBlackBackground :height
+	investmentPlanningCounselLogoCustomColor :height "black
+end
+
+make "height 100
+make "separation :height * 5
+jumpLeft :separation / 2
+ipcLogoGreenBackground :height
+jumpRight :separation
+ipcLogoBlackBackground :height

@@ -1,0 +1,43 @@
+; Inspired by logo for software called 
+; PC Logo Version 4.0.
+; It was released in 1992.
+; You can run it in your web browser at:
+; https://www.dosgames.com/game/logo/
+; The software can be downloaded at:
+; https://archive.org/details/pclogo4dos
+to pcLogoLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "center [-0.01 0.363]
+	localmake "lowRight [0.472 0.001]
+	localmake "left [-0.474 0.319]
+	localmake "top [0.315 0.999]
+	localmake "triangles [
+		["#00a800 [:lowRight :left :center]]
+		["#54fc54 [:left :center :top]]
+		["#3bd73b [:top :center :lowRight]]
+	]
+	setPenSize :height * 0.002
+	setPenColor "black
+	setLineJoinStyle "round
+	repeat count :triangles [
+		localmake "triangleInfo item repcount :triangles
+		setFillColor first :triangleInfo
+		localmake "points last :triangleInfo
+		
+		repeat count :points [
+			localmake "point item repcount :points
+			jumpTo :oldPos
+			setHeading :oldHeading
+			jumpRight :height * first :point
+			jumpForward :height * last :point
+			setItem repcount "points pos
+		]
+		polygon :points
+	]	
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+pcLogoLogo 100

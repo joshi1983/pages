@@ -1,0 +1,24 @@
+; Inspired by logo at:
+; https://sbi.bank.in
+to stateBankOfIndiaLogo :height
+	localmake "oldState turtleState
+	localmake "gapAngle 12
+	localmake "outerRadius 1 / (1 + cos :gapAngle / 2)
+	localmake "innerRadius 0.145
+	localmake "gap :outerRadius * 2 * sin :gapAngle / 2
+	localmake "innerArcAngle 180 - arcSin :gap / 2 / :innerRadius
+	localmake "len1 :outerRadius * (cos :gapAngle / 2) -
+		sqrt :innerRadius * :innerRadius - (:gap * :gap) / 4
+	localmake "lines1 [
+		[90 0] [:innerArcAngle :innerRadius] [90 - :innerArcAngle 0]
+		[:len1] [-90 - :gapAngle / 2 0] [(:gapAngle - 360) / 2 :outerRadius]
+	]
+	setFillColor "#00b5ef
+	setPenSize 0
+	drawArcLineShape [0 1 - :outerRadius + :innerRadius
+		combine :lines1 reverse :lines1
+	] :height
+	setTurtleState :oldState
+end
+
+stateBankOfIndiaLogo 100

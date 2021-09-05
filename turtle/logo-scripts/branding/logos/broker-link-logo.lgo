@@ -1,0 +1,26 @@
+; Inspired by logo at:
+; https://www.brokerlink.ca
+to brokerLinkLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "lowerHeight :height * 0.65
+	localmake "lowerWidth :height * 0.915
+	localmake "upperHeight :height * 0.555
+	localmake "upperWidth :height * 0.753
+	localmake "cornerRadius :height * 0.11
+	jumpForward :lowerHeight / 2
+	jumpRight :height * 0.077
+	setPenSize 0
+	setFillColor "#00B5E2
+	roundRect :lowerWidth :lowerHeight :cornerRadius
+
+	setFillColor "#F0B323
+	setFillBlendMode "multiply
+	jumpTo :oldPos
+	jumpLeft :height * 0.157
+	jumpForward :height - :upperHeight / 2
+	roundRect :upperWidth :upperHeight :cornerRadius
+	setTurtleState :oldState
+end
+
+brokerLinkLogo 100

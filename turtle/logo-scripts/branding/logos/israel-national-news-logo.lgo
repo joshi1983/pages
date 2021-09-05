@@ -1,0 +1,37 @@
+make "innBlueColor "#0c54a2
+
+; Inspired by logo and favicon at:
+; https://www.israelnationalnews.com
+to israelNationalNewsLogo :height :color
+	localmake "oldState turtleState
+	localmake "thickness :height * 0.34
+	localmake "angle 30.2
+	setPenSize 0
+	setFillColor :color
+	jumpLeft :height * 0.252
+	parallelogram :thickness :height / cos :angle :angle
+	jumpForward :height
+	left 180
+	jumpLeft :height * 0.125
+	parallelogram :height * 0.395 :height * 0.35 :angle
+	
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://www.israelnationalnews.com
+to innOnBlueLogo :height
+	localmake "oldState turtleState
+	localmake "innerHeight :height * 0.8	
+	stripes :height :height [:innBlueColor]
+	jumpForward (:height - :innerHeight) / 2
+	israelNationalNewsLogo :innerHeight "white
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 5
+jumpLeft :separation / 2
+innOnBlueLogo :height
+jumpRight :separation
+israelNationalNewsLogo :height :innBlueColor

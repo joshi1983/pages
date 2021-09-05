@@ -1,0 +1,278 @@
+; Inspired by a car drawing from an
+; Amiga Logo programming manual
+; The manual is titled, "Amiga Logo Tutorial and Reference"
+; An electronic version is freely available at:
+
+; https://archive.org/details/amiga-logo-manual/page/n69/mode/2up
+
+; The car drawing is at page 69.
+; The following code was written from scratch
+; to look like the image in the manual.
+; The manual says the AmigaLogo implementation can be
+; found by clicking "car" but this implementation
+; was made without checking it.
+
+to wheel :radius :timeRatio
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "numLines 3
+	localmake "lineLength :radius * 0.8
+	localmake "penSize1 :radius * 0.35
+	localmake "wheelRotation 360 * :timeRatio
+	setPenSize :penSize1
+	setPenColor "black
+	setFillColor "#bbb
+	circle :radius - :penSize1 / 2
+	setPenSize :radius * 0.03
+	setPenColor "#fff
+	setFillColor transparent
+	circle :radius - :penSize1
+	setLineCap "round
+	setPenColor "#444
+	setPenSize :radius * 0.05
+	left :wheelRotation
+	repeat :numLines [
+		jumpBackward :lineLength / 2
+		forward :lineLength
+		jumpTo :oldPos
+		right 180 / :numLines
+	]
+	setPenSize 0
+	setFillColor "#222
+	circle :radius * 0.08
+	setTurtleState :oldState
+end
+
+to wheels :carHeight :timeRatio
+	localmake "oldState turtleState
+	localmake "wheelRadius :carHeight * 0.192
+	jumpForward :wheelRadius
+	jumpLeft :carHeight * 0.875
+	wheel :wheelRadius :timeRatio
+	jumpRight :carHeight * 1.708
+	wheel :wheelRadius :timeRatio
+	setTurtleState :oldState
+end
+
+to wheelArc :carHeight
+	localmake "oldPenSize penSize
+	localmake "arcs1 [[40 0.36] [42.5 0.22]]
+	setPenColor "black
+	setPenSize :carHeight * 0.01
+	arcLines combine :arcs1 reverse :arcs1 :carHeight
+	setPenSize :oldPenSize
+end
+
+to carRoof :carHeight
+	localmake "oldState turtleState
+	localmake "angle 33
+	setPenSize 0
+	setFillColor "green
+	drawArcLineShape [-0.1245 0.95 
+		[[:angle / 2 - 90  0] [-:angle 1.364] [-20 0] [0.05]
+		[-143 0] [0.75]]
+	] :carHeight
+	setTurtleState :oldState
+end
+
+to carTopWindowFrames :carHeight
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	setPenSize 0
+	setFillColor "green
+
+	; front/left window frame
+	drawArcLineShape [-0.41 0.65 
+		[[-70 0] [27 0.2] [0.25] [35 0.1] [-82 0] [0.1]
+		[-90 0] [0.025] [90 0] [180 0] [48 0.1] [0.25] [150 0.05]]
+	] :carHeight
+
+	; middle frame piece
+	jumpForward :carHeight * 0.65
+	jumpRight :carHeight * 0.24
+	setPenSize :carHeight * 0.04
+	setPenColor fillColor
+	right 20
+	forward :carHeight * 0.3
+
+	; rear frame piece
+	setPenSize 0
+	jumpTo :oldPos
+	setHeading :oldHeading + 90
+	drawArcLineShape [-0.65 0.6 
+		[[130 0.065] [0.13] [50 0.18] [180 0] [0.23]
+		[-160 0] [120 0.04] [10 1] [35 0.35]]
+	] :carHeight
+
+	setTurtleState :oldState
+end
+
+to carTopBackground :carHeight
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	jumpForward :carHeight * 0.65
+	jumpLeft :carHeight * 0.54
+	setFillColor "#4000
+	setPenSize :carHeight * 0.015
+	setPenColor "green
+	right 55
+	polyStart
+	jumpForward :carHeight * 0.51
+	setHeading :oldHeading + 90
+	jumpForward :carHeight * 0.77
+	right 35
+	jumpForward :carHeight * 0.52
+	polyEnd
+	setTurtleState :oldState
+	carTopWindowFrames :carHeight
+	carRoof :carHeight
+end
+
+to carBackground :carHeight
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	carTopBackground :carHeight
+	jumpForward :carHeight * 0.17
+	setPenSize 0
+	setFillColor "#644
+	polyStart
+	jumpLeft :carHeight * 0.8
+	left 85
+	jumpForward :carHeight * 0.5
+	setHeading :oldHeading
+	jumpForward :carHeight * 0.33
+	jumpRight :carHeight * 2.5
+	arcLines [[-0.36] [93 0] [0.5]] :carHeight
+	polyEnd
+	setTurtleState :oldState
+end
+
+to darkCarBody :carHeight
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "colorStops createPList2 [
+		[0 "#050] [0.6 "#060] [1 "#090]
+	]
+	jumpLeft :carHeight * 1.419
+	jumpForward :carHeight * 0.198
+	setPenSize 0
+	localmake "pos1 pos
+	jumpForward :carHeight * 0.4
+	setFillGradient createLinearGradient :pos1 pos :colorStops "pad
+	jumpTo :pos1
+	polyStart
+	arcLines [[20 0] [0.05] [-20 0] [90 0] [0.038] [-90 0] [0.032]
+		[-90 0] [0.017] [90 0] [0.048] [90 0] [0.062] [-90 0] [0.08]
+		[-65 0] [0.12] [24 0] [0.13] [-32 0] [-16 3] [-31 0] [30 0.2] 
+		[1.05] [8 0] [0.35] [-8 0] [0.4] [-105 0.05] [0.1] [15 0]
+		[0.1] [65 0] [0.09] [-65 0.03] [0.135] [-65 0.03] [0.13] [-25 0]
+		[0.29] [-82 0]] :carHeight
+	wheelArc :carHeight
+	setHeading :oldHeading - 90
+	jumpForward :carHeight * 1.18
+	right 85
+	wheelArc :carHeight
+	polyEnd
+	setTurtleState :oldState
+end
+
+to lights :carHeight
+	localmake "oldState turtleState
+	jumpLeft :carHeight * 1.41
+	jumpForward :carHeight * 0.275
+	stripes :carHeight * 0.08 :carHeight * 0.05 ["yellow]
+	setPenSize 0
+	setFillColor "red
+	drawArcLineShape [2.75 0.127
+		[[-90 0] [0.065] [90 0] [0.08] [90 0] [0.05]]
+	] :carHeight
+	setTurtleState :oldState
+end
+
+to stripe :carHeight
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "stripeThickness :carHeight * 0.045
+	
+	localmake "rightAngle 42
+	localmake "rightStripeLength :carHeight * 0.48
+	localmake "middleLeftAngle 40
+	localmake "middleStripeLength :carHeight * 1.3
+	localmake "leftLength :carHeight * 0.445
+	jumpRight :carHeight * 1.51
+	jumpForward :carHeight * 0.345
+	setPenSize 0
+	setFillColor "white
+	polyStart
+	jumpLeft :rightStripeLength
+	localmake "pos1 pos
+	left :rightAngle
+	jumpForward :stripeThickness / cos :rightAngle
+	setHeading :oldHeading + 90
+	jumpForward :rightStripeLength + :stripeThickness * tan :rightAngle
+	polyEnd
+
+	jumpTo :pos1
+	setHeading :oldHeading
+	jumpLeft :carHeight * 0.4
+	polyStart
+	jumpLeft :middleStripeLength
+	left :middleLeftAngle
+	jumpForward :stripeThickness / cos :middleLeftAngle
+	setHeading :oldHeading
+	jumpRight :middleStripeLength + :stripeThickness * (1 + (tan :middleLeftAngle))
+	polyEnd
+
+	jumpTo :pos1
+	jumpLeft :carHeight * 2.1
+	polyStart
+	jumpLeft :leftLength
+	jumpForward :stripeThickness
+	jumpRight :leftLength + :stripeThickness * 0.9
+	polyEnd
+	setTurtleState :oldState
+end
+
+to carShadow :carHeight
+	localmake "oldPos pos
+	localmake "thickness :carHeight * 0.2
+	localmake "colorStops createPList2 [
+		[0 "#0000] [0.5 "#4000] [1 "#0000]
+	]
+	jumpBackward :thickness / 2
+	localmake "fromPos pos
+	jumpForward :thickness 
+	setPenGradient createLinearGradient :fromPos pos :colorStops "pad
+	setPenSize :carHeight * 10
+	setLineCap "butt
+	backward :thickness
+	jumpTo :oldPos
+end
+
+to amigaCar :height :timeRatio
+	carShadow :height
+	carBackground :height
+	darkCarBody :height
+	wheels :height :timeRatio
+	lights :height
+	stripe :height
+end
+
+setScreenColor "#def
+amigaCar 220 animation.timeRatio
+
+to animation.snapshotstyle
+	output createPList2 [
+		["position.y 200]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 1
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

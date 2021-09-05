@@ -1,0 +1,78 @@
+// Copied from
+// https://www.f-lohmueller.de/pov_tut/x_sam/geo/yin_yang.txt
+
+// POV-Ray 3.7 Example Scene File "yin_yang.pov"
+// author: Friedrich A. Lohmueller, Aug-2005/Jan-2011 
+// homepage: www.f-lohmueller.de
+//--------------------------------------------------------------------------
+#version 3.6; // 3.7;
+global_settings{ assumed_gamma 1.0 }
+#default{ finish{ ambient 0.1 diffuse 0.9 }} 
+//--------------------------------------------------------------------------
+#include "colors.inc"
+#include "textures.inc"
+#include "functions.inc"
+//--------------------------------------------------------------------------
+// camera ------------------------------------------------------------------
+#declare Camera0 = camera {ultra_wide_angle angle 50           // front view
+                           location  <0.0 , 0.0 ,-3.0>
+                           right     x*image_width/image_height
+                           look_at   <0.0 , 0.0 , 0.0>}
+camera{Camera0}
+// sun ---------------------------------------------------------------------
+light_source{< 3000,3000,-3000> color White}
+// sky ---------------------------------------------------------------------
+sky_sphere { pigment { color White}
+                  } //end of skysphere
+//--------------------------------------------------------------------------
+//---------------------------   scenery objects  ---------------------------
+//--------------------------------------------------------------------------
+
+
+
+union{
+isosurface {
+  function{
+    f_comma( 
+       x,y,z,
+       0.95 //scale
+     )
+  }
+  threshold 0.03
+  max_gradient 2
+  accuracy 0.00001
+  contained_by {sphere {0,1.5}}
+
+  texture{
+     pigment{ color rgb <1,1,1>} 
+     finish { specular 0.1 roughness 0.1 phong 0.2 }
+         }
+  rotate<90,0,0>
+  translate< 0.0,0.05,0>
+ }
+
+isosurface {
+  function{
+    f_comma( 
+       x,y,z,
+       0.95 //scale
+     )
+  }
+  threshold 0.03
+  max_gradient 2
+  accuracy 0.00001
+  contained_by {sphere {0,1.5}}
+
+  texture{
+     pigment{ color rgb <0,0,0>} 
+     finish { specular 0.1 roughness 0.1 phong 0.2 }
+         }
+  rotate<90,0,180>
+  translate< 0.0,-0.05,0>
+ }
+
+
+  rotate<0,0,45>
+  scale <1.35,1.2,1.2>
+  translate< 0,0.00,0>
+} // end of isosurface -------------------------------------------------------

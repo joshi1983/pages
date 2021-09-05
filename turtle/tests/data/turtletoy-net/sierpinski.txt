@@ -1,0 +1,58 @@
+// copied from https://turtletoy.net/turtle/dfb383449b
+const sides = 3; //min=3, max=10, step=1
+const depth = 5; //min=1, max=7, step=1
+const size = 90; //min=30, max=100, step=5
+const rotation = 0; //min=-1, max=1, step=0.01
+
+const turtle = new Turtle();
+
+function getPolygonPoints(center, radius, sideCount, angleOffset) {
+    let points = [];
+    for (let i = 0; i < sideCount; i++) {
+        let angle = (i * 2 * Math.PI / sideCount) - Math.PI / 2 + angleOffset;
+        points.push([
+            center[0] + radius * Math.cos(angle),
+            center[1] + radius * Math.sin(angle)
+        ]);
+    }
+    return points;
+}
+
+function drawPolygon(points) {
+    turtle.jump(points[points.length - 1]);
+    for (let p of points) turtle.goto(p);
+}
+
+function getScale(n) {
+    let sum = 0;
+    for (let k = 1; k <= Math.floor(n / 4); k++) {
+        sum += Math.cos(2 * Math.PI * k / n);
+    }
+    return 1 / (2 * (1 + sum));
+}
+
+function subdivide(center, radius, level, currentRotation) {
+    if (level === 0) {
+        drawPolygon(getPolygonPoints(center, radius, sides, currentRotation));
+        return;
+    }
+
+    const scale = getScale(sides);
+    const anchorPoints = getPolygonPoints(center, radius, sides, currentRotation);
+
+    for (let p of anchorPoints) {
+        const angle = Math.atan2(p[1] - center[1], p[0] - center[0]);
+        const distToNewCenter = radius * (1 - scale);
+        
+        const newCenter = [
+            center[0] + distToNewCenter * Math.cos(angle),
+            center[1] + distToNewCenter * Math.sin(angle)
+        ];
+        subdivide(newCenter, radius * scale, level - 1, currentRotation + Math.PI * rotation);
+    }
+}
+
+function walk(i) {
+    subdivide([0, 0], size, depth, 0);
+    return false;
+}

@@ -1,0 +1,36 @@
+; Inspired by
+; https://www.pinterest.ca/pin/88172105197936333/
+to rotatingHexagon :size :timeRatio
+	localmake "oldHeading heading
+	localmake "color1 mix "red "yellow :timeRatio
+	localmake "color2 mix "yellow "red :timeRatio
+	localmake "numHexagons 8
+	localmake "angle :timeRatio * 60 * :numHexagons
+	repeat :numHexagons [
+		setPenColor mix :color2 :color1 repRatio
+		setPenSize :size * mix 0.01 0.05 repRatio
+		localmake "starSize :size * mix 0.1 0.95 repRatio
+		setHeading :oldHeading + :angle * repRatio
+		regularPolygon :starSize 6
+	]
+end
+
+setScreenColor "black
+make "timeRatio (1 + cos animation.timeRatio * 360) / 2
+make "timeRatio interpolateRatio easeInOut :timeRatio
+rotatingHexagon 100 :timeRatio
+
+to animation.snapshotstyle
+	output createPList2 [
+		["zoom.scale 3]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 2
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

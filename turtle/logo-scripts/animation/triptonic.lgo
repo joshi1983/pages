@@ -1,0 +1,117 @@
+to spiralArm :startSize :numCircles :maxReps
+	localmake "oldState turtleState
+	localmake "numReps ceiling :numCircles
+	localmake "size :startSize
+	repeat ceiling :numReps [
+		localmake "radius :size * mix 0.49 0.3 interpolateRatio easeOut repRatio
+		if repcount = :numReps [
+			localmake "radius :radius * (:numCircles + 1 - :numReps)
+		]
+		jumpForward :size
+		jumpIn :size * interpolateRatio easeInOutCubic repRatio
+		circle :radius
+		if repcount < :maxReps - 2 [
+			left 11
+		]
+		localmake "size :size * 1.114
+	]
+
+	setTurtleState :oldState
+end
+
+; Inspired by:
+; https://www.youtube.com/watch?v=2EgO2TH_Vxo
+to tripnotic :height :t :colorOffset
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "maxCircles 42
+	localmake "offsets [0]
+	repeat 4 [
+		localmake "numReps power 2 repcount
+		localmake "offset 1 / :numReps
+		localmake "numReps2 :numReps / 2
+		repeat :numReps2 [
+			queue2 "offsets :offset + repcount / :numReps2
+		]
+	]
+
+	localmake "maxTris count :offsets
+	localmake "numCirclesReal :t * :maxTris * :maxCircles
+	localmake "numCirclesInt ceiling :numCirclesReal
+	localmake "colors ["#0f0 "#f00 "#00f]
+	localmake "numTris max 1 ceiling :numCirclesInt / :maxCircles
+	setPenSize 0
+	setFillBlendMode "lighter
+
+	repeat :numTris [
+		localmake "offset (item repcount :offsets) / 3 
+		setHeading :oldHeading + :offset * 360
+		localmake "numCirclesReal1 :numCirclesReal - (repcount - 1) * :maxCircles
+		localmake "numCirclesReal1 clamp :numCirclesReal1 0 :maxCircles
+		localmake "offset :offset + :colorOffset
+		repeat 3 [
+			setFillColor mixItems :colors modulo repcount / 3 + :offset 1
+			spiralArm :height * 0.001 :numCirclesReal1 :maxCircles
+			right 360 / 3
+		]
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+make "t animation.clampedTimeRatio
+make "rotateStartTime 0.5
+make "stopTimeInterval 0.15
+make "colorOffset 0
+make "colorShiftStartTime 0.3
+if :t < :rotateStartTime [
+	setHeading 360 * interpolateRatio easeInOut :t / :rotateStartTime
+]
+if and :t > :rotateStartTime :t < 1 - :stopTimeInterval [
+	make "t2 (:t - :rotateStartTime) / (1 - :rotateStartTime - :stopTimeInterval) 
+	ifelse :t2 < 0.5 [
+		make "t2 interpolateRatio easeInOut :t2 / 0.5
+		rollRight :t2 * 360
+	] [
+		make "t2 interpolateRatio easeInOut (:t2 - 0.5) / 0.5
+		pitchUp :t2 * 360
+	]
+]
+if :t > :colorShiftStartTime [
+	make "t2 (:t - :colorShiftStartTime) / (1 - :colorShiftStartTime)
+	make "colorOffset 5 * interpolateRatio easeInOut clamp :t2 0 1
+]
+tripnotic 100 clamp :t / :rotateStartTime 0 1 :colorOffset
+
+to animation.snapshotstyle
+	localmake "minScaleTime 0.75
+	localmake "r 0
+	ifelse animation.clampedTimeRatio < :minScaleTime [
+		localmake "r (:minScaleTime - animation.clampedTimeRatio) / :minScaleTime
+	] [
+		localmake "r (animation.clampedTimeRatio - :minScaleTime) / (1 - :minScaleTime)
+	]
+	localmake "scale mix 5.5 2.8 interpolateRatio easeIn :r
+
+	localmake "zoomStartTime 0.9
+	if animation.timeRatio > :zoomStartTime [
+		localmake "t (animation.timeRatio - :zoomStartTime) / (1 - :zoomStartTime)
+		localmake "t interpolateRatio easeInOut clamp :t 0 1
+		localmake "scale :scale * power 280 :t
+	]
+	output createPList2 [
+		["zoom.scale :scale]
+	]
+end
+
+to animation.setup
+	localmake "minutes 1
+	localmake "seconds 54
+	localmake "durationSeconds :minutes * 60 + :seconds
+
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :durationSeconds]
+		["thumbnailTime :durationSeconds * 0.1]
+	]
+end

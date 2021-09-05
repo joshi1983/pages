@@ -1,0 +1,40 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Adobe_Inc.#/media/File:Adobe_Corporate_logo.svg
+to adobeLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angle1 22.8
+	jumpRight :height * 0.2627
+	localmake "rightPos pos
+	setPenSize 0
+	left :angle1
+	setFillColor "#fa0c00
+	polyStart
+	jumpForward :height * 0.6855
+	left 180 - :angle1 * 2
+	jumpForward :height * 0.467
+	setHeading :oldHeading + 90
+	jumpForward :height * 0.193
+	right 90 - :angle1
+	jumpForward distanceToLine :oldPos :rightPos
+	polyEnd
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpRight :height * 0.562
+	polyStart
+	jumpForward :height
+	jumpLeft :height * tan :angle1
+	polyEnd
+	
+	jumpTo :oldPos
+	jumpLeft :height * 0.569
+	polyStart
+	jumpForward :height
+	jumpRight :height * tan :angle1
+	polyEnd
+	setTurtleState :oldState
+end
+
+adobeLogo 100

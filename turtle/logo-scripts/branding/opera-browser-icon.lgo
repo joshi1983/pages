@@ -1,0 +1,50 @@
+; Inspired by
+; https://upload.wikimedia.org/wikipedia/commons/4/49/Opera_2015_icon.svg
+; Referenced from:
+; https://en.wikipedia.org/wiki/Opera_(web_browser)
+
+to operaIcon :size
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angle2 172.1
+	localmake "arcs1 [[69 0.36] [43.5 0.425] 
+		[11.3622 0.530988]]
+	localmake "arcs2 [[69 0.36] [16.8 0.425] [178.5 0] [-35 0.245]
+		[-23 0.17] [-35 0.22] [-24 0.34] [-23.4378 0.494]]
+	localmake "colorStops createPList2 [
+		[0 "#a70014] [1 "#ff1b2d]
+	]
+	jumpForward :size / 2
+	setFillGradient createLinearGradient :oldPos pos :colorStops "pad
+	jumpTo :oldPos
+	setPenSize 0
+	jumpRight :size * 0.33302
+	jumpForward :size * 0.127057
+	localmake "pos1 pos
+	localmake "angle1 arcSin 0.33302 * 2
+	left 90 + :angle1
+	polyStart
+	arcRight 180 + :angle1 * 2 :size / 2
+	right :angle2
+	arcLines combine :arcs1 reverse :arcs1 :size
+	polyEnd
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :size * 0.4
+	localmake "fromPos pos
+	jumpForward :size * 0.6
+	setFillGradient createLinearGradient pos :fromPos :colorStops "pad
+	jumpTo :pos1
+	right 90 - :angle1
+	setPenSize 0
+	polyStart
+	arcLeft 180 - :angle1 * 2 :size / 2
+	left 180 - :angle2
+	arcLines :arcs2 :size
+	arcLines reverse :arcs2 :size
+	polyEnd
+	setTurtleState :oldState
+end
+
+operaIcon 100

@@ -1,0 +1,39 @@
+; Inspired by
+; https://commons.wikimedia.org/wiki/File:McAfee_logo_(2017).svg
+to mcAfeeLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "colors ["#75160d "#c01818]
+	localmake "angle1 65.1
+	localmake "outerSize1 :height * 0.48
+	localmake "outerHeight :height - :outerSize1 * cos :angle1
+	localmake "verticalThickness :height * 0.195
+	localmake "innerSize1 :outerSize1 - :verticalThickness
+	localmake "innerHeight :outerHeight - :verticalThickness * 2
+	setPenSize 0
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		setFillColor item repcount :colors
+		setHeading :oldHeading - :sign * :angle1
+		polyStart
+		jumpForward :outerSize1
+		setHeading :oldHeading
+		jumpForward :outerHeight
+		right 180 - :angle1 * :sign
+		jumpForward :outerSize1
+		setHeading :oldHeading
+		jumpBackward :verticalThickness
+		left :angle1 * :sign
+		jumpForward :innerSize1
+		setHeading :oldHeading + 180
+		jumpForward :innerHeight
+		left :angle1 * :sign
+		jumpForward :innerSize1
+		polyEnd
+		jumpTo :oldPos
+	]
+	setTurtleState :oldState
+end
+
+mcAfeeLogo 100

@@ -1,0 +1,46 @@
+; Inspired by:
+; https://www.pinterest.ca/pin/98797785563848461/
+
+to drawPetal :size
+	localmake "oldState turtleState
+	localmake "angle1 30
+	localmake "angle4 120
+	localmake "arcsInfo [
+		[-15 1.42925]
+		[-30 0.6]
+		[-15 1.42925]
+	]
+
+	polyStart
+	left :angle1
+	arcsLeft :arcsInfo :size
+	right :angle4 ; point of symmetry
+	arcsLeft :arcsInfo :size
+	polyEnd
+	setTurtleState :oldState
+end
+
+to drawFlower :size :numPetals
+	localmake "oldPos pos
+	localmake "petalPadding :size * 0.08
+	localmake "petalSize :size * 0.5 - :petalPadding
+	setFillColor "black
+	repeat :numPetals [
+		jumpForward :petalPadding
+		drawPetal :petalSize
+		jumpTo :oldPos
+		right 360 / :numPetals
+	]
+end
+
+; Draw the flower with different numbers of petals
+; to show how they look.
+make "size 50
+make "separation :size * 1.2
+right 90
+setPenSize 0
+jumpBackward :separation * 2
+repeat 5 [
+	drawFlower :size repcount * 2
+	jumpForward :separation
+]

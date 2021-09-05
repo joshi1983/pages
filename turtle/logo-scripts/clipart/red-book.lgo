@@ -1,0 +1,68 @@
+; Inspired by a drawing and program at:
+; https://www.youtube.com/watch?v=edDlPeAnPD4
+to redBook :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "thickness 0.23
+	localmake "width 0.9
+	localmake "angle1 45
+	localmake "slantedHeight (1 - :thickness) / cos :angle1 
+	localmake "bindArcAngle 120
+	localmake "bindArcRadius :thickness / 2 / sin :bindArcAngle / 2
+	localmake "mainLineThickness :height * 0.04
+	setPenSize :mainLineThickness
+	localmake "height1 :height - penSize
+	localmake "bindArcRadius2 :bindArcRadius * :height1
+	localmake "bindingOffset 0.08
+	localmake "bottomLine1 [[90 0] [:width] [-:bindingOffset]]
+	localmake "bindingLine [[-90 - :bindArcAngle / 2 0]
+		[:bindArcAngle :bindArcRadius]]
+	setPenColor "black
+	setLineJoinStyle "round
+	setFillColor "white
+	jumpForward :mainLineThickness / 2
+	localmake "startPos pos
+	setPenSize 0
+	drawArcLineShape [0 0
+		(combine :bottomLine1 :bindingLine [[-90 - :bindArcAngle / 2 0]
+		[:width - :bindingOffset] [-180 :thickness / 2]])
+	] :height1
+
+	setFillColor "#e43
+	setPenSize :mainLineThickness
+	arcLines [[-90 0] [90 - :angle1 :thickness / 2]] :height1
+	drawArcLineShape [0 0
+		[[90 + :angle1 :thickness / 2] [:width] [-90 - :angle1 0]
+		[:slantedHeight] [:angle1 - 90 0]
+		[:width] [-90 - :angle1 :thickness / 2]]
+	] :height1
+	jumpTo :startPos
+	setHeading :oldHeading
+	jumpForward :height1 * :thickness
+	setPenSize penSize / 2
+	arcLines [[-:angle1 0] [:slantedHeight]] :height1
+	
+	jumpTo :startPos
+	setHeading :oldHeading
+	setPenSize :mainLineThickness
+	arcLines :bottomLine1 :height1
+	setPenSize penSize / 2
+	arcLines :bindingLine :height1
+	right 180
+	setPenSize penSize / 3
+	repeat 10 [
+		penUp
+		arcRight :bindArcAngle / 10 :bindArcRadius2
+		localmake "bindingPos pos
+		localmake "heading1 heading
+		penDown
+		setHeading :oldHeading + 90
+		forward :width * :height1 * 0.93
+		jumpTo :bindingPos
+		setHeading :heading1
+	]	
+	setTurtleState :oldState
+end
+
+setScreenColor "#ddd
+redBook 100

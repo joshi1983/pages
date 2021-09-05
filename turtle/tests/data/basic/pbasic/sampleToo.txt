@@ -1,0 +1,115 @@
+// sampleToo.bas - simplified debug version
+cls
+clr
+pen 1.0
+
+var cellSize : Int = 12
+var gridW    : Int = 8
+var gridH    : Int = 8
+var originX  : Int = 100
+var originY  : Int = 100
+var sampleX  : Int = 300
+var sampleY  : Int = 100
+
+var writtenR[64] : Float
+var writtenG[64] : Float
+var writtenB[64] : Float
+var sampledR[64] : Float
+var sampledG[64] : Float
+var sampledB[64] : Float
+
+var gx  : Int = 0
+var gy  : Int = 0
+var idx : Int = 0
+var pr  : Float = 0.0
+var pg  : Float = 0.0
+var pb  : Float = 0.0
+var px  : Int = 0
+var py  : Int = 0
+var dx  : Int = 0
+var dy  : Int = 0
+
+// ── Pass 1: draw written grid ─────────────────────────────────────────────
+gy = 0
+while (gy < gridH) {
+    gx = 0
+    while (gx < gridW) {
+        idx = gy * gridW + gx
+        pr = RND(0)
+        pg = RND(0)
+        pb = RND(0)
+        writtenR[idx] = pr
+        writtenG[idx] = pg
+        writtenB[idx] = pb
+        dy = 0
+        while (dy < cellSize) {
+            dx = 0
+            while (dx < cellSize) {
+                px = originX + gx * cellSize + dx
+                py = originY + gy * cellSize + dy
+                POINT(px, py, pr, pg, pb, 1.0)
+                dx = dx + 1
+            }
+            dy = dy + 1
+        }
+        gx = gx + 1
+    }
+    gy = gy + 1
+}
+
+locate 5,1
+print "Pass 1 done"
+
+// ── Pass 2: sample centre of each cell ───────────────────────────────────
+gy = 0
+while (gy < gridH) {
+    gx = 0
+    while (gx < gridW) {
+        idx = gy * gridW + gx
+        px = originX + gx * cellSize + 6
+        py = originY + gy * cellSize + 6
+        sampledR[idx] = SAMPLE(px, py, 0, 1.0)
+        sampledG[idx] = SAMPLE(px, py, 1, 1.0)
+        sampledB[idx] = SAMPLE(px, py, 2, 1.0)
+        gx = gx + 1
+    }
+    gy = gy + 1
+}
+
+print "Pass 2 done"
+print "Cell 0 written R=";
+print writtenR[0]
+print " sampled R=";
+print sampledR[0]
+print "Cell 0 written G=";
+print writtenG[0]
+print " sampled G=";
+print sampledG[0]
+
+// ── Pass 3: draw sampled grid ─────────────────────────────────────────────
+gy = 0
+while (gy < gridH) {
+    gx = 0
+    while (gx < gridW) {
+        idx = gy * gridW + gx
+        pr = sampledR[idx]
+        pg = sampledG[idx]
+        pb = sampledB[idx]
+        dy = 0
+        while (dy < cellSize) {
+            dx = 0
+            while (dx < cellSize) {
+                px = sampleX + gx * cellSize + dx
+                py = sampleY + gy * cellSize + dy
+                POINT(px, py, pr, pg, pb, 1.0)
+                dx = dx + 1
+            }
+            dy = dy + 1
+        }
+        gx = gx + 1
+    }
+    gy = gy + 1
+}
+
+print "Pass 3 done"
+end

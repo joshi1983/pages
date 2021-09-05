@@ -1,0 +1,24 @@
+!
+!  KENDALLW.  Show how to compute Kendall W.
+!  Compare six patients' rankings of three drug treatments.
+!  Data from "Analysing Qualitative Data" by A. E. Maxwell, p. 121.
+!
+LIBRARY "Stat3Lib.trc"
+
+DIM t(6,3)
+
+MAT READ t
+CALL KendallW (t, w, f, p)
+
+PRINT "Kendall W: "; w
+PRINT "F-value for W:"; f
+PRINT "Probability: "; Using$("#.###",p)
+
+DATA 3, 2, 1                      ! Patient 1's rankings
+DATA 2, 1, 3                      ! Patient 2
+DATA 1, 2, 3                      ! etc.
+DATA 2, 1, 3
+DATA 1, 3, 2
+DATA 1, 2, 3
+
+END

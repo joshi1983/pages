@@ -1,0 +1,17 @@
+; Inspired by
+; https://www.pinterest.ca/pin/452189618843115451
+to rainbowFlower :size
+	localmake "numPetals 32
+	localmake "colors ["white "skyblue "aqua "blue "red "orange]
+	setPenSize 0
+	repeat :numPetals [
+		localmake "ratio repcount / :numPetals
+		localmake "resultRGB mixItems :colors :ratio
+		setFillColor mix :resultRGB transparent 0.3
+		arcPair :size 100
+		right 360 / :numPetals
+	]
+end
+
+setScreenColor "black
+rainbowFlower 150

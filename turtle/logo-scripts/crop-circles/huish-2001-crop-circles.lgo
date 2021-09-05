@@ -1,0 +1,82 @@
+make "darkColor "#780
+
+; Inspired by
+; https://www.pinterest.ca/pin/59391288813966890/
+; It is also shown at
+; https://temporarytemples.co.uk/wp-content/uploads/2014/07/2001_08_14_huish-wiltshire-wheat-35mm.jpg
+; and mentioned at:
+; https://temporarytemples.co.uk/crop-circles/2001-crop-circles
+; Located at Huish, near Draycot Fitzpayne, Wiltshire, England
+; It was reported at:
+; August 14, 2001
+to huishCropCircles :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "lightColor "#ef8
+	localmake "outerRadii vectorScale [0.06 0.015 0.008] :height
+	localmake "largeRadius :height * 0.38
+	localmake "angles1 [90 - 180 / 8 90 - 180 / 4]
+	localmake "lineAngles (combine  :angles1 [0] vectorScale :angles1 -1)
+	localmake "gap :height / 2 - :largeRadius
+	repeat count :outerRadii [
+		localmake "factor 1
+		if repcount <> 1 [
+			localmake "factor 2
+		]
+		localmake "gap :gap - :factor * item repcount :outerRadii
+	]
+	localmake "gap :gap / (-1 + count :outerRadii)
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	setFillColor :lightColor
+	localmake "circlePoints []
+	repeat 8 [
+		jumpForward :largeRadius
+		if or repcount = 2 repcount = 8 [
+			queue2 "circlePoints pos
+		]
+		repeat count :outerRadii [
+			localmake "radius item repcount :outerRadii
+			circle :radius
+			jumpForward :radius
+			if repcount < count :outerRadii [
+				localmake "nextRadius item 1 + repcount :outerRadii
+				jumpForward :gap + :nextRadius
+			]
+		]
+		right 360 / 8
+		jumpTo :center
+	]
+	setFillColor transparent
+	setPenSize :height * 0.003
+	setPenColor :lightColor
+	jumpBackward :largeRadius
+	localmake "bottomPos pos
+	right 90
+	repeat 10 [
+		localmake "radius :largeRadius * mix 1 0.3 repRatio
+		circleLeft :radius
+	]
+	localmake "points []
+	repeat count :lineAngles [
+		setHeading :oldHeading + item repcount :lineAngles
+		forward :height * 0.244815
+		if or repcount = 2 repcount = 5 [
+			queue2 "points pos
+		]
+		forward distanceToCircle :center :largeRadius
+		jumpTo :bottomPos
+	]
+	setPenColor :lightColor
+	repeat count :points [
+		jumpTo item repcount :points
+		localmake "p item repcount :circlePoints
+		setHeading towards :p
+		forward distance :p
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor :darkColor
+huishCropCircles 100
