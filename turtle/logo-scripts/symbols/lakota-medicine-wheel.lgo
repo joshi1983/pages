@@ -1,0 +1,49 @@
+; Inspired by:
+; https://en.wikipedia.org/wiki/File:Lakota_medicine_wheel.svg
+to lakotaMedicineWheel :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "colors ["red "yellow "white "black]
+	localmake "thicknessFactor 0.077
+	localmake "thickness :height * :thicknessFactor
+	setPenColor "black
+	setPenSize :height * 0.002
+	localmake "radius (:height - penSize) / 2
+	localmake "innerRadius :radius - :thickness
+	setLineJoinStyle "miter
+	jumpForward :height / 2
+	localmake "center pos
+	repeat count :colors [
+		setHeading :oldHeading + repcount * 360 / 4
+		setFillColor item repcount :colors
+		jumpForward :thickness / 2
+		jumpLeft :thickness / 2
+		localmake "pos1 pos
+		jumpRight :thickness
+		localmake "pos2 pos
+		jumpBackward :thickness
+		localmake "pos3 pos
+		jumpLeft :thickness
+		localmake "pos4 pos
+		jumpTo :pos3
+		polyStart
+		jumpForward distanceToCircle :center :radius
+		setHeading (towards :center) + 90
+		localmake "arcAngle getArcLeftAngleToLine :radius :pos1 :pos2
+		arcLeft :arcAngle :radius
+		setHeading towards :pos1
+		jumpForward distanceToCircle :center :innerRadius
+		setHeading (towards :center) - 90
+		localmake "arcAngle getArcRightAngleToLine :innerRadius :pos1 :pos4		
+		arcRight :arcAngle :innerRadius
+		setHeading towards :pos4
+		jumpForward distance :pos1
+		jumpLeft :thickness
+		polyEnd
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "#eee
+lakotaMedicineWheel 100

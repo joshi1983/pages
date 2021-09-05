@@ -1,0 +1,93 @@
+; Inspired by
+; https://upload.wikimedia.org/wikipedia/commons/d/d7/Android_robot.svg
+
+to androidRobotLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "whitePadding :height * 0.022
+	localmake "armSeparation :height * 0.69
+	localmake "armLength :height * 0.245
+	localmake "legSeparation :height * 0.197
+	localmake "legLength :height * 0.2
+	localmake "headArcRadius :height * 0.25
+	localmake "antennaAngle 29
+	localmake "antennaLength :height * 0.087
+	localmake "arcAngle1 45
+	localmake "arcAngle2 180 - 2 * :arcAngle1
+	localmake "headArcRadius1 :height * 0.23
+	localmake "headArcRadius2 :height * 0.278
+	localmake "bodyWidth :height * 0.5276
+	localmake "bodyHeight :height * 0.38
+	localmake "bodyArcRadius :height * 0.065
+	localmake "eyeSeparation :height * 0.244
+	localmake "eyeRadius :height * 0.022
+	setLineCap "round
+	setPenColor "#a4c639
+	setFillColor penColor
+	setPenSize :height * 0.12
+	
+	; Draw arms.
+	jumpForward :height * 0.3625
+	jumpLeft :armSeparation / 2
+	forward :armLength
+	jumpRight :armSeparation
+	backward :armLength
+	jumpTo :oldPos
+
+	; Draw legs.
+	jumpForward :whitePadding + penSize / 2
+	jumpLeft :legSeparation / 2
+	forward :legLength
+	jumpRight :legSeparation
+	backward :legLength
+
+	; Draw antenna
+	jumpTo :oldPos
+	jumpForward :height * 0.675
+	localmake "antennaCenter pos
+	setPenSize :height * 0.017
+	left :antennaAngle
+	repeat 2 [
+		jumpForward :headArcRadius
+		forward :antennaLength
+		jumpTo :antennaCenter
+		right :antennaAngle * 2
+	]
+
+	; Draw head.
+	setPenSize 0
+	setHeading :oldHeading
+	jumpForward :height * 0.0038
+	jumpLeft :bodyWidth / 2
+	polyStart
+	; 3 circular arcs instead of 1 because
+	; the head is slightly elliptical.
+	arcRight :arcAngle1 :headArcRadius1
+	arcRight :arcAngle2 :headArcRadius2
+	arcRight :arcAngle1 :headArcRadius1
+	polyEnd
+
+	; Draw main body.
+	jumpForward :whitePadding
+	polyStart
+	jumpForward :bodyHeight
+	arcRight 90 :bodyArcRadius
+	jumpForward :bodyWidth - :bodyArcRadius * 2
+	arcRight 90 :bodyArcRadius
+	jumpForward :bodyHeight
+	polyEnd
+
+	; Draw eyes.
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.798
+	jumpLeft :eyeSeparation / 2
+	setFillColor "white
+	circle :eyeRadius
+	jumpRight :eyeSeparation
+	circle :eyeRadius
+	setTurtleState :oldState
+end
+
+androidRobotLogo 100
