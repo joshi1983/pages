@@ -1,0 +1,72 @@
+to flirLogoCustomColor :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "size1 :height / 6 / cos 45
+	localmake "lengths vectorScale [1 1 2] :size1
+	setPenSize 0
+	jumpForward :height / 2
+	localmake "center pos
+	repeat 2 [
+		setHeading :oldHeading + repcount * 360 / 2
+		jumpForward :size1 * cos 45
+		left 135
+		polyStart
+		repeat count :lengths [
+			jumpForward item repcount :lengths
+			right 90
+		]
+		repeat count :lengths [
+			jumpForward item 4 - repcount :lengths
+			right 90
+		]
+		polyEnd
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+to flirBlackLogo :height
+	setFillColor "black
+	flirLogoCustomColor :height
+end
+
+; Inspired by logo at
+; https://www.flir.com/about/about-flir/
+to flirWhiteLogo :height
+	stripes :height * 2 :height ["black]
+	setFillColor "white
+	flirLogoCustomColor :height
+end
+
+; Inspired by logo at upper left corner on:
+; https://www.flir.com
+to teledyneFlirLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "gap :height * 0.05
+	localmake "angle 45
+	localmake "size1 (:height - :gap * cos 45) / (1 + cos :angle)
+	jumpForward :height
+	setFillColor "black
+	setPenSize 0
+	localmake "center pos
+	repeat 4 [
+		setHeading :oldHeading + 90 + (repcount - 1) * 180 / 3
+		jumpForward :gap
+		setHeading :oldHeading + 45 + repcount * 180 / 4
+		jumpForward :size1 / 2
+		right 90
+		parallelogram :size1 :size1 -:angle
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 4
+jumpLeft :separation
+flirBlackLogo :height
+jumpRight :separation
+flirWhiteLogo :height
+jumpRight :separation
+teledyneFlirLogo :height

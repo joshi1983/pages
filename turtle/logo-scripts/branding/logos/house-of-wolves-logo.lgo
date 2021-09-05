@@ -1,0 +1,104 @@
+make "angle 40
+
+to fillAlmostSquare :width
+	localmake "oldState turtleState
+	localmake "baseWidth :width / 2 / sin :angle
+	jumpRight :width / 2
+	left 90 - :angle
+	jumpLeft :baseWidth / 2
+	parallelogram :baseWidth :baseWidth 2 * (45 - :angle)
+	setTurtleState :oldState
+end
+
+to fillHouseOfWolvesShape :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "thicknessRatio 0.032
+	localmake "shapes [
+		[-0.015 0 [[0.34] [-8 1] [-32 0.13] [0.147] 
+		[-90 0] [:thicknessRatio] [-90 0] [0.177] [32 0.14] [6 0.5]]]
+
+		[-0.015 0.51 [[-20 0.3] [-20 0.1] [0.211] [-90 0] 
+		[:thicknessRatio] [-90 0] [0.23] [24 0.23]]]
+	
+		[-0.015 0.617 [[-18 0.33] [-22 0.13] [0.125] [-90 0]
+		[:thicknessRatio] [-90 0] [0.155] [29.2 0.21]]]
+	]
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		localmake "height1 :sign * :height
+		repeat count :shapes [
+			localmake "shapeInfo item repcount :shapes
+			jumpLeft :height1 * first :shapeInfo
+			jumpForward :height * item 2 :shapeInfo
+			polyStart
+			arcLines last :shapeInfo :height1
+			polyEnd
+			jumpTo :oldPos
+			setHeading :oldHeading
+		]
+	]
+	localmake "topOffset :height * 0.872
+	jumpForward :topOffset
+	localmake "smallSquareSize :height * 0.045
+	fillAlmostSquare :height * 0.065
+	localmake "center pos
+	localmake "separation 2 * (:height - :topOffset) - :smallSquareSize / tan :angle
+	repeat 2 [
+		jumpBackward :separation / 2 * sign repcount - 1.5
+		fillAlmostSquare :smallSquareSize
+		jumpTo :center
+	]
+	localmake "width1 :height * 0.215
+	localmake "len1 :height * 0.117
+	localmake "thickness1 :height * 0.035
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		jumpRight :sign * :width1 / 2
+		localmake "middlePos2 pos
+		left :angle * :sign
+		polyStart
+		jumpForward :len1
+		left (180 - :angle * 2) * :sign
+		jumpForward :thickness1
+		left :angle * 2 * :sign
+		localmake "len2 distanceToLine :center :middlePos2
+		jumpForward :len2
+		right 2 * :angle * :sign
+		jumpForward :len2
+		left 2 * :angle * :sign
+		jumpForward :thickness1
+		polyEnd
+		jumpTo :center
+		setHeading :oldHeading
+		jumpRight :sign * :height * 0.167
+		right :angle * :sign
+		localmake "squareSize :height * 0.032
+		rect :squareSize :squareSize
+		jumpTo :center
+		setHeading :oldHeading
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://logodix.com/logos/403598
+; That's listed at:
+; https://logodix.com/house-of-wolves-destiny
+to houseOfWolvesDestinyLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	setPenSize 0
+	setFillColor "#3fff
+	fillHouseOfWolvesShape :height
+
+	setFillColor "white
+	jumpTo :oldPos
+	jumpForward :height * 0.393
+	fillHouseOfWolvesShape :height * 0.38
+	setTurtleState :oldState
+end
+
+setScreenColor "#1a3d43
+houseOfWolvesDestinyLogo 100

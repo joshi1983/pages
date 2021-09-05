@@ -1,0 +1,33 @@
+; Inspired by:
+; https://en.wikipedia.org/wiki/Marelli_Holdings#/media/File:Marelli_logo.svg
+to marelliLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "angle 30
+	localmake "height1 :height * cos :angle
+	localmake "outerTriangleWidth :height * 2 * sin :angle
+	localmake "separation :outerTriangleWidth * cos :angle
+	localmake "thickness 0.32
+	localmake "innerLen 1 - :thickness / sin :angle
+	localmake "lines1 [
+		[180 - :angle 0] [1] [90 + :angle 0] [:thickness]
+		[90 - :angle 0] [:innerLen] [:angle - 90 0]
+	]
+	setPenSize 0
+	setFillColor "#009cde
+	jumpLeft :separation / 2
+	jumpForward :height - (:height1 * cos :angle)
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		right :sign * :angle
+		drawArcLineShape [0 :height1 / :height 
+			combine :lines1 reverse :lines1
+		] :height		
+		setHeading :oldHeading
+		jumpRight :separation
+	]	
+
+	setTurtleState :oldState
+end
+
+marelliLogo 100

@@ -1,0 +1,66 @@
+; Inspired by:
+; https://upload.wikimedia.org/wikipedia/commons/1/1e/Flag_of_Bonaire.svg
+; Referenced from:
+; https://en.wikipedia.org/wiki/Flag_of_Bonaire
+
+to triangle :size
+	localmake "oldState turtleState
+	jumpRight :size / 2
+	left 30
+	polyStart
+	repeat 2 [
+		jumpForward :size
+		left 120
+	]
+	polyEnd
+	setTurtleState :oldState
+end
+
+to bonaireFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 3 / 2
+	localmake "circleRadius :height * 0.202
+	localmake "redTriangleSize :height * 0.217
+	setPenSize :width
+	setPenColor "white
+	setLineCap "butt
+	forward :height
+	jumpLeft :height / 8
+	setPenSize 0
+	setFillColor "#ffd700
+	polyStart
+	jumpLeft :width / 2 - :height / 8
+	jumpBackward :height * 5 / 12
+	polyEnd
+	jumpBackward :height * 7 / 12
+	setFillColor "#003087
+	polyStart
+	jumpRight :width
+	jumpForward :height
+	polyEnd
+	jumpLeft :width * 13 / 18
+	jumpBackward :height * 31/72
+	setFillColor transparent
+	setPenColor "black
+	setPenSize :height * 0.0285
+	circle :circleRadius
+	setFillColor "black
+	setPenSize 0
+	localmake "pos1 pos
+	repeat 4 [
+		jumpForward :circleRadius
+		triangle :height * 0.055
+		jumpTo :pos1
+		right 90
+	]
+	setFillColor "#d50032
+	repeat 2 [
+		jumpBackward :redTriangleSize / 3 * cos 30
+		triangle :redTriangleSize
+		right 60
+		jumpTo :pos1
+	]
+	setTurtleState :oldState
+end
+
+bonaireFlag 100
