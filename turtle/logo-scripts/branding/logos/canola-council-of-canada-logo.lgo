@@ -1,0 +1,70 @@
+to createWhiteGradient :height
+	localmake "oldState turtleState
+	localmake "fromPos pos
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#8fff
+	setProperty "colorStops 1 "#0fff
+	jumpRight :height * 0.2
+	localmake "result createLinearGradient :fromPos pos :colorStops "pad
+	setTurtleState :oldState
+	output :result
+end
+
+; Inspired by logo at
+; https://www.canolacouncil.org/
+to canolaCanadaLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "arcsInfo [
+		[20 0.5] [30 0.16] [40 0.2] [5 0.6975238]
+	]
+	localmake "arcsInfo2 [
+		[25 0.8] [37 0.27] [77 0.22826213]
+	]
+	localmake "angle 0
+	repeat count :arcsInfo [
+		localmake "angle :angle + first (item repcount :arcsInfo)
+	]
+	localmake "angle2 0
+	repeat count :arcsInfo2 [
+		localmake "angle2 :angle2 + first (item repcount :arcsInfo2)
+	]
+	jumpForward :height / 2
+	localmake "height :height / 1.007
+	setPenSize 0
+	left 45
+	jumpForward :height * 0.55
+	setFillColor "#ffdf00
+	polyStart
+	right 90
+	localmake "points []
+	repeat 4 [
+		arcsRight :arcsInfo :height
+		left :angle * 2 - 90
+		queue2 "points pos
+		arcsRight reverse :arcsInfo :height
+	]
+	polyEnd
+	repeat 2 [
+		localmake "index 5 - repcount * 1
+		jumpTo item :index :points
+		setHeading (towards item :index - 1 :points)
+		setFillGradient createWhiteGradient :height
+		right :angle
+		polyStart
+		arcsLeft reverse :arcsInfo :height
+		arcsLeft :arcsInfo :height
+		polyEnd
+	]
+	jumpTo first :points
+	setFillColor "white
+	setHeading :oldHeading + 270 - :angle2
+	polyStart
+	arcsRight :arcsInfo2 :height
+	arcsRight reverse :arcsInfo2 :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+canolaCanadaLogo 100
