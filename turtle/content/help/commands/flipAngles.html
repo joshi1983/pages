@@ -1,0 +1,32 @@
+<code>; myFlipAngles procedure works a lot like the flipAngles command.
+; The flipAngles command is available so you don't need to implement it yourself.
+; Reviewing this implementation could help you implement something similar using procedures, though.
+to myFlipAngles :data
+	localmake "result []
+	repeat count :data [
+		localmake "pair item repcount :data
+		ifelse 1 >= count :pair [
+			queue2 "result :pair
+		] [
+			queue2 "result [-first :pair last :pair]
+		]
+	]
+	output :result
+end
+
+make "data [[90 0] [50] [30 100]]
+print flipAngles :data
+; prints [[-90 0] [50] [-30 100]]
+
+print myFlipAngles :data
+; also prints [[-90 0] [50] [-30 100]]</code><code>print flipAngles []
+; prints []
+
+print flipAngles [[1]]
+; prints [[1]]
+
+print flipAngles [[90 0]]
+; prints [[-90 0]]
+
+print flipAngles [[90 0] [30 100]]
+; prints [[-90 0] [-30 100]]</code>

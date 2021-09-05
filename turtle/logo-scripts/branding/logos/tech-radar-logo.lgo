@@ -1,0 +1,43 @@
+; Inspired by logo at:
+; https://www.techradar.com
+to techRadarLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "minRadius :height * 0.1572
+	localmake "thickness :height * 0.1289
+	localmake "innerGap :minRadius - :thickness / 2
+	localmake "thickness2 :height * 0.138
+	setPenSize :thickness
+	setPenColor "#E40784
+	jumpForward :minRadius + penSize / 2
+	jumpLeft :height * 0.278
+	setFillColor transparent
+	circle :minRadius
+	localmake "center pos
+	jumpBackward :innerGap
+	jumpLeft :innerGap
+	localmake "bottomLeft pos
+	jumpForward :innerGap
+	setPenSize 0
+	setFillColor penColor
+	repeat 2 [
+		localmake "radius :height * item repcount [0.367 0.64]
+		localmake "outerRadius :radius + :thickness2
+		jumpTo :bottomLeft
+		setHeading :oldHeading + 90
+		jumpForward distanceToCircle :center :radius
+		setHeading (towards :center) + 90
+		localmake "arcAngle 90 + 2 * arcSin :innerGap / :radius
+		polyStart
+		arcLeft :arcAngle :radius
+		setHeading :oldHeading
+		jumpForward distanceToCircle :center :outerRadius
+		setHeading (towards :center) - 90
+		localmake "arcAngle 90 + 2 * arcSin :innerGap / :outerRadius
+		arcRight :arcAngle :outerRadius
+		polyEnd
+	]
+	setTurtleState :oldState
+end
+
+techRadarLogo 100
