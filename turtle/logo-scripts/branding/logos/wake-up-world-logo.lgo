@@ -1,0 +1,150 @@
+to createOuterGradient :radius
+	localmake "oldState turtleState
+	localmake "colorStops createPList2 [
+		[0 "black] [1 "#00298b]
+	]
+	right 45
+	jumpForward :radius
+	localmake "fromPos pos
+	jumpBackward :radius * 2
+	localmake "result createLinearGradient :fromPos pos :colorStops "pad
+	setTurtleState :oldState
+	output :result
+end
+
+to drawInnerFlower :radius
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "outerArcsInfo [[90 0] [0.17] [-85 0] [0.6883692]
+	[-60 0.15] [0.1] [40 0.21584685] [-75 0]]
+	localmake "arcAngle 70
+	localmake "innerPeddleArcs [
+		[:arcAngle / 2 0] [-:arcAngle 0.58] [(:arcAngle - 180) / 2 0] 
+	]
+	setPenSize 0
+	localmake "colorStops createPList2 [
+		[0 "#1b54ae] [0.2 "#1b54ae] [1 "#000]
+	]
+	setFillGradient createRadialGradient pos :radius :colorStops
+	repeat 8 [
+		setHeading :oldHeading + repcount * 360 / 8
+		polyStart
+		arcLines :outerArcsInfo :radius
+		arcLines reverse :outerArcsInfo :radius
+		polyEnd
+		jumpTo :oldPos
+	]
+	localmake "colorStops createPList2 [
+		[0 "#ac6994] [0.2 "#ac6994] [1 "#f7c77d]
+	]
+	setFillGradient createRadialGradient pos :radius * 0.8 :colorStops
+	repeat 8 [
+		setHeading :oldHeading + repcount * 360 / 8
+		polyStart
+		arcLines :innerPeddleArcs :radius
+		arcLines reverse :innerPeddleArcs :radius
+		polyEnd		
+		jumpTo :oldPos
+	]
+	setFillColor "#f1c07d
+	circle :radius * 0.18
+	setTurtleState :oldState
+end
+
+to fluerDeLis :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "arcs [[30 0] [95 0.35] [-123 0] [-40 0.35] [-63 0.3]
+	[120.13395 0] [-60 0.405] [39 0.246204] [-88.13395 0]]
+	localmake "colorStops createPList2 [
+		[0 "#f0c07e] [1 "#a05a99]
+	]
+	jumpForward :height
+	setFillGradient createLinearGradient :oldPos pos :colorStops "pad
+	jumpTo :oldPos
+	setPenSize 0
+	polyStart
+	arcLines :arcs :height
+	arcLines reverse :arcs :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+to largePetal :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "oldGradient fillGradient
+	localmake "arcs [[140 0] [0.2] [20 0.85] [50 0.26]
+		[40 0.14] [185 0.02] [-50 0.08] [-90 0.06] [-140 0.128]
+		[-102 0.18] [-60 0.3] [-35.759 0.7] [10 2.175] [-57.241 0]]
+	setPenSize 0
+	setFillColor "white
+	jumpForward :height * 0.2
+	localmake "height1 :height * 0.8
+	isoTriangle :height1 :height1
+	jumpTo :oldPos
+	jumpForward :height * 0.8
+	setFillGradient :oldGradient
+	polyStart
+	arcLines :arcs :height
+	arcLines reverse :arcs :height
+	polyEnd
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.27
+	fluerDeLis :height * 0.48
+	setFillGradient :oldGradient
+	setTurtleState :oldState
+end
+
+to drawOuterShape :height
+	localmake "oldState turtleState
+	localmake "info [[27 0] [30 1.991] [-109.5 0] [-37.5 1.133]]
+	setPenSize 0
+	polyStart
+	arcLines :info :height
+	arcLines reverse :info :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by Wake Up World channel logo at:
+; https://www.youtube.com/@JoinWakeUpWorld
+to wakeUpWorldLogo :height
+	localmake "oldState turtleState
+	jumpForward :height / 2
+	localmake "center pos
+	setPenGradient createOuterGradient :height / 2
+	setPenSize :height * 0.02
+	circle (:height - penSize) / 2
+	setPenSize :height * 0.03
+	roundIsoStar :height * 0.49 :height * 0.4 6 :height * 0.19 0
+	drawInnerFlower :height * 0.16
+	localmake "colorStops createPList2 [
+		[0 "black] [1 "#f95355]
+	]
+	setFillGradient createRadialGradient pos :height / 2 :colorStops
+	right 180 / 6
+	repeat 6 [
+		jumpForward :height * 0.18
+		largePetal :height * 0.31
+		jumpTo :center
+		right 360 / 6
+	]
+	localmake "colorStops createPList2 [
+		[0 "black] [0.83 "black] [1 "#1b54ae]
+	]
+	setFillGradient createRadialGradient pos :height * 0.39 :colorStops
+	right 180 / 6
+	repeat 6 [
+		jumpForward :height * 0.3
+		drawOuterShape :height * 0.1
+		jumpTo :center
+		right 360 / 6
+	]
+	setTurtleState :oldState
+end
+
+wakeUpWorldLogo 100

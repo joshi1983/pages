@@ -1,0 +1,45 @@
+to heart :size
+	localmake "oldState turtleState
+	localmake "arcsInfo [
+		[20 1.8265] [-202.7 0.29224]
+	]
+	localmake "angle1 35
+	localmake "angle4 120
+	left :angle1
+	polyStart
+	arcsLeft :arcsInfo :size
+	left :angle4 
+	; point of symmetry
+	arcsLeft reverse :arcsInfo :size
+	polyEnd
+
+	setTurtleState :oldState
+end
+
+to fourLeafClover :size
+	localmake "oldPos pos
+	setPenSize :size * 0.01
+	setFillColor "green
+
+	; draw stem.
+	jumpBackward :size * 0.4
+
+	right 180
+	polyStart
+	arcLeft 60 :size * 0.6
+	right 90
+	forward :size * 0.05
+	right 90
+	arcRight 60 :size * 0.6
+	polyEnd
+	jumpTo :oldPos
+
+	; draw the 4 heart-shaped leafs.
+	repeat 4 [
+		heart :size * 0.5
+		right 90
+	]
+end
+
+fourLeafClover 100
+hideTurtle
