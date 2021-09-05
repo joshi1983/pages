@@ -1,0 +1,26 @@
+; Inspired by favicon at:
+; https://rosettacode.org
+to rosettaCodeFavicon :height
+	localmake "oldState turtleState
+	localmake "hexRadius :height * 0.16
+	localmake "offset :height / 2 - :hexRadius * cos 180 / 6
+	jumpForward :height / 2
+	right 180 / 6
+	localmake "center pos
+	setPenSize 0
+	setFillColor "#8e7650
+	regularPolygon :hexRadius 6
+	setFillColor "#ffc200
+
+	repeat 6 [
+		right 180 / 6
+		jumpForward :offset
+		right 180 / 6
+		regularPolygon :hexRadius 6
+		jumpTo :center
+	]
+
+	setTurtleState :oldState
+end
+
+rosettaCodeFavicon 100

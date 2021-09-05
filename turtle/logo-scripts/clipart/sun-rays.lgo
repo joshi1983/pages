@@ -1,0 +1,38 @@
+to drawRay :height
+	localmake "oldState turtleState
+	setPenSize 0
+	polyStart
+	arcLines [[20 0] [-45 0.6] [50 0.3] [-42 0.402]
+	[-170 0] [40 0.4] [-58 0.3] [70.030442 0.392]] :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://www.pinterest.ca/pin/111534528266917367
+to sun :height
+	localmake "oldState turtleState
+	localmake "innerRadius :height * 0.33
+
+	; The 1.1 factor is used to get a little overlap
+	; between the ray and the inner circle.  
+	; A little overlap prevents some fringing 
+	; artifacts between touching edges.
+	localmake "rayLength (:height / 2 - :innerRadius) * 1.1
+	localmake "numRays 48
+	setFillColor "#eddd08
+	setPenSize 0
+	jumpForward :height / 2
+	localmake "center pos
+	circle :innerRadius
+	repeat :numRays [
+		jumpForward :height / 2 - :rayLength
+		drawRay :rayLength
+		jumpTo :center
+		right 360 / :numRays
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "#3d1e05
+sun 100

@@ -1,0 +1,49 @@
+<code>; Behaves exactly like roundParallelogram command.
+; The roundParallelogram command is available so you don't need to implement it yourself.
+; Reviewing this implementation could help you implement something similar using procedures, though.
+to myRoundParallelogram :width :slantedHeight :angle :cornerRadius
+	localmake "oldState turtleState
+	localmake "angle2 90 + :angle
+	localmake "angle3 90 - :angle
+	if :slantedHeight &lt; 0 [
+		localmake "slantedHeight -:slantedHeight
+		right 180
+	]
+	localmake "straightHeight :slantedHeight - :cornerRadius * 2 / cos :angle
+	localmake "straightWidth1 :width / 2 - :cornerRadius * tan :angle2 / 2
+	localmake "straightWidth2 :width / 2 - :cornerRadius  * tan :angle3 / 2
+	polyStart
+	left 90
+	jumpForward :straightWidth1
+ 	arcLeft -:angle2 :cornerRadius
+	jumpForward :straightHeight
+	arcLeft -:angle3 :cornerRadius
+	jumpForward :straightWidth1 + :straightWidth2
+ 	arcLeft -:angle2 :cornerRadius
+	jumpForward :straightHeight
+ 	arcLeft -:angle3 :cornerRadius
+	polyEnd
+
+	setTurtleState :oldState
+end
+
+make "width 30
+make "angle mix -60 60 animation.timeRatio
+make "slantedHeight 100
+make "cornerRadius 4
+
+setPenSize 0
+setFillColor "#00f
+parallelogram :width :slantedHeight :angle
+
+setFillColor "#8f00
+myRoundParallelogram :width :slantedHeight :angle :cornerRadius</code>
+
+<code>make "width 20
+make "slantedHeight 60
+make "angle 30
+
+parallelogram :width :slantedHeight :angle
+
+setFillColor "red
+roundParallelogram :width :slantedHeight :angle 5</code>

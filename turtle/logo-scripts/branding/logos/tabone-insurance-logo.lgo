@@ -1,0 +1,33 @@
+; Inspired by logo at:
+; https://taboneinsurance.com
+to taboneInsuranceLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "line1 [
+		[73 0] [-55 0.58] [-24.3 1.1] [-66.5 0] [0.449326]
+		[-17.2 0]
+	]
+	localmake "closedShield combine :line1 reverse :line1
+	localmake "goldColor "#dfb610
+	setFillColor "#141a46
+	setLineJoinStyle "miter
+	setPenSize :height * 0.025
+	setPenColor :goldColor
+	jumpForward :height * 0.714
+	repeat 3 [
+		localmake "width :height * mix 1.51 2.15 repRatio
+		stripes :width :height * 0.02 [:goldColor]
+		jumpBackward :height * 0.096
+	]
+	jumpTo :oldPos
+	drawArcLineShape [0 0.015
+		:closedShield
+	] :height
+	jumpForward :height * 0.407
+	stripes :height * 0.05 :height * 0.265 [:goldColor]
+	jumpForward :height * 0.315
+	stripes :height * 0.3 :height * 0.04 [:goldColor]
+	setTurtleState :oldState
+end
+
+taboneInsuranceLogo 100

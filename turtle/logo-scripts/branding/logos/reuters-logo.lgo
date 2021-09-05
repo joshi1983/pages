@@ -1,0 +1,41 @@
+; Inspired by logo at
+; https://www.reuters.com/world/china/china-state-media-slams-sinograin-over-alleged-use-fuel-tankers-transport-2024-07-08/
+to reutersLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "innerGap :height * 0.25
+	; The pattern superficially looks simple but I couldn't 
+	; find a simple mathematical formula that accurately matched up with the 
+	; angles or radii of circles.
+	; The following data indicates polar coordinates for each and every circle.
+	localmake "circles [
+		[16 0.3 0] [46 0.24 0.004] [75.6 0.3 0.005] [105 0.37 0.004] [134 0.46 0.004]
+		[164 0.36 0] [194 0.3 0] [224 0.21 -0.004] [254.5 0.29 -0.004] [285 0.36 -0.004]
+		[316 0.46 -0.002] [346 0.36 0]
+
+		; outer circles
+		[0.8 0.5 0.2] [23.15 0.6 0.202] [45.4 0.67 0.204] [67.7 0.58 0.2024]
+		[90 0.505 0.204] [112.3 0.427 0.2042] [137.7 0.34 0.193]
+		[156.9 0.42 0.201] [179.3 0.505 0.199] [202 0.57 0.195]
+		[224.5 0.66 0.195] [247.3 0.595 0.195] [270 0.5 0.194] [292.9 0.43 0.193]
+		[315.6 0.34 0.195] [338.2 0.42 0.197]
+	]
+	localmake "numInnerCircles count :circles
+	jumpForward :height * 0.5
+	localmake "center pos
+	right 180 / :numInnerCircles
+	setPenSize 0
+	setFillColor "#D64000
+	repeat :numInnerCircles [
+		localmake "info item repcount :circles
+		setHeading :oldHeading + first :info
+		localmake "radius :height / 10 * item 2 :info
+		jumpForward :innerGap + :height * last :info
+		circle :radius
+		right 360 / :numInnerCircles
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+reutersLogo 100

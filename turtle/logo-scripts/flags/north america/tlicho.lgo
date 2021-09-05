@@ -1,0 +1,125 @@
+make "numWaves 13
+make "arcAngle 100
+make "arcRadiusFactor 1 / (:numWaves + 1) / 4 / sin :arcAngle / 2
+
+to lenToWaveAmplitude :len
+	output :arcRadiusFactor * :len * (1 - cos :arcAngle / 2)
+end
+
+to drawWaveyLine :len :directionSign
+	localmake "arcRadius :len * :arcRadiusFactor
+	arcLeft :arcAngle / 2 * :directionSign :arcRadius
+	repeat :numWaves [
+		arcLeft -:arcAngle * :directionSign :arcRadius
+		arcLeft :arcAngle * :directionSign :arcRadius
+	]
+	arcLeft -:arcAngle * :directionSign :arcRadius
+	arcLeft :arcAngle / 2 *  :directionSign :arcRadius
+end
+
+to drawTipi :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "height1 :height * 0.7
+	localmake "baseWidth 2 * :height1 * tan 30
+	localmake "thickness :height * 0.05
+	localmake "height2 (:height - :thickness) / cos 30
+	setPenSize 0
+	setFillColor "red
+	jumpForward :thickness / 2
+	isoTriangle :baseWidth :height1
+	setFillColor transparent
+	setPenColor "white
+	setPenSize :thickness
+	setLineCap "round
+	setLineJoinStyle "miter
+	jumpForward :height - penSize
+	localmake "topMiddle pos
+	jumpLeft (:height - :height1 - :thickness) * tan 30
+	right 150
+	forward :height2
+	right 120
+	forward :baseWidth
+	right 120
+	forward :height2
+
+	setHeading :oldHeading
+	jumpTo :topMiddle
+	backward :height - :height1 - penSize
+	setTurtleState :oldState
+end
+
+; Inspired by flag at:
+; https://en.wikipedia.org/wiki/T%C5%82%C4%B1%CC%A8ch%C7%AB#/media/File:%D0%A4%D0%BB%D0%B0%D0%B3_%D0%A2%D0%BB%D0%B8%D1%87%D0%BE.svg
+;
+; Some more information is at:
+; https://tlicho.ca/cec-assembly/our-story/flag
+to tlichoFlag :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "width :height * 2
+	localmake "tlichoBlue "#0000cc
+	localmake "tlichoYellow "yellow
+	localmake "sunAngle1 120
+	localmake "sunRadius :height * 0.285
+	localmake "waveThickness1 :height * 0.09
+	localmake "teepeeSeparation :height * 0.33
+	stripes :width :height [:tlichoBlue]
+	jumpForward :height * 0.5 + :sunRadius * sin (:sunAngle1 - 90)
+	setPenSize 0
+	setFillColor :tlichoYellow
+	right :sunAngle1
+	jumpForward :sunRadius
+	left 90
+	polyStart
+	arcLeft :sunAngle1 * 2 :sunRadius
+	polyEnd
+
+	; Draw the North Star.
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpRight :width * 0.3923
+	jumpForward :height * 0.81
+	regularStar :height * 0.0965 5
+
+	; Draw the river.
+	jumpTo :oldPos
+	jumpForward (:height - :waveThickness1) / 2 - lenToWaveAmplitude :width
+	jumpLeft :width / 2
+	setFillColor "white
+	right 90
+	polyStart
+	drawWaveyLine :width 1
+	jumpLeft :waveThickness1
+	left 180
+	drawWaveyLine :width -1
+	polyEnd
+
+	setPenColor :tlichoBlue
+	setPenSize :height * 0.01
+	setHeading :oldHeading + 90
+	setLineCap "butt
+	setLineJoinStyle "round
+	jumpLeft penSize / 2
+	drawWaveyLine :width 1
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.14
+	jumpLeft :teepeeSeparation * 1.5
+
+	; represent the four Tłı̨chǫ Communities of 
+	; Behchokǫ̀, Whatì, Gamètì and Wekweètì
+	repeat 4 [
+		drawTipi :height * 0.26
+		jumpRight :teepeeSeparation
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "#ddd
+; Make the white in the flag stand out by 
+; using a color other than white.
+
+tlichoFlag 100

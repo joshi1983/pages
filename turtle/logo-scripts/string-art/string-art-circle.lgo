@@ -1,0 +1,76 @@
+to drawCentralPattern :height
+	localmake "oldState turtleState
+	localmake "center pos
+	localmake "numPoints 10
+	repeat 4 [
+		localmake "points1 []
+		localmake "points2 []
+		repeat :numPoints [
+			jumpForward :height / 2 * repRatio
+			queue2 "points1 pos
+			jumpTo :center
+		]
+		repeat :numPoints [
+			jumpRight :height / 2 * repRatio
+			queue2 "points2 pos
+			jumpTo :center
+		]
+		repeat :numPoints [
+			jumpTo item repcount :points1
+			setPos item :numPoints + 1 - repcount :points2
+		]
+		jumpTo :center
+		right 360 / 4
+	]
+	setTurtleState :oldState
+end
+
+to drawOuterPattern :height
+	localmake "oldState turtleState
+	localmake "center pos
+	localmake "numPoints 10
+	repeat 4 [
+		localmake "points1 []
+		localmake "points2 []
+		jumpRight :height / 2
+		jumpForward :height / 2
+		localmake "corner pos
+		repeat :numPoints [
+			jumpBackward :height / 2 * repRatio
+			queue2 "points1 pos
+			jumpTo :corner
+		]
+		repeat :numPoints [
+			jumpLeft :height / 2 * repRatio
+			queue2 "points2 pos
+			jumpTo :corner
+		]
+		repeat :numPoints [
+			jumpTo item repcount :points1
+			setPos item :numPoints + 1 - repcount :points2
+		]
+		jumpTo :center
+		right 360 / 4
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by a figure in
+; https://archive.org/details/101basiccomputer0000davi/page/4/mode/2up
+;
+; That is page 5 from a book called
+; 101 BASIC Computer Games
+; by David H. Ahl
+; The figure is near the bottom of page 5.
+to stringArtCircle :height
+	localmake "oldState turtleState
+	setPenSize :height * 0.002
+	jumpForward :height / 2
+
+	drawCentralPattern :height
+	drawOuterPattern :height
+
+	setTurtleState :oldState
+end
+
+stringArtCircle 100

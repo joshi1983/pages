@@ -1,0 +1,90 @@
+to drawShine :height
+	localmake "oldState turtleState
+	localmake "startHeading heading + 20
+	localmake "numThicknesses 10
+	jumpForward :height * 0.75
+	jumpLeft :height * 0.387
+	localmake "startPos pos
+	setPenColor mix "white transparent 1.5 / :numThicknesses
+	setLineCap "round
+	repeat :numThicknesses [
+		setPenSize :height * 0.05 * repcount / :numThicknesses
+		setHeading :startHeading
+		arcRight 50 :height * 0.2
+		jumpTo :startPos
+	]
+	setTurtleState :oldState
+end
+
+to drawStem :height
+	localmake "oldState turtleState
+	jumpForward :height * 0.83
+	setPenColor "#50050c
+	setPenSize :height * 0.025
+	setLineCap "butt
+	arcRight 9 :height * 0.45
+	setLineCap "round
+	arcRight 40 :height * 0.12
+	arcRight 38 :height * 0.055
+	setTurtleState :oldState
+end
+
+to drawLeaf :height
+	localmake "oldState turtleState
+	setPenSize 0
+	setFillColor "#033d00
+	drawArcLineShape [0.015 0.84
+		[[-5 0] [-65 0.16] [-20 0.05] [0.1]
+		[-107 0] [-77 0.2]]
+	] :height
+	setTurtleState :oldState
+end
+
+to drawSF :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	setPenSize :height * 0.045
+	setPenColor "#ddff00
+	setLineCap "round
+	setLineJoinStyle "round
+	jumpLeft :height * 0.265
+	jumpForward :height * 0.28
+	arcLines [[180 0] [0.005] [53 0.05] [50 0.15]
+		[100 0.097] [21 0.2] [0.17] [-20 0.2] [-90 0.085]
+		[-20 0.05] [-22 0.2] [-61 0.05]] :height
+
+	setHeading :oldHeading
+	jumpTo :oldPos
+	jumpRight :height * 0.117
+	jumpForward :height * 0.222
+	forward :height * 0.463
+	localmake "fTopLeft pos
+	right 90
+	forward :height * 0.207
+	jumpTo :fTopLeft
+	jumpRight :height * 0.184
+	forward :height * 0.13
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://www.youtube.com/@SchoolFreeware
+to schoolFreewareLogo :height
+	localmake "oldState turtleState
+	setFillColor "#9b0204
+	setPenSize 0
+	drawArcLineShape [0 0
+		[[-90 0] [17 0.7] [30 0.23] [17 0.5] [18 1.2]
+		[80 0.31] [20 0.2] [-7 3.5] [62 0.24] [50 0.4]
+		[35 0.86] [35 0.3]
+		]
+	] :height
+	drawShine :height
+	drawStem :height
+	drawLeaf :height
+	drawSF :height
+	setTurtleState :oldState
+end
+
+schoolFreewareLogo 100

@@ -1,0 +1,177 @@
+to draw1 :fontHeight
+	localmake "oldState turtleState
+	jumpForward :fontHeight * 0.03
+	stripes :fontHeight * 0.2 :fontHeight * 0.95 [penColor]
+	setTurtleState :oldState
+end
+
+to draw0 :fontHeight
+	localmake "oldState turtleState
+	setFillColor transparent
+	jumpForward :fontHeight / 2
+	setPenSize :fontHeight * 0.25
+	circle (:fontHeight - penSize) / 2
+	setTurtleState :oldState
+end
+
+to drawSpace
+	; draw nothing.  A space doesn't have any visible elements.
+end
+
+; Inspired by logo at:
+; https://xeroxalto.computerhistory.org/
+; It is also shown at:
+; https://www.flickr.com/photos/vanderwal/498803938
+; https://logos-download.com/65168-computer-history-museum-logo-download.html
+to computerHistoryMuseumLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "sideOffset :height * 0.161
+	localmake "baseOffset :height * 0.09
+	localmake "topOffset :height * 0.01
+	localmake "separation (:height - :sideOffset * 2) / 4
+	localmake "rowSeparation (:height - :baseOffset - :topOffset) / 4
+	localmake "fontHeight :rowSeparation * 0.6
+	localmake "lines [1 0 2]
+	localmake "binaryGrid [
+		'10110'
+		'011 1'
+		'1 1 0'
+		'1   1'
+	]
+	localmake "drawProcs createPList2 [
+		["0 "draw0] ["1 "draw1] [' ' "drawSpace]
+	]
+
+	stripes :height :height ["#a90021]
+	jumpLeft :separation
+	setFillColor transparent
+	setPenSize :height * 0.05
+	setPenColor "white
+	setLineCap "butt
+	repeat count :lines [
+		localmake "pos1 pos
+		setPenSize :height * 0.06
+		forward :sideOffset - :fontHeight / 2 + :rowSeparation * item repcount :lines
+		right 90
+		setPenSize :height * 0.05
+		circleLeft :height * 0.06
+		setHeading :oldHeading
+		jumpTo :pos1
+		jumpRight :separation
+	]
+	jumpTo :oldPos
+	jumpForward :baseOffset + 3 * :rowSeparation
+	jumpLeft :separation * 2
+	setPenColor "#fdb21a
+	repeat count :binaryGrid [
+		localmake "rowStart pos
+		localmake "row item repcount :binaryGrid
+		repeat count :row [
+			localmake "char item repcount :row
+			localmake "drawProc getProperty "drawProcs :char
+			(invoke :drawProc :fontHeight)
+			jumpRight :separation
+		]
+		jumpTo :rowStart
+		jumpBackward :rowSeparation
+	]
+	setTurtleState :oldState
+end
+
+to drawC :height
+	localmake "oldState turtleState
+	localmake "arcRadiusRatio 0.158
+	localmake "arcRadius :height * :arcRadiusRatio
+	localmake "startLenRatio 0.063
+	localmake "thicknessRatio 0.14
+	localmake "arcLines [
+		[:startLenRatio] [180 :arcRadiusRatio] [0.5 - :arcRadiusRatio - :thicknessRatio / 2]
+	]
+	localmake "gap :height * (1 - :startLenRatio - :arcRadiusRatio - :thicknessRatio / 2)
+	setPenSize :height * :thicknessRatio
+	setLineCap "butt
+	jumpRight :arcRadius
+	jumpForward :gap
+	arcLines :arcLines :height
+	arcLines reverse :arcLines :height
+	setTurtleState :oldState
+end
+
+to drawH :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "height1 :height * 0.985
+	localmake "separation :height * 0.3163
+	localmake "middleThickness :height * 0.125
+	jumpForward (:height - :height1) / 2
+	jumpLeft :separation / 2
+	repeat 2 [
+		stripes :height * 0.142 :height1 [penColor]
+		jumpRight :separation
+	]
+	jumpTo :oldPos
+	jumpForward :height * 0.446
+	stripes :separation :middleThickness [penColor]
+	setTurtleState :oldState
+end
+
+to drawM :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "height1 :height * 0.985
+	localmake "separation :height * 0.497
+	localmake "angle1 161.6
+	localmake "sideThickness :height * 0.142
+	localmake "midThickness :height * 0.12
+	localmake "offset1 (:sideThickness + :midThickness * cos :angle1) / 2 
+	localmake "separation1 :separation - :offset1 * 2
+	localmake "arcs [
+		[:angle1 0]
+		[:separation1 / 2 / :height / sin :angle1]
+		[270 + (180 - :angle1) 0]
+	]
+	jumpForward (:height - :height1) / 2
+	jumpLeft :separation / 2
+	repeat 2 [
+		stripes :sideThickness :height1 [penColor]
+		jumpRight :separation
+	]
+	jumpLeft :separation
+	jumpForward :height1 * 0.98
+	setLineCap "butt
+	setLineJoinStyle "bevel
+	setPenSize :midThickness
+	jumpLeft :offset1
+	arcLines combine :arcs reverse :arcs :height
+	setHeading :oldHeading
+	jumpRight :separation1 / 2
+	jumpBackward :height1 * 0.8015
+	setFillColor penColor
+	localmake "baseWidth :height1 * 0.0715
+	localmake "trapHeight :height1 * 0.1
+	localmake "topWidth :baseWidth - :trapHeight * 2 * tan :angle1
+	setPenSize 0
+	isoTrapezoid :baseWidth :topWidth :trapHeight
+	setTurtleState :oldState
+end
+
+to chmNewLogo :height
+	localmake "oldState turtleState
+	setPenColor "#ed1b2f
+	jumpLeft :height * 0.7
+	drawC :height
+	jumpRight :height * 0.5715
+	drawH :height
+	jumpRight :height * 0.676
+	drawM :height
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 5
+jumpLeft :separation / 2
+computerHistoryMuseumLogo :height
+jumpRight :separation
+chmNewLogo :height

@@ -1,0 +1,82 @@
+; Inspired by drawing at:
+; https://ca.pinterest.com/pin/43487952649547562
+to radialFan :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "offset :height * 0.7
+	localmake "gradientRadius :height + :offset
+	localmake "ratio1 :offset / :gradientRadius
+	localmake "colorStops createPList2 [
+		[:ratio1 "#f08] [mix :ratio1 1 0.4 "#80b] [1 "#08f]
+	]
+	localmake "radius :height / 2
+	localmake "numAngles 32
+	localmake "d :radius + :offset
+	localmake "maxAngle arcSin :radius / :d
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	jumpBackward :height / 2 + :offset
+	localmake "startPos pos
+	setFillGradient createRadialGradient pos :gradientRadius :colorStops
+	repeat :numAngles [
+		localmake "angleOffset mix -:maxAngle :maxAngle repRatio
+		setHeading :oldHeading + :angleOffset
+		jumpTo :startPos		
+		localmake "len distanceToCircle :center :radius
+		if :len < 0 [
+			localmake "len sqrt :d * :d - :radius * :radius
+		]
+		jumpForward :len
+		localmake "points [pos]
+		jumpForward :radius * 0.01 ; an offset to get the next nearest point.
+		; Without moving at all, distanceToCircle might return 0 since 
+		; you're on the circle's edge.
+		localmake "len distanceToCircle :center :radius
+		if :len > 0 [
+			jumpForward :len
+			queue2 "points pos
+		]
+		jumpTo :startPos
+		left (:maxAngle / :numAngles) * sign :angleOffset
+		localmake "len2 distanceToCircle :center :radius
+		if :len2 > 0 [
+			jumpForward :len2
+			queue2 "points pos
+			jumpForward :radius * 0.01
+			localmake "len2 distanceToCircle :center :radius
+			if :len2 > 0 [
+				jumpForward :len2
+				queue2 "points pos
+			]
+		]
+		if 2 <= count :points [
+			jumpTo last :points
+			polyStart
+			ifelse 3 = count :points [
+				localmake "p item 2 :points
+				localmake "d distance :p
+				localmake "arcAngle 2 * arcSin :d / 2 / :radius
+				localmake "sign sign repRatio - 0.5
+				setHeading (towards :p) + :sign * :arcAngle / 2
+				arcLeft :sign * :arcAngle :radius
+			] [
+				localmake "p item 2 :points
+				localmake "d distance :p
+				localmake "arcAngle 2 * arcSin :d / 2 / :radius
+				setHeading (towards :p) - :arcAngle / 2
+				arcLeft -:arcAngle :radius
+				setPos first :points
+				localmake "p item 3 :points
+				setHeading (towards :p) + :arcAngle / 2
+				arcLeft :arcAngle :radius
+			]
+			polyEnd
+		]
+		jumpTo :startPos
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+radialFan 100

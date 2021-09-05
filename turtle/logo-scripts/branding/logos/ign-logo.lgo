@@ -1,0 +1,45 @@
+; Inspired by logo at:
+; https://www.ign.com
+to ignLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "lines1 [
+		[90 0] [0.0816] [66.5 0] [10 0.5] [8.4 1.2]
+			[53.18 0] [0.18500779] [41.92 0]
+	]
+	localmake "lines2 [
+		[23.8 1] [120.5 0] [0.31]
+	]
+	localmake "outerRadius :height * 0.439
+	setFillColor "#bf1313
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0	
+	repeat 4 [
+		drawArcLineShape [0 0.5
+			combine :lines1 reverse :lines1
+		] :height
+		right 90
+	]
+	repeat 4 [
+		setHeading :oldHeading + 45 + repcount * 360 / 4
+		jumpForward :outerRadius
+		localmake "p2 pos
+		polyStart
+		left 90
+		arcLines :lines2 :outerRadius
+		localmake "innerRadius distance :center
+		localmake "angle1 heading - ((towards :center) - 90)
+		left :angle1
+		localmake "innerArcAngle getArcRightAngleToLine :innerRadius :p2 :center
+		arcRight :innerArcAngle * 2 :innerRadius
+		left :angle1
+		arcLines reverse :lines2 :outerRadius
+		polyEnd
+		jumpTo :center
+	]
+
+	setTurtleState :oldState
+end
+
+ignLogo 100

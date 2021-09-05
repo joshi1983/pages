@@ -1,0 +1,67 @@
+; Inspired by the watch face at:
+; https://www.youtube.com/watch?v=T89-oYkOlhg
+; and a Python turtle graphics example shown at:
+; https://www.youtube.com/shorts/XePJabcFG90
+to ben10WatchFace :height :glowColor
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "outerThickness :height * 0.09
+	localmake "outerRadius (:height - :outerThickness) / 2 
+	localmake "tinyRadius :height * 0.025
+	localmake "gap :height * 0.06
+	
+	localmake "dashGap :outerRadius - :outerThickness / 2
+	localmake "innerAngle 50
+	setLineJoinStyle "miter
+	jumpForward :height / 2
+	setFillColor :glowColor
+	setPenSize 0
+	circle :outerRadius
+	setFillColor "#444
+	setPenSize :height * 0.02
+	setPenColor "black
+	localmake "center pos
+	repeat 2 [
+		setHeading :oldHeading + 90 + 180 * repcount
+		jumpForward :gap
+		localmake "pos2 pos
+		polyStart
+		right :innerAngle
+		jumpForward distanceToCircle :center :outerRadius
+		setHeading (towards :center) + 90
+		localmake "outerAngle getArcLeftAngleToLine :outerRadius :center :pos2
+		arcLeft :outerAngle * 2 :outerRadius
+		polyEnd
+		jumpTo :center
+	]
+	setPenSize :outerThickness
+	setPenColor "#888
+	setFillColor transparent
+	circle :outerRadius
+
+	; Darken the inner and outer edges of the watch to make 
+	; the edges look sharper.
+	setPenSize :height * 0.007
+	setPenColor "black
+	circle :dashGap
+	circle (:height - penSize) / 2
+
+	; Draw the tiny outer circles.
+	setHeading :oldHeading
+	setFillColor :glowColor
+
+	repeat 4 [
+		jumpForward :outerRadius
+		circle :tinyRadius
+		right 90
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 4
+jumpLeft :separation / 2
+ben10WatchFace :height "lime
+jumpRight :separation
+ben10WatchFace :height "white

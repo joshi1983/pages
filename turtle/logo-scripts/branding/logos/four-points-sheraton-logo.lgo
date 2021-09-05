@@ -1,0 +1,28 @@
+; Inspired by logo at
+; https://en.wikipedia.org/wiki/Four_Points_by_Sheraton#/media/File:Four_Points_Logo_neu.svg
+to fourPointsSheratonLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "colors ["#d0df71 "#b83a3a "#76b9bb "#004660 ]
+	localmake "arcsInfo [
+		[10 0.6] [10 0.45] [10 0.31] [20 0.225] [30 0.165]
+		[10 0.27] [10 0.24] [10 0.43] [10 0.65] [7.245 1.65]
+	]
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	repeat count :colors [
+		setFillColor item repcount :colors
+		setHeading :oldHeading + repcount * 360 / count :colors
+		jumpForward :height * 0.0432372
+		jumpRight :height * 0.0418755
+		right 122
+		polyStart
+		arcsLeft :arcsInfo :height
+		polyEnd
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+fourPointsSheratonLogo 100

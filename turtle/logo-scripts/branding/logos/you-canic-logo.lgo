@@ -1,0 +1,53 @@
+; Inspired by the logo shown at
+; https://www.youtube.com/@YOUCANIC
+to youCanicLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "nutOffsetFactor 0.768
+	localmake "offset1 :height * (1 - :nutOffsetFactor)
+	localmake "wrenchLines1 [
+		[-90 0] [0.19] [90 0] [0.27] [-55 0]
+		[8.9 2] [72 0.16]
+	]
+	localmake "len1 :height * 0.07
+
+	; Get some top points to help calculate arc angle to
+	; make an arc meet exactly on the top line.	
+	jumpForward :height
+	localmake "top1 pos
+	jumpRight :height
+	localmake "top2 pos
+
+	jumpTo :oldPos
+	setPenSize 0
+	jumpForward :height * :nutOffsetFactor
+	setFillColor "#be0000
+	regularPolygon :height * 0.172 6
+
+	setFillColor "#000002
+	jumpTo :oldPos
+	polyStart
+	arcLines :wrenchLines1 :height
+	localmake "arcRadius1 :height * 3
+	localmake "arcAngle1 getArcLeftAngleToLine :arcRadius1 :top1 :top2
+	arcLeft :arcAngle1 :arcRadius1
+	localmake "angle1 heading - (:oldHeading - 90)
+	left :angle1
+	jumpForward :len1
+	localmake "width1 (distance :top1) / cos 30
+	left 90
+	localmake "len2 :offset1 + :width1 / 2
+	jumpForward :len2
+	right 60
+	jumpForward :width1
+	right 60
+	arcLines [[:width1] [-60 0] [:len2] [90 0] [:len1] [:angle1 0]
+	[:arcAngle1 :arcRadius1]] 1
+	arcLines reverse :wrenchLines1 :height
+	polyEnd
+
+	setTurtleState :oldState
+end
+
+youCanicLogo 100

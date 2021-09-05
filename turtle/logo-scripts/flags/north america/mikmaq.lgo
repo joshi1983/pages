@@ -1,0 +1,56 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Mi%27kmaq#/media/File:Mikmaq_State_Flag_(vertical).svg
+; Referenced from
+; https://en.wikipedia.org/wiki/Mi%27kmaq
+; A tweaked export from WebLogo was uploaded to Wikipedia to reduce its file size in 2023
+to mikmaqStateVerticalFlag :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "width :height / 2
+	localmake "color "#f00
+	localmake "crossWidth :height * 0.44
+	localmake "moonRadius1 :height * 0.0782
+	localmake "starSize :height * 0.082
+	stripes :width :height ["white]
+	setPenSize 0
+	jumpForward :height * 0.89
+	jumpLeft :height * 0.1477
+	setFillColor :color
+	circle :moonRadius1
+	jumpRight :height * 0.034
+	setFillColor "white
+	circle :moonRadius1
+	jumpRight :height * 0.272
+	jumpForward :height * 0.0065
+	setFillColor :color
+	regularStar :starSize 5
+	jumpTo :oldPos
+	setLineCap "butt
+	setPenColor :color
+	jumpForward :height * 3 / 100
+	setPenSize :height * 0.1
+	forward :height * 94 / 100
+	jumpBackward :height * 0.2373661
+	right 90
+	jumpBackward :crossWidth / 2
+	forward :crossWidth
+	setTurtleState :oldState
+end
+
+to mikmaqStateHorizontalFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 2
+	jumpRight :width / 2
+	jumpForward :height / 2
+	left 90
+	mikmaqStateVerticalFlag :width
+	setTurtleState :oldState
+end
+
+setScreenColor "#888
+make "height 100
+make "separation :height * 5
+jumpLeft :separation / 2
+mikmaqStateVerticalFlag :height
+jumpRight :separation
+mikmaqStateHorizontalFlag :height

@@ -1,0 +1,44 @@
+! DemListE
+
+! Demonstrates the List Edit control.
+! Similar to the List Button, except that the selected item,
+! when moved to the top box, can be edited.
+
+LIBRARY "TrueCtrl.trc"
+
+READ xl, xr, yb, yt
+DATA .62, .90, .17, .58
+
+DIM t$(0:10)
+MAT READ t$
+DATA fruit
+DATA apples, bananas, cumquats, elderberries, grapes
+DATA lemons, mangos, pears, peaches, strawberries
+
+CALL TC_Init
+
+CALL TC_Show (0)
+CALL TC_Win_Active (0)
+PRINT "Press ESC to quit."
+
+CALL TC_ListEdit_Create (leid, t$(), xl, xr, yb, yt)
+
+DO
+   CALL TC_Event (0, event$, window, x1, x2)
+
+   IF event$ = "HIDE" then EXIT DO
+   IF event$ = "KEYPRESS" and x1 = 27 then EXIT DO
+
+   IF event$ = "CONTROL DESELECTED" and x2 = leid then
+      CALL TC_ListEdit_Get (leid, t1$)
+      PRINT "Now showing: "; t1$
+      PAUSE 1
+      CALL TC_ListEdit_Set (leid, t$(0))   ! Reset
+
+   END IF
+
+LOOP
+
+CALL TC_Cleanup
+
+END

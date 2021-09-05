@@ -1,0 +1,30 @@
+; Inspired by logo at:
+; https://en.wikipedia.org/wiki/Embraer#/media/File:Embraer_logo.svg
+to embraerLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "angle1 49
+	localmake "angle2 37.5
+	localmake "lines1 [
+		[:angle1 0] [0.5 / sin :angle1] [180 - :angle1 0]
+		[0.2] [:angle2 0] [0.5 / sin :angle2] [90 - :angle2 0]
+	]
+	localmake "bodyLength 0.917
+	localmake "thicknessFactor 0.08
+	setPenSize 0
+	jumpForward :height / 2
+	jumpRight :height * 0.05
+	right 90
+	setFillColor "#100690
+	drawArcLineShape [0 0
+		combine :lines1 reverse :lines1
+	] :height
+	setHeading :oldHeading
+	drawArcLineShape [-0.484 :thicknessFactor / 2
+		[[-90 0] [:bodyLength] [-90 0] [:thicknessFactor] [-90 0]
+		[:bodyLength + :thicknessFactor]]
+	] :height
+	setTurtleState :oldState
+end
+
+embraerLogo 100

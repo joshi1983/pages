@@ -1,0 +1,42 @@
+; Inspired by logo at
+; https://www.h-its.org
+to hitsLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "thickness1 :height * 0.014
+	localmake "thickness2 :thickness1 / cos 45
+	localmake "height1 :height * 1.35
+	localmake "step :height1 * (cos 45) / 3
+	jumpForward :height * 0.3307
+	jumpRight :height * 0.145
+	stripes :step * 2 :step * 2 ["#c2e1f3]
+	jumpTo :oldPos
+	jumpLeft :height * 0.4932
+	jumpForward :height * 0.01
+	setPenSize 0
+	setFillColor "#002551
+	setPenColor fillColor
+	parallelogram :thickness2 :height1 45
+	right 45
+	jumpForward :height1 / 2
+	setFillColor transparent
+	setPenSize :thickness1
+	isoTriangle :height1 :height1 / 2
+	jumpForward :height1 / 2
+	setHeading :oldHeading
+	setPenSize 0
+	setFillColor penColor
+	repeat 3 [
+		repeat 3 [
+			circle :height * 0.035
+			jumpLeft :step
+		]
+		jumpRight :step * 3
+		jumpBackward :step
+	]
+	
+	setTurtleState :oldState
+end
+
+hitsLogo 100

@@ -1,0 +1,20 @@
+; Inspired by flag at:
+; https://en.wikipedia.org/wiki/Flag_of_Rond%C3%B4nia#/media/File:Bandeira_de_Rond%C3%B4nia.svg
+to rondoniaFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 10 / 7
+	localmake "starOuterRadius :height * 0.251
+	localmake "innerRadius :starOuterRadius * 0.397
+	stripes :width :height ["#f3e718 "#002580]
+	setPenSize 0
+	setFillColor "#00994c
+	isoTriangle :width :height / 2
+	jumpForward :height / 2
+	setFillColor "white
+	jumpForward :innerRadius
+	; very close to a regular star but slightly off.
+	isotoxalStar :starOuterRadius :innerRadius 5
+	setTurtleState :oldState
+end
+
+rondoniaFlag 100

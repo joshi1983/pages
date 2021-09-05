@@ -1,0 +1,34 @@
+; Inspired by logo of https://bensound.com
+; bensound is a great source for background music in videos.
+to bensoundLogo :height
+	localmake "oldState turtleState
+	localmake "radius1 :height / 3
+	localmake "radius2 :radius1 * 0.9
+	localmake "lineThickness :height * 0.138
+	localmake "size1 :height - :lineThickness - :radius1
+	setPenColor "white
+	setLineCap "round
+	setPenSize :lineThickness
+	jumpForward :height - penSize / 2
+	jumpLeft :radius1
+	right 180
+	forward :size1
+	arcLeft 180 :radius1
+	localmake "pos1 pos
+	localmake "heading1 heading
+	arcLeft 30 :radius2
+	arcLeft 72 :radius1
+
+	setPenSize 0
+	setFillColor penColor
+	jumpTo :pos1
+	setHeading :heading1
+	jumpLeft :radius1
+	jumpBackward :height * 0.008
+	circle :height * 0.133
+
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+bensoundLogo 100

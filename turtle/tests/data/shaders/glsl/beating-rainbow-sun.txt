@@ -1,0 +1,53 @@
+const float PI = 3.14159265359;
+const float TWO_PI = 2.0 * PI;
+const vec3 color1 = vec3(1.0,1.0,1.0);
+const vec3 color2 = vec3(0.9,0.9,0.3);
+const int len = 5;
+const vec3 rainbowColours[] = vec3[len](
+    vec3(1.0, 0.0, 0.0),
+    vec3(1.0, 1.0, 0.0),
+    vec3(0.0, 1.0, 1.0),
+    vec3(0.0, 0.0, 1.0),
+    vec3(0.5, 0.0, 1.0)
+);
+
+vec3 ratioToRainBowColour(in float ratio) {
+    ratio = ratio - floor(ratio);
+    float scaledRatio = ratio * float(len);
+    int index1 = clamp(int(scaledRatio), 0, len - 1);
+    int index2 = (index1 + 1) % len;
+    float mixRatio = scaledRatio - floor(scaledRatio);
+    return mix(rainbowColours[index1], rainbowColours[index2], mixRatio);
+}
+
+void mainImage( out vec4 fragColor, in vec2 fragCoord )
+{
+    vec2 uv = fragCoord/iResolution.y;
+    vec2 displacement = uv - vec2(iResolution.x/iResolution.y/2.0, 0.5);
+    float theta = atan(displacement.y, displacement.x);
+    float scaleFactor1 = mix(3.0, 5.0, 0.5 * sin(iTime * TWO_PI) + 0.5);
+    float distance = length(displacement) * scaleFactor1;
+    float heartScaleFactor = 3.0 - 2.0 * sin(theta) + cos(2.0 * theta) - 2.0 * abs(cos(theta));
+    heartScaleFactor = max(heartScaleFactor, 0.0);
+    float heartCircleRatio = (1.0 + sin(iTime * TWO_PI)) / 2.0;
+    heartScaleFactor = mix(heartScaleFactor, 1.0, heartCircleRatio);
+    distance = clamp(distance * 3.0 / heartScaleFactor, 0.0001, 2.0);
+    vec3 rayColor1 = vec3(1.0, 2.0 - distance, 0.0);
+    vec3 rayColor2 = vec3(0.0, 0.0, 0.0);
+
+    vec3 col;
+    if (distance > 1.0) {
+        // Draw the rays.
+        float angle = theta * 32.0 + iTime * TWO_PI;
+        col = mix(rayColor1, rayColor2, (1.0 + sin(angle)) * 0.5);
+    }
+    else {
+        // Calculate colour for inside the sun's disk.
+        col = mix(color1, color2, distance * distance);
+        vec3 rainbowColour = ratioToRainBowColour(displacement.y * 1.5 * scaleFactor1);
+        col = mix(rainbowColour, col, heartCircleRatio);
+    }
+
+    // Output to screen
+    fragColor = vec4(col,1.0);
+}

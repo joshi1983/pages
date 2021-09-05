@@ -1,0 +1,175 @@
+to ironManForehead :size
+	localmake "oldState turtleState
+	localmake "size1 :size * 0.07
+	localmake "size7 :size * 0.12652744
+	
+	setPenSize 0
+	jumpBackward :size * 0.008
+	right 90
+	polyStart
+	jumpForward :size1
+	localmake "arcs [[14 0.1] [-3.45 3] [-77 0] [0.03] [110 0] [0.04]
+	[60 0] [0.05] [-22 0.13] [9 1.1] [0.07] [42 0.03] [35 0.333] [92.5 0]
+	[0.22] [-30 0.05] [-50.05 0.02]]
+	arcLines :arcs :size
+
+	jumpForward :size7 ; reflection point
+	arcLines reverse :arcs :size
+
+	polyEnd
+	setTurtleState :oldState
+end
+
+to ironManMiddle :size
+	localmake "oldState turtleState
+	localmake "size1 :size * 0.07
+	localmake "size7 :size * 0.2335374
+	setPenSize 0
+	jumpBackward :size * 0.02
+	right 90
+	jumpForward :size1
+	polyStart
+	localmake "arcs [[-85 0.014] [40 0.01] [33 0.02] [30 0.295]
+	[26.5 0.03] [0.077] [-124 0] [0.075] [-43 0.06] [0.19] [30 0.17]
+	[-53 0.055] [0.02] [-92 0] [0.035] [57.5 0.02]]
+	arcLines :arcs :size
+
+	jumpForward :size7 ; reflection point
+	arcLines reverse :arcs :size
+
+	polyEnd
+	setTurtleState :oldState
+end
+
+to ironManJaw :size
+	localmake "oldState turtleState
+	setPenSize 0
+	jumpBackward :size * 0.375
+	right 90
+	jumpForward :size * 0.09
+	polyStart
+	localmake "arcs [[-43 0.05] [-12.5 0.2] [101 0] [0.069]
+	[-122.5 0] [0.071] [-60 0] [0.079] [-82 0] [0.046] [35 0.06]
+	[0.04] [-45 0] [49 0.055]]
+	arcLines :arcs :size
+
+	jumpForward :size * 0.016697334 ; reflection point
+	arcLines reverse :arcs :size
+
+	polyEnd
+	setTurtleState :oldState
+end
+
+to ironManEyes :size
+	localmake "oldState turtleState
+
+	localmake "oldHeading heading
+	localmake "size1 :size * 0.029
+	localmake "size2 :size * 0.09
+	localmake "size3 :size * 0.022
+	localmake "size4 :size * 0.091
+	localmake "angle1 9
+	jumpBackward :size1
+	localmake "pos1 pos
+	jumpRight :size2
+	left :angle1
+	ellipse2 :size3 :size4
+
+	jumpTo :pos1
+	setHeading :oldHeading
+	jumpLeft :size2
+	right 180 + :angle1
+	ellipse2 :size3 :size4
+
+	setTurtleState :oldState
+end
+
+to ironManEyeDarkBackground :size :eyeSeparation
+	localmake "oldPos pos
+	localmake "size1 :size * 0.32
+	localmake "size2 :size * 0.2
+	localmake "size3 :size * 0.15
+	localmake "colorStops createPList2 [
+		[0 "#000] [0.8 "#000] [1 "#0000]
+	]
+	setFillGradient createRadialGradient pos :size * 0.32 :colorStops
+	ellipse :size1 :size2
+
+	
+	localmake "colorStops createPList2 [
+		[0 "#8fff] [0.5 "#644f] [1 "#000f]
+	]
+	jumpRight :eyeSeparation
+	setFillGradient createRadialGradient pos :size3 :colorStops
+	jumpTo :oldPos
+	ellipse :size1 :size2
+	jumpLeft :eyeSeparation
+	setFillGradient createRadialGradient pos :size3 :colorStops
+	jumpTo :oldPos
+	ellipse :size1 :size2
+end
+
+to ironManHelmetPath :size
+	ironManForehead :size
+	ironManMiddle :size
+	ironManJaw :size
+end
+
+; Inspired by
+; https://www.pinterest.ca/pin/129408189285676669/
+to ironManHelmet :size
+	localmake "oldPos pos
+	localmake "width :size * 0.3
+	localmake "eyeLevel :size * 0.01
+	localmake "eyeSeparation :size * 0.2
+	localmake "eyeGradientSize :size * 0.25
+	localmake "colorStops createPList2 [
+		[0 "#8f00] [0.12 "#7f00] [0.14 "#50ff0000]
+		[0.16 "#66ff0000] [1 "#0f00]
+	]
+	setPenGradient createRadialGradient pos :size * 4 :colorStops
+	setPenSize :size * 10
+	setLineCap "butt
+	jumpBackward :size * 0.5
+	forward :size
+	setPenSize 0
+	jumpTo :oldPos
+	ironManEyeDarkBackground :size :eyeSeparation
+	localmake "colorStops createPList2 [
+		[0 "#ffd] [1 "#F0F056]
+	]
+	setFillGradient createRadialGradient pos :size * 0.3 :colorStops
+	ironManHelmetPath :size
+	localmake "colorStops createPList2 [
+		[0 "#0fff] [0.5 "#5fff] [1 "#0fff]
+	]
+	jumpLeft :width * 0.5
+	localmake "fromPos pos
+	jumpRight :width
+	setFillGradient createLinearGradient :fromPos pos :colorStops "pad
+	jumpTo :oldPos
+	ironManHelmetPath :size
+
+	jumpBackward :eyeLevel
+	localmake "pos1 pos
+	jumpRight :eyeSeparation
+	localmake "colorStops createPList2 [
+		[0 "#fff] [0.3 "#88d8d8ff] [0.5 "#44d8d8ff]
+		[1 "#00d8d8ff]
+	]
+	setFillGradient createRadialGradient pos :eyeGradientSize :colorStops
+	jumpTo :oldPos
+	ironManHelmetPath :size
+	jumpTo :pos1
+	jumpLeft :eyeSeparation
+	setFillGradient createRadialGradient pos :eyeGradientSize :colorStops
+	jumpTo :oldPos
+	ironManHelmetPath :size
+
+	setFillColor "white
+	ironManEyes :size
+end
+
+make "size 100
+setScreenColor "black
+ironManHelmet :size

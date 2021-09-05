@@ -1,0 +1,35 @@
+; Inspired by logo shown at
+; https://en.wikipedia.org/wiki/Mopar#/media/File:Mopar_logo.svg
+; The flag for the National Union of Greece looks similar but rotated 90 degrees.
+; The National Union of Greece flag is at:
+; https://en.wikipedia.org/wiki/National_Union_of_Greece#/media/File:Flag_of_National_Union_of_Greece.svg
+to moparLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "thickness :height * 0.25
+	localmake "arcRadius1 :height * 0.493
+	localmake "arcRadius2 :arcRadius1 + :thickness / 2
+	localmake "arcAngle 180 + 2 * arcSin (:height - :arcRadius2) / :arcRadius2
+	localmake "middleBottomGap :height * 0.05
+
+	; Draw the arc.
+	jumpForward :height - :thickness / 2
+	right 90
+	setPenSize 0
+	arcRight :arcAngle / 2 :arcRadius1
+	right 180
+	setLineCap "butt
+	setPenSize :thickness
+	setPenColor "#215494
+	arcLeft :arcAngle :arcRadius1
+
+	; Draw the vertical line in the middle.
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :middleBottomGap
+	forward :height - :middleBottomGap - :thickness / 2
+	setTurtleState :oldState
+end
+
+moparLogo 100

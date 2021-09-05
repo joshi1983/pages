@@ -1,0 +1,36 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/File:Snapchat_logo.svg
+; Also, shown at
+; https://www.snapchat.com/
+; The most noticable differences are:
+; - the outline of the ghost has a uniform thickness in this drawing.
+; The original logo varies the thickness of the ghost's outline and makes some corners look
+; sharper.
+to snapchatLogo :height
+	localmake "oldState turtleState
+	localmake "arcsInfo [
+		[55 0.2] [20 0.14] [15 0.2] [4 1] [-121 0]
+		[10 0.2] [160 0.043] [7 0.5] [-90 0.02]
+		[-10 0.45] [-33 0.15] [132 0.03] 
+		[20 0.2] [-70 0.01]
+		[85 0.043] [-37.5 0.165] [33.5 0.186908237]
+	]
+	setPenSize 0
+	jumpForward :height / 2
+	setFillColor "#fffc00
+	roundRect :height :height :height * 0.16
+	jumpForward :height * 0.335
+	left 90
+	setPenSize :height * 0.04
+	setPenColor "black
+	setFillColor "white
+	setLineJoinStyle "round
+	setLineCap "round
+	polyStart
+	arcsLeft :arcsInfo :height
+	arcsLeft reverse :arcsInfo :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+snapchatLogo 100

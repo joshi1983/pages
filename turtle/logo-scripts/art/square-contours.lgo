@@ -1,0 +1,74 @@
+; Inspired partly by
+; https://www.pinterest.ca/pin/142918988167167301/
+;
+; A valuely similar pattern with explaination is given in a book called
+; Apple Logo: Programming and Problem Solving
+; See page 288 and 289.
+; You can borrow the book for free at:
+; https://archive.org/details/applelogoprogram0000bill/page/288/mode/2up
+;
+; Another book called The Turtle's Sourcebook contains a similar drawing.
+; The similar drawing can be found on page 113.
+; You can borrow the book at:
+; https://archive.org/details/turtlessourcebook/page/n123/mode/2up
+to squareContours :size
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "numContours 10
+	localmake "numScales 10
+	localmake "initialSize :size * 0.03
+	localmake "scaleFactor exp ((ln :size / :initialSize) / (:numScales + 2) / (:numContours * 0.5))
+	localmake "scaleFactor2 power :scaleFactor :numContours / 2
+	localmake "size :initialSize
+	localmake "brightColor "#FEFFB8
+	localmake "darkColor "orange
+	repeat :numScales [
+		localmake "minPenSize :size * 0.01
+		localmake "maxPenSize :size * 0.03
+		setPenSize :size * 0.8
+		setPenColor "#570000
+		square :size * 2 + penSize
+		closePath
+		setPenColor "yellow
+		repeat :numContours [
+			localmake "ratio power repRatio 0.6
+			setPenColor mix :darkColor :brightColor :ratio
+			setPenSize mix :minPenSize :maxPenSize :ratio
+			square :size * 2
+			localmake "size :size * :scaleFactor
+		]
+		localmake "size  :size / :scaleFactor2
+		right 45
+	]
+
+	; add some lines to frame it horizontally.
+	localmake "size1 :size / cos 45
+	setPenColor :darkColor
+	localmake "size :size * :scaleFactor2 * :scaleFactor2
+	repeat 6 [
+		setHeading :oldHeading
+		setPenSize :size * 0.01
+		localmake "size :size * :scaleFactor2
+		jumpRight :size
+		left 45
+		forward :size1
+		jumpBackward :size1
+		left 90
+		forward :size1
+		jumpTo :oldPos
+		setHeading :oldHeading
+		jumpLeft :size
+		right 45
+		forward :size1
+		jumpBackward :size1
+		right 90
+		forward :size1
+		jumpTo :oldPos
+	]
+
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+squareContours 100

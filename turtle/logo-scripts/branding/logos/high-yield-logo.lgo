@@ -1,0 +1,42 @@
+; Inspired by logo at:
+; https://www.youtube.com/@HighYield
+to highYieldLogo :height
+	localmake "oldState turtleState
+	localmake "blackSquares [
+		[0]
+		[1 2]
+		[-2]
+		[3]
+		[-1]
+		[-1 1]
+		[]
+	]
+	localmake "squareSeparation :height / 8.3
+	localmake "squareSize :squareSeparation * 0.8
+	setPenSize :height * 0.053
+	setPenColor "#179cff
+	setFillColor "yellow
+	jumpForward :height / 2
+	circle (:height - penSize) / 2
+	jumpBackward :squareSeparation * 3.5 - (:squareSeparation - :squareSize) / 2
+	repeat count :blackSquares [
+		localmake "row item repcount :blackSquares
+		localmake "rowMiddle pos
+		localmake "numSquares 1 + 2 * min 3 4 - abs (repcount - 4)
+		jumpLeft :squareSeparation * (:numSquares + 1) / 2
+		repeat :numSquares [
+			jumpRight :squareSeparation
+			stripes :squareSize :squareSize ["white]
+		]
+		jumpTo :rowMiddle
+		repeat count :row [
+			jumpRight :squareSeparation * item repcount :row
+			stripes :squareSize :squareSize ["black]
+			jumpTo :rowMiddle
+		]
+		jumpForward :squareSeparation
+	]
+	setTurtleState :oldState
+end
+
+highYieldLogo 100

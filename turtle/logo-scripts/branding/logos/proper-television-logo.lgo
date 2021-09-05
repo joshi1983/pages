@@ -1,0 +1,63 @@
+to setProperTelevisionGradient :height
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "colorStops createPList2 [
+		[0 "#a52912] [1 "#00a52912]
+	]
+	right 135
+	jumpForward :height * 0.55
+	setFillGradient createLinearGradient :oldPos pos :colorStops "pad
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+; Inspired by logo at
+; https://www.propertelevision.com
+to properTelevisionLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "radius :height / 2
+	localmake "pWidth1 :height * 0.148
+	localmake "arcLinesInfo1 [[0.215] [35 0.3]
+	[25 0.18] [30 0.255]
+	]
+	localmake "arcLinesInfo2 [
+	[0.22] [-90 0.105]
+	]
+	jumpForward :height / 2
+	setPenSize 0
+	setFillColor "#ed3f24
+	circle :height / 2
+	localmake "center pos
+	jumpForward :height * 0.3615
+	setProperTelevisionGradient :height
+	polyStart
+	jumpRight :height * 0.212
+	localmake "upperRight pos
+	right 135
+	jumpForward distanceToCircle :center :radius
+	setHeading (towards :center) - 90
+	arcRight 80.6 :radius
+	setHeading :oldHeading - 45
+	jumpForward :height * 0.61
+	arcRight 60 :height * 0.2
+	polyEnd
+
+	jumpTo :upperRight
+	setHeading :oldHeading + 180
+	jumpRight :pWidth1 / 2
+	stripes :pWidth1 :height * 0.767 ["white]
+	setFillColor "white
+	right 90
+	polyStart
+	arcLines :arcLinesInfo1 :height
+	arcLines reverse :arcLinesInfo1 :height
+	jumpLeft :height * 0.134
+	left 180
+	arcLines :arcLinesInfo2 :height
+	arcLines reverse :arcLinesInfo2 :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+properTelevisionLogo 100

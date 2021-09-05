@@ -1,0 +1,39 @@
+; Inspired by
+; https://upload.wikimedia.org/wikipedia/commons/c/c5/Chinese-army_Wuhan_flag_%281911-1928%29_18_dots.svg
+; Referenced from:
+; https://en.wikipedia.org/wiki/Wuchang_Uprising
+; A few other versions of the flag are shown at:
+; https://www.crwflags.com/fotw/flags/cn-nwarf.html
+
+to wuchanUprisingFlag :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "width :height * 3 / 2
+	localmake "largeSize :height * 0.385
+	localmake "smallSize :height * 0.107
+	localmake "largeRadius :height * 0.036
+	localmake "smallRadius :height * 0.024
+	setPenColor "#ef0000
+	setPenSize :width
+	setLineCap "butt
+	forward :height
+	setPenSize 0
+	jumpBackward :height / 2
+	setFillColor "black
+	localmake "center pos
+	isotoxalStar :height * 0.39 :height * 0.135 9
+	setFillColor "#ffef00
+	repeat 9 [
+		setHeading :oldHeading + repcount * 360 / 9
+		jumpForward :largeSize
+		circle :largeRadius
+		right 360 / 18
+		jumpTo :center
+		jumpForward :smallSize
+		circle :smallRadius
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+wuchanUprisingFlag 100

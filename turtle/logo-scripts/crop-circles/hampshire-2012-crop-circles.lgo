@@ -1,0 +1,74 @@
+make "darkColor "#680
+make "arcRadiusRatio 0.16
+make "straightRatio 1 - :arcRadiusRatio * 2
+
+to drawTibetanKnot :scale
+	localmake "arcsInfo1 [[:straightRatio] [-270 :arcRadiusRatio] ]
+	localmake "arcsInfo (combine [[:arcRadiusRatio] [-90 :arcRadiusRatio]] :arcsInfo1 :arcsInfo1 :arcsInfo1
+		[[:straightRatio] [-90 :arcRadiusRatio] [:arcRadiusRatio]])
+	arcLines :arcsInfo :scale
+end
+
+to drawTibetanKnotGroupPart :scale
+	localmake "straightLength :straightRatio * :scale
+	forward :straightLength
+	arcLines [[-90 :arcRadiusRatio]] :scale
+	forward :straightLength
+	repeat 3 [
+		arcLines [[-270 :arcRadiusRatio]] :scale
+		forward :straightLength
+	]
+	arcLines [[-90 :arcRadiusRatio]] :scale
+end
+
+to drawTibetanKnotGroup :scale
+	localmake "straightLength :straightRatio * :scale
+	localmake "arcsInfo1 [[:straightRatio] [-270 :arcRadiusRatio] ]
+	forward :arcRadiusRatio * :scale
+	arcLines [[-90 :arcRadiusRatio]] :scale
+	arcLines :arcsInfo1 :scale
+	forward :straightLength
+	arcLines [[-90 :arcRadiusRatio]] :scale
+	repeat 3 [
+		drawTibetanKnotGroupPart :scale
+	]
+	forward :straightLength
+	arcLines [[-90 :arcRadiusRatio]] :scale
+	forward :straightLength
+	arcLines [[-270 :arcRadiusRatio]] :scale
+	forward :straightLength
+	arcLines [[-90 :arcRadiusRatio]] :scale
+	forward :straightLength
+end
+
+; Inspired by crop circles shown at:
+; https://www.pinterest.ca/pin/77335318589044842/
+; Also, shown at:
+; https://www.pinterest.ca/pin/485966616050391671/
+; and at:
+; https://www.pinterest.ca/pin/399483429418299572/
+; Reported on August 9, 2012
+; Found in Hampshire, United Kingdom
+to hampshire2012CropCircles :height
+	localmake "oldState turtleState
+	localmake "lightColor "#ef8
+	localmake "knotScale :height * 0.12
+	localmake "offset :knotScale * (1 - :arcRadiusRatio * 3) / 2
+	jumpForward :height / 2
+	setPenSize 0
+	setFillColor :lightColor
+	circle :height / 2
+	setFillColor :darkColor
+	square :height * 0.68
+	setPenColor :lightColor
+	setPenSize :height * 0.01
+	jumpForward :offset
+	jumpRight :offset
+	repeat 4 [
+		drawTibetanKnotGroup :knotScale
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor :darkColor
+hampshire2012CropCircles 100

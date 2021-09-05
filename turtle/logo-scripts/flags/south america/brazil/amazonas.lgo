@@ -1,0 +1,59 @@
+to drawStarPair :separation :starSize :starHeading
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	jumpLeft :separation / 2
+	setHeading :starHeading
+	regularStar :starSize 5
+	setHeading :oldHeading
+	jumpRight :separation
+	setHeading :starHeading
+	regularStar :starSize 5
+	setTurtleState :oldState
+end
+
+to drawStarColumn :separation :starSize :starHeading
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	jumpLeft :separation * 1.5
+	repeat 4 [
+		setHeading :starHeading
+		regularStar :starSize 5
+		setHeading :oldHeading
+		jumpRight :separation		
+	]	
+	setTurtleState :oldState
+end
+
+; Inspired by flag at:
+; https://en.wikipedia.org/wiki/File:Bandeira_do_Amazonas.svg
+to amazonasFlag :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "width :height * 7 / 5
+	localmake "separation :height / 15
+	localmake "starSize :height * 0.0216666
+	stripes :width :height ["white "#d20000 "white]
+	jumpForward :height * 2 / 3
+	jumpLeft :width * 2 / 7
+	stripes :width * 3 / 7 :height / 3 ["#001e78]
+	jumpForward :height / 6
+	setPenSize 0
+	setFillColor "white
+	regularStar :height * 13 / 300 5
+	localmake "center pos
+	repeat 2 [
+		setHeading :oldHeading + 90 + 180 * repcount
+		jumpForward :separation / 2
+		repeat 2 [
+			drawStarPair :separation * 3 :starSize :oldHeading
+			jumpForward :separation
+			drawStarColumn :separation :starSize :oldHeading
+			jumpForward :separation
+		]
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "#888
+amazonasFlag 100

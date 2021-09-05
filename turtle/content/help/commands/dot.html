@@ -1,0 +1,36 @@
+<code>; The math is explained in detail at:
+; https://mathinsight.org/dot_product_examples
+
+print dot [1 2 3] [4 -5 6]
+; prints 12
+; The value is calculated as follows:
+; 1 * 4 + 2 * -5 + 3 * 6
+; = 4 - 10 + 18
+; = -6 + 18
+; = 12
+
+print dot [-4 -9] [-1 2]
+; prints -14
+; The value is calculated as follows:
+; -4 * -1 + -9 * 2
+; = 4 + -18
+; = -14</code>
+<code>; myDotProduct procedure works exactly like the dot command.
+; The dot command is available so you don't need to implement it yourself.
+; Reviewing this implementation could help you implement something similar using procedures, though.
+to myDotProduct :list1 :list2
+	localmake "result 0
+	repeat count :list1 [
+		localmake "result :result + 
+			(item repcount :list1) * (item repcount :list2)
+	]
+	output :result
+end
+
+print myDotProduct [1 2 3] [4 -5 6]
+; prints 12
+; just like print dot [1 2 3] [4 -5 6]
+
+print myDotProduct [-4 -9] [-1 2]
+; prints -14
+; just like print dot [-4 -9] [-1 2]</code>

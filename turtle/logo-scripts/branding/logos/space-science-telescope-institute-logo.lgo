@@ -1,0 +1,103 @@
+make "heightRatio 0.685
+
+to outerRect :logoHeight
+	localmake "oldState turtleState
+	localmake "widthRatio 0.673
+	localmake "edgeSizeRatio 0.03
+	localmake "oneSide [:edgeSizeRatio :heightRatio]
+	localmake "lens (sentence :oneSide [:widthRatio] reverse :oneSide)
+	jumpForward penSize / 2 + :logoHeight * :heightRatio
+	jumpLeft :logoHeight * (:widthRatio / 2 - :edgeSizeRatio)
+	left 90
+	repeat count :lens [
+		forward :logoHeight * item repcount :lens
+		left 90
+	]
+	setTurtleState :oldState
+end
+
+to arcForward :arcRadius :height
+	localmake "oldState turtleState
+	localmake "angle1 arcCos (:arcRadius - :height) / :arcRadius
+	jumpRight :arcRadius * sin :angle1
+	left 90 - :angle1
+	arcLeft :angle1 * 2 :arcRadius
+	setTurtleState :oldState
+end
+
+to spaceTelescopeScienceInstituteLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "upperCircleRadius1 :height * 0.306
+	localmake "upperCircleRadius2 :height * 0.139
+	localmake "middleArcRadius :height * 0.162
+	localmake "upperAngle 5.6
+	localmake "upperSize1 :height * 0.275
+	localmake "arcAngle1 67
+	localmake "arcRadius1 :height * 0.156
+	setLineCap "butt
+	setFillColor transparent
+	outerRect :height
+	jumpForward :height * :heightRatio + penSize / 2
+	localmake "middleTop pos
+	circle :upperCircleRadius1
+	circlePair :upperCircleRadius1 :middleArcRadius	:height * -0.295
+
+	jumpTo :middleTop
+	circle :upperCircleRadius2
+	circlePair :upperCircleRadius2 0 :height * -0.65
+
+	jumpTo :middleTop
+	right :upperAngle
+	jumpLeft :upperCircleRadius2	
+	backward :upperSize1
+	arcRight :arcAngle1 :arcRadius1
+
+	jumpTo :middleTop
+	setHeading :oldHeading
+	left :upperAngle
+	jumpRight :upperCircleRadius2	
+	backward :upperSize1
+	arcLeft :arcAngle1 :arcRadius1
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	setLineCap "round
+	jumpForward penSize / 2
+	arcForward :height * 0.342 :height * 0.185
+	
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://hera.ph1.uni-koeln.de/~makai/Pictures/stsci_logo.jpg
+to spaceTelescopeScienceInstituteLogoBlack :height
+	setPenSize :height * 0.01
+	setPenColor "black
+	spaceTelescopeScienceInstituteLogo :height
+end
+
+; Inspired by
+; https://upload.wikimedia.org/wikipedia/en/1/13/Stsci_logo.png
+to spaceTelescopeScienceInstituteLogoBlue :height
+	localmake "oldState turtleState
+	localmake "radius :height / 2
+	setFillColor "#318dde
+	setPenSize 0
+	jumpForward :radius
+	circle :radius
+	setPenColor "white
+	setPenSize :height * 0.013
+	circle :radius * 0.935
+	jumpBackward :height * 0.318
+	spaceTelescopeScienceInstituteLogo :height * 0.71
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 3
+jumpLeft :separation * 0.5
+spaceTelescopeScienceInstituteLogoBlack :height
+jumpRight :separation
+spaceTelescopeScienceInstituteLogoBlue :height

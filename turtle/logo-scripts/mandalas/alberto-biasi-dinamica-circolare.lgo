@@ -1,0 +1,79 @@
+to drawStreak :len :lenToWidest :maxWidth
+	localmake "oldState turtleState
+	localmake "angle1 arcTan :maxWidth / 2 / :lenToWidest
+	localmake "angle2a arcTan (:maxWidth / 2) / (:len - :lenToWidest)
+	localmake "angle2 :angle1 + :angle2a
+	localmake "angle3 180 - :angle2a * 2
+	localmake "lenToWidest1 hypot [:lenToWidest :maxWidth / 2]
+	localmake "len2 hypot [:len - :lenToWidest :maxWidth / 2]
+	right :angle1
+	polyStart
+	jumpForward :lenToWidest1
+	left :angle2
+	jumpForward :len2
+	left :angle3
+	jumpForward :len2
+	polyEnd
+	setTurtleState :oldState
+end
+
+to createBackgroundGradient :radius
+	localmake "colorStops createPList2 [
+		[0 "white] [0.8 "white] [1 "#eee]
+	]
+	output createRadialGradient pos :radius :colorStops
+end
+
+to createStreakGradient :len :lenToMaxWidth
+	localmake "peakRatio :lenToMaxWidth / :len
+	localmake "peakRatioBefore :peakRatio * 0.6
+	localmake "peakRatioAfter mix 1 :peakRatio 0.3 
+	localmake "colorStops createPList2 [
+		[0 "#44c] [:peakRatioBefore "#22a] [:peakRatio "#004]
+		[:peakRatioAfter "#22a] [1 "#44c]
+	]
+	localmake "oldPos pos
+	jumpForward :len
+	localmake "result createLinearGradient :oldPos pos :colorStops "pad
+	jumpTo :oldPos
+	output :result
+end
+
+; Inspired by
+; https://www.pinterest.ca/pin/666532813623685057/
+; It is titled Dinamica Circolare which is Italian for circular dynamics.
+to albertoBiasiDinamicaCircolare :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "numSlices 256
+	localmake "centralGap :height * 0.03
+	jumpForward :height / 2
+	setPenSize :height * 0.002
+	localmake "radius1 (:height - penSize) / 2
+	localmake "radius2 :radius1 - :centralGap
+	localmake "minPeakWidthLen :radius2 * 0.4
+	localmake "maxPeakWidthLen :minPeakWidthLen + :radius2 * 0.03
+	localmake "maxWidth (:minPeakWidthLen + :maxPeakWidthLen) / 2 * sin 360 / :numSlices
+	setPenColor "gray
+	setFillGradient createBackgroundGradient :radius1
+	circle :radius1
+	localmake "center pos
+	setPenSize 0
+	repeat :numSlices [
+		setHeading :oldHeading + repcount * 360 / :numSlices
+		localmake "middleLen mix :maxPeakWidthLen :minPeakWidthLen randomRatio
+		localmake "gap2 :middleLen * 0.7
+		setFillColor "#BABABA
+		jumpForward :centralGap
+		drawStreak :radius2 :middleLen	:maxWidth
+		jumpForward :gap2
+		localmake "len1 :radius2 * 0.7 - :gap2
+		localmake "len2 :middleLen - :gap2
+		setFillGradient createStreakGradient :len1 :len2
+		drawStreak :len1 :len2 :maxWidth
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+albertoBiasiDinamicaCircolare 100
