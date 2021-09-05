@@ -1,0 +1,70 @@
+; Inspired by a drawing from
+; Terrapin Logo 3.0 For Apple II manual.
+; The drawing is on page G-60.
+; You can find a digital version of the manual at:
+; https://archive.org/details/TerrapinLogo3.0ForAppleII/page/n101/mode/2up
+make "windowSizeRatio 0.37
+make "windowPositionRatio 0.46
+
+to window :height
+	localmake "oldState turtleState
+	rect :height :height
+	repeat 2 [
+		jumpBackward :height / 2
+		stripes penSize :height [penColor]
+		jumpForward :height / 2
+		right 90
+	]
+	setTurtleState :oldState
+end
+
+to house :height
+	localmake "oldState turtleState
+	localmake "height :height - penSize
+	localmake "oldPos pos
+	localmake "baseHeight :height * 0.7
+	localmake "roofHeight :height - :baseHeight
+	localmake "roofAngle 30
+	localmake "width :roofHeight * 2 / tan :roofAngle
+	localmake "roofLength (hypot [:width (:height - :baseHeight) * 2]) / 2
+	jumpForward :height * :windowPositionRatio
+	window :height * :windowSizeRatio
+	jumpTo :oldPos
+
+	jumpForward penSize / 2
+	jumpLeft :width / 2
+	forward :baseHeight
+	right 90 - :roofAngle
+	forward :roofLength
+	right :roofAngle * 2
+	forward :roofLength
+	right 90 - :roofAngle
+	forward :baseHeight
+
+	setTurtleState :oldState
+end
+
+to town :height
+	localmake "oldState turtleState
+	localmake "separation :height * 1.1
+	jumpLeft :separation
+	repeat 3 [
+		house :height
+		jumpRight :separation
+	]
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 4
+setPenSize :height * 0.04
+setLineCap "round
+setLineJoinStyle "round
+jumpLeft :separation
+jumpForward :height * :windowPositionRatio
+window :height * :windowSizeRatio
+jumpBackward :height * :windowPositionRatio
+jumpRight :separation
+house :height
+jumpRight :separation
+town :height
