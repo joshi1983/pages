@@ -1,0 +1,47 @@
+to getMandelbrotValue :x :y
+	localmake "zx 0
+	localmake "zy 0
+	repeat 25 [
+		localmake "xt :zx * :zy
+		localmake "zx :zx * :zx - :zy * :zy + :x
+		localmake "zy 2 * :xt + :y
+		if :zx > 2 [
+			output repcount
+		]
+	]
+	output 25
+end
+
+to valueToColor :v
+	output [:v * 10 :v * 3 :v * 0.5]
+end
+
+to sierpinskiCarpet :x :y :size
+	ifelse :size > 2 [
+		localmake "small :size / 3
+		for ["dx 0 2 1] [
+			for ["dy 0 2 1] [
+				if ( or :dx <> :dy  :dx <> 1 ) [
+					sierpinskiCarpet 
+						:x+:dx*:small
+						:y+:dy*:small
+						:small
+				]
+			]
+		]
+	] [
+		penup
+		setxy :x :y
+		pendown
+		localmake "r 25 - getMandelbrotValue :x*0.005-0.5 :y*0.005
+		if :r > 0.2 [
+			setfillcolor valueToColor :r
+			setpencolor valueToColor :r * 0.7 - 0.1
+			circle :r * 0.07
+		]
+	]
+end
+
+setfillcolor "black
+setpensize 0.1
+sierpinskiCarpet -200 -200 400

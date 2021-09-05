@@ -1,0 +1,191 @@
+to radialPattern :minRadius :maxRadius
+	localmake "deltaRadius :maxRadius - :minRadius
+	localmake "midRadius (:minRadius + :maxRadius) * 0.5
+	localmake "midDeltaRadius :deltaRadius * 0.5
+	localmake "numMarks 40
+
+	repeat :numMarks [
+		penup
+		forward :minRadius
+		pendown
+		ifelse 0 = remainder repcount 2 [ 
+			forward :deltaRadius
+			penup
+			back :maxRadius
+		] [
+			forward :midDeltaRadius
+			penup
+			back :midRadius
+		]
+		right 360 / :numMarks
+	]
+end
+
+to eyeLashArcLeft :degrees :radius :numRepeats :lashThickness
+	localmake "lashArcRadius :lashThickness * 10
+	setpencolor "black
+	setpensize :lashThickness
+	repeat :numRepeats [
+		right 70
+		arcRight 50 :lashArcRadius
+		penup
+		arcRight -50 :lashArcRadius
+		left 70
+		arcLeft :degrees / :numRepeats :radius
+		pendown
+	]
+end
+
+to drawGlare :size
+	localmake "oldHeading heading
+	localmake "oldPos pos
+	setpencolor "white
+	setpensize :size * 0.3
+	left 65
+	fd :size * 0.4
+	right 90
+	pendown
+	arcRight 30 :size
+	penup
+	setheading :oldHeading
+	setPos :oldPos
+end
+
+to drawEye :size :eyeColor1 :openRatio
+	localmake "closeRatio 1 - :openRatio
+	localmake "irisRadius :size * 0.3
+	localmake "pupilRadius :irisRadius * 0.3
+	localmake "eyeLidThickness :size * 0.1
+	localmake "eyeLidColor "Salmon
+	localmake "upperEyelidRadius :size * (0.78 - :closeRatio * 0.18) / :openRatio
+	localmake "lowerEyelidRadius :size * 0.905 / :openRatio
+	localmake "lashThickness :size * 0.005
+	localmake "originalPos pos
+	localmake "originalHeading heading
+
+	setfillcolor :eyeColor1
+	setpencolor "black
+	setpensize :irisRadius * 0.01
+	circle :irisRadius
+
+	setpencolor "black
+	radialPattern :pupilRadius * 1.1 :irisRadius * 0.9
+	setpencolor "white
+	right 5
+	radialPattern :pupilRadius :irisRadius * 0.7
+
+	setfillcolor "black
+	circle :pupilRadius
+
+	drawGlare :irisRadius
+
+	; move to corner of the eye
+	penup
+	right 102
+	forward :size * 0.63
+	pendown
+
+	if :openRatio < 0.82 [
+		localmake "pos1 pos
+		localmake "heading1 heading
+		; hide parts of the iris and pupil that may appear above and below the eyelids.
+		localmake "wThickness :irisRadius * 2 * :closeRatio
+		left 90
+		forward :size * 0.29
+		left 43 * :closeRatio
+		setpencolor "white
+		setpensize :wThickness
+		left 60
+		arcLeft 108 * :openRatio :upperEyelidRadius * 1.2
+		sety ycor - :size * (0.1 + 0.39 * :closeRatio)
+		left 75 + 105 * :closeRatio
+		arcLeft 70 * :openRatio :lowerEyelidRadius
+		setpensize 0
+		setpos :pos1
+		setheading :heading1
+	]
+
+	; draw lacrimal laruncle and canthus
+	; in other words, corner nearest the nose
+	setfillcolor "pink
+	setpensize 0
+	circle :size * 0.13
+	left 80
+	fd :size * 0.1
+
+	left 53 + 65 * :closeRatio
+
+	; draw upper eye lid.
+	setpencolor :eyeLidColor
+	setpensize :eyeLidThickness
+	arcLeft 123 * :openRatio :upperEyelidRadius
+
+	setfillcolor :eyeLidColor
+	setpensize 0
+	circle :eyeLidThickness * 0.5
+
+	setpensize :eyeLidThickness
+	left 70 + 109 * :closeRatio
+	arcLeft 81.4 * :openRatio :lowerEyeLidRadius
+	arcRight 40 * :openRatio :size * 0.1
+	ifelse :closeRatio < 0.9 [
+		ifelse :closeRatio > 0.7 [
+			forward :size * 0.03
+		] [
+			forward :size * 0.1 * :closeRatio
+		]
+	] [
+		forward :size * 0.01 * :closeRatio
+		circle :size * (0.005 + 0.12 * :openRatio)
+	]
+	arcLeft 150 :size * (0.005 + 0.12 * :openRatio)
+	penup
+	left 100
+	forward :eyeLidThickness * 0.3
+
+	; draw eye lashes
+	right 70 + :openRatio * 45
+	pendown
+	eyeLashArcLeft 105 * :openRatio :upperEyelidRadius 30 :lashThickness
+	penup
+	arcleft 4.5 * :openRatio :upperEyelidRadius
+	left 77 + :closeRatio * 108
+	eyeLashArcLeft 55 * :openRatio :lowerEyelidRadius 15 :lashThickness
+	penup
+	setpos :originalPos
+	setheading :originalHeading
+end
+
+to getOpenRatio
+	if and (animation.time > 7) (animation.time <= 7.1) [
+		output 0.005
+	]
+	if and (animation.time > 6.9) (animation.time < 7.01) [
+		output 0.005 + (abs 7 - animation.time) * 9.95
+	]
+	if and (animation.time > 7.1) (animation.time < 7.2) [
+		output 0.005 + abs (7.1 - animation.time) * 9.95
+	]
+	if animation.time < 6.91 [
+		localmake "result 1 - 0.1 * ((6.9 - animation.time) / 6.9)
+		output :result
+	]
+	output 1
+end
+
+drawEye 100 "green getOpenRatio
+
+to animation.snapshotstyle
+	localmake "ratio (10 - animation.time) * 0.1
+	localmake "result plistCreate
+	; zoom in slowly.
+	setProperty "result "zoom.scale 4 - :ratio * :ratio
+	output :result
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 10
+	; Edit this if you want to change the length of your animation.
+	output :minutes * 60 + :seconds
+end

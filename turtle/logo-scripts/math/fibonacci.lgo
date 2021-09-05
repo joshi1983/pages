@@ -1,0 +1,72 @@
+; A few procedures to calculate numbers from the Fibonacci sequence
+; Learn more about the sequence at:
+; https://en.wikipedia.org/wiki/Fibonacci_number
+
+to fibonacciRecursive :n
+	; base case 1
+	if :n = 0 [
+		output 0
+	]
+	; another base case
+	if :n = 1 [
+		output 1
+	]
+	; general case
+	output (fibonacciRecursive :n - 2) + (fibonacciRecursive :n - 1)
+end
+
+; The following runs much faster than the recursive solution above for large :n
+to fibonacci :n
+	; special case that the lower loop won't work for
+	if :n = 0 [
+		output 0
+	]
+	localmake "n1 0
+	localmake "n2 1
+	repeat :n [
+		localmake "previousN1 :n1
+		localmake "n1 :n2
+		localmake "n2 :previousN1 + :n1
+	]
+	output :n1
+end
+
+to FibonacciBinet :n
+	; Binet's formula is explained at:
+	; https://artofproblemsolving.com/wiki/index.php/Binet%27s_Formula
+	; This is an optimal performance solution since no recursion or loops are needed.
+	localmake "sqrt5 sqrt 5
+	output (1 / :sqrt5) * ( (power ((1 + :sqrt5) / 2) :n) - (power ((1 - :sqrt5) / 2) :n) )
+end
+
+to FibonacciList :n
+	localmake "a 0
+	localmake "b 1
+	localmake "result []
+	repeat :n [
+		queue "result :a
+		localmake "previousa :a
+		localmake "a :b
+		localmake "b :previousa + :b
+	]
+	output :result
+end
+
+
+print ["9th "Fibonacci "number "is fibonacciRecursive 9]
+; prints 34
+
+print ["9th "Fibonacci "number "is fibonacci 9]
+; also prints 34
+
+print ["9th "Fibonacci "number "is FibonacciBinet 9]
+; also prints 34
+
+print FibonacciList 9
+; prints 0 1 1 2 3 5 8 13 21
+
+
+; show in the drawing.
+right 90
+setfillcolor "black
+label FibonacciList 9

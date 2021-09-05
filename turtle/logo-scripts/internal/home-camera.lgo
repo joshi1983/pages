@@ -1,0 +1,63 @@
+; inspired by
+; https://www.onlinewebfonts.com/icon/370319
+
+to camera :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "apertureRadius :size * 0.2
+	localmake "halfWidth :size * 0.5
+	localmake "cornerRadius :size * 0.1
+	localmake "halfWidth2 :halfWidth - :cornerRadius
+	localmake "width2 :size - :cornerRadius * 2
+	localmake "height :size * 0.7
+	localmake "height2 :height - :cornerRadius * 2
+	setPenSize 0
+	back :height * 0.5
+	right 90
+	forward :halfWidth2
+	arcLeft 90 :cornerRadius
+	setFillColor "black
+	polyStart
+	repeat 2 [
+		forward :height2
+		arcLeft 90 :cornerRadius
+		forward :width2
+		arcLeft 90 :cornerRadius
+	]
+	polyEnd
+	setPos :oldPos
+	setFillColor "white
+	circle :apertureRadius
+	setHeading :oldHeading
+end
+
+to roof :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "cornerRadius :size * 0.05
+	localmake "angle 30
+	localmake "width2 :size - :cornerRadius * 2
+	localmake "halfWidth :size * 0.5
+	localmake "halfWidth2 :halfWidth - :cornerRadius * (sin :angle)
+	localmake "sideLength (:halfWidth2 / cos :angle)
+	setPenSize 0
+	right 90 + :angle
+	setFillColor "black
+	polyStart
+	forward :sideLength
+	arcRight 180 - :angle :cornerRadius
+	forward :width2
+	arcRight 180 - :angle :cornerRadius
+	forward :sideLength
+	polyEnd
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to homeCamera :size
+	roof :size
+	back :size * 0.7
+	camera :size * 0.8
+end
+
+homeCamera 200

@@ -1,0 +1,129 @@
+make "g 6.5
+
+to calcStarSettings :largeRadius :smallRadius :numPoints
+	localmake "angle1 180 / :numPoints
+	localmake "len1 :smallRadius * sin :angle1
+	localmake "len2 :smallRadius * cos :angle1
+	localmake "size1 hypot [:len1 (:largeRadius - :len2)]
+	localmake "angle2 90 - arcCos :len1 / :size1
+	localmake "angle3 180 - 2 * (:angle1 + :angle2)
+	output [:angle2 :angle3 :size1]
+end
+
+to star :largeSize :smallSize :numPoints
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "settings calcStarSettings :largeSize :smallSize :numPoints
+	localmake "angle1 item 1 :settings
+	localmake "angle2 item 2 :settings
+	localmake "size1 item 3 :settings
+	forward :largeSize
+	polyStart
+	repeat :numPoints [
+		right 180 - :angle1
+		forward :size1
+		left :angle2
+		forward :size1
+		left :angle1
+	]
+	polyEnd
+	right 180 / :numPoints
+	penUp
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to glare :size
+	if :size < 0.1 [
+		stop
+	]
+	localmake "oldHeading heading
+	localmake "colorStops plistCreate
+	setProperty "colorStops 0 "white
+	setProperty "colorStops 0.1 "#ff8
+	setProperty "colorStops 0.2 "#f00
+	setProperty "colorStops 1 "black
+	localmake "gradient createRadialGradient pos pos :size :colorStops "pad
+	setFillGradient :gradient
+	setPenSize 0
+	setHeading 0
+	star :size * 0.2 :size * 0.05 8
+	star :size * 0.3 :size * 0.1 32
+	localmake "gradient createRadialGradient pos pos :size * 2 :colorStops "pad
+	setFillGradient :gradient
+	star :size * 0.4 :size * 0.05 16
+	localmake "gradient createRadialGradient pos pos :size * 3 :colorStops "pad
+	setFillGradient :gradient
+	star :size * 0.5 :size * 0.02 4
+	setHeading :oldHeading
+end
+
+to explosion :explosionRadius :brightness
+	localmake "oldPos pos
+	localmake "numSparklers 32
+	localmake "radius :explosionRadius
+	repeat :numSparklers [
+		penUp
+		setPos :oldPos
+		forward :radius
+		glare :brightness
+		right 360 / :numSparklers
+	]
+end
+
+to fireworks :size :maxElevation :time
+	localmake "oldHeading heading
+	localmake "explosionTime 3
+	localmake "initialSpeed :maxElevation / :explosionTime
+	localmake "elevation :time * :initialSpeed - :time * :time * :g
+	localmake "trailWidth :size * 0.01
+	penUp
+	localmake "from pos
+	forward :elevation
+	localmake "colorStops plistCreate
+	setProperty "colorStops 0 "black
+	setProperty "colorStops 0.5 "#841
+	setProperty "colorStops 1 "#a84
+	localmake "toPos pos
+	localmake "gradient createLinearGradient :from :toPos :colorStops "pad
+	setFillGradient :gradient
+	setPenSize 0
+	right 90
+	forward :trailWidth * 0.5
+	right 90
+	if :elevation > 0.01 [
+		polyStart
+		repeat 2 [
+			forward :elevation
+			right 90
+			forward :trailWidth
+			right 90
+		]
+		polyEnd
+	]
+	setPos :toPos
+	setHeading :oldHeading
+	ifelse :time < :explosionTime [
+		glare :size * 0.05
+	] [
+		localmake "time :time - :explosionTime
+		localmake "explosionRadius :time * :size
+		explosion :explosionRadius :size * 0.05
+	]
+end
+
+setScreenColor "black
+fireworks 200 200 animation.time
+hideTurtle
+
+to animation.snapshotstyle
+	localmake "result plistCreate
+	output :result
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 10
+	; Edit this if you want to change the length of your animation.
+	output :minutes * 60 + :seconds
+end

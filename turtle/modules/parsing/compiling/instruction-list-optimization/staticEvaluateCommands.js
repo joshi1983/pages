@@ -1,0 +1,45 @@
+import { CallCommandInstruction } from '../../execution/instructions/CallCommandInstruction.js';
+import { getCommandGroups } from '../../../command-groups/getCommandGroups.js';
+import { isConstantPush } from './isConstantPush.js';
+import { PushInstruction } from '../../execution/instructions/PushInstruction.js';
+import { removeInstructions } from './removeInstructions.js';
+import { shouldValueBeCloned } from '../shouldValueBeCloned.js';
+
+const commandGroups = getCommandGroups();
+
+export function staticEvaluateCommand(instructions, i) {
+	const instruction = instructions[i];
+	if (!(instruction instanceof CallCommandInstruction))
+		throw new Error('i must be the index of a CallCommandInstruction');
+
+	const inputs = [];
+	for (let j = 0; j < instruction.numArgs; j++) {
+		if (isConstantPush(instructions[i - instruction.numArgs + j]) === true)
+			inputs.push(instructions[i - instruction.numArgs + j].value);
+		else {
+			return false;
+		}
+	}
+	const commandGroupName = instruction.command.commandGroup;
+	const commandName = instruction.command.primaryName;
+	const commandGroup = commandGroups.get(commandGroupName);
+	if (commandGroup === undefined)
+		throw new Error('Unable to find commandGroup ' + commandGroupName + '.  If it is turtle or compiled, it should not be isStaticEvaluationSafe.');
+
+	const result = commandGroup[commandName](...inputs);
+	const parseTreeToken = instructions[i].parseTreeToken;
+	i -= instruction.numArgs;
+	removeInstructions(instructions, i + 1, instruction.numArgs);
+	instructions[i] = new PushInstruction(result, parseTreeToken, shouldValueBeCloned(result));
+	return true;
+}
+
+export function staticEvaluateCommands(instructions) {
+	for (let i = 0; i < instructions.length; i++) {
+		const instruction = instructions[i];
+		if (instruction instanceof CallCommandInstruction && instruction.command.isStaticEvaluationSafe) {
+			if (staticEvaluateCommand(instructions, i))
+				i -= instruction.numArgs;
+		}
+	}
+};

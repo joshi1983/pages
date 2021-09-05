@@ -1,0 +1,37 @@
+import { Command } from '../../../../parsing/Command.js';
+import { ParseTreeTokenType } from '../../../../parsing/ParseTreeTokenType.js';
+
+const commandsUsingColour = new Set(Command.getAllCommandsInfo().filter(function(info) {
+	return info.args.some(arg => arg.types === 'color' ||
+		arg.types === 'color|transparent' || arg.types === 'int' || arg.types === 'num');
+}).map(info => info.primaryName));
+
+function isToBeChanged(t) {
+	if (isNaN(t.val) || t.val.indexOf('.') !== -1 || t.parentNode === null)
+		return false;
+	if (t.parentNode.type !== ParseTreeTokenType.PARAMETERIZED_GROUP)
+		return false;
+	const info = Command.getCommandInfo(t.parentNode.val);
+	if (info === undefined)
+		return false;
+	if (!commandsUsingColour.has(info.primaryName))
+		return false;
+	const argIndex = t.parentNode.children.indexOf(t);
+	if (info.args.length <= argIndex)
+		return false;
+	const types = info.args[argIndex].types;
+	return types === 'color' || types === 'color|transparent' || types === 'int' || types === 'num';
+}
+
+export function quoteIntegerFixer(cachedParseTree, fixLogger) {
+	const tokensToChange = cachedParseTree.getTokensByType(ParseTreeTokenType.STRING_LITERAL).
+		filter(isToBeChanged);
+	tokensToChange.forEach(function(stringToken) {
+		const oldValue = stringToken.val;
+		stringToken.val = parseInt(oldValue);
+		stringToken.type = ParseTreeTokenType.NUMBER_LITERAL;
+		cachedParseTree.tokenTypeChanged(stringToken, ParseTreeTokenType.STRING_LITERAL);
+		cachedParseTree.tokenValueChanged(stringToken, oldValue);
+		fixLogger.log(`Quote removed before integer value ${stringToken.val} because integer values are not to be prefixed with a quote.  A quote indicates a string.`, stringToken);
+	});
+};

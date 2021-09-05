@@ -1,0 +1,34 @@
+; The Vicsek fractal is explained at:
+; https://en.wikipedia.org/wiki/Vicsek_fractal
+
+to square :size
+	localmake "oldPos pos
+	setPenSize :size
+	penUp
+	back :size * 0.5
+	penDown
+	forward :size
+	penUp
+	setPos :oldPos
+end
+
+to vicsek :size
+	ifelse :size < 3 [
+		square :size * 3
+	] [
+		localmake "oldPos pos
+		localmake "oldHeading heading
+		vicsek :size / 3
+		repeat 2 [
+			forward :size
+			vicsek :size / 3
+			back :size * 2
+			vicsek :size / 3
+			setPos :oldPos
+			right 90
+		]
+		setHeading :oldHeading
+	]
+end
+
+vicsek 150

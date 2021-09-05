@@ -1,0 +1,58 @@
+; Inspired by:
+; https://commons.wikimedia.org/wiki/File:Poppy.svg
+
+to poppy :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "outerArcRadius :size * 0.59
+	localmake "outerArcRadius2 :size * 0.059
+	localmake "innerArcRadius :size * 0.09
+	localmake "red1 "#e43232
+	localmake "red2 "#c00
+	localmake "green1 "#396
+	localmake "green2 "#028000
+	setPenColor :red2
+	setFillColor :red1
+	setPenSize :size * 0.03
+	penUp
+	; move to centre the poppy on :oldPos.
+	forward :outerArcRadius * 0.62
+	left 90
+	forward :outerArcRadius * 1.29
+	setHeading :oldHeading
+	penDown
+
+	; fill red part of poppy.
+	polyStart
+	repeat 4 [
+		arcRight 130 :outerArcRadius
+		arcRight 40 :outerArcRadius2
+		arcLeft 120 :outerArcRadius2
+		arcRight 40 :outerArcRadius2
+	]
+	polyEnd
+	penUp
+	; move turtle to get green part of poppy in centre.
+	setPos :oldPos
+	setHeading :oldHeading
+	left 27.5
+	forward :size * 0.2335
+	setHeading :oldHeading
+	penDown
+	setFillColor :green1
+	setPenColor :green2
+	setPenSize :size * 0.02
+
+	; fill green part of poppy.
+	polyStart
+	repeat 8 [
+		arcRight 170 :innerArcRadius
+		left 125
+	]
+	polyEnd
+	penUp
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+poppy 200

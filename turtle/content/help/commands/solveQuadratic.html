@@ -1,0 +1,48 @@
+<code>; The following code graphs the parabola for:<br>
+; y = :a * :x * :x + :b * :x + :c.<br>
+; It marks the x-axis intersections with red circles.<br>
+; solveQuadratic :a :b :c is used<br>
+; to calculate the x values.<br>
+<br>
+; adjust the a, b, and c values to see<br>
+; the red points adjust correctly.<br>
+make "a 2<br>
+make "b 5<br>
+make "c -50<br>
+<br>
+to quadratic :x<br>
+	output :a * :x * :x + :b * :x + :c<br>
+end<br>
+<br>
+; transforms the x-value to display it more clearly<br>
+to mathXToDrawingX :x<br>
+	output :x * 20<br>
+end<br>
+<br>
+; Graph the parabola.<br>
+setFillColor "black<br>
+repeat 100 [<br>
+	make "x (repcount - 50) * 0.2<br>
+	penup<br>
+	setXY (mathXToDrawingX :x) quadratic :x<br>
+	pendown<br>
+	circle 3<br>
+]<br>
+<br>
+; Show the solved intersection between
+; the parabola and the x-axis.<br>
+make "xWhenYIsZero solveQuadratic :a :b :c<br>
+setFillColor "red<br>
+repeat count :xWhenYIsZero [<br>
+	make "x item repcount :xWhenYIsZero<br>
+	penup<br>
+	setXY (mathXToDrawingX :x) 0<br>
+	pendown<br>
+	circle 8<br>
+	penup<br>
+	; move away from dot enough to<br>
+	; make text more readable.<br>
+	setY yCor + 15<br>
+	pendown<br>
+	label str :x<br>
+]</code>

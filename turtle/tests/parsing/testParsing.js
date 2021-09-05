@@ -1,0 +1,66 @@
+import { testCharIndexToParseTreeTokenPosition } from './testCharIndexToParseTreeTokenPosition.js';
+import { testCommandClass } from './testCommandClass.js';
+import { testCompiling } from './compiling/testCompiling.js';
+import { testCreateParameterizedGroups } from './testCreateParameterizedGroups.js';
+import { testDataTypesDirectory } from './data-types/testDataTypesDirectory.js';
+import { testExampleScripts } from './testExampleScripts.js';
+import { testExecution } from './execution/testExecution.js';
+import { testFixOperatorPrecedence } from './testFixOperatorPrecedence.js';
+import { testGetTokensForParsing } from './testGetTokensForParsing.js';
+import { testIsAfterOrSame } from './testIsAfterOrSame.js';
+import { testIsSupportedByHighOrderInvoke } from './testIsSupportedByHighOrderInvoke.js';
+import { testKeyword } from './testKeyword.js';
+import { testLoggers } from './loggers/testLoggers.js';
+import { testLogoParserFailing } from './testLogoParserFailing.js';
+import { testLogoParsingStates } from './testLogoParsingStates.js';
+import { testLogoScannerTokenSplitter } from './testLogoScannerTokenSplitter.js';
+import { testNumbers } from './testNumbers.js';
+import { testOperators } from './testOperators.js';
+import { testOrderOfOperation } from './testOrderOfOperation.js';
+import { testParseTree } from './testParseTree.js';
+import { testParseTreeAnalysis } from './parse-tree-analysis/testParseTreeAnalysis.js';
+import { testParseTreeColIndexes } from './testParseTreeColIndexes.js';
+import { testParseTreeToCodeWithComments } from './testParseTreeToCodeWithComments.js';
+import { testParseTreeToken } from './testParseTreeToken.js';
+import { testProcedure } from './testProcedure.js';
+import { testScanner } from './testScanner.js';
+import { testScrapeProcedures } from './testScrapeProcedures.js';
+import { testToken } from './testToken.js';
+import { testUnsupportedCommand } from './testUnsupportedCommand.js';
+import { prefixWrapper } from '../helpers/prefixWrapper.js';
+
+export function testParsing(logger) {
+	function namedLog(prefix) {
+		return prefixWrapper(prefix, logger);
+	}
+
+	testCharIndexToParseTreeTokenPosition(namedLog('testCharIndexToParseTreeTokenPosition'));
+	testCommandClass(namedLog('testCommandClass'));
+	testCompiling(namedLog('testCompiling'));
+	testCreateParameterizedGroups(namedLog('testCreateParameterizedGroups'));
+	testDataTypesDirectory(namedLog('testDataTypesDirectory'));
+	testExampleScripts(namedLog('testExampleScripts'));
+	testExecution(namedLog('testExecution'));
+	testFixOperatorPrecedence(namedLog('testFixOperatorPrecedence'));
+	testGetTokensForParsing(namedLog('testGetTokensForParsing'));
+	testIsAfterOrSame(namedLog('testIsAfterOrSame'));
+	testIsSupportedByHighOrderInvoke(namedLog('testIsSupportedByHighOrderInvoke'));
+	testKeyword(namedLog('testKeyword'));
+	testLoggers(namedLog('testLoggers'));
+	testLogoParserFailing(namedLog('testLogoParserFailing'));
+	testLogoParsingStates(namedLog('testLogoParsingStates'));
+	testLogoScannerTokenSplitter(namedLog('testLogoScannerTokenSplitter'));
+	testNumbers(namedLog('testNumbers'));
+	testOperators(namedLog('testOperators'));
+	testOrderOfOperation(namedLog('testOrderOfOperation'));
+	testParseTree(namedLog('testParseTree'));
+	testParseTreeAnalysis(namedLog('testParseTreeAnalysis'));
+	testParseTreeColIndexes(namedLog('testParseTreeColIndexes'));
+	testParseTreeToCodeWithComments(namedLog('testParseTreeToCodeWithComments'));
+	testParseTreeToken(namedLog('testParseTreeToken'));
+	testProcedure(namedLog('testProcedure'));
+	testScanner(namedLog('testScanner'));
+	testScrapeProcedures(namedLog('testScrapeProcedures'));
+	testToken(namedLog('testToken'));
+	testUnsupportedCommand(namedLog('testUnsupportedCommand'));
+};

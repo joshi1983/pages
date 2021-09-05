@@ -1,0 +1,50 @@
+import { fetchJson } from '../fetchJson.js';
+const operators = await fetchJson('json/operators.json');
+const symbolsMap = new Map();
+operators.forEach(function(operatorInfo) {
+	symbolsMap.set(operatorInfo.symbol, operatorInfo);
+});
+
+export class Operators {
+	static compareOperatorPrecedence(op1, op2) {
+		op1 = Operators.getOperatorInfo(op1);
+		op2 = Operators.getOperatorInfo(op2);
+		return op1.precedence - op2.precedence;
+	}
+
+	static canBeUnary(operatorInfo) {
+		if (typeof operatorInfo === 'string')
+			operatorInfo = Operators.getOperatorInfo(operatorInfo);
+		if (typeof operatorInfo !== 'object')
+			throw new Error('operatorInfo must be an object or the string for an operator symbol.  Not: ' + operatorInfo);
+		return operatorInfo.unary !== undefined;
+	}
+
+	static getOperatorInfo(symbol) {
+		if (typeof symbol !== 'string')
+			throw new Error('symbol must be a string');
+		return symbolsMap.get(symbol);
+	}
+
+	static getParameterTypes(operatorInfo, parameterIndex) {
+		if (typeof operatorInfo === 'string')
+			operatorInfo = Operators.getOperatorInfo(operatorInfo);
+		return operatorInfo.args[parameterIndex];
+	}
+
+	static getBinaryReturnTypes(operatorInfo) {
+		return operatorInfo.returnTypes;
+	}
+
+	static getUnaryReturnTypes(operatorInfo) {
+		if (typeof operatorInfo === 'string')
+			operatorInfo = Operators.getOperatorInfo(operatorInfo);
+		return operatorInfo.unary.returnTypes;
+	}
+
+	static getUnaryParameterTypes(operatorInfo) {
+		if (typeof operatorInfo === 'string')
+			operatorInfo = Operators.getOperatorInfo(operatorInfo);
+		return operatorInfo.unary.arg;
+	}
+};
