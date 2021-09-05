@@ -1,0 +1,56 @@
+to drawEyes :eyeHeight
+	localmake "oldState turtleState
+	localmake "eyeSeparation :eyeHeight * 2.5
+	jumpLeft :eyeSeparation / 2
+	repeat 2 [
+		setFillColor "white
+		circle :eyeHeight / 2
+		setFillColor "black
+		circle :eyeHeight * 0.25
+		jumpRight :eyeSeparation
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by:
+; https://www.youtube.com/watch?v=iY7lLPZ2GEA
+; The code used in that video is for MSWLogo.
+;
+; Most of that code should work well in WebLogo but
+; I(Josh Greig) wrote the following WebLogo code
+; to make better use of commands unique to WebLogo.
+;
+; The main part of happylearningtheknowledgehub's original code 
+; that won't work in WebLogo is flood.
+; In WebLogo, instead of flood fills, you call 
+; setFillColor, polyStart, and polyEnd.
+to face :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "width :height * 0.79
+	localmake "lipWidth :width * 0.61
+	localmake "noseArcRadius :height * 0.043
+	setFillColor "#ffc661
+	jumpForward :height / 2
+	setPenSize :height * 0.012
+	setLineCap "round
+	rect :width :height - penSize
+	setFillColor "red
+	rect :width :height * 0.2
+	rect 0 :height * 0.2
+	drawEyes :height * 0.16
+	jumpForward :height * 0.29
+	setFillColor "black
+	stripes :width :height * 0.2 ["black]
+	jumpBackward :height * 0.585
+	jumpLeft :lipWidth / 2
+	right 90
+	forward :lipWidth
+	jumpBackward :lipWidth / 2 + :noseArcRadius
+	setHeading :oldHeading
+	jumpForward :height * 0.1
+	arcRight 180 :noseArcRadius
+	setTurtleState :oldState
+end
+
+face 100

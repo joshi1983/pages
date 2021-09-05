@@ -1,0 +1,149 @@
+make "honeyPotBackgroundColor "#ffc500
+
+to drawMouth :radius
+	localmake "oldState turtleState
+	localmake "center pos
+	localmake "oldHeading heading
+	localmake "blackOffset :radius * 0.08
+	localmake "blackAngle 180 + 2 * arcSin :blackOffset / :radius
+	localmake "tongueArcsInfo [[-26 0.2] [30 0.6] [33.654109 0.9] ]
+	localmake "tongueOuterAngle 123.1820
+	localmake "tongueAngle 0
+	repeat count :tongueArcsInfo [
+		localmake "arcInfo item repcount :tongueArcsInfo 
+		localmake "tongueAngle :tongueAngle + first :arcInfo
+	]
+
+	; Draw black background of mouth
+	stripes :radius * 0.12 :radius / 2 ["black]
+	jumpForward :blackOffset
+	left 90
+	jumpForward distanceToCircle :center :radius
+	setHeading (towards :center) + 90
+	setFillColor "black
+	polyStart
+	arcLeft :blackAngle :radius
+	polyEnd
+
+	; Draw tongue
+	jumpTo :center
+	setHeading :oldHeading
+	jumpBackward :radius * 0.37
+	setFillColor "#d60a45
+	left 90
+	polyStart
+	arcsLeft :tongueArcsInfo :radius
+	setHeading (towards :center) + 90
+	arcLeft :tongueOuterAngle :radius
+	setHeading :oldHeading - 90 + :tongueAngle
+	arcsLeft reverse :tongueArcsInfo :radius
+	polyEnd
+	setTurtleState :oldState
+end
+
+to drawNose :radius
+	localmake "oldState turtleState
+	localmake "arcsInfo [[30 0.4] [30 0.75] [100 0.18] [20 0.5] [0.20918804]]
+	jumpForward :radius * 0.23
+	right 90
+	setFillColor "black
+	setPenSize 0
+	polyStart
+	arcLines :arcsInfo :radius
+	arcLines reverse :arcsInfo :radius
+	polyEnd
+	setTurtleState :oldState
+end
+
+to drawNoseAndMouth :radius
+	localmake "oldState turtleState
+	setPenSize 0
+	setFillColor "white
+	circle :radius
+	drawMouth :radius
+	drawNose :radius
+	setTurtleState :oldState
+end
+
+to drawEars :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "earArcRadius :height * 0.05
+	localmake "separation :height * 0.623
+	jumpLeft :separation / 2
+	jumpForward :height * 0.195
+	setPenSize 0
+	setFillColor "black
+	repeat 2 [
+		localmake "pos1 pos
+		localmake "sign sign repcount - 1.5
+		setHeading :oldHeading + 53 * :sign		
+		polyStart
+		arcLeft :sign * 180 :earArcRadius
+		polyEnd
+		setHeading :oldHeading
+		jumpTo :pos1
+		jumpRight :separation
+	]
+	setTurtleState :oldState
+end
+
+to drawEyes :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "separation :height * 0.44
+	jumpForward :height * 0.133
+	jumpLeft :separation / 2
+	setPenSize 0
+	setFillColor "black
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		localmake "pos1 pos
+		right :sign * 120
+		polyStart
+		arcLines [[169 0.018] [25 0.123] [30 0.08] [25 0.123]
+		[172 0.017] [-65 0.087]] :height * :sign
+		polyEnd
+		jumpTo :pos1
+		setHeading :oldHeading
+		jumpRight :separation
+	]	
+	setTurtleState :oldState
+end
+
+to honeypotFace :height
+	localmake "oldState turtleState
+	jumpForward :height * 0.403
+	drawNoseAndMouth :height * 0.115
+	drawEars :height
+	drawEyes :height
+	setTurtleState :oldState
+end
+
+to honeypotSquareLogo :height
+	localmake "oldState turtleState
+	stripes :height :height [:honeyPotBackgroundColor]
+	honeypotFace :height
+	setTurtleState :oldState
+end
+
+; Inspired by logo at
+; https://www.youtube.com/@Honeypotio
+; Honepotio has some good educational videos related to software development.
+to honeyPotCircleLogo :height
+	localmake "oldState turtleState
+	setFillColor :honeyPotBackgroundColor
+	setPenSize 0
+	jumpForward :height / 2
+	circle :height / 2
+	setTurtleState :oldState
+	honeypotFace :height
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 5
+jumpLeft :separation / 2
+honeypotSquareLogo :height
+jumpRight :separation
+honeyPotCircleLogo :height

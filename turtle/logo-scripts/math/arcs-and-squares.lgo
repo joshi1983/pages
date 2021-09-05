@@ -1,0 +1,34 @@
+; Inspired by
+; https://regolo54.tumblr.com/post/171417279707/fractal
+; also shown at:
+; https://www.pinterest.ca/pin/803751864741995279/
+to arcsAndSquares :height
+	localmake "colors [ "#800 "#f00 "#f80 "#ff0 ]
+	localmake "oldHeading heading
+	setPenColor "black
+	setPenSize :height * 0.005
+	localmake "maxSize :height - penSize
+	jumpForward :height / 2
+	setLineJoinStyle "miter
+	rect :maxSize :maxSize
+	jumpLeft :maxSize / 2
+	jumpBackward :maxSize / 2
+	localmake "bottomLeftCorner pos
+	localmake "size :maxSize
+	setLineJoinStyle "round
+	repeat 6 [
+		setFillColor mixItems2 :colors repRatio
+		jumpRight :size
+		polyStart
+		jumpForward :size
+		jumpLeft :size
+		right 90
+		arcRight 90 :size
+		polyEnd
+		localmake "size :size / sqrt 2
+		jumpTo :bottomLeftCorner
+		setHeading :oldHeading
+	]
+end
+
+arcsAndSquares 100
