@@ -1,0 +1,35 @@
+; Inspired by logo at:
+; https://iconnections.io
+to iconnectionsLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "circleRadius :height * 0.058
+	localmake "numRepeats 8
+	localmake "circleOffset (:height / 2 - :circleRadius) / cos 180 / :numRepeats
+	localmake "lines1 [[90 0] [18 1]]
+	localmake "lines2 [[0.39] [-95 0] [0.11] [-71 0.12] [53.5 0.274685]]
+	setFillColor "#682a7c
+	setPenSize 0
+	jumpForward :height / 2
+	localmake "center pos
+	repeat :numRepeats [
+		localmake "heading1 :oldHeading + (repcount + 0.5) * 360 / :numRepeats
+		setHeading :heading1
+		jumpForward :circleOffset
+		circle :circleRadius
+		jumpBackward :height * 0.15
+		localmake "d distance :center
+		polyStart
+		arcLines :lines1 :d
+		setHeading :heading1 - 180 / :numRepeats
+		arcLines :lines2 :d
+		arcLines reverse :lines2 :d
+		setHeading (towards :center) + 90
+		arcLines reverse :lines1 :d
+		polyEnd
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+iconnectionsLogo 100

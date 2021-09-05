@@ -1,0 +1,53 @@
+; Inspired by logo at:
+; https://www.nasdaq.com
+to nasdaqLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angle 20
+	localmake "thicknessFactor 0.275
+	localmake "cornerRadiusFactor 0.05
+	localmake "xOffset -0.116
+	localmake "yOffset -0.057
+	localmake "len1 0.285
+	localmake "cornerRadiusFactor2 0.045
+	localmake "len2 (:len1 + :yOffset * 2 / cos :angle)
+	localmake "lines1 [
+		[-:angle 0] [:len1] [:angle * 2 - 180 :cornerRadiusFactor2]
+		[:len2] [-:angle 0]
+	]
+	jumpLeft :height
+	localmake "lines []
+	queue2 "lines [:oldPos pos]
+	jumpForward :height
+	localmake "upperLeft pos
+	jumpRight :height
+	queue2 "lines [:upperLeft pos]
+
+	jumpTo :oldPos
+	setPenSize 0
+	setFillColor "#0090BA
+	jumpForward :height / 2
+	localmake "center pos
+	repeat 2 [
+		setHeading :oldHeading + repcount * 360 / 2
+		jumpForward :height * 0.25
+		polyStart
+		arcLines [[90 0] [:thicknessFactor]
+			[90 - :angle :cornerRadiusFactor]] :height
+		localmake "len distanceToLines :lines
+		jumpForward :len
+		arcLines [[:angle + 90 0] [:thicknessFactor] [90 - :angle 0]] :height
+		jumpForward :len
+		arcRight 90 - :angle :height * :cornerRadiusFactor
+		polyEnd
+		jumpTo :center
+	]
+	setHeading :oldHeading
+	drawArcLineShape [:xOffset :yOffset
+		combine :lines1 :lines1
+	] :height
+	setTurtleState :oldState
+end
+
+nasdaqLogo 100

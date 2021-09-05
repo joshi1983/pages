@@ -1,0 +1,100 @@
+; Arcs left far enough to intersect the specified point
+; Assumes the point is on the arc
+to arcLeftToPoint :point :arcRadius
+	localmake "arcAngle 2 * arcSin (distance :point) / 2 / :arcRadius
+	arcLeft :arcAngle :arcRadius
+end
+
+to cfaBars :radius
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "size1 :radius * 0.06
+	localmake "size2 :radius * 0.16
+	localmake "size3 :radius * 0.12
+	localmake "angle1 360 / 7
+	; The CFA logo has this angle a few degrees smaller but
+	; 360 / 7 feels more mathematically and geometrically exact
+	; Maybe the logo designer wanted a little more blank space between lines
+	; but it seems like the few degrees less was eyeballed instead of based 
+	; on a mathematically calculated number
+
+	jumpForward :size1
+	repeat 3 [
+		localmake "pos1 pos
+		left :angle1
+		jumpForward distanceToCircle :oldPos :radius
+		localmake "arcEndPoint pos
+		jumpTo :pos1
+		right :angle1
+		polyStart
+		jumpForward :size2
+		localmake "pos2 pos
+		left :angle1
+		jumpForward distanceToCircle :oldPos :radius
+		setHeading (towards :oldPos) + 90
+		arcLeftToPoint :arcEndPoint :radius
+		polyEnd
+		jumpTo :pos2
+		setHeading :oldHeading
+		jumpForward :size3
+	]
+end
+
+to cfaLogoWithCustomColors :height :colors
+	localmake "oldState turtleState
+	localmake "radius :height / 2
+	setPenSize 0
+	localmake "center pos
+	right 5
+	repeat count :colors [
+		setFillColor item repcount :colors
+		cfaBars :radius
+		jumpTo :center
+		right 360 / count :colors
+	]	
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/CFA_Institute#/media/File:CFA_Institute_Logo.png
+; Referenced from
+; https://en.wikipedia.org/wiki/CFA_Institute#
+; The logo is used in
+; https://www.cfainstitute.org
+to cfaLogo :height
+	localmake "colors ["#008ed5 "#5b77cc "#009966 "#008ed5 "#009966 "#5b77cc "#009966]
+	jumpForward :height / 2
+	setPenSize 0
+	setFillColor "white
+	circle :height / 2
+	cfaLogoWithCustomColors :height :colors
+	jumpBackward :height / 2
+end
+
+to cfaLogoMonochrome :height
+	localmake "colors duplicate "white 7
+	localmake "radius :height / 2
+	localmake "gradientRadius :radius * 2.5
+	localmake "colorStops createPList2 [
+		[0 "black] [0.4 "black] [0.7 "#8000] [0.9 "#2000]
+		[1 "#0000]
+	]
+	jumpForward :radius
+	localmake "center pos
+	setPenSize :gradientRadius * 2
+	setPenGradient createRadialGradient pos :gradientRadius :colorStops
+	setLineCap "butt
+	jumpBackward :radius
+	forward :height
+	jumpTo :center
+	cfaLogoWithCustomColors :height :colors
+	jumpBackward :radius
+end
+
+setScreenColor "#ddd
+make "height 100
+make "separation :height * 5
+jumpLeft :separation / 2
+cfaLogo :height
+jumpRight :separation
+cfaLogoMonochrome :height

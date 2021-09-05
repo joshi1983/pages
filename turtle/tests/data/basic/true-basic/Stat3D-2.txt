@@ -1,0 +1,119 @@
+!
+!  Stat3d-2
+!
+!  Multiple regression with 3-d scatter plot and
+!  contour plot of fitted polynomial.
+!
+!  The lower block shows the contour plot; the upper
+!  block shows the data points. The floor and back
+!  walls of the upper block show projections into the
+!  X, Y, and Z planes of the data points.
+!
+!  From the 3-D plot, you can see that this data
+!  cannot be well fit by a linear regression!
+!
+! The sources for 3dCont and 3dLib are in the 3DGrafTK folder
+LIBRARY "3DCont.trc", "3DLib.trc", "Stat4Lib.trc"
+
+CALL DrawGraph
+
+END
+
+MODULE MyMod
+
+    SHARE beta(0),int             ! Multiple regression slopes/intercept
+
+    !  The main routine.  This does all the work.
+    !
+    SUB DrawGraph
+
+        DIM data(20,3), corr(0,0), se(0), t(0), p(0), ey(0)
+        DIM res(0), sres(0), stres(0), press(0), hat(0,0), ra(0)
+
+        !  Read data and do multiple linear regression.
+        !
+        MAT READ data
+
+        ! Do multiple regression
+        CALL MultiLSFit (data, 3, corr, int, beta, se, t, p, ey, res, sres, stres, press, hat, ra)
+
+        DATA 2.53, 8.33, 3.39 ,  2.27, 7.97, 2.50 ,  2.96, 7.78, 3.69 ,  3.77, 7.72, 5.26
+        DATA 4.51, 7.51, 6.53 ,  3.44, 7.16, 4.03 ,  8.83, 6.97, 9.63 ,  7.09, 6.78, 9.16
+        DATA 2.91, 6.86, 2.68 ,  2.39, 6.53, 1.30 ,  5.78, 6.42, 9.17 ,  7.28, 6.11, 9.37
+        DATA 2.41, 5.86,  .68 ,  3.60, 5.71, 2.91 ,  4.61, 5.33, 4.54 ,  5.42, 5.04, 5.87
+        DATA 4.49, 3.81, 3.78 ,  2.58, 2.79, 1.05 ,  3.65, 1.47,  .77 ,  5.37, 1.16, 3.60
+
+        !
+        !  Set up 3-D view so it looks snazzy.
+        !
+        CALL ScalePersWindow (0, 10, 0, 10, -10, 10)  ! Viewing volume
+        CALL SetCamera3 (17, -23, 33)  ! Camera position
+        CALL SetTlines3 (10)      ! # contour lines
+        SET COLOR MIX(0) .5, .5, .5    ! Gray background
+
+        ASK WINDOW x1, x2, y1, y2
+        SET WINDOW .75*x1, .75*x2, .85*y1, .65*y2
+
+        !  Draw bottom block and contour lines; then top block.
+        !
+        CALL SetColor3 ("yellow")      ! Contour lines = yellow
+        CALL Block3 (0, 10, 0, 10, -12, -10, "cyan", "blue", "red", 0)
+        SET COLOR "blue"
+        CALL Tplot (-10)
+        SET COLOR "blue"
+        CALL Block3 (0, 10, 0, 10, -1, 0, "cyan", "blue", "green", 1)
+
+        !  Draw the Y and X "back walls."
+        !
+        SET COLOR "cyan"
+        CALL FillRectY3 (10, 0, 10, 0, 10)
+        CALL FillRectX3 (0, 0, 10, 0, 10)
+        SET COLOR "black"
+        CALL RectY3 (10, 0, 10, 0, 10)
+        CALL RectX3 (0, 0, 10, 0, 10)
+
+        !  Draw the "back wall" Y projections first.
+        !
+        SET COLOR "blue"
+        FOR i = 1 to Size(data,1)
+            LET x = data(i,1)
+            LET y = data(i,2)
+            LET z = data(i,3)
+            CALL FillRectY3 (10, x-.3, x+.3, z-.3, z+.3)
+
+        NEXT i
+
+        !  Graph data points and their X & Z projections.
+        !
+        FOR i = 1 to Size(data,1)
+            LET x = data(i,1)     ! Get (x,y,z) coordinates
+            LET y = data(i,2)
+            LET z = data(i,3)
+
+            SET COLOR "cyan"
+            CALL FillRectZ3 (0, x-.3, x+.3, y-.3, y+.3)    ! Draw Z projection
+
+            SET COLOR "blue"
+            CALL FillRectX3 (0, y-.3, y+.3, z-.3, z+.3)    ! Draw X projection
+
+            SET COLOR "black"
+            CALL RectZ3 (0, x-.3, x+.3, y-.3, y+.3)   ! Outline Z projection
+            CALL LineOff3 (x, y, 0, x, y, z)     ! Draw line down to floor
+
+            CALL Block3 (x-.3, x+.3, y-.3, y+.3, z-.3, z+.3, "yellow", "yellow", "red", 1)
+
+        NEXT i
+
+    END SUB
+
+    !  Called by Tplot to graph contour lines.
+    !  Return the multiple regression function we calculated
+    !  previously by MultiLSFit.
+    !
+    DEF F(x,y)
+
+        LET F = beta(1)*x + beta(2)*y + int
+
+    END DEF
+
+END MODULE

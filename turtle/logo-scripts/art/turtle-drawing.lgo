@@ -1,0 +1,79 @@
+; Copied from
+; http://www.educa.fmf.uni-lj.si/logo/doc/Apr.96/chpt7.pdf
+
+TO YPLA :SIZE
+	TURTLE1 :size
+	MAKE "P []
+	REPEAT 6 [TURTLE2 :size]
+	TURTLE3 :size
+END
+
+TO TURTLE1 :size
+	CS PD 
+	HT 
+	RT 18 
+	localmake "TSIZE :SIZE / 3
+	REPEAT 5 [
+		FD :TSIZE
+		LT 108
+		REPEAT 3 [
+			FD :TSIZE
+			RT 72
+		]
+		FD :TSIZE 
+		LT 108 
+		FD :TSIZE 
+		RT 72
+	]
+	REPEAT 5 [
+		FD :SIZE
+		RT 72
+	]
+END
+
+TO TURTLE2 :size
+	localmake "tsize :size / 3
+	FD :SIZE / 2
+	RT 90
+	FD :TSIZE
+	localMAKE "Q POS
+	IF count :P = 0 [
+		localMAKE "P POS
+	]
+	SETPOS :P SETPOS :Q
+	MAKE "P :Q 
+	BK :TSIZE
+	LT 90
+	FD :SIZE / 2
+	RT 72
+END
+
+TO TURTLE3 :size
+	localmake "tsize :size / 3
+	PU
+	FD :TSIZE
+	LT 90
+	FD :SIZE / 4
+	LT 18
+	PD
+	REPEAT 5 [
+		FD :SIZE / 12
+		RT 72
+	]
+	PU
+	RT 18
+	BK :SIZE / 4
+	RT 90
+	PU
+	FD :TSIZE
+	LT 90
+	FD :SIZE / 4
+	RT 18
+	PD
+	REPEAT 5 [
+		FD :SIZE / 12
+		LT 72
+	]
+END
+
+YPLA 100

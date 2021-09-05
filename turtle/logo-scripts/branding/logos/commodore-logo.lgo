@@ -1,0 +1,74 @@
+; Inspired by:
+; https://en.wikipedia.org/wiki/Commodore_International#/media/File:Commodore_logo.svg
+; Referenced from:
+; https://en.wikipedia.org/wiki/Commodore_International
+; Commodore International was a well known producer of personal computers in 1980's.
+make "commodoreBlue "#025
+make "commodoreRed "#f00
+make "rightRatio 0.13481901
+
+to commodoreLetterC :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "arcAngle1 216
+	localmake "arcAngle2 70
+	localmake "arcAngle3 100
+	localmake "arcRadius1 :height * 0.5
+	localmake "arcRadius2 :height * 0.285
+	localmake "arcRadius3 :height * 0.2584462
+	jumpRight :height * :rightRatio
+	jumpForward :height * 0.0237693
+	setPenSize 0
+	left 108
+	setFillColor :commodoreBlue
+	polyStart
+	arcRight :arcAngle1 :arcRadius1
+	setHeading :oldHeading
+	jumpBackward :height * 0.24835
+	left 60
+	arcLeft :arcAngle2 :arcRadius2
+	arcLeft :arcAngle3 :arcRadius3 ; symmetry
+	arcLeft :arcAngle2 :arcRadius2
+	polyEnd
+	setTurtleState :oldState
+end
+
+to commodoreRightSide :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "angle1 133.9
+	localmake "size1 :height * 0.17348
+	localmake "size2 :height * 0.373275
+	localmake "size3 :size1 / sin :angle1
+	localmake "separation :height * 0.03317
+	localmake "rightRatio2 :rightRatio + 0.00442365
+	jumpForward :height / 2 + :separation / 2
+	jumpRight :height * :rightRatio2
+	setFillColor :commodoreBlue
+	setPenSize 0
+	localmake "pos1 pos
+	polyStart
+	jumpForward :size1
+	jumpRight :size2
+	right 90 + :angle1
+	jumpForward :size3
+	polyEnd
+	setHeading :oldHeading
+	jumpTo :pos1
+	jumpBackward :separation
+	setFillColor :commodoreRed
+	polyStart
+	jumpBackward :size1
+	jumpRight :size2
+	left :angle1 - 90
+	jumpForward :size3
+	polyEnd
+	setTurtleState :oldState
+end
+
+to commodoreLogo :height
+	commodoreLetterC :height
+	commodoreRightSide :height
+end
+
+commodoreLogo 100

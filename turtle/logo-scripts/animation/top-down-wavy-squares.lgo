@@ -1,0 +1,45 @@
+; Inspired by
+; https://www.youtube.com/watch?v=afADEZdsQVA
+; This is very different, though.
+to topDownWaveySquares :size :timeRatio
+	localmake "oldState turtleState
+	localmake "minSize :size * 0.02
+	localmake "maxSize :minSize * 4.3
+	localmake "gridSize (:size - :maxSize) / 10
+	localmake "waveLengthScale :size / 3
+	localmake "centerAngle :timeRatio * -720
+	setFillColor "black
+	setLineCap "butt
+	jumpForward :size / 2 - :maxSize / 2
+	jumpLeft :gridSize * 20
+	setPenSize 0
+	for ["x -20 20] [
+		localmake "pos1 pos
+		for ["y -5 5] [
+			localmake "sizeRatio (1 + sin :centerAngle + :waveLengthScale * hypot [:x :y]) / 2
+			localmake "squareSize mix :minSize :maxSize :sizeRatio
+			square :squareSize
+			jumpBackward :gridSize + :squareSize / 2
+		]
+		jumpTo :pos1
+		jumpRight :gridSize
+	]
+	setTurtleState :oldState
+end
+
+topDownWaveySquares 100 animation.clampedTimeRatio
+
+to animation.snapshotstyle
+	output createPList2 [
+		["zoom.scale 3]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 3
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

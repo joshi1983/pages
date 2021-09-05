@@ -1,0 +1,29 @@
+to zendPiece :height
+	localmake "oldState turtleState
+	localmake "cornerRadius :height * 0.17
+	setPenSize 0
+	setFillColor "#0679ea
+	polyStart
+	jumpForward :height - :cornerRadius
+	arcRight 90 :cornerRadius
+	jumpForward :height * 0.595
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by the logo at:
+; https://www.zend.com/
+to zendLogo :height
+	localmake "oldState turtleState
+	localmake "pieceHeight :height * 0.86
+
+	jumpLeft :height * 0.525
+	zendPiece :pieceHeight
+	jumpForward :height
+	jumpRight :height * 1.05
+	right 180
+	zendPiece :pieceHeight		
+	setTurtleState :oldState
+end
+
+zendLogo 100

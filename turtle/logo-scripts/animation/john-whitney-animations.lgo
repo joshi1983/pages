@@ -1,0 +1,269 @@
+make "colors ["white "red]
+make "sizes [0.005 0.01]
+
+
+; Inspired by the first 2 or 3 images shown at:
+; https://www.youtube.com/watch?v=jIv-EcX9tUs
+; These images are shown in the first 5 seconds of the video.
+to squareToCircleSpiral :height :time
+	localmake "oldState turtleState
+	localmake "straightLength :height * 0.03
+	localmake "arcRadius 0
+	localmake "arcRadiusStep :height * 0.02 * :time
+	localmake "straightStep :height * mix 0 0.02 :time
+	localmake "sizes vectorScale :sizes :height
+	setPenColor "white
+	jumpForward :height / 2
+	localmake "center pos
+	localmake "index 0
+	while (distance :center) < :height / 2 / cos 45 [
+		localmake "colorIndex 1 + modulo (int :index / 4) count :colors
+		setPenColor item :colorIndex :colors
+		setPenSize item :colorIndex :sizes
+		forward :straightLength
+		ifelse :arcRadius <= 0 [
+			right 90
+		] [
+			arcRight 90 :arcRadius
+		]
+		localmake "arcRadius :arcRadius + :arcRadiusStep
+		localmake "straightLength :straightLength + :straightStep
+		localmake "index :index + 1
+	]
+
+	setTurtleState :oldState
+end
+
+to movingStraightLines :height :time
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "maxIterations 360
+	localmake "numIterations :maxIterations * :time
+	jumpForward :height / 2
+	localmake "center pos
+	setPenBlendMode "lighter
+	repeat :numIterations [
+		setHeading :oldHeading + 58 + repcount * 360 / :maxIterations
+		localmake "ratio1 4 * repcount / :maxIterations
+		localmake "ratio :ratio1 - int :ratio1
+		localmake "ratio power :ratio 1.5
+		localmake "gap :height * mixItems [0.45 0.25] :ratio
+		localmake "angle mixItems [0 30] :ratio * :ratio
+		localmake "len :height * mixItems [0.3 0.01] :ratio
+		localmake "colorIndex 1 + modulo repcount count :colors
+		localmake "color item :colorIndex :colors
+		localmake "size :height * 0.5 * item :colorIndex :sizes
+		jumpForward :gap
+		right :angle
+		stripes :len :size [:color]
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+to circlePattern :height :time
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "maxAngles 256
+	jumpForward :height / 2
+	localmake "center pos
+	setPenColor "white
+	setPenSize :height * 0.005
+	setPenBlendMode "lighter
+	repeat :maxAngles * :time [
+		localmake "ratio repcount / :maxAngles
+		setHeading :oldHeading + :ratio * 360
+		jumpForward :height / 2
+		localmake "colorIndex 1 + modulo repcount count :colors
+		setPenColor item :colorIndex :colors
+		setPenSize :height * item :colorIndex :sizes
+		backward :height / 4 * (1 + sin 5 * 360 * :ratio)
+		jumpTo :center
+	]
+
+	setTurtleState :oldState
+end
+
+to twistingCurves1 :height :time
+	localmake "oldState turtleState
+	localmake "numLines 64
+	localmake "gap :height * 0.2
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize :height * 0.004
+	setPenColor "white
+	repeat :numLines [
+		jumpForward :gap
+		right 90
+		forward :height * 0.5
+		left 90
+		- (360 / :numLines * :time
+		)jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+to getEllipsePoints :radius1 :radius2 :numPoints :startAngle :rangeAngle
+	localmake "oldPos pos
+	localmake "result []
+	repeat :numPoints [
+		localmake "angle :startAngle + repRatio * :rangeAngle
+		localmake "x :radius1 * cos :angle
+		localmake "y :radius2 * sin :angle
+		jumpRight :x
+		jumpForward :y
+		queue2 "result pos
+		jumpTo :oldPos
+	]
+	output :result
+end
+
+to twistingEllipseCurves :height :time :colors :sizes
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "numLines 64
+	jumpForward :height * mixItems [0.6 0.5 0.4 0.65] :time
+	localmake "radius1 :height * mixItems [0 0.4 0.2 0.4 0.3] :time
+	localmake "radius2 :height * mixItems [0 0.4 0.6 0.7 0.5] :time
+	right mixItems [0 90 30] :time
+	localmake "rangeAngle mixItems2 [360 300 180 90 360] :time
+	localmake "points1 getEllipsePoints :radius1 :radius2 :numLines 0 :rangeAngle
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * mixItems2 [0.1 0.6 0.1 0.3] :time
+	jumpRight :height * mixItems2 [0 -0.4 0.2 0.5 -0.1] :time
+	right mixItems2 [0 90] :time
+	localmake "rangeAngle mixItems2 [0 360 180 0] :time
+	localmake "points2 getEllipsePoints :height * 0.2 :height * 0.1 :numLines 30 :rangeAngle
+	setPenBlendMode "lighter
+	repeat :numLines [
+		localmake "from item repcount :points1
+		localmake "to item repcount :points2
+		localmake "colorIndex 1 + modulo repcount count :colors
+		setPenColor item :colorIndex :colors
+		setPenSize :height * 0.5 * item :colorIndex :sizes
+		jumpTo :from
+		setPos :to
+	]
+	setTurtleState :oldState
+end
+
+to twistingEllipseCurves1 :height :time
+	twistingEllipseCurves :height :time :colors :sizes
+end
+
+to twistingEllipseCurves2 :height :time
+	localmake "oldState turtleState
+	localmake "width :height * 1.3
+	localmake "colors ["red "lime "blue]
+	localmake "separation :width / count :colors
+	localmake "height2 :height * 0.7
+	jumpLeft :separation
+	jumpForward (:height - :height2) / 2
+	repeat count :colors [
+		localmake "color item repcount :colors
+		twistingEllipseCurves :height2 :time [:color] [0.005]
+		jumpRight :separation
+	]
+	setTurtleState :oldState
+end
+
+to dotPattern :height :time
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "numDots 500
+	localmake "angleOffsetScale (1 - :time) * 360 * 10
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	setFillBlendMode "lighter
+	repeat :numDots [
+		localmake "angle repcount * 360 / :numDots
+		setHeading :oldHeading + :angle + repRatio * :angleOffsetScale
+		jumpForward :height * 0.25 * (1 + cos 3 * :angle)
+		localmake "colorIndex 1 + modulo repcount count :colors
+		setFillColor item :colorIndex :colors
+		circle :height * 0.004
+		jumpTo :center
+	]
+
+	setTurtleState :oldState
+end
+
+to curveAnimationRatio :ratio
+	localmake "ratio interpolateRatio easeInOut :ratio
+	; We scale out by 1.15 so there is a short pause between
+	; each short animation.
+	; Watching the video feels better with a short pause 
+	; between sections.
+	localmake "ratio clamp 0.5 + (:ratio - 0.5) * 1.15 0 1
+	output :ratio
+end
+
+; This draws an animation showing recreations of
+; animations and images from:
+; https://www.youtube.com/watch?v=jIv-EcX9tUs
+;
+; John Whitney experimented with computer graphics 
+; in the 1960's.
+;
+; The main differences include:
+; - Extra colours were added to make the patterns look
+; more appealing and patterns easier to recognize.
+; - The initial spiral images were turned into a smooth animation
+; for more visual appeal.
+; - More points were used because it looks better.
+; - The more complicated patterns like twistingEllipseCurves1
+; are very different because the original pattern looked chaotic.
+; I didn't understand what John Whitney's animation was doing very well
+; so I made a similarly chaotic looking animation.
+to drawJohnWhitneyAnimation :height :time
+	localmake "animationProcs [
+		"squareToCircleSpiral
+		"movingStraightLines
+		"circlePattern
+		"twistingEllipseCurves1
+		"twistingEllipseCurves2
+		"dotPattern
+	]
+	; The limit is so the video will stop for a second or 2 at the end.
+	localmake "limit 0.95
+	ifelse :time > :limit [
+		localmake "time 1
+	] [
+		localmake "time :time / :limit
+	]
+	localmake "numProcs count :animationProcs
+	localmake "timeRatio :time * :numProcs
+	localmake "procIndex max 1 ceiling :timeRatio
+	localmake "procName item :procIndex :animationProcs
+	localmake "timeRatio :timeRatio - int :timeRatio
+	if :time >= 1 [
+		localmake "timeRatio 1
+	]
+	localmake "timeRatio curveAnimationRatio :timeRatio
+	(invoke :procName :height curveAnimationRatio :timeRatio)
+end
+
+setScreenColor "black
+make "time animation.clampedTimeRatio
+drawJohnWhitneyAnimation 100 :time
+
+to animation.snapshotstyle
+	output createPList2 [
+		["position.y 50]
+		["zoom.scale 5]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 40
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+		["thumbnailTime 33]
+	]
+end

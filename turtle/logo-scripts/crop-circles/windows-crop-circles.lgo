@@ -1,0 +1,50 @@
+to drawMicrosoftWindowsLogo :height
+	localmake "oldState turtleState
+	localmake "polies [
+		[-0.184 0.26 [
+			[-35 0] [-35 0.18] [-20 0.15] [-10 0.38] [110 0] [-1 12.3]
+			[63 0] [79 0.165]
+		]]
+		[0.057 0.316 [
+			[-107 0] [72 0.18] [50 0] [-1 12.2] [129 0] [-72 0.17]
+		]]
+		[0.008 0.558 [
+			[-110 0] [75 0.16] [50 0] [-1 10] [120 0] [-47 0.17] [-5 0.6]
+		]]
+		[-0.22 0.505 [
+			[-40 0] [-70 0.18] [122 0] [-1 11] [60 0] [70 0.17]
+		]]
+	]
+	setFillColor screenColor
+	setPenSize 0
+	drawArcLineShapes :polies :height
+	setTurtleState :oldState
+end
+
+; Inspired by an edited image of crop circles as shown at
+; https://www.snopes.com/fact-check/microsoft-crop-circle/?collection-id=254522
+to windowsCropCircles :height
+	localmake "oldState turtleState
+	localmake "tinyCircleRadius :height * 0.05
+	localmake "numSpikes 12
+	setFillColor "#efb
+	setPenColor fillColor
+	jumpForward :height / 2
+	localmake "center pos
+	circle :height * 0.33
+	repeat :numSpikes [
+		setPenSize :height * 0.035
+		forward :height / 2 - :tinyCircleRadius
+		setPenSize 0
+		circle :tinyCircleRadius
+		right 360 / :numSpikes
+		jumpTo :center
+	]
+
+	setTurtleState :oldState
+	drawMicrosoftWindowsLogo :height
+	setTurtleState :oldState
+end
+
+setScreenColor "green
+windowsCropCircles 100

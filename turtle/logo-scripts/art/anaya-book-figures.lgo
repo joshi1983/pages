@@ -1,0 +1,176 @@
+; These were inspired by figures from a book.
+; The book is called: Programacion en Logo
+; which translates to Programming in Logo
+; It was published by Anaya in 1986.
+;
+; A digital version of the book can be found at:
+; https://archive.org/details/anaya-programacion-en-logo
+
+to drawEllipsePairs :ellipsePairs :height
+	localmake "oldState turtleState
+	localmake "center pos
+	repeat count :ellipsePairs [
+		localmake "info vectorScale item repcount :ellipsePairs :height
+		localmake "separation last :info
+		jumpForward item 3 :info
+		jumpLeft :separation / 2
+		repeat 2 [
+			ellipse (first :info) (item 2 :info)
+			jumpRight :separation
+		]
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+to figure27 :height
+	localmake "oldState turtleState
+	localmake "numCircles 10
+	localmake "radius ((:height - penSize) / 2) / (1 + cos 180 / :numCircles) 
+	setFillColor transparent
+	jumpForward :height / 2
+	setPenColor "black
+	repeat :numCircles [
+		circleRight :radius
+		right 360 / :numCircles
+	]
+
+	setTurtleState :oldState
+end
+
+
+; Inspired by figure 28 on page 53 of the book.
+;
+; A digital version of the page is at:
+; https://archive.org/details/anaya-programacion-en-logo/page/52/mode/2up
+to face28 :height
+	localmake "oldState turtleState
+	localmake "ellipsePairs [
+		[0.11 0.1 0.2 0.44] ; eyes
+		[0.021 0.02 -0.06 0.13]
+	]
+	setPenSize :height * 0.02
+	setPenColor "black
+	setFillColor "white
+	setLineCap "round
+	jumpForward :height / 2
+	ellipse :height * 0.555 (:height - penSize) / 2 
+	drawEllipsePairs :ellipsePairs :height
+	jumpBackward :height * 0.3
+	circle :height * 0.05
+	setTurtleState :oldState
+end
+
+; Inspired by figure 29 on page 53 of the book.
+;
+; A digital version of the page is at:
+; https://archive.org/details/anaya-programacion-en-logo/page/52/mode/2up
+to face29 :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "ellipsePairs [
+		[0.055 0.05 0.2 0.45] ; eyes
+		[0.021 0.02 -0.06 0.14]
+	]
+	localmake "separation :height * 0.45
+	localmake "arcAngle 110
+	setPenSize :height * 0.02
+	setLineCap "round
+	jumpForward :height / 2
+	setFillColor "white
+	ellipse :height * 0.56 (:height - penSize) / 2
+	localmake "center pos
+	drawEllipsePairs :ellipsePairs :height
+	jumpForward :height * 0.19
+	jumpLeft :separation / 2
+	repeat 2 [
+		ellipseArc 180 :height * 0.11 :height * 0.105	90	
+		setHeading :oldHeading
+		jumpRight :separation
+	]
+	jumpTo :center
+	jumpForward :height * 0.05
+	left :arcAngle / 2
+	arc :arcAngle :height * 0.35
+	setTurtleState :oldState
+end
+
+; Inspired by figure 26 on page 52 from the book
+; 
+; A digital version is at:
+; https://archive.org/details/anaya-programacion-en-logo/page/52/mode/2up
+to circlesPair :height
+	localmake "oldState turtleState
+	localmake "numPairs 5
+	localmake "colors ["black "white]
+	setFillColor "white
+	setPenSize :height * 0.015
+	jumpForward :height / 2
+	localmake "center pos
+	repeat :numPairs [
+		localmake "radius mix :height * 0.16 (:height - penSize) / 2 repRatio
+		localmake "separation :radius * 2
+		setFillColor item 1 + modulo repcount 2 :colors
+		jumpTo :center
+		jumpLeft :separation / 2
+		circle :radius
+		jumpRight :separation
+		circle :radius
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by figure 49 on page 156 from the book.
+;
+; A digital version is at:
+; https://archive.org/details/anaya-programacion-en-logo/page/156/mode/2up
+to starFigure49 :height
+	localmake "oldState turtleState
+	localmake "colors ["black "white]
+	setPenSize :height * 0.01
+	localmake "polyRadius (:height - penSize) / 2 / cos 30
+	setFillColor "white
+	jumpForward :height / 2
+	localmake "center pos
+	left 90
+	setLineJoinStyle "round
+	repeat 2 [
+		setFillColor item repcount :colors
+		regularPolygon :polyRadius 3
+		right 180
+		jumpTo :center
+	]
+
+	setTurtleState :oldState
+end
+
+; Inspired by figure 50 on page 156 from the book.
+;
+; A digital version is at:
+; https://archive.org/details/anaya-programacion-en-logo/page/156/mode/2up
+to starFigure50 :height
+	localmake "oldState turtleState
+	jumpForward :height / 2
+	setPenSize :height * 0.02
+	setFillColor "white
+	left 180 / 6
+	setLineJoinStyle "round
+	regularStar (:height - penSize) / 2 / cos 30 6
+	setTurtleState :oldState
+end
+
+setScreenColor "#ccc
+make "height 100
+make "separation :height * 2.5
+jumpLeft :separation * 2.5
+figure27 :height
+jumpRight :separation
+face28 :height
+jumpRight :separation
+face29 :height
+jumpRight :separation
+circlesPair :height
+jumpRight :separation
+starFigure49 :height
+jumpRight :separation
+starFigure50 :height

@@ -1,0 +1,61 @@
+; Inspired by an image at:
+; https://www.facebook.com/share/p/1BVgqMFMmF
+to phiSpiral :height
+	localmake "oldState turtleState
+	localmake "scaleFactor 0.7861514
+	localmake "pentagonRadius :height / (1 + (cos 180 / 5) +
+		(:scaleFactor * 2 * (sin 180 / 5) * cos (90 - 360 / 5)) + 
+		(power :scaleFactor 2) * (1 + cos 180 / 5))
+	localmake "arcAngle 360 / 5
+	jumpForward :height - :pentagonRadius * (1 + cos 180 / 5)
+	setPenSize 0
+	repeat 30 [
+		setFillColor "#888
+		localmake "offset :pentagonRadius * cos 180 / 5
+		localmake "halfStraightWidth :pentagonRadius * sin 180 / 5
+		jumpForward :offset
+		regularPolygon :pentagonRadius 5
+		jumpBackward :offset
+
+		setFillColor "black
+		drawArcLineShape [-1 0
+			[[-90 + :arcAngle / 2 0] [-:arcAngle :pentagonRadius / :halfStraightWidth]]
+		] :halfStraightWidth
+		jumpRight :halfStraightWidth
+		right 360 / 5
+		localmake "pentagonRadius :pentagonRadius * :scaleFactor
+		jumpRight :pentagonRadius * sin 180 / 5
+	]
+	localmake "finalPos pos
+	setTurtleState :oldState
+	output [:finalPos :scaleFactor]
+end
+
+phiSpiral 100
+
+to animation.snapshotstyle
+	localmake "info phiSpiral 100
+	localmake "p first :info
+	localmake "scaleFactor last :info
+	localmake "t interpolateRatio easeInOut animation.clampedTimeRatio
+	localmake "e :t * 50
+	if :e > 1 [
+		localmake "e :e - int (:e - 1)
+	]
+	localmake "factor power :scaleFactor 5 * :e
+	localmake "scale 5 / :factor
+	output createPList2 [
+		["position.x first :p]
+		["position.y item 2 :p]
+		["zoom.scale :scale]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 20
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

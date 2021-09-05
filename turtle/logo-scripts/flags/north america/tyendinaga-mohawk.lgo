@@ -1,0 +1,121 @@
+to mohawkEagle :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "arcsInfo [
+		[-23 0.405]
+		[-40 0.06]
+		[-16 0.08]
+		[137 0.069]
+		[5 5]
+		[-16 0.6]
+		[13 0.4]
+		[20 0.043]
+		[98 0.013]
+		[20 0.1]
+		[10 1.1]
+		[-7 2.5]
+		[-100 0.058]
+		[-42 0.25]
+		[2 2]
+		[8 0.3]
+		[70 0.05122535]
+		[30 0.17]
+	]
+	jumpForward :height * 0.231
+	left 90
+	setFillColor "white
+	setPenSize 0
+	; bird wings, torso, and tail
+	polyStart
+	arcsLeft :arcsInfo :height
+	arcLeft 22 :height * 0.5398077
+	arcsLeft reverse :arcsInfo :height
+	polyEnd
+
+	; bird head
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.259
+	jumpRight :height * 0.148
+	left 115
+	polyStart
+	arcRight 37 :height * 0.0405
+	arcRight 60 :height * 0.05
+	arcRight 60 :height * 0.065
+	arcRight 35 :height * 0.05
+	jumpForward :height * 0.07
+	left 140
+	jumpForward :height * 0.1
+	arcRight 20 :height * 0.03
+	arcRight 8 :height * 0.18
+	arcLeft 50 :height * 0.07
+	arcLeft 20 :height * 0.199
+	arcLeft 52 :height * 0.042
+	arcLeft 18 :height * 0.092
+	arcLeft 2 :height * 3
+	arcRight 10 :height * 0.25
+	arcRight 72 :height * 0.032
+	arcRight 30 :height * 0.07
+	left 70
+	jumpLeft :height * 0.2
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Mohawk_people#/media/File:Mohawk_peace_flag.svg
+; Some things don't line up perfectly with the SVG there.
+; For example, the circle isn't exactly in the center of the SVG.
+; A few things that aren't exactly centered, exactly equal...
+; in the SVG were made exact in this drawing to keep the code simpler.
+;
+; A web search finds the same flag having lots of variation particularly with the bird.
+; The differences here might be ok.
+to tyendinagaMohawkFlag :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "width :height * 5 / 3
+	localmake "numChainRings 16
+	localmake "chainLinkSize1 :height * 0.08
+	localmake "chainLinkSize2 :height * 0.05
+	localmake "chainLinkSize3 :height * 0.05
+	localmake "chainLinkDistance1 :height * 0.32
+	localmake "chainLinkDistance2 :chainLinkDistance1 + :chainLinkSize2 / 2
+	stripes :width :height ["#00006b]
+	jumpForward :height / 2
+	setFillColor transparent
+	setPenColor "white
+	setPenSize :height * 0.02
+	circle :height * 0.4
+	localmake "center pos
+	setLineJoinStyle "round
+	repeat :numChainRings [
+		setHeading :oldHeading + (repcount + 0.5) * 360 / :numChainRings
+		jumpForward :chainLinkDistance1
+		jumpLeft :chainLinkSize1 / 2
+		polyStart
+		repeat 2 [
+			jumpForward :chainLinkSize2
+			right 90
+			jumpForward :chainLinkSize1
+			right 90
+		]
+		polyEnd
+		jumpTo :center	
+	]
+	setLineCap "round
+	repeat :numChainRings [
+		setHeading :oldHeading + repcount * 360 / :numChainRings
+		jumpForward :chainLinkDistance2
+		jumpLeft :chainLinkSize3 / 2
+		right 90
+		forward :chainLinkSize3
+		jumpTo :center
+	]
+	setHeading :oldHeading
+	mohawkEagle :height * 0.4153
+	setTurtleState :oldState
+end
+
+tyendinagaMohawkFlag 100

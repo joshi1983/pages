@@ -1,0 +1,22 @@
+; Similar to the color command documented at
+; http://www.sonic.net/~nbs/webturtle/commands/
+; assuming the input is an integer prefixed with + or -.
+to webTurtleOffsetColor :offset
+	localmake "offset int :offset
+	localmake "colorPalette $$$COLOR_PALETTE$$$
+	localmake "numColors count :colorPalette
+	localmake "penColorRGB lowerCase colorToHexCode penColor
+	if 9 = count :penColorRGB [
+		localmake "penColorRGB word "# substring
+		:penColorRGB 3 9
+	]
+	repeat :numColors [
+		localmake "color item repcount :colorPalette
+		if :color = :penColorRGB [
+			localmake "newIndex repcount - 1 + :offset + :numColors
+			localmake "newIndex remainder :newIndex :numColors
+			localmake "newIndex 1 + :newIndex
+			setPenColor item :newIndex :colorPalette
+		]
+	]
+end

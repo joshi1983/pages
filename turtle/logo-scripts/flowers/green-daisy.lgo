@@ -1,0 +1,38 @@
+; Inspired by a daisy drawing at:
+; https://www.sydlexia.com/logo.htm
+; That page introduces some Logo programming commands and
+; techniques while focusing on the Terrapin Logo dialect.
+; Terrapin is sometimes called MIT Logo.
+; That page was written by Syd Lexia.
+;
+; That Terrapin code will work in WebLogo but some 
+; different WebLogo commands can draw the daisy with less code.
+;
+; This WebLogo recreation of Syd's drawing was made by Josh Greig
+to daisy :height
+	localmake "oldState turtleState
+	localmake "flowerRadius :height * 0.23
+	localmake "leafRadius :height * 0.13
+	localmake "leafLevel :height * 0.23
+	localmake "numPetals 25
+	setPenSize :height * 0.01
+	setPenColor "lime
+	setFillColor transparent
+	stripes :height penSize [penColor]
+	stripes penSize :height - :flowerRadius [penColor]
+	jumpForward :leafLevel
+	circleRight :leafRadius
+	circleLeft :leafRadius
+	jumpForward :height - :leafLevel - :flowerRadius * (cos 180 / :numPetals) - penSize / 2
+	right 180 / :numPetals
+	repeat :numPetals [
+		stripes penSize :flowerRadius [penColor]
+		right 360 / :numPetals
+	]
+	regularStar :flowerRadius :numPetals
+
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+daisy 100

@@ -1,0 +1,68 @@
+make "darkColor "#980
+make "lightColor "#ECDA89
+
+to drawOffsettedCircle :radius :offset
+	localmake "oldPos pos
+	jumpForward :offset
+	circle :radius
+	jumpTo :oldPos
+end
+
+; Inspired by
+; https://www.pinterest.ca/pin/477311260526118101/
+to goddessCropCircles :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "thickness1 :height * 0.085
+	localmake "thickness2 :height * 0.01
+	localmake "littleRadius :thickness1
+	localmake "littleRadius2 :littleRadius - :thickness2 / 2
+	localmake "headRadius :height * 0.07
+	localmake "torsoRadius :height * 0.077
+	localmake "topOffset :height / 2 - :littleRadius + :thickness2
+	localmake "mediumRadius :height * 0.18
+	localmake "mediumDarkRadius :height * 0.145
+	localmake "baseAngle 32
+	localmake "baseArcRadius :height * 0.47
+	setPenColor :lightColor
+	setPenSize :thickness1
+	setFillColor transparent
+	jumpForward :height / 2
+	circle (:height - penSize) / 2
+	localmake "center pos
+	setPenColor :darkColor
+	setPenSize :thickness2
+	drawOffsettedCircle :littleRadius2 :topOffset
+
+	setPenSize 0
+	setFillColor :lightColor
+	jumpForward :topOffset - :mediumRadius
+	circle :mediumRadius
+	setFillColor :darkColor
+	jumpForward :mediumRadius - :mediumDarkRadius
+	circle :mediumDarkRadius
+	setFillColor :lightColor
+	jumpBackward :mediumDarkRadius - :headRadius
+	circle :headRadius
+	jumpBackward :headRadius + :torsoRadius
+	circle :torsoRadius
+
+	jumpTo :center
+	setPenSize 0
+	setFillColor :lightColor
+	drawOffsettedCircle :littleRadius2 - :thickness2 / 2 :topOffset
+
+	jumpTo :oldPos
+	jumpForward :thickness1
+	left :baseAngle
+	setPenSize 0
+	polyStart
+	arcRight :baseAngle * 2 :baseArcRadius
+	right 180 - :baseAngle * 2
+	arcRight :baseAngle * 2 :baseArcRadius
+	polyEnd
+	setTurtleState :oldState
+end
+
+setScreenColor :darkColor
+goddessCropCircles 100

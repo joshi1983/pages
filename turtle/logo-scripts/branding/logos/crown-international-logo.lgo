@@ -1,0 +1,124 @@
+to drawGlobe :height
+	localmake "oldState turtleState
+	localmake "outerRatio 0.82
+	localmake "radii [:outerRatio 0.65 0.5 0.32 0.17]
+	localmake "step :height * 0.14
+	localmake "thickness :height * 0.025
+	jumpForward :height / 2
+	localmake "center pos
+	setPenColor "white
+	setPenSize :thickness
+	setLineCap "butt
+	repeat count :radii [
+		localmake "radiusFactor item repcount :radii
+		ellipse :height  * :radiusFactor (:height - penSize) / 2	
+	]
+	jumpForward :height / 2
+	backward :height
+	jumpForward :height / 2 - :step * 2 + :thickness / 2
+	localmake "r :height * :outerRatio
+	repeat 5 [
+		localmake "y2 (distance :center) * :outerRatio * 2
+		localmake "width 2 * sqrt :r * :r - :y2 * :y2
+		setPenSize :width
+		jumpBackward :thickness / 2
+		forward :thickness
+		jumpForward :step - :thickness / 2
+	]
+	
+	setTurtleState :oldState
+end
+
+to drawCrown :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "jewelRadius :height * 0.035
+	localmake "jewelOffset :height
+	localmake "angleStep 17.5
+	localmake "base2 :height * 0.225
+	localmake "angleSpread 15
+	localmake "middleHeight :height - :base2 - :jewelRadius
+	localmake "middleLine [[90 0] [-60 0.07] [-20 0.2] [-8.5 6] [180 0.01] [0.8]
+		[10 0.8] [-101.5 0.03] [180 0.0051573]]
+	localmake "middleShape [0.18 0
+		:middleLine
+	]
+	localmake "points []
+	stripes :height * 0.8 :height * 0.15 [fillColor]
+	jumpBackward :jewelOffset - :height + :jewelRadius
+	localmake "center pos
+	setPenSize 0
+	repeat 5 [
+		setHeading :oldHeading + (repcount - 3) * :angleStep
+		jumpForward :jewelOffset
+		circle :jewelRadius
+		if repcount <> 3 [
+			queue2 "points pos
+		]
+		jumpTo :center
+	]
+
+
+	setHeading :oldHeading
+	jumpForward :height * 0.2
+	localmake "center2 pos	
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :base2
+	drawArcLineShape :middleShape :middleHeight
+	drawArcLineShape :middleShape -:middleHeight
+	localmake "basePos1 pos
+	jumpRight :height
+	localmake "basePos2 pos
+	repeat count :points [
+		localmake "index repcount
+		localmake "sign sign repcount - 2.5
+		if :index > 2 [
+			localmake "index 5 - :index
+		]
+		localmake "arcRadius :height * item :index [0.95 2]
+		localmake "topPos item repcount :points 
+		jumpTo :topPos
+		localmake "towardsCenter towards :center2
+		setHeading :towardsCenter + :sign * :angleSpread / 2
+		ifelse :sign < 0 [
+			localmake "angle1 getArcRightAngleToLine :arcRadius :basePos1 :basePos2
+		] [
+			localmake "angle1 getArcLeftAngleToLine :arcRadius :basePos1 :basePos2
+		]
+		arcLeft :sign * :angle1 :arcRadius
+		localmake "pos1 pos
+		localmake "heading1 heading
+		jumpTo :topPos
+		setHeading :towardsCenter - :sign * :angleSpread / 2
+		ifelse :sign < 0 [
+			localmake "angle2 getArcRightAngleToLine :arcRadius :basePos1 :basePos2
+		] [
+			localmake "angle2 getArcLeftAngleToLine :arcRadius :basePos1 :basePos2
+		]
+		polyStart		
+		arcLeft :sign * :angle2 :arcRadius
+		jumpTo :pos1
+		setHeading :heading1 + 180
+		arcLeft -:sign * :angle1 :arcRadius
+		polyEnd
+	]
+
+	setTurtleState :oldState
+end
+
+; Inspired by a logo at:
+; https://en.wikipedia.org/wiki/Crown_International_Pictures#/media/File:Crown_International_Pictures_(logo).jpg
+to crownInternationalLogo :height
+	localmake "oldState turtleState
+	drawGlobe :height * 0.48
+	jumpForward :height / 2
+	setFillColor "white
+	drawCrown :height / 2
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+crownInternationalLogo 100

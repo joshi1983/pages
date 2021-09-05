@@ -1,0 +1,93 @@
+make "cornerRadiusRatio1 0.084
+make "radiusRatio 0.513
+
+to halfHexagon :radius :cornerRadius
+	localmake "oldState turtleState
+	localmake "angle 360 / 6
+	localmake "cornerGap :cornerRadius * ((1 / cos :angle / 2) - 1)
+	localmake "straightLength (:radius * 2 * sin :angle / 2) - 2 * :cornerRadius * tan :angle / 2
+	jumpForward :radius - :cornerGap
+	polyStart
+	left 90
+	arcLeft :angle / 2 :cornerRadius
+	repeat 2 [
+		jumpForward :straightLength
+		arcLeft :angle :cornerRadius
+	]
+	jumpForward :straightLength
+	arcLeft :angle / 2 :cornerRadius
+	polyEnd
+	setTurtleState :oldState
+end
+
+to hexBackground :height
+	localmake "oldState turtleState
+	localmake "cornerRadius :height * :cornerRadiusRatio1
+	localmake "radius :height * :radiusRatio
+	setPenSize 0
+	setFillColor "#659AD2 
+	jumpForward :height / 2
+	right 60
+	halfHexagon :radius :cornerRadius
+	setFillColor "#004482
+	right 180
+	halfHexagon :radius :cornerRadius
+	setTurtleState :oldState
+end
+
+to rightSideTriangle :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "crossSize :height * 0.0985
+	localmake "crossSeparation :height * 0.1235
+	localmake "cornerRadius :height * :cornerRadiusRatio1
+	localmake "radius :height * :radiusRatio
+	localmake "angle 360 / 12
+	localmake "cornerGap :cornerRadius * ((1 / cos :angle) - 1)
+	localmake "straightLength (:radius * 2 * sin :angle) - 2 * :cornerRadius * tan :angle
+	right 60
+	setPenSize 0
+	setFillColor "#00599C
+	polyStart
+	jumpForward :radius - :cornerGap
+	right 90
+	arcRight :angle :cornerRadius
+	jumpForward :straightLength
+	arcRight :angle :cornerRadius
+	polyEnd
+
+	setTurtleState :oldState
+	setLineCap "butt
+	setPenColor "white
+	setPenSize :height * 0.033
+	jumpRight :height * 0.3703
+	repeat 2 [
+		localmake "crossCenter pos
+		repeat 2 [
+			jumpBackward :crossSize / 2
+			forward :crossSize
+			jumpTo :crossCenter
+			right 90
+		]
+		setHeading :oldHeading
+		jumpLeft :crossSeparation
+	]
+	
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/C++#/media/File:ISO_C++_Logo.svg
+to cPlusPlusLogo :height
+	localmake "oldState turtleState
+	hexBackground :height
+	setPenSize :height * 0.146
+	setPenColor "white
+	jumpForward :height / 2
+	circle :height * 0.2225
+	rightSideTriangle :height
+	
+	setTurtleState :oldState
+end
+
+cPlusPlusLogo 100

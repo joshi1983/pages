@@ -1,0 +1,75 @@
+; Inspired by
+; https://www.pinterest.ca/pin/22729173099974620
+; "Atrapa Sol Flor de la Vida Semilla Verde Amarilla"
+; translated by Microsoft translator to
+; "Sun Catcher Flower of Life Yellow Green Seed"
+to sunCatchingFlowerOfLife :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "smallRadius :height * 0.245
+	localmake "thickness :height * 0.004
+	setPenColor "black
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	setFillColor "#b0bf
+	setLineJoinStyle "round
+	repeat 6 [
+		setHeading :oldHeading + (repcount + 0.5) * 360 / 6
+		polyStart
+		arcRight 60 :smallRadius
+		right 180 - 60
+		arcRight 60 :smallRadius
+		polyEnd
+		jumpTo :center
+	]
+	setFillColor "#f80
+	repeat 6 [
+		setHeading :oldHeading + (repcount - 0.5) * 360 / 6
+		penUp
+		arcRight 60 :smallRadius
+		localmake "neighbourCenter pos
+		jumpTo :center
+		setHeading :oldHeading + (repcount + 0.5) * 360 / 6
+		arcRight 60 :smallRadius
+		penDown
+		polyStart
+		arcRight 60 :smallRadius
+		setHeading (towards :neighbourCenter) - 90
+		arcRight 60 :smallRadius
+		setHeading (towards :center) + 90
+		arcLeft 360 / 6 :smallRadius
+		polyEnd
+		jumpTo :center
+	]
+	setFillColor "#b00
+	setHeading :oldHeading
+	jumpForward :height / 2
+	polyStart
+	jumpBackward :height / 2 - :smallRadius * 2
+	right 90
+	repeat 6 [
+		arcRight 60 :smallRadius
+		left 60
+		arcRight 60 :smallRadius
+	]
+	jumpLeft :height / 2 - :smallRadius * 2
+	right 180
+	arcLeft 360 :height / 2
+	polyEnd
+	setPenSize :thickness
+	setFillColor transparent
+	jumpTo :center
+	repeat 6 [
+		setHeading :oldHeading + (repcount + 0.5) * 360 / 6
+		circleRight :smallRadius
+	]
+	setFillColor transparent
+	setPenSize :thickness
+	circle :smallRadius
+	circle (:height - penSize) / 2
+
+	setTurtleState :oldState
+end
+
+sunCatchingFlowerOfLife 100

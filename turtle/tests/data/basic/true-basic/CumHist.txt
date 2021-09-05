@@ -1,0 +1,22 @@
+!
+!  CUMHIST.  Show cumulative histogram. World city cost-of-living prices.
+!  Source: U.N. via Information Please Almanac 1989, p. 142.
+!
+LIBRARY "Stat2Lib.trc"
+
+DIM cost(65)
+
+MAT READ cost
+DATA 102,86,117,89,64,93,113,70,54,81,64,122,92,98,48,78,79,47,67,113,67,102
+DATA 72,144,80,106,68,81,92,58,65,94,62,76,82,109,99,65,74,50,71,81,70,102
+DATA 61,84,115,85,64,76,96,67,73,64,88,88,79,156,145,67,81,118,78,48,94
+MAT cost = (1/100) * cost
+
+CALL SetText ("Cost-of-Living in 65 World Cities", "Relative Cost (New York = 1)", "# Cities")
+CALL SetGrid ("h.")
+CALL SetHistoColor ("yellow")
+
+CALL PlotCumHist (cost, .50, 1.50, .05, "black")
+
+END
+

@@ -1,0 +1,56 @@
+to drawTruck :scale
+	localmake "oldState turtleState
+	localmake "wheelSeparation :scale * 0.335
+	localmake "boxWidth :scale * 0.377
+	setPenSize 0
+	setFillColor "black
+	circle :scale * 0.052 ; front wheel
+
+	jumpRight :wheelSeparation
+	jumpForward :scale * 0.005
+	circle :scale * 0.057 ; rear wheel
+
+	jumpLeft :scale * 0.064
+	jumpForward :scale * 0.01
+	stripes :boxWidth :scale * 0.252 [fillColor]
+
+	jumpLeft :boxWidth / 2
+	polyStart
+	jumpBackward :scale * 0.02
+	jumpLeft :scale * 0.208
+	jumpForward :scale * 0.0205
+	jumpRight :scale * 0.0205
+	arcLines [[0.1] [-90 0.009] [0.05] [75 0] [0.078]
+	[-75 0.033] [0.2]] :scale
+	polyEnd
+
+	setTurtleState :oldState
+end
+
+; Inspired by sign at:
+; https://www.roadtrafficsigns.com/truck-sign/truck-crossing-traffic-sign/sku-x-w11-10
+to truckTrafficSign :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "height1 :height * 0.732
+	localmake "yellowCornerRadius :height * 0.045
+	localmake "height2 :height * 0.69
+	jumpForward :height / 2
+	left 45
+	setPenSize 0
+	setFillColor "#f7d417
+	roundRect :height1 :height1 :yellowCornerRadius
+	setPenSize :height * 0.019
+	setPenColor "black
+	setFillColor transparent
+	roundRect :height2 :height2 :height * 0.024
+
+	setHeading :oldHeading
+	jumpBackward :height * 0.1675
+	jumpLeft :height * 0.168
+	drawTruck :height
+
+	setTurtleState :oldState
+end
+
+truckTrafficSign 100

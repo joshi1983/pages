@@ -1,0 +1,32 @@
+make "sunbeltGreen "#008545
+
+; Inspired by logo at
+; https://www.sunbeltrentals.com
+to sunbeltRentalsLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "len1 :height * 0.18
+	localmake "len2 :height * 0.33965
+	jumpForward :height
+	jumpRight :height * 0.03351873
+	setPenSize 0
+	setFillColor "#FED203
+	circle 0.01
+	polyStart
+	repeat 8 [
+		jumpBackward :len1
+		jumpRight :len2
+		right 45
+	]
+	polyEnd
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height / 2
+	setFillColor :sunbeltGreen
+	circle :height * 0.145
+	setTurtleState :oldState
+end
+
+setScreenColor :sunbeltGreen
+sunbeltRentalsLogo 100

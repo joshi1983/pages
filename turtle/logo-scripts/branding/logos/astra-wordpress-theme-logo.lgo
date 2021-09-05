@@ -1,0 +1,56 @@
+; Inspired by logo at:
+; https://wpastra.com
+to astraWordPressThemeLogo :height :color :drawCircle?
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "letterBottom 0.242
+	jumpForward :height / 2
+	if :drawCircle? [
+		setPenColor :color
+		setFillColor transparent
+		setPenSize :height * 0.05
+		circle (:height - penSize) / 2
+	]
+	jumpTo :oldPos
+	setPenSize 0
+	setFillColor :color
+	drawArcLineShapes [
+		[-0.26 :letterBottom [[-25.36 0] [0.593] [-128 0]
+			[0.135] [-53 0] [0.4634]]
+		]
+		[0.26 :letterBottom [[25.95 0] [0.35] [128.4 0] [0.246]
+			[115.46 0] [0.1025] [-66.3 0] [0.101]]]
+	] :height
+	setTurtleState :oldState
+end
+
+to astraWordPressThemeOnGradientLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "colorStops createPList2 [
+		[0 "#5C2EDE] [1 "#AA49DF]
+	]
+	jumpForward :height / 2
+	right 45
+	jumpBackward :height / 2
+	localmake "fromPos pos
+	jumpForward :height
+	setFillGradient createLinearGradient :fromPos pos :colorStops "pad
+	jumpBackward :height / 2
+	setPenSize 0
+	circle :height / 2
+	jumpTo :oldPos
+	setHeading :oldHeading
+	astraWordPressThemeLogo :height "white false
+	setTurtleState :oldState
+end
+
+setScreenColor "#5C2EDE
+
+make "height 100
+make "separation :height * 5
+jumpLeft :separation / 2
+astraWordPressThemeLogo :height "white true
+jumpRight :separation
+astraWordPressThemeOnGradientLogo :height

@@ -1,0 +1,46 @@
+; Inspired by logo at:
+; https://www.youtube.com/@Fireoflearning
+to fireOfLearningLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "shapes [
+		[0 0.4 45
+			[-0.045 0.02 [[-25 0] [-24 0.25][0.18]
+			[20 0.45] [40 0.2] [23 0.35] [0.08]
+			[172 0] [0.04] [-33 0.15] [-30 0.4]
+			[-10 0.2] [9.5 1] [45 0.22]
+		]]]
+		[0.13 0.1 55
+			[-0.02 0.25 [[30 0] [-55 0.08] [-15 0.5] [15 0.5]
+			[45 0.2] [3.5 1] [175 0] [-45 0.15] [-10 1] [10 0.5]
+			[15 0.2] [40 0.1] [5 0.4]
+			]]
+		]
+		[-0.16 0.15 69
+			[-0.107 0.201 [[44 0] [-40 0.23] [-38 0.15] [-10 1.2] [20 0.3]
+			[40 0.13] [20 0.65] [175 0] [-20 0.2] [-44 0.1] [-7 2]
+			[9 1] [50 0.17] [40 0.25] [4 0.9]]
+			]
+		]
+	]
+	localmake "colorStops createPList2 [
+		[0 "black] [0.4 "#cb1200] [1 "#ffc300]
+	]
+	setPenSize 0
+	repeat count :shapes [
+		localmake "info item repcount :shapes
+		right item 3 :info
+		jumpForward :height * first :info
+		localmake "fromPos pos
+		jumpForward :height * item 2 :info
+		setFillGradient createLinearGradient :fromPos pos :colorStops "pad
+		setHeading :oldHeading
+		jumpTo :oldPos
+		drawArcLineShape last :info :height
+	]
+
+	setTurtleState :oldState
+end
+
+fireOfLearningLogo 100

@@ -1,0 +1,79 @@
+make "londonRed [200 16 46]
+
+to sword :height
+	localmake "oldState turtleState
+	localmake "radiusFactor 0.043
+	localmake "radius :height * :radiusFactor
+	localmake "thicknessFactor1 0.03
+	localmake "guardThickness :height * 0.045
+	localmake "width1 :height * 0.3
+	localmake "lines1 [
+		[1 - :radiusFactor - :thicknessFactor1] [45 0]
+		[:thicknessFactor1 / cos 45] [45 0]
+	]
+	jumpForward :radius
+	setPenSize 0
+	setFillColor :londonRed
+	circle :radius
+	
+	drawArcLineShape [:thicknessFactor1 0
+		combine :lines1 reverse :lines1
+	] :height
+	jumpForward :height * 0.21
+	stripes :width1 :guardThickness [fillColor]
+	jumpLeft :width1 / 2
+	jumpForward :guardThickness
+	repeat 2 [
+		circle :guardThickness
+		jumpRight :width1
+		jumpBackward :guardThickness
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by:
+; https://en.wikipedia.org/wiki/Flag_of_the_City_of_London#/media/File:Flag_of_the_City_of_London_(2x1).svg
+to londonEnglandFlag :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "width :height * 2
+	localmake "thickness :height * 0.2
+	localmake "swordHeight :height / 3
+	stripes :width :height ["white]
+	stripes :thickness :height [:londonRed]
+	jumpForward (:height - :thickness) / 2
+	stripes :width :thickness [:londonRed]
+
+	jumpTo :oldPos
+	jumpLeft :width / 2 - (:width - :thickness) / 4
+	jumpForward :height - (:height - :thickness) / 4 - :swordHeight / 2
+	sword :swordHeight
+	setTurtleState :oldState
+end
+
+; Inspired by:
+; https://en.wikipedia.org/wiki/Flag_of_the_City_of_London#/media/File:Banner_of_the_City_of_London_(2x1).svg
+to londonEnglandBanner :height
+	localmake "oldState turtleState
+	localmake "width :height / 2
+	localmake "thickness :height * 0.1
+	localmake "swordHeight :height / 6
+	stripes :width :height ["white]
+	stripes :thickness :height [:londonRed]
+	jumpForward (:height - :thickness) / 2
+	stripes :width :thickness [:londonRed]
+	jumpLeft :width / 2 - (:width - :thickness) / 4
+	jumpForward :thickness + (:height - :thickness) / 4 - :swordHeight / 2
+	sword :swordHeight
+	setTurtleState :oldState
+end
+
+setScreenColor "#eee
+make "height 100
+make "separation :height * 3
+jumpLeft :separation
+londonEnglandFlag :height
+jumpRight :separation
+sword :height
+jumpRight :separation
+londonEnglandBanner :height

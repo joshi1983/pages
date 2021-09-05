@@ -1,0 +1,46 @@
+! DEMWIN5.TRU
+
+! Experiments with child windows.
+
+LIBRARY "TrueCtrl.trc"
+
+DIM menu$(2, 0:2)
+MAT READ menu$
+DATA File, Quit, ""
+DATA Edit, Does, Nothing
+
+CALL TC_Init
+
+CALL TC_Win_Create (winp, "title|close|size", .1, .9, .1, .9)
+CALL TC_Win_SetTitle (winp, "Parent Window")
+CALL TC_Menu_Set (winp, menu$(,))
+PLOT TEXT, at .4, .9: "This is a parent window,"
+PLOT TEXT, at .4, .85: "with a full border."
+CALL TC_Show (winp)
+PAUSE 1
+
+CALL TC_Win_ChildCreate (winc1, "child|border single", winp, .2, .6, .3, .7)
+PLOT TEXT, at .2, .5: "This is a child window,"
+PLOT TEXT, at .2, .4: "with a single border."
+CALL TC_Show (winc1)
+PAUSE 1
+
+CALL TC_Win_ChildCreate (winc2, "child|border none", winp, .4, .8, .2, .6)
+PLOT TEXT, at .2, .5: "This is a child window,"
+PLOT TEXT, at .2, .4: "with no border."
+CALL TC_Show (winc2)
+
+DO
+   CALL TC_Event (0, event$, window, x1, x2)
+   IF event$ = "HIDE" then EXIT DO
+   IF event$ = "KEYPRESS" and x1 = 27 then EXIT DO
+   IF event$ = "MENU" and x1 = 1 and x2 = 1 then EXIT DO
+
+LOOP
+
+CALL TC_Free (winc2)
+CALL TC_Free (winc1)
+CALL TC_Free (winp)
+CALL TC_Cleanup
+
+END

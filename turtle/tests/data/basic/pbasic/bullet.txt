@@ -1,0 +1,73 @@
+// bullet.bas
+// INKEY$ demo — move ASCII bullet • around the screen with arrow keys.
+// Uses TIMER at 0.125s for the game loop.
+// Terminal is 80 columns x 25 rows (1-based LOCATE convention).
+
+// ── Screen bounds (1-based LOCATE coordinates) ──
+var colMin : Int = 2
+var colMax : Int = 79
+var rowMin : Int = 2
+var rowMax : Int = 24
+
+// ── Bullet position ──
+var col : Int = 40
+var row : Int = 12
+var lastCol : Int = 0
+var lastRow : Int = 0
+
+// ── State ──
+var running : Int = 1
+var moved : Int = 0
+var k$ : String = ""
+
+// ── Initial draw ──
+cls
+locate row, col
+print "•";
+
+// ── Game loop function (called by TIMER) ──
+func gameLoop() {
+    moved = 0
+    k$ = INKEY$
+
+    if k$ == "ESC" then running = 0
+
+    if k$ == "^U" then moved = 1
+    if k$ == "^D" then moved = 1
+    if k$ == "^L" then moved = 1
+    if k$ == "^R" then moved = 1
+
+    if moved == 1 then lastCol = col
+    if moved == 1 then lastRow = row
+
+    if k$ == "^U" then row = row - 1
+    if k$ == "^D" then row = row + 1
+    if k$ == "^L" then col = col - 1
+    if k$ == "^R" then col = col + 1
+
+    // Clamp to bounds
+    if row < rowMin then row = rowMin
+    if row > rowMax then row = rowMax
+    if col < colMin then col = colMin
+    if col > colMax then col = colMax
+
+    // Only redraw if position changed
+    if moved == 1 then locate lastRow, lastCol
+    if moved == 1 then print " ";
+    if moved == 1 then locate row, col
+    if moved == 1 then print "•";
+
+    if running == 0 then timeroff
+}
+
+// ── Start timer ──
+timer 0.125 gameLoop
+timeron
+
+// ── Wait loop — keeps program alive until ESC ──
+while (running == 1) {
+}
+
+// ── Clean exit ──
+locate 25, 1
+print "Goodbye!"

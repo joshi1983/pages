@@ -1,0 +1,56 @@
+to drawOuterDesign :len
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	setPenSize :len * 0.05
+	setFillColor randomColor
+	right 180 / 4
+	repeat 4 [
+		arcPair :len 80
+		right 360 / 4
+		jumpTo :oldPos
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by a drawing at:
+; https://www.youtube.com/watch?v=7XsYM7hsJ0A
+to saanviOnamFlower :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "numDots 36
+	jumpForward :height / 2
+	localmake "center pos
+	setLineJoinStyle "round
+	setFillGradient createRadialGradient pos :height * 0.43
+		createPList2 [
+			[0 "pink] [0.85 "pink] [1 "#0fdd]
+		]
+	setPenSize 0
+	circle :height * 0.42
+	setFillColor "black
+	right 180 / :numDots
+	repeat :numDots [
+		jumpForward :height * 0.37
+		circle :height * 0.01
+		jumpForward :height * 0.085
+		drawOuterDesign :height * 0.05
+		right 360 / :numDots
+		jumpTo :center
+	]
+	setFillColor "yellow
+	setPenColor "black
+	setPenSize :height * 0.005
+	circle :height * 0.35
+	setFillColor "red
+	circle :height * 0.035
+	setHeading :oldHeading
+	repeat 9 [
+		jumpForward :height * 0.04
+		arcPair :height * 0.245 80
+		right 360 / 9
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+saanviOnamFlower 100

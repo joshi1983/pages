@@ -1,0 +1,37 @@
+; Inspired by logo at:
+; https://www.yellowpages.ca/bus/Ontario/Windsor/Al-Can-Roofing/102856806.html
+to alcanLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "angle1 -37.5
+	localmake "angle2 36
+	localmake "width1 :height * 0.58
+	localmake "width2 :width1 * 0.6
+	localmake "height1 :height / cos :angle1
+	localmake "width2a -:height1 * sin :angle1
+	localmake "height2 (:width2a - :width2) / sin :angle2
+	jumpRight :height * 1.525
+	setPenSize 0
+	setFillColor "white
+	repeat 3 [
+		parallelogram :width1 :height1 :angle1
+		jumpLeft :height * 0.7
+	]
+	jumpRight :width1 / 2 - :height * 0.015
+	right :angle1
+	polyStart
+	jumpForward :height1
+	right 180 - :angle1 * 2
+	jumpForward :height1
+	setHeading :oldHeading
+	jumpRight :width2
+	right :angle2
+	jumpForward :height2
+	right 180 - :angle2 * 2
+	jumpForward :height2
+	polyEnd	 
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+alcanLogo 100

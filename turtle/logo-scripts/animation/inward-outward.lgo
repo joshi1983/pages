@@ -1,0 +1,54 @@
+; Inspired by
+; https://bigblueboo.tumblr.com/post/109110279374/inward-outward
+; The artist is Charlie Deck.
+to inwardOutward :height :timeRatio :color
+	localmake "oldState turtleState
+	localmake "numCircles 36
+	localmake "maxDegrees 360  * 3.6
+	localmake "angleStep :maxDegrees / :numCircles
+	localmake "radiusStep :height * 0.48 / :numCircles
+	localmake "radiusOffset (:maxDegrees / 360) * :timeRatio
+	localmake "startAngleOffset int :radiusOffset
+	localmake "radiusOffset :radiusOffset - :startAngleOffset
+	localmake "radiusOffset :radiusOffset * :radiusStep
+
+	; Adjust the radiusOffset so timeRatio 1 draws the same as 0.
+	localmake "radiusOffset :radiusOffset + :height * 0.005 * :timeRatio
+	setFillColor transparent
+	setPenColor :color
+	setPenSize :height * 0.025
+	jumpForward :height / 2
+	localmake "center pos
+	circle (:height - penSize) / 2
+	setPenSize :height * 0.004
+	left :angleStep * :startAngleOffset + :angleStep * :numCircles * :timeRatio
+	repeat :numCircles [
+		localmake "radius :radiusStep * (repcount - 1) + :radiusOffset
+		jumpForward :height * 0.01
+		if :radius > 0 [
+			circle :radius
+		]
+		right :angleStep
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+make "timeRatio animation.timeRatio
+inwardOutward 100 :timeRatio "black
+
+to animation.snapshotstyle
+	output createPList2 [
+		["position.y 50]
+		["zoom.scale 5.1]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 5
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

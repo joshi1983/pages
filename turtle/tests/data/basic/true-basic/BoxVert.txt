@@ -1,0 +1,25 @@
+!
+!  BOXVERT.  Plot some vertical box-and-whisker plots.
+!
+LIBRARY "Stat2Lib.trc"
+
+DIM d(50,3), x(50), names$(3)
+
+MAT READ names$
+DATA Test 1, Test 2, Test 3
+
+FOR j = 1 to 3
+    CALL SimNormal (50, 0, 1, x)  ! Get normal distribution
+    FOR i = 1 to 50
+        LET d(i,j) = x(i)         ! Copy into column of d(,)
+    NEXT i
+NEXT j
+
+CALL SetBoxVert (1)               ! Switch to vertical box plots
+CALL SetErrorBeam (5)             ! Add 5-pixel crossbar to whiskers
+
+CALL SetDataStyle (3)
+CALL SetTitle ("Vertical Box Plots")
+CALL ManyBoxPlot (d, names$, "black")
+
+END

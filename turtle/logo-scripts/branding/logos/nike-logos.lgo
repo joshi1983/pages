@@ -1,0 +1,68 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Swoosh#/media/File:Logo_NIKE.svg
+; Also, available at:
+; https://about.nike.com/en/newsroom/collections/nike-inc-logos
+to nikeSwooshLogo :height
+	localmake "oldState turtleState
+	localmake "width :height * 1139 / 397
+	localmake "arcsInfo [
+		[10 0.85] [15 0.6] [20 0.22] [50 0.23] [25 0.4]
+		[16.285 0.8] [-168 0] [-6 3] [-10 1.35] [-20 0.65]
+		[-25 0.35] [-30 0.25] [-29 0.32] [-20 0.435] [-16.354882 1.2]
+	]
+	jumpForward :height
+	jumpRight :width / 2
+	left 104.8
+	setPenSize 0
+	setFillColor "white
+	polyStart
+	jumpForward :height * 2.15
+	arcsRight :arcsInfo :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by the converse logo at:
+; https://about.nike.com/en/newsroom/collections/nike-inc-logos#
+to nikeConverseLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "oldPos pos
+	localmake "angle 42
+	localmake "size1 :height / 2 / cos :angle
+
+	setPenSize 0
+	; Draw the star.
+	jumpForward :height / 2
+	jumpLeft :height * 0.343
+	right 36 / 2
+	setFillColor "white
+	regularStar :height * 0.295 5
+
+	; Draw the arrow on the left side.
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpRight :height * 0.135
+	right :angle
+	polyStart
+	jumpForward :size1
+	setHeading :oldHeading - :angle
+	jumpForward :size1
+	setHeading :oldHeading
+	jumpLeft :height * 0.383
+	right 180 - :angle
+	jumpForward :size1
+	right :angle * 2
+	jumpForward :size1
+	polyEnd
+
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+make "height 100
+make "separation :height * 3
+jumpLeft :separation / 2
+nikeSwooshLogo :height
+jumpRight :separation
+nikeConverseLogo :height

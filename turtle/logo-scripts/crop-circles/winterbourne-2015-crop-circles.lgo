@@ -1,0 +1,63 @@
+make "darkColor "#780
+
+to drawCrescent :outerRadius
+	localmake "oldState turtleState
+	localmake "innerRadius :outerRadius * 0.92
+	localmake "outerArcAngle 270
+	localmake "chordLength 2 * abs :outerRadius * sin :outerArcAngle / 2
+	localmake "innerArcAngle 360 - 2 * arcSin :chordLength / 2 / :innerRadius
+	right :outerArcAngle / 2 - 90
+	jumpForward :outerRadius
+	left 90
+	polyStart
+	arcLeft :outerArcAngle :outerRadius
+	left 180 - (:outerArcAngle - :innerArcAngle) / 2
+	arcRight :innerArcAngle :innerRadius
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by crop circles shown at:
+; https://ca.pinterest.com/pin/120049146309847548
+; They are also mentioned at:
+; https://temporarytemples.co.uk/crop-circles/2015-crop-circles
+; Located at: Winterbourne Stoke Down, Wiltshire
+; Reported on: July 10, 2015
+to winterbourne2015CropCircles :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "lightColor "#ef8
+	localmake "numDashes 13
+	localmake "triangleHeight :height / 2 * cos 90 / :numDashes
+	localmake "triangleWidth :height * sin 90 / :numDashes
+	localmake "midRadius :height * 0.36
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	setFillColor :lightColor
+	circle :height / 2
+	setPenSize :height * 0.03
+	setPenColor :darkColor
+	circle :height * 0.43
+	setPenSize 0
+	repeat :numDashes [
+		setHeading :oldHeading + (repcount + 0.7) * 360 / :numDashes
+		jumpForward :triangleHeight
+		right 180
+		isoTriangle :triangleWidth :triangleHeight
+		jumpTo :center
+	]
+	setFillColor :darkColor
+	circle :midRadius
+	setHeading :oldHeading + 45
+	setFillColor :lightColor
+	drawCrescent :height * 0.25
+	setFillColor :darkColor
+	isotoxalStar :midRadius :height * 0.1 4
+	setFillColor :lightColor
+	isotoxalStar :midRadius :height * 0.06 4
+	setTurtleState :oldState
+end
+
+setScreenColor :darkColor
+winterbourne2015CropCircles 100

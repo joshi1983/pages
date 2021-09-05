@@ -1,0 +1,91 @@
+to drawPillarBase :width
+	localmake "oldState turtleState
+	localmake "height :width / 2.7
+	stripes :width :height * 0.4 ["white]
+	jumpForward :height * 0.65
+	stripes :height * 2.3 :height * 0.35 ["white]
+
+	setTurtleState :oldState
+end
+
+to drawCompletePillar :width :height :verticalOffset
+	localmake "oldState turtleState
+	drawPillarBase :width
+	jumpForward :height
+	right 180
+	drawPillarBase :width
+	jumpForward :verticalOffset
+	drawVertical :width * 0.7 :height - 2 * :verticalOffset
+	setTurtleState :oldState
+end
+
+to drawVertical :width :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "sideWidth :width * 0.2
+	localmake "separation :width - :sideWidth
+	localmake "baseHeight :width * 0.12
+	stripes :width * 0.4 :height ["white]
+	stripes :width * 0.1 :height ["gray]
+	stripes :width :baseHeight ["white]
+	jumpLeft :separation / 2
+	repeat 2 [
+		stripes :sideWidth :height ["white]
+		jumpRight :separation
+	]
+	jumpTo :oldPos
+	jumpForward :height - :baseHeight
+	stripes :width :baseHeight ["white]
+	setTurtleState :oldState
+end
+
+to drawMiddlePillar :pillarWidth :verticalOffset
+	localmake "oldState turtleState
+	localmake "verticalWidth :pillarWidth * 0.68
+	drawPillarBase :pillarWidth
+	jumpForward :verticalOffset
+	drawVertical :verticalWidth :pillarWidth * 1.82
+	setPenSize 0
+	setFillColor "white
+	drawArcLineShape [-0.5 2.55
+		[[0.35] [-90 0] [0.2] [-60 0.2] [115 0.23] [-77 0.2] [-68 0]
+		[0.25]]
+	] :verticalWidth
+	setTurtleState :oldState
+end
+
+to drawRightPillar :width :verticalOffset
+	localmake "oldState turtleState
+	localmake "verticalWidth :width * 0.68
+	drawPillarBase :width
+	jumpForward :verticalOffset
+	drawVertical :verticalWidth :width * 0.83
+	setPenSize 0
+	setFillColor "white
+	drawArcLineShape [-0.5 1.1
+		[[0.2] [-100 0] [0.2] [55 0.4] [-99 0.3] [-36 0]
+		[0.22]]
+	] :verticalWidth
+
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://www.youtube.com/@toldinstone
+to toldInStoneLogo :height
+	localmake "oldState turtleState
+	localmake "pillarHeight :height * 0.5
+	localmake "pillarWidth :height * 0.1306
+	localmake "verticalOffset :height * 0.058
+	localmake "separation :height * 0.218
+	stripes :height :height ["black]
+	jumpForward (:height - :pillarHeight) / 2
+	drawMiddlePillar :pillarWidth :verticalOffset
+	jumpLeft :separation
+	drawCompletePillar :pillarWidth :pillarHeight :verticalOffset
+	jumpRight :separation * 2
+	drawRightPillar :pillarWidth :verticalOffset
+	setTurtleState :oldState
+end
+
+toldInStoneLogo 100

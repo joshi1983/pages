@@ -1,0 +1,160 @@
+to drawSky :width :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "colorStops createPList2 [
+		[0 "#19bce0] [0.42 "#19bce0] [0.8 "#093C95]
+		[1 "#002a75]
+	]
+	jumpForward :height
+	setPenGradient createLinearGradient :oldPos pos :colorStops "pad
+	setLineCap "butt
+	setPenSize :width
+	backward :height
+	setTurtleState :oldState
+end
+
+to drawField :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "layers [
+		[0.447 "#ffcf00 
+			[[-92 0] [1.2] [5.5 2] [0.609973] [-93.5 0] [0.444870622]]
+		]
+		[0.322 "#f7b900 
+			[[-90 0] [1] [5.5 9] [-9.85235 0.8] [-85.6477 0] [0.36481022460815]]
+		]
+		[0.052 "#f5ac00 [[-82.5 0] [2.017258] [-97.5 0] [0.315305005]]]
+	]
+	setPenColor "black
+	setPenSize :height * 0.01
+	jumpLeft :height
+	localmake "startPos pos
+	repeat count :layers [
+		localmake "layerInfo item repcount :layers
+		localmake "leftHeight :height * first :layerInfo
+		setFillColor item 2 :layerInfo
+		polyStart
+		jumpForward :leftHeight
+		arcLines last :layerInfo :height
+		polyEnd
+		jumpTo :startPos
+		setHeading :oldHeading
+	]
+	setTurtleState :oldState
+end
+
+to drawRedGrainElevator :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "shapes [
+		[0.891 0.321 0 "#a50000 0.375 84 0.2 0 0.393]
+		[0.825 0.771 0 "#a50000 0.085 75 0.105 0 0.105]
+		[0.734 0.32 0 "#700000 0.18 91 0.25 0 0.175]
+		[0.828 0.855 49 "#948e9d 0.075 36 0.093 45 0.06]
+		[0.891 0.69 42 "#948e9d 0.11 43 0.093 43 0.1]
+		[0.734 0.5 -32 "#948e9d 0.1 125 0.233 -45 0.108]
+	]
+	setLineCap "round
+	setLineJoinStyle "round
+	setPenColor "black
+	setPenSize :height * 0.01
+	repeat count :shapes [
+		localmake "shape item repcount :shapes
+		jumpLeft :height * first :shape
+		jumpForward :height * item 2 :shape
+		right item 3 :shape
+		setFillColor item 4 :shape
+		polyStart
+		jumpForward :height * item 5 :shape
+		right item 6 :shape
+		jumpForward :height * item 7 :shape
+		setHeading :oldHeading + item 8 :shape
+		jumpBackward :height * item 9 :shape
+		polyEnd
+		jumpTo :oldPos
+		setHeading :oldHeading
+	]
+	jumpLeft :height * 0.785
+	jumpForward :height * 0.58
+	setFillColor "#700000
+	polyStart
+	jumpForward :height * 0.135
+	right 42
+	jumpForward :height * 0.095
+	left 42
+	jumpForward :height * 0.085
+	right 45
+	jumpForward :height * 0.06
+
+	right 85
+	jumpForward :height * 0.073
+	right 62
+	setHeading :oldHeading + 180
+	jumpForward :height * 0.08
+	left 37
+	jumpForward :height * 0.105
+	setHeading :oldHeading + 180
+	jumpForward :height * 0.127
+	polyEnd
+	setTurtleState :oldState
+end
+
+to drawBailOfHay :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "startArcInfo [[51 0] [-150 0.078] ]
+	jumpRight :height * 0.759
+	jumpForward :height * 0.066
+	setPenColor "black
+	setPenSize :height * 0.005
+	setLineCap "round
+	setLineJoinStyle "round
+	setFillColor "#ffd300
+	localmake "startPos pos
+	polyStart
+	arcLines :startArcInfo :height
+	arcLines [[175 0] [0.08]
+	[120 0.078] [20 0.15]] :height
+	polyEnd
+	jumpTo :startPos
+	setHeading :oldHeading
+	setFillColor "#fbc100
+	polyStart
+	arcLines :startArcInfo :height
+	arcLines [[-18 0.03] [-110 0.08]] :height
+	polyEnd
+	jumpTo :startPos
+	setHeading :oldHeading
+	jumpLeft :height * 0.11
+	jumpForward :height * 0.015
+	right 96
+	forward :height * 0.1
+	left 4
+	forward :height * 0.115
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://images.squarespace-cdn.com/content/v1/5aa57edbb40b9d681b6ed76e/1642196038846-QOFUEDLXEZ33D1EFDEIH/11.png
+; shown on the website:
+; https://www.carter-ryan.com/available-paintings-spring-show
+; The artist's name is Jason Carter.
+; Learn more about the artist at:
+; https://www.carter-ryan.com/
+; Here is a news story involving Jason Carter:
+; https://www.youtube.com/watch?v=38WPH9h9-VA
+; The following WebLogo code was written by Josh Greig in 2024 to draw something resembling 
+; Jason Carter's acrylic painting.
+to redGrainElevatorJasonCarter :height
+	localmake "oldState turtleState
+	localmake "width :height * 2
+	drawSky :width :height
+	drawField :height
+	drawRedGrainElevator :height
+	drawBailOfHay :height
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+redGrainElevatorJasonCarter 100

@@ -1,0 +1,81 @@
+make "darkColor "#880
+make "lightColor "#ffd
+
+to drawOuterShapes :outerRadius
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "center pos
+	localmake "numArcs 18
+	localmake "gapAngle 3
+	localmake "gapAngleRadians :gapAngle * pi / 180
+	localmake "arcedCircumference :outerRadius * (pi * 2 * (:numArcs) / (:numArcs + 1) - :gapAngleRadians)
+	localmake "arcAngle1Radians (:arcedCircumference / :numArcs) / :outerRadius
+	localmake "arcAngle1Degrees :arcAngle1Radians * 180 / pi
+	localmake "outerArcRadius :outerRadius * 2 * sin :arcAngle1Degrees / 2
+
+	setPenSize :outerRadius * 0.005
+	localmake "outerRadius2 :outerRadius - penSize / 2
+	localmake "finalAngle 90 + :arcAngle1Degrees / 2
+	setPenColor :lightColor
+	setHeading :oldHeading + :gapAngle / 2 + 1 * :arcAngle1Degrees
+	jumpForward :outerArcRadius + :outerRadius2
+	left 90
+	arcLeft :finalAngle :outerArcRadius
+	jumpTo :center
+	setHeading :oldHeading - :gapAngle / 2 - 1 * :arcAngle1Degrees
+	jumpForward :outerArcRadius + :outerRadius2
+	right 90
+	arcRight :finalAngle :outerArcRadius
+
+	setFillColor :lightColor
+	setPenSize 0
+	jumpTo :center
+	repeat :numArcs [
+		setHeading :oldHeading + :gapAngle / 2 + repcount * :arcAngle1Degrees
+		jumpForward :outerRadius
+		left :arcAngle1Degrees / 2
+		polyStart
+		arcLeft 60 :outerArcRadius
+		right 120
+		arcRight 60 + :arcAngle1Degrees :outerArcRadius
+		right 120
+		arcLeft 60 :outerArcRadius
+		polyEnd
+		jumpTo :center
+	]
+
+	setTurtleState :oldState
+end
+
+; Drone footage of the field is shown at:
+; https://www.youtube.com/watch?v=XamMSSGpl3U
+; These were reported in July 15, 2014.
+; This was located in:
+; Macmillan Way, nr Rodmarton, Gloucestershire
+to gloucestershire2014CropCircles :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "outerRadius :height * 0.3782
+	jumpForward :height / 2
+	localmake "center pos
+	setPenColor :lightColor
+	setFillColor transparent
+	setPenSize :height * 0.01
+	circle :height * 0.2
+	circle :outerRadius
+	jumpRight :outerRadius
+	right 90
+	forward :height * 0.2
+	setPenSize 0
+	setFillColor :lightColor
+	circle :height * 0.04
+	jumpBackward :height * 0.25 + :outerRadius
+	circle :height * 0.05
+	jumpTo :center
+	setHeading :oldHeading + 90
+	drawOuterShapes :outerRadius
+	setTurtleState :oldState
+end
+
+setScreenColor :darkColor
+gloucestershire2014CropCircles 100

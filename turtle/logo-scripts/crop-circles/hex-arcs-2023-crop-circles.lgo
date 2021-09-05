@@ -1,0 +1,33 @@
+make "darkColor "#780
+make "lightColor "#ff8
+
+; Inspired by image at:
+; https://www.reddit.com/r/aliens/comments/14tegki/new_crop_circle_772023/
+; Reported in July 7, 2023.
+to hexArcs2023CropCircles :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "thickness :height * 0.01
+	localmake "height1 :height - :thickness
+	localmake "arcRadius :height1 / 4
+	jumpForward :height / 2
+	localmake "center pos
+	setFillColor transparent
+	setLineJoinStyle "round
+	setPenColor :lightColor
+	setPenSize :thickness
+	repeat 6 [
+		setHeading :oldHeading + repcount * 360 / 6
+		jumpForward :arcRadius
+		left 120
+		repeat 5 [
+			arcPair :arcRadius 60
+			right 60
+		]
+		jumpTo :center
+	]	
+	setTurtleState :oldState
+end
+
+setScreenColor :darkColor
+hexArcs2023CropCircles 100

@@ -1,0 +1,26 @@
+!
+!  MANYOBS.  Plot many observation plots on one graph.
+!
+LIBRARY "Stat2Lib.trc"
+
+DIM data(4,11,5), leg$(4), lab$(11)
+
+FOR i = 1 to size(data,1)         ! Make fake datasets
+    FOR j = 1 to size(data,2)
+        FOR k = 1 to size(data,3)
+            LET data(i,j,k) = i+rnd*rnd
+        NEXT k
+
+    NEXT j
+
+NEXT i
+
+MAT READ leg$, lab$               ! Read legend & labels
+DATA Moth, Ant, Fly, Beetle
+DATA 12:00, "", "", "", 1:00, "", "", "", 2:00, "", ""
+
+CALL SetText ("Appetite", "Time", "Nibbles")
+CALL PlotManyObs (data, leg$, lab$, "")
+
+END
+

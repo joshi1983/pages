@@ -1,0 +1,23 @@
+' copied from https://basicfusion.org/tutorial.html
+SCREEN 12
+DEFSPRITE 1, 4, 4
+' Frame 0
+SPRITEROW 1,0,0, ",lime,lime,"
+SPRITEROW 1,0,1, "lime,lime,lime,lime"
+SPRITEROW 1,0,2, "lime,,lime,lime"
+SPRITEROW 1,0,3, ",lime,,lime"
+' Frame 1
+SPRITEROW 1,1,0, ",cyan,cyan,"
+SPRITEROW 1,1,1, "cyan,cyan,cyan,cyan"
+SPRITEROW 1,1,2, "cyan,,cyan,cyan"
+SPRITEROW 1,1,3, ",cyan,,cyan"
+
+F = 0 : TICK = 0
+
+LOOP:
+  PAINT "#0a0a1a"
+  TICK = TICK + 1
+  IF TICK MOD 15 = 0 THEN F = 1 - F
+  DRAWSPRITE 1, 300, 220, F, 10
+  SYNC
+GOTO LOOP

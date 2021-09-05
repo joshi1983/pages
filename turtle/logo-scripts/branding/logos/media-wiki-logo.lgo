@@ -1,0 +1,58 @@
+to leaf :height
+	localmake "oldState turtleState
+	localmake "arcAngle1 30
+	localmake "arcRadius1 0.065405
+	localmake "leftArcs [
+		[30 0.25]
+		[20 0.5]
+		[20 0.35]
+		[30 0.75]
+		[17 1.1808]
+	]
+	localmake "remainingAngle 360 - :arcAngle1
+	repeat count :leftArcs [
+		localmake "arcInfo item repcount :leftArcs
+		localmake "remainingAngle :remainingAngle - 2 * item 1 :arcInfo
+	]
+	localmake "arcs (combine :leftArcs [[:remainingAngle 0]] reverse :leftArcs [[:arcAngle1 :arcRadius1]])
+	left 90
+	arcRight :arcAngle1 / 2 :height * :arcRadius1
+	polyStart
+	repeat count :arcs [
+		localmake "arcInfo item repcount :arcs
+		localmake "arcRadius :height * item 2 :arcInfo
+		localmake "arcAngle item 1 :arcInfo
+		ifelse :arcRadius = 0 [
+			right :arcAngle
+		] [
+			arcRight :arcAngle :arcRadius
+		]
+	]
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://www.mediawiki.org/wiki/MediaWiki
+to mediaWikiLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "leafSize :height * 0.2952725
+	localmake "numLeafs 24
+	localmake "colors ["#60b "#c09 "red "#f60 "#fa0 "#f60 "red "#c09]
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	setFillColor "black
+	repeat :numLeafs [
+		setFillColor mixItems :colors remainder repRatio + 0.4 1
+		setFillColor mix fillColor transparent 0.7
+		setHeading :oldHeading + repcount * 360 / :numLeafs
+		jumpForward :height / 2 - :leafSize
+		leaf :leafSize
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+mediaWikiLogo 100

@@ -1,0 +1,695 @@
+; Inspired by the famous "The Scream" painting.
+; A public domain photo of it is at:
+; https://en.wikipedia.org/wiki/The_Scream#/media/File:Edvard_Munch,_1893,_The_Scream,_oil,_tempera_and_pastel_on_cardboard,_91_x_73_cm,_National_Gallery_of_Norway.jpg
+
+; At Maximum Speed, the turtle is hard to see.
+; Moving at such extreme speed can be stressful on the turtle.
+; If you could see it, it would be screaming like the one in this drawing.
+
+to turtleNose :headHeight
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "nostrilSeparation :headHeight * 0.07
+	localmake "nostrilRadius :headHeight * 0.008
+	localmake "angle 32
+	localmake "size1 :headHeight * 0.18
+	localmake "penSize1 :headHeight * 0.009
+	localmake "penSize2 :penSize1 * 0.5
+	localmake "arcAngle 30
+	localmake "arcRadius :headHeight * 0.2
+	setPenSize 0
+	setFillColor "black
+	jumpForward :headHeight * 0.64
+	localmake "nostrilPos pos
+	jumpRight :nostrilSeparation / 2
+	; draw nostrils
+	circle :nostrilRadius
+	jumpLeft :nostrilSeparation
+	circle :nostrilRadius
+	jumpTo :nostrilPos
+	jumpForward :headHeight * 0.05
+	localmake "toPos pos
+	jumpBackward :headHeight * 0.25
+	localmake "colorStops createPList2 [
+		[0 "#241] [0.5 "#241] [0.7 "#d241] [1 "#1241]
+	]
+	setPenGradient createLinearGradient pos :toPos :colorStops "pad
+	localmake "pos1 pos
+	setPenSize :penSize1
+	setLineCap "round
+	right :angle
+	forward :size1
+	setPenSize :penSize2
+	arcLeft :arcAngle :arcRadius
+	jumpTo :pos1
+	setHeading :oldHeading - :angle
+	setPenSize :penSize1
+	forward :size1
+	setPenSize :penSize2
+	arcRight :arcAngle :arcRadius
+
+	setTurtleState :oldState
+end
+
+to drawEye :headHeight :sign
+	localmake "arcs1 [[-60 0.09] [20 0.25]]
+	localmake "arcs2 [[90 0.07] [120 0.08]]
+	localmake "arcs3 [[90 0] [0.05] [-118 0] [58.7 0.18]]
+	localmake "penSize1 :headHeight * 0.002
+	localmake "headHeight1 :headHeight * :sign
+	polyStart
+	arcLines :arcs1 :headHeight1
+	setPenSize :penSize1
+	arcLines :arcs2 :headHeight1
+	setPenSize 0
+	arcLines :arcs3 :headHeight1
+	polyEnd
+end
+
+to turtleEyes :headHeight
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "size1 :headHeight * 0.08
+	localmake "eyeCornerX :headHeight * 0.07
+	localmake "eyeCornerY :headHeight * 0.19
+	localmake "angle1 150
+	localmake "arcs [[-10 0] [-100 0.09] [-44 0] [-170 0.07]]
+	jumpForward :headHeight * 0.75
+	localmake "eyeBase pos
+	jumpForward :headHeight * 0.2375
+	localmake "colorStops createPList2 [
+		[0 "#8251] [0.6 "#6251] [1 "#4251]
+	]
+	localmake "gradient createLinearGradient pos :eyeBase :colorStops "pad
+	setFillGradient :gradient
+	localmake "topPos pos
+	jumpRight :size1
+	right :angle1
+	setPenSize 0
+
+	; right eye
+	drawEye :headHeight 1
+
+	jumpTo :topPos
+	setHeading :oldHeading
+	jumpBackward :eyeCornerY
+	jumpRight :eyeCornerX
+	setFillColor "black
+	polyStart
+	arcLines :arcs :headHeight
+	polyEnd
+
+	; left eye
+	jumpTo :topPos
+	setHeading :oldHeading
+	jumpLeft :size1
+	left :angle1
+	setFillGradient :gradient
+	drawEye :headHeight -1
+
+	jumpTo :topPos
+	setHeading :oldHeading
+	jumpBackward :eyeCornerY
+	jumpLeft :eyeCornerX
+	setFillColor "black
+	polyStart
+	arcLines :arcs -:headHeight
+	polyEnd
+
+	setTurtleState :oldState
+end
+
+to mouthShadow :headHeight
+	localmake "oldState turtleState
+	localmake "size1 :headHeight * 0.05
+	localmake "angle1 80
+	localmake "arcAngle1 10
+	localmake "arcs1 [[30 0] [20 0.3] [80 0] [0.06] [-25 0] [0.04453037]]
+	jumpForward :headHeight * 0.41
+	jumpLeft :headHeight * 0.13
+	setPenSize 0
+	setFillColor "black
+	polyStart
+	right 90 - :arcAngle1 / 2
+	arcRight :arcAngle1 :headHeight * 1.491583
+	left :angle1
+	jumpForward :size1
+	arcLines :arcs1 :headHeight
+	arcLines reverse :arcs1 :headHeight
+	polyEnd
+	setTurtleState :oldState
+end
+
+to mouthPinkShape :headHeight
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "arcsInfo [[40 0.14] [30 0.04] [34 0.4] [7.5 1.5] [56.5 0.06293]]
+	localmake "colorStops createPList2 [
+		[0 "#E2CACE] [0.78 "#CAB4B8]
+		[0.85 "#B9A7AA] [1 "#9B8C8F]
+	]
+	jumpForward :headHeight * 0.5
+	setFillGradient createLinearGradient :oldPos pos :colorStops "pad
+	setPenSize :headHeight * 0.003
+	setPenColor "#000
+	drawArcLineShape [0 0
+		(combine [[62 0] [0.11] [40 0]] :arcsInfo reverse :arcsInfo)
+		] :headHeight
+	setTurtleState :oldState
+end
+
+to tongueOutline :headHeight
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angle1 160
+	localmake "angle2 175
+	localmake "size1 :headHeight * 0.128
+	localmake "size2 :size1 / sin :angle1
+	localmake "size3 :headHeight * 0.02
+	localmake "size4 :size3 / sin :angle2
+	localmake "colorStops createPList2 [
+		[0 "#2000] [0.5 "#3000] [1 "#6000]
+	]
+	jumpForward :headHeight * 0.42
+	localmake "gradient1 createLinearGradient :oldPos pos :colorStops "pad
+	localmake "topPos pos
+	jumpLeft :size1
+	setLineCap "round
+	setLineJoinStyle "round
+	setPenSize :headHeight * 0.01
+	setPenGradient :gradient1
+	right :angle1
+	forward :size2
+	setHeading :oldHeading + 180 - :angle1
+	forward :size2
+
+	setPenSize 0
+	setFillGradient :gradient1
+	jumpTo :topPos
+	setHeading :oldHeading
+	jumpLeft :size3
+	right :angle2
+	polyStart
+	jumpForward :size4
+	setHeading :oldHeading + 180 - :angle2
+	jumpForward :size4
+	polyEnd
+
+	setTurtleState :oldState
+end
+
+to turtleMouth :headHeight
+	localmake "oldState turtleState
+	mouthPinkShape :headHeight
+	tongueOutline :headHeight
+	mouthShadow :headHeight
+	setTurtleState :oldState
+end
+
+to turtleHead :headHeight
+	localmake "oldState turtleState
+	localmake "arcAngle1 115
+	localmake "arcAngle7 19
+	localmake "arcRadius1 :headHeight * 0.12
+	localmake "arcRadius7 :headHeight * 0.3987388
+	localmake "arcsInfo [
+		[15 2] [25 0.35] [14 0.95] [87 0.15] [-28 0.05]
+	]
+	setPenSize :headHeight * 0.008
+	setFillColor "#408000
+	left 90
+	arcRight :arcAngle1 / 2 :arcRadius1
+	right 180
+	polyStart
+	arcLeft :arcAngle1 :arcRadius1
+	arcsLeft :arcsInfo :headHeight
+	arcLeft :arcAngle7 :arcRadius7 ; point of symmetry
+	arcsLeft reverse :arcsInfo :headHeight
+	polyEnd
+	setTurtleState :oldState
+	turtleNose :headHeight
+	turtleEyes :headHeight
+	turtleMouth :headHeight
+end
+
+to turtleLegs :turtleHeight
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "angle1 126
+	localmake "arcAngle1 46
+	localmake "arcAngle2 70
+	localmake "arcRadius1 :turtleHeight * 0.3
+	localmake "arcRadius2 :turtleHeight * 0.25
+	localmake "legWidth :turtleHeight * 0.13
+	jumpForward :turtleHeight * 0.2
+	setPenSize :turtleHeight * 0.004
+	localmake "pos1 pos
+	left :angle1
+	setPenColor "#1F3D00
+	setFillColor "#408000
+	polyStart
+	arcLeft :arcAngle1 :arcRadius1
+	setHeading :oldHeading
+	jumpLeft :legWidth
+	arcRight :arcAngle2 :arcRadius2
+	jumpTo :pos1
+	setHeading :oldHeading + :angle1
+	arcRight :arcAngle1 :arcRadius1
+	setHeading :oldHeading
+	jumpRight :legWidth
+	arcLeft :arcAngle2 :arcRadius2
+	polyEnd
+	setTurtleState :oldState
+end
+
+to turtleArms :turtleHeight
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "angle1 110
+	localmake "arcs [[-215 0.18] [-90 0] [0.115] [-80 0] [120 0.08]]
+
+	jumpForward :turtleHeight * 0.5
+	localmake "pos1 pos
+	left 110
+	setFillColor "#408000
+	polyStart
+	arcLines :arcs :turtleHeight
+	jumpTo :pos1
+	setHeading :oldHeading + :angle1
+	arcLines :arcs -:turtleHeight
+	polyEnd
+
+	setTurtleState :oldState
+end
+
+to turtleNeck :neckWidth
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "outerColor "#2B5700
+	localmake "innerColor "#408000
+	localmake "colorStops createPList2 [
+		[0 :outerColor] [0.2 :innerColor]
+		[0.8 :innerColor] [1 :outerColor]
+	]
+	jumpLeft :neckWidth / 2
+	localmake "fromPos pos
+	jumpRight :neckWidth
+	setPenGradient createLinearGradient :fromPos pos :colorStops "pad
+	setPenSize :neckWidth
+	jumpTo :oldPos
+	forward :neckWidth
+	setTurtleState :oldState
+end
+
+to frontShellOuterPoly :shellHeight
+	localmake "oldState turtleState
+	localmake "size1 :shellHeight * 0.12
+	localmake "angle1 5
+	localmake "arcsInfo [[-47 0.33] [45 0.2] [16 1.2]
+	[45 0] [0.21] [-30 0] [0.02] [35 0] [31 0.266184666]]
+	jumpRight :size1
+	right :angle1
+	polyStart
+	arcLines :arcsInfo :shellHeight
+	arcLines reverse :arcsInfo :shellHeight	
+	polyEnd
+
+	setTurtleState :oldState
+end
+
+to frontShell :shellHeight
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "angle1 70
+	localmake "arcAngle 90 - :angle1
+	setPenSize 0
+	jumpForward :shellHeight * 0.05
+	setFillColor "#664242
+	frontShellOuterPoly :shellHeight
+	jumpForward :shellHeight * 0.013
+	setFillColor "#D7AB8E
+	frontShellOuterPoly :shellHeight * 0.97
+
+	setPenSize :shellHeight * 0.006
+	jumpForward :shellHeight * 0.1
+	setLineCap "round
+	setPenColor "#664242
+	forward :shellHeight * 0.75
+	localmake "lines [[0.15 0.08] [0.4 0.2] [0.4 0.25]]
+	setHeading :oldHeading
+	repeat count :lines [
+		localmake "lineInfo item repcount :lines
+		localmake "arcRadius :shellHeight * item 1 :lineInfo
+		localmake "size :arcRadius * 0.3
+		jumpBackward :shellHeight * item 2 :lineInfo
+		localmake "pos1 pos
+		setHeading :oldHeading + :angle1
+		arcRight :arcAngle :arcRadius
+		forward :size
+		jumpTo :pos1
+		setHeading :oldHeading - :angle1
+		arcLeft :arcAngle :arcRadius
+		forward :size
+		jumpTo :pos1
+		setHeading :oldHeading
+	]
+
+	setTurtleState :oldState
+end
+
+to turtleShell :turtleHeight
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "arcAngle1 95
+	localmake "arcAngle6 9
+	localmake "arcRadius1 :turtleHeight * 0.2
+	localmake "arcRadius6 :turtleHeight * 1.4294705
+	localmake "arcsInfo [
+		[18 0.6] [17 0.2] [15 0.8] [78 0.17]
+	]
+	jumpForward :turtleHeight * 0.01
+	localmake "pos1 pos
+	left 90
+	setPenSize 0
+	arcRight :arcAngle1 / 2 :arcRadius1
+	right 180
+	setPenSize :turtleHeight * 0.003
+	setFillColor "#b87
+	polyStart
+	arcLeft :arcAngle1 :arcRadius1
+	arcsLeft :arcsInfo :turtleHeight
+	arcLeft :arcAngle6 :arcRadius6 ; point of symmetry
+	arcsLeft reverse :arcsInfo :turtleHeight
+	polyEnd
+	jumpTo :oldPos
+	setHeading :oldHeading
+	turtleLegs :turtleHeight
+	jumpForward :turtleHeight * 0.6
+	turtleNeck :turtleHeight * 0.15
+	jumpTo :oldPos
+	turtleArms :turtleHeight
+	jumpTo :pos1
+	frontShell :turtleHeight * 0.73
+	jumpForward :turtleHeight * 0.68
+	turtleHead :turtleHeight * 0.3
+	setTurtleState :oldState
+end
+
+to screamSky :drawingHeight
+	localmake "oldState turtleState
+	localmake "colors [
+		"#44272753 "#505095 "#5454A6 "brown "#EEB058 "#FF7B00 "#F53D3D 
+		"orange "#E6B04C "#DBDB7B]
+	localmake "oldHeading heading
+	localmake "size1 :drawingHeight * 0.73
+	jumpForward :drawingHeight * 0.68
+	jumpLeft :drawingHeight * 0.4
+	localmake "pos1 pos
+	setLineCap "round
+	setPenSize 0
+	setFillColor "orange
+	jumpRight :drawingHeight * 0.35
+	jumpForward :drawingHeight * 0.15
+	circle :drawingHeight * 0.15
+	jumpTo :pos1
+	setPenSize :drawingHeight * 0.06
+	jumpForward :drawingHeight * 0.02
+	right 90
+	setPenColor "#5555AF
+	jumpForward penSize * 0.2
+	forward :size1
+	jumpTo :pos1
+	setHeading :oldHeading
+	setPenSize :drawingHeight * 0.02
+	repeat count :colors [
+		setPenColor item repcount :colors
+		localmake "pos1 pos
+		right 73
+		arcRight 30 :drawingHeight * 0.5
+		arcLeft 30 :drawingHeight * 0.4
+		arcRight 33 :drawingHeight * 0.55
+
+		jumpTo :pos1
+		setHeading :oldHeading
+		jumpForward penSize * 0.9		
+	]
+	localmake "colors ["#DFDF86 "#DBB46B "#EC8383 
+		"orange "#BFABAB "#C15C5C "#C39898]
+	setPenSize penSize * 1.2
+	repeat count :colors [
+		setPenColor item repcount :colors
+		localmake "pos1 pos
+		right mix 90 87 repRatio
+		forward :drawingHeight * 0.76
+
+		jumpTo :pos1
+		setHeading :oldHeading
+		jumpForward penSize * 0.95	
+	]
+	setTurtleState :oldState
+end
+
+to rightSide :drawingHeight
+	localmake "oldState turtleState
+	jumpRight :drawingHeight * 0.385
+	setPenColor "#A35252
+	setPenSize :drawingHeight * 0.04
+	forward :drawingHeight
+	setTurtleState :oldState
+end
+
+to railing :drawingHeight
+	localmake "oldState turtleState
+	localmake "colors ["#FFF3B8 "pink "gray
+		"#515190 transparent transparent transparent
+		"#C89B46 "#FFCBC2 "#7B6565 "#9D4848
+		transparent transparent transparent "orange "#b944 "#524242 "#88515190]
+	localmake "topAngle 125
+	localmake "oldHeading heading
+	localmake "vanishingPointY :drawingHeight * 0.675
+	setLineCap "round
+	jumpLeft :drawingHeight * 0.44
+	jumpForward :vanishingPointY
+	localmake "vanishingPoint pos
+	right :topAngle
+	jumpForward :drawingHeight * 1
+	localmake "toPos1 pos
+	localmake "toPos pos
+	setPenSize :drawingHeight * 0.03
+	repeat count :colors [
+		localmake "c item repcount :colors
+		setPenColor :c
+		if transparent <> :c [
+			setHeading towards :vanishingPoint
+			forward distance :vanishingPoint
+		]
+		jumpTo :toPos
+		setHeading :oldHeading
+		ifelse repcount > 3 [
+			jumpLeft penSize * 0.75
+		] [
+			jumpBackward penSize * 0.95
+		]
+		localmake "toPos pos
+	]
+	jumpBackward penSize / 2
+	localmake "toPos pos
+	; Darken the lower-left triangle to give the impression of shade from the railing.
+	setFillColor "#2000
+	setPenSize 0
+	polyStart
+	setHeading towards :vanishingPoint
+	jumpForward distance :vanishingPoint
+	setHeading :oldHeading
+	jumpBackward :vanishingPointY
+	polyEnd
+	setPenSize :drawingHeight * 0.003
+	localmake "colors ["#393974 "white "brown "#92D3D3]
+	repeat 15 [
+		setPenColor item 1 + remainder repcount (count :colors) :colors
+		setHeading towards :vanishingPoint
+		forward distance :vanishingPoint
+		jumpTo :toPos
+		setHeading :oldHeading
+		jumpLeft :drawingHeight * 0.03
+		localmake "toPos pos
+	]
+	jumpTo :toPos1
+	setHeading :oldHeading
+	setPenColor "#dd96644E
+	repeat 4 [
+		localmake "ratio repcount / 4.5
+		if repcount = 2 [
+			localmake "ratio 0.67
+		]
+		jumpTo mix :vanishingPoint :toPos1 :ratio
+		setPenSize :drawingHeight * (mix 0.015 0.07 :ratio)
+		localmake "height :drawingHeight * (min 0.2 mix 0.05 0.35 :ratio)
+		jumpBackward :height * 0.12
+		backward :height * 0.88
+	]
+
+	setTurtleState :oldState
+end
+
+to person1 :drawingHeight
+	localmake "oldState turtleState
+	jumpLeft :drawingHeight * 0.373
+	jumpForward :drawingHeight * 0.48
+	setLineCap "round
+	setPenSize :drawingHeight * 0.02
+	setPenColor "#dd535383
+	forward :drawingHeight * 0.08
+	setPenSize :drawingHeight * 0.035
+	forward :drawingHeight * 0.07
+	setPenColor mix penColor transparent 0.8
+	setPenSize :drawingHeight * 0.015
+	jumpForward penSize
+	forward :drawingHeight * 0.015
+	setTurtleState :oldState
+end
+
+to person2 :drawingHeight
+	localmake "oldState turtleState
+	jumpLeft :drawingHeight * 0.33
+	jumpForward :drawingHeight * 0.48
+	setLineCap "round
+	setPenSize :drawingHeight * 0.03
+	setPenColor "#dd535383
+	forward :drawingHeight * 0.148
+	setPenColor mix penColor transparent 0.8
+	setPenSize :drawingHeight * 0.015
+	jumpForward penSize
+	forward :drawingHeight * 0.015
+	setTurtleState :oldState
+end
+
+to drawBackgroundPeople :drawingHeight
+	person1 :drawingHeight
+	person2 :drawingHeight
+end
+
+to screamBackground :drawingHeight
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "colorStops createPList2 [
+		[0 "#C1AE86] [0.7 "#F9DEA4] [1 "#ECD093]
+	]
+	jumpForward :drawingHeight
+	setPenGradient createLinearGradient :oldPos pos :colorStops "pad
+	setPenSize :drawingHeight * 0.8
+	setLineCap "butt
+	backward :drawingHeight
+	setTurtleState :oldState
+end
+
+to minPositive :numbers
+	localmake "result first :numbers
+	for ["i 2 count :numbers] [
+		localmake "num item :i :numbers
+		if or :result < 0 (and :num < :result :num >= 0) [
+			localmake "result :num
+		]
+	]
+	output :result
+end
+
+to screamWater :drawingHeight
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "width :drawingHeight * 0.8
+	jumpRight :drawingHeight
+	localmake "bottomPos2 pos
+	jumpTo :oldPos
+	jumpRight :width / 2
+	localmake "rightPos1 pos
+	jumpBackward :drawingHeight
+	localmake "rightPos2 pos
+
+	jumpLeft :width
+	localmake "leftVPos1 pos
+	jumpForward :drawingHeight
+	localmake "leftVPos2 pos
+	jumpTo :oldPos
+	jumpLeft :drawingHeight * 0.34
+	jumpForward :drawingHeight * 0.56
+	right 100
+	setPenSize :drawingHeight * 0.001
+	setFillColor "#5555AF
+	localmake "leftPos1 pos
+	polyStart
+	arcLines [[31 0.8] [165 0.013] [0.07] [-182 0.011] 
+		[0.05] [12 0.4] [90 0.016]] :drawingHeight
+	setHeading :oldHeading + 90
+	arcLines [[0.21] [-90 0] [-70 0.1] [10 0.9] [90 0.25]] :drawingHeight
+	polyEnd
+	localmake "leftPos2 pos
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :drawingHeight * 0.66
+	localmake "pos1 pos
+	right 95
+	jumpForward :drawingHeight * 0.4
+	localmake "pos2 pos
+	setPenSize :drawingHeight * 0.002
+	localmake "colors ["white "aqua "navy "gray "brown]
+	localmake "numColors count :colors
+	localmake "numRepeats 35
+	repeat :numRepeats [
+		localmake "index 1 + remainder repcount :numColors
+		setPenColor item :index :colors
+		localmake "arcRadius :drawingHeight * mix 3 0.1 repcount / :numRepeats
+		jumpTo mix :pos1 :pos2 repRatio
+		setHeading :oldHeading - mix 85 150 repRatio
+		localmake "angles [
+			getArcLeftAngleToLine :arcRadius :rightPos1 :rightPos2
+			getArcLeftAngleToLine :arcRadius :leftPos1 :leftPos2
+			getArcLeftAngleToLine :arcRadius :leftVPos1 :leftVPos2
+			getArcLeftAngleToLine :arcRadius :oldPos :bottomPos2
+		]
+		localmake "arcAngle minPositive :angles
+		if even? repcount [
+			setPenSize 0
+			arcLeft :arcAngle * 0.15 :arcRadius
+			localmake "arcAngle :arcAngle * 0.85
+		]
+		setPenSize :drawingHeight * mix 0.0005 0.002 repRatio 
+		arcLeft :arcAngle :arcRadius
+	]
+
+	setTurtleState :oldState
+end
+
+to pictureFrame :innerHeight
+	setPenColor "#000
+	setLineJoinStyle "miter
+	setFillColor transparent
+	setPenSize :innerHeight * 0.06
+	localmake "height1 :innerHeight + penSize
+	jumpForward (:height1 - penSize) / 2
+	rect :innerHeight * 0.8 + penSize :height1
+end
+
+to screamingTurtle :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	screamBackground :height
+	screamWater :height
+	screamSky :height
+	railing :height
+	drawBackgroundPeople :height
+	rightSide :height
+	jumpRight :height * 0.03
+	turtleShell :height * 0.51
+
+	jumpTo :oldPos
+	pictureFrame :height
+	setTurtleState :oldState
+end
+
+setScreenColor "#73739C
+screamingTurtle 100

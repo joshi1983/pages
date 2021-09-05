@@ -1,0 +1,159 @@
+; Inspired by a symbol on clothing at:
+; https://en.wikipedia.org/wiki/Eastern_Catholic_Churches#/media/File:Sviatoslav_Shevchuk.jpg
+to byzentineCross :height
+	localmake "oldState turtleState
+	localmake "thicknessFactor 0.06
+	localmake "height1 :height * (1 - :thicknessFactor)
+	localmake "line1 [
+		[90 0] [0.2] [119 0] [-23 1.3] [84 0] [0.044127]
+	]
+	localmake "outerShape [0 0.5
+		combine :line1 reverse :line1
+	]
+	localmake "whiteLine [
+		[90 0] [-80 0.02] [10.5 1] [-110.5 0.035] [0.035048]
+	]
+	localmake "whiteShape [0 0.16
+		pathMirror :whiteLine
+	]
+	setFillColor "black
+	setPenColor "black
+	setPenSize :height * :thicknessFactor
+	setLineJoinStyle "round
+	jumpForward :height / 2
+	repeat 4 [
+		drawArcLineShape :outerShape :height1
+		right 90
+	]
+	setPenSize :height * 0.01
+	setPenColor "white
+	setFillColor transparent
+	repeat 4 [
+		drawArcLineShape :outerShape :height1
+		right 90
+	]
+	setPenSize 0
+	setFillColor "white
+	repeat 4 [
+		drawArcLineShape :whiteShape :height
+		right 90
+	]
+
+	; I couldn't see the core clearly in the photo so this is
+	; 90% guess work and imagining what could look good.
+	setFillColor "gold
+	repeat 10 [
+		localmake "radiusOffset :height * 0.015 * repRatio
+		localmake "cornerRadius :height * 0.03 - :radiusOffset
+		localmake "cornerRadius2 :cornerRadius * 0.8
+		localmake "radiusOffset2 :radiusOffset * 0.8
+		setFillColor mix "gold "#600 repRatio
+		repeat 2 [
+			roundRect :height * 0.24 - :radiusOffset2 * 2 :cornerRadius * 2 :cornerRadius
+			right 45
+			roundRect :height * 0.19 - :radiusOffset2 * 2 :cornerRadius2 * 2 :cornerRadius2
+			right 45
+		]
+	]
+	setFillColor "#d00
+	repeat 2 [
+		rect :height * 0.1 :height * 0.02
+		right 90
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by a cross at the top of a holy staff
+; carried at
+; https://en.wikipedia.org/wiki/Eastern_Catholic_Churches#/media/File:Sviatoslav_Shevchuk.jpg
+to goldCross :height
+	localmake "oldState turtleState
+	localmake "thickness :height * 0.22
+	localmake "squareSize :height * 0.45
+	localmake "step :height * 0.155
+	stripes :height * 1.5 :height ["black]
+	jumpForward :height / 2
+	setPenSize 0
+	setFillColor "gold
+	roundRect :thickness :height :thickness / 2
+	jumpForward :height * 0.1
+	roundRect :height * 0.85 :thickness :thickness / 2
+	setPenColor fillColor
+	setPenSize :height * 0.04
+	setFillColor transparent
+	roundRect :squareSize :squareSize :height * 0.07
+	setFillColor "blue
+	setPenSize :height * 0.004
+	setPenColor "#4000
+	circle :height * 0.06
+	localmake "center pos
+	setFillColor "red
+	repeat 4 [
+		localmake "numReds ifelse repcount = 3 3 2
+		repeat :numReds [
+			jumpForward :step
+			circle :height * 0.045
+		]
+		jumpTo :center
+		right 90
+	]
+
+	setTurtleState :oldState
+end
+
+to getCurvedEndLine :len1 
+	localmake "line1 [
+		[0.03] [90 0] [:len1] [-20 0.2] [110 0] [0.0420615]
+	]
+	output combine :line1 reverse :line1
+end
+
+; Inspired by a shield on a sign at:
+; https://www.google.com/maps/@42.3019435,-82.9964669,3a,15y,163.22h,85.21t/data=!3m7!1e1!3m5!1srUCERI2sT3nr84hP4DNlhg!2e0!6shttps:%2F%2Fstreetviewpixels-pa.googleapis.com%2Fv1%2Fthumbnail%3Fcb_client%3Dmaps_sv.tactile%26w%3D900%26h%3D600%26pitch%3D4.7853005670390445%26panoid%3DrUCERI2sT3nr84hP4DNlhg%26yaw%3D163.22269359133122!7i16384!8i8192?entry=ttu&g_ep=EgoyMDI2MDcwNS4wIKXMDSoASAFQAw%3D%3D
+to byzantineCatholicShield :height
+	localmake "oldState turtleState
+	localmake "arc1 [19.987 1.0085]
+	localmake "line [
+		[90 0] [0.35] [90 0] [0.55] [40 0.35] :arc1
+	]
+	localmake "blueLine [
+		[59.99 0] [-19.987 1.0085] [-5 0.35] [-50 0] [-75 0.1] [0.07]
+		[90 0.05] [-90.003 0.03] [0.040122]
+	]
+	localmake "lowerBar [0 0.6
+		getCurvedEndLine 0.14
+	]
+	localmake "upperBar [0 0.77
+		getCurvedEndLine 0.1
+	]
+	setPenSize 0
+	setFillColor "#d00
+	drawArcLineShape [0 0
+		pathMirror reverse :line
+	] :height
+	setFillColor "white
+	drawArcLineShape [0 0.1
+		combine [[-90 0]] getCurvedEndLine 0.77
+	] :height
+	drawArcLineShape :lowerBar :height
+	drawArcLineShape :lowerBar -:height
+	drawArcLineShape :upperBar :height
+	drawArcLineShape :upperBar -:height
+
+	setFillColor "#00d
+	drawArcLineShape [0 0
+		pathMirror :blueLine
+	] :height
+	
+	setTurtleState :oldState
+end
+
+setScreenColor "#ddd
+make "height 100
+make "separation :height * 4
+jumpLeft :separation
+byzentineCross :height
+jumpRight :separation
+goldCross :height
+jumpRight :separation
+byzantineCatholicShield :height

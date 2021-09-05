@@ -1,0 +1,125 @@
+; Inspired by:
+; https://www.pinterest.ca/pin/421931058810509678/
+
+to diamondRow :width :height :numTriangles
+	localmake "oldState turtleState
+	localmake "wChange :width / :numTriangles
+	setPenSize 0
+	jumpLeft (:width - :wChange) * 0.5
+	right 90
+	repeat :numTriangles [
+		right 90
+		isoTriangle :wChange :height
+		left 90
+		jumpForward :wChange
+	]
+	setTurtleState :oldState
+end
+
+to diamond :size
+	localmake "oldState turtleState
+	localmake "width :size * 0.5
+	localmake "numLevels 8
+	localmake "maxTriangles :numLevels * 2
+	localmake "levelHeight :size * 0.5 / :numLevels
+	localmake "triangleWidth :width / :maxTriangles
+	setPenSize 0
+	jumpForward :levelHeight
+	repeat :numLevels [
+		localmake "numTriangles repcount
+		localmake "width_ :triangleWidth * :numTriangles
+		diamondRow :width_ :levelHeight :numTriangles
+		jumpForward :levelHeight
+	]
+	right 180
+	jumpForward :levelHeight
+	repeat :numLevels [
+		localmake "numTriangles :numLevels + 1 - repcount
+		localmake "width_ :triangleWidth * :numTriangles
+		diamondRow :width_ :levelHeight :numTriangles
+		jumpBackward :levelHeight
+	]
+	setTurtleState :oldState
+end
+
+to triplePiece :size
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "angle arcTan 4
+	localmake "angle1 90 + :angle
+	localmake "angle2 90 - :angle
+	localmake "len1 :size * 0.9
+	localmake "numLines 20
+	localmake "lineSpace :size / :numLines
+	setPenSize 0
+	polyStart
+	jumpForward :size
+	right :angle1
+	jumpForward :len1
+	localmake "lenScale (distance :oldPos) / :numLines 
+	polyEnd
+	setTurtleState :oldState
+	setPenSize 0
+	setFillColor "black
+	left 90
+	repeat :numLines [
+		localmake "slantedHeight (:numLines + 1 - repcount) * :lenScale
+		right :angle2
+		parallelogram :size * 0.005 :slantedHeight 30 - :angle2
+		left :angle2
+		jumpRight :lineSpace
+	]
+	setTurtleState :oldState
+end
+
+to triplePattern :size
+	localmake "angles 3
+	repeat :angles [
+		triplePiece :size
+		right 360 / :angles
+	]
+end
+
+to design :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "smallRadius :size * 0.8
+	localmake "radius1 :smallRadius * 0.5775
+	localmake "triplePatternSize :smallRadius * 0.27
+	localmake "numAngles 6
+	localmake "colorStops createPList2 [
+		[0 "white] [0.7 "white] [0.9 mix "white screenColor 0.08]
+		[1 screenColor]
+	]
+	setFillGradient createRadialGradient pos :size :colorStops
+	setPenSize 0
+	circle :size
+	setPenColor "black
+	setPenSize :size * 0.015
+	circle :size * 0.88
+
+	setFillColor "black
+	repeat :numAngles [
+		diamond :smallRadius
+		right 360 / :numAngles
+	]
+	jumpForward :smallRadius
+	right 90 + 180 / 6
+	repeat :numAngles [
+		diamond :smallRadius
+		jumpForward :smallRadius
+		right 360 / :numAngles
+	]
+	jumpTo :oldPos
+	setHeading :oldHeading + 180 / 6
+	repeat :numAngles [
+		jumpForward :radius1
+		right 180 / 3
+		triplePattern :triplePatternSize
+		jumpTo :oldPos
+	]
+	setHeading :oldHeading
+end
+
+setScreenColor "#222
+design 200

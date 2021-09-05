@@ -1,0 +1,66 @@
+// spriteTest.bas
+// Milestone 30 — SPRITE demo.
+// Moves a 🛸 sprite around the graphics canvas using arrow keys.
+// ESC quits.  Mirrors the structure of ascii bullet.bas exactly.
+
+// ── Canvas bounds (logical pixels, pBASIC origin top-left) ──────────────────
+var sx : Int = 630
+var sy : Int = 500
+var speed : Int = 18
+var xMin : Int = 32
+var xMax : Int = 1228
+var yMin : Int = 32
+var yMax : Int = 968
+
+var running : Int = 1
+var k$ : String = ""
+
+// ── Initial sprite declaration ───────────────────────────────────────────────
+// SPRITE(id, x, y, rotation, scale, hidden, alpha, imageURL)
+// scale 2.0 = double size so the emoji is easy to see
+SPRITE(1, 630, 500, 0, 2.0, 1, 1.0, "@🛸")
+
+cls
+print "spriteTest: Arrow keys move 🛸  ESC to quit. "
+
+// ── Game loop (called by TIMER at 1/30 s) ────────────────────────────────────
+func gameLoop() {
+    k$ = INKEY$
+    
+    locate 1,70
+    if k$ == "^U" then print "UP    "
+    if k$ == "^D" then print "DOWN  "
+    if k$ == "^L" then print "LEFT  "
+    if k$ == "^R" then print "RIGHT "
+    
+    if k$ == "ESC" then running = 0
+	
+    if k$ == "^U" then sy = sy - speed
+    if k$ == "^D" then sy = sy + speed
+    if k$ == "^L" then sx = sx - speed
+    if k$ == "^R" then sx = sx + speed
+
+    // Clamp to canvas bounds
+    if sx < xMin then sx = xMin
+    if sx > xMax then sx = xMax
+    if sy < yMin then sy = yMin
+    if sy > yMax then sy = yMax
+
+    // Move the sprite — only x and y change; other params are omitted (sentinels)
+    SPRITE(1, sx, sy, , , , , )
+
+    if running == 0 then timeroff
+}
+
+// Start gameLoop Timer
+timer 0.125 gameLoop
+timeron
+
+// Keep alive until ESC
+while (running == 1) {
+}
+
+// Clean exit
+SPRITE(1, , , , , 0, , )
+print ""
+print "Goodbye!"
