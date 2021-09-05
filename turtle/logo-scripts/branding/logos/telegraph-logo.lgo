@@ -1,0 +1,66 @@
+; Inspired by logo at
+; https://www.youtube.com/@telegraph
+to telegraphLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "squareSize :height * cos 45
+	localmake "topArcsInfo [
+		[-1 1] [-77 0.065] [-18 0.18]
+		[-12 0.4] [12 0.4] [20 0.22]
+		[70 0.065] [88 0.08] [170 0.005]
+		[-80 0.022] [-83 0.027] [-10 0.3]
+		[-8 0.5] [23 0.25] [80 0.12] [20.6 0.2]
+		[165.4 0.005143303]
+	]
+	localmake "crescentArcsInfo [
+		[-58 0] [-163 0.005] [189 0.1525] [-163 0.005]
+		[-100 0.197] [-100 0.17] [-29 0.2065]
+	]
+	localmake "centralArcsInfo [
+		[-60 0] [-160 0.004] [40 0.052]
+		[1 3] [-35 0.05] [-22 0.12] [-10 0.4]
+		[-175 0.003] [60 0.03] [1 4.8] [-60 0.009]
+	]
+	jumpForward :height / 2
+	setPenSize 0
+	setFillColor "black
+	circle :height / 2
+
+	left 45
+	setFillColor "white
+	rect :squareSize :squareSize
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpRight :height * 0.0823
+	jumpForward :height * 0.3264
+	stripes :height * 0.007 :height * 0.3 ["black]
+
+	jumpTo :oldPos
+	jumpLeft :height * 0.1983
+	jumpForward :height * 0.5345
+	setFillColor "black
+	polyStart
+	arcsLeft :topArcsInfo :height
+	polyEnd
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.6019
+	jumpLeft :height * 0.0761
+	polyStart
+	arcsLeft :crescentArcsInfo :height
+	polyEnd
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpRight :height * 0.0468
+	jumpForward :height * 0.5706
+	polyStart
+	arcsLeft :centralArcsInfo :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+telegraphLogo 100

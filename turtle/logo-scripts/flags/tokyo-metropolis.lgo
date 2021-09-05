@@ -1,0 +1,42 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Symbols_of_Tokyo#/media/File:Flag_of_Tokyo_Metropolis.svg
+to tokyoMetropolisFlag :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "width :height * 3 / 2
+	localmake "thickness :height * 0.055
+	localmake "mainFlagColor "#4b0082
+	localmake "angle 45.5
+	localmake "size1 :height * 0.3065
+	localmake "size2 :thickness  / 2 / sin :angle
+	stripes :width :height [:mainFlagColor]
+	jumpForward :height / 2
+	setPenColor "white
+	setFillColor "white
+	localmake "center pos
+	setPenSize 0
+	repeat 6 [	
+		setHeading :oldHeading + repcount * 360 / 6
+		jumpLeft :thickness / 2
+		polyStart
+		jumpForward :size1
+		right :angle
+		jumpForward :size2
+		right 180 - :angle * 2
+		jumpForward :size2
+		right :angle
+		jumpForward :size1
+		polyEnd
+		jumpTo :center
+	]
+	setPenSize :thickness
+	setFillColor :mainFlagColor
+	circle :height * 0.13885
+	setPenSize 0
+	setFillColor "white
+	circle :thickness
+	setTurtleState :oldState
+end
+
+setScreenColor "#eee
+tokyoMetropolisFlag 100
