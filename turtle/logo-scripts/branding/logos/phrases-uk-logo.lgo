@@ -1,0 +1,22 @@
+; Inspired by logo at:
+; https://www.phrases.org.uk/
+to phrasesUKLogo :height
+	localmake "oldState turtleState
+	localmake "numSquares 4
+	stripes :height :height ["white]
+	jumpForward :height / 2
+	setLineJoinStyle "miter
+	setPenColor "#000080
+	setPenSize :height / 4 / :numSquares
+	setFillColor transparent
+	repeat :numSquares [
+		localmake "size penSize * 4 * repcount - penSize
+		rect :size :size
+	]
+	setTurtleState :oldState
+end
+
+; make the white in the logo stand out by
+; darkening the screen color.
+setScreenColor "#ddd
+phrasesUKLogo 100

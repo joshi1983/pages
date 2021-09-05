@@ -1,0 +1,54 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/BlackBerry#/media/File:Blackberry_Logo.svg
+to blackberryLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "columns [
+		[0 2] [0 3] [0.6 2]
+	]
+	localmake "angle1 10.5
+	localmake "arcRadius :height * 0.121
+	localmake "arcsInfo [
+		[25 1.6] [70 0.81] [30 1.11]
+		[30 0.9] [25 2.2]
+	]
+	localmake "width1 :height * 0.2
+	localmake "height1 (:height - :arcRadius * 2) / 2
+	localmake "xOffset :height1 * tan :angle1
+	localmake "width2 :height * 0.5
+	setPenSize 0
+	setFillColor "black
+	jumpForward :height
+	jumpLeft :height * 0.5861
+	repeat count :columns [
+		localmake "column item repcount :columns
+		localmake "offset :height1 * first :column
+		localmake "numRepeats last :column
+		localmake "columnTop pos
+		jumpBackward :height
+		jumpLeft :height * :xOffset / :height1
+		localmake "columnPos2 pos
+		jumpTo :columnTop
+		setHeading :oldHeading
+		jumpBackward :offset
+		jumpLeft :offset * :xOffset / :height1
+		repeat :numRepeats [
+			localmake "pos1 pos
+			polyStart
+			jumpRight :width1
+			right 90
+			arcsRight :arcsInfo :arcRadius
+			jumpForward distanceToLine :columnTop :columnPos2
+			polyEnd
+			jumpTo :pos1
+			setHeading :oldHeading
+			jumpBackward :height1
+			jumpLeft :xOffset
+		]
+		jumpTo :columnTop
+		jumpRight :width2
+	]
+	setTurtleState :oldState
+end
+
+blackberryLogo 100

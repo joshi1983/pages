@@ -1,0 +1,34 @@
+; Implemented to be similar to:
+; https://processing.org/reference/trim_.html
+to pTrim :value
+	if list? :value [
+		localmake "result []
+		repeat count :value [
+			queue2 "result pTrim item repcount :value
+		]
+		output :result
+	]
+	if string? :value [
+		localmake "whitespaces [9 10 11 12 13 32]
+		localmake "startIndex 1
+		repeat count :value [
+			localmake "ch item repcount :value
+			localmake "charCode ascii :ch
+			localmake "startIndex repcount
+			if -1 = indexOf :charCode :whitespaces [
+				break
+			]
+		]
+		if :startIndex = count :value [
+			output ''
+		]
+		for ["i count :value :startIndex + 1 -1] [
+			localmake "ch item :i :value
+			localmake "charCode ascii :ch
+			if -1 = indexOf :charCode :whitespaces [
+				output substring :value :startIndex :i
+			]
+		]
+	]
+	output :value
+end

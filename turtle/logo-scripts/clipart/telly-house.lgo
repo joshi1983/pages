@@ -1,0 +1,80 @@
+; Inspired by a house drawing in a manual for
+; Telly Turtle, a game on the Colecovision gaming console
+; The manual was published in 1984.
+; The similar house drawing is found on page 14.
+; You can see an electronic version of the manual at: 
+; https://archive.org/details/telly-turtle-manual-colecovision-adam-1984/page/14/mode/2up
+to tellyHouse :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "mainFloorHeight :height * 0.43
+	localmake "doorHeight :height * 0.345
+	localmake "doorWidth :height * 0.18
+	localmake "roofWidth :height * 1.0313604
+	setLineCap "butt
+
+	; Draw the chimney.
+	setPenColor "black
+	setPenSize :height * 0.087
+	jumpLeft :height * 0.2
+	forward :height * 0.966
+	
+	; Draw main floor.
+	jumpTo :oldPos
+	setPenSize :height * 0.045
+	jumpForward (penSize + :mainFloorHeight) / 2
+	setFillColor "white
+	rect :height * 0.84 :mainFloorHeight
+
+	; Draw roof.
+	jumpTo :oldPos
+	jumpForward :mainFloorHeight + penSize / 2
+	isoTriangle :roofWidth :roofWidth / 2
+
+	; Draw door.
+	jumpTo :oldPos
+	jumpForward (penSize + :doorHeight) / 2
+	rect :doorWidth :doorHeight
+
+	; White out the bottom of the door.
+	jumpTo :oldPos
+	stripes :doorWidth - penSize :doorHeight ["white]
+
+	setTurtleState :oldState
+end
+
+; Draws a soft grassy pattern
+to drawGrassBackward :width
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "grassColor "green
+
+	; As cutOffRatio approaches 1,
+	; the grass approaches 0 height.
+	localmake "cutOffRatio 0.98
+
+	; Calculate the circular gradient's width such that the cutOffRatio 
+	; corresponds with the cut's height.
+	localmake "angle arcCos :cutOffRatio
+	localmake "radius :width / 2 / sin :angle
+	localmake "colorStops createPList2 [
+		[0 :grassColor] [:cutOffRatio :grassColor] [1 mix :grassColor transparent 0]
+	]
+	jumpForward :radius * :cutOffRatio
+	localmake "center pos
+	setFillGradient createRadialGradient pos :radius :colorStops
+
+	; Fill the cut off the circle.
+	jumpTo :oldPos
+	jumpRight :width / 2
+	setHeading (towards :center) - 90
+	setPenSize 0
+	polyStart
+	arcRight 2 * :angle :radius
+	polyEnd	
+	setTurtleState :oldState
+end
+
+setScreenColor "#eef
+tellyHouse 100
+drawGrassBackward 300

@@ -1,0 +1,43 @@
+; Inspired by logo in:
+; https://www.youtube.com/watch?v=Hv6EMd8dlQk
+to blindrLogo :height
+	localmake "oldState turtleState
+	localmake "arcAngle1 19
+	localmake "angle1 46.5
+	localmake "angle2 64
+	localmake "angle3 144
+	localmake "radius :height / 2
+	localmake "radius1 0.02
+	localmake "thickness (cos :angle2) - (cos :angle2 + :arcAngle1) +
+		:radius1 * (1 + sin 90 - :angle2 - :arcAngle1)
+	localmake "len1 1.84
+	localmake "thickness2 :thickness -
+		:radius1 * (1 + cos 180 - :angle3)
+	localmake "len2 :thickness2 / cos (:angle3 - 90)
+	localmake "arcs1 [[90 0] [:angle1 1] [180 - :angle1 :radius1]
+		[(1 - :radius1) * (sin :angle1)]]
+	localmake "len3 :len1
+	localmake "shapes [
+		[0 1 
+			combine :arcs1 reverse :arcs1
+		]
+		[-sin :angle2 cos :angle2
+			[[90 + :angle2 0] [:arcAngle1 1]
+			[180 - :angle2 - :arcAngle1 :radius1]
+			[:len1] [:angle3 :radius1] [:len2]
+			[180 - :angle3 :radius1] [:len3]]
+		]
+	]
+	setPenSize 0
+	setFillColor "red
+	jumpForward :radius
+	drawArcLineShapes :shapes :radius
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+blindrLogo 100
+make "height 100.5
+jumpLeft :height * 0.025
+jumpBackward :height * 0.005
+imageAlpha :height * 320 / 339 :height 'local://blindr-logo.png' 0.5

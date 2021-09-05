@@ -1,0 +1,137 @@
+to javascriptInfoRadioTower :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "circleOuterRadius :height * 0.1463
+	localmake "thickness1 :height * 0.1
+	localmake "bottomOffset :height * 0.223
+	localmake "cornerRadius :height * 0.0355
+	localmake "cornerRadius2 :height * 0.0365
+	localmake "angle1 16.25
+	localmake "angle2 90 - :angle1
+	localmake "angle3 1.6
+	localmake "innerLength1 :height * 0.7 / cos :angle1
+	jumpForward :height - :circleOuterRadius
+	setPenSize :thickness1
+
+	; Draw the top ring.
+	setFillColor transparent
+	circle :circleOuterRadius - :thickness1 / 2
+	setPenSize 0
+	jumpTo :oldPos
+	setFillColor penColor
+
+	; Draw the 2 slanted outer beams.
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		jumpLeft :sign * :bottomOffset
+		setHeading :oldHeading + :sign * 90
+		polyStart
+		arcLeft :sign * :angle2 :cornerRadius
+		jumpForward :innerLength1
+		jumpLeft :sign * :height * 0.102
+		right :sign * :angle3
+		jumpBackward :height * 0.74214564
+		right 180
+		arcLeft :sign * (90 + :angle1 + :angle3) :cornerRadius2
+		polyEnd
+		jumpTo :oldPos
+		setHeading :oldHeading
+	]
+	
+	; Draw the zigzag pattern.
+	setLineCap "round
+	setLineJoinStyle "round
+	jumpRight :height * 0.2
+	jumpForward :height * 0.144
+	setPenSize :height * 0.0747
+	left 73.8
+	forward :height * 0.373
+	right 137.5
+	forward :height * 0.3235
+	left 127.5
+	forward :height * 0.25
+
+	setTurtleState :oldState
+end
+
+to lightningBolt :length :xScale
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "pointsInfo [
+		[-0.01275 0.00132] [-0.02782 0.23161] [-0.07965 0.18274]
+		[-0.0756 0.4141] [-0.13641 0.42565] [-0.004767 1]
+		[0.007937 0.998611] [0.029314 0.689115] [0.07327 0.72627]
+		[0.062914 0.451228] [0.12042212 0.45248262]
+	]
+	localmake "points []
+	repeat count :pointsInfo [
+		localmake "p item repcount :pointsInfo
+		jumpRight :xScale * :length * first :p
+		jumpForward :length * last :p
+		queue2 "points pos
+		jumpTo :oldPos
+	]
+	polygon :points
+	setTurtleState :oldState
+end
+
+to drawLightningBolts :logoHeight :timeRatio
+	localmake "angle1 26
+	localmake "boltsInfo [
+		[-1 0.9 -20 0.13 :angle1]
+		[-1 1 -15 0.2 45]
+		[1 1 15 0.2 :angle1]
+		[1 0.9 20 0.13 0]
+	]
+	localmake "distanceOffset :logoHeight * 0.3 * :timeRatio
+	localmake "boltLength :logoHeight * 0.221261
+	jumpForward :logoHeight * 0.3
+	localmake "center pos
+	setPenSize 0
+	repeat count :boltsInfo [
+		left (last (item repcount :boltsInfo)) / 2
+	]
+	setFillColor mix fillColor transparent 1 - :timeRatio * 0.9
+	repeat count :boltsInfo [
+		localmake "heading1 heading
+		localmake "boltInfo item repcount :boltsInfo
+		localmake "sign first :boltInfo
+		jumpForward :distanceOffset
+		jumpForward :logoHeight * (item 4 :boltInfo)
+		right item 3 :boltInfo
+		lightningBolt :boltLength * (item 2 :boltInfo) :sign
+		setHeading :heading1 + last :boltInfo
+		jumpTo :center
+	]
+end
+
+; Inspired by logo at
+; https://javascript.info
+to javascriptInfoLogo :height :timeRatio
+	localmake "oldState turtleState
+	setPenSize 0
+	setPenColor "#BE1622
+	setFillColor "#BE1622
+	javascriptInfoRadioTower :height * 0.46518
+	drawLightningBolts :height :timeRatio
+	setTurtleState :oldState
+end
+
+javascriptInfoLogo 100 animation.clampedTimeRatio
+
+to animation.snapshotstyle
+	output createPList2 [
+		["zoom.scale 5]
+		["position.y 50]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 1.5
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

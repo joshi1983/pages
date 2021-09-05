@@ -1,0 +1,179 @@
+to drawStrings :colors :step :offsets :numSteps :offsetRange :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	jumpLeft :step * int :numSteps / 2
+	jumpForward :height / 2
+	localmake "leftPos pos
+	repeat count :colors [
+		setPenColor item repcount :colors
+		localmake "offset repcount * :offsetRange / 8
+		if odd? repcount [
+			localmake "offset :offset + :offsetRange / 8 * 0.15
+		]
+		jumpTo :leftPos
+		repeat :numSteps + 1 [
+			localmake "newOffset item repcount :offsets
+			localmake "newOffset :newOffset + :offset
+			ifelse repcount = 1 [
+				jumpForward :newOffset
+			] [
+				localmake "offsetDelta :newOffset - :oldOffset
+				localmake "angle arcTan :offsetDelta / :step
+				setHeading :oldHeading + 90 - :angle
+				forward :step / cos :angle
+			]
+			localmake "oldOffset :newOffset
+		]
+		setHeading :oldHeading
+		jumpBackward :newOffset
+		repeat :numSteps + 1 [
+			localmake "newOffset item repcount :offsets
+			localmake "newOffset :newOffset + :offset
+			ifelse repcount = 1 [
+				jumpBackward :newOffset
+			] [
+				localmake "offsetDelta :newOffset - :oldOffset
+				localmake "angle arcTan :offsetDelta / :step
+				setHeading :oldHeading - 90 - :angle
+				forward :step / cos :angle
+			]
+			localmake "oldOffset :newOffset
+		]
+
+		setHeading :oldHeading
+	]
+	setTurtleState :oldState
+end
+
+to drawBlueStrings :step :numSteps :numStrings :height 
+	localmake "offsetRange :height * 0.08
+	localmake "offsets []
+	repeat :numSteps + 1 [
+		localmake "val :height * 0.095
+		localmake "index repcount - int :numSteps / 2
+		ifelse 2 > abs :index - 1 [
+			localmake "val :height * 0.05
+			if :index = 1 [
+				localmake "val -:height * 0.09 - :offsetRange
+			]
+		] [
+			ifelse :index < 0 [
+				localmake "index 1 - :index
+			] [
+				localmake "index 3 + :index
+			]
+			localmake "interval remainder :index 4
+			if 2 <= :interval [
+				localmake "val -:val - :offsetRange
+			]
+		]
+		queue2 "offsets :val
+	]
+	localmake "colors duplicate "#04f :numStrings
+	drawStrings :colors :step :offsets :numSteps :offsetRange :height
+end
+
+to drawBrownStrings :step :numSteps :numStrings :height 
+	localmake "offsetRange :height * 0.08
+	localmake "offsets []
+	repeat :numSteps + 1 [
+		localmake "val :height * 0.22
+		if odd? repcount [
+			localmake "val :val + :height * 0.17
+		]
+		if repcount = 1 + int :numSteps / 2 [
+			localmake "val :val - :height * 0.08
+		]
+		queue2 "offsets :val
+	]
+	localmake "colors duplicate "#9E5933 :numStrings
+	drawStrings :colors :step :offsets :numSteps :offsetRange :height
+end
+
+to drawGrayStrings :step :numSteps :numStrings :height 
+	localmake "offsetRange :height * 0.08
+	localmake "offsets []
+	repeat :numSteps + 1 [
+		localmake "val :height * 0.23
+		if even? repcount [
+			localmake "val :val + :height * 0.1
+		]
+		if repcount = 1 + int :numSteps / 2 [
+			localmake "val :val - :height * 0.08
+		]
+		queue2 "offsets :val
+	]
+	localmake "colors duplicate "#938080 :numStrings
+	setItem (int (count :colors) / 2) "colors  "brown
+	drawStrings :colors :step :offsets :numSteps :offsetRange :height
+end
+
+to drawLightGrayStrings :step :numSteps :numStrings :height 
+	localmake "offsetRange :height * 0.08
+	localmake "offsets []
+	repeat :numSteps + 1 [
+		localmake "val 0
+		if even? repcount [
+			localmake "val :val + :height * 0.25
+		]
+		if repcount = 1 + int :numSteps / 2 [
+			localmake "val :height * 0.35
+		]
+		queue2 "offsets :val
+	]
+	localmake "colors duplicate "#B0B0B0 :numStrings
+	drawStrings :colors :step :offsets :numSteps :offsetRange :height
+end
+
+to drawRedWhiteStripeStrings :step :numSteps :numStrings :height 
+	localmake "offsetRange :height * 0.08
+	localmake "offsets []
+	localmake "middleIndex 1 + int :numSteps / 2
+	localmake "maxOffset :height * 0.16
+	repeat :numSteps + 1 [
+		localmake "val 0
+		if odd? repcount [
+			localmake "val :maxOffset
+		]
+		localmake "middleOffset abs repcount - :middleIndex
+		if :middleOffset < 2 [
+			localmake "val :maxOffset / 2 * :middleOffset
+		]
+		queue2 "offsets :val
+	]
+	localmake "colors []
+	repeat :numStrings [
+		queue2 "colors ifelse 2 > remainder repcount + 3 4 "brown "#B0B0B0 
+	]
+	drawStrings :colors :step :offsets :numSteps :offsetRange :height
+end
+
+; Inspired by
+; https://www.facebook.com/photo?fbid=10212586217287795
+to rojCraftGraph :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "step :height * 0.24
+	localmake "numSteps 40
+	localmake "numStrings 8
+	localmake "width :step * :numSteps
+	localmake "blackStripeThickness :height * 0.01
+	stripes :width :height ["#052445]
+	setPenSize :height * 0.005
+	drawBrownStrings :step :numSteps :numStrings :height
+	drawLightGrayStrings :step :numSteps :numStrings :height
+	drawGrayStrings :step :numSteps :numStrings :height
+	drawRedWhiteStripeStrings :step :numSteps :numStrings :height
+	drawBlueStrings :step :numSteps :numStrings :height
+
+	jumpTo :oldPos
+	jumpLeft :step * int :numSteps / 2
+	repeat :numSteps [
+		stripes :blackStripeThickness :height ["black]
+		jumpRight :step
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+rojCraftGraph 100

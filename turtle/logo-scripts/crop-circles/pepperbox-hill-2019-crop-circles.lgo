@@ -1,0 +1,69 @@
+make "darkColor "#780
+
+to drawTwistedArms :centralRadius :thickness :arcScale
+	localmake "oldHeading heading
+	localmake "center pos
+	repeat 6 [
+		setHeading :oldHeading + repcount * 360 / 6
+		jumpRight :centralRadius - :thickness / 2
+		arcLines [[-180 1] [180 1]] :arcScale
+		jumpTo :center
+	]
+end
+
+; Inspired by images at:
+; http://cropcircleconnector.com/2019/pepperbox/pepperbox2019a.html
+; These crop circles were found in
+; Pepperbox Hill, Windwhistle Lane, nr West Grimstead, Wiltshire
+; It was reported on July 23, 2019
+to pepperboxHill2019CropCircles :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "lightColor "#ef8
+	localmake "outerCircleRadius :height * 0.118
+	localmake "thickness :height * 0.02
+	localmake "innerCircleRadius :outerCircleRadius - :thickness * 2
+	localmake "centralRadius :height * 0.075
+	localmake "gap (:height / 2 - :outerCircleRadius) / cos 180 / 6
+	localmake "arcScale (:gap - :centralRadius - :innerCircleRadius + :thickness / 2) / 4
+	jumpForward :height / 2
+	setLineCap "round
+	localmake "center pos
+	setFillColor transparent
+	setPenSize :thickness
+	setPenColor :lightColor
+	setPenSize :thickness * 4
+	drawTwistedArms :centralRadius :thickness :arcScale
+	right 180 / 6
+	setFillColor :darkColor
+	setPenSize :thickness
+	setPenColor :lightColor
+	repeat 6 [
+		jumpForward :gap
+		circle :outerCircleRadius - penSize / 2
+		jumpTo :center
+		right 360 / 6
+	]
+	setPenColor :darkColor
+	setPenSize :thickness * 2
+	setHeading :oldHeading
+	drawTwistedArms :centralRadius :thickness :arcScale
+	setPenColor :lightColor
+	setPenSize :thickness
+	drawTwistedArms :centralRadius :thickness :arcScale
+	setHeading :oldHeading + 180 / 6
+	repeat 6 [
+		jumpForward :gap
+		circle :innerCircleRadius
+		jumpTo :center
+		right 360 / 6
+	]
+
+	setPenSize 0
+	setFillColor :lightColor
+	circle :centralRadius
+	setTurtleState :oldState
+end
+
+setScreenColor :darkColor
+pepperboxHill2019CropCircles 100

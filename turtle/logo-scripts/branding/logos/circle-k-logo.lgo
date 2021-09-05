@@ -1,0 +1,26 @@
+make "redColor "#ee2e24
+
+; Inspired by:
+; https://en.wikipedia.org/wiki/Circle_K#/media/File:Circle_K_logo_2015.svg
+to circleKLogo :height
+	localmake "oldState turtleState
+	localmake "radius :height / 2
+	jumpForward :height / 2
+	setPenSize 0
+	setFillColor :redColor
+	circle :height / 2
+	setFillColor "white
+	right 127.7
+	jumpForward :radius
+	left 90
+	polyStart
+	arcLines [[340.2 1] [95.3 0] [1.016] [142.2 0] [0.5085]
+	[-90 0] [0.3513] [-90 0] [1.102] [-90 0] [0.3513]
+	[-90 0] [0.507] [144.5 0] [0.6232] [-54.5 0] [0.4025]
+	[-126.4 0] [0.659]] :radius
+	polyEnd
+	setTurtleState :oldState
+end
+
+setScreenColor :redColor
+circleKLogo 100

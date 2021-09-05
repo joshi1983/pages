@@ -1,0 +1,105 @@
+; Inspired by:
+; https://www.youtube.com/watch?v=WEUloPdIfRk
+; Code translated from Python to WebLogo
+
+; drawWindow draws a square window of size 50 by 50.
+; Since the window is drawn more than once, 
+; defining a procedure reduces code-duplication.
+to drawWindow
+	localmake "oldPos pos
+	setPenColor "black
+	setFillColor "white
+	; draw white background for window.
+	polyStart
+	repeat 4 [
+		forward 50
+		left 90
+	]
+	polyEnd
+
+	; draw cross on window.
+	jumpForward 25
+	left 90
+	forward 50
+	jumpTo :oldPos
+	jumpForward 25
+	right 90
+	forward 50
+end
+
+to fillRect :width :height
+	polyStart
+	repeat 2 [
+		forward :width
+		left 90
+		forward :height
+		left 90
+	]
+	polyEnd
+end
+
+setScreenColor "green
+
+; Sky
+jumpTo [-400 -100]
+right 90
+setColors "deepskyblue
+fillRect 800 500
+
+; Sun
+jumpTo [-320 225]
+setFillColor "yellow
+setPenColor "orange
+circle 35
+
+; Cloud
+jumpTo [200 200]
+setColors "white
+circle 25
+jumpTo [220 240]
+circle 25
+jumpTo [230 215]
+circle 25
+jumpTo [180 225]
+circle 25
+
+; House
+jumpTo [-100 -100]
+setPenSize 3
+setPenColor "chocolate
+setFillColor "orange
+fillRect 170 170
+
+; Chimney
+jumpTo [20 130]
+setPenColor "brown
+setFillColor "firebrick
+fillRect 40 100
+
+; Roof
+jumpTo [-127 70]
+polyStart
+repeat 3 [
+	forward 225
+	left 120
+]
+polyEnd
+
+; Window 1
+jumpTo [0 0]
+drawWindow
+
+; Window 2
+jumpTo [-80 0]
+drawWindow
+
+; Door
+jumpTo [-40 -97]
+setColors "red
+fillRect 50 80
+
+; Door Handle/knob
+jumpTo [-30 -60]
+setColors "black
+circle 5
+hideTurtle
