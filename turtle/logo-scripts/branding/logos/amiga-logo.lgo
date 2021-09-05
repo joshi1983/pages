@@ -1,0 +1,500 @@
+; Inspired by:
+; https://upload.wikimedia.org/wikipedia/commons/a/a7/Amiga_Logo_1985.svg
+; Referenced from:
+; https://en.wikipedia.org/wiki/Amiga
+make "letterShadowAngle 45
+make "letterATopArcRadiusRatio 0.04
+make "baseArcRadiusRatio 0.025
+make "shadowDistanceRatio 0.11
+
+to parallelogram2 :width :height :angle
+	jumpRight :width / 2
+	parallelogram :width :height / sin :angle 90 + :angle
+	jumpLeft :width / 2
+end
+
+to verticalGradient :height :color1 :color2
+	localmake "oldPos pos
+	localmake "colorStops createPList
+	setProperty "colorStops 0 :color1
+	setProperty "colorStops 1 :color2
+	jumpForward :height
+	setFillGradient createLinearGradient :oldPos pos :colorStops "pad
+	jumpTo :oldPos
+end
+
+to amigaCheckmark :checkmarkHeight
+	localmake "oldPos pos
+	localmake "thickness :checkmarkHeight * 0.16
+	localmake "thickness2 :checkmarkHeight * 0.135
+	localmake "angle1 55.2
+	localmake "size1 :checkmarkHeight * 0.401
+	localmake "outlineThickness :checkmarkHeight * 0.003
+	localmake "outlineThickness2 :checkmarkHeight * 0.002
+	localmake "outlineThicknessSlanted :outlineThickness / cos :angle1
+	localmake "outlineThickness2Slanted :outlineThickness2 / cos :angle1
+	localmake "size2 :size1 - :outlineThickness * 2
+	localmake "checkmarkHeight2 :checkmarkHeight - :outlineThickness2 * 2
+	jumpForward :size1
+	setPenSize 0
+	setFillColor "black
+	parallelogram2 :thickness :size1 :angle1
+	jumpBackward :outlineThickness
+	jumpRight :outlineThicknessSlanted
+	verticalGradient -:size2 "#146daf "#279e64
+	parallelogram2 :thickness2 :size2 :angle1
+
+	jumpTo :oldPos
+	jumpRight (:size1 + :checkmarkHeight) / tan :angle1
+	jumpForward :checkmarkHeight
+	setFillColor "black
+	parallelogram2 :thickness :checkmarkHeight -:angle1
+	jumpBackward :outlineThickness2
+	jumpRight :outlineThickness2Slanted
+	verticalGradient -:checkmarkHeight2 "#e13e28 "#e5e975
+	parallelogram2 :thickness2 :checkmarkHeight2 -:angle1
+	jumpTo :oldPos
+end
+
+to amigaCheckmarks :height
+	localmake "sideStep :height * 0.174
+	jumpRight :sideStep
+	repeat 2 [
+		amigaCheckmark :height
+		jumpLeft :sideStep
+	]
+end
+
+to drawBase :chordWidth :arcRadius
+	localmake "arcAngle1 11
+	localmake "largeArcRadius :chordWidth / 2 / sin (:arcAngle1 / 2)
+	arcLeft :letterShadowAngle + :arcAngle1 / 2 :arcRadius
+	arcRight :arcAngle1 :largeArcRadius
+	arcLeft :arcAngle1 / 2 + 180 - :letterShadowAngle :arcRadius
+end
+
+to drawBase2 :chordWidth :arcRadius
+	localmake "arcAngle1 11
+	localmake "largeArcRadius :chordWidth / 2 / sin (:arcAngle1 / 2)
+	arcRight :letterShadowAngle + :arcAngle1 / 2 :arcRadius
+	arcLeft :arcAngle1 :largeArcRadius
+	arcRight :arcAngle1 / 2 + 180 - :letterShadowAngle :arcRadius
+end
+
+to letterAForeground :fontHeight
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "baseArcRadius :fontHeight * :baseArcRadiusRatio
+
+	jumpForward :fontHeight * 0.11
+	jumpRight :fontHeight * 0.005
+	right 90 + :letterShadowAngle
+	polyStart
+	drawBase :fontHeight * 0.3 :baseArcRadius
+	arcLeft 33 :baseArcRadius
+	jumpForward :fontHeight * 0.05
+	arcRight 50 :fontHeight * 0.06
+	arcRight 20 :fontHeight * 0.04
+	arcRight 40 :fontHeight * 0.06
+	jumpForward :fontHeight * 0.18
+	setHeading :oldHeading
+	jumpRight :fontHeight * 0.257
+	right 177.5
+	jumpForward :fontHeight * 0.15
+	arcRight 11 :fontHeight * 0.18
+	arcRight 13 :fontHeight * 0.1
+	arcRight 45 :fontHeight * 0.042
+	arcRight 13 :fontHeight * 0.08
+	jumpForward :fontHeight * 0.048
+	arcLeft 124.4 :baseArcRadius
+	drawBase :fontHeight * 0.37 :baseArcRadius
+	arcLeft 33 :baseArcRadius
+	jumpForward :fontHeight * 0.02
+	arcRight 50 :fontHeight * 0.085
+	arcRight 25.3 :fontHeight * 0.04
+	jumpForward :fontHeight * 0.732
+	arcLeft 142 :fontHeight * 0.055
+	jumpForward :fontHeight * 0.165
+	left 37
+	jumpForward :fontHeight * 0.385
+	setHeading :oldHeading
+	jumpLeft :fontHeight * 0.28585
+	left 144.5
+	jumpForward :fontHeight * 0.3
+	arcRight 40 :fontHeight * 0.131
+	jumpForward :fontHeight * 0.05
+	arcLeft 120 :baseArcRadius
+	polyEnd
+	setPenColor fillColor
+	setPenSize :fontHeight * 0.054
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :fontHeight * 0.44
+	jumpRight :fontHeight * 0.33
+	right 35.5
+	forward :fontHeight * 0.6
+end
+
+to letterABackground :fontHeight
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "baseArcRadius :fontHeight * :baseArcRadiusRatio
+	localmake "shadowDistance :fontHeight * :shadowDistanceRatio
+	jumpRight :fontHeight * 0.083
+	jumpForward :fontHeight * 0.035
+	right 90 + :letterShadowAngle
+	polyStart
+	drawBase :fontHeight * 0.297 :baseArcRadius
+	jumpForward :shadowDistance
+	setHeading :oldHeading
+	jumpLeft :fontHeight * 0.095
+	right 18
+	arcRight 16 :fontHeight * 0.48
+	jumpForward :fontHeight * 0.078
+	setHeading :oldHeading
+	jumpRight :fontHeight * 0.295
+	jumpBackward :fontHeight * 0.21
+	jumpLeft :fontHeight * 0.15
+	jumpBackward :fontHeight * 0.011
+	right 90 + :letterShadowAngle
+	jumpForward :shadowDistance
+	drawBase :fontHeight * 0.375 :baseArcRadius
+	jumpForward :shadowDistance + :fontHeight * 0.009
+	setHeading :oldHeading - 3
+	jumpForward :fontHeight * 0.718
+	arcLeft :letterShadowAngle - 3 :fontHeight * :letterATopArcRadiusRatio
+	jumpForward :fontHeight * 0.13
+	setHeading :oldHeading
+	jumpLeft :fontHeight * 0.06
+	jumpBackward :fontHeight * 0.55
+	jumpLeft :fontHeight * 0.4
+	left 145
+	jumpForward :fontHeight * 0.37
+	setHeading :oldHeading
+	jumpLeft :fontHeight * 0.085
+	jumpBackward :fontHeight * 0.0261
+	polyEnd
+	setPenColor fillColor
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :fontHeight * 0.4
+	jumpRight :fontHeight * 0.353
+	setPenSize :fontHeight * 0.07
+	right 34.45
+	forward :fontHeight * 0.5
+end
+
+to letterGForeground :fontHeight
+	localmake "baseArcRadius :fontHeight * :baseArcRadiusRatio
+	jumpForward :fontHeight * 0.45
+	polyStart
+	arcRight 12 :fontHeight * 0.3
+	arcRight 30 :fontHeight * 0.4
+	arcRight 22 :fontHeight * 0.81
+	arcRight 25 :fontHeight
+	arcRight 12 :fontHeight * 0.65
+	arcRight 15 :fontHeight * 0.1
+	arcRight 32 :fontHeight * 0.04
+	arcRight 51 :fontHeight * 0.015
+	jumpForward :fontHeight * 0.174
+	arcRight 163 :fontHeight * 0.035
+	jumpForward :fontHeight * 0.07
+	arcLeft 10 :fontHeight * 0.2
+	arcLeft 74 :fontHeight * 0.042
+	arcLeft 15 :fontHeight * 0.2
+	arcLeft 40 :fontHeight * 0.6
+	arcLeft 42 :fontHeight * 0.51
+	arcLeft 35 :fontHeight * 0.3
+	arcLeft 40 :fontHeight * 0.18
+	arcLeft 17 :fontHeight * 0.31
+	arcLeft 72 :fontHeight * 0.05
+	jumpForward :fontHeight * 0.18
+	arcLeft 20 :fontHeight * 0.15
+	arcLeft 76 :fontHeight * 0.044
+	jumpForward :fontHeight * 0.045
+	arcRight 124 :baseArcRadius
+	drawBase2 :fontHeight * 0.405 :baseArcRadius
+	arcRight 35 :baseArcRadius
+	jumpForward :fontHeight * 0.05
+	arcLeft 40 :fontHeight * 0.06
+	arcLeft 24 :fontHeight * 0.16
+	jumpForward :fontHeight * 0.215
+	arcRight 55 :fontHeight * 0.045
+	arcRight 25 :fontHeight * 0.8
+	arcRight 25 :fontHeight * 0.55
+	arcRight 50 :fontHeight * 0.3
+	arcRight 12 :fontHeight * 0.35
+	polyEnd
+end
+
+to letterGBackground :fontHeight
+	localmake "oldHeading heading
+	localmake "baseArcRadius :fontHeight * :baseArcRadiusRatio
+	localmake "shadowDistance :fontHeight * :shadowDistanceRatio
+	jumpForward :fontHeight * 0.45
+	right 25.6
+	polyStart
+	arcRight 73 :fontHeight * 0.9
+	setHeading :oldHeading + 90 + :letterShadowAngle
+	jumpForward :shadowDistance
+	arcRight 64 :baseArcRadius
+	jumpForward :fontHeight * 0.168
+	arcRight 116 :fontHeight * 0.035
+	jumpForward :shadowDistance
+	setHeading :oldHeading
+	jumpForward :fontHeight * 0.1
+	left 90
+	arcLeft 90 :fontHeight * 0.545
+	arcLeft 30 :fontHeight * 0.3
+	left 45
+	jumpForward :fontHeight * 0.21
+	left 95
+	jumpForward :fontHeight * 0.273
+	localmake "angle 47
+	setHeading :oldHeading - :letterShadowAngle - :angle
+	arcRight :angle :baseArcRadius
+	jumpForward :shadowDistance
+	setHeading :oldHeading + 85.5
+	jumpForward :fontHeight * 0.4465
+	setHeading :oldHeading + 90 + :letterShadowAngle
+	jumpForward :shadowDistance
+	arcRight 130 :baseArcRadius
+	arcLeft 11 :fontHeight * 0.4
+	arcLeft 43 :fontHeight * 0.06
+	arcLeft 16 :fontHeight * 0.2
+	jumpForward :fontHeight * 0.21
+	arcRight 58 :fontHeight * 0.05
+	arcRight 30 :fontHeight * 0.8
+	arcRight 34 :fontHeight * 0.42
+	setHeading :oldHeading - :letterShadowAngle
+	jumpForward :shadowDistance
+	polyEnd
+end
+
+to letterIForeground :fontHeight
+	localmake "baseArcRadius :fontHeight * :baseArcRadiusRatio
+	jumpForward :fontHeight * 0.115
+	jumpRight :fontHeight * 0.001
+	right 90 + :letterShadowAngle
+	polyStart
+	drawBase :fontHeight * 0.401 :baseArcRadius
+	arcLeft 35 :baseArcRadius
+	jumpForward :fontHeight * 0.05
+	arcRight 60 :fontHeight * 0.03
+	arcRight 36 :fontHeight * 0.08
+	jumpForward :fontHeight * 0.648
+	arcRight 36 :fontHeight * 0.08
+	arcRight 23 :fontHeight * 0.03
+	jumpForward :fontHeight * 0.07
+	arcLeft 122 :baseArcRadius
+	drawBase :fontHeight * 0.38 :baseArcRadius
+	arcLeft 35 :baseArcRadius
+	jumpForward :fontHeight * 0.04
+	arcRight 82 :fontHeight * 0.03
+	arcRight 16 :fontHeight * 0.1
+	jumpForward :fontHeight * 0.65
+	arcRight 16 :fontHeight * 0.1
+	arcRight 43 :fontHeight * 0.05
+	jumpForward :fontHeight * 0.0735
+	arcLeft 110 :baseArcRadius
+	polyEnd
+end
+
+to letterIBackground :fontHeight
+	localmake "oldHeading heading
+	localmake "baseArcRadius :fontHeight * :baseArcRadiusRatio
+	localmake "shadowDistance :fontHeight * :shadowDistanceRatio
+	jumpRight :fontHeight * 0.085
+	jumpForward :fontHeight * 0.032
+	right 90 + :letterShadowAngle
+	polyStart
+	drawBase :fontHeight * 0.40 :baseArcRadius
+	jumpForward :shadowDistance
+	setHeading :oldHeading
+	jumpLeft :fontHeight * 0.01
+	setHeading :oldHeading + 0
+	arcRight 16 :fontHeight * 0.2
+	jumpForward :fontHeight * 0.61
+	arcRight 60 :fontHeight * 0.06
+	arcRight 5 :fontHeight * 0.4
+	arcLeft 20 :fontHeight * 0.1
+	arcLeft 106 :baseArcRadius
+	jumpForward :shadowDistance
+	setHeading :oldHeading - 100
+	jumpForward :fontHeight * 0.3
+	right 12
+	jumpForward :fontHeight * 0.124
+	setHeading :oldHeading + 90 + :letterShadowAngle
+	jumpForward :fontHeight * 0.15
+	right 60
+	jumpForward :fontHeight * 0.7
+	right 66
+	jumpForward :fontHeight * 0.153
+	polyEnd
+end
+
+to letterMForeground :fontHeight
+	localmake "baseArcRadius :fontHeight * :baseArcRadiusRatio
+	jumpForward :fontHeight * 0.115
+	jumpRight :fontHeight * 0.004
+	right 90 + :letterShadowAngle
+	polyStart
+	drawBase :fontHeight * 0.288 :baseArcRadius
+	arcLeft 35 :baseArcRadius
+	jumpForward :fontHeight * 0.05
+	arcRight 25 :fontHeight * 0.09
+	arcRight 50 :fontHeight * 0.04
+	arcRight 15 :fontHeight * 0.1
+	arcRight 9.4 :fontHeight * 0.2
+	jumpForward :fontHeight * 0.55
+	right 159.3
+	jumpForward :fontHeight * 0.637
+	arcLeft 144.3 :fontHeight * 0.046
+	jumpForward :fontHeight * 0.801
+	right 160.5
+	jumpForward :fontHeight * 0.58
+	arcRight 9 :fontHeight * 0.17
+	arcRight 40 :fontHeight * 0.045
+	arcRight 13 :fontHeight * 0.1
+	jumpForward :fontHeight * 0.06
+	arcLeft 121.5 :baseArcRadius
+	drawBase :fontHeight * 0.39 :baseArcRadius
+	arcLeft 28 :baseArcRadius
+	jumpForward :fontHeight * 0.04
+	arcRight 20 :fontHeight * 0.07
+	arcRight 40 :fontHeight * 0.04
+	arcRight 26.3 :fontHeight * 0.07
+	jumpForward :fontHeight * 0.648
+	arcRight 20 :fontHeight * 0.07
+	arcRight 30 :fontHeight * 0.04
+	arcRight 12 :fontHeight * 0.07
+	jumpForward :fontHeight * 0.062
+	arcLeft 171 :baseArcRadius
+	arcRight 10 :fontHeight * 1.52
+	arcLeft 61.3 :baseArcRadius
+	jumpForward :fontHeight * 0.655
+	right 145.1
+	jumpForward :fontHeight * 0.54
+	arcLeft 93 :fontHeight * 0.02
+	arcRight 10 :fontHeight * 1.7
+	arcLeft 174 :baseArcRadius
+	jumpForward :fontHeight * 0.035
+	arcRight 10 :fontHeight * 0.1
+	arcRight 78.5 :fontHeight * 0.04
+	arcRight 10 :fontHeight * 0.1
+	jumpForward :fontHeight * 0.64
+	arcRight 20 :fontHeight * 0.15
+	arcRight 10 :fontHeight * 0.09
+	arcRight 23 :fontHeight * 0.05
+	jumpForward :fontHeight * 0.078
+	arcLeft 174 :baseArcRadius
+	polyEnd
+end
+
+to letterMBackground :fontHeight
+	localmake "oldHeading heading
+	localmake "baseArcRadius :fontHeight * :baseArcRadiusRatio
+	localmake "shadowDistance :fontHeight * :shadowDistanceRatio
+	jumpForward :fontHeight * 0.04
+	jumpRight :fontHeight * 0.082
+	right 90 + :letterShadowAngle
+	polyStart
+	drawBase :fontHeight * 0.288 :baseArcRadius
+	jumpForward :shadowDistance
+	setHeading :oldHeading
+	jumpLeft :fontHeight * 0.065
+	left 10
+	arcRight 30.9 :fontHeight * 0.2
+	jumpForward :fontHeight * 0.382
+	setHeading :oldHeading + 177.8
+	jumpForward :fontHeight * 0.491
+	setHeading :oldHeading + 90 + :letterShadowAngle
+	jumpForward :shadowDistance
+	arcLeft 100.8 :fontHeight * :letterATopArcRadiusRatio
+	jumpForward :fontHeight * 0.7
+	right 160
+	jumpForward :fontHeight * 0.5
+	right 62
+	jumpForward :fontHeight * 0.155
+	setHeading :oldHeading + 90 + :letterShadowAngle
+	jumpForward :shadowDistance
+	drawBase :fontHeight * 0.39 :baseArcRadius
+	jumpForward :shadowDistance + :fontHeight * 0.003
+	setHeading :oldHeading + 2
+	arcRight 12 :fontHeight * 0.2
+	jumpForward :fontHeight * 0.62
+	arcRight 52 :fontHeight * 0.05
+	arcRight 20 :fontHeight * 0.1
+	arcLeft 20 :fontHeight * 0.0935
+	arcLeft 111 :baseArcRadius
+	jumpForward :shadowDistance
+	setHeading :oldHeading - 95
+	jumpForward :fontHeight * 0.3
+	left 50
+	jumpForward :fontHeight * 0.51
+	right 143.5
+	jumpForward :fontHeight * 0.348
+	arcLeft 43.5 :baseArcRadius
+	jumpForward :shadowDistance
+	setHeading :oldHeading - 5
+	jumpLeft :fontHeight * 0.339
+	setHeading :oldHeading + 90 + :letterShadowAngle
+	jumpForward :fontHeight * 0.13
+	setHeading :oldHeading - 160
+	jumpForward :fontHeight * 0.7
+	setHeading :oldHeading - 116
+	jumpForward :fontHeight * 0.1382
+	setHeading :oldHeading + 90 + :letterShadowAngle
+	jumpForward :fontHeight * 0.2
+	polyEnd
+end
+
+to drawBackgroundString :fontHeight :letterWidths :s
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	setFillColor "#898989
+	repeat count :s [
+		localmake "letter item repcount :s
+		localmake "procName (word "letter :letter "background)
+		localmake "pos1 pos
+		setPenSize 0
+		(invoke :procName :fontHeight)
+		jumpTo :pos1
+		setHeading :oldHeading
+		jumpRight :fontHeight * item repcount :letterWidths
+	]
+	setTurtleState :oldState
+end
+
+to drawForegroundString :fontHeight :letterWidths :s
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	setFillColor "#000
+	repeat count :s [
+		localmake "letter item repcount :s
+		localmake "procName (word "letter :letter "foreground)
+		localmake "pos1 pos
+		setPenSize 0
+		(invoke :procName :fontHeight)
+		jumpTo :pos1
+		setHeading :oldHeading
+		jumpRight :fontHeight * item repcount :letterWidths
+	]
+	setTurtleState :oldState
+end
+
+to amigaLogo :height
+	localmake "oldPos pos
+	localmake "fontHeight :height * 0.534
+	localmake "widths [0.922 1.19 0.554 0.773 0.5]
+	jumpLeft :height * 1.001
+	drawBackgroundString :fontHeight :widths "amiga
+	drawForegroundString :fontHeight :widths "amiga
+
+	jumpTo :oldPos
+	jumpForward :height * 0.0193
+	jumpLeft :height * 1.703
+	amigaCheckmarks :height * 0.9807
+end
+
+amigaLogo 100

@@ -1,0 +1,220 @@
+; These spirals are mostly inspired by a few different spiral images on pinterest.
+
+to spiral1Arc :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	setPenSize 0
+	left 57.5
+	jumpForward :size * 0.23
+	right 65
+	setFillColor "black
+	polyStart
+	arcRight 100 :size * 0.47
+	arcRight 50 :size * 0.6
+	arcRight 40 :size * 0.9
+	arcRight 25 :size * 0.7
+	arcRight 40 :size * 0.9
+	right 180
+	arcLeft 32 :size * 0.6
+	arcLeft 30 :size
+	arcLeft 50 :size * 0.62
+	arcLeft 25 :size * 0.65
+	arcLeft 98 :size * 0.465
+	polyEnd
+	; restore old position and heading.
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+; Inspired by
+; https://www.pinterest.ca/pin/34410384639594389/
+to spiral1 :size
+	localmake "numArcs 6
+	repeat :numArcs [
+		spiral1Arc :size
+		right 360 / :numArcs
+	]
+end
+
+to spiral2Arc :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	right 22
+	forward :size * 0.21
+	left 30
+	polyStart
+	arcLeft 65 :size * 0.4
+	arcLeft 55 :size * 0.83
+	left 97
+	forward :size * 0.22
+	left 95
+	arcRight 55 :size * 0.65
+	arcRight 68 :size * 0.371
+	polyEnd
+	; restore old position and heading.
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+; Inspired by spiral at upper right in
+; https://www.pinterest.ca/pin/848365648574120685/
+to spiral2 :size
+	localmake "numArcs 10
+	repeat :numArcs [
+		spiral2Arc :size
+		right 360 / :numArcs
+	]
+end
+
+to spiral3Arc :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	left 15
+	forward :size
+	right 110
+	polyStart
+	arcRight 90 :size * 0.8
+	right 90
+	forward :size * 0.1
+	right 90
+	arcLeft 82.3 :size * 0.807
+	polyEnd
+	; restore old position and heading.
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+; Inspired by the spiral near the center-right of
+; https://www.pinterest.ca/pin/848365648574120685/
+to spiral3 :size
+	localmake "numArcs 15
+	repeat :numArcs [
+		spiral3Arc :size
+		right 360 / :numArcs
+	]
+	circle :size * 0.5
+end
+
+to spiral4Arc :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	right 45
+	forward :size * 0.2
+	left 81
+	spiral3Arc :size
+	; restore old position and heading.
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+; Inspired by the spiral near the lower-left of
+; https://www.pinterest.ca/pin/848365648574120685/
+to spiral4 :size
+	localmake "numArcs 20
+	repeat :numArcs [
+		spiral4Arc :size
+		right 360 / :numArcs
+	]
+	circle :size * 0.7
+end
+
+; Inspired by
+; https://www.pinterest.ca/pin/54465476737823656/
+to hexSpiral :size
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "size1 :size * 0.4
+	localmake "size2 :size1 * tan 30
+	localmake "thickness (:size - :size1) * 0.5
+	localmake "diagonalThickness :thickness / cos 30
+	localmake "size3 :diagonalThickness + :size2 * 2
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "black
+	setProperty "colorStops 0.15 "darkRed
+	setProperty "colorStops 0.5 "red
+	setProperty "colorStops 1 "orange
+	setPenSize :size * 0.003
+	setFillColor "orange
+	repeat 6 [
+		setHeading :oldHeading + repcount * 360 / 6
+		jumpForward :size1
+		jumpLeft :size2
+		left 60
+		localmake "fromPos pos
+		jumpBackward :size3
+		setFillGradient createLinearGradient :fromPos pos :colorStops "pad
+		jumpForward :size3
+		right 150
+		polyStart
+		forward :size3
+		right 60
+		forward :size3
+		left 120 
+		forward :diagonalThickness
+		left 60
+		forward :size3
+		left 60
+		forward :size3
+		polyEnd
+		jumpTo :oldPos
+	]
+
+	setTurtleState :oldState
+end
+
+to fillEquilateralTriangle :sideLength
+	localmake "oldState turtleState
+	polyStart
+	repeat 2 [
+		jumpForward :sideLength
+		right 360 / 3
+	]
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://www.pinterest.ca/pin/80150068362435345/
+to triangleSpiral :size
+	if :size < 1 [
+		stop ; draw nothing because it is too small.
+		; We must stop the recursion at some point.
+	]
+	localmake "oldState turtleState
+	setPenSize :size * 0.01
+	localmake "colors ["black "orange "green]
+	localmake "size1 :size / sin 60
+	jumpLeft :size1 * 0.5
+	right 30
+	jumpBackward :size1
+	repeat 3 [
+		setFillColor item repcount :colors
+		fillEquilateralTriangle :size1
+		jumpForward :size1 * 2
+		right 360 / 3
+	]
+	right 60
+	jumpForward :size1
+	right 90
+	jumpBackward :size * 2 / 3
+	right 120
+	jumpForward :size / 6
+	triangleSpiral :size / 2
+	setTurtleState :oldState
+end
+
+make "size 100
+make "sideStepSize :size * 4
+jumpLeft :sideStepSize * 2.5
+triangleSpiral :size
+jumpRight :sideStepSize
+spiral1 :size
+jumpRight :sideStepSize
+spiral2 :size
+jumpRight :sideStepSize
+spiral3 :size
+jumpRight :sideStepSize
+spiral4 :size
+jumpRight :sideStepSize
+hexSpiral :size

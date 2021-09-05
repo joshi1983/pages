@@ -1,0 +1,137 @@
+to engineArcs :engineSize
+	localmake "arcRadius :engineSize * 0.3
+	localmake "innerDiameter :engineSize - 2 * :arcRadius
+	arcLeft 90 :arcRadius
+	jumpForward :innerDiameter
+	arcLeft 90 :arcRadius
+end
+
+; Inspired by
+; https://publicdomainvectors.org/en/free-clipart/Plane-silhouette-image/59012.html
+to jet :height
+	localmake "oldState turtleState
+	localmake "engineSize :height * 0.034
+	localmake "angle1 48.5
+	localmake "angle2 49.5
+	localmake "arcAngle1 75
+	localmake "arcAngle2 103
+	localmake "arcAngle3 25
+	localmake "arcAngle4 25
+	localmake "arcAngle5 58
+	localmake "arcAngle6 8
+	localmake "arcAngle7 102
+	localmake "arcAngle8 18
+	localmake "arcAngle9 120
+	localmake "arcAngle10 48.5
+	localmake "arcAngle11 130.5
+	localmake "arcAngle12 131
+	localmake "arcAngle13 49
+	localmake "arcAngle14 41
+	localmake "arcRadius1 :height * 0.01
+	localmake "arcRadius2 :height * 0.008
+	localmake "arcRadius3 :height * 0.017
+	localmake "arcRadius4 :height * 0.05
+	localmake "arcRadius5 :height * 0.012
+	localmake "arcRadius6 :height * 0.2
+	localmake "arcRadius7 :height * 0.01
+	localmake "arcRadius8 :height * 0.76
+	localmake "arcRadius9 :height * 0.0055
+	localmake "arcRadius10 :height * 0.023
+	localmake "arcRadius11 :height * 0.005
+	localmake "arcRadius12 :height * 0.007
+	localmake "arcRadius13 :height * 0.015
+	localmake "arcRadius14 :height * 0.0075236
+	localmake "size1 :height * 0.125
+	localmake "size2 :height * 0.015
+	localmake "size3 :height * 0.138
+	localmake "size4 :height * 0.04
+	localmake "size5 :height * 0.26
+	localmake "size6 :height * 0.173
+	localmake "size7 :height * 0.035
+	localmake "size8 :height * 0.132
+	localmake "size9 :height * 0.069
+	localmake "size10 :height * 0.028
+	localmake "size11 :height * 0.125
+	localmake "size12 :height * 0.065
+	localmake "size13 :height * 0.02
+	localmake "size14 :height * 0.13
+	localmake "size15 :height * 0.1
+	localmake "arcsInfo [[10 0.6] [9 0.4] [30 0.0366755]]
+	setPenSize 0
+	setFillColor "black
+	polyStart
+	right 28
+	jumpForward :height * 0.033
+	arcRight :arcAngle1 :arcRadius1
+	jumpForward :size1
+	arcLeft :arcAngle2 :arcRadius2
+	jumpForward :size2
+	arcLeft :arcAngle3 :arcRadius3
+	arcLeft :arcAngle4 :arcRadius4
+	jumpForward :size3
+	arcRight :arcAngle5 :arcRadius5
+	jumpForward :size4
+	arcLeft :arcAngle6 :arcRadius6
+	jumpForward :size5
+	arcRight :arcAngle7 :arcRadius7
+	arcRight :arcAngle8 :arcRadius8
+	jumpForward :size6
+	arcLeft :arcAngle9 :arcRadius9
+	jumpForward :size7
+	arcLeft :arcAngle10 :arcRadius10
+	jumpForward :size8
+	right :angle1
+	jumpForward :size9
+	engineArcs :engineSize
+	jumpForward :size10
+	arcRight :arcAngle11 :arcRadius11
+	jumpForward :size11
+	right :angle2
+	jumpForward :size12
+	engineArcs :engineSize
+	jumpForward :size13
+	arcRight :arcAngle12 :arcRadius12
+	jumpForward :size14
+	arcRight :arcAngle13 :arcRadius13
+	jumpForward :size15
+	arcsLeft :arcsInfo :height
+	arcLeft :arcAngle14 * 2 :arcRadius14; point of symmetry
+
+	arcsLeft reverse :arcsInfo :height
+	jumpForward :size15
+	arcRight :arcAngle13 :arcRadius13
+	jumpForward :size14
+	arcRight :arcAngle12 :arcRadius12
+	jumpForward :size13
+	engineArcs :engineSize
+	jumpForward :size12
+	right :angle2
+	jumpForward :size11
+	arcRight :arcAngle11 :arcRadius11
+	jumpForward :size10
+	engineArcs :engineSize
+	jumpForward :size9
+	right :angle1
+	jumpForward :size8
+	arcLeft :arcAngle10 :arcRadius10
+	jumpForward :size7
+	arcLeft :arcAngle9 :arcRadius9
+	jumpForward :size6
+	arcRight :arcAngle8 :arcRadius8
+	arcRight :arcAngle7 :arcRadius7
+	jumpForward :size5
+	arcLeft :arcAngle6 :arcRadius6
+	jumpForward :size4
+	arcRight :arcAngle5 :arcRadius5
+	jumpForward :size3
+	arcLeft :arcAngle4 :arcRadius4
+	arcLeft :arcAngle3 :arcRadius3
+	jumpForward :size2
+	arcLeft :arcAngle2 :arcRadius2
+	jumpForward :size1
+	arcRight :arcAngle1 :arcRadius1
+	polyEnd
+	setTurtleState :oldState
+end
+
+jet 100
