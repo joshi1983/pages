@@ -1,0 +1,83 @@
+to createGradient :radius :colorPairs :innerScale
+	localmake "colorStops createPList
+	repeat count :colorPairs [
+		localmake "pairInfo item repcount :colorPairs
+		localmake "ratio item 1 :pairInfo
+		localmake "color item 2 :pairInfo
+		localmake "ratio power :ratio :innerScale
+		setProperty "colorStops :ratio :color
+	]
+	output createRadialGradient pos :radius :colorStops
+end
+
+; Inspired by string art made by Koky Feuntes.
+; Here is the image:
+; https://www.facebook.com/photo/?fbid=10222075198164228
+to kokyFuentesCircle :radius :timeRatio
+	localmake "points []
+	localmake "oldHeading heading
+	localmake "oldPos pos
+	localmake "numPoints 200
+	localmake "toPointCount :numPoints * 0.3
+	localmake "middleIndex round (:numPoints / 2)
+	localmake "minOffset int :middleIndex - :toPointCount / 2
+	localmake "maxOffset int :middleIndex
+	localmake "groupSize 20
+	localmake "halfGroupSize round :groupSize / 2
+	localmake "step 10
+	setLineCap "round
+	repeat :numPoints [
+		setHeading :oldHeading + 360 * repcount / :numPoints 
+		jumpForward :radius
+		queue2 "points pos
+		jumpTo :oldPos
+	]
+	localmake "colorPairs [
+		[0 "white]
+		[0.15 "#ffFF83]
+		[0.225 "brown]
+		[0.3 "#ffFF83]
+		[0.65 "#2483FF]
+		[0.9 "red]
+		[1 "orange]
+	]
+	setPenSize :radius * 0.002
+	repeat :numPoints [
+		localmake "fromPos item repcount :points
+		localmake "offsetGroupIndex ((remainder repcount :groupSize) - :halfGroupSize) * 2
+		for ["offset :minOffset :maxOffset :step] [
+			localmake "toIndex 1 + remainder :numPoints + :offsetGroupIndex + repcount + :offset :numPoints
+			localmake "toPos item :toIndex :points
+			jumpTo :fromPos
+			localmake "scale :timeRatio * :timeRatio * (:offset - :minOffset) * 10 / (:maxOffset - :minOffset)
+			setPenGradient createGradient :radius :colorPairs :scale
+			setPos :toPos
+		]
+	]
+	setFillColor "white
+	setPenColor 0
+	repeat :numPoints [
+		jumpTo item repcount :points
+		circle :radius * 0.006
+	]
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+setScreenColor "black
+kokyFuentesCircle 100 animation.timeRatio
+
+to animation.snapshotstyle
+	output createPList2 [
+		["zoom.scale 3.5]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 5
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end
