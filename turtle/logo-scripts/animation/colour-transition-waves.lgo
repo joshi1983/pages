@@ -1,0 +1,60 @@
+; Inspired by:
+; https://www.pinterest.ca/pin/684406474639243500/
+make "colors ["red "white "black "purple "green "yellow "navy]
+
+to circles :size :ratio
+	localmake "ratio clamp :ratio 0 1
+	localmake "oldPos pos
+	localmake "maxRadius :size * 0.11
+	localmake "minLargeRadius :maxRadius * 0.8
+	localmake "repcount1 20
+	localmake "repcount2 8
+	localmake "delta :maxRadius * 2.2
+	localmake "width (:repcount1 - 1) * :delta
+	localmake "height (:repcount2 - 1) * :delta
+	localmake "numColors count :colors
+	localmake "intervalRatio :ratio * :numColors - (int :ratio * :numColors)
+	localmake "colorIndex1 1 + (remainder (int (:ratio * :numColors)) :numColors)
+	localmake "colorIndex2 1 + (remainder :colorIndex1 :numColors)
+	jumpLeft :width / 2
+	jumpForward :height / 2
+	localmake "pos1 pos
+	setFillColor item :colorIndex1 :colors
+	setPenSize 0
+	repeat 2 [
+		repeat :repcount1 [
+			repeat :repcount2 [
+				localmake "dRatio :ratio * :numColors - (distance :oldPos) / :size
+				localmake "dRatio 0.5 + 0.5 * (sin 360 * :dRatio)
+				localmake "dRatio clamp :dRatio 0 1
+				localmake "circleRadius mix :minLargeRadius :maxRadius :dRatio
+				if :circleRadius > 0 [
+					circle :circleRadius
+				]
+				jumpBackward :delta
+			]
+			jumpForward :repcount2 * :delta
+			jumpRight :delta
+		]
+		setFillColor item :colorIndex2 :colors
+		localmake "minLargeRadius :minLargeRadius * :intervalRatio
+		localmake "maxRadius :maxRadius * :intervalRatio
+		jumpTo :pos1
+	]
+end
+
+setScreenColor "black
+circles 100 animation.time / animation.duration
+
+to animation.snapshotstyle
+	localmake "result createPList
+	setProperty "result "zoom.scale 2.2
+	output :result
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 7
+	; Edit this if you want to change the length of your animation.
+	output :minutes * 60 + :seconds
+end

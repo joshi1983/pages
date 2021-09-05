@@ -1,0 +1,52 @@
+; Inspired by:
+; https://www.pinterest.ca/pin/366973069640537626/
+; Animation closes the central opening of the shape
+
+to swirlShutterArm :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "size :size * 0.95
+	localmake "size1 :size * 0.15
+	localmake "size2 :size
+	localmake "angle1 60.875
+	polyStart
+	forward :size1
+	right 120
+	arcRight 70 :size2
+	right 171.85
+	arcLeft :angle1 :size2
+	polyEnd
+	penUp
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to swirl :size :openRatio
+	localmake "angle :openRatio * 60 - 25
+	localmake "oldPos pos
+	localmake "numArms 12
+	repeat :numArms [
+		forward :size * 0.85
+		right :angle
+		swirlShutterArm :size * 1.1
+		left :angle
+		setPos :oldPos
+		right 360 / :numArms
+	]
+end
+
+setFillColor "black
+setPenSize 0
+swirl 250 animation.time / 3
+
+to animation.snapshotstyle
+	localmake "result createPList
+	output :result
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 3
+	; Edit this if you want to change the length of your animation.
+	output :minutes * 60 + :seconds
+end

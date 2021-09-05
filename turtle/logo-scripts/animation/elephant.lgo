@@ -1,0 +1,123 @@
+; Inspired by
+; https://www.youtube.com/watch?v=FoTYV22qZTg
+
+; Terry Davis mentioned using interpolation and vectors in his HolyC version.
+; This WebLogo animation uses interpolation.
+; WebLogo uses "lists" instead of "vectors".
+; There isn't much difference other than word choice.
+
+to background :width :height
+	localmake "oldState turtleState
+	setPenSize :height * 0.69
+	setPenColor "#f5f456
+	jumpForward penSize / 2
+	jumpLeft :width / 2
+	right 90
+	forward :width
+	setTurtleState :oldState
+end
+
+to elephant :timeRatio
+	localmake "oldState turtleState
+	localmake "timeRatio clamp :timeRatio 0 1
+	localmake "timeRatio 1 - sin 180 * :timeRatio
+	localmake "polygons [
+		; rear background leg		
+		[
+			[7.7 13.3] [10.2 12.4] [14.2 13.1]
+			[15.6 14.9] [14.5 20.3] [14.5 34.2]
+			[27.7 58] [10.9 53.5] [8.4 31.3]
+		]
+		; most of the elephant
+		[
+			; snout points
+			[-48.5 17.5] [-44 18] [-43 43]
+			[-37 65]
+			[mix -37 -34 :timeRatio 55] ; moving mouth
+			
+			; front leg in background
+			[-29.7 66] [-28 66] [-28 46.7]
+			[-31 16.5] [-27 13.4] [-18.7 16.5] [-19 58]
+
+			; lower chest
+			[-2.3 50.4] [26 54]
+
+			; tail
+			[36.5 76.4] [40.7 70]
+			; moving part of tail
+			[mix 46 47 :timeRatio mix 59 59.5 :timeRatio]
+			[mix 48 49 :timeRatio mix 60 60.5 :timeRatio]
+			[43 70] 
+			[37.1 81.2]
+
+			; back
+			[18 92.4] [-10 94]
+
+			; head
+			[-27.8 100] [-40 95.3] [-46 77.4]
+		]
+		; foreground front leg
+		[
+			[-26.7 1.6] [-24.4 0] [-19.7 2.5] [-19 28.4]
+			[-7.1 59] [-11 70.4] [-19.7 68.4] [-20.2 58.9] [-26.4 28.8]
+		]
+		; foreground rear leg
+		[
+			[27.7 6.1] [33.4 5] [37.6 10.4] [30 39.4] [37.8 67.2] [36.5 79.4]
+			[23.7 86.6] [12.2 77.8] [12.2 67.5] [14.5 55.6]
+		]
+	]
+	setFillColor "#a9a6aa
+	setPenColor "#000
+	setPenSize 0.5
+	setLineJoinStyle "round
+	setLineCap "round
+	repeat count :polygons [
+		localmake "points item repcount :polygons
+		jumpTo item 1 :points
+		polyStart
+		for ["i 2 count :points] [
+			localmake "toPos item :i :points
+			setHeading towards :toPos
+			jumpForward distance :toPos
+		]
+		polyEnd
+	]
+	; Draw ear
+	localmake "earPoints [[-29.9 69.5]
+		[mix -19.2 -19.7 :timeRatio 74.7]
+		[mix -19.3 -20 :timeRatio 90] 
+		[-28.9 96.4]]
+	jumpTo item 1 :earPoints
+	for ["i 2 count :earPoints] [
+		localmake "toPos item :i :earPoints
+		setHeading towards :toPos
+		forward distance :toPos
+	]
+
+	; draw eye
+	setFillColor "black
+	setPenSize 0
+	jumpTo [-38.6 77.8]
+	circle 0.5
+	setTurtleState :oldState
+end
+
+setScreenColor "#58fbfd
+
+background 500 100
+elephant animation.time / animation.duration
+
+to animation.snapshotstyle
+	localmake "result createPList
+	setProperty "result "zoom.scale 5
+	setProperty "result "position.y 50
+	output :result
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 1.5
+	; Edit this if you want to change the length of your animation.
+	output :minutes * 60 + :seconds
+end

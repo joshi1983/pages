@@ -1,0 +1,292 @@
+; This is inspired by a painting done in a
+; high school art class by Josh Greig.
+; This WebLogo script is also written by the same Josh Greig.
+make "navyColor "#004
+make "yellowColor "#ff0
+make "whiteColor "#fff
+make "redColor "#f00
+
+to createLinearGradientSimple :fromColor :toColor :len
+	localmake "colorStops createPList
+	setProperty "colorStops 0 :fromColor
+	setProperty "colorStops 1 :toColor
+	localmake "oldPos pos
+	jumpForward :len
+	localmake "result createLinearGradient :oldPos pos :colorStops "pad
+	jumpTo :oldPos
+	output :result
+end
+
+to curveGradient :colorStops :from :to :fromColor :toColor :exponent
+	localmake "numSteps 5
+	repeat :numSteps [
+		localmake "ratio repRatio
+		localmake "stepPosition :from + :ratio * (:to - :from)
+		localmake "mixRatio power :ratio :exponent
+		localmake "mixRatio mix :mixRatio (power :ratio :exponent * 0.5) 0.9
+		localmake "mixRatio mix :mixRatio :ratio 0.8
+		localmake "c mix :fromColor :toColor :mixRatio
+		setProperty "colorStops :stepPosition :c
+	]
+end
+
+to verticalGradient :width :height 
+	localmake "colorStops createPList
+	setProperty "colorStops 0 :navyColor
+	curveGradient :colorStops 0 0.53 :redColor :navyColor 5
+	setProperty "colorStops 0.55 :yellowColor
+	curveGradient :colorStops 1 0.58 :redColor :navyColor 5
+	localmake "oldPos pos
+	setPenSize 0
+	jumpForward :height
+	localmake "gradient createLinearGradient :oldPos pos :colorStops "pad
+	setPenGradient :gradient
+	setPenSize :width
+	backward :height
+	jumpForward :height * 0.55
+	waterRadialGradient :width :height * 0.55
+end
+
+to waterRadialGradient :width :height
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#fff
+	setProperty "colorStops 0.15 "#8fff
+	setProperty "colorStops 0.25 "#4fff
+	setProperty "colorStops 1 "#0fff
+	setPenGradient createRadialGradient pos pos min :width :height :colorStops "pad
+	setPenSize :width
+	backward :height
+end
+
+to getReflectionRatios :numDivisions
+	localmake "result []
+	repeat :numDivisions [
+		localmake "ratio 2 - 2 / (1 + (repcount - 1) / (:numDivisions - 1))
+		queue "result :ratio
+	]
+	output :result
+end
+
+to calcAngleDelta :arcRadius :width :height
+	ifelse :arcRadius * 2 < :height [
+		output 180
+	] [
+		localmake "v1 180
+		localmake "v2 180
+		if :arcRadius > :width * 0.5 [
+			localmake "v1 arcSin :width * 0.5 / :arcRadius 
+		]
+		if :arcRadius * 2 > :height [
+			ifelse :arcRadius > :height [
+				localmake "v2 abs arcCos (:arcRadius - :height) / :arcRadius 
+			] [
+				localmake "v2 90 + abs arcSin (:height - :arcRadius) / :arcRadius 
+			]
+		]
+		output min :v1 :v2
+	]
+end
+
+to calcAngleForWidthIntersection :angle :width :arcRadius
+	localmake "cx :arcRadius * sin :angle
+	localmake "dx :cx + :width
+	if (abs :dx) > :arcRadius [
+		output 360
+	]
+	output (arcSin :dx / :arcRadius) - :angle
+end
+
+to calcAngleForHeightIntersection :angle :height :arcRadius
+	localmake "cy :arcRadius * cos :angle
+	localmake "dy :cy - :height
+	if (abs :dy) > :arcRadius [
+		output 360
+	]
+	output (arcCos :dy / :arcRadius) - :angle
+end
+
+to calcArcAngle :angle :width :height :arcRadius
+	localmake "result calcAngleForWidthIntersection :angle :width :arcRadius
+	localmake "result min :result calcAngleForHeightIntersection :angle :height :arcRadius
+	output :result
+end
+
+to sunPattern :width :height :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "maxSize :height * 500
+	localmake "numArcs 100
+	setPenSize 0
+	left 90
+	circleRight :size
+	repeat :numArcs [
+		localmake "ratio (:numArcs + 1 - repcount) / :numArcs
+		localmake "arcRadius :size + :maxSize * power :ratio 10
+		setPenColor mix :yellowColor :whiteColor clamp (:ratio - 0.35) 0 1
+		jumpTo :oldPos
+		setHeading :oldHeading
+		if and :ratio > 0.5 :ratio < 0.9 [
+			localmake "height1 :height
+			if :ratio < 0.6 [
+				localmake "height1 :height * (1 +  15 * (0.6 - :ratio))
+			]
+			setPenGradient createLinearGradientSimple penColor :navyColor :height1
+		] 
+		setHeading :oldHeading - 90
+		localmake "angleDelta calcAngleDelta :arcRadius :width :height
+		arcRight :angleDelta :arcRadius
+		setPenSize :size * 0.5 * (1.01 - :ratio)
+		arcRight -:angleDelta * 2 :arcRadius
+	]
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to sunPatterns :width :height
+	localmake "maxSize :height * 0.08
+	localmake "size :maxSize
+	sunPattern :width :height :size
+end
+
+to fillBoatBackground :boatSize
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	setFillColor :navyColor
+	setPenSize 0
+	polyStart
+	jumpForward :boatSize * 0.7
+	arcRight 30 :boatSize * 0.5
+	arcRight 20 :boatSize * 0.5
+	right 80
+	arcRight 35 :boatSize * 0.4
+	arcRight 5 :boatSize
+	arcRight 10 :boatSize * 2.5
+	jumpForward :boatSize * 0.99256
+	polyEnd
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to drawBoat :width :height
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "offset min :height :width
+	localmake "boatSize :height * 0.3
+	localmake "generalPenSize :boatSize * 0.01
+	setPenSize 0
+	right 90
+	jumpForward :offset
+	left 90
+	localmake "gradient1 createLinearGradientSimple (mix :redColor :yellowColor 0.5) (mix :yellowColor :whiteColor 0.5) :boatSize * 0.5
+	left 60
+	setPenColor mix :redColor :navyColor 0.5
+	fillBoatBackground :boatSize
+	setPenSize :generalPenSize
+	forward :boatSize * 0.7
+	setPenColor :redColor
+	setPenSize :generalPenSize * 0.5
+	arcRight 30 :boatSize * 0.5
+	setPenSize :generalPenSize
+	arcRight 20 :boatSize * 0.5
+	localmake "boatPoint pos
+	right 80
+	setPenGradient :gradient1
+	setPenSize :generalPenSize * 1.2
+	arcRight 35 :boatSize * 0.4
+	arcRight 5 :boatSize
+	arcRight 10 :boatSize * 2.5
+	forward :boatSize * 0.99256
+	jumpTo :boatPoint
+	setHeading :oldHeading + 160
+	setPenColor mix :redColor :yellowColor 0.4
+	setPenSize :generalPenSize * 0.5
+	arcLeft 40 :boatSize * 0.4
+	forward :boatSize * 0.975
+	; draw highlights on seats in canoe
+	localmake "tempHeading :oldHeading + 120
+	jumpTo :boatPoint
+	setHeading :tempHeading
+	setPenColor mix :yellowColor :redColor 0.4
+	jumpForward :boatSize * 0.4
+	repeat 3 [
+		setHeading :tempHeading
+		jumpForward :boatSize * 0.25
+		localmake "tempPos pos
+		left 60
+		backward :boatSize * 0.103
+		forward :boatSize * 0.2
+		jumpTo :tempPos
+	]
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to drawSunReflection :width :height
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "ratios getReflectionRatios 15
+	localmake "maxArcRadius :width * 20
+	localmake "minArcRadius :width
+	setFillColor "white
+	setPenSize 0
+	localmake "minSize :height * 0.007
+	left 90
+	jumpForward :width
+	setHeading :oldHeading
+	jumpForward :height
+	localmake "vanishingPoint pos
+	jumpTo :oldPos
+	repeat count :ratios [
+		localmake "ratio item repcount :ratios
+		localmake "length :minSize + :height * 0.15 * (:ratio - 0.5)
+		localmake "len1 (:ratio * :height * 2) - :height
+		setPenColor mix :whiteColor :yellowColor :ratio
+		jumpTo :oldPos
+		setHeading :oldHeading
+		jumpForward :len1
+		setPenSize 0
+		if :length > 0 [
+			ellipse :length :minSize
+		]
+		setHeading towards :vanishingPoint
+		setPenSize :height * 0.005
+		localmake "len2 hypot [(:len1 - :height) * 0.5 (:width * 0.5)]
+		if :ratio < 0.5 [
+			localmake "change hypot [:len1 (:width * :len1 / (:height - :len1))]
+			jumpForward :change
+			localmake "len2 :len2 - :change
+		]
+		forward :len2
+		if :len1 > 0 [
+			localmake "lineHeading heading
+			jumpTo :oldPos
+			setHeading :oldHeading
+			jumpForward :len1
+			setHeading :lineHeading + 180
+			localmake "arcRadius mix :maxArcRadius :minArcRadius (:ratio - 0.5) * 2
+			localmake "arcAngle calcArcAngle (:lineHeading - :oldHeading - 270) :width * 0.5 :len1 :arcRadius
+			arcRight :arcAngle :arcRadius
+		]
+	]
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to sunsetWithBoat :width :height
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "skyHeight :height * 0.45
+	verticalGradient :width :height
+	forward :height - :skyHeight
+	sunPatterns :width :skyHeight
+	setFillColor :whiteColor
+	left 90
+	circleRight :height * 0.06
+	jumpTo :oldPos
+	setHeading :oldHeading
+	drawSunReflection :width :height - :skyHeight
+	drawBoat :width :height
+end
+
+setScreenColor :navyColor
+sunsetWithBoat 400 50

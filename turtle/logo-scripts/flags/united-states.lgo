@@ -1,0 +1,86 @@
+; American flag
+
+to drawStar :size
+	localmake "oldState turtleState
+	setPenSize 0
+	right 18
+	jumpForward :size * 1.4
+	left 162
+	setFillColor "white
+	polyStart
+
+	repeat 5 [
+		forward :size
+		right 72
+		forward :size
+		left 144
+	]
+	polyEnd
+	setTurtleState :oldState
+end
+
+to drawStripes :width :height
+	localmake "redColor "#c60000
+	localmake "oldPos pos
+	localmake "stripSize :height / 13
+	setPenColor "white
+	setPenSize :height
+	forward :width
+	jumpBackward :width
+	right 90
+	jumpBackward (:height - :stripSize) * 0.5
+	left 90
+	setPenSize :stripSize
+	setPenColor :redColor
+	repeat 7 [
+		forward :width
+		jumpBackward :width
+		right 90
+		jumpForward penSize * 2
+		left 90
+	]
+	jumpTo :oldPos
+end
+
+to drawFlag :width :height
+	localmake "starSize :width * 0.013
+	localmake "blueWidth :width * 0.457
+	localmake "blueHeight :height * 7/13
+	localmake "starOffsetX :blueWidth * 0.172
+	left 90
+	drawStripes :width :height
+	forward :width - :blueWidth
+	right 90
+	jumpForward (:height - :blueHeight) * 0.5
+	left 90
+	setPenSize :blueHeight
+	setPenColor "#00008c
+	forward :blueWidth
+	jumpBackward :blueWidth / 15
+	right 90
+	jumpForward :blueHeight * 0.5 - :starSize * 2
+	left 90
+	setPenSize 0
+	repeat 9 [
+		ifelse even? repcount [
+			jumpBackward :blueWidth / 12
+			localmake "numStarsInRow 5
+		] [
+			localmake "numStarsInRow 6
+		]
+		repeat :numStarsInRow [
+			drawStar :starSize
+			jumpBackward :starOffsetX
+		]
+		if :numStarsInRow = 5 [
+			jumpForward :blueWidth / 12
+		]
+		jumpForward :starOffsetX * :numStarsInRow
+		left 90
+		jumpForward :blueHeight / 9.7
+		right 90
+	]
+end
+
+setScreenColor "black
+drawFlag 100 60

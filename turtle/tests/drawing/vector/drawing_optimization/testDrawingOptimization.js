@@ -1,0 +1,26 @@
+import { prefixWrapper } from '../../../helpers/prefixWrapper.js';
+import { testCreateFilledCircleUsingCircleLeft } from './testCreateFilledCircleUsingCircleLeft.js';
+import { testGetSimplestShape } from './testGetSimplestShape.js';
+import { testMergeArcs } from './testMergeArcs.js';
+import { testMergeLines } from './testMergeLines.js';
+import { testMergeLineWithArc } from './testMergeLineWithArc.js';
+import { testMergeOverlappingParallelLines } from './testMergeOverlappingParallelLines.js';
+import { testMergePathWithArc } from './testMergePathWithArc.js';
+import { testMergePathWithLine } from './testMergePathWithLine.js';
+import { testMergeShapes } from './testMergeShapes.js';
+import { testOptimizeDrawing } from './testOptimizeDrawing.js';
+import { testTryMergeShapePairWithTestDrawings } from './testTryMergeShapePairWithTestDrawings.js';
+
+export function testDrawingOptimization(logger) {
+	testCreateFilledCircleUsingCircleLeft(prefixWrapper('testCreateFilledCircleUsingCircleLeft', logger));
+	testGetSimplestShape(prefixWrapper('testGetSimplestShape', logger));
+	testMergeArcs(prefixWrapper('testMergeArcs', logger));
+	testMergeLines(prefixWrapper('testMergeLines', logger));
+	testMergeLineWithArc(prefixWrapper('testMergeLineWithArc', logger));
+	testMergeOverlappingParallelLines(prefixWrapper('testMergeOverlappingParallelLines', logger));
+	testMergePathWithArc(prefixWrapper('testMergePathWithArc', logger));
+	testMergePathWithLine(prefixWrapper('testMergePathWithLine', logger));
+	testMergeShapes(prefixWrapper('testMergeShapes', logger));
+	testOptimizeDrawing(prefixWrapper('testOptimizeDrawing', logger));
+	testTryMergeShapePairWithTestDrawings(prefixWrapper('testTryMergeShapePairWithTestDrawings', logger));
+};

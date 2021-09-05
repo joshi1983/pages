@@ -1,0 +1,360 @@
+; Inspired by the logo at:
+; https://www.pinterest.ca/pin/669488300869060188/
+to sunsetGradient1 :radius
+	localmake "oldPos pos
+	jumpBackward :radius
+	localmake "fromPos pos
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#931918
+	setProperty "colorStops 0.3 "#c8401a
+	setProperty "colorStops 0.6 "#c45e16
+	setProperty "colorStops 0.8 "#e79d3c
+	setProperty "colorStops 1 "#ffe290
+	jumpForward :radius * 2
+	localmake "result createLinearGradient :fromPos pos :colorStops "pad
+	jumpTo :oldPos
+	output :result
+end
+
+to sunsetGradientCircle :radius
+	localmake "oldState turtleState
+	localmake "gradients [
+		sunsetGradient1 :radius
+	]
+	setPenSize 0
+	repeat count :gradients [
+		setFillGradient item repcount :gradients
+		circle :radius
+	]
+	setTurtleState :oldState
+end
+
+to bridgeUpperRails :width :height
+	localmake "oldState turtleState
+	jumpLeft :width / 2
+	localmake "pos1 pos
+	localmake "oldHeading heading
+	localmake "railThickness :height * 0.05
+	localmake "postThickness :height * 0.2
+	localmake "numPosts int (:width / (:height * 2)) 
+	localmake "step1 :height / 4
+	localmake "postSeparation :width / :numPosts
+	setPenSize :railThickness
+	jumpForward :height - :step1 * 0.5
+	right 90
+	repeat 3 [
+		forward :width
+		jumpBackward :width
+		jumpRight :step1
+	]
+	jumpTo :pos1
+	setHeading :oldHeading
+	setPenSize :postThickness
+	repeat :numPosts + 1 [
+		forward :height
+		jumpBackward :height
+		jumpRight :postSeparation
+	]
+	setTurtleState :oldState
+end
+
+to bridgeSupports :size
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "arcRadius :size * 0.6
+	localmake "arcAngle1 45
+	localmake "numSupports 14
+	localmake "supportSeparation :size / :numSupports
+	localmake "supportThickness :supportSeparation / 2
+	setPenSize :size
+	setLineCap "butt
+	backward :size * 0.1
+	jumpBackward :size * 0.01
+	localmake "pos1 pos
+	setPenSize 0
+	left 90
+	arcLeft :arcAngle1 :arcRadius
+	right 180
+	setPenSize :size * 0.05
+	arcRight :arcAngle1 * 2 :arcRadius
+	jumpTo :pos1
+	setHeading :oldHeading
+	jumpLeft :size / 2
+	jumpForward :size * 0.03
+	setPenSize :supportThickness
+	repeat :numSupports + 1 [
+		localmake "x (repcount - 1) * :supportSeparation - (:size / 2)
+		localmake "supportHeight :size * 0.63 - sqrt :arcRadius * :arcRadius - :x * :x
+		backward :supportHeight
+		jumpForward :supportHeight
+		jumpRight :supportSeparation	
+	]
+	setTurtleState :oldState
+end
+
+to bridge :width
+	bridgeUpperRails :width :width * 0.05
+	bridgeSupports :width
+end
+
+to woman :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "arcAngle1 22
+	localmake "arcAngle2 70
+	localmake "arcRadius1 :height * 0.7
+	localmake "arcRadius2 :height * 0.08
+	jumpRight :height * 0.12
+	setPenSize 0
+	setFillColor "black
+	; Draw head, hair and torso.
+	polyStart
+	jumpForward :height * 0.3
+	arcLeft :arcAngle1 :arcRadius1
+	arcRight :arcAngle2 :arcRadius2
+	jumpForward :height * 0.04
+	left 50
+	jumpForward :height * 0.04
+	arcLeft 80 :height * 0.06
+	arcRight 80 :height * 0.03
+	jumpForward :height * 0.13
+	arcLeft 170 :height * 0.06
+	arcRight 10 :height * 0.95
+	right 35
+	arcLeft 90 :height * 0.07
+	arcRight 60 :height * 0.18
+	arcLeft 26 :height * 0.45
+	jumpForward :height * 0.16
+	arcLeft 86 :height * 0.03
+	jumpForward :height * 0.02
+	jumpRight :height * 0.114586577
+	setHeading :oldHeading + 90
+	jumpForward :height * 0.08
+	jumpLeft :height * 0.11
+	jumpForward :height * 0.05
+	jumpRight :height * 0.11
+	polyEnd
+
+	; draw the arms.
+	jumpTo :oldPos
+	setLineCap "round
+	setHeading :oldHeading
+	jumpForward :height * 0.72
+	localmake "pos1 pos
+	jumpRight :height * 0.095
+	right 160
+	setPenSize :height * 0.042
+	arcRight 30 :height * 0.6
+	jumpTo :pos1
+	setHeading :oldHeading
+	jumpLeft :height * 0.13
+	left 165
+	arcLeft 30 :height * 0.6
+	setTurtleState :oldState
+end
+
+to man :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "size1 :height * 0.28
+	setPenSize 0
+	setFillColor "black
+	right 1
+
+	polyStart
+	jumpForward :size1
+	right 178
+	jumpForward :size1
+	setHeading :oldHeading + 90
+	jumpForward :height * 0.1
+	left 90
+	jumpForward :height * 0.35
+	arcLeft 15 :height * 0.35
+	arcRight 10 :height * 0.15
+	arcRight 15 :height * 0.7
+	arcRight 80 :height * 0.03
+	arcLeft 95 :height * 0.015
+	jumpForward :height * 0.05
+	arcLeft 80 :height * 0.05
+	arcRight 13 :height * 0.2
+	right 30
+	jumpForward :height * 0.02
+	right 40
+	jumpForward :height * 0.04
+	right 120
+	arcLeft 120 :height * 0.005
+	jumpForward :height * 0.04
+	arcLeft 100 :height * 0.004
+	right 110
+	arcLeft 205 :height * 0.054
+	jumpForward :height * 0.045
+	arcLeft 50 :height * 0.005
+	right 53
+	arcRight 10 :height * 0.2
+	jumpRight :height * 0.003
+	right 30
+	jumpForward :height * 0.012
+	right 40
+	arcLeft 20 :height * 0.25
+	arcLeft 90 :height * 0.06
+	arcRight 45 :height * 0.12
+	arcRight 9 :height * 0.65
+	arcLeft 12 :height * 0.2
+	jumpForward :height * 0.436
+	polyEnd
+
+	; draw arms
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.7
+	localmake "pos1 pos
+	jumpRight :height * 0.123
+	right 170
+	setPenSize :height * 0.045
+	arcRight 40 :height * 0.5
+	jumpTo :pos1
+	setHeading :oldHeading
+	jumpLeft :height * 0.12
+	left 168
+	setLineCap "round
+	setPenSize penSize * 1.15
+	forward :height * 0.15
+	setPenSize penSize * 0.82
+	forward :height * 0.18
+	setTurtleState :oldState
+end
+
+to couple :manHeight
+	localmake "separation :manHeight * 0.33
+	jumpLeft :separation / 2
+	woman :manHeight * 0.9
+	jumpRight :separation
+	man :manHeight
+end
+
+to bat1 :size
+	localmake "oldState turtleState
+	setPenSize 0
+	right 40
+	setFillColor "black
+	polyStart
+	arcRight 50 :size * 0.5
+	left 30
+	arcRight 40 :size * 0.3
+	left 160
+	arcLeft 40 :size * 0.33
+	right 25
+	arcLeft 40 :size * 0.5
+	right 70
+	arcLeft 40 :size * 0.5
+	right 40
+	arcLeft 50 :size * 0.3
+	left 160
+	arcRight 50 :size * 0.3
+	left 45
+	arcRight 43 :size * 0.6
+	polyEnd
+	setTurtleState :oldState
+end
+
+to bat2 :size
+	localmake "oldState turtleState
+	setPenSize 0
+	right 70
+	setFillColor "black
+	polyStart
+	arcRight 70 :size * 0.45
+	left 30
+	arcRight 40 :size * 0.4
+	left 150
+	arcLeft 120 :size * 0.45
+	right 90
+	arcLeft 120 :size * 0.45
+	left 140
+	arcRight 40 :size * 0.4
+	left 45
+	arcRight 70 :size * 0.41
+	polyEnd
+	setTurtleState :oldState
+end
+
+to randomBat :maxBatSize
+	localmake "oldHeading heading
+	localmake "minBatSize :maxBatSize * 0.5
+	localmake "batSize mix :maxBatSize :minBatSize randomRatio
+	localmake "angleRange 40
+	localmake "rotation mix -:angleRange :angleRange randomRatio
+	right :rotation
+	ifelse randomRatio < 0.5 [
+		bat1 :batSize
+	] [
+		bat2 :batSize
+	]
+	setHeading :oldHeading
+end
+
+to randomBatArcLeft :fromThickness :toThickness :arcRadius :angle :numBats :maxBatSize :levelHeading
+	localmake "stepAngle :angle / :numBats
+	setPenSize 0
+	repeat :numBats [
+		localmake "ratio repRatio
+		localmake "thickness mix :toThickness :fromThickness  :ratio
+		localmake "pos1 pos
+		localmake "heading1 heading
+		jumpLeft :thickness / 2
+		jumpRight :thickness * randomRatio
+		setHeading :levelHeading
+		randomBat :maxBatSize
+		setHeading :heading1
+		jumpTo :pos1
+		arcLeft :stepAngle :arcRadius
+	]
+end
+
+to randomBatArcRight :fromThickness :toThickness :arcRadius :angle :numBats :maxBatSize :levelHeading
+	localmake "stepAngle :angle / :numBats
+	setPenSize 0
+	repeat :numBats [
+		localmake "ratio repRatio
+		localmake "thickness mix :toThickness :fromThickness  :ratio
+		localmake "pos1 pos
+		localmake "heading1 heading
+		jumpLeft :thickness / 2
+		jumpRight :thickness * randomRatio
+		setHeading :levelHeading
+		randomBat :maxBatSize
+		setHeading :heading1
+		jumpTo :pos1
+		arcRight :stepAngle :arcRadius
+	]
+end
+
+to randomizedBats :size
+	localmake "oldHeading heading
+	localmake "maxBatSize :size * 0.03
+	jumpForward :size * 0.4
+	jumpLeft :size * 0.42
+	right 150
+	randomBatArcLeft :size * 0.5 :size * 0.15 :size * 0.35 75 190 :maxBatSize :oldHeading
+	randomBatArcRight :size * 0.15 :size * 0.1 :size * 0.4 40 60 :maxBatSize :oldHeading
+	randomBatArcRight :size * 0.1 :size * 0.1 :size * 0.23 210 100 :maxBatSize :oldHeading
+end
+
+to sunsetAtBridge :size
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	sunsetGradientCircle :size * 0.5
+	bridge :size
+	jumpRight :size * 0.15
+	couple :size * 0.09
+	jumpTo :oldPos
+	setHeading :oldHeading
+	randomizedBats :size
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+sunsetAtBridge 100

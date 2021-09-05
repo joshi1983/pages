@@ -1,0 +1,42 @@
+import { processTranslationTestCase } from './processTranslationTestCase.js';
+
+export function testFunctionCallTranslation(logger) {
+	const cases = [
+		{'in': 'func1(50)', 'out': 'func1 50'},
+		{'in': 'fd(50)', 'out': 'forward 50'},
+		{'in': 'skk.fd(50)', 'out': 'forward 50'},
+		{'in': 'star.right(75)', 'out': 'right 75'},
+		{'in': 'turtle.heading()', 'out': 'pyHeading'},
+		{'in': 'turtle.circle(100)', 'out': 'circleLeft 100'},
+		{'in': 'turtle.up()\nx = 0', 'out': 'penUp \nmake "x 0'},
+		{'in': 'turtle.setpos(x, y)', 'out': 'setPos [:x :y]'},
+		{'in': 'turtle.Screen().bgcolor("black")', 'out': 'setScreenColor "black'},
+		{'in': 'func1(1,2)', 'out': 'func1 1 2'},
+		{'in': 'fillcolor()', 'out': 'fillColor'},
+		{'in': 'fillcolor(255, 0, 0)', 'out': 'setFillColor convertColorUsingMode [255 0 0]'},
+		{'in': 'color()', 'out': 'penColor'},
+		{'in': 'color(255, 0, 100)', 'out': 'setColors convertColorUsingMode [255 0 100]'},
+		{'in': 'distance(0, 1)', 'out': 'distance [0 1]'},
+		{'in': 'color(\'red\', \'yellow\')', 'out': 'setPenColor "red\nsetFillColor "yellow'},
+		{'in': 'turtle.color(random.random(), random.random(), random.random())', 'out': 'setColors convertColorUsingMode [randomRatio  randomRatio  randomRatio ]'},
+		{'in': 'abs(pos())', 'out': 'hypot pos'},
+		{'in': 'abs([1,2])', 'out': 'hypot [1 2]'},
+		{'in': 'abs( (1,2) )', 'out': 'hypot [1 2]'},
+		{'in': 'abs(x)', 'out': 'abs :x'},
+		{'in': 'random.choice([1,2,3])', 'out': 'pick [1 2 3]'},
+		{'in': 'random.random()', 'out': 'randomRatio'},
+		{'in': 'dot()', 'out': 'pyDot -1 penColor'},
+		{'in': 'dot(10)', 'out': 'pyDot 10 penColor'},
+		{'in': 'dot("red")', 'out': 'pyDot -1 "red'},
+		{'in': 'dot(10, "red")', 'out': 'pyDot 10 "red'},
+		{'in': 'tur.dot(10, "red")', 'out': 'pyDot 10 "red'},
+		{'in': 'turtle.dot(60, color="yellow")',  'out': 'pyDot 60 "yellow'},
+		{'in': 'degrees(1)', 'out': 'pyDegrees 1'},
+		{'in': 'degrees(360)', 'out': 'pyDegrees 360'},
+		{'in': 'radians()', 'out': 'pyDegrees 2 * pi'},
+	];
+	cases.forEach(function(caseInfo, index) {
+		caseInfo.index = index;
+		processTranslationTestCase(caseInfo, logger);
+	});
+};

@@ -1,0 +1,180 @@
+; inspired by
+; https://www.pinterest.ca/pin/109071622215028204/
+
+to radiatingLines :outerRadius :innerRadius :numLines
+	repeat :numLines [
+		; alternate the inner and outer radii slightly to make
+		; the pattern more interesting.
+		ifelse (remainder repcount 2) = 0 [
+			localmake "alternatingOffset :outerRadius * 0.05
+		] [
+			localmake "alternatingOffset 0
+		]
+		jumpForward :innerRadius + :alternatingOffset
+		forward :outerRadius - :alternatingOffset
+		jumpBackward :outerRadius + :innerRadius
+		right 360 / :numLines
+	]
+end
+
+to centreCircle :size
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#b60
+	setProperty "colorStops 0.6 "#740
+	setProperty "colorStops 1 "#400
+	localmake "gradient createRadialGradient pos pos :size :colorStops "pad
+	setFillGradient :gradient
+	setPenSize 0
+	circle :size
+end
+
+to calcPeddleSettings :length :width
+	localmake "halfWidth :width * 0.5
+	localmake "len1 max (:halfWidth * 1.01) :length / 3
+	localmake "angle1 max 20 (1.01 * arcSin :halfWidth / :len1)
+	localmake "len2 :len1 - :halfWidth / (tan :angle1)
+	localmake "radius1 :len2 / sin (:angle1 * 0.5)
+	localmake "len3 :radius1 * sin :angle1
+	localmake "len4 :length - :len3
+	localmake "len5 :halfWidth - :radius1 * (1 - cos :angle1)
+	localmake "radius2 (:len4 * :len4 + :len5 * :len5) / (2 * :len5)
+	localmake "angle2 :angle1 - (arcSin :len4 / :radius2)
+	localmake "angle3 :angle1 - :angle2
+	output [:halfWidth :radius1 :angle1 :radius2 :angle2 :angle3]
+end
+
+to peddle :length :width
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "peddleSettings calcPeddleSettings :length :width
+	localmake "halfWidth item 1 :peddleSettings
+	localmake "radius1 item 2 :peddleSettings
+	localmake "angle1 item 3 :peddleSettings
+	localmake "radius2 item 4 :peddleSettings
+	localmake "angle2 item 5 :peddleSettings
+	localmake "angle3 item 6 :peddleSettings
+
+	left 90
+	jumpForward :halfWidth
+	right 90
+	setPenSize 0
+	polyStart
+	arcRight :angle1 :radius1
+	left :angle2
+	arcLeft :angle3 :radius2
+	right 180 ; symmetry
+	arcLeft :angle3 :radius2
+	left :angle2
+	arcRight :angle1 :radius1
+	polyEnd
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to peddleRing :innerRadius :peddleLength :peddleWidth :numPeddles
+	localmake "oldPos pos
+	repeat :numPeddles [
+		jumpForward :innerRadius
+		
+		peddle :peddleLength :peddleWidth
+		jumpTo :oldPos
+		right 360 / :numPeddles
+	]
+end
+
+to innerFlower :size
+	localmake "oldHeading heading
+	localmake "peddleLength :size * 0.6
+	localmake "peddleWidth :peddleLength * 0.27
+	localmake "innerRadius :size - :peddleLength
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "brown
+	setProperty "colorStops 0.18 "#b60
+	setProperty "colorStops 0.35 "#fd3
+	setProperty "colorStops 0.5 "#ffa
+	setProperty "colorStops 0.7 "white
+	setProperty "colorStops 1 "white
+	localmake "gradient createRadialGradient pos pos :size :colorStops "pad
+	setFillGradient :gradient
+	circle :innerRadius * 1.04
+	peddleRing :innerRadius :peddleLength :peddleWidth 16
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "brown
+	setProperty "colorStops 0.5 "#840
+	setProperty "colorStops 0.75 "#c90
+	setProperty "colorStops 1 "#ff8
+	localmake "gradient createRadialGradient pos pos :size * 0.4 :colorStops "pad
+	setFillGradient :gradient
+	isotoxalStar :size * 0.4 :size * 0.15 50
+
+	centreCircle :size * 0.18
+	setHeading :oldHeading
+end
+
+to outerFlower :size
+	localmake "innerRadius :size * 0.7
+	localmake "peddleLength :size - :innerRadius
+	localmake "peddleWidth :peddleLength * 0.3
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "black
+	setProperty "colorStops 0.2 "black
+	setProperty "colorStops 0.42 "#44a
+	setProperty "colorStops 0.55 "#070
+	setProperty "colorStops 0.8 "#0d0
+	setProperty "colorStops 1 "#af0
+	localmake "gradient createRadialGradient pos pos :size :colorStops "pad
+	setFillGradient :gradient
+	circle :innerRadius
+	localmake "numPeddles 64
+	peddleRing :innerRadius * 0.98 :peddleLength :peddleWidth :numPeddles
+	setPenColor "#af0
+	setPenSize :size * 0.002
+	radiatingLines :size * 0.6 :size * 0.5 :numPeddles
+	setPenSize 0
+	setFillColor "black
+	repeat 32 [
+		ellipse :size * 0.4 :size * 0.05
+		right 360 / 32
+	]
+end
+
+to outerMostFlower :size
+	localmake "innerRadius :size * 0.65
+	localmake "outerPeddleRadius :size * 0.95
+	localmake "peddleLength :outerPeddleRadius - :innerRadius
+	localmake "peddleWidth :peddleLength * 0.22
+	localmake "numPeddles 64
+	setPenColor "#080
+	setPenSize :size * 0.002
+	radiatingLines :size * 0.9 0 :numPeddles
+	right 180 / :numPeddles
+	setPenColor "white
+	setPenSize :size * 0.001
+	radiatingLines :size 0 :numPeddles
+	setPenSize 0
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "black
+	setProperty "colorStops 0.45 "black
+	setProperty "colorStops 0.62 "#d60
+	setProperty "colorStops 0.75 "yellow
+	setProperty "colorStops 0.85 "white
+	setProperty "colorStops 1 "white
+	localmake "gradient createRadialGradient pos pos :outerPeddleRadius :colorStops "pad
+	setFillGradient :gradient
+	circle :innerRadius
+	peddleRing :innerRadius * 0.98 :peddleLength :peddleWidth :numPeddles
+	setPenColor "#ff0
+	setPenSize :size * 0.002
+	radiatingLines :innerRadius * 1.1 0 :numPeddles
+end
+
+to flower :size
+	outerMostFlower :size
+	right 360 / 128
+	outerFlower :size * 0.65
+	innerFlower :size * 0.35
+end
+
+setScreenColor "black
+flower 100

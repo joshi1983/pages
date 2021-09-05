@@ -1,0 +1,277 @@
+<div class="differences-from-fms-logo">
+	<p>
+		The following comparisons will be useful for anyone familiar with FMSLogo or
+		UCBLogo and want to learn WebLogo.
+		This may be useful if you want to convert FMSLogo scripts into WebLogo scripts.
+		The <span data-helpid="code-editor">code editor</span>'s 
+		<span data-helpid="autofixcode"><strong>Edit</strong> -&gt;
+		<strong>Auto-fix Code</strong> feature</span>
+		will automatically fix a lot of differences from other
+		Logo interpreters but this may help you understand the fixes.
+	</p>
+	<p>
+		FMS Logo has a lot in common with WebLogo but also a lot of differences.
+	</p>
+
+	<h3>WebLogo is Far More Portable</h3>
+	<p>As a web application, WebLogo works on far more operating systems and devices than
+	FMS Logo which was for Windows.</p>
+
+	<h3>Different Focus</h3>
+	<p>
+		To be great at something often requires focus and specialization.
+		WebLogo focuses on making beautiful drawings and being easy to learn.
+		WebLogo does not try to be a general-purpose or low-level programming tool.  
+	</p>
+	<p>
+		FMSLogo supports a lot of other features.
+		WebLogo does not have commands or features for CD-rom control,
+		low-level networking, serial port communication,
+		creating buttons or
+		general-purpose interactive applications out of Logo scripts.
+	</p>
+
+	<h3>WebLogo Treats Commander-specific Commands Differently</h3>
+	<p>
+		The following are FMSLogo commands that can be better done by other features of WebLogo:
+	</p>
+	<ul>
+		<li><strong>cleartext</strong> since you can click the clear text messages button.</li>
+		<li><strong>edall</strong> which opens the editor.  This can be done by clicking the Edall button or <strong>File</strong> -&gt; <strong>Edit</strong>.</li>
+		<li><strong>edit</strong> which is almost the same as edall</li>
+		<li><strong>halt</strong> since you can click the pause button in the commander.</li>
+		<li><strong>slowdown</strong> and <strong>slowdraw</strong> since execution speed can be controlled by <strong>Debugging</strong> -&gt; <strong>Maximum Speed</strong>, <strong>Debugging</strong> -&gt; <strong>Slow</strong>...</li>
+		<li><strong>zoom</strong> since zoom can be controlled with the menu 
+		<strong>Zoom</strong> -&gt; <strong>In</strong>, <strong>Zoom</strong> -&gt; <strong>Out</strong> and using a mouse wheel while your cursor is hovered over the graphics screen.</li>
+	</ul>
+	<p>
+		For your convenience and familiarity, some of those trigger similar functionality
+		when run from the Commander but they're not really commands in WebLogo and won't work in Logo procedures.
+	</p>
+
+	<h3>WebLogo Does Not Wrap Graphics Screen</h3>
+	<p>
+	If a drawing or the turtle moves out of the visible rectangle on the screen in WebLogo,
+	it simply stops being visible.
+	You can drag the graphics screen to move the camera or zoom out to see more 
+	of the drawing and turtle.
+	</p>
+	<p>Anything disappearing off the right of the FMS Logo graphics screen, reappears on
+	the left side and similar in the vertical directions.</p>
+	<p>
+	The reason WebLogo uses its approach is to make the experience of viewing the drawing more similar to how
+	nearly all content is viewed in other software.  A few similar examples are:</p>
+	<ul>
+		<li>When a web page is taller than can fit in the viewport of a web browser,
+		you scroll to see it much like you would drag to see it in WebLogo.</li>
+	</ul>
+	<h3>More consistent boolean expressions</h3>
+	<p>
+		Boolean(true/false) conditions are treated the same by WebLogo no matter where they are.
+		It doesn't matter if the evalated value is printed or used in a control-structure such as an
+		<span class="command">if-statement</span>, <span class="command">while</span>, or <span class="command">until</span> loop.
+	</p>
+	<p>
+		That is different from FMSLogo when it comes to while and until loop conditions.
+		FMSLogo expects a list for conditions in while and until loops but does not in an if-statement.
+	</p>
+	<h4>FMSLogo Example</h4>
+	<code>make "x 0<br>
+; FMSLogo-style while-loop.  Notice [] brackets for condition:<br>
+while [5 &gt; :x] [<br>
+&nbsp;&nbsp;make "x :x + 1<br>
+&nbsp;&nbsp;print :x<br>
+&nbsp;&nbsp;print :x &lt; 2 ; prints true or false<br>
+]<br>
+; if-statement condions written without [] brackets in FMSLogo:<br>
+if :x &lt; 2 [<br>
+&nbsp;&nbsp;print "xx<br>
+]</code>
+	<h4>WebLogo Example</h4>
+	<code class="pastable">make "x 0<br>
+; WebLogo-style while-loop.  Notice lack of [] brackets for condition:<br>
+while 5 &gt; :x [<br>
+&nbsp;&nbsp;make "x :x + 1<br>
+&nbsp;&nbsp;print :x<br>
+&nbsp;&nbsp;print :x &lt; 2 ; prints true or false<br>
+]<br>
+; if-statement condition same in both versions.<br>
+if :x &lt; 2 [<br>
+&nbsp;&nbsp;print "xx<br>
+]</code>
+
+	<h3>[ Square Brackets ]</h3>
+	<p>
+		Square brackets in WebLogo and FMSLogo indicate a list but the contents of the
+		lists are evaluated differently.
+		WebLogo always looks for calls to commands, procedures, and treats something as a
+		string literal only when " symbol is found.
+		In other words, the list command is much less useful in WebLogo since the
+		contents of a square-bracketed expression
+		are treated the same as calling the list command.
+	</p>
+	<p>This difference is demonstrated by the following examples.</p>
+
+	<h4>Example with FMS Logo</h4>
+	<code>; print a list in FMSLogo<br>
+print [1 2 3]<br>
+; prints 1 2 3<br>
+print [1 2 pi]<br>
+; prints 1 2 pi<br>
+print (list 1 2 pi)<br>
+; prints 1 2 3.14159265358979<br>
+<br>
+print [hello world]<br>
+; Notice the lack of quotes.
+; prints [hello world]<br>
+print [1 2 pi]<br>
+; prints [1 2 3.14159] in WebLogo but different from FMSLogo<br>
+print (list 1 2 pi)<br>
+; prints [1 2 3.14159] in both versions<br>
+<br>
+; for-loop in FMSLogo:<br>
+for [x 0 5 1] [<br>
+&nbsp;&nbsp;print :x<br>
+]
+
+print ifelse 1 &lt; 2 [sum 1 2] [product 1 2]</code>
+
+	<h4>Similar Example for WebLogo</h4>
+	<code class="pastable">; print a list in WebLogo<br>
+print [1 2 3]<br>
+; prints [1 2 3]<br>
+<br>
+print ["hello "world]<br>
+; Notice the quotes.<br>
+; prints [hello world]<br>
+<br>
+; for-loop in WebLogo:<br>
+for ["x 0 5 1] [<br>
+&nbsp;&nbsp;print :x<br>
+]
+
+print ifelse 1 &lt; 2  sum 1 2  product 1 2
+; Notice the lack of square brackets since we're returning numbers.
+; WebLogo requires square brackets if you use ifelse for instruction lists, though.</code>
+	<p>FMSLogo is similar to several other Logo interpreters in its treatment of
+	data list literals without needing quotes but
+	this seemed like an important change for WebLogo for a few reasons.</p>
+	<ul>
+		<li>If adding quotes to lots of words in text bothers you, use apostrophes instead.
+		The alternative, long string literal, preserves multiple spaces, tabs, and other 
+		information that gets ignored in square bracket expressions.
+		For example, print count 'hello     world' prints 15 instead of 11.
+		</li>
+		<li>Requiring a quote for all string literals can be easier to read and understand.
+		You don't need to ask yourself, "is this an instruction list or a data list?"
+		to know how words like print will be interpretted as a command or the string "print" since
+		it'll be a string if and only if there is a quote immediately before it.
+		</li>
+		<li>WebLogo's treatment of square brackets and string literals makes it easier to express complex data structures with nested lists, calculated values... by letting you call any command or procedure and use any operator.</li>
+		<li>WebLogo's approach to square brackets for data lists should make it easier to learn other programming languages.
+		A wider number of popular programming languages let you evaluate complex expressions in array or list literals similar to WebLogo's which
+		means anyone learning WebLogo should have 1 less difference to study when acquiring a different programming language.
+		Java, JavaScript, c, c++, PHP, Python all make it simple to call functions, evaluate +, -, *... 
+		operators in array or list literals.</li>
+	</ul>
+	<h3>Local Variable Scopes</h3>
+	<p>WebLogo does not support something called dynamic scopes.  FMSLogo, Amiga Logo and several other Logo interpreters support dynamic scopes of local variables.</p>
+	<p>WebLogo's local variables can be read in the procedure that assigns them and nowhere else.
+	In WebLogo, you can pass a local variable as a parameter to another procedure if you need
+	another procedure to access the same value.</p>
+	<p>Dynamic scopes allow procedures to access local variables from any procedure that calls it.
+	More precisely, dynamic scopes allow any local variable or parameter in the procedure
+	call stack nearest the current procedure to be accessed by name.
+	It sounds complicated and that's partly why WebLogo doesn't support it.</p>
+	<p>WebLogo does not support dynamic scopes because:</p>
+	<ul>
+		<li>Static scopes are easier to learn and teach than dynamic scopes.
+		It is simpler to explain and understand that "a variable can either be local or global" than
+		"a variable can be local, global, or anywhere on the call stack".
+		Simplicity is particularly important when Logo is supposed to be easy to learn
+		for people who haven't programmed before.</li>
+		<li><p>Dynamic scopes generally make code harder to troubleshoot and the code is harder to validate.
+		If you see code that reads from a variable x but don't see x assigned anywhere in the procedure,
+		you can't know it'll cause a problem unless you look through all the procedures that call it.
+		Needing to look at all code calling your procedure gets more difficult as the complexity of your project
+		increases.</p>
+		<p>
+		WebLogo's lack of support for dynamic scopes means that if you ever see a variable
+		being read without assigned in that one procedure, it is either global or you know you must fix it.
+		This also means, you can get a very complete understanding of how code in a procedure should
+		behave by looking at nothing more than that procedure.</p>
+		</li>
+		<li>We want WebLogo to help people prepare for programming in other languages which don't support
+		dynamic scopes.  Java, JavaScript, TypeScript, Python, c#, PHP, Rust are some of the most
+		popular programming languages as I write this and none of them support dynamic scopes.
+		Not supporting dynamic scopes in WebLogo means there is one more similarity with other
+		popular programming languages. WebLogo programmers can create beautiful things in other languages
+		with the time
+		they'd otherwise spend learning the difference between static and dynamic scopes.</li>
+	</ul>
+	<p>The following is an example that would demonstrate dynamic scope of a variable x in a Logo interpreter like FMSLogo.</p>
+	<code>to p
+	print :x
+end
+
+to p2
+	localmake "x "hi
+	p
+end
+p2
+	</code>
+	<p>Below is a version of code that avoids needing dynamic scope support.  The following would work in both WebLogo FMSLogo.
+	An x parameter is added and a value is passed to it explicitly.</p>
+	<code>to p :x
+	print :x
+end
+
+to p2
+	localmake "x "hi
+	p :x
+end
+p2</code>
+	<h3>Differences with Property List Commands</h3>
+	<p>
+	The underlying property list data type should be the same but some commands are different enough
+	that new command names were chosen to clarify the difference.
+	</p>
+	<p>The commands in FMS Logo create property lists for global variables but don't work for local variables.  
+	This limitation is why WebLogo creates property lists differently.</p>
+	<p>
+	Instead of pprop both setting properties and creating new property lists, 
+	the <span class="command">setProperty command</span> only sets properties on an existing property list 
+	that was created using <span class="command">createPList</span>.
+	This way, you can use <span class="command">localmake</span> or <span class="command">make</span> 
+	to assign your property lists to local or global variables.</p>
+	<h3>Animation</h3>
+	<p>WebLogo makes it easier to create and export animations.</p>
+	<p>Animations in FMS Logo usually use the <strong>wait</strong> command or <strong>gifsave</strong> command.
+	Viewing an animation within FMS Logo tends to be flickery because you see the slow drawing process between each frame.</p>
+	<p>WebLogo lets you turn any drawing into an animation by making use of the animation time anywhere in your script.
+	WebLogo automatically generates code to help you indicate properties of your animation such as duration.
+	Another procedure called animation.snapshotstyle lets you indicate properties that change with time such as
+	zoom, and what part of the drawing you want to show.
+	</p>
+	<p>WebLogo lets you download a frame sequence.
+	A frame sequence gives you the best flexibility to use the animation data
+	without any loss of quality and with the widest variety of third party software.
+	You can use the frame sequence in many other animation applications such as ffmpeg.
+	This enables you to eventually make mp4 and other video formats combined with audio.
+	The frame sequence can be made with any standard frame rate, resolution,
+	rasterized image format and with motion blur.
+	</p>
+	<h3>Minor Command Differences</h3>
+	<ul>
+		<li><span class="command">pos</span> returns a list of 3 numbers(x y z) but FMSLogo returns only 2(x y).
+		Although deviating from FMSLogo has drawbacks, the z-coordinate is part of the turtle's position so
+		adding z seemed like a worthwhile improvement.
+		</li>
+		<li><span class="command">setPos</span> can set the z-coordinate while FMS Logo could only set x and y using <span class="command">setPos</span>.
+		setPos in WebLogo works with both a list of length 2 or 3.</li>
+		<li><span class="command">setPenSize</span> accepts a number and <span class="command">penSize</span> returns a number.
+		FMSLogo's penSize commands work with a list of 2 numbers representing sizes in 2 directions.
+		Usually people just copied the number so a size of 5 would be indicated with [5 5].
+		This extra complexity didn't seem worth keeping so WebLogo works with a single number.</li>
+	</ul>
+</div>

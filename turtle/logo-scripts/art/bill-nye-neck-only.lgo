@@ -1,0 +1,640 @@
+; Inspired by photo at:
+; https://crosscut.com/2017/11/bill-nye-the-science-guy-new-documentary-climate-science
+
+to leftLine :len
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	left 90
+	forward :len
+	penUp
+	setPos :oldPos
+	penDown
+	setHeading :oldHeading
+end
+
+; Used for a crosshatching pattern
+to straightJaggedEdgePath :len :width :numPoints
+	localmake "step :len / :numPoints
+	localmake "angle arcTan :width / (:step * 0.5)
+	localmake "sideStepLength :step * 0.5 / cos :angle
+	repeat :numPoints [
+		right :angle
+		forward :sideStepLength
+		left :angle * 2
+		forward :sideStepLength
+		right :angle
+	]
+end
+
+to straightJaggedEdgePath2 :len :width :numPoints
+	localmake "step :len / :numPoints
+	localmake "angle arcTan -:width / (:step * 0.5)
+	localmake "sideStepLength :step * 0.5 / cos :angle
+	repeat :numPoints [
+		right :angle
+		forward :sideStepLength
+		left :angle * 2
+		forward :sideStepLength
+		right :angle
+	]
+end
+
+to arc2JaggedEdgePath :angle :radius :jaggedWidth :numPoints
+	localmake "stepAngle :angle / :numPoints
+	localmake "step 2 * :radius * sin (:stepAngle * 0.5)
+	repeat :numPoints [
+		straightJaggedEdgePath :step :jaggedWidth 1
+		right :stepAngle
+	]
+end
+
+to arcLeftJaggedEdgePath :angle :radius :jaggedWidth :numPoints
+	localmake "stepAngle :angle / :numPoints
+	localmake "step 2 * :radius * sin (:stepAngle * 0.5)
+	repeat :numPoints [
+		straightJaggedEdgePath :step :jaggedWidth 1
+		left :stepAngle
+	]
+end
+
+to neckGradient1 :nyeSize
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	setPenSize 0
+	right 14.1
+	forward :nyeSize * 0.1722
+	localmake "fromPos pos
+	setHeading :oldHeading - 145
+	forward :nyeSize * 0.125
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#0f0609
+	setProperty "colorStops 0.4 "#110505
+	setProperty "colorStops 0.5 "#361c1d
+	setProperty "colorStops 0.8 "#86564c
+	setProperty "colorStops 0.95 "#885248
+	setProperty "colorStops 1 "#ac7966
+	localmake "gradient createLinearGradient :fromPos pos :colorStops "pad
+	setFillGradient :gradient
+	setPos :fromPos
+	setHeading :oldHeading + 174
+	polyStart
+	arcRight 56 :nyeSize * 0.059
+	arcRight 5 :nyeSize * 0.5
+	arcLeft 6.1 :nyeSize * 0.24
+	right 54.7
+	arcLeft 23 :nyeSize * 0.059
+	right 150
+	forward :nyeSize * 0.04
+	arcRight 50 :nyeSize * 0.03
+	left 68
+	forward :nyeSize * 0.07
+	polyEnd
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to neckGradient2 :nyeSize
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	left 16
+	forward :nyeSize * 0.38
+	localmake "gradientFromPos pos
+	right 170
+	setPenSize 0
+	forward :nyeSize * 0.277
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#846552 ; top of side burn hair
+	setProperty "colorStops 0.05 "#967561 ; middle of side hair
+	setProperty "colorStops 0.11 "#9c7d6b ; bottom of side hair
+	setProperty "colorStops 0.13 "#5a3628 ; shadow under side hair
+	setProperty "colorStops 0.143 "#8b5e4a
+	setProperty "colorStops 0.2 "#8b5e4a
+	setProperty "colorStops 0.25 "#8b5e4a
+	setProperty "colorStops 0.33 "#502f28 ; jaw line start
+	setProperty "colorStops 0.5 "#37201a
+	setProperty "colorStops 0.7 "#37201a
+	setProperty "colorStops 0.8 "#502f28
+	setProperty "colorStops 0.9 "#37211f ; light part of neck in shadow
+	setProperty "colorStops 1 "#291315 ; low neck
+	localmake "gradient createLinearGradient :gradientFromPos pos :colorStops "pad
+	setFillGradient :gradient
+	setPos :gradientFromPos
+	setHeading :oldHeading + 70
+	polyStart
+	forward :nyeSize * 0.022
+	right 90
+	arcRight 40 :nyeSize * 0.01
+	arcLeft 30 :nyeSize * 0.06
+	forward :nyeSize * 0.015
+	arcLeft 30 :nyeSize * 0.01
+	arcRight 90 :nyeSize * 0.018
+	arcLeft 17 :nyeSize * 0.07
+	arcLeft 33 :nyeSize * 0.01
+	arcLeft 9 :nyeSize * 0.3
+	arcLeft 120 :nyeSize * 0.005
+	arcRight 75 :nyeSize * 0.008
+	arcLeft 8.7 :nyeSize * 0.5
+	arcLeft 60 :nyeSize * 0.005
+	arcRight 60 :nyeSize * 0.008
+	arcLeft 60 :nyeSize * 0.009
+	arcRight 120 :nyeSize * 0.002
+	arcLeft 60 :nyeSize * 0.005
+	arcRight 4.6 :nyeSize * 0.3
+	right 90.8
+	forward :nyeSize * 0.068
+	right 67
+	arcLeft 20 :nyeSize * 0.031
+	right 90
+	arcLeft 45 :nyeSize * 0.12
+	arcLeft 27 :nyeSize * 0.045
+	arcRight 85 :nyeSize * 0.026
+	arcLeft 7 :nyeSize * 0.5
+	arcRight 15 :nyeSize * 0.08
+	arcLeft 23 :nyeSize * 0.16
+	polyEnd
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to neckGradient3 :nyeSize
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	left 21.5
+	forward :nyeSize * 0.29
+	localmake "fromPos pos
+	setHeading :oldHeading - 92
+	forward :nyeSize * 0.017
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#62372e
+	setProperty "colorStops 0.12 "#7a4d47
+	setProperty "colorStops 0.25 "#9c6356
+	setProperty "colorStops 0.32 "#9c6356
+	setProperty "colorStops 0.4 "#8a614d
+	setProperty "colorStops 1 "#5b3930
+	localmake "gradient createLinearGradient :fromPos pos :colorStops "pad
+	setFillGradient :gradient
+	setPos :oldPos
+	setHeading :oldHeading - 22.15
+	forward :nyeSize * 0.28905
+	right 5
+	polyStart
+	arcLeft 155 :nyeSize * 0.0005
+	arcRight 9.7 :nyeSize * 0.1
+	left 19
+	arcRight 3.92 :nyeSize * 0.2
+	arcRight 120 :nyeSize * 0.001
+	left 117
+	arcLeft 4 :nyeSize * 0.5
+	left 90
+	forward :nyeSize * 0.0182
+	left 126
+	arcRight 36 :nyeSize * 0.026
+	arcLeft 1 :nyeSize * 2
+	left 90
+	forward :nyeSize * 0.0018
+	right 80.4
+	arcLeft 9.4 :nyeSize * 0.1
+	polyEnd
+	setPos :oldPos
+	setHeading :oldHeading	
+end
+
+to neckGradient4 :nyeSize
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "radius :nyeSize * 0.131
+	setFillColor transparent
+	forward :nyeSize * 0.19
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#7d574c
+	setProperty "colorStops 0.9 "#7d574c
+	setProperty "colorStops 0.94 "#956e67
+	setProperty "colorStops 0.95 "#9a746b
+	setProperty "colorStops 0.96 "#956e67
+	setProperty "colorStops 0.98 "#674941
+	setProperty "colorStops 1 "#4d3b37
+	localmake "gradient createRadialGradient pos pos :radius :colorStops "pad
+	setFillGradient :gradient
+	right 60
+	setPos :oldPos
+	setHeading :oldHeading - 40.7
+	forward :nyeSize * 0.12
+	left 16
+	polyStart
+	arcRight 20.5 :nyeSize * 0.15
+	right 35
+	arcRight 0.8 :nyeSize * 2
+	right 160
+	arcLeft 20 :nyeSize * 0.2
+	polyEnd
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to neckGradient5 :nyeSize
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	left 38
+	forward :nyeSize * 0.1
+	localmake "gradientFromPos pos
+	right 70
+	forward :nyeSize * 0.026
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#c9a084
+	setProperty "colorStops 1 "#845242
+	localmake "gradient createLinearGradient :gradientFromPos pos :colorStops "pad
+	setFillGradient :gradient
+
+	setPos :oldPos
+	setHeading :oldHeading - 25.5
+	forward :nyeSize * 0.0815
+	localmake "arcRadius :nyeSize * 0.06
+	polyStart
+	arcLeft 0.5 :arcRadius
+	localmake "jaggedWidth :nyeSize * 0.008
+	arcLeftJaggedEdgePath 1 :arcRadius :jaggedWidth * 0.5 1
+	arcLeftJaggedEdgePath 64.2 :arcRadius :jaggedWidth 50
+	arcLeftJaggedEdgePath 1 :arcRadius :jaggedWidth * 0.75 1
+	arcLeftJaggedEdgePath 1 :arcRadius :jaggedWidth * 0.5 1
+	left 123.5
+	arcLeft 4.1 :nyeSize * 0.3
+	left 7
+	arcLeft 7.6 :nyeSize * 0.21
+	left 45
+	arcRight 24 :nyeSize * 0.05
+	polyEnd
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to neckGradient6 :nyeSize
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	left 30.1
+	forward :nyeSize * 0.234
+	localmake "fromPos pos
+	left 160
+	forward :nyeSize * 0.075
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#6b5349
+	setProperty "colorStops 0.5 "#5b4035
+	setProperty "colorStops 0.9 "#6c4b42
+	setProperty "colorStops 1 "#957165
+	localmake "gradient createLinearGradient :fromPos pos :colorStops "pad
+	setFillGradient :gradient
+	setPos :fromPos
+	setHeading :oldHeading - 178.5
+	polyStart
+	arcLeft 2.7 :nyeSize
+	left 20
+	arcLeft 8 :nyeSize * 0.22
+	left 168
+	arcRight 17.5 :nyeSize * 0.25
+	polyEnd
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to neckGradient7 :nyeSize
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "radius :nyeSize * 0.122
+	forward :nyeSize * 0.21
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#6a3e35
+	setProperty "colorStops 0.83 "#6a3e35
+	setProperty "colorStops 0.9 "#a76c5c
+	setProperty "colorStops 0.96 "#7e5342
+	setProperty "colorStops 1 "#744e41
+	localmake "gradient createRadialGradient pos pos :radius :colorStops "pad
+	setFillGradient :gradient
+	setPos :oldPos
+	setHeading :oldHeading - 29.4
+	forward :nyeSize * 0.237
+	polyStart
+	right 121
+	straightJaggedEdgePath :nyeSize * 0.0165 :nyeSize * 0.003 20
+	right 90
+	forward :nyeSize * 0.003
+	left 35
+	arcLeft 30 :nyeSize * 0.03
+	right 65
+	arc2JaggedEdgePath 53 :nyeSize * 0.05 :nyeSize * 0.005 40
+	arc2JaggedEdgePath 1 :nyeSize * 0.05 :nyeSize * 0.002 1
+	arcRight 1 :nyeSize * 0.05
+	right 110
+	arcRight 14 :nyeSize * 0.22
+	polyEnd
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+
+to neckGradient8 :nyeSize
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	setPenSize 0
+	left 16
+	forward :nyeSize * 0.18
+	localmake "fromPos pos
+	left 105
+	forward :nyeSize * 0.07
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#56332f
+	setProperty "colorStops 0.5 "#6a3e35
+	setProperty "colorStops 0.7 "#a76c5c
+	setProperty "colorStops 0.92 "#785040
+	setProperty "colorStops 0.97 "#785040
+	setProperty "colorStops 1 "#957165
+	localmake "gradient createLinearGradient :fromPos pos :colorStops "pad
+	setFillGradient :gradient
+	setPos :oldPos
+	setHeading :oldHeading - 25.3
+	forward :nyeSize * 0.216
+	right 150
+	polyStart
+	; upper corner
+	arcLeft 25 :nyeSize * 0.025
+	arcRight 30 :nyeSize * 0.055
+	arcRight 5 :nyeSize * 0.2
+	arcRight 15 :nyeSize * 0.103
+	right 90
+	arcRight 18 :nyeSize * 0.1
+	arcLeft 110 :nyeSize * 0.005
+	arc2JaggedEdgePath 14 :nyeSize * 0.15 :nyeSize * 0.005 40
+	arc2JaggedEdgePath 2 :nyeSize * 0.15 :nyeSize * 0.002 6
+	arcRight 2 :nyeSize * 0.15
+	right 157
+	arcLeft 56 :nyeSize * 0.06
+	right 54
+	arcRight 17 :nyeSize * 0.1
+	right 4
+	arcRight 9.5 :nyeSize * 0.15
+	right 59
+	arcLeft 51 :nyeSize * 0.05
+	polyEnd
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to neckGradient9 :nyeSize
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "radius :nyeSize * 0.045
+	left 4
+	forward :nyeSize * 0.105
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#583132
+	setProperty "colorStops 0.2 "#4d2c2b
+	setProperty "colorStops 0.33 "#69423d
+	setProperty "colorStops 0.4 "#54322d
+	setProperty "colorStops 0.48 "#5b3a33
+	setProperty "colorStops 0.55 "#643f39
+	setProperty "colorStops 0.7 "#583732
+	setProperty "colorStops 1 "#5c372e
+	localmake "gradient createRadialGradient pos pos :radius :colorStops "pad
+	setFillGradient :gradient
+	left 30
+	setPos :oldPos
+	setHeading :oldHeading - 16
+	forward :nyeSize * 0.1018
+	polyStart
+	arcLeftJaggedEdgePath 12.5 :nyeSize * 0.2 :nyeSize * 0.009 50
+	right 90
+	forward :nyeSize * 0.009
+	right 8
+	arcLeft 9.5 :nyeSize * 0.1
+	right 90
+	arc2 19.5 :nyeSize * 0.13
+	right 85
+	arcLeft 25 :nyeSize * 0.035
+	polyEnd
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to neckGradient10 :nyeSize
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "radius :nyeSize * 0.045
+	left 20
+	forward :nyeSize * 0.12
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#85544d
+	setProperty "colorStops 1 "#5a3a2d
+	localmake "gradient createRadialGradient pos pos :radius :colorStops "pad
+	circle 3
+	setFillGradient :gradient
+	setPos :oldPos
+	setHeading :oldHeading - 30
+	forward :nyeSize * 0.095
+	right 10
+	polyStart
+	arcLeft 16 :nyeSize * 0.2
+	right 110
+	arcLeft 12 :nyeSize * 0.2
+	right 90
+	forward :nyeSize * 0.045
+	polyEnd
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to drawNeck :nyeSize
+	setPenSize 0
+	neckGradient10 :nyeSize
+	neckGradient8 :nyeSize
+	neckGradient9 :nyeSize
+	neckGradient1 :nyeSize
+	neckGradient2 :nyeSize
+	neckGradient3 :nyeSize
+	neckGradient4 :nyeSize
+	neckGradient5 :nyeSize
+	neckGradient6 :nyeSize
+	neckGradient7 :nyeSize
+	hair1 :nyeSize
+end
+
+to hair1 :nyeSize
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	setPenSize 0
+	setFillColor "#211715
+	left 25.6
+	forward :nyeSize * 0.263
+	right 30
+	polyStart
+	arcLeft 21.2 :nyeSize * 0.11
+	left 90
+	arcRight 70 :nyeSize * 0.016
+	left 160
+	arcLeft 8 :nyeSize * 0.2
+	arcRight 20 :nyeSize * 0.03
+	arcLeft 59 :nyeSize * 0.013
+	arcLeft 90 :nyeSize * 0.0015
+	polyEnd
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to drawFace :nyeSize
+	chinAndRightCheekOutline :nyeSize
+	jawGradient1 :nyeSize
+	cheekboneGradient1 :nyeSize
+end
+
+to chinAndRightCheekOutline :nyeSize
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	setPenSize 0
+	left 7.1
+	forward :nyeSize * 0.18
+	localmake "fromPos pos
+	right 56.1	
+	forward :nyeSize * 0.1705
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#462e2c
+	setProperty "colorStops 0.1 "#574143
+	setProperty "colorStops 0.5 "#472f2b
+	setProperty "colorStops 0.9 "#352224
+	setProperty "colorStops 1 "#4b3327
+	localmake "gradient createLinearGradient :fromPos pos :colorStops "pad
+	setFillGradient :gradient
+	setPos :fromPos
+	setHeading :oldHeading - 7.1 + 112
+	polyStart
+	forward :nyeSize * 0.02
+	arcLeft 20 :nyeSize * 0.03
+	arcRight 52 :nyeSize * 0.017
+	arcLeft 55 :nyeSize * 0.005
+	arcLeft 18 :nyeSize * 0.1
+	arcLeft 40 :nyeSize * 0.02
+	forward :nyeSize * 0.02
+	arcRight 5 :nyeSize * 0.01
+	arcLeft 15 :nyeSize * 0.05
+	arcLeft 5.1 :nyeSize * 0.5
+	arcRight 70 :nyeSize * 0.01
+	arcLeft 50 :nyeSize * 0.004
+	arcLeft 13 :nyeSize * 0.1
+	right 162
+	arcRight 25 :nyeSize * 0.03
+	arcRight 4 :nyeSize * 0.1
+	arcLeft 9 :nyeSize * 0.2
+	arcRight 2 :nyeSize * 0.5
+	arcLeft 7 :nyeSize * 0.15
+	arcRight 15 :nyeSize * 0.03
+	forward :nyeSize * 0.022
+	arcRight 40 :nyeSize * 0.02
+	arcLeft 6 :nyeSize * 0.18
+	arcRight 40 :nyeSize * 0.02
+	arcRight 8.8 :nyeSize * 0.3
+	arcRight 54 :nyeSize * 0.00458
+	polyEnd
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to cheekboneGradient1 :nyeSize
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	setPenSize 0
+	left 21.4
+	forward :nyeSize * 0.235
+	localmake "fromPos pos
+	right 20
+	forward :nyeSize * 0.27
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#321
+	setProperty "colorStops 0.02 "#442c28
+	setProperty "colorStops 0.04 "#905548 ; near top of forehead
+	setProperty "colorStops 0.05 "#d09c86
+	setProperty "colorStops 0.1 "#d7a48f
+	setProperty "colorStops 0.29 "#c0927c ; near eyebrow
+	setProperty "colorStops 0.31 "#7f513a ; part of eyebrow
+	setProperty "colorStops 0.37 "#78513a ; part of eyebrow
+	setProperty "colorStops 0.38 "#9c7057 ; near eyebrow
+	setProperty "colorStops 0.45 "#a8755f
+	setProperty "colorStops 0.52 "#cea087 ; upper, well-lit part of cheekbone
+	setProperty "colorStops 0.57 "#b2856f
+	setProperty "colorStops 0.62 "#694536 ; cheekbone shadow
+	setProperty "colorStops 0.67 "#694536 ; cheekbone shadow
+	setProperty "colorStops 0.75 "#8e5d49 ; cheek shadow
+	setProperty "colorStops 0.8 "#96644f
+	setProperty "colorStops 0.85 "#a7715c ; lower part of cheek
+	setProperty "colorStops 0.88 "#a7715c
+	setProperty "colorStops 0.96 "#815444
+	setProperty "colorStops 0.99 "#5b3c37 ; near bottom of jaw
+	setProperty "colorStops 1 "#37201a
+	localmake "gradient createLinearGradient pos :fromPos :colorStops "pad
+	setFillGradient :gradient
+	setPos :fromPos
+	setHeading :oldHeading + 18
+	polyStart
+	arcLeft 20 :nyeSize * 0.18
+	arcRight 18 :nyeSize * 0.08
+	arcLeft 30 :nyeSize * 0.008
+	arcRight 7 :nyeSize * 0.1
+	arcRight 50 :nyeSize * 0.05
+	arcLeft 21 :nyeSize * 0.0093
+	arcRight 9 :nyeSize * 0.3
+	arcLeft 35 :nyeSize * 0.003
+	arcLeft 15 :nyeSize * 0.1
+
+	arcRight 35 :nyeSize * 0.08
+	arcRight 178 :nyeSize * 0.005
+	arcLeft 37 :nyeSize * 0.08
+	arcRight 48 :nyeSize * 0.011
+	forward :nyeSize * 0.01
+	left 50
+	forward :nyeSize * 0.005
+	arcRight 70 :nyeSize * 0.006
+	arcLeft 30 :nyeSize * 0.09
+	arcRight 28 :nyeSize * 0.02
+	arcLeft 70 :nyeSize * 0.03
+	arcRight 30 :nyeSize * 0.04
+	arcRight 15.3 :nyeSize * 0.3
+	polyEnd
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to jawGradient1 :nyeSize
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "radius :nyeSize * 0.126
+	right 5
+	forward :nyeSize * 0.27
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#a9725a
+	setProperty "colorStops 0.8 "#a46b52
+	setProperty "colorStops 0.9 "#7e5342
+	setProperty "colorStops 1 "#37201a
+	localmake "gradient createRadialGradient pos pos :radius :colorStops "pad
+	setFillGradient :gradient
+	setPos :oldPos
+	setHeading :oldHeading - 18
+	forward :nyeSize * 0.24
+	right 10
+	polyStart
+	arcRight 15 :nyeSize * 0.2
+	arcLeft 35 :nyeSize * 0.04
+	left 115
+	straightJaggedEdgePath :nyeSize * 0.033 :nyeSize * 0.006 25
+	straightJaggedEdgePath :nyeSize * 0.002 :nyeSize * 0.004 1
+	forward :nyeSize * 0.003
+	left 40
+	arcLeft 7.1 :nyeSize * 0.435
+	arcLeft 100 :nyeSize * 0.004
+	polyEnd
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to drawBillNye :height
+	drawNeck :height
+	drawFace :height
+end
+
+;image 888 456 'http://localhost:9001/turtle/images/bill-nye.jpg'
+setPenSize 0.1
+drawBillNye 888

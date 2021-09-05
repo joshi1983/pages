@@ -1,0 +1,390 @@
+; Inspired by:
+; https://upload.wikimedia.org/wikipedia/commons/e/e5/NASA_logo.svg
+; Referenced from:
+; https://en.wikipedia.org/wiki/NASA
+make "nasaRed "#fc3d21
+
+to redBackgroundStreak :logoHeight
+	localmake "oldState turtleState
+	jumpRight :logoHeight * 0.04958197
+	jumpForward :logoHeight * 0.4336421
+	setPenSize 0
+	setFillColor :nasaRed
+	right 58
+	polyStart
+	arcLeft 6 :logoHeight * 3.8
+	arcLeft 10 :logoHeight * 1
+	arcLeft 21 :logoHeight * 0.57
+	left 162.3
+	arcRight 22 :logoHeight * 0.8
+	arcRight 10 :logoHeight * 2.3
+	arcRight 2 :logoHeight * 7
+	arcLeft 10 :logoHeight * 2
+	arcLeft 7.6 :logoHeight * 0.6
+	left 120
+	jumpForward :logoHeight * 0.013
+	left 55
+	arcRight 15 :logoHeight * 0.9
+	jumpForward :logoHeight * 0.4
+	arcLeft 16.9 :logoHeight * 1.34
+	polyEnd
+	setTurtleState :oldState
+end
+
+to redForegroundStreak :logoHeight
+	localmake "oldState turtleState
+	jumpLeft :logoHeight * 0.4655
+	jumpForward :logoHeight * 0.0455
+	setPenSize 0
+	setFillColor :nasaRed
+	right 48
+	polyStart
+	arcRight 10 :logoHeight * 3.7
+	arcLeft 6 :logoHeight * 3.8
+	right 177.2
+	jumpRight :logoHeight * 0.0251
+	jumpBackward :logoHeight * 0.01137
+	arcRight 9 :logoHeight * 2.1
+	arcLeft 3 :logoHeight * 6
+	arcLeft 9 :logoHeight * 1.9
+	jumpForward :logoHeight * 0.102
+	polyEnd
+	setTurtleState :oldState
+end
+
+to starWithGlare :size
+	localmake "circleRadius :size * 0.6
+	setFillColor "white
+	setPenSize 0
+	circle :circleRadius
+	isotoxalStar :size * 2 :size * 0.173 4
+end
+
+to starBackground :radius
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "maxCircleRadius :radius * 0.02
+	localmake "stars [
+		[0.003 0.915 0.45]
+		[-0.059 0.806 0.6]
+		[0.057 0.792 0.6]
+		[-0.03 0.721 0.45]
+		[0.057 0.675 0.45]
+		[0.207 0.588 0.65]
+		[0.204 0.815 1.1]
+		[-0.188 0.723 0.5]
+		[-0.165 0.706 0.5]
+		[-0.14 0.69 0.5]
+		[-0.178 0.657 0.5]
+		[-0.37 0.522 0.5]
+		[-0.334 0.48 0.5]
+		[-0.267 0.505 1.1]
+		[-0.358 -0.214 0.5]
+		[-0.354 -0.406 0.6]
+		[-0.46 -0.507 0.5]
+		[-0.62 -0.457 0.6]
+		[-0.73 -0.47 0.5]
+		[-0.633 -0.513 0.45]
+		[-0.59 -0.545 0.55]
+		[-0.388 -0.625 0.5]
+		[-0.287 -0.549 0.6]
+		[-0.274 -0.646 0.5]
+		[-0.36 -0.742 1.1]
+		[-0.05 -0.621 0.5]
+		[0.147 -0.55 0.5]
+		[0.44 -0.497 0.5]
+		[0.441 -0.383 0.5]
+		[0.518 -0.329 0.6]
+		[0.518 -0.4 0.6]
+		[0.48 -0.719 0.5]
+		[0.6475 -0.272 0.45]
+		[0.665 -0.323 0.6]
+		[0.775 -0.314 1.01]
+		[0.808 -0.3845 0.6]
+		[0.754 -0.402 0.5]
+		[0.665 -0.485 0.45]
+		[0.741 -0.535 0.5]
+		[0.6865 -0.534 1.01]
+	]
+	setPenSize 0
+	setFillColor "#0b3d91
+	circle :radius
+	setFillColor "white
+	repeat count :stars [
+		localmake  "starInfo item repcount :stars
+		localmake "starBrightness item 3 :starInfo
+		jumpRight :radius * item 1 :starInfo
+		jumpForward :radius * item 2 :starInfo
+		ifelse :starBrightness >= 1 [
+			starWithGlare :maxCircleRadius * :starBrightness
+		] [
+			circle :maxCircleRadius * :starBrightness
+		]
+		jumpTo :oldPos
+	]
+	setTurtleState :oldState
+end
+
+to orbitRingBackground :logoHeight
+	localmake "oldState turtleState
+	jumpForward :logoHeight * 0.6514844
+	jumpLeft :logoHeight * 0.2821927
+	setPenSize 0
+	setFillColor "white
+	right 163
+	polyStart
+	arcLeft 20 :logoHeight * 0.68
+	jumpForward 0.05 * :logoHeight
+	arcLeft 3 :logoHeight * 0.7
+	arcRight 8 :logoHeight * 0.4
+	arcLeft 20 :logoHeight * 0.15
+	arcLeft 7 :logoHeight * 0.09
+	arcLeft 25 :logoHeight * 0.025
+	arcLeft 125 :logoHeight * 0.0135
+	arcLeft 25 :logoHeight * 0.025
+	arcRight 15 :logoHeight * 0.5
+	arcRight 10 :logoHeight * 1.1
+	arcRight 15 :logoHeight * 0.45
+	polyEnd
+	setTurtleState :oldState
+end
+
+to orbitRingForeground :logoHeight
+	localmake "oldState turtleState
+	jumpForward :logoHeight * 0.231
+	jumpRight :logoHeight * 0.074
+	setPenSize 0
+	setFillColor "white
+	right 113
+	polyStart
+	arcLeft 7 :logoHeight * 0.4
+	arcLeft 17 :logoHeight * 0.17
+	arcLeft 24 :logoHeight * 0.08
+	arcLeft 30 :logoHeight * 0.04
+	arcLeft 30 :logoHeight * 0.1
+	arcLeft 20 :logoHeight * 0.23
+	arcLeft 19 :logoHeight * 0.63
+	arcLeft 15 :logoHeight
+	arcLeft 19 :logoHeight * 0.45
+	arcLeft 25 :logoHeight * 0.15
+	arcLeft 30 :logoHeight * 0.09
+	arcLeft 30 :logoHeight * 0.05
+	arcLeft 27 :logoHeight * 0.12
+	arcLeft 17 :logoHeight * 0.31
+
+	jumpLeft :logoHeight * 0.011
+	jumpBackward :logoHeight * 0.010893
+	left 177
+
+	arcRight 15 :logoHeight * 0.3
+	arcRight 25 :logoHeight * 0.1
+	arcRight 60 :logoHeight * 0.06
+	arcRight 25 :logoHeight * 0.14
+	arcRight 15 :logoHeight * 0.4
+	arcRight 15 :logoHeight * 0.75
+	arcRight 5 :logoHeight * 1.3
+	arcRight 15 :logoHeight * 0.65
+	arcRight 15 :logoHeight * 0.28
+	arcRight 25 :logoHeight * 0.13
+	arcRight 30 :logoHeight * 0.07
+	arcRight 25 :logoHeight * 0.03
+	arcRight 25 :logoHeight * 0.13
+	arcRight 13.7 :logoHeight * 0.25
+	polyEnd
+	setTurtleState :oldState
+end
+
+to nasaN :fontSize
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "size1 :fontSize * 0.7
+	localmake "size2 :fontSize * 0.32
+	localmake "size3 :fontSize * 0.49
+	localmake "size4 :fontSize * 0.743847
+	localmake "angle1 128
+	localmake "angle2 51
+	localmake "angle3 149.5
+	localmake "arcAngle1 6
+	localmake "arcAngle2 36
+	localmake "arcAngle3 10
+	localmake "arcAngle4 3.81635
+	localmake "arcAngle5 5
+	localmake "arcRadius1 :fontSize * 0.8
+	localmake "arcRadius2 :fontSize * 0.16
+	localmake "arcRadius3 :fontSize * 0.1
+	jumpForward :fontSize
+	setPenSize 0
+	right :angle1
+	polyStart
+	arcRight :arcAngle1 :arcRadius1
+	arcRight :arcAngle2 :arcRadius2
+	arcRight :arcAngle3 :arcRadius3
+	jumpForward :size1
+	arcRight :arcAngle3 :arcRadius3
+	arcRight :arcAngle2 :arcRadius2
+	arcRight :arcAngle4 :arcRadius1
+	setHeading :oldHeading
+	jumpRight :size2
+	left :angle2
+	arcRight :arcAngle5 :arcRadius1
+	arcRight :arcAngle2 :arcRadius2
+	arcRight :arcAngle3 :arcRadius3
+	jumpForward :size3
+	right :angle3
+	jumpForward :size4
+	setHeading :oldHeading
+	jumpRight :fontSize * 0.435
+	left :angle2
+	arcRight :arcAngle5 :arcRadius1
+	arcRight :arcAngle2 :arcRadius2
+	arcRight :arcAngle3 :arcRadius3
+	jumpForward :size1
+	arcRight :arcAngle3 :fontSize * 0.1
+	arcRight 40 :fontSize * 0.222342
+	setHeading :oldHeading
+	jumpLeft :fontSize * 0.305
+	right 135
+	arcRight :arcAngle1 :arcRadius1
+	arcRight :arcAngle2 :arcRadius2
+	arcRight 3 :arcRadius3
+	jumpForward :fontSize * 0.465
+	right :angle3
+	jumpForward :fontSize * 0.725115
+	polyEnd
+	setTurtleState :oldState
+end
+
+to nasaA :fontSize
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "size1 :fontSize * 0.52
+	localmake "size2 :fontSize * 0.97
+	localmake "size3 :fontSize * 0.61
+	localmake "angle1 55
+	localmake "angle2 159.7
+	localmake "arcAngle1 9
+	localmake "arcAngle2 30.8
+	localmake "arcAngle3 55
+	localmake "arcAngle4 6.0785
+	localmake "arcAngle5 4.6263
+	localmake "arcRadius1 :fontSize * 0.8
+	localmake "arcRadius2 :fontSize * 0.12
+	jumpForward :fontSize
+	jumpTo :oldPos
+	setPenSize 0
+	right :angle1
+	polyStart
+	arcLeft :arcAngle1 :arcRadius1
+	arcLeft :arcAngle2 :arcRadius2
+	jumpForward :fontSize * 0.72
+	arcLeft :arcAngle3 :arcRadius2
+	arcLeft :arcAngle4 :arcRadius1
+	setHeading :oldHeading
+	jumpRight :size1
+	right :angle2
+	jumpForward :size2
+	arcLeft :arcAngle2 :arcRadius2
+	arcLeft :arcAngle5 :arcRadius1
+	setHeading :oldHeading
+	jumpLeft :size3
+	right 50
+	arcLeft 10 :fontSize * 0.49
+	arcLeft 61 :fontSize * 0.1
+	jumpForward :fontSize * 0.59
+	left 142.5
+	jumpForward :fontSize * 0.49
+	left 5
+	jumpForward :fontSize * 0.12
+	arcLeft 50 :fontSize * 0.1
+	arcLeft 6.4072 :fontSize * 0.5
+	polyEnd
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpRight :fontSize * 0.45
+	jumpForward :fontSize * 0.23
+	setPenSize :fontSize * 0.4
+	setPenColor fillColor
+	forward :fontSize * 0.13
+	setTurtleState :oldState
+end
+
+to nasaS :fontSize
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "angle1 40
+	localmake "angle2 35
+	localmake "angle3 55
+	localmake "angle4 35
+	localmake "arcRadius1 :fontSize * 0.65
+	localmake "arcRadius2 :fontSize * 0.48
+	localmake "arcRadius3 :fontSize * 0.2
+	localmake "arcRadius4 :fontSize * 0.35
+	setPenSize 0
+	jumpBackward :fontSize * 0.075
+	jumpRight :fontSize * 0.03
+	right 35
+	polyStart
+	arcRight 10 :fontSize * 0.4
+	arcRight 33 :fontSize * 0.13
+	arcRight 34 :fontSize * 0.05
+	arcLeft :angle1 :arcRadius1
+	arcLeft :angle2 :arcRadius2
+	arcLeft :angle3 :arcRadius3
+	arcLeft :angle4 :arcRadius4
+	arcLeft 22 :fontSize * 0.9
+	arcRight 22 :fontSize * 0.3
+	arcRight 75 :fontSize * 0.08
+	arcRight 50 :fontSize * 0.06
+	arcRight 45 :fontSize * 0.41
+	arcRight 9 :fontSize * 0.8
+	setHeading :oldHeading
+	jumpForward :fontSize * 0.255
+	left 135
+	arcRight 20 :fontSize * 0.22
+	arcRight 41 :fontSize * 0.05
+	arcLeft 24 :fontSize
+	arcLeft 70 :fontSize * 0.3
+	arcLeft 80 :fontSize * 0.32
+	arcLeft 4 :fontSize * 3
+	arcRight 12 :fontSize * 0.5
+	arcRight 40 :fontSize * 0.11
+	arcRight 80 :fontSize * 0.05
+	arcRight 30 :fontSize * 0.32
+	arcRight 19 :fontSize * 0.55
+	arcRight 7 :fontSize * 0.3
+	arcRight 21.73407 :fontSize * 0.4
+	polyEnd
+	setTurtleState :oldState
+end
+
+to nasaLabel :height
+	localmake "oldState turtleState
+	localmake "fontSize :height * 0.1885
+	jumpForward :height * 0.4065
+	jumpLeft :height * 0.468
+	setFillColor "white
+	nasaN :fontSize
+	jumpRight :height * 0.231
+	nasaA :fontSize
+	jumpRight :height * 0.245
+	nasaS :fontSize
+	jumpRight :height * 0.18
+	nasaA :fontSize
+	setTurtleState :oldState
+end
+
+to nasaLogo :height
+	localmake "oldPos pos
+	jumpForward :height / 2
+	jumpLeft :height * 0.0435
+	starBackground :height / 2
+	jumpTo :oldPos
+	orbitRingBackground :height
+	redBackgroundStreak :height
+	nasaLabel :height
+	redForegroundStreak :height
+	orbitRingForeground :height
+end
+
+nasaLogo 100

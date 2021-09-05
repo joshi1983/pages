@@ -1,0 +1,195 @@
+; Design1 inspired by:
+; https://www.pinterest.ca/pin/3096293486341368/
+to circularDesign1 :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "smallRadius :size * 0.25
+	localmake "innerRadius :smallRadius * 1.25
+	localmake "size1 :size - :innerRadius
+	localmake "numLines 64
+	setFillColor "black
+	setPenSize 0
+	circle :smallRadius
+	jumpForward :innerRadius
+	right 90
+	setPenSize :size * 0.003
+	repeat :numLines + 1 [
+		forward :size1
+		backward :size1
+		arcRight 180 / :numLines :innerRadius
+	]
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to design2Line :size :len
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	arcRight 180 :size
+	forward :len
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+; Design2 inspired by:
+; https://www.pinterest.ca/pin/3096293486341369/
+to circularDesign2 :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "smallRadius :size * 0.12
+	localmake "numLines 16
+	setPenSize 0
+	circle :smallRadius
+	right 90
+	setPenSize :size * 0.005
+	forward	:smallRadius * 2
+	repeat :numLines [
+		localmake "ratio repcount / :numLines
+		design2Line :size * 0.11 * (2.5 + :ratio) :size * (0.7 + :ratio)
+		forward :size * 0.02
+	]
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+; Design3 inspired by:
+; https://www.pinterest.ca/pin/309692911871305817/
+to circularDesign3 :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "numLines 128
+	jumpBackward :size * 0.25
+	localmake "centrePos pos
+	setPenSize :size * 0.003
+	repeat :numLines [
+		localmake "angle 360 * (repcount - 1) / :numLines
+		localmake "val1 abs (cos :angle)
+		localmake "val2 abs (sin :angle)
+		setHeading :oldHeading + :angle
+		forward :size * 0.5 / max :val1 :val2
+		jumpTo :centrePos
+	]
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+; Design4 inspired by:
+; https://www.pinterest.ca/pin/802907439834045673/
+to circularDesign4 :size
+	localmake "oldHeading heading
+	localmake "oldPos pos
+	localmake "numLines 100
+	setPenSize :size * 0.005
+	jumpBackward :size * 0.25
+	localmake "pos1 pos
+	repeat :numLines [
+		localmake "angle 360 * (repcount - 0.5) / :numLines
+		localmake "val1 abs (cos :angle)
+		localmake "val2 abs (sin :angle)
+		jumpTo :pos1
+		setHeading :oldHeading + :angle
+		design4Arcs :size / max :val1 :val2
+	]
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+; Design5 inspired by:
+; https://www.pinterest.ca/pin/505599495647905594/
+to circularDesign5 :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "numLines 64
+	setFillColor penColor
+	setPenSize :size * 0.003
+	jumpBackward :size * 0.25
+	localmake "centrePos pos
+	repeat :numLines [
+		localmake "len :size * (0.3 + 0.002 * random 100)
+		forward :size * 0.1
+		forward :len
+		circle :size * 0.01
+		jumpTo :centrePos
+		right 360 / :numLines
+	]
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+; Design6 inspired by:
+; https://www.pinterest.ca/pin/425590233549065533/
+to circularDesign6 :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "numLines 32
+	jumpBackward :size * 0.25
+	localmake "centrePos pos
+	localmake "size :size * 0.5
+	backward :size
+	jumpTo :centrePos
+	repeat :numLines [
+		localmake "len :size * repcount / :numLines
+		localmake "len2 sqrt (:size * :size - :len * :len)
+		left 90
+		jumpForward :len
+		right 90
+		if :len2 > 0 [
+			backward :len2
+			forward :len2
+		]
+		arcRight 180 :len
+		forward :len2
+		setHeading :oldHeading
+		jumpTo :centrePos
+	]
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+; Design6 inspired by:
+; https://www.pinterest.ca/pin/527061962650786751/
+to circularDesign7 :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "numLines 64
+	backward :size * 0.25
+	localmake "tempPos pos
+	localmake "size :size * 0.5
+	repeat :numLines [
+		localmake "angle 180 * repcount / :numLines
+		setHeading :oldHeading + 90 + :angle
+		localmake "len :size * 2 * cos :angle
+		jumpTo :tempPos
+		jumpForward :len
+		backward :len * 2
+	]
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to design4Arcs :size
+	localmake "size :size * 0.2
+	localmake "angle 40
+	left :angle * 0.5
+	repeat 2 [
+		arcRight :angle :size
+		arcLeft :angle :size
+	]
+end
+
+make "size 100
+make "separation :size * 2
+jumpLeft 3 * :separation
+circularDesign1 :size
+jumpRight :separation
+circularDesign2 :size
+jumpRight :separation
+circularDesign3 :size
+jumpRight :separation
+circularDesign4 :size
+jumpRight :separation
+circularDesign5 :size
+jumpRight :separation
+circularDesign6 :size
+jumpRight :separation
+circularDesign7 :size

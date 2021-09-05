@@ -1,0 +1,72 @@
+; Inspired by
+; https://www.redbubble.com/i/canvas-print/Mitsu-Tomoe-Japan-Shinto-Trinity-Symbol-Triskele-by-nitty-gritty/13252222.5Y5V7
+to mitsuTomoe1 :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "circlePenSize :size * 0.04
+	localmake "radius :size - :circlePenSize * 0.5
+	localmake "arcRadius1 :size * 0.92
+	localmake "arcRadius2 :size * 0.41
+	localmake "arcRadius3 :size * 0.6353
+	localmake "arcAngle1 (360 / 3) * 0.94
+	localmake "arcAngle2 260
+	localmake "arcAngle3 91.61
+	setPenSize :circlePenSize
+	setFillColor transparent
+	circle :radius
+	setPenSize 0
+	setFillColor "black
+	repeat 3 [
+		jumpTo :oldPos
+		jumpForward :arcRadius1
+		right 90
+		polyStart
+		arcRight :arcAngle1 :arcRadius1
+		arcRight :arcAngle2 :arcRadius2
+		left 95
+		arcLeft :arcAngle3 :arcRadius3
+		polyEnd
+		setHeading :oldHeading + repcount * 360 / 3
+	]
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+; Inspired by
+; https://www.pinterest.ca/pin/4925880833006682/
+to mitsuTomoe2 :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "circlePenSize :size * 0.08
+	localmake "radius :size - :circlePenSize * 0.5
+	localmake "arcRadius1 :size * 0.85
+	localmake "arcRadius2 :arcRadius1 * 0.43
+	localmake "arcRadius3 :arcRadius1 * 0.51
+	localmake "arcAngle1 (360 / 3) * 0.85
+	localmake "arcAngle2 210
+	localmake "arcAngle3 115
+	setPenSize :circlePenSize
+	setFillColor transparent
+	circle :radius
+	setPenSize 0
+	setFillColor "black
+	repeat 3 [
+		jumpTo :oldPos
+		jumpForward :arcRadius1
+		right 90
+		polyStart
+		arcRight :arcAngle1 :arcRadius1
+		arcRight :arcAngle2 :arcRadius2
+		arcLeft :arcAngle3 :arcRadius3
+		polyEnd
+		setHeading :oldHeading + repcount * 360 / 3
+	]
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+make "size 100
+make "separation :size * 2.2
+mitsuTomoe1 :size
+jumpRight :separation
+mitsuTomoe2 :size
