@@ -1,0 +1,100 @@
+; Inspired by logo at:
+; https://www.copper88.com
+to copper88Logo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "innerLen1 :height * 0.095
+	localmake "innerRadius :height * 0.16
+	localmake "innerX sqrt :innerRadius * :innerRadius - :innerLen1 * :innerLen1 / 4
+	localmake "innerAngle 2 * arcSin :innerLen1 / 2 / :innerRadius
+	localmake "innerLen2 :innerRadius * 2 * sin 45 - :innerAngle / 2
+	localmake "thickness :height * 0.058
+	localmake "centerOffset :height * 0.26
+	jumpForward :height / 2
+	localmake "center pos
+	setFillColor "#f57921
+	setPenSize 0
+	repeat 2 [
+		setHeading :oldHeading + repcount * 180
+		jumpRight :centerOffset
+		localmake "center2 pos
+		jumpLeft :innerX
+		jumpForward :innerLen1 / 2
+		polyStart
+		repeat 3 [
+			right 45
+			jumpForward :innerLen2
+			right 45
+			jumpForward :innerLen1
+		]
+		right 45
+		jumpForward :innerLen2
+		left 45
+		jumpForward :thickness
+		jumpLeft :thickness
+		left 135
+		localmake "outerRadius :height * 0.2528
+		localmake "len1 distanceToCircle :center2 :outerRadius
+		jumpForward :len1
+		repeat 5 [
+			left 45
+			jumpForward :height * 0.01
+			jumpForward distanceToCircle :center2 :outerRadius
+		]
+		left 45
+		jumpForward :len1
+		left 45
+		jumpForward :thickness
+		polyEnd
+		jumpTo :center
+	]
+	localmake "outerRadius2 :outerRadius * 0.977
+	repeat 2 [
+		setHeading :oldHeading + repcount * 180
+		localmake "sign sign repcount - 1.5
+		localmake "angle 45 * :sign
+		jumpForward :centerOffset
+		localmake "center2 pos
+		jumpRight :sign * :innerRadius * cos :innerAngle / 2
+		jumpBackward :innerLen1
+		polyStart
+		jumpForward :innerLen1 / 2
+		repeat 2 [
+			jumpForward :innerLen1
+			left :angle
+			jumpForward :innerLen2
+			left :angle
+		]
+		jumpRight :thickness * :sign 
+		jumpBackward :thickness * 0.7 
+		right 180
+		repeat 2 [
+			right :angle		
+			jumpForward :height * 0.01
+			jumpForward distanceToCircle :center2 :outerRadius2
+		]
+		right :angle
+		jumpForward :height * 0.24
+		right :angle
+		jumpForward :innerLen1
+		polyEnd
+		jumpTo :center		
+	]
+	setTurtleState :oldState
+end
+
+to copper88OnBlackLogo :height
+	localmake "oldState turtleState
+	localmake "innerHeight :height * 0.8
+	stripes :height :height ["black]
+	jumpForward (:height - :innerHeight) / 2
+	copper88Logo :innerHeight
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 4
+jumpLeft :separation / 2
+copper88Logo :height
+jumpRight :separation
+copper88OnBlackLogo :height

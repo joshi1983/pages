@@ -1,0 +1,22 @@
+; Inspired by:
+; https://en.wikipedia.org/wiki/Flag_of_Chicago#/media/File:Flag_of_Chicago,_Illinois.svg
+to chicagoFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 3 / 2
+	localmake "blueColor "#41B6E6
+	localmake "separation :height * 0.29166666
+	stripes :width :height ["white :blueColor "white 
+		"white :blueColor "white ]
+	jumpForward :height / 2
+	jumpLeft :separation * 1.5
+	setPenSize 0
+	setFillColor "#E4002B
+	repeat 4 [
+		isotoxalStar :height * 0.125 :height * 0.04575 6
+		jumpRight :separation
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "#ccc
+chicagoFlag 100

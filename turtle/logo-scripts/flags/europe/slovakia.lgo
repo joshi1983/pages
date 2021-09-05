@@ -1,0 +1,61 @@
+make "blueColor "#0b4ea2
+make "redColor "#ee1c25
+
+to drawShield :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "arcsInfo1 [[65 0] [-20.5 0.85] [-45.5 0.5] [0.35] [-9 0.58]
+	[-80 0] [0.375504475]
+	]
+	localmake "crossInfo [[90 0] [0.034] [-90 0] [0.3565] [90 0] [4 1.5] [14.6 0.37]
+	[-115 0] [12.6 0.52] [-115 0] [16 0.4] [2.51 2] [90 0] [0.1025] [90 0] [10 0.6]
+	[11.5 0.27] [-117.5 0] [13 0.5] [-114 0] [18.2 0.5] [91 0] [4 0.6] [7.61 0.8]
+	[-108 0] [4.48 0.6938736]]
+	localmake "blueShape [[64 0] [-18 0.88] [-13.6 0.51] [-60 0] [-26 0.17] [-70 0.08]
+	[-18.5 0.17] [120 0] [-20 0.24] [-30 0.12] [-17.9 0.07753628]]
+	setPenColor "white
+	setPenSize :height * 0.027
+	jumpForward penSize / 2 / cos 30
+	setFillColor :redColor
+	setLineJoinStyle "miter
+	polyStart
+	arcLines :arcsInfo1 :height
+	arcLines reverse :arcsInfo1 :height
+	polyEnd
+
+	setPenSize 0
+	setFillColor "white
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.2
+	polyStart
+	arcLines :crossInfo :height
+	arcLines reverse :crossInfo :height
+	polyEnd
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	setFillColor :blueColor
+	jumpForward :height * 0.03
+	polyStart
+	arcLines :blueShape :height
+	arcLines reverse :blueShape :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Slovakia#/media/File:Flag_of_Slovakia.svg
+to slovakiaFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 3 / 2
+	stripes :width :height [:redColor :blueColor "white]
+	jumpForward :height * 0.23333131
+	jumpLeft :height * 0.3
+	drawShield :height * 0.5293687
+	setTurtleState :oldState
+end
+
+setScreenColor "#ddd
+slovakiaFlag 100

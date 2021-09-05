@@ -1,0 +1,48 @@
+; Inspired by
+; https://www.pinterest.ca/pin/789537378439776063/
+
+make "colors ["white "#4EA3FD "blue "black]
+
+to getColorMix :ratio
+	localmake "ratio :ratio - int :ratio
+	localmake "ratio :ratio * count :colors
+	localmake "index1 1 + remainder (int :ratio) count :colors
+	localmake "index2 1 + remainder :index1 count :colors
+	localmake "color1 item :index1 :colors
+	localmake "color2 item :index2 :colors
+	localmake "ratio :ratio - int :ratio
+	output mix :color2 :color1 :ratio
+end
+
+to square :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	jumpForward :size * 0.5
+	right 90
+	jumpForward :size * 0.5
+	right 90
+	
+	repeat 3 [
+		forward :size
+		right 90
+	]
+	closePath
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to blueSpiral :size
+	localmake "numSquares 200
+	localmake "penSizeOffset :size * 0.001
+	right 45
+	repeat :numSquares [
+		setPenColor getColorMix 12 * repcount / :numSquares 
+		setPenSize :penSizeOffset + :size * 0.005
+		square :size
+		localmake "size :size * 0.98
+		right 4
+	]
+end
+
+setScreenColor "black
+blueSpiral 100

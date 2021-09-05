@@ -1,0 +1,45 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Toyota#/media/File:Toyota.svg
+; The actual logo uses lots of ellipses and elliptical arcs.
+; The main difference with this code is some circular arcs were used to
+; approximate the elliptical arcs in the real logo.
+to toyotaLogo :height
+	localmake "oldState turtleState
+	localmake "darkColor "black
+	localmake "lightColor "white
+	localmake "outerArcsInfo [
+		[15 1.18] [10 0.62] [10 0.56] [20 0.24] [20 0.154]
+		[80 0.11] [-6 0] [31 0.996578829]
+	]
+	localmake "innerArcsInfo1 [
+		[-10 1.2] [-10 0.67] [-10 0.4] [-15 0.192] [-20 0.1]
+		[-25 0.0585]
+	]
+	localmake "innerArcsInfo combine :innerArcsInfo1 reverse :innerArcsInfo1
+	setFillColor :darkColor
+	setPenSize 0
+	jumpForward :height / 2
+	ellipse :height * 0.765 :height / 2
+	setFillColor :lightColor
+	jumpForward :height * 0.02
+	ellipse :height * 0.665 :height * 0.47
+	setFillColor :darkColor
+	jumpBackward :height * 0.039
+	ellipse :height * 0.187 :height * 0.445
+	setFillColor :lightColor
+	jumpForward :height * 0.029
+	ellipse :height * 0.115 :height * 0.302
+	setFillColor :darkColor
+	jumpBackward :height * 0.0197
+	right 90
+	polyStart
+	arcLines :outerArcsInfo :height
+	arcLines reverse :outerArcsInfo :height
+	arcLeft 180 :height * 0.0637
+	arcLines :innerArcsInfo :height
+	arcLines :innerArcsInfo :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+toyotaLogo 100

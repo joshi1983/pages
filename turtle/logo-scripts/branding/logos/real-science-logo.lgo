@@ -1,0 +1,110 @@
+make "realScienceYellow "#ffca00
+
+to getClosestIntersectionWithLines :lines
+	localmake "result -1
+	repeat count :lines [
+		localmake "line item repcount :lines
+		localmake "d distanceToLine first :line last :line
+		if :d >= 0 [
+			if or :result < 0 :result > :d [
+				localmake "result :d
+			]
+		]
+	]
+	output :result
+end
+
+to drawHoneycombPattern :len :boundaryLines :visitedPoints
+	localmake "oldState turtleState
+	localmake "d getClosestIntersectionWithLines :boundaryLines
+	ifelse :d < :len [
+		forward :d
+	] [
+		forward :len
+		if not member? pos :visitedPoints [
+			queue2 "visitedPoints pos
+			left 60
+			drawHoneycombPattern :len :boundaryLines :visitedPoints
+			right 120
+			drawHoneycombPattern :len :boundaryLines :visitedPoints
+		]
+	]
+	setTurtleState :oldState
+end
+
+to drawBackground :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "boundaryLines []
+	localmake "hexSize :height * 0.092
+	localmake "colorStops createPList2 [
+		[0 :realScienceYellow] [1 "#33FF7300]
+	]
+	stripes :height :height ["#FF7300]
+	jumpLeft :height / 2
+	repeat 4 [
+		localmake "fromPos pos
+		jumpForward :height
+		queue2 "boundaryLines [:fromPos pos]
+		right 90
+	]
+	setPenColor "#a00
+	setPenSize :height * 0.002
+	jumpTo :oldPos
+	jumpForward :height / 2 + :hexSize * 1
+	setLineCap "butt
+	drawHoneycombPattern :hexSize :boundaryLines []
+	
+	jumpTo :oldPos
+	jumpForward :height / 2
+	setPenGradient createRadialGradient pos :height / cos 45 :colorStops
+	setLineCap "butt
+	jumpTo :oldPos
+	setPenSize :height
+	forward :height	
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://www.youtube.com/@realscience
+to realScienceLogo :height
+	localmake "oldState turtleState
+	localmake "whiteShapeStart [[180 0] [0.08] [40 0.02] [12 0.1]]
+	localmake "whiteShapeEnd [[52.307 0.18] [95 0.0009]]
+	localmake "startX -0.373
+	localmake "startY 0.283
+	localmake "whiteShapes [
+		[:startX :startY 
+		(combine :whiteShapeStart [[-39 0.25]
+		[144 0] [0.1] [-4.2 0.5] [60 0] [0.05]]
+		:whiteShapeEnd)
+		]
+
+		[:startX -:startY (combine [[180 0]] flipAngles :whiteShapeStart 
+			[[24 0.21] [7 1.5] [-7 1] [-40 0.24] [-50 0.135] [-36 0.25] 
+			[-50 0] [0.13] [-126 0] [0.12] [107 0.065] [20 0.3] [0.18] [-11.5 0.65]
+			] flipAngles :whiteShapeEnd)]
+	]
+	localmake "oldHeading heading
+	drawBackground :height
+	jumpForward :height / 2
+	setFillColor "white
+	setPenSize 0
+	localmake "center pos
+	repeat 2 [
+		setHeading :oldHeading + repcount * 180
+		repeat count :whiteShapes [
+			localmake "shapeInfo item repcount :whiteShapes
+			jumpRight :height * first :shapeInfo
+			jumpForward :height * item 2 :shapeInfo
+			polyStart
+			arcLines last :shapeInfo :height
+			polyEnd
+			jumpTo :center
+		]
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "#d80
+realScienceLogo 100

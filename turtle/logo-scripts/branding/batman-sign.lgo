@@ -1,0 +1,48 @@
+; Inspired by:
+; http://www.clker.com/clipart-batman-logo-9.html
+
+to batmanSign :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "size1 :height * 0.180656095
+	localmake "angle1 50
+	localmake "angle3 155
+	localmake "arcsInfo1 [
+		[30 0.35] [30 0.18] [90 0.08] [36 0.37]
+		[-102 0] [13 0.3] [80 0.05] [25 0.3]
+	]
+	localmake "arcLinesInfo [
+		[30 0.8] [30 0.3] [40 0.25] [30 0.32] [23.3 1.2]
+		[138 0] [0.1] [-100 0.115] [-32 0.23] [-63 0.1]
+		[-15 0.5] [0.08] [15 0.13] [120 0] [15 0.13] [0.04]
+		[-77 0]
+	]
+	localmake "arcAngle18 21.4
+	localmake "arcRadius18 :height * 0.31114539
+	setFillColor "yellow
+	setPenSize 0
+	jumpForward :height / 2
+	ellipse :height * 0.9533335 :height * 0.5
+
+	jumpTo :oldPos
+	jumpForward :height * 0.1
+	jumpLeft :height * 0.46
+	setFillColor "black
+	left :angle1
+	polyStart
+	arcsRight :arcsInfo1 :height
+	jumpForward :size1
+	; point of symmetry
+	setHeading :oldHeading + 28
+	jumpForward :size1
+	arcsRight reverse :arcsInfo1 :height
+	left :angle3
+	arcLines :arcLinesInfo :height
+	arcLeft :arcAngle18 :arcRadius18 ; symmetry
+	arcLines reverse :arcLinesInfo :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+batmanSign 100

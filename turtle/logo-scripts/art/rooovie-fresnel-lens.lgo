@@ -1,0 +1,141 @@
+to addShadowGradients :width :height :bottomAngle :skipHighlight?
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "blackColorStops createPList2 [
+		[0 "#000] [0.1 "#8000] [1 transparent]
+	]
+	localmake "thickness1 :width * sin :bottomAngle
+	localmake "thickness2 :thickness1 / 2
+	localmake "highlightThickness :height * 0.005
+	jumpLeft :width / 2
+	localmake "leftPos pos
+	jumpRight :width
+	localmake "rightPos pos
+	left :bottomAngle
+	localmake "fromPos pos
+	jumpForward :thickness1
+	setFillGradient createLinearGradient :fromPos pos :blackColorStops "pad
+	setPenSize 0
+	polygon [:leftPos :fromPos pos]
+
+	jumpTo :rightPos
+	setHeading :oldHeading
+	jumpLeft :thickness2
+	setFillGradient createLinearGradient :rightPos pos :blackColorStops "pad
+	jumpRight :thickness2 / 2
+	jumpForward :height / 2
+	rect :thickness2 :height
+
+	if not :skipHighlight? [
+		jumpTo :leftPos
+		jumpRight :highlightThickness / 2
+		stripes :highlightThickness :height ["#8fff]
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by:
+; https://ca.pinterest.com/pin/570338740328230983
+; and shown at:
+; https://www.instagram.com/p/Cm6tssHSotd
+;
+; The artist who made the source of inspiration goes by the username Rooovie
+; and 
+; https://www.instagram.com/rooovie
+;
+; I'm not sure what Rooovie wants to call their work but
+; the repeated rectangular pattern resembled what could be seen while seeing
+; something through a Fresnel lens.
+; https://en.wikipedia.org/wiki/Fresnel_lens
+;
+; Some of the differences include:
+; - Used smooth gradients instead of the dotted/dither-like technique
+; in the original painting by Rooovie.  This was mainly to simplify the code.
+to rooovieFresnelLens :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "width :height * 0.8
+	localmake "sizes [
+		[0.04 -0.01 0.12]
+		[0.15 -0.08 0.18]
+		[0.25 -0.1 0.23]
+		[0.25 -0.07 0.27]
+		[0.25 0 0.33]
+	]
+	localmake "rooovieRed "#ff2109
+	localmake "redColorStops createPList2 [
+		[0 :rooovieRed] [0.8 :rooovieRed] [1 mix :rooovieRed transparent 0]
+	]
+	localmake "rooovieGreen "#019450
+	localmake "greenColorStops createPList2 [
+		[0 :rooovieGreen] [1 mix :rooovieGreen transparent 0]
+	]
+	localmake "rooovieWhite "white
+	localmake "whiteTransparent mix :rooovieWhite transparent 0
+	setLineCap "butt
+	jumpForward :height
+	localmake "top pos
+	jumpBackward :height * 0.1
+	localmake "sunPos pos
+	localmake "w :width
+	localmake "step :height * 0.06
+	localmake "bottomPos :oldPos
+	repeat count :sizes [
+		localmake "sizeInfo vectorScale item repcount :sizes :height
+		localmake "redYOffset item 2 :sizeInfo
+		localmake "redRadius first :sizeInfo
+		localmake "sunRadius :height * mix 0.025 0.56 repRatio
+		localmake "gradients []
+
+		; white gradient
+		ifelse repcount = count :sizes [
+			localmake "whiteColorStops1 createPList2 [
+				[0 mix :rooovieWhite transparent 0.7]
+				[0.99 :rooovieWhite]
+				[1 :whiteTransparent]
+			]
+		] [
+			localmake "whiteColorStops1 createPList2 [
+				[0 :whiteTransparent]
+				[0.7 - repRatio * 0.2 :whiteTransparent]
+				[0.99 :rooovieWhite]
+				[1 :whiteTransparent]
+			]
+		]
+		queue2 "gradients createRadialGradient :sunPos :sunRadius :whiteColorStops1
+
+		; green gradient
+		jumpTo :bottomPos
+		jumpForward item 3 :sizeInfo
+		localmake "fromPos pos
+		jumpForward :step
+		queue2 "gradients createLinearGradient :fromPos pos :greenColorStops "pad
+
+		; red gradient
+		jumpTo :bottomPos
+		jumpForward :redYOffset
+		queue2 "gradients createRadialGradient pos :redRadius :redColorStops
+
+		jumpTo :bottomPos
+		localmake "h distance :top
+
+		setPenSize :w
+		stripes :w :h ["#2c91c0]
+		repeat count :gradients [
+			setPenGradient item repcount :gradients
+			jumpTo :bottomPos
+			forward :h
+		]
+		jumpTo :bottomPos
+		addShadowGradients :w :h mix 10 3 repRatio repcount = 1
+
+		localmake "w :w - :step * 2.1
+		jumpTo :bottomPos
+		jumpForward :step * 0.95
+		localmake "bottomPos pos
+		localmake "step :step * 1.19
+	]	
+	setTurtleState :oldState
+end
+
+rooovieFresnelLens 100

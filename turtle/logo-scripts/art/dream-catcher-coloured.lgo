@@ -1,0 +1,187 @@
+to drawArcs :radius
+	localmake "oldState turtleState
+	localmake "center pos
+	localmake "tinyRadius :radius * 0.058
+	localmake "offset1 :tinyRadius * 0.6
+	setPenSize :radius * 0.007
+	jumpForward :radius
+	localmake "pos1 pos
+	jumpBackward  :offset1
+	localmake "startPos pos
+	left 90
+	localmake "arcAngle getArcRightAngleToCircle :tinyRadius :center :radius
+	arcRight :arcAngle :tinyRadius
+	localmake "len1 distance :pos1
+	localmake "angle 2 * arcSin :len1 / 2 / :radius
+	setHeading (towards :center) + 90 - :angle - :arcAngle
+	arcRight :arcAngle * 2 :tinyRadius
+	jumpTo :startPos
+	setHeading (towards :center) - 90
+	arcLeft :arcAngle :tinyRadius
+	setHeading (towards :center) - 90 + :angle + :arcAngle
+	arcLeft :arcAngle * 2 :tinyRadius
+	setTurtleState :oldState
+end
+
+to drawStar :radius :innerRadius
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "center pos
+	localmake "angle1 157
+	localmake "angle2 2 * (180 - :angle1)
+	localmake "numPoints 8
+	setLineCap "round
+	setLineJoinStyle "round
+	setFillColor "yellow
+
+	jumpForward :radius
+	right :angle1
+	localmake "len distanceToCircle :center :innerRadius 
+	jumpForward :len
+	localmake "angle3 heading - ((towards :center) - 90)
+	left :angle3
+	localmake "pointWidth1 :len * sin :angle2 / 2
+	localmake "pointAngleWidth arcSin :pointWidth1 / :innerRadius
+	localmake "arcAngle 360 / :numPoints - 2 * :pointAngleWidth
+	jumpTo :center
+	localmake "lines1 [[:len / :radius]
+		[:angle3 0] [-:arcAngle :innerRadius / :radius]
+		[:angle3 0] [:len / :radius] [:angle2 - 180 0]]
+	localmake "outerLines []
+	repeat :numPoints [
+		repeat count :lines1 [
+			queue2 "outerLines item repcount :lines1
+		]
+	]
+
+	jumpTo :center
+	setHeading :oldHeading + 180 / :numPoints
+	drawArcLineShape [0 1
+		combine [[-:angle1 0]] :outerLines 
+	] :radius
+	setTurtleState :oldState
+end
+
+to drawArrow :radius
+	localmake "oldState turtleState
+	localmake "bottomArcAngle 10
+	localmake "arcAngle 45
+	localmake "arcRadiusFactor 0.35
+	localmake "lines1 [
+		[:arcAngle / 2 0] [-:arcAngle * 1.25 :arcRadiusFactor]
+		[:arcAngle * 1.5 :arcRadiusFactor]
+		[-:arcAngle :arcRadiusFactor]
+	]
+	localmake "arrowHeadLen2 0.2
+	localmake "lines2 [
+		[-150 0] [0.48] [-150 0] [:arrowHeadLen2]
+	]
+	setLineJoinStyle "miter
+	setFillColor "red
+	drawArcLineShape [0 0.3
+		(combine :lines2 [[108.8 0]] reverse flipAngles :lines1
+		[[-85 0] [-:bottomArcAngle 1] [-85 0]] :lines1
+		[[138 0] [:arrowHeadLen2]])
+	] :radius
+	setTurtleState :oldState
+end
+
+to drawJaggedEdges :size
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "width :size / 2
+	localmake "angle1 62
+	localmake "angle2 180 - 2 * (90 - :angle1)
+	localmake "dash :width / 3 / cos :angle1
+	localmake "len1 :size * 0.1
+	localmake "points []
+	setLineJoinStyle "miter
+	repeat 3 [
+		setHeading :oldHeading + (repcount - 2) * 90
+		jumpForward :width
+		jumpLeft :width
+		queue2 "points pos
+		right 90
+		repeat 3 [
+			left :angle1
+			jumpForward :dash
+			queue2 "points pos
+			right :angle2
+			jumpForward :dash
+			queue2 "points pos
+			left :angle1
+		]
+		jumpTo :oldPos
+	]
+	setHeading :oldHeading
+	jumpTo first :points
+	setHeading :oldHeading - :angle1
+	jumpBackward :len1
+	setItem 1 "points pos
+	setHeading :oldHeading
+	localmake "len2 distanceToLine :oldPos item 7 :points
+	jumpForward :len2
+	localmake "pos2 pos
+	right 90
+	jumpForward (distance :oldPos) * 2 * cos 45
+	localmake "pos3 pos
+	right 90
+	jumpForward :len2
+	queue2 "points pos
+	queue2 "points :pos3
+	queue2 "points :pos2
+	setFillColor "brown
+	polygon :points
+	setTurtleState :oldState
+end
+
+; Inspired by a drawing at:
+; https://www.facebook.com/photo/?fbid=29029860723324268
+to microWorldsPentaFlower :height :color1 :color2
+	localmake "oldState turtleState
+	localmake "thickness1 :height * 0.005
+	localmake "innerRadius :height * 0.245
+	setPenSize :height * 0.07
+	setPenColor :color1
+	jumpForward :height / 2
+	setFillColor :color2
+	localmake "radius1 (:height - penSize) / 2
+	circle :radius1
+	setPenSize :height * 0.04
+	setPenColor :color2
+	setFillColor transparent
+	circle :radius1
+	setPenColor :color1
+	setPenSize :height * 0.03
+	localmake "radius2 :radius1 + penSize / 2
+	localmake "tinySquareSize penSize
+	circle :radius1
+	localmake "center pos
+	setPenSize 0
+	repeat 12 [
+		jumpForward :radius1
+		setFillColor :color2
+		rect :tinySquareSize * 1.2 :tinySquareSize * 1.05
+		setFillColor :color1
+		circle :tinySquareSize * 0.4
+		jumpTo :center
+		right 180 / 12
+		setPenColor :color2
+		drawArcs :radius2
+		jumpTo :center
+		right 180 / 12
+	]
+	setPenSize :thickness1
+	setPenColor :color1
+	setFillColor transparent
+	drawStar :height * 0.42 :height * 0.3
+	setFillColor "white
+	circle :innerRadius
+	drawArrow :innerRadius
+	jumpForward :height * 0.02
+	drawJaggedEdges :height * 0.22
+	setTurtleState :oldState
+end
+
+microWorldsPentaFlower 100 "black "white

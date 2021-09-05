@@ -1,0 +1,23 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/MongoDB#/media/File:MongoDB_Fores-Green.svg
+to mongoDBLogo :height
+	localmake "oldState turtleState
+	localmake "arcsInfo [[-36 0] [-3.5 2.5] [25 0.65]
+		[38 0.44] [15 0.62] [10 0.53] [8 0.5]
+		[178.7 0.0112] [-14.7 0.21] [-43.1 0] [0.6]
+	]
+	localmake "shapes [
+		[0 0 :arcsInfo]
+		[0 0 flipAngles :arcsInfo]
+	]
+	setPenSize 0
+	setFillColor "#00684a
+	isoTrapezoid :height * 0.031 :height * 0.054 :height * 0.125
+	jumpForward :height
+	right 180
+
+	drawArcLineShapes :shapes :height
+	setTurtleState :oldState
+end
+
+mongoDBLogo 100

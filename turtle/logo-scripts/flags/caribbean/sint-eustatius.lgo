@@ -1,0 +1,43 @@
+; Inspired by:
+; https://en.wikipedia.org/wiki/Flag_of_Sint_Eustatius#/media/File:Flag_of_Sint_Eustatius.svg
+to sintEustatiusFlag :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "width :height * 3 / 2
+	localmake "islandShape [-0.0112 0.4305
+		[[-51 0] [7.7 0.05] [0.148] [-88.5 0.035] [80 0.0198] [15 0.01]
+		[-40 0.019] [-30 0.034] [-21 0.02] [0.15] [-113 0] [0.1718]
+		[-29.17 0] [0.456] [-90 0] [0.061] [-99 0.0235] [0.001]
+		[85 0] [-122 0.0388] [0.045] [30 0.01] [15 0.101] [-30 0.02]
+		[30 0.017]]
+	]
+	localmake "thicknessFactor 0.033
+	localmake "outerLines [[0.243] [90 0] [3/4 - :thicknessFactor / 2] [90 0]
+		[0.5 - :thicknessFactor / 2] 
+		[90 0] [0.305]]
+	localmake "outerShapes [
+		[0 0.24 :outerLines]
+		[0 0.24 flipAngles :outerLines]
+	]
+	stripes :width :height ["white]
+	jumpForward :height * 0.6077
+	setPenSize 0
+	setFillColor "#f9d90f
+	regularStar :height * 0.06 5
+	setFillColor "#008830
+	jumpTo :oldPos
+	drawArcLineShape :islandShape :height
+	setFillColor "#012a87
+	setPenColor "#dc171d
+	setPenSize :height * :thicknessFactor
+	setLineJoinStyle "miter
+	jumpForward :height / 2
+	repeat 2 [
+		drawArcLineShapes :outerShapes :height
+		right 180
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "#ddd
+sintEustatiusFlag 100
