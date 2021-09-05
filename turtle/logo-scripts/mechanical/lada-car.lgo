@@ -1,0 +1,405 @@
+to drawWheel :radius :rotationAngle
+	localmake "oldState turtleState
+	localmake "numHoles 16
+	localmake "center pos
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#000
+	setProperty "colorStops 0.05 "#000
+	setProperty "colorStops 0.051 "#ddd
+	setProperty "colorStops 0.053 "#888
+	setProperty "colorStops 0.1 "#555
+	setProperty "colorStops 0.3 "#555
+	setProperty "colorStops 0.33 "#888
+	setProperty "colorStops 0.38 "#888
+	setProperty "colorStops 0.45 "#5f5f5f
+	setProperty "colorStops 0.6 "#444
+	setProperty "colorStops 0.62 "#222
+	setProperty "colorStops 0.63 "#444
+	setProperty "colorStops 0.7 "#888
+	setProperty "colorStops 0.72 "#888
+	setProperty "colorStops 0.73 "#555
+	setProperty "colorStops 0.74 "#888
+	setProperty "colorStops 1 "#888
+	setPenSize :radius * 0.3
+	localmake "innerRadius :radius - penSize / 2
+	setFillGradient createRadialGradient pos :innerRadius :colorStops
+	setPenColor "#222
+	circle :radius - penSize / 2
+	setPenSize 0
+	setFillColor "black
+	right 180 / :numHoles - :rotationAngle
+	repeat :numHoles [
+		jumpForward :radius * 0.47
+		circle :radius * 0.03
+		jumpTo :center
+		right 360 / :numHoles
+	]
+	localmake "numHoles 7
+	setFillColor "#000
+	repeat :numHoles [
+		jumpForward :radius * 0.17
+		circle :radius * 0.015
+		jumpTo :center
+		right 360 / :numHoles
+	]
+
+	setTurtleState :oldState
+end
+
+to drawWheels :height :rotationAngle
+	localmake "oldState turtleState
+	localmake "wheelRadius :height * 0.195
+	localmake "wheelSeparation :height * 1.675
+	jumpForward :wheelRadius
+	jumpLeft :height * 0.98
+	repeat 2 [
+		drawWheel :wheelRadius :rotationAngle
+		jumpRight :wheelSeparation
+	]
+	setTurtleState :oldState
+end
+
+to drawLadaCarBottom :height
+	localmake "oldState turtleState
+	jumpLeft :height * 1.244
+	jumpForward :height * 0.248
+	setPenSize 0
+	setFillColor "black
+	polyStart
+	arcLines [[0.3] [-90 0] [2.22] [-88 0] [0.43] [-50 0] [0.02]
+	[-130 0] [0.14] [90 0] [0.05] [100 0] [0.09] [-110 0] [0.1]
+	[5 0] [0.6] [30 0] [0.09] [-28 0] [0.24] [30 0] [-15 0.22]
+	[-15 0] [0.12] [-33 0.1] [34 0] [0.3]] :height
+	polyEnd	
+	setTurtleState :oldState
+end
+
+to fillShapes :shapesInfo :scale
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	setPenSize 0
+	repeat count :shapesInfo [
+		localmake "info item repcount :shapesInfo
+		jumpRight :scale * first :info
+		jumpForward :scale * item 2 :info
+		polyStart
+		arcLines last :info :scale
+		polyEnd
+		jumpTo :oldPos
+		setHeading :oldHeading
+	]
+
+	setTurtleState :oldState
+end
+
+to drawWindowSemitransparency :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#1000
+	setProperty "colorStops 1 "#3000
+	jumpLeft :height * 0.693
+	localmake "fromPos pos
+	jumpRight :height
+	setFillGradient createLinearGradient :fromPos pos :colorStops "pad
+	jumpTo :oldPos
+	fillShapes [[-0.79 0.59 [[-44 0] [0.5] [-46 0] [1.083] [-47.5 0] [0.4]]]] :height
+	setTurtleState :oldState
+end
+
+to drawCarInterior :height
+	localmake "oldState turtleState
+	localmake "shapesInfo [
+		[-0.53 0.669
+			[[-32 0] [0.128] [-150 0] [0.103] [170 0.003] [0.053]
+	[60 0.025] [0.02] [-90 0] [0.025] [-100 0] [0.15]]
+		]
+		[0.054 0.669
+			[[-4 0] [0.14] [-170 0.039] [0.15]]
+		]
+		[0.42 0.675
+			[[1 0] [0.235] [-90 0] [0.017] [-90 0] [0.235]]
+		]
+		[0.381 0.675
+			[[1 0] [0.235] [-90 0] [0.017] [-90 0] [0.235]]
+		]
+		[-0.55 0.632 [[-90 0] [1.4] [130 0] [0.4] [50 0] [0.195] [120.7 0]
+		[0.29] [-120 0] [1.2]]]
+		[-0.519 0.668 [[-34.3 0] [0.245] [-52 0.07] [-6.753 6] [-57 0.075]
+		[90 0] [0.15] [150 0] [0.95]]]
+		[-0.021 0.676 [[-2 0] [0.3] [-90 0] [0.04] [-90 0] [0.3]]]
+	]
+	setFillColor "black
+	fillShapes :shapesInfo :height
+	
+	setTurtleState :oldState
+end
+
+to createPaintGradient :height :paintColor
+	localmake "oldState turtleState
+	localmake "gap :height * 0.94
+	localmake "gradientHeight :height - :gap
+	localmake "colorStops createPList
+	setProperty "colorStops 0 :paintColor
+	setProperty "colorStops 1 mix :paintColor "black 0.8
+	jumpForward :gap
+	localmake "fromPos pos
+	jumpForward :gradientHeight
+	localmake "result createLinearGradient :fromPos pos :colorStops "pad
+	setTurtleState :oldState
+	output :result
+end
+
+to drawPaintedParts :height :paintColor
+	localmake "oldState turtleState
+	setFillGradient createPaintGradient :height :paintColor
+	jumpLeft :height * 1.2662
+	jumpForward :height * 0.2233
+	setPenSize 0
+	polyStart
+	arcLines [[-60 0.02] [30 0.05] [100 0] [0.07] [-53 0] [0.18]
+	[-12 0.1] [0.1] [-75 0.01] [-10 0.6] [-7.6 4] [40 0.08] [-80 0]
+	[38 0.12] [54 0.03] [0.27] [30 0.05] [90 0.025] [-120 0] [-30 0.05]
+	[-20 0.25] [-8 6] [-17 0.34] [-25 0.13] [-80 0] [73 0.03] [0.3]
+	[77 0] [11 0.3] [-85 0] [43 0.05] [0.42] [-82 0.05] [0.055] [-15 0.2]
+	[0.05] [-20 0.05] [0.18] [-22 0] [-60 0.26] [15 0] [0.03] [-55 0.045]
+	[0.09] [54 0.125] [23 0.5] [50 0.125] [13 0.4] [-3 0.4] [-70.3 0.06]
+	[1.1] [-90 0] [0.455] [-90 0] [1.295] [120 0] [0.162] [10 0.5] [40 0.07]
+	[8 0.5] [0.31] [92 0] [0.3] 
+	[-90 0] [0.061] [-92 0] [0.3] ; between windows
+	[92.3 0] [0.33] [54 0.07] [0.45] ; front window
+	[27.7225 0] [0.315293555] [-82 0] ; return to a previous point
+	[-3.2 0.5] [-62 0.02] [-5 0.3] [0.1] [17 0.25]
+	[50 0.18] [14 0.45] [56 0.17] [0.08] [-5 0.32] [-35 0.05] [-13.85 0.1]
+	[-100 0.006]
+	] :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+to drawPaintShadows :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	jumpLeft :height * 1.37
+	jumpForward :height * 0.5579
+	setPenSize 0
+	setFillColor "#2000
+	polyStart
+	arcLines [[-75 0] [-10 1] [-4 13] [0.5] [-4.2 15.5] [176 0] [0.44]
+	[-40 0.05] [75 0] [0.05] [-27.1 0.15] [1.3] [-29 0.33] [60 0]
+	[-25 0.05] [0.4] [11.9 1.25]] :height
+	polyEnd
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpLeft :height * 1.3641
+	jumpForward :height * 0.5189
+	setFillColor "#1000
+	polyStart
+	arcLines [[-86 0] [-6.85 23] [-90 0] [-32 0.34] [0.13] 
+	[-52.5 0.02] [0.25] [-66 0] [0.15] [56 0.17] [15 0.7] [60 0.17]
+	[17.2 0.5] [-70 0] [-13.8 0.05] [1.105] [-70 0] [0.155] [60 0.245]
+	[40 0.3] [40 0.18] [0.1] [-70 0] [0.06] [-75 0] [0.2]] :height
+	polyEnd
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.356
+	jumpLeft :height * 0.133
+	left 1
+	stripes :height * 1.2 :height * 0.003 ["#2000]
+	jumpRight :height * 1.25
+	stripes :height * 0.4 :height * 0.003 ["#2000]
+	jumpBackward :height * 0.133
+	left 3
+	stripes :height * 0.24 :height * 0.006 ["#4000]
+	jumpForward :height * 0.004
+	stripes :height * 0.26 :height * 0.002 ["#8000]
+	setTurtleState :oldState
+end
+
+to drawLines :linesInfo :scale
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	repeat count :linesInfo [
+		localmake "outline item repcount :linesInfo
+		localmake "arcLinesInfo last :outline
+		jumpRight :scale * first :outline
+		jumpForward :scale * item 2 :outline
+		arcLines :arcLinesInfo :scale
+		jumpTo :oldPos
+		setHeading :oldHeading
+	]
+end
+
+to drawWindowOutlines :height
+	localmake "oldState turtleState
+	localmake "outlines [
+		[-0.685 0.683 [[-125 0] [30 0.11] [59.7 0.05] [0.285]
+		[93 0.015] [0.015]]]
+		[-0.581 0.643 [[-33.9 0] [0.26] [-5 0.45] [-48 0.115]
+		[-5 8] [-7 0.4] [-49 0.13] [0.25]]]
+		[0.6442 0.9414 [[133 0] [83.5 0.02] [0.3] [70 0]
+		[0.04] [70 0.015]]]
+	]
+	setLineJoinStyle "round
+	setLineCap "round
+	setPenSize :height * 0.015
+	setPenColor "black
+	drawLines :outlines :height
+	setTurtleState :oldState
+end
+
+to drawDoorHandles :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "doorHandlesInfo [[-0.055 0.598] [0.535 0.609]]
+	setFillColor "black
+	setPenColor "#666
+	setPenSize :height * 0.015
+	setLineJoinStyle "round
+	repeat count :doorHandlesInfo [
+		localmake "info item repcount :doorHandlesInfo
+		jumpRight :height * first :info
+		jumpForward :height * last :info
+		rect :height * 0.09 :height * 0.03
+		jumpTo :oldPos
+	]
+	jumpForward :height * 0.537
+	jumpLeft :height * 0.0097
+	setPenColor "#8000
+	setFillColor "#8000
+	setPenSize :height * 0.003
+	circle :height * 0.01
+	setTurtleState :oldState
+end
+
+to drawDoorLines :height
+	localmake "oldState turtleState
+	localmake "lines [
+		[0.0117 0.66 [[-1 0] [0.28]]]
+		[0.038 0.66 [[1 0] [0.28]]]
+		[0.0225 0.66 [[-174 0] [-1 4] [-7.3 2.5]]]
+		[0.635 0.664 [[177 0] [0.15] [-74 0.034] [60 0.2] [0.05]
+		[-71.8 0.031] [0.983] [-86 0.03] [-10.8 1.78] [-45 0.009] [0.03]]]
+	]
+	setLineJoinStyle "round
+	setLineCap "round
+	setPenSize :height * 0.002
+	drawLines :lines :height
+	setTurtleState :oldState
+end
+
+to drawOrangeLights :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#c50
+	setProperty "colorStops 0.3 "#f7890f
+	setProperty "colorStops 1 "#f7890f
+	jumpForward :height * 0.4954
+	jumpLeft :height * 1.2553
+	setFillGradient createRadialGradient pos :height * 0.05 :colorStops
+	setPenColor "black
+	setPenSize :height * 0.001
+	roundRect :height * 0.05 :height * 0.025 :height * 0.005
+
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#fda21b
+	setProperty "colorStops 0.46 "#fda21b
+	setProperty "colorStops 0.5 "#e65e65
+	setProperty "colorStops 1 "#e65e65
+	jumpTo :oldPos
+	jumpForward :height * 0.451
+	jumpRight :height * 1.36
+	localmake "fromPos pos
+	jumpForward :height * 0.1
+	setFillGradient createLinearGradient :fromPos pos :colorStops "pad
+	jumpTo :fromPos
+	right 10
+	setPenSize 0
+	polyStart
+	arcLines [[0.04] [10 0.1] [0.045] [-100 0] [0.018] [-80 0] [0.04] [-10 0] [0.05]] :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+to drawLights :height
+	localmake "oldState turtleState
+	drawOrangeLights :height
+
+	jumpLeft :height * 1.3372
+	jumpForward :height * 0.3952
+	left 80
+	setPenSize :height * 0.001
+	setPenColor "black
+	arcLines [[-55 0.022] [0.02] [-14.5 0.1] [-9.2 0.7] [-80 0.015]] :height
+	setTurtleState :oldState
+end
+
+to drawBumpers :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "radius :height * 0.007
+	setFillColor "black
+	fillShapes [
+		[1.204 0.262 [[-85.7 0] [0.185] [60 0.005] [0.03] [-60 0]
+		[85 0.007] [0.03] [85 0.005] [-85 0] [0.015] [90 0.005] [-90 0]
+		[0.003] [90 0.005] [0.175] [78 0.005] [0.1087] [100 0.005]]]
+		[-1.2455 0.257 [[85 0] [0.135] [-70 0.005] [0.02] [50 0] 
+		[-62 0.005] [0.027] [-70 0.005] [65 0] [0.017] [-85 0.005] [0.11]
+		[-74.5 0.005] [0.09327] [-105 0.005]]]
+		[-0.702 0.242 [[-88.9 0] [1.14] [-104 0] [0.03] [-76 0] [1.12]]]
+	] :height
+	setFillColor "#666
+	setPenSize 0
+	jumpTo :oldPos
+	jumpLeft :height * 1.2976
+	jumpForward :height * 0.3102
+	circle :radius
+	jumpTo :oldPos
+	jumpRight :height * 1.2583
+	jumpForward :height * 0.329
+	circle :radius
+	setTurtleState :oldState
+end
+
+; Inspired by photo at:
+; https://flashbak.com/wp-content/uploads/2020/04/lada5-1200x675.jpg
+; which was found in the page:
+; https://flashbak.com/the-lada-riva-and-niva-iconic-soviet-cars-that-outlasted-the-empire-427891/
+to lada :height :timeRatio
+	localmake "oldState turtleState
+	localmake "rotationAngle :timeRatio * :timeRatio * 360 * 5
+	drawWindowSemitransparency :height
+	drawLadaCarBottom :height
+	drawCarInterior :height
+	drawPaintedParts :height "#de8
+	drawPaintShadows :height
+	drawWindowOutlines :height
+	drawDoorHandles :height
+	drawDoorLines :height
+	drawLights :height
+	drawBumpers :height
+	drawWheels :height :rotationAngle
+	setTurtleState :oldState
+end
+
+make "timeRatio animation.time / animation.duration
+lada 100 :timeRatio
+
+to animation.snapshotstyle
+	localmake "result createPList
+	setProperty "result "position.y 50
+	setProperty "result "zoom.scale 2
+	output :result
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 5
+	; Edit this if you want to change the length of your animation.
+	localmake "result createPList
+	setProperty "result "duration :minutes * 60 + :seconds
+	output :result
+end

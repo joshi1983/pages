@@ -1,0 +1,170 @@
+; If you like this example, you may also like
+; an example called Amiga House.
+
+to verticalGradient :width :height :colors
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	jumpForward :height
+	localmake "colorStops createPList
+	repeat count :colors [
+		setProperty "colorStops repRatio item repcount :colors
+	]
+	setPenGradient createLinearGradient :oldPos pos :colorStops "pad
+	setLineCap "butt
+	setPenSize :width
+	backward :height
+	setTurtleState :oldState
+end
+
+to sky :width :height
+	verticalGradient :width :height ["#fff "#9bd]
+end
+
+to ground :width :height
+	verticalGradient :width :height ["#45BF53 "#81DF9D]
+end
+
+to walkway :doorWidth :height
+	localmake "scale1 1.2
+	setFillColor "#8000
+	setPenSize 0
+	isoTrapezoid :doorWidth * 3 * :scale1 :doorWidth * :scale1 :height 
+	setFillColor "#8fff
+	isoTrapezoid :doorWidth * 3 :doorWidth  :height 
+end
+
+to drawWindow :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "width :height * 0.5
+	localmake "baseHeight :height * 0.5
+	localmake "slantedLength hypot [:height - :baseHeight :width / 2]
+	localmake "angle arcSin (:width / 2 / :slantedLength)
+	localmake "arcAngle1 58
+	localmake "arcRadius1 :height * 0.3
+	jumpRight :width / 2
+	setFillColor "#ccc
+	polyStart
+	forward :baseHeight
+	left :angle
+	forward :slantedLength
+	left 180 - :angle * 2
+	forward :slantedLength
+	left :angle
+	forward :baseHeight
+	polyEnd
+	jumpTo :oldPos
+	setHeading :oldHeading
+	setFillColor transparent
+	setPenColor "#000
+	setPenSize :height * 0.02
+	isoTrapezoid :width :width :baseHeight
+	forward :baseHeight
+	localmake "pos1 pos
+	arcRight :arcAngle1 :arcRadius1
+	jumpTo :pos1
+	setHeading :oldHeading
+	arcLeft :arcAngle1 :arcRadius1
+	setTurtleState :oldState
+end
+
+to churchBuilding :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "baseHeight :height * 0.4
+	localmake "roofHeight :height * 0.35
+	localmake "width1 :height * 0.951
+	localmake "doorToLeft :height * 0.155
+	localmake "crossHeight :height * 0.2
+	localmake "crossWidth :crossHeight * 2 / 3
+	localmake "crossAbovePoint :crossHeight / 2
+	localmake "crossGeneralThickness :height * 0.023
+	localmake "crossOutlineThickness :height * 0.005
+	localmake "crossWidth2 :crossWidth - :crossOutlineThickness * 2
+	localmake "crossHeight2 :crossHeight - :crossOutlineThickness * 2
+	localmake "triangleWidth :height * 0.24
+	localmake "triangleHeight :height - :baseHeight - :crossAbovePoint
+	localmake "generalPenSize :height * 0.01
+	localmake "doorWidth :height * 0.11
+	localmake "doorHeight :doorWidth * 1.8
+	localmake "windowBase :height * 0.145
+	localmake "windowHeight :height * 0.2
+	localmake "windowSeparation :height * 0.19
+	jumpRight :width1 / 2 - :doorToLeft
+	setFillColor "white
+	setPenSize :generalPenSize
+	setPenColor "black
+	isoTrapezoid :width1 :width1 :baseHeight
+	jumpForward :baseHeight
+	setFillColor "#866
+	isoTrapezoid :width1 :width1 * 0.6 :roofHeight
+	jumpLeft (:width1 - :triangleWidth) / 2
+	;setFillColor "white
+	isoTriangle :triangleWidth :triangleHeight
+	jumpForward :triangleHeight + :crossAbovePoint - :crossHeight 
+	setPenSize :crossGeneralThickness
+
+	; draw cross.
+	forward :crossHeight
+	jumpBackward :crossWidth / 2
+	right 90
+	jumpBackward :crossWidth / 2
+	forward :crossWidth
+	
+	; draw white inside cross.
+	setPenColor "white
+	setPenSize :crossGeneralThickness - 2 * :crossOutlineThickness
+	jumpBackward :crossOutlineThickness
+	backward :crossWidth2
+	jumpForward :crossWidth2 / 2
+	left 90
+	jumpForward :crossWidth2 / 2
+	backward :crossHeight2
+
+	setPenColor "black
+	jumpTo :oldPos
+	setHeading :oldHeading
+	setPenSize :generalPenSize
+	setFillColor "#ddd
+	isoTrapezoid :doorWidth :doorWidth :doorHeight
+	setPenSize 0
+	setFillColor "black
+	jumpForward :doorHeight / 2
+	jumpRight :doorWidth * 0.35
+	circle :height * 0.008
+	setPenSize :generalPenSize
+	jumpForward :windowBase - :doorHeight / 2
+	jumpRight :height * 0.16
+	repeat 3 [
+		drawWindow :windowHeight
+		jumpRight :windowSeparation
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by a drawing in a book.
+; The book is called
+; Addison-Wesley - LOGO Programming (Small Computer Series)
+; The book was published in 1983.
+; The drawing is shown near the bottom of page 46.
+; You can see it online at:
+; https://archive.org/details/addison-wesley-logo-programming-small-computer-series/page/46/mode/2up
+;
+; Color and gradients were added to make this more attractive.
+to church :height
+	localmake "oldState turtleState
+	localmake "width :height * 10
+	localmake "doorWidth :height * 0.067
+	localmake "churchBottom :height * 0.337
+	sky :width :height
+	ground :width :height * 0.4
+	jumpLeft :height * 0.158
+	walkway :doorWidth :churchBottom
+	jumpForward :churchBottom
+	churchBuilding :height * 0.6
+	setTurtleState :oldState
+end
+
+church 100

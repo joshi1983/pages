@@ -1,0 +1,40 @@
+make "darkColor "#880
+
+; Mentioned at:
+; http://www.cropcircleconnector.com/2021/barton/barton2021a.html
+; Drone footage of the field is shown at:
+; https://www.youtube.com/watch?v=vfEyJJzG3R8
+; These were reported June 8, 2021.
+; The location was Barton Stacey Belt, Nr South Wonston, Hampshire.
+to barton2021CropCircles :height
+	localmake "oldState turtleState
+	localmake "lightColor "#ffd
+	localmake "midRadius :height * 0.228
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	setFillColor :lightColor
+	circle :height / 2
+	setFillColor :darkColor
+	right 180 / 12
+	isotoxalStar :height * 0.48 :height * 0.39 12
+	setPenSize :height * 0.008
+	setPenColor :lightColor
+	circle :midRadius
+	setPenSize 0
+	setFillColor :lightColor
+	repeat 4 [
+		jumpForward :midRadius
+		circle :height * 0.05
+		jumpTo :center
+		right 45
+		jumpForward :midRadius
+		circle :height * 0.085
+		jumpTo :center
+		right 45
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor :darkColor
+barton2021CropCircles 100
