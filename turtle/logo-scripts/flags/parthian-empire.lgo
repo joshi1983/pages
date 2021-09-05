@@ -1,0 +1,53 @@
+; Inspired by flag at:
+; https://en.wikipedia.org/wiki/List_of_Iranian_flags#/media/File:Flag_of_Parthian_Empire.svg
+;
+; The Parthian Empire's flag is largely unknown but
+; this is based on someone's educated guess.
+;
+; This WebLogo version is much more symmetrical
+; because more symmetry and repetition is easier to implement in WebLogo.
+; Modern flags also tend to be very symmetrical.
+to parthianFlag :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "width :height * 3 / 2
+	localmake "numRays 16
+	localmake "radius :height / 2
+	jumpForward :height / 2
+	setFillColor "black
+	setPenSize 0
+	rect :width :height
+	setFillColor "brown
+	isotoxalStar :radius :radius * 0.4 :numRays
+	right 180 / :numRays
+	repeat :numrays [
+		drawArcLineShape [-0.1 0
+			[[0.6] [-88 0] [50 0.08] [70 0.04] [-67 0.095] [45 0.04]
+			[0.04] [-60 0.04] [60 0.03] [0.04] [-49.15 0.0404] [0.015]
+			[-160 0] [40 0.03] [0.05] [-10 0.1] [-40 0.045] [50 0.04]
+			[10 0.2] [-5 0.2] [-16 0.05] [-40 0.02] [0.03] [20 0.05]
+			[50 0.025] [-45 0.3] [0.5]
+			]
+		] :radius
+		right 360 / :numRays	
+	]
+	setFillColor "yellow
+	repeat :numrays [
+		drawArcLineShape [0 0.43
+			[[90 0] [-90 0.015] [30 0.08] [0.04] [-80 0.08] [100 0.043]
+			[-80 0.04] [0.05] [40 0.05] [0.05] [-80 0.04] [-170 0]
+			[70 0.025] [0.1] [-40 0.07] [70 0.03] [0.05] [-78 0.045]
+			[50 0.1] [-18 0.2] [-50 0.04] [-30 0.02]
+			]
+		] :radius
+		right 360 / :numRays	
+	]
+	setHeading :oldHeading
+	setPenColor "brown
+	isotoxalStar :radius * 0.9 :height * 0.15 :numRays
+	setPenSize :height * 0.015
+	circle :radius * 0.4
+	setTurtleState :oldState
+end
+
+parthianFlag 100

@@ -1,0 +1,23 @@
+! An insidious bug
+!
+DEF XXX$(n)                       ! Return a string of n X's
+    LET s$ = ""                   ! Start with an empty string
+    FOR i = 1 to n                ! Loop. . .
+        LET s$ = s$ & "x"         ! . . . adding an X each time
+    NEXT i
+
+    !***************IMPORTANT***********************************************
+    REM: the counter i is incremented each cycle of the FOR NEXT loop
+    REM: on exit from the loop =n+1
+    REM: if i=4 or more then the main program loop below will be terminated
+    !***********************************************************************
+
+    LET XXX$ = s$
+END DEF
+
+FOR i = 1 to 4                    ! Ask four times
+    PRINT "How many X's";
+    INPUT n
+    PRINT XXX$(n)
+NEXT i
+END
