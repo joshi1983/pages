@@ -1,0 +1,293 @@
+; Inspired by:
+; https://upload.wikimedia.org/wikipedia/commons/d/d9/Node.js_logo.svg
+; Referenced from:
+; https://en.wikipedia.org/wiki/Node.js
+make "arcRadiusRatio 0.03
+make "nodeBlack "#333
+
+to letterN :height
+	localmake "oldState turtleState
+	localmake "size1 :height * 0.384
+	localmake "size2 :height * 0.286
+	localmake "size3 :height * 0.17015
+	localmake "size4 :height * 0.182
+	localmake "size5 :height * 0.076
+	localmake "arcAngle1 60
+	localmake "arcAngle2 180 - 2 * :arcAngle1
+	localmake "arcAngle3 120
+	localmake "arcAngle4 180 - :arcAngle3
+	localmake "arcRadius1 :height * :arcRadiusRatio
+	localmake "arcRadius2 :arcRadius1 / 2
+	localmake "arcRadius3 :arcRadius1 * 0.9
+	setFillColor :nodeBlack
+	setPenSize 0
+	jumpForward :height * 0.084
+	polyStart
+	jumpForward :size1
+	arcRight :arcAngle1 :arcRadius1
+	jumpForward :size2
+	arcRight :arcAngle2 :arcRadius1
+	jumpForward :size2
+	arcRight :arcAngle1 :arcRadius1
+	jumpForward :size1
+	arcRight :arcAngle3 :arcRadius2
+	jumpForward :size3
+	arcRight :arcAngle4 :arcRadius1
+	jumpForward :size4
+	arcLeft :arcAngle1 :arcRadius3
+	jumpForward :size5
+	arcLeft :arcAngle2 :arcRadius3
+	jumpForward :size5
+	arcLeft :arcAngle1 :arcRadius3
+	jumpForward :size4
+	arcRight :arcAngle4 :arcRadius1
+	jumpForward :size3
+	arcRight :arcAngle3 * 0.95 :arcRadius2
+	polyEnd
+	setTurtleState :oldState
+end
+
+to verticalLeftGradient :height
+	localmake "oldPos pos
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#59ac45
+	setProperty "colorStops 1 "#51914c
+	jumpBackward :height * 0.02
+	localmake "fromPos pos
+	jumpForward :height * 0.33
+	setFillGradient createLinearGradient :fromPos pos :colorStops "pad
+	jumpTo :oldPos
+end
+
+to verticalRightGradient :height
+	localmake "oldPos pos
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#3e853d
+	setProperty "colorStops 1 "#54924e
+	jumpBackward :height * 0.35
+	setFillGradient createLinearGradient :oldPos pos :colorStops "pad
+	jumpTo :oldPos
+end
+
+to upperRightGradient :height
+	localmake "oldPos pos
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#639a58
+	setProperty "colorStops 1 "#6ca25e
+	jumpBackward :height * 0.35
+	setFillGradient createLinearGradient :oldPos pos :colorStops "pad
+	jumpTo :oldPos
+end
+
+to horizontalGradient :height
+	localmake "oldPos pos
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#6bbf47
+	setProperty "colorStops 0.5 "#73aa63
+	setProperty "colorStops 1 "#3e863d
+	jumpRight :height * 0.54
+	setFillGradient createLinearGradient :oldPos pos :colorStops "pad
+	jumpTo :oldPos
+end
+
+to letterO :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "angle1 23
+	localmake "angle2 10
+	localmake "angle3 20
+	localmake "angle4 15
+	localmake "arcRadius :height * :arcRadiusRatio
+	localmake "size1 :height * 0.285
+	localmake "points []
+	jumpRight :height * 0.357
+	jumpForward :height * 0.006
+	setPenSize 0
+	left 90
+	arcRight 30 :arcRadius
+	setFillColor "#3e863d
+	polyStart
+	repeat 6 [
+		jumpForward :size1
+		queue2 "points pos
+		arcRight 60 :arcRadius
+		queue2 "points pos
+	]
+	polyEnd
+
+	; left-most gradient
+	jumpTo item 1 :points
+	setHeading :oldHeading - 60
+	arcRight :angle1 :arcRadius
+	polyStart
+	arcRight 60 - :angle1 :arcRadius
+	verticalLeftGradient :height
+	jumpForward :size1
+	arcRight 60 :arcRadius
+	jumpForward :size1
+	jumpRight :height * 0.02
+	polyEnd
+
+	; right-most gradient
+	jumpTo item 7 :points
+	setHeading :oldHeading
+	verticalRightGradient :height
+	setHeading :oldHeading + 120
+	arcRight :angle2 :arcRadius
+	polyStart
+	arcRight 60 - :angle2 :arcRadius
+	jumpForward :size1
+	jumpRight :height * 0.172
+	polyEnd
+
+	; upper-right gradient
+	jumpTo item 6 :points
+	setHeading :oldHeading + 120
+	upperRightGradient :height
+	left 180
+	arcLeft :angle3 :arcRadius
+	left 180
+	polyStart
+	arcRight :angle3 :arcRadius
+	jumpForward :size1
+	arcRight :angle4 :arcRadius
+	right 73.3
+	jumpForward :height * 0.2
+	polyEnd
+
+	; Biggest gradient
+	setHeading :oldHeading
+	jumpTo item 4 :points
+	horizontalGradient :height
+	right 60
+	polyStart
+	jumpForward :size1
+	arcRight 60 - :angle3 :arcRadius
+	right 30
+	jumpTo item 9 :points
+	right 50
+	arcRight 60 :arcRadius
+	jumpForward :size1
+	arcRight 20 :arcRadius
+	polyEnd
+
+	setTurtleState :oldState
+end
+
+to letterD :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "thickness :height * 0.1855
+	localmake "size1 :height * 0.286
+	localmake "size2 :height * 0.096
+	localmake "angle1 63
+	localmake "arcRadius1 :height * :arcRadiusRatio
+	localmake "arcRadius2 :height * :size2 / :size1 * :arcRadiusRatio
+	localmake "arcRadius3 :arcRadius1 / 3
+	localmake "arcAngle1 60
+	jumpRight :height * 0.34
+	setPenSize 0
+	left 90
+	arcRight :arcAngle1 / 2 :arcRadius1
+	setFillColor :nodeBlack
+
+	; Draw a C-like shape. 
+	polyStart
+	repeat 4 [
+		jumpForward :size1
+		arcRight 60 :arcRadius1
+	]
+	right :angle1
+	jumpForward :thickness / sin :angle1
+	right 180 - :angle1
+	repeat 5 [
+		arcLeft 60 :arcRadius2
+		jumpForward :size2
+	]
+	arcLeft 60 :arcRadius2
+	setHeading :oldHeading + 180
+	jumpLeft :thickness
+	jumpForward :thickness / tan :angle1
+	localmake "lowerRightPos pos
+	arcRight 60 :arcRadius1
+	jumpForward :size1
+	arcRight 50 :arcRadius1
+	polyEnd
+
+	; Draw the vertical stroke.
+	jumpTo :lowerRightPos
+	setHeading :oldHeading
+	polyStart
+	jumpForward :height * 0.714
+	arcLeft 61 :arcRadius1
+	jumpForward :height * 0.169
+	arcLeft 119 :arcRadius1 / 2
+	jumpForward :height * 0.3823
+	arcRight 120 :arcRadius3
+	setHeading :oldHeading + 180
+	jumpForward :height * 0.1
+	jumpLeft :arcRadius3 * (1 + cos 60)
+	jumpForward :height * 0.3
+	polyEnd
+
+	setTurtleState :oldState
+end
+
+to letterE :height
+	localmake "oldState turtleState
+	localmake "size1 :height * 0.051
+	localmake "size2 :height * 0.087
+	localmake "size3 :height * 0.171
+	localmake "size4 :height * 0.289
+	localmake "arcRadius1 :height * 0.009
+	localmake "arcRadius2 :height * 0.018
+	localmake "arcRadius3 :height * 0.015
+	localmake "arcRadius4 :height * 0.028
+	jumpRight :height * 0.256
+	jumpForward :height * 0.297
+	setPenSize 0
+	setFillColor "#689f63
+	polyStart
+	repeat 6 [
+		jumpForward :size1
+		arcRight 60 :arcRadius1
+	]
+	polyEnd
+	jumpRight :height * 0.145
+	setFillColor :nodeBlack
+	polyStart
+	jumpForward :height * 0.0678
+	repeat 3 [
+		arcLeft 60 :arcRadius2
+		jumpForward :size2
+	]
+	arcLeft 60 :arcRadius2
+	jumpForward :height * 0.286
+	arcRight 120 :arcRadius3
+	jumpForward :size3
+	repeat 4 [
+		arcRight 60 :arcRadius4
+		jumpForward :size4
+	]
+	arcRight 60 :arcRadius4
+	jumpForward :height * 0.07
+	arcRight 60 :arcRadius4
+	jumpForward :height * 0.17284
+	arcRight 115 :arcRadius3
+	polyEnd
+	setTurtleState :oldState
+end
+
+to nodejsLogo :height
+	localmake "oldPos pos
+	jumpLeft :height * 1.296
+	letterN :height
+	jumpRight :height * 0.6
+	letterO :height
+	jumpTo :oldPos
+	letterD :height
+	jumpRight :height * 0.71
+	letterE :height
+end
+
+nodejsLogo 100
