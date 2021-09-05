@@ -1,0 +1,60 @@
+; This animation visualizes a square being scaled
+; in the 45 degree direction.
+; Only at the exact start of the animation is it a square.
+; After animation.time = 0, the red shape is a rhombus.
+; The rhombus shrinks as it gets shrunk in the 45 degree direction.
+to squareToRhombus :size :timeRatio
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "heading1 :timeRatio * -80
+	localmake "len1 1 / sqrt 2
+	localmake "size1 :size * hypot [:len1 :len1 * tan 45 + :heading1 / 2]
+	localmake "numGuideLines 6
+	localmake "gridSize :size * sqrt 2
+	localmake "gridThickness :size * 0.005
+	right 45
+	repeat :numGuideLines + 1 [
+		stripes :gridSize :gridThickness ["black]
+		jumpForward :gridSize / :numGuideLines
+	]
+	jumpTo :oldPos
+	jumpRight :gridSize / 2
+	repeat :numGuideLines + 1 [
+		stripes :gridThickness :gridSize ["black]
+		jumpLeft :gridSize / :numGuideLines
+	]
+
+	setLineJoinStyle "round
+	jumpTo :oldPos
+	setHeading :oldHeading
+	setFillColor transparent
+	left :heading1 / 2
+	jumpRight :size1 / 2
+	setPenSize :size * 0.02
+	setPenColor "red
+	parallelogram :size1 :size1 :heading1
+
+	setTurtleState :oldState
+end
+
+make "timeRatio clamp animation.time / animation.duration 0 1
+make "timeRatio interpolateRatio easeInOut :timeRatio
+squareToRhombus 100 :timeRatio
+
+to animation.snapshotstyle
+	localmake "result createPList
+	setProperty "result "position.y 50
+	setProperty "result "position.x 30
+	setProperty "result "zoom.scale 4
+	output :result
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 3
+	; Edit this if you want to change the length of your animation.
+	localmake "result createPList
+	setProperty "result "duration :minutes * 60 + :seconds
+	output :result
+end

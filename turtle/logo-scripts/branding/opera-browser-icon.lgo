@@ -1,0 +1,83 @@
+; Inspired by
+; https://upload.wikimedia.org/wikipedia/commons/4/49/Opera_2015_icon.svg
+; Referenced from:
+; https://en.wikipedia.org/wiki/Opera_(web_browser)
+
+to operaIcon :size
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "darkRedColor "#a70014
+	localmake "lightRedColor "#ff1b2d
+	localmake "angle2 172.1
+	localmake "angle3 178.5
+	localmake "arcAngle1 69
+	localmake "arcAngle2 43.5
+	localmake "arcAngle2_ 16.8
+	localmake "arcAngle3 11.3622
+	localmake "arcAngle4 35
+	localmake "arcAngle5 23
+	localmake "arcAngle6 35
+	localmake "arcAngle7 24
+	localmake "arcAngle8 23.4378
+	localmake "arcRadius1 :size * 0.36
+	localmake "arcRadius2 :size * 0.425
+	localmake "arcRadius3 :size * 0.530988
+	localmake "arcRadius4 :size * 0.245
+	localmake "arcRadius5 :size * 0.17
+	localmake "arcRadius6 :size * 0.22
+	localmake "arcRadius7 :size * 0.34
+	localmake "arcRadius8 :size * 0.494
+	localmake "colorStops createPList
+	setProperty "colorStops 0 :darkRedColor
+	setProperty "colorStops 1 :lightRedColor
+	jumpForward :size / 2
+	setFillGradient createLinearGradient :oldPos pos :colorStops "pad
+	jumpTo :oldPos
+	setPenSize 0
+	jumpRight :size * 0.33302
+	jumpForward :size * 0.127057
+	localmake "pos1 pos
+	localmake "angle1 arcSin 0.33302 * 2
+	left 90 + :angle1
+	polyStart
+	arcRight 180 + :angle1 * 2 :size / 2
+	right :angle2
+	arcLeft :arcAngle1 :arcRadius1
+	arcLeft :arcAngle2 :arcRadius2
+	arcLeft :arcAngle3 * 2 :arcRadius3
+	arcLeft :arcAngle2 :arcRadius2
+	arcLeft :arcAngle1 :arcRadius1
+	polyEnd
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :size * 0.4
+	localmake "fromPos pos
+	jumpForward :size * 0.6
+	setFillGradient createLinearGradient pos :fromPos :colorStops "pad
+	jumpTo :pos1
+	right 90 - :angle1
+	setPenSize 0
+	polyStart
+	arcLeft 180 - :angle1 * 2 :size / 2
+	left 180 - :angle2
+	arcLeft :arcAngle1 :arcRadius1
+	arcLeft :arcAngle2_ :arcRadius2
+	left :angle3
+	arcRight :arcAngle4 :arcRadius4
+	arcRight :arcAngle5 :arcRadius5
+	arcRight :arcAngle6 :arcRadius6
+	arcRight :arcAngle7 :arcRadius7
+	arcRight :arcAngle8 * 2 :arcRadius8
+	arcRight :arcAngle7 :arcRadius7
+	arcRight :arcAngle6 :arcRadius6
+	arcRight :arcAngle5 :arcRadius5
+	arcRight :arcAngle4 :arcRadius4
+	left :angle3
+	arcLeft :arcAngle2_ :arcRadius2
+	arcLeft :arcAngle1 :arcRadius1
+	polyEnd
+	setTurtleState :oldState
+end
+
+operaIcon 100
