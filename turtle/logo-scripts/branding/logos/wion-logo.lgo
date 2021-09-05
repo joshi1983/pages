@@ -1,0 +1,37 @@
+; Inspired by logo at:
+; https://www.youtube.com/@WION
+to wionLogo :height
+	localmake "oldState turtleState
+	localmake "dashHeight :height * 0.187
+	localmake "wionYellow "#ffda29
+	localmake "wionBlack "#4f4f4f
+	localmake "leftArcs1 [
+		[-107.5 0.5] [-146 0] [14.5 1.2] [100 0.138]
+		[14 0.2] [-25 0.2] [-30 0.099202617] 
+	]
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	setFillColor :wionYellow
+	circle :height / 2
+	setFillColor :wionBlack
+	drawArcLineShape [-0.5 0
+		combine :leftArcs1 reverse :leftArcs1
+	] :height
+
+	setPenColor :wionBlack
+	setLineCap "round
+	setPenSize :height * 0.055
+	jumpRight :height * 0.253
+	jumpBackward :dashHeight / 2
+	forward :dashHeight
+
+	setFillColor :wionYellow
+	setPenSize 0
+	jumpTo :center
+	jumpLeft :height * 0.311
+	circle :height * 0.123
+	setTurtleState :oldState
+end
+
+wionLogo 100
