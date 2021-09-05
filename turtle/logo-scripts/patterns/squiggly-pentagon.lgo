@@ -1,0 +1,55 @@
+; The code from the book uses several straight lines.
+; This uses a circular arc because I thought a smoother 
+; curved line would look more like a squiggle you 
+; may draw on paper.
+; This also uses a couple colors instead of just black because
+; I thought it would look more interesting.
+to squigglyLineForward :len :squiggleWidth
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "oldPenSize penSize
+	localmake "wavelength :squiggleWidth * 0.75
+	localmake "size1 hypot [:wavelength / 4 :squiggleWidth / 2]
+	localmake "angle1 arcSin :wavelength / 4 / :size1
+	localmake "arcRadius :size1 / 2 / cos :angle1
+	localmake "arcAngle 360 - 2 * arcSin (:wavelength / 4 / :arcRadius)
+	localmake "numSquiggles :len / :wavelength
+	right :arcAngle / 2
+	setPenSize :oldPenSize * 0.5
+	setPenColor "green
+	repeat :numSquiggles [
+		arcLeft :arcAngle :arcRadius
+		arcRight :arcAngle :arcRadius
+	]
+	setPenSize :oldPenSize
+	setHeading :oldHeading
+	jumpTo :oldPos
+	setPenColor "black
+	forward :len
+end
+
+; Inspired by drawing from a book called
+; Logo programming : a practical guide for parents and teachers
+; by Möller, Anne
+; Publication date 1984
+; The drawing is on page 103.
+; You can see an electronic version of the book at:
+; https://archive.org/details/logoprogrammingp0000moll/page/102/mode/2up
+; You may need to sign in and borrow the book to view that page but it is free.
+to squigglyPentagon :height
+	localmake "oldState turtleState
+	localmake "sideLength :height * 0.58718
+	localmake "squiggleWidth :height * 0.125
+	jumpForward :height * 0.0314
+	left 90 - 180 / 5
+	setPenColor "black
+	setLineCap "round
+	setLineJoinStyle "round
+	repeat 5 [
+		squigglyLineForward :sideLength :squiggleWidth
+		right 360 / 5
+	]
+	setTurtleState :oldState
+end
+
+squigglyPentagon 100

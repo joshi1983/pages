@@ -1,0 +1,64 @@
+to peddle :radius :len
+	localmake "oldState turtleState
+	localmake "angle arcSin :radius / :len
+	localmake "len :len * cos :angle
+	localmake "arcAngle 180 + :angle * 2
+	left :angle
+	ifelse :radius = 0 [
+		forward :len
+	] [
+		polyStart
+		jumpForward :len
+		arcRight :arcAngle :radius
+		polyEnd
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://publicdomainvectors.org/en/free-clipart/Vector-shape-with-repetitive-pattern/8230.html
+; You can learn more about Guilloche at
+; https://en.wikipedia.org/wiki/Guilloch%C3%A9
+; A video shows a rose engine engraving a guiloche pattern 
+; for a watch face at:
+; https://www.youtube.com/watch?v=9VKASuwatG0
+
+; The public domain source image shows a lot of 
+; parallel circular arcs running close together.
+; This code simplifies that to solid filled regions.
+; Each filled region resembles a single peddle from a flower.
+to guillocheFlower :radius :timeRatio
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "numAngles 36
+	localmake "maxPeddleRadius :radius * 0.44 * :timeRatio
+	localmake "jumpLen :radius * 0.1
+	localmake "len :radius - :maxPeddleRadius - :jumpLen
+	setLineCap "round
+	setPenSize :radius * 0.01
+	setPenColor mix "#2000 "#f048 :timeRatio
+	setFillColor penColor
+	repeat :numAngles [
+		jumpForward :jumpLen
+		peddle :maxPeddleRadius :len
+		jumpTo :oldPos
+		right 360 / :numAngles
+	]
+	setTurtleState :oldState
+end
+
+guillocheFlower 300 animation.timeRatio
+
+to animation.snapshotstyle
+	output createPList
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 4
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+		["thumbnailTime 1.4]
+	]
+end
