@@ -1,0 +1,32 @@
+; Implemented to be similar to:
+; https://processing.org/reference/binary_.html
+to pBinary :value
+	if string? :value [
+		if '#' = first :value [
+			localmake "result ''
+			for ["i 2 count :value] [
+				localmake "result word :result pHexDigitToBinary item :i :value
+			]
+			output :result
+		]
+		if 1 = count :value [
+			output pBinary ascii :value
+		]
+	]
+	if integer? :value [
+		localmake "signPrefix ''
+		if :value < 0 [
+			localmake "signPrefix '-'
+			localmake "value -:value
+		]
+		localmake "digits ''
+		while and :value <> 0 :value <> -1 [
+			localmake "digit str remainder :value 2
+			localmake "digits word :digit :digits
+			localmake "value bitShiftRight :value 1
+		]
+		output word :signPrefix :digits
+	]
+	; FIXME: convert colors to binary.
+	output str :value
+end
