@@ -1,0 +1,20 @@
+; pattern created by drawing straight lines between
+; every vertex on 16-sides regular polygon
+
+make "numSides 16
+make "radius 200
+setPenSize 0.5
+
+repeat :numSides [
+	make "angle1 repcount * 360 / :numSides
+	jumpForward :radius
+	make "tempPos pos
+	
+	repeat :numSides [
+		make "angle repcount * 360 / :numSides
+		setXY :radius * cos :angle :radius * sin :angle
+		setPos :tempPos
+	]
+	home
+	right 360 / :numSides
+]

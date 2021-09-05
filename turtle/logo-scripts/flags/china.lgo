@@ -1,0 +1,54 @@
+to drawStar :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	right 18
+	jumpForward :size * 1.4
+	left 162
+	setPenSize 0
+	polyStart
+
+	repeat 5 [
+		jumpForward :size
+		right 72
+		jumpForward :size
+		left 144
+	]
+	polyEnd
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to drawChinaFlag :width :height
+	localmake "bigStarSize :height * 0.11
+	localmake "smallStarSize :bigStarSize / 3
+	localmake "smallStarArcRadius :width * 0.126
+	right 90
+	setPenColor "#EE1C25
+	setPenSize :height
+	forward :width
+	jumpBackward :width
+	left 90
+	jumpForward :height * 0.25
+	right 90
+	jumpForward :width / 6
+	right 90 + 18
+	setPenSize 0
+	localmake "bigStarPosition pos
+	setFillColor "#FF0
+	drawStar :bigStarSize
+	jumpLeft :width * 0.12
+	jumpBackward :width * 0.022
+	left 177
+	repeat 4 [
+		jumpForward :smallStarArcRadius
+		localmake "tempHeading heading
+		setHeading -18 + towards :bigStarPosition
+		drawStar :smallStarSize
+		setHeading :tempHeading
+		jumpBackward :smallStarArcRadius
+		right 45.7
+	]
+end
+
+setScreenColor "black
+drawChinaFlag 300 200

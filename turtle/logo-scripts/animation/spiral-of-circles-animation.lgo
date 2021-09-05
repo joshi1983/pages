@@ -1,0 +1,32 @@
+to spiralOfCircles :size
+	localmake "maxCircleSize :size * 0.01
+	localmake "center pos
+	setFillColor "black
+	setPenSize 0
+	repeat 30 [
+		localmake "outerRepcount repcount
+		localmake "radius :size * repcount / 20
+		localmake "numCircles :radius / :maxCircleSize
+		repeat :numCircles [
+			setPos :center
+			setHeading 360 * repcount / :numCircles
+			forward :radius
+			circle :maxCircleSize * (1.01 + sin (animation.time * 150 + :outerRepcount * 30 + repcount * 360 / :numCircles))
+		]
+	]
+end
+
+spiralOfCircles 100
+
+to animation.snapshotstyle
+	localmake "result createPList
+	setProperty "result "zoom.scale 1.65
+	output :result
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 10
+	; Edit this if you want to change the length of your animation.
+	output :minutes * 60 + :seconds
+end

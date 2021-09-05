@@ -1,0 +1,61 @@
+; Inspired by animation at
+; https://www.pinterest.ca/pin/417427459221337913/
+
+make "colors ["green "yellow "orange "red "brown "purple
+"blue "navy "black "aqua]
+
+to regularPolygon :sideLength :numSides
+	repeat :numSides [
+		forward :sideLength
+		right 360 / :numSides
+	]
+end
+
+to tumblingPolygons :size :numTumbledCycles
+	localmake "oldState turtleState
+	jumpLeft :size
+	; Convert size from size of the 12-sided polygon to 
+	; length of 1 side of the polygon.
+	localmake "size :size * 2 * tan 180 / 12
+	jumpBackward :size * 0.5
+
+	; Convert the number of cycles from number of rotations of the 
+	; outer polygon to number of sides tumbled through.
+	localmake "numTumbledCycles :numTumbledCycles * 12
+
+	; Move the turtle around the 12-sided polygon to the intended 
+	; starting position and heading.
+	repeat int :numTumbledCycles [
+		left 360 / 12
+		jumpBackward :size
+	]
+	localmake "numTumbledCycles :numTumbledCycles - int :numTumbledCycles
+	localmake "numTumbledCycles :numTumbledCycles * 3 / 4
+	localmake "heading1 heading
+	setPenSize :size * 0.03
+	setLineJoinStyle "round
+	for ["numSides 12 3 -1] [
+		localmake "ratio (12 - :numSides) / 9
+		setHeading :heading1 + :numTumbledCycles * :ratio * 360 / :numSides 
+		setFillColor item :numSides - 2 :colors
+		polyStart
+		regularPolygon :size :numSides
+		polyEnd
+	]
+	setTurtleState :oldState
+end
+
+tumblingPolygons 100 animation.time * 0.1
+
+to animation.snapshotstyle
+	localmake "result createPList
+	setProperty "result "zoom.scale 2.5
+	output :result
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 10
+	; Edit this if you want to change the length of your animation.
+	output :minutes * 60 + :seconds
+end

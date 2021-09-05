@@ -1,0 +1,107 @@
+; Inspired by
+; https://www.pinterest.ca/pin/462956036707064680/
+; which is also at:
+; https://www.waldorftoday.com/2011/02/geometric-drawing-series/
+make "colors ["black "green  "brown "purple  "blue "violet  "red "orange "yellow "white]
+make "colors2 ["black "violet "purple "blue "green "#ADAD00 "#BD7B00 "#B30000 "black]
+
+to ratioToColor :ratio
+	localmake "ratio clamp :ratio 0 ((count :colors) - 1) / (count :colors)
+	localmake "len count :colors
+	localmake "index1 1 + (remainder int (:len * :ratio) :len)
+	localmake "index2 1 + remainder :index1 :len
+	localmake "ratio :ratio * :len
+	localmake "ratio :ratio - int :ratio
+	localmake "color1 item :index1 :colors
+	localmake "color2 item :index2 :colors
+	if and :index2 = 1 :index1 = count :colors [
+		localmake "color2 "black
+	]
+	output mix :color2 :color1 :ratio
+end
+
+to leaf :size :angle
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "arcRadius :size / 2 / sin :angle
+	left :angle
+	polyStart
+	arcRight :angle * 2 :arcRadius
+	right 180 - :angle * 2
+	arcRight :angle * 2 :arcRadius
+	polyEnd
+	setHeading :oldHeading
+	jumpTo :oldPos
+end
+
+to flower1 :size
+	localmake "numPeddles 6
+	localmake "numContours 100
+	setPenSize 0
+	repeat :numPeddles [
+		repeat :numContours [
+			localmake "ratio1 (:numContours + 1 - repcount) / :numContours
+			localmake "size1 :size * :ratio1
+			setFillColor ratioToColor (repcount - 1) / (:numContours - 1)
+			leaf :size1 30
+		]
+		right 360 / :numPeddles
+	]
+end
+
+to flower2Background :size
+	localmake "numColors count :colors2
+	localmake "colorStops createPList
+	repeat :numColors [
+		localmake "ratio repRatio
+		setProperty "colorStops :ratio item repcount :colors2
+	]
+	setFillGradient createRadialGradient pos pos :size :colorStops "pad
+	setPenSize 0
+	circle :size
+end
+
+; Inspired by
+; https://www.waldorftoday.com/wp-content/uploads/2011/02/Geom6Ries04.jpg
+; from https://www.waldorftoday.com/2011/02/geometric-drawing-series/
+to flower2 :size
+	flower2Background :size
+	flower1 :size
+end
+
+; Inspired by
+; https://www.waldorftoday.com/wp-content/uploads/2011/02/Geom6Ries19.jpg
+to flower3 :size
+	localmake "oldHeading heading
+	localmake "numAngles 12
+	localmake "numStripes min count :colors count :colors2
+	setPenSize :size * 0.15 / :numStripes
+	setFillColor transparent		
+	repeat :numAngles [
+		localmake "angleRepcount repcount
+		repeat :numStripes [
+			localmake "size1 :size * repcount / :numStripes
+			ifelse even? :angleRepcount [
+				setPenColor item repcount :colors2
+			] [
+				localmake "ratio repcount / :numStripes
+				setPenColor ratioToColor :ratio
+			]
+			leaf :size1 20
+		]
+		right 360 / :numAngles
+	]
+	setHeading :oldHeading
+end
+
+setScreenColor "black
+make "size 50
+make "separation :size * 4
+jumpLeft :separation * 1.5
+flower1 :size
+jumpRight :separation
+flower2Background :size
+jumpRight :separation
+flower2 :size
+jumpRight :separation
+flower3 :size

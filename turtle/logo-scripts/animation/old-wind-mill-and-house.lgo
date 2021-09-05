@@ -1,0 +1,318 @@
+; inspired by
+; https://www.pinterest.ca/pin/438608451204236419/
+
+to framedRect :width :height
+	localmake "oldPos pos
+	localmake "ratio 0.965
+	localmake "ratio2 1 - ((1 - :ratio) * :height / :width)
+	setPenSize :width
+	setPenColor "black
+	penDown
+	forward :height
+	jumpBackward :height * (1 - :ratio) / 2
+	right 90
+	jumpForward :width * :ratio2 / 2
+	setPenColor "#dcc499
+	setPenSize (:width + :height) * 0.018
+	right 90
+	repeat 2 [
+		forward :height * :ratio
+		right 90
+		forward :width * :ratio2
+		right 90
+	]
+	closePath
+	penUp
+	jumpTo :oldPos
+	right 180
+end
+
+to smoke :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "oldPenSize penSize
+	localmake "size1 :size * 0.4
+	localmake "size2 :size * 0.69545
+	localmake "angle1 45
+	localmake "angle2 60
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#2000
+	setProperty "colorStops 0.3 "#6234
+	setProperty "colorStops 0.7 "#2046
+	setProperty "colorStops 1 "#4524
+	localmake "fromRatio animation.time / 3
+	jumpForward :size * :fromRatio
+	localmake "from pos
+	jumpForward :size * (2 - :fromRatio)
+	localmake "to pos
+	
+	jumpTo :oldPos
+	setPenSize 0
+	localmake "gradient1 createLinearGradient  :from :to :colorStops "pad
+	setFillGradient :gradient1
+	penDown
+	arcRight :angle1 :size1
+	arcLeft :angle2 :size2
+	polyStart
+	localmake "startPoint pos
+	right 180
+	arcRight :angle2 :size2
+	arcLeft :angle1 :size1
+	right 180
+	arcLeft 30 :size * 0.4
+	arcRight 50 :size * 0.3
+	arcRight 12 :size * 0.4
+	arcLeft 40 :size * 0.703
+	setHeading towards :startPoint
+	jumpForward distance :startPoint
+	polyEnd
+	penUp
+	jumpTo :oldPos
+	setHeading :oldHeading
+	setPenSize :oldPenSize
+end
+
+to house :size
+	localmake "oldPos pos
+	localmake "chimneyColor "#830
+	localmake "height1 :size * 0.13
+	localmake "height2 :size * 0.2
+	localmake "height3 :size * 0.35
+	localmake "width1 :size * 0.25
+	localmake "width3 :width1
+	localmake "width2 :size - :width1 - :width3
+	localmake "roofAngle1 arcTan (:height2 - :height1) / :width1
+	localmake "roofAngle2 arcTan (:height3 - :height2) * 2 / :width2
+	localmake "roofLen1 0.5 * :width2 / cos :roofAngle2
+	localmake "roofLen2 :width1 / cos :roofAngle1
+
+	setPenColor :chimneyColor
+	setPenSize :size * 0.05
+	jumpForward :size * 0.37
+	penUp
+	smoke :size * 0.55
+	setPos :oldPos
+	forward :size * 0.05
+	penDown
+	forward :size * 0.38 ; house's main chimney
+	
+	jumpTo :oldPos
+	right 90
+	jumpForward :size * 0.49
+	left 90
+	setPenSize :size * 0.03
+	jumpForward :size * 0.001
+	penDown
+	forward :size * 0.19 ; side chimney
+	
+	jumpTo :oldPos
+	left 90
+	jumpForward :size * 0.5
+	right 90
+	penDown
+	setFillColor "#a78d61
+	setPenColor "black
+	setPenSize :size * 0.002
+	polyStart
+	forward :height1
+	setPenSize :size * 0.01
+	right 90 - :roofAngle1
+	forward :roofLen2
+	left :roofAngle2 - :roofAngle1
+	forward :roofLen1
+	right :roofAngle2 * 2
+	forward :roofLen1
+	left :roofAngle2 - :roofAngle1
+	forward :roofLen2
+	right 90 - :roofAngle1
+	setPenSize :size * 0.002
+	forward :height1
+	setPenSize 0
+	polyEnd
+	
+	right 180
+	jumpTo :oldPos
+	jumpForward :size * 0.02
+	penDown
+	framedRect :size * 0.06 :size * 0.11
+	forward :size * 0.21
+	framedRect :size * 0.06 :size * 0.07
+	setPos :oldPos
+	right 89
+	forward :size * 0.33
+	left 89
+	framedRect :size * 0.06 :size * 0.11 ; side door
+	right 70
+	forward :size * 0.1
+	left 70
+	framedRect :size * 0.04 :size * 0.05
+	setPos :oldPos
+	left 89
+	forward :size * 0.37
+	right 89
+	framedRect :size * 0.08 :size * 0.1
+	setPos :oldPos
+	right 90
+	backward :width2 * 0.5
+	setPenColor "#dcc499
+	setPenSize :size * 0.001
+	repeat 2 [
+		left 90
+		penDown
+		forward :height2
+		penUp
+		jumpBackward :height2
+		right 90
+		jumpForward :width2
+	]
+end
+
+to skyAndGround :size
+	localmake "oldPos pos
+	penUp
+	jumpBackward :size * 0.6
+	localmake "from pos
+	jumpForward :size
+	localmake "to pos
+	localmake "colorStops createPList
+	setProperty "colorStops 0 screenColor
+	setProperty "colorStops 0.2 "#5d671e
+	setProperty "colorStops 0.495 "#bfbd8d
+	setProperty "colorStops 0.505 "#8badb3
+	setProperty "colorStops 0.6 "#b9c4c6
+	setProperty "colorStops 0.65 "#b9c4c6
+	setProperty "colorStops 0.7 "#a9c3c8
+	setProperty "colorStops 0.75 "#b9c4c6
+	setProperty "colorStops 1 screenColor
+	localmake "gradient createLinearGradient :from :to :colorStops "pad
+	setFillGradient :gradient
+	setPenSize 0
+	jumpTo :oldPos
+	circle :size * 0.5
+end
+
+to drawWindMillMount :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "notchSize :size * 0.005
+	localmake "numNotches 5
+	localmake "height :size
+	localmake "notchGap :height / :numNotches
+	localmake "maxWidth :size * 0.15
+	localmake "angle1 arcTan :maxWidth / 2 / :height
+	setPenColor "#464e3d
+
+	; draw mount.
+	repeat :numNotches [
+		setPenSize :maxWidth * (1 + :numNotches - repcount) / :numNotches
+		forward :notchSize
+		setPenSize :notchSize
+		forward :notchGap
+	]
+	right :angle1
+	setPenSize :size * 0.01
+	penDown
+	localmake "size1 (:height + 5 * :notchSize) / cos :angle1
+	backward :size1
+	
+	jumpForward :size1 ; mount diagonal on left
+	left :angle1 * 2
+	penDown
+	backward :size1 ; mount diagonal on right
+	penUp
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to windFin :len
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "outerLen :len * 0.3
+	localmake "angle 95.5
+	setPenSize 0
+	polyStart
+	jumpForward :len
+	left :angle
+	jumpForward :outerLen
+	left :angle
+	jumpForward :len
+	polyEnd
+	penUp
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to windFins :radius
+	localmake "oldPos pos
+	localmake "numFins 20
+	localmake "innerRadius :radius * 0.35
+	setFillColor transparent
+	setPenSize :radius * 0.01
+	setPenColor "#222
+	circle :radius * 0.7
+	repeat 2 [
+		
+		jumpBackward :radius * 0.5
+		penDown
+		forward :radius
+		penUp
+		jumpTo :oldPos
+		right 90
+	]
+	setPos :oldPos
+	setFillColor "#707768
+	repeat :numFins [
+		forward :innerRadius
+		windFin :radius * 0.65
+		setPos :oldPos
+		right 360 / :numFins
+	]
+	setPos :oldPos
+end
+
+to windMill :size :angle
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	penDown
+	drawWindMillMount :size * 0.8
+	setHeading :oldHeading
+	setPos :oldPos
+	forward :size * 0.8
+	right :angle
+	setFillColor "#808778
+	windFins :size * 0.15	
+end
+
+to drawScene :size :angle
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	skyAndGround :size
+	backward :size * 0.105
+	right 90
+	forward :size * 0.15
+	left 90
+	house :size * 0.6
+	setPos :oldPos
+	setHeading :oldHeading
+	backward :size * 0.3
+	left 90
+	forward :size * 0.16
+	right 90
+	windMill :size * 0.7 :angle
+end
+
+drawScene 200 animation.time * 360 / 3
+hideTurtle
+
+to animation.snapshotstyle
+	localmake "result createPList
+	setProperty "result "zoom.scale 2.5
+	output :result
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 3
+	; Edit this if you want to change the length of your animation.
+	output :minutes * 60 + :seconds
+end

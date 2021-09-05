@@ -1,0 +1,44 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Japan#/media/File:War_flag_of_the_Imperial_Japanese_Army_(1868%E2%80%931945).svg
+
+to getEdgeIntersection :size1 :size2 :angle
+	localmake "result1 abs :size1 / 2 / sin :angle
+	localmake "result2 abs :size2 / 2 / cos :angle
+	output min :result1 :result2
+end
+
+to japanFlagBeforeWW2 :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "width :height * 3 / 2
+	localmake "radius :height / 4
+	localmake "numAngles 16
+	localmake "angleStep 360 / :numAngles
+	jumpForward :height / 2
+	jumpLeft :width / 2
+	setPenColor "white
+	setPenSize :height
+	right 90
+	forward :width
+	jumpBackward :width / 2
+	setPenSize 0
+	setFillColor "#b0313f
+	circle :radius
+	localmake "center pos
+	localmake "angle -:angleStep / 4
+	repeat :numAngles [
+		setHeading :oldHeading + :angle
+		localmake "radius getEdgeIntersection :width :height :angle
+		jumpForward :radius
+		polyStart
+		jumpBackward :radius
+		right :angleStep / 2
+		jumpForward getEdgeIntersection :width :height :angle + :angleStep / 2
+		polyEnd
+		jumpTo :center
+		localmake "angle :angle + :angleStep
+	]
+	setTurtleState :oldState
+end
+
+japanFlagBeforeWW2 100

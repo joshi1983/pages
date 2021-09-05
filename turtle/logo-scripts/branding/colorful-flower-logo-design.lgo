@@ -1,0 +1,168 @@
+; Inspired by:
+; https://www.pinterest.ca/pin/746049494512634399/
+; The original designer was Ki Dunya.
+
+; The graphic designer used Adobe Illustrator to make the logo
+; in a tutorial at: 
+; https://www.youtube.com/watch?v=HKTVUspbcms
+; A similar design was implemented in WebLogo by Josh Greig.
+
+make "leafAngle 68
+
+to leaf :size :angle
+	localmake "oldHeading heading
+	localmake "arcRadius :size / 2 / sin :angle
+	left :angle
+	polyStart
+	arcRight :angle * 2 :arcRadius
+	right 180 - :angle * 2
+	arcRight :angle * 2 :arcRadius
+	polyEnd
+	setHeading :oldHeading
+end
+
+to gradient1 :size :shadowDown :intensityRatio
+	localmake "oldPos pos
+	localmake "colorStops createPList
+	setProperty "colorStops 0 fillColor
+	setProperty "colorStops 0.3 fillColor
+	setProperty "colorStops 0.6 mix fillColor "black 1 - 0.5 * :intensityRatio
+	setProperty "colorStops 1 mix fillColor "black :intensityRatio
+	localmake "fromPos pos
+	jumpForward :size
+	localmake "toPos pos
+	if :shadowDown [
+		; swap.
+		localmake "temp :fromPos
+		localmake "fromPos :toPos
+		localmake "toPos :temp
+	]
+	setFillGradient createLinearGradient :fromPos :toPos :colorStops "pad
+	jumpTo :oldPos
+end
+
+to shadowGradient :size
+	localmake "oldPos pos
+	localmake "leafArcRadius :size / 2 / sin :leafAngle
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#6000
+	setProperty "colorStops 0.9 "#6000
+	setProperty "colorStops 1 transparent
+	jumpBackward :leafArcRadius * 0.25
+	jumpLeft :leafArcRadius * 0.85
+	setFillGradient createRadialGradient pos pos :leafArcRadius :colorStops "pad	
+	jumpTo :oldPos
+end
+
+to backgroundLeaf :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "arcRadius :size / 2 / sin :leafAngle
+	localmake "leafAngle1 3
+	localmake "leafAngle2 :leafAngle * 2 - :leafAngle1
+	right :leafAngle
+	arcLeft :leafAngle1 :arcRadius
+	polyStart
+	arcLeft :leafAngle2 :arcRadius
+	left 180 - :leafAngle * 2
+	arcLeft :leafAngle * 1.5 :arcRadius
+	polyEnd
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to peddleBackground :size :shadowDown
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldFillColor fillColor
+	localmake "leafRadius :size / 2 / sin :leafAngle
+	localmake "ratio 0.9
+	if :shadowDown [
+		localmake "ratio 0.45
+	]
+	setPenSize 0
+	setFillColor mix :oldFillColor "black :ratio
+	jumpForward :size * 0.021
+	jumpRight :size * 0.0399
+	circle :size * 0.019
+	jumpTo :oldPos
+	setFillColor :oldFillColor
+	gradient1 :size :shadowDown 0.5
+	backgroundLeaf :size
+	shadowGradient :size
+	backgroundLeaf :size
+	jumpForward :size * 0.98
+	left 183 - :leafAngle
+
+	; Highlight near the edge.
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#1fff
+	setProperty "colorStops 0.1 "#8fff
+	setProperty "colorStops 0.6 "#0fff
+	setPenGradient createLinearGradient pos :oldPos :colorStops "pad
+	setPenSize :size * 0.015
+	setLineCap "round
+	arcLeft :leafAngle * 1.5 :leafRadius
+
+	setTurtleState :oldState
+end
+
+to peddleForeground :size :shadowDown
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "leafRadius :size / 2 / sin :leafAngle
+	localmake "leafAngle2 :leafAngle * 0.4
+	localmake "leafRadius2 :size / 2 / sin :leafAngle2
+	gradient1 :size not :shadowDown 0.9
+	right :leafAngle
+	setPenSize 0
+	polyStart
+	arcLeft :leafAngle * 2 :leafRadius
+	localmake "pos1 pos
+	localmake "heading1 :oldHeading + 180 - :leafAngle2
+	setHeading :heading1
+	arcRight :leafAngle2 * 2 :leafRadius2
+	polyEnd
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#0fff
+	setProperty "colorStops 0.5 "#afff
+	setProperty "colorStops 1 "#0fff
+	setPenGradient createLinearGradient :oldPos :pos1 :colorStops "pad
+	jumpTo :pos1
+	setHeading :heading1
+	setPenSize :size * 0.01
+	arcRight :leafAngle2 * 2 :leafRadius2	
+	setHeading :oldHeading
+	setTurtleState :oldState
+end
+
+to colorfulFlower :size
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "peddleSize :size / 2
+	localmake "colors ["red "Chartreuse "aqua "violet]
+	localmake "numPeddles count :colors
+	localmake "size1 :size * 0.02
+	jumpForward :size / 2
+	localmake "center pos
+	repeat :numPeddles [
+		setFillColor item repcount :colors
+		jumpLeft :size1
+		peddleBackground :peddleSize odd? repcount
+		jumpTo :center
+		right 360 / :numPeddles
+	]
+	setHeading :oldHeading
+	left 2
+	repeat :numPeddles [
+		setFillColor item repcount :colors
+		peddleForeground :peddleSize odd? repcount
+		jumpTo :center
+		right 360 / :numPeddles
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+colorfulFlower 100

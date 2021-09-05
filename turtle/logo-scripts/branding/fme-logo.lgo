@@ -1,0 +1,194 @@
+; Inspired by logo at
+; https://upload.wikimedia.org/wikipedia/en/b/b3/FME_Software_Logo.svg
+; Referenced from:
+; https://community.safe.com/s/documentation
+; Also referenced from:
+; https://www.youtube.com/@FMEchannel
+; Also referenced from:
+; https://en.wikipedia.org/wiki/FME_(software)
+; Found while researching point cloud data file formats
+
+make "fmeFontBottomRatio 0.383
+make "fmeFontTopRatio 0.63
+make "triangleSizeRatio 0.202
+make "outerMAngle 180 - arcTan (:fmeFontTopRatio - :fmeFontBottomRatio) / :triangleSizeRatio
+make "letterGray "#82786f
+make "fontWidthRatio 0.23
+
+to tinyCircles :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "numCircles 36
+	localmake "tinyCircleRadius :height * 0.018
+	localmake "tinyCircleDistance (:height / 2) - :tinyCircleRadius
+	setFillColor "#b7b1a9
+	setPenSize 0
+	jumpForward :height / 2
+	localmake "center pos
+	repeat 14 [
+		setHeading :oldHeading + (repcount - 7.5) * 360 / :numCircles
+		jumpForward :tinyCircleDistance
+		circle :tinyCircleRadius
+		jumpTo :center
+	]
+	repeat 11 [
+		setHeading :oldHeading + (repcount + 12) * 360 / :numCircles
+		jumpForward :tinyCircleDistance
+		circle :tinyCircleRadius
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+to backgroundGradient :height
+	localmake "oldState turtleState
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#fec901
+	setProperty "colorStops 0.3 "#fec901
+	setProperty "colorStops 0.85 "#fff
+	setProperty "colorStops 1 "#fff
+	jumpForward :height / 2
+	setFillGradient createRadialGradient pos pos :height / 2 :colorStops "pad
+	setPenSize 0
+	circle :height / 2
+	setTurtleState :oldState
+end
+
+to trianglePattern :numTriangles :triangleSize :startLeft
+	if :numTriangles < 1 [
+		stop
+	]
+	localmake "oldHeading heading
+	localmake "outerMAngle 129
+	localmake "triangleSize2 :triangleSize / 2 / cos 180 - :outerMAngle
+	; Calculate to make the triangle isoscelese.
+	localmake "angle1 :outerMAngle
+
+	if :startLeft [
+		localmake "angle1 -:angle1
+	]
+	setFillColor "#e22029
+	setPenSize 0
+	right 90
+	polyStart
+	jumpForward :triangleSize
+	localmake "pos1 pos
+	right :angle1
+	jumpForward :triangleSize2
+	polyEnd
+	jumpTo :pos1
+	setHeading :oldHeading
+	trianglePattern :numTriangles - 1 :triangleSize not :startLeft
+end
+
+to fmeLogoLetterF :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "fontWidth :height * :fontWidthRatio
+	localmake "size1 :fontWidth * 0.45
+	localmake "triangleSize :height * :triangleSizeRatio
+	localmake "slantedHeight :height * (:fmeFontTopRatio - :fmeFontBottomRatio) / sin :outerMAngle
+	localmake "size2 :slantedHeight * 0.4
+	localmake "size3 :slantedHeight * 0.21
+	jumpForward :height * :fmeFontTopRatio
+	jumpLeft :triangleSize * 1.5
+	setFillColor :letterGray
+	setPenSize 0
+	polyStart
+	jumpLeft :fontWidth
+	left 270 - :outerMAngle
+	jumpForward :slantedHeight
+	setHeading :oldHeading
+	jumpRight :size1
+	right :outerMAngle - 90
+	jumpForward :size2
+	setHeading :oldHeading
+	jumpRight :fontWidth - :size1
+	right :outerMAngle - 90
+	jumpForward :size3
+	setHeading :oldHeading
+	jumpLeft :fontWidth - :size1
+	right :outerMAngle - 90
+	jumpForward :slantedHeight * 0.13
+	setHeading :oldHeading
+	jumpRight :fontWidth - :size1
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Draws the triangles to indicate the letter M.
+to fmeLogoLetterM :height
+	localmake "oldHeading heading
+	localmake "oldPos pos
+	localmake "triangleSize :height * :triangleSizeRatio
+	jumpForward :height * :fmeFontBottomRatio
+	jumpLeft :triangleSize * 2.5
+	localmake "pos1 pos
+	setPenSize 0
+	setFillColor "white
+	polyStart
+	jumpRight 5 * :triangleSize
+	left :outerMAngle - 90
+	jumpForward :height * (:fmeFontTopRatio - :fmeFontBottomRatio) / sin :outerMAngle
+	setHeading :oldHeading
+	jumpLeft :triangleSize * 3
+	polyEnd
+
+	jumpTo :pos1
+	trianglePattern 5 :triangleSize false
+	jumpTo :oldPos
+	jumpForward :height * :fmeFontTopRatio
+	jumpLeft :triangleSize * 1.5
+	trianglePattern 3 :triangleSize true
+	jumpTo :oldPos
+end
+
+to fmeLogoLetterE :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "fontWidth :height * :fontWidthRatio
+	localmake "triangleSize :height * :triangleSizeRatio
+	localmake "slantedHeight :height * (:fmeFontTopRatio - :fmeFontBottomRatio) / sin :outerMAngle
+	localmake "size1 :slantedHeight * 0.26
+	localmake "size2 :fontWidth * 0.55
+	localmake "size3 :slantedHeight * 0.15
+	localmake "size4 :slantedHeight - (:size1 + :size3) * 2
+	jumpForward :height * :fmeFontBottomRatio
+	jumpRight :fontWidth + :triangleSize * 2.5
+	setFillColor :letterGray
+	setPenSize 0
+	polyStart
+	jumpLeft :fontWidth
+	left :outerMAngle - 90
+	jumpForward :slantedHeight
+	setHeading :oldHeading
+	jumpRight :fontWidth
+	right 270 - :outerMAngle
+	jumpForward :size1
+	setHeading :oldHeading
+	jumpLeft :size2
+	right 270 - :outerMAngle
+	jumpForward :size3
+	setHeading :oldHeading
+	jumpRight :size2
+	right 270 - :outerMAngle
+	jumpForward :size4
+	setHeading :oldHeading
+	jumpLeft :size2
+	right 270 - :outerMAngle
+	jumpForward :size3
+	setHeading :oldHeading
+	jumpRight :size2	
+	polyEnd
+	setTurtleState :oldState
+end
+
+to fmeLogo :height
+	backgroundGradient :height
+	tinyCircles :height
+	fmeLogoLetterF :height
+	fmeLogoLetterM :height
+	fmeLogoLetterE :height
+end
+
+fmeLogo 100

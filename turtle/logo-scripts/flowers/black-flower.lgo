@@ -1,0 +1,49 @@
+; Inspired by:
+; https://www.pinterest.ca/pin/98797785563848461/
+
+to drawPeddle :size
+	localmake "oldState turtleState
+	localmake "angle1 30
+	localmake "angle2 15
+	localmake "angle3 30
+	localmake "angle4 120
+	localmake "size1 :size * 1.42925
+	localmake "size2 :size * 0.6
+
+	polyStart
+	left :angle1
+	arcRight :angle2 :size1
+	arcRight :angle3 :size2
+	arcRight :angle2 :size1
+	right :angle4 ; point of symmetry
+	arcRight :angle2 :size1
+	arcRight :angle3 :size2
+	arcRight :angle2 :size1
+	polyEnd
+	setTurtleState :oldState
+end
+
+to drawFlower :size :numPeddles
+	localmake "oldPos pos
+	localmake "peddlePadding :size * 0.08
+	localmake "peddleSize :size * 0.5 - :peddlePadding
+	setFillColor "black
+	repeat :numPeddles [
+		jumpForward :peddlePadding
+		drawPeddle :peddleSize
+		jumpTo :oldPos
+		right 360 / :numPeddles
+	]
+end
+
+; Draw the flower with different numbers of peddles
+; to show how they look.
+make "size 50
+make "separation :size * 1.2
+right 90
+setPenSize 0
+jumpBackward :separation * 2
+repeat 5 [
+	drawFlower :size repcount * 2
+	jumpForward :separation
+]

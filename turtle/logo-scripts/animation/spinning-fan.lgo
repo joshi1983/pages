@@ -1,0 +1,69 @@
+; Inspired by
+; https://www.pinterest.co.kr/pin/293015519513274678/
+
+to fin :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angle 130
+	localmake "angle1 :angle * 0.69
+	localmake "angle2 30
+	localmake "size1 :size * 0.54597
+	localmake "size2 :size1 * 1.202
+	localmake "size3 :size * 0.1
+	localmake "size4 :size3 * 1.202
+	setPenSize 0
+	polyStart
+	arcRight :angle :size1
+	arcRight :angle2 :size3
+	arcRight 160 :size * 0.02
+	arcLeft :angle2 :size4
+	arcLeft :angle1 :size2
+	polyEnd
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to finFillGradient :size :maxAlpha
+	localmake "colorStops createPList
+	setProperty "colorStops 0 mix "#038 transparent :maxAlpha
+	setProperty "colorStops 1 "#0038
+	setFillGradient createRadialGradient pos pos :size :colorStops "pad
+end
+
+to fan :size
+	localmake "oldHeading heading
+	localmake "oldPos pos
+	localmake "numFins 4
+	localmake "numBlur 3
+	localmake "angle 110
+	penUp
+	repeat :numFins [
+		setHeading :oldHeading + 25 + repcount * 360 / :numFins
+		repeat :numBlur [
+			setPos :oldPos
+			finFillGradient :size repcount / 3
+			forward :size
+			right :angle
+			fin :size
+			left :angle
+			right 40 / :numBlur
+		]
+		setPos :oldPos
+	]
+	setHeading :oldHeading
+end
+
+right animation.time * 360 / 10
+fan 250
+
+to animation.snapshotstyle
+	localmake "result createPList
+	output :result
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 10
+	; Edit this if you want to change the length of your animation.
+	output :minutes * 60 + :seconds
+end

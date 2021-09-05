@@ -1,0 +1,237 @@
+; Inspired by:
+; https://gfycat.com/entireanchoredbigmouthbass-wellhead-panel-control-kuwait-oil-wellhead
+; The animation shows the oil pump doing what pumps do.
+
+to sizeToMountHeight :size
+	output :size * 0.35
+end
+
+to drawMount :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angle 15
+	localmake "mountHeight sizeToMountHeight :size
+	localmake "size1 :mountHeight / cos :angle
+	localmake "size2 :mountHeight * 0.03
+	localmake "platformThickness :size * 0.08
+	localmake "platformLength :size
+	localmake "numCrosses 4
+	setFillColor penColor
+	right 180 - :angle
+	setPenSize :size2
+	forward :size1
+	setPenSize 0
+	jumpBackward :size1 / :numCrosses
+	repeat :numCrosses - 1 [
+		circle :size2 * 0.9
+		backward :size1 / :numCrosses
+	]
+	circle :mountHeight * 0.12
+	setPenSize :size2
+	right :angle * 2
+	setPenSize :size2
+	forward :size1
+	
+	setHeading :oldHeading + 180
+	jumpTo :oldPos
+	jumpForward :mountHeight + :platformThickness / 2
+	right 90
+	jumpBackward :platformLength / 2 
+	
+	setPenSize :platformThickness
+	forward :platformLength
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to sizeToHammerArmLength :size
+	output :size * 0.42
+end
+
+to drawHammer :size :angle
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "mountHeight sizeToMountHeight :size
+	localmake "size1 :size * 0.07
+	localmake "size2 sizeToHammerArmLength :size
+	localmake "size2b :size2 * 1.03
+	localmake "size3 :size * 0.67 - :size2
+	localmake "threshold :size * 0.001 
+	localmake "hammerRadius :size3
+	localmake "angle1 35
+	localmake "angle2 15
+	localmake "hammerHeadThickness :hammerRadius * ((cos :angle2) - (cos (:angle1))) 
+	localmake "size4 :size * 0.07
+	localmake "size5 :size * 0.056
+	localmake "size6 :size5 - :hammerHeadThickness
+	localmake "cableRadius :hammerRadius * 1.08
+	localmake "cableThickness1 :size * 0.0028
+	localmake "cableThickness2 :size * 0.0021
+	localmake "len1 :cableRadius * 0.8 - :cableRadius * :angle * pi / 180
+	localmake "cableJointSize :cableThickness1 * 1.5
+	localmake "oilWellThickness :size * 0.014
+
+	; draw the thick roughly horizontal beam
+	setPenSize :size1
+	right 90 + :angle
+	
+	forward :size2b
+	backward :size2b + :size3 - :hammerHeadThickness
+	forward :threshold
+	; avoid tiny errors from making a few erroneous white pixels
+
+	; draw the hammer head.
+	left 90
+	setPenSize 0
+	polyStart
+	setFillColor penColor
+	jumpForward :size4
+	left 90
+	jumpForward :size5
+	left 90 - :angle2
+	arcLeft :angle1 + :angle2 :hammerRadius
+	left 90 - :angle1
+	jumpForward :size6
+	left 90
+	polyEnd
+	setPenSize 0
+
+	; draw the able.
+	jumpTo :oldPos
+	setHeading :oldHeading - 90
+	jumpForward :cableRadius
+	left 90
+	setPenSize :cableThickness1
+	forward :len1
+	circle :cableJointSize
+
+	setPenSize :cableThickness2
+	forward :mountHeight - :len1
+
+	setPenSize :oilWellThickness
+	backward :mountHeight * 0.2
+
+	setPenSize 0
+
+	jumpTo :oldPos
+	setHeading :oldHeading + :angle + 95
+	jumpForward :size2
+	circle :size * 0.015
+	localmake "result pos
+
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	output :result
+end
+
+to drawMotor :size :angle
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "motorLargeRadius :size
+	localmake "motorSmallRadius :size * 0.4
+	localmake "motorArmThickness :motorSmallRadius * 0.6
+	localmake "size2 :motorSmallRadius * 2.3
+	localmake "motorAxisHeight :motorLargeRadius * 0.9
+	localmake "guardRadius :motorLargeRadius * 1
+	localmake "guardAngle 60
+	localmake "guardPadding :size * 0.12
+	setPenSize 0
+	circle :motorSmallRadius
+	setPenSize :size2
+	backward :motorAxisHeight
+	setPos :oldPos
+	right :angle
+	setPenSize :motorArmThickness
+	backward :motorLargeRadius
+	forward :motorLargeRadius * 0.2
+	localmake "result pos
+	setPenSize 0
+	jumpBackward :motorLargeRadius * 0.15
+	jumpForward :guardPadding + :guardRadius * ( 1 - cos (:guardAngle / 2))
+	right 90
+	jumpForward :guardRadius * sin (:guardAngle / 2)
+	right 90
+	polyStart
+	jumpForward :guardPadding
+	right 90 - :guardAngle / 2
+	arcRight :guardAngle :guardRadius
+	right 90 - :guardAngle / 2
+	jumpForward :guardPadding
+	polyEnd
+	setPenSize 0
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	output :result
+end
+
+to getAngleFromTriangleLengths :a :b :c
+; use Cosine Rule.
+; Explained at:
+; https://discover.hubpages.com/education/Applying-the-cosine-rule-formula-to-work-out-a-missing-angle-given-3-side-lengths-of-a-triangle
+	localmake "denominator 2 * :b * :c
+	localmake "cosA (:b * :b + :c * :c - :a * :a) / :denominator
+	output arcCos :cosA
+end
+
+to drawOilPump :size :motorAngle
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "motorSize :size * 0.1
+	localmake "mountHeight sizeToMountHeight :size
+	localmake "motorPos1 :mountHeight * 0.744
+	localmake "motorPos2 :size * 0.42
+	localmake "motorHammerThickness :size * 0.01
+	drawMount :size
+	jumpBackward :motorPos1
+	right 90
+	jumpForward :motorPos2
+	left 90
+	
+	localmake "motorPoint drawMotor :motorSize :motorAngle
+
+	; Calculate the angle of the hammer required to 
+	; connect the lower-right corner of the hammer to the
+	; motor arm while maintaining a constant length of
+	; :motorToHammerLength
+	jumpTo :motorPoint
+	localmake "hammerToMotorDistance distance :oldPos
+	localmake "hammerToMotorHeading towards :oldPos
+	localmake "hammerArmLength sizeToHammerArmLength :size
+
+	; constant length of the arm connecting between the motor and the hammer.
+	localmake "motorToHammerLength :size * 0.22
+	localmake "angle getAngleFromTriangleLengths :hammerArmLength :motorToHammerLength :hammerToMotorDistance 
+	setHeading :hammerToMotorHeading + :angle
+	jumpForward :motorToHammerLength
+	localmake "hammerAngle (towards :oldPos) + 85 - 360
+
+	; done calculating.
+	jumpTo :oldPos
+	setHeading :oldHeading
+	localmake "hammerPoint drawHammer :size :hammerAngle
+	setPenSize 0
+	jumpTo :hammerPoint
+	setHeading towards :motorPoint
+	setPenSize :motorHammerThickness
+	forward distance :motorPoint
+end
+
+setPenSize 0
+setY 120
+drawOilPump 850 animation.time * 72
+hideTurtle
+
+to animation.snapshotstyle
+	localmake "result createPList
+	output :result
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 10
+	; Edit this if you want to change the length of your animation.
+	output :minutes * 60 + :seconds
+end
