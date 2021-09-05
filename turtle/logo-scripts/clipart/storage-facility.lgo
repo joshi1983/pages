@@ -1,0 +1,121 @@
+; Based on public domain graphics at:
+; https://publicdomainvectors.org/en/free-clipart/Storage-facility/83848.html
+to storageFacility :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "width1 :height * 1.74
+	localmake "halfWidth1 :width1 / 2
+	localmake "height1 :height * 0.765
+	localmake "height2 :height * 0.97
+	localmake "roofAngle1 arcTan (:height2 - :height1) / :halfWidth1
+	localmake "roofLength1 :halfWidth1 / cos :roofAngle1
+	localmake "roofLength2 :roofLength1 * 1.06
+	localmake "roofShadowSize :height * 0.065
+	localmake "sidingRepeats 23.1
+	localmake "sidingStep :width1 / :sidingRepeats
+	localmake "doorWidth :width1 * 0.67
+	localmake "doorHeight :height * 0.655
+	localmake "highlightHeight :doorHeight * 0.71
+	localmake "highlightWidth :width1 * 0.315
+
+	; Give impression of a shadow
+	setLineCap "butt
+	setPenColor "#4000
+	setPenSize :width1 * 1.2
+	jumpBackward :height * 0.01
+	forward :height * 0.01
+	
+	jumpTo :oldPos
+	setFillColor "#d7ccc8
+	setPenSize 0
+	jumpLeft :halfWidth1
+	polyStart
+	jumpForward :height1
+	localmake "upperLeftCorner pos
+	right 90 - :roofAngle1
+	jumpForward :roofLength1
+	right :roofAngle1 * 2
+	jumpForward :roofLength1
+	right 90 - :roofAngle1
+	jumpForward :height1
+	polyEnd
+
+	setPenSize :height * 0.01
+	setHeading :oldHeading
+	repeat :sidingRepeats [
+		localmake "len mix :height1 :height2 2 * abs (repRatio - 0.5)
+		setPenColor "#e8e2e0
+		forward :len
+		setPenColor "#c3b7b4
+		jumpLeft penSize
+		backward :len
+		jumpLeft :sidingStep - penSize
+	]
+	; roof shadow
+	jumpTo :upperLeftCorner
+	setHeading :oldHeading + 90 - :roofAngle1
+	setPenSize 0
+	setFillColor "#c3b7b4
+	polyStart
+	jumpForward :roofLength1
+	right :roofAngle1 * 2
+	jumpForward :roofLength1
+	setHeading :oldHeading + 180
+	jumpForward :roofShadowSize
+	setHeading :oldHeading - 90 + :roofAngle1
+	jumpForward :roofLength1
+	left :roofAngle1 * 2
+	jumpForward :roofLength1
+	polyEnd
+
+	; draw roof
+	setPenColor "#dc6b26
+	setPenSize :height * 0.052
+	setLineJoinStyle "miter
+	jumpTo :upperLeftCorner
+	setHeading :oldHeading + 90 - :roofAngle1
+	jumpBackward :roofLength2 - :roofLength1
+	forward :roofLength2
+	right :roofAngle1 * 2
+	forward :roofLength2
+
+	; open door.
+	setPenColor "#4d4442
+	jumpTo :oldPos
+	setHeading :oldHeading
+	setPenSize :doorWidth
+	forward :doorHeight
+
+	; indicate light hitting back of storage facility
+	jumpTo :oldPos
+	setPenSize :highlightWidth
+	setPenColor "#7d706b
+	jumpRight (:doorWidth - :highlightWidth) / 2
+	forward :highlightHeight
+
+	; draw boxes in storage facility
+	localmake "boxes [
+		["#dd9549 0.25 0.3 0.248]
+		["#dd9549 0.2 0.365 0.1]
+		["#ca833c 0.04 0.365 0.102]
+		["#e9a158 0.11 0.69 0.007]
+		["#dd9549 0.2 0.41 0.077]
+		["#ca833c 0.075 0.69 0]
+	]
+	jumpTo :oldPos
+	jumpRight :doorWidth * 0.073
+	repeat count :boxes [
+		localmake "boxInfo item repcount :boxes
+		setPenColor item 1 :boxInfo
+		setPenSize :doorWidth * item 2 :boxInfo
+		localmake "len :doorHeight * item 3 :boxInfo
+		forward :len
+		jumpBackward :len
+		jumpLeft :doorWidth * item 4 :boxInfo
+	]
+
+	setTurtleState :oldState
+end
+
+storageFacility 100
