@@ -1,0 +1,70 @@
+to drawCorner :size
+	localmake "arcAngle 30
+	localmake "arcRadius :size / (cos 45) / 2 / sin :arcAngle / 2
+	localmake "colorStops createPList2 [
+		[0 mix fillColor "black 0.5] [1 fillColor]
+	]
+	localmake "fromPos pos
+	left 45
+	jumpForward :size
+	setFillGradient createLinearGradient :fromPos pos :colorStops "pad
+	jumpTo :fromPos
+	polyStart
+	jumpLeft :size
+	jumpForward :size
+	setHeading (towards :fromPos) + :arcAngle / 2
+	arcLeft :arcAngle :arcRadius
+	polyEnd
+end
+
+; Inspired by logo at
+; https://www.youtube.com/@InvisiblePeople
+to invisiblePeopleLogo :height
+	localmake "oldState turtleState
+	localmake "radius :height * 0.107
+	localmake "gap :height * 0.177
+	localmake "redColor "#fe272e
+	localmake "orangeColor "#fd7b01
+	localmake "colors [:redColor :orangeColor]
+	localmake "colorStops createPList2 [
+		[0 :redColor] [1 :orangeColor]
+	]
+	localmake "arcsInfo [[10 1.1] [15 0.6] [20 0.4]]
+	localmake "size1 :height * 0.6423223
+	localmake "cornerSize :height * 0.15
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	right 45
+	localmake "diagonalHeading heading
+	jumpBackward :radius
+	localmake "fromPos pos
+	jumpForward :radius * 2
+	setFillGradient createLinearGradient :fromPos pos :colorStops "pad
+	jumpTo :center
+	circle :radius
+
+	repeat 2 [
+		localmake "heading1 :diagonalHeading + repcount * 180
+		setHeading :heading1
+		setFillColor item repcount :colors
+		jumpForward :gap
+		left 90
+		circle 0.0001
+		polyStart
+		arcLines :arcsInfo :height
+		jumpBackward :size1
+		localmake "cornerPos pos
+		jumpLeft :size1
+		right 90
+		arcLines reverse :arcsInfo :height
+		polyEnd
+		jumpTo :cornerPos
+		setHeading :heading1
+		drawCorner :cornerSize
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+invisiblePeopleLogo 100

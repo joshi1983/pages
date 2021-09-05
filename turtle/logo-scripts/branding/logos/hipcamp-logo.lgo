@@ -1,0 +1,61 @@
+make "hipCampOrange "#EC5017
+
+; Inspired by logo at:
+; https://www.hipcamp.com
+to hipcampLogo :height :tentColor :color2
+	localmake "oldState turtleState
+	localmake "angle1 56.5
+	localmake "outerCornerRadius 0.045
+	localmake "len1 (1 - :outerCornerRadius *
+		(1 - (cos :angle1) + 1 + cos :angle1)) / sin :angle1
+	localmake "bottomWidth 2 * :len1 * (cos :angle1)
+	localmake "innerTriangleWidth 0.51
+	localmake "innerTriangleTopRadius 0.025
+	localmake "innerTriangleBottomRadius 0.03
+	localmake "angle2 58.5
+	localmake "innerLen1 (:innerTriangleWidth / 2 -
+		:innerTriangleBottomRadius * (sin :angle2) -
+		:innerTriangleTopRadius * sin :angle2) / cos :angle2
+	localmake "innerTriangleLines1 [
+		[-:angle2 :innerTriangleBottomRadius]
+		[:innerLen1] [:angle2 :innerTriangleTopRadius]
+	]
+	localmake "bottomLen1 (:bottomWidth - :innerTriangleWidth) / 2
+	localmake "sideLines [
+		[-90 0] [-:angle1 :outerCornerRadius]
+		[:len1] [:angle1 - 180 :outerCornerRadius]
+	]
+	localmake "outLines1 (combine :sideLines [[:bottomLen1]] :innerTriangleLines1)
+	setPenSize 0
+	setFillColor :tentColor
+	drawArcLineShape [0 1
+		(combine :outLines1 reverse :outLines1)
+	] :height
+	setFillColor :color2
+	drawArcLineShape [-0.282 0.045
+		[[-90 0] [35 0.02] [20.5 0.04] [0.35] [30 0.04] [107 0.02]
+		[20 0.05] [-13.3 1.5] [105 0.02] [8.9 1.2] [40 0.03]]
+	] :height
+
+	setTurtleState :oldState
+end
+
+to hipCampFavicon :height
+	localmake "oldState turtleState
+	localmake "innerHeight :height * 0.6
+	setPenSize 0	
+	setFillColor :hipCampOrange
+	jumpForward :height / 2
+	roundRect :height :height :height * 0.15
+	jumpBackward :innerHeight / 2
+	hipcampLogo :innerHeight "white :hipCampOrange
+
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 5
+jumpLeft :separation / 2
+hipcampLogo :height :hipCampOrange "white
+jumpRight :separation
+hipCampFavicon :height

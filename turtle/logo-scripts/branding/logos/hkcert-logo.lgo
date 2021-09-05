@@ -1,0 +1,44 @@
+; Inspired by logo at:
+; https://www.hkcert.org
+to hkcertLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	setPenSize :height * 0.015
+	setPenColor "#636466
+	localmake "arcRadius (:height - penSize) / 2
+	jumpLeft :height * 0.24
+	jumpForward penSize / 2
+	setLineCap "butt
+	setLineJoinStyle "miter
+	forward :height - penSize
+	left 90
+	arcLeft 90 :arcRadius
+	left 90
+	forward :arcRadius * 3
+	left 90
+	forward :arcRadius
+	localmake "topRight pos
+
+	jumpBackward :arcRadius * 2
+	setFillColor transparent
+	polyStart
+	arcLeft 90 :arcRadius
+	left 90
+	forward :arcRadius
+	polyEnd
+
+	jumpTo :topRight
+	setPenColor "#ed1c24
+	setHeading :oldHeading - 90
+	jumpBackward penSize / 2
+	forward penSize / 2
+	arcsLeft [[90 1] [-180 1]] :arcRadius
+
+	jumpRight :arcRadius
+	setPenSize 0
+	setFillColor penColor
+	circle :height * 0.085	
+	setTurtleState :oldState
+end
+
+hkcertLogo 100

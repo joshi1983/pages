@@ -1,0 +1,78 @@
+!------------------------------------------------------------------------
+! Program .. Bt-Find1                                                   |
+! This program displays the first Key and last Key in the Data Base.    |
+! The first Key is the Key which would come first, if the keys in       |
+! the Data Base were sorted alphabetically.                             |
+! The last Key is the Key which would come last, if the keys in         |
+! the Data Base were sorted alphabetically.                             |
+!------------------------------------------------------------------------
+ 
+LIBRARY "BTreeLib.trc"
+
+!------------------------------------------------------------------------ 
+! First, the program Opens the Data Base.                               |
+!------------------------------------------------------------------------
+ 
+CALL BtOpen ("NameAdPh", DataBaseSize, #1)
+
+!------------------------------------------------------------------------ 
+! The following B-Tree subroutine stores in variable (FirstKey$),       |
+! the first Key found in the Data Base.                                 |
+! If there are no entries in the Data Base, then subroutine (GetFirst)  |
+! sets variable (FirstKey$) to the Null string.                         |
+!------------------------------------------------------------------------
+
+CALL GetFirst (FirstKey$, #1)
+
+!------------------------------------------------------------------------ 
+! If the Data Base is empty, then the program displays a message and    |
+! stops.                                                                |
+!------------------------------------------------------------------------
+
+IF FirstKey$ = "" THEN
+   CLEAR
+   SET CURSOR 2, 2 
+   PRINT "There are no entries in the Data Base."
+   SET CURSOR 4, 2
+   PRINT "Press any key to end the program .. ";
+   DO WHILE KEY INPUT
+      GET KEY KeyPressed
+      LOOP
+   GET KEY KeyPressed
+   CALL BtClose (#1)
+   CLEAR
+   STOP
+   END IF
+
+!------------------------------------------------------------------------ 
+! Getting to this point means that the Data Base is not empty.          |
+! The following lines of code display the first Data Base Key.          |
+!------------------------------------------------------------------------
+
+CLEAR
+SET CURSOR 2, 2
+PRINT "The first Key in the Data Base is .. "; FirstKey$;
+
+!------------------------------------------------------------------------ 
+! The following B-Tree subroutine stores in variable (LastKey$),        |
+! the last Key found in the Data Base.                                  |
+!------------------------------------------------------------------------
+
+CALL GetLast (LastKey$, #1)
+
+!------------------------------------------------------------------------ 
+! The following lines of code display the last Data Base Key.           |
+!------------------------------------------------------------------------
+
+SET CURSOR 4, 2
+PRINT "The last Key in the Data Base is ... "; LastKey$;
+SET CURSOR 6, 2
+PRINT "Press any key to end the program ... ";
+DO WHILE KEY INPUT
+   GET KEY KeyPressed
+   LOOP
+GET KEY KeyPressed
+
+CALL BtClose (#1)
+CLEAR
+END
