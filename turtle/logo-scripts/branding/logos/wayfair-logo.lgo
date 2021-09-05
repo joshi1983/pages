@@ -1,0 +1,40 @@
+; Inspired by logo at:
+; https://www.wayfair.com/
+to wayfairLogo :size
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "innerSquareSize :size * 0.471
+	localmake "size2 :innerSquareSize * 0.482
+	localmake "size3 :innerSquareSize * 0.531
+	localmake "arcRadius1 :innerSquareSize * 0.04
+	localmake "arcAngle1 60
+	localmake "arcAngle2 180 - 2 * :arcAngle1
+	jumpForward :size / 2
+	localmake "pos1 pos
+	localmake "colors ["#57c377 "#a77ad7 "#ffc600 "#92da4d]
+	localmake "numColors count :colors
+	setPenSize 0
+	repeat :numColors [
+		setHeading :oldHeading + (repcount - 0.5) * 360 / :numColors
+		jumpForward :innerSquareSize / 2
+		jumpRight :innerSquareSize / 2
+		setFillColor item repcount :colors
+		polyStart
+		jumpForward :size2
+		arcLeft :arcAngle1 :arcRadius1
+		jumpForward :size3
+		arcLeft :arcAngle2 :arcRadius1
+		jumpForward :size3
+		arcLeft :arcAngle1 :arcRadius1
+		jumpForward :size2
+		polyEnd
+		jumpTo :pos1
+	]
+	setPenColor "#7f187f
+	jumpBackward :innerSquareSize / 2
+	setPenSize :innerSquareSize
+	forward :innerSquareSize
+	setTurtleState :oldState
+end
+
+wayfairLogo 100

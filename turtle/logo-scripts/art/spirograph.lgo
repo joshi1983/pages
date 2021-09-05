@@ -1,0 +1,27 @@
+; Inspired by:
+; https://www.pinterest.ca/pin/192740059039665358/
+
+to spirograph :size
+	localmake "size1 :size * 1.06418357
+	localmake "numRepeats 1000
+	localmake "arcAngle 50.23
+	localmake "angle2 130.9358
+	setPenSize :size * 0.01
+
+	; Move the turtle to centre the pattern.
+	jumpForward :size * 0.175
+	left 90
+	jumpForward :size * 0.37
+	right 90
+
+	; draw the spirograph
+	repeat :numRepeats [
+		setPenColor mix "white "black (repcount - 1) / (:numRepeats - 1)
+		arcRight :arcAngle :size1
+		right :angle2
+		arcLeft :arcAngle :size1
+	]
+end
+
+setScreenColor "#066
+spirograph 200
