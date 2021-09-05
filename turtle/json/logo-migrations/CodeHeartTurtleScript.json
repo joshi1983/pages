@@ -1,0 +1,343 @@
+{
+	"name": "Code Heart's TurtleScript",
+	"description": "Code Heart's TurtleScript is a JavaScript-like language with several turtle-graphics-like functions and several colour names predefined.  I mention Code Heart mainly to distinguish his language from KTurtle's TurtleScript which is a lot more similar to Logo.",
+	"externalLink": "https://casual-effects.com/codeheart/turtle",
+	"toProcPath": "logo-scripts/codeheart-turtlescript-content",
+	"caseSensitiveCommandNames": true,
+	"commands": [
+		{
+			"primaryName": "abs",
+			"isIndependentFunction": true,
+			"to": "abs"
+		},
+		{
+			"primaryName": "arc",
+			"args": [
+				{"name": "angle"},
+				{"name": "radius"}
+			],
+			"description": "Draw an arc around the turtle, without moving the turtle. The angle is relative to the current heading.  We should test if WebLogo's arc command is a good translation for CodeHeart's arc.  It looks good from the documentation but maybe the start and end angles are different.",
+			"to": "arc"
+		},
+		{
+			"primaryName": "asciiCharacter",
+			"to": "char"
+		},
+		{
+			"primaryName": "atan2",
+			"isIndependentFunction": true,
+			"to": "radArcTan2",
+			"reverseArgs": true
+		},
+		{
+			"primaryName": "bk",
+			"to": "backward"
+		},
+		{
+			"primaryName": "ceil",
+			"isIndependentFunction": true,
+			"to": "ceiling"
+		},
+		{
+			"primaryName": "clamp",
+			"to": "clamp"
+		},
+		{
+			"primaryName": "clear",
+			"argCount": {
+				"min": 1,
+				"max": 3
+			},
+			"description": "Clears the screen to the specified color.  The colour can be specified as 1 or 3 arguments.  1 single colour argument or red, green, blue values.  Translating to a setScreenColor and some WebLogo command to clear the drawing might work."
+		},
+		{
+			"primaryName": "cos",
+			"isIndependentFunction": true,
+			"to": "radCos"
+		},
+		{
+			"primaryName": "endFill",
+			"to": "polyEnd"
+		},
+		{
+			"primaryName": "exp",
+			"isIndependentFunction": true,
+			"to": "exp"
+		},
+		{
+			"primaryName": "fd",
+			"to": "forward"
+		},
+		{
+			"primaryName": "floor",
+			"isIndependentFunction": true,
+			"to": "floor"
+		},
+		{
+			"primaryName": "forEach",
+			"toProc": "codeheartTsForEach"
+		},
+		{
+			"primaryName": "getHeading",
+			"to": "heading"
+		},
+		{
+			"primaryName": "getScale",
+			"args": [],
+			"description": "Returns the current scale number.  The same scale is set using setScale.",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "getX",
+			"to": "xCor"
+		},
+		{
+			"primaryName": "getY",
+			"to": "yCor"
+		},
+		{
+			"primaryName": "isArray",
+			"to": "list?"
+		},
+		{
+			"primaryName": "isBoolean",
+			"to": "boolean?"
+		},
+		{
+			"primaryName": "isNumber",
+			"to": "number?"
+		},
+		{
+			"primaryName": "isString",
+			"to": "string?"
+		},
+		{
+			"primaryName": "length",
+			"to": "count"
+		},
+		{
+			"primaryName": "log",
+			"isIndependentFunction": true,
+			"to": "ln"
+		},
+		{
+			"primaryName": "log2",
+			"args": [
+				{"name": "num"}
+			],
+			"isIndependentFunction": true,
+			"toProc": "codeheartTsLog2"
+		},
+		{
+			"primaryName": "lt",
+			"description": "Translates to either left or arcLeft in WebLogo depending on how many arguments are specified.",
+			"argLengthTos": [
+				[1, "left"],
+				[2, "arcLeft"]
+			]
+		},
+		{
+			"primaryName": "max",
+			"isIndependentFunction": true,
+			"to": "max"
+		},
+		{
+			"primaryName": "min",
+			"isIndependentFunction": true,
+			"to": "min"
+		},
+		{
+			"primaryName": "pd",
+			"to": "penDown"
+		},
+		{
+			"primaryName": "pow",
+			"isIndependentFunction": true,
+			"to": "power"
+		},
+		{
+			"primaryName": "pu",
+			"to": "penUp"
+		},
+		{
+			"primaryName": "randomInteger",
+			"args": [
+				{"name": "min"},
+				{"name": "max"}
+			],
+			"description": "Returns a random integer in the specified range",
+			"toProc": "codeheartTsRandomInteger"
+		},
+		{
+			"primaryName": "randomReal",
+			"args": [
+				{"name": "min"},
+				{"name": "max"}
+			],
+			"description": "Returns a random real number in the specified range",
+			"toProc": "codeheartTsRandomReal"
+		},
+		{
+			"primaryName": "round",
+			"isIndependentFunction": true,
+			"to": "round"
+		},
+		{
+			"primaryName": "rt",
+			"argCount": {
+				"min": 1,
+				"max": 2
+			},
+			"description": "Translates to either right or arcRight in WebLogo depending on how many arguments are specified.",
+			"argLengthTos": [
+				[1, "right"],
+				[2, "arcRight"]
+			]
+		},
+		{
+			"primaryName": "setColor",
+			"argCount": {
+				"min": 1,
+				"max": 4
+			},
+			"description": "Translates to setPenColor but the color might be expressed by 1, 3, or 4 parameters.",
+			"argLengthConditionalTo": "setPenColor"
+		},
+		{
+			"primaryName": "setHeading",
+			"names": ["setheading"],
+			"to": "setHeading"
+		},
+		{
+			"primaryName": "setPosition",
+			"names": ["setxy"],
+			"args": [
+				{"name": "x"},
+				{"name": "y"}
+			],
+			"toProc": "codeheartTsSetXY"
+		},
+		{
+			"primaryName": "setScale",
+			"args": [
+				{"name": "s"}
+			],
+			"description": "Scales all distances (but not x and y coordinates or pen width) by this factor. Useful for reusing drawing commands for different size objects. 1.0 is the default scale.",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "setSpeed",
+			"args": [
+				{"name": "speed"}
+			],
+			"description": "Sets the number of commands executed before showing the next frame of animation.",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "setWidth",
+			"args": [
+				{"name": "width"}
+			],
+			"to": "setPenSize"
+		},
+		{
+			"primaryName": "setX",
+			"to": "setX"
+		},
+		{
+			"primaryName": "setXY",
+			"to": "setXY"
+		},
+		{
+			"primaryName": "setY",
+			"to": "setY"
+		},
+		{
+			"primaryName": "sign",
+			"isIndependentFunction": true,
+			"to": "sign"
+		},
+		{
+			"primaryName": "sin",
+			"isIndependentFunction": true,
+			"to": "radSin"
+		},
+		{
+			"primaryName": "sqrt",
+			"isIndependentFunction": true,
+			"to": "sqrt"
+		},
+		{
+			"primaryName": "square",
+			"args": [
+				{
+					"name": "num",
+					"types": "num"
+				}
+			],
+			"description": "Returns the square of the specified number.  For example, square(3) returns 9.",
+			"toProc": "codeheartTsSquare"
+		},
+		{
+			"primaryName": "startFill",
+			"argCount": {
+				"min": 1,
+				"max": 4
+			},
+			"description": "Translates to a setFillColor and polyStart"
+		},
+		{
+			"primaryName": "strokeCircle",
+			"args": [
+				{"name": "x"},
+				{"name": "y"},
+				{"name": "radius"},
+				{"name": "color"},
+				{"name": "thickness"}
+			],
+			"description": "Draw a circle outline",
+			"toProc": "codeheartTsStrokeCircle"
+		},
+		{
+			"primaryName": "strokeLine",
+			"args": [
+				{"name": "x0"},
+				{"name": "y0"},
+				{"name": "x1"},
+				{"name": "y1"},
+				{"name": "color"},
+				{"name": "thickness"}
+			],
+			"description": "Draws a straight line between the specified points",
+			"toProc": "codeheartTsStrokeLine"
+		},
+		{
+			"primaryName": "tan",
+			"isIndependentFunction": true,
+			"to": "radTan"
+		},
+		{
+			"primaryName": "toLowerCase",
+			"to": "lowerCase"
+		},
+		{
+			"primaryName": "toUpperCase",
+			"to": "upperCase"
+		},
+		{
+			"primaryName": "wait",
+			"args": [
+				{"name": "seconds"}
+			],
+			"description": "Waits for the specified number of seconds",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "while",
+			"to": "while"
+		}
+	],
+	"keywords": [],
+	"operators": [
+	]
+}
