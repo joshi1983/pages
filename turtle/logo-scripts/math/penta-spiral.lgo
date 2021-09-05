@@ -1,0 +1,77 @@
+to drawSpiral :startLength
+	localmake "oldState turtleState
+	localmake "oldPenSize penSize
+	localmake "shrinkFactor 0.62
+	localmake "angle1 180 / 5
+	while :startLength > penSize [
+		localmake "newLength :startLength * :shrinkFactor
+		localmake "pos1 pos
+		localmake "heading1 heading
+		localmake "parallelogramLength :startLength / 2 / cos :angle1
+		localmake "parallelogramLength2 :parallelogramLength * 2 * sin :angle1
+		localmake "nextPLength :parallelogramLength * :shrinkFactor
+		localmake "triangleWidth :nextPLength + :parallelogramLength
+		localmake "triangleHeight :triangleWidth / 2 * tan :angle1
+		left 90 - :angle1
+		jumpRight :parallelogramLength / 2
+		setFillColor "white
+		setPenSize :oldPenSize
+		setPenColor "lime
+		parallelogram :parallelogramLength :parallelogramLength 90 - :angle1 * 2
+
+		jumpTo :pos1
+		setHeading :heading1
+		setPenSize :oldPenSize * 3
+		setPenColor "black
+		forward :startLength
+		localmake "endPos pos
+
+		setPenSize :oldPenSize
+		setPenColor "purple
+		right 90 - :angle1
+		jumpRight :parallelogramLength - :triangleWidth / 2
+		setFillColor "black
+		isoTriangle :triangleWidth :triangleHeight
+		forward :triangleHeight
+		jumpTo mix :pos1 :endPos 0.5
+		setHeading :heading1
+		jumpBackward penSize / 2
+		stripes :parallelogramLength2 penSize [penColor]
+
+		jumpTo :endPos
+		setHeading :heading1 - 360 / 5
+		localmake "startLength :newLength
+	]
+
+	setTurtleState :oldState
+end
+
+; Inspired by:
+; https://www.facebook.com/photo?fbid=10237891206843368&set=gm.2121336424956558&idorvanity=391950357895182
+; The facebook post was created by Ghee Beom Kim.
+;
+; This WebLogo code was written by Josh Greig.
+; The main changes include:
+; - varied colours for more visual appeal and easier pattern recognition
+; - varied line width for the same reasons
+to hexSpirals :height
+	localmake "oldState turtleState
+	localmake "startLen :height * 0.349
+	jumpForward :height * 0.461
+	right 90 / 5
+	setPenSize :height * 0.002
+	setPenColor "black
+	repeat 5 [
+		drawSpiral :startLen
+		right 360 / 5
+	]
+	setFillBlendMode "darken
+	setPenSize 0
+	setFillColor "#8000
+	left 180 / 5
+	regularPolygon :startLen / 2 / cos 180 / 5 5	
+	setTurtleState :oldState
+end
+
+setScreenColor "#465
+hexSpirals 100

@@ -1,0 +1,29 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Aruba#/media/File:Flag_of_Aruba.svg
+; Mostly based on construction sheet at
+; https://en.wikipedia.org/wiki/Flag_of_Aruba#/media/File:Flag_of_Aruba_construction.svg
+to arubaFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 3 / 2
+	localmake "yellowStripeSize :height / 18
+	localmake "starPenSize :height * 0.2 / 18
+	localmake "starSize1 :height * 0.147
+	localmake "starSize2 :height * 0.049
+	stripes :width :height ["#418fde]
+	jumpForward :height * 3 / 18
+	setPenSize :width
+	setLineCap "butt
+	setPenColor "#ffd100
+	forward :yellowStripeSize
+	jumpForward :yellowStripeSize
+	forward :yellowStripeSize
+	jumpForward :height * (12 - 4) / 18
+	jumpLeft :width / 2 - :height * 4 / 18
+	setPenColor "white
+	setFillColor "#EF3340
+	setPenSize :starPenSize
+	isotoxalStar :starSize1 :starSize2 4
+	setTurtleState :oldState
+end
+
+arubaFlag 100
