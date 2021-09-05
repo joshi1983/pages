@@ -1,0 +1,61 @@
+; Inspired by:
+; https://codepen.io/Tsankashvili/pen/OQGyVO
+; by Misha Tsankashvili
+to mishaSnowflake :height :timeRatio
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "colors ["#b0f6 "#b00f "#b60f]
+	localmake "len1 :height * 0.18
+	localmake "len2 :len1 * 0.5
+	localmake "largeRadius :height * 0.22
+	jumpForward :height / 2
+	localmake "center pos
+	setPenColor "white
+	setPenSize :height * 0.002
+	setLineCap "round
+	repeat 8 [
+		setHeading :oldHeading + 360 * (:timeRatio + repcount / 8)
+		localmake "heading1 heading
+		jumpForward :largeRadius
+		localmake "center2 pos
+		localmake "blendFactor 0.3 + 0.7 * remainder repcount 2
+		repeat 120 [
+			setHeading :heading1 + 180 - repRatio * 180
+			localmake "angle (repRatio * 1.7 - 4 * :timeRatio) * 360
+			jumpForward :largeRadius
+			right :angle
+			localmake "pos1 pos
+			setPenColor mix (item 1 + remainder repcount 3 :colors) "white interpolateRatio easeOutQuad repRatio
+			setPenColor mix "red penColor :blendFactor * repRatio
+			repeat 2 [
+				jumpForward :len2
+				backward :len1
+				jumpTo :pos1
+				right 90
+			]
+			jumpTo :center2
+		]
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+make "timeRatio clamp animation.time / animation.duration 0 1
+mishaSnowflake 100 :timeRatio
+
+to animation.snapshotstyle
+	localmake "result createPList
+	setProperty "result "zoom.scale 6.5
+	setProperty "result "position.y 50
+	output :result
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 4
+	; Edit this if you want to change the length of your animation.
+	localmake "result createPList
+	setProperty "result "duration :minutes * 60 + :seconds
+	output :result
+end

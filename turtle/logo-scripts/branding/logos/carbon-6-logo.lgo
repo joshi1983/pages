@@ -1,0 +1,39 @@
+to hexagon :size
+	localmake "oldState turtleState
+	localmake "size1 :size
+	localmake "size2 :size1
+	jumpBackward :size1
+	left 60
+	repeat 6 [
+		forward :size2
+		right 360 / 6
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by a logo at:
+; https://www.carbon6.io/
+to carbon6Logo :size
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "size1 :size * 2/3
+	localmake "size2 :size / 3
+	setFillColor "black
+	setPenSize 0
+	repeat 6 [
+		jumpForward :size1
+		polyStart
+		hexagon :size2
+		polyEnd
+		jumpTo :oldPos
+		right 360 / 6
+	]
+	setPenSize :size * 0.23
+	setPenColor fillColor
+	setFillColor transparent
+	hexagon :size1
+	closePath
+	setTurtleState :oldState	
+end
+
+carbon6Logo 100

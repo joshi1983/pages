@@ -1,0 +1,137 @@
+; Inspired by
+; https://www.pinterest.ca/pin/677791812685057542/
+
+make "borderThickness 0.005
+
+to poly2 :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angle1 360 / 7
+	localmake "angle2 :angle1 * 2
+	left :angle1
+	localmake "heading2 heading
+	polyStart
+	forward :size
+	right :angle2
+	forward :size
+	setHeading :heading2 + 180
+	forward :size
+	polyEnd
+	penUp
+	setPos :oldPos
+	setHeading :oldHeading	
+end
+
+to yellowTile :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angle1 360 / 7
+	localmake "angle2 180 - :angle1
+	setPenSize :size * :borderThickness
+	setFillColor "#ffe73f
+	polyStart
+	forward :size
+	right :angle1
+	forward :size
+	right :angle2
+	forward :size
+	polyEnd
+	penUp
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to redTile :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angle1 360 / 16
+	localmake "angle2 180 - :angle1
+	setPenSize :size * :borderThickness
+	setFillColor "red
+	polyStart
+	forward :size
+	right :angle1
+	forward :size
+	right :angle2
+	forward :size
+	polyEnd
+	penUp
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to blackTile :size
+	setPenSize 0
+	setFillColor "black
+	poly2 :size
+end
+
+to blueTile :size
+	setPenSize :size * :borderThickness
+	setFillColor "#069dec
+	poly2 :size
+end
+
+to blueTile2 :size
+	
+end
+
+; Inspired by
+; https://www.pinterest.ca/pin/677791812685057542/
+to fractile1 :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "size1 :size * 0.255
+	localmake "angle1 360 / 7
+	repeat 7 [
+		setHeading :oldHeading + repcount * :angle1
+		setPos :oldPos
+		yellowTile :size1
+		forward :size1
+		blackTile :size1
+		right :angle1
+		forward :size1
+		right :angle1
+		repeat 3 [
+			left :angle1
+			yellowTile :size1
+		]
+		repeat 2 [
+			right :angle1
+			forward :size1
+			blueTile :size1
+			back :size1
+		]
+	]
+	penUp
+	; restore original position and heading.
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to seaCrabPart :size
+	
+end
+
+; Inspired by
+; https://www.fractiles.com/wp/wp-content/uploads/2020/06/SeaCrabTR-200x183.png
+; from https://www.fractiles.com/gallery/
+to fractile2 :size
+	localmake "size1 :size * 0.1
+	localmake "angle1 360 / 7
+	localmake "angle2 360 / 16
+	repeat 2 [
+		redTile :size1
+		right :angle2
+	]
+	repeat 2 [
+		redTile :size1
+		right :angle2 + :angle1
+		blueTile :size1
+		right :angle1
+	]
+	redTile :size1
+end
+
+setScreenColor "black
+fractile1 100
