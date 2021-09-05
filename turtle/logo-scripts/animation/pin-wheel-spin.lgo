@@ -1,0 +1,162 @@
+; Inspired by
+; https://www.pinterest.ca/pin/422282902572120038/
+
+to backgroundCircle :radius
+	localmake "colorStops createPList
+	setProperty "colorStops 0 mix screenColor "#ffd 0.3
+	setProperty "colorStops 1 screenColor
+	setFillGradient createRadialGradient pos :radius :colorStops
+	setPenSize 0
+	circle :radius
+end
+
+to stick :len :width
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "c1 "#841
+	localmake "colorStops createPList
+	setProperty "colorStops 0 :c1
+	setProperty "colorStops 0.5 "#ee6
+	setProperty "colorStops 1 :c1
+	setPenSize 0
+	right 90
+	jumpBackward :width / 2
+	localmake "fromPos pos
+	jumpForward :width
+	setPenGradient createLinearGradient :fromPos pos :colorStops "pad
+	setHeading :oldHeading
+	jumpTo :oldPos
+	setPenSize :width * 0.5
+	forward :len
+end
+
+to shrinkArcRight :arcAngle :arcSize :ratioPower
+	localmake "numDivisions 5
+	localmake "arcStep :arcAngle / :numDivisions
+	repeat :numDivisions [
+		localmake "ratio 1 - (repcount - 1) / :numDivisions
+		localmake "ratio power :ratio :ratioPower
+		arcRight :arcStep :arcSize * :ratio
+	]
+end
+
+to growArcLeft :arcAngle :arcSize
+	localmake "numDivisions 5
+	localmake "arcStep :arcAngle / :numDivisions
+	repeat :numDivisions [
+		localmake "ratio repcount / :numDivisions
+		arcLeft :arcStep :arcSize * :ratio
+	]
+end
+
+to singleFinBackground :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "oldFillColor fillColor
+	localmake "colorStops createPList
+	setProperty "colorStops 0 mix :oldFillColor "black 0.7
+	setProperty "colorStops 0.3 :oldFillColor
+	setProperty "colorStops 1 mix :oldFillColor "white 0.7
+	setHeading :oldHeading + 145
+	backward :size * 0.1
+	localmake "fromPos pos
+	forward :size * 1.3
+	setFillGradient createLinearGradient :fromPos pos :colorStops "pad
+	setPos :oldPos
+	setHeading :oldHeading
+	localmake "angle 30
+	right :angle
+	setPenColor "black
+	setPenSize 0
+	penDown
+	polyStart
+	jumpForward :size / cos :angle
+	right 90 - :angle
+	jumpForward :size * 0.9
+	arcRight 30 :size * 0.4
+	arcRight 10 :size * 0.6
+	arcRight 20 :size * 3
+	arcRight 120 :size * 0.05
+	polyEnd
+	penUp
+	jumpTo :oldPos
+	setHeading :oldHeading
+	setFillColor :oldFillColor
+end
+
+to singleFinForeground :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "arcSize :size
+	localmake "oldFillColor fillColor
+	localmake "colorStops createPList
+	setProperty "colorStops 0 :oldFillColor
+	setProperty "colorStops 0.6 mix :oldFillColor "white 0.8
+	setProperty "colorStops 0.8 mix :oldFillColor "white 0.2
+	setProperty "colorStops 1 mix :oldFillColor "black 0.9
+	setPenSize 0
+	jumpForward :size
+	setFillGradient createLinearGradient :oldPos pos :colorStops "pad
+	setPenColor "black
+	jumpTo :oldPos
+	setHeading :oldHeading
+	left 10
+	polyStart
+	shrinkArcRight 100 :arcSize * 1.714 3
+	forward :size * 1.3
+	right 180
+	growArcLeft 52 :arcSize * 3.4
+	polyEnd
+	setPos :oldPos
+	setHeading :oldHeading
+	setFillColor :oldFillColor
+end
+
+to singleFin :size
+	singleFinBackground :size
+	singleFinForeground :size
+end
+
+to wheelButton :radius
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "white
+	setProperty "colorStops 1 "black
+	setFillGradient createRadialGradient pos :radius :colorStops
+	setPenSize 0
+	circle :radius
+end
+
+to propellerPinWheel :size
+	localmake "colors ["#04f "orange "green "red]
+	localmake "oldPos pos
+	forward :size * 0.5
+	backgroundCircle :size * 0.8
+	setPos :oldPos
+	stick :size * 0.8 :size * 0.05
+	right (power (animation.time / 10) 2) * 360 * 15
+	repeat count :colors [
+		setFillColor item repcount :colors
+		singleFin :size * 0.15
+		right 360 / count :colors
+	]
+	wheelButton :size * 0.015
+end
+
+setScreenColor "#f0b2aa
+propellerPinWheel 150
+
+to animation.snapshotstyle
+	localmake "result createPList
+	setProperty "result "zoom.scale 2
+	setProperty "result "position.y 80
+	output :result
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 10
+	; Edit this if you want to change the length of your animation.
+	localmake "result createPList
+	setProperty "result "duration :minutes * 60 + :seconds
+	output :result
+end
