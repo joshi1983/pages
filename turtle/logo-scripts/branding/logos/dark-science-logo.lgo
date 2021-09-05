@@ -1,0 +1,86 @@
+to drawDrop :scale
+	localmake "oldState turtleState
+	setPenSize 0
+	polyStart
+	arcLines [[-142 0] [-72 0.64] [247 0.16] [-100 0.29] [-15 0.4]] :scale
+	polyEnd
+	setTurtleState :oldState
+end
+
+to drawDrops :scale :dropsInfo
+	localmake "oldPos pos
+	repeat count :dropsInfo [
+		localmake "dropInfo item repcount :dropsInfo
+		jumpRight :scale * first :dropInfo
+		jumpForward :scale * item 2 :dropInfo
+		drawDrop :scale * (item 3 :dropInfo) * item 4 :dropInfo
+		jumpTo :oldPos
+	]
+end
+
+to darkScienceForeground :height
+	localmake "oldState turtleState
+	localmake "hexagonRadius :height * 0.182
+	localmake "innerHexRadius :hexagonRadius * cos 180 / 6
+	localmake "gap :height * 0.015
+	localmake "separationY (:innerHexRadius + :gap) * (cos 180 / 6)
+	localmake "separationX (:innerHexRadius + :gap) * (sin 180 / 6)
+	jumpForward :height / 2
+	setLineJoinStyle "miter
+	setPenSize :height * 0.01
+	setPenColor "white
+	setFillColor transparent
+	jumpForward :separationY
+	jumpLeft :separationX
+	regularPolygon :hexagonRadius 6
+	setFillColor penColor
+	drawDrops :hexagonRadius [[-0.87 -0.49 0.7 1] [-0.53 -0.685 0.92 1]]
+	jumpBackward :separationY * 2
+	jumpRight :separationX * 2
+	regularPolygon :hexagonRadius 6
+	drawDrops :hexagonRadius [[0.9 -0.27 0.75 -1]]
+	setTurtleState :oldState
+end
+
+to drawRadialBloch :radius :innerColor
+	localmake "oldState turtleState
+	localmake "colorStops createPList
+	setProperty "colorStops 0 :innerColor
+	setProperty "colorStops 1 mix :innerColor transparent 0
+	setFillGradient createRadialGradient pos :radius :colorStops
+	circle :radius
+	setTurtleState :oldState
+end
+
+to drawImpressionOfGas :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "bloches [
+		[-0.48 0.5 0.3 "#a4ff]
+		[-0.35 0.45 0.2 "#44ff]
+		[-0.18 0.12 0.15 "#528f]
+		[-0.17 0.53 0.2 "#828f]
+		[0.45 0.33 0.3 "#8f0f]
+		[0.28 0.53 0.3 "#5f0f]
+		[0.33 0.12 0.15 "#3f0f]
+	]
+	setPenSize 0
+	repeat count :bloches [
+		localmake "blochInfo item repcount :bloches
+		jumpRight :height * first :blochInfo
+		jumpForward :height * item 2 :blochInfo
+		drawRadialBloch :height * item 3 :blochInfo last :blochInfo
+		jumpTo :oldPos
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by logo at
+; https://www.youtube.com/@darkscienceyt
+to darkScienceLogo :height
+	drawImpressionOfGas :height
+	darkScienceForeground :height
+end
+
+setScreenColor "black
+darkScienceLogo 100

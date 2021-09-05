@@ -1,0 +1,69 @@
+; Inspired by logo at
+; https://www.youtube.com/@grasshoppertutorials/about
+to differentDesignLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "radius :height / 2
+	localmake "radius2 :radius * 0.98
+	localmake "radius3 :radius * 0.495
+	localmake "angle1 50
+	localmake "angle2 arcSin (:radius * sin :angle1 / 2) / :radius2
+	localmake "angle3 :angle2 - :angle1 / 2
+	localmake "centerRadius :height * 0.1
+	localmake "thickness :height * 0.105
+	localmake "step :radius3 - :centerRadius
+	jumpForward :radius
+	localmake "center pos
+	setPenSize 0
+	setFillColor "white
+
+	; Draw crescent
+	right 40 - :angle1 / 2	
+	jumpForward :radius
+	left 90
+	polyStart
+	arcLeft 360 - :angle1 :radius
+	left 180 - :angle3
+	arcRight 360 - :angle2 * 2 :radius2
+	polyEnd
+
+	; Draw innermost shape
+	jumpTo :center
+	setHeading :oldHeading
+	jumpForward :centerRadius
+	jumpRight :centerRadius
+	polyStart
+	jumpLeft :centerRadius
+	left 90
+	arcLeft 270 :centerRadius
+	polyEnd
+
+	; Draw the 2 d letters inside each other.
+	repeat 2 [
+		jumpTo :center
+		setHeading :oldHeading
+		jumpForward :radius3 - :thickness
+		jumpRight :centerRadius
+		polyStart
+		jumpForward :thickness
+		jumpLeft :centerRadius
+		left 90
+		arcLeft 270 :radius3
+		localmake "size1 sqrt :radius * :radius - :radius3 * :radius3 
+		localmake "size2 sqrt :radius * :radius - power :radius3 - :thickness 2 
+		jumpForward :size1
+		localmake "angle arcCos :size1 / :radius
+		left 90 - :angle
+		arcLeft :angle - (arcCos :size2 / :radius) :radius
+		setHeading :oldHeading + 180
+		jumpForward :size2
+		arcRight 270 :radius3 - :thickness
+		polyEnd
+		localmake "radius3 :radius3 + :step
+	]
+
+	setTurtleState :oldState
+end
+
+setScreenColor "#000
+differentDesignLogo 100
