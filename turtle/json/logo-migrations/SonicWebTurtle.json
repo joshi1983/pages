@@ -1,0 +1,146 @@
+{
+	"name": "Sonic Web Turtle",
+	"description": "A Logo-like interpreter by Bill Kendrick that executes server-side in a website and downloads a gif",
+	"externalLink": "http://www.sonic.net/~nbs/webturtle/examples/",
+	"toProcPath": "logo-scripts/sonic-webturtle-content",
+	"commands": [
+		{"primaryName": "color",
+		"args": [
+			{
+				"name": "newColor",
+				"types": "color"
+			}
+		],
+		"to": "setPenColor"},
+		{"primaryName": "draw",
+		"to": "forward"},
+		{
+			"primaryName": "forget",
+			"args": [],
+			"description": "This is similar to the \"GOBACK\" command, in that the most recently \"REMEMBERed\" spot is discarded; however, the turtle does not move.",
+			"toProc": "webTurtleForget"
+		},
+		{
+			"primaryName": "goback",
+			"args": [],
+			"description": "Restores position and orientation to a state that should have been previously remembered using the remember command.",
+			"toProc": "webTurtleGoback",
+			"returnTypes": null
+		},
+		{
+			"primaryName": "home",
+			"args": [],
+			"description": "Goes to 0 0 and points up.  Unlike WebLogo's home command, WebTurtle's home command never draws a trail between the current point and the home position.",
+			"toProc": "webTurtleHome",
+			"returnTypes": null
+		},
+		{"primaryName": "left",
+		"to": "left"},
+		{"primaryName": "let",
+		"to": "make"},
+		{"primaryName": "move",
+		"to": "jumpForward"},
+		{
+			"primaryName": "point",
+			"args": [
+				{"name": "degrees", "types": "num"}
+			],
+			"description": "Sets heading of the turtle.  0 is right. 90 is up.  270 is down.",
+			"reason": "Similar to WebLogo's setHeading except the angle needs to be calculated differently.",
+			"toProc": "webTurtlePoint"
+		},
+		{
+			"primaryName": "pop",
+			"args": [
+				{"name": "varToStoreInto"}
+			],
+			"description": "Pops a value off a stack.  This pops from the same stack that is pushed to by the push command.  This could be translated to popping from a global stack variable in WebLogo.",
+			"returnTypes": null
+		},
+		{
+			"primaryName": "print",
+			"args": [
+				{"name": "message", "types": "string"}
+			],
+			"description": "Use this to draw upright text at the position of the turtle. The turtle is not moved.",
+			"toProc": "webTurtlePrint",
+			"returnTypes": null
+		},
+		{
+			"primaryName": "push",
+			"args": [
+				{"name": "val"}
+			],
+			"description": "Pushes a value onto a stack.  push is to be used with the corresponding pop command.  This could be translated to pushing to a global stack variable in WebLogo.",
+			"returnTypes": null
+		},
+		{
+			"primaryName": "remember",
+			"args": [],
+			"description": "This tells the turtle to make a note of its current location and direction. You can remember more than one place- the latest place remembered will be used when using \"GOBACK\" (below), followed by the next latest place, and so on..  This could be translated to usage of make, turtleState, and setTurtleState commands in WebLogo.",
+			"toProc": "webTurtleRemember",
+			"returnTypes": null
+		},
+		{
+			"primaryName": "repeat",
+			"to": "repeat"
+		},
+		{
+			"primaryName": "return",
+			"to": "stop"
+		},
+		{
+			"primaryName": "right",
+			"to": "right"
+		},
+		{
+			"primaryName": "showTurtle",
+			"to": "showTurtle"
+		},
+		{
+			"primaryName": "thick",
+			"description": "Set the thickness of the lines the turtle draws. You can also specify \"+1\", \"+2\", etc. or \"-1\", \"-2\", etc. to increase or decrease the thickness relative to what it is now.",
+			"to": "setPenSize",
+			"returnTypes": null
+		},
+		{
+			"primaryName": "transparent",
+			"args": [
+				{"name": "opacityPercentage", "types": "num"}
+			],
+			"description": "Set the transparency of the lines the turtle draws. 0 transparency means the line is drawn dark (any lines you draw over are replaced). 100 means the line you draw is invisible. You can also specify \"+1\", \"+2\", etc. or \"-1\", \"-2\", etc. to increase or decrease the transparency",
+			"toProc": "webTurtleTransparent",
+			"returnTypes": null
+		},
+		{
+			"primaryName": "turtleprint",
+			"args": [
+				{"name": "message", "types": "string"}
+			],
+			"description": "This draws text at the angle the turtle is pointing, and it moves the turtle forward as it draws. It's like drawing lines out of words!",
+			"toProc": "webTurtleTurtlePrint",
+			"returnTypes": null
+		}
+	],
+	"operators": [
+		{"symbol": "!=", "to": "<>"},
+		{"symbol": "*", "to": "*"},
+		{"symbol": "+", "to": "+"},
+		{"symbol": "-", "to": "-"},
+		{"symbol": "/", "to": "/"},
+		{"symbol": "<", "to": "<"},
+		{"symbol": "<=", "to": "<="},
+		{"symbol": "<>", "to": "<>"},
+		{"symbol": "=", "to": "="},
+		{"symbol": "==", "to": "="},
+		{"symbol": ">", "to": ">"},
+		{"symbol": ">=", "to": ">="}
+	],
+	"keywords": [
+		{
+			"from": "endif",
+			"to": null,
+			"description": "Marks the end of an if-statement's instruction list"
+		}
+	]
+}
