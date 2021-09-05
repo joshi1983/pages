@@ -1,0 +1,87 @@
+import { addCodeBlockIfNeeded } from './addCodeBlockIfNeeded.js';
+import { addDeclaration } from './addDeclaration.js';
+import { declaringTypes } from './declaringTypes.js';
+import { getGoodPreviousForIdentifier } from './getGoodPreviousForIdentifier.js';
+import { ParseTreeTokenType } from '../ParseTreeTokenType.js';
+import { shouldAppendChild } from './shouldAppendChild.js';
+
+function isExtends(previousToken, nextToken) {
+	if (nextToken.val !== 'extends')
+		return false;
+	let t = previousToken;
+	// t would be a class name token, if token is an extends used in a class definition
+	if (t.type !== ParseTreeTokenType.IDENTIFIER)
+		return false;
+	t = t.parentNode;
+	if (t.type !== ParseTreeTokenType.CLASS)
+		return false;
+	return true;
+}
+
+function shouldBeDeclaration(previousToken) {
+	const parent = previousToken.parentNode;
+	if (parent === null)
+		return false;
+	if (parent.type !== ParseTreeTokenType.ARG_LIST &&
+	parent.type !== ParseTreeTokenType.TREE_ROOT)
+		return false;
+	if (previousToken.type === ParseTreeTokenType.IDENTIFIER ||
+	previousToken.type === ParseTreeTokenType.DATA_TYPE) {
+		return true;
+	}
+	return false;
+}
+
+function shouldNextBeConvertedToDataType(previousToken) {
+	const parent = previousToken.parentNode;
+	if (parent === null)
+		return false;
+	const grandParent = parent.parentNode;
+	if (grandParent !== null && grandParent.type === ParseTreeTokenType.METHOD_CALL)
+		return false;
+	if (previousToken.type === ParseTreeTokenType.CURVED_LEFT_BRACKET &&
+	parent.type === ParseTreeTokenType.ARG_LIST)
+		return true;
+	return false;
+}
+
+function shouldSetPreviousParentCodeBlock(previousToken) {
+	const parent = previousToken.parentNode;
+	if (parent === null ||
+	parent.type !== ParseTreeTokenType.CURLY_BRACKET_EXPRESSION)
+		return false;
+	if (parent.children.length > 1) {
+		const secondChild = parent.children[1];
+		if (secondChild.type === ParseTreeTokenType.COLON)
+			return false;
+	}
+	if (declaringTypes.has(previousToken.type))
+		return true;
+	return false;
+}
+
+export function processIdentifier(previousToken, nextToken) {
+	if (addCodeBlockIfNeeded(previousToken, nextToken)) {
+		return nextToken;
+	}
+	else {
+		if (isExtends(previousToken, nextToken))
+			nextToken.type = ParseTreeTokenType.EXTENDS;
+
+		previousToken = getGoodPreviousForIdentifier(previousToken);
+		if (shouldBeDeclaration(previousToken)) {
+			previousToken.appendSibling(nextToken);
+			return addDeclaration(nextToken);
+		}
+		else if (shouldNextBeConvertedToDataType(previousToken)) {
+			nextToken.type = ParseTreeTokenType.DATA_TYPE;
+		}
+		if (shouldSetPreviousParentCodeBlock(previousToken))
+			previousToken.parentNode.type = ParseTreeTokenType.CODE_BLOCK;
+		if (nextToken.type === ParseTreeTokenType.EXTENDS ||
+		shouldAppendChild(previousToken, nextToken))
+			previousToken.appendChild(nextToken);
+		else
+			previousToken.appendSibling(nextToken);
+	}
+};
