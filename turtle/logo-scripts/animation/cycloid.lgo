@@ -1,0 +1,118 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Cycloid#/media/File:Cycloid_f.gif
+; Also explained more at:
+; https://en.wikipedia.org/wiki/Cycloid
+
+; When exporting this as an animation, try a wide aspect ratio like 400x240.
+; square aspect ratios will cut off the left and right sides.
+
+; If you like this, see also an example called Cardioid.
+
+to cycloidCurve :radius :angle
+	localmake "oldPos pos
+	localmake "numPoints 100
+	localmake "points []
+	localmake "angle :angle * pi / 180
+
+	; Calculate a lot of points on the curve. 
+	repeat :numPoints [
+		localmake "t repRatio * :angle + pi
+
+		; this math is derived from the Equations section at:
+		; https://en.wikipedia.org/wiki/Cycloid#Equations
+		localmake "x :radius * (:t - pi - radSin :t)
+		localmake "y :radius * (1 - radCos :t)
+		jumpTo :oldPos
+		jumpForward :y
+		jumpRight :x
+		queue2 "points pos
+	]
+
+	; Connect the points with line segments.
+	jumpTo item 1 :points
+	for ["index 2 :numPoints] [
+		setPos item :index :points
+	]
+
+	; Restore state of the turtle.
+	; only position would have changed in this procedure.
+	jumpTo :oldPos
+end
+
+to drawSpokes :radius
+	localmake "oldPos pos
+	localmake "originalMinLineSize penSize / 2
+	localmake "numLines 12
+	localmake "colors ["white "aqua]
+	localmake "minLineSize :originalMinLineSize
+	; Draw with a few different colors and pen sizes
+	; to help people visually track the rotation 
+	; of the outer circle.
+	repeat count :colors [
+		setPenColor item repcount :colors
+		repeat :numLines [
+			setPenSize :minLineSize
+			forward :radius - :originalMinLineSize
+			jumpTo :oldPos
+			right 360 / :numLines
+		]
+		localmake "numLines int :numLines / 3
+		localmake "minLineSize :minLineSize * 1.8
+	]
+end
+
+to cycloid :size :timeRatio
+	localmake "oldState turtleState
+	localmake "radius :size / 4.5
+	localmake "angleRange 360 * 2
+	localmake "startOffset -:radius * :angleRange * pi / 360
+	localmake "angle :timeRatio * :angleRange
+	localmake "distance :radius * 2 * pi * :angle / 360
+	localmake "circlePenSize :size * 0.01
+	stripes -:startOffset * 2 :size * 0.01 ["#8fff]
+	setPenColor "white
+	setPenSize :size * 0.01
+	jumpRight :startOffset
+	cycloidCurve :radius :angle
+	jumpRight :distance
+	setPenColor "white
+	setPenSize :circlePenSize
+	jumpForward :radius
+	circle :radius
+	right :angle
+	drawSpokes :radius
+	jumpForward :radius
+
+	; Draw a few circles to emphasize the point
+	; that the cardioid is traced from.
+	setPenColor "aqua
+	setPenSize :size * 0.005
+	setFillColor transparent
+	circle :size * 0.1
+	setPenSize :size * 0.008
+	circle :size * 0.04
+	setFillColor "white
+	setPenColor "red
+	circle :size * 0.025
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+cycloid 300 interpolateRatio easeInOut animation.time / animation.duration
+
+to animation.snapshotstyle
+	localmake "result createPList
+
+	; offset the camera to center the cardioid better for exported animations.
+	setProperty "result "position.y 80
+	output :result
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 3
+	; Edit this if you want to change the length of your animation.
+	localmake "result createPList
+	setProperty "result "duration :minutes * 60 + :seconds
+	output :result
+end

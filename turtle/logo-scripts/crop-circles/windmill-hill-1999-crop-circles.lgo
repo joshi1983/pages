@@ -1,0 +1,89 @@
+make "darkColor "#780
+make "lightColor "#ff8
+
+to dotsForward :dotRadius :numDots
+	localmake "step :dotRadius * 3
+	repeat :numDots [
+		jumpForward :step
+		circle :dotRadius
+	]
+end
+
+to drawCorner :dotRadius :numDots
+	if :numDots < 4 [
+		stop
+	]
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "step :dotRadius * 3
+	localmake "size1 :step * :numDots
+	jumpForward (:size1) / 2
+	jumpRight :step
+	dotsForward :dotRadius :numDots / 2
+	right 90
+	repeat 2 [
+		dotsForward :dotRadius :numDots - 1
+		right 90
+	]
+	dotsForward :dotRadius :numDots / 2 - 1
+	if :numDots = 5 [
+		jumpRight :step
+		circle :dotRadius
+		jumpForward :step * 2
+		jumpRight :step * 2
+		circle :dotRadius
+	]
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	localmake "size2 :size1 / 2
+	jumpForward :size2 ;+ :step
+	jumpRight :size2 ;- :step / 2
+	localmake "center pos
+	left 90
+	localmake "step :dotRadius * 3
+	localmake "newNumDots :numDots / 2 - 1
+	jumpBackward :step / 2
+	drawCorner :dotRadius :newNumDots
+	jumpTo :center
+	right 90
+	jumpForward :step / 2
+	drawCorner :dotRadius :newNumDots
+	jumpTo :center
+	right 90
+	jumpLeft :step
+	jumpForward :step / 2
+	drawCorner :dotRadius :newNumDots
+	setTurtleState :oldState
+end
+
+; Inspired by:
+; https://www.pinterest.co.uk/pin/AdoI4GNbGk8mPfOMPq5OxAYYwe12dU9dXdDH4gWAkkHrR-C0Sr-AASE/
+; Reported in July 16, 1999
+; Windmill Hill, Wiltshire
+to windmillHill1999CropCircles :height
+	localmake "oldState turtleState
+	localmake "lightColor "#ff8
+	localmake "squareSize :height * 0.49 / cos 45
+	jumpForward :height / 2
+	localmake "center pos
+	setFillColor :lightColor
+	setPenSize 0
+	circle :height / 2
+	setFillColor :darkColor
+	rect :squareSize :squareSize
+	setFillColor :lightColor
+	localmake "cornerScale :squareSize * 12 / 25
+	localmake "step :cornerScale / 12
+	localmake "dotRadius :step / 3
+	repeat 4 [
+		drawCorner :dotRadius 12
+		jumpTo :center
+		right 90
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor :darkColor
+windmillHill1999CropCircles 100
