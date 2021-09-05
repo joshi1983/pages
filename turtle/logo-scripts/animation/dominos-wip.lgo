@@ -1,0 +1,101 @@
+make "thicknessRatio 0.17
+
+to getMaxDominoAngleFromPrevious :previousAngle :separationGapRatio :height1Ratio
+	; Calculate angle to intersect the bottom corner of the previous domino.
+	localmake "x1 :separationGapRatio + :thicknessRatio * (1 - cos :previousAngle)
+	localmake "y1 :thicknessRatio * sin :previousAngle
+	localmake "angle1 90 - arcTan :y1 / :x1
+	ifelse :previousAngle < 89 [
+		; Calculate angle to intersect the side of the previous domino.
+		localmake "separationGapRatio2 :separationGapRatio * cos :previousAngle
+		localmake "angle2 :previousAngle + arcSin :separationGapRatio2 / :height1Ratio
+		output min :angle1 :angle2
+	] [
+		output :angle1
+	]
+end
+
+to getMaxDominoAngleFromNext :nextAngle :separationGapRatio :height1Ratio
+	localmake "x1 (:height1Ratio * sin :nextAngle) - :separationGapRatio
+	localmake "y1 :height1Ratio * cos :nextAngle
+	localmake "angle1 arcTan :x1 / :y1
+	output :angle1
+end
+
+to drawDominos :height :animationRatio
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "thickness :height * :thicknessRatio
+	localmake "height1Ratio 1 / hypot [1 :thicknessRatio]
+	localmake "height1 :height * :height1Ratio
+	localmake "numDominos 10
+	localmake "numStandingDominos (int :numDominos * (1 - :animationRatio))
+	localmake "widthFactor 5
+	localmake "separationGapRatio :widthFactor / :numDominos - :thicknessRatio
+	localmake "separation :height * :separationGapRatio + :thickness
+
+	; Not exact angle but pretty close
+	localmake "maxDominoAngle1 90 - arcTan :thickness / :separation
+	localmake "maxDominoAngle2 90
+	localmake "fallingRatio :animationRatio * :numDominos
+	localmake "fallingRatio :fallingRatio - int :fallingRatio
+	setPenSize :thickness
+	setLineCap "butt
+	setPenColor "black
+	jumpRight :separation * (:numDominos - 1) / 2
+	localmake "previousAngle 0
+	localmake "angles []
+	repeat :numDominos [
+		localmake "dominoAngle :maxDominoAngle1
+		if repcount = 1 [
+			localmake "dominoAngle :maxDominoAngle2
+		]
+		ifelse repcount + 1 < :numStandingDominos [
+			localmake "dominoAngle 0
+		] [
+			ifelse repcount = :numStandingDominos [
+				localmake "dominoAngle :maxDominoAngle1 * :fallingRatio
+			] [
+				localmake "dominoAngle getMaxDominoAngleFromPrevious :previousAngle :separationGapRatio :height1Ratio
+			]
+		]
+		queue2 "angles :dominoAngle
+		localmake "previousAngle :dominoAngle
+	]
+	for ["i :numDominos - 1 1 -1] [
+		localmake "nextAngle item :i + 1 :angles
+		localmake "angle2 getMaxDominoAngleFromNext :nextAngle :separationGapRatio :height1Ratio
+		if :angle2 > item :i :angles [
+			setItem :i "angles :angle2
+		]
+	]
+	repeat :numDominos [
+		localmake "pos1 pos
+		localmake "dominoAngle item repcount :angles
+		right :dominoAngle
+		jumpLeft :thickness / 2
+		setPenColor ifelse :numStandingDominos = repcount  "red  "blue
+		forward :height1
+		jumpTo :pos1
+		setHeading :oldHeading
+		jumpLeft :separation
+	]
+
+	setTurtleState :oldState
+end
+
+drawDominos 100 animation.timeRatio
+
+to animation.snapshotstyle
+	output createPList2 [
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 5
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

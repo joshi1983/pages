@@ -1,0 +1,51 @@
+to drawArm :length
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "shapes [
+		[0.135] [-0.18] [0.135]
+	]
+	localmake "endRadius :length * 0.08
+	localmake "midThickness :length * 0.05
+	repeat count :shapes [
+		localmake "info item repcount :shapes
+		localmake "radius :length * first :info
+		localmake "absRadius abs :radius
+		localmake "absRadius2 :absRadius * 0.86
+		if repcount = 1 [
+			jumpForward :absRadius2
+		]
+		jumpForward :absRadius2
+		drawArcLineShape [0 1
+			[[90 0] [180 1]]
+		] :radius
+		if repcount = 2 [
+			roundRect :midThickness :absRadius * 2 :midThickness / 2
+		]
+		jumpForward :absRadius2
+	]
+	jumpTo :oldPos
+	jumpForward :length - :endRadius
+	circle :endRadius
+
+	setTurtleState :oldState
+end
+
+; Inspired by a June 20, 2024 crop circle pattern
+; at https://cropcircleconnector.com/2024/stonehenge/comments.html
+to stoneHengeJune20_2024 :height
+	localmake "oldState turtleState
+	localmake "radius :height * 0.548
+	jumpForward :radius
+	setPenSize 0
+	setFillColor "white
+	circle :height * 0.08
+	right 180 / 5
+	repeat 5 [
+		drawArm :radius
+		right 360 / 5
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "#BD9B61
+stoneHengeJune20_2024 100
