@@ -1,0 +1,57 @@
+; Inspired by
+; https://www.pinterest.ca/pin/16958936095112395/
+to sacredGeometryCircle :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "stopRatios [0.1 0.2 0.4 0.7 1]
+	localmake "minPenSize :height * 0.002
+	localmake "radius1 (:height - :minPenSize) / 2
+	localmake "steps []
+	localmake "prevRatio 0
+	repeat count :stopRatios [
+		localmake "nextRatio item repcount :stopRatios
+		queue2 "steps :radius1 * (:nextRatio - :prevRatio)
+		localmake "prevRatio :nextRatio
+	]
+	localmake "numBranchLevels (count :steps) - 1
+	localmake "numBranches 12
+	localmake "maxPenSize :height * 0.005
+	jumpForward :height / 2
+	setLineCap "round
+	setLineJoinStyle "round
+	setPenColor "#fb3
+	localmake "center pos
+	repeat :numBranches [
+		setHeading :oldHeading + repcount * 360 / :numBranches
+		setPenSize :maxPenSize
+		localmake "radius first :steps
+		forward :radius
+		localmake "points [[pos heading]]
+		repeat :numBranchLevels [
+			localmake "nextPoints []
+			localmake "angle mix 10 30 repRatio
+			localmake "radius :radius + item 1 + repcount :steps
+			localmake "numAngles repcount + 1
+			localmake "angleStep :angle / (:numAngles - 1)
+			setPenSize mix :minPenSize :maxPenSize sqrt repRatio
+			repeat count :points [
+				localmake "point item repcount :points
+				localmake "pos first :point
+				setHeading last :point
+				left :angle / 2
+				repeat :numAngles [
+					jumpTo :pos
+					forward distanceToCircle :center :radius
+					queue2 "nextPoints [pos heading]
+					right :angleStep
+				]
+			]
+			localmake "points :nextPoints
+		]
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+sacredGeometryCircle 100

@@ -1,0 +1,50 @@
+; Inspired by logo at:
+; https://www.youtube.com/@TraversyMedia
+to traversyMediaLogo :height :backgroundColor :foregroundColor1 :foregroundColor2
+	localmake "oldState turtleState
+	localmake "dotRadius :height * 0.046
+	localmake "dotSeparation :height * 0.124
+	localmake "dotColors [
+		:foregroundColor2 :foregroundColor1 :foregroundColor1]
+	jumpForward :height / 2
+	setFillColor :backgroundColor
+	setPenColor :foregroundColor1
+	setPenSize :height * 0.042
+	circle (:height - penSize) / 2
+
+	jumpBackward :height * 0.202
+	setPenSize 0
+	repeat count :dotColors [
+		setFillColor item repcount :dotColors
+		circle :dotRadius
+		jumpForward :dotSeparation
+	]
+	jumpLeft :dotSeparation
+	setFillColor :foregroundColor2
+	repeat 3 [
+		circle :dotRadius
+		jumpRight :dotSeparation
+	]
+	setTurtleState :oldState
+end
+
+; This is similar to a logo version on a banner at:
+; https://www.youtube.com/@TraversyMedia
+to darkTraversyMediaLogo :height
+	localmake "oldState turtleState
+	localmake "innerHeight :height * 0.8
+	jumpForward :height / 2
+	setPenSize 0
+	setFillColor "#2b5377
+	circle :height / 2
+	jumpBackward :innerHeight / 2
+	traversyMediaLogo :innerHeight transparent "white "white
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 5
+jumpLeft :separation / 2
+traversyMediaLogo :height "white "#3c7faa "#30557f
+jumpRight :separation
+darkTraversyMediaLogo :height

@@ -1,0 +1,35 @@
+; Inspired by a logo at:
+; https://www.youtube.com/@EnergiMedia
+to energiMediaLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "innerRadius :height * 0.26
+	localmake "numRays 13
+	setPenSize 0
+	setFillColor "#3b7d8d
+	jumpForward :height / 2
+	localmake "center pos
+	circle :height * 0.21
+	repeat :numRays [
+		setHeading :oldHeading + 7 + repcount * 360 / :numRays
+		jumpForward :innerRadius
+		localmake "startPos pos
+		polyStart
+		arcLines [[5 0] [55 0.15] [0.04] [-50 0.1]
+			[170 0] [40 0.18]
+		] :height
+		localmake "arcRadius :height * 0.18
+		localmake "arcAngle getArcRightAngleToCircle :arcRadius :center :innerRadius
+		arcRight :arcAngle :arcRadius
+		setHeading (towards :center) - 90
+		localmake "d distance :startPos
+		localmake "arcAngle 2 * arcSin :d / 2 / :innerRadius
+		arcRight :arcAngle :innerRadius
+		polyEnd
+		jumpTo :center
+	]
+
+	setTurtleState :oldState
+end
+
+energiMediaLogo 100

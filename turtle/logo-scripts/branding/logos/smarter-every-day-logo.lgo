@@ -1,0 +1,71 @@
+to drawBackgroundGlow :height
+	localmake "oldState turtleState
+	localmake "c "#8f00
+	localmake "colorStops createPList2 [
+		[0 :c] [0.5 :c] [1 mix :c transparent 0]
+	]
+	jumpForward :height / 2
+	setFillGradient createRadialGradient pos :height / 2 :colorStops
+	setPenSize 0
+	circle :height / 2
+
+	setTurtleState :oldState
+end
+
+to drawLinesWithPens :linesInfo :pens :scale
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	repeat count :linesInfo [
+		localmake "arcInfo item repcount :linesInfo
+		jumpRight :scale * first :arcInfo
+		jumpForward :scale * item 2 :arcInfo
+		localmake "startPos pos
+		repeat count :pens [
+			localmake "penInfo item repcount :pens
+			setPenSize :scale * first :penInfo
+			setPenColor last :penInfo
+			arcLines last :arcInfo :scale
+			jumpTo :startPos
+			setHeading :oldHeading
+		]
+		jumpTo :oldPos
+	]
+end
+
+; Inspired by
+; https://www.youtube.com/@smartereveryday
+to smarterEveryDayLogo :height
+	localmake "oldState turtleState
+	localmake "arcsInfo [
+		[-0.0978 0.1172 [[-7 0] [10 0.7] [35 0.1]]]
+		[0.228 0.17 [[25 0] [-50 0.4] [0.06] [88 0.23] [0.04]]]
+		[-0.0715 0.3278 [[115 0] [-32 0.27] [-83 0.04] [-14 0.15]
+		[70 0.015] [-105 0.02] [105 0] [-70 0.02] [-10 0.08]]]
+		[-0.2461 0.4808 [[82 0] [0.04] [-95 0.017] [-15 0.07] [-10 0.3]
+			[42 0.1] [-90 0.225] [-25 0.33] [-45 0.23] [-48 0.16]
+			[-50 0.19] [-70 0.065] [45 0.1] [-62 0.055] [65 0.06]
+			[0.05] [-90 0.045] [-40 0.16]]]
+	]
+	localmake "pens [[0.03 "#1f00] [0.02 "#2f00] [0.01 "#5f00] [0.005 "#bff0] [0.002 "#fff]]
+	drawBackgroundGlow :height
+	setLineCap "round
+	setLineJoinStyle "round
+	drawLinesWithPens [
+		[-0.152 0.8 [[-47 0] [-23 0.3]]]
+		[-0.0778 0.1178 [[-6 0] [0.11] [-175 0.007] [0.2]]]
+		[0.212 0.16 [[21 0] [0.115] [160 0.007] [16 0.9]]]
+		]
+		[[0.005 "black]
+		] :height
+	drawLinesWithPens [
+		[-0.0778 0.1178 [[-6 0] [0.09]]]
+		[0.212 0.16 [[21 0] [0.09]]]
+		]
+		[[0.015 "black]
+		] :height
+	drawLinesWithPens :arcsInfo :pens :height
+	setTurtleState :oldState
+end
+
+setScreenColor "#191130
+smarterEveryDayLogo 100

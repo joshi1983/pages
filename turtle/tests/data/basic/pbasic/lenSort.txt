@@ -1,0 +1,79 @@
+// lenSort.bas — insertion sort by line length, no BREAK needed
+var fileLines[255] : String
+var lineCount : Int = 0
+var a$ : String = ""
+var b$ : String = "lenSortOut.txt"
+var sortJ : Int = 0
+var sortKey$ : String = ""
+var sortKeyLen : Int = 0
+var sortScanning : Int = 0
+var sortInsertAt : Int = 0
+input "Enter File: "; a$
+if a$ <> "" then doReadFile()
+if a$ <> "" then doCountLines()
+if a$ <> "" then doSortLines()
+if a$ <> "" then doWriteFile()
+print "Done. Sorted"
+print lineCount
+print "lines to"
+print b$
+end
+
+func doReadFile() {
+    fileLines[] = LOAD(a$)
+    return 0
+}
+
+func doCountLines() {
+    lineCount = 0
+    while (fileLines[lineCount] <> "") {
+        lineCount = lineCount + 1
+    }
+    return 0
+}
+
+func doSortLines() {
+    var i : Int = 0
+    var milestone : Int = 0
+    for i = 1 to lineCount - 1
+        sortKey$ = fileLines[i]
+        sortKeyLen = len(sortKey$)
+        sortJ = i - 1
+        sortInsertAt = i
+        sortScanning = 1
+        while (sortScanning == 1) {
+            doInnerStep()
+        }
+        fileLines[sortInsertAt] = sortKey$
+        milestone = int(i / 100) * 100
+        if milestone == i then printProgress(i)
+    next i
+    return 0
+}
+
+func doInnerStep() {
+    if len(fileLines[sortJ]) <= sortKeyLen then doStopScan()
+    if sortScanning == 1 then fileLines[sortJ + 1] = fileLines[sortJ]
+    if sortScanning == 1 then sortInsertAt = sortJ
+    if sortScanning == 1 then sortJ = sortJ - 1
+    if sortJ < 0 then doStopScan()
+    return 0
+}
+
+func doStopScan() {
+    sortScanning = 0
+    return 0
+}
+
+func printProgress(i) {
+    print "Sorting: ";
+    print i; 
+    print " of "; 
+    print lineCount
+    return 0
+}
+
+func doWriteFile() {
+    SAVE b$, fileLines[]
+    return 0
+}

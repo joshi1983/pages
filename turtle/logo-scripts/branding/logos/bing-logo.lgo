@@ -1,0 +1,92 @@
+make "color1 "#01b9eb
+make "color2 "#1E4D9F
+make "color3 "#01c5cc
+
+to getVerticalBingGradient :height
+	localmake "oldPos pos
+	jumpForward :height
+	localmake "colorStops createPList2 [
+		[0 :color2] [1 :color1]
+	]
+	localmake "result createLinearGradient :oldPos pos :colorStops "pad
+	jumpTo :oldPos
+	output :result
+end
+
+to getBingGradient2 :height
+	localmake "oldState turtleState
+	jumpForward :height
+	right 180
+	localmake "result getVerticalBingGradient :height
+	setTurtleState :oldState
+	output :result
+end
+
+to getBingGradient3 :height
+	localmake "oldPos pos
+	jumpForward :height
+	localmake "colorStops createPList2 [
+		[0 :color3] [1 mix :color1 :color2 0.5]
+	]
+	localmake "result createLinearGradient :oldPos pos :colorStops "pad
+	jumpTo :oldPos
+	output :result
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Microsoft_Bing#/media/File:Bing_Fluent_Logo.svg
+; The logo since 2020
+to bingLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "arcRadius1 :height * 0.2597
+	localmake "arcRadius2 :arcRadius1 * 1.04
+	localmake "cx :height * 0.0715
+	localmake "x1 :height * 0.1
+	localmake "offset1 :x1 - :cx
+	localmake "angle1 57.5
+	localmake "angle2 76.6
+	localmake "size1 :height * 0.16215
+	localmake "gradient2Length :height * 0.55
+	setFillGradient getVerticalBingGradient :height
+	jumpLeft :x1
+	jumpForward :arcRadius1 - sqrt :arcRadius1 * :arcRadius1 - :offset1 * :offset1
+	setPenSize 0
+
+	; draw vertical shape.
+	polyStart
+	arcLines [[0.812] [55.5 0.12] [0.1423] [124.5 0.0395] [0.7008]] :height
+	localmake "pos1 pos
+	arcLeft 83 :arcRadius1
+	polyEnd
+
+	; draw lower shape.
+	jumpTo :pos1
+	setHeading :oldHeading + :angle1
+	setFillGradient getBingGradient2 :gradient2Length
+	setHeading :oldHeading + 180
+	polyStart
+	arcLeft 180 - :angle1 :arcRadius1
+	jumpForward :size1
+	localmake "pos1 pos
+	localmake "heading1 heading
+	arcLeft :angle2 :arcRadius2
+	left 179.2 - :angle2
+	jumpForward :height * 0.5521
+	arcRight 121.7 :height * 0.1155
+	polyEnd
+
+	; draw right-most shape
+	jumpTo :pos1
+	setHeading :oldHeading - 60
+	setFillGradient getBingGradient3 :height * 0.46
+	setHeading :heading1
+	polyStart
+	arcLines [[90 1] [30 1.06]] :arcRadius2
+	arcLines [ [0.1725] [138.5 0.03837] [0.181] [52 0.096] [0.08]
+	[-14 0.25] [-3 0.15] [-80 0.114] [-30 0.2]] :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+bingLogo 100

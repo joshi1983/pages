@@ -1,0 +1,30 @@
+; Inspired by image at:
+; https://ca.pinterest.com/pin/253046072803233520/
+;
+; Also shown at:
+; https://ca.pinterest.com/pin/223772675231341938/
+;
+to irisCrescent :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "radius1 :height / 2
+	localmake "numAngles 180
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	setFillColor "black
+	circle :radius1
+	jumpRight :height * 0.11
+	jumpForward :height * 0.07
+	setFillColor "white
+	circle :height * 0.21
+	repeat :numAngles [
+		setHeading :oldHeading + repcount * 360 / :numAngles
+		localmake "d min :height * 0.45 distanceToCircle :center :radius1
+		stripes :height * 0.005 :d [fillColor]		
+	]	
+	setTurtleState :oldState
+end
+
+setScreenColor "#ddd
+irisCrescent 100

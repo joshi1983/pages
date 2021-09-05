@@ -1,0 +1,13 @@
+; Implemented to work similar to unbinary function from:
+; https://processing.org/reference/unbinary_.html
+to pUnbinary :value
+	localmake "result 0
+	repeat count :value [
+		localmake "result bitShiftLeft :result 1
+		localmake "digit item repcount :value
+		if :digit = "1 [
+			localmake "result bitOr :result 1
+		]
+	]
+	output :result
+end

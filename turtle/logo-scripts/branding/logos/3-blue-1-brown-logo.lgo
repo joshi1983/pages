@@ -1,0 +1,50 @@
+to drawBrown :radius
+	localmake "oldState turtleState
+	polyStart
+	jumpLeft :radius
+	arcRight 90 :radius
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://www.youtube.com/@3blue1brown
+;
+; 3blue1brown has a lot of interesting math-related content.
+to threeBlue1BrownLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "numPoints 28
+	localmake "radius :height / 2
+	jumpForward :height / 2
+	setPenSize 0
+	setFillColor "#76c2e2
+	circle :height / 2
+
+	setFillColor "#8d6238
+	drawBrown :radius
+
+	setFillColor "#508da2
+	right 180 / :numPoints
+	isotoxalStar :height * 0.43 :height * 0.3 :numPoints
+
+	setHeading :oldHeading
+	setFillColor "#3840
+	drawBrown :radius
+
+	setFillColor "#395f6c
+	isotoxalStar :height / 2 :height * 0.31 :numPoints
+	setFillColor "#204758
+	isotoxalStar :height * 0.37 :height * 0.26 :numPoints
+
+	setFillColor "#6840
+	drawBrown :radius
+
+	setFillColor "black
+	isotoxalStar :height * 0.3 :height * 0.2 :numPoints
+	circle :height * 0.246
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+threeBlue1BrownLogo 100

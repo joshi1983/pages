@@ -1,0 +1,46 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Magna_International#/media/File:Magna_logo.svg
+to magnaLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "oldPos pos
+	localmake "angle 20
+	localmake "radius :height * 0.12915
+	localmake "size1 :height * 0.746
+	localmake "size2 :height * 0.195
+	localmake "size3 :height * 0.1035
+	localmake "size4 :size1 - :size3
+	localmake "separation :height * 0.308
+	localmake "gapWidth :separation - :size2 - :size3 * 2 * (sin :angle)
+	localmake "sideHeight :size1 - :size3 - :gapWidth / 2 / sin :angle
+	localmake "baseWidth :sideHeight * 2 * sin :angle
+	jumpForward :height - :radius
+	jumpRight :height * 0.0614
+	setPenSize 0
+	setFillColor "#E22E2F
+	circle :radius
+	jumpTo :oldPos
+	setFillColor "black
+	jumpRight :height * 0.506
+	repeat 2 [
+		localmake "pos1 pos
+		left :angle
+		polyStart
+		jumpForward :size1
+		setHeading :oldHeading
+		jumpLeft :size2
+		left 180 - :angle
+		jumpForward :size3
+		setHeading :oldHeading + 180 - :angle
+		jumpForward :size4
+		polyEnd
+		setHeading :oldHeading
+		jumpTo :pos1
+		jumpLeft :separation
+	]
+	jumpLeft :baseWidth / 2
+	isoTriangle :baseWidth :baseWidth / 2 / tan :angle
+	setTurtleState :oldState
+end
+
+magnaLogo 100

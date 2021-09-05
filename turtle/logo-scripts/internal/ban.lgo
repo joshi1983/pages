@@ -1,0 +1,24 @@
+; makes transparent colours more obvious
+; in color selector dialog.
+; output to images/icons/ban.svg and
+; images/icons/ban-white.svg
+
+to ban :size
+	localmake "oldHeading heading
+	localmake "oldPos pos
+	localmake "penSize1 :size * 0.2
+	localmake "radius :size - :penSize1
+	setPenSize :penSize1
+	circle :radius
+	penUp
+	left 45
+	forward :radius
+	penDown
+	back :radius * 2
+	penUp
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+setScreenColor transparent
+ban 32

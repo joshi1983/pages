@@ -1,0 +1,204 @@
+; Inspired by
+; https://www.pinterest.ca/pin/1477812369590902
+
+to filledSquare :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "halfSize :size * 0.5
+	jumpForward :halfSize
+	jumpRight :halfSize
+	right 180
+	setPenSize 0
+	polyStart
+	repeat 3 [
+		forward :size
+		right 90
+	]
+	polyEnd
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to tableWithSeats :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	setFillColor "black
+	filledSquare :size * 1.05
+	repeat 4 [
+		right 90
+		jumpForward :size * 0.84
+		filledSquare :size * 0.32
+		jumpTo :oldPos
+	]
+	setHeading :oldHeading
+end
+
+to triangleInCircles :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "bigCircleRadius :size * 0.6
+	localmake "triangleSideLength :bigCircleRadius * 2 * sin 60
+	setFillColor "black
+	circle :bigCircleRadius
+	repeat 3 [
+		jumpForward :size * 0.83
+		circle :size * 0.17
+		right 360 / 3
+		jumpTo :oldPos
+	]
+	; draw white triangle
+	setFillColor "white
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :bigCircleRadius
+	right 150
+	polyStart
+	repeat 2 [
+		forward :triangleSideLength
+		right 360 / 3
+	]
+	polyEnd
+	setHeading :oldHeading
+	jumpTo :oldPos
+end
+
+to filledDiamond :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angle1 70
+	localmake "length :size / cos (:angle1 * 0.5)
+	localmake "angle2 180 - :angle1
+	jumpForward :size
+	right 180 - :angle1 * 0.5
+	polyStart
+	forward :length
+	right 180 - :angle2
+	forward :length
+	right 180 - :angle1
+	forward :length
+	right :angle2
+	polyEnd
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to tableWithSeats2 :size
+	localmake "oldPos pos
+	localmake "size1 :size * 0.65
+	localmake "xScale :size1 * sin 70
+	localmake "yScale :size1
+	setFillColor "black
+	filledDiamond :size * 0.8
+	repeat 4 [
+		ifelse even? repcount [
+			localmake "x 1
+		] [
+			localmake "x -1
+		]
+		ifelse even? int repcount / 2  [
+			localmake "y 1
+		] [
+			localmake "y -1
+		]
+		jumpRight :x * :xScale
+		jumpForward :y * :yScale
+		filledDiamond :size * 0.3
+		jumpTo :oldPos
+	]
+end
+
+to squaresWithTarget :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "size1 :size * 0.22
+	setPenSize :size1
+	setPenColor "black
+	setFillColor transparent
+	circle :size * 0.6
+	right 45
+	setPenColor "white
+	jumpForward :size
+	backward :size * 2
+	jumpTo :oldPos
+	setPenSize 0
+	setFillColor "black
+	circle :size1
+	repeat 4 [
+		jumpForward :size * 0.9
+		filledSquare :size1
+		jumpTo :oldPos
+		right 90
+	]
+	setHeading :oldHeading
+end
+
+to filledEquilateralTriangle :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	jumpForward :size * sin 30
+	right 150
+	polyStart
+	repeat 2 [
+		forward :size
+		right 120
+	]
+	polyEnd
+	setHeading :oldHeading
+	jumpTo :oldPos
+end
+
+to circlesInTriangles :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "tinyRadius :size * 0.2
+	localmake "mediumRadius :size * 0.35
+	localmake "arcRadius :size * 0.5
+	localmake "triangleLength1 :arcRadius * tan 60
+
+	; draw the circles in the center
+	setPenSize 0
+	setFillColor "black	
+	circle :tinyRadius
+	setPenSize :size * 0.02
+	setPenColor "black
+	setFillColor transparent
+	circle :mediumRadius
+	setFillColor "black
+	setPenSize 0
+
+	; draw the triangles nearest the circles
+	repeat 3 [
+		setHeading :oldHeading - 60 + (repcount - 1) * 360 / 3
+		jumpForward :arcRadius
+		right 90
+		polyStart
+		arcRight 360 / 3 :arcRadius
+		left 180
+		forward :triangleLength1
+		left 120
+		polyEnd
+		jumpTo :oldPos
+	]
+	; draw the little triangles
+	setHeading :oldHeading - 60
+	repeat 3 [
+		jumpForward :size * 0.75
+		filledEquilateralTriangle :size * 0.4
+		right 360 / 3
+		jumpTo :oldPos
+	]
+	setHeading :oldHeading
+end
+
+make "size 50
+make "separation :size * 4
+jumpLeft :separation * 2
+tableWithSeats :size
+jumpRight :separation
+triangleInCircles :size
+jumpRight :separation
+tableWithSeats2 :size
+jumpRight :separation
+squaresWithTarget :size
+jumpRight :separation
+circlesInTriangles :size

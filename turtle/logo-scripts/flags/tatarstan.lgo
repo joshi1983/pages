@@ -1,0 +1,18 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Tatarstan#/media/File:Flag_of_Tatarstan.svg
+to tatarstanFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 2
+	localmake "height2 :height * 0.466
+	localmake "colors ["red "#008000]
+	stripes :width :height ["white]
+	repeat count :colors [
+		stripes :width :height2 [item repcount :colors]
+		jumpForward :height
+		right 180
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "#ddd
+tatarstanFlag 100

@@ -1,0 +1,29 @@
+; Inspired by
+; https://www.pinterest.ca/pin/862228291172185009/
+to googleGLogo :scale
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "size1 20 * :scale
+	localmake "arcRadius 50 * :scale - 0.5 * :size1
+	localmake "angle1 45 + arcSin (:size1 * 0.5 / (:arcRadius + :size1 * 0.5))
+	localmake "size2 (:arcRadius + :size1 * 0.5) * sin 135 - :angle1
+
+	right 45
+	jumpForward :arcRadius
+	setPenSize :size1
+	setLineCap "butt
+	left 90
+	setPenColor "#eb4335
+	arcLeft 90 :arcRadius
+	setPenColor "#fbbc05
+	arcLeft 90 :arcRadius
+	setPenColor "#34a853
+	arcLeft 90 :arcRadius
+	setPenColor "#4285f4
+	arcLeft :angle1 :arcRadius
+	jumpTo :oldPos
+	setHeading :oldHeading + 90
+	forward :size2
+end
+
+googleGLogo 1

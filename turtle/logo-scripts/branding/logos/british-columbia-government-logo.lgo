@@ -1,0 +1,66 @@
+to drawSunRays :radius
+	localmake "oldState turtleState
+	left 69.6
+	repeat 7 [
+		repeat 4 [
+			stripes :radius * 0.01 :radius [fillColor]
+			right 2.5
+		]
+		right 5
+		isoTriangle :radius * 0.1 :radius * 0.87
+		right 7
+	]	
+
+	setTurtleState :oldState
+end
+
+to drawMountains :radius
+	localmake "oldState turtleState
+	localmake "center pos
+	setFillColor "#234075
+	left 78
+	jumpForward :radius
+	localmake "startPos pos
+	polyStart
+	arcLines [[-144 0] [0.23] [-53 0] [13 0.6] [45 0]
+		[0.08] [-75 0] [0.11] [7.8 0] [0.255] [68 0]
+		[0.2] [5 0] [0.16] [-71 0] [0.16] [27 0] [0.085]
+		[-28 0] [0.107] [70.5 0] [0.31] [-55 0] [0.12]
+		[57 0] [0.19] [-64 0]] :radius
+	jumpForward distanceToCircle :center :radius
+	setHeading (towards :center) - 90
+	arcLines [[-23.7 1] [-51 0] [-40 1.25] [0.6]] :radius
+	localmake "arcRadius :radius * 1.4
+	localmake "arcAngle getArcLeftAngleToCircle :arcRadius :center :radius
+	arcLeft :arcAngle :arcRadius
+	localmake "arcAngle 2 * arcSin (distance :startPos) / 2 / :radius
+	setHeading (towards :startPos) - :arcAngle / 2
+	arcRight :arcAngle :radius
+	polyEnd
+
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://www2.gov.bc.ca
+to britishColumbiaLogo :height
+	localmake "oldState turtleState
+	localmake "bcOrange "#e3a82b
+	localmake "offsetY :height * 0.25
+	localmake "radius :height - :offsetY
+	jumpForward :offsetY
+	setFillColor :bcOrange
+	setPenSize 0
+	drawArcLineShape [1 0
+		[[180 1]]
+	] :radius - penSize / 2
+	setFillColor "white
+	drawArcLineShape [1 0
+		[[180 1]]
+	] :height * 0.38
+	drawSunRays :radius * 0.98
+	drawMountains :radius
+	setTurtleState :oldState
+end
+
+britishColumbiaLogo 100

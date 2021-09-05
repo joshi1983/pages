@@ -1,0 +1,68 @@
+; Inspired by:
+; https://upload.wikimedia.org/wikipedia/commons/a/a2/Flag_of_Saint_David.svg
+to saintDavidFlag :height
+	localmake "oldPos pos
+	localmake "width :height * 5 / 3
+	localmake "thickness :height / 6
+	localmake "davidYellow "#ffd619
+	stripes :width :height ["black]
+	stripes :thickness :height [:davidYellow]
+	jumpForward (:height - :thickness) / 2
+	stripes :width :thickness [:davidYellow]
+	jumpTo :oldPos
+end
+
+to drawFlower :radius :centerColor
+	localmake "oldState turtleState
+	localmake "arcs [[180 / 5 0] [0.395] [-90 0] [98 0.04] [0.07] [-90 0.195] [-9 0.55]
+		[18 0.36] [5 2.062403045] [-58 0.025]]
+	localmake "shape [0 0
+		combine :arcs reverse :arcs
+	]
+	repeat 5 [
+		drawArcLineShape :shape :radius
+		right 360 / 5
+	]
+	setFillColor :centerColor
+	circle :radius * 0.102
+	setTurtleState :oldState
+end
+
+; Inspired by:
+; https://en.wikipedia.org/wiki/Diocese_of_St_Davids#/media/File:Flag_of_the_Diocese_of_St_Davids.svg
+to dioceseOfSaintDavidFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 5 / 3
+	localmake "thickness :height * 0.2572
+	localmake "davidYellow "#eac102
+	localmake "xSeparation :width * 7 / 24
+	localmake "ySeparation :height * 2/3
+	localmake "flowerSize :height * 0.11
+	stripes :width :height ["black]
+	stripes :thickness :height [:davidYellow]
+	jumpForward (:height - :thickness) / 2
+	stripes :width :thickness [:davidYellow]
+	jumpForward :thickness / 2
+	localmake "center pos
+	jumpLeft :xSeparation
+	setPenSize 0
+	setFillColor "black
+	repeat 3 [
+		drawFlower :flowerSize :davidYellow
+		jumpRight :xSeparation
+	]
+	jumpTo :center
+	jumpBackward :ySeparation / 2
+	repeat 2 [
+		drawFlower :flowerSize :davidYellow
+		jumpForward :ySeparation
+	]
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 5
+jumpLeft :separation / 2
+saintDavidFlag :height
+jumpRight :separation
+dioceseOfSaintDavidFlag :height

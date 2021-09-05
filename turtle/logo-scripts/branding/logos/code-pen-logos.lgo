@@ -1,0 +1,59 @@
+; Inspired by logo at
+; https://codepen.io
+to codePenLogoCustomColor :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "slantedLen :height * 0.55
+	localmake "angle1 34
+	localmake "angle2 22
+	localmake "height1 :height * 0.3049
+	localmake "topPoints []
+	setLineCap "round
+	setLineJoinStyle "round
+	setPenSize :height * 0.08
+	jumpForward penSize / 2
+	setFillColor transparent
+	left :angle1
+	jumpRight :slantedLen / 2
+	; draw bottom
+	parallelogram :slantedLen :slantedLen -:angle2
+	setHeading :oldHeading
+	jumpForward :height1
+	left :angle1
+	; Draw top
+	parallelogram :slantedLen :slantedLen -:angle2
+	jumpRight :slantedLen / 2
+	queue2 "topPoints pos
+	jumpLeft :slantedLen
+	queue2 "topPoints pos
+	left :angle2
+	jumpForward :slantedLen
+	queue2 "topPoints pos
+	right :angle2
+	jumpRight :slantedLen
+	queue2 "topPoints pos
+	setHeading :oldHeading
+	repeat count :topPoints [
+		jumpTo item repcount :topPoints
+		backward :height1
+	]
+	setTurtleState :oldState
+end
+
+to codePenLogoBlack :height
+	setPenColor "black
+	codePenLogoCustomColor :height
+end
+
+to codePenLogoWhite :height
+	setPenColor "white
+	stripes :height * 3 :height ["black]
+	codePenLogoCustomColor :height
+end
+
+make "height 100
+make "separation :height * 5
+jumpLeft :separation * 0.5
+codePenLogoBlack :height
+jumpRight :separation
+codePenLogoWhite :height

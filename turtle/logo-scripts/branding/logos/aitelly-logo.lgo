@@ -1,0 +1,26 @@
+; Inspired by logo at:
+; https://www.youtube.com/@Aitelly
+to aiTellyLogo :height
+	localmake "oldState turtleState
+	localmake "maxRadius :height / 2
+	localmake "radii [1 0.645 0.43 0.245 0.16]
+	localmake "aiTellyYellow "#ffd305
+	jumpForward :height / 2
+	setPenSize 0
+	repeat count :radii [
+		localmake "radiusRatio item repcount :radii
+		setFillColor ifelse odd? repcount "black :aiTellyYellow
+		circle :maxRadius * :radiusRatio
+	]
+	left 48.6
+	jumpForward :height * 0.3
+	setPenSize :height * 0.02
+	setPenColor :aiTellyYellow
+	forward :height * 0.145
+	setPenSize 0
+	setFillColor penColor
+	circle :height * 0.02
+	setTurtleState :oldState
+end
+
+aiTellyLogo 100

@@ -1,0 +1,67 @@
+to drawRobloxSquare :height
+	localmake "oldState turtleState
+	localmake "oldPenSize penSize
+	localmake "oldPenColor penColor
+	localmake "thickness :height * 0.38
+	localmake "thickSquareSize :height - :thickness
+	setLineJoinStyle "miter
+	setPenSize :thickness
+	setPenColor "white
+	square :thickSquareSize
+
+	setPenSize :oldPenSize
+	setPenColor :oldPenColor
+	localmake "squareSize :height - penSize
+	square :squareSize
+	
+	localmake "squareSize :squareSize - :thickness * 2
+	square :squareSize
+
+	setTurtleState :oldState
+end
+
+to drawPencil :height
+	localmake "oldState turtleState
+	localmake "widthFactor 0.45
+	localmake "height1 :height - penSize
+	localmake "vHeightFactor 1 - :widthFactor / 2 / cos 45
+	localmake "straightHeightFactor :vHeightFactor / cos 45
+	localmake "outlines [
+		[:widthFactor / 2 / cos 45] [-45 0]
+		[:straightHeightFactor] [-90 0]
+		[:widthFactor / 2]
+	]
+	setFillColor "white
+	setLineJoinStyle "round
+	jumpForward penSize / 2
+	drawArcLineShape [0 0
+		combine :outlines reverse :outlines
+	] :height1
+	right 45
+	jumpForward :height1 * 0.905
+	stripes :widthFactor * :height1 penSize [penColor]
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://roblox.fandom.com/wiki/Roblox_Studio
+to robloxFandomWikiLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "squareHeight :height * 0.755
+	localmake "squareAngle 14.5
+	setPenColor "#db2718
+	setPenSize :height * 0.043
+	jumpForward :height - :squareHeight / 2 / (cos 45) * (sin 45 + :squareAngle)
+	jumpLeft :height * 0.01
+	right :squareAngle
+	drawRobloxSquare :squareHeight
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	drawPencil :height * 0.585
+	setTurtleState :oldState
+end
+
+robloxFandomWikiLogo 100

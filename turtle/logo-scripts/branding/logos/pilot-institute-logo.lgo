@@ -1,0 +1,85 @@
+to drawWings :height :linePos1 :linePos2
+	localmake "oldState turtleState
+	localmake "angle1 45
+	localmake "line [
+		[-:angle1 0.165] [0.115] [:angle1 - 180 0.027]
+	]
+	setPenSize 0
+	setFillColor "#F80590
+	jumpTo :linePos1
+	setHeading towards :linePos2
+	localmake "oldHeading heading
+	jumpForward :height * 0.2545
+	repeat 2 [
+		localmake "startPos pos
+		polyStart
+		arcLines [[90 0] [mix 0.313 0.395 repRatio]] :height
+		arcLines :line :height
+		jumpForward distanceToLine :linePos1 :linePos2
+		polyEnd
+		jumpTo :startPos
+		setHeading :oldHeading
+		jumpBackward :height * 0.2
+	]
+	jumpTo :linePos1
+	polyStart
+	right 180
+	arcLines [[0.017] [40 0.08] [6 1]] :height
+	setHeading :oldHeading - 90
+	arcLines [[0.275]] :height
+	arcLines :line :height
+	jumpForward distanceToLine :linePos1 :linePos2
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by a logo at:
+; https://pilotinstitute.com
+to pilotInstituteLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "thickness :height * 0.09
+	localmake "offset :height * 0.13
+	localmake "angle1 37
+	localmake "topLines [
+		[90 0] [:angle1 0.6] [90 - :angle1 0] [0.1]
+	]
+	localmake "bottomLines [
+		[-45 0.2] [-19 0.6] [0.155]
+	]
+	localmake "shieldHeight1 0.36
+	jumpRight :offset
+
+	localmake "middleBottom pos
+	jumpForward :height * 0.517
+	setFillColor "#2198FF
+	setPenSize 0
+	roundIsoStar :height * 0.265 :height * 0.135 5 :height * 0.022 0
+	setPenColor fillColor
+	setLineCap "round
+	setLineJoinStyle "round
+	setPenSize :thickness
+
+	jumpTo :middleBottom
+	jumpForward :height - penSize / 2
+	localmake "middle turtleState
+	arcLines :topLines :height
+	setTurtleState :middle
+	arcLines :topLines -:height
+	forward :height * :shieldHeight1
+	setLineJoinStyle "miter
+	setLineCap "butt
+	arcLines :bottomLines :height
+	localmake "newHeading heading - :oldHeading
+	setHeading 180 + :oldHeading - :newHeading
+	arcLines reverse :bottomLines :height
+	jumpRight penSize / 2
+	localmake "linePos1 pos
+	jumpForward :height
+	localmake "linePos2 pos
+
+	drawWings :height :linePos1 :linePos2
+	setTurtleState :oldState
+end
+
+pilotInstituteLogo 100

@@ -1,0 +1,59 @@
+; Inspired by logo at
+; https://commons.wikimedia.org/wiki/Commons:Welcome
+; The biggest difference is in the arrow at the top.
+; The real logo has a lot of curves that look hand drawn.
+; The wikimediaCommonsLogo procedure draws a top arrow using an
+; isosceles triangle with no curves
+; The arrow in the real logo also points a bit off to the left.
+; The procedure points exactly straight up.
+to wikimediaCommonsLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "centerOffset :height * 0.368
+	localmake "largeArrowThickness :height * 0.105
+	localmake "narrowArrowThickness :height * 0.021
+	localmake "radius1 :centerOffset - :largeArrowThickness / 2
+
+	; :anglePad is an angle such that it lines up
+	; at the innermost part of the upper-left end of the arc
+	; with the side of the arrow.
+	localmake "anglePad arcSin :narrowArrowThickness / 2 / (:radius1 - :largeArrowThickness / 2) 
+	localmake "overlapSize :height * 0.01
+	jumpForward :centerOffset
+	localmake "center pos
+	setPenSize 0
+	setFillColor "#970000
+	circle :height * 0.122
+	left 45 - :anglePad
+	jumpForward :radius1
+	setPenSize :largeArrowThickness
+	setLineCap "butt
+	setPenColor "#006499
+	left 90
+	arcLeft 270 + :anglePad :radius1
+	arcLeft 25 :height * 0.2
+	arcRight 10 :height * 0.6
+	arcRight 60 :height * 0.14
+
+	; a little overlap with the triangle
+	; This is to prevent little artifacts on
+	; the fringe between the two shapes
+	forward :overlapSize
+	jumpBackward :overlapSize
+
+	setPenSize 0
+	setFillColor penColor
+	isoTriangle :largeArrowThickness * 2 :height * 0.1969468
+
+	setPenSize :narrowArrowThickness
+	repeat 7 [
+		jumpTo :center
+		setHeading :oldHeading - repcount * 45
+		jumpForward :radius1
+		right 180
+		arrow :height * 0.18 30 :height * 0.04
+	]
+	setTurtleState :oldState
+end
+
+wikimediaCommonsLogo 100

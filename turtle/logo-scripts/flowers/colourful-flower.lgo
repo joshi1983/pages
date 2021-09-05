@@ -1,0 +1,39 @@
+; Inspired by image at:
+; https://www.iconarchive.com/show/style-4-megapack-icons-by-hamzasaleem/Preview-icon.html
+to colorfulFlower :height
+	localmake "oldState turtleState
+	localmake "colors [
+		"orange "orange "green "green "navy "purple "red "red
+	]
+	localmake "petalThickness :height * 0.3
+	localmake "innerChordLength :petalThickness / 2 / cos 45
+	localmake "innerChordLength2 :innerChordLength / 2 / cos 45 / 2
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize :petalThickness
+	setLineCap "round
+	repeat count :colors [
+		setPenColor mix (item repcount :colors) transparent 0.55
+		jumpForward penSize / 2
+		forward :height / 2 - penSize
+		jumpTo :center
+		right 360 / count :colors
+	]
+	setPenSize 0
+	setFillColor "#8000
+	repeat count :colors [
+		arcPair :innerChordLength 360 * 2 / count :colors
+		right 360 / count :colors
+	]
+	right 180 / count :colors
+	setFillColor "black
+	repeat count :colors [
+		arcPair :innerChordLength2 360 / count :colors
+		right 360 / count :colors
+	]
+	setFillColor "white
+	circle :height * 0.055
+	setTurtleState :oldState
+end
+
+colorfulFlower 100

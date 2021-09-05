@@ -1,0 +1,106 @@
+make "arcAngle1 113
+make "arcAngle2 53
+
+to drawWoodFloor :radius
+	localmake "oldState turtleState
+	localmake "center pos
+	localmake "arcAngle3 47
+	localmake "len1 :radius * 2 * cos :arcAngle3 / 2
+	localmake "slicesInfo [
+		0.33 -0.25 0.57 -0.59 0.06
+	]
+	localmake "boardsWidth (2 * :radius * sin :arcAngle3 / 2) - penSize / 2
+	localmake "boardWidth :boardsWidth / count :slicesInfo
+	jumpBackward :radius
+	right 90
+	penUp
+	arcLeft :arcAngle1 - :arcAngle2 :radius
+	right 180
+	polyStart
+	arcRight :arcAngle3 / 2 :radius
+	localmake "heading1 towards :center
+	arcRight :arcAngle3 / 2 :radius
+	localmake "pos2 pos
+	setHeading :heading1
+	jumpForward :len1
+	right 90 - :arcAngle3 / 2
+	arcRight :arcAngle3 :radius
+	polyEnd
+	penDown
+	arcRight :arcAngle1 - :arcAngle3 :radius
+
+	; Draw the wood floor pattern.
+	jumpTo :pos2
+	setHeading :heading1
+	jumpForward :len1 / 2
+	right 90
+	setPenSize penSize / 2
+	repeat count :slicesInfo [
+		localmake "slicePos item repcount :slicesInfo
+		localmake "size :slicePos * :radius 
+		jumpRight :size
+		forward :boardWidth
+		jumpLeft :size
+	]
+	localmake "lineThickness penSize
+	localmake "offset :boardWidth / 2 * ((count :slicesInfo) - 1)
+	repeat (count :slicesInfo) - 1 [
+		setPenSize 2 * sqrt :radius * :radius - :offset * :offset
+		jumpBackward :boardWidth - :lineThickness
+		backward :lineThickness
+		localmake "offset :offset - :boardWidth
+	]
+	setTurtleState :oldState
+end
+
+to sugarSwingCommunityOfJazzLogoCustomizable :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "oldPos pos
+	localmake "thicknessRatio 0.025
+	localmake "thickness1 :height * :thicknessRatio
+	localmake "radius1 (:height - :thickness1) / 2
+	setPenSize 0
+	jumpForward :height / 2
+	localmake "center pos
+	jumpTo :oldPos
+	setLineCap "butt
+	setLineJoinStyle "miter
+	jumpForward :thickness1 / 2
+	left 90
+	arcRight :arcAngle2 :radius1
+	right 180
+	setPenSize :thickness1
+	setPenColor "black
+	arcLeft :arcAngle1 :radius1
+
+	jumpTo :center
+	setHeading :oldHeading
+	drawWoodFloor :radius1
+	setTurtleState :oldState
+end
+
+; Inspired by logo shown at
+; https://www.sugarswing.com/
+to sugarSwingBallroomLogo :height
+	localmake "oldState turtleState
+	setFillColor "#e9184e
+	sugarSwingCommunityOfJazzLogoCustomizable :height
+	setTurtleState :oldState
+end
+
+; Inspired by logoshown at
+; https://www.sugarswingcommunity.com/
+to sugarSwingCommunityOfJazzMonochromeLogo :height
+	localmake "oldState turtleState
+	setFillColor transparent
+	sugarSwingCommunityOfJazzLogoCustomizable :height
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 3
+jumpLeft :separation / 2
+sugarSwingBallroomLogo :height
+jumpRight :separation
+sugarSwingCommunityOfJazzMonochromeLogo :height

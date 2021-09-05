@@ -1,0 +1,56 @@
+; The raster/pixel pattern of the cat
+; represented in an ASCII-art-like format
+make "bitmap [
+'#-#---#'
+'###---#'
+'###--#'
+'#####'
+'-####'
+'-#--#']
+make "darkColor "#6767b2
+make "halfWidth 0
+repeat count :bitmap [
+	make "halfWidth max :halfWidth count item repcount :bitmap
+]
+make "halfWidth :halfWidth / 2
+
+; Inspired by logo at:
+; https://www.make.bitsy.org
+to bitsyCatLogoCustomColor :height
+	localmake "oldPos pos
+	localmake "squareSize :height / count :bitmap
+	jumpForward :height - :squareSize
+	jumpLeft :halfWidth * :squareSize
+	repeat count :bitmap [
+		localmake "lineStartPos pos
+		localmake "line item repcount :bitmap
+		repeat count :line [
+			localmake "filled? '#' = item repcount :line
+			if :filled? [
+				stripes :squareSize :squareSize [penColor]
+			]
+			jumpRight :squareSize
+		]
+		jumpTo :lineStartPos
+		jumpBackward :squareSize
+	]
+	jumpTo :oldPos
+end
+
+to bitsyCatLogoDarkForeground :height
+	setPenColor :darkColor
+	bitsyCatLogoCustomColor :height
+end
+
+to bitsyCatLogoDarkBackground :height
+	stripes :height * 3 :height [:darkColor]
+	setPenColor "white
+	bitsyCatLogoCustomColor :height
+end
+
+make "height 100
+make "separation :height * 5
+jumpLeft :separation * 0.5
+bitsyCatLogoDarkForeground :height
+jumpRight :separation
+bitsyCatLogoDarkBackground :height

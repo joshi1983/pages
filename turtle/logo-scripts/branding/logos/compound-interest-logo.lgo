@@ -1,0 +1,65 @@
+make "ciGreen "#91c24f
+
+to drawC :fontHeight
+	localmake "arcs1 [
+		[-40 0.28] [-16 0.19] [-86.3 0.267] [142.3 0]
+		[0.292] [66 0] [30 0.55] [84 0.496549905]
+	]
+	localmake "shape [-0.123 0.5
+		combine :arcs1 reverse :arcs1
+	]
+	drawArcLineShape :shape :fontHeight
+end
+
+to drawI :fontHeight
+	localmake "oldState turtleState
+	jumpForward :fontHeight * 0.03
+	stripes :fontHeight * 0.225 :fontHeight * 0.64 [fillColor]
+	setFillColor :ciGreen
+	jumpForward :fontHeight * 0.885
+	circle :fontHeight * 0.14
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://www.compoundchem.com
+; The logo is also shown at:
+; https://www.instagram.com/compoundchem
+; and
+; https://x.com/compoundchem
+to compoundInterestLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "darkColor "#384052
+	localmake "colorStops createPList2 [
+		[0 "#f4a707] [0.005 :darkColor]
+		[0.995 :darkColor] [1 :ciGreen]
+	]
+	localmake "stripeWidth :height * 0.53
+	localmake "fontHeight :height * 0.385
+	setPenSize 0
+	jumpForward :height / 2
+	localmake "center pos
+	left 45
+	jumpBackward :stripeWidth / 2
+	localmake "fromPos pos
+	jumpForward :stripeWidth
+	setPenGradient createLinearGradient :fromPos pos :colorStops "pad
+	setFillColor transparent
+	jumpTo :center
+	setPenSize :height * 0.07
+	circle (:height - penSize) / 2	
+	setFillColor :darkColor
+	setPenSize 0
+	circle :height * 0.352
+	setHeading :oldHeading
+	jumpBackward :fontHeight * 0.48
+	jumpLeft :fontHeight * 0.25
+	setFillColor "white
+	drawC :fontHeight
+	jumpRight :fontHeight * 0.589
+	drawI :fontHeight
+	setTurtleState :oldState
+end
+
+compoundInterestLogo 100

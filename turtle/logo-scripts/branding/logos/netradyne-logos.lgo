@@ -1,0 +1,55 @@
+; Inspired by logo at
+; https://www.netradyne.com
+
+to netradyneLogoCustomColor :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "maxPenSize :height * 0.05
+	localmake "minPenSize :height * 0.015
+	localmake "width1 :height * 0.95
+	localmake "numV 7
+	jumpLeft :width1 / 2
+	jumpForward :maxPenSize / 2
+	localmake "bottomLeft pos
+	jumpRight :width1
+	localmake "lowerRight pos
+	setLineCap "round
+	setLineJoinStyle "round
+	repeat :numV [
+		jumpTo :bottomLeft
+		localmake "thickness mix :minPenSize :maxPenSize repRatio
+		localmake "dy :height - :thickness
+		localmake "dx repRatio * :width1
+		localmake "angle arcTan :dx / :dy
+		localmake "len1 hypot [:dx :dy]
+		setPenSize :thickness
+		setHeading :oldHeading + :angle
+		jumpRight (:maxPenSize - :thickness) / 2
+		forward :len1
+		localmake "topPos pos
+		jumpTo :lowerRight
+		setHeading towards :topPos
+		jumpRight (:maxPenSize - :thickness) / 2
+		setHeading towards :topPos
+		forward distance :topPos
+	]
+	setTurtleState :oldState
+end
+
+to netradyneGreenLogo :height
+	setPenColor "#3DB174
+	netradyneLogoCustomColor :height
+end
+
+to netradyneWhiteLogo :height
+	setPenColor "white
+	netradyneLogoCustomColor :height
+end
+
+setScreenColor "black
+make "height 100
+make "separation :height * 5
+jumpLeft :separation * 0.5
+netradyneGreenLogo :height
+jumpRight :separation
+netradyneWhiteLogo :height

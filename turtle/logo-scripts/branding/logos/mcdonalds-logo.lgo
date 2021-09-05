@@ -1,0 +1,38 @@
+; Inspired by
+; https://commons.wikimedia.org/wiki/File:McDonald%27s_Golden_Arches.svg
+;
+; The following can help constructing an old version of the McDonalds logo:
+; https://ca.pinterest.com/pin/576601558560946923
+to mcDonaldsLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "outerArcsInfo1 [
+		[10 2.9] [10 1.51] [10 0.77] [15 0.37] [20 0.167] [20 0.116] [15 0.1]
+		[20 0.138] [10 0.18] [10 0.26] [10 0.41] [10 0.77] [4.16 1.4]
+	]
+	localmake "innerArcsInfo [
+		[7 4.5] [10 1.45] [5 0.55] [10 0.33] [20 0.105] [20 0.05] [40 0.0365]
+		[20 0.065] [15 0.12] [10 0.285] [10 0.7] [10 2.33] [2.46 6]
+	]
+	localmake "outerAngle sumOfFirsts :outerArcsInfo1
+	localmake "innerAngle sumOfFirsts :innerArcsInfo
+	localmake "outerArcsInfo :outerArcsInfo1
+	jumpLeft :height * 0.5719788
+	setFillColor "#fc0
+	setPenSize 0
+	polyStart
+	arcsRight :outerArcsInfo :height
+	setHeading :oldHeading + (180 - :outerAngle) ; point of symmetry
+	arcsRight reverse :outerArcsInfo :height
+	setHeading :oldHeading
+	jumpLeft :height * 0.1426
+	arcsLeft :innerArcsInfo :height
+	setHeading :oldHeading
+	jumpLeft :height * 0.1429437
+	setHeading :oldHeading - (180 - :innerAngle)
+	arcsLeft reverse :innerArcsInfo :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+mcDonaldsLogo 100

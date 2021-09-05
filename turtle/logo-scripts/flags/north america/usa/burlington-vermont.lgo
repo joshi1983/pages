@@ -1,0 +1,34 @@
+to drawWave :width :thickness :color
+	localmake "oldState turtleState
+	localmake "angle 30
+	localmake "slantedParallelogramHeight :width / 4 / :thickness / cos :angle / 2
+	localmake "lines1 [
+		[:slantedParallelogramHeight] [-:angle 0]
+		[:slantedParallelogramHeight] [:angle 0]
+	]
+	localmake "lines1 concat :lines1 :lines1
+	setPenSize 0
+	setFillColor :color
+	drawArcLineShape [-:width / :thickness / 2 
+	0.5 - :slantedParallelogramHeight / 2 * sin :angle / 2
+		(combine [[:angle / 2 - 90 0]] :lines1 [[-90 - :angle / 2 0] [1] [-90 - :angle / 2 0]]
+		flipAngles :lines1)
+	] :thickness
+
+	setTurtleState :oldState
+end
+
+; Inspired by flag at:
+; https://en.wikipedia.org/wiki/Flag_of_Burlington,_Vermont#/media/File:Flag_of_Burlington,_Vermont.svg
+to burlingtonVermontFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 3 / 2
+	stripes :width :height ["#1d4395]
+	jumpForward :height / 2
+	drawWave :width :height * 0.6 "white 
+	drawWave :width :height * 0.2 "#6db244
+	setTurtleState :oldState
+end
+
+setScreenColor "#ddd
+burlingtonVermontFlag 100

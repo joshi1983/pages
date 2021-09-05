@@ -1,0 +1,25 @@
+!
+!  TTEST2MP. Use T-test and Confidence Interval for matched pairs
+!  to test whether marijuana cigarettes change intellectual
+!  performance more than tobacco cigarettes.
+!  Data from "Beginning Statistics with Data Analysis" by F. Mosteller, p. 277.
+!
+LIBRARY "Stat1Lib.trc"
+
+DIM a(9), b(9)
+
+MAT READ a, b
+DATA -3,  10, -3,  3,  4, -3,  2, -1, -1    ! Change after tobacco
+DATA  5, -17, -7, -3, -7, -9, -6,  1, -3    ! ...after marijuana
+
+CALL Ttest2MP (a, b, 0, 0, t, p, mean, se, df)
+PRINT "Difference mean: "; mean
+PRINT "T statistic: "; t
+PRINT "Standard error: "; se
+
+CALL Confint2MP (a, b, .95, left, right, se, df)
+PRINT "95% confidence limits: "; left; right
+
+PRINT "Probability (1-tailed): "; Using$("#.###", p/2)
+
+END

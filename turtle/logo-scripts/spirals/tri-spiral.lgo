@@ -1,0 +1,29 @@
+; Inspired by
+; https://www.pinterest.ca/pin/422281210383778/
+to triSpiral :height
+	localmake "oldState turtleState
+	localmake "shrinkFactor cos 30
+	localmake "numTriangles 30
+	setPenSize :height * 0.002
+	localmake "triHeight (:height - penSize) / (1 + (power :shrinkFactor 4))
+	setLineCap "round
+	setLineJoinStyle "round
+	jumpForward penSize / 2
+	repeat :numTriangles [
+		localmake "triWidth 2 * :triHeight * tan 30
+		setFillColor transparent
+		isoTriangle :triWidth :triHeight
+		localmake "trapHeight penSize * 3
+		localmake "trapEndWidth :triWidth - :trapHeight * 2 * tan 30
+		setFillColor "black
+		isoTrapezoid :triWidth :trapEndWidth :trapHeight
+		jumpRight :triWidth / 2
+		left 30
+		localmake "newTriHeight :triHeight * :shrinkFactor
+		jumpForward :triHeight / (cos 30) - :newTriHeight
+		localmake "triHeight :newTriHeight
+	]
+	setTurtleState :oldState
+end
+
+triSpiral 100

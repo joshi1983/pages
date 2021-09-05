@@ -1,0 +1,52 @@
+; Inspired by a Tektronix 4051 BASIC program at:
+; https://www.facebook.com/share/p/1EUCWhxvtw
+;
+; Brad Srebnik shared that facebook post.
+; Brad also made a simulator of
+; the Tektronix computer demonstrated at:
+; https://www.youtube.com/watch?v=a94uJjTOjTY
+to tektronixSpiral :height :timeRatio
+	localmake "oldState turtleState
+	localmake "numIterations 200 * :timeRatio
+	setPenSize :height * 0.005
+	setPenColor "lime
+	setLineJoinStyle "miter
+	setLineCap "butt
+	repeat :numIterations [
+		forward repcount / 2.5
+		setHeading -repcount * (88 + 4 * (repcount * repcount / 10000))
+	]
+	setPenSize 0
+	setFillColor "red
+	if :timeRatio > 0.9 [
+		setFillColor mix fillColor transparent clamp (1 - :timeRatio) / 0.1 0 1
+	]
+	circle :height * mix 0.01 0.003 :timeRatio 
+
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+make "timeRatio interpolateRatio easeInOut animation.timeRatio
+tektronixSpiral 100 :timeRatio
+
+to animation.snapshotstyle
+	localmake "box drawing.box
+	localmake "minY getProperty "box "minY
+	localmake "maxY getProperty "box "maxY
+	localmake "range max 1 :maxY - :minY
+	localmake "scale min 20 600 / :range
+	output createPList2 [
+		["zoom.scale :scale]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 10
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+		["thumbnailTime 5]
+	]
+end

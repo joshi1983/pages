@@ -1,0 +1,58 @@
+make "longHornRed "#de4e05
+
+to longhornLogoBackground :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "colorStops createPList2 [
+		[0 "#d8b858] [1 "#e7c96d]
+	]
+	jumpForward :height
+	setFillGradient createLinearGradient :oldPos pos :colorStops "pad
+	jumpBackward :height / 2
+	setPenSize :height * 0.01
+	setPenColor :longHornRed
+	circle (:height - penSize) / 2
+	setPenSize :height * 0.03
+	setFillColor transparent
+	circle :height * 0.46
+	setFillColor "#FDF3D3
+	setPenSize 0
+	isotoxalStar :height * 0.08 :height * 0.4 23
+	setTurtleState :oldState
+end
+
+
+; Inspired by the logo in:
+; https://en.wikipedia.org/wiki/File:Longhorn_3683.png
+to longHornLogo :height
+	localmake "oldState turtleState
+	localmake "hornArcsInfo [
+		[55 0.125] [35 0]
+	]
+	localmake "straightHornWidthGap :height * 0.01
+	localmake "straightHornWidth :height * 0.51339411 - :straightHornWidthGap * 2
+	localmake "hornThickness1 :height * 0.08
+	longhornLogoBackground :height
+	jumpForward :height * 0.58
+	right 180
+	setPenColor :longHornRed
+	setPenSize :hornThickness1
+	setLineCap "round
+	setLineJoinStyle "round
+	setFillColor transparent
+	isoTriangle :height * 0.17 :height * 0.39
+
+	jumpRight :height * 0.31
+	jumpBackward :height * 0.1
+	arcsLeft :hornArcsInfo :height
+	jumpForward :straightHornWidthGap
+	setPenSize :height * 0.09
+	forward :straightHornWidth
+	jumpForward :straightHornWidthGap
+	setPenSize :hornThickness1
+	arcsLeft reverse :hornArcsInfo :height
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+longHornLogo 100

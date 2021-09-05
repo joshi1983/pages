@@ -1,0 +1,61 @@
+make "lightColor "#efc985
+make "darkColor "#660
+
+; Inspired by
+; https://hoaxopedia.com/wp-content/uploads/2022/12/Crop-circles.jpg
+to sevenPointCropCircles :height
+	localmake "oldState turtleState
+	localmake "tinyCircleRadius :height * 0.05
+	localmake "gap (:height - :tinyCircleRadius * 2) / (1 + cos 180 / 7)
+	localmake "largeRadius :height * 0.36
+	localmake "largeThickness :height * 0.1
+	localmake "largeRadius1 :largeRadius - :largeThickness / 2
+	localmake "largeThickness2 :largeThickness * 0.75
+	localmake "symbolThickness :height * 0.018
+	localmake "startRadius :largeRadius - :largeThickness2 / 2
+	jumpForward :tinyCircleRadius + :gap
+	localmake "center pos
+	setPenColor :darkColor
+	setPenSize :largeThickness
+	setFillColor transparent
+	circle :largeRadius	
+	right 180 / 7
+	setFillColor :darkColor
+	setLineCap "butt
+	repeat 7 [
+		setPenSize :height * 0.005
+		setPenColor :darkColor
+		forward :gap
+		setPenSize 0
+		circle :tinyCircleRadius
+		localmake "heading1 heading
+		setPenColor :lightColor
+		setPenSize :symbolThickness
+		repeat 2 [
+			jumpTo :center
+			localmake "sign sign repcount - 1.5
+			setHeading :heading1 + :sign * 4
+			jumpForward :startRadius
+			forward :largeThickness2 - penSize / 2
+			right :sign * 90
+			arcLeft :sign * -18 distance :center
+			setHeading towards :center
+			forward :largeThickness2 - penSize
+			right :sign * 90
+			arcLeft :sign * 12 distance :center
+			setHeading (towards :center) + 180
+			forward :largeThickness2 * 0.37
+			right :sign * 90
+			arcLeft :sign * -8 distance :center
+		]
+		jumpTo :center
+		setHeading :heading1 + 360 / 7
+	]
+	setPenSize 0
+	setFillColor :darkColor
+	isotoxalStar :largeRadius1 :height * 0.12 7	
+	setTurtleState :oldState
+end
+
+setScreenColor :lightColor
+sevenPointCropCircles 100

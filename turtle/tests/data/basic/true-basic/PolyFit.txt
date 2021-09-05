@@ -1,0 +1,28 @@
+!
+!  POLYFIT.  Show how to add fitted polynomials to data.
+!  We fit an order-2 polynomial, then an order-4 one.
+!
+LIBRARY "Stat2Lib.trc"
+
+DIM d(20), x(20), y(20), w(0), coeff(0), resid(0), cv(0,0)
+
+CALL SetTitle ("Two Polynomial Fits")
+CALL ReserveLegend
+
+MAT READ x, y
+CALL SetPolyFit (2)
+CALL PlotScat (x, y, 6, 0, "black")
+
+CALL PolyFit (x, y, w, 4, coeff, resid, var, cv)
+CALL AddPolyPlot (coeff, 2, "black")
+
+CALL AddLegend ("x^2 Fit", 2, 1, "black")
+CALL AddLegend ("x^4 Fit", 2, 2, "black")
+CALL DrawLegend
+
+DATA 0.226, 0.241, 0.278, 0.320, 0.352, 0.412, 0.457, 0.514, 0.551, 0.660, 0.754
+DATA 0.663, 0.598, 0.412, 0.298, 0.439, 0.169, 0.136, 0.811, 0.779
+DATA 0.651, 0.691, 0.714, 0.736, 0.747, 0.762, 0.762, 0.747, 0.721, 0.680, 0.695
+DATA 0.703, 0.732, 0.721, 0.688, 0.762, 0.450, 0.264, 0.349, 0.524
+
+END

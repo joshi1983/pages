@@ -1,0 +1,130 @@
+; copied from https://www.playbasic.com/sourcecodes.php?Page=01
+setfps 60
+    
+    Shape    =10 
+    CreateConvexShape Shape, 50, 60  
+    Work = CloneShape(Shape)
+
+    CurrentRGB    = $ff00ff
+    NextRGB        = $00ff00
+    
+
+    STartTime = timer() and $7fffffff
+
+    Do
+
+          Cls 0
+
+            CurrentTIME = (timer() and $7fffffff)
+            TimePast#    = CurrentTime - STartTIME
+            TimeScale#    = cliprange#(TimePast#/5000,0,1)
+                
+          phase# = phase# + 1.5
+
+            inkmode 1+32
+            Max        = 12
+            for lp =1 to Max-1
+
+                    copyshape Shape,Work
+            
+                  phase2# = phase# + (lp*10.5)
+                    
+                ; Apply radial wobble
+                    Shape_RadialNoise(Work, 20.0*cos(360*TimeScale#)*5, 10.0, phase2#)
+
+                    Scale#= float(Max)/lp
+                    RotateShape Work , (360 * cos(Scale#)), 0.1+Scale#
+                    
+                    ThisRgb1 = rgbfade(CurrentRGB    ,Scale#*100) 
+                    ThisRgb2 = rgbfade(NextRGB        ,(1-Scale#)*100) 
+                    ThisRgb    = rgbAlphablend(ThisRGB1,ThisRGB2,TimeScale#*100) 
+                            
+                    ink ThisRGB
+                ; draw shape in middle of screen
+                    DrawShape Work, GetScreenWidth()*0.5, GetScreenHeight()*0.5, 2  ; filled
+            next
+
+;            print phase#
+
+            if TimeScale#=1
+                StartTIME = CurrentTIME
+                CurrentRGB = NExtRGB 
+                NextRGB = rndrgb()
+            endif
+
+        
+      Sync
+    Loop spacekey()
+
+
+
+
+
+; ------------------------------------------------------
+; Shape_RadialNoise()
+; Applies sinus radial distortion around shape centre
+; ------------------------------------------------------
+Function Shape_RadialNoise(shp, Amp#, Freq#, Phase#)
+
+    local cx# = ShapeCentreX#(shp)
+    local cy# = ShapeCentreY#(shp)
+
+    local vx#, vy#, dx#, dy#, dist#, ang#, off#
+
+    For i = 0 To GetShapeVerts(shp)-1
+
+        ; get existing vertex
+        vx#    =GetShapeVertexX(shp,i)
+        vy#    =GetShapeVertexY(shp,i)
+        
+        ; direction from centre
+        dx# = vx# - cx#
+        dy# = vy# - cy#
+
+        dist# = Sqrt(dx#*dx# + dy#*dy#)
+
+        ; avoid division-by-zero
+        If dist# = 0 Then Continue
+
+        ; unit vector
+        ux# = dx# / dist#
+        uy# = dy# / dist#
+
+        ; angle of vertex around centre
+        ang# = ATanFull(dy#, dx#)
+
+        ; radial noise offset
+        off# = Sin(ang# * Freq# + Phase#) * Amp#
+
+        ; apply
+        vx# = vx# + ux# * off#
+        vy# = vy# + uy# * off#
+
+        SetShapeVertex shp, i, vx#, vy#
+
+    Next
+
+EndFunction
+
+
+
+Function ShapeCentreX#(shp)
+    For i = 0 To GetShapeVerts(shp)-1
+        sum# += GetShapeVertexX(shp, i)
+    Next
+    Sum#    /= GetShapeVerts(shp)
+EndFunction Sum#
+
+Function ShapeCentreY#(shp)
+    For i = 0 To GetShapeVerts(shp)-1
+      sum# += GetShapeVertexY(shp, i)
+    Next
+    Sum#    /= GetShapeVerts(shp)
+EndFunction Sum#
+
+
+
+Function CloneShape(SrcShape)
+        DestShape=GetFreeShape()
+        CopyShape SrcShape,DestShape
+EndFunction DestShape

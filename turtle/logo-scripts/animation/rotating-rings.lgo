@@ -1,0 +1,66 @@
+to drawRing :radius :thickness
+	localmake "oldState turtleState
+	localmake "numAngles 20
+	localmake "offset1 :radius * cos 180 / :numAngles
+	localmake "len :radius * 2 * sin 180 / :numAngles
+	localmake "center pos
+	setFillColor mix penColor transparent 0.2
+	repeat :numAngles [
+		jumpIn :offset1
+		rect :thickness :len
+		jumpTo :center
+		pitchUp 360 / :numAngles
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by:
+; https://www.facebook.com/share/v/189ad4qcE1/
+to spinningSquares :height
+	localmake "oldState turtleState
+	localmake "rings [
+		["yellow 0.2] 
+		["#0f0 0.3]
+		["#f00 0.4]
+		["#03f 0.4]
+		["#05f 0.5]
+	]
+	localmake "thickness :height * 0.1
+	setPenBlendMode "lighter
+	setFillBlendMode "lighter
+	setPenSize :height * 0.005
+	setLineJoinStyle "round
+	setFillColor transparent
+	repeat count :rings [
+		localmake "ringInfo item repcount :rings
+		setPenColor first :ringInfo
+		drawRing :height * last :ringInfo :thickness
+		jumpLeft :thickness
+	]
+
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+make "t interpolateRatio easeInOut animation.clampedTimeRatio
+left 45
+rollRight 30
+pitchUp :t * 360
+spinningSquares 100
+
+to animation.snapshotstyle
+	output createPList2 [
+		["position.y -22.5]
+		["position.x -20]
+		["zoom.scale 5.5]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 5
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

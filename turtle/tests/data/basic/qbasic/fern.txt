@@ -1,0 +1,23 @@
+REM copied from https://mesutakcan.blogspot.com/2020/06/quickbasic-kursu-bolum-14-grafik.html
+'Fractal 2
+SCREEN 12
+WINDOW (-4, 0)-(6, 10)
+RANDOMIZE TIMER
+WHILE INKEY$ = ""
+    r = RND
+    SELECT CASE r
+        CASE IS <= .01
+            a = 0: b = 0: c = 0: d = .16: e = 0: f = 0
+        CASE .01 TO .86
+            a = .85: b = .04: c = -.04: d = .85: e = 0: f = 1.6
+        CASE .86 TO .93
+            a = .2: b = -.26: c = .23: d = .23: e = .05: f = 1.6
+        CASE ELSE
+            a = -.15: b = .28: c = .26: d = .24: e = 0: f = .44
+    END SELECT
+    nx = (a * x) + (b * y) + e
+    ny = (c * x) + (d * y) + f
+    x = nx
+    y = ny
+    PSET (x, y), 2
+WEND

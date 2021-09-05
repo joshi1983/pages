@@ -1,0 +1,36 @@
+; Inspired by logo at
+; https://programming-language-benchmarks.vercel.app
+to vercelProgrammingLanguageBenchmarksLogo :height
+	localmake "oldState turtleState
+	localmake "cornerRadius :height * 0.03
+	localmake "size1 :height * 1.12
+	localmake "size2 :height * 0.92
+	localmake "separation :height * 0.3
+	localmake "heading1 heading
+	setPenSize :height * 0.06
+	setPenColor "#00c68f
+	jumpForward penSize / 2
+	jumpLeft :height * 0.09
+	roundIsoTriangle :size1 :size1 * cos 30 :cornerRadius
+	localmake "pos1 pos
+	jumpRight :size1 / 2
+	localmake "lowerRight pos
+	left 30
+	jumpForward :height
+	localmake "upperRight pos
+
+	jumpTo :pos1
+	setHeading :heading1
+	setPenColor "#2f495e
+	jumpRight :separation
+	roundIsoTriangle :size2 :size2 * cos 30 :cornerRadius
+	jumpForward (:size2 * sin 60)
+	left 180 - 30
+	jumpForward distanceToLine :lowerRight :upperRight
+	left 60
+	forward (distance :lowerRight) - :cornerRadius * ((tan 30) + 1 / cos 30)
+	arcRight 120 :cornerRadius
+	setTurtleState :oldState
+end
+
+vercelProgrammingLanguageBenchmarksLogo 100

@@ -1,0 +1,21 @@
+; Inspired by logo at:
+; https://www.english-heritage.org.uk/
+to englishHeritageLogo :height
+	localmake "oldState turtleState
+	localmake "thickness :height * 0.14285714
+	localmake "height1 :thickness * 2
+	localmake "gap :height / 2 - :height1
+	localmake "englishRed "#e62506
+	jumpForward :height / 2
+	localmake "center pos
+	repeat 4 [
+		jumpForward :gap
+		stripes :height :thickness [:englishRed]
+		stripes :thickness :height1 [:englishRed]
+		jumpTo :center
+		right 360 / 4
+	]
+	setTurtleState :oldState
+end
+
+englishHeritageLogo 100

@@ -1,0 +1,59 @@
+; Inspired by logo at
+; https://www.evcareers.ca
+to evCareersLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "height1 :height * 0.333
+	localmake "angle1 23
+	localmake "angle2 23.5
+	localmake "width1 :height * 0.296
+	localmake "width2 :height * 0.6345
+	localmake "eHeight1 :height * 0.36
+	localmake "eHeight :height * 0.28
+	localmake "minEWidth :height * tan :angle2
+	localmake "maxEWidth :height * 0.87
+	localmake "arcRadius :height * 0.082
+	jumpRight :width2
+	setPenSize 0
+	setFillColor "#00a0df
+	polyStart
+	jumpForward :height
+	jumpLeft :width1
+	jumpBackward :height1
+	left :angle1
+	jumpForward :height1 / cos :angle1
+	right :angle1
+	jumpLeft :height * 0.327
+	right 180 - :angle2
+	jumpForward :height / cos :angle2
+	polyEnd
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpLeft :width2
+	localmake "y :eHeight
+	setFillColor "#0075c9
+	repeat 2 [
+		localmake "pos1 pos
+		polyStart
+		jumpForward :eHeight
+		jumpRight mix :minEWidth :maxEWidth :y / :height
+		right 180 - :angle2
+		jumpForward :eHeight / cos :angle2
+		polyEnd
+		setHeading :oldHeading
+		localmake "y :y + :eHeight1
+		jumpTo :pos1
+		jumpForward :eHeight1
+	]
+	polyStart
+	jumpForward :eHeight - :arcRadius
+	arcRight 90 :arcRadius
+	jumpForward :minEWidth - :arcRadius
+	right 90 - :angle2
+	jumpForward :eHeight / cos :angle2
+	polyEnd
+	setTurtleState :oldState
+end
+
+evCareersLogo 100

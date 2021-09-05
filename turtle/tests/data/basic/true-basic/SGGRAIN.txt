@@ -1,0 +1,43 @@
+!  SGGrain   Demonstrate SetGrain.
+
+LIBRARY "SGFunc.trc", "SGLib.trc"
+LIBRARY "TrueCtrl.trc"
+
+CALL TC_Init
+
+! If you with to use a new window instead of the default window, use
+CALL TC_Win_Create (win, "title|close|size|show", .1, .9, .1, .9)
+CALL TC_Win_SetTitle (win, "New Window")
+
+! If you are content using the default window, then use this:
+!     CALL TC_Show (0)
+! instead.
+
+! In Version 5, in order to work with multiple windows, such as:
+!      OPEN #1: screen 0, .49, 0, 1
+! You must open, and show, a child window instead.
+
+CALL TC_Win_ChildCreate (winc1, "border none|show", win, 0, .49, 0, 1)
+
+CALL SetGrain (10)
+CALL SetTitle ("Grain = 10")
+CALL Fgraph (-pi, pi, 1, "red green magenta")
+
+! OPEN #2: screen .51, 1, 0, 1
+CALL TC_Win_ChildCreate (winc2, "border none|show", win, .51, 1, 0, 1)
+
+CALL SetGrain (100)
+CALL SetTitle ("Grain = 100")
+CALL Fgraph (-pi, pi, 1, "red green magenta")
+
+CALL TC_Win_Active (winc2)        ! Permit receiving keystroke
+GET KEY key
+CALL TC_Free (winc2)
+CALL TC_Free (winc1)
+CALL TC_Free (win)
+
+CALL TC_Cleanup
+
+END
+
+DEF F(x) = Sin(3*x)

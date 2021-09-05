@@ -1,0 +1,58 @@
+to drawArcShape :arcRadius :color :flipY?
+	localmake "oldState turtleState
+	setFillColor :color
+	if :flipY? [
+		jumpForward abs :arcRadius
+		right 180
+	]
+	drawArcLineShape [-0.5 0
+		[[1] [-90 0] [-90 1]]
+	] :arcRadius	
+	setTurtleState :oldState
+end
+
+; Inspired by:
+; https://www.publicdomainpictures.net/en/view-image.php?image=531072&picture=circles-mid-century-bauhaus-poster
+;
+to bauhausPoster1919 :height
+	localmake "oldState turtleState
+	localmake "numCols 6
+	localmake "colSeparation :height * 0.156
+	localmake "innerWidth :colSeparation * 0.87
+	localmake "rowSeparation (:height - :innerWidth * 2) / 4
+	localmake "bBlue "#007dda
+	localmake "bOrange "#ffba0b
+	localmake "bBlack "#171717
+	localmake "bRed "#ff2802
+	localmake "colors [
+		[:bRed :bOrange :bBlack :bOrange :bBlue :bRed]
+		[:bOrange :bBlue :bOrange :bBlack :bRed :bBlue]
+		[:bBlack :bOrange :bRed :bBlue :bBlack :bBlack]
+		[:bRed :bBlue :bBlack :bOrange :bRed :bBlue]
+		[:bOrange :bBlack :bBlue :bRed :bOrange :bRed]
+		[:bBlack :bBlue :bOrange :bBlack :bRed :bBlue]
+	]
+	setPenSize 0
+	jumpLeft :colSeparation * 2.5
+	repeat :numCols [
+		localmake "colBottom pos
+		stripes :innerWidth :innerWidth [item repcount last :colors]
+		jumpForward :rowSeparation
+		drawArcShape :innerWidth item repcount item 5 :colors false
+		jumpForward :rowSeparation
+		drawArcShape -:innerWidth item repcount item 4 :colors true
+		jumpForward :innerWidth
+		drawArcShape -:innerWidth item repcount item 3 :colors false
+		jumpForward :rowSeparation
+		drawArcShape :innerWidth item repcount item 2 :colors true
+		jumpForward :rowSeparation + :innerWidth / 2
+		setFillColor item repcount first :colors
+		circle :innerWidth / 2
+
+		jumpTo :colBottom
+		jumpRight :colSeparation
+	]
+	setTurtleState :oldState
+end
+
+bauhausPoster1919 100

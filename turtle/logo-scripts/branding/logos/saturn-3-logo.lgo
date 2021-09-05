@@ -1,0 +1,111 @@
+
+
+to drawBlueStripes :radius
+	localmake "oldState turtleState
+	localmake "center pos
+	setPenColor "#08f
+	setLineCap "butt
+	jumpForward :radius * 0.05
+	repeat 4 [
+		localmake "d distance :center
+		setPenSize 2 * sqrt :radius * :radius - :d * :d
+		forward :radius * mix 0.1 0.05 repRatio
+		jumpForward :radius * 0.031
+	]
+	jumpForward :radius * 0.03
+	forward :radius * 0.18
+	jumpForward :radius * 0.04
+	localmake "d distance :center
+	setPenSize 2 * sqrt :radius * :radius - :d * :d
+	forward :radius - :d
+
+	setTurtleState :oldState
+end
+
+; Inspired by a logo from a movie called Saturn 3.
+; The logo was used in a shoulder patch on uniforms in the movie and
+; filled the screen near the beginning of the movie.
+; The early scene with it resembles a sunrise with astronauts walking from the horizon.
+;
+; The logo can be found at:
+; https://www.patchesnpins.com/webshop/tv-shows/saturn-3/saturn-3-logo-patch%C2%A0/
+;
+; and at:
+; https://saturn3makingof.com/about/
+to saturn3Logo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "leftRightAngle 85
+	localmake "arcAngles [
+		:leftRightAngle 84 :leftRightAngle 73
+	]
+	localmake "thickness :height * 0.048
+	localmake "arcRadius (:height - :thickness) / 2
+	localmake "innerRadius :height * 0.4
+	localmake "smallRadius :height * 0.15
+	localmake "smallArcAngle 165
+	localmake "yellowArcAngle 90
+	localmake "yellowArcRadius :smallRadius * (sin :smallArcAngle / 2) / sin :yellowArcAngle / 2
+	localmake "saturnRed "#f00
+	localmake "topWhiteRectHeight :height * 0.12
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	setFillColor "white
+	circle :height / 2
+	drawBlueStripes :innerRadius
+	circle :height * 0.18
+	setFillColor transparent
+	setPenColor "white
+	setPenSize :height / 2 - :innerRadius
+	circle mix (:height / 2) :innerRadius 0.5
+
+	setLineCap "butt
+	setPenColor "black
+	setPenSize :thickness
+	repeat 4 [
+		setHeading :oldHeading + repcount * 360 / 4
+		jumpForward :arcRadius
+		left 90
+		localmake "arcAngle item repcount :arcAngles
+		arcLeft :arcAngle / 2 :arcRadius
+		right 180
+		arcRight :arcAngle :arcRadius
+		jumpTo :center
+	]
+
+	jumpTo :center
+	setHeading :oldHeading
+	setPenSize 0
+	setFillColor :saturnRed
+	drawArcLineShape [-1 0 
+		[[-180 0] [180 1]]
+	] :innerRadius
+	jumpLeft :smallRadius
+	arcRight (180 - :smallArcAngle) / 2 :smallRadius
+	polyStart
+	arcRight :smallArcAngle :smallRadius
+	polyEnd
+	setFillColor "yellow
+	setHeading :oldHeading - 90 + :yellowArcAngle / 2
+	polyStart
+	arcLeft :yellowArcAngle :yellowArcRadius
+	polyEnd
+	setHeading :oldHeading
+	jumpTo :center
+	jumpBackward :innerRadius
+	setPenColor "white
+	setPenSize :height * 0.05
+	repeat 5 [
+		forward :height * mix 0.02 0.075 repRatio
+		jumpForward :height * 0.031
+	]
+	jumpTo :center
+	jumpForward :innerRadius - :topWhiteRectHeight
+	forward :topWhiteRectHeight
+
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+saturn3Logo 100

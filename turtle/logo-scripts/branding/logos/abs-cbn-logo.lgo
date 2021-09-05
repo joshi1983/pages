@@ -1,0 +1,24 @@
+; Inspired by logo at:
+; https://en.wikipedia.org/wiki/ABS-CBN#/media/File:ABS-CBN_(2013).svg
+to absCbnLogo :height
+	localmake "oldState turtleState
+	localmake "thickness :height * 0.08575
+	localmake "maxRadius :height * 0.443
+	localmake "minRadius :height * 0.157
+	localmake "colors ["#ec1c24 "#00a551 "#0066b2]
+	localmake "centerOffset :height - :maxRadius - :thickness / 2
+	jumpForward :centerOffset
+	setPenSize :thickness
+	setFillColor transparent
+	repeat count :colors [
+		localmake "radius mix :minRadius :maxRadius repRatio 
+		setPenColor item repcount :colors
+		circle :radius
+	]
+	setTurtleState :oldState
+	stripes :height * 0.127 :centerOffset ["white]
+	stripes :height * 0.071 :centerOffset ["black]
+	setTurtleState :oldState
+end
+
+absCbnLogo 100

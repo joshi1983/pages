@@ -1,0 +1,60 @@
+; Inspired by flag at:
+; https://en.wikipedia.org/wiki/Flag_of_Grenada#/media/File:Flag_of_Grenada.svg
+to grenadaFlag :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "width :height * 5 / 3
+	localmake "grenadaRed "#ce1126
+	localmake "grenadaYellow "#fcd116
+	localmake "borderThickness :height * 0.14
+	localmake "triangleWidth :width - :borderThickness * 2
+	localmake "triangleHeight (:height - :borderThickness * 2) / 2
+	localmake "starSeparation :height / 3
+	localmake "line1 [
+		[170 0] [-20 0.065] [-10 0.15] [5 0.5] [25 0.09] [20 0.05]
+		[30 0.085] [8.9 0.18] [134.5 0] [-40.4563 0.13]
+		[-52.9437 0]
+	]
+	jumpForward :height / 2
+	setPenColor :grenadaRed
+	setFillColor "#007a5e
+	setPenSize :borderThickness
+	rect :width - penSize :height - penSize
+	setFillColor :grenadaYellow
+	setPenSize 0
+	localmake "center pos
+	repeat 2 [
+		setHeading :oldHeading + repcount * 180
+		jumpBackward :triangleHeight
+		isoTriangle :triangleWidth :triangleHeight
+		jumpBackward :borderThickness / 2
+		setHeading :oldHeading
+		jumpLeft :starSeparation
+		repeat 3 [
+			regularStar :height * 0.065 5
+			jumpRight :starSeparation
+		]
+		jumpTo :center
+	]
+	setFillColor :grenadaRed
+	circle :height * 0.12
+	jumpLeft :height * 0.539
+	jumpBackward :height * 0.0715
+	left 29.5
+	localmake "leftPos pos
+	localmake "leftHeading heading
+	arcPair :height * 0.15 66
+	jumpTo :center
+	setHeading :oldHeading
+	setFillColor :grenadaYellow
+	regularStar :height * 0.11 5
+
+	jumpTo :leftPos
+	setHeading :leftHeading
+	drawArcLineShape [0 0.19
+		combine :line1 reverse :line1
+	] :height
+	setTurtleState :oldState
+end
+
+grenadaFlag 100

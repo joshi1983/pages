@@ -1,0 +1,20 @@
+REM This was copied from:
+REM https://en.wikipedia.org/wiki/BBC_BASIC
+
+REM Acorn Archimedes version
+ON ERROR : ON ERROR OFF : PRINT REPORT$; " at line ";ERL : END
+MODE MODE : REM clears the screen
+PROC_triangle(700,700,500,200,500,900,"F")
+END
+
+DEF PROC_triangle(x1%,y1%,x2%,y2%,x3%,y3%,fill$)
+LOCAL triangle_fill_plot_code%
+triangle_fill_plot_code% = &55
+MOVE x1%,y1%
+DRAW x2%,y2%
+IF fill$="F" THEN
+PLOT triangle_fill_plot_code%,x3%,y3%
+ELSE
+DRAW x3%,y3% : DRAW x1%,y1%
+ENDIF
+ENDPROC : REM of PROC_triangle()

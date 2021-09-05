@@ -1,0 +1,56 @@
+; Inspired by
+; https://www.pinterest.ca/pin/75364993757667153/
+; Parametric equations are shown in the image.
+; 
+to tToPoint :t
+	output [
+		radSin (9.52 * :t)
+		(power (radCos 9.52 * :t) 4) * radSin (radSin (4.8 * :t))
+	]
+end
+
+to transformUsingTurtleState :p
+	localmake "oldPos pos
+	jumpLeft first :p
+	jumpForward last :p
+	localmake "result xyCor
+	jumpTo :oldPos
+	output :result
+end
+
+to drawPetal :scale
+	localmake "oldState turtleState
+	setPenSize :scale * 0.007
+	setPenColor "#500
+	jumpForward :scale
+	localmake "oldPos pos
+	right 90
+	localmake "oldHeading heading
+	; Increase the 3000 to get a smoother, more accurate curve.
+	; Decrease to sacrifice accuracy for execution speed and fewer line segments.
+	repeat 3000 [
+		localmake "t 16 * (repRatio - 0.5)
+		localmake "p vectorScale (tToPoint :t) :scale
+		setHeading :oldHeading
+		jumpTo :oldPos
+		localmake "p transformUsingTurtleState :p
+		ifelse 1=repcount [
+			jumpTo :p
+		] [
+			jumpTo :prevPos
+			setHeading towards :p
+			forward distance :p
+		]
+		localmake "prevPos pos
+	]
+	setTurtleState :oldState
+end
+
+to drawParametricFlower :scale
+	repeat 4 [
+		drawPetal :scale
+		right 360 / 4
+	]
+end
+
+drawParametricFlower 100

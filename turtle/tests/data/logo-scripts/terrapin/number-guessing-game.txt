@@ -1,0 +1,207 @@
+; copied from: https://resources.terrapinlogo.com/logolib/guess_number.html
+;GUESSING GAME 9.3
+
+;WARNING
+
+;PLEASE DO NOT CHANGE ANY OF THE PROCEDURES
+;UNLESS TOLD TO DO SO
+;ONE LITTLE CHANGE CAN CHANGE THIS GAME ENTIRELY
+
+;WARNING
+
+TO Main
+    cs ct
+    make "counter 0
+    make "times 0
+    user
+    Intro
+END
+TO user
+    pr "|Please type in your first name:|
+    make "title read
+    pr "|Please type in your age:|
+    make "age read
+END
+TO Hold
+    pr "|To continue, press any key|ignore rc
+END
+TO Intro
+    cs ct
+    type se "|Welcome|:title pr "|, to Guessing Game 9.3 Created by Jared Zhao in March 4, 2011. |
+    pr "|This game was created for Mrs. Godzich, one of my computer teachers.|
+    pr "|In this game, the computer will make up a number from 1 to 1,000.|
+    pr "|You will be given multiple tries to guess the number.|
+    pr "|You will have ten turns (correct guesses).|
+    Hold
+    pr "|In the end, your total guesses will be compared with the correct guesses you had.|
+    pr "|The lower guesses in your total, the better.|
+    Hold
+    Menu
+END
+TO Menu
+    cs ct
+    make "counter 0
+    make "times 0
+    pr "|Welcome to the Main Menu.|
+    pr "|If you have not played this game before and would like a demo, press d|
+    pr "|If you have played this game before and want to skip the demo and go straight to the game, press s|
+    pr "|If you would like to know about previous guessing games, press p|
+    make "control rc
+    if :control = "d then demo1
+    if :control = "s then start
+    if :control = "p then previous
+END
+TO demo1
+    cs ct
+    pr "|Welcome to the Demo.|
+    pr "|In the Demo, you will be taught the main concepts of this game.|
+    Hold
+    pr "|The computer will have a number from 1 to 1,000.|
+    pr "|Your objective is to guess the computer's number.|
+    pr "|You will be given multiple tries.|
+    Hold
+    ct
+    pr "|.|
+    wait 400 ct
+    pr "|..|
+    wait 400 ct
+    pr "|...|
+    wait 400 ct
+    pr "|....|
+    wait 400 ct
+    pr "|.....|
+    wait 600 ct
+    pr "|Okay, I have a number. Guess away!!!|
+    r.demo2
+END
+TO r.demo2
+    make "r.set.number random 1000
+    demo2
+END
+TO demo2
+    make "answer read
+    If :answer > 1000 then sorry1
+    If :answer < 1 then sorry2
+    If :answer = :r.set.number then pr (se "|Congradulations. |word :answer char 32 "|You have passed the Demo. You will be directed back to the Main Menu once you press any key|)ignore rc menu
+    If :answer < :r.set.number then pr (se "|Sorry,|:title "|, that was incorrect...|word :answer char 32 "|was smaller than the set number... please try again|)demo2
+    If :answer > :r.set.number then pr (se "|Sorry,|:title "|, that was incorrect...|word :answer char 32 "|was bigger than the set number... please try again|)demo2
+END
+TO sorry1
+    pr "|Sorry,|:title "|, your number MUST be between 1 and 1000 ... yeah I know... maybe in Guessing Game 9.3 I'll make it 1 to 1 trillion...|
+    Hold
+    demo2
+END
+TO sorry2
+    pr "|Sorry,|:title "|, your number MUST be between 1 and 1,000 ... Please guess again.|
+    Hold
+    demo2
+END
+TO previous
+    cs ct
+    pr "|Guessing Game 1.0 and 2.0 are both games that have started the creator of these games mind.|
+    pr "|He, from those games, begane to make Guessing Game 3.0 , 4.0 , 5.0 , and 6.0 . They have all been an epic fail...|
+    pr "|But, he did not quit. He continued by making 7.0 , 7.1 , 7.2 , and 7.3 . They have been a Terrapin Logo Gussing Game Revolution.|
+    pr "|Guessing Game 8.0 has evolved from 7.3 .|
+    Hold
+    pr "|8.0 has turned easily into 8.1 , 8.2 , and 8.3 . With the encouragement of Mrs. Godzich, Jared has made 9.0 .|
+    pr "|He originally got the idea of Guessing Game 7.0 (the computer picks random numbers) from Abed Alsolamon, so give him credit.|
+    pr "|Jared Zhao looks forward to expanding Guessing Game 9.0 and starting 10.0 .|
+    pr "|He is already thinking about branching off from Guessing Games.|
+    pr "|To go back to the Main Menu, press any key.|ignore rc
+    menu
+END
+TO start
+    cs ct
+    make "total 0
+    pr "|Welcome to Guessing Game 9.3 .|
+    pr "|To go through the rules press r.|
+    pr "|To continue to the game, press c.|
+    pr "|To go back to the main menu, press m.|
+    make "control rc
+    if :control = "r then rules
+    if :control = "c then game1 4 0
+    if :control = "m then menu
+END
+TO rules
+    cs ct
+    pr "|The rules to this game is simple. When the computer asks you to guess a number, just type in the number and press enter.|
+    pr "|You are alowed to guess numbers from 1 to 1,000 . If you don't guess from 1 to 1,000 , then your computer will receive a virus. No... I was kidding.|
+    pr "|If you don't guess from 1 to 1,000 , the computer will count that as a guess but tell you that your bounderies are from 1 to 1,000 .|
+    pr "|To go back to the game, press any key.|ignore rc
+    start
+END
+TO game1 :counter :times
+    make "tnt :total + :counter
+    make "set.number random 1000
+    cs ct
+    if :counter = 5 then maybe :tnt; over
+    ct
+    pr "|.|
+    wait 400 ct
+    pr "|..|
+    wait 400 ct
+    pr "|...|
+    wait 400 ct
+    pr "|....|
+    wait 400 ct
+    pr "|.....|
+    wait 500 ct
+    pr "|Okay, I have a number. Guess away!!!|
+    game2 :counter :times
+END
+TO game2 :counter :times
+    make "guess read
+    If :guess = :set.number then congratulation :guess :counter :times
+    If :guess < :set.number then bigger :guess :times :counter
+    If :guess > :set.number then smaller :guess :times :counter
+END
+TO congratulation :guess :counter :times
+    type "|Congratulations!|type :guess type char 32 type "|was the correct answer.|
+    Hold
+    game1 :counter + 1 :times + 1
+END
+TO bigger :guess :times :counter
+    type "|Sorry...|type char 32 type :guess type char 32 type "|was not the correct answer. The set number is bigger than|type char 32 type :guess type char 32 type ". pr "| please select another number.|
+    game2 :counter :times + 1
+END
+TO smaller :guess :times :counter
+    type "|Sorry...|type char 32 type :guess type char 32 type "|was not the correct answer. The set number is smaller than|type char 32 type :guess type char 32 type ". pr "| please select another number.|
+    game2 :counter :times + 1
+END
+TO maybe :total
+    type "|You have had |type :total pr "| turns. Do you want to keep on playing or do you want to quit?|
+    pr "|To continue the game, press c.|
+    pr "|To quit the game and see your profile, press p.|
+    make "control rc
+    If :control = "c then game1 0
+    If :control = "p then profile
+END
+TO over
+    cs ct
+    type "|You have had 10 turns. Your final score is|type char 32 type word :times char 32 type "guesses type char 32 type "/ type char 32 type "10 type char 32 pr "totalguesses.
+    pr "|The creator of Guessing Game 9.3 -AND- the computer are always welcoming you to play again.|
+    pr "||
+    pr "|GUESSING GAME 9.3|
+    pr "|BY JARED ZHAO|
+    pr "|MARCH 5, 2011|
+    pr "||
+    pr "||
+    pr "||
+    pr "||
+    pr "|Press any key to see your profile.|
+    ignore rc
+    profile
+END
+TO profile
+    pr :title
+    type "|It took|type word :title char 32 type word char 32 :times pr "| tries to get 10 correct|
+    type :title type "|is|type word char 32 :age type char 32 pr "|years old.|
+END
+
+main
+
+;Guessing Game 9.3
+;by Jared Zhao
+;sixth grade
+;Challenger School
+;March 5, 2011

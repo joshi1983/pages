@@ -1,0 +1,109 @@
+to drawI :height
+	localmake "oldState turtleState
+	localmake "len1 :height * 0.631
+	localmake "gap :height * 0.06
+	localmake "len2 :height - :len1 - :gap
+	jumpRight :height * 0.678
+	setLineCap "butt
+	setPenSize :height * 0.45
+	setPenColor "#b60301
+	forward :len1
+	jumpForward :gap
+	forward :len2
+	setTurtleState :oldState
+end
+
+to drawP :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "arcRadius :height * 0.395
+	localmake "arcAngle2 143
+	localmake "arcRadius2 :arcRadius / sin :arcAngle2 / 2
+	localmake "size1 :height * 0.11
+	localmake "size2b :height * 0.07
+	localmake "size2 :arcRadius - :size2b / 2
+	localmake "size3 :height * 0.12
+	localmake "size4 :size3 + :size2b
+	jumpLeft :height * 0.26
+	setFillColor "#e72003
+	setPenSize 0
+	polyStart
+	jumpForward :height
+	jumpRight :height * 0.52
+	right 90
+	localmake "topArcPos pos
+	arcRight 180 :arcRadius
+	jumpForward :size1
+	jumpRight :size2
+	jumpBackward :size3
+	jumpRight :size2b
+	jumpForward :size4
+	jumpLeft :height - :arcRadius + :size2b / 2
+	polyEnd
+
+	; Cast shadow to the right of the arc.
+	setFillColor "black
+	jumpTo :topArcPos
+	setHeading :oldHeading + 90
+	polyStart
+	arcRight 180 :arcRadius
+	jumpBackward :height * 0.15
+	right 180 - (180 - :arcAngle2) / 2
+	arcLeft :arcAngle2 :arcRadius2
+	polyEnd
+
+	setTurtleState :oldState
+end
+
+to drawD :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "size1 :height * 0.64
+	localmake "shadowArcAngle 145
+	localmake "shadowArcRadius :height / 2 / sin :shadowArcAngle / 2
+	localmake "brownArcAngle 175
+	localmake "brownArcRadius :height / 2 / sin :brownArcAngle / 2
+
+	; Fill black background.
+	setFillColor "black
+	setPenSize 0
+	jumpLeft :height * 0.9
+	polyStart
+	jumpRight :size1
+	right 90 - (180 - :shadowArcAngle) / 2
+	arcLeft :shadowArcAngle :shadowArcRadius
+	setHeading :oldHeading - 90
+	jumpForward :size1
+	polyEnd
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpLeft :height * 0.68
+	setLineCap "butt
+	setPenSize :height * 0.433
+	setPenColor "#884404
+	forward :height
+
+	setPenSize 0
+	setFillColor penColor
+	jumpRight :height * 0.27
+	right 90 + (180 - :brownArcAngle) / 2
+	polyStart
+	arcRight :brownArcAngle :brownArcRadius
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Dimension_Pictures_(1970s_company)#/media/File:Dimension_Pictures_logo.jpeg
+to dimensionPicturesIncLogo :height
+	localmake "oldState turtleState
+	drawI :height
+	drawP :height
+	drawD :height
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+dimensionPicturesIncLogo 100

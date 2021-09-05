@@ -1,0 +1,154 @@
+to bigGrin :height :t
+	localmake "oldState turtleState
+	localmake "numTriangles 16
+	localmake "thickness :height * 0.01
+	localmake "triangleAngle 13
+	localmake "scale (tan 180 / :numTriangles) / tan :triangleAngle
+	localmake "outerRadius (:height - :thickness / tan :triangleAngle) / 2
+	localmake "triangleHeight :outerRadius * :scale / (1 + :scale)
+	localmake "triangleOffset :outerRadius - :triangleHeight
+	localmake "triangleWidth :triangleHeight * 2 * (tan :triangleAngle)
+	localmake "eyeSeparation :height * 0.27
+	localmake "arcAngle 175
+	localmake "smileArcRadiusFactor 0.13
+	localmake "smileWidthFactor :smileArcRadiusFactor * 2 * sin :arcAngle / 2
+	localmake "moveFactor (1 + sin :t * 360) / 2
+	localmake "colorStops createPList2 [
+		[0 "#faa]
+		[0.3 "red]
+		[0.8 "blue]
+		[1 "white]
+	]
+	jumpForward :height / 2
+	localmake "center pos
+	setFillColor "black
+	setPenSize 0
+	circle hypot [:triangleOffset :triangleWidth / 2]
+
+	setPenSize :thickness
+	setPenColor "red
+	setFillBlendMode "lighter
+	setFillGradient createRadialGradient2 pos pos :outerRadius * :moveFactor :colorStops "repeat
+	setLineJoinStyle "miter
+	repeat :numTriangles [
+		jumpForward :triangleOffset
+		isoTriangle :triangleWidth :triangleHeight
+		right 360 / :numTriangles
+		jumpTo :center
+	]
+	setFillBlendMode "normal
+	setFillColor mixItems ["white "yellow] :t
+	setPenSize 0
+	jumpForward :height * 0.055
+	jumpLeft :eyeSeparation / 2
+	repeat 2 [
+		circle :height * 0.05
+		jumpRight :eyeSeparation
+	]
+	jumpTo :center
+	drawArcLineShape [-:smileWidthFactor / 2 -0.07
+		[
+		[270 - :arcAngle / 2 0]
+		[:arcAngle :smileArcRadiusFactor]
+		]
+	] :height
+	setTurtleState :oldState
+end
+
+to flyingSaucer :height :state1 :t
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "ellipseRadius1 :height * 1.16
+	localmake "ellipseRadius2 :height * 0.25
+	localmake "greenEllipseRatio 1.2
+	localmake "colors ["red "lime "white]
+	localmake "bodyColors ["#bbf "blue "white "yellow]
+	localmake "lightSeparation :ellipseRadius1 * 0.75
+	localmake "t :t - floor :t
+	setFillColor transparent
+	setPenColor mixItems ["lime "yellow "aqua "white] :t
+	setPenSize :height * 0.03
+	jumpForward :height / 2
+	repeat 3 [
+		localmake "radius1 (:height - penSize) / 2 * mix 1 0.54 repRatio
+		ellipse :radius1 * :greenEllipseRatio :radius1
+	]
+	jumpTo :oldPos
+	setFillColor mixItems :bodyColors :t
+	setPenColor "blue
+	setPenSize :height * 0.02
+	jumpForward :ellipseRadius2 + penSize / 2
+	ellipse :ellipseRadius1 :ellipseRadius2
+
+	jumpLeft :lightSeparation
+	setPenSize :height * 0.005
+	repeat 3 [
+		localmake "index 1 + remainder (:state1 + repcount) count :colors
+		setFillColor item :index :colors
+		circle :height * 0.12
+		jumpRight :lightSeparation	
+	]
+
+	setTurtleState :oldState
+end
+
+to mixItems3 :list :ratio
+	output mixItems2 :list interpolateRatio easeIn :ratio
+end
+
+; Inspired by animation at:
+; https://www.facebook.com/share/p/1Ae75Fqzrv/
+to ufos :height :t
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "ufosData [
+		[mixItems3 [[-0.5 0.3] [-0.6 0.8] [0.8 0.5] [1.071985 -0.004652571]] :t 0.05 0 1]
+		[mixItems3 [[0.5 0.3] [-0.8 0.5] [0.2728868 -0.1219971] [1 0.9]] :t 0.06 0.5 1]
+		[mixItems3 [[-0.8 0.5] [-0.5400759 -0.1762052] [0.5 0.3] [0.3212342 0.01787676] [0.2 0.1]] :t 
+			mixItems [0.07 0.15 0.1 0.07] :t 
+		:t * 0.5 1]
+		[mixItems3 [[0 0] [0 0.5] [0 0.7] [-0.03956209 0.3335206] [-0.6 0.2]] :t 
+		mixItems2 [15 0.3 0.1 0.1] :t
+		0]
+	]
+	repeat count :ufosData [
+		localmake "ufoInfo item repcount :ufosData
+		localmake "posPair first :ufoInfo
+		localmake "height1 :height * item 2 :ufoInfo
+		localmake "type last :ufoInfo
+		jumpRight :height * first :posPair
+		jumpForward :height * last :posPair
+		jumpBackward :height1 / 2
+		ifelse :type = 0 [
+			bigGrin :height1 :t
+		] [
+			localmake "state1 int :t * 10
+			localmake "timeOffset item 3 :ufoInfo
+			flyingSaucer :height1 :state1 :t + :timeOffset
+		]
+		jumpTo :oldPos
+	]
+
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+
+ufos 100 animation.clampedTimeRatio
+
+to animation.snapshotstyle
+	localmake "scale 5
+	output createPList2 [
+		["position.y 50]
+		["zoom.scale :scale]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 10
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

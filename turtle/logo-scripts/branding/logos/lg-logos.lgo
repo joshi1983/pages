@@ -1,0 +1,71 @@
+to drawForegroundShapes :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "gRadius :height * 0.393
+	jumpForward :height / 2
+	localmake "center pos
+
+	; Draw the little white circle.
+	setPenSize 0
+	setFillColor "white
+	jumpForward :height * 0.1552
+	jumpLeft :height * 0.152
+	circle :height * 0.0575
+
+	; Draw L.
+	jumpTo :oldPos
+	jumpForward :height * 0.711
+	jumpRight :height * 0.0012
+	setPenSize :height * 0.038
+	setPenColor "white
+	setLineCap "butt
+	setLineJoinStyle "miter
+	backward :height * 0.4025
+	right 90
+	forward :height * 0.1211
+
+	; Draw G.
+	jumpTo :oldPos
+	setHeading :oldHeading
+	localmake "x :height * 0.142
+	localmake "y :height * 0.503
+	jumpForward :y
+	jumpRight :x
+	setLineCap "square
+	right 90
+	forward :gRadius - :x
+	setHeading (towards :center) - 90
+	arcRight 270.5 :gRadius
+
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/LG#/media/File:LG_logo_(2015).svg
+to lg2015Logo :height
+	localmake "oldState turtleState
+	jumpForward :height / 2
+	setPenSize 0
+	setFillColor "#a50034
+	circle :height / 2
+	jumpBackward :height / 2
+	drawForegroundShapes :height
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://upload.wikimedia.org/wikipedia/commons/a/a2/LG_logo_%282023%29.svg
+to lgSecondaryLogo :height
+	localmake "oldState turtleState
+	stripes :height * 2 :height ["#ff312d]
+	drawForegroundShapes :height
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 5
+jumpLeft :separation * 0.5
+lg2015Logo :height
+jumpRight :separation
+lgSecondaryLogo :height

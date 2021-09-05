@@ -1,0 +1,82 @@
+make "darkColor "#ba0
+make "mediumColor "#ec0
+make "lightColor "#ffb
+
+to drawRay :len :widthFactor
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "colors [
+		:darkColor :mediumColor 
+		mix :mediumColor :lightColor 0.5
+		:lightColor
+	]
+	setPenSize 0
+	repeat 10 [
+		setFillColor mixItems2 :colors repRatio
+		localmake "startRadius :len * mix 0.02 :widthFactor repcount / 10
+		circlePair :startRadius 0 :len
+		jumpTo :oldPos
+	]
+
+	setTurtleState :oldState
+end
+
+to drawRing :radius
+	localmake "oldState turtleState
+	setFillColor transparent
+	setPenColor :darkColor
+	circle :radius
+	setPenColor :lightColor
+	setPenSize penSize / 3
+	circle :radius
+	setTurtleState :oldState
+end
+
+; Inspired by symbol at:
+; https://en.wikipedia.org/wiki/Seleucid_dynasty#/media/File:Vergina_Sun_WIPO.svg
+to verginaSun :height
+	localmake "oldState turtleState
+	localmake "len1 :height * 0.38
+	localmake "len2 :height * 0.295
+	localmake "innerLen :height * 0.033
+	localmake "thinFactor 0.11
+	localmake "thickFactor 0.35
+	jumpForward :height / 2
+	localmake "center pos
+	repeat 8 [
+		jumpForward :height / 2 - :len1
+		drawRay :len1 :thinFactor
+		jumpTo :center
+		right 180 / 8
+		jumpForward :height / 2 - :len2
+		drawRay :len2 :thinFactor
+
+		right 180 / 8
+		jumpTo :center
+	]
+	setPenSize :height * 0.0045
+	drawRing :height * 0.073
+	drawRing :height * 0.0624
+	setFillColor :mediumColor
+	setPenColor :darkColor
+	setPenSize penSize / 3
+	circle :height * 0.053
+	right 180 / 10
+	repeat 10 [
+		jumpForward :height * 0.038
+		circle :height * 0.013
+		right 360 / 10
+		jumpTo :center
+	]
+	right 180 / 10
+	repeat 10 [
+		jumpForward :innerLen
+		right 180
+		drawRay :innerLen :thickFactor
+		right 360 / 10 - 180
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+verginaSun 100

@@ -1,0 +1,38 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Alaska#/media/File:Flag_of_Alaska.svg
+to alaskaFlag :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "width :height * 1416 / 1000
+	localmake "starSize1 :height * 0.0575
+	localmake "starSize2 :height * 0.0345
+
+	; big dipper stars
+	localmake "stars [
+		[0.105 0.2677]
+		[0.032 0.1636]
+		[-0.156 0.226]
+		[-0.145 0.3567]
+		[-0.229 0.4498]
+		[-0.312 0.5387]
+		[-0.479 0.6008]
+	]
+	stripes :width :height ["#0F204B]
+	setFillColor "#ffb612
+	setPenSize 0
+	jumpRight :height * 0.45
+	jumpForward :height * 0.8126
+	regularStar :starSize1 5
+	repeat count :stars [
+		localmake "starInfo item repcount :stars
+		jumpTo :oldPos
+		jumpRight :height * item 1 :starInfo
+		jumpForward :height * item 2 :starInfo
+		regularStar :starSize2 5
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+make "height 100
+alaskaFlag :height

@@ -1,0 +1,60 @@
+; Inspired by logo at:
+; https://www.carriersource.io/carriers/velocity-transport
+; The logo is also at:
+; https://www.facebook.com/photo/?fbid=566485908811343&set=pb.100063498163120.-2207520000
+;
+; This facebook page is likely for the same company:
+; https://www.facebook.com/velocitytrans.ca
+; 
+to anolaTimberMartLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angle 29
+	localmake "vLines [
+		[:angle 0] [1.06] [-:angle - 90 0] [-2 3]
+		[-60 0.18]
+	]
+	localmake "redLines1 [
+		[-46 0.15] [-15 0.4] [0.18] [-175 0]
+		[56 0.1]
+	]
+	localmake "vSeparation :height * 0.325
+	jumpForward :height
+	localmake "top pos
+	jumpTo :oldPos
+	setPenSize 0
+	setFillColor "blue
+	polyStart
+	arcLines :vLines :height
+	localmake "len distanceToLine :oldPos :top
+	jumpForward :len
+	localmake "angle heading - :oldHeading
+	left 180 + 2 * :angle
+	jumpForward :len
+	arcLines reverse :vLines :height
+	polyEnd
+	setFillColor "red
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		localmake "height1 :sign * :height
+		jumpTo :top
+		setHeading :oldHeading
+		jumpLeft :height1 * 0.71
+		repeat 3 [
+			localmake "pos1 pos
+			localmake "width mix 0.25 0.83 repRatio
+			jumpLeft :width * :height1
+			drawArcLineShape [0 0
+				(combine [[-90 0] [:width]] :redLines1
+				[[:width - 0.07] [-40 0.15] [-20 0.45]])
+			] :height1
+			jumpTo :pos1
+			jumpBackward :vSeparation
+			jumpLeft :vSeparation * :sign * tan :angle
+		]
+	]
+	setTurtleState :oldState
+end
+
+anolaTimberMartLogo 100

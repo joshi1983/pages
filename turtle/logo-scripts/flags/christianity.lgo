@@ -1,0 +1,22 @@
+; Inspired by flag at:
+; https://en.wikipedia.org/wiki/Christian_Flag#/media/File:Christian_Flag.svg
+to christianFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 16 / 9
+	localmake "gap :height * 0.0833333
+	localmake "blueWidth :width / 3
+	localmake "thickness :height * 0.0556
+	localmake "crossColor "red
+	stripes :width :height ["white]		
+	jumpLeft (:width - :blueWidth) / 2
+	jumpForward :height / 2
+	stripes :blueWidth :height / 2 ["#003380]
+	jumpForward :gap
+	stripes :thickness :height / 2 - :gap * 2 [:crossColor]
+	jumpForward :height * 0.175
+	stripes :width * 0.146 :thickness [:crossColor]
+	setTurtleState :oldState
+end
+
+setScreenColor "gray
+christianFlag 100

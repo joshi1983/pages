@@ -1,0 +1,28 @@
+; Inspired by
+; https://www.tricentis.com
+to tricentisLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "thickness :height * 0.18
+	localmake "gap :height * 0.19
+	localmake "size1 ((:height - :thickness * cos 45) / 2 - :gap) / cos 45
+	jumpForward :height / 2
+	jumpRight :height * 0.092
+	setLineCap "butt
+	setPenSize :thickness
+	setPenColor "#004c97
+	localmake "center pos
+	repeat 3 [
+		setHeading :oldHeading + 90 - 90 * repcount
+		jumpForward :gap
+		left 45
+		jumpForward :size1
+		backward :size1
+		right 90
+		forward :size1
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+tricentisLogo 100

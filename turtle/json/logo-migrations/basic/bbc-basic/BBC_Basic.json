@@ -1,0 +1,106 @@
+{
+	"name": "BBC Basic",
+	"description": "A Basic programming language version made by Acorn Computers.  It was started in the early 1980's on 8-bit computers but later supported by many platforms.",
+	"externalLink": "https://en.wikipedia.org/wiki/BBC_BASIC",
+	"alternativeLinks": [
+		"http://bbc.nvg.org/doc/BBCUserGuide-1.00.pdf",
+		"https://beebwiki.mdfs.net",
+		"https://www.bbcmicrobot.com/learn/index.html"
+	],
+	"commands": [
+		{
+			"primaryName": "cls",
+			"to": "clearScreen"
+		},
+		{
+			"primaryName": "cos",
+			"to": "radCos"
+		},
+		{
+			"primaryName": "erl",
+			"args": [],
+			"description": "Returns the line number of the last error to occur",
+			"migrateToCode": "0"
+		},
+		{
+			"primaryName": "error",
+			"to": "print"
+		},
+		{
+			"primaryName": "int",
+			"to": "int"
+		},
+		{
+			"primaryName": "len",
+			"to": "count"
+		},
+		{
+			"primaryName": "ln",
+			"to": "ln"
+		},
+		{
+			"primaryName": "log",
+			"to": "log10"
+		},
+		{
+			"primaryName": "mode",
+			"args": [
+				{"name": "newMode", "types": "int"}
+			],
+			"description": "Sets screen mode",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "move",
+			"args": [
+				{"name": "x", "types": "int"},
+				{"name": "y", "types": "int"}
+			],
+			"description": "Moves to the specified coordinates",
+			"to": "jumpTo",
+			"applicableForQBasicFixer": true,
+			"wrapAllParametersWithSquareBrackets": true
+		},
+		{
+			"primaryName": "print",
+			"to": "print"
+		},
+		{
+			"primaryName": "report$",
+			"args": [],
+			"description": "Returns the last error message",
+			"migrateToCode": "\" "
+		},
+		{
+			"primaryName": "rnd",
+			"to": "random"
+		},
+		{
+			"primaryName": "sgn",
+			"to": "sign"
+		},
+		{
+			"primaryName": "sin",
+			"to": "radSin"
+		},
+		{
+			"primaryName": "time",
+			"args": [],
+			"description": "Returns time or sets it with the computer's electronic clock",
+			"to": "animation.time",
+			"applicableForQBasicFixer": true
+		}
+	],
+	"operators": [
+		{"symbol": "<<", "convertToCommand": "bitShiftLeft"},
+		{"symbol": ">>", "convertToCommand": "bitShiftRight"}
+	],
+	"keywords": [
+		{"from": "endproc", "to": "end"},
+		{"from": "endwhile", "toSymbol": "]"},
+		{
+			"from": "local",
+			"description": "Indicates that a specific variable name or names are to have a local scope within a procedure or function.  In BBC BASIC, variables in procedures and functions are to have a global scope unless they're formal parameters or marked with 'local'."
+		}
+	]
+}

@@ -1,0 +1,36 @@
+!
+!  CUBE3        version 2.0
+!
+!  Look at a cube from various camera positions.
+!  This program provides a perspective view.  Change
+!  the "PersWindow" to "ParaWindow" to get a
+!  parallel projection.
+!
+LIBRARY "3DLib.trc"
+
+RANDOMIZE
+
+OPEN #1: screen 0, 1, 0, .2       ! #1 = input window
+OPEN #2: screen .15, .85, .21, 1  ! #2 = display
+CALL PersWindow (0, 1, 0, 1, 0, 1)
+
+CALL ShowCube (2, -3, 5)          ! Show initial view
+
+DO
+   INPUT prompt "Camera position  (x, y, z): ": x,  y,  z
+   CALL ShowCube (x, y, z)
+LOOP
+
+SUB ShowCube (x, y, z)            ! Show cube from camera (x, y, z)
+
+    WINDOW #2
+    CLEAR
+    CALL SetCamera3 (x, y, z)
+    CALL MarkedCube
+    SET CURSOR 1, 1
+    PRINT "Camera: "; x; y; z
+    WINDOW #1
+
+END SUB
+
+END

@@ -1,0 +1,30 @@
+; Inspired by logo at
+; https://www.youtube.com/@WarnerClassics
+; The logo for https://monday.com looks vaguely similar too.
+to warnerClassicsLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "angle 23
+	localmake "separation :height * 0.516
+	localmake "gap :height * 0.51
+	setLineCap "round
+	setPenColor "black
+	setPenSize :height * 0.38
+	localmake "size1 (:height - penSize) / cos :angle
+	jumpLeft :height * 0.285
+	jumpForward penSize / 2
+	repeat 2 [
+		localmake "pos1 pos
+		left :angle
+		forward :size1
+		setHeading :oldHeading
+		jumpTo :pos1
+		jumpRight :separation
+	]
+	left :angle
+	jumpForward :gap
+	forward :size1 - :gap
+	setTurtleState :oldState
+end
+
+warnerClassicsLogo 100

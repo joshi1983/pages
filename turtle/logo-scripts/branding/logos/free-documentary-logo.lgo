@@ -1,0 +1,39 @@
+; Inspired by logo at
+; https://www.youtube.com/@FreeDocumentary
+
+; There are some differences.
+; - the thickness perfectly consistent here but
+; the original logo uses a narrower line at the bottom of the D than
+; the lower part of the F.
+to freeDocumentaryLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "thickness :height * 0.18
+	localmake "arcsInfo [
+		[10 1.27] [35 0.4] [30 0.4] [15 0.38756948]
+	]
+	localmake "len1 :height * 0.05
+	localmake "len2 :height * 0.743
+	localmake "len3 :len2 - :len1 - :thickness / 2
+	setPenColor "white
+	jumpForward :thickness / 2
+	setLineCap "butt
+	setPenSize :thickness
+	right 90
+	forward :len1
+	arcsLeft :arcsInfo :height
+	arcsLeft reverse :arcsInfo :height
+	forward :len2
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpLeft :len3
+	forward :height * 0.485
+	right 90
+	forward :len3
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+freeDocumentaryLogo 100

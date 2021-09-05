@@ -1,0 +1,23 @@
+; This is used to underline code with corresponding errors, warnings, or tips.
+; This is exported to images/code-editor-underline.svg
+to v :width1 :height
+	localmake "oldState turtleState
+	setPenSize :height * 0.3
+	localmake "height1 :height - penSize
+	localmake "angle arcTan :width1 / 2 / :height1
+	localmake "len hypot [:height1 :width1 / 2]
+
+	jumpForward penSize / 2
+	setLineCap "round
+	setLineJoinStyle "round
+	left :angle
+	jumpForward :len
+	right 180
+	forward :len
+	left 180 - :angle * 2
+	forward :len
+
+	setTurtleState :oldState
+end
+
+v 100 100

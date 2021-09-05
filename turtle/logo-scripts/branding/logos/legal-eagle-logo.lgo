@@ -1,0 +1,34 @@
+; Inspired by logo at:
+; https://www.youtube.com/@LegalEagle
+to legalEagleLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "shapes [
+		[-0.224 0 "#41b2ff [[11 0] [-101 0.177] [0.05] [90 0.22]
+		[90 0] [0.295] [141 0.241]]]
+
+		[-0.34 0.13 "#96d5ff [[22 0] [-100 0.26] [-12 0.6] [0.2]
+		[90 0.22] [90 0] [0.46] [50 0.42] [60 0.27] [19.6 0.57]]]
+
+		[-0.45 0.24 "#fff [[28 0] [-100 0.355] [-18 0.65] [0.392]
+		[90 0.2238993] [90 0] [0.61] [48 0.6] [50 0.34] [29.2 0.615]
+		]]
+	]
+	setPenSize 0
+	repeat count :shapes [
+		localmake "shapeInfo item repcount :shapes
+		setFillColor item 3 :shapeInfo
+		jumpRight :height * first :shapeInfo
+		jumpForward :height * item 2 :shapeInfo
+		polyStart
+		arcLines last :shapeInfo :height
+		polyEnd
+		jumpTo :oldPos
+		setHeading :oldHeading
+	]	
+	setTurtleState :oldState
+end
+
+setScreenColor "#10213b
+legalEagleLogo 100

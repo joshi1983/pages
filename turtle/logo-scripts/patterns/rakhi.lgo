@@ -1,0 +1,36 @@
+; Inspired by final drawing at:
+; https://www.youtube.com/watch?v=Ax3ojpXcEMU
+to rakhi :height
+	localmake "oldState turtleState
+	localmake "width :height * 3
+	localmake "circleSeparation :height * 0.1
+	localmake "numCircles int :width / :circleSeparation
+	jumpForward :height / 2
+	localmake "center pos
+	localmake "numAngles 16
+	setPenSize 0
+	setFillColor "red
+	rect :width :height * 0.1
+	jumpLeft :circleSeparation * (:numCircles - 1) / 2
+	setFillColor "white
+	repeat :numCircles [
+		circle :height * 0.03
+		jumpRight :circleSeparation
+	]
+	jumpTo :center
+	setPenSize :height * 0.01
+	localmake "squareSize (:height - penSize) / 2 * cos 45
+	setPenColor "black
+	setLineJoinStyle "round
+	repeat :numAngles [
+		setFillColor mix (mix "orange "yellow repRatio) transparent 0.5
+		jumpRight :squareSize / 2
+		jumpForward :squareSize / 2
+		square :squareSize
+		jumpTo :center
+		right 360 / :numAngles
+	]
+	setTurtleState :oldState
+end
+
+rakhi 100

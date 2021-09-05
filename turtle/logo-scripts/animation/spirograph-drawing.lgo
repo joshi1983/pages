@@ -1,0 +1,82 @@
+; Inspired by:
+; https://www.facebook.com/share/v/1H61QA8KtR
+to drawBenice :height :timeRatio
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "circles [
+	]
+	localmake "r 0.245
+	localmake "factors [3 3 3 3 3 3]
+	localmake "rotationSpeeds [1 4 12 16]
+	repeat count :rotationSpeeds [
+		queue2 "circles [:r 360 * item repcount :rotationSpeeds]
+		localmake "factor2 item repcount :factors
+		localmake "r :r / :factor2
+	]
+	localmake "numIterations 10000
+	jumpForward :height / 2
+	localmake "center pos
+	localmake "points []
+	repeat :numIterations [
+		localmake "angleScale :timeRatio * repRatio
+		setHeading :oldHeading - :angleScale * last first :circles
+		repeat count :circles [
+			localmake "info item repcount :circles
+			localmake "factor last :info
+			localmake "radius :height * first :info
+
+			if repcount <> 1 [
+				jumpForward :radius
+				setHeading :oldHeading + :factor * :angleScale
+			]
+			jumpForward :radius
+		]
+		queue2 "points pos
+		jumpTo :center
+	]
+	setPenColor "black
+	setFillColor transparent
+	setPenSize :height * 0.002
+	setLineJoinStyle "round
+	jumpTo first :points
+	for ["i 2 count :points] [
+		setPos item :i :points
+	]
+	jumpTo :center
+	setPenColor "red
+	setPenSize :height * 0.005
+	localmake "angleScale :timeRatio
+	setHeading :oldHeading - :angleScale * last first :circles
+	repeat count :circles [
+		localmake "info item repcount :circles
+		localmake "radius :height * first :info
+		localmake "factor last :info
+		if repcount <> 1 [
+			jumpForward :radius
+			setHeading :oldHeading + :factor * :angleScale
+		]
+		circle :radius
+		jumpForward :radius
+	]
+	setTurtleState :oldState
+end
+
+make "timeRatio interpolateRatio easeInOut animation.clampedTimeRatio
+drawBenice 100 :timeRatio
+
+to animation.snapshotstyle
+	output createPList2 [
+		["position.y 50]
+		["zoom.scale 6]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 10
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+		["thumnailTime :seconds]
+	]
+end

@@ -1,0 +1,63 @@
+; Inspired by
+; https://commons.wikimedia.org/wiki/File:Audible_logo.svg
+to audibleLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angle1 58
+	localmake "size1 :height * 0.8089642 / sin :angle1
+	localmake "size2 :height * 0.137
+	setPenSize 0
+	setFillColor "#F8991C
+	left :angle1
+	polyStart
+	jumpForward :size1
+	setHeading :oldHeading
+	jumpForward :size2
+	right 180 - :angle1
+	jumpForward :size1
+	setHeading :oldHeading + :angle1
+	jumpForward :size1
+	setHeading :oldHeading
+	jumpBackward :size2
+	polyEnd
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.25
+	localmake "center pos
+	localmake "arcsInfo [
+		[161 0.245 0.287]
+		[166 0.505 0.521]
+		[171 0.725 0.75]
+	]
+	jumpForward :height * 0.014
+	localmake "startPos pos
+	left :angle1
+	jumpForward 100
+	localmake "middlePos pos
+	right :angle1 * 2
+	jumpTo :startPos
+	jumpForward 100
+	localmake "startPos2 pos
+	jumpTo :startPos
+	repeat count :arcsInfo [
+		localmake "arcInfo item repcount :arcsInfo
+		localmake "radius1 :height * last :arcInfo
+		localmake "radius2 :height * item 2 :arcInfo
+		jumpTo :startPos
+		setHeading :oldHeading + :angle1
+		jumpForward distanceToCircle :center :radius1
+		setHeading (towards :center) + 90
+		localmake "angle2 getArcLeftAngleToLine :radius1 :startPos :middlePos
+		polyStart
+		arcLeft :angle2 :radius1
+		left first :arcInfo
+		localmake "angle3 getArcRightAngleToLine :radius2 :startPos :startPos2
+		arcRight :angle3 :radius2
+		polyEnd
+	]
+	setTurtleState :oldState
+end
+
+audibleLogo 100

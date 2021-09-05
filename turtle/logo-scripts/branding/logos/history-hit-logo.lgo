@@ -1,0 +1,34 @@
+; Inspired by logo at:
+; https://www.youtube.com/@HistoryHit
+to historyHitLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "colors ["white "#199ba8]
+	localmake "angle1 118
+	localmake "angle2 :angle1 - 90
+	localmake "width1 0.165 * :height
+	localmake "width3 :height * 0.15
+	localmake "tinyHeight :height * 0.13
+	localmake "heightStart :height * 0.23
+	localmake "width2 :height * 0.4
+	localmake "gap :height * 0.3
+	localmake "height1 :height - :width1 * 2 * tan :angle2
+	localmake "height2 :height - :gap * 2 * tan :angle2 
+	localmake "height3 :height2 - :width3 * 2 * tan :angle2
+	jumpForward :height / 2
+	setPenSize 0
+	localmake "center pos
+	repeat count :colors [
+		setHeading :oldHeading + 90 + repcount * 360 / count :colors
+		setFillColor item repcount :colors
+		isoTrapezoid :height :height1 :width1
+		isoTrapezoid :heightStart :tinyHeight :width2
+		jumpForward :gap
+		isoTrapezoid :height2 :height3 :width3
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "#0a1f3c
+historyHitLogo 100

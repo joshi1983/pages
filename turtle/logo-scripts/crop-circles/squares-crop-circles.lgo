@@ -1,0 +1,59 @@
+make "darkColor "#680
+
+; Inspired by
+; https://www.pinterest.ca/pin/462322717982697201/
+; This was from Bishops Canning Down. Wiltshire
+; This was reported on July 24, 2012
+; I wasn't able to understand the pattern of thin straight lines
+; just outside of the inner circle of the actual crop circles.  
+; I moved the lines a bit to make a more understandable pattern.
+to squaresCropCircles :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "lightColor "#ffd
+	localmake "offsets1 [0.2 0.38]
+	localmake "offsets combine :offsets1 (vectorSubtract (duplicate 1 count :offsets1) reverse :offsets1)
+	setPenSize :height * 0.015
+	localmake "squareSize (:height - penSize) * cos 45
+	setPenColor :lightColor
+	jumpForward :height / 2
+	localmake "center pos
+	setFillColor transparent
+	circle (:height - penSize) / 2
+	setLineJoinStyle "round
+	right 45
+	square :squareSize
+	left 45
+	setFillColor :darkColor
+	square :squareSize
+	setFillColor transparent
+	circle :height * 0.125
+	setFillColor :lightColor
+	setPenSize 0
+	circle :height * 0.04
+	setPenSize :height * 0.002
+	repeat 4 [
+		localmake "heading1 :oldHeading + (repcount - 1) * 360 / 4
+		setHeading :heading1
+		repeat count :offsets [
+			localmake "offset item repcount :offsets
+			localmake "y :squareSize / 2
+			localmake "x :squareSize * (:offset - 0.5)
+			localmake "dx :x + :squareSize / 2
+			localmake "dy :x - :squareSize / 2
+			localmake "angle arcTan2 :dy :dx 
+			localmake "len hypot [:dx :dy]
+			jumpForward :y
+			jumpRight :x
+			left :angle + 90
+			forward :len
+			setHeading :heading1
+			jumpTo :center
+		]
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor :darkColor
+squaresCropCircles 100

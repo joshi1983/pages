@@ -1,0 +1,41 @@
+!------------------------------------------------------------------------
+! Program .. Bt-Keys                                                    |
+! This program displays the Key of each entry in the Data Base.         |
+!------------------------------------------------------------------------
+ 
+LIBRARY "BTreeLib.trc"
+
+DIM KeyArray$(0)
+
+!------------------------------------------------------------------------ 
+! First, the program Opens the Data Base.                               |
+!------------------------------------------------------------------------
+ 
+CALL BtOpen ("NameAdPh", DataBaseSize, #1)
+
+!------------------------------------------------------------------------ 
+! The next line of code stores the Data Base keys in array (KeyArray$)  |
+! The (LoadKeys) subroutine stores the keys in alphabetically sequence. |
+!------------------------------------------------------------------------
+
+CALL LoadKeys (KeyArray$(), #1)
+
+!------------------------------------------------------------------------ 
+! The following lines of code will display the keys.                    |
+!------------------------------------------------------------------------
+
+CLEAR
+PRINT
+FOR i = 1 TO SIZE (KeyArray$)
+    IF KeyArray$(i) <> CHR$(127) THEN PRINT " "; KeyArray$(i)
+    NEXT i
+PRINT
+PRINT " Press any key to end the program .. ";
+DO WHILE KEY INPUT
+   GET KEY KeyPressed
+   LOOP
+GET KEY KeyPressed
+
+CALL BtClose (#1)
+CLEAR
+END

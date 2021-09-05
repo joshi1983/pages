@@ -1,0 +1,26 @@
+; Inspired by an image at:
+; https://www.facebook.com/photo/?fbid=10237281474080430
+; which was made by Ghee Beom Kim
+to circles :height
+	localmake "oldState turtleState
+	localmake "numAngles 128
+	setPenColor "white
+	setPenSize :height * 0.002
+	localmake "outerRadius (:height - penSize) / 2
+	setFillColor transparent
+	jumpForward :height / 2
+	localmake "center pos
+	right 90
+	repeat :numAngles [
+		localmake "ratio remainder repRatio * 2 1
+		localmake "radius :height * 0.24 * (0.03 + power 0.18 mixItems2 [1 0 1] :ratio)
+		jumpForward :outerRadius - :radius
+		circle :radius
+		jumpTo :center
+		right 360 / :numAngles
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+circles 100

@@ -1,0 +1,81 @@
+; Inspired by
+; https://www.pinterest.ca/pin/185632815883821486
+; Parametric equations are shown in the image and post.
+; It says by Nico. G.
+; [R-D] or Nico. G's plot is with a constant power of 3.
+; The following animation ranges the power from 0.01 to 10.01 as the time progresses.
+
+make "timeRatio interpolateRatio easeInQuart animation.clampedTimeRatio
+make "power 0.01 + 10 * :timeRatio
+
+to power2 :base :exp
+	localmake "sign sign :base
+	if even? :exp [
+		localmake "sign 1
+	]
+	localmake "result power abs :base :exp
+	output :result * :sign
+end
+
+to tToPoint :t
+	output [
+	(radSin :t ) + 1 / 1.4 * power2 ( radSin (112 * :t ) ) :power
+	( radCos :t ) + 1 / 1.4 * radCos ( 110 * :t ) 
+	]
+end
+
+to transformUsingTurtleState :p
+	localmake "oldPos pos
+	jumpLeft first :p
+	jumpForward last :p
+	localmake "result xyCor
+	jumpTo :oldPos
+	output :result
+end
+
+to drawPetal :scale
+	localmake "oldState turtleState
+	setPenSize :scale * 0.005
+	setPenColor "white
+	jumpForward :scale
+	localmake "oldPos pos
+	right 90
+	localmake "oldHeading heading
+	; Increase the 3000 to get a smoother, more accurate curve.
+	; Decrease to sacrifice accuracy for execution speed and fewer line segments.
+	repeat 25000 [
+		localmake "t 2 * pi * repRatio
+		localmake "p vectorScale ( tToPoint :t ) :scale
+		setHeading :oldHeading
+		jumpTo :oldPos
+		localmake "p transformUsingTurtleState :p
+		ifelse 1 = repcount [
+			jumpTo :p
+		] [
+			jumpTo :prevPos
+			setHeading towards :p
+			forward distance :p
+		]
+		localmake "prevPos pos
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+drawPetal 100
+
+to animation.snapshotstyle
+	output createPList2 [
+		["zoom.scale 2]
+		["position.y 100]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 5
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

@@ -1,0 +1,27 @@
+; Inspired by a drawing at:
+; https://www.youtube.com/shorts/6U_PB2wZmaw
+; @OualiCode wrote the code in the video to run in Python.
+;
+; This WebLogo version was written by Josh Greig.
+
+setScreenColor "black
+setPenSize 1.5
+make "h 0.3
+make "t 153
+repeat 3 [
+	make "d 75 + repcount * 15
+	repeat 1000 [
+		make "th ( repcount / 300 ) * pi
+		make "x :t * ( radCos :th ) + :d *
+		radCos :t * :th
+		make "y :t * ( radSin :th ) - :d *
+		radSin :t * :th
+		setPenColor hsvToRGB :h - floor :h 0.9 1 
+		ifelse repcount = 1 [
+			jumpTo [ :x :y ]
+		] [
+			setPos [ :x :y ]
+		]
+		make "h :h + 0.004
+	]
+]

@@ -1,0 +1,155 @@
+! Craps game.
+! Revised 22 APR 2004
+! This program demonstrates how to work in pixel units
+! This program requires the 6 die bmp image files
+
+LIBRARY "TrueCTRL.trc"
+
+CALL TC_init
+CALL TC_setunitstopixels          ! set units to pixels
+
+REM: how big is the screen
+CALL TC_getscreensize(xl,xr,yb,yt)
+REM: find the mid point
+LET midx=(xr+xl)/2
+LET midy=(yb+yt)/2
+
+CALL TC_Show (0)                  ! Show the default window
+CALL TC_Win_Switch (0)            ! Move it to the front
+
+REM: re-size window around midpoint
+CALL TC_setrectpixels(0,midx-300,midx+300,midy+200,midy-200)
+
+REM: create a logical window for plotting images
+ASK PIXELS xpix,ypix
+LET midx=xpix/2
+LET midy=ypix/2
+SET WINDOW 0,xpix-1,ypix-1,0
+
+REM: set font
+CALL TC_win_setfont(0,"TIMES",18,"BOLD")
+
+REM: make window objects
+CALL TC_PushBtn_Create (start, "START",midx-50,midx+50, -99999,20)
+CALL TC_PushBtn_Create (roll, "ROLL DICE",midx-250,midx-150, -99999,20)
+CALL TC_PushBtn_Create (stop, "QUIT",midx+150,midx+250, -99999,20)
+
+
+REM: draw craps table
+SET COLOR 2                       ! green circle
+BOX DISK midx-150,midx+150,350,50
+
+REM: read dice image files and convert to BOX string images
+DIM image$(6)
+FOR n=1 to 6
+    LET filename$=str$(n) & "die.bmp"
+    CALL read_image("MS BMP",image$(n),filename$)
+NEXT n
+
+LET gameflag=0                    ! no game in progress
+
+RANDOMIZE
+DO
+   CALL TC_Event (0, event$, window, x1, x2)
+
+   IF event$ = "HIDE" then
+      EXIT DO
+   ELSEIF event$ = "KEYPRESS" then
+      IF x1 = 27 then
+         EXIT DO
+      END IF
+   ELSEIF event$="CONTROL DESELECTED" then
+      IF x2=stop then
+         EXIT DO
+      ELSEIF x2=start and gameflag=0 then
+         LET message$="New game"
+         CALL messages(message$)
+         CALL play_game
+      ELSEIF x2=roll and gameflag=1 then
+         CALL roll(dice)
+      END IF
+   END IF
+
+LOOP
+CALL TC_cleanup
+
+
+SUB play_game
+    CALL roll(dice)
+
+    SELECT CASE dice              ! Branch on roll
+
+    CASE 2, 3, 12                 ! dice = 2, 3, or 12
+         LET message$= "You lose."
+         LET gameflag=0
+    CASE 7, 11                    ! dice = 7 or 11
+         LET message$= "You win."
+         LET gameflag=0
+    CASE ELSE                     ! Anything else
+         LET POINT = dice         ! Remember that roll
+         LET gameflag=1
+         LET message$="Roll again"
+    END SELECT
+    CALL Messages(message$)
+END SUB
+
+SUB roll(dice)
+    REM: randomly selects a dice score for each die
+    LET die1 = Int(6*Rnd + 1)     ! Roll again
+    CALL show_dice(1,die1)
+    LET die2 = Int(6*Rnd + 1)     ! Both dice
+    CALL show_dice(2,die2)
+    LET dice = die1 + die2
+    IF gameflag=1 then
+       CALL analyse_scores
+    END IF
+END SUB
+
+SUB analyse_scores
+    REM: decides winner/loser/continue
+    IF dice=point then
+       LET message$="You win"
+       LET gameflag=0
+    ELSEIF dice=7 then
+       LET message$= "You lose"
+       LET gameflag=0
+    ELSE
+       LET message$="Roll again."
+    END IF
+
+    CALL messages(message$)
+
+END SUB
+
+SUB messages(text$)
+    REM: clear print area
+    SET COLOR -2                  ! white
+    BOX AREA 5,xpix-5,ypix-5,ypix-40
+    PAUSE 0.5
+    REM: set print color to RED
+    SET COLOR 12
+    SET TEXT JUSTIFY "center","base"
+    PLOT TEXT, AT midx,ypix-20:text$
+END SUB
+
+SUB show_dice(number,value)
+    REM: shows value of dice
+    SET COLOR -1                  ! black
+    IF number=1 then
+       CALL roll_dice(midx-100,value)
+    ELSE
+       CALL roll_dice(midx+24,value)
+    END IF
+END SUB
+
+SUB roll_dice(left,value)
+    REM: animated random roll
+    FOR n=1 to 6
+        BOX SHOW image$(n) at left,238
+        PAUSE 0.2
+    NEXT n
+
+    BOX SHOW image$(value) at left,238
+END SUB
+
+END

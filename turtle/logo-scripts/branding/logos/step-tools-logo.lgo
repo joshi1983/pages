@@ -1,0 +1,101 @@
+to drawSteps :width :height
+	localmake "oldState turtleState
+	localmake "w :width
+	setFillColor "white
+	setPenSize 0
+	repeat 3 [
+		localmake "stepHeight1 :height * item repcount [0.102 0.048 0.034]
+		localmake "stepHeight2 :height * item repcount [0.062 0.062 0.05]
+		localmake "angle item repcount [40 39 43]
+		localmake "stepTopWidth :w - :stepHeight2 * 2 * tan :angle
+		stripes :w :stepHeight1 ["#a5a5a5]
+		jumpForward :stepHeight1
+		isoTrapezoid :w :stepTopWidth :stepHeight2 
+		jumpForward :stepHeight2
+		localmake "w :stepTopWidth
+	]
+	setTurtleState :oldState
+end
+
+to drawGlobe :height
+	localmake "oldHeading heading
+	localmake "radius :height * 0.1
+	jumpForward :height * 0.774
+	jumpLeft :height * 0.067
+	localmake "center pos
+	setPenSize 0
+	setFillColor "#ed1b2e
+	circle :radius
+	setFillColor "black
+	jumpBackward :radius * 0.155
+	jumpLeft :radius * 0.35
+	right 57
+	; Cuba and Jamaica
+	circlePair :radius * 0.02 :radius * 0.03 :radius * 0.18
+
+	setHeading :oldHeading + 153
+	jumpTo :center
+	jumpForward :radius
+	; North and South America
+	polyStart
+	arcLines [[-130 0] [-42 0.7] [51 0.05] [0.14] [-80 0.1]
+	[-11 0.5] [90 0.05] [-26 0.2] [60 0.1] [-50 0.13] [10 0.3]
+	[-50 0.27] [70 0.04] [-90 0.04] [55 0.22] [-68 0] [-30 1.01]
+	[-125 0] [0.08] [120 0.04] [0.05] [-50 0.05] [0.07] [-140 0.05]
+	[0.04] [-120 0.01] [0.03] [170 0.015] [0.1] [120 0.08] [60 0.04]
+	[0.06] [-90 0.02] [-25 0.34] [-90 0.02] [0.1] [10 0.05] [0.1] [20 0.35]
+	[20 0.1] [0.05] [-170 0.02] [0.02] [75 0.03] [0.17] [135 0.045]
+	[13 0.5] [50 0.05] [-70 0.05] [0.1] [40 0.15] [60 0.03] [0.1] [-60 0.03]
+	[-15 1.5] [-70 0.04] [-25 0.55] [28 0.6] [45 0.15] [0.15]
+	] :radius
+	polyEnd
+
+	jumpTo :center
+	setHeading :oldHeading + 5
+	jumpForward :radius
+	; Europe and Africa
+	polyStart
+	arcLines [[180 0] [88 0.06] [0.08] [-90 0.02] [0.08] [-90 0.03] [0.02]
+	[90 0.06] [0.02] [30 0.13] [50 0.04] [-160 0.04] [160 0.01] [110 0.13]
+	[-90 0.1] [40 0.1] [-20 0.2] [-137 0.02] [10 0.8] [-60 0.1] [53 0.12]
+	[38 0.45] [100 0.2] [50 0.1] [-90 0.07] [-47 0.05] [0.17] [-20 0.1]
+	[0.4] [150 0] [104 1.015]
+	] :radius
+	polyEnd
+
+	jumpTo :center
+	setHeading :oldHeading - 50
+	jumpForward :radius
+	; indicate Greenland and some islands from Northern Canada
+	polyStart
+	arcLines [[175 0] [90 0.09] [-60 0.04] [0.08] [30 0.1] [0.01] [160 0.015]
+	[-50 0.1] [30 0.1] [-100 0.07]
+	] :radius
+	polyEnd
+
+	; indicate iceland
+	jumpTo :center
+	setHeading :oldHeading - 25
+	jumpForward :radius * 0.84
+	circle :radius * 0.065
+	
+	; indicate Ireland and UK
+	jumpTo :center
+	setHeading :oldHeading
+	jumpForward :radius * 0.72
+	circlePair :radius * 0.055 :radius * 0.045 :radius * 0.06
+end
+
+; Inspired by logo at
+; https://www.steptools.com
+to stiLogo :height
+	localmake "oldState turtleState
+	localmake "width :height * 181 / 400
+	stripes :width :height ["black]
+	drawSteps :width :height
+	drawGlobe :height
+	setTurtleState :oldState
+end
+
+setScreenColor "#444
+stiLogo 100

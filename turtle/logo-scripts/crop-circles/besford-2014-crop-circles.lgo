@@ -1,0 +1,51 @@
+make "darkColor "#880
+
+; Mentioned at:
+; https://augureye.blogspot.com/2014/08/2014-crop-circle-gallery.html
+; Drone footage of the field is shown at:
+; https://www.youtube.com/watch?v=FKyoIw03YuA
+; These were reported in 2014.
+; The location was Besford, Near Pershore, Worcestershire.
+to besford2014CropCircles :height
+	localmake "oldState turtleState
+	localmake "lightColor "#ffd
+	localmake "thickness :height * 0.02
+	localmake "gap :height * 0.142
+	localmake "width1 :height * 0.25
+	localmake "trapezoidHeight :height * 0.2
+	localmake "width2 :width1 - :trapezoidHeight * 2 * (tan 18)
+	setLineJoinStyle "miter
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	setFillColor :lightColor
+	circle :height / 2
+	setFillColor :darkColor
+	right 180
+	regularPolygon :height * 0.395 5
+	setPenSize 0
+	right 180
+	setFillColor :lightColor
+	; a regular star matching the size of the crop circle would 
+	; span outside of the circle.
+	; To avoid that, we'll use several trapezoids.
+	repeat 5 [
+		jumpForward :gap
+		isoTrapezoid :width1 :width2 :trapezoidHeight
+		jumpTo :center
+		right 360 / 5
+	]
+	setFillColor :darkColor
+	regularStar :height * 0.46 5
+	setFillColor transparent
+	setPenSize :thickness
+	setPenColor :lightColor
+	circle :height * 0.14
+	setPenSize 0
+	setFillColor :lightColor
+	circle :height * 0.058
+	setTurtleState :oldState
+end
+
+setScreenColor :darkColor
+besford2014CropCircles 100

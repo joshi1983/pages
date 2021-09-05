@@ -1,0 +1,93 @@
+make "color1 "black
+make "color2 "white
+
+to drawTriangles :radius
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angle 28
+	localmake "numPoints 36
+	repeat 3 [
+		localmake "offsetFactor 0.5 * remainder repcount 2
+		repeat :numPoints [
+			setHeading :oldHeading + (repcount + :offsetFactor) * 360 / :numPoints
+			jumpForward :radius
+			localmake "pos2 pos
+			jumpTo :oldPos
+			left 180 / :numPoints
+			jumpForward :radius
+			right 180 - :angle
+			polyStart
+			jumpForward distanceToLine :oldPos :pos2
+			setHeading (towards :oldPos) + 90
+			localmake "nextRadius distance :oldPos
+			arcLeft 360 / :numPoints :nextRadius
+			polyEnd
+			jumpTo :oldPos
+		]
+		localmake "radius :nextRadius
+	]
+	setTurtleState :oldState
+	output :nextRadius
+end
+
+to drawHexagon :size
+	localmake "oldState turtleState
+	localmake "oldPenSize penSize
+	localmake "size2 :size / cos 30
+	localmake "oldPos pos
+	setPenSize 0
+	regularPolygon :size2 6
+	setPenSize :oldPenSize
+	repeat 3 [
+		forward :size2
+		jumpTo :oldPos
+		right 360 / 3
+	]
+	setTurtleState :oldState
+end
+
+to drawHexagons :size
+	localmake "oldState turtleState
+	localmake "size2 :size / cos 30
+	localmake "oldPos pos
+	setPenColor :color2
+	setPenSize :size * 0.04
+	repeat 5 [
+		localmake "len 5 - abs (3 - repcount)
+		jumpLeft :size * 2 * (3 - repcount)
+		jumpForward (:len - 1) * :size2
+		repeat :len [
+			if or :len <> 5 repcount <> 3 [
+				drawHexagon :size
+			]
+			jumpBackward :size2 * 2
+		]
+		jumpTo :oldPos
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://proofofalien.com/wp-content/uploads/2016/02/Wiltshire-crop-circle-2007.jpg
+; It is referenced from:
+; https://proofofalien.com/top-10-mysterious-alien-crop-circles-in-the-world/
+; It is also shown at:
+; - https://www.pinterest.ca/pin/302656037455487821/
+; - http://www.cropcircleconnector.com/anasazi/time2012g.html
+to wiltshire2007CropCircles :height
+	localmake "oldState turtleState
+	localmake "maxTriRadius :height * 0.48
+	jumpForward :height / 2
+	setPenSize 0
+	setFillColor :color2
+	circle :height / 2
+	setFillColor :color1
+	localmake "innerRadius drawTriangles :maxTriRadius
+	; The hexagon size is calculated to exactly touch the inside of the triangles.
+	drawHexagons :innerRadius / 5 * cos 30
+	setTurtleState :oldState
+end
+
+setScreenColor :color1
+wiltshire2007CropCircles 100

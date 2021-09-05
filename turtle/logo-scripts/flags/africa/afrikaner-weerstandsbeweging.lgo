@@ -1,0 +1,32 @@
+; Inspired by a flag at:
+; https://en.wikipedia.org/wiki/File:Flag_of_the_Afrikaner-Weerstandsbeweging.svg
+to afrikanerWeerstandsbewegingFlag :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "angle1 30
+	localmake "len1 0.325
+	localmake "topWidth :height * 0.22
+	localmake "thickness 0.104
+	localmake "innerTopWidth :topWidth - 2 * :height * :thickness * tan :angle1 
+	localmake "pWidth :height * 0.115
+	stripes :height * 5 / 3 :height ["#d00]
+	jumpForward :height / 2
+	setFillColor "white
+	setPenSize 0
+	circle :height * 0.375
+	localmake "center pos
+	setFillColor "black
+	repeat 3 [
+		setHeading :oldHeading + repcount * 360 / 3
+		jumpForward :height * 0.008
+		jumpLeft :pWidth / 2
+		parallelogram :pWidth :len1 * :height :angle1
+		jumpForward :len1 * :height * cos :angle1
+		right 180
+		isoTrapezoid :topWidth :innerTopWidth :height * :thickness
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+afrikanerWeerstandsbewegingFlag 100

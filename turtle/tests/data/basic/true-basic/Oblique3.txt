@@ -1,0 +1,64 @@
+!
+!  OBLIQUE3        version 2.0
+!
+!  Show two straight parallel views,  and then
+!  a cavalier and cabinet projection.
+!
+LIBRARY "3DLib.trc"
+
+OPEN #1: screen 0, .5, .5, 1
+CALL ParaWindow (0, 1, 0, 1, 0, 1)
+CALL SetCamera3 (.5, -5, .5)
+CALL DrawHouse
+CALL PlotText3 (0, .5, 1.2, "Head-On Parallel")
+
+OPEN #2: screen .5, 1, .5, 1
+CALL ParaWindow (0, 1, 0, 1, 0, 1)
+CALL SetCamera3 (3, -4, 4)
+CALL DrawHouse
+CALL PlotText3 (0, .5, 1.2, "Parallel From Above")
+
+OPEN #3: screen 0, .5, 0, .5
+CALL ParaWindow (0, 1, 0, 1, 0, 1)
+CALL SetCamera3 (.5, -5, .5)
+CALL Cavalier3 (45)
+CALL DrawHouse
+CALL PlotText3 (.2, .5, 1.2, "Cavalier")
+
+OPEN #4: screen .5, 1, 0, .5
+CALL ParaWindow (0, 1, 0, 1, 0, 1)
+CALL SetCamera3 (.5, -5, .5)
+CALL Cabinet3 (45)
+CALL DrawHouse
+CALL PlotText3 (.2, .5, 1.2, "Cabinet")
+
+END
+
+SUB DrawHouse
+
+    DIM house (12, 3)
+
+    MAT READ house
+    DATA 0, 0, 0,  0, 0, .5,  0, .5, 1,  0, 1, .5,  0, 1, 0,  0, 0, 0
+    DATA 1, 0, 0,  1, 0, .5,  1, .5, 1,  1, 1, .5,  1, 1, 0,  1, 0, 0
+
+    PLOT
+    CALL MatLines3 (house)
+
+    CALL LineOff3 (1, 0, .5,  0, 0, .5)     ! Parts of roofline
+    CALL LineOff3 (1, 1, .5,  0, 1, .5)
+    CALL LineOff3 (1, 1, 0,   0, 1,  0)
+    CALL LineOff3 (1, .5, 1,  0, .5, 1)
+
+
+    CALL RectX3 (0, .2, .4, .2, .4)    ! Windows
+    CALL RectX3 (0, .6, .8, .2, .4)
+
+    CALL RectY3 (0, .45, .55, 0, .4)   ! Front door
+
+    CALL RectX3 (1, .3, .7, .15, .4)   ! Big picture window
+
+    CALL CircleY3 (1, .3, .4, .1, .4)  ! Weird circular windows
+    CALL CircleY3 (1, .6, .7, .1, .4)
+
+END SUB

@@ -1,0 +1,81 @@
+to greekSquare :size :minPenSize
+	localmake "oldState turtleState
+	localmake "numSpiralsPerSide 12
+	localmake "size1 :size - :minPenSize
+	setPenSize :size - :size1
+	localmake "size2 :size1 / (1.5 * :numSpiralsPerSide)
+	localmake "size3 :size2 / 2
+	jumpForward :size1 / 2 - :size2
+	jumpLeft :size1 / 2
+	repeat 4 [
+		repeat :numSpiralsPerSide - 1 [
+			repeat 2 [
+				forward :size2
+				right 90
+			]
+			forward :size3
+			right 90
+			forward :size3
+			left 90
+			forward :size3
+			left 90
+			forward :size2
+			left 90
+		]
+		forward :size2
+		right 90
+		forward :size3
+	]	
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://www.facebook.com/photo/?fbid=10233009132954572
+to greekSquareHole :height :minPenSize :twist :numIterations
+	localmake "oldState turtleState
+	localmake "size :height
+	setLineCap "butt
+	setLineJoinStyle "miter
+	
+	repeat :numIterations [
+		greekSquare :size :minPenSize
+		right :twist
+		localmake "size :size * 0.85
+	]
+	setTurtleState :oldState
+end
+
+make "timeRatio animation.clampedTimeRatio
+make "size 100 * power 120 interpolateRatio easeInOut :timeRatio
+make "minPenSize :size * 0.005
+make "numIterations 40
+ifelse :timeRatio < 0.5 [
+	make "timeRatio :timeRatio * 2
+	make "timeRatio interpolateRatio easeInOut :timeRatio
+	make "twist 0
+] [
+	make "timeRatio (:timeRatio - 0.5) * 2
+	make "numIterations int mix 63 40 :timeRatio
+	make "minPenSize mix :minPenSize * 0.1 :minPenSize :timeRatio
+	make "timeRatio2 power interpolateRatio easeOut :timeRatio 0.2
+	make "timeRatio interpolateRatio easeInOut :timeRatio
+	make "minPenSize mix :minPenSize * 0.02 :minPenSize :timeRatio2
+	make "twist mix 10 0 :timeRatio
+]
+greekSquareHole :size :minPenSize :twist :numIterations
+
+to animation.snapshotstyle
+	localmake "scale 4
+	output createPList2 [
+		["zoom.scale :scale]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 10
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

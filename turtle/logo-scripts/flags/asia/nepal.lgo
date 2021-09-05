@@ -1,0 +1,217 @@
+; This code is far longer than you likely 
+; expected by looking at the flag.
+; Part of the reason for this code size is that 
+; this is strictly following construction sheets.
+; Aside from flags that contain illustrations such as Cambodia's flag,
+; Nepal's construction is one of the most difficult to do exactly right.
+; Nepal's flag is also unique by not being rectangular.
+
+; Similar to the isotoxalStar command except this 
+; won't draw all the points.
+; :numPoints2 can be less than :numPoints.
+to myIsotoxalStar :radius1 :radius2 :numPoints :numPoints2
+	localmake "oldState turtleState
+	if :radius1 < :radius2 [
+		; swap radius1 with radius2.
+		localmake "temp :radius1
+		localmake "radius1 :radius2
+		localmake "radius2 :temp
+		right 180 / :numPoints
+	]
+	left 360 * (:numPoints - :numPoints2) / :numPoints
+	localmake "angle1 180 / :numPoints
+	localmake "len1 :radius2 * sin :angle1
+	localmake "len2 :radius2 * cos :angle1
+	localmake "size1 hypot [:len1 :radius1 - :len2]
+	localmake "angle2 90 - arcCos :len1 / :size1
+	localmake "angle3 180 - 2 * (:angle1 + :angle2)
+	jumpForward :radius1
+	polyStart
+	repeat :numPoints2 [
+		right 180 - :angle2
+		jumpForward :size1
+		left :angle3
+		jumpForward :size1
+		left :angle2
+	]
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Calculates distance between 2 points
+to getSeparation :point1 :point2
+	output hypot vectorSubtract :point1 :point2
+end
+
+; crimsonPiece procedure is a translation of part A 
+; of instruction sheet at:
+; https://www.servat.unibe.ch/icl/np01000_.html
+to crimsonPiece :abLength
+	localmake "oldHeading heading
+	localmake "acLength :abLength * 4 / 3
+	localmake "cdLength :abLength / 3
+	localmake "pointB pos
+	localmake "egLength :abLength / sqrt 2
+	jumpLeft :abLength
+	localmake "pointA pos
+	jumpForward :acLength
+	localmake "pointC pos
+	jumpBackward :cdLength
+	localmake "pointD pos
+	jumpForward :cdLength - :acLength
+	jumpRight :abLength
+	setHeading towards :pointD
+	jumpForward :abLength
+	localmake "pointE pos
+	setHeading :oldHeading + 90
+	jumpBackward :abLength - :egLength
+	localmake "pointF pos
+	jumpForward :abLength
+	localmake "pointG pos
+	setFillColor "crimson
+	localmake "points [:pointB :pointE :pointG :pointC]	
+	repeat 2 [
+		jumpTo :pointA
+		polyStart
+		repeat count :points [
+			localmake "nextPoint item repcount :points
+			setHeading towards :nextPoint
+			jumpForward distance :nextPoint
+		]
+		polyEnd
+		setPenSize 0
+	]
+	setHeading :oldHeading
+	output [:pointA :pointB :pointC :pointD :pointE :pointF :pointG]
+end
+
+; moonShape procedure is a translation of part B
+; of instruction sheet at:
+; https://www.servat.unibe.ch/icl/np01000_.html
+; points should be a list of points A, B, C, D, E, F, G.
+to moonPiece :points
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "pointA item 1 :points
+	localmake "pointB item 2 :points
+	localmake "pointC item 3 :points
+	localmake "pointD item 4 :points
+	localmake "pointF item 6 :points
+	localmake "pointG item 7 :points
+	jumpTo :pointA
+	setHeading towards :pointB
+	localmake "abHeading heading
+	localmake "abLength distance item 2 :points
+	localmake "ahLength :abLength / 4
+	jumpForward :ahLength
+	localmake "pointH pos
+	jumpLeft :abLength * mix (4 / 3) (1 / sqrt 2) 3 / 4
+	localmake "pointI pos
+	localmake "pointJ mix :pointC :pointF 0.5
+	localmake "pointK mix :pointC :pointG 0.5
+	localmake "jkLength getSeparation :pointJ :pointK
+	localmake "pointL mix :pointJ :pointK :ahLength / :jkLength
+	localmake "pointM mix :pointJ :pointG 3 / 4
+	jumpTo :pointB
+	localmake "bdHeading towards :pointD
+	jumpTo :pointM
+	localmake "angle1 abs ((towards :pointD) - :bdHeading)
+	localmake "mdLength getSeparation :pointM :pointD
+	localmake "mCircleRadius abs :mdLength * sin :angle1
+	jumpTo :pointM
+	setPenSize 0.1
+	setHeading :abHeading + 90
+	jumpForward :mCircleRadius
+	localmake "pointN pos
+	jumpTo :pointM
+	setHeading :abHeading
+	jumpBackward :ahLength
+	localmake "pointO pos
+	localmake "lnLength getSeparation :pointL :pointN
+	localmake "lmLength getSeparation :pointL :pointM
+	localmake "pqLength 2 * sqrt (:lnLength * :lnLength - :lmLength * :lmLength)
+	jumpTo :pointM
+	jumpBackward :pqLength / 2
+	localmake "pointP pos
+	jumpForward :pqLength
+	localmake "pointQ pos
+
+	localmake "nmLength getSeparation :pointN :pointM
+	setHeading (towards :pointM) - 90
+	setPenSize 0
+	setFillColor "white
+	polyStart
+	arcRight 180 distance :pointM
+	setHeading (towards :pointL) + 90
+	localmake "LRadius distance :pointL
+	localmake "angleTotal 2 * arcSin :pqLength / 2 / :LRadius
+	arcLeft :angleTotal :LRadius
+	polyEnd
+	right 180
+	localmake "angle1 getArcRightAngleToCircle :LRadius :pointN :nmLength
+	arcRight :angle1 :LRadius
+	localmake "point_S pos
+	arcRight :angleTotal - :angle1 * 2 :LRadius
+	localmake "pointR pos
+	localmake "pointT mix :point_S :pointR 0.5
+	jumpTo :pointT
+	localmake "outerRadius distance :point_S
+	localmake "innerRadius distance :pointM
+	setHeading :oldHeading
+	myIsotoxalStar :innerRadius :outerRadius 16 10
+
+	queue2 "points :pointH
+	queue2 "points :pointI
+	queue2 "points :pointJ
+	queue2 "points :pointK
+	queue2 "points :pointL
+	queue2 "points :pointM
+	queue2 "points :pointN
+	queue2 "points :pointO
+	queue2 "points :pointP
+	queue2 "points :pointQ
+	setTurtleState :oldState
+	output :points
+end
+
+to drawSun :points
+	localmake "pointA item 1 :points
+	localmake "pointB item 2 :points
+	localmake "pointE item 5 :points
+	localmake "pointF item 6 :points
+	localmake "pointH item 8 :points
+	localmake "pointL item 12 :points
+	localmake "pointM item 13 :points
+	localmake "pointN item 14 :points
+	localmake "pointU mix :pointA :pointF 0.5
+	localmake "pointV mix :pointB :pointE 0.5
+	localmake "lnLength getSeparation :pointL :pointN
+	localmake "mnLength getSeparation :pointM :pointN
+	localmake "ahLength getSeparation :pointA :pointH
+	localmake "uvLength getSeparation :pointU :pointV
+	localmake "pointW mix :pointV :pointU :ahLength / :uvLength
+	jumpTo :pointN
+	setFillColor transparent
+	setPenSize 0
+	setFillColor "white
+	jumpTo :pointW
+	isotoxalStar :lnLength :mnLength 12
+end
+
+to nepalFlag :height
+	localmake "oldState turtleState
+	; I didn't see the thickness of blue defined in construction sheets 
+	; but this lines up with the SVG.
+	setPenSize :height * 0.06 
+	setPenColor "#003893
+
+	jumpRight :height * 0.307
+	jumpForward penSize / 2
+
+	localmake "points crimsonPiece (:height * 0.9158) * 3 / 4
+	moonPiece :points
+	drawSun :points
+	setTurtleState :oldState
+end
+
+nepalFlag 100

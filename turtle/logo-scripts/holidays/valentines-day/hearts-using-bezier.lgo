@@ -1,0 +1,219 @@
+to reflectX :p :mirrorPoint :mirrorDirection
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	jumpTo :mirrorPoint
+	localmake "distance distance :p
+	localmake "h towards :p
+	setHeading :mirrorDirection * 2 - :h
+	jumpForward :distance
+	setItem 1 "p xCor
+	setItem 2 "p yCor
+	setItem 3 "p zCor
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to heartShape :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	jumpBackward :size * 0.5
+	localmake "size :size / 1.1649
+	localmake "angle1 55
+	localmake "numPoints 100
+	localmake "pos1 pos
+	
+	; calculate the bezier points
+	localmake "points [pos]
+	jumpForward :size
+	localmake "finalPos pos
+	jumpTo :pos1
+	right :angle1
+	jumpForward :size * 1.5
+	queue2 "points pos
+	setHeading :oldHeading - 60
+	jumpForward :size * 1.2
+	queue2 "points pos
+	queue2 "points :finalPos
+	jumpTo :pos1
+
+	polyStart
+	; draw right side of heart.
+	repeat :numPoints [
+		localmake "ratio repcount / :numPoints
+		localmake "p bezier :points :ratio
+		setHeading towards :p
+		forward distance :p
+	]
+
+	; Draw left side of heart.
+	repeat :numPoints [
+		localmake "ratio 1 - repcount / :numPoints
+		localmake "p bezier :points :ratio
+		reflectX :p :pos1 :oldHeading
+		setHeading towards :p
+		forward distance :p
+	]
+	polyEnd
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to heartShape2 :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	jumpBackward :size * 0.5
+	localmake "angle1 5
+	localmake "angle2 70
+	localmake "numPoints 100
+	localmake "pos1 pos
+	
+	; calculate the bezier points
+	localmake "points [pos]
+	jumpForward :size * 0.83
+	localmake "finalPos pos
+	jumpTo :pos1
+	right :angle1
+	jumpForward :size * 0.4
+	queue2 "points pos
+	jumpTo :pos1
+	setHeading :oldHeading + :angle2
+	jumpForward :size * 1.3
+	queue2 "points pos
+	jumpTo :pos1
+	setHeading :oldHeading + 10
+	jumpForward :size * 1.4265
+	queue2 "points pos
+	queue2 "points :finalPos
+
+	jumpTo :pos1
+	polyStart
+	; draw right side of heart.
+	repeat :numPoints [
+		localmake "ratio repcount / :numPoints
+		localmake "p bezier :points :ratio
+		setHeading towards :p
+		forward distance :p
+	]
+
+	; Draw left side of heart.
+	repeat :numPoints [
+		localmake "ratio 1 - repcount / :numPoints
+		localmake "p bezier :points :ratio
+		reflectX :p :pos1 :oldHeading
+		setHeading towards :p
+		forward distance :p
+	]
+	polyEnd
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to heartFlat :size
+	; fill a shape using the bezier curve.
+	setFillColor "red
+	setPenSize :size * 0.01
+	heartShape :size
+end
+
+to heartFlat2 :size
+	setFillColor "black
+	setPenSize 0
+	heartShape2 :size
+	setFillColor "red
+	heartShape :size * 0.7
+end
+
+to heartContoured :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "outerColor "#730D0D
+	localmake "innerColor "red
+	localmake "numContours 4
+	localmake "maxSize :size
+	localmake "minSize :size * 0.4
+	setFillColor transparent
+	setPenSize 0
+	repeat :numContours [
+		localmake "ratio (repcount - 1) / :numContours
+		localmake "contourSize mix :minSize :maxSize :ratio
+		ifelse repcount = 1 [
+			setFillColor "black
+		] [
+			setFillColor mix :innerColor :outerColor :ratio
+		]
+		heartShape :contourSize
+	]
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to heartLeafedClover :size
+	localmake "leafSize :size * 0.5
+	localmake "leafSeparationSize :size * 0.28
+	localmake "oldPos pos
+	setFillColor "green
+	repeat 4 [
+		jumpTo :oldPos
+		jumpForward :leafSeparationSize
+		heartShape :leafSize
+		right 90
+	]
+	jumpTo :oldPos
+end
+
+to heartFractal :size
+	localmake "size :size * 0.9
+	localmake "innerSize :size * 0.6
+	ifelse :size > 1.5 [
+		localmake "oldPos pos
+		localmake "oldHeading heading
+		setFillColor "red
+		setPenSize 0
+		; polar coordinates and sizes for each
+		; The format of each is:
+		; [degrees distanceRatio sizeRatio]
+		localmake "childHearts [
+			[0 0.4 0.05]
+			[15 0.5 0.1]
+			[-15 0.5 0.1]
+			[40 0.52 0.15]
+			[-40 0.52 0.15]
+			[65 0.5 0.15]
+			[-65 0.5 0.15]
+			[90 0.45 0.15]
+			[-90 0.45 0.15]
+			[120 0.4 0.1]
+			[-120 0.4 0.1]
+			[150 0.4 0.1]
+			[-150 0.4 0.1]
+			[180 0.45 0.2]
+		]
+		heartShape :innerSize
+		repeat count :childHearts [
+			localmake "childHeart item repcount :childHearts
+			jumpTo :oldPos
+			setHeading :oldHeading + item 1 :childHeart
+			jumpForward :size * item 2 :childHeart
+			heartFractal :size * item 3 :childHeart
+		]
+		jumpTo :oldPos
+		setHeading :oldHeading
+	] [
+		; give the impression of a tiny heart 
+		; without the complexity of a heart.
+		circle :innerSize
+	]
+end
+
+make "size 200
+make "separation :size * 2
+jumpLeft :separation * 2
+heartFlat :size
+jumpRight :separation
+heartFlat2 :size
+jumpRight :separation
+heartContoured :size
+jumpRight :separation
+heartLeafedClover :size
+jumpRight :separation
+heartFractal :size

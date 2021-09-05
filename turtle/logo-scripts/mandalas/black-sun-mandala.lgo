@@ -1,0 +1,160 @@
+to outline :radius :outlineThickness
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "numTinyCircles 24
+	setPenSize :outlineThickness
+	localmake "radius1 :radius - penSize / 2
+	localmake "tinyCircleRadius1 penSize * 0.45
+	setPenColor "white
+	setFillColor transparent
+	circle :radius1
+	setPenSize :tinyCircleRadius1 * 0.1
+	setFillColor "black
+	setPenColor "black
+	repeat 2 [
+		repeat :numTinyCircles [
+			jumpForward :radius1
+			circle :tinyCircleRadius1
+			jumpTo :oldPos
+			right 360 / :numTinyCircles
+		]
+		right 180 / :numTinyCircles
+		setFillColor transparent
+	]
+	setTurtleState :oldState
+end
+
+to crossHatchSquare :size
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "numLines 14
+	localmake "stepSize :size / :numLines
+	localmake "thickness :stepSize * 0.15
+	localmake "gapSize :stepSize - :thickness
+	setLineCap "butt
+	setPenColor "black
+	setPenSize :size
+	repeat 2 [
+		jumpBackward :size / 2
+		repeat :numLines [
+			forward :thickness
+			jumpForward :gapSize		
+		]
+		jumpTo :oldPos
+		right 90
+	]
+	setTurtleState :oldState
+end
+
+to crescents :radius
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "numCrescents 8
+	localmake "moonRadius :radius * 0.09
+	localmake "moonDistance :radius * 0.8
+	localmake "arcAngle 120
+	localmake "innerArcRadius :moonRadius / sin :arcAngle / 2
+	setFillColor "white
+	setPenColor "black
+	repeat :numCrescents [
+		setHeading :oldHeading + repcount * 360 / :numCrescents
+		jumpForward :moonDistance
+		setPenSize 0
+		circle :moonRadius
+		crossHatchSquare :moonRadius * 2
+		jumpBackward :moonRadius
+		right 90
+		setPenSize :moonRadius * 0.04
+		polyStart
+		arcLeft 180 :moonRadius
+		left 90 + :arcAngle / 2
+		arcRight :arcAngle :innerArcRadius
+		polyEnd
+		jumpTo :oldPos
+	]
+	setTurtleState :oldState
+end
+
+to outerWhiteCurves :radius :innerRadius
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "numShapes 8
+	localmake "arcAngle1 0.99 * 360 / :numShapes
+	localmake "arcAngle2 40
+	setPenSize 0
+	setFillColor "white
+	repeat :numShapes [
+		setHeading :oldHeading + (repcount + 0.5) * 360 / :numShapes
+		jumpForward :radius
+		localmake "outerPos pos
+		jumpBackward :radius - :innerRadius
+		right 90
+		arcRight :arcAngle1 / 2 :innerRadius
+		localmake "startPos pos
+		right 180
+		polyStart
+		arcLeft :arcAngle1 :innerRadius
+		setHeading (towards :outerPos) + :arcAngle2 / 2
+		localmake "arcRadius (distance :outerPos) / 2 / sin :arcAngle2 / 2
+		arcLeft :arcAngle2 :arcRadius
+		setHeading (towards :startPos) + :arcAngle2 / 2
+		arcLeft :arcAngle2 :arcRadius
+		polyEnd
+		jumpTo :oldPos
+	]
+	setHeading :oldHeading
+end
+
+to innerCircles :radius
+	setPenSize :radius * 0.82
+	setFillColor "black
+	setPenColor "white
+	circle :radius - penSize / 2
+	setPenColor "black
+	setPenSize :radius * 0.01
+	setFillColor transparent
+	circle :radius * 0.35
+	circle :radius * 0.55
+end
+
+to innerSquiggles :radius
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "numSquiggles 8
+	localmake "arcsInfo [
+		[-60 0.5] [60 0.5]
+	]
+	setPenSize 0
+	setFillColor "black
+	repeat :numSquiggles [
+		setHeading :oldHeading - 15 + (repcount + 0.5) * 360 / :numSquiggles
+		polyStart
+		arcsRight :arcsInfo :radius
+		right 175
+		arcsRight :arcsInfo :radius
+		polyEnd
+		jumpTo :oldPos
+	]
+end
+
+; Inspired by a hand drawing shown at:
+; https://www.youtube.com/watch?v=6B7eGJgrWyw
+to blackSunMandala :height
+	localmake "oldState turtleState
+	localmake "radius1 :height / 2
+	localmake "outlineThickness :radius1 * 0.06
+	localmake "radius2 :radius1 - :outlineThickness
+	localmake "radius3 :radius2 * 0.6
+	localmake "radius4 :radius3 * 0.93
+	jumpForward :radius1
+	outline :radius1 :outlineThickness
+	crescents :radius2
+	outerWhiteCurves :radius2 :radius3
+	innerCircles :radius4
+	innerSquiggles :radius4
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+blackSunMandala 100

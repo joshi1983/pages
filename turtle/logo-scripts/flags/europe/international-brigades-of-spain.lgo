@@ -1,0 +1,17 @@
+; Inspired by
+; https://commons.wikimedia.org/wiki/File:Flag_of_the_International_Brigades.svg
+; This flag was used during the Spanish civil war(1936 - 1939).
+to internationalBrigadesFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 694 / 500
+	localmake "redColor "#DA121A
+	localmake "starRadius1 :height * 0.2
+	stripes :width :height ["#630B57 "#FCDD09 :redColor]
+	setPenSize 0
+	setFillColor :redColor
+	jumpForward :height / 2 - :starRadius1 * (1 - sin 30) / 2
+	isotoxalStar :starRadius1 :height * 0.062 3
+	setTurtleState :oldState
+end
+
+internationalBrigadesFlag 100

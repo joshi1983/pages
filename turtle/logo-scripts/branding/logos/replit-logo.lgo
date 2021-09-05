@@ -1,0 +1,51 @@
+; Inspired by logo at
+; https://replit.com/
+to replitLogo :height :color
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "cornerRadiusRatio 0.057
+	localmake "cornerRadius2Ratio 0.063
+	localmake "height1Ratio 0.32 * (1 - 3 * :cornerRadiusRatio)
+	localmake "height2Ratio :height1Ratio - :cornerRadiusRatio
+	localmake "outerWidthRatio 0.41
+	localmake "width1Ratio :outerWidthRatio - :cornerRadiusRatio
+	localmake "width2Ratio :width1Ratio - :cornerRadiusRatio
+	localmake "width3Ratio 0.378
+	localmake "height3Ratio 1 - 2 * (:height1Ratio + :cornerRadiusRatio) - 2 * :cornerRadius2Ratio 
+	localmake "arcsInfo1 [
+		[:height1Ratio] [90 0] [:width1Ratio] [90 :cornerRadiusRatio]
+		[:height2Ratio] [90 :cornerRadiusRatio] [:width2Ratio] [90 :cornerRadiusRatio]
+	]
+	jumpForward :height * :cornerRadiusRatio
+	setPenSize 0
+	setFillColor :color
+	polyStart
+	arcLines :arcsInfo1 :height
+	polyEnd
+
+	jumpTo :oldPos
+	jumpForward :height * (1 - :cornerRadiusRatio)
+	right 180
+	polyStart
+	arcLines :arcsInfo1 -:height
+	polyEnd
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * (:cornerRadiusRatio + :height1Ratio)
+	polyStart
+	arcLines [
+		[-90 0] [:width3Ratio] [90 :cornerRadius2Ratio] [:height3Ratio]
+		[90 :cornerRadius2Ratio] [:width3Ratio]
+	] :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 4
+jumpLeft :separation / 2
+replitLogo :height "black
+jumpRight :separation
+replitLogo :height "#fd5402

@@ -1,0 +1,100 @@
+; Inspired by logo at:
+; https://en.wikipedia.org/wiki/File:AVCO_Embassy_Logo.jpg
+to avcoEmbassyLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angle 12
+	localmake "thickness :height * 0.01
+	setPenSize 0
+	setFillColor "#0f81e2
+	jumpLeft :height * 1.2
+	polyStart
+	jumpRight :height * 1.15
+	right :angle
+	jumpForward :height / cos :angle
+	polyEnd
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpRight :height * 0.216
+	setFillColor "#51a15a
+	parallelogram :height * 0.35 :height / cos :angle :angle
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpRight :height * 0.82
+	localmake "startPos pos
+	repeat 26 [
+		if 0 <> remainder repcount 9 [
+			jumpTo :startPos
+			setHeading :oldHeading + :angle
+			jumpForward (:height - :thickness) * repRatio / (cos :angle)
+			setHeading :oldHeading
+			parallelogram :height * 0.7 :thickness / cos :angle :angle
+		]
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://en.wikipedia.org/wiki/Embassy_Pictures#/media/File:Embassy_Pictures_logo.png
+to embassyPicturesLogo :height :color
+	localmake "oldState turtleState
+	localmake "width :height * 1.33
+	setPenSize 0
+	localmake "starLen1 0.39
+	localmake "starLen2 0.36895
+	localmake "leftLines1 [
+		[0.5] [-90 0] [0.705] [-36 - 90 0] [:starLen1]
+		[36/2 - 90 0] [:starLen2] [180 - 36 0] [:starLen2]
+		[(36 / 2 - 90) / 2 0]
+	]
+	localmake "starLen3 0.32
+	localmake "eWidth :height * 0.603
+	localmake "eThickness :height * 0.215
+	localmake "leftEThickness 0.252
+	localmake "eLines1 [[90 + 36 / 2 0] [:starLen3] [90 - 36 / 2 0]
+		[0.5 - :starLen3 * sin 36 / 2] [90 0]
+		[:leftEThickness] [90 0]
+		[0.5 - :eThickness / :height / 2] [-90 0]
+		[:eWidth / :height - :leftEThickness]
+		[90 0] [:eThickness / 2 / :height]
+	]
+	setFillColor :color
+	drawArcLineShape [-:width / :height / 2 0.5
+		combine :leftLines1 reverse :leftLines1
+	] :height
+	jumpRight (:width - :eWidth) / 2
+	drawArcLineShape [
+		:starLen3 * (cos 36 / 2) - :eWidth / :height / 2 
+		0.5
+		combine :eLines1 reverse :eLines1
+	] :height
+	repeat 2 [
+		stripes :eWidth :eThickness [fillColor]
+		jumpForward :height - :eThickness
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://en.wikipedia.org/wiki/Embassy_Pictures#/media/File:Embassy_Television.jpg
+to embassyTelevisionLogo :height
+	localmake "oldState turtleState
+	localmake "innerHeight :height * 0.7
+	stripes :height * 1.5 :height ["#4a6bff]
+	jumpForward (:height - :innerHeight) / 2
+	embassyPicturesLogo :innerHeight "#c1baf0
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+make "height 100
+make "separation :height * 4
+jumpLeft :separation
+avcoEmbassyLogo :height
+jumpRight :separation
+embassyPicturesLogo :height "#4a6bff
+jumpRight :separation
+embassyTelevisionLogo :height

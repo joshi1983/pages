@@ -1,0 +1,122 @@
+to getNailPositions :len :numNails
+	localmake "oldPos pos
+	localmake "result []
+	repeat :numNails [
+		queue2 "result pos
+		jumpForward :len / :numNails
+	]
+	jumpTo :oldPos
+	output :result
+end
+
+to connect :point1 :point2
+	jumpTo :point1
+	setHeading towards :point2
+	forward distance :point2
+end
+
+; Inspired by https://www.youtube.com/watch?v=cvTJdyUFj5k
+; The video tutorial mentions a lot of the measured angles,
+; lengths, and nail counts which made it fairly straightforward
+; to make a similar drawing in WebLogo.
+to omArtStringMandala :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "scale :height * 0.0186
+	localmake "centerRadius :scale * 3 / 2
+	jumpForward :height / 2
+	localmake "center pos
+	localmake "nails []
+	repeat 12 [
+		setHeading :oldHeading + repcount * 360 / 12
+		jumpForward :centerRadius
+		localmake "nailsForSection []
+		queue2 "nailsForSection getNailPositions :scale * 13 27
+		jumpForward :scale * 13 * 15 / 27
+		right 180 - 140
+		queue2 "nailsForSection getNailPositions :scale * 13 27
+		jumpLeft :scale * 13
+		queue2 "nailsForSection getNailPositions :scale * 13 27
+		queue2 "nails :nailsForSection
+		jumpTo :center
+	]
+	setPenSize :scale * 0.17
+	setPenColor "white
+	repeat 12 [
+		localmake "nailSection1 item 1 + (remainder repcount 12) :nails
+		localmake "nailSection2 item repcount :nails
+		localmake "nailStrip1 item 1 :nailSection1
+		localmake "nailStrip2 item 1 :nailSection2
+		repeat 16 [
+			localmake "index1 11 + repcount
+			localmake "index2 repcount
+			localmake "p1 item :index1 :nailStrip1
+			localmake "p2 item :index2 :nailStrip2
+			connect :p1 :p2
+		]
+	]
+	repeat 12 [
+		localmake "nailSection item repcount :nails
+		localmake "nailStrip1 item 1 :nailSection
+		localmake "nailStrip2 item 2 :nailSection
+		repeat count :nailStrip1 [
+			localmake "p1 item repcount :nailStrip1
+			localmake "p2 item repcount :nailStrip2
+			connect :p1 :p2
+		]
+	]
+	jumpTo :center
+	setHeading :oldHeading
+	regularPolygon :centerRadius 12
+	repeat 6 [
+		jumpBackward :centerRadius
+		forward :centerRadius * 2
+		jumpTo :center
+		right 360 / 12
+	]
+	setPenSize :scale * 0.1
+	repeat 12 [
+		localmake "nailSection item repcount :nails
+		localmake "nailStrip1 item 2 :nailSection
+		localmake "nailStrip2 item 3 :nailSection
+		repeat count :nailStrip1 [
+			localmake "p1 item repcount :nailStrip1
+			localmake "p2 item repcount :nailStrip2
+			connect :p1 :p2
+		]
+	]
+
+	setPenColor "#9200C7
+	repeat 12 [
+		localmake "nailSection1 item repcount :nails
+		localmake "nailSection2 item 1 + (remainder repcount 12) :nails
+		localmake "nailStrip1 first :nailSection1
+		localmake "nailStrip2 first :nailSection2
+		repeat 15 [
+			localmake "p1 item repcount :nailStrip1
+			localmake "p2 item 16 - repcount :nailStrip2
+			connect :p1 :p2
+		]
+	]
+
+	; Draw the nails.
+	setPenSize :scale * 0.03
+	setPenColor "black
+	setFillColor "white
+	repeat count :nails [
+		localmake "section item repcount :nails
+		repeat count :section [
+			localmake "nailPoints item repcount :section
+			repeat count :nailPoints [
+				localmake "nailPoint item repcount :nailPoints
+				jumpTo :nailPoint
+				circle :scale * 0.2
+			]
+		]
+	]
+
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+omArtStringMandala 100

@@ -1,0 +1,47 @@
+to drawPetal :height
+	localmake "oldState turtleState
+	localmake "arcsInfo [
+		[21.5 0] [0.66] [-75 0.16] [12 1] [18.319488 0.2]
+		[-66.81949 0]
+	]
+	polyStart
+	arcLines :arcsInfo :height
+	arcLines reverse :arcsInfo :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://commons.wikimedia.org/wiki/File:Flag_of_Janamat_Party_Nepal.png
+; Some small differences include:
+; - The width/height ratio was changed to 16:9.
+; - The petal colour was changed to exactly match the left side.
+; - The flower is centered precisely.
+to janamatPartyNepalFlag :height
+	localmake "oldState turtleState
+	localmake "width :height *  16 / 9
+	localmake "flagOrange "#fd0002
+	localmake "petalRadius :height * 0.2
+	jumpForward :height / 2
+	localmake "center pos
+	jumpLeft :width / 2
+	right 90
+	stripes :height :width [:flagOrange "white "#22b14c]
+	jumpTo :center
+	left 90
+	setFillColor :flagOrange
+
+	; Draw the ASTADAL KAMAL.
+	setPenSize 0
+	right 180 / 8
+	repeat 8 [
+		drawPetal :petalRadius
+		right 360 / 8
+	]
+	setFillColor "white
+	circle :height * 0.095
+	setTurtleState :oldState
+end
+
+setScreenColor "#ddd
+janamatPartyNepalFlag 100

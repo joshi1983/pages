@@ -1,0 +1,38 @@
+to drawP :logoHeight
+	localmake "oldState turtleState
+	jumpForward :logoHeight * 0.476
+	jumpLeft :logoHeight * 0.105
+
+	arcLines [[-62 0] [10 1] [40 0.155] [90 0.095] [20 0.34] [4 2]
+	[10 0.5] [123 0.03] [0.18] [-40 0.4] [-32 0.23] [-90 0] [-30 0.02]
+	[-38 0.2] [0.19]
+	] :logoHeight
+	setTurtleState :oldState
+end
+
+to drawC :logoHeight
+	localmake "oldState turtleState
+	jumpForward :logoHeight * 0.763
+	jumpRight :logoHeight * 0.224
+
+	arcLines [[20 0] [90 0.027] [30 0.34] [25 0.17] [29 0.27]
+	[60 0.08] [31 0.15] [27 0.5]
+	] :logoHeight
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/President%27s_Choice#/media/File:President's_Choice_Logo_2014.svg
+to presidentsChoice2014Logo :height
+	localmake "oldState turtleState
+	stripes :height * 0.659 :height ["#e02a26]
+	setPenColor "white
+	setPenSize :height * 0.042
+	setLineCap "round
+	setLineJoinStyle "round
+	drawP :height
+	drawC :height
+	setTurtleState :oldState
+end
+
+presidentsChoice2014Logo 100

@@ -1,0 +1,21 @@
+; Inspired by:
+; https://en.wikipedia.org/wiki/Flag_of_Switzerland#/media/File:Flag_of_Switzerland_(Pantone).svg
+; A construction sheet is at:
+; https://en.wikipedia.org/wiki/Flag_of_Switzerland#/media/File:Flag_of_Switzerland_(construction_sheet).svg
+to switzerlandFlag :height
+	localmake "oldState turtleState
+	localmake "crossSize :height * (7 * 2 + 6) / 32
+	localmake "crossThickness :height * 6 / 32
+	stripes :height :height ["#da291c]
+	jumpForward :height / 2
+	localmake "center pos
+	repeat 2 [
+		jumpBackward :crossSize / 2
+		stripes :crossThickness :crossSize ["white]
+		jumpTo :center
+		right 90
+	]
+	setTurtleState :oldState
+end
+
+switzerlandFlag 100

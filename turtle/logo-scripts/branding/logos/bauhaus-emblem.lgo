@@ -1,0 +1,64 @@
+make "eyeX 0.01606143
+make "eyeY 0.8256531
+make "eyeHeight1 0.00838365
+make "eyeWidth1 0.25009923
+make "eyeSquareSize 0.157
+make "rects [
+	[0.0485 0.2764 0.08 0.0203 "white] 
+	[0.07662 0.25325 0.044 0.2749 "#156daa]
+	[0.1065 0.685 0.027 0.595 "#e83128] [-0.001 0.062 0.115 0.116 "#e83128]
+	[-0.016 0.1218 0.229 0.012 "white]
+	[0.065 0.38732 0.1096 0.00675 "white]
+	[-:eyeX - :eyeSquareSize / 2 :eyeY - :eyeSquareSize / 2 :eyeSquareSize :eyeSquareSize "#f1c900]
+	[-:eyeX - :eyeWidth1 / 2 :eyeY - :eyeHeight1 / 2 :eyeWidth1 :eyeHeight1 "white]
+	[-:eyeX - :eyeHeight1 / 2 :eyeY - :eyeWidth1 / 2 :eyeHeight1 :eyeWidth1 "white]
+]
+
+to drawCustomRectsAndCircle :height :rects
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	setPenSize 0
+	setFillColor "white
+	repeat count :rects [
+		localmake "rect item repcount :rects
+		jumpTo :oldPos
+		jumpRight :height * first :rect
+		jumpForward :height * item 2 :rect
+		setFillColor last :rect
+		rect :height * item 3 :rect :height * item 4 :rect
+	]
+
+	setPenColor "white
+	setPenSize :height * 0.00945
+	setFillColor transparent
+	jumpTo :oldPos
+	jumpForward :height / 2
+	circle (:height - penSize) / 2
+	setTurtleState :oldState
+end
+
+; Based on 
+; https://en.wikipedia.org/wiki/Bauhaus#/media/File:Bauhaus-Signet.svg
+; with colors from Bauhaus logos found in various other sources
+to bauhausEmblemColored :height
+	drawCustomRectsAndCircle :height :rects
+end
+
+to rectToWhiteRect :rect
+	output [item 1 :rect item 2 :rect item 3 :rect item 4 :rect "white]
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Bauhaus#/media/File:Bauhaus-Signet.svg
+to bauhausEmblemWhite :height
+	localmake "whiteRects map "rectToWhiteRect :rects
+	drawCustomRectsAndCircle :height :whiteRects
+end
+
+setScreenColor "black
+make "height 100
+make "separation :height * 5
+jumpLeft :separation / 2
+bauhausEmblemWhite :height
+jumpRight :separation
+bauhausEmblemColored :height

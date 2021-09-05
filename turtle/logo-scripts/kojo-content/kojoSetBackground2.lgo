@@ -1,0 +1,18 @@
+; This is a very rough translation of Kojo's setBackground2 command.
+; There are some significant differences, though.
+; - This will draw over existing shapes which Kojo's setBackground2 might not do.
+; - This also uses a hardcoded dimensions and position.
+;  Kojo's setBackground2 likely uses the viewport dimensions and position dynamically.
+to kojoSetBackground2 :topColor :bottomColor
+	localmake "oldState turtleState
+	localmake "colorStops createPList2 [
+		[0 :topColor] [1 :bottomColor]
+	]
+	localmake "height 500
+	setFillGradient createLinearGradient [0 -:height / 2] [0 :height / 2] :colorStops "pad
+	jumpTo [0 0]
+	setPenSize 0
+	rect 1000 :height
+	setTurtleState :oldState
+	setScreenColor :bottomColor
+end

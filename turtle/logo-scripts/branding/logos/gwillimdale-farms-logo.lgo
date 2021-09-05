@@ -1,0 +1,59 @@
+to drawSun :logoHeight
+	localmake "oldState turtleState
+	jumpForward :logoHeight * 0.47
+	jumpRight :logoHeight * 0.71
+	localmake "center pos
+	left 75
+	setLineCap "round
+	setPenColor "#FCD630
+	setPenSize :logoHeight * 0.04
+	repeat 6 [
+		jumpForward :logoHeight * 0.36
+		forward :logoHeight * 0.12
+		jumpTo :center
+		right 28.1
+	]
+	arc 180 :logoHeight * 0.27
+	jumpRight :logoHeight * 0.02
+	right 33
+	setLineCap "butt
+	arc 145 :logoHeight * 0.25
+	setTurtleState :oldState
+end
+
+to drawField :logoHeight
+	localmake "oldState turtleState
+	localmake "arcsInfo [
+		[23 3.5] [10 7] [-173 0]
+		[-17 4] [173.5 0]
+		[19 4] [2.1 18] [-175 0.01]
+		[-20 5] [172.5 0]
+		[18 5] [-178 0.01]
+		[-7 6] [-12 2.5] [-8 10] [-15.6 2.465]
+	]
+	jumpForward :logoHeight * 0.263
+	jumpRight :logoHeight * 1.676
+	setPenSize 0
+	setFillColor "#A6CD57
+	left 73
+	polyStart
+	arcsLeft :arcsInfo :logoHeight
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by logo at
+; https://gwillimdalefarms.com
+; The original logo looks different in mainly one way:
+; The original logo has a much more hand-drawn style.
+; The original looks a lot like chalk or crayon on roughly textured paper.
+; This hand-drawn style is represented in SVG by lots of tiny shapes.
+; This drawing in WebLogo uses the same colors but has much smoother edges.
+to gwillimdaleLogo :height
+	localmake "oldState turtleState
+	drawSun :height
+	drawField :height
+	setTurtleState :oldState
+end
+
+gwillimdaleLogo 100

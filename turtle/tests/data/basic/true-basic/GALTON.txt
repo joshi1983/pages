@@ -1,0 +1,87 @@
+!  Galton box.
+!
+!  Version 2.0, copyright (c) 1988 by True BASIC, Inc.
+!
+
+OPEN #1: screen .05,.95,.05,.96
+SET WINDOW -5,27,0,20
+SET COLOR MIX(0) .6,1,0
+DIM count(11)
+RANDOMIZE
+
+SET COLOR "red"                   !draw collection box at bottom
+BOX AREA 0,22,0,.2
+FOR x = 0 to 22 step 2
+    BOX AREA x-.05,x+.05,0,9
+NEXT x
+
+SET COLOR "black"                 !draw pegs
+FOR r = 1 to 10
+    FOR c = 1 to r
+        CALL peg(r,c,0)
+    NEXT c
+NEXT r
+
+SET COLOR "red"                   !get image of ball
+CALL disk(ball$)
+
+FOR b = 1 to 50                   !drop 50 balls down board
+    LET r,c = 1
+    CALL ball(r,c,ball$,0)
+    FOR t = 1 to 10
+        CALL ball(r,c,ball$,-1)
+        LET r = r+1
+        IF rnd<.5 then LET c=c+1
+        IF t=10 then LET count(c)=count(c)+1
+        CALL ball(r,c,ball$,count(c))
+pause 0.05
+    NEXT t
+NEXT b
+END
+
+!
+!  Draw one peg.
+!
+SUB peg(r,c,cnt)
+    CALL convert(r,c,x,y,cnt)
+    BOX AREA x-.1,x+.1,y-.1,y+.1
+END SUB
+
+!
+!  If cnt>=0 then draw a ball.  Otherwise erase that spot.
+!
+SUB ball(r,c,b$,cnt)
+    CALL convert(r,c,x,y,cnt)
+    IF cnt<0 then
+       BOX CLEAR x-.33,x+.33,y+.2,y+.9
+    ELSE
+       BOX SHOW b$ at x-.33,y+.2
+    END IF
+END SUB
+
+!
+!  Convert row/column to screen x/y location.
+!
+SUB convert(r,c,x,y,cnt)
+    IF r<11 then
+       LET x = 12-r+2*(c-1)
+       LET y = 20-r
+    ELSE
+       LET x = 2*c-1
+       LET y = 1.3*cnt/2-.5
+    END IF
+END SUB
+
+!
+!  Get image of ball in b$.
+!
+SUB disk(b$)
+    LET x = 11
+    LET y = 19.5
+    LET r = .33
+    SET COLOR "black"
+    BOX CIRCLE x-r,x+r,y-r,y+r
+    SET COLOR "cyan"
+    FLOOD x,y
+    BOX KEEP 10.67,11.33,19.21,19.84 in b$
+END SUB

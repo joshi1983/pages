@@ -1,0 +1,55 @@
+; Inspired by logo at:
+; https://www.wikiwand.com
+to wikiwandLogo :height
+	localmake "oldState turtleState
+	localmake "lightColor "white
+	localmake "oldHeading heading
+	localmake "angle 45
+	localmake "gap1 0.12
+	localmake "gap2 0.145
+	localmake "len1 0.126
+	localmake "len2 0.11
+	localmake "gaps vectorScale [:gap2 :gap1 :gap2] :height
+	localmake "lens vectorScale [:len2 :len1 :len2] :height
+	localmake "wShapes [
+		[0 0 
+			[[90 0] [5 0.4] [20 0.08] [117 0.011] [0.028]
+			[-25 0.04] [-4 4] [0.02] [20 0.1] [95 0.02]
+			[18 0.15] [4.85 3] [-55 0.07] [-2.2 0.4] [153.7 0.018]
+			[20 0.28] [3.9 0.6] [147 0.016] [8 0.2] [-30 0.02]
+			[-65.5 0.005] [0.243] [-138 0] [0.23] [-20 0.08]
+			[-90 0.01] [20 0.05] [146 0.0115] [6 0.3]
+			]
+		]
+		[0.015 0
+			[[159.1 0] [-3.48 5] [-133 0] [-3 4] [-13 0.135]
+			[-85 0.015] [13 0.1] [143 0.016] [15 0.35] [8.8 0.5]
+			[140 0.013] [25 0.1] [-55 0.01] [-8 0.2] [0.3]
+			[20 0.025] [111 0.03] [4 5]
+			]
+		]
+	]
+	setFillColor "black
+	jumpForward :height / 2
+	setPenSize 0
+	roundRect :height :height :height * 0.24
+	setPenSize :height * 0.05
+	setLineCap "round
+	jumpForward :height * 0.056
+	left :angle
+	setPenColor :lightColor
+	localmake "startPos pos
+	repeat 3 [
+		jumpForward item repcount :gaps
+		forward item repcount :lens
+		right :angle
+		jumpTo :startPos
+	]
+	setHeading :oldHeading
+	setPenSize 0
+	setFillColor :lightColor
+	drawArcLineShapes :wShapes :height
+	setTurtleState :oldState
+end
+
+wikiwandLogo 100

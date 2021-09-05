@@ -1,0 +1,34 @@
+; Inspired by flag at:
+; https://en.wikipedia.org/wiki/Flag_of_Durham,_North_Carolina#/media/File:Flag_of_Durham,_North_Carolina.svg
+to durhamNorthCarolinaFlag :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "width :height * 5 / 3
+	localmake "blueColor "#00548f
+	localmake "stars [
+		[0.107 0.3973] [0.323 0.465] [0.525 0.581] [0.6725 0.7255]
+		[0.3663 0.275] [0.561 0.372] [0.7267 0.5198]
+	]
+	stripes :width :height ["#1d4395]
+	jumpForward :height / 2
+	jumpLeft :width / 2
+	right 90
+	stripes :height :width ["#ef3e42 "#ffd046 :blueColor :blueColor]
+
+	setHeading :oldHeading
+	jumpTo :oldPos
+	setPenSize 0
+	setFillColor "white
+	repeat count :stars [
+		localmake "starInfo item repcount :stars
+		jumpRight :height * first :starInfo
+		jumpForward :height * last :starInfo
+		regularStar :height * 0.087 5
+		jumpTo :oldPos
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "#ddd
+durhamNorthCarolinaFlag 100

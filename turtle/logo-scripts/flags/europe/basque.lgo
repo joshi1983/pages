@@ -1,0 +1,38 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Ikurri%C3%B1a#/media/File:Flag_of_the_Basque_Country.svg
+to basqueFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 25 / 14
+	localmake "whiteThickness :height * 4.3 / 28
+	localmake "angle arcTan :height / :width
+	localmake "triWidth1 :width - :whiteThickness / sin :angle
+	localmake "triHeight1 :height / 2 - :whiteThickness / 2 / cos :angle
+	localmake "triWidth2 :height - :whiteThickness / cos :angle
+	localmake "triHeight2 (:width - :whiteThickness / sin :angle) / 2
+	localmake "redColor "#D52B1E
+	stripes :width :height ["#009B48]
+	setFillColor :redColor
+	setPenSize 0
+	; top and bottom triangles
+	repeat 2 [
+		isoTriangle :triWidth1 :triHeight1
+		jumpForward :height
+		right 180
+	]
+	jumpLeft :width / 2
+	jumpForward :height / 2
+	right 90
+	repeat 2 [
+		isoTriangle :triWidth2 :triHeight2
+		jumpForward :width
+		right 180
+	]
+	setTurtleState :oldState
+	stripes :whiteThickness :height ["white]
+	jumpForward (:height - :whiteThickness) / 2
+	stripes :width :whiteThickness ["white]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+basqueFlag 100

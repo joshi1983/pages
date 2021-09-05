@@ -1,0 +1,180 @@
+to drawTrapezoidCross :baseWidth :topWidth :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "angle arcTan (:topWidth + :baseWidth) / 2 / :height
+	localmake "len1 hypot [(:baseWidth + :topWidth) / 2 :height]
+	isoTrapezoid :baseWidth :topWidth :height
+	jumpLeft :baseWidth / 2
+	right :angle
+	forward :len1
+	setHeading :oldHeading
+	jumpLeft :topWidth
+	right 180 - :angle
+	forward :len1
+	setTurtleState :oldState
+end
+
+to drawIncompleteTrapezoidCross :baseWidth :topWidth :height
+	localmake "oldState turtleState
+	localmake "oldOrientation orientation
+	localmake "oldPos pos
+	localmake "angle arcTan (:topWidth + :baseWidth) / 2 / :height
+	localmake "len1 hypot [(:baseWidth + :topWidth) / 2 :height]
+	localmake "angle2 arcTan (:baseWidth - :topWidth) / 2 / :height 
+	localmake "len2 :height / cos :angle2
+	jumpLeft :baseWidth / 2
+	localmake "pos1 pos
+	right :angle
+	forward :len1
+	jumpTo :pos1
+	setOrientation :oldOrientation
+	right :angle2
+	forward :len2
+	setOrientation :oldOrientation
+	jumpTo :oldPos
+	jumpRight :baseWidth / 2
+	localmake "pos1 pos
+	left :angle
+	forward :len1
+
+	jumpTo :pos1
+	setOrientation :oldOrientation
+	left :angle2
+	forward :len2
+
+	setTurtleState :oldState
+end
+
+to trapCrossPattern :numLevels :baseWidth :stepHeight :outsideAngle
+	localmake "oldState turtleState
+	setFillColor transparent
+	repeat :numLevels [
+		localmake "nextBaseWidth :baseWidth - :stepHeight * 2 * tan :outsideAngle
+		drawTrapezoidCross :baseWidth :nextBaseWidth :stepHeight
+		jumpForward :stepHeight
+		localmake "stepHeight :stepHeight * :nextBaseWidth / :baseWidth
+		localmake "baseWidth :nextBaseWidth
+	]
+	setTurtleState :oldState
+end
+
+to trapCrossPattern3D :numLevels :baseWidth :stepHeight :outsideAngle
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldOrientation orientation
+	localmake "dx :stepHeight * tan :outsideAngle
+	localmake "h sqrt :stepHeight * :stepHeight - :dx * :dx 
+	localmake "pitchAngle arcTan :dx / :h
+	setLineJoinStyle "round
+	setLineCap "round
+	repeat 4 [
+		rollRight repcount * 90
+		jumpOut :baseWidth / 2
+		pitchUp :pitchAngle
+		trapCrossPattern :numLevels :baseWidth :stepHeight :outsideAngle
+		setOrientation :oldOrientation
+		jumpTo :oldPos
+	]
+	setTurtleState :oldState
+end
+
+to drawArms :baseWidth :stepHeight :armLength :outsideAngle
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldOrientation orientation
+	localmake "oldPenSize penSize
+	localmake "dx :stepHeight * tan :outsideAngle
+	localmake "pitchAngle arcTan :dx / :armLength
+	localmake "topWidth :baseWidth + :armLength * 2
+	localmake "coilLength :stepHeight * 0.5
+	repeat 2 [
+		setOrientation :oldOrientation
+		localmake "sign sign repcount - 1.5
+		jumpIn :baseWidth / 2 * :sign
+		rollRight :pitchAngle * :sign
+		localmake "orientation1 orientation
+		setPenSize :oldPenSize
+		isoTrapezoid :baseWidth :topWidth :stepHeight
+		jumpForward :stepHeight
+		jumpLeft :topWidth / 2
+		setPenSize :oldPenSize * 3
+		repeat 2 [
+			setOrientation :oldOrientation
+			backward :coilLength
+			setOrientation :orientation1
+			jumpForward :coilLength
+			jumpRight :topWidth
+		]
+		setOrientation :oldOrientation
+		jumpTo :oldPos
+	]
+
+	setTurtleState :oldState
+end
+
+; Inspired by towers like the ones here:
+; https://pxhere.com/en/photo/572653
+to powerTower :size
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "stepHeight :size * 3 / 4
+	localmake "oldOrientation orientation
+	localmake "outsideAngle 7
+	localmake "baseWidth :size
+	localmake "nextBaseWidth :baseWidth - :stepHeight * 2 * tan :outsideAngle
+	localmake "ratio :nextBaseWidth / :baseWidth
+	localmake "dx :stepHeight * tan :outsideAngle
+	localmake "h sqrt :stepHeight * :stepHeight - :dx * :dx 
+	localmake "pitchAngle arcTan :dx / :h
+	localmake "outsideAngle2 1
+	localmake "ratio2 cos :outsideAngle2
+	setPenSize :size * 0.01
+	repeat 4 [
+		rollRight repcount * 90
+		jumpOut :baseWidth / 2
+		pitchUp :pitchAngle
+		drawIncompleteTrapezoidCross :baseWidth :nextBaseWidth :stepHeight
+		setOrientation :oldOrientation
+		jumpTo :oldPos
+	]
+	jumpForward :stepHeight
+	localmake "stepHeight :stepHeight * :nextBaseWidth / :baseWidth
+	localmake "baseWidth :nextBaseWidth
+	trapCrossPattern3D 3 :baseWidth :stepHeight :outsideAngle
+	repeat 3 [
+		jumpForward :stepHeight
+		localmake "stepHeight :stepHeight * :ratio
+	]
+	localmake "baseWidth :baseWidth * power :ratio 3
+	trapCrossPattern3D 3 :baseWidth :stepHeight :outsideAngle2
+	drawArms :baseWidth :stepHeight :baseWidth * 2 :outsideAngle2
+	repeat 2 [
+		jumpForward :stepHeight
+		localmake "stepHeight :stepHeight * :ratio2
+	]
+	localmake "baseWidth :baseWidth * power :ratio2 2
+	drawArms :baseWidth :stepHeight :baseWidth :outsideAngle2
+
+	setTurtleState :oldState
+end
+
+pitchUp 20
+rollRight animation.timeRatio * 360
+powerTower 20
+
+to animation.snapshotstyle
+	output createPList2 [
+		["zoom.scale 7]
+		["position.y 30]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 3
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+		["thumbnailTime 0.15]
+	]
+end

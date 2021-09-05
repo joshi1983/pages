@@ -1,0 +1,26 @@
+<code>setPenSize 0
+setFillColor "#11000000
+repeat 5000 [
+	jumpTo [0 0]
+	setHeading 360 * repRatio
+	jumpForward 20 * randomGaussian
+	circle 3
+]</code>
+<code>make "bars duplicate 0 100
+repeat 5000 [
+	make "rVal randomGaussian
+	make "index round :rVal * 10 + 50
+	if and :index &gt; 0 :index &lt;= count :bars [
+		make "val item :index :bars
+		setItem :index "bars :val + 1
+	]
+]
+
+; Draw a bar graph of all the values in the counted range.
+repeat count :bars [
+	make "h item repcount :bars
+	if :h &gt; 0 [
+		stripes 1 :h * 0.3 ["black]
+	]
+	jumpRight 1
+]</code>

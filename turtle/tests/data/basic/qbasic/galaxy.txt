@@ -1,0 +1,39 @@
+REM copied from:
+REM https://www.facebook.com/share/p/19DnySsaQY/
+screen 12
+randomize timer
+dim coul(0 to 3) as _unsigned long
+coul(0) = _RGB(0, 0, 0)
+coul(1) = _RGB(255, 0, 0)
+coul(2) = _RGB(255, 255, 0)
+coul(3) = _RGB(255, 255, 255)
+
+CLS
+LINE (0, 0)-(639, 479), coul(0), BF
+DIM pxmap(0 to 639, 0 TO 479) AS INTEGER
+
+FOR n = 1 TO 50000
+	s = LOG(RND)
+	t = 300 * RND
+	u = 60 * s * SIN(t)
+	v = 50 * s * COS(t)
+	p = 3 * s
+	c = COS(p)
+	s2 = SIN(p)
+	x = u * c + v * s2
+	y = -u * s2 + v * c
+	r = x * x + y * y
+	z = 80 * EXP(-r / 10)
+	y = y + z + INT(RND * 40) + 1
+	x = x + (-z * 0.3 * INT(RND * 20 + 1))
+	xx = 2 * INT(160 + x * 0.7 + y * 0.3)
+	yy = 2 * INT(120 + x * 0.1 + y * 0.4)
+	IF xx >= 0 AND xx < 640 AND yy >= 0 AND yy < 480 THEN
+		col = pxmap(xx, yy)
+		IF col < 3 THEN col = col + 1
+		pxmap(xx, yy) = col
+		LINE (xx, yy)-(xx + 1, yy + 1), coul(col), BF
+	END IF
+NEXT
+
+SLEEP

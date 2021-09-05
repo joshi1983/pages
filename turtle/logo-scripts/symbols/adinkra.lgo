@@ -1,0 +1,143 @@
+; Inspired by symbol 4 at:
+; https://en.wikipedia.org/wiki/Adinkra_symbols#/media/File:Gyaman_Adinkra_Symbols.jpg
+to adinkrahene :height
+	localmake "oldState turtleState
+	setPenSize :height * 0.08
+	localmake "maxRadius (:height - penSize) / 2
+	localmake "minRadius :maxRadius / 3.5
+	setPenColor fillColor
+	setFillColor transparent
+	jumpForward :height / 2
+	repeat 3 [
+		localmake "radius mix :maxRadius :minRadius repRatio 
+		circle :radius
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by symbol 50 at:
+; https://en.wikipedia.org/wiki/Adinkra_symbols#/media/File:Gyaman_Adinkra_Symbols.jpg
+to mako :height
+	localmake "oldState turtleState
+	localmake "gap :height * 0.3
+	localmake "outerRadius :height * 0.06
+	localmake "pairLen :height / 2 - :outerRadius - :gap
+	localmake "numAngles 18
+	setPenSize 0
+	jumpForward :height / 2
+	localmake "center pos
+	repeat :numAngles [
+		jumpForward :gap
+		circlePair :height * 0.01 :outerRadius :pairLen
+		right 360 / :numAngles
+		jumpTo :center
+	]
+	circle :height * 0.06
+	setPenColor fillColor
+	setPenSize :height * 0.08
+	setFillColor transparent
+	circle :height * 0.222
+	setTurtleState :oldState
+end
+
+; Inspired by symbol 35 at:
+; https://en.wikipedia.org/wiki/Adinkra_symbols#/media/File:Gyaman_Adinkra_Symbols.jpg
+to fofoo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angle1 115
+	localmake "angle2 10
+	localmake "numSides 9
+	localmake "lines1 [
+		[:angle1 0.09] [0.1]
+		[-:angle2 0.1]
+		[180 / :numSides + :angle2 - :angle1 0.06389]
+	]
+	jumpForward :height
+	setPenSize 0
+	left 90
+	polyStart
+	repeat :numSides [
+		arcLines :lines1 :height
+		arcLines reverse :lines1 :height
+	]
+	polyEnd
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.48
+	setFillColor "white
+	circle :height * 0.1
+	setTurtleState :oldState
+end
+
+; Inspired by symbol 43 at:
+; https://en.wikipedia.org/wiki/Adinkra_symbols#/media/File:Gyaman_Adinkra_Symbols.jpg
+to ketePa :height
+	localmake "oldState turtleState
+	localmake "step :height / 13
+	localmake "thickness :step / 3
+	jumpForward :height / 2
+	localmake "center pos
+	repeat 2 [
+		jumpBackward :step * 5.5 + :thickness / 2
+		repeat 12 [
+			stripes :height :thickness [fillColor]
+			jumpForward :step
+		]
+		jumpTo :center
+		right 90
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by symbol 70 at:
+; https://en.wikipedia.org/wiki/Adinkra_symbols#/media/File:Gyaman_Adinkra_Symbols.jpg
+to nsoromma :height
+	localmake "oldState turtleState
+	localmake "numPoints 10
+	localmake "largeRadius :height / 2 / cos 180 / :numPoints
+	localmake "littleRadius :height * 0.23
+	setPenSize 0
+	jumpForward :height / 2
+	isotoxalStar :littleRadius :largeRadius :numPoints
+	setFillColor "white
+	circle :height * 0.16
+	setTurtleState :oldState
+end
+
+; Inspired by symbol 101 at:
+; https://en.wikipedia.org/wiki/Adinkra_symbols#/media/File:Gyaman_Adinkra_Symbols.jpg
+to tabon :height
+	localmake "oldState turtleState
+	localmake "angle1 122
+	localmake "lines1 [
+		[-:angle1 0.1376] [0.11] [:angle1 - 45 0.1]
+	]
+	setPenSize 0
+	left 90
+	polyStart
+	repeat 4 [
+		arcLines :lines1 :height
+		arcLines reverse :lines1 :height
+	]
+	polyEnd
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 2
+setFillColor "black
+jumpLeft :separation * 2.5
+adinkrahene :height
+jumpRight :separation
+mako :height
+jumpRight :separation
+fofoo :height
+jumpRight :separation
+ketePa :height
+make "pos1 pos
+jumpRight :separation
+nsoromma :height
+jumpRight :separation
+tabon :height

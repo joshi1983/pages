@@ -1,0 +1,52 @@
+to perpendicularStripes :width :height :colors
+	localmake "oldState turtleState
+	jumpForward :height / 2
+	jumpLeft :width / 2
+	right 90
+	stripes :height :width :colors
+	setTurtleState :oldState
+end
+
+to belgiumFlagCustomWidth :width :height
+	localmake "colors ["black "#fdda25 "#ef3340]
+	perpendicularStripes :width :height :colors
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Belgium#/media/File:Flag_of_Belgium.svg
+to belgiumFlag :height
+	belgiumFlagCustomWidth :height * 15 / 13 :height
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Belgium#/media/File:Flag_of_Belgium_(civil).svg
+to belgium3_2RatioFlag :height
+	belgiumFlagCustomWidth :height * 3 / 2 :height
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Belgium#/media/File:Flag_of_the_Brabantine_Revolution.svg
+to brabantRevolutionFlag :height
+	localmake "colors ["#fae042 "black "#ed2939]
+	localmake "width :height * 3 / 2
+	stripes :width :height :colors
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Belgium#/media/File:Flag_of_Belgium_(1830).svg
+to belgiumRevolutionFlag :height
+	localmake "colors ["black "#fae042 "#ed2939]
+	localmake "width :height * 3 / 2
+	stripes :width :height :colors
+end
+
+make "height 100
+make "separation :height * 4
+jumpLeft :separation * 1.5
+belgiumFlag :height
+jumpRight :separation
+belgium3_2RatioFlag :height
+jumpRight :separation
+brabantRevolutionFlag :height
+jumpRight :separation
+belgiumRevolutionFlag :height

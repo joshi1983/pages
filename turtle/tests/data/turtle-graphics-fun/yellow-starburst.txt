@@ -1,0 +1,25 @@
+// copied from: https://www.turtlegraphics.fun/turtle.html?example=star_burst2
+//Star Burst 2 -- draw lines radiating from a point
+
+function starBurst(x, y, numberOfRadials, insideRadius, outsideRadius, offsetAngle) {
+    penup()
+    for (var i = 0; i < numberOfRadials; i++) {
+        goto( x,y)
+        angle( i * 360 / numberOfRadials + offsetAngle)
+        forward( insideRadius)
+        pendown()
+        forward( outsideRadius - insideRadius)
+        penup()
+    }
+}
+
+function demo () {
+    reset()
+    hideTurtle()
+    radials = 32
+    color( "orange")
+    starBurst( 0, 0, radials, 25, 175, 0);
+    color( "yellow")
+    width(4)
+    starBurst( 0, 0, radials, 35, 150, 180/radials);
+}

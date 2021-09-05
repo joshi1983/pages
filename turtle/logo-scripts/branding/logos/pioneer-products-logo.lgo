@@ -1,0 +1,46 @@
+; Inspired by logo at:
+; https://www.pioneer.com/ca-en
+to pioneerProductsLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "outline1 [
+		[0.52] [110 0.2] [0.620308151]
+		[70 0.15] [0.354826748]
+	]
+	localmake "plantLines1 [
+		[134 0] [75 0.212] [-180 0] [127 0.165]
+		[133 0] [-125 0.215] [106 0] [0.056530638]
+	]
+	localmake "infinityLines1 [
+		[0.05] [-25 0.4] [-20 0.25] [-30 0.2] [-60 0.135]
+	]
+	; draw plant.
+	setPenSize 0
+	setFillColor "#2a702e
+	drawArcLineShape [0 0.91
+		combine :plantLines1 reverse :plantLines1
+	] :height
+	setPenColor fillColor
+	setPenSize :height * 0.11
+	setLineJoinStyle "round
+	jumpForward :height * 0.345
+	right 45
+	repeat 2 [
+		arcLines :infinityLines1 :height
+		arcLines reverse :infinityLines1 :height
+		left 90
+	]
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	setPenSize :height * 0.05
+	setFillColor transparent
+	drawArcLineShape [0 penSize / 2 / :height
+		(combine [[-90 0]] :outline1 reverse :outline1)
+	] :height
+
+	setTurtleState :oldState
+end
+
+pioneerProductsLogo 100

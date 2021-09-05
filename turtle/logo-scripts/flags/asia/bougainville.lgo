@@ -1,0 +1,64 @@
+to drawUpeHeaddress :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "lines [
+		[[-3 0.6] [-4 0.1] [-20 0.06] [-45 0.035]
+		[25 0.15] [8.3 0.63] [-64.5 0] [0.256]]
+
+		[[-3 0.5] [-70 0.04] [20 0.19] [9 0.5] [-57 0] [0.253]]
+
+		[[-3 0.3] [-72 0.03] [14.5 0.37] [5 0.5] [-42 0] [0.253]]
+
+		[[-2 0.2] [-82 0.018] [8 0.68] [4.2 0.5] [-21.2 0] [0.25]]
+	]
+	setPenSize 0
+	jumpForward :height * 0.216
+	localmake "startPos pos
+	repeat count :lines [
+		localmake "line item repcount :lines
+		setFillColor item 1 + remainder repcount 2 ["red "white]
+		polyStart
+		jumpBackward :height * 0.431
+		left 90
+		arcLines :line :height
+		localmake "d distance :startPos
+		localmake "angleChange heading - (towards :startPos)
+		setHeading towards :startPos
+		setPos :startPos
+		localmake "angleChange2 heading - :oldHeading
+		setHeading :oldHeading + 180 - :angleChange2
+		jumpForward :d
+		left :angleChange
+		arcLines reverse :line :height		
+		polyEnd
+		jumpTo :startPos
+		setHeading :oldHeading
+	]
+
+	setTurtleState :oldState
+end
+
+; Inspired by flag at:
+; https://en.wikipedia.org/wiki/Flag_of_Bougainville#/media/File:Flag_of_Bougainville.svg
+to bougainvilleFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 3 / 2
+	localmake "radius1 :height * 0.3875
+	localmake "radius2 :height * 0.308
+	localmake "thickness :height * 0.025
+	stripes :width :height ["navy]
+	setPenColor "white
+	setPenSize :thickness
+	jumpForward :height / 2
+	setFillColor "green
+	circle :radius1
+	setPenSize 0
+	setFillColor "white
+	isotoxalStar :radius1 - :thickness / 2 :radius2 24
+	setFillColor "black
+	circle :radius2
+	drawUpeHeaddress :height
+	setTurtleState :oldState
+end
+
+bougainvilleFlag 100

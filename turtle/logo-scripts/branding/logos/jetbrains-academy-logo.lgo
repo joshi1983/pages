@@ -1,0 +1,39 @@
+; Inspired by logo at:
+; https://www.youtube.com/@JetBrainsAcademy
+to jetBrainsAcademyLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "colorStops createPList2 [
+		[0 "#1dda88] [1 "#b04bf3]
+	]
+	localmake "cornerRadius1 0.06
+	localmake "cornerRadius2 0.08
+	localmake "lines1 [
+		[45 :cornerRadius1] [0.35] [45 :cornerRadius2]
+		[0.3] [45 :cornerRadius2] [0.35] [45 :cornerRadius1]
+	]
+	jumpLeft :height * 0.35
+	jumpForward :height * 0.15
+	localmake "lowerLeft pos
+	right 45
+	jumpForward :height * 0.98
+	setFillGradient createLinearGradient :lowerLeft pos :colorStops "pad
+	jumpTo :oldPos
+	setHeading :oldHeading
+	setPenSize 0
+	drawArcLineShape [-0.34 0.17
+		(combine [[-135 0]] :lines1 reverse :lines1)
+	] :height
+	jumpForward :height * 0.462
+	jumpLeft :height * 0.045
+	setFillColor "black
+	square :height * 0.44
+	jumpBackward :height * 0.147
+	jumpLeft :height * 0.068
+	setFillColor "white
+	rect :height * 0.18 :height * 0.04
+	setTurtleState :oldState
+end
+
+jetBrainsAcademyLogo 100

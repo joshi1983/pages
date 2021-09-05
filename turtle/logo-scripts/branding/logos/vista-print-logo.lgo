@@ -1,0 +1,44 @@
+; Inspired by:
+; https://en.wikipedia.org/wiki/File:Vistaprint_logo.svg
+to vistaPrintLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angle 30
+	localmake "height1 :height * 0.72
+	localmake "height2 (:height - :height1) * 2
+	localmake "size1 :height1 * tan :angle
+	localmake "baseWidth :height2 / cos :angle
+	localmake "trapezoidHeight :height * 0.44
+	localmake "topWidth :baseWidth - :trapezoidHeight * 2 * tan :angle
+	localmake "triangleHeight :trapezoidHeight
+	localmake "triangleWidth :triangleHeight * 2 * tan :angle
+	localmake "vistaDarkBlue "#295e9d
+	localmake "vistaMiddleBlue "#44a2dd
+	localmake "vistaLightBlue "#73d2f2
+	jumpForward :height1
+	localmake "middlePos pos
+	localmake "sign 1
+	setFillColor :vistaDarkBlue
+	setPenSize 0
+	repeat 2 [
+		jumpRight :size1 * :sign
+		left (90 - :angle) * :sign
+		isoTrapezoid :baseWidth :topWidth :trapezoidHeight
+		setHeading :oldHeading
+		jumpTo :middlePos
+		localmake "sign -1
+		setFillColor :vistaLightBlue
+	]
+	jumpTo :oldPos
+	jumpForward :triangleHeight
+	setFillColor :vistaMiddleBlue
+	isoTriangle :triangleWidth :triangleHeight
+	setFillColor :vistaDarkBlue
+	right 180
+	isoTriangle :triangleWidth :triangleHeight
+	
+	setTurtleState :oldState
+end
+
+vistaPrintLogo 100
