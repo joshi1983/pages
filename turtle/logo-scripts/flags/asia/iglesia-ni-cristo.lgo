@@ -1,0 +1,94 @@
+to drawCandleTop :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "gap :height * 0.06
+	localmake "separation :height / 2 - :gap
+	localmake "arcs [
+		[90 0] [0.184] [-90 0] [30 0.1] [12 0.8] [0.22] [-42 0.13]
+		[-90 0] [0.47630185]
+	]
+	setPenSize 0
+	repeat 2 [
+		jumpForward :gap
+		localmake "pos1 pos
+		polyStart
+		arcLines :arcs :height
+		arcLines reverse :arcs :height
+		polyEnd
+
+		setHeading :oldHeading
+		jumpTo :pos1
+		jumpForward :separation
+	]	
+	setTurtleState :oldState
+end
+
+to drawMenorah :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "baseArcs [
+		[90 0] [0.18] [-90 0] [0.03] [-63 0] [0.11] [-27 0] [0.08198928]
+	]
+	localmake "topHeight :height * 0.106
+	localmake "size1 :height * 0.048
+	localmake "gap :height * 0.008
+	localmake "middleHeight :height - (:gap + :size1) * 3 - :topHeight
+	localmake "thickness :height * 0.04
+	localmake "radiusStep :height * 0.136
+	setFillColor "#ff9e2a
+	setLineCap "butt
+	setPenSize :height * 0.31
+	setPenColor fillColor
+	repeat 3 [
+		forward :size1
+		jumpForward :gap
+	]
+	setPenSize 0
+	localmake "midPos pos
+	polyStart
+	arcLines :baseArcs :height
+	arcLines reverse :baseArcs :height
+	polyEnd
+	setPenSize :thickness
+	jumpTo :midPos
+	setHeading :oldHeading
+	forward :middleHeight
+	drawCandleTop :topHeight
+	jumpBackward :height * 0.195
+	repeat 3 [
+		localmake "radius :radiusStep * repcount
+		localmake "pos1 pos
+		right 90
+		setPenSize 0
+		arcLeft 90 :radius
+		drawCandleTop :topHeight
+		right 180
+		setPenSize :thickness
+		arcRight 180 :radius
+		drawCandleTop :topHeight
+
+		jumpTo :pos1
+		setHeading :oldHeading		
+		jumpBackward :radiusStep
+	]	
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Iglesia_ni_Cristo#/media/File:Iglesia_ni_Cristo_flag.svg
+to iglesiaNiCristoFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 3 / 2
+	jumpLeft :width / 2
+	jumpForward :height / 2
+	right 90
+	stripes :height :width ["green "white "#fd100c]
+	jumpForward :width / 2
+	jumpRight :height * 0.213
+	left 90
+	drawMenorah :height * 0.42
+	setTurtleState :oldState
+end
+
+setScreenColor "#ddd
+iglesiaNiCristoFlag 100
