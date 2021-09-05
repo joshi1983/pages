@@ -1,0 +1,30 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Three.js#/media/File:Three.js_Icon.svg
+to threeJSLogo :height
+	localmake "oldState turtleState
+	localmake "maxLen :height
+	localmake "minLen :maxLen / 4
+	localmake "tHeight :minLen * cos 30
+	localmake "tWidth :tHeight / cos 30
+	setLineCap "round
+	setLineJoinStyle "round
+	setPenSize :height * 0.025
+	setPenColor "black
+	jumpForward :height * 0.3624
+	jumpRight :height * 0.12
+	left 44
+	repeat 4 [
+		localmake "numTriangles 5 - repcount
+		localmake "pos1 pos
+		jumpLeft (:numTriangles - 1) * :tWidth / 2
+		repeat :numTriangles [
+			isoTriangle :tWidth :tHeight
+			jumpRight :tWidth
+		]
+		jumpTo :pos1
+		jumpForward :tHeight
+	]
+	setTurtleState :oldState
+end
+
+threeJSLogo 100
