@@ -1,0 +1,22 @@
+to qbCircle5 :coords :radius :startAngleRadians :endAngleRadians :aspectRatio
+	localmake "oldState turtleState
+	jumpTo :coords
+	ifelse :endAngleRadians - :startAngleRadians >= pi * 2 [
+		ifelse :aspectRatio = 1 [
+			circle :radius
+		] [
+			setHeading 0
+			ellipse :radius :radius * :aspectRatio
+		]
+	] [
+		localmake "deltaDegrees (:endAngleRadians - :startAngleRadians) * 180 / pi
+		localmake "startAngleDegrees :startAngleRadians * 180 / pi
+		setHeading :startAngleDegrees
+		ifelse :aspectRatio = 1 [
+			arc :deltaDegrees :radius
+		] [
+			ellipseArc :deltaDegrees :radius :radius * :aspectRatio :startAngleDegrees
+		]
+	]
+	setTurtleState :oldState
+end
