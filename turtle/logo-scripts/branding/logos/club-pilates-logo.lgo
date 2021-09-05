@@ -1,0 +1,36 @@
+; Inspired by logo at:
+; https://www.clubpilates.com
+to clubPilatesLogo :height
+	localmake "oldState turtleState
+	localmake "dotRadius :height * 0.015
+	localmake "numDots 72
+	localmake "lines1 [
+		[165 0] [-30 0.18] [0.02] [74 0.128]
+		[0.086] [155 0] [-52 0.05] [23.4625 0.1]
+		[-65.4625 0]
+	]
+	setFillColor transparent
+	setPenColor "#5c8cc9
+	jumpForward :height / 2
+	setPenSize :height * 0.017
+	circle :height * 0.448
+	setPenSize 0
+	setFillColor penColor
+	localmake "center pos
+	repeat :numDots [
+		jumpForward :height / 2 - :dotRadius
+		circle :dotRadius
+		right 360 / :numDots
+		jumpTo :center
+	]
+	repeat 8 [
+		drawArcLineShape [0 0.42
+			combine :lines1 reverse :lines1
+		] :height
+		right 360 / 8
+	]
+
+	setTurtleState :oldState
+end
+
+clubPilatesLogo 100

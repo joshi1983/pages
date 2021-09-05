@@ -1,0 +1,91 @@
+to drawFoot :footHeight
+	localmake "oldState turtleState
+	localmake "arcRadius :footHeight - penSize / 2
+	setFillColor "yellow
+	jumpForward penSize / 2
+	jumpLeft :arcRadius
+	polyStart
+	arcRight 180 :arcRadius
+	polyEnd
+	setTurtleState :oldState
+end
+
+to drawFeet :feetHeight
+	localmake "oldState turtleState
+	localmake "separation :feetHeight * 2.9
+	jumpLeft :separation / 2
+	repeat 2 [
+		drawFoot :feetHeight
+		jumpRight :separation
+	]
+	setTurtleState :oldState
+end
+
+to drawEyes :eyeHeight
+	localmake "oldState turtleState
+	localmake "separation :eyeHeight * 2.7
+	jumpLeft :separation / 2
+	repeat 2 [
+		setFillColor "white
+		circle :eyeHeight / 2
+		setFillColor "black
+		circle :eyeHeight * 0.25
+		jumpRight :separation
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by:
+; https://www.youtube.com/watch?v=3pqftKhDo6w
+; The code used in that video is for MSWLogo.
+;
+; Most of that code should work well in WebLogo but
+; I(Josh Greig) wrote the following WebLogo code
+; to make better use of commands unique to WebLogo.
+;
+; The main part of happylearningtheknowledgehub's original code 
+; that won't work in WebLogo is flood.
+; In WebLogo, instead of flood fills, you call 
+; setFillColor, polyStart, and polyEnd.
+to puffyThePenguin :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "torsoHeight :height * 0.87
+	localmake "whiteArcRadius :height * 0.236
+	localmake "noseArcRadius :height * 0.113
+	setPenSize :height * 0.015
+	setLineJoinStyle "round
+	setPenColor "black
+	jumpForward :height / 2
+	setFillColor "aqua
+	rect :height * 0.92 :height * 0.41
+
+	setFillColor "blue
+	jumpTo :oldPos
+	jumpForward :height - (:torsoHeight + penSize) / 2
+	rect :height * 2 / 3 :torsoHeight
+
+	jumpBackward :torsoHeight / 2
+	jumpLeft :whiteArcRadius
+	setFillColor "white
+	polyStart
+	arcRight 180 :whiteArcRadius
+	polyEnd
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	drawFeet :height - :torsoHeight - penSize / 2
+	jumpForward :height * 0.867
+	drawEyes :height * 0.16
+
+	jumpBackward :height * 0.16
+	setFillColor "#ffa303
+	jumpLeft :noseArcRadius
+	polyStart
+	arcRight 180 :noseArcRadius
+	polyEnd
+	setTurtleState :oldState
+end
+
+puffyThePenguin 100

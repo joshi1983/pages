@@ -1,0 +1,105 @@
+; Inspired by:
+; https://www.pinterest.ca/pin/1055599904615415/
+to starship :height
+	localmake "oldState turtleState
+	localmake "angle1 13
+	localmake "angle2 155
+	localmake "angle2_ 180 - :angle2
+	localmake "innerAngle1 :angle1 / 2 + :angle2_
+	localmake "angle3 180 - :innerAngle1 * 2
+	localmake "angle4 65
+	localmake "innerAngle5 45
+	localmake "outerAngle5 180 - :innerAngle5
+	localmake "angle6 180 - :angle4 - :innerAngle5
+	localmake "sideSize1 :height * 0.19
+	localmake "sideSize2 :height * 0.182
+	localmake "size1a :height * 0.648
+	localmake "size1b :height * 0.22
+	localmake "size2_ :height * (tan :angle1 / 2)
+	localmake "size2 :size2_ / (cos :angle2 - (:angle1 / 2) - 90)
+	left 180 - :angle1 / 2
+	setPenSize 0
+	polyStart
+	jumpForward :size1a
+	right :angle4
+	jumpForward :sideSize1
+	left :outerAngle5
+	jumpForward :sideSize2
+	right :angle6
+	jumpForward :size1b
+	left :angle2
+	jumpForward :size2
+	right :angle3
+	jumpForward :size2
+	left :angle2
+	jumpForward :size1b
+	right :angle6
+	jumpForward :sideSize2
+	left :outerAngle5
+	jumpForward :sideSize1
+	polyEnd
+	setTurtleState :oldState
+end
+
+to starTrekInsigniaOutline :size
+	localmake "oldState turtleState
+	setPenSize 0
+	jumpLeft :size * 0.314
+	polyStart
+	right 38
+	arcRight 2.5 :size * 4.5
+	arcRight 8 :size * 1.4
+	arcRight 8 :size * 0.7
+	arcRight 21.5 :size * 0.2
+	arcRight 63 :size * 0.06
+	arcRight 22.1 :size * 0.9
+	left 169
+	arcLeft 13 :size * 2.7
+	arcLeft 17.15 :size * 1.32
+	left 110
+	arcLeft 15 :size * 1.7
+	arcLeft 15.7 :size * 2.24
+	polyEnd
+	setTurtleState :oldState
+end
+
+to starTrekInsigniaInside :size
+	localmake "oldState turtleState
+	setPenSize 0
+	jumpForward :size * 0.1123
+	jumpLeft :size * 0.277
+	right 40
+	polyStart
+	arcRight 2.5 :size * 4
+	arcRight 10 :size
+	arcRight 15 :size * 0.4
+	arcRight 45 :size * 0.112
+	arcRight 29 :size * 0.082
+	arcRight 6.7 :size
+	left 159
+	arcLeft 11 :size * 2.45
+	arcLeft 13.1 :size * 1.03
+	left 113.5
+	arcLeft 10 :size * 1.8
+	arcLeft 15.74 :size * 2.1
+	polyEnd
+	setTurtleState :oldState
+end
+
+to starTrekInsignia :height
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	setFillColor "black
+	starTrekInsigniaOutline :height
+	setFillColor "#c8a851
+	starTrekInsigniaInside :height
+	setFillColor "black
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.885
+	starship :height * 0.408
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+starTrekInsignia 100

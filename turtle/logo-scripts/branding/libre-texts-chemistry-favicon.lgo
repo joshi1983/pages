@@ -1,0 +1,32 @@
+; Inspired by favicon at
+; https://chem.libretexts.org/
+to libreTextsChemistryFavicon :height
+	localmake "oldState turtleState
+	localmake "cornerRadius :height * 0.1
+	localmake "numSides 6
+	localmake "radius :height / 2 + :cornerRadius * ((1 / cos 180 / :numSides) - 1)
+	localmake "flaskLine1 [
+		[90 0] [-29 0.52] [-70 0.05] [-27 0.1] [0.25] [36 0.1]
+		[0.05] [45 0.05] [0.01] [-135 0.055] [0.076158]
+	]
+	localmake "libreTextChemBlue "#2dcbff
+	localmake "rectHeight :height * 0.035
+	jumpForward :height / 2
+	setPenSize 0
+	setFillColor :libreTextChemBlue
+	roundRegularPolygon :radius :numSides :cornerRadius
+	setFillColor "white
+	drawArcLineShape [0 -0.292
+		combine :flaskLine1 reverse :flaskLine1
+	] :height
+	jumpLeft :height * 0.1
+	jumpBackward :height * 0.01
+	setFillColor :libreTextChemBlue
+	repeat 3 [
+		roundRect :height * 0.2 :rectHeight :rectHeight / 2
+		jumpForward :height * 0.08
+	]
+	setTurtleState :oldState
+end
+
+libreTextsChemistryFavicon 100

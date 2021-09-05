@@ -1,0 +1,23 @@
+; Inspired by logo at:
+; https://www.baptisthealth.com
+to baptistHealthSystemLogo :height
+	localmake "oldState turtleState
+	localmake "line1 [
+		[10 0.8] [15 1] [62 0] [0.24] [131 0] [0.3]
+		[-85 0.0053954]
+	]
+	localmake "colors ["#e76827 "#029cbb "#713788 "#c3c230]
+	setPenSize 0
+	jumpForward :height / 2
+	right 180 / count :colors
+	repeat count :colors [	
+		setFillColor item repcount :colors
+		drawArcLineShape [0 1 / 2 / (cos 45) - item 2 arcLinesInfo :line1
+			pathMirror reverse :line1
+		] :height
+		right 360 / count :colors
+	]
+	setTurtleState :oldState
+end
+
+baptistHealthSystemLogo 100

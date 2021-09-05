@@ -1,0 +1,43 @@
+; Inspired by logo shown at
+; https://commons.wikimedia.org/wiki/File:Kubernetes_logo.svg
+to kubernetesLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "backgroundColor "#326de6
+	localmake "radius :height / (1 + cos 180 / 7)
+	localmake "arcsInfo [
+		[-5.43 2] [90 0]
+		[-50 0.005] [-29 0.015] [-14 0.05] [-6 0.5]
+	]
+	jumpForward :height * 0.469
+	localmake "center pos
+	setFillColor :backgroundColor
+	setPenSize 0
+	jumpForward :height * 0.0085
+	roundRegularPolygon :radius * 1.0075 7 :radius * 0.13
+	jumpTo :center
+	setPenColor "white
+	setPenSize :height * 0.055
+	circle :height * 0.258
+	setPenSize 0
+	setFillColor penColor
+	; Draw the 
+	jumpForward :height * 0.112
+	jumpRight :height * 0.034
+	right 173.5
+	polyStart
+	repeat 7 [
+		arcLeft 117.2114 0.0195 * :height
+		arcsRight :arcsInfo :height
+		arcRight 197.5 0.023 * :height
+		arcsRight reverse :arcsInfo :height
+	]	
+	polyEnd
+	jumpTo :center
+	setHeading :oldHeading + 180
+	setFillColor :backgroundColor
+	regularPolygon :height * 0.04 7
+	setTurtleState :oldState
+end
+
+kubernetesLogo 100

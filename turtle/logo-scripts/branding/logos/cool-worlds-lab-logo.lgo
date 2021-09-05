@@ -1,0 +1,79 @@
+to drawOrbit :radius :dotRadius
+	localmake "oldState turtleState
+	localmake "thickness :dotRadius * 0.8
+	jumpForward :radius
+	circle :dotRadius
+	localmake "dotPos pos
+	right 90
+	jumpRight :radius * 2 - :thickness / 4
+	localmake "innerHalfPos pos
+	jumpRight :thickness / 2
+	localmake "outerHalfPos pos
+
+	jumpTo :dotPos
+	jumpRight :thickness / 2
+	polyStart
+	arcRight 180 (distance :innerHalfPos) / 2
+	arcRight 180 (distance :dotPos) / 2
+	right 180
+	arcLeft 180 (distance :outerHalfPos) / 2
+	arcLeft 180 (:thickness / 2 + distance :dotPos) / 2
+	polyEnd
+
+	setTurtleState :oldState
+end
+
+to drawStar :size
+	localmake "oldState turtleState
+	localmake "line1 [
+		[45 1] [180 0] [45 1]
+	]
+	jumpForward :size / 2
+	right 90
+	polyStart
+	repeat 4 [
+		arcLines :line1 :size
+	]
+	polyEnd
+
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://www.youtube.com/@CoolWorldsLab
+to coolWorldsLabLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "angles [152 -125 -37.5]
+	localmake "stars [
+		[-0.344 -0.12 0.01] [-0.275 0.175 0.02]
+		[0.078 0.32 0.02] 
+		[0.163 -0.137 0.01] [0.132 -0.29 0.03]
+		[-0.03 -0.035 0.01] [0.346 -0.02 0.01]
+	]
+	jumpForward :height / 2
+	setPenSize 0
+	setFillColor "black
+	circle :height / 2
+	localmake "center pos
+	setFillColor "white
+	repeat count :angles [
+		setHeading :oldHeading + item repcount :angles
+		localmake "radius :height * mix 0.41 0.115 repRatio
+		localmake "dotRadius :height * mix 0.039 0.031 repRatio
+		drawOrbit :radius :dotRadius
+		jumpTo :center
+	]
+	setHeading :oldHeading
+	repeat count :stars [
+		localmake "starInfo item repcount :stars
+		jumpRight :height * first :starInfo
+		jumpForward :height * item 2 :starInfo
+		drawStar :height * last :starInfo
+		jumpTo :center
+	]
+
+	setTurtleState :oldState
+end
+
+coolWorldsLabLogo 100

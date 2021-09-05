@@ -1,0 +1,26 @@
+<code>make "p createPList
+print :p
+; prints []
+
+setProperty "p "x 1
+setProperty2 :p "x 2
+; notice the similarity to setProperty.
+
+print :p
+; prints [x:=1]
+
+make "listOfPLists [
+	createPList2 [
+		["x 1] ["y 2]
+	]
+	createPList2 [
+		["x 10] ["y 20]
+	]
+]
+
+setProperty2 first :listOfPLists "x 5
+setProperty2 first :listOfPLists "y 6
+setProperty2 item 2 :listOfPLists "x 3
+
+print :listOfPLists
+; prints [[x:=5 y:=6] [x:=3 y:=20]]</code>

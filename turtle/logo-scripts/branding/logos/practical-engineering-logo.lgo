@@ -1,0 +1,52 @@
+to drawGlasses :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "arcsInfo [[-75 0.21] [75 0] [1.185] [90 0.09] [0.26] [90 0]
+	[0.09] [-73 0] [0.44] [73 0.31] [0.4] [71 0.35] [0.3] [-71 0.141873945]
+	[180 0.10955] [0.1] [10 0] [60 0] [0.63] [-71 0.25] [0.39] [-71 0.25]
+	[0.45] [-10 0.3] [-98 0.12] [0.73] [-107 0.277]
+	]
+	jumpForward :height * 0.835
+	localmake "pos1 pos
+	setPenSize 0
+	setFillColor "black
+	left 90
+	polyStart
+	arcLines :arcsInfo :height
+	polyEnd
+	jumpTo :pos1
+	setHeading :oldHeading + 90
+	polyStart
+	arcLines :arcsInfo -:height
+	polyEnd
+	setTurtleState :oldState
+end
+
+to drawHat :height
+	localmake "oldState turtleState
+	localmake "arcsInfo [[0.825] [-90 0.03] [-56 0.07] [0.095] [53 0]
+	[0.13] [-87 0] [0.095] [-95 0] [0.13] [95 0] [0.07] [90 0] [0.185]
+	[90 0] [0.14] [-95 0] [-65 0.64] [-100 0] [8.5 1.5] [151 0] [0.29]
+	[-46.337 0] [-33.163 0.35776]]
+	setPenSize 0
+	setFillColor "#d94e47
+	left 90
+	polyStart
+	arcLines :arcsInfo :height
+	arcLines reverse :arcsInfo :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://www.youtube.com/@PracticalEngineeringChannel
+to practicalEngineeringLogo :height
+	localmake "oldState turtleState
+	localmake "hatHeight :height * 0.609
+	drawGlasses :height * 0.317
+	jumpForward :height - :hatHeight
+	drawHat :hatHeight
+	setTurtleState :oldState
+end
+
+practicalEngineeringLogo 100

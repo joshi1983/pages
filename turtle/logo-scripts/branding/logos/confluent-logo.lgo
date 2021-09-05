@@ -1,0 +1,78 @@
+; Traced over an image of the Confluent company logo.
+; The logo is on their website at: https://www.confluent.io/
+to confluentLogo :size
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "size1 :size * 0.615
+	localmake "offsetSize :size * 0.033
+	localmake "hInnerStrokeWidth :size * 0.04
+	localmake "angle1 1.6
+	; angle1 determines how much thicker the line is near the center than 
+	; near the outer ends.
+	; This draws trapezoids with such a small angle that it is hard to see.
+
+	localmake "angle2 90 - :angle1
+	localmake "outerStrokeWidth 2 * (:hInnerStrokeWidth - :size1 * sin :angle1)
+	setPenSize :size * 0.1
+	setPenColor "white
+	circle :size - penSize * 0.5
+	jumpBackward :offsetSize
+	jumpLeft :offsetSize
+	localmake "oldPos pos
+	setPenSize 0
+	setFillColor penColor
+	repeat 5 [
+		setHeading :oldHeading - (repcount - 1) * 90 / 4
+		jumpLeft :hInnerStrokeWidth
+		right :angle1
+		polyStart
+		jumpForward :size1
+		right :angle2
+		jumpForward :outerStrokeWidth
+		right :angle2
+		jumpForward :size1
+		right :angle1 * 2
+		jumpForward :size1
+		right :angle2
+		jumpForward :outerStrokeWidth
+		polyEnd
+		jumpTo :oldPos
+	]
+	setTurtleState :oldState
+end
+
+; Similar to the above but shorter because the subtle
+; change in line thickness near the center is removed.
+; In other words, below draws the lines near the center as
+; perfect rectangles.
+; confluentLogo, on the other hand, draws them as trapezoids.
+to confluentLogoSimplerButDifferent :size
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "size1 :size * 0.615
+	localmake "offsetSize :size * 0.033
+	localmake "innerStrokeWidth :offsetSize * 2
+	setPenSize :size * 0.1
+	setPenColor "white
+	circle :size - penSize * 0.5
+	jumpBackward :offsetSize
+	jumpLeft :offsetSize
+	localmake "oldPos pos
+	setPenSize :innerStrokeWidth
+	setLineCap "butt
+	repeat 5 [
+		setHeading :oldHeading - (repcount - 1) * 90 / 4
+		jumpForward :size1
+		backward :size1 * 2
+		jumpTo :oldPos
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+make "size 100
+make "separation :size * 5
+jumpLeft :separation * 0.5
+confluentLogo :size
+jumpRight :separation
+confluentLogoSimplerButDifferent :size

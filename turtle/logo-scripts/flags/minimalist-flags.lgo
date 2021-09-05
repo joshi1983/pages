@@ -1,0 +1,135 @@
+; If you want drawings that more accurately resemble the official flags,
+; search for examples by the country name in File -> Load Example.
+;
+; The following is intended to include the most identifiable
+; aspects of world flags without details.
+
+to brazilFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 1.43
+	stripes :width :height ["green]
+	localmake "points []
+	jumpForward :height / 2
+	localmake "center pos
+	repeat 4 [
+		jumpForward :height * item 1 + remainder repcount 2 [0.6 0.38]
+		queue2 "points pos
+		jumpTo :center
+		right 360 / 4
+	]
+	setPenSize 0
+	setFillColor "#ffcb00
+	polygon :points
+	setFillColor "#302681
+	circle :height * 0.25
+	setTurtleState :oldState
+end
+
+; Inspired by flag at:
+; https://en.wikipedia.org/wiki/Flag_of_Canada#/media/File:Flag_of_Canada_(Pantone).svg
+; The maple leaf was reduced to a triangle to give the impression with
+; minimal detail
+to canadaFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 2
+	localmake "caRed "#d52b1e
+	jumpLeft :width / 2
+	jumpForward :height / 2
+	right 90
+	stripes :height :width [:caRed "white "white :caRed]
+	jumpForward :width / 2
+	left 90
+	jumpBackward :height * 0.22
+	setPenSize 0
+	setFillColor :caRed
+	isoTriangle :height * 0.7 :height * 0.6
+	setTurtleState :oldState
+end
+
+; Inspired by a flag design at:
+; https://www.sketchbookb.com/journal/2017/7/2/0252-america-the-minimal
+to usFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 5 / 3
+	localmake "blueWidth :width / 2
+	localmake "blueHeight :height * 3 / 5
+	localmake "usRed "#b73052
+	stripes :width :height [:usRed "white :usRed "white :usRed]
+	jumpLeft (:width - :blueWidth) / 2
+	jumpForward :height - :blueHeight
+	stripes :blueWidth :blueHeight ["#233d5c]
+	setTurtleState :oldState
+end
+
+
+; Inspired by flag at:
+; https://en.wikipedia.org/wiki/Flag_of_Mexico#/media/File:Flag_of_Mexico.svg
+to mexicoFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 7 / 4
+	localmake "mexGreen "#006847
+	jumpLeft :width / 2
+	jumpForward :height / 2
+	right 90
+	stripes :height :width [:mexGreen "white "#ce1126]
+	jumpForward :width / 2
+	jumpLeft :height * 0.03
+	setPenSize 0
+	setFillColor "#A77127
+	circle :height * 0.16
+	setPenColor :mexGreen
+	setPenSize :height * 0.02
+	setLineCap "round
+	left 180
+	arc 180 :height * 0.205
+	setTurtleState :oldState
+end
+
+; Inspired by flag at: 
+; https://en.wikipedia.org/wiki/Flag_of_Lebanon#/media/File:Flag_of_Lebanon.svg
+; The tree is very detailed in the official flag.
+; This simplifies that to an arrow-like shape.
+;
+; The idea of using an arrow-like shape is from:
+; https://www.reddit.com/r/vexillology/comments/achvop/simple_lebanon_flag/
+to lebannonFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 3 / 2
+	localmake "lebRed "#d31624
+	stripes :width :height [:lebRed "white "white :lebRed]
+	jumpForward :height * 0.27
+	setPenSize :height * 0.1
+	setPenColor "#008c3e
+	setLineCap "butt
+	arrow :height * 0.47 33 :height * 0.2
+	setTurtleState :oldState
+end
+
+; Inspired by flag at:
+; https://en.wikipedia.org/wiki/Flag_of_Oman#/media/File:Flag_of_Oman.svg
+to omanFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 7 / 4
+	localmake "stripeWidth :height * 7 / 6
+	localmake "omanRed "#db171b
+	stripes :width :height [:omanRed]
+	jumpRight (:width - :stripeWidth) / 2
+	stripes :stripeWidth :height ["#028002 :omanRed "white]
+	setTurtleState :oldState
+end
+
+setScreenColor "#ddd
+make "height 100
+make "separation :height * 3
+jumpLeft :separation * 2.5
+usFlag :height
+jumpRight :separation
+canadaFlag :height
+jumpRight :separation
+brazilFlag :height
+jumpRight :separation
+mexicoFlag :height
+jumpRight :separation
+lebannonFlag :height
+jumpRight :separation
+omanFlag :height

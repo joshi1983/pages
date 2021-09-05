@@ -1,0 +1,112 @@
+to drawP :height
+	localmake "oldState turtleState
+	localmake "circleRadius :height * 0.3
+	localmake "capThickness :height * 0.03
+	localmake "thickness1 :height * 0.135
+	localmake "capWidth :thickness1 * 2
+	setFillColor transparent
+	setPenSize :thickness1
+	jumpForward :height - :circleRadius - penSize / 2
+	jumpRight :height * 0.044
+	circle :circleRadius
+	jumpLeft :circleRadius + :height * 0.01
+	jumpForward :circleRadius + penSize / 2
+	setLineCap "butt
+	localmake "top pos
+	backward :height
+	stripes :capWidth :capThickness [penColor]
+	jumpTo :top
+	jumpBackward :capThickness / 2
+	setPenSize :capThickness
+	left 90
+	forward :capWidth / 2
+	setTurtleState :oldState
+end
+
+to drawO :height
+	localmake "oldState turtleState
+	localmake "radius :height * 0.232
+	setPenSize :height * 0.1
+	jumpForward :radius + penSize / 2
+	setFillColor transparent
+	circle :radius
+	setTurtleState :oldState
+end
+
+; Inspired by logo on a bottle at:
+; https://en.wikipedia.org/wiki/The_Pop_Shoppe#/media/File:The_Pop_Shoppe,_assorted_flavours,_Canada_(obverse),_2026-03-05.jpg
+to popShoppeLogo :height
+	localmake "oldState turtleState
+	setPenColor "white
+	drawO :height
+	jumpLeft :height * 0.745
+	drawP :height
+	jumpRight :height * 1.51
+	drawP :height	
+	setTurtleState :oldState
+end
+
+to drawSignP :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "width :height * 0.95
+	localmake "circleRadius :height * 0.265
+	localmake "edgeLines [
+		[0.07] [-90 0] [90 0.07]
+	]
+	localmake "edgeInfo arcLinesInfo :edgeLines
+	localmake "edgeHeight (item 2 :edgeInfo) * cos last :edgeInfo
+	setPenSize :height * 0.185
+	setFillColor transparent
+	jumpRight (:width - penSize) / 2 - :circleRadius
+	jumpForward :height - :circleRadius - penSize / 2
+	circle :circleRadius
+
+	jumpTo :oldPos
+	jumpLeft :width / 2
+	setFillColor penColor
+	setPenSize 0
+	polyStart
+	arcLines :edgeLines :height
+	jumpForward :height * (1 - 2 * :edgeHeight)
+	arcLines reverse :edgeLines :height
+	jumpRight :height * 0.36
+	jumpBackward :height * (1 - :edgeHeight)
+	right 180
+	arcLines reverse :edgeLines :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+to drawSignO :height
+	localmake "oldState turtleState
+	localmake "radius :height * 0.2
+	setPenSize :height * 0.185
+	setFillColor transparent
+	jumpForward :radius + penSize / 2
+	circle :radius
+
+	setTurtleState :oldState
+end
+
+; Inspired by a sign at:
+; https://en.wikipedia.org/wiki/The_Pop_Shoppe#/media/File:PoP_Shoppe_London_Outlet.jpg
+to popShoppeSignLogo :height
+	localmake "oldState turtleState
+	setPenColor "#eb181e
+	drawSignO :height
+	jumpLeft :height * 0.75
+	drawSignP :height
+	jumpRight :height * 1.52
+	drawSignP :height
+	
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+make "height 100
+make "separation :height * 4
+jumpLeft :separation / 2
+popShoppeLogo :height
+jumpRight :separation
+popShoppeSignLogo :height

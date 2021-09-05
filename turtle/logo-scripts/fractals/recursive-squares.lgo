@@ -1,0 +1,36 @@
+make "colors ["white "#f0f]
+
+to drawSquare :size :index
+	if :size > 0.2 [
+		localmake "oldState turtleState
+		localmake "center pos
+		localmake "smallerSize :size / 3
+		localmake "size2 (:size + :smallerSize) / 2
+		setPenSize max 0.3 :size * 0.015
+		setPenColor item 1 + remainder :index count :colors :colors
+		square :size
+		repeat 4 [
+			jumpForward :size2
+			jumpLeft :size2
+			drawSquare :smallerSize :index + 1
+			jumpTo :center
+			right 90
+		]
+		setTurtleState :oldState
+	]
+end
+
+; Inspired by image at:
+; https://www.facebook.com/share/p/1ErQeAJcx1/
+to recursiveSquares :height
+	localmake "oldState turtleState
+	setFillColor transparent
+	setPenBlendMode "lighter
+	setLineJoinStyle "miter
+	jumpForward :height / 2
+	drawSquare :height * 0.5 0	
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+recursiveSquares 100

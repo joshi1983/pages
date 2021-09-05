@@ -1,0 +1,39 @@
+; Inspired by
+; https://commons.wikimedia.org/wiki/File:Astrobotic_Technology_Logo.svg
+to astroboticLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "topWidth :height * 2 / 3
+	localmake "topWidth2 :height * 0.1662
+	localmake "innerHeight :height * 0.9167
+	localmake "topInnerWidth :topWidth - :topWidth2 * 2
+	localmake "bottomWidth :height * 2
+	localmake "bottomInnerWidth :height
+	localmake "angle1 arcTan (:bottomWidth - :topWidth) / 2 / :height
+	localmake "outerSlantedHeight :height / cos :angle1
+	localmake "angle2 arcTan (:bottomInnerWidth - :topInnerWidth) / 2 / :innerHeight
+	localmake "innerSlantedHeight :innerHeight / cos :angle2
+	jumpForward :height
+	jumpLeft :topWidth / 2
+	setPenSize 0
+	setFillColor "#e22726
+	left 180 - :angle1
+	polyStart
+	jumpForward :outerSlantedHeight
+	setHeading :oldHeading
+	jumpRight :bottomWidth
+	left :angle1
+	jumpForward :outerSlantedHeight
+	setHeading :oldHeading
+	jumpLeft :topWidth2
+	right 180 - :angle2
+	jumpForward :innerSlantedHeight
+	setHeading :oldHeading
+	jumpLeft :bottomInnerWidth
+	right :angle2
+	jumpForward :innerSlantedHeight
+	polyEnd
+	setTurtleState :oldState
+end
+
+astroboticLogo 100

@@ -1,0 +1,68 @@
+; Inspired by an animation at:
+; https://ca.pinterest.com/pin/202662051966066211
+to tree :height :t
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldOrientation orientation
+	localmake "numAngles 32
+	localmake "numLevels 5
+	localmake "colors ["#f44 "#ea2 "#fd4]
+	localmake "colorOffset :t * count :colors
+	localmake "colorOffsetInt int :colorOffset
+	localmake "level :t * :numLevels
+	localmake "levelInt int :level
+	localmake "levelFraction :level - :levelInt
+	localmake "starRadius :height * mix 0.04 0.07 :levelFraction
+	setPenSize 0
+	setFillColor "#ff8
+	jumpForward :height - :starRadius
+	regularStar :starRadius 5
+	jumpTo :oldPos
+	setPenSize :height * 0.005
+	setPenBlendMode "lighter
+	repeat :numLevels [
+		localmake "ratio1 repRatio + :levelFraction / :numLevels
+		if :ratio1 > 1 [
+			break
+		]
+		localmake "verticalRatio mix 0.9 0.2 :ratio1
+		localmake "startOffset :height * mix 0.01 0.3 clamp (:verticalRatio - 0.2) / 0.65 0 1
+		localmake "len :height * mix 0.12 0.2 repRatio
+		localmake "pitchAngle mix 170 120 repRatio
+		jumpForward :height * :verticalRatio
+		localmake "startPos pos
+		setPenColor item (1 + modulo :colorOffsetInt + repcount count :colors) :colors
+		repeat :numAngles [
+			rollRight repcount * 360 / :numAngles
+			jumpOut :startOffset
+			pitchDown :pitchAngle
+			forward :len
+			jumpTo :startPos
+			setOrientation :oldOrientation
+		]
+		jumpTo :oldPos
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "#235
+pitchUp 15
+rollRight 360 * animation.timeRatio
+make "t animation.timeRatio
+tree 100 :t
+
+to animation.snapshotstyle
+	output createPList2 [
+		["position.y 50]
+		["zoom.scale 5]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 5
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

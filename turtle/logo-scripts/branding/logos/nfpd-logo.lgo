@@ -1,0 +1,184 @@
+to drawMountain :height
+	localmake "oldState turtleState
+	localmake "size1 :height * 1.28
+	localmake "angle1 41
+	localmake "pair [20 0.15]
+	localmake "topAngle 180 - :angle1 * 2 - (first :pair) * 2
+	localmake "arcsInfo [
+		:pair [:topAngle 0.04] :pair
+	]
+	localmake "lines [
+		[150 0.12] [27 0.5] [-145 0.12] [140 0.14] [-73 0.48]
+		[90 0.04] [-95 0.1] [143 0.55] [-158 0.47] [153 0.22]
+		[-152 0.285] [99 0.122] [-95 0.4]
+	]
+	setPenSize 0
+	jumpLeft :height * 0.906
+	right :angle1
+	polyStart
+	jumpForward :size1
+	arcsRight :arcsInfo :height
+	jumpForward :size1
+	repeat count :lines [
+		localmake "line item repcount :lines
+		right first :line
+		jumpForward :height * last :line
+	]
+	polyEnd
+	setTurtleState :oldState
+end
+
+to drawN :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "angle1 95
+	localmake "angle2 41
+	jumpLeft :height * 0.45
+	polyStart
+	jumpForward :height
+	right :angle1
+	jumpForward :height * 0.1
+	right :angle2
+	jumpForward :height * 0.9
+	left :angle1 + :angle2
+	jumpForward :height * 0.62
+	jumpRight :height * 0.2
+	jumpBackward :height * 0.9638786
+	jumpLeft :height * 0.15
+	left 42
+	jumpForward :height * 0.88
+	setHeading :oldHeading
+	jumpBackward :height * 0.6539674
+	polyEnd
+	setTurtleState :oldState
+end
+
+to drawF :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "size1 :height * 0.33
+	localmake "height1 :height * 0.15
+	localmake "height2 :height * 0.23
+	localmake "diagonalSize :height * 0.2
+	localmake "angle1 150
+	jumpLeft :height * 0.225
+	polyStart
+	jumpForward :height
+	jumpRight :height * 0.63
+	left :angle1
+	jumpForward :diagonalSize
+	setHeading :oldHeading
+	jumpLeft :size1
+	jumpBackward :height2
+	jumpRight :size1
+	jumpBackward :height1
+	jumpLeft :size1
+	jumpBackward :height - :height1 - :height2 + :diagonalSize * cos :angle1
+	polyEnd
+	setTurtleState :oldState
+end
+
+to drawP :height
+	localmake "oldState turtleState
+	localmake "size1 :height * 0.35
+	localmake "outerArcRadius :height * 0.3
+	localmake "thickness :height * 0.19
+	localmake "innerArcRadius :outerArcRadius - :thickness
+	jumpLeft :height * 0.3
+	polyStart
+	jumpForward :height
+	jumpRight :size1
+	right 90
+	arcRight 180 :outerArcRadius
+	jumpForward :size1
+	jumpRight :thickness
+	jumpBackward :size1
+	right 180
+	arcLeft 180 :innerArcRadius
+	jumpForward :size1 - :thickness
+	jumpLeft :height - :thickness
+	polyEnd
+	setTurtleState :oldState
+end
+
+to drawD :height
+	localmake "oldState turtleState
+	localmake "thickness :height * 0.19
+	localmake "size1 :height * 0.4
+	localmake "outerArcRadius :height * 0.5
+	localmake "innerArcRadius :outerArcRadius - :thickness
+	jumpLeft :height * 0.4
+	polyStart
+	jumpForward :height
+	jumpRight :size1
+	right 90
+	arcRight 180 :outerArcRadius
+	jumpForward :size1
+	jumpRight :thickness
+	right 180
+	jumpForward :size1
+	arcLeft 180 :innerArcRadius
+	jumpForward :size1 - :thickness
+	jumpLeft :height - :thickness
+	polyEnd
+	setTurtleState :oldState
+end
+
+to drawPair :size
+	localmake "oldState turtleState
+	localmake "separation :size * 0.073
+	localmake "angle 41
+	localmake "size1 :size * 0.608
+	localmake "size2 (:size - :size1) / sin :angle
+	jumpRight :separation / 2
+	jumpForward :size1 / 2
+	setPenSize 0
+	right 90
+	parallelogram :size1 :size2 -:angle
+	jumpBackward :separation
+	left 180
+	parallelogram :size1 :size2 :angle
+	setTurtleState :oldState
+end
+
+; Inspired by logo at
+; https://www.nfpdsnowbrand.com
+to nfpdLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "oldPos pos
+	localmake "pairSize :height * 0.47
+	localmake "gap :height * 0.1
+	localmake "fontHeight :height * 0.162
+	setFillColor "black
+	jumpForward :height - :pairSize
+	drawPair :pairSize
+	jumpBackward :height * 0.05
+	localmake "center pos
+	right 90
+	repeat 2 [
+		jumpForward :gap
+		drawPair :pairSize
+		jumpTo :center
+		right 180
+	]
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.185
+	drawMountain :height * 0.3
+
+	setPenSize 0
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpLeft :height * 0.291
+	drawN :fontHeight
+	jumpRight :height * 0.2
+	drawF :fontHeight
+	jumpRight :height * 0.19
+	drawP :fontHeight
+	jumpRight :height * 0.2
+	drawD :fontHeight
+	setTurtleState :oldState
+end
+
+nfpdLogo 100

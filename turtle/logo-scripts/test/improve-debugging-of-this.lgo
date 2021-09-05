@@ -1,0 +1,31 @@
+to drawCircleOfEllipses :height :time
+	localmake "oldState turtleState
+	localmake "ellipseRadius1 :height * 0.2
+	localmake "ellipseRatio 0.3
+	localmake "offset :height / 2 - :ellipseRadius1
+	localmake "numAngles 24
+	localmake "numEllipsesPerAngle 6
+	setFillColor transparent
+	setPenColor "red
+	setPenSize :height * 0.003
+	jumpForward :height / 2
+	localmake "center pos
+	right 360 / :time
+	repeat :numAngles [
+		jumpForward :offset ; Exception thrown here but it should be thrown in the right 360 / :time above instead.
+			; When :time = 0, 360 / :time = infinity.
+		repeat :numEllipsesPerAngle [
+			localmake "radius1 :ellipseRadius1 * repcount / :numEllipsesPerAngle
+			localmake "radius2 :radius1 * :ellipseRatio
+			ellipse :radius1 :radius2
+		]
+		jumpTo :center
+		right 360 / :numAngles
+	]
+
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+make "time animation.clampedTimeRatio
+drawCircleOfEllipses 100 :time

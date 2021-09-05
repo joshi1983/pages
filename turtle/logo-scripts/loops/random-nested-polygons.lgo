@@ -1,0 +1,63 @@
+; Inspired by the Nested Polygons project
+; from pages 132 and 133 of a book called:
+; LOGO programming for the IBM PC
+; The book is available at:
+; https://archive.org/details/logoprogrammingf0000ross/page/132/mode/2up
+; You may need to sign up and borrow the book to see page 132.
+
+make "colors ["white "red "aqua "lime "violet "yellow]
+
+; The outer-most polygon is connecting randomly selected points.
+; Nested polygons are drawn using the middle points or averages of 
+; coordinates from the outer polygon.
+; Pen color is cycled through the above color list.
+; Pen size is reduced at each level of nesting for artistic effect.
+to randomNestedPolygons :radius :numPoints
+	localmake "oldPos pos
+	localmake "points []
+	localmake "minRadius :radius * 0.6
+	; The closer minRadius is to 0,
+	; the more random the points will be.
+
+	localmake "remainingAngle 360
+	; Before starting to find points, there is a total 
+	; of 360 degrees to rotate through.
+
+	; Using polar coordinates to randomly get the points
+	repeat :numPoints [
+		localmake "radius1 mix :minRadius :radius randomRatio
+		jumpForward :radius1
+		queue2 "points pos
+
+		; Rotate at a random angle.
+		; Factor in remaining angle range to prevent overshooting 
+		; a total of 360 degrees.
+		localmake "remainingNumPoints :numPoints - repcount
+		localmake "minAngle :remainingAngle * 0.2 / (1 + :remainingNumPoints)
+		localmake "maxAngle :remainingAngle / (1 + :remainingNumPoints)
+		localmake "angle mix :minAngle :maxAngle randomRatio
+		right :angle
+		localmake "remainingAngle :remainingAngle - :angle
+		jumpTo :oldPos
+	]
+	setPenSize :radius * 0.03
+	repeat 3 [
+		repeat count :colors [
+			setPenColor item repcount :colors
+			polygon :points
+			; Update points with middle points.
+			localmake "points2 []
+			repeat :numPoints [
+				localmake "p1 item repcount :points
+				localmake "index2 1 + remainder repcount :numPoints
+				localmake "p2 item :index2 :points
+				queue2 "points2 mix :p1 :p2 0.5 
+			]
+			localmake "points :points2
+			setPenSize penSize * 0.85
+		]
+	]
+end
+
+setScreenColor "black
+randomNestedPolygons 300 6

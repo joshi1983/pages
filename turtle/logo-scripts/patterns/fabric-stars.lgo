@@ -1,0 +1,138 @@
+make "designPurple "#b4f
+
+to drawNotch :size
+	localmake "oldState turtleState
+	localmake "angle 30
+	localmake "size1 :size * sin :angle
+	jumpBackward :size1
+	left :angle
+	jumpRight :size / 2
+	parallelogram :size :size -:angle
+	setTurtleState :oldState
+end
+
+to circularDesign :radius
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "numSteps 16
+	localmake "numSides 16
+	localmake "colors [:designPurple "white]
+	localmake "centralGap :radius / :numSteps
+	localmake "purpleRadius :radius / 2
+	localmake "purpleRadius2 :radius / 2 - :centralGap
+	localmake "whiteLength :radius - :purpleRadius
+	localmake "numWhiteSteps int :numSteps / 2
+	localmake "whiteStep :whiteLength / :numWhiteSteps
+	localmake "notchSize :radius * 0.03
+	setPenSize :radius * 0.003
+	setFillColor transparent
+	setPenColor first :colors
+	repeat :numSteps / 2 - 1 [
+		localmake "scaledRadius :radius * repcount / :numSteps
+		regularPolygon :scaledRadius :numSides
+	]
+	setFillColor "white
+	repeat :numSides [
+		jumpForward :centralGap
+		setPenSize :radius * 0.015
+		setPenColor :designPurple
+		forward :purpleRadius2
+		setPenColor "white
+		forward :whiteLength
+		setPenSize 0
+		repeat :numWhiteSteps [
+			localmake "width :radius * mix 0.06 0.12 repRatio
+			jumpBackward :whiteStep
+			isoTriangle :width :whiteStep
+		]
+		right 360 / :numSides
+		jumpTo :oldPos
+	]
+	setPenSize :radius * 0.002
+	setFillColor transparent
+	localmake "innerRadii []
+	repeat :numWhiteSteps [
+		localmake "outerRadius mix :purpleRadius :radius repRatio
+		localmake "innerRadius :outerRadius - :whiteStep * 2 * (mix -0.2 1 repRatio)
+		queue2 "innerRadii :innerRadius
+		isotoxalStar :outerRadius :innerRadius :numSides
+	]
+	setPenColor "white
+	right 180 / :numSides
+	setPenSize :radius * 0.004
+	repeat :numSides [
+		jumpForward first :innerRadii
+		forward (last :innerRadii) - (first :innerRadii)
+		jumpTo :oldPos
+		right 360 / :numSides
+	]
+	setPenSize 0
+	setFillColor "white
+	repeat count :innerRadii [
+		localmake "innerRadius item repcount :innerRadii
+		repeat :numSides [
+			jumpForward :innerRadius
+			drawNotch :notchSize
+			right 360 / :numSides
+			jumpTo :oldPos
+		]
+	]
+	setTurtleState :oldState
+end
+
+to starPattern :radius
+	localmake "oldHeading heading
+	setPenColor "white
+	setPenSize :radius * 0.05
+	setFillColor :designPurple
+	right 180 / 5
+	regularStar :radius 5
+	setHeading :oldHeading
+end
+
+to drawStarArc :innerRadius
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "angle 90 * 6 / 8
+	localmake "starSize :innerRadius / 4
+	localmake "totalRadius :innerRadius + :starSize
+	localmake "numStars 6
+	left :angle * 1.5
+	repeat :numStars + 1 [
+		jumpForward :totalRadius
+		starPattern :starSize
+		left :angle * 2 / :numStars
+		jumpTo :oldPos
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://www.pinterest.ca/pin/169307267233475859/
+; A similar pattern is being made in this video:
+; https://www.youtube.com/watch?v=1jqswZYcRHc
+to completePattern :height
+	localmake "oldHeading heading
+	localmake "circHeight :height * 0.5 * 3 / 4
+	localmake "diff :height - :circHeight
+	localmake "sideStep :circHeight * (2 + 1 / 2) * cos 360 / 16
+	localmake "numRepetitions 8
+	jumpForward (:height - :diff / 2) / 2
+	jumpLeft :sideStep * (:numRepetitions - 1) / 2
+	repeat :numRepetitions [
+		localmake "offset :diff * ((remainder repcount 2) - 0.5)
+		jumpForward :offset
+		circularDesign :circHeight
+		ifelse :offset < 0 [
+			right 180 - 180 / 16
+		] [
+			left 180 / 16
+		]
+		drawStarArc :circHeight
+		setHeading :oldHeading
+		jumpRight :sideStep
+	]
+end
+
+setScreenColor "black
+completePattern 100

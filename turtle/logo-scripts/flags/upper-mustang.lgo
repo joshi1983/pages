@@ -1,0 +1,29 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Upper_Mustang#/media/File:Flag_of_Mustang.svg
+; This code has a few differences:
+; 1. The SVG has a very thin white outline and this code does not.
+; 2. The SVG has a slightly different width / height ratio.  I used 8 / 5 
+; because it is a close but round fraction.
+; 3. The SVG has thicker blue margins on the left and right than top and bottom.
+; This code draws them exactly the same thickness.
+;
+; These differences are made for cleaner code and a cleaner looking flag.
+; I suspect the SVG has some mistakes and some of these differences 
+; are related to those mistakes.
+to upperMustangFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 8 / 5
+	jumpForward :height / 2
+	setPenColor "#010080
+	setFillColor "#ce1126
+	setPenSize :height * 0.15
+	setLineJoinStyle "miter
+	rect :width - penSize :height - penSize
+	setFillColor "white
+	setPenSize 0
+	isotoxalStar :height * 0.3 :height * 0.19 16
+	setTurtleState :oldState
+end
+
+setScreenColor "#ddd
+upperMustangFlag 100

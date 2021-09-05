@@ -1,0 +1,56 @@
+; Inspired by logo at:
+; https://jimmythegreek.com/
+to jimmyTheGreekLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	setFillColor transparent
+	setPenColor "#005297
+	setPenSize :height * 0.05
+	jumpForward :height / 2
+	circle (:height - penSize) / 2
+	setPenSize 0
+	setFillColor penColor
+	drawArcLineShape [0.327 0.08
+		[[90 0] [-17 0.2] [-5 0.4] [-8 1] [0.2] [10 0.25] [20 0.17]
+		[90 0.085] [50 0.05] [18 0.13] [25 0.2] [50 0.05] [90 0.04]
+		[40 0.13] [70 0.029] [60 0.02] [40 0.09] [60 0.025] [130 0]
+		[-30 0.1] [-30 0.02] [-90 0.014] [-35 0.02] [-33 0.1] [-60 0.03]
+		[-70 0.02] [-20 0.07] [-20 0.2] [-70 0.05] [-60 0.035] [-40 0.1]
+		[-15 0.3] [0.1] [5 1.5] [8 0.6] [15 0.2] [15 0.15]]
+	] :height
+	jumpForward :height * 0.1645
+	localmake "topPos1 pos
+	right 117
+	localmake "topHeading heading
+	jumpForward :height * 0.18
+	localmake "topPos2 pos
+	jumpBackward :height * 0.22
+	setHeading :oldHeading + 180
+	polyStart
+	arcLines [[0.23] [-40 0.245] [-30 0.17] [-7 0.5] [170 0]
+		[20 0.35] [50 0.19] [17 0.32]] :height
+	jumpForward distanceToLine :topPos1 :topPos2
+	polyEnd
+
+	jumpTo :topPos1
+	setHeading :topHeading
+	jumpForward :height * 0.043
+	setHeading :oldHeading + 180
+	polyStart
+	arcLines [[0.19] [-40 0.25] [-24 0.15] [165.5 0] [78.5 0.2]] :height
+	jumpForward distanceToLine :topPos1 :topPos2
+	polyEnd
+
+	jumpTo :topPos1
+	setHeading :topHeading
+	jumpForward :height * 0.121
+	setHeading :oldHeading + 180
+	polyStart
+	arcLines [[0.17] [-38 0.18] [155 0] [63 0.165]] :height
+	jumpForward distanceToLine :topPos1 :topPos2
+	polyEnd
+
+	setTurtleState :oldState
+end
+
+jimmyTheGreekLogo 100

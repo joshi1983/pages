@@ -1,0 +1,63 @@
+; Inspired by logo at:
+; https://sciencing.com
+to sciencingLogo :height :seconds
+	localmake "oldState turtleState
+	localmake "ellipseRadius1 :height * 0.2
+	localmake "ellipseRadius2 :height * 0.6
+	localmake "offset :seconds * 360
+	localmake "ellipses [
+		["#FFED3D 0 + :offset / 2]
+		["#EB2222 180 + :offset / 1.8]
+		["#19C17B 133 + :offset / 2.3]
+	]
+	localmake "littleCircleRadius :height * 0.053
+	localmake "angle 45
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	setFillColor "#1597FF
+	circle :height * 0.127
+	setPenSize :height * 0.007
+	setFillColor transparent
+	setPenColor "#979797
+	left :angle
+	repeat 3 [
+		ellipse :ellipseRadius2 :ellipseRadius1
+		right :angle
+	]
+	setPenSize 0
+	left :angle
+	repeat count :ellipses [
+		localmake "ellipseInfo item repcount :ellipses
+		localmake "eAngle last :ellipseInfo
+		jumpRight :ellipseRadius2 * cos :eAngle
+		jumpForward :ellipseRadius1 * sin :eAngle
+		setFillColor first :ellipseInfo
+		circle :littleCircleRadius
+		jumpTo :center
+		left :angle
+	]
+	setTurtleState :oldState
+end
+
+sciencingLogo 100 animation.time
+
+to animation.snapshotstyle
+	output createPList2 [
+		["position.y 50]
+		["zoom.scale 5]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	; The seconds would need to be 414 to
+	; end the animation where it started.
+	; 414 = the least common multiple of 2, 1.8, 2.3.
+	; 18 is enough to put 2 of the 3 circles in the same spot.
+	localmake "seconds 18
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

@@ -1,0 +1,249 @@
+make "kitbogaSkyBlue "#c1ffff
+make "kitbogaGray "#8eb6b8
+
+to drawClouds :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "circlesInfo [
+		; upper right cloud
+		[0.46 0.83 0.1] [0.64 0.77 0.15] [0.77 0.73 0.1]
+		[0.55 0.927 0.05] [0.67 0.83 0.13] [0.79 0.87 0.07]
+
+		; upper left cloud
+		[-0.73 0.805 0.053] [-0.81 0.88 0.08] [-0.88 0.81 0.12]
+	]
+	setPenSize 0
+	setFillColor "white
+	repeat count :circlesInfo [
+		localmake "circleInfo item repcount :circlesInfo
+		jumpRight :height * first :circleInfo
+		jumpForward :height * item 2 :circleInfo
+		circle :height * last :circleInfo
+		jumpTo :oldPos
+	]
+	setTurtleState :oldState
+end
+
+to drawBushes :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "x1 :height * 0.346
+	localmake "arcsInfo [[-90 0]
+		[1 5] [90 0.055] [-60 0]
+		[105 0.07] [-80 0]
+		[45 0.07] [20 0.09] [70 0.05]
+		[1 0.8]
+	]
+	jumpForward :height * 0.15
+	localmake "middlePos pos
+	jumpLeft :x1
+	setFillColor "green
+	polyStart
+	arcsRight :arcsInfo :height
+	polyEnd
+
+	jumpTo :middlePos
+	setHeading :oldHeading
+	jumpRight :x1
+	polyStart
+	arcsLeft :arcsInfo :height
+	polyEnd
+
+	setTurtleState :oldState
+end
+
+to drawHouseBackground :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "baseWidth :height * 0.65
+	localmake "angle1 19
+	localmake "angle2 68
+	localmake "angle3 :angle2 - :angle1
+	localmake "angle4 110
+	localmake "size1 :height * 0.42
+	localmake "roofBaseWidth :baseWidth / 2 + :size1 * sin :angle1
+	localmake "size2 :roofBaseWidth / sin :angle3
+	localmake "size3 :size2 * 1.07
+	localmake "roofThickness1 :height * 0.03
+	localmake "roofThickness2 :roofThickness1 * sin :angle4
+	localmake "size4 :size3 - (:roofThickness1 * sin (:angle4 - 90)) 
+		+ :roofThickness2 * tan (180 - :angle3 - 90)
+	setFillColor "#f4e1ac
+	jumpForward :height * 0.15
+	jumpRight :baseWidth / 2
+	polyStart
+	jumpLeft :baseWidth
+	left :angle1
+	jumpForward :size1
+	right :angle2
+	jumpForward :size2
+	localmake "top pos
+	setHeading :oldHeading + 180 - :angle3
+	jumpForward :size2
+	polyEnd
+
+	; Draw roof
+	setFillColor :kitbogaGray
+	jumpTo :top
+	polyStart
+	jumpForward :size3
+	left :angle4
+	jumpForward :roofThickness1
+	left 180 - :angle4
+	jumpForward :size4
+	setHeading :oldHeading - 180 + :angle3
+	jumpForward :size4
+	left 180 - :angle4
+	jumpForward :roofThickness1
+	polyEnd
+
+	setTurtleState :oldState
+end
+
+to drawWindowEyebrows :windowSize :sideSign
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "height1 :windowSize * 0.13
+	localmake "baseWidth :windowSize * 0.96
+	localmake "angle1 26
+	jumpForward :windowSize * 0.6
+	setFillColor :kitbogaGray
+	repeat 3 [
+		localmake "pos1 pos
+		localmake "topWidth :baseWidth - :windowSize * 0.15
+		jumpLeft :baseWidth / 2 * :sideSign
+		polyStart
+		jumpRight :baseWidth * :sideSign
+		left :angle1 * :sideSign
+		jumpForward :height1 / cos :angle1
+		setHeading :oldHeading
+		jumpLeft :topWidth * :sideSign
+		polyEnd
+		jumpTo :pos1
+		jumpForward :height1
+		jumpRight :windowSize * 0.09 * :sideSign
+		localmake "baseWidth :topWidth - :windowSize * 0.15
+	]
+	setTurtleState :oldState
+end
+
+to drawWindow :size :sideSign
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "smallSize :size * 0.7
+
+	drawWindowEyebrows :size :sideSign
+	setFillColor "#915d3b
+	rect :size :size
+	setFillColor :kitbogaSkyBlue
+	rect :smallSize :smallSize
+
+	repeat 2 [
+		jumpBackward :smallSize / 2
+		forward :smallSize
+		jumpTo :oldPos
+		right 90
+	]
+	setTurtleState :oldState
+end
+
+to drawWindows :height
+	localmake "oldState turtleState
+	localmake "separation :height * 0.37
+	localmake "windowSize :height * 0.22
+	jumpForward :height * 0.525
+	jumpLeft :separation / 2
+	drawWindow :windowSize 1
+	jumpRight :separation
+	drawWindow :windowSize -1
+
+	setTurtleState :oldState
+end
+
+to rectForward :width :height
+	jumpForward :height / 2
+	rect :width :height
+	jumpBackward :height / 2
+end
+
+to drawDoors :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "separation :height * 0.19
+	setFillColor "#805331
+
+	jumpForward :height * 0.148
+	rectForward :height * 0.11 :height * 0.172
+	jumpRight :separation / 2
+	repeat 2 [
+		rectForward :height * 0.035 :height * 0.2
+		jumpLeft :separation
+	]
+	jumpTo :oldPos
+	jumpForward :height * 0.244
+	jumpRight :height * 0.027
+	setFillColor "#D1A566
+	circle :height * 0.012
+	setTurtleState :oldState
+end
+
+to drawMustache :height
+	localmake "oldState turtleState
+	localmake "topWidth :height * 0.24
+	localmake "arcsInfo1 [
+		[-26 0.2] [120 0]
+		[53 0.10176943] [13 0.3]
+	]
+	localmake "arcsInfo (combine :arcsInfo1 [[-60 0.08]] reverse :arcsInfo1) 
+	localmake "startAngle 360 + 180 - sumOfFirsts :arcsInfo
+	jumpForward :height * 0.382
+	jumpRight :topWidth / 2
+	setFillColor :kitbogaGray
+	right :startAngle / 2
+	polyStart
+	arcsRight :arcsInfo :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+to drawSteps :height
+	localmake "oldState turtleState
+	setFillColor :kitbogaGray
+	jumpForward penSize / 2
+	isoTrapezoid :height * 0.4 :height * 0.35 :height * 0.05
+	jumpForward :height * 0.07
+	rect :height * 0.35 :height * 0.04
+	jumpForward :height * 0.04
+	rect :height * 0.31 :height * 0.04
+	jumpForward :height * 0.035
+	rect :height * 0.27 :height * 0.03
+	setTurtleState :oldState
+end
+
+; Inspired by house shown at
+; https://youtu.be/nl-_LBx_tpM?t=441
+; The Kitboga youtube channel is full of funny videos
+; made from editing his lengthy conversations with scammers.
+;
+; This man has been living in his house long enough that they
+; started to look like each other.
+to kitbogaHouse :height
+	localmake "oldState turtleState
+	localmake "width :height * 10
+	localmake "grassHeight :height * 0.266
+	stripes :width :height [:kitbogaSkyBlue]
+	drawClouds :height
+	stripes :width :grassHeight ["black]
+	stripes :width :grassHeight - :height * 0.01 ["green]
+
+	setPenSize :height * 0.005
+	drawHouseBackground :height
+	drawBushes :height
+	drawWindows :height
+	drawDoors :height
+	drawMustache :height
+	drawSteps :height
+	setTurtleState :oldState
+end
+
+kitbogaHouse 100

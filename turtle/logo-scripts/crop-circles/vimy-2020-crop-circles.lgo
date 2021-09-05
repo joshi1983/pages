@@ -1,0 +1,77 @@
+make "darkColor "#780
+
+; Inspired by:
+; https://ca.pinterest.com/pin/720998221585893478/
+; It is also mentioned at:
+; http://cropcircleconnector.com/2020/Vimy/Vimy2020a.html
+; It is also mentioned at:
+; https://www.youtube.com/watch?v=isuh1ny7fFw
+; Reported July 5, 2020
+; Located at Vimy, Pas-de-Calais, France
+to vimy2020CropCircles :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "lightColor "#ef8
+	localmake "innerGap :height * 0.01
+	localmake "outerCircleRadius (:height / 2 - :innerGap) / 2
+	localmake "innerCircleRadius :height * 0.26
+	localmake "backtrackLength :height * 0.07
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	setFillColor :lightColor
+	circle :height / 2
+	setFillColor :darkColor
+	repeat 4 [
+		jumpRight :innerGap
+		circleRight :outerCircleRadius
+		jumpTo :center
+		right 360 / 4
+	]
+	setFillColor transparent
+	setPenColor :lightColor
+	setPenSize :height * 0.05
+
+	; Calculate outerEdgeDistance to be
+	; the distance between the center and where
+	; the outer circles intersect.
+	jumpForward :innerGap + :outerCircleRadius
+	localmake "outerCircleCenter pos
+	jumpTo :center
+	right 45
+	localmake "gap1 :innerGap * 2
+	jumpForward :gap1
+	localmake "outerEdgeDistance :gap1 + distanceToCircle :outerCircleCenter :outerCircleRadius
+	jumpTo :center
+
+	circle :outerEdgeDistance - penSize / 2
+	setPenSize :height * 0.02
+	circle :innerCircleRadius
+	setHeading :oldHeading
+	setPenSize 0
+	setFillColor :lightColor
+	repeat 2 [
+		setHeading :oldHeading + repcount * 90
+		jumpRight :innerGap
+		localmake "arcRightAngle getArcRightAngleToCircle :outerCircleRadius :center :innerCircleRadius
+		polyStart
+		repeat 2 [
+			arcRight :arcRightAngle :outerCircleRadius
+			jumpLeft :innerGap
+			jumpBackward :backtrackLength
+			right 180
+			localmake "middleAngle 180 - 2 * :arcRightAngle
+			arcRight :middleAngle :outerCircleRadius * 0.67106007
+			jumpForward :backtrackLength
+			jumpLeft :innerGap
+			right 180
+			arcRight :arcRightAngle :outerCircleRadius
+		]
+		polyEnd
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor :darkColor
+vimy2020CropCircles 100

@@ -1,0 +1,30 @@
+! Compute e to many places
+!
+! **NOTE:** type 'do huge' in the command window before running
+
+
+DECLARE HUGE term, ans, zer
+
+CLEAR
+PRINT "Approximates e"
+PRINT
+PRINT "Decimal places";
+INPUT d
+Decimals (d+3)               ! Extra places for round-off
+
+LET term = 1                      ! One term
+LET ans = term                    ! Sum of series
+
+LET t1 = time                     ! Time it
+let zer = 0
+FOR n = 1 to 1000                 ! By infinite series approximation
+    LET term = term/n             ! 1 / n!
+    IF term = zer then EXIT FOR   ! No longer significant
+    LET ans = ans + term
+NEXT n
+
+PRINT ans                         ! e
+PRINT n; "terms"                  ! How many terms were needed
+PRINT time-t1; "secs."            ! Print time
+
+END

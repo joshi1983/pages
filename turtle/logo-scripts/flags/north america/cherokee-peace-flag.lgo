@@ -1,0 +1,30 @@
+to cherokeePeaceFlag :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "width :height * 5 / 3
+	localmake "starSize1 :height * 0.062
+	localmake "starSize2 :height * 0.031
+	localmake "points [
+		[0.4555 0.345]
+		[0.3632 0.145]
+		[0.1368 0.41]
+		[0.1082 0.1945]
+		[-0.1025 0.498]
+		[-0.259 0.6785]
+		[-0.4772 0.7965]
+	]
+	stripes :width :height ["white]
+	setPenSize 0
+	setFillColor "#ED2024
+	repeat count :points [
+		localmake "p item repcount :points
+		jumpRight :height * first :p
+		jumpForward :height * last :p
+		isotoxalStar :starSize1 :starSize2 7
+		jumpTo :oldPos
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "#888
+cherokeePeaceFlag 100

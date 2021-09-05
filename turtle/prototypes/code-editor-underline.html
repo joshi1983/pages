@@ -1,0 +1,48 @@
+<html lang="en">
+	<head>
+		<style>
+		button {
+			cursor: pointer;
+		}
+		div {
+			height: 10px;
+			width: 100%;
+			background-color: red;
+			mask-image: url("../images/code-editor-underline.svg");
+			mask-size: contain;
+		}
+		.underline-error {
+			background-color: red;
+		}
+		.underline-warning {
+			background-color: orange;
+		}
+		.underline-tip {
+			background-color: yellow;
+		}
+		</style>
+		<script>
+		const colorClasses = ["underline-error", "underline-warning", "underline-tip"];
+		let index = 0;
+		let div;
+		function changeColour() {
+			div.classList.remove(colorClasses[index]);
+			index = (index + 1) % colorClasses.length;
+			div.classList.add(colorClasses[index]);
+		}
+
+		function init() {
+			const button = document.querySelector('button');
+			div = document.querySelector('div');
+			button.addEventListener('click', changeColour);
+			changeColour();
+		}
+		</script>
+	</head>
+	<body onload="init()">
+		<p>This prototype is some work leading to a feature that will underline sections of code related to static code analysis messages.
+		The messages could be errors, warnings, or tips.</p>
+		<div></div>
+		<button>Change Colour</button>
+	</body>
+</html>

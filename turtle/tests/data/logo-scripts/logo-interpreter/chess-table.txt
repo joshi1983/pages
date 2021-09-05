@@ -1,0 +1,75 @@
+; copied from http://www.logointerpreter.com/view-program.php?user=Vlad-Tudor&program=Chess%20Table#google_vignette
+;verical lines
+make "s 0
+repeat 9 [
+    setxy -248+:s -248
+    fd 498
+    make "s :s+62
+]
+;horizontal lines
+make "s 0
+right 90
+repeat 9 [
+    setxy -248 -248+:s
+    fd 498
+    make "s :s+62
+]
+;drawing the black squares
+setfc "#969696
+setcolor "#969696
+make "y 0
+repeat 8 [
+    ifelse REPCOUNT%2=1
+    [make "x 0]
+    [make "x 62]
+    repeat 4 [
+        setxy -220+:x -220+:y
+        fill
+        make "x :x+62*2
+    ]
+    make "y :y+62
+]
+home
+;white pieces
+setxy -217 -217
+go "79 true
+setxy -155 -217
+go "77 true
+setxy -93 -217
+go "75 true
+setxy -31 -217
+go "73 true
+setxy 31 -217
+go "71 true
+setxy 93 -217
+go "75 true
+setxy 155 -217
+go "77 true
+setxy 217 -217
+go "79 true
+repeat 8 [
+    setxy REPCOUNT*62-279 -155
+    go "81 true
+]
+;black pieces
+setxy -217 217
+go "80 true
+setxy -155 217
+go "78 true
+setxy -93 217
+go "76 true
+setxy -31 217
+go "74 true
+setxy 31 217
+go "72 true
+setxy 93 217
+go "76 true
+setxy 155 217
+go "78 true
+setxy 217 217
+go "80 true
+repeat 8 [
+    setxy REPCOUNT*62-279 155
+    go "82 true
+]
+ht

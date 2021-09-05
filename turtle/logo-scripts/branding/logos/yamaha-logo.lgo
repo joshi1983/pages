@@ -1,0 +1,31 @@
+; Inspired by logo at:
+; https://commons.wikimedia.org/wiki/File:Yamaha_logo.svg
+to ahsWindowAndDoorLogo :height
+	localmake "oldState turtleState
+	localmake "numAngles 3
+	localmake "innerOffset 0.0041
+	localmake "tuningForklines1 [
+		[90 0] [30 0.008] [19.6 0.007] [21 0.009]
+		[0.112] [30 0.01] [30 0.015] [15 0.009]
+		[-106 0.0388] [30 0.085] [20.4 0.13] [0.4886]
+		[90 0] [0.0458] [90 0] [0.3] [90 0] [:innerOffset] [-90 0]
+		[0.07] [-90 0] [:innerOffset] [90 0] [0.1323347]
+		[-90 0.02499135]
+	]
+	setPenColor "#48217a
+	setPenSize :height * 0.0563
+	setFillColor transparent
+	jumpForward :height / 2
+	circle (:height - penSize) / 2
+	setFillColor penColor
+	setPenSize 0
+	repeat :numAngles [
+		drawArcLineShape [0 0.42065
+			combine :tuningForklines1 reverse :tuningForklines1
+		] :height
+		right 360 / :numAngles
+	]
+	setTurtleState :oldState
+end
+
+ahsWindowAndDoorLogo 100

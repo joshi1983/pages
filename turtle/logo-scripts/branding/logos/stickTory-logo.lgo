@@ -1,0 +1,48 @@
+; Inspired by logo at:
+; https://www.youtube.com/@StickTory
+to stickToryLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "radius1 :height * 0.395
+	setPenColor "black
+	setPenSize :height * 0.045
+	setFillColor "#ff5852
+	jumpForward :height * 0.57
+	jumpLeft :height * 0.045
+	left 60
+	; hat
+	ellipse :height * 0.435 :height * 0.288
+
+	setHeading :oldHeading
+	setFillColor "white
+	jumpTo :oldPos
+	jumpForward :radius1 + penSize / 2
+	; face
+	ellipse :radius1 * 1.04 :radius1
+
+
+	localmake "center pos
+	jumpLeft :height * 0.153
+	jumpBackward :height * 0.008
+	setPenSize 0
+	setFillColor "black
+	; eyes
+	repeat 2 [
+		ellipse :height * 0.038 :height * 0.048
+		jumpRight :height * 0.38
+	]
+
+	; lips and smile
+	jumpTo :center
+	jumpBackward :height * 0.06
+	jumpLeft :height * 0.025
+	right 140
+	setPenSize :height * 0.02
+	setLineCap "round
+	arcLeft 80 :height * 0.08
+	arcLeft 8 :height * 0.2
+	setTurtleState :oldState
+end
+
+stickToryLogo 100

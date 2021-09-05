@@ -1,0 +1,40 @@
+; Inspired by:
+; https://en.wikipedia.org/wiki/List_of_flags_of_Nepal#/media/File:Flag_of_Nepal_(19th_century).svg
+; I didn't find a construction sheet so this code was written to just line up with the linked 
+; SVG.
+to nepalBefore1923Flag :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "width :height * 1000 / 670
+	localmake "flagRed "#ce1327
+	setFillColor :flagRed
+	jumpLeft :width / 2
+	right 90
+	jumpLeft :height / 4
+	setPenSize 0
+	repeat 2 [
+		isoTriangle :height / 2 :width
+		jumpLeft :height / 2
+	]
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height / 4
+	jumpLeft :width * 0.286
+	setFillColor "white
+	isotoxalStar :height * 0.07 :height * 0.145 64
+
+	jumpRight :height * 0.005
+	jumpForward :height * 0.513
+	circle :height * 0.125
+	setFillColor :flagRed
+	jumpForward :height * 0.031
+	circle :height * 0.103
+	jumpForward :height * 0.014
+	setFillColor "white
+	circle :height * 0.051
+	setTurtleState :oldState
+end
+
+setScreenColor "#ddd
+nepalBefore1923Flag 100

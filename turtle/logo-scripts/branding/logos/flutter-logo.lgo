@@ -1,0 +1,75 @@
+; Inspired by
+; https://commons.wikimedia.org/wiki/File:Google-flutter-logo.svg
+; The following is a little different.
+; The main difference is that the flutterLogo procedure doesn't draw any arcs.
+; The source SVG version from Wikipedia had some tiny arcs at a couple corners.
+; The following doesn't draw those arcs partly because they looked like mistakes.
+; The tiny arcs in the SVG appeared to overshoot their intended corners.
+;
+; If you want to use this drawing or exported versions of this, see
+; https://flutter.dev/brand
+; This procedure draws something almost exactly like the official Flutter logo so
+; follow their rules and guidance on using the Flutter logo.
+to flutterLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "thickness :height * 0.218
+	localmake "angle1 134.95
+	localmake "angle2 :angle1 - 90
+	localmake "thickness2 :thickness / cos :angle2
+	localmake "thickness3 :thickness * tan :angle1
+	localmake "len1 :thickness - :height / 2 / cos :angle1
+	localmake "len2 :len1 + :thickness * tan :angle1
+	localmake "len3 :height * 0.38
+	localmake "rightLen :height * 0.40399
+	localmake "lightBlueColor "#44d1fd
+
+	; Draw the top shape.
+	jumpForward :height
+	jumpRight :rightLen
+	left :angle1
+	setPenSize 0
+	setFillColor :lightBlueColor
+	polyStart
+	jumpForward :len1
+	jumpRight :thickness
+	right 180
+	jumpForward :len2
+	polyEnd
+
+	; Draw the bottom shape.
+	setFillColor "#08589c
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpRight :rightLen
+	polyStart
+	jumpLeft :thickness2
+	left :angle2
+	jumpForward :height * 0.164
+	jumpRight :thickness / 2
+	localmake "squareBottom pos
+	jumpRight :thickness / 2
+	polyEnd
+
+	setFillColor :lightBlueColor
+	polyStart
+	jumpRight :len3
+	setHeading :oldHeading
+	jumpLeft :thickness2
+	left :angle1
+
+	; + height * 0.1 for a little overlap.
+	; Overlap prevents background colors from leaking through.
+	jumpForward :len3 + :thickness3 + :height * 0.1
+	polyEnd
+
+	; Draw square.
+	jumpTo :squareBottom
+	setHeading :oldHeading - :angle2
+	stripes :thickness :thickness ["#1fbcfd]
+
+	setTurtleState :oldState
+end
+
+flutterLogo 100

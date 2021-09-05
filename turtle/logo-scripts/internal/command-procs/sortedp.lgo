@@ -1,0 +1,10 @@
+to sorted? :listValue :lessOrEqualProc
+	for ["i 2 count :listValue] [
+		localmake "prev item :i - 1 :listValue
+		localmake "current item :i :listValue
+		if not (invoke :lessOrEqualProc :prev :current) [
+			output false
+		]
+	]
+	output true
+end

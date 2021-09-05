@@ -1,0 +1,49 @@
+; Inspired by logo at:
+; https://en.wikipedia.org/wiki/United_States_Postal_Service#/media/File:USPS_-_Color_Logo.svg
+to usPostalServiceLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angle 12
+	localmake "width :height * 1.425
+	localmake "slantedHeight :height / cos :angle
+	localmake "uspsBlue "#15569c
+	setPenSize 0
+	setFillColor :uspsBlue
+	jumpLeft :height * 0.106
+	parallelogram :width :slantedHeight :angle
+	jumpLeft :width / 2
+	localmake "bottomLeft pos
+	right :angle
+	jumpForward :slantedHeight
+	localmake "topLeft pos	
+
+	jumpTo :bottomLeft	
+	setHeading :oldHeading
+	setFillColor "white
+	polyStart
+	arcLines [[-64.1 0] [1] [-19 1.2] [13 0.1] [130 0.01] [25 0.04] [20 0.5]
+			[10.4 2.5] [-97.5 0] [0.315] [-107.8 0] [0.62] [90 0] [60 0.035]
+			[15 0.1] [15 0.8] [0.8]] :height
+	jumpTo :topLeft
+	setHeading :oldHeading + 101.5
+	arcLines [[0.95] [-19 0.32] [-45 0.03]] :height
+	setHeading :oldHeading + 90
+	arcLines [[-3 2] [-7 0.3] [-80 0.07] [-10 0.2] [-14 0.3] [-10.5 0.5]
+		[-34 0]] :height
+	jumpForward distanceToLine :oldPos :bottomLeft
+	polyEnd
+	
+	jumpTo :bottomLeft	
+	setHeading :oldHeading
+	setFillColor :uspsBlue
+	drawArcLineShape [1.34 0.54
+		[[-90 0] [57 0.015] [15 0.36] [15 0.1] [50 0.035] [35 0.05]
+		[8 0.4] [0.08] [60 0.01] [-40 0.05] [-15 0.23] [0.04] [18 0.05]
+		[150 0.01] [9 0.1] [5.5 2] [-14 0.25] [-5 0.03] [-60 0.015] [-30 0.03]
+		[-10 0.2] [0.01] [5 0.3] [6 0.1] [60 0.007]]
+	] :height
+	setTurtleState :oldState
+end
+
+usPostalServiceLogo 100

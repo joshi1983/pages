@@ -1,0 +1,162 @@
+make "eyeWidthFactor 2.3
+make "arcAngle 4 * arcTan 1 / :eyeWidthFactor
+make "arcRadiusFactor :eyeWidthFactor / 2 / sin :arcAngle / 2
+make "arc1 [ [-:arcAngle :arcRadiusFactor] [:arcAngle - 180 0]]
+make "backgroundShape [-:eyeWidthFactor / 2 0.5
+	(combine [[:arcAngle / 2 - 90 0]] :arc1 :arc1)
+]
+
+to drawEyeLids :height :blinkRatio
+	if :blinkRatio > 0 [
+		localmake "oldState turtleState
+		localmake "eyelidWidth :eyeWidthFactor / 2 * :blinkRatio
+		localmake "y1 :arcRadiusFactor - 0.5
+		localmake "lidGap :eyeWidthFactor / 2 - :eyelidWidth
+		localmake "eyelidArcAngle :arcAngle / 2 - arcTan :lidGap / :y1
+		localmake "lidGapAngle :arcAngle / 2 - :eyelidArcAngle
+		localmake "height1Factor cos :lidGapAngle
+		localmake "height2Factor 0.5 + :arcRadiusFactor * (:height1Factor - 1)
+		localmake "arcs1 [
+			[:arcAngle / 2 - 90 0]
+			[-:eyelidArcAngle :arcRadiusFactor]
+			[:eyelidArcAngle - :arcAngle / 2 - 90 0]
+			[:height2Factor]
+		]
+		localmake "eyelidShape [-:eyeWidthFactor / 2 0
+			combine :arcs1 reverse :arcs1
+		]
+		setFillColor "#2c82b7
+		jumpForward :height / 2
+		repeat 2 [
+			drawArcLineShape :eyelidShape :height
+			right 180
+		]
+		setTurtleState :oldState
+	]
+end
+
+to drawEye :height :timeRatio
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "irisMoveStart 0.03
+	localmake "timeRatio2 clamp (:timeRatio - :irisMoveStart) / 0.45 0 1 
+	localmake "irisAngle 155 + 50 * interpolateRatio easeInOut :timeRatio2
+	localmake "irisMotionRadius 1.2
+	localmake "blinkRatio 0
+	setFillColor "white
+	drawArcLineShape :backgroundShape :height
+
+	; Draw iris in animated position.
+	ifelse :timeRatio < 0.654 [
+		jumpForward :height * :arcRadiusFactor
+		left :irisAngle
+		jumpForward :height * :irisMotionRadius
+	] [
+		jumpForward :height / 2
+		if :timeRatio > 0.9 [
+			localmake "ratio clamp (:timeRatio - 0.9) / 0.1 0 1
+			localmake "ratio interpolateRatio easeIn :ratio
+			jumpLeft :height * 0.35 * :ratio
+		]
+	]
+	setFillColor "black
+	circle :height * 0.33
+
+	; Draw blinking eyelids.
+	if and :timeRatio > 0.56 :timeRatio < 0.86 [
+		localmake "blinkTimeRatio (:timeRatio - 0.56) / (0.86 - 0.56)
+		localmake "blinkRatio mixItems2 [0 1 1 0 1 1 0] :blinkTimeRatio
+		jumpTo :oldPos
+		setHeading :oldHeading
+		drawEyeLids :height :blinkRatio	
+	]
+	setTurtleState :oldState
+end
+
+to drawEyeShipForeground :height :timeRatio
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "arcRadius 0.675
+	localmake "len1 1 - :arcRadius
+	localmake "eyeHeight :height * 0.37
+	localmake "backgroundShape [-:arcRadius 0
+		[[:len1] [-180 :arcRadius] [:len1]]
+	]
+	setPenSize 0
+	localmake "colorStops createPList2 [
+		[0 "#ff5165] [1 "#ff283c]
+	]
+	jumpForward :height
+	setFillGradient createLinearGradient :oldPos pos :colorStops "pad
+	jumpTo :oldPos	
+	drawArcLineShape :backgroundShape :height
+	jumpForward :height * 0.312
+	drawEye :eyeHeight :timeRatio
+	setTurtleState :oldState
+end
+
+to drawHoverRays :height :timeRatio
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "width :height * 1.07
+	localmake "step :width / 5
+	jumpForward :height
+	localmake "top pos
+	jumpBackward :height
+	jumpLeft :width / 2
+	setPenSize 0
+	repeat 5 [
+		localmake "ratio 3 * (1 + :timeRatio) + repRatio * 3
+		localmake "ratio :ratio - int :ratio
+		localmake "ratio clamp :ratio 0 1
+		setFillColor mix "#217a77 "#d4e4e5 :ratio
+		polyStart
+		jumpRight :step
+		localmake "pos2 pos
+		if repcount <> 5 [
+			; Draw a section to be overlapped.
+			; Overlapping shapes prevents unwanted
+			; background pixels from showing in the antialiased 
+			; pixels where teh shapes touch.
+			jumpRight :step
+		]
+		setHeading towards :top
+		jumpForward distance :top
+		polyEnd
+		jumpTo :pos2
+		setHeading :oldHeading
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by:
+; https://ca.pinterest.com/pin/246361042112429247
+to alienEye :height :timeRatio
+	localmake "oldState turtleState
+	localmake "eyeShipHeight :height * 0.547
+	drawHoverRays :height * 0.7 :timeRatio
+	jumpForward :height - :eyeShipHeight
+	drawEyeShipForeground :eyeShipHeight :timeRatio
+	setTurtleState :oldState
+end
+
+make "timeRatio animation.clampedTimeRatio
+setScreenColor "black
+alienEye 100 :timeRatio
+
+to animation.snapshotstyle
+	output createPList2 [
+		["position.y 50]
+		["zoom.scale 5]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 2
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

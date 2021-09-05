@@ -1,0 +1,30 @@
+; Inspired by logo at:
+; https://www.youtube.com/@machinesmakingmusic4381
+to machinesMakingMusicLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "thickness :height * 0.15
+	localmake "mHeight :height * 0.825
+	localmake "mSeparation :height * 0.406
+	localmake "gap :height * 0.29
+	localmake "topThickness :height * 0.045
+	jumpLeft :height * 0.531
+	repeat 3 [
+		stripes :thickness :mHeight ["white]
+		jumpRight :mSeparation
+	]
+	jumpLeft :mSeparation * 2
+	jumpForward :mHeight - :thickness
+	stripes :mSeparation * 2 :thickness ["white]
+	jumpTo :oldPos
+	jumpRight :height * 0.548
+	jumpForward :gap
+	stripes :height * 0.12 :height - :gap ["white]
+	jumpForward :height - :gap - :topThickness / 2
+	left 90
+	stripes :topThickness :height * 0.67 ["white]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+machinesMakingMusicLogo 100

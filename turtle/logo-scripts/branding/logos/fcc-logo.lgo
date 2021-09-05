@@ -1,0 +1,45 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Federal_Communications_Commission#/media/File:FCC_New_Logo.svg
+to fccLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "thicknessRatio 0.1
+	localmake "thickness :height * :thicknessRatio
+	localmake "radii [0.235 0.5 - :thicknessRatio / 2]
+	localmake "angle1 54
+	localmake "angle2 53
+	localmake "fSize1 :height * 0.424
+	jumpForward :height / 2
+	jumpRight :height * 0.198
+	setPenSize :thickness
+	setPenColor "black
+	localmake "center pos
+	setLineCap "butt
+	repeat count :radii [
+		setHeading :oldHeading + :angle1
+		localmake "radius :height * item repcount :radii
+		jumpForward :radius
+		left 90
+		arcLeft 181 + :angle1 * 2 :radius
+		jumpTo :center
+	]
+	setHeading :oldHeading - 90
+	jumpForward :height * last :radii
+	forward :height * 0.3
+	jumpLeft :height * 0.48
+	jumpForward :height * 0.05
+	setPenSize 0
+	setFillColor penColor
+	polyStart
+	jumpRight :height * 0.968
+	jumpBackward :fSize1
+	left :angle2
+	jumpForward :thickness / sin :angle2
+	setHeading :oldHeading
+	jumpLeft :fSize1 - :thickness - :thickness / tan :angle2
+	jumpBackward :height * 0.8
+	polyEnd
+	setTurtleState :oldState
+end
+
+fccLogo 100

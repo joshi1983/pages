@@ -1,0 +1,24 @@
+; Inspired by logo at:
+; https://loranscholar.ca
+to loranScholarLogo :height
+	localmake "oldState turtleState
+	localmake "colors [
+		"#ed1c29 "#8b0209 "#c41520
+	]
+	localmake "lines1 [
+		[90 0] [-30 0.11] [0.4848] [-150 0.004] [0.4728491]
+	]
+	jumpForward :height / 2
+	setPenSize 0
+	right 90
+	repeat count :colors [
+		setFillColor item repcount :colors
+		drawArcLineShape [0 0.04
+			combine :lines1 reverse :lines1
+		] :height * 0.9985
+		right 360 / count :colors
+	]	
+	setTurtleState :oldState
+end
+
+loranScholarLogo 100

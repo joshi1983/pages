@@ -1,0 +1,105 @@
+; Uses law of cosines
+to getCosRatio :a :b :c
+	if :a * :b = 0 [
+		output 0
+	]
+	output (:a * :a + :b * :b - :c * :c) / (2 * :a * :b)
+end
+
+to getAngle :a :b :c
+	output arcCos getCosRatio :a :b :c
+end
+
+; Inspired by
+; https://publicdomainvectors.org/en/free-clipart/US-National-Park-Maps-pictogram-for-an-exercise-facility-vector-image/22602.html
+to exercisePerson :size :ratio
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "ratio 1 - abs 1 - :ratio * 2
+	localmake "headRadius :size * 0.08
+	localmake "minTorsoPosRatio 0.159
+	localmake "maxTorsoPosRatio 0.437
+	localmake "armLength :size * 0.27
+	localmake "standUpRatio min 1 :ratio * 1.7
+	localmake "standUpRatio interpolateRatio easeInOutCubic :standUpRatio
+	localmake "torsoPosRatio mix :maxTorsoPosRatio :minTorsoPosRatio :standUpRatio
+	localmake "torsoPos :size * :torsoPosRatio
+	localmake "neckGap :headRadius + :size * mix 0.02 0.01 :torsoPosRatio
+	localmake "armRatio interpolateRatio easeIn max 0 (:ratio - 0.6) / 0.4
+	localmake "armAngle mix 17 135 :armRatio
+	localmake "armThickness :size * 0.07
+	localmake "legThickness :size * 0.09
+	localmake "torsoWidth :size * 0.2
+	localmake "shoulderSeparation :torsoWidth - :armThickness * 0.5
+	localmake "legSeparation :torsoWidth - :legThickness * 0.9
+	localmake "legLength1 :size * 0.19
+	localmake "legLength2 :size * 0.2471
+	localmake "footDistance :torsoPos
+	localmake "legAngle1 180 - getAngle :legLength1 :footDistance :legLength2
+	localmake "legAngle2 180 - getAngle :legLength2 :legLength1 :footDistance
+	localmake "torsoHeight :size * 0.37
+	jumpForward :torsoPos
+	setLineCap "butt
+	setPenSize :torsoWidth
+	setPenColor "black
+	; Draw torso.
+	forward :torsoHeight
+
+	jumpForward :neckGap
+	setPenSize 0
+	setFillColor penColor
+	; Draw head.
+	circle :headRadius
+	jumpBackward :neckGap + :armThickness / 2
+	localmake "pos1 pos
+
+	; Draw arms.
+	setPenSize :armThickness
+	jumpRight :shoulderSeparation / 2
+	right :armAngle
+	setLineCap "round
+	forward :armLength
+	jumpTo :pos1
+	setHeading :oldHeading
+	jumpLeft :shoulderSeparation / 2
+	left :armAngle
+	forward :armLength
+
+	; Draw legs.
+	setLineJoinStyle "round
+	jumpTo :pos1
+	setHeading :oldHeading
+	jumpBackward :torsoHeight - (:legThickness + :armThickness) / 2
+	setPenSize :legThickness	
+	localmake "pos1 pos
+	jumpRight :legSeparation / 2
+	right :legAngle1
+	forward :legLength1
+	right :legAngle2
+	forward :legLength2
+	jumpTo :pos1
+	setHeading :oldHeading
+	jumpLeft :legSeparation / 2
+	left :legAngle1
+	forward :legLength1
+	left :legAngle2
+	forward :legLength2
+	
+	setTurtleState :oldState
+end
+
+jumpBackward 280
+exercisePerson 530 animation.timeRatio
+
+to animation.snapshotstyle
+	output createPList
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 3
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

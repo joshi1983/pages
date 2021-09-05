@@ -1,0 +1,64 @@
+to colorfulGradient :height
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "colorStops createPList2 [
+		[0 "#ff7917] [0.4 "#E02E40] [0.5 "#d43a5f] [1 "#36acb3]
+	]
+	jumpForward :height / 2
+	left 45
+	jumpForward :height * 0.3
+	localmake "fromPos pos
+	jumpBackward :height * 0.6
+	localmake "result createLinearGradient :fromPos pos :colorStops "pad
+	jumpTo :oldPos
+	setHeading :oldHeading
+	output :result
+end
+
+; The actual logo at https://css-tricks.com/ is slightly different.
+; It is stretched in a horizontal direction a bit.
+; The following draws without the stretch because this is simpler.
+to cssTricksShape :height
+	localmake "oldState turtleState
+	localmake "arcAngle1 96.4
+	localmake "arcRadius :height * 0.096
+	localmake "size1 :height * 0.28482
+	left 90
+	setPenSize 0
+	arcRight :arcAngle1 :arcRadius
+	left 180
+	polyStart
+	repeat 6 [
+		arcLeft :arcAngle1 * 2 :arcRadius
+		jumpForward :size1
+		right 132.8
+		jumpForward :size1
+	]
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by logo at
+; https://css-tricks.com/
+to cssTricksBlackLogo :height
+	localmake "oldState turtleState
+	setFillColor "black
+	cssTricksShape :height
+	setTurtleState :oldState
+end
+
+; Inspired by the favicon(browser tab icon) logo at
+; https://css-tricks.com/
+to cssTricksColorfulLogo :height
+	localmake "oldState turtleState
+	setFillGradient colorfulGradient :height
+	cssTricksShape :height
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 4
+jumpLeft :separation * 0.5
+cssTricksBlackLogo :height
+jumpRight :separation
+cssTricksColorfulLogo :height

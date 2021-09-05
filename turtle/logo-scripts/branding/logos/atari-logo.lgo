@@ -1,0 +1,43 @@
+; Inspired by
+; https://upload.wikimedia.org/wikipedia/commons/5/58/Atari_Official_2012_Logo.svg
+; Referred by
+; https://en.wikipedia.org/wiki/Atari
+; Atari created gaming consoles, personal computers but also created
+; Atari Logo and Apple Logo.
+; More detail on Atari Logo is at:
+; https://en.wikipedia.org/wiki/Atari_Logo
+
+to atariLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "size1 :height * 0.099
+	setPenSize :height * 0.14
+	setLineCap "butt
+	forward :height
+	localmake "pos1 pos
+	setFillColor penColor
+	jumpLeft :size1
+	setPenSize 0
+	localmake "arcsInfo1 [[179 0] [5 5] [8 1] [25 0.45] [15 0.72] [15 0.5]
+	[14 0.7]]
+	localmake "arcsInfo2 [[0.149] [-80 0][15 0.5] [12 0.4] [15 0.56] [15 0.53] [15 0.72]
+	[8.55 2.45122]]
+	polyStart
+	arcLines :arcsInfo1 -:height
+	setHeading :oldHeading
+	arcLines :arcsInfo2 :height
+	polyEnd
+	jumpTo :pos1
+	setHeading :oldHeading
+	jumpRight :size1
+	polyStart
+	arcLines :arcsInfo1 :height
+	setHeading :oldHeading
+	arcLines :arcsInfo2 -:height
+	polyEnd
+	setTurtleState :oldState
+end
+
+setScreenColor "#E41B23
+setPenColor "white
+atariLogo 100

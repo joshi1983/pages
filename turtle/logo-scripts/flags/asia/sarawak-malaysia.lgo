@@ -1,0 +1,28 @@
+; Inspired by flag at:
+; https://upload.wikimedia.org/wikipedia/commons/7/7e/Flag_of_Sarawak.svg
+to sarawakFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 2
+	localmake "sarawakYellow "#fcd116
+	localmake "colors ["black "#ce1126]
+	localmake "angle arcTan :height / :width
+	localmake "len (hypot [:width / :height 1]) * 2 / 3
+	stripes :width :height [:sarawakYellow]
+	setPenSize 0
+	jumpForward :height / 2
+	repeat 2 [
+		setFillColor item repcount :colors
+		drawArcLineShape [-:width / :height / 2 0.5
+			[[-90 0] [:width / :height / 3] [-:angle 0]
+			[:len] [:angle - 90 0] [1 / 3]]
+		] :height
+		right 180
+	]
+	setFillColor :sarawakYellow
+	; The star in the SVG is rotated about 4 degrees.
+	; I'm not rotating here because I suspect the SVG's star rotation is by mistake.
+	isotoxalStar :height * 0.1 :height / 4 9
+	setTurtleState :oldState
+end
+
+sarawakFlag 100

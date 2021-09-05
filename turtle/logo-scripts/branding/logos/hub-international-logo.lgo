@@ -1,0 +1,18 @@
+; Inspired by logo at
+; https://en.wikipedia.org/wiki/Hub_International#/media/File:Hub_International_logo.svg
+to hubLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "colorStops createPList2 [
+		[0 "#00adef] [0.25 "#0994dc] [0.5 "#176fba] [0.75 "#1e5cb2] [1 "#2c3797]
+	]
+	jumpForward :height
+	setPenGradient createLinearGradient pos :oldPos :colorStops "pad
+	jumpBackward :height / 2
+	setPenSize :height * 0.202
+	setFillColor transparent
+	circle (:height - penSize) / 2
+	setTurtleState :oldState
+end
+
+hubLogo 100

@@ -1,0 +1,21 @@
+; Inspired by:
+; https://en.wikipedia.org/wiki/Sperry_Corporation#/media/File:Sperry_Corporation_logo.svg
+to sperryCorporationLogo :height
+	localmake "oldState turtleState
+	localmake "arcs1 [[45 0] [-10 0.082] [-10 0.11] [-10 0.12] [-6 0.16]
+	[-6.8 0.83] [-3.1338 5] [-89.07 0] [0.0525] [-89.8 0] [3 1.8] [10 0.7]
+	[10 0.33] [10 0.26] [10 0.17] [1.8038 0.31004235]]
+	localmake "shape [0.065 0.065
+		combine :arcs1 reverse :arcs1
+	]
+	jumpForward :height / 2
+	setPenSize 0
+	setFillColor "black
+	repeat 4 [
+		drawArcLineShape :shape :height
+		right 360 / 4
+	]
+	setTurtleState :oldState
+end
+
+sperryCorporationLogo 100

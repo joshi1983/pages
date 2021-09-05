@@ -1,0 +1,64 @@
+; This was inspired by a photo edit request at:
+; https://www.facebook.com/groups/photoshopthat/permalink/655875717087319/?comment_id=657080123633545&notif_id=1739905767734513&notif_t=feedback_reaction_generic&ref=notif
+;
+; This references a popular 1970's sci-fi movie called Zardoz:
+; https://www.youtube.com/watch?v=FSjCkISrJfQ
+to zardozZipline :height :timeRatio
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "headTimeRatio interpolateRatio easeIn :timeRatio
+	localmake "headHeight :height * mix 0.8 0.1 :headTimeRatio
+	localmake "ladyTimeRatio clamp (interpolateRatio easeOutQuad :timeRatio) 0 1
+	localmake "ladyHeight :height * mix 0.001 0.2 :ladyTimeRatio
+	localmake "backgroundHeight :height * 703 / 960
+	localmake "swingAngle 10 * sin :ladyTimeRatio * 1200
+	localmake "ladyOpacity 1
+	localmake "ladyDisappearStart 0.42
+	if :timeRatio > :ladyDisappearStart [
+		localmake "endTime :ladyDisappearStart + 0.02
+		localmake "ladyOpacity clamp (:endTime - :timeRatio) / (:endTime - :ladyDisappearStart) 0 1
+	]
+
+	; background
+	image :height * 720 / 960 :height 'weblogo://logo-scripts/images/zardoz-zipline/background.jpg'
+
+	; head
+	jumpForward :height * mix 0.65 0.46 :headTimeRatio
+	jumpLeft :height * mix -0.8 0.5 :headTimeRatio
+	image :headHeight * 415 / 436 :headHeight 'weblogo://logo-scripts/images/zardoz-zipline/zardoz.png'
+
+	if :ladyOpacity > 0 [
+		jumpTo :oldPos
+		jumpForward :height * mix 0.5 0.925 :ladyTimeRatio
+		jumpRight :height * mix -0.5 0.5 :ladyTimeRatio
+		right :swingAngle
+		jumpBackward :ladyHeight * 0.95
+		imageAlpha :ladyHeight * 115 / 185 :ladyHeight 'weblogo://logo-scripts/images/zardoz-zipline/lady.png' :ladyOpacity
+	]
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	image :backgroundHeight * 720 / 702 :backgroundHeight 'weblogo://logo-scripts/images/zardoz-zipline/foreground.png'
+	setTurtleState :oldState
+end
+
+make "timeRatio animation.clampedTimeRatio
+zardozZipline 100 :timeRatio
+
+to animation.snapshotstyle
+	output createPList2 [
+		["position.y 50]
+		["zoom.scale 8.18]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 10
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+		["thumbnailTime 3.65]
+	]
+end

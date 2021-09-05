@@ -1,0 +1,41 @@
+! DemRadio
+
+! Demonstrates a set of radio buttons
+
+LIBRARY "TrueCtrl.trc"
+
+DIM text$(5)                      ! The texts of the buttons
+MAT READ text$
+DATA Loud, Medium, Soft, Quiet, Off
+
+CALL TC_Init
+
+! 0 is the number of the default output window.
+LET win = 0
+CALL TC_Win_SetPen (win, -1, 7, "", "")  ! Color 7  
+CALL TC_Win_SetBrush (win, 3, -3, "")    ! Background color 3, cyan
+CALL TC_Win_SetFont (win, "", 12, "BOLD")     ! Font specifics
+CLEAR                             ! To clear the old background color
+CALL TC_Show (win)
+CALL TC_Win_Active (win)
+
+CALL TC_RadioGroup_Create (rid, text$(), .45, .63, .50, .75)
+CALL TC_PushBtn_Create (pid, "Quit", .50, .58, -99999, .44)
+DO
+   CALL TC_Event (0, event$, window, x1, x2)
+
+   IF event$ = "HIDE" then EXIT DO
+   IF event$ = "CONTROL DESELECTED" then
+
+      IF x2 = pid then EXIT DO    ! Push button has been pushed
+
+      CALL TC_RadioGroup_On (rid, button)
+      PRINT "Button "; text$(button); " is now on"
+
+   END IF
+
+LOOP
+
+CALL TC_Cleanup
+
+END

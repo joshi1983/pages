@@ -1,0 +1,28 @@
+EXTERNAL
+
+SUB Get (l$(), codes$)
+
+    LIBRARY "{WB_c}WBsccs.trc"
+
+    ! This subroutine imitates the Unix get command,
+    ! which unravels an sccs-format file to produce
+    ! the desired version of the source file.
+
+    ! If the current file is compiled, this routine
+    ! does not succeed in displaying the newly
+    ! retrieved text file.
+
+    WHEN exception in
+         CALL WB_Get (l$(), codes$)
+         PRINT "Done with Get."
+    USE
+         IF extype = 1 then
+            PRINT extext$
+         ELSE
+            PRINT extype, extext$
+            PRINT exline$
+            PRINT "Error in Get."
+         END IF
+    END WHEN
+
+END SUB

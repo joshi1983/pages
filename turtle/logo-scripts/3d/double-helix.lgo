@@ -1,0 +1,40 @@
+; Inspired by DNA's double helix explained at:
+; https://en.wikipedia.org/wiki/DNA
+
+to dotsBetweenPoints :dotSize :p1 :p2
+	repeat 20 [
+		jumpTo mix :p1 :p2 repRatio
+		sphere :dotSize
+	]
+end
+
+to doubleHelixDots :width :radius
+	localmake "numChainLinks 50
+	localmake "chainLinkStep :width / :numChainLinks
+	localmake "angleStep 20
+	localmake "dotSize :radius * 0.04
+	localmake "stepsBetweenAngle 5
+	setPenSize 0
+	setFillColor "black
+	repeat :numChainLinks [
+		localmake "angle :angleStep * repcount
+		localmake "x repcount * :chainLinkStep - :width / 2
+		localmake "y :radius * sin :angle
+		localmake "z :radius * cos :angle
+		localmake "p1 [:x :y :z]
+		localmake "p2 [:x -:y -:z]
+		dotsBetweenPoints :dotSize :p1 :p2
+		repeat :stepsBetweenAngle [
+			localmake "angle2 :angle + repRatio * :angleStep
+			localmake "x2 :x + repRatio * :chainLinkStep
+			localmake "y2 :radius * sin :angle2
+			localmake "z2 :radius * cos :angle2
+			jumpTo [:x2 :y2 :z2]
+			sphere :dotSize
+			jumpTo [:x2 -:y2 -:z2]
+			sphere :dotSize
+		]
+	]
+end
+
+doubleHelixDots 800 100

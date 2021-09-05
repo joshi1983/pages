@@ -1,0 +1,30 @@
+; Inspired by logo at:
+; https://www.brunet.ca
+to brunetLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "gapThickness :height * 0.12
+	localmake "gapAngle 2 * arcTan :gapThickness / :height
+	localmake "arcAngle 90 - :gapAngle
+	localmake "radius (hypot [:height :gapThickness]) / 2
+	localmake "straightLength (:height - :gapThickness) / 2
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	setFillColor "#008ed0
+	repeat 4 [
+		localmake "heading1 :oldHeading + :gapAngle / 2 + (repcount - 1) * 360 / 4
+		setHeading :heading1
+		jumpForward :radius
+		right 90
+		polyStart
+		arcRight :arcAngle :radius
+		right 90 + :gapAngle / 2
+		jumpForward :straightLength
+		polyEnd
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+brunetLogo 100

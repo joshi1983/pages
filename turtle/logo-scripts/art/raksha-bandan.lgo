@@ -1,0 +1,110 @@
+to centralDesign :height
+	localmake "oldState turtleState
+	localmake "center pos
+	localmake "oldHeading heading
+	localmake "radius1 :height * 0.08
+	setFillColor "red
+	setPenColor "yellow
+	setPenSize :height * 0.03
+	localmake "height1 :height - :radius1 * 2 - penSize
+	jumpForward :height1 / 2
+	repeat 2 [
+		circle :radius1
+		jumpBackward :height1
+	]	
+
+	setLineJoinStyle "round
+	jumpTo :center
+	roundIsoStar :height * 0.35 :height * 0.54 12 :height * 0.085 0
+
+	right 180 / 12
+	setPenSize 0
+	setFillColor "white
+	repeat 12 [
+		jumpForward :height * 0.31
+		circle :height * 0.03
+		right 360 / 12
+		jumpTo :center
+	]
+	setHeading :oldHeading
+	setFillColor "yellow
+	setPenColor "white
+	setPenSize :height * 0.015
+	circle :height * 0.22
+	setFillColor "black
+	setPenSize 0
+	localmake "size :height * 0.22
+	localmake "angle 90
+	repeat 2 [
+		repeat 7 [
+			arcPair :size :angle
+			right 360 / 7
+		]
+		localmake "size :size * 0.95
+		setFillGradient createRadialGradient pos :size createPList2 [
+			[0 "red] [1 "yellow]
+		]
+		localmake "angle 80
+	]
+	setTurtleState :oldState
+end
+
+to drawStrings :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "lines [
+		[170 0.8] [190 0.85] [210 1]
+	]
+	localmake "ringRadius :height * 0.07
+	setFillColor transparent
+	setPenColor "white
+	setPenSize :height * 0.03
+	repeat count :lines [
+		localmake "lineInfo item repcount :lines
+		setHeading :oldHeading + first :lineInfo
+		forward (:height * last :lineInfo) - :ringRadius
+		jumpForward :ringRadius
+		circle :ringRadius
+		jumpTo :oldPos
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by drawing at:
+; https://www.youtube.com/watch?v=LoflBi5tq3Q
+to rakshaBandan :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "straightLength :height * 1.07
+	localmake "angle 42.5
+	localmake "numCircles 36
+	setPenSize :height * 0.03
+	setPenColor "red
+	jumpForward :height - (penSize + :straightLength * cos :angle) / 2 
+	localmake "center pos
+	left :angle
+	setLineCap "round
+	jumpBackward :straightLength / 2
+	localmake "endPos1 pos
+	forward :straightLength
+	localmake "endPos2 pos
+	setPenSize 0
+	setFillColor "white
+	repeat :numCircles [
+		circle :height * 0.01
+		jumpBackward :straightLength / (:numCircles - 1)
+	]
+	jumpTo :center
+	centralDesign :height * 0.42
+	setHeading :oldHeading
+	jumpTo :endPos1
+	repeat 2 [
+		drawStrings :height * 0.2
+		jumpTo :endPos2
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "#be0b95
+rakshaBandan 100

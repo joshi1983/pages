@@ -1,0 +1,32 @@
+<code>arcsRight [
+	[45 1]
+	[-45 1]
+] 100
+
+; Same as:
+; arcRight 45 1 * 100
+; arcLeft 45 1 * 100</code>
+<code>; myArcsRight procedure works exactly like the arcsRight command.
+; The arcsRight command is available so you don't need to implement it yourself.
+; Reviewing this implementation could help you implement something similar using procedures, though.
+to myArcsRight :arcsInfo :scale
+	repeat count :arcsInfo [
+		localmake "arcInfo item repcount :arcsInfo
+		localmake "arcAngle first :arcInfo
+		localmake "arcRadius :scale * last :arcInfo
+		ifelse :arcRadius = 0 [
+			right :arcAngle
+		] [
+			ifelse :arcAngle > 0 [
+				arcRight :arcAngle :arcRadius
+			] [
+				arcLeft :arcAngle :arcRadius
+			]
+		]
+	]
+end
+
+myArcsRight [
+	[45 1] 
+	[-45 1]
+] 100</code>

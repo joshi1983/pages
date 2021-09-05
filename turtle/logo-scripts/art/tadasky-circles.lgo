@@ -1,0 +1,46 @@
+; Inspired by:
+; https://ca.pinterest.com/pin/70016969181216601
+;
+; The artist's name is Tadasky (Tadasuke Kuwayama).
+; You can learn more about him at: 
+; https://davidrichardgallery.com/artist/779-tadasky
+; and at:
+; https://tadasuke.kuwayama.com
+to tadaskyCircles :height
+	localmake "oldState turtleState
+	localmake "colors ["red "orange "yellow "white]
+	localmake "thickness :height / 2 / (count :colors)
+	localmake "maxRadius (:height - :thickness) / 2
+	localmake "minRadius :thickness * 0.5
+	localmake "numContours 20
+	jumpForward :height / 2
+	setFillColor transparent
+	repeat count :colors [
+		localmake "radius mix :minRadius :maxRadius repRatio
+		setPenColor item repcount :colors
+		setPenSize :thickness
+		if :radius <> 0 [
+			circle :radius
+		]
+		localmake "radius :radius - :thickness / 2
+		repeat :numContours [
+			localmake "radius1 :radius + :thickness * repcount / :numContours
+			ifelse :radius = 0 [
+				localmake "ratio 1 - repRatio
+			] [
+				localmake "ratio 2 * (0.5 - abs (repRatio - 0.5))
+			]
+			localmake "ratio interpolateRatio easeOutCirc :ratio
+			localmake "thickness1 (1 - :ratio * :ratio) * 0.03 * :thickness
+			setPenColor "black
+			setPenSize :thickness1
+			if :radius1 > 0 [
+				circle :radius1
+			]
+		]
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "#cac1bc
+tadaskyCircles 100

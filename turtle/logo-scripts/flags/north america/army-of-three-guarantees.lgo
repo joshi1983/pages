@@ -1,0 +1,61 @@
+; Inspired by:
+; https://en.wikipedia.org/wiki/List_of_Mexican_flags#/media/File:Flag_of_the_Three_Guarantees.svg
+;
+; The main differences include:
+; - the stars were made more symmetric.  
+; Some of the points in the version on Wikipedia are at different radii from their centers.
+; - The diagonal lines around the green shape were made parallel to each other.
+; They aren't parallel in the SVG but I suspect that to be unintentional by whoever made the SVG.
+; - The vertical line on either side of the green shape is equal height.
+; The original SVG has a shorter right side to the green shape than left side.
+; This code draws with an equal height on left and right side because I suspect the
+; difference in the original to be a mistake.
+to armyOf3GuaranteesFlag :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "width :height * 7 / 4
+	localmake "angle1 arcTan :height / :width
+	localmake "greenLen1 1 / 3
+	localmake "sinRatio sin :angle1
+	localmake "diagonalLength (1 - :greenLen1) / :sinRatio
+	localmake "triangleShape [:width / :height / 2 0
+		[[1] [90 + :angle1 0] [1 / :sinRatio]]
+	]
+	localmake "starSize1 :height * 0.112
+	localmake "starSize2 :height * 0.049
+	localmake "numPoints 8
+	setPenSize 0
+	setFillColor "#d32927
+	drawArcLineShape :triangleShape :height
+	jumpForward :height
+	right 180
+	setFillColor "white
+	drawArcLineShape :triangleShape :height
+	setFillColor "#076d4a
+	drawArcLineShape [-:width / :height / 2 0
+		 [
+		[:greenLen1] [:angle1 - 90 0]
+		[:diagonalLength]
+		[-:angle1 0] [:greenLen1 * :width / :height]
+		[-90 0] [:greenLen1] [:angle1 - 90 0]
+		[:diagonalLength]
+	]
+	] :height
+	
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	setFillColor "#eabc00
+	isotoxalStar :starSize1 :starSize2 :numPoints
+	repeat 2 [
+		setHeading :oldHeading + repcount * 180
+		jumpLeft :height * 0.68
+		jumpForward :height * 0.32
+		isotoxalStar :starSize1 :starSize2 :numPoints
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "#eee
+armyOf3GuaranteesFlag 100

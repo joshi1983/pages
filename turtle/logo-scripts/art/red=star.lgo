@@ -1,0 +1,27 @@
+; Inspired by image at:
+; https://ca.pinterest.com/pin/228205906114541353
+to redStar :height
+	localmake "oldState turtleState
+	localmake "offset :height * 0.12
+	localmake "colors [
+		["red 128]
+		["orange 128]
+		["yellow 64]
+		["white 32]
+	]
+	jumpForward :height / 2
+	setPenSize 0
+	repeat count :colors [
+		localmake "info item repcount :colors
+		localmake "radius1 :height / 2 * mix 0.3 1 repRatio
+		localmake "radius2 :radius1 - :offset
+		localmake "numPoints last :info
+		setFillColor first :info
+		isotoxalStar :radius1 :radius2 :numPoints
+	]
+
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+redStar 100

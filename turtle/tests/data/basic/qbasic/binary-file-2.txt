@@ -1,0 +1,27 @@
+REM copied from https://qb64.com/wiki/BINARY.html
+
+SCREEN _NEWIMAGE(1000, 600, 256)
+_SCREENMOVE _MIDDLE
+DIM value AS INTEGER    'value type can be changed
+LINE INPUT ; "Enter a BINARY filename to open: ", file$
+PRINT " Press S to restart!"
+
+IF LEN(file$) THEN OPEN file$ FOR BINARY AS #1 ELSE END
+IF LOF(1) = 0 THEN PRINT "Empty file!": END
+DO
+  FOR i = 1 TO 16
+    x = x + 1
+    GET #1, , value
+    IF EOF(1) THEN EXIT DO
+    PRINT value;
+  NEXT
+  PRINT CHR$(27); x; "@"; row
+  K$ = INPUT$(1)
+  IF UCASE$(K$) = "S" THEN CLS: x = 0: row = 0: PRINT "Restarted!": SEEK 1, 1
+  IF x = 256 THEN x = 0: row = row + 1: PRINT
+LOOP UNTIL K$ = CHR$(27)
+CLOSE #1
+PRINT "Press Escape to exit!"
+DO: _LIMIT 100
+LOOP UNTIL INKEY$ = CHR$(27)
+SYSTEM

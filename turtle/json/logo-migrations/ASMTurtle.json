@@ -1,0 +1,238 @@
+{
+	"name": "ASM Turtle",
+	"description": "ASM Turtle is an interpreter and scripting language resembling the assembly programming language but for a fictional processor that has opcodes similar to turtle graphics commands.  ASM Turtle was created around 2002 by the same Josh Greig that created WebLogo around 20 years later.",
+	"externalLink": "https://github.com/joshi1983/ASM-Turtle",
+	"toProcPath": "logo-scripts/asm-turtle-content",
+	"commands": [
+		{
+			"primaryName": "abs",
+			"args": [],
+			"description": "Calculates the absolute value of a simulated register and saves the result back to the simulated register.",
+			"isReadingRegister": true,
+			"isWritingToRegister": true
+		},
+		{
+			"primaryName": "add",
+			"args": [
+				{
+					"name": "valueToAdd",
+					"types": "num"
+				}
+			],
+			"description": "Adds specified value to a simulated register.",
+			"isReadingRegister": true,
+			"isWritingToRegister": true
+		},
+		{
+			"primaryName": "call",
+			"args": [
+				{"name": "procLabel"}
+			],
+			"description": "Calls the specified procedure.  Any paramters should be passed using push."
+		},
+		{
+			"primaryName": "cmp",
+			"args": [
+				{"name": "val1", "types": "num"},
+				{"name": "val2", "types": "num"}
+			],
+			"description": "Compares 2 values and stores the result as either -1 or 0 in a simulated comparison register.  This is a little like the cmp or test opcodes from the Intel x86 instruction set.",
+			"isReadingRegister": false,
+			"isWritingToRegister": false
+		},
+		{
+			"primaryName": "cos",
+			"args": [],
+			"description": "Calculates cos of an angle and stores the result.  The angle is in radians and read from the simulated register.  The result is stored back to the simulated register.",
+			"isReadingRegister": true,
+			"isWritingToRegister": true
+		},
+		{
+			"primaryName": "dec",
+			"args": [
+				{"name": "variable"}
+			],
+			"description": "Decrements the specified variable.  In other words, subtracts 1 from it.  Stores the result back to the specified variable."
+		},
+		{
+			"primaryName": "div",
+			"args": [
+				{"name": "value", "types": "num"}
+			],
+			"description": "Divides the simulated register by the specified value.  Stores the result back to the simulated register.  If the specified value is 0, nothing happens to avoid division by 0.",
+			"isReadingRegister": true,
+			"isWritingToRegister": true
+		},
+		{
+			"primaryName": "fd",
+			"args": [
+				{"name": "distance", "types": "num"}
+			],
+			"to": "forward"
+		},
+		{
+			"primaryName": "inc",
+			"args": [
+				{"name": "variable"}
+			],
+			"description": "Increments or adds 1 to the specified variable.  'inc x' from ASMTurtle is similar to 'make \"x :x + 1' in WebLogo."
+		},
+		{
+			"primaryName": "je",
+			"args": [
+				{"name": "toLabel"}
+			],
+			"description": "Jumps to the specified label if a simulated register represents 'equal'. Jumps if register = 0.",
+			"isReadingRegister": false
+		},
+		{
+			"primaryName": "jl",
+			"args": [
+				{"name": "toLabel"}
+			],
+			"description": "Jumps to the specified label if a simulated register represents 'Less than'.  Jumps if register < 0.",
+			"isReadingRegister": false
+		},
+		{
+			"primaryName": "jmp",
+			"args": [
+				{"name": "toLabel"}
+			],
+			"description": "Always jumps to the specified label.  This is not conditional."
+		},
+		{
+			"primaryName": "jne",
+			"args": [
+				{"name": "toLabel"}
+			],
+			"description": "Jumps to the specified label if a simulated register represents 'Not equal'.  Jumps if the register is <> 0.",
+			"isReadingRegister": false
+		},
+		{
+			"primaryName": "jnl",
+			"args": [
+				{"name": "toLabel"}
+			],
+			"description": "Jumps to the specified label if a simulated register represents 'Not Less than'.  Another way to describe 'not less than' would be 'greater than or equal'.  Jumps if the register is >= 0.",
+			"isReadingRegister": false
+		},
+		{
+			"primaryName": "load",
+			"args": [
+				{
+					"name": "value",
+					"types": "num"
+				}
+			],
+			"description": "Assigns the specified number to a simulated numeric register.",
+			"isWritingToRegister": true
+		},
+		{
+			"primaryName": "lt",
+			"to": "left"
+		},
+		{
+			"primaryName": "mul",
+			"args": [
+				{"name": "scaleFactor", "types": "num"}
+			],
+			"description": "Multiplies a simulated number register value by the specified value",
+			"isReadingRegister": true,
+			"isWritingToRegister": true
+		},
+		{
+			"primaryName": "penDown",
+			"to": "penDown"
+		},
+		{
+			"primaryName": "penUp",
+			"to": "penUp"
+		},
+		{
+			"primaryName": "pop",
+			"args": [
+			],
+			"description": "Pops value from stack.  The popped value is not stored anywhere but the stack's top is removed."
+		},
+		{
+			"primaryName": "push",
+			"args": [
+				{"name": "value"}
+			],
+			"description": "Pushes the specified value to a stack.  This is useful for passing paramters to procedures."
+		},
+		{
+			"primaryName": "ret",
+			"args": [],
+			"description": "Returns from procedure",
+			"to": "stop"
+		},
+		{
+			"primaryName": "rt",
+			"to": "right",
+			"isWritingToRegister": false
+		},
+		{
+			"primaryName": "saveto",
+			"args": [
+				{"name": "variable"}
+			],
+			"description": "Assigns the simulated register value to the specified variable",
+			"isReadingRegister": true,
+			"isWritingToRegister": false
+		},
+		{
+			"primaryName": "setcolor",
+			"args": [],
+			"description": "Sets the pen color to the value in the simulated register.",
+			"isReadingRegister": true,
+			"isWritingToRegister": false
+		},
+		{
+			"primaryName": "sin",
+			"args": [],
+			"description": "Calculates sin of the an angle in radians and stores the ratio in a simulated register.  The angle is read from the simulated register.",
+			"isReadingRegister": true,
+			"isWritingToRegister": true
+		},
+		{
+			"primaryName": "sqr",
+			"args": [],
+			"description": "Calculates square of the simulated register and saves the result to the simulated register.",
+			"isReadingRegister": true,
+			"isWritingToRegister": true
+		},
+		{
+			"primaryName": "sqrt",
+			"args": [],
+			"description": "Calculates square root of the simulated register and saves the result to the simulated register, if the value is at least 0.  If the simulated register has a negative value, nothing happens.",
+			"isReadingRegister": true,
+			"isWritingToRegister": true
+		},
+		{
+			"primaryName": "sub",
+			"args": [
+				{
+					"name": "value",
+					"types": "num"
+				}
+			],
+			"description": "Subtracts the specified value from a simulated register.  The result is stored in the simulated register",
+			"isReadingRegister": true,
+			"isWritingToRegister": true
+		}
+	],
+	"operators": [],
+	"keywords": [
+		{
+			"from": "instr",
+			"to": null,
+			"description": "Indicates the start of the instructions part of an ASMTurtle script"
+		},
+		{
+			"from": "var",
+			"to": null,
+			"description": "Indicates the start of a variable list.  The variable list is terminated with an empty line."
+		}
+	]
+}

@@ -1,0 +1,25 @@
+! Trivia quiz -- reads data from a file
+!
+OPEN #1: name "TrivData"                  ! Open file as channel #1
+
+DO
+   INPUT #1: question$, answer$           ! Get data from channel #1
+   LET total = total + 1                  ! Count the questions
+   PRINT question$
+   LINE INPUT reply$                      ! Get user's guess
+   
+   IF reply$ = answer$ THEN               ! If correct...
+      LET right = right + 1               ! Count right replies
+      PRINT "Correct."                    ! And say bravo
+   ELSE
+      PRINT "No, the correct answer is "; answer$; "."
+   END IF
+
+LOOP until end #1
+
+PRINT "All done. You answered"; right; "out of"; total;
+PRINT "questions correctly."
+
+CLOSE #1                                  ! Close the file
+
+END

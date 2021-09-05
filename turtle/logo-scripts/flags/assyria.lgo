@@ -1,0 +1,122 @@
+; Inspired by a flag at:
+; https://en.wikipedia.org/wiki/Assyrian_flag#/media/File:Flag_of_the_Assyrian_Volunteers.svg
+; Used by Assyrian military volunteers in World War 1
+to assyrianVolunteersFlag :height
+	localmake "oldState turtleState
+	stripes :height :height ["#b12]
+	jumpForward :height / 2
+	setPenSize 0
+	setFillColor "white
+	repeat 2 [
+		rect :height * 0.095 :height * 0.625
+		right 90
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by flag at:
+; https://en.wikipedia.org/wiki/Assyrian_flag#/media/File:Old_Assyrian_Flag.svg
+to assyriaWW1To1975Flag :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "width :height * 5 / 3
+	localmake "stars [
+		[-0.585 0.899]
+		[-0.698 0.87]
+		[-0.635 0.75]
+	]
+	stripes :width :height ["#bd081d "white "#681f72]
+	setPenSize 0
+	setFillColor "white
+	repeat count :stars [
+		localmake "info item repcount :stars
+		jumpRight :height * first :info
+		jumpForward :height * last :info
+		regularStar :height * 0.045 5
+		jumpTo :oldPos
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by flag at:
+; https://en.wikipedia.org/wiki/Assyrian_flag#/media/File:Gozartoflag.svg
+to tricolorNorthernSyriaFlag :height
+	stripes :height * 3 / 2 :height ["#F11924 "#FEF303 "#003E87]
+end
+
+to drawWaves :height
+	localmake "oldState turtleState
+	localmake "separation :height * 0.15
+	localmake "radius 0.167
+	localmake "width1 0.12
+	localmake "angle 60
+	localmake "line []
+	repeat 3 [
+		queue2 "line [:angle / 2 :radius]
+		queue2 "line [-:angle :radius]
+		queue2 "line [:angle / 2 :radius]
+	]
+	jumpLeft :separation * 0.85
+	repeat 3 [
+		drawArcLineShape [-:width1 / 2 0
+			(combine :line [[-90 0] [:width1] [-90 0]] flipAngles :line)
+		] :height
+		jumpRight :separation
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by flag at:
+; https://en.wikipedia.org/wiki/Assyrian_flag#/media/File:Chaldean_flag.svg
+to chaldeanFlag :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "blueSeparation :height * 1.18
+	localmake "chaldeanBlue "#0241ab
+	stripes :height * 5 / 3 :height ["white]
+	jumpLeft :blueSeparation / 2
+	repeat 2 [
+		stripes :height * 0.1 :height [:chaldeanBlue]
+		jumpRight :blueSeparation
+	]
+	jumpTo :oldPos
+	jumpForward :height / 2
+	localmake "center pos
+	setFillColor :chaldeanBlue
+	setPenSize 0
+	repeat 8 [
+		setHeading :oldHeading + (repcount + 0.5) * 360 / 8
+		jumpForward :height * 0.12
+		drawWaves :height * 0.123
+		jumpTo :center
+	]
+	setFillColor "white
+	setPenColor "#de0000
+	setPenSize :height * 0.006
+	setHeading :oldHeading
+	isotoxalStar :height * 0.282 :height * 0.115 8
+	setFillColor penColor
+	setPenSize 0
+	isotoxalStar :height * 0.245 :height * 0.1 8
+	setPenColor "yellow
+	setFillColor "white
+	setPenSize :height * 0.049
+	circle :height * 0.098
+	setPenSize 0
+	setFillColor :chaldeanBlue
+	circle :height * 0.064
+	setTurtleState :oldState
+end
+
+setScreenColor "#ddd
+make "height 100
+make "separation :height * 3
+jumpLeft :separation * 1.5
+assyrianVolunteersFlag :height
+jumpRight :separation
+assyriaWW1To1975Flag :height
+jumpRight :separation
+tricolorNorthernSyriaFlag :height
+jumpRight :separation
+chaldeanFlag :height

@@ -1,0 +1,36 @@
+# Copied from: https://userbase.kde.org/KTurtle/Examples
+# Heighway dragon
+
+reset
+canvassize 500, 500
+go 320, 400
+turnright 90
+$size = 7
+
+learn X $depth {
+  if $depth>0 {
+    X $depth-1
+    turnleft 90
+    Y $depth-1
+    forward $size
+  }
+}
+
+learn Y $depth {
+  if $depth>0 {
+    forward $size
+    X $depth-1
+    turnright 90
+    Y $depth-1
+  }
+}
+
+pencolor 0,255,0
+forward $size
+X 10
+turnleft 90
+pencolor 255,0,0
+Y 10
+forward $size
+
+go 50,450

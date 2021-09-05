@@ -1,0 +1,22 @@
+; Inspired by the cover of a manual.
+; The manual is titled: APX 20157 FORTH Turtle Graphics Plus
+; The manual was published in 1982.
+;
+; A digital version is at:
+; https://en.wikipedia.org/wiki/Clubs_(suit)#/media/File:SuitClubs.svg
+to apxTurtleGraphicsCover :height
+	localmake "oldState turtleState
+	localmake "width :height * 1.12
+	localmake "numStripes 23
+	localmake "stripeThickness :height * 0.033
+	localmake "separation (:width - :stripeThickness) / (:numStripes - 1)
+	jumpLeft (:width - :stripeThickness) / 2
+	repeat :numStripes [
+		localmake "c mixItems2 ["#00d "#f0d "orange "yellow "#8b0 "green "#040] repRatio
+		stripes :stripeThickness :height [:c]
+		jumpRight :separation
+	]
+	setTurtleState :oldState
+end
+
+apxTurtleGraphicsCover 100

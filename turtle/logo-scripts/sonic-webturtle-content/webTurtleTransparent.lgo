@@ -1,0 +1,18 @@
+; Similar to transparent command documented at
+; http://www.sonic.net/~nbs/webturtle/commands/
+to webTurtleTransparent :percentage
+	localmake "percentage clamp :percentage -100 100
+	localmake "redValue colorToRed penColor
+	localmake "greenValue colorToGreen penColor
+	localmake "blueValue colorToBlue penColor
+	ifelse :percentage < 0 [
+		localmake "currentAlpha alphacolorToAlpha penColor
+		localmake "alphaRatioOffset -:percentage / 100
+		localmake "alpha min 255 :currentAlpha + :alphaRatioOffset * 255
+		setPenColor [:alpha :redValue :greenValue :blueValue]
+	] [
+		localmake "alphaRatio 1 - :percentage / 100
+		localmake "alpha clamp :alphaRatio * 255 0 255
+		setPenColor [:alpha :redValue :greenValue :blueValue]
+	]
+end

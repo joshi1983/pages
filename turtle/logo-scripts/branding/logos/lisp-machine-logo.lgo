@@ -1,0 +1,58 @@
+to drawLispLinkArrow :length :headingOffset
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "arrowAngle 30
+	localmake "arrowLines1 [
+		[:arrowAngle 0] [0.25]
+		[-90 - :arrowAngle 0]
+		[0.05] [:arrowAngle - 90 0]
+	]
+	setFillColor "black
+	setPenSize 0
+	circle :length * 0.05
+	right :headingOffset
+	setPenSize :length * 0.04
+	localmake "endGap penSize / 2 / tan :arrowAngle
+	setLineCap "butt
+	forward :length - :endGap
+	jumpForward :endGap
+	localmake "endPos pos
+	right 180
+	setPenSize 0
+	setFillColor penColor
+	polyStart
+	arcLines :arrowLines1 :length
+	localmake "d distanceToLine :oldPos :endPos
+	jumpForward :d
+	left 180 - :arrowAngle * 2
+	jumpForward :d
+	arcLines reverse :arrowLines1 :length
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by logo on a LISP Machine at:
+; https://upload.wikimedia.org/wikipedia/commons/1/16/LISP_machine.jpg
+;
+; It resembles diagrams of a single node in a linked list data structure.
+to lispMachineLogo :height
+	localmake "oldState turtleState
+	localmake "boxHeight :height * 0.51
+	localmake "boxWidth :height * 1.37
+	setPenSize :height * 0.03
+	localmake "arrowLength :height - (:boxHeight + penSize) / 2
+	setLineJoinStyle "miter
+	setFillColor "white
+	jumpForward :height - (:boxHeight + penSize) / 2
+	jumpLeft (:arrowLength - :boxWidth / 4) / 2
+	rect :boxWidth :boxHeight
+	rect 0 :boxHeight
+	jumpLeft :boxWidth / 4
+	drawLispLinkArrow :arrowLength 180
+	jumpRight :boxWidth / 2
+	drawLispLinkArrow :arrowLength 90
+
+	setTurtleState :oldState
+end
+
+lispMachineLogo 100

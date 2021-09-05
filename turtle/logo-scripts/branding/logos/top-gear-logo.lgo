@@ -1,0 +1,50 @@
+
+; Inspired by logo at:
+; https://shop.tribalgear.com
+to tribalGearLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "outerRadius :height / (1 + cos 360 / 2 / 5)
+	localmake "starRadius :height * 0.395
+	localmake "starHeight1 :starRadius * (1 - sin 18)
+	localmake "starLen1 :starHeight1 / cos 18
+	localmake "starInnerRadius :starRadius * (sin 18) / cos 180 / 5
+	localmake "tLen1 0.15
+	localmake "tLen2 0.07
+	localmake "tLen3 :tLen2 +
+		((:outerRadius * (cos 180 / 5) - :starRadius) / :height / cos 18)
+	localmake "tTopWidth (:outerRadius * sin 180 / 5) / :height + :tLen1 -
+		(:outerRadius * (cos 180 / 5) - :starRadius) / :height * tan 18
+	jumpForward :outerRadius
+	setPenSize 0
+	setFillColor "black
+	localmake "center pos
+	repeat 5 [
+		setHeading :oldHeading + (repcount + 0.5) * 360 / 5
+		jumpForward :starInnerRadius
+		right 18 + 180 / 5
+		polyStart
+		jumpForward :starLen1
+		right 180 - 36
+		jumpForward :height * :tLen2
+		right 18
+		jumpLeft :height * :tLen1
+		right 180 - 18
+		jumpForward :height * :tLen3
+		left 90 - 18
+		jumpForward :height * :tTopWidth
+		left 90 - 18
+		jumpForward :height * :tLen3
+		left 90 + 18
+		jumpForward :height * 0.137
+		left 45
+		jumpForward :height * (:tLen2 * (cos 18) / cos 45)
+		left 45 + 180 - 18
+		jumpForward :starLen1 
+		polyEnd
+		jumpTo :center
+	]	
+	setTurtleState :oldState
+end
+
+tribalGearLogo 100

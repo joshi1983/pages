@@ -1,0 +1,92 @@
+make "widthRatio 917.92 / 800
+
+to fillBackground :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "width :height * :widthRatio
+	localmake "cornerRadius :height * 0.145
+	localmake "straightHeight :height - :cornerRadius
+	localmake "colorStops createPList2 [
+		[0 "#ec670f] [1 "#f29100]
+	]
+	jumpForward :height
+	setFillGradient createLinearGradient :oldPos pos :colorStops "pad
+	jumpTo :oldPos
+	setPenSize 0
+	jumpLeft :width / 2
+	polyStart
+	jumpForward :straightHeight
+	arcRight 90 :cornerRadius
+	jumpForward :width - :cornerRadius * 2
+	arcRight 90 :cornerRadius
+	jumpForward :straightHeight
+	polyEnd
+	setTurtleState :oldState
+end
+
+to fillGround :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "width :height * :widthRatio
+	setPenSize 0
+	setFillColor "white
+	jumpLeft :width / 2
+	localmake "bottomLeft pos
+	polyStart
+	jumpForward :height * 0.033
+	arcLines [[-100 0] [-5 0.5] [0.02] [5 0.35] [16.5 0.3]
+	[0.08] [-2.8 0.1] [0.047] [-27.5 0.11] [24 0.147] [0.02]
+	[1.8 1] [0.151] [13 0.12] [-15 0.52] [0.05] [5 0.1] [-21 0.5]
+	[15 0.27] [14.2386 0.2169]
+	] :height
+	setHeading :oldHeading + 180
+	jumpForward distanceToLine :oldPos :bottomLeft
+	polyEnd
+	setTurtleState :oldState
+end
+
+to fillCamel :height
+	localmake "oldState turtleState
+	localmake "width :height * :widthRatio
+	setPenSize 0
+	setFillColor "white
+	jumpLeft :width / 2
+	localmake "bottomLeft pos
+	jumpForward :height * 0.228
+	localmake "startPos pos
+	polyStart
+	circle 0.1
+	arcLines [[-18 0] [-20 0.088] [-4 0.3] [16 0.15] [14 0.15] [-3 0.01] [-50 0.026]
+	[-14 0.05] [-49 0.016] [-6 0.24] [20 0.05] [10 0.3] [10 0.7] [-10 0.07]
+	[-135 0] [22 0.055] [19 0.1] [0.05] [-21 0.09] [0.012] [40 0.037] [7 0.1]
+	[-30 0.065] [9 0.1] [4 0.7] [-16 0.1] [120 0] [0.037] [65 0] [12 0.14]
+	[0.03] [-13 0.05] [-21 0.16] [20 0.03] [10 0.15] [-19 0.08] [0.11] [-37 0.072]
+	[-7 0.1] [-42.3 0] [-26 0.2] [-17 0.15] [-7 0.8] [31 0.035] [-21 0.1] [0.08]
+	[70 0] [0.0342] [113 0] [-17 0.4] [-13 0.08] [45 0.03] [-30 0.115] [-7 0.15]
+	[10 0.15] [-18 0.16] [21 0.06] [-108 0.007] [0.08] [28 0.19] [50 0.184] [-4 0.3] 
+	[-50 0.033] [-11.5 0.18] [12.5 0.18] [-20 0.03] [-25 0.04] [10 0.07] [20 0.018]
+	[60 0.008] [8 0.02] [52 0] [0.0095] [-123 0] [70 0.008] [20 0.02] [17 0.07]
+	[10 0.09] [35 0.04] [10 0.27] [0.02] [21 0.07] [0.01] [-50 0.04] [43 0.02]
+	[0.03] [25 0.09] [40 0.025] [0.01] [-20 0.03] [10 0.05] [49 0.014] [-30 0.02]
+	[6 0.3] [-26 0.13] [-44 0.022] [-20 0.13] [-30 0.19] [-30 0.1] [0.09] [30 0.16]
+	[105 0.055] [0.09] [-125.5 0.023] [0.103] [126 0.055] [0.06] [-16 0.14]
+	[-8 0.5]
+	] :height
+	jumpForward distanceToLine :bottomLeft :startPos
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/OCaml#/media/File:OCaml_Logo.svg
+to OCamlLogo :height
+	localmake "oldState turtleState
+	fillBackground :height
+	fillGround :height
+	fillCamel :height
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+OCamlLogo 100

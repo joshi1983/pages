@@ -1,0 +1,92 @@
+to getPrimes :n
+	localmake "primes [2 3]
+	localmake "i 3
+	while :n > count :primes [
+		localmake "found? true
+		localmake "limit 1 + sqrt :i
+		repeat count :primes [
+			localmake "prime item repcount :primes
+			if 0 = remainder :i :prime [
+				localmake "found? false
+				break
+			]
+			if :limit < :prime [
+				break
+			]
+		]
+		if :found? [
+			queue2 "primes :i
+		]
+		localmake "i :i + 2
+	]
+	output :primes
+end
+
+to getIndex :needle :sortedNums
+	repeat count :sortedNums [
+		localmake "val item repcount :sortedNums
+		if :val >= :needle [
+			output repcount
+		]
+	]
+	output -1
+end
+
+to ulamForward :unitSize :len :startNum :primes :labelHeading
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "oldPos pos
+	localmake "radius :unitSize / 2
+	forward :len * :unitSize
+	localmake "endPos pos
+	jumpTo :oldPos
+	localmake "i max 1 getIndex :startNum :primes
+	localmake "limit getIndex :startNum + :len :primes
+	setPenSize 0
+	setFillColor "red
+	while :i < :limit [
+		localmake "val item :i :primes
+		localmake "len1 :val - :startNum
+		setHeading :oldHeading
+		jumpForward :len1 * :unitSize
+		setFillColor "red
+		circle :radius
+		setFillColor "black
+		setHeading :labelHeading
+		localmake "text str :val
+		jumpBackward fontSize / 3.5 * count :text
+		jumpRight fontSize / 4
+		label str :val
+		localmake "i :i + 1
+		jumpTo :oldPos
+	]
+	setTurtleState :oldState
+	jumpTo :endPos
+end
+
+; Inspired by this Coding Train video:
+; https://www.youtube.com/watch?v=a35KWEjRvc0
+;
+; You can learn more about Ulam Spirals at:
+; https://en.wikipedia.org/wiki/Ulam_spiral
+to ulamSpiral :unitSize :max
+	localmake "labelHeading heading + 90
+	localmake "primes getPrimes :max
+	localmake "len 1
+	localmake "startNum 1
+	right 90
+	setFontSize :unitSize / 2
+	setLineCap "round
+	setLineJoinStyle "round
+	repeat 50 [
+		ulamForward :unitSize :len :startNum :primes :labelHeading
+		localmake "startNum :startNum + :len
+		left 90
+		ulamForward :unitSize :len :startNum :primes :labelHeading
+		localmake "startNum :startNum + :len
+		left 90
+		localmake "len :len + 1
+	]
+end
+
+ulamSpiral 10 400

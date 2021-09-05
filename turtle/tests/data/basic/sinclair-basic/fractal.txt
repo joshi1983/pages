@@ -1,0 +1,27 @@
+REM copied from
+REM https://www.facebook.com/share/p/179ymQHCpe/
+2 LET scrw=255: LET scrh=175
+4 LET sw=127: LET sh=87
+6 BORDER 1: PAPER 1: INK 7 : CLS
+8 FOR A=0 TO SW : FOR B=0 TO scrh
+10 LET X=(A-sw)/sc:
+LET Y=(B-sh)/sc
+LET I=0
+LET D=100
+12 IF X*Y*Y>4 or I>27 THEN
+GO TO 22
+14 LET T=X*X-Y*Y :
+LET Y=2*X*Y+.156:
+LET X=T-.8:
+LET I=I+1
+16 IF ABS (X) <D THEN
+LET D=ABS (X)
+18 IF ABS (Y) <D THEN
+LET D=ABS (Y)
+20 GO TO 12
+22 IF D<.01 THEN
+INK 6:
+PLOT A,B:
+PLOT scrw-A,scrh-B
+24 NEXT B:
+NEXT A

@@ -1,0 +1,122 @@
+EXTERNAL
+
+!     Library of routines related to BOX CIRCLE
+!
+!     BoxArc        Draws an arc
+!     BoxSector     Draws an (open) sector
+!     BoxWedge      Draws a (filled) sector
+!     BoxDisk       Draws a disk (360-degree wedge)
+!     Arc           Utility routine to support the above
+!
+!     BoxDisk is no longer needed as it is included
+!     in the Medallion Series as BOX DISK.
+!
+!     BoxArc, BoxSector, and BoxWedge can also be
+!     produced by the Graphical objects in True Controls:
+!          ARC and PIE
+!
+!     Arc is a general purpose routine used by the others.
+!
+!     The first four coordinates are BOX coodinates.
+!     Start and end must be in degrees.
+!     Degrees are counterclockwise; 0 degrees is the + x-axis.
+!
+! Copyright (c) 1987, 2001 by True BASIC, Incorporated.
+
+PICTURE BoxArc (x1, x2, y1, y2, start, end)
+
+    IF (end - start) >= 360 then
+       DRAW Arc (x1, x2, y1, y2, start, start+360, 1)
+    ELSE
+       DRAW Arc (x1, x2, y1, y2, start, end, 1)
+    END IF
+
+END PICTURE
+
+PICTURE BoxSector (x1, x2, y1, y2, start, end)
+
+    IF (end - start) >= 360 then
+       DRAW Arc (x1, x2, y1, y2, start, start+360, 2)
+    ELSE
+       DRAW Arc (x1, x2, y1, y2, start, end, 2)
+    END IF
+
+END PICTURE
+
+PICTURE BoxWedge (x1, x2, y1, y2, start, end)
+
+    IF (end - start) >= 360 then
+       DRAW BoxDisk (x1, x2, y1, y2)
+    ELSE
+       DRAW Arc (x1, x2, y1, y2, start, end, 3)
+    END IF
+
+END PICTURE
+
+PICTURE BoxDisk (x1, x2, y1, y2)
+
+    DRAW Arc (x1, x2, y1, y2, 0, 360, 3)
+
+END PICTURE
+
+PICTURE Arc (x1, x2, y1, y2, start, end, type)
+
+    !  type = 1:     Arc
+    !  type = 2:     Sector
+    !  type = 3:     Wedge
+
+    OPTION ANGLE degrees
+
+    DIM pts(0,2)                  ! Local array for MAT PLOT
+
+    LET xcenter = (x1 + x2)/2
+    LET ycenter = (y1 + y2)/2
+    LET rx = (x2 - x1)/2
+    LET ry = (y2 - y1)/2
+
+    LET delta = 5                 ! Use 5 degrees for now
+    LET n = int((end - start)/delta)   ! Floor, to avoid overrunning
+    IF n < 0 then EXIT PICTURE    ! Don't draw, if end < start
+
+    LET cd = cos(delta)
+    LET sd = sin(delta)
+    LET ratio = rx/ry
+    LET j = 0
+    IF type = 2 or type = 3 then  ! Start from center
+       MAT REDIM pts(n+4,2)
+       LET j = j + 1
+       LET pts(j,1) = xcenter
+       LET pts(j,2) = ycenter
+    ELSE
+       MAT REDIM pts(n+2,2)
+    END IF
+
+    LET j = j + 1
+    LET x0 = rx*round(cos(start),5)    ! Round trig values, so sin(360) = 0
+    LET y0 = ry*round(sin(start),5)
+    LET pts(j,1) = xcenter + x0   ! First perimeter point
+    LET pts(j,2) = ycenter + y0
+    FOR j = j+1 to j+n
+        LET xtemp = x0*cd - ratio*y0*sd
+        LET y0 = y0*cd + x0*sd/ratio
+        LET x0 = xtemp
+        LET pts(j,1) = xcenter + x0
+        LET pts(j,2) = ycenter + y0
+    NEXT j
+
+    LET pts(j,1) = xcenter + rx*round(cos(end),5)     ! Last perimeter point,
+    LET pts(j,2) = ycenter + ry*round(sin(end),5)     ! accurately calculated.
+
+    IF type = 2 or type = 3 then
+       LET j = j + 1
+       LET pts(j,1) = xcenter
+       LET pts(j,2) = ycenter
+    END IF
+
+    IF type = 1 or type = 2 then
+       MAT PLOT LINES: pts
+    ELSE
+       MAT PLOT AREA: pts
+    END IF
+
+END PICTURE

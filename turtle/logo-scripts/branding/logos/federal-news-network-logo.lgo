@@ -1,0 +1,82 @@
+to colorToColorStops :color
+	output createPList2 [
+		[0 mix :color "black 0.3]
+		[0.5 mix :color "black 0.7]
+		[1 :color]
+	]
+end
+
+to drawShape :height :pIndex :colorStops
+	localmake "oldState turtleState
+	localmake "separation :height * 0.37
+	localmake "angle1 18
+	localmake "parallelogramHeight :height * 0.845
+	localmake "width1 :parallelogramHeight / cos :angle1
+	jumpForward :height - :parallelogramHeight / 2
+	jumpLeft :height * 0.025 - :separation * (:pIndex - 1)
+	right 90 - :angle1
+	localmake "heading1 heading
+	setPenSize 0
+	localmake "pos1 pos
+	jumpRight :width1 / 2
+	localmake "fromPos pos
+	right :angle1
+	jumpLeft :parallelogramHeight
+	setFillGradient createLinearGradient :fromPos pos :colorStops "pad
+	setHeading :heading1
+	jumpTo :pos1
+	parallelogram :width1 :height * 0.29 :angle1
+	setTurtleState :oldState
+end
+
+to fnnLogoCustomGradients :height :gradients
+	localmake "oldState turtleState
+	localmake "shapeHeight :height * 0.476
+	jumpForward :height - :shapeHeight
+	for ["pIndex count :gradients 1 -1] [
+		localmake "colorStops item :pIndex :gradients
+		repeat 5 [
+			drawShape :shapeHeight :pIndex :colorStops
+			right 360 / 5
+		]
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://federalnewsnetwork.com
+to federalNewsNetworkLogo :height
+	localmake "oldState turtleState
+	localmake "parallelograms [
+		"#086278
+		"#ae382f
+	]
+	localmake "gradients []
+	repeat count :parallelograms [
+		queue2 "gradients colorToColorStops item repcount :parallelograms
+	]
+	fnnLogoCustomGradients :height :gradients
+	setTurtleState :oldState
+end
+
+to fnnLogoOnBlack :height
+	localmake "oldState turtleState
+	localmake "innerHeight :height * 0.8
+	stripes :height :height ["black]
+	jumpForward (:height - :innerHeight) / 2
+	localmake "gradients []
+	repeat 2 [
+		queue2 "gradients createPList2 [
+			[0 "white]
+		]
+	]
+	fnnLogoCustomGradients :innerHeight :gradients
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 4
+jumpLeft :separation / 2
+federalNewsNetworkLogo :height
+jumpRight :separation
+fnnLogoOnBlack :height

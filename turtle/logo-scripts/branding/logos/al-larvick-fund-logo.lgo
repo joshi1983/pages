@@ -1,0 +1,146 @@
+make "fontThicknessRatio 0.12
+
+to drawCamera :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "grayHeight :height * 0.61
+	localmake "cameraBlack "#35323f
+	setPenSize :height * 0.02
+	setLineCap "round
+	setLineJoinStyle "round
+	jumpForward :height * 0.4
+	jumpRight :height * 0.09
+	setPenColor :cameraBlack
+	arcLines [[-150 0] [-40 0.38] [0.08]
+		[30 0.1] [50 0.04] [107 0.02] [30 0.78]
+	] :height
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	setPenSize 0
+	setFillColor :cameraBlack
+	jumpForward :height / 2
+	roundRect :height * 0.13 :height :height * 0.01
+
+	setPenSize :height * 0.015
+	setFillColor "#9f8984
+	jumpTo :oldPos
+	jumpForward :height - (:grayHeight + penSize) / 2
+	localmake "upperCenter pos
+	roundRect :height * 0.27 :grayHeight :height * 0.02
+
+	jumpBackward :grayHeight * 0.07
+	circle :height * 0.16
+	setFillColor :cameraBlack
+	circle :height * 0.12
+	localmake "result pos
+
+	jumpTo :upperCenter
+	jumpForward :grayHeight * 0.373
+	roundRect :height * 0.2 :height * 0.07 :height * 0.01
+
+	setTurtleState :oldState
+	output :result
+end
+
+to drawC :fontHeight
+	localmake "oldState turtleState
+	localmake "line1 [
+		[-30 0.45] [-30 0.2] [-23 0.4] [-16 1.5] [-50 0.31]
+		[87 0] [0.15] [100 0] [49 0.6] [10 2] [80 0.46] [3 0.965745]
+	]
+	setPenSize 0
+	drawArcLineShape [-0.465 0.5
+		combine :line1 reverse :line1
+	] :fontHeight
+
+	setTurtleState :oldState
+end
+
+to drawL :fontHeight
+	localmake "oldState turtleState
+	localmake "width :fontHeight * 0.95
+	localmake "thickness :fontHeight * :fontThicknessRatio
+	jumpLeft :width / 2
+	stripes :thickness :fontHeight [fillColor]
+	jumpForward :thickness / 2
+	right 90
+	setPenSize :thickness
+	setLineCap "butt
+	setPenColor fillColor
+	forward :width
+
+	setTurtleState :oldState
+end
+
+to drawA :fontHeight
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "thickness :fontHeight * :fontThicknessRatio
+	localmake "angle 30
+	localmake "thickness1 :thickness / cos :angle
+	jumpForward :fontHeight * 0.2
+	stripes :fontHeight * 0.9 :thickness [fillColor]	
+
+	jumpTo :oldPos
+	jumpForward :fontHeight
+	right 180
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		parallelogram :thickness1 :fontHeight / cos :angle :angle * :sign
+	]
+	setTurtleState :oldState
+end
+
+to drawF :fontHeight
+	localmake "oldState turtleState
+	setPenColor fillColor
+	setPenSize :fontHeight * :fontThicknessRatio
+	localmake "len1 :fontHeight - penSize / 2
+	setLineCap "butt
+	jumpLeft (:fontHeight - penSize) / 2
+	forward :len1
+	right 90
+	forward :len1
+	jumpBackward :len1
+	jumpRight (:fontHeight - penSize) / 2
+	forward :len1
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://archive.org/details/al-larvick-fund
+;
+; A similar logo is also at Al Larvick Fund's website:
+; https://www.allarvickfund.org
+to alcfLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "fontHeight :height * 0.12
+	setFillColor "#307e97
+	jumpForward :height / 2
+	setPenSize 0
+	roundRect :height :height :height * 0.07
+
+	jumpTo :oldPos
+	jumpRight :height * 0.11
+	jumpForward :height * 0.09
+	localmake "cPos drawCamera :height * 0.82
+	jumpTo :cPos
+	jumpBackward :fontHeight / 2
+	localmake "cPos pos
+	setFillColor "#ecb461
+	drawC :fontHeight
+	jumpLeft :height * 0.216
+	drawL :fontHeight
+	jumpLeft :height * 0.207
+	drawA :fontHeight
+	jumpTo :cPos
+	jumpRight :height * 0.225
+	drawF :fontHeight
+
+	setTurtleState :oldState
+end
+
+alcfLogo 100

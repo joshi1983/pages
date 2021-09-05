@@ -1,0 +1,72 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/File:Berber_flag.svg
+; Referenced from
+; https://en.wikipedia.org/wiki/Berber_flag
+to berberFlag :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "width :height * 3 / 2
+	stripes :width :height ["#FFE513 "#9C3 "#09C]
+	setPenSize 0
+	setFillColor "#CC0033
+	jumpForward :height * 0.154
+	jumpRight :height * 0.0136
+	right 1.132817
+
+	; tall, vertical shape
+	polyStart
+	jumpForward :height * 0.682851
+	left 44.7358
+	jumpForward :height * 0.039295
+	left 133.46435
+	jumpForward :height * 0.6621062
+	polyEnd
+
+	; lower arc
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.140248
+	jumpRight :height * 0.345525
+	left 40.1
+	polyStart
+	arcLeft 7 :height * 1.05
+	arcLeft 13 :height * 0.6
+	arcLeft 20 :height * 0.35
+	arcLeft 50 :height * 0.36
+	arcLeft 11.95 :height * 0.75
+	right 40.6
+	jumpForward :height * 0.0415
+	right 120
+	arcRight 29 :height * 0.375
+	arcRight 18 :height * 0.32
+	arcRight 20 :height * 0.6
+	arcRight 37 :height * 0.395
+	arcRight 14.9 :height * 1.08
+	polyEnd
+
+	; upper arc
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpRight :height * 0.4092
+	jumpForward :height * 0.8367 
+	left 149
+	polyStart
+	arcRight 20 :height * 0.67
+	arcRight 25 :height * 0.38
+	arcRight 25 :height * 0.39
+	arcRight 25 :height * 0.35
+	arcRight 26 :height * 0.525
+	right 103.1
+	jumpForward :height * 0.0894
+	right 74
+	arcLeft 20 :height * 0.6
+	arcLeft 50 :height * 0.258
+	arcLeft 25 :height * 0.37
+	arcLeft 21.5 :height * 0.44
+	polyEnd
+	setTurtleState :oldState
+end
+
+make "height 100
+berberFlag :height

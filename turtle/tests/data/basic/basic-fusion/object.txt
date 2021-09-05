@@ -1,0 +1,12 @@
+REM copied from https://basicfusion.org/tutorial.html
+OBJECT Mob
+    DIM hp AS INTEGER
+    SUB Hurt(d)
+        hp = hp - d
+        IF hp < 0 THEN hp = 0
+    END SUB
+    SUB HurtTwice(d)
+        THIS.Hurt(d) ' Calls its own Hurt method twice
+        THIS.Hurt(d)
+    END SUB
+END OBJECT

@@ -1,0 +1,72 @@
+; Inspired by logo at
+; https://www.youtube.com/@racketlang
+; Also, shown at:
+; https://en.wikipedia.org/wiki/Racket_(programming_language)#/media/File:Racket-logo.svg
+to racketLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "radius :height / 2
+	localmake "blueArcRadius :height * 1.45
+	localmake "blueOffset1 :height * 0.14
+	localmake "blueOffset2 sqrt :radius * :radius - :blueOffset1 * :blueOffset1
+	localmake "blueArcAngle 2 * arcSin :blueOffset2 / :blueArcRadius
+	localmake "blueArcAngle2 2 * arcCos :blueOffset1 / :radius
+	localmake "oldPos pos
+	localmake "redY :height * 0.06
+	localmake "redY2 :height * 0.57
+	localmake "redArcAngle1 2 * arcCos (:radius - :redY) / :radius
+	localmake "redArcRadius1 :radius * 2.8
+	localmake "redLenA :redY2 - :redY
+	localmake "redLen1 hypot [:radius * (sin :redArcAngle1 / 2) :redLenA]
+	localmake "redArcAngle2 2 * arcSin :redLen1 / 2 / :redArcRadius1
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	setFillColor "white
+	circle :height / 2
+	right 54.1
+	jumpForward :blueOffset1
+	jumpRight :blueOffset2
+	left 90 - :blueArcAngle / 2
+	setFillColor "#3e5ba9
+	polyStart
+	arcLeft :blueArcAngle :blueArcRadius
+	setHeading (towards :center) - 90
+	arcRight :blueArcAngle2 :radius
+	polyEnd
+
+	setFillColor "#9f1c21
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :redY2
+	localmake "pos2 pos
+	jumpTo :oldPos
+	right 90
+	arcLeft :redArcAngle1 / 2 :radius
+	localmake "rightPos pos
+	right 180
+	polyStart
+	arcRight :redArcAngle1 :radius
+	setHeading (towards :pos2) - :redArcAngle2 / 2
+	arcRight :redArcAngle2 :redArcRadius1
+	setHeading (towards :rightPos) - :redArcAngle2 / 2
+	arcRight :redArcAngle2 :redArcRadius1
+	polyEnd
+	setHeading (towards :center) - 90
+	arcRight 77 :radius
+	localmake "startPos pos
+	polyStart
+	arcRight 90 :radius
+	localmake "len1 distance :rightPos
+	localmake "redArcAngle 2 * arcSin :len1 / 2 / :redArcRadius1
+	setHeading (towards :rightPos) - :redArcAngle / 2
+	arcRight 13.3 :redArcRadius1
+	localmake "len1 distance :startPos
+	localmake "redArcAngle 2 * arcSin :len1 / 2 / :redArcRadius1
+	setHeading (towards :startPos) + :redArcAngle / 2
+	arcLeft :redArcAngle :redArcRadius1
+	polyEnd
+	setTurtleState :oldState
+end
+
+racketLogo 100

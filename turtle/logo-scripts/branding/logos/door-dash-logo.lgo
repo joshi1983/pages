@@ -1,0 +1,36 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/DoorDash#/media/File:DoorDash_Logo.svg
+to doorDashLogo :height
+	localmake "oldState turtleState
+	localmake "leftAngle 45
+	localmake "angle1 180 - :leftAngle
+	localmake "arcRadius1 :height * 0.042
+	localmake "arcRadius2 :height * 0.12
+	localmake "arcRadius3 :height * 0.113
+
+	; calculate size1 such that the central arc is exactly centered vertically.
+	localmake "size1 (:height / 2 - :arcRadius3 - :arcRadius1 * (1 - cos :angle1) - :arcRadius2 * (1 - cos :leftAngle)) / cos :leftAngle
+	localmake "size2 :height * 0.897
+	localmake "size3 :height * 0.616
+	jumpRight :height * 0.104
+	setPenSize 0
+	setFillColor "#FF3008
+	polyStart
+	jumpRight :height * 0.285
+	right 90
+	arcLeft 180 :height / 2
+	jumpForward :height * 1.24
+	arcLeft :angle1 :arcRadius1
+	jumpForward :size1
+	arcLeft :leftAngle :arcRadius2
+	jumpForward :size2
+	arcRight 180 :arcRadius3
+	jumpForward :size3
+	arcLeft :angle1 :arcRadius1
+	jumpForward :size1
+	arcLeft :leftAngle :arcRadius2
+	polyEnd
+	setTurtleState :oldState
+end
+
+doorDashLogo 100

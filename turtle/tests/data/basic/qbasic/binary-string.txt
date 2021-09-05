@@ -1,0 +1,24 @@
+REM copied from https://stackoverflow.com/questions/38265725/qbasic-decimal-to-binary-conversion
+
+PRINT "Enter value";
+INPUT Temp#
+Out3$ = ""
+IF Temp# >= False THEN
+    Digits = False
+    DO
+        IF 2 ^ (Digits + 1) > Temp# THEN
+            EXIT DO
+        END IF
+        Digits = Digits + 1
+    LOOP
+    FOR Power = Digits TO 0 STEP -1
+        IF Temp# - 2 ^ Power >= False THEN
+            Temp# = Temp# - 2 ^ Power
+            Out3$ = Out3$ + "1"
+        ELSE
+            Out3$ = Out3$ + "0"
+        END IF
+    NEXT
+END IF
+PRINT Out3$
+END

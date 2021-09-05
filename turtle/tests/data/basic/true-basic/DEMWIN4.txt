@@ -1,0 +1,51 @@
+! DEMWIN4.TRU
+
+! Experiments with placing windows with screen coordinates.
+
+LIBRARY "TrueCtrl.trc"
+LIBRARY "TrueDial.trc"
+
+DIM label$(4), text$(4), c(4)
+MAT READ label$
+DATA xl, xr, yb, yt
+
+CALL TC_Init
+
+DO
+   CALL TD_InputM ("", "Enter coordinates (0 to 1)", "Ok|Quit", label$(), text$(), 1, 1, result)
+   IF result = 2 then EXIT DO
+
+   CALL TC_Free (winid)
+   FOR i = 1 to 4
+       LET c(i) = val(text$(i))
+   NEXT i
+
+   CALL TC_Win_Create (winid, "CLOSE", c(1), c(2), c(3), c(4))
+   CALL TC_Show (winid)
+
+   ! Plunk down a grid to help us see things.
+
+   SET COLOR 4
+   BOX LINES 0, 1, 0, 1
+   FOR xx = 1 to 9
+       LET x = xx/10
+       PLOT LINES: x,0; x,1
+   NEXT xx
+   FOR yy = 1 to 9
+       LET y = yy/10
+       PLOT LINES: 0,y; 1,y
+   NEXT yy
+   PRINT "Press Esc to quit."
+
+   DO
+      CALL TC_Event (0, event$, window, x1, x2)
+      IF event$ = "HIDE" then EXIT DO
+      IF event$ = "KEYPRESS" and x1 = 27 then EXIT DO
+   LOOP
+
+LOOP
+
+CALL TC_Free (winid)
+CALL TC_Cleanup
+
+END

@@ -1,0 +1,93 @@
+to getOffsetFromRadii :radius1 :radius2
+	localmake "len1 hypot [:radius1 :radius2]
+	localmake "angle1 triLengthsToAngle :radius1 :len1 :radius2
+	localmake "angle2 arcTan :radius2 / :radius1
+	localmake "angle :angle1 + :angle2 - 90
+	localmake "x :radius1 + :radius1 * sin :angle
+	localmake "y -:radius1 * cos :angle
+	output [:x :y]
+end
+
+; Inspired by a figure from an old book
+; The title is "X Rays and Crystal Structure".
+; The book was published in 1915.
+; The figure is on page 215.
+; You can find it in a digital version of the book at:
+; https://archive.org/details/xrayscrystalstru00braguoft/page/216/mode/2up
+; An image of it is also at:
+; https://www.pinterest.ca/pin/15692298692656821
+; I added a few colours to make things look more appealing.
+to crystalXrayAnalysis :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "radii [0.095 0.12 0.159 0.24 0.48]
+	localmake "intersections [
+		[1 3 0.009] [1 5 0.012] [2 5 0.013]
+		[3 3 0.01] [3 4 0.016] [3 5 0.016]
+		[4 4 0.012]
+	]
+	localmake "axisDots [
+		[2 0.01] [3 0.015]
+	]
+	localmake "largeRadius :height * last :radii
+	localmake "arcAngle 135
+	localmake "thickness1 :height * 0.004
+	localmake "thickness2 :height * 0.0012
+	jumpForward :height / 2
+	localmake "center pos
+	setPenColor "#a00
+	setPenSize :thickness1
+	repeat 2 [
+		setHeading :oldHeading + repcount * 90
+		jumpBackward :height / 2
+		forward :height
+		jumpTo :center
+	]
+	setPenColor "#008
+	setPenSize :thickness2
+	repeat 4 [
+		setHeading :oldHeading + repcount * 360 / 4
+		for ["i 1 (count :radii) - 1] [
+			localmake "radius :height * item :i :radii
+			circleLeft :radius
+		]
+		penUp
+		arcRight -:arcAngle / 2 :largeRadius
+		penDown
+		arcRight :arcAngle :largeRadius
+		jumpTo :center
+		jumpTo :center
+	]
+	setPenSize 0
+	setFillColor "#c000
+	repeat 4 [
+		setHeading :oldHeading + repcount * 360 / 4
+		repeat count :intersections [
+			localmake "intersectionInfo item repcount :intersections
+			localmake "radius1 :height * item (first :intersectionInfo) :radii
+			localmake "radius2 :height * item (item 2 :intersectionInfo) :radii
+			localmake "dotRadius :height * last :intersectionInfo
+			localmake "offset getOffsetFromRadii :radius1 :radius2
+			jumpLeft first :offset
+			jumpForward last :offset
+			circle :dotRadius
+			jumpTo :center
+			jumpLeft first :offset
+			jumpForward -last :offset
+			circle :dotRadius
+			jumpTo :center
+		]
+		repeat count :axisDots [
+			localmake "axisInfo item repcount :axisDots
+			localmake "radius :height * item (first :axisInfo) :radii
+			localmake "dotRadius :height * last :axisInfo
+			jumpLeft :radius * 2
+			circle :dotRadius
+			jumpTo :center
+		]
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+crystalXrayAnalysis 100

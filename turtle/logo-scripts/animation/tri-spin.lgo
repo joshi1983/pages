@@ -1,0 +1,100 @@
+to drawArcsAndDots :radius :smallRadius :angle
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "numIterations 64
+	localmake "angleFraction1 :angle / 6 * :numIterations / 120
+	localmake "angleFraction2 (:angleFraction1 - int :angleFraction1) * 120 / :numIterations
+	localmake "points []
+	setPenSize 0
+	repeat :numIterations [
+		localmake "angle2 repRatio * 120
+		setHeading :oldHeading + :angle2 + :angleFraction2
+		jumpForward :radius
+		circle :radius * 0.01 * (1.02 - repcount / :numIterations)
+		jumpTo :oldPos
+	]
+	; use more iterations to make the spirograph curves smoother.
+	localmake "numIterations 200
+	repeat :numIterations [
+		localmake "angle2 repRatio * 120
+		setHeading :oldHeading + :angle2 ;+ :angle / 6 
+		jumpForward :radius
+		right 6 * :angle2 - :angle
+		jumpForward :smallRadius
+		queue2 "points pos
+		jumpTo :oldPos
+	]
+	setLineJoinStyle "round
+	jumpTo first :points
+	for ["i 2 count :points] [
+		localmake "ratio :i / :numIterations
+		setPenSize :radius * 0.02 * clamp 1.05 - :ratio 0 1
+		setPos item :i :points
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by:
+; https://ca.pinterest.com/pin/25051341670739872
+to spinningLines :height :timeRatio
+	localmake "oldState turtleState
+	localmake "thickness1 :height * 0.006
+	localmake "oldHeading heading
+	localmake "largeRadius :height * 0.33
+	localmake "smallRadius :height * 0.167
+	jumpForward :height * 0.497
+	setPenSize :thickness1
+	setPenColor "white
+	setFillColor transparent
+	circle :height * 0.052
+	setPenSize 0
+	setFillColor penColor
+	circle :height * 0.043
+	localmake "center pos
+	repeat 3 [
+		localmake "angle (repcount - :timeRatio) * 360 / 3
+		setHeading :oldHeading + 90 + :angle
+		localmake "angle 360 * :timeRatio * 2
+		drawArcsAndDots :largeRadius :smallRadius :angle
+		setPenSize :thickness1
+		forward :largeRadius
+		setFillColor transparent
+		circle :height * 0.03
+		setPenSize :height * 0.002
+		circle :height * 0.167
+		setPenSize 0
+		setFillColor penColor
+		circle :height * 0.022
+		left :angle
+		setPenSize :height * 0.003
+		forward :smallRadius
+		setFillColor transparent
+		circle :height * 0.023
+		setPenSize 0
+		setFillColor penColor
+		circle :height * 0.015
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+make "timeRatio animation.clampedTimeRatio
+spinningLines 100 :timeRatio
+
+to animation.snapshotstyle
+	output createPList2 [
+		["position.y 50]
+		["zoom.scale 6.5]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 3
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

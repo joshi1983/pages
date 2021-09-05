@@ -1,0 +1,63 @@
+! Compact
+!
+! This program is used to compact a TBTree Toolkit data file.
+!
+! Since the TBTree toolkit uses tombstones to mark deleted records
+! rather than actually deleting the data from the file, several
+! deletes can create a file with a considerable amount of extra
+! data.  This program simply copies the active records from a data
+! file into a second, compacted file.  This action takes only the
+! active records, leaving the deleted remnants behind.
+!
+! Written: Sept 20,1989
+! Revised: Apr 30,1990
+!
+LIBRARY "BTreeLib.trc"
+
+DECLARE DEF true, false
+LET hival$ = CHR$(127)
+
+DO
+
+   LINE INPUT PROMPT "Enter file name of existing database: ": infilename$
+   CALL BTOpen(infilename$, fsize, #1)
+   DO
+      LINE INPUT PROMPT "Enter file name of new database: ": outfilename$
+      IF outfilename$ = infilename$ then
+         PRINT "The new database must have a different name!"
+      ELSE
+         EXIT DO
+      END IF
+   LOOP
+   CALL BTOpen(outfilename$, fsize, #2)
+   
+   PRINT "Compacting..."
+   PRINT "Please wait..."
+   
+   CALL GetFirst(next$, #1)
+   DO WHILE next$ < hival$
+      CALL Get(next$, data$, #1, found)
+      CALL Put(next$, data$, #2, putted)
+      CALL GetNext(next$, #1)
+   LOOP
+
+   CALL BTClose(#1)
+   CALL BTClose(#2)
+   
+   PRINT "Done."
+
+   DO
+      INPUT PROMPT "Compact another file? (Y/N) ": yn$
+      LET yn$ = LCASE$(yn$[1:1])
+      IF yn$ <> "y" and yn$ <> "n" then
+         PRINT "Please enter Y or N."
+      ELSE
+         EXIT DO
+      END IF
+   LOOP
+
+   IF yn$ = "n" then STOP
+
+LOOP
+
+END

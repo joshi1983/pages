@@ -1,0 +1,23 @@
+; Inspired by
+; https://www.pinterest.ca/pin/5207355799614168
+to tendrilSpiral :height
+	localmake "oldState turtleState
+	localmake "len :height * 0.62
+	localmake "angle 26.5
+	localmake "numIterations 28
+	setLineCap "butt
+	setPenSize :height * 0.01
+	setPenColor "#352b82
+	jumpForward penSize / 2
+	jumpRight :len / 2
+	left 90
+	repeat :numIterations [
+		forward :len
+		jumpBackward :len / 2
+		right :angle
+		localmake "len :len * 0.8944
+	]
+	setTurtleState :oldState
+end
+
+tendrilSpiral 100

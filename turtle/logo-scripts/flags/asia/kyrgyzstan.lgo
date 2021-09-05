@@ -1,0 +1,76 @@
+; Inspired by logo at:
+; https://en.wikipedia.org/wiki/Flag_of_Kyrgyzstan#/media/File:Flag_of_Kyrgyzstan.svg
+;
+; Some instructions are at:
+; https://24.kg/obschestvo/283613_sporyi_vokrug_novogo_flaga_priblijennyiy_glavyi_gknb_pokazal_pravilnyiy_variant/
+; but I was unable to read them well since they're mostly not in English.
+to kyrgyzstanFlag :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "width :height * 5 / 3
+	localmake "kRed "red
+	localmake "kYellow "yellow
+	localmake "radius1 :height * 0.175
+	localmake "thickness1 :height * 0.022
+	localmake "innerRadius :radius1 - :thickness1
+	localmake "numRays 40
+	localmake "rayLength :height * 0.109
+	localmake "rayStartRadius :height * 0.012
+	stripes :width :height [:kRed]
+	setFillColor transparent
+	setPenSize :thickness1
+	setPenColor :kYellow
+	jumpForward :height / 2
+	circle :radius1
+	localmake "center pos
+	setFillColor :kYellow
+	setPenSize 0
+	repeat :numRays [
+		jumpForward :radius1 + :thickness1 / 2 + :rayStartRadius
+		circlePair :rayStartRadius :height * 0.0008 :rayLength		
+		right 360 / :numRays
+		jumpTo :center
+	]
+	setFillColor :kYellow
+	circle :radius1 - :thickness1 * 1.4
+	setFillColor :kRed
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		repeat 4 [
+			setHeading :oldHeading + :sign * (168 - repcount * 14)
+			jumpForward :innerRadius
+			setHeading :oldHeading + :sign * (-18 - repRatio * 7)
+			localmake "arcRadius :height * 0.34
+			localmake "angle2 mix 5 4 repRatio
+			polyStart
+			ifelse :sign > 0 [
+				arcLeft 1 :arcRadius
+				localmake "angle getArcLeftAngleToCircle :arcRadius :center :innerRadius
+				arcLeft :angle :arcRadius
+				localmake "delta heading - ((towards :center) - 90)
+				left :delta
+				arcRight :angle2 :innerRadius
+				left :delta + 20 + (repcount - 1) * 23.2
+				arcLeft 1 :arcRadius
+				localmake "angle getArcRightAngleToCircle :arcRadius :center :innerRadius
+				arcRight :angle :arcRadius
+			] [
+				arcRight 1 :arcRadius
+				localmake "angle getArcRightAngleToCircle :arcRadius :center :innerRadius
+				arcRight :angle :arcRadius
+				localmake "delta heading - ((towards :center) + 90)
+				left :delta
+				arcLeft :angle2 :innerRadius
+				right 180 + :delta + 5 + 0.2 * :angle2
+				arcLeft 1 :arcRadius
+				localmake "angle getArcLeftAngleToCircle :arcRadius :center :innerRadius
+				arcLeft :angle :arcRadius
+			]
+			polyEnd
+			jumpTo :center
+		]
+	]
+	setTurtleState :oldState
+end
+
+kyrgyzstanFlag 100

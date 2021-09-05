@@ -1,0 +1,56 @@
+to drawNotches :length :numNotches :startOffsetRatio
+	localmake "lenPerNotch :length / :numNotches
+	localmake "notchWidth :lenPerNotch * 0.37
+	localmake "notchHeight :notchWidth * 1.15
+	localmake "cornerRadius :lenPerNotch * 0.06
+	jumpBackward :lenPerNotch * (:startOffsetRatio - 0.5)
+	setPenSize 0
+	setFillColor "white
+	repeat :numNotches + 1 [
+		roundRect :notchWidth :notchHeight :cornerRadius
+		jumpForward :lenPerNotch
+	]
+end
+
+to drawStrip :width
+	localmake "oldState turtleState
+	setLineCap "butt
+	setPenSize :width * 0.16
+	setPenColor fillColor
+	jumpLeft :width / 2
+	left 90
+	backward :width
+	drawNotches :width 4 0.5
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://en.wikipedia.org/wiki/File:New_Line_Cinema_2011_WarnerMedia_Byline.svg
+to newLineCinemaLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "height1 :height * 0.8406888
+	localmake "width1 :height * 0.818
+	localmake "cornerRadius :height * 0.033
+	jumpForward :height1 / 2
+	setPenSize 0
+	setFillColor "black
+	jumpLeft :height * 0.082
+	roundRect :width1 :height1 :cornerRadius
+	localmake "center1 pos
+	jumpForward :height1 / 2
+	jumpRight :width1 / 2
+	setHeading towards :center1
+	jumpForward :height * 0.261
+	setHeading :oldHeading + 45
+	drawStrip :height * 0.837
+
+	jumpTo :center1
+	setHeading :oldHeading
+	jumpLeft :width1 / 2 - :height * 0.07
+	jumpBackward :height1 / 2
+	drawNotches :height1 4 0.5
+	setTurtleState :oldState
+end
+
+newLineCinemaLogo 100
