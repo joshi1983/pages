@@ -1,0 +1,37 @@
+; Inspired by:
+; https://en.wikipedia.org/wiki/China_Railway#/media/File:China_Railways.svg
+to chinaRailwayLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "angle1 78.7
+	localmake "angle2 74
+	localmake "angle3 85.4
+	localmake "railLines1 [
+		[90 0] [0.2825] [-90 0] [0.037]
+		[-:angle1 0.019] [0.189] [:angle1 0.059]
+		[0.25] [:angle2 0.041] [0.0915] [-:angle2 0]
+		[0.08] [-:angle3 0.06] [:angle3 - 90 1.208419]
+	]
+	localmake "arcAngle 303
+	localmake "topHeight :height * 0.1
+	setPenSize 0
+	setFillColor "#e60012
+	drawArcLineShape [0 0
+		combine :railLines1 reverse :railLines1
+	] :height
+	jumpForward :height - :topHeight / 2
+	roundRect :height * 0.165 :topHeight :height * 0.045
+
+
+	jumpTo :oldPos
+	jumpForward :height * 0.52
+	setPenColor fillColor
+	setPenSize :height * 0.1
+	setLineCap "butt
+	right (360 - :arcAngle) / 2
+	arc :arcAngle :height * 0.385
+
+	setTurtleState :oldState
+end
+
+chinaRailwayLogo 100

@@ -1,0 +1,110 @@
+!  Spirograph.
+!
+!  IBM PC Version 2.0 copyright (c) 1988 by True BASIC, Inc.
+
+DIM rr(15), gg(15), bb(15)
+
+LET colormax = 15
+CALL Init (rr, gg, bb, colormax)
+ASK MAX COLOR mc
+IF mc=1 then
+   LET bw, colormax = 1
+ELSE IF mc>3 then
+   LET cyclecolor = 1
+END IF
+
+SET BACK "black"
+CLEAR
+
+RANDOMIZE
+LET BaseX = 150
+LET BaseY = 256
+LET a = 70
+LET b = 19
+LET ab = 0
+LET ba = 5
+LET Incr1 = 4
+LET Incr2 = -4
+
+SUB Spiro
+
+    LET Xa = 64 * a
+    LET Ya = 0
+    LET Xb = 64 * b
+    LET Yb = 0
+    LET Vx = 0
+    LET Vy = 15000
+    FOR i = 1 to 300
+        LET y1 = Basey + Int((Xa + Xb + Vx) / 64)
+        LET x1 = Basex + Int((Ya + Yb + Vy) / 64)
+        LET y2 = Basey + Int((Xa + Xb - Vx) / 64)
+        LET x2 = Basex + Int((Ya + Yb - Vy) / 64)
+        IF cyclecolor<>0 then CALL Cycle (rr, gg, bb, col, colormax)
+        LET col = col+1
+        IF col>colormax then LET col = 1
+        SET COLOR col
+        PLOT x1,y1; x2,y2
+        LET Xa = Xa - Int(Ya / incr2)
+        LET Ya = Int(Xa / incr2) + Ya
+        LET Xb = Xb - Int(Yb / incr1)
+        LET Yb = Int(Xb / incr1) + Yb
+        LET Vx = Vx - Int(Vy / incr1)
+        LET Vy = Int(Vx / incr1) + Vy
+pause 0.05
+    NEXT i
+
+END SUB
+
+IF bw<>0 then BOX KEEP 0,1,0,1 in s$
+SET WINDOW -200, 500, -100, 600
+LET s1 = 1
+LET s2 = -1
+LET tt = time
+DO
+   FOR j = 1 to 2
+       CALL Spiro
+       IF bw<>0 then
+          BOX SHOW s$ at -200,-100 using 10      ! Invert screen
+       ELSE
+          ASK COLOR MIX(0) bb1,bb2,bb3
+          PAUSE 1
+          SET COLOR MIX(0) 1-bb1,1-bb2,1-bb3
+          CLEAR
+       END IF
+       IF KEY INPUT then EXIT DO
+   NEXT j
+   LET incr1 = incr1+s1*Int(7*rnd)
+   LET incr2 = incr2+s2*Int(3*rnd)
+   IF abs(incr1)>27 then LET s1 = -Sgn(incr1)
+   IF abs(incr2)>27 then LET s2 = -Sgn(incr2)
+LOOP
+
+END
+
+SUB Init (r(), g(), b(), colormax)     ! Set 15 colors to rainbow
+
+    MAT READ r, g, b
+    DATA  1,  1, 1, .6, .3,  0,  0,  0,  0,  0, .3, .6,  1,  1,  1
+    DATA .3, .6, 1,  1,  1,  1,  1,  1, .6, .3,  0,  0,  0,  0,  0
+    DATA  0,  0, 0,  0,  0, .3, .6,  1,  1,  1,  1,  1,  1, .6, .3
+
+    LET j = 1
+    FOR i = 1 to colormax
+        SET COLOR MIX (i) r(j), g(j), b(j)
+        LET j = j + 1
+    NEXT i
+
+END SUB
+
+SUB Cycle (r(), g(), b(), c, colormax)      ! Cycle colors
+
+    LET c1 = mod(c,14)+1
+    LET j = c
+    FOR i = colormax-1 to 1 step -1
+        LET j = j-1
+        IF j<1 then LET j=colormax-1
+        SET COLOR MIX (i) r(j), g(j), b(j)
+    NEXT i
+    LET c = c1
+
+END SUB

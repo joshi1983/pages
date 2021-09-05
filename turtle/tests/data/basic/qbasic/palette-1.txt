@@ -1,0 +1,47 @@
+REM copied from:
+REM https://qbmikehawk.neocities.org/articles/palette/
+
+DECLARE SUB setColor (attr AS INTEGER, r AS INTEGER, g AS INTEGER, b AS INTEGER)
+DECLARE SUB setPalette ()
+
+' Enter Mode 13 (320x200, 256 colors)
+SCREEN 13
+
+' Display the whole color palette
+FOR y% = 0 TO 15
+  FOR x% = 0 TO 15
+    LINE (x% * 10, y% * 10)-STEP(9, 9), x% + (y% * 16), BF
+  NEXT x%
+NEXT y%
+
+' Wait for user input
+COLOR 15: LOCATE 3, 25: PRINT "Press a key - 1": SLEEP
+
+setColor 254, 0, 29, 63 ' Set attribute 254 to teal
+setColor 255, 63, 34, 0 ' Set attribute 255 to orange
+
+' Wait for user input
+COLOR 15: LOCATE 3, 25: PRINT "Press a key - 2": SLEEP
+
+' Modify the whole palette
+setPalette
+
+' {attr} is the color attribute index, must be 0 - 255
+' {r}, {g} and {b} are Red, Green and Blue intensity, must be 0 - 63
+SUB setColor (attr AS INTEGER, r AS INTEGER, g AS INTEGER, b AS INTEGER)
+  PALETTE attr, r + g * 256& + b * 65536
+END SUB
+
+' Fill the whole palette with 64 shades of red, green, blue and gray
+SUB setPalette
+  DIM full(0 TO 255) AS LONG
+
+  FOR i% = 0 TO 63
+    full(i%) = i%               ' Red   (attributes   0 to 63)
+    full(64 + i%) = i% * 256&   ' Green (attributes  64 to 127)
+    full(128 + i%) = i% * 65536 ' Blue  (attributes 128 to 191)
+    full(192 + i%) = full(i%) + full(64 + i%) + full(128 + i%) ' Gray
+  NEXT i%
+
+  PALETTE USING full(0)
+END SUB

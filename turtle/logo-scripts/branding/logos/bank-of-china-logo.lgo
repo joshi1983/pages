@@ -1,0 +1,24 @@
+; Inspired by logo at:
+; https://en.wikipedia.org/wiki/Bank_of_China#/media/File:Bank_of_China.svg
+to bankOfChinaLogo :height
+	localmake "oldState turtleState
+	localmake "rectHeight :height * 0.3
+	setFillColor transparent
+	setPenColor "#B10A32
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize :height * 0.1078
+	localmake "radius (:height - penSize) / 2 
+	circle :radius
+	roundRect :height * 0.37 :rectHeight :height * 0.069
+	roundRect :height * 0.37 :rectHeight :height * 0.05
+	repeat 2 [
+		jumpForward :rectHeight / 2
+		forward :radius - :rectHeight / 2
+		jumpTo :center
+		right 180
+	]
+	setTurtleState :oldState
+end
+
+bankOfChinaLogo 100
