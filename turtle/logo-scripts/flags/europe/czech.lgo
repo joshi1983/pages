@@ -1,0 +1,58 @@
+make "czechRed "#d7141a
+make "czechBlue "#11457e
+
+to backgroundStripes :height
+	localmake "width :height * 3 / 2
+	stripes :width :height [:czechRed "white]
+end
+
+; Based on construction sheet at:
+; https://en.wikipedia.org/wiki/Flag_of_the_Czech_Republic#/media/File:Czech_flag_construction.svg
+; and colors at
+; https://en.wikipedia.org/wiki/Flag_of_the_Czech_Republic
+to czechRepublicFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 3 / 2
+	backgroundStripes :height
+	jumpLeft :width / 2
+	jumpForward :height / 2
+	right 90
+	setFillColor :czechBlue
+	setPenSize 0
+	isoTriangle :height :width / 2
+	setTurtleState :oldState
+end
+
+to czechRepublicFlagVertical :height
+	localmake "oldState turtleState
+	jumpForward :height / 2
+	jumpLeft :height / 3
+	right 90
+	czechRepublicFlag :height * 2 / 3
+	setTurtleState :oldState
+end
+
+to bohemiaAndMaraviaProtectorateFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 3 / 2
+	stripes :width :height [:czechBlue :czechRed "white]
+	setTurtleState :oldState
+end
+
+to czechoslovakiaFlag :height
+	localmake "oldState turtleState
+	backgroundStripes :height
+	setTurtleState :oldState
+end
+
+setScreenColor "#ddd
+make "height 100
+make "separation :height * 3
+jumpLeft :separation * 1.5
+czechRepublicFlag :height
+jumpRight :separation
+czechRepublicFlagVertical :height
+jumpRight :separation
+bohemiaAndMaraviaProtectorateFlag :height
+jumpRight :separation
+czechoslovakiaFlag :height

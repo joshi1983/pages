@@ -1,0 +1,78 @@
+to teamViewerLogoCustomFill :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "oldFillColor fillColor
+	localmake "oldFillGradient? fillGradientp
+	localmake "oldFillGradient fillGradient
+	localmake "thickness :height * 0.10482348
+	localmake "angle1 107.5
+	localmake "angle2 136.19213
+	localmake "arrowHeadHeight1 :height * 0.1417856
+	localmake "size1 :arrowHeadHeight1 / sin :angle1
+	localmake "size2 -:arrowHeadHeight1 / sin (:angle1 - :angle2)
+	localmake "arrowWidth1 :height * 0.3
+	setPenSize 0
+	jumpForward :height / 2
+	roundRect :height :height :height * 0.147869
+	setFillColor "white
+	circle :height * 0.4017
+	localmake "center pos
+	setPenSize :thickness
+	setFillColor :oldFillColor
+	ifelse :oldFillGradient? [
+		setFillGradient :oldFillGradient
+		setPenGradient :oldFillGradient
+	] [
+		setPenColor :oldFillColor
+	]
+	jumpLeft :arrowWidth1 / 2
+	right 90
+	forward :arrowWidth1
+	setPenSize 0
+	repeat 2 [
+		jumpTo :center
+		localmake "heading1 :oldHeading + (repcount + 0.5) * 360 / 2
+		setHeading :heading1
+		jumpForward :height * 0.1262
+		left :angle1
+		polyStart
+		jumpForward :size1
+		right :angle2
+		jumpForward :size2
+		setHeading :heading1 + 180 + :angle1 - :angle2
+		jumpForward :size2
+		polyEnd
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by logo at
+; https://commons.wikimedia.org/wiki/File:TeamViewer_logo_new.svg
+to teamViewerDarkBlueLogo :height
+	localmake "oldState turtleState
+	setFillColor "#050a52
+	teamViewerLogoCustomFill :height
+	setTurtleState :oldState
+end
+
+; Inspired by logo at
+; https://logodownload.org/wp-content/uploads/2017/08/teamviewer-logo-5.png
+to teamViewerLightBlueLogo :height
+	localmake "oldState turtleState
+	localmake "bottom pos
+	localmake "colorStops createPList2 [
+		[0 "#0564c8] [1 "#0e8ee9]
+	]
+	jumpForward :height
+	setFillGradient createLinearGradient :bottom pos :colorStops "pad
+	jumpBackward :height
+	teamViewerLogoCustomFill :height
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 4
+jumpLeft :separation / 2
+teamViewerDarkBlueLogo :height
+jumpRight :separation
+teamViewerLightBlueLogo :height
