@@ -1,0 +1,20 @@
+EXTERNAL
+
+SUB Header (line$(), options$)
+
+    LIBRARY "{WB_c}WBsccs.trc"
+
+    WHEN EXCEPTION IN
+         CALL WB_Header (options$)
+         PRINT "Done with header print."
+    USE
+         IF extype = 1 then
+            PRINT extext$
+         ELSE
+            PRINT extype, extext$
+            PRINT exline$
+            PRINT "Error in Header."
+         END IF
+    END WHEN
+
+END SUB

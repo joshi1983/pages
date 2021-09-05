@@ -1,0 +1,41 @@
+; Inspired by logo at:
+; https://www.arizona.edu
+to universityOfArizonaLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "outlineThicknessFactor 0.088
+	localmake "angle 21
+	localmake "aLine [[180 - :angle 0] [0.71] [-50 0.12]
+		[161 0] [0.17] [150 0] [:angle - 102.2 0.03] [0.471131]
+		[-68.8 0]]
+	localmake "aLines combine :aLine reverse :aLine
+	setLineCap "butt
+	setLineJoinStyle "miter
+	setPenSize :height * :outlineThicknessFactor
+	setPenColor "#00265b
+	jumpForward :height - penSize / 2
+	localmake "top pos
+	repeat 2 [
+		arcLines [
+			[90 0] [0.27] [90 0] [0.18] [90 0]
+			[0.073] [-90 - :angle 0] [0.59] [:angle - 90 0]
+			[0.09] [90 0] [0.18] [90 0] [0.395] [90 0]
+			[0.135]
+		] :height * sign repcount - 1.5
+		jumpTo :top
+		setHeading :oldHeading
+	]
+	setPenSize 0
+	setFillColor "#bf2036
+	jumpTo :oldPos
+	setHeading :oldHeading
+	drawArcLineShape [0 1 - :outlineThicknessFactor
+		:aLines
+	] :height
+	jumpForward :height * 0.393
+	rect :height * 0.3 :height * 0.067
+	setTurtleState :oldState
+end
+
+universityOfArizonaLogo 100

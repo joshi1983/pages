@@ -1,0 +1,36 @@
+make "topWidthFactor 0.825
+
+to yonexShape :width :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "radius :height * 0.285
+	jumpLeft :width / 2 - :radius
+	jumpForward :radius
+	circle :radius
+
+	jumpTo :oldPos
+	jumpRight :width / 2
+	drawArcLineShape [0 1
+		[[90 0] [:topWidthFactor] [150 0] [-60 0.83]]
+	] :height
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://en.wikipedia.org/wiki/Yonex#/media/File:Logo-Yonex.svg
+to yonexLogo :height
+	localmake "oldState turtleState
+	localmake "width :height * 1.05
+	localmake "separation :height * :topWidthFactor
+	setPenSize 0
+	setFillColor "white
+	jumpLeft :width / 2
+	repeat 2 [
+		yonexShape :width :height
+		jumpRight :separation
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+yonexLogo 100

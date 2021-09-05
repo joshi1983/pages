@@ -1,0 +1,24 @@
+; Inspired by logo at:
+; https://www.ona.org
+to onaLogo :height
+	localmake "oldState turtleState
+	localmake "radius :height * 0.5503
+	localmake "arcs [
+		[-90 0] [61.55 0.034] [0.59] [72.8 0.044]
+		[0.394] [45.65 0.039604925]
+	]
+	localmake "shape [0 0.118 combine :arcs reverse :arcs]
+	setPenSize 0
+	jumpForward :height - :radius
+	localmake "center pos
+	setFillColor "white
+	repeat 5 [
+		drawArcLineShape :shape :radius
+		right 360 / 5
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+onaLogo 100

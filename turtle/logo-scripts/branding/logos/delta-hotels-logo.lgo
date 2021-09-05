@@ -1,0 +1,47 @@
+; Inspired by logo at
+; https://en.wikipedia.org/wiki/Delta_Hotels#/media/File:Delta_Hotels_logo.svg
+to deltaHotelsLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "thickness :height * 0.1122
+	localmake "largeArcRadius1 :height * 0.5
+	localmake "largeArcRadius2 :largeArcRadius1 - :thickness
+	localmake "topSize1 :height * 0.372
+	localmake "ellipseRadius2 :thickness * 0.26
+	jumpForward :height
+	jumpLeft :height * 0.413
+	right 90
+	setPenSize 0
+	setFillColor "#2a3692
+	localmake "topPos pos
+	polyStart
+	jumpForward :topSize1
+	arcRight 180 :largeArcRadius1
+	jumpForward :height * 0.352
+	arcRight 90 :height * 0.055
+	jumpForward :height * 0.505
+	localmake "leftMiddlePos pos
+	right 180
+	jumpLeft :thickness
+	jumpForward :height * 0.4208
+	arcLeft 90 :height * 0.027
+	jumpForward :height * 0.267
+	arcLeft 180 :largeArcRadius2
+	jumpForward :topSize1
+	polyEnd
+
+	; Draw elliptical line cap at top left.
+	jumpTo :topPos
+	setHeading :oldHeading
+	jumpBackward :thickness / 2
+	ellipse :ellipseRadius2 :thickness / 2
+
+	; Draw elliptical line cap at middle left.
+	jumpTo :leftMiddlePos
+	jumpRight :thickness / 2
+	ellipse :thickness / 2 :ellipseRadius2 
+
+	setTurtleState :oldState
+end
+
+deltaHotelsLogo 100

@@ -1,0 +1,70 @@
+! This program attempts to find a complex root of a
+! polynomial by Newton's method.
+!
+! **NOTE:** type 'do complex' in the command window before running
+
+
+DECLARE COMPLEX P, x, x0, x1, value, slope
+DECIMALS 5
+
+DIM RR(0:1), II(0:1), P(0:1)
+READ degree
+DATA 4
+MAT REDIM RR(0:degree), II(0:degree), P(0:degree)
+
+MAT READ RR                       ! Read part of coefficients
+DATA 1, 0, 0, 0, -1
+MAT READ II                       ! Imaginary part of coefficients
+DATA 0, 0, 0, 0, 0
+
+CALL c_VecComp (RR, II, P)        ! Compose them to complex coefficients
+
+DO
+   INPUT prompt "Initial point (i.e., real,imag): ": appr, appi
+   IF appr = 0 and appi = 0 then EXIT DO
+
+   LET x0 = appr + appi*i
+   LET x = x0
+   LET count = 0
+   DO
+      CALL Evaluate (x, value, slope)
+      LET x1 = x - value/slope    ! New approximation
+      IF abs(value) <= 1e-6 then EXIT DO
+      IF abs(x-x1) < 1e-6 then EXIT DO
+      LET x = x1
+      LET count = count + 1
+      IF count > 100 then
+         PRINT "Appears not to be converging."
+         EXIT DO
+      END IF
+   LOOP
+
+   IF count <= 100 then
+      PRINT "Found a root: "; x
+      PRINT "Function value: "; value
+   END IF
+
+LOOP
+PRINT "Done"
+
+SUB Evaluate (x, v, s)
+
+    DECLARE COMPLEX x, v, s
+
+    ! Compute function value
+
+    LET v = P(0)
+    FOR j = 1 to degree
+        LET v = v*x + P(j)
+    NEXT j
+
+    ! Compute derivative value
+
+    LET s = degree*P(0)
+    FOR j = 1 to degree-1
+        LET s = s*x + (degree-j)*P(j)
+    NEXT j
+
+END SUB
+
+END

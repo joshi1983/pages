@@ -1,0 +1,60 @@
+; Inspired by
+; https://www.pinterest.ca/pin/2251868538338804/
+; This doesn't do the zoom or a looped animation, though.
+to drawUnfoldingPyramid :scale :timeRatio
+	localmake "baseWidth :scale
+	localmake "triHeight :scale
+	localmake "center pos
+	localmake "pitchAngle 30
+	localmake "sidePitching 1 + floor :timeRatio * 4
+	localmake "pitchingRatio ( :timeRatio * 4 -
+	floor :timeRatio * 4 )
+	localmake "pitchingAngle mix -90 30 :pitchingRatio
+	localmake "colors [ "orange "green ]
+	setPenSize 0
+	pitchUp 30
+	setLineJoinStyle "round
+	rollRight 20
+	repeat 4 [
+		localmake "index 1 + remainder repcount 2
+		setFillColor item :index :colors
+		localmake "pitchAngle1 :pitchAngle
+		if repcount = :sidePitching [
+			localmake "fadeStartRatio 0.5
+			if :pitchingRatio > :fadeStartRatio [
+				localmake "opacity interpolateRatio easeIn
+				( 1 - :pitchingRatio ) / ( 1 - :fadeStartRatio )
+				setFillColor mix fillColor transparent :opacity
+			]
+			localmake "pitchAngle1 :pitchingAngle
+		]
+		if repcount >= :sidePitching [
+			jumpOut :baseWidth / 2
+			pitchUp :pitchAngle1
+			isoTriangle :baseWidth - penSize / 2 :triHeight
+			jumpTo :center
+			pitchDown :pitchAngle1
+		]
+		rollRight 90
+	]
+end
+
+setScreenColor "black
+drawUnfoldingPyramid 100 animation.clampedTimeRatio
+
+to animation.snapshotstyle
+	output createPList2 [
+		["position.y 20]
+		["zoom.scale 3]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 4
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+		["thumbnailTime 1.2]
+	]
+end

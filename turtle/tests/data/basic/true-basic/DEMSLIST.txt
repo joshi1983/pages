@@ -1,0 +1,37 @@
+PROGRAM DemSList
+
+! This program demonstrates how to use the
+! the Selection List dialog box.
+
+LIBRARY "TrueDial.trc"
+
+DIM list$(15)
+MAT READ list$
+DATA Apples, Bananas, Cherries, Dates, Elderberries
+DATA Figs, Grapes, Huckleberries, Lemons, Mangos
+DATA Nectaries, Oranges, Papayas, Raspberries, Strawberries
+
+LET message$ = "Pick a fruit"
+LET buttons$ = "Okay|Cancel|Quit"
+LET choice = 5                    ! Start with this selected
+DO
+
+   CALL TD_List (message$, buttons$, list$, choice, 1, result)
+
+   SELECT CASE result
+   CASE 1
+        PRINT "You just selected: "; list$(choice)
+        PAUSE 1
+   CASE 2
+        PRINT "You just canceled."
+        PAUSE 1
+   CASE 3
+        PRINT "You just quit."
+        PAUSE 1
+        EXIT DO
+   END SELECT
+   LET choice = 5
+
+LOOP
+
+END

@@ -1,0 +1,38 @@
+to rotatedRegularPolygon :radius :numSides
+	right 180 / :numSides
+	regularPolygon :radius :numSides
+	left 180 / :numSides
+end
+
+; Inspired by drawing from a book called
+; Beyond MINDSTORMS : Teaching with IBM Logo
+; The book was published in 1985.
+; The drawing is on page 100.
+; You can borrow a digital version of the book at:
+; https://archive.org/details/bwb_W8-ALH-433/page/100/mode/2up?view=theater
+to hexagonsAndSquares :height
+	localmake "oldState turtleState
+	setPenSize :height * 0.003
+	localmake "height1 :height - penSize / cos 180 / 6
+	localmake "hexSize :height1 / 2 / (1 + 2 * power cos 180 / 6 2)
+	localmake "radius1 :hexSize * 2 * cos 180 / 6
+	localmake "squareSize :radius1 * tan 180 / 6
+	setPenColor "black
+	setLineJoinStyle "miter
+	jumpForward :height / 2
+	localmake "center pos
+	right 180 / 6
+	repeat 6 [
+		jumpForward :radius1
+		setFillColor "lightBlue
+		rotatedRegularPolygon :hexSize 6
+		jumpBackward (:radius1 - :squareSize) / 2
+		setFillColor "darkBlue
+		square :squareSize
+		jumpTo :center
+		right 360 / 6
+	]
+	setTurtleState :oldState
+end
+
+hexagonsAndSquares 100

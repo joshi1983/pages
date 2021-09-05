@@ -1,0 +1,64 @@
+; Inspired by:
+; https://www.instagram.com/p/CK1P5QdnIPo
+to vibrantArcs :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "colors ["#cf04 "#484f "#206f "#208f
+		 "#208f "#108f "#108f "#108f "#108f "#108f 
+		"#10bf "#20df "#2800ddff "#3000ddff 
+		"#30df "#30df "#8ff]
+	localmake "numAngles 18
+	localmake "gapFactor 0.04
+	localmake "gap :height * :gapFactor
+	localmake "tinyRadiusFactor 0.13
+	localmake "largeRadiusFactor (1 - :tinyRadiusFactor * 2 - :gapFactor) / 2
+	localmake "numLines 60
+	localmake "thickness :height * :largeRadiusFactor / :numLines
+	localmake "height1 :height - :thickness
+	localmake "height2 :height1 / 2 * 0.97
+	localmake "largeRadius :largeRadiusFactor * :height2
+	localmake "thickness :thickness * 0.58
+	jumpForward :height / 2
+	localmake "center pos
+	setFillColor transparent
+	setPenSize :height * :tinyRadiusFactor - :thickness * 2
+	setPenColor "#800f
+	circle :gap + penSize / 2
+	setPenSize 0
+	setFillColor "#480f
+	repeat :numAngles [
+		localmake "heading1 :oldHeading + repcount * 360 / :numAngles
+		setHeading :heading1
+		jumpForward :height / 2 - :largeRadius
+		localmake "center2 pos
+		jumpTo :center
+		setHeading :heading1 - 360 / :numAngles
+		jumpForward distanceToCircle :center2 :largeRadius
+		localmake "pos2 pos
+		setHeading (towards :center2) - 90
+		localmake "angleOffset 1
+		arcRight :angleOffset :largeRadius
+		localmake "arcAngle getArcRightAngleToLine :largeRadius :center :pos2
+		polyStart
+		arcRight :angleOffset + :arcAngle :largeRadius
+		polyEnd
+		jumpTo :center
+	]
+	setLineCap "butt
+	setPenSize :thickness
+	repeat :numLines [
+		setPenColor mixItems2 :colors repRatio
+		localmake "scale (:height1 - :gap) / 2 * mix 1 0.5 repRatio
+		repeat :numAngles [
+			setHeading :oldHeading + repcount * 360 / :numAngles
+			jumpForward :gap
+			arcLines [[-90 0] [180 :tinyRadiusFactor]
+				[-180 :largeRadiusFactor]] :scale
+			jumpTo :center
+		]
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+vibrantArcs 100

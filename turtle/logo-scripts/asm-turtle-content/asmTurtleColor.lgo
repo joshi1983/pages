@@ -1,0 +1,10 @@
+; Turns a 24-bit integer into a color list
+; Interprets the number in a similar way to
+; https://github.com/joshi1983/ASM-Turtle
+to asmTurtleColor :num
+	localmake "num max 0 (int :num)
+	localmake "redComponent bitAnd :num 255
+	localmake "greenComponent bitAnd int :num / 256 255
+	localmake "blueComponent bitAnd int :num / 256 / 256 255
+	output [:redComponent :greenComponent :blueComponent]
+end

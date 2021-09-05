@@ -1,0 +1,33 @@
+; Inspired by logo at:
+; https://images.seeklogo.com/logo-png/39/1/parsons-corp-logo-png_seeklogo-392966.png
+to parsonsElectricLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "innerRadius 0.325
+	localmake "outerRadius 0.48
+	localmake "gapAngle 26
+	localmake "oldHeading heading
+	jumpForward :height * (1 - :outerRadius)
+	localmake "center pos
+	setFillColor "#b31127
+	setPenSize 0
+	jumpTo :oldPos
+	jumpLeft :innerRadius * :height
+	polyStart
+	arcLines [
+		[1 - :outerRadius] [:gapAngle - 360 :innerRadius]
+		[180 - :gapAngle 0]
+	] :height
+	jumpForward distanceToCircle :center :outerRadius * :height
+	setHeading (towards :center) + 90
+	localmake "arcAngle heading - :oldHeading
+	if :arcAngle < 0 [
+		localmake "arcAngle 360 + :arcAngle
+	]
+	arcLeft 180 + :arcAngle :height * :outerRadius
+	jumpForward :height * (1 - :outerRadius)
+	polyEnd
+	setTurtleState :oldState
+end
+
+parsonsElectricLogo 100

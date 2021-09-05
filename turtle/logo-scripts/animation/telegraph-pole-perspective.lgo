@@ -1,0 +1,88 @@
+make "poleScaleBase 0.62
+
+to drawBackground :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "colorStops createPList2 [
+		[0 "#b84] [0.49 "#643] [0.5 "#448] [0.8 "#aaf] [1 "#ddf]
+	]
+
+	jumpForward :height
+	setPenGradient createLinearGradient :oldPos pos :colorStops "pad
+	setLineCap "butt
+	setPenSize :height * 3
+	backward :height
+
+	setTurtleState :oldState
+end
+
+to drawPoles :height
+	localmake "oldState turtleState
+	localmake "color "black
+	jumpForward :height / 2
+	localmake "center pos
+	repeat 20 [
+		localmake "separation :height * 1.3
+		localmake "thickness :height * 0.03
+		localmake "topThickness :thickness * 0.5
+		localmake "topHeight :height * 0.12
+		localmake "topSeparation :height * 0.2
+		jumpLeft :separation / 2
+		repeat 2 [
+			localmake "sideCenter pos
+			jumpBackward :height / 2
+			stripes :thickness :height [:color]
+			jumpForward :height - :topHeight
+			stripes :topSeparation :topThickness [:color]
+			jumpLeft :topSeparation / 2
+			repeat 2 [
+				stripes :topThickness :topHeight [:color]
+				jumpRight :topSeparation
+			]
+			jumpTo :sideCenter
+			jumpRight :separation
+		]
+		jumpTo :center
+		localmake "height :height * 0.62
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by a an image from issue 47 of INPUT magazine
+to telegraphPolesPerspective :height :time
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "poleHeight :height / power :poleScaleBase 2 * :time
+	drawBackground :height
+	jumpForward :height / 2
+	setFillGradient createLinearGradient :oldPos pos createPList2 [
+		[0 "#444] [0.35 "#888] [0.6 "#ddd] [0.75 "#ddd] [1 "#888]
+	] "pad
+	setPenSize 0
+	jumpTo :oldPos
+	isoTriangle :height :height / 2
+	
+	jumpForward (:height - :poleHeight) / 2
+	drawPoles :poleHeight
+
+	setTurtleState :oldState
+end
+
+make "time animation.clampedTimeRatio
+telegraphPolesPerspective 100 :time
+
+to animation.snapshotstyle
+	output createPList2 [
+		["position.y 50]
+		["zoom.scale 6]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 1
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

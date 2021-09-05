@@ -1,0 +1,57 @@
+; Inspired by
+; httpsen.wikipedia.orgwikiChatGPT#mediaFileChatGPT_logo.svg
+; Referenced from
+; httpsen.wikipedia.orgwikiChatGPT
+
+to chatGPTBackground :height
+	localmake "oldState turtleState
+	localmake "arcRadius :height * 0.24
+	setFillColor "#74aa9c
+	setPenSize 0
+	jumpRight :height / 2
+	left 90
+	polyStart
+	jumpForward :height - :arcRadius
+	repeat 2 [
+		arcRight 90 :arcRadius
+		jumpForward :height - 2 * :arcRadius
+	]
+	arcRight 90 :arcRadius
+	polyEnd
+	setTurtleState :oldState
+end
+
+to chatGPTLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "numSides 6
+	localmake "angle1 360 / :numSides
+	localmake "backwardSize :height * 0.11
+	localmake "arcRadius :height * 0.164
+	localmake "size1a :height * 0.1
+	localmake "size1 :size1a + :height * 0.1265
+	localmake "size2 :height * 0.175
+	chatGPTBackground :height
+	jumpForward :height / 2
+	localmake "center pos
+	setPenColor "white
+	setLineCap "round
+	setLineJoinStyle "round
+	repeat :numSides [
+		setHeading :oldHeading + repcount * :angle1
+		jumpBackward :backwardSize
+		left 180 - :angle1
+		setPenSize :height * 0.04
+		jumpBackward :size1a
+		forward :size1
+		right :angle1
+		setPenSize :height * 0.05
+		jumpForward :height * 0.005
+		forward :size2
+		arcRight 140 :arcRadius
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+chatGPTLogo 100

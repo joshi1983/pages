@@ -1,0 +1,35 @@
+; Inspired by logo at:
+; https://soundhearingcare.ca/
+to soundHearingCareWindsorLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "startRadius :height * 0.125
+	localmake "finalRadius :height / 2
+	localmake "shcGreen "#69be28
+	localmake "innerThicknessFactors [0.18 0.3 0.45]
+	jumpForward :height / 2
+	localmake "finalCenter pos
+	jumpRight :height * 0.22
+	localmake "startCenter pos
+	setPenSize 0
+	setFillColor :shcGreen
+	repeat 3 [
+		jumpTo mix :finalCenter :startCenter repcount / 3
+		localmake "outerRadius mix :finalRadius :startRadius * 0.75 repcount / 3
+		localmake "innerRadius :height * item repcount :innerThicknessFactors
+		localmake "rightGap :height * 0.018
+		jumpRight :outerRadius + (1 - repRatio) * :height * 0.01
+		polyStart
+		arcLeft 360 :outerRadius
+		arcLeft 180 :rightGap / 2
+		arcRight 360 :innerRadius
+		polyEnd
+		setHeading :oldHeading
+	]
+	jumpTo :startCenter
+	circle :startRadius
+	
+	setTurtleState :oldState
+end
+
+soundHearingCareWindsorLogo 100

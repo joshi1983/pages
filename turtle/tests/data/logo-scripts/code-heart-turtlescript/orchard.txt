@@ -1,0 +1,101 @@
+
+// Blends between a and by by parameter 0 <= t <= 1
+function lerp(a, b, t) {
+    return a * (1 - t) + b * t;
+}
+
+
+/* Draw a branch and leave the turtle back where it started
+
+   len:        how long the starting branch/trunk should be in pixels
+   saturation: between 0 and 1
+   centerX:    center of the tree top, for shading
+   centerY:    center of the tree top, for shading
+ */
+function branch(len, saturation, centerX, centerY) {
+    var r, g, b
+    
+    // If we're going a long distance, draw a branch...
+    if (len > 15) {
+        var brightness = clamp((centerX - getX()) / 85 + 1, 0.9, 1)
+
+        // Fade into the mist
+        r = lerp(210, 167 * brightness, saturation) / 255
+        g = lerp(210, 109 * brightness, saturation) / 255
+        b = lerp(210,  84 * brightness, saturation) / 255
+
+        setColor(r, g, b)
+        setWidth(max(1, len / 8))
+        pd()
+        fd(len)
+        pu()
+
+        var i = randomInteger(3, 4)
+        while (i >= 0) {
+            var turn = randomReal(-50, 50)
+
+            // Turn
+            rt(turn)
+
+            branch(len * randomReal(0.2, 0.85), saturation, centerX, centerY)
+
+            // Restore angle
+            lt(turn)
+            
+            i = i - 1
+        }
+
+        // Put the turtle back where it started
+        bk(len)
+    } else {
+        // Otherwise, just draw a leaf
+        var brightness = clamp(((centerX - getX()) + (getY() - centerY) * 2) / 150, 0.6, 1) * randomReal(0.7, 1.0)
+
+        // Fade into the mist
+        r = lerp(210, 130 * brightness, saturation) / 255
+        g = lerp(210, 200 * brightness, saturation) / 255
+        b = lerp(210, 100 * brightness, saturation) / 255
+        
+        startFill(r, g, b)
+        arc(360, 5)
+        endFill()
+    }
+}
+
+
+function tree(len, saturation) {
+    // Shadow
+    setColor(0, 0, 0, 0.05 * saturation)
+    rt(85)
+    pd()
+    setWidth(len * 0.2)
+    fd(len * 0.4)
+    pu()
+    bk(len * 0.4)
+    lt(85)
+
+    var turn = randomReal(-5, 5)
+
+    rt(turn)
+    branch(len, saturation, getX(), getY() + len * 1.5)
+    lt(turn)
+}
+
+
+setSpeed(500)
+ht()
+clear(SILVER)
+pu()
+
+
+var numTrees = 20
+var i = 0
+while (i < numTrees) {
+    var t = i / (numTrees - 1)
+    var y = -200 - t * 350
+    // Draw farther back trees first
+    setPosition(randomReal(-800, 800), y)
+    tree(100 + 140 * t, t * 0.75 + 0.25)
+    i = i + 1
+}
+

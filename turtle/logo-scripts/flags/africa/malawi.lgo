@@ -1,0 +1,107 @@
+to ray1 :length
+	localmake "oldState turtleState
+	localmake "arcsInfo [
+		[3 10]
+		[10 1.5]
+		[7.5 0.9]
+		[20 0.18]
+		[10 0.14]
+		[10 0.085]
+		[40.5 0.0665]
+	]
+	right 90 - sumOfFirsts :arcsInfo
+	polyStart
+	arcsRight :arcsInfo :length
+	arcsRight reverse :arcsInfo :length
+	polyEnd	
+	setTurtleState :oldState
+end
+
+to ray3 :length
+	localmake "oldState turtleState
+	localmake "arcsInfo [
+		[3 11]
+		[5 3]
+		[6 0.9]
+		[16 0.18]
+		[14 0.05]
+		[16 0.035]
+		[35 0.017]
+	]
+	localmake "shiftSize :length * 0.015
+	jumpLeft :shiftSize
+	right 90 - sumOfFirsts :arcsInfo
+	polyStart
+	arcsRight :arcsInfo :length
+	arcsRight reverse :arcsInfo :length
+	polyEnd	
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Malawi#/media/File:Flag_of_Malawi.svg
+to malawiFlag :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "width :height * 3 / 2
+	localmake "colors ["#339e35 "#ce1126 "#000]
+	localmake "rayLength1 :height / 10
+	localmake "rayLength2 :height * 0.077826
+	localmake "numRay1 29
+	localmake "rayAngleRange1 145
+	localmake "rayAngleRange2 149.5
+	localmake "numRay2 2
+	localmake "sunRadius :height * 0.215
+	localmake "sunAngleRange 141
+	stripes :width :height :colors
+	jumpForward :height * 0.62
+	setPenSize 0
+	localmake "center pos
+	setFillColor item 2 :colors
+	repeat :numRay1 [
+		setHeading :oldHeading + :rayAngleRange1 * ((repcount - 0.5) / :numRay1 - 0.5)
+		jumpForward :height * 0.24
+		ray1 :rayLength1
+		jumpTo :center
+	]
+	repeat :numRay2 [
+		setHeading :oldHeading + :rayAngleRange2 * (repcount - 1.5)
+		jumpForward :height * 0.34 - :rayLength2
+		ray1 :rayLength2
+		jumpTo :center
+	]
+	setHeading :oldHeading + :sunAngleRange / 2
+	drawArcLineShape [0 1
+		[[90 0] [:sunAngleRange 1]]] :sunRadius
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://upload.wikimedia.org/wikipedia/commons/0/08/Flag_of_Malawi_%282010%E2%80%932012%29.svg
+; active from 2010 to 2012
+to binguFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 3 / 2
+	localmake "numRays 45
+	stripes :width :height ["#339e35 "black "#ce1126]
+	jumpForward :height / 2
+	setPenSize 0
+	setFillColor "white
+	circle :height * 2 / 15
+	localmake "center pos
+	right 180 / :numRays
+	repeat :numRays [
+		jumpForward :height * 0.1633
+		ray3 :height * 0.1119
+		right 360 / :numRays
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 4
+jumpLeft :separation * 0.5
+malawiFlag :height
+jumpRight :separation
+binguFlag :height

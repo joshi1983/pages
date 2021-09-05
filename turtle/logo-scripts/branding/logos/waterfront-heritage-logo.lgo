@@ -1,0 +1,202 @@
+to dawWindowFrame :height :drawDoor
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "width :height * 1.47
+	localmake "color "black
+	localmake "thickness1 :height * 0.04
+	localmake "thickness2 :height * 0.12
+	localmake "gap1 :height * 0.5
+	localmake "doorHeight :height * 0.95
+	localmake "separation :height * 0.57
+	localmake "doorWidth :separation - :thickness2
+	jumpForward :gap1
+	repeat 2 [
+		stripes :width :thickness1 [:color]
+		jumpForward :height - :gap1 - :thickness1
+	]
+	jumpTo :oldPos
+	jumpLeft (:width - :thickness1) / 2
+	repeat 2 [
+		stripes :thickness1 :height [:color]
+		jumpRight :width - :thickness1
+	]
+	jumpTo :oldPos
+	jumpLeft :separation / 2
+	repeat 2 [
+		stripes :thickness2 :height [:color]
+		jumpRight :separation
+	]
+	if :drawDoor [
+		jumpTo :oldPos
+		jumpBackward :doorHeight - :gap1
+		stripes :doorWidth :doorHeight ["white]
+		jumpForward :doorHeight - :gap1
+		stripes :doorWidth * 0.85 :gap1 * 0.9 ["black]
+	]
+	setTurtleState :oldState
+end
+
+to drawMiddle :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "roofAngle 40
+	localmake "widthFactor 0.87
+	localmake "width :height * :widthFactor
+	localmake "roofLenFactor :widthFactor / 2 / sin :roofAngle
+	localmake "roofHeightFactor :roofLenFactor * cos :roofAngle
+	localmake "outlineArcs [
+		[1 - :roofHeightFactor] [-:roofAngle 0] [:roofLenFactor]
+	]
+	localmake "roofArcs [[0.78] [:roofAngle 0] [90 0.02] 
+		[0.017] [90 - :roofAngle 0]]
+	localmake "rects [[0.125 0.62 0.05 0.3] [0.248 0.58 0.03 0.15]
+		[0.127 0.5 0.04 0.18] [0.35 0.46 0.04 0.1]]
+	jumpLeft :width / 2
+	setPenSize :height * 0.02
+	jumpBackward penSize / 2
+	setPenColor "black
+	setLineJoinStyle "round
+	setFillColor "white
+	polyStart
+	arcLines :outlineArcs :height
+	right 180 - :roofAngle * 2
+	arcLines reverse :outlineArcs :height
+	polyEnd
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.46
+	stripes :height * 0.8 :height * 0.055 ["black]
+	stripes :height * 0.02 :height * 0.48 ["black]
+	stripes :height * 0.04 :height * 0.33 ["black]
+	jumpForward :height * 0.295
+	stripes :height * 0.3 :height * 0.05 ["black]
+	jumpTo :oldPos
+	setFillColor "black
+	setPenSize 0
+	repeat count :rects [
+		localmake "rectInfo item repcount :rects
+		localmake "separation :height * first :rectInfo
+		localmake "rectWidth :height * item 3 :rectInfo
+		localmake "rectHeight :height * last :rectInfo
+		jumpLeft :separation
+		jumpForward :height * item 2 :rectInfo
+		repeat 2 [
+			rect :rectWidth :rectHeight
+			jumpRight :separation * 2
+		]		
+		jumpTo :oldPos
+	]
+	jumpForward :height
+	localmake "top pos
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		right (90 + :roofAngle) * :sign
+		jumpRight :height * 0.427 * :sign
+		stripes :height * 0.05 :height * 0.2 ["black]
+		jumpTo :top
+		setHeading :oldHeading
+	]
+	setPenSize :height * 0.01
+	jumpBackward penSize / 2
+	setFillColor "white
+	left 180 - :roofAngle
+	polyStart
+	arcLines :roofArcs :height
+	localmake "len distanceToLine :oldPos :top
+	jumpForward :len
+	right 180 - :roofAngle * 2
+	jumpForward :len
+	arcLines reverse :roofArcs :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+to drawRoofNotches :height
+	localmake "oldState turtleState
+	localmake "notchPositions [4.52 3.57 2.42 -2.53
+	-3.53 -4.19 -5.7]
+	localmake "notchHeight :height * 0.22
+	jumpForward :height - :notchHeight
+	localmake "center pos
+	repeat count :notchPositions [
+		localmake "offsetFactor item repcount :notchPositions
+		jumpRight :height * :offsetFactor
+		stripes :height * 0.1 :notchHeight ["black]
+		jumpTo :center
+	]	
+	setTurtleState :oldState
+end
+
+to drawDoors :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "width :height * 0.55
+	localmake "darkWidth :width * 0.3
+	localmake "separation :width * 0.47
+	localmake "darkInfo [
+		[0.15 0.165] [0.23 0.36] [0.4 0.162]
+	]
+	setPenSize :height * 0.02
+	setPenColor "black
+	setFillColor "white
+	jumpForward :height / 2
+	rect :width - penSize :height - penSize	
+	jumpTo :oldPos
+	stripes penSize :height [penColor]
+	repeat count :darkInfo [
+		localmake "intervalInfo item repcount :darkInfo
+		localmake "darkHeight :height * last :intervalInfo
+		jumpForward :height * first :intervalInfo
+		jumpLeft :separation / 2
+		repeat 2 [
+			stripes :darkWidth :darkHeight [penColor]
+			jumpRight :separation
+		]
+		jumpLeft :separation * 1.5
+	]	
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://waterfrontheritage.ca/
+; The logo is shown in some 
+; Community Waterfront Heritage Centre
+; videos including:
+; https://www.youtube.com/watch?v=MZlo0JaVowg
+to waterfrontHeritageLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "baseHeightFactor 0.45
+	localmake "darkBaseHeight :height * 0.145
+	localmake "arcs [
+		[1.81] [-90 0] [:baseHeightFactor] [90 0] [0.185]
+		[-120 0] [-10 0.2] [-16.5 0.4]
+		[0.7] [56.5 0] [0.058647303392] [-90 0] [1.305640749297122]
+	]
+	setPenSize 0
+	setFillColor "black
+	left 90
+	polyStart
+	arcLines :arcs :height
+	arcLines reverse :arcs :height
+	polyEnd
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :darkBaseHeight
+	stripes :height * 3.58 :height * 0.3 ["white]
+	drawRoofNotches :height * (:baseHeightFactor) - :darkBaseHeight
+	jumpRight :height * 0.025
+	drawMiddle :height - :darkBaseHeight
+	dawWindowFrame :height * 0.24 false
+	jumpLeft :height * 0.57
+	dawWindowFrame :height * 0.24 true
+
+	jumpTo :oldPos
+	jumpRight :height * 0.95
+	drawDoors :height * 0.38
+	setTurtleState :oldState
+end
+
+waterfrontHeritageLogo 100

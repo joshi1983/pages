@@ -1,0 +1,80 @@
+make "widthRatio 16 / 11
+
+to drawSunBackground :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "width :height * :widthRatio
+	localmake "radius 0.5 * hypot [:width :height]
+	localmake "colorStops createPList2 [
+		[0 "white] [0.17 "#F0CCC7] [0.23 "#E69F94]
+		[0.28 "#D76B5B] [0.3 "white] [0.7 "#D77060]
+		[1 "#c3412e]
+	]
+	jumpForward :height / 2
+	jumpRight :height * 0.01
+	setPenGradient createRadialGradient pos :radius :colorStops
+	jumpTo :oldPos
+	setLineCap "butt
+	setPenSize :width
+	forward :height
+	setTurtleState :oldState
+end
+
+to drawMountains :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "width :height * :widthRatio
+	jumpRight :width / 2
+	localmake "bottomRight pos
+	jumpForward :height
+	localmake "topRight pos
+
+	jumpTo :oldPos
+	jumpLeft :width / 2
+	setPenSize 0
+	setFillColor "#666
+	polyStart
+	jumpForward :height * 0.625
+	right 90
+	arcLines [[-20 0.55] [-10 2] [30 0] [0.48] [45 0]
+	[-30 0.6] [-13 0.8]] :height
+	jumpForward distanceToLine :bottomRight :topRight
+	setHeading :oldHeading + 180
+	jumpForward distance :bottomRight
+	polyEnd
+
+	localmake "colorStops createPList2 [
+		[0 "#B0B0B0] [1 "#8B8484]
+	]
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.45
+	setFillGradient createLinearGradient :oldPos pos :colorStops "pad
+	jumpTo :oldPos
+	jumpLeft :width / 2
+	polyStart
+	jumpForward :height * 0.32
+	arcLines [[-83 0] [14.5 2] [-21.5 * 2 0.64940836]
+	[14.5 2]
+	] :height
+	setHeading :oldHeading + 180
+	jumpForward distance :bottomRight
+
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by logo at
+; https://en.wikipedia.org/wiki/Turing_(programming_language)#/media/File:Turing_logo.gif
+; which is also at:
+; https://web.archive.org/web/20050622074843/http://www.holtsoft.com/turing/
+to turingLogo :height
+	localmake "oldState turtleState
+	drawSunBackground :height
+	drawMountains :height
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+turingLogo 100

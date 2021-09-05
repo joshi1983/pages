@@ -1,0 +1,27 @@
+; Inspired by logo at:
+; https://pdfa.org
+to pdfaLogo :height
+	localmake "oldState turtleState
+	localmake "squares [
+		[0 0 "#d23f4f]
+		[2 0 "#4690b0]
+		[1 1 "#8a985b]
+		[2 2 "#ca9933]
+	]
+	localmake "squareSize :height / 3
+	setPenSize 0
+	jumpForward :squareSize / 2
+	jumpLeft :squareSize
+	localmake "bottomLeft pos
+	repeat count :squares [
+		localmake "squareInfo item repcount :squares
+		setFillColor last :squareInfo
+		jumpRight :squareSize * first :squareInfo
+		jumpForward :squareSize * item 2 :squareInfo
+		square :squareSize
+		jumpTo :bottomLeft
+	]
+	setTurtleState :oldState
+end
+
+pdfaLogo 100

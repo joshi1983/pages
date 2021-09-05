@@ -1,0 +1,65 @@
+
+to triangle1 :size1 :sign
+	localmake "oldState turtleState
+	localmake "angle 124.5 
+	localmake "size2 :size1 * 1.15
+	localmake "triangleHeight :size1 * sin 180 - :angle
+	jumpForward :size1 / 2
+	right :angle * :sign
+	jumpForward :size2 / 2
+	right 90 * :sign
+	isoTriangle :size2 :triangleHeight
+	setTurtleState :oldState
+end
+
+; Inspired by logo at
+; https://www.saand.ca/
+to saandLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "rectWidth :height * 0.31
+	localmake "rectHeight :height * 0.2
+	localmake "thickness :height * 0.03
+	localmake "triangleSize :height * 0.17
+	localmake "triangleSeparation :rectWidth + :thickness * 2
+	localmake "trapSeparation1 :height * 0.25
+	localmake "trapOffset1 :height * 0.065
+	localmake "trapAngle 30
+	localmake "trapezoidWidth1 :height * 0.25
+	localmake "trapezoidWidth2 :height * 0.31
+	localmake "trapezoidHeight :height * 0.2
+	setPenSize 0
+	setFillColor "#ff6647
+	jumpForward :height / 2
+	localmake "center pos
+	repeat 2 [
+		setHeading :oldHeading + repcount * 360 / 2
+		jumpForward :height / 2 - :rectHeight
+		isoTrapezoid :rectWidth :rectWidth :rectHeight
+		jumpForward :rectHeight / 2
+		jumpRight :triangleSeparation / 2
+		triangle1 :triangleSize 1
+		jumpLeft :triangleSeparation
+		triangle1 :triangleSize -1
+		jumpTo :center
+	]
+	setHeading :oldHeading
+	repeat 2 [
+		setHeading :oldHeading + (repcount + 0.5) * 360 / 2
+		jumpForward :height / 2
+		right 180
+		isoTriangle :triangleSize * 1.25 :triangleSize * 0.8
+		jumpRight :trapSeparation1
+		jumpForward :trapOffset1
+		left :trapAngle
+		isoTrapezoid :trapezoidWidth1 :trapezoidWidth2 :trapezoidHeight
+		right :trapAngle
+		jumpLeft :trapSeparation1 * 2
+		right :trapAngle
+		isoTrapezoid :trapezoidWidth1 :trapezoidWidth2 :trapezoidHeight
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+saandLogo 100

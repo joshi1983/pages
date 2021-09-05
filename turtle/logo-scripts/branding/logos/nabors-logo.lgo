@@ -1,0 +1,84 @@
+; Inspired by logo at:
+; https://www.nabors.com
+to naborsLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "radius :height / 2
+	localmake "stripWidth :height * 0.12
+	localmake "angle 35
+	localmake "arcRadius :radius * 0.3
+	localmake "arcRadius2 :radius * 0.21
+	setFillColor "white
+	setPenSize 0
+	jumpForward :height - :radius
+	localmake "center pos
+	jumpRight :radius - :stripWidth
+	jumpForward distanceToCircle :center :radius
+	setHeading (towards :center) - 90
+	polyStart
+	arcRight 2 * arcCos (:radius - :stripWidth) / :radius :radius
+	polyEnd
+	repeat 2 [
+		localmake "stripWidth :radius * item repcount [0.26 0.31]
+		setHeading :oldHeading
+		jumpTo :center
+		localmake "x :radius * item repcount [0.695 0.37]
+		jumpRight :x
+		jumpForward distanceToCircle :center :radius
+		setHeading (towards :center) + 90
+		localmake "arcAngle (arcSin :x / :radius) - (arcSin (:x - :stripWidth) / :radius)
+		polyStart
+		arcLeft :arcAngle :radius
+		setHeading :oldHeading + 180
+		jumpForward :radius * 0.1
+		jumpForward distanceToCircle :center :radius
+		setHeading (towards :center) + 90
+		arcLeft :arcAngle :radius
+		polyEnd
+	]
+	repeat 2 [
+		setHeading :oldHeading
+		jumpTo :center
+		jumpLeft :radius * item repcount [0 0.375]
+		jumpForward distanceToCircle :center :radius
+		localmake "startPos pos
+		right 180
+		polyStart
+		jumpForward :radius * item repcount [0.955 0.78]
+		arcRight :angle :arcRadius
+		jumpForward :radius * item repcount [0.255 0.247]
+		arcLeft :angle :arcRadius
+		jumpForward distanceToCircle :center :radius
+		setHeading (towards :center) - 90
+		localmake "arcAngle item repcount [19.5 18.5]
+		arcRight :arcAngle :radius
+		setHeading :oldHeading
+		jumpForward :radius * item repcount [0.44 0.27]
+		arcRight :angle :arcRadius2
+		jumpForward :radius * item repcount [0.31 0.22]
+		arcLeft :angle :arcRadius2
+		jumpForward distanceToCircle :center :radius
+		localmake "d distance :startPos
+		localmake "arcAngle 2 * (arcSin :d / 2 / :radius)
+		setHeading (towards :startPos) - :arcAngle / 2
+		arcRight :arcAngle :radius
+		polyEnd
+	]
+	setHeading :oldHeading
+	jumpTo :center
+	jumpLeft :radius * 0.7
+	jumpForward distanceToCircle :center :radius
+	localmake "startPos pos
+	right 180
+	polyStart
+	arcLines [[0.54] [-:angle 0.2] [0.23] [:angle 0.2]] :radius
+	jumpForward distanceToCircle :center :radius
+	localmake "arcAngle 2 * arcSin (distance :startPos) / 2 / :radius
+	setHeading (towards :center) - 90
+	arcRight :arcAngle :radius
+	polyEnd
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+naborsLogo 100

@@ -1,0 +1,130 @@
+to drawEars :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "angle 60
+	localmake "earLength :height * 0.63
+	localmake "earArcRadius :earLength / 2 / sin :angle / 2 
+	localmake "blackStartAngle 35
+	jumpForward :height * 0.6
+	localmake "center pos
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		jumpLeft :sign * :height * 0.08
+		left :sign * 51
+		setFillColor "yellow
+		arcPair  :earLength :angle
+		left :sign * :angle / 2
+		penUp
+		arcLeft -:sign * :blackStartAngle :earArcRadius
+		penDown
+		setFillColor "black
+		polyStart
+		arcLeft (:angle - :blackStartAngle) * -:sign :earArcRadius
+		right (180 - :angle) * :sign
+		arcLeft -:sign * 13 :earArcRadius
+		polyEnd
+
+		jumpTo :center
+		setHeading :oldHeading
+	]
+	setTurtleState :oldState
+end
+
+to drawEyes :separation :radius
+	localmake "oldState turtleState
+	jumpLeft :separation / 2
+	setPenSize 0
+	repeat 2 [
+		localmake "pos1 pos
+		localmake "sign sign repcount - 1.5
+		setFillColor "black
+		circle :radius
+		jumpForward :radius * 0.53
+		jumpRight -:sign * :radius * 0.45
+		setFillColor "white
+		circle :radius * 0.3
+		jumpTo :pos1
+		jumpRight :separation
+	]
+	setTurtleState :oldState
+end
+
+to drawBlushCircles :height
+	localmake "oldState turtleState
+	localmake "separation :height * 0.54
+	jumpForward :height * 0.24
+	jumpLeft :separation / 2
+	setFillColor "red
+	setPenSize :height * 0.006
+	repeat 2 [
+		circle :height * 0.056
+		jumpRight :separation
+	]
+
+	setTurtleState :oldState
+end
+
+to drawLips :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "arcAngle 60
+	localmake "arcRadius :height * 0.125
+	jumpForward :height * 0.28
+	localmake "center pos
+	setPenColor "black
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		setHeading :oldHeading + :sign * (:arcAngle / 2 + 94)
+		arcLeft :sign * :arcAngle :arcRadius
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by an example program at:
+; https://logo.cheerful.nl/nl
+; The Pikachu example from there was written by
+; Jeffrey Koopman.
+;
+; Do the following to see the cheerful Netherlands Logo code:
+; 1. If you see a dialog prompting for "English" or "Netherlands", click "Netherlands".
+; 2. Click "UITLEG".
+; 3. Click "Voorbeelden".
+; 4. Click "Pikachu".  That should load the example in their code editor.
+; 5. Click the button with the play icon captioned "Uitvoeren".
+; The "Uitvoeren" button should run it in your browser.
+;
+; This WebLogo version wasn't directly translated from Jeffrey Koopman's code.
+; This was made by tracing similar shapes over a screenshot of Jeffrey Koopman's drawing.
+to pikachu :height
+	localmake "oldState turtleState
+	localmake "faceLines1 [
+		[-90 0] [40 0.46] [76 0.2] [-34 0.25] [80 0.17]
+		[18 0.67375712]
+	]
+	localmake "noseLength :height * 0.03
+	setLineJoinStyle "round
+	setLineCap "round
+	setPenColor "black
+	setPenSize :height * 0.01
+	setFillColor "yellow
+	drawEars :height
+	jumpForward penSize / 2
+	drawArcLineShape [0 0
+		combine :faceLines1 reverse :faceLines1
+	] :height
+	drawBlushCircles :height
+	drawLips :height
+
+	jumpForward :height * 0.41
+	drawEyes :height * 0.375 :height * 0.08
+	jumpBackward :height * 0.033
+	jumpLeft :noseLength / 2
+	right 90
+	setPenSize :height * 0.02
+	forward :noseLength
+	setTurtleState :oldState
+end
+
+setScreenColor "aqua
+pikachu 100

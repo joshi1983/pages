@@ -1,0 +1,29 @@
+; Made similar to the hex function at:
+; https://processing.org/reference/hex_.html
+; where 2 parameters is passed in.
+to pHex2 :value :numDigits
+	if and string? :value :value <> '' [
+		if '#' = first :value [
+			localmake "result substring upperCase :value 2 count :value
+			if :numDigits < count :result [
+				localmake "startIndex (count :result) - :numDigits
+				output substring :result :startIndex count :result
+			]
+			output :result
+		]
+	]
+	if integer? :value [
+		localmake "sign sign :value
+		localmake "value abs :value
+		localmake "result ''
+		repeat :numDigits [
+			localmake "result word :result pIntToHexDigit bitAnd :value 15
+			localmake "value bitShiftRight :value 4
+		]
+		if :sign = -1 [
+			output word '-' :result
+		]
+		output :result
+	]
+	output :value
+end

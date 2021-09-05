@@ -1,0 +1,83 @@
+make "navalJackGreen "#006847
+
+to mexicoNavalJackFlagBackgroundStripes :height
+	localmake "oldState turtleState
+	localmake "triHeight :height / 3 / (cos 45)
+	localmake "triWidth :triHeight * 2
+	localmake "gap :triHeight / 2
+	localmake "colors ["white "#ce1126]
+	stripes :height :height [:navalJackGreen]
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	left 45
+	repeat 2 [
+		jumpForward :gap
+		setFillColor item repcount :colors
+		isoTriangle :triWidth :triHeight		
+		jumpTo :center
+		right 180
+	]
+	setTurtleState :oldState
+end
+
+to mexicoNavalJackStar :starRadius
+	isotoxalStar :starRadius :starRadius * 0.5 8
+end
+
+to drawStars :height
+	localmake "oldState turtleState
+	localmake "padding :height * 0.15
+	localmake "starRadius :height * 0.05
+	localmake "separation :height - :padding * 2
+	jumpForward :padding
+	jumpRight :separation / 2
+	setPenSize 0
+	setFillColor "#d9b45b
+	mexicoNavalJackStar :starRadius
+	jumpLeft :separation
+	mexicoNavalJackStar :starRadius
+	jumpForward :separation	
+	mexicoNavalJackStar :starRadius
+	setTurtleState :oldState
+end
+
+to drawAnchor :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "hookLines1 [
+		[90 0] [0.012] [89.6 0] [0.68] [-40 0.048]
+		[-92 0.012] [-21 0.3] [-90 0] [0.038] [120 0]
+		[-13 0.6] [140.2 0] [17 0.8] [160 0] [0.09] [-152 0]
+		[6.9 1] [25 0] [-30 0.09] [-14.366 0.35] [73.666 0]
+	]
+	localmake "ellipseRadius2 :height * 0.075
+	setPenSize 0
+	setFillColor "white
+	drawArcLineShape [0 0.88
+		combine :hookLines1 reverse :hookLines1
+	] :height
+	jumpForward :height * 0.767
+	stripes :height * 0.137 :height * 0.057 [fillColor]
+
+	jumpTo :oldPos
+	jumpForward :height - :ellipseRadius2
+	ellipse :height * 0.035 :ellipseRadius2
+	setFillColor :navalJackGreen
+	ellipse :height * 0.014 :height * 0.03
+	setTurtleState :oldState
+end
+
+; Inspired by flag at:
+; https://en.wikipedia.org/wiki/Flag_of_Mexico#/media/File:Naval_jack_of_Mexico.svg
+to mexicoNavalJackFlag :height
+	localmake "oldState turtleState
+	mexicoNavalJackFlagBackgroundStripes :height
+	drawStars :height
+	jumpForward :height / 3
+	drawAnchor :height / 3
+	setTurtleState :oldState
+end
+
+setScreenColor "#eee
+mexicoNavalJackFlag 100

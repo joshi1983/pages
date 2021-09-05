@@ -1,0 +1,19 @@
+; Inspired by symbol at:
+; https://en.wikipedia.org/wiki/Clubs_(suit)#/media/File:SuitClubs.svg
+to clubsLogo :height
+	localmake "oldState turtleState
+	localmake "radiusFactor 0.239
+	localmake "line1 [[-14.35 0.41] [128 0] [-9 0.3] [-8.4 2.15] [-30 0.03]
+		[-20 0.025] [-100 0.016] [-20 0.025] [-14.8 0.028]
+		[317.5 :radiusFactor] [-202.6 0.0155] [153.65 :radiusFactor]]
+	localmake "startOffset 0.0123
+	setPenSize 0
+	setFillColor "black
+
+	drawArcLineShape [0 :startOffset
+		pathMirror :line1
+	] :height * (1 - :startOffset) / item 2 arcLinesInfo :line1
+	setTurtleState :oldState
+end
+
+clubsLogo 100

@@ -1,0 +1,135 @@
+/**
+ * copied from:
+ * https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_doc_examples.htm
+ * Specifications for the GeolocationService
+ * @author Jane Devington
+ * @version 0.2.0
+ * @see GeolocationService
+ * @since 0.1.0
+ */
+@IsTest
+private class GeolocationServiceTest {
+  /**
+   * Verifies that known addresses are correctly geocoded to their expected coordinates.
+   * @see GeolocationService#geocodeAddress(
+   * String street,
+   * String city,
+   * String state,
+   * String postalCode,
+   * String country)
+   */
+  @IsTest
+  private static void validAddressShouldReturnCorrectCoordinates() {
+    String street = '415 Mission Street';
+    String city = 'San Francisco';
+    String state = 'CA';
+    String postalCode = '94105';
+    String country = 'USA';
+
+    GeolocationService.Coordinates coords;
+    Test.startTest();
+    coords = GeolocationService.geocodeAddress(
+      street,
+      city,
+      state,
+      postalCode,
+      country
+    );
+    Test.stopTest();
+
+    Assert.isNotNull(
+      coords,
+      'Coordinates should not be null for a valid address.'
+    );
+    Assert.areEqual(
+      37.785834,
+      coords.latitude,
+      'Latitude should match for Salesforce tower.'
+    );
+    Assert.areEqual(
+      -122.406417,
+      coords.longitude,
+      'Longitude should match for Salesforce tower.'
+    );
+  }
+
+  /**
+   * Verifies that calling the geocodeAddress with missing required parameters
+   * throws a GeocodingException.
+   * @see GeolocationService#geocodeAddress(
+   * String street,
+   * String city,
+   * String state,
+   * String postalCode,
+   * String country)
+   * @see GeolocationService#GeocodingException
+   */
+  @IsTest
+  private static void missingRequiredParametersShouldThrowGeocodingException() {
+    String street = ''; // Missing
+    String city = 'San Francisco';
+    String state = 'CA';
+    String postalCode = 94105;
+    String country = 'USA';
+
+    Test.startTest();
+    Boolean caughtException = false;
+    try {
+      GeolocationService.geocodeAddress(
+        street,
+        city,
+        state,
+        postalCode,
+        country
+      );
+    } catch (GeolocationService.GeocodingException e) {
+      caughtException = true;
+      Assert.areEqual(
+        'Street, City, and Postal Code are required for geocoding.',
+        e.getMessage(),
+        'Exception message should indicate missing required fields.'
+      );
+    }
+    Test.stopTest();
+
+    Assert.isTrue(
+      caughtException,
+      'GeocodingException should have been thrown for missing street.'
+    );
+  }
+
+  /**
+   * Verifies that calling the deprecated method throws a
+   * DeprecatedMethodCalledException.
+   * @see GeolocationService#convertAddressToCoordinates(String address)
+   * @see GeolocationService#DeprecatedMethodCalledException
+   */
+  @IsTest
+  private static void deprecatedMethodCallShouldThrowDeprecatedMethodCalledException() {
+    String oldAddress = '123 Deprecated Lane';
+
+    Test.startTest();
+    Boolean caughtException = false;
+    try {
+      GeolocationService.convertAddressToCoordinates(
+        oldAddress
+      );
+    } catch (GeolocationService.DeprecatedMethodCalledException e) {
+      caughtException = true;
+      Assert.isTrue(
+        e.getMessage().contains('is deprecated'),
+        'Exception message should indicate deprecation.'
+      );
+      Assert.isTrue(
+        e.getMessage().contains('Please use'),
+        'Exception message should suggest new method.'
+      );
+    }
+    Test.stopTest();
+
+    Assert.isTrue(
+      caughtException,
+      'DeprecatedMethodCalledException should have been thrown.'
+    );
+  }
+}

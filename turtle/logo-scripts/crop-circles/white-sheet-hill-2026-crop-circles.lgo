@@ -1,0 +1,64 @@
+to calculateArcAngle :largeCircleRadius :arcRadius :height :smallRadius
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	jumpForward :height - :smallRadius
+	localmake "top pos
+	jumpRight :height
+	localmake "topRight pos
+
+	right 45
+	jumpTo :oldPos
+	jumpForward :largeCircleRadius
+	left 90
+	localmake "result getArcRightAngleToLine :arcRadius :top :topRight
+	setTurtleState :oldState
+	output :result
+end
+
+
+; Inspired by photo at:
+; https://ca.pinterest.com/pin/327003622968811144
+; https://temporarytemples.co.uk/project/white-sheet-hill-2026
+to whiteSheetHill2026CropCircles :height
+	localmake "oldState turtleState
+	localmake "smallRadius :height * 0.06
+	localmake "largeCircleRadius :height * 0.23
+	localmake "thickness :height * 0.012
+	localmake "arcRadius :largeCircleRadius
+	localmake "arcAngle calculateArcAngle :largeCircleRadius :arcRadius :height / 2 :smallRadius
+	localmake "coreCircleRadius :height * 0.11
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize :thickness
+	setPenColor "#efc
+	circle :largeCircleRadius
+	setPenSize 0
+	setFillColor penColor
+	circle :coreCircleRadius
+	right 360 / 2 / 4
+	repeat 4 [
+		localmake "heading1 heading
+		jumpForward :largeCircleRadius
+		localmake "arcStartPos pos
+		repeat 2 [
+			localmake "sign sign repcount - 1.5
+			setHeading :heading1 + :sign * 90
+			setPenSize :thickness
+			arcLeft :arcAngle * :sign :arcRadius
+			setPenSize 0
+			circle :smallRadius
+			jumpTo :arcStartPos
+		]
+		setHeading :heading1
+		setPenSize :thickness
+		forward :height * 0.225
+		setPenSize 0
+		circle :coreCircleRadius
+		jumpTo :center
+		setHeading :heading1 + 360 / 4
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "#684
+whiteSheetHill2026CropCircles 100

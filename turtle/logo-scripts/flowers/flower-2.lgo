@@ -1,0 +1,96 @@
+; Inspired by:
+; https://www.pinterest.ca/pin/487866572131392161/
+
+to petal :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	setPenColor fillColor
+	left 10
+	setPenSize :size * 0.004
+	arcLeft 30 :size * 0.6
+	arcRight 39 :size * 0.29
+	right 151
+	setPenSize 0
+	polyStart
+	arcLines [[13.5 0.45] [-47.35 0.5] [174 0] [30 0.44]
+		[12 0.8] [-16.7 0.55]] :size
+	localmake "pos1 pos
+	localmake "heading1 heading
+	left 108
+	arcLeft 40 :size * 0.1
+	polyEnd
+	jumpTo :pos1
+	setHeading :heading1
+	polyStart
+	arcRight 50 :size * 0.34
+	arcLeft 45 :size * 0.07
+	localmake "pos1 pos
+	localmake "heading1 heading
+	right 173
+	arcRight 50 :size * 0.08
+	arcLeft 42 :size * 0.36
+	polyEnd
+	jumpTo :pos1
+	setHeading :heading1 + 175
+	polyStart
+	arcLines [[-36 0.14] [50 0.24] [4 3] [-150 0] [0.025] [-33 0]] :size
+	localmake "pos1 pos
+	localmake "heading1 heading + 180
+	arcLines [[2.5 3] [-17 0.55] [-50 0.14] [40 0.116]] :size
+	polyEnd
+	jumpTo :pos1
+	setHeading :heading1
+	polyStart
+	arcLines [[-40 0.35] [-11.07 0.9] [171 0] [45 0.7] [20 0.35]
+		[14 0.1] [45 0.02]] :size
+	localmake "pos1 pos
+	localmake "heading1 heading
+	left 95
+	arcRight 15 :size * 0.4
+	arcLeft 16 :size * 0.5
+	polyEnd
+	jumpTo :pos1
+	setHeading :heading1
+	polyStart
+	arcRight 70 :size * 0.02
+	arcRight 40 :size * 0.13
+	arcRight 3 :size * 0.9
+	arcLeft 13 :size * 0.2
+	right 173
+	arcRight 7 :size
+	arcLeft 17 :size * 0.2
+	arcLeft 34.7 :size * 0.0164
+	polyEnd
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpforward :size
+	localmake "pos1 pos
+	setHeading :oldHeading - 157
+	polyStart
+	arcLeft 39 :size * 0.81
+	left 20
+	jumpforward :size * 0.025
+	left 160
+	arcRight 35.7 :size * 0.9125
+	polyEnd
+	jumpTo :pos1
+	setHeading :oldHeading + 178
+	polyStart
+	arcLines [[22 0.4] [-19.5 1.2] [170 0] [8 1.35] [30 0.24]
+		[-170 0] [-54 0.38] [-24.78 1.1] [-176 0] [12 1] [45 0.52]
+		[2 2] [-37.3 0.5554]] :size
+	polyEnd
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to flower :size
+	localmake "numPetals 8
+	repeat :numPetals [
+		petal :size
+		right 360 / :numPetals
+	]
+end
+
+setFillColor "black
+flower 150

@@ -1,0 +1,68 @@
+; Inspired by logo at
+; https://fusionauth.io/
+to fusionAuthLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "penSize1 :height * 0.056
+	localmake "arcRadius1 :height * 0.451
+	localmake "arcRadius2 :arcRadius1 - :penSize1 / 2
+	localmake "arcRadius3 :arcRadius1 + :penSize1 / 2
+	localmake "arcAngle1 5
+	localmake "arcAngle2 20
+	localmake "keyArcRadius1 :height * 0.0575
+	localmake "keyArcRadius2 :height * 0.0098
+	localmake "angle1 60.4
+	localmake "angle2 71.5
+	localmake "angle3 101
+	localmake "size1 :height * 0.094
+	localmake "size2 :height * 0.074
+	jumpForward :height * 0.4792
+	localmake "center pos
+	setPenColor "white
+	setPenSize :penSize1
+	setFillColor transparent
+	circle :height * 0.23
+	setLineCap "round
+	setFillColor penColor
+	repeat 3 [
+		setHeading :oldHeading + 30.5 + repcount * 360 / 3
+		jumpForward :arcRadius1
+		right 90
+		setPenSize :penSize1
+		arcRight 71 :arcRadius1
+		setPenSize 0
+		jumpRight :penSize1 / 2
+		polyStart
+		arcRight :arcAngle1 :arcRadius2
+		left 91
+		arcRight :arcAngle2 :height * 0.163
+		left 87.9355 + :arcAngle2
+		arcLeft :arcAngle1 * 1.5 :arcRadius3
+		polyEnd
+		jumpTo :center
+	]
+	setPenSize 0
+	setHeading :oldHeading
+	setFillColor "#f58320
+	repeat 3 [
+		jumpForward :arcRadius1
+		circle :height * 0.07
+		jumpTo :center
+		right 360 / 3
+	]
+	jumpTo :center
+	jumpRight :height * 0.0285
+	right :angle1
+	polyStart
+	arcLeft 180 + 2 * :angle1 :keyArcRadius1
+	right :angle2
+	jumpForward :size1
+	arcLeft :angle3 :keyArcRadius2
+	jumpForward :size2
+	arcLeft :angle3 :keyArcRadius2
+	polyEnd
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+fusionAuthLogo 100

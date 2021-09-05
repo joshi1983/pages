@@ -1,0 +1,30 @@
+; Inspired by
+; https://commons.wikimedia.org/wiki/File:Musical.ly_vector_logo.svg
+to musicallyLogo :height
+	localmake "oldState turtleState
+	localmake "radius :height / 2
+	localmake "tinyRadius 0.005
+	localmake "smallRadius 0.0156
+	localmake "largeRadius1 0.056
+	localmake "largeRadius2 0.0717
+	localmake "largeRadius1b 0.066091765
+	localmake "outerUTurn [[-50 :largeRadius1] [-80 :largeRadius2] [-50 :largeRadius1]]
+	setPenSize 0
+	jumpForward :radius
+	setFillColor "#ff0f50
+	circle :radius
+	jumpLeft :height * 0.2781
+	jumpBackward :height * 0.0491
+	setFillColor "white
+	polyStart
+	arcLines (combine [[-90 :tinyRadius] [0.1092] [90 :smallRadius]
+	[0.17]] :outerUTurn [[0.277] [180 :smallRadius] [0.187]] :outerUTurn
+	[[0.08] [90 :smallRadius] [0.1092] [-90 :tinyRadius] [0.04]
+	[-90 :tinyRadius] [0.1092] [-90 :largeRadius1b] [0.0743] [180 :smallRadius]
+	[0.188]] :outerUTurn [[0.278] [180 :smallRadius] [0.1647] [-90 :largeRadius1b]
+	[0.1092] [-90 :tinyRadius]]) :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+musicallyLogo 100

@@ -1,0 +1,49 @@
+; Inspired by:
+; https://www.pinterest.ca/pin/288441551145728369/
+
+to diagonalSquare :size
+	if :size <= 0 [
+		stop
+	]
+	localmake "oldHeading heading
+	right 45
+	square :size
+	setHeading :oldHeading
+end
+
+to pierreSquares :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "numSizes 4
+	localmake "ratio cos 180 * animation.timeRatio
+	setPenColor "white
+	setPenSize :size * 0.03
+	setFillColor "black
+	right 90
+	localmake "sideDistance :size * 1.875 * :ratio
+	repeat :numSizes [
+		jumpTo :oldPos
+		localmake "size1 :size * repcount / :numSizes
+		jumpBackward :sideDistance
+		diagonalSquare :size1
+		jumpForward :sideDistance * 2
+		diagonalSquare :size1
+		localmake "sideDistance :sideDistance - :size1 * 1.25 * :ratio
+	]
+	setHeading :oldHeading
+end
+
+pierreSquares 160 / sin 45
+
+to animation.snapshotstyle
+	output createPList
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 2
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end
