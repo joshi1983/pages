@@ -1,0 +1,43 @@
+make "poshmarkRed "#7f0353
+
+; Inspired by the logo at:
+; https://poshmark.com/what_is_poshmark
+; and
+; https://en.wikipedia.org/wiki/Poshmark#/media/File:Poshmark_logo.png
+to poshmarkLogoCustomColor :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "backStep :height * 0.235
+	localmake "arcRadius :height * 0.235
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize :height * 0.105
+	setLineCap "butt
+	repeat 2 [
+		setHeading :oldHeading + repcount * 360 / 2
+		jumpLeft :height * 0.072
+		jumpBackward :backStep
+		forward :backStep + :height / 2 - :arcRadius - penSize / 2
+		arcRight 270 :arcRadius
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+to poshmarkLogoDark :height
+	setPenColor :poshmarkRed
+	poshmarkLogoCustomColor :height
+end
+
+to poshmarkLogoWhite :height
+	stripes :height * 3 :height [:poshmarkRed]
+	setPenColor "white
+	poshmarkLogoCustomColor :height
+end
+
+make "height 100
+make "separation :height * 5
+jumpLeft :separation * 0.5
+poshmarkLogoDark :height
+jumpRight :separation
+poshmarkLogoWhite :height

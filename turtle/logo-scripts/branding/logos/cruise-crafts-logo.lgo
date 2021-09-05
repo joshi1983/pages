@@ -1,0 +1,74 @@
+to drawShipAndWater :height
+	localmake "oldHeading heading
+	localmake "arcLinesInfo1 [
+		[30 0] [20 0.16] [65 0.05] [-5 1]
+		[-20 0.2]
+	]
+	localmake "arcLinesInfo2 [
+		[110 0] [0.17] [88 0] [0.13]
+	]
+	localmake "shipUpperWidth :height * 0.2
+	localmake "shipUpperHeight1 :height * 0.07
+	localmake "shipTopWidth :height * 0.04
+	localmake "shipTopHeight :height * 0.08
+	setLineCap "round
+	setLineJoinStyle "round
+	jumpForward :height * 0.042
+	localmake "shipCenter pos
+	backward :height * 0.222
+	localmake "waterLineMiddle pos
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		arcLines :arcLinesInfo1 :height * :sign
+		setHeading :oldHeading
+		jumpTo :shipCenter
+		arcLines :arcLinesInfo2 :height * :sign
+
+		setHeading :oldHeading
+		jumpTo :waterLineMiddle
+	]
+	jumpTo :shipCenter
+	jumpLeft :shipUpperWidth / 2
+	jumpBackward :height * 0.035
+	forward :shipUpperHeight1
+	right 90
+	forward :shipUpperWidth
+	right 90
+	forward :shipUpperHeight1
+	jumpBackward :shipUpperHeight1 + :shipTopHeight / 2
+	jumpRight :shipUpperWidth / 2
+	rect :shipTopWidth :shipTopHeight
+	jumpBackward :shipTopHeight * 0.15
+	stripes :shipTopWidth penSize [penColor]
+end
+
+; Inspired by logo at
+; https://cruisecrafts.ca
+to cruiseCraftsLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "radius1 :height * 0.44
+	localmake "squareSize :height * 0.06
+	jumpForward :height / 2
+	setFillColor transparent
+	setPenColor "white
+	setPenSize :height * 0.01
+	circle (:height - penSize) / 2
+	circle :radius1
+	localmake "center pos
+	drawShipAndWater :height
+
+	setFillColor penColor
+	setPenSize 0
+	repeat 4 [
+		setHeading :oldHeading + repcount * 360 / 4
+		jumpTo :center
+		jumpForward :radius1
+		left 45
+		rect :squareSize :squareSize
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "#61c2cd
+cruiseCraftsLogo 100

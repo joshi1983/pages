@@ -1,0 +1,35 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Linux_Mint#/media/File:The_Linux_Mint_Logo.svg
+to linuxMintLogo :height
+	localmake "oldState turtleState
+	localmake "arcRadius1 :height * 0.117
+	localmake "smallArcRadius :height * 0.0782
+	localmake "mStraightHeight :height * 0.196
+	jumpForward :height / 2
+	setPenSize :height * 20 / 256
+	setPenColor "black
+	setFillColor transparent
+	circle (:height - penSize) / 2
+	setLineCap "butt
+	jumpForward :height * 0.25385
+	jumpLeft :height * 0.2345
+	right 180
+	forward :height * 0.3515
+	arcLeft 90 :arcRadius1
+	forward :height * 0.235
+	arcLeft 90 :arcRadius1
+	forward :height * 0.196
+	arcLeft 180 :smallArcRadius
+	right 180
+	arcLeft 180 :smallArcRadius
+	forward :mStraightHeight
+	jumpLeft :smallArcRadius * 2
+	backward :mStraightHeight * 1.1 ; middle of the m
+	; Multiplied by 1.1 so there is a little overlap.
+	; We don't want the background color leaking through an
+	; infinitesimally narrow crack.
+
+	setTurtleState :oldState
+end
+
+linuxMintLogo 100
