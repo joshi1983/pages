@@ -1,0 +1,21 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Bahia#/media/File:Bandeira_da_Bahia.svg
+to bahiaFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 3 / 2
+	localmake "redColor "#d31920
+	localmake "squareSize :height / 2
+	localmake "triSize :squareSize * 0.78519625
+	stripes :width :height	[:redColor "white :redColor "white]
+	jumpForward :height / 2
+	jumpLeft (:width - :height / 2) / 2
+	stripes :squareSize :squareSize ["#003087]
+	jumpForward :height * 0.09
+	setFillColor "white
+	setPenSize 0
+	isoTriangle :triSize :triSize * cos 30
+	setTurtleState :oldState
+end
+
+setScreenColor "#bbb
+bahiaFlag 100

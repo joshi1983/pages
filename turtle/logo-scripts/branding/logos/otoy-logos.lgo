@@ -1,0 +1,73 @@
+to otoyLogoCustomColors :height :backgroundColor :foregroundColor
+	localmake "oldState turtleState
+	localmake "cornerRadius :height * 0.13
+	localmake "straightHeight :height - 2 * :cornerRadius * (1 - cos 45)
+	localmake "largeSize :straightHeight / 2 / (cos 45) + :cornerRadius
+	jumpForward :height / 2
+	setFillColor :backgroundColor
+	setPenSize 0
+	left 45
+	roundRect :largeSize :largeSize :cornerRadius
+	setPenColor :foregroundColor
+	setFillColor transparent
+	setPenSize :height * 0.119
+	circle :height * 0.2355
+	setTurtleState :oldState
+end
+
+; Inspired by logo at
+; https://otoy.com/
+to blackOToyLogo :height
+	otoyLogoCustomColors :height "black "white	
+end
+
+to whiteOToyLogo :height
+	localmake "redColor "#a00
+	stripes :height * 2 :height [:redColor]
+	otoyLogoCustomColors :height "white :redColor	
+end
+
+to octaneRenderLogoCustomColors :height :backgroundColor :foregroundColor
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	setFillColor :backgroundColor
+	repeat 6 [
+		setHeading :oldHeading + repcount * 360 / 6
+		polyStart
+		arcLines [[5 0] [0.2418] [-65 0] [-25 0.4] [-13 0.45] [-5.365 2]
+		[-88 0] [0.094] [-88 0] [20 0.35] [25 0.2]
+		] :height
+		polyEnd
+		jumpTo :center
+	]
+	setFillColor :foregroundColor
+	circle :height * 0.1333
+	setTurtleState :oldState
+end
+
+; Inspired by logo at
+; https://en.wikipedia.org/wiki/File:Octane_Render_logo.png
+; and
+; https://home.otoy.com/render/octane-render/
+to blackOctaneRenderLogo :height
+	octaneRenderLogoCustomColors :height "black "white
+end
+
+to whiteOctaneRenderLogo :height
+	stripes :height * 2 :height ["black]
+	octaneRenderLogoCustomColors :height "white "black
+end
+
+make "height 100
+make "separation :height * 4
+jumpLeft :separation * 1.5
+blackOToyLogo :height
+jumpRight :separation
+whiteOToyLogo :height
+jumpRight :separation
+whiteOctaneRenderLogo :height
+jumpRight :separation
+blackOctaneRenderLogo :height

@@ -1,0 +1,41 @@
+make "ckpuBlueColor "#0084c4
+
+; Inspired by logo at:
+; https://www.facebook.com/photo/?fbid=553642183225830&set=a.553642173225831
+to ckpuLogo :height :outerDropColor :innerDropColor
+	localmake "oldState turtleState
+	localmake "lines1 [
+		[162 0] [-15 0.3] [0.174]
+		[123 0.1532]
+	]
+	localmake "outerScaleFactor 2.20628
+	setPenSize 0
+	setFillColor :innerDropColor
+	drawArcLineShape [0.133 0.689
+		combine :lines1 reverse :lines1
+	] :height
+	setFillColor :outerDropColor
+	drawArcLineShape [0 1 / :outerScaleFactor
+		combine :lines1 [[50 0.1532] [32 0.18] [174 0]
+		[-198 0.105] [0.155] [65 0] [-10 0.55]]
+	] :height * :outerScaleFactor
+	setTurtleState :oldState
+end
+
+; Inspired by:
+; https://www.chatham-kent.ca/localgovernment/municipalprojects/PublishingImages/CKPUC/CKPUC_Web_logo.jpg
+to ckpuOnBlueLogo :height
+	localmake "oldState turtleState
+	localmake "innerHeight :height * 0.8
+	stripes :height :height [:ckpuBlueColor]
+	jumpForward (:height - :innerHeight) / 2
+	ckpuLogo :innerHeight "white "white
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 5
+jumpLeft :separation / 2
+ckpuLogo :height :ckpuBlueColor "#73a532
+jumpRight :separation
+ckpuOnBlueLogo :height

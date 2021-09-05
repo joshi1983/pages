@@ -1,0 +1,42 @@
+; Inspired by logo at:
+; https://www.geeksforgeeks.org
+to geeksForGeeksLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "radius :height / 2
+	localmake "innerArcRadius :height * 0.33
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	setFillColor "#2f8d46
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		setHeading :oldHeading
+		jumpRight :sign * :height / 2
+		localmake "center1 pos
+		jumpTo :center
+		polyStart
+		arcLeft -138 * :sign :radius
+		right :sign * 87
+		jumpForward distanceToCircle :center1 :innerArcRadius
+		setHeading (towards :center1) + 90 * :sign
+		arcLeft :sign * 299 :innerArcRadius
+		setHeading :oldHeading - :sign * 90
+		jumpForward :height * 0.01
+		jumpForward distanceToLine :oldPos :center
+		jumpRight :sign * :height * 0.15
+		jumpBackward :height / 2
+		right 180
+		jumpForward distanceToCircle :center1 :radius
+		setHeading (towards :center1) - 90 * :sign
+		localmake "d distance :center
+		localmake "arcAngle -:sign * 2 * arcSin :d / 2 / :radius
+		arcLeft :arcAngle :radius
+		polyEnd
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+geeksForGeeksLogo 100

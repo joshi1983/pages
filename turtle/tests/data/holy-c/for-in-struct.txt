@@ -1,0 +1,21 @@
+// copied from: https://holyc-lang.com/docs/language-spec/learn-control-flow
+class Container
+{
+  I64 size;
+  I64 *entries;
+};
+
+U0 Main()
+{
+  Continer *c = MAlloc(sizeof(Container));
+  c->size = 0;
+  c->entries = MAlloc(sizeof(I64)*10);
+  c->entries[c->size++] = 1;
+  c->entries[c->size++] = 2;
+  c->entries[c->size++] = 3;
+
+  /* prints 1 2 3 */
+  for (auto it : c) {
+    "%d\n",it;
+  }
+}

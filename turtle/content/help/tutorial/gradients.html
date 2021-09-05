@@ -1,0 +1,52 @@
+<p>The simplest way to color a filled shape like a circle is to 
+set fill color using the <span class="command">setFillColor command</span>.
+</p>
+<code class="pastable">setFillColor "red<br>
+circle 100<br>
+; fills a circle with a solid red color</code>
+
+<p>You might want to fill a shape with a blend of colors.  
+A <strong>gradient</strong> is an area that transitions between more than 1 color.</p>
+<p>Defining a gradient requires specifying color stops.</p>
+<ul>
+	<li>You must indicate a ratio from 0 to 1 for each color stop.
+	This ratio indicates where the color appears in the gradient.</li>
+	<li>Color stops also require the color.
+	The following indicate the color to be red: "red, [255 0 0], or color index.</li>
+</ul>
+<p>The following defines a variable colorStops for use in a gradient:</p>
+<code class="pastable">make "colorStops createPList ; create a property list.
+setProperty "colorStops 0 "red
+setProperty "colorStops 1 "black
+; the gradient blends between red and black.
+</code>
+<p>The commands for creating a gradient include:</p>
+<ul>
+	<li>
+		<p><span class="command">createLinearGradient</span> -
+		for blending between colors in a single straight direction.
+		The perpendicular directions with constant color are also straight.
+		</p>
+		<img alt="Example of linear gradient" src="content/help/tutorial/images/linear-gradient.svg">
+	</li>
+	<li>
+		<p><span class="command">createRadialGradient</span> and <span class="command">createRadialGradient2</span>
+		- for blending between colors in a radiating direction.
+		Perpendicular directions with constant color are circular.</p>
+		<img alt="Example of radial gradient" src="content/help/tutorial/images/radial-gradient.svg">
+	</li>
+</ul>
+
+<code class="pastable">make "colorStops createPList
+setProperty "colorStops 0 "red
+setProperty "colorStops 1 "black
+; the gradient blends between red and black.
+
+setFillGradient createLinearGradient [0 0] [100 0] :colorStops "pad
+circle 200
+; draws a circle filled with a gradient that blends
+; between red and black
+; Point [0 0] is red.
+; point [100 0] is black.
+; Point [50 0] is an even mix between red and black.
+</code>

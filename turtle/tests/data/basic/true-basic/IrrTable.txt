@@ -1,0 +1,25 @@
+!
+!  IRRTABLE.  Make and show an "irregular" frequency dataset.
+!  Immigration rates (per 1000 Americans) over US history.
+!  Source: Statistical Abstracts of the United States, 1978.
+!
+LIBRARY "Stat2Lib.trc"
+DIM int$(22), r(22), freq(0,0)
+
+
+MAT READ int$, r
+DATA 1820:1830, 1831:1840, 1841:1850, 1851:1860
+DATA 1861:1870, 1871:1880, 1881:1890, 1891:1900
+DATA 1901:1910, 1911:1920, 1921:1930, 1931:1940
+DATA 1941:1950, 1951:1960, 1961:1970
+DATA 1971, 1972, 1973, 1974, 1975, 1976, 1977
+
+DATA 1.2, 3.9, 8.4, 9.3, 6.4, 6.2, 9.2, 5.3, 10.4
+DATA 5.7, 3.5, 0.4, 0.7, 1.5, 1.7
+DATA 1.8, 1.8, 1.9, 1.9, 1.8, 1.9, 2.1
+
+CALL SetText ("American Immigration Rates", "Year", "%")
+CALL TableToFreq (int$(), r(), freq(,))     ! Convert to freq table
+CALL PlotHistFromFreq (freq(,), "")    ! Plot histogram
+
+END

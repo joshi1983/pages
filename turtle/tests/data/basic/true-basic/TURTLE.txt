@@ -1,0 +1,81 @@
+! This file contains both the Turtle demonstration program and 
+! the sample module Turtle.  If the module were stored in a separate 
+! file an appropriate LIBRARY statement would be required.
+
+PRINT "To turn the turtle type 'R' for right or 'L' for left"
+PRINT "followed by an angle, and then press the return key."
+PRINT
+PRINT "To move the turtle in the current direction, type 'F' or"
+PRINT "'B' followed by a distance to move forward or backward,"
+PRINT "and then press the return key."
+PRINT
+PRINT "Press 'C' to clear the screen or 'S' to stop the program."
+PRINT "Press any key when you are ready to begin."
+
+GET KEY start
+CLEAR
+
+DO
+   IF KEY INPUT then
+      GET KEY how
+      LET how$ = Ucase$(Chr$(Mod(how,256)))
+      SELECT CASE how$
+      CASE "L"
+           INPUT PROMPT how$: angle
+           CALL Left(angle)
+      CASE "R"
+           INPUT PROMPT how$: angle
+           CALL Right(angle)
+      CASE "F"
+           INPUT PROMPT how$: distance
+           CALL Forward(distance)
+      CASE "B"
+           INPUT PROMPT how$: distance
+           CALL Back(distance)
+      CASE "C"
+           CALL ClearScreen
+      CASE "S"
+           STOP
+      CASE ELSE
+      END SELECT
+   END IF
+LOOP
+
+END
+
+MODULE Turtle
+
+    SHARE x, y, a                       ! Location, angle
+                                        ! Same x, y, and a used
+                                        ! throughout the routine
+    OPTION ANGLE DEGREES                ! Initialize
+
+    CALL ClearScreen
+
+    SUB ClearScreen
+        CLEAR
+        SET WINDOW -140, 140, -120, 120
+        LET x, y = 0                    ! Start at origin
+        LET a = 90                      ! Head upward
+        PLOT 0, 0;                      ! Start drawing
+    END SUB
+
+    SUB Left(da)
+        LET a = a + da
+    END SUB
+
+    SUB Right(da)
+        LET a = a - da
+    END SUB
+
+    SUB Forward(d)
+        LET x = x + d*Cos(a)
+        LET y = y + d*Sin(a)
+        PLOT x, y;
+    END SUB
+
+    SUB Back(d)
+        CALL Forward(-d)
+    END SUB
+
+END MODULE

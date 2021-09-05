@@ -1,0 +1,155 @@
+make "hiphopDxGoldColor "#fec114
+make "fontGeneralGapRatio 0.025
+
+to drawH :height
+	localmake "oldPos pos
+	jumpForward :height * :fontGeneralGapRatio
+	localmake "height :height * (1 - 2 * :fontGeneralGapRatio)
+	localmake "width :height * 0.99
+	localmake "sideThickness :width * 0.34
+	localmake "midThickness :height * 0.28
+	localmake "separation :width - :sideThickness
+	jumpLeft :separation / 2
+	repeat 2 [
+		stripes :sideThickness :height [fillColor]
+		jumpRight :separation
+	]
+	jumpTo :oldPos
+	jumpForward (:height - :midThickness) * 0.56
+	stripes :width :midThickness [fillColor]
+	jumpTo :oldPos
+end
+
+to drawI :height
+	localmake "oldPos pos
+	jumpForward :height * :fontGeneralGapRatio
+	stripes :height * 0.325 :height * (1 - 2 * :fontGeneralGapRatio) [fillColor]
+	jumpTo :oldPos
+end
+
+to drawP :height
+	localmake "oldState turtleState
+	localmake "height :height * (1 - 2 * :fontGeneralGapRatio)
+	localmake "outerArcsInfo [
+		[0.33] [-30 0.55] [-50 0.32] [-10 0.47]
+	]
+	localmake "innerArcsInfo [
+		[0.315] [180 0.116] [0.33]
+	]
+	jumpLeft :height * 0.28
+	jumpForward :height * :fontGeneralGapRatio
+	stripes :height * 0.34 :height [fillColor]
+	jumpForward :height
+	right 90
+	setPenSize 0
+	polyStart
+	arcLines :outerArcsInfo :height
+	arcLines reverse :outerArcsInfo :height
+	jumpRight :height * 0.26
+	right 180
+	arcLines :innerArcsInfo :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+to drawO :height
+	localmake "oldState turtleState
+	localmake "outerArcsInfo [
+		[30 0.6] [30 0.48] [30 0.49]
+	]
+	localmake "innerArcsInfo [
+		[-60 0.21] [-30 0.268]
+	]
+	setPenSize 0
+	right 90
+	polyStart
+	repeat 2 [
+		arcLines :outerArcsInfo :height
+		arcLines reverse :outerArcsInfo :height
+	]
+	jumpLeft :height * 0.263
+	right 180
+	repeat 2 [
+		arcLines :innerArcsInfo :height
+		arcLines reverse :innerArcsInfo :height
+	]
+	polyEnd
+	setTurtleState :oldState
+end
+
+to drawDx :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "cornerRadiusRatio 0.038
+	localmake "innerLenRatio 1 - :cornerRadiusRatio * 2
+	localmake "outlinePair [[90 :cornerRadiusRatio] [:innerLenRatio]]
+	localmake "angle 52.9
+	jumpLeft :height * 0.1
+	localmake "startPos pos
+	right 90
+	setPenSize 0
+	polyStart
+	arcLines (combine [[0.548]] :outlinePair 
+	[[90 :cornerRadiusRatio] [:innerLenRatio * 0.97]] :outlinePair
+	[[90 :cornerRadiusRatio] [0.14] [:angle 0] [0.469]]) :height
+	arcLines [[75 0.011] [0.164] [-127.9 0.013] [0.177]
+	[-52 0.016] [180 0.0142] [95 0] [0.012] [-135 0] [5 0.3]
+	[25 0.09] [40 0.037] [22 0.06] [0.222] [90 0.021] [0.2075]
+	[90 0.021] [0.143] [-127.5 0] [0.16] [-52.5 0] [0.182] [-90 0.025]
+	[0.453] [-90 0.025] [0.35] [-30 0.17] [-26.2 0.24] [108 0] [0.04]
+	[-51.8 0.015] [0.18] [-127.7 0.012] [0.358] [76 0.017] [0.158]
+	[-128.3 0.013] [0.176] [-47 0.02] [100 0.015]] :height
+	polyEnd
+	jumpTo :startPos
+	setHeading :oldHeading
+	jumpForward :height * 0.596
+	jumpRight :height * 0.24545
+	left 52.3
+	stripes :height * 0.16 :height * 0.017 [fillColor]
+	setTurtleState :oldState
+end
+
+; Inspired by logo at
+; https://hiphopdx.com/
+to hiphopDxLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "fontHeight :height * 0.413
+	jumpLeft :height * 1.582
+	jumpForward (:height - :fontHeight) * 0.478
+	setFillColor :hiphopDxGoldColor
+	drawH :fontHeight
+	jumpRight :fontHeight * 0.855
+	drawI :fontHeight
+	jumpRight :fontHeight * 0.81
+	drawP :fontHeight
+	jumpRight :fontHeight * 1.113
+	drawH :fontHeight
+	jumpRight :fontHeight * 1.19
+	drawO :fontHeight
+	jumpRight :fontHeight * 1.15
+	drawP :fontHeight
+
+	jumpTo :oldPos
+	jumpRight :height * 1.29
+	drawDx :height
+	setTurtleState :oldState
+end
+
+; Inspired by the favicon(browser tab icon) at:
+; https://hiphopdx.com/
+to hiphopDxFavicon :height
+	localmake "oldState turtleState
+	stripes :height * 0.9 :height [:hiphopDxGoldColor]
+	setFillColor "black
+	drawDx :height
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+make "height 100
+make "separation :height * 5
+jumpLeft :separation / 2
+hiphopDxLogo :height
+jumpRight :separation
+hiphopDxFavicon :height

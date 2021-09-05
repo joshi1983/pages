@@ -1,0 +1,71 @@
+; Inspired by:
+; https://ca.pinterest.com/pin/554224297911001627/
+; Also shown at:
+; https://dribbble.com/shots/1728616-Bubbles
+to daveWhyteCircles :height :timeRatio
+	localmake "oldState turtleState
+	localmake "numAngles 24
+	localmake "stopGap 0.15
+	localmake "timeRatio clamp :timeRatio :stopGap 1 - :stopGap
+	localmake "timeRatio (:timeRatio - :stopGap) / (1 - 2 * :stopGap)
+	; Now, timeRatio should be between 0 and 1 but there may be some floating point error.
+	localmake "timeRatio clamp :timeRatio 0 1
+	; Clamp to eliminate potential floating point errors.
+
+	localmake "timeRatio interpolateRatio easeInOut :timeRatio
+	localmake "numCircles 5
+	localmake "maxRadius :height * 0.04
+	localmake "maxDistanceRatioOffset 0.08
+	localmake "ratio1 (:numCircles - 1) / :numCircles
+	jumpForward :height / 2
+	localmake "center pos
+	setFillColor transparent
+	setPenGradient createRadialGradient pos :height / 2 
+		createPList2 [[0.2 "violet] [0.6 "aqua] [1 "blue]]
+	repeat :numAngles [
+		localmake "distanceRatioOffset 0
+		if even? repcount [
+			localmake "distanceRatioOffset :maxDistanceRatioOffset
+		]
+		repeat :numCircles [
+			localmake "distanceRatio1 repRatio
+			localmake "distanceRatio (:distanceRatio1 * :ratio1 
+				+ :timeRatio / :numCircles) / (1 + :maxDistanceRatioOffset)
+				+ :distanceRatioOffset
+			localmake "distanceRatio clamp :distanceRatio 0 1
+			localmake "outerRadius :maxRadius * :distanceRatio
+			jumpForward :height * mix 0.45 0.1 :distanceRatio
+			localmake "thicknessRatio repRatio * :ratio1 + :timeRatio / :numCircles
+			localmake "thicknessRatio mixItems2 [0 1 1 0]  clamp :thicknessRatio 0 1
+			setPenSize :outerRadius * :thicknessRatio
+			localmake "circleRadius :outerRadius - penSize / 2
+			if and :circleRadius > 0 penSize > 0.0001 [
+				circle :circleRadius
+			]
+			jumpTo :center
+		]
+		right 360 / :numAngles
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+make "timeRatio animation.clampedTimeRatio
+daveWhyteCircles 100 :timeRatio
+
+to animation.snapshotstyle
+	output createPList2 [
+		["position.y 50]
+		["zoom.scale 7]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 2
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

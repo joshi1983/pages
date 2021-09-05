@@ -1,0 +1,58 @@
+; Inspired by
+; https://studycadcam.blogspot.com/2021/03/2d-cad-exercises-1077.html
+; Almost all numbers used in implementation are directly from the CAD drawing.
+to bell :scale
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "size1 50 * :scale
+	; Using 50 here because the source drawing apparently has a mistake.
+	; 50 lines up much better than 53.
+
+	localmake "arcRadius1 10 * :scale
+	localmake "arcRadius2 2.5 * :scale
+	localmake "arcRadius3 50 * :scale
+	localmake "arcRadius4 24.5 * :scale
+	localmake "bottomArcHeight 9 * :scale
+	localmake "bottomArcAngle1 arcSin (:arcRadius1 - :bottomArcHeight) / :arcRadius1
+	localmake "bottomChordLength :arcRadius1 * 2 * cos :bottomArcAngle1
+	localmake "bottomSize 0.5 * (87 * :scale - :bottomChordLength)
+	localmake "sideArcAngle1 143.7
+	; Could be calculated from the CAD drawing but this
+	; is accurate enough for now.
+
+	localmake "sideArcAngle2 :sideArcAngle1 - 90
+	localmake "sideArcAngle3 180
+	localmake "sideLength1 :size1 - :arcRadius2 * (1 + sin (:sideArcAngle1 - 90)) - :arcRadius3 * sin :sideArcAngle2
+
+	; draw most of the bell except the ring at the top.
+	setFillColor "black
+	setPenSize 0
+	jumpRight :arcRadius1
+	left 180 - :bottomArcAngle1
+	polyStart
+	arcRight 180 - :bottomArcAngle1 * 2 :arcRadius1
+	left 90 - :bottomArcAngle1
+	jumpForward :bottomSize
+	arcRight :sideArcAngle1 :arcRadius2
+	arcLeft :sideArcAngle2 :arcRadius3
+	jumpForward :sideLength1
+	arcRight :sideArcAngle3 :arcRadius4
+	jumpForward :sideLength1
+	arcLeft :sideArcAngle2 :arcRadius3
+	arcRight :sideArcAngle1 :arcRadius2
+	polyEnd
+
+	; Draw ring at top of bell.
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :size1 + 25 * :scale
+	setPenSize 5.2 * :scale
+	setPenColor fillColor
+	setFillColor transparent
+	circle (5.2 * 0.5 + 4.25) * :scale
+
+	setTurtleState :oldState
+end
+
+bell 2

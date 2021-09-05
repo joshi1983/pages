@@ -1,0 +1,180 @@
+make "mainGreen "#367d37
+
+to drawCottage :height	
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "baseWidthFactor 1.44
+	localmake "baseWidth :height * :baseWidthFactor
+	localmake "angle 34
+	localmake "baseHeightFactor 0.45
+	localmake "baseHeight1 :height * :baseHeightFactor
+	localmake "roofHeightFactor1 0.49
+	localmake "roofHeightFactor2 0.19
+	localmake "roofHeightFactor3 :roofHeightFactor1 - :roofHeightFactor2
+	localmake "frontRoofHeight1 :height * 0.9 - :baseHeight1
+	localmake "trapTopWidth :baseWidth - :frontRoofHeight1 * 2 * tan :angle
+	localmake "roofStops createPList2 [
+		[0 "#120000] [0.3 "#991b0f] [1 "#991b0f]
+	]
+	localmake "whiteLines1 [[:baseHeightFactor] [-:angle 0]
+		[:frontRoofHeight1 / :height / cos :angle]
+		[:angle - 90 0] [:trapTopWidth / :height / 2]
+	]
+	localmake "rects [
+		[-0.395 0 0.225 0.255] ; door
+		[0.025 0.158 0.16 0.1] ; left window
+		[0.235 0.158 0.16 0.1] ; right window
+	]
+	setPenSize 0
+	setFillColor "white
+	drawArcLineShape [0 0
+		(combine [[90 0] [:baseWidthFactor / 2] [-90 0]] :whiteLines1 reverse :whiteLines1)
+	] :height
+	jumpForward :baseHeight1
+	localmake "roofBase pos
+	jumpForward :height * :roofHeightFactor1
+	setFillGradient createLinearGradient :roofBase pos :roofStops "pad
+	jumpTo :roofBase
+	drawArcLineShape [-0.07 0
+		[[:angle 0] [:roofHeightFactor1 / cos :angle] [-:angle - 90 0]
+		[0.79] [:angle - 90 0] [:roofHeightFactor2 / cos :angle]
+		[-:angle * 2 0] [:roofHeightFactor3 / cos :angle]]
+	] :height
+	setPenSize :height * 0.07
+	setPenColor "#593513
+	setLineCap "butt
+	setLineJoinStyle "miter
+	jumpTo :oldPos
+	jumpLeft :baseWidth * 0.505
+	jumpForward :baseHeight1 * 0.95
+	arcLines [[-:angle 0] [0.6] [:angle * 2 - 180 0] [0.6]
+		[90 - :angle 0] [0.36] [90 - :angle 0] [0.38]
+		[:angle * 2 - 180 0] [0.38]] :height
+	setHeading :oldHeading
+	repeat count :rects [
+		localmake "rect item repcount :rects
+		localmake "rectW :height * item 3 :rect
+		localmake "rectH :height * item 4 :rect
+		jumpTo :oldPos
+		jumpRight :height * first :rect
+		jumpForward :height * item 2 :rect
+		stripes :rectW :rectH [penColor]
+	]
+	setFillColor penColor
+	setPenSize 0
+	jumpTo :oldPos
+	jumpLeft :height * 0.395
+	jumpForward :height * 0.536
+	ellipse :height * 0.08 :height * 0.125	
+	setTurtleState :oldState
+end
+
+to drawRadialOutline :radius
+	localmake "oldState turtleState
+	localmake "colorStops createPList2 [
+		[0 "#0000] [0.9 "#0000] [1 "#000]
+	]
+	setPenGradient createRadialGradient pos :radius :colorStops
+	jumpBackward :radius
+	setLineCap "butt
+	setPenSize :radius * 2
+	forward :radius * 2	
+	setTurtleState :oldState
+end
+
+to createFieldGradient :thickness :mainColor
+	localmake "oldState turtleState
+	localmake "colorStops createPList2 [
+		[0 :mainColor]
+		[1 "#000]
+	]
+	jumpRight :thickness * 0.3
+	localmake "startPos pos
+	jumpLeft :thickness * 0.7
+	localmake "result createLinearGradient :startPos pos :colorStops "pad
+	setTurtleState :oldState
+	output :result
+end
+
+to drawWaveyField :radius
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "center pos
+	localmake "angleCount 14
+	localmake "waveCount 4
+	localmake "waveLength :radius / :waveCount
+	setPenSize :radius * 0.01
+	setPenColor "black
+	repeat :angleCount [
+		localmake "headingOffset mix -270 -90 interpolateRatio easeInOut repRatio
+		localmake "startHeading :oldHeading + :headingOffset
+		localmake "arcAngle mixItems2 [20 50 20 50 20] repRatio
+		localmake "arcRadius :waveLength / 4 / sin :arcAngle / 2
+		if repcount <> 1 [
+			setHeading :startHeading
+			jumpTo :center
+			localmake "mainColor ifelse even? repcount :mainGreen "#bb0
+			localmake "thickness :radius * max 0.01 sin :angleDelta / 2
+			setFillGradient createFieldGradient :thickness :mainColor
+			setPenSize 0
+			right :arcAngle / 2
+			polyStart
+			repeat :waveCount [
+				arcLeft :arcAngle :arcRadius
+				arcRight :arcAngle :arcRadius
+			]
+			localmake "prevEndPos first :prevInfo
+			localmake "prevArcAngle item 2 :prevInfo
+			localmake "prevArcRadius item 3 :prevInfo
+			localmake "angleDelta 2 * arcSin (distance :prevEndPos) / 2 / :radius
+			setHeading (towards :center) - 90
+			arcRight :angleDelta :radius
+			setHeading (towards :center) + :prevArcAngle / 2
+			repeat :waveCount [
+				arcLeft :prevArcAngle :prevArcRadius
+				arcRight :prevArcAngle :prevArcRadius
+			]
+			polyEnd
+		]
+		setHeading :startHeading
+		jumpTo :center
+		right :arcAngle / 2
+		setPenSize :radius * 0.01
+		repeat :waveCount [
+			arcLeft :arcAngle :arcRadius
+			arcRight :arcAngle :arcRadius
+		]
+
+		localmake "prevInfo [pos :arcAngle :arcRadius]
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by:
+; https://ca.pinterest.com/pin/4574037117042080
+to cottageCore :height
+	localmake "oldState turtleState
+	localmake "greenFoundationHeight :height * 0.05
+	stripes :height :height [:mainGreen "#076fa1]
+	jumpForward :height / 2
+	localmake "center pos
+	jumpForward :height * 0.018
+	setPenSize 0
+	setFillColor "#E5C615
+	isotoxalStar :height * 0.2 :height * 0.077 20
+	jumpBackward :greenFoundationHeight
+	stripes :height * 0.1137 :greenFoundationHeight [:mainGreen]
+	jumpBackward :height * 0.002 - :greenFoundationHeight
+	drawCottage :height * 0.079
+	jumpTo :center
+	jumpForward :height * 0.01
+	drawWaveyField :height / 2
+	jumpTo :center
+	drawRadialOutline :height / 2
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+cottageCore 100

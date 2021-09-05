@@ -1,0 +1,69 @@
+; Inspired by a logo at:
+; https://en.wikipedia.org/wiki/Texaco#/media/File:Texaco_logo.svg
+to texacoLogo :height :starColor :circleColor
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "radius :height * 0.5
+	localmake "innerGap :height * 0.195
+	localmake "tThickness :height * 0.115
+	jumpForward :radius
+	setPenSize 0
+	setFillColor :starColor
+	circle :radius
+	localmake "center pos
+	setFillColor :circleColor
+	repeat 5 [
+		setHeading :oldHeading + (repcount + 0.5) * 360 / 5
+		jumpForward :innerGap
+		localmake "startPos pos
+		left 108 / 2
+		polyStart
+		jumpForward distanceToCircle :center :radius
+		localmake "newHeading (towards :center) - 90
+		setHeading :newHeading
+		localmake "arcAngle getArcRightAngleToLine :radius :center :startPos
+		arcRight :arcAngle * 2 :radius
+		polyEnd
+		jumpTo :center
+	]
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.1
+	setLineCap "butt
+	setPenSize :tThickness
+	setPenColor fillColor
+	forward :height * 0.445
+	setPenSize 0
+	rect :height * 0.31 :height * 0.095
+	setTurtleState :oldState
+end
+
+to texacoOnBlackLogo :height
+	localmake "oldState turtleState
+	localmake "innerHeight :height * 0.8	
+	stripes :height :height ["black]
+	jumpForward (:height - :innerHeight) / 2
+	texacoLogo :innerHeight "white :texacoRed
+	setTurtleState :oldState
+end
+
+to texacoOnRedLogo :height
+	localmake "oldState turtleState
+	localmake "innerHeight :height * 0.8	
+	stripes :height :height [:texacoRed]
+	jumpForward (:height - :innerHeight) / 2
+	texacoLogo :innerHeight :texacoRed "white
+	setTurtleState :oldState
+end
+
+make "texacoRed "#e93330
+make "height 100
+make "separation :height * 4
+jumpLeft :separation
+texacoLogo :height "white :texacoRed
+jumpRight :separation
+texacoOnBlackLogo :height
+jumpRight :separation
+texacoOnRedLogo :height

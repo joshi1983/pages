@@ -1,0 +1,92 @@
+to drawGradient :center :points
+	localmake "oldState turtleState
+	localmake "colorStops createPList2 [
+		[0 "blue] [0.4 "#08f] [1 transparent]
+	]
+	localmake "arcAngle 360 / 8
+	jumpTo first :points
+	localmake "arcRadius distance :center
+	jumpTo mix first :points last :points 0.5
+	localmake "d distance :center
+	localmake "gradientRadius :d * 1.1
+	setHeading towards last :points
+	jumpLeft :d * 0.3
+	setFillGradient createRadialGradient pos :gradientRadius :colorStops
+
+	jumpTo last :points
+	setPenSize 0
+	setFillBlendMode "lighter
+	polyStart
+	for ["i -1 + count :points 1 -1] [
+		jumpTo item :i :points
+	]
+	setHeading (towards :center) + 90
+	arcLeft :arcAngle :arcRadius
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Move the turtle like with the forward command.
+; Just start from a width of 0.
+to reverseTriangle :distance
+	localmake "oldState turtleState
+	localmake "oldPenSize penSize
+	setPenSize 0
+	jumpForward :distance
+	localmake "endPos pos
+	setFillColor penColor
+	right 180
+	isoTriangle :oldPenSize :distance
+	circle :oldPenSize / 2
+
+	setTurtleState :oldState
+	jumpTo :endPos
+end
+
+; Inspired by drawing at:
+; https://ca.pinterest.com/pin/456763587231804964/
+to jabhuaCircle :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "numRadii 8
+	localmake "numSections 8
+	localmake "sectionAngle 360 / :numSections 
+	localmake "radii []
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize :height * 0.005
+	localmake "maxRadius (:height - penSize) / 2
+	localmake "minRadius :maxRadius * 0.45
+	setPenColor "white
+	setFillColor transparent
+	setLineCap "butt
+	repeat :numRadii [
+		localmake "radius mix :minRadius :maxRadius repRatio
+		queue2 "radii :radius
+	]
+	repeat :numSections [
+		localmake "startHeading :oldHeading + repcount * 360 / :numSections
+		localmake "points []
+		repeat :numRadii [
+			localmake "offsetAngle (repcount - 1) * 360 / :numSections / (:numRadii - 1)
+			setHeading :startHeading - :offsetAngle
+			localmake "radius item repcount :radii
+			reverseTriangle :radius
+			queue2 "points pos
+			left 90
+			arcLeft :sectionAngle - :offsetAngle :radius
+			jumpTo :center
+		]
+		jumpTo last :points
+		for ["i -1 + count :points 1 -1] [
+			setPos item :i :points
+		]
+		drawGradient :center :points
+		jumpTo :center
+	]
+
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+jabhuaCircle 100

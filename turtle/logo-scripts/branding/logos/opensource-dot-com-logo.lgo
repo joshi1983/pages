@@ -1,0 +1,28 @@
+; Inspired by favicon at:
+; https://opensource.com/
+to openSourceDotComLogo :height
+	localmake "oldState turtleState
+	localmake "numAngles 13
+	localmake "angleStep 360 / (1 + :numAngles)
+	localmake "littleRadius :height * 0.05
+	localmake "radius :height / 2 - :littleRadius
+	setPenSize :height * 0.07
+	setPenColor "#66C2E1
+	forward :height / 2
+	right 180 - :angleStep
+	localmake "center pos
+	setFillColor "white
+	setPenColor "white
+	repeat :numAngles [
+		setPenSize :height * 0.01
+		forward :radius
+		setPenSize 0
+		circle :littleRadius
+		jumpTo :center
+		left :angleStep
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "#0090bf
+openSourceDotComLogo 100

@@ -1,0 +1,64 @@
+to getEllipseRadiusAt :radius1 :radius2 :angle
+	localmake "x :radius1 * (cos :angle) * :radius2 / :radius1
+	localmake "y :radius1 * sin :angle
+	output hypot [:x :y]
+end
+
+; Inspired by:
+; https://ca.pinterest.com/pin/691865561521067673/
+; but also shown at:
+; https://ca.pinterest.com/pin/308215168232220912/
+; https://chaninicholas.com/the-last-uranus-pluto-square/#sthash.lrFFv2cU.qjtu
+; https://www.nytimes.com/2011/07/31/books/review/perplexities-of-consciousness-by-eric-schwitzgebel-book-review.html
+;
+; Those credit the illustration to:
+; Tamara Shopsin
+to tamaraShopsinEye :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "width :height * 1.785479
+	localmake "arcsInfo1 [
+		[-40 0] [-15 1.523432] [-4 3] [-20 0.82] [-11 0.82828721]
+	]
+	localmake "arcsInfo combine :arcsInfo1 reverse :arcsInfo1
+	localmake "numRays 64
+	localmake "rayThicknessAngle 360 * 0.6 / :numRays
+	localmake "rayRadius1 :height * 0.55
+	localmake "rayRadius2 :height * 0.5
+	setPenSize 0
+	jumpForward :height / 2
+	localmake "center pos
+	jumpLeft :width / 2
+	setFillColor "white
+	polyStart
+	arcLines :arcsInfo :height
+	arcLines :arcsInfo :height
+	polyEnd
+	setFillColor "#097bc1
+	repeat :numRays [
+		jumpTo :center
+		localmake "angle repcount * 360 / :numRays
+		localmake "angle2 :angle + :rayThicknessAngle
+		localmake "radius getEllipseRadiusAt :rayRadius1 :rayRadius2 :angle
+		setHeading :oldHeading + :angle
+		jumpForward :radius
+		localmake "pos1 pos
+		jumpTo :center
+		localmake "radius getEllipseRadiusAt :rayRadius1 :rayRadius2 :angle2
+		setHeading :oldHeading + :angle2
+		polyStart
+		jumpForward :radius
+		localmake "d distance :pos1
+		localmake "arcAngle 2 * arcSin :d / 2 / :radius 
+		setHeading (towards :pos1) + :arcAngle / 2
+		arcLeft :arcAngle :radius
+		polyEnd
+	]
+	jumpTo :center
+	setFillColor "black
+	circle :height * 0.08
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+tamaraShopsinEye 100

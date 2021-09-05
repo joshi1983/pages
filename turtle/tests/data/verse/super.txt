@@ -1,0 +1,15 @@
+# copied from https://verselang.github.io/book/10_classes_interfaces/
+entity := class:
+    ID:int
+    Name:string
+
+    Display():void =
+        Print("Entity {ID}: {Name}")
+
+character := class(entity):
+    Health:int
+
+    Display<override>():void =
+        # Create a superclass instance to call its method
+        super{ID := ID, Name := Name}.Display()
+        Print("Health: {Health}")

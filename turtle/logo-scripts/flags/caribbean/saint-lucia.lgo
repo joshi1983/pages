@@ -1,0 +1,24 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Saint_Lucia#/media/File:Flag_of_Saint_Lucia.svg
+to saintLuciaFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 2
+	localmake "triWidth :height * 2 / 3
+	localmake "triWidth1 :triWidth * 0.909
+	localmake "triHeight1 :height * 0.749
+	stripes :width :height ["#6cF]
+	jumpForward :height * 0.08798332
+	setPenSize :height * 0.041
+	setPenColor "white
+	setFillColor "black
+	jumpForward penSize / 2
+	isoTriangle :triWidth1 :triHeight1
+	jumpBackward penSize / 2
+	setPenSize 0
+	setFillColor "#fcd116
+	isoTriangle :triWidth :height * 0.4120167
+	setTurtleState :oldState
+end
+
+setScreenColor "#888
+saintLuciaFlag 100

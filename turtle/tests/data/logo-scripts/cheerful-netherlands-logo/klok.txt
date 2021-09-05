@@ -1,0 +1,70 @@
+' Huidige tijd
+$uren=1
+$minuten=0
+$seconden=0
+
+TURTLEUIT
+
+' Teken klok cijfers
+$i=90
+$uur=12
+HERHAAL 12
+	$x=COS(RAD($i))*100
+	$y=SIN(RAD($i))*100
+	$i=$i-30
+	ZETTURTLE $x $y 90
+	SCHRIJF $uur
+	$uur=($uur+1)%12
+DOE
+
+' Laat de klok lopen...
+ZOLANG 1
+	$urenHoek=($uren*60+$minuten)/2
+	$minutenHoek=($minuten*60+$seconden)/10
+	$secondenHoek=$seconden*6
+
+	' Teken wijzers
+	PEN ZWART 4
+	ZETTURTLE 10 10 0
+	RECHTS $urenHoek
+	VOORUIT 50
+
+	ZETTURTLE 10 10 0
+	RECHTS $minutenHoek
+	VOORUIT 80
+
+	PEN ROOD 2
+	ZETTURTLE 10 10 0
+	RECHTS $secondenHoek
+	VOORUIT 80
+
+	WACHT 1
+
+	' Wijzers weghalen
+	PEN WIT 8
+	ZETTURTLE 10 10 0
+	RECHTS $urenHoek
+	VOORUIT 50
+
+	ZETTURTLE 10 10 0
+	RECHTS $minutenHoek
+	VOORUIT 80
+
+	ZETTURTLE 10 10 0
+	RECHTS $secondenHoek
+	VOORUIT 80
+
+	' Update de tijd
+	$seconden=$seconden+1
+	ALS $seconden=60
+		$seconden=0
+		$minuten=$minuten+1
+		ALS $minuten=60
+			$minuten=0
+			$uren=$uren+1
+			ALS $uren=12
+				$uren=0
+			EINDALS
+		EINDALS
+	EINDALS
+DOE

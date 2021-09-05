@@ -1,0 +1,63 @@
+to drawTriangles :height :smallerTriangleColor
+	localmake "oldState turtleState
+	localmake "width :height * 3 / 2
+	localmake "leftShift :height * 0.47958367
+	localmake "largeHeight :height * 0.81972245
+	localmake "verticalGap :height * 0.07211113
+	setPenSize 0
+	setFillColor "#ffcd00
+	jumpLeft :leftShift
+	polyStart
+	jumpRight :leftShift + :width / 2
+	jumpForward :largeHeight
+	polyEnd
+
+	; Draw the smaller triangle.
+	setFillColor :smallerTriangleColor
+	jumpBackward :verticalGap
+	polyStart
+	jumpBackward :largeHeight - :verticalGap
+	jumpLeft :width / 2 + :height * 0.37141717
+	polyEnd
+	setTurtleState :oldState
+end
+
+to drawStars :flagHeight
+	localmake "width :flagHeight * 3 / 2
+	localmake "separation :flagHeight * 0.69328
+	jumpForward :flagHeight / 2
+	left arcTan :flagHeight / :width
+	jumpBackward :flagHeight * 0.0133
+	jumpRight :separation / 2
+	setPenSize 0
+	setFillColor "white
+	repeat 2 [
+		regularStar :flagHeight * 0.1395 5
+		jumpLeft :separation
+	]
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Saint_Kitts_and_Nevis#/media/File:Flag_of_Saint_Kitts_and_Nevis.svg
+; There is a construction sheet at:
+; https://www.crwflags.com/fotw/images/k/kn'.gif
+; I didn't follow the construction sheet because some details like
+; 33.69 degrees appear to be rounded without indicating that.
+; The exact angle most-likely is: arcTan 2 / 3.
+to saintKittsAndNevisFlag :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "width :height * 3 / 2
+	stripes :width :height ["black]
+	drawTriangles :height "#c8102e
+	jumpForward :height
+	right 180
+	drawTriangles :height "#009739
+	jumpTo :oldPos
+	setHeading :oldHeading
+	drawStars :height
+	setTurtleState :oldState
+end
+
+saintKittsAndNevisFlag 100

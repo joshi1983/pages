@@ -1,0 +1,45 @@
+; This is used for help on
+; the isoTriangle
+; Exported as SVG to:
+; content/help/commands/images/isoTriangle.svg
+
+setScreenColor transparent
+setFillColor "green
+make "widthColor "red
+make "heightColor "blue
+make "width 30
+make "height 40
+make "separation 100
+isoTriangle :width :height
+make "oldPenSize penSize * 2
+setPenColor :widthColor
+setPenSize :width
+setLineCap "butt
+jumpBackward :oldPenSize / 2
+forward :oldPenSize
+
+setPenColor :heightColor
+setPenSize :oldPenSize
+jumpBackward :oldPenSize / 2
+forward :height
+
+jumpRight :width * 0.6
+setFontSize 12
+setPenSize 0
+jumpBackward :height / 2
+make "labelSeparation fontSize * 1.1
+right 90
+setFillColor :heightColor
+label ["height :height]
+jumpRight :labelSeparation
+setFillColor :widthColor
+label ["width :width]
+
+setFillColor "green
+setY 0
+setHeading 0
+jumpRight :separation
+isoTriangle :height * 2 :height
+
+jumpRight :separation * 0.5
+isoTriangle :height * 0.1 :height

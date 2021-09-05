@@ -1,0 +1,187 @@
+make "skinColor "#f7c9af
+make "darkHairColor "#6a462c
+make "beardColor "#cc9181
+
+to drawBackgroundAndShirt :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "shapesInfo [
+		["#c43ff8 [[0.5 0.765 90 -20 1] [-0.5 0.67 -85 40 1]]]
+		["#9d23e0 [[0.5 0.22 90 -20 0.5] [-0.5 0.269 -65 40 0.45]]]
+		["#7607ac [[-0.5 0.124 -30 95 0.335]]]
+	]
+	stripes :height :height ["#ca56f7]
+	setPenSize 0
+	repeat count :shapesInfo [
+		localmake "shapeInfo item repcount :shapesInfo
+		setFillColor first :shapeInfo
+		localmake "subshapes last :shapeInfo
+		repeat count :subshapes [
+			localmake "subshapeInfo item repcount :subshapes
+			localmake "arcRadius :height * last :subshapeInfo
+			polyStart
+			jumpLeft :height * first :subshapeInfo
+			jumpForward :height * item 2 :subshapeInfo
+			right item 3 :subshapeInfo
+			arcLeft (item 4 :subshapeInfo) :arcRadius
+			polyEnd
+			jumpTo :oldPos
+			setHeading :oldHeading
+		]
+	]
+	polyStart
+	jumpLeft :height * 0.467
+	arcRight 170 :height * 0.295
+	polyEnd
+	setTurtleState :oldState
+end
+
+to drawNeck :height
+	localmake "oldState turtleState
+	localmake "thickness :height * 0.28
+	jumpForward :height * 0.275
+	jumpRight :height * 0.064
+	setPenSize 0
+	setFillColor :skinColor
+	stripes :thickness :height * 0.2 [:skinColor]
+	ellipse :thickness / 2 :height * 0.09
+	setTurtleState :oldState
+end
+
+to drawTopHair :height
+	localmake "oldState turtleState
+	jumpForward :height * 0.45
+	jumpRight :height * 0.15
+	right 90
+	setPenSize 0
+	setFillColor :darkHairColor	
+	polyStart
+	arcLines [
+		[90 0.11] [0.195] [30 0.17] [60 0.23] [0.22]
+		[30 0.23] [60 0.17] [60 0.11]
+	] :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+to drawEar :height
+	localmake "oldState turtleState
+	jumpForward :height * 0.53
+	jumpRight :height * 0.17
+	setPenSize :height * 0.12
+	setPenColor :skinColor
+	setLineCap "round
+	forward :height * 0.01
+	setTurtleState :oldState
+end
+
+to drawFaceBackground :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	setPenSize 0
+	jumpLeft :height * 0.355
+	jumpForward :height * 0.74
+	setFillColor :skinColor
+	polyStart
+	arcLines [
+	[-60 0.19] [-30 0.2] [0.04] [-60 0]
+	[60 0.12] [0.05] [-90 0.07] [0.076] [-90 0.034]
+	[90 0.034] [0.3] [-90 0] [0.3728308346899] [-70 0] [-20 0.3]
+	] :height
+	polyEnd
+	jumpTo :oldPos
+	setHeading :oldHeading
+	setFillColor "#f6c0a4
+	jumpForward :height * 0.438
+	jumpLeft :height * 0.084
+	circle :height * 0.04
+	setPenColor "#e1af96
+	setPenSize :height * 0.03
+	setLineCap "round
+	jumpLeft :height * 0.13
+	jumpForward :height * 0.02
+	left 90
+	forward :height * 0.046
+	setTurtleState :oldState
+end
+
+to drawEyes :height
+	localmake "oldState turtleState
+	localmake "eyeRadius :height * 0.033
+	localmake "eyebrowLength :eyeRadius * 2
+	localmake "eyeSeparation :height * 0.175
+	setPenSize 0
+	jumpForward :height * 0.57
+	jumpLeft :height * 0.303
+	setFillColor :darkHairColor
+	circle :eyeRadius
+	jumpRight :eyeSeparation
+	circle :eyeRadius
+	jumpForward :height * 0.089
+	setLineCap "round
+	setPenColor :beardColor
+	setPenSize :height * 0.025
+	jumpRight :eyebrowLength / 2
+	left 90
+	forward :eyebrowLength
+	jumpLeft :height * 0.025
+	jumpForward :eyeSeparation - :eyebrowLength
+	forward :eyebrowLength
+	setTurtleState :oldState
+end
+
+to drawBeardAndMustache :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "lipAngle 60
+	jumpForward :height * 0.578
+	jumpRight :height * 0.036
+	setPenSize 0
+	setFillColor :beardColor
+	; beard
+	polyStart
+	arcLines [[-0.082] [180 0] [-90 0.122] [0.25642535]
+	[106 0]] :height
+	localmake "cornerPos pos
+	arcLines [[74 0.18]
+	[0.1985] [90 0.175] [0.15938527595]] :height
+	polyEnd
+	; mustache
+	jumpTo :cornerPos
+	setHeading :oldHeading
+	jumpRight :height * 0.06
+	right 90
+	setPenSize :height * 0.095
+	setPenColor :beardColor
+	setLineCap "round
+	forward :height * 0.1
+	jumpLeft :height * 0.015
+	setPenSize 0
+	setFillColor :skinColor
+	right 180 - :lipAngle
+	polyStart
+	arcRight :lipAngle * 2 :height * 0.063
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by logo at
+; https://www.youtube.com/user/universetoday
+; He is an engineer turned journalist who
+; gives regular reporting on space-related
+; news.
+to fraserCainLogo :height
+	localmake "oldState turtleState
+	drawBackgroundAndShirt :height
+	drawNeck :height
+	drawTopHair :height
+	drawFaceBackground :height
+	drawBeardAndMustache :height
+	drawEyes :height
+	drawEar :height
+	setTurtleState :oldState
+end
+
+fraserCainLogo 100

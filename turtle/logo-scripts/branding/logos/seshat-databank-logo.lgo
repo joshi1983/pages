@@ -1,0 +1,74 @@
+make "outerArcRadiusRatio 0.592
+make "seshatBrown "#7f4f40
+
+to drawOuterArc :height
+	localmake "oldState turtleState
+	localmake "outerArcRadius :height * :outerArcRadiusRatio
+	localmake "innerArcRadius :height * 0.566
+	localmake "outerGapAngle 9
+	localmake "outerArcAngle1 2 * (90 + arcSin (:height - :outerArcRadius) / :outerArcRadius)
+	localmake "outerArcAngle2 :outerArcAngle1 - 2 * :outerGapAngle
+	localmake "baseWidth :outerArcRadius * 2 * sin :outerArcAngle2 / 2
+	localmake "innerArcAngle 180 + 2 * arcCos :baseWidth / 2 / :innerArcRadius
+	jumpLeft :outerArcRadius * sin :outerArcAngle1 / 2
+	left :outerArcAngle1 / 2 - 90
+	setPenSize 0
+	arcRight :outerGapAngle :outerArcRadius
+	setFillColor :seshatBrown
+	polyStart
+	arcRight :outerArcAngle2 :outerArcRadius
+	right 180 - (:outerArcAngle2 - :innerArcAngle) / 2
+	arcLeft :innerArcAngle :innerArcRadius
+	polyEnd
+	setTurtleState :oldState
+end
+
+to fillLeafShape :height
+	localmake "oldState turtleState
+	localmake "arcsInfo [[-90 0] [65 0.03] [18 0.5] [7 3] [10.9526 1] 
+	[8.215828 2] [70.831572 0]]
+	polyStart
+	arcLines :arcsInfo :height
+	arcLines reverse :arcsInfo :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+to tanScaleAngle :angle :scaleFactor
+	localmake "dx cos :angle
+	localmake "dy sin :angle
+	output arcTan2 :dx :dy * :scaleFactor
+end
+
+; Inspired by logo at
+; https://en.wikipedia.org/wiki/Seshat_(project)#/media/File:Seshat_Logo.png
+; You can learn more about the Seshat project at:
+; https://en.wikipedia.org/wiki/Seshat_(project)
+to seshatLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "leafLength :height * 0.5
+	localmake "innerGap :height * 0.018
+	localmake "seshatWheatColor "#bd922d
+	localmake "seshatRed "#eb632d
+	localmake "colors [:seshatBrown :seshatWheatColor "#c9bf9d :seshatBrown
+	:seshatRed transparent :seshatWheatColor :seshatRed]
+	drawOuterArc :height
+	jumpForward :height - :height * :outerArcRadiusRatio - :height * 0.02
+	setPenSize 0
+	localmake "center pos
+	repeat count :colors [
+		localmake "angleOffset (repcount - 2) * 360 / count :colors
+		localmake "angleOffset tanScaleAngle :angleOffset 0.9
+		setHeading :oldHeading - :angleOffset
+		setFillColor item repcount :colors
+		jumpForward :innerGap
+		fillLeafShape :leafLength
+		left 360 / count :colors
+		jumpTo :center
+	]
+
+	setTurtleState :oldState
+end
+
+seshatLogo 100

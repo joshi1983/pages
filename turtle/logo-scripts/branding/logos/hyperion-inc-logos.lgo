@@ -1,0 +1,116 @@
+; This shows a few different versions of the Hyperion Inc logo
+; from:
+; https://www.hyperion.inc
+
+to hyperionIncLogo :height :color
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "thickness :height * 0.035
+	localmake "bracketWidth :height * 0.32
+	localmake "bracketWidth1 :bracketWidth - :thickness
+	localmake "bracketGap :height * 0.192
+	stripes :thickness :height [:color]
+	jumpForward :height * 0.515
+	; not exactly 0.5 because the logo is slightly asymmetric
+	; when I traced it from a screenshot of the web page
+
+	localmake "center pos
+	setPenSize 0
+	setFillColor :color
+	repeat 2 [
+		setHeading :oldHeading + 90 + repcount * 360 / 2
+		jumpForward :bracketGap
+		stripes :bracketWidth :thickness [:color]
+		jumpLeft :bracketWidth1 / 2
+		repeat 2 [
+			localmake "sign sign repcount - 1.5
+			parallelogram :thickness :height * 0.2 30 * :sign
+			jumpRight :bracketWidth1
+		]
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+; This version was shown on the exterior of a building
+; in one of the videos on their website.
+;
+; A similar version but without the central cross bar 
+; is shown behind the executives in a video at:
+; https://www.hyperion.inc/company
+; The :crossBar? parameter specifies whether you want it drawn or not.
+to hyperionIncLogo2 :height :crossBar? :color
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "thickness :height * 0.045
+	localmake "bracketGap :height * 0.27
+	localmake "bracketHeight :height * 0.5
+	setPenSize 0
+	setFillColor :color
+	jumpForward :height / 2
+	rect :thickness :height
+	localmake "center pos
+	if :crossBar? [
+		rect :bracketGap * 2 :thickness
+	]
+	repeat 2 [
+		setHeading :oldHeading + 90 + repcount * 360 / 2
+		jumpForward :bracketGap
+		rect :bracketHeight :thickness
+		jumpBackward :thickness / 2
+		jumpLeft :bracketHeight / 2
+		repeat 2 [
+			stripes :thickness :bracketGap [:color]
+			jumpRight :bracketHeight			
+		]
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by the logo appearing at the top of the page at:
+; https://www.hyperion.inc as I write this code.
+to hyperionIncHeaderLogo :height
+	hyperionIncLogo :height "white
+end
+
+; This is similar to the favicon(browser tab icon) at:
+; https://www.hyperion.inc
+to hyperionIncLogoOnWhite :height
+	localmake "oldState turtleState
+	localmake "innerHeight :height * 0.9
+	stripes :height :height ["white]
+	jumpForward (:height - :innerHeight) / 2
+	hyperionIncLogo :innerHeight "black
+	setTurtleState :oldState
+end
+
+; Inspired by a version of the logo shown on a wall in 
+; one of their offices in a video on their website
+to hyperionIncHexagonLogo :height
+	localmake "oldState turtleState
+	localmake "innerHeight :height * 0.63
+	setPenColor "white
+	setPenSize :height * 0.025
+	setLineJoinStyle "miter
+	setFillColor transparent
+	jumpForward :height / 2
+	regularPolygon (:height - penSize / cos 30) / 2 6
+	jumpBackward :innerHeight / 2
+	hyperionIncLogo2 :innerHeight true penColor
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+make "height 100
+make "separation :height * 2.5
+jumpLeft :separation * 2
+hyperionIncHeaderLogo :height
+jumpRight :separation
+hyperionIncLogo2 :height false "white
+jumpRight :separation
+hyperionIncLogo2 :height true "white
+jumpRight :separation
+hyperionIncHexagonLogo :height
+jumpRight :separation
+hyperionIncLogoOnWhite :height

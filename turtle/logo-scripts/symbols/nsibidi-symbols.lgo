@@ -1,0 +1,266 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Nsibidi#/media/File:Nsibidi_umbrella.jpg
+to nativeUmbrella :height
+	localmake "oldState turtleState
+	setPenSize :height * 0.08
+	localmake "outerRadius (:height - penSize) / 2
+	localmake "innerRadius :height * 0.18
+	localmake "numLines 8
+	setFillColor transparent
+	jumpForward :height / 2
+	localmake "center pos
+	circle :outerRadius
+	circle :innerRadius
+	right 180 / :numLines
+	repeat :numLines [
+		jumpForward :innerRadius
+		forward :outerRadius - :innerRadius
+		jumpTo :center
+		right 360 / :numLines
+	]
+	setFillColor penColor
+	setPenSize 0
+	circle :height * 0.04
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Nsibidi#/media/File:Nsibidi_moon.jpg
+to moon :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "outerHeight :height * 0.155
+	localmake "innerRadius :height / 2 - :outerHeight
+	localmake "numOuterShapes 16
+	localmake "outerLen :height * pi / :numOuterShapes / 2.5
+	setPenSize :height * 0.04
+	jumpForward :height / 2
+	localmake "center pos
+	setLineCap "round
+	repeat :numOuterShapes [
+		setHeading :oldHeading + repcount * 360 / :numOuterShapes
+		jumpForward :innerRadius
+		forward :outerHeight - penSize / 2
+		right 90
+		jumpBackward :outerLen / 2
+		forward :outerLen
+		jumpTo :center
+	]
+	setFillColor transparent
+	circle :innerRadius
+	setHeading :oldHeading + 45
+	repeat 2 [
+		jumpBackward :innerRadius
+		forward :innerRadius * 2
+		jumpTo :center
+		right 90
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Nsibidi#/media/File:Nsibidi_tortoise.jpg
+to tortoise :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "baseSeparation :height * 0.4
+	localmake "baseHeight :height * 0.08
+	localmake "middleHeight :height * 0.602
+	localmake "circleRadius :height * 0.12
+	localmake "legAngle 80
+	setLineCap "round
+	setLineJoinStyle "round
+	setPenSize :height * 0.04
+	jumpLeft :baseSeparation / 2
+	jumpForward penSize / 2
+	forward :baseHeight
+	right 90
+	forward :baseSeparation
+	left 90
+	backward :baseHeight
+	jumpLeft :baseSeparation / 2
+	forward :middleHeight
+	right 90
+	circleLeft :circleRadius
+	jumpLeft :circleRadius
+	localmake "center pos
+	repeat 2 [
+		setHeading :oldHeading + (repcount - 0.5) * 180 - :legAngle / 2
+		repeat 2 [
+			localmake "heading1 heading
+			jumpForward :circleRadius
+			forward :height * 0.25
+			left 90 * sign repcount - 1.5
+			forward :height * 0.08
+			setHeading :heading1
+			jumpTo :center
+			right :legAngle
+		]
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Nsibidi#/media/File:Nsibidi_name_written.jpg
+to nsibidi :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "upperLeftLength :height * 0.425
+	localmake "shortLen :height * 0.12
+	setPenSize :height * 0.045
+	setLineJoinStyle "round
+	setLineCap "round
+	jumpForward :height * 0.802
+	jumpLeft :height * 0.64
+	right 66
+	localmake "startHeading heading
+	localmake "startPos pos
+	forward :upperLeftLength
+	right 107
+	forward :height * 0.96
+	left 112
+	forward :height * 0.77
+	left 83
+	jumpBackward :shortLen / 2
+	forward :shortLen
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.641
+	jumpRight :height * 0.065
+	setFillColor transparent
+	circle :height * 0.1
+	jumpBackward :height * 0.35
+	jumpRight :height * 0.25
+	left 25
+	arcRight 188 :height * 0.06
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.185
+	jumpRight :height * 0.338
+	right 106
+	forward :height * 0.33
+	
+	jumpTo :startPos
+	setHeading :startHeading
+	jumpRight :height * 0.09
+	jumpBackward :height * 0.055
+	setFillColor penColor
+	setPenSize 0
+	repeat 4 [
+		circle :height * 0.02
+		jumpForward :height * 0.13
+	]
+	setTurtleState :oldState
+end
+
+to drawPlantainBranch :len
+	localmake "oldState turtleState
+	arcLines [[-10 5.747126]] :len
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Nsibidi#/media/File:Nsibidi_plantain.jpg
+to plantain :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "ellipseRadiusY :height * 0.03
+	localmake "ellipseRadiusX :height * 0.08
+	localmake "startAngle 45
+	localmake "branchSize :height * 0.2
+	setLineCap "round
+	setPenSize :height * 0.03
+	jumpForward penSize / 2
+	localmake "startPos pos
+	forward :height - penSize - :ellipseRadiusY * 2
+	jumpForward :ellipseRadiusY
+	setFillColor penColor
+	ellipse :ellipseRadiusX :ellipseRadiusY
+	jumpTo :startPos
+	setPenSize penSize * 0.8 ; branches look a little more thin.
+	repeat 4 [
+		setHeading :oldHeading - :startAngle
+		drawPlantainBranch :branchSize
+		right :startAngle * 2
+		drawPlantainBranch -:branchSize
+		setHeading :oldHeading
+		jumpForward :height * 0.19
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Nsibidi#/media/File:Nsibidi_matchet.jpg
+to matchet :height
+	localmake "oldState turtleState
+	localmake "cornerRadius :height * 0.03
+	setPenSize 0
+	setFillColor penColor
+	jumpForward :height / 2
+	roundRect :height * 0.14 :height :cornerRadius
+	jumpForward :height * 0.22
+	roundRect :height * 0.45 :height * 0.13 :cornerRadius
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Nsibidi#/media/File:Nsibidi_welcome.jpg
+to welcome :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	setPenSize :height * 0.06
+	setLineCap "round
+	jumpForward penSize / 2
+	left 48
+	arcsRight [[30 0.75] [40 0.55] [26 0.65]] :height
+	setHeading :oldHeading
+	jumpTo :oldPos
+	jumpForward :height * 0.226
+	jumpRight :height * 0.205
+	left 52
+	arcLines [[-85 0.26] [0.18]] :height
+	
+	setHeading :oldHeading
+	jumpTo :oldPos
+	jumpForward :height * 0.48
+	jumpRight :height * 0.11
+	left 65
+	setPenSize penSize * 0.7
+	arcLines [[0.03] [-80 0.18] [-30 0.2]] :height
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Nsibidi#/media/File:Nsibidi_big_drum.jpg
+to bigDrum :height
+	localmake "oldState turtleState
+	localmake "radius :height * 0.15
+	setPenSize :height * 0.08
+	jumpForward penSize / 2
+	setFillColor penColor
+	forward :height - penSize - :radius
+	circle :radius
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 2
+jumpLeft :separation * 3.5
+nativeUmbrella :height
+jumpRight :separation
+moon :height
+jumpRight :separation
+tortoise :height
+jumpRight :separation
+nsibidi :height
+jumpRight :separation
+plantain :height
+jumpRight :separation
+matchet :height
+jumpRight :separation
+welcome :height
+jumpRight :separation
+bigDrum :height

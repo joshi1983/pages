@@ -1,0 +1,37 @@
+; Inspired by logo at:
+; https://www.hypedc.com/au/
+to hypeDCLogo :height :color
+	localmake "oldState turtleState
+	localmake "thickness :height * 0.02
+	localmake "radius (:height - :thickness) / 2
+	localmake "factors [0.29 0.7]
+	setPenColor :color
+	setPenSize :thickness
+	setFillColor transparent
+	jumpForward :height / 2
+	circle :radius
+	repeat 2 [
+		repeat count :factors [
+			ellipse :radius :radius * item repcount :factors
+		]
+		right 90
+	]
+	setTurtleState :oldState
+end
+
+to hypeDCLogoOnBlack :height
+	localmake "oldState turtleState
+	localmake "innerHeight :height * 0.8
+	stripes :height :height ["black]
+	jumpForward (:height - :innerHeight) / 2
+	hypeDCLogo :innerHeight "white
+
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 5
+jumpLeft :separation / 2
+hypeDCLogo :height "black
+jumpRight :separation
+hypeDCLogoOnBlack :height

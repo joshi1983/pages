@@ -1,0 +1,72 @@
+to drawLegs :vOffset :maxVOffset :footSeparation
+	localmake "oldState turtleState
+	localmake "y :maxVOffset + :vOffset
+	localmake "x :footSeparation / 2
+	localmake "arcAngle 4 * arcTan2 :x :y
+	localmake "chordLength1 hypot [:y :x]
+	localmake "arcRadius :chordLength1 / 2 / sin (:arcAngle / 4)
+	localmake "footSize 1.8
+	localmake "pantColor "#3f474e
+	setFillColor :pantColor
+	setPenSize 0 
+	jumpForward 66
+	jumpRight 4.5
+	circle 2
+	jumpBackward 1 + :y
+	jumpLeft :footSeparation / 2
+	setFillColor "black
+	circle :footSize
+	localmake "startFootPos pos
+	jumpRight :footSeparation
+	circle :footSize
+	left 90 - :arcAngle / 2
+	setPenSize 3
+	setPenColor :pantColor
+	ifelse :arcAngle < 0.001 [
+		setPos :startFootPos
+	] [
+		arcLeft :arcAngle :arcRadius
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by 2 things.
+;
+; One is a very mathematical animation involving a circlular arc at:
+; https://www.facebook.com/share/v/18xHphEwVj/
+;
+; The second inspiration was a commercial for Volvo trucks at:
+; https://www.youtube.com/watch?v=M7FIvfx5J10
+make "minSeparation 27
+make "t interpolateRatio easeInOut animation.clampedTimeRatio
+make "separationOffset :t * 16
+make "separation :minSeparation + :separationOffset
+make "maxVOffset 14
+make "vOffset mix -:maxVOffset 0 :t
+make "height 100
+image :height * 1268 / 582 :height 'weblogo://logo-scripts/images/volvo-trucks-commercial/background.jpg'
+jumpTo [-:separationOffset / 2 0]
+image :height * 845 / 582 :height 'weblogo://logo-scripts/images/volvo-trucks-commercial/truck1.png'
+
+jumpTo [:separationOffset / 2 0]
+image :height * 845 / 582 :height 'weblogo://logo-scripts/images/volvo-trucks-commercial/truck2.png'
+
+jumpTo [0 :vOffset]
+drawLegs :vOffset :maxVOffset :separationOffset + 20 
+image :height * 845 / 582 :height 'weblogo://logo-scripts/images/volvo-trucks-commercial/van-damme.png'
+
+to animation.snapshotstyle
+	output createPList2 [
+		["position.y 50]
+		["zoom.scale 5.5]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 10
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

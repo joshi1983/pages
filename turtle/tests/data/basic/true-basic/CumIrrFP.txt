@@ -1,0 +1,19 @@
+!
+!  CUMIRRFP.  Make and show a cumulative "irregular" frequency dataset.
+!  Hospital Utilization Rate, 1976, by age.
+!  Source: Statistical Abstracts of the United States, 1978.
+!
+LIBRARY "Stat2Lib.trc"
+
+DIM int$(8),count(8),freq(0,0),f1(0,0)
+
+MAT READ int$,count
+DATA 0:.99, 1:4, 5:14, 15:24, 25:34, 35:44, 45:64, 65:100
+DATA 621, 1112, 2011, 5539, 5273, 3460, 8444, 7912
+
+CALL SetText ("Hospital Usage - 1976", "Age Range", "Patients")
+
+CALL TableToFreq (int$(), count(), freq(,))      ! Convert to freq table
+CALL PlotCumFPFromFreq (freq(,), 10, 1, "")      ! Plot frequency polygon
+
+END

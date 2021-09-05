@@ -1,0 +1,39 @@
+; Inspired by drawing at:
+; https://ia600104.us.archive.org/21/items/TNM_Object_Logo_programing_language_for_Macintosh_20170828_0278/TNM_Object_Logo_programing_language_for_Macintosh_20170828_0278.pdf
+to drawShape :size
+	localmake "oldState turtleState
+	localmake "gap :size * 0.4
+	localmake "squareSize :size - :gap
+	localmake "numSides 32
+	localmake "center pos
+	setPenSize :size * 0.007
+	repeat :numSides [
+		jumpRight :gap + :squareSize / 2
+		square :squareSize
+		jumpTo :center
+		rollRight 360 / :numSides
+	]
+	setTurtleState :oldState
+end
+
+make "timeRatio animation.timeRatio
+pitchUp 30
+left 20
+pitchUp 10
+rollRight :timeRatio * 360
+drawShape 100
+
+to animation.snapshotstyle
+	output createPList2 [
+		["zoom.scale 3]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 10
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

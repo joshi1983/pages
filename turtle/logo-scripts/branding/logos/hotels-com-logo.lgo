@@ -1,0 +1,57 @@
+; Inspired by logo in
+; https://en.wikipedia.org/wiki/Hotels.com#/media/File:Hotels.com_Logo_2023.svg
+; The logo is also used at:
+; https://hotels.com
+to hotels.comLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "squareSize :height * 0.125025
+	localmake "cornerRadius1 :height * 0.013
+	localmake "squareSeparation :height * 0.215
+	localmake "angle1 135.2
+	localmake "angle2 180 - :angle1
+	localmake "cornerRadius2 :height * 0.0106
+	localmake "cornerRadius3 :height * 0.027
+	localmake "cornerRadius4 :height * 0.0643
+	localmake "size1 :height * 0.528
+	localmake "size2 :height * 0.1385
+	localmake "size3 :size1 + :height * 0.0136 - :cornerRadius4
+	setPenSize 0
+	setFillColor "#EF3346
+	jumpForward :height / 2
+	roundRect :height :height :height * 0.21
+
+	; Draw the 3 little squares/windows.	
+	setFillColor "black
+	jumpLeft :height * 0.206731
+	jumpForward :height * 0.009
+	roundRect :squareSize :squareSize :cornerRadius1
+	jumpRight :squareSeparation
+	setFillColor "#FDDB32
+	roundRect :squareSize :squareSize :cornerRadius1
+	jumpBackward :squareSeparation
+	setFillColor "black
+	roundRect :squareSize :squareSize :cornerRadius1
+
+	; Draw hotel building shadow
+	jumpTo :oldPos
+	jumpForward :height * 0.6968
+	jumpRight :height * 0.196
+	polyStart
+	jumpLeft :size1
+	left 90
+	arcRight :angle1 :cornerRadius2
+	jumpForward :size2
+	arcRight :angle2 :cornerRadius3
+	jumpForward :size3
+	arcRight 90 :cornerRadius4 ; contains point of symmetry
+	jumpForward :size3
+	arcRight :angle2 :cornerRadius3
+	jumpForward :size2
+	arcRight :angle1 :cornerRadius2
+	polyEnd
+
+	setTurtleState :oldState
+end
+
+hotels.comLogo 100

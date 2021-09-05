@@ -1,0 +1,117 @@
+to drawBeak :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "arcAngle 45
+	localmake "lines1 [
+		[90 0] [-:arcAngle 1]
+		[:arcAngle - 180 0]
+		[sin :arcAngle]
+	]
+	localmake "lines2 [
+		[-90 0] [37 0.4] [-121 0] [252 0.089]
+		[-40 0.44] [52 0.117383]
+	]
+	localmake "shadowLines1 [
+		[-90 0] [-45 0.05] [55 0.18]
+		[140 0] [-20 0.6] [50 0] [0.0342646]
+	]
+	setFillColor "#c1661d
+	setPenColor "black
+	setPenSize :height * 0.04
+	setLineJoinStyle "round
+	jumpForward penSize / 2
+	drawArcLineShape [0 0
+		combine :lines1 reverse :lines1
+	] :height * 0.53
+
+	jumpTo :oldPos
+	setFillColor "#eda02c
+	setLineJoinStyle "round
+	drawArcLineShape [0 0.095
+		combine :lines2 reverse :lines2
+	] :height
+	jumpForward :height * 0.176
+	localmake "center pos
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		jumpRight :sign * :height * 0.242
+		right :sign * 90
+		forward :height * 0.085
+		jumpTo :center
+		setHeading :oldHeading
+	]
+	; Draw shadow that will come from the glasses.
+	jumpTo :oldPos
+	setPenSize 0
+	setFillColor "#c2641c
+	drawArcLineShape [0 0.298
+		combine :shadowLines1 reverse :shadowLines1
+	] :height
+
+	setTurtleState :oldState
+end
+
+to drawEyes :height
+	localmake "oldState turtleState
+	localmake "eyeShape [0.32 0.495
+		[[125 0.02] [0.14] [128 0.013] [11 0.38]
+		[80 0.055]]
+	]
+	setPenSize 0
+	setFillColor "black
+	drawArcLineShape :eyeShape :height
+	drawArcLineShape :eyeShape -:height
+	setTurtleState :oldState
+end
+
+to drawHead :height
+	localmake "oldState turtleState
+	setPenSize :height * 0.043
+	setPenColor "black
+	setFillColor "white
+	setLineJoinStyle "miter
+	drawArcLineShape [0 0.927
+		[[180 0] [0.121] [-90 0] [92 0.38] [0.2]
+		[90 0] [0.753] [89 0] [0.2] [61.5 0.38]
+		[-23 0] [0.116] [109 0] [0.05]]
+	] :height
+	drawEyes :height
+	drawBeak :height
+
+	setFillColor "#4000
+	setPenSize 0
+	drawArcLineShape [-0.346 0.585
+		[[-45 0] [-53.5 0.5] [123 0]
+		[0.17] [150 0] [0.08] [-86 0]
+		[50 0.36]]
+	] :height
+	setTurtleState :oldState
+end
+
+to drawSafetyGlasses :height
+	localmake "oldState turtleState
+	localmake "lines1 [
+		[90 0] [0.42] [90 0] [0.1]
+		[100 0.22] [44 0.18] [-54 0.058628]
+	]
+	setPenSize :height * 0.04
+	setPenColor "black
+	setFillColor "#8fff
+	setLineJoinStyle "miter
+	drawArcLineShape [0 0.573
+		combine :lines1 reverse :lines1
+	] :height
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://www.youtube.com/@CrafterDuckDIY
+to crafterDuckDIYLogo :height
+	localmake "oldState turtleState
+	drawHead :height
+	drawSafetyGlasses :height	
+	setTurtleState :oldState
+end
+
+crafterDuckDIYLogo 100

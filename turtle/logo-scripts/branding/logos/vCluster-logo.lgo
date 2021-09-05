@@ -1,0 +1,41 @@
+make "vClusterOrange "#f60
+
+to drawCentralShapes :height :color
+	localmake "oldState turtleState
+	setPenSize 0
+	setFillColor :color
+	jumpForward :height * 0.6385
+	repeat 3 [
+		drawArcLineShape [0 0.077
+			[[90 0] [0.33] [-90 0.23] [-90 0] [0.69]]
+		] :height
+		right 360 / 3
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://www.youtube.com/@vcluster
+to vClusterLogo :height
+	localmake "oldState turtleState
+	setPenSize 0
+	jumpForward :height / 2
+	setFillColor :vClusterOrange
+	circle :height / 2
+	jumpBackward :height * 0.326
+	drawCentralShapes :height * 0.565 "white
+	setTurtleState :oldState
+end
+
+; Inspired by favicon(browser tab icon) at:
+; https://www.vcluster.com
+to vClusterFavicon :height
+	drawCentralShapes :height :vClusterOrange
+end
+
+make "height 100
+make "separation :height * 5
+jumpLeft :separation / 2
+vClusterLogo :height
+jumpRight :separation
+vClusterFavicon :height

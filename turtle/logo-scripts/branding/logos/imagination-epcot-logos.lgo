@@ -1,0 +1,60 @@
+; Inspired by logo shown at:
+; https://youtu.be/vm71LBGSUu0?t=301
+to imaginationEpcot1982Logo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "smallRadius :height * 0.16
+	localmake "thickness1 :height * 0.08
+	localmake "thickness2 :height * 0.06
+	localmake "smallRadius2 :smallRadius + (:thickness2 - :thickness1)
+	localmake "arcRadius (:height - :thickness2) / 4 + :smallRadius2 / 2
+	jumpForward :height / 2
+	setFillColor transparent
+	setPenSize :thickness1
+	setPenColor "#a92a75
+	circle (:height - penSize) / 2
+	circle :smallRadius
+	localmake "center pos
+	setPenSize :thickness2
+	repeat 4 [
+		setHeading :oldHeading - 3 + repcount * 360 / 4
+		jumpForward :smallRadius
+		left 90
+		arcLeft 180 :arcRadius
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by:
+; https://en.wikipedia.org/wiki/Imagination!_(Epcot)#/media/File:Epcot_Imagination_pavilion_modern_logo.svg
+to imaginationEpcot2019Logo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "smallRadius :height * 0.165
+	localmake "thickness :height * 0.045
+	localmake "largeRadius (:height - :thickness) / 2
+	localmake "arcRadius (:largeRadius + :smallRadius) / 2
+	setPenColor "#5f59c5
+	setPenSize :thickness
+	setFillColor transparent
+	jumpForward :height / 2
+	circle :largeRadius
+	circle :smallRadius
+	localmake "center pos
+	repeat 4 [
+		setHeading :oldHeading + repcount * 360 / 4
+		jumpForward :smallRadius
+		left 90
+		arcLeft 180 :arcRadius
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 5
+jumpLeft :separation / 2
+imaginationEpcot1982Logo :height
+jumpRight :separation
+imaginationEpcot2019Logo :height

@@ -1,0 +1,118 @@
+to rotatedHexagon :radius
+	localmake "oldState turtleState
+	setFillColor "yellow
+	left 180 / 6
+	regularPolygon :radius 6
+	setTurtleState :oldState
+end
+
+to drawGreenShapes :size1 :size2
+	localmake "oldState turtleState
+	setFillColor "#3b9063
+	jumpBackward :size2 * 3
+	jumpLeft :size1
+	repeat 3 [
+		isoTriangle :size1 :size2
+		jumpRight :size1
+	]
+	jumpForward :size2
+	right 180
+	jumpRight :size1 * 1.5
+	repeat 2 [
+		isoTriangle :size1 :size2
+		jumpRight :size1
+	]
+	jumpLeft :size1 * 1.5
+	jumpForward :size2 * 5
+	isoTriangle :size1 :size2
+	jumpRight :size1 * 1.5
+	jumpForward :size2
+	repeat 2 [
+		repeat 2 [
+			isoTriangle :size1 :size2
+			right 180
+		]
+		jumpLeft :size1 * 3
+	]
+
+	setTurtleState :oldState
+end
+
+to drawBlueShapes :size1 :size2
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	jumpForward :size2
+	jumpLeft :size1 / 2
+	setFillColor "#5991c4
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		localmake "pos1 pos
+		parallelogram :size1 :size1 :sign * 30
+		right :sign * 30
+		jumpForward :size1
+		setHeading :oldHeading
+		parallelogram :size1 :size1 :sign * 30
+			
+		setHeading :oldHeading
+		jumpTo :pos1
+		jumpRight :size1
+	]
+	jumpTo :oldPos
+	jumpForward :size2 * 5
+	localmake "pos1 pos
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		jumpLeft :sign * :size1 * 1.5
+		parallelogram :size1 :size1 :sign * 30
+		jumpForward :size2
+		left 60 * :sign
+		parallelogram :size1 :size1 30 * :sign
+		jumpForward :size2
+		right 60 * :sign
+		jumpLeft :size1 / 2 * :sign
+		repeat 2 [
+			parallelogram :size1 :size1 30 * :sign
+			jumpLeft :sign * :size1
+		]
+		setHeading :oldHeading
+		jumpTo :pos1		
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by:
+; https://ca.pinterest.com/pin/309833649360257486
+to seaTurtle :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "hexHeight :height * 2 / 9
+	localmake "hexRadius :hexHeight / 2 / cos 180 / 6
+	localmake "size1 :hexHeight / 2 / cos 30
+	localmake "size2 :hexHeight / 2
+	jumpForward :height
+	localmake "top pos
+	jumpBackward :hexHeight / 2
+	setPenSize :height * 0.0005
+	setPenColor "black
+	setFillColor "#FFEA00
+	rotatedHexagon :hexRadius
+	jumpBackward :size2 * 3
+	repeat 2 [
+		rotatedHexagon :hexRadius
+		jumpBackward :hexHeight
+	]
+	jumpForward :size2 * 3
+	jumpLeft :hexRadius + :size1 / 2
+	repeat 2 [
+		rotatedHexagon :hexRadius
+		jumpRight :hexRadius * 2 + :size1
+	]
+	jumpTo :top
+	drawGreenShapes :size1 :size2
+	jumpTo :oldPos
+	drawBlueShapes :size1 :size2
+	setTurtleState :oldState
+end
+
+seaTurtle 100

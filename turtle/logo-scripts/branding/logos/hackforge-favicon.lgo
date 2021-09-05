@@ -1,0 +1,87 @@
+; inspired by logo at
+; https://hackf.org/
+
+to hammerArm :size :direction
+	localmake "oldState turtleState
+	localmake "armLength :size
+	localmake "armLength2 :size * 0.91
+	localmake "handleThickness :size * 0.12
+	localmake "tinySize1 :size * 0.05
+	localmake "tinySize2 :tinySize1 * 0.7
+	setPenSize :size * 0.009
+	setPenColor "white
+	setFillColor "black
+	polyStart
+	jumpForward :armLength
+	left 90 * :direction
+	jumpForward :handleThickness
+	left 90 * :direction
+	jumpForward :tinySize1
+	left 55 * :direction
+	jumpForward :tinySize2
+	right 58 * :direction
+	jumpForward :armLength2
+	polyEnd
+	setTurtleState :oldState
+end
+
+to hammerHead :size :direction
+	localmake "oldState turtleState
+	setPenSize 0
+	right 90 * :direction
+	jumpForward :size * 0.1
+	setFillColor "white
+	polyStart
+	left 178 * :direction
+	jumpForward :size * 1.3
+	right 75 * :direction
+	jumpForward :size * 0.65
+	right 60 * :direction
+	jumpForward :size * 0.32
+	right 43 * :direction
+	jumpForward :size * 0.6
+	jumpLeft :size * 0.08 * :direction
+	jumpForward :size * 0.5
+	right 30 * :direction
+	jumpForward :size * 0.2
+	left 30 * :direction
+	jumpForward :size * 0.3
+	right 30 * :direction
+	jumpForward :size * 0.15
+	right 60 * :direction
+	jumpForward :size * 0.65
+	right 60 * :direction
+	jumpForward :size * 0.15
+	right 30 * :direction
+	jumpForward :size * 0.3
+	polyEnd
+	setTurtleState :oldState
+end
+
+to hammer :size :direction
+	localmake "oldState turtleState
+	localmake "armSize :size * 0.82
+	localmake "headSize :size - :armSize
+	hammerArm :armSize :direction
+	jumpForward :armSize * 0.999
+	; the 0.999 is to eliminate a tiny crack in the upper left between the hammer and head
+
+	hammerHead :headSize :direction
+	setTurtleState :oldState
+end
+
+to faviconLogo :height
+	localmake "oldState turtleState
+	localmake "hammerHeight :height * 1.5
+	setPenSize 0
+	jumpForward :height / 2
+	setFillColor "#666
+	circle :height / 2
+	jumpBackward :hammerHeight * 0.8
+	jumpRight :hammerHeight * 0.05
+	hammer :hammerHeight 1
+	setTurtleState :oldState
+end
+
+setScreenColor transparent
+faviconLogo 100

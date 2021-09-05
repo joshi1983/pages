@@ -1,0 +1,36 @@
+; Inspired by logo at:
+; https://www.filmlinc.org/
+to filmAtLincolnCenterLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "radius :height / 2
+	localmake "numSlices 40
+	localmake "arcAngle 360 * 0.62 / :numSlices
+	setPenSize 0
+	setFillColor "white
+	jumpForward :height / 2
+	localmake "center pos
+	repeat :numSlices [
+		setHeading :oldHeading + :arcAngle / 2 + 
+			(repcount + 0.5) * 360 / :numSlices
+		polyStart
+		jumpForward :radius
+		left 90
+		arcLeft :arcAngle :radius
+		polyEnd
+		jumpTo :center
+	]
+	setFillColor "black
+	circle :height * 0.064
+	repeat 5 [
+		setHeading :oldHeading + repcount * 360 / 5
+		jumpForward :height * 0.285
+		circle :height * 0.115
+		jumpTo :center
+	]
+
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+filmAtLincolnCenterLogo 100

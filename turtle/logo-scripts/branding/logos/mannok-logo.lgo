@@ -1,0 +1,45 @@
+; Inspired by image at:
+; https://mannokbuild.com
+to mannokLogo :height :middleColor :outerColor
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angle 60
+	localmake "thickness :height * 0.37
+	localmake "widthChange :thickness * 2 / tan :angle
+	localmake "width1 :height * 1.08
+	localmake "width2 :width1 - :widthChange
+	localmake "width3 :height * 0.785
+	localmake "topOffset :height * 0.35
+	setPenSize 0
+	setFillColor :middleColor
+	right :angle
+	jumpLeft :width1 / 2
+	isoTrapezoid :width1 :width2 :thickness
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height
+	localmake "top pos
+	jumpRight :topOffset
+	right :angle + 180
+	jumpLeft :width1 / 2
+	setFillColor :outerColor
+	isoTrapezoid :width1 :width2 :thickness
+
+	jumpTo :top
+	setHeading :oldHeading
+	jumpLeft :topOffset
+	right 180 - :angle
+	jumpRight :width1 - :width3 / 2
+	isoTrapezoid :width3 :width3 - :widthChange :thickness
+		
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 4
+jumpLeft :separation / 2
+mannokLogo :height "#cbdb2a "#296989
+jumpRight :separation
+mannokLogo :height "black "black

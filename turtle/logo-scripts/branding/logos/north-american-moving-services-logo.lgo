@@ -1,0 +1,37 @@
+; Inspired by logo at:
+; https://www.northamerican.com
+to northAmericanMovingServicesLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "arrowThickness :height * 0.28
+	localmake "thickness1 :arrowThickness / 2
+	localmake "radius :height / 2
+	localmake "circleSeparation 2 * sqrt :radius * :radius - :thickness1 * :thickness1
+	localmake "colors ["#ea4235 "#0167a9]
+	localmake "arrowAngle 38
+	localmake "slantedHeight :radius / cos 45
+	setPenSize 0
+	jumpForward :height / 2
+	jumpLeft :circleSeparation / 2
+	repeat 2 [
+		setFillColor item repcount :colors
+		circle :radius
+		jumpRight :circleSeparation
+	]
+	jumpLeft :circleSeparation - :radius
+	setLineCap "butt
+	setPenColor "white
+	left 90
+	setPenSize :arrowThickness
+	forward :radius * 3.25
+	setPenSize 0
+	setFillColor penColor
+	setHeading :oldHeading
+	repeat 2 [
+		parallelogram :arrowThickness * 1.15 :slantedHeight :arrowAngle * -sign repcount - 1.5
+		right 180
+	]
+	setTurtleState :oldState
+end
+
+northAmericanMovingServicesLogo 100

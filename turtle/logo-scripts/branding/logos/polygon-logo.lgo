@@ -1,0 +1,31 @@
+; Inspired by logo at:
+; https://www.polygon.com/
+to polygonLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "colorStops createPList2 [
+		[0 "#cc0792] [1 "#e90c59]
+	]
+	jumpForward :height
+	setPenSize :height * 0.03
+	localmake "height1 :height - penSize
+	setPenGradient createLinearGradient :oldPos pos :colorStops "pad
+	setLineJoinStyle "round
+	setLineCap "round
+	jumpBackward penSize / 2
+	backward :height1
+	jumpForward :height1 * 2 / 3
+	left 45
+	square :height1 / 3 / cos 45
+	left 45
+	jumpBackward :height1 / 3
+	arcLines [[2 / 3] [90 0] [1 / 3] [45 0]] :height1
+	localmake "leftBottom pos
+	forward :height1 / 3 / cos 45
+	jumpTo :leftBottom
+	left 45
+	forward :height1 / 3
+	setTurtleState :oldState
+end
+
+polygonLogo 100

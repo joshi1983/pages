@@ -1,0 +1,89 @@
+; Inspired by logo at:
+; https://en.wikipedia.org/wiki/NetWare#/media/File:NetWare_logo.svg
+;
+; This doesn't line up with the actual white Netware logo pattern perfectly.
+; The separation between points on the right side
+; are almost exactly the same in this procedure but they vary a few percentages
+; in the actual logo.
+to netwareLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "leftAngle 74.5
+	localmake "angle1 42
+	localmake "angle2 48.945
+	localmake "headingLeft :oldHeading - :leftAngle
+	localmake "leftThickness :height * 0.274
+	localmake "rightThickness :height * 0.0125
+	localmake "separation :height * 0.183
+	stripes :height * 1.84 :height ["#ed1c24]
+	jumpForward :height
+	localmake "top1 pos
+	jumpLeft 100
+	localmake "top2 pos
+
+	jumpTo :oldPos
+	jumpRight :height * 0.007096
+	localmake "startPos pos
+	left :angle1
+	jumpForward 100
+	localmake "leftPos1 pos
+	jumpTo :startPos
+	setHeading :oldHeading + :angle2
+	setPenSize 0
+	setFillColor "white
+	polyStart
+	jumpForward :height * 0.1627
+	localmake "pos1 pos
+	setHeading :headingLeft
+	jumpForward distanceToLine :startPos :leftPos1
+	polyEnd
+
+	repeat 3 [
+		setHeading :oldHeading + :angle2
+		jumpTo :pos1
+		jumpForward :separation
+		polyStart
+		jumpForward :rightThickness
+		localmake "pos1 pos
+		setHeading :headingLeft
+		jumpForward distanceToLine :startPos :leftPos1
+		setHeading towards :startPos
+		jumpForward :leftThickness
+		polyEnd
+	]
+
+	setHeading :oldHeading + :angle2
+	jumpTo :pos1
+	jumpForward :separation
+	polyStart
+	jumpForward :rightThickness
+	localmake "pos1 pos
+	setHeading :headingLeft
+	localmake "d1 distanceToLine :startPos :leftPos1
+	localmake "d2 distanceToLine :top1 :top2
+	jumpForward :d2
+	setHeading :oldHeading - 90
+	localmake "d distanceToLine :startPos :leftPos1 
+	jumpForward :d
+	setHeading towards :startPos
+	jumpForward :leftThickness - (:d1 - :d2) * (cos :leftAngle) / cos :angle1
+	polyEnd
+
+	setHeading :oldHeading + :angle2
+	jumpTo :pos1
+	jumpForward :separation
+	polyStart
+	jumpForward :rightThickness
+	setHeading :headingLeft
+	jumpForward distanceToLine :top1 :top2
+	setHeading :oldHeading - 90
+	jumpForward :height * 0.39
+
+	polyEnd
+
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+netwareLogo 100

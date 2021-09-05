@@ -1,0 +1,30 @@
+; Inspired by logo at
+; https://commons.wikimedia.org/wiki/File:Mastercard-logo.svg
+to mastercardLogo :height
+	localmake "oldState turtleState
+	localmake "colors ["#EB001B "#F79E1B]
+	localmake "separation :height * 0.62
+	localmake "radius :height / 2
+	localmake "arcAngle 2 * arcCos :separation / 2 / :radius
+	setPenSize 0
+	jumpForward :height / 2
+	localmake "center pos
+	repeat 2 [
+		setFillColor item repcount :colors
+		jumpLeft :separation / 2
+		circle :radius
+		jumpTo :center
+		right 180
+	]
+	jumpForward sqrt :radius * :radius - :separation * :separation / 4
+	left 180 - :arcAngle / 2
+	setFillColor "#FF5A00
+	polyStart
+	arcLeft :arcAngle :radius
+	left 180 - :arcAngle
+	arcLeft :arcAngle :radius
+	polyEnd	
+	setTurtleState :oldState
+end
+
+mastercardLogo 100

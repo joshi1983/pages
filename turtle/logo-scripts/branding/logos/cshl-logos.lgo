@@ -1,0 +1,127 @@
+to chordLengthAngleToRadius :chordLength :arcAngle
+	output :chordLength / 2 /  sin :arcAngle / 2
+end
+
+to drawWavyCircle :radius
+	localmake "oldState turtleState
+	localmake "thickness :radius * 0.19
+	setPenSize :radius * 0.04
+	localmake "radius :radius - (:thickness + penSize) / 2
+	localmake "numWaves 18
+	localmake "chordLength 2 * :radius * sin 360 / 2 / :numWaves
+	localmake "arcAngle 4 * arcTan :thickness / :chordLength 
+	localmake "arcAngle1 :arcAngle - 360 / :numWaves
+	localmake "arcAngle2 :arcAngle + 360 / :numWaves
+	localmake "arcRadius chordLengthAngleToRadius :chordLength :arcAngle
+	localmake "heading1 heading
+	jumpForward :radius * 0.98
+	localmake "startPos pos
+	right 90 + :arcAngle1 / 2 + 180 / :numWaves
+	repeat 2 [
+		repeat :numWaves [
+			arcLeft :arcAngle1 :arcRadius
+			arcRight :arcAngle2 :arcRadius
+		]
+		jumpTo :startPos
+		setHeading :heading1 + 90 + 180 / :numWaves
+		jumpForward :chordLength
+
+		right :arcAngle1 / 2 + 360 / :numWaves
+	]
+	setTurtleState :oldState
+end
+
+to drawC :fontHeight
+	localmake "oldState turtleState
+	setPenSize 0
+	jumpRight :fontHeight * 0.38
+	jumpForward :fontHeight * 0.08
+	polyStart
+	arcLines [[120 0] [-50 0.59] [-10 0.58] [-40 0.4] [-40 0.615]
+	[-50 0.415] [-44.5 0.72] [-95 0] [15.5 0.1] [0.085] [-50 0]
+	[0.01] [-75.5 0] [50 0.36] [80 0.37] [20 0.84] [40 0.36]
+	[30 0.36] [53.7 0.415] [-85 0] [0.01]] :fontHeight
+	polyEnd
+	setTurtleState :oldState
+end
+
+to drawS :fontHeight
+	localmake "oldState turtleState
+	setPenSize 0
+	jumpLeft :fontHeight * 0.29
+	jumpForward :fontHeight * 0.08
+	polyStart
+	arcLines [[-130 0] [40 0.34] [25 0.45] [40 0.28] [40 0.315] [35 0.17]
+	[18 0.4] [0.1] [-20 0.45] [-30 0.1] [-50 0.21] [-30 0.13] [-50 0.19]
+	[-38 0.15] [-8.5 0.4] [67 0] [0.017] [80 0] [-14.2 0.5] [78 0]
+	[30 0.31] [25 0.45] [20 0.2] [15 0.35] [30 0.21] [30 0.32] [30 0.17]
+	[15 0.5] [0.1] [-12 0.5] [-40 0.15] [-120 0.202] [-20 0.3] [-33.3 0.21]
+	[55 0] [0.014] [101 0] [-18 0.4]
+	] :fontHeight
+	polyEnd
+	setTurtleState :oldState
+end
+
+to drawH :fontHeight
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "width :fontHeight * 0.69
+	localmake "sideShape [0.064 0.02
+		[[3.5 0] [-7.4 7.5] [110 0] [-35 0.22] [112 0]
+		[-7.4 7.5] [110 0] [-35 0.22]]
+	]
+	setPenSize 0
+	jumpForward :fontHeight * 0.5
+	stripes :width :fontHeight * 0.065 [fillColor]
+	jumpTo :oldPos
+	jumpLeft :width / 2
+	repeat 2 [
+		drawArcLineShape :sideShape :fontHeight
+		jumpRight :width
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://www.cshl.edu
+; That's the website for Cold Spring Harbor Laboratory.
+;
+; The main difference between their logo and this code's drawing is
+; the wavy circle is made more symmetrical and consistent.
+; The repeating shapes in the outline are made more consistent here.
+to cshlLogo :height :fontColor :outlineColor
+	localmake "oldState turtleState
+	localmake "fontHeight :height * 0.229
+	setPenColor :outlineColor
+	jumpForward :height / 2
+	drawWavyCircle :height / 2
+	jumpLeft :height * 0.2
+	jumpBackward :fontHeight * 0.55
+	setFillColor :fontColor
+	drawC :fontHeight
+	jumpRight :height * 0.185
+	drawS :fontHeight
+	jumpRight :height * 0.205
+	drawH :fontHeight
+	setTurtleState :oldState
+end
+
+; The favicon looks similar to this at:
+; https://www.cshl.edu
+to cshlOnWhiteBackgroundLogo :height
+	localmake "oldState turtleState
+	localmake "innerHeight :height * 0.9
+	stripes :height :height ["white]
+	jumpForward (:height - :innerHeight) / 2
+	cshlLogo :innerHeight "black :cshlBlue
+	setTurtleState :oldState
+end
+
+make "cshlBlue "#004982
+setScreenColor :cshlBlue
+make "height 100
+make "separation :height * 5
+jumpLeft :separation / 2
+cshlLogo :height "white "white
+jumpRight :separation
+cshlOnWhiteBackgroundLogo :height

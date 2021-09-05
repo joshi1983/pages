@@ -1,0 +1,37 @@
+; Inspired by logo at:
+; https://software.camplife.com
+to campLifeLogo :height
+	localmake "oldState turtleState
+	localmake "cornerRadius1 :height * 0.07
+	localmake "cornerRadius2 0.02
+	localmake "angle1 58.5
+	localmake "outerLen ((1 - :cornerRadius2 * (1 + cos :angle1)) / sin :angle1)
+	localmake "height1 :height * 0.245
+	localmake "lines1 [
+		[:angle1 + 90 0] [:outerLen]
+		[180 - :angle1 :cornerRadius2] [0.287]
+		[:angle1 :cornerRadius2] [0.28] [180 - :angle1 0]
+		[0.045] [:angle1 - 180 :cornerRadius2] [0.26]
+		[180 - :angle1 0] [0.04] [:angle1 - 180 :cornerRadius2]
+		[0.176371] [-:angle1 :cornerRadius2]
+	]
+	localmake "separation :height * 1.15
+	setPenSize 0
+	setFillBlendMode "lighter
+	setFillColor "black
+	drawArcLineShape [0 1
+		combine :lines1 reverse :lines1
+	] :height	
+
+	jumpForward :height - :height1 / 2
+	roundRect :height * 1.22 :height1 :cornerRadius1	
+	jumpBackward :height * 0.5
+	jumpLeft :separation / 2
+	repeat 2 [
+		roundRect :height * 0.7 :height1 :cornerRadius1	
+		jumpRight :separation
+	]
+	setTurtleState :oldState
+end
+
+campLifeLogo 100

@@ -1,0 +1,51 @@
+// bubbleUniverse.bas — Clifford Pickover Bubble Universe
+// Ported from QB64 to pBASIC
+// Each frame increments t for animation. CTRL-C to stop.
+
+var pi     : Float = 3.14159265
+var r      : Float = 0.0
+var t      : Float = 0.0
+var u      : Float = 0.0
+var v      : Float = 0.0
+var x      : Float = 0.0
+var i      : Float = 0.0
+var j      : Float = 0.0
+var px     : Float = 0.0
+var py     : Float = 0.0
+var rr     : Float = 0.0
+var gg     : Float = 0.0
+var bb     : Float = 0.0
+var frame  : Float = 0.0
+
+pi = 3.14159265
+r  = 2.0 * pi / 235.0
+t  = rnd(1) * 4.0
+
+cls
+clr
+pen 3.0
+
+for frame = 0 to 500 step 1
+    buffer:1
+    clr
+    x = 0.0
+    for i = 0 to 249 step 1
+        for j = 0 to 249 step 1
+            u  = sin(i + v) + sin(r * i + x)
+            v  = cos(i + v) + cos(r * i + x)
+            x  = u + t
+            px = int(630.0 + 216.0 * u)
+            py = int(500.0 + 216.0 * v)
+            rr = (i * 3.0) - int(i * 3.0 / 256.0) * 256.0
+            gg = (j * 3.0) - int(j * 3.0 / 256.0) * 256.0
+            bb = 255.0 - int((i + j) / 2.0)
+            bb = bb - int(bb / 256.0) * 256.0
+            point(px, py, rr / 255.0, gg / 255.0, bb / 255.0, 1.0)
+        next j
+    next i
+    buffer
+    t = t + 0.02
+next frame
+pen 1.0
+clr
+end

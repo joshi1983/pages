@@ -1,0 +1,122 @@
+to verticalShapes :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "redSquareSize :height * 0.168
+	localmake "angle1 28.5
+	localmake "angle2 149
+	localmake "size1 :height * 0.23
+	localmake "size2 abs :size1 * (sin :angle1) / (sin :angle2 - :angle1)
+	setPenSize 0
+	repeat 2 [
+		localmake "heading1 :oldHeading + repcount * 360 / 2
+		setHeading :heading1
+		jumpForward :height * 0.04
+		left :angle1
+		setFillColor "#0c0
+		polyStart
+		jumpForward :size1
+		right :angle2
+		jumpForward :size2
+		setHeading :heading1 + (180 - (:angle2 - :angle1))
+		jumpForward :size2
+		polyEnd
+		jumpTo :oldPos
+		setHeading :heading1
+		jumpForward :height * 0.263
+		setFillColor "black
+		circle :height * 0.038
+		jumpTo :oldPos
+	]
+	setTurtleState :oldState
+	jumpBackward :redSquareSize / 2
+	stripes :redSquareSize :redSquareSize ["red]
+	jumpTo :oldPos
+	setFillColor "yellow
+	repeat 2 [
+		jumpForward :height * 0.01
+		ellipse :height * 0.02 :height * 0.047
+		jumpTo :oldPos
+		right 180
+	]
+	setTurtleState :oldState
+end
+
+to horizontalShapes :radius1
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "arcAngle 21
+	localmake "size1 :radius1 * 0.195
+	localmake "size2 2 * ((:radius1 * sin 45 - :arcAngle) - :size1)
+	localmake "size3 :radius1 * 0.275
+	localmake "size4 :radius1 * 0.313
+	repeat 2 [
+		localmake "heading1 :oldHeading + 90 + repcount * 360 / 2
+		setHeading :heading1
+		left 45
+		setFillColor "blue
+		polyStart
+		jumpForward :radius1
+		right 90
+		arcRight :arcAngle :radius1
+		setHeading :heading1
+		jumpBackward :size4
+		jumpRight :size1
+		jumpBackward :size3
+		jumpRight :size2
+		jumpForward :size3
+		jumpRight :size1
+		jumpForward :size4
+		right 90 + :arcAngle
+		arcRight :arcAngle :radius1
+		polyEnd
+
+		setFillColor "red
+		jumpTo :oldPos
+		setHeading :heading1
+		jumpForward :radius1 * 0.96
+		circle :radius1 * 0.22
+		jumpTo :oldPos
+	]
+	
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Eel_Ground_First_Nation#/media/File:Flag_of_Eel_Ground_First_Nation.svg
+to eelGroundFirstNationFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 2
+	localmake "redWidth :width * 0.8333261
+	localmake "thickness :height * 0.01
+	localmake "largeThickness :height * 0.052
+	localmake "radius1 :height * 0.347
+	localmake "radius2 :radius1 + (:thickness + :largeThickness) / 2
+	stripes :width :height ["yellow]
+	stripes :redWidth :height ["red]
+	jumpForward :height / 2
+	localmake "center pos
+	setFillColor "yellow
+	setPenSize 0
+	circle :radius1
+	verticalShapes :height
+	horizontalShapes :radius1
+	setFillColor transparent
+	setPenSize :largeThickness
+	setPenColor "yellow
+	circle :radius2
+	left 45
+	setPenSize :thickness
+	setPenColor "black
+	circle :radius1
+	repeat 2 [
+		jumpBackward :radius1
+		forward :radius1 * 2
+		jumpTo :center
+		right 90
+	]
+	setTurtleState :oldState
+end
+
+eelGroundFirstNationFlag 100

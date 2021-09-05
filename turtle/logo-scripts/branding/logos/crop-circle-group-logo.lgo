@@ -1,0 +1,30 @@
+; Inspird by logo at:
+; https://www.cropcircleaccess.com/wp-content/uploads/2022/05/logo-crop.jpg
+;
+; That was found in the footer of the website:
+; https://www.cropcircleaccess.com
+;
+; It looks like cropcirclegroup was renamed cropcircleaccess.
+to cropCircleGroupLogo :height
+	localmake "oldState turtleState
+	localmake "numInnerCircles 18
+	setFillColor transparent
+	jumpForward :height / 2
+	setPenColor "white
+	setPenSize :height * 0.022
+	circle (:height - penSize) / 2
+	setPenSize :height * 0.017
+	circle :height * 0.443
+	localmake "center pos
+	setPenSize :height * 0.01
+	repeat :numInnerCircles [
+		jumpForward :height * 0.17
+		circle :height * 0.24
+		jumpTo :center
+		right 360 / :numInnerCircles
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "#9096c8
+cropCircleGroupLogo 100

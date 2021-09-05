@@ -1,0 +1,161 @@
+; Inspired by:
+; https://www.robertharding.com/preview/1245-881/london-eye-millennium-wheel-twilight-london-england-united/
+; The animation shows the wheel rotating.
+
+to londonEyeMount :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angle 10
+	localmake "size1 :size / cos :angle
+	localmake "platformWidth :size * 0.7
+	localmake "platformHeight :size * 0.07
+
+	setPenSize :size * 0.002
+	setPenColor "black
+
+	backward :size
+	localmake "platformCentre pos
+	jumpTo :oldPos
+	setPenSize :size * 0.03
+	setPenColor "white
+	right :angle
+	backward :size1
+	jumpTo :oldPos
+	left :angle * 2
+	backward :size1
+	jumpTo :platformCentre
+	setHeading :oldHeading
+	right 90
+	jumpBackward :platformWidth * 0.5
+	setPenSize :platformHeight * 1.1
+	setPenColor "black
+	
+	forward :platformWidth
+	setPenColor "gray
+	setPenSize :platformHeight
+	backward :platformWidth	
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to londonEyeWheel :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "wheelRadius :size
+	localmake "innerRadius :wheelRadius * 0.83
+	localmake "midRadius :wheelRadius * 0.92
+	localmake "numPods 32
+	localmake "podSize :wheelRadius * 0.025
+	localmake "podSupportSize :podSize
+	localmake "outerRadius :wheelRadius - :podSize
+	localmake "podSupportRadius :outerRadius - :podSize - :size * 0.002
+	localmake "numCables 64
+
+	setPenSize :wheelRadius * 0.006
+	setPenColor "white
+	circle :innerRadius
+	circle :midRadius
+	setFillColor "white
+	setPenSize 0
+	circle :wheelRadius * 0.03
+	setPenColor "black
+	localmake "cableJoints []
+	repeat :numCables [
+		jumpTo :oldPos
+		setPenSize :wheelRadius * 0.0005
+		
+		forward :innerRadius
+		setPenSize 0
+		circle :wheelRadius * 0.01
+		queue "cableJoints pos
+		right 360 / :numCables
+	]
+	setHeading :oldHeading + 180 / :numCables
+	setPenColor "white
+	localmake "outerJoints []
+	repeat :numCables [
+		jumpTo :oldPos
+		jumpForward :midRadius
+		setPenSize 0
+		circle :wheelRadius * 0.008
+		localmake "outerJoint pos
+		localmake "point1 item repcount :cableJoints
+		localmake "point2 item (1 + remainder repcount :numCables) :cableJoints
+		setHeading towards :point1
+		
+		setPenSize :wheelRadius * 0.005
+		forward distance :point1
+		jumpTo :outerJoint
+		queue "outerJoints :outerJoint
+		setHeading towards :point2
+		forward distance :point2
+		setHeading :oldHeading + (repcount + 0.5) * 360 / :numCables
+	]
+	setFillColor "#333
+	setHeading :oldHeading
+	setPenSize 0
+	repeat :numPods [
+		jumpTo :oldPos
+		jumpForward :outerRadius
+		circle :podSize
+		right 360 / :numPods
+	]
+	setPenSize :wheelRadius * 0.002
+	repeat :numPods [
+		jumpTo :oldPos
+		jumpForward :podSupportRadius
+		right 90
+		jumpForward :podSupportSize * 0.5
+		localmake "outerJoint1 pos
+		
+		backward :podSupportSize
+		localmake "jointIndex 1 + remainder (repcount * 2 + :numCables - 3) :numCables
+		localmake "midJoint1 item :jointIndex :outerJoints
+		localmake "midJoint2 item remainder (:jointIndex + 1) :numCables :outerJoints
+		setHeading towards :midJoint1
+		forward distance :midJoint1
+		jumpTo :outerJoint1
+		setHeading towards :midJoint2
+		forward distance :midJoint2
+
+		setHeading :oldHeading + repcount * 360 / :numPods
+	]
+	setHeading :oldHeading
+	jumpTo :oldPos
+end
+
+to londonEye :size :angle
+	localmake "oldState turtleState
+
+	londonEyeMount :size
+	right :angle
+	londonEyeWheel :size
+
+	setTurtleState :oldState
+end
+
+setScreenColor "#28d
+make "displacementRatio min 1 animation.time * animation.time
+ifelse animation.time > 1 [
+	make "angle (1 + 2 * (animation.time - 1)) * 360 / 10
+] [
+	make "angle :displacementRatio * 360 / 10	
+]
+londonEye 200 :angle
+hideTurtle
+
+to animation.snapshotstyle
+	output createPList2 [
+		["zoom.scale 1.22]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 10
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end
