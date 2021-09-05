@@ -1,0 +1,39 @@
+; Inspired by logo at:
+; https://www.bbcbasic.co.uk
+to bbcBasicUKLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "size1 :height * 0.23
+	localmake "arcRadius :height * 0.42
+	jumpRight 100
+	localmake "pos1 pos
+	jumpTo :oldPos
+
+	setPenColor "lime
+	setPenSize :height * 0.09
+	setLineCap "round
+	setLineJoinStyle "round
+	jumpForward :height - penSize / 2
+	jumpLeft :height * 0.22
+	right 180
+	forward :size1
+	localmake "corner pos
+	left 90
+	forward :size1
+
+	setPenColor "#000083
+	jumpTo :corner
+	right 180
+	arcLeft 90 :arcRadius
+	forward (distanceToLine :oldPos :pos1) - penSize / 2
+	
+	jumpTo :corner
+	forward (distanceToLine :oldPos :pos1) - :arcRadius - penSize / 2
+	arcLeft 90 :arcRadius
+	left 90
+	forward :height * 0.26
+	arcRight 90 :arcRadius
+	setTurtleState :oldState
+end
+
+bbcBasicUKLogo 100

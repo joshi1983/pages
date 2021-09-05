@@ -1,0 +1,32 @@
+; Inspired by logo at:
+; https://www.facebook.com/bloombyMetDaan
+to metDaanBloomLogo :height
+	localmake "oldState turtleState
+	localmake "petal1Arcs [
+		[-12 0] [8 1.5] [13 0.25] [20 0.1] [20 0.035]
+		[20 0.02] [21 0.01379989]
+	]
+	localmake "petalShapes [
+		[0.0032 0.117
+			combine :petal1Arcs reverse :petal1Arcs
+		]
+		[0.0705 0.262
+			[[-21 0] [-16 0.45] [-31 0.12] [63 0]
+			[20 0.13] [40 0.056] [50 0.037] [38 0.07]
+			[15 0.2] [45 0] [-20 0.16] [-6 0.35]]
+		]
+	]
+	jumpForward :height / 2
+	setPenSize 0
+	setFillColor "#df7173
+	circle :height * 0.063
+
+	repeat 12 [
+		drawArcLineShapes :petalShapes :height
+		right 360 / 12
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "#f4c2c3
+metDaanBloomLogo 100

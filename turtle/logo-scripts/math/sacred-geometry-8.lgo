@@ -1,0 +1,27 @@
+; Inspired by
+; https://www.pinterest.ca/pin/612771093063665632
+to sacredGeometry8 :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	setPenSize :height * 0.03
+	localmake "radius1 (:height - penSize) / 7
+	localmake "separation :radius1 * 3
+	jumpForward :height / 2
+	jumpBackward :separation / 2
+	setFillColor transparent
+	setPenColor "black
+	repeat 2 [
+		localmake "center1 pos
+		circle :radius1
+		jumpForward :radius1 * 2
+		right 90
+		arcRight 315 :radius1 * 2
+		setHeading :oldHeading
+		jumpTo :center1
+		jumpForward :separation
+		right 180
+	]
+	setTurtleState :oldState
+end
+
+sacredGeometry8 100

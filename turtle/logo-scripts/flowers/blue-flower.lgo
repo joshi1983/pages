@@ -1,0 +1,67 @@
+to drawFlowerBloom :radius
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "colors ["#0559af "#87a6dd "#0b4282]
+	setPenSize 0
+	jumpBackward :radius * 0.35
+	localmake "endPos pos
+	repeat count :colors [
+		localmake "circleRadius :radius * mix 0.5 1 repRatio
+		setFillColor item repcount :colors
+		jumpTo mix :endPos :oldPos repRatio
+		circle :circleRadius
+	]		
+
+	setTurtleState :oldState
+end
+
+; Inspired by image at:
+; https://ca.pinterest.com/pin/563018698504508
+;
+; In case that pin becomes unavailable, 
+; it was uploaded by an account named Коля
+; https://ca.pinterest.com/ribakit3/
+to blueFlower :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "flowerRadius :height * 0.135
+	localmake "stemLength :height * 0.335
+	localmake "leafLine [
+		[-50 0] [20 0.275] [30 0.21]
+	]
+	localmake "leafShape [0.002 0.017
+		combine :leafLine reverse :leafLine
+	]
+	localmake "leafColors ["#848304 "#403f00]
+	localmake "angle 57.5
+	setPenSize :height * 0.015
+	setPenColor "#424202
+	setLineCap "butt
+	forward :height - :stemLength - :flowerRadius
+	localmake "center pos
+	left :angle
+	repeat 3 [
+		forward :stemLength * ifelse repcount = 2 1 0.865
+		drawFlowerBloom :flowerRadius
+		right :angle
+		jumpTo :center
+	]
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.25
+	setPenSize 0
+	localmake "angle 70
+	repeat 2 [
+		setHeading :oldHeading + (repcount - 1.5) * 2 * :angle
+		setFillColor item repcount :leafColors
+		drawArcLineShape :leafShape :height
+		setFillColor item 3 - repcount :leafColors
+		drawArcLineShape :leafShape -:height
+	]
+
+	setTurtleState :oldState
+end
+
+blueFlower 100

@@ -1,0 +1,37 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Google_Chrome#/media/File:Google_Chrome_icon_(February_2022).svg
+; Referenced from:
+; https://en.wikipedia.org/wiki/Google_Chrome
+
+to googleChromeLogo :radius
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "colors ["#e33b2e "#fbc116 "#229342]
+	localmake "arcAngle1 120
+	localmake "arcAngle2 360 / 3
+	localmake "radius1 :radius * 0.5
+	localmake "angle1 180
+	localmake "angle2 60
+	localmake "straightSize1 :radius * 0.86587
+	setPenSize 0
+	setFillColor "white
+	circle :radius1
+	setFillColor "#1a73e8
+	circle :radius * 0.395878
+	repeat count :colors [
+		setHeading :oldHeading + (repcount - 1) * 360 / 3
+		setFillColor item repcount :colors
+		jumpForward :radius1
+		left 90
+		polyStart
+		arcLeft :arcAngle1 :radius1
+		right :angle1
+		jumpForward :straightSize1
+		right :angle2
+		arcRight :arcAngle2 :radius
+		polyEnd
+		jumpTo :oldPos
+	]
+end
+
+googleChromeLogo 100

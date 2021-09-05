@@ -1,0 +1,27 @@
+; Inspired by logo at:
+; https://en.wikipedia.org/wiki/Dynabook_Inc.#/media/File:Dynabook_wordmark_logo.svg 
+to dynabookLogo :height
+	localmake "oldState turtleState
+	localmake "radius1 0.34
+	localmake "cornerRadius 0.03
+	localmake "len1 0.5 - :radius1 - :cornerRadius
+	localmake "lines1 [
+		[-90 :radius1] [90 0] [:len1] [90 :cornerRadius]
+		[0.938] [90 :cornerRadius] [0.5 - :cornerRadius]
+	]
+	setPenSize 0
+	setFillColor "black
+	jumpLeft :height * 0.22
+	jumpForward :height / 2
+	drawArcLineShape [0 0
+		combine :lines1 reverse :lines1
+	] :height
+	jumpRight :height * :radius1
+	circle :height * 0.12
+	jumpRight :height * 0.516
+	circle :height * 0.163
+
+	setTurtleState :oldState
+end
+
+dynabookLogo 100

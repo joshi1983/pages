@@ -1,0 +1,61 @@
+to drawPlusSymbol :height
+	localmake "r 0.05
+	localmake "straightLen (0.5 - :r * 3) / 1.5
+	localmake "lines1 [
+		[:straightLen / 2] [-90 :r] [:straightLen]
+		[90 :r] [:straightLen] [-90 :r]
+		[:straightLen / 2]
+	]
+	localmake "lines2 combine :lines1 :lines1
+	localmake "outline (combine [[-90 0]] :lines2 :lines2)
+	drawArcLineShape [0 0.5
+		:outline
+	] :height
+end
+
+; Inspired by logo at:
+; https://js-dos.com
+to jsDosLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "thickness :height / 5 / cos 45 
+	localmake "colors [
+		"#6e71d2
+		"#860d86
+	]
+	setLineCap "butt
+	setLineJoinStyle "miter
+	setPenSize :thickness
+	setPenColor "lime
+	jumpForward :height / 2
+	localmake "center pos
+	repeat count :colors [
+		setHeading :oldHeading - 45 + repcount * 180
+		setPenColor item repcount :colors
+		jumpForward penSize
+		jumpRight penSize
+		arcLines [[-90 0] [-1.5] [-90 0] [1.5]] penSize
+		jumpTo :center
+	]
+	localmake "offset1 penSize * 0.36
+	jumpForward penSize / 2 + :offset1
+	jumpLeft :offset1
+	setPenSize 0
+	setFillColor "white
+	localmake "center2 pos
+	repeat 4 [
+		jumpForward :height * 0.05
+		circle :height * 0.028
+		jumpTo :center2
+		right 360 / 4
+	]
+	jumpTo :center
+	setHeading :oldHeading - 45
+	jumpForward :thickness / 2 + :offset1
+	jumpLeft :height * 0.12
+	drawPlusSymbol :height * 0.16
+
+	setTurtleState :oldState
+end
+
+jsDosLogo 100

@@ -1,0 +1,62 @@
+make "timeRatio interpolateRatio easeInOut animation.clampedTimeRatio
+make "colors ["#A6332B "lime]
+repeat count :colors [
+	make "color item repcount :colors
+	setItem repcount "colors mix :color "white :timeRatio
+]
+make "leafColor last :colors
+make "branchingAngle mix 20 120 :timeRatio
+make "leafSize 0.5
+make "leafSquareSize :leafSize * 3
+make "maxSize 100
+make "maxBranchThickness abs 5 * :timeRatio
+
+to sierpinskiTriangleToTree :size
+	localmake "oldState turtleState
+	localmake "ratio 1 - :size / :maxSize
+	setPenColor mixItems2 :colors power :ratio 4
+	ifelse :size < :leafSize [
+		stripes :leafSquareSize :leafSquareSize [penColor] 
+	] [
+		localmake "oldPos pos
+		left :branchingAngle
+		setPenSize :maxBranchThickness * (1 - :ratio)
+		repeat 3 [
+			forward :size
+			sierpinskiTriangleToTree :size / 2
+			jumpTo :oldPos
+			right :branchingAngle
+		]
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+setLineCap "round
+setLineJoinStyle "round
+sierpinskiTriangleToTree :maxSize
+
+to animation.snapshotstyle
+	localmake "box drawing.box
+	localmake "maxY getProperty "box "maxY
+	localmake "minY getProperty "box "minY
+	localmake "maxX getProperty "box "maxX
+	localmake "minX getProperty "box "minX
+	localmake "max max (:maxY - :minY) (:maxX - :minX)
+	localmake "averageY mix :maxY :minY 0.5
+	localmake "scale 650 / :max
+	output createPList2 [
+		["position.y :averageY]
+		["zoom.scale :scale]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 5
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+		["thumbnailTime 3.02]
+	]
+end

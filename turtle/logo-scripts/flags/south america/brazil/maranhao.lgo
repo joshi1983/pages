@@ -1,0 +1,27 @@
+; Inspired by flag at:
+; https://en.wikipedia.org/wiki/Flag_of_Maranh%C3%A3o#/media/File:Bandeira_do_Maranh%C3%A3o.svg
+to maranhaoFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 3 / 2
+	localmake "cornerWidth :width / 3
+	localmake "maranhaoRed "#C53425
+	localmake "colors [:maranhaoRed]
+	repeat 2 [
+		queue2 "colors "white
+		queue2 "colors "black
+		queue2 "colors "white
+		queue2 "colors :maranhaoRed
+	]
+	stripes :width :height :colors
+	jumpForward :height / 2
+	jumpLeft (:width - :cornerWidth) / 2
+	stripes :cornerWidth :height / 2 ["#25247B]
+	jumpForward :height / 4
+	setFillColor "white
+	setPenSize 0
+	regularStar :height * 0.1875 5
+	setTurtleState :oldState
+end
+
+setScreenColor "gray
+maranhaoFlag 100

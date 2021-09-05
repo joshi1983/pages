@@ -1,0 +1,103 @@
+; This is representing both a flower petal and a
+; guitar pick(a little tool used to strike the strings)
+to drawPick :height
+	localmake "oldState turtleState
+	localmake "line1 [
+		[90 0] [-20 0.15] [-35 0.35] [-16 1.985] [-90 0.25]
+		[-19 0.964925]
+	]
+	setPenSize 0
+	setFillColor "white
+	drawArcLineShape [0 0
+		combine :line1 reverse :line1
+	] :height
+
+	setTurtleState :oldState
+end
+
+to drawFlower :height :pickSize
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "largeRadius :height * 0.196
+	setPenSize :height * 0.003
+	setLineCap "butt
+	forward :height - :largeRadius
+	localmake "center pos
+	right 90
+	repeat 7 [
+		jumpForward :largeRadius - :pickSize
+		drawPick :pickSize
+		jumpTo :center
+		left 360 / 8
+	]
+	setFillColor penColor
+	setPenSize 0
+	circle :height * 0.08
+	setHeading :oldHeading
+	jumpBackward :height * 0.368
+	left 50
+	jumpForward :height * 0.005
+	arcPair :height * 0.105 120
+	setTurtleState :oldState
+end
+
+to drawStrings :height :pickSize
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "stringSeparation :height * 0.031
+	localmake "circleSeparation :height * 0.22
+	jumpForward :height * 0.3
+	setFillColor penColor
+	setPenSize 0
+	circle :height * 0.01
+	jumpForward :height * 0.33
+	left 90
+	jumpBackward :height * 0.01
+	drawPick :pickSize
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	setPenSize :height * 0.002
+	jumpLeft :stringSeparation * 2.5
+	repeat 6 [
+		stripes penSize :height * 0.985 [penColor]
+		jumpRight :stringSeparation
+	]
+	jumpTo :oldPos
+	jumpForward :height * 0.07
+	repeat 5 [
+		stripes :height * 0.175 penSize [penColor]
+		jumpForward :height * mix 0.182 0.15 repRatio
+	]
+	jumpTo :oldPos
+	jumpForward :height * 0.805
+	setPenSize 0
+	repeat 3 [
+		localmake "middle pos
+		repeat 2 [
+			jumpRight :circleSeparation / 2 * sign repcount - 1.5
+			circle :height * 0.013
+			jumpTo :middle
+		]
+		jumpForward :height * 0.066
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://ca.pinterest.com/pin/46021227432082939
+to monstersOfFolkPoster :height
+	localmake "oldState turtleState
+	localmake "pickSize :height * 0.12
+	localmake "separation :height * 0.43
+	setPenColor "black
+	jumpLeft :separation / 2
+	drawFlower :height :pickSize
+	jumpRight :separation
+	drawStrings :height :pickSize
+	setTurtleState :oldState
+end
+
+setScreenColor "#b49859
+monstersOfFolkPoster 100

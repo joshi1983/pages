@@ -1,0 +1,41 @@
+; Inspired by logo at:
+; https://en.wikipedia.org/wiki/CK_Transit#/media/File:RideCK.png
+;
+; Also, shown at:
+; https://www.chatham-kent.ca/transit/Pages/default.aspx
+to rideCKLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	; The arc/arrow shapes are not exactly the same.
+	; This data approximates some of the differences.
+	localmake "arcs [
+		["#0084c4 4.5 176.6 74 145.7 90 0.16] 
+		["#004f78 0 170 77 138 95 0.15]
+	]
+	localmake "outerRadius :height / 2
+	localmake "innerRadius :height * 0.37
+	jumpForward :height / 2
+	setPenSize 0
+	localmake "center pos
+	repeat 2 [
+		localmake "arcInfo item repcount :arcs
+		localmake "startOffset item 2 :arcInfo
+		setHeading :oldHeading + 32 + :startOffset + repcount * 360 / 2
+		setFillColor first :arcInfo
+		jumpBackward :outerRadius
+		right 90
+		polyStart
+		arcLeft item 3 :arcInfo :outerRadius
+		left item 4 :arcInfo
+		jumpForward distanceToCircle :center :innerRadius
+		setHeading (towards :center) - 90
+		arcRight item 5 :arcInfo :innerRadius
+		right item 6 :arcInfo
+		jumpForward :height * last :arcInfo
+		polyEnd
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+rideCKLogo 100

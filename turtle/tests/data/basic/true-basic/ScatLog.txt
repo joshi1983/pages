@@ -1,0 +1,26 @@
+!
+!  SCATLOG. Show a logarithmic scatter plot.
+!
+LIBRARY "Stat2Lib.trc"
+
+DIM x(30), y(30)
+
+FOR i = 1 to 30                   ! Create exponential dataset
+    LET x(i) = i
+    LET y(i) = Exp(i/10)
+NEXT i
+
+CALL SetAxes (0)                  ! Turn off axes; on grid lines
+CALL SetGrid ("h.v.")
+
+OPEN #1: screen 0, .49, 0, 1      ! At left, show normal x/y plot
+CALL SetTitle ("Normal")
+CALL PlotScat (x, y, 10, 0, "black")
+
+OPEN #2: screen .5, 1, 0, 1       ! At right, show log plot
+CALL SetGraphType ("logy")
+CALL SetTitle ("Log-Y")
+CALL PlotScat (x, y, 10, 0, "black")
+
+END
+

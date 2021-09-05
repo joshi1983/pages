@@ -1,0 +1,26 @@
+; Inspired by
+; https://www.youtube.com/watch?v=RMTQgXEn25s
+; DJ Oamen approximates cicular paths using regular polygons with many sides.
+; Turning 2 degrees per side means he is drawing 180-sided regular polygons.
+; The following uses circles because they're more smooth and simpler shapes.
+to circularPattern :height :numColumns :numRows
+	localmake "radius (:height - penSize) / (:numRows + 1)
+	jumpForward :radius + penSize / 2
+	jumpLeft :radius * (:numColumns - 1.5)
+	repeat :numRows [
+		if even? repcount [
+			jumpLeft :radius * 2
+		]
+		repeat :numColumns [
+			circle :radius
+			jumpRight :radius * 2
+		]
+		jumpLeft :radius * 2 * :numColumns
+		jumpForward :radius
+		jumpRight :radius
+	]
+end
+
+setScreenColor "black
+setPenColor "white
+circularPattern 100 20 5

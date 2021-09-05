@@ -1,0 +1,28 @@
+; plots circles along the curve of a sin wave
+; radius and color are adjusted for an appealing effect
+
+to ratioToGray :ratio
+	localmake "ratio :ratio * 255
+	output [:ratio :ratio :ratio]
+end
+
+to waveCircles :width :height
+	localmake "numCircles 20
+	localmake "maxCircleRadius :width * 0.15 / :numCircles
+	localmake "sideStep :width / :numCircles
+	setPenSize 0
+	setFillColor "black
+	repeat :numCircles [
+		localmake "a repcount * 360 / :numCircles
+		localmake "y :height * 0.5 * sin :a
+		forward :y
+		setFillColor ratioToGray (1 + cos :a) * 0.4
+		circle :maxCircleRadius * (1.9 + cos :a)
+		backward :y
+		right 90
+		forward :sideStep
+		left 90
+	]
+end
+
+waveCircles 250 120

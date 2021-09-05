@@ -1,0 +1,57 @@
+; Copied from http://www.sonic.net/~nbs/webturtle/webturtle.cgi?file=dragon
+; Dragon - A line system fractal
+; Written for WebTurtle by
+; Geert Pante (Geert.Pante@rug.ac.be)
+; January 1999
+
+LET D 12
+LET LEN 40/D
+
+LET S 1
+
+RIGHT 90
+MOVE 80
+RIGHT 90
+MOVE 50
+RIGHT 90
+GO RIGHTDRAGON
+
+END
+
+# RIGHTDRAGON
+  IF D > 0
+    RIGHT 45
+    PUSH D
+    LET D D-1
+    GO RIGHTDRAGON
+    POP D
+    LEFT 90
+    PUSH D
+    LET D D-1
+    GO LEFTDRAGON
+    POP D
+    RIGHT 45
+  ENDIF
+  IF D = 0
+    DRAW LEN
+  ENDIF
+RETURN
+
+# LEFTDRAGON
+  IF D > 0
+    LEFT 45
+    PUSH D
+    LET D D-1
+    GO RIGHTDRAGON
+    POP D
+    RIGHT 90
+    PUSH D
+    LET D D-1
+    GO LEFTDRAGON
+    POP D
+    LEFT 45
+  ENDIF
+  IF D = 0
+    DRAW LEN
+  ENDIF
+RETURN

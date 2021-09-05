@@ -1,0 +1,115 @@
+to drawA :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "triangleHeight  :height * 0.36
+	localmake "triangleWidth :triangleHeight / cos 30
+	localmake "pAngle 28
+	localmake "heightAboveTriangle :height - :triangleHeight
+	localmake "symmetricHeightAboveTriangle :triangleWidth / 2 / tan :pAngle
+	localmake "thickness1 (:heightAboveTriangle - :symmetricHeightAboveTriangle) / 2 / (cos :pAngle)
+	localmake "thickness :thickness1 * (sin 2 * :pAngle)
+	localmake "thickness2 :thickness / cos :pAngle
+	setPenSize 0
+	setFillColor "#e11a19
+	jumpForward :triangleHeight
+	right 180
+	isoTriangle :triangleWidth :triangleHeight
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpLeft :height
+	localmake "bottomPos2 pos
+	jumpTo :oldPos
+	jumpForward :height
+	localmake "top pos
+	right 180 - :pAngle
+	setFillColor "black
+	polyStart
+	jumpForward :thickness1
+	right :pAngle * 2
+	jumpForward distanceToLine :oldPos :bottomPos2
+	setHeading :oldHeading - 90
+	jumpForward :thickness2
+	polyEnd
+
+	jumpTo :top
+	setHeading :oldHeading + 180 - :pAngle
+	jumpForward :thickness1 * 2
+	polyStart
+	localmake "len distanceToLine :oldPos :bottomPos2
+	jumpForward :len
+	setHeading :oldHeading - 90
+	jumpForward :thickness2
+	setHeading :oldHeading - :pAngle
+	jumpForward :len - :thickness1
+	polyEnd
+	setTurtleState :oldState
+end
+
+to drawN :height
+	localmake "oldState turtleState
+	localmake "widthFactor 0.73
+	localmake "width :height * :widthFactor
+	localmake "angle 49
+	localmake "len1 0.88
+	localmake "thickness1 0.04
+	localmake "thickness2 :widthFactor - :thickness1 - :len1 * cos :angle
+	localmake "lines1 [[:len1] [90 + :angle 0]
+		[:len1 * sin :angle] [-90 0] [:thickness2] [-90 0]]
+
+	jumpLeft :width / 2
+	setFillColor "black
+	setPenSize 0
+	polyStart
+	arcLines [[1] [-90 0] [:thickness1] [-:angle 0]] :height
+	arcLines :lines1 :height
+	arcLines [[1] [-:angle - 90 0]] :height
+	arcLines :lines1 :height * 1.07
+	polyEnd
+
+	setTurtleState :oldState
+end
+
+to drawY :height
+	localmake "oldState turtleState
+	localmake "thickness :height * 0.12
+	localmake "angle 35
+	localmake "overlap :height * 0.05
+	localmake "baseHeight :height * 0.49
+	localmake "slantedHeight (:height - :baseHeight) / cos :angle
+	setLineCap "butt
+	setPenColor "black
+	setPenSize :thickness
+	forward :baseHeight + :overlap
+	jumpBackward :overlap
+	setFillColor penColor
+	setPenSize 0
+	parallelogram :thickness :slantedHeight :angle
+	parallelogram :thickness :slantedHeight -:angle
+
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://www.antonioluna.org/2014/03/this-is-fantastic-tool-for-your-reading.html
+;
+; A similar logo is also at:
+; https://www.grupoanaya.es
+to anayaPublishingLogo :height
+	localmake "oldState turtleState
+	localmake "fontHeight :height
+	jumpLeft :height * 1.6
+	drawA :fontHeight
+	jumpRight :height * 0.93
+	drawN :fontHeight
+	jumpRight :height * 0.91
+	drawA :fontHeight
+	jumpRight :height * 0.68
+	drawY :fontHeight
+	jumpRight :height * 0.68
+	drawA :fontHeight
+	setTurtleState :oldState
+end
+
+anayaPublishingLogo 100

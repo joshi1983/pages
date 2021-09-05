@@ -1,0 +1,39 @@
+; Inspired by logo at:
+; https://www.facebook.com/photo/?fbid=433938012173631
+;
+; They were mentioned at:
+; https://www.cbc.ca/news/canada/newfoundland-labrador/take-2-paradigm-hyperloop-spacex-1.5188137
+to paradigmHyperloopLogo :height :color
+	localmake "oldState turtleState
+	localmake "radius :height * 0.286
+	localmake "numCircles 8
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize :height * 0.028
+	localmake "gap (:height - penSize) / 2 - :radius
+	setPenColor :color
+	setFillColor transparent
+	repeat :numCircles [
+		jumpForward :gap
+		circle :radius
+		jumpTo :center
+		right 360 / :numCircles
+	]
+	setTurtleState :oldState
+end
+
+to paradigmHyperloopWhiteOnBlackLogo :height
+	localmake "oldPos pos
+	stripes :height :height ["black]
+	localmake "innerHeight :height * 0.9
+	jumpForward (:height - :innerHeight) / 2
+	paradigmHyperloopLogo :innerHeight "white
+	jumpTo :oldPos
+end
+
+make "height 100
+make "separation :height * 5
+jumpLeft :separation / 2
+paradigmHyperloopLogo :height "black
+jumpRight :separation
+paradigmHyperloopWhiteOnBlackLogo :height

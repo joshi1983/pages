@@ -1,0 +1,73 @@
+; Inspired by an image at:
+; https://en.wikipedia.org/wiki/File:Balochistan_Flag.svg
+; A construction sheet is at:
+; https://flagofbalochistan.com
+to balochistanLiberationFlag :height
+	localmake "oldState turtleState
+	localmake "width :height *  5 / 3
+	localmake "starRadius :height * 8 / 36 / (1 + cos 180 / 5)
+	stripes :width :height ["#5cb200 "#e4002b]
+	jumpLeft :width / 2
+	jumpForward :height / 2
+	right 90
+	setFillColor "#0066dc
+	setPenSize 0
+	isoTriangle :height :width / 2
+	jumpForward :height / 2 * tan 30
+	setFillColor "white
+	left 90
+	jumpForward :starRadius - :height * 8 / 36 / 2
+	regularStar :starRadius 5
+	setTurtleState :oldState
+end
+
+; Inspired by flag at:
+; https://en.wikipedia.org/wiki/Flag_of_Balochistan,_Pakistan#/media/File:Flag_of_BNP_(Awami).svg
+to belochistanNationalPartyFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 75/48
+	localmake "belochistanRed "#db3d3a
+	localmake "starRadius :height * 0.27
+	jumpLeft :width / 2
+	jumpForward :height / 2
+	right 90
+	stripes :height :width ["#355047 "#fcf063 :belochistanRed :belochistanRed]
+	jumpForward :width * 3 / 4
+	left 90
+	setFillColor "white
+	setPenSize 0
+	jumpBackward :starRadius * (1 - cos 180 / 5) / 2
+	regularStar :starRadius 5
+	setTurtleState :oldState
+end
+
+; Inspired by flag at:
+; https://en.wikipedia.org/wiki/Flag_of_Balochistan,_Pakistan#/media/File:Flag_of_the_Baloch_People.svg
+to belochPeopleFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 3 / 2
+	localmake "belochBlue "#000095
+	stripes :width :height ["#e4002b "#5cb200]
+	jumpLeft :width / 2
+	jumpForward :height / 2
+	right 90
+	setFillColor :belochBlue
+	setPenSize 0
+	isoTriangle :height :width / 2
+	jumpForward :height / 4
+	setFillColor "white
+	isotoxalStar :height * 0.195 :height * 0.1 12
+	setPenSize :height * 0.012
+	setPenColor :belochBlue
+	circle :height * 0.102
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 4
+jumpLeft :separation
+balochistanLiberationFlag :height
+jumpRight :separation
+belochistanNationalPartyFlag :height
+jumpRight :separation
+belochPeopleFlag :height

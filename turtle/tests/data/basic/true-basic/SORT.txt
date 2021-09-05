@@ -1,0 +1,91 @@
+EXTERNAL
+
+SUB Sort (lines$(), arg$)
+
+    !
+    !  SORT          version 1.0
+    !
+    !  Copyright (c) 1985, 1997 by True BASIC, Inc.  All rights reserved.
+    !
+    !  This is a DO program which sorts the current file, line by line,
+    !  into ascending ASCII order.
+    !
+    !  arg$ is ignored.
+
+    CALL QuickSortS (lines$, Lbound(lines$), Ubound(lines$))
+
+END SUB
+
+SUB QuickSortS (arr$(), a, b)
+
+    LOCAL a1, b1, t$, p$, b1$
+
+    ! If the segment is 8 elements or fewer, use a straight insertion sort
+
+    IF b - a < 9 then
+       FOR a1 = a+1 to b
+           LET b1 = a1 - 1
+           IF arr$(b1) > arr$(a1) then
+              LET t$ = arr$(a1)
+              DO
+                 LET arr$(b1+1) = arr$(b1)
+                 LET b1 = b1 - 1
+
+              LOOP while b1 >= a and arr$(b1) > t$
+              LET arr$(b1+1) = t$
+
+           END IF
+
+       NEXT a1
+       EXIT SUB
+
+    END IF
+
+    ! Find the median of three elements (a, b, (a+b)/2)
+
+    LET p$ = arr$(a)
+    LET b1$ = arr$(b)
+    LET t$ = arr$((a+b)/2)
+    IF p$ >= b1$ then
+       IF t$ < p$ then
+          IF t$ < b1$ then LET p$ = b1$ else LET p$ = t$   ! LET p = max(t,b1)
+       END IF
+
+    ELSE
+       IF t$ > p$ then
+          IF t$ < b1$ then LET p$ = t$ else LET p$ = b1$   ! LET p = min(t,b1)
+       END IF
+
+    END IF
+
+    ! Partition the arr$ into the elements above & below p
+
+    LET a1 = a
+    LET b1 = b
+    DO
+       DO while arr$(a1) < p$
+          LET a1 = a1 + 1
+
+       LOOP
+
+       DO while arr$(b1) > p$
+          LET b1 = b1 - 1
+
+       LOOP
+
+       IF a1 >= b1 then EXIT DO
+
+       LET t$ = arr$(b1)
+       LET arr$(b1) = arr$(a1)
+       LET arr$(a1) = t$
+       LET a1 = a1 + 1
+       LET b1 = b1 - 1
+
+    LOOP
+
+    ! Sort the two segments recursively
+
+    CALL QuickSortS (arr$, a, b1)
+    CALL QuickSortS (arr$, b1+1, b)
+
+END SUB

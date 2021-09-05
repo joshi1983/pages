@@ -1,0 +1,39 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Government_of_Ontario#/media/File:Province_of_Ontario_logo.svg
+to ontarioLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "outerArcs [
+		[10 0.9] [20 0.46] [15 0.342]
+	]
+	setPenSize 0
+	setFillColor "black
+	right 90
+	polyStart
+	repeat 4 [
+		arcLines :outerArcs :height
+		arcLines reverse :outerArcs :height
+	]
+	polyEnd
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.537
+	localmake "center pos
+	setFillColor "white
+	repeat 3 [
+		setHeading :oldHeading + (repcount + 0.45) * 360 / 3
+		jumpForward :height * 0.011
+		left 35
+		polyStart
+		arcLines [[25 0.067] [25 0.07] [20 0.113] [53.05 0.26] [93.1 0]
+		[48 0.26] [-80 0] [0.085] [-97 0] [-64.9 0.34] [-66.5 0]
+		[-76 0.34] [-95 0.0605] [-19.5 0.15]] :height
+		polyEnd
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+ontarioLogo 100

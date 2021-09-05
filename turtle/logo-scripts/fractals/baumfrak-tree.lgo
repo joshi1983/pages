@@ -1,0 +1,41 @@
+to branchForward :len
+	localmake "oldState turtleState
+	localmake "arcAngle 90
+	localmake "arcRadius :len / 2 / sin :arcAngle / 2
+	left :arcAngle / 2
+	polyStart
+	arcRight :arcAngle :arcRadius
+	right 180 - :arcAngle
+	arcRight :arcAngle :arcRadius
+	polyEnd
+	setTurtleState :oldState
+	jumpForward :len
+end
+
+to drawTree :trunkLength
+	if :trunkLength > 0.2 [
+		localmake "oldState turtleState
+		localmake "nextBranchLength :trunkLength * 0.5
+		branchForward :trunkLength
+		left 90
+		repeat 3 [
+			drawTree :nextBranchLength
+			right 90
+		]
+		setTurtleState :oldState
+	]
+end
+
+; Inspired by
+; https://www.pinterest.ca/pin/1104507877336542469/
+; which is also shown at:
+; http://www.asamnet.de/~hollwecm/section/fraktal.htm
+to baumfrakTree :height
+	localmake "oldState turtleState
+	setFillColor "black
+	setPenSize 0
+	drawTree :height * 0.5
+	setTurtleState :oldState
+end
+
+baumfrakTree 100

@@ -1,0 +1,391 @@
+REM copied from https://www.bamsoftware.com/bzr/qbasic/spaceman.bas
+REM                             Press F5
+
+DECLARE SUB delay (seconds!)
+del = 0.003
+f = 150
+high = 70
+2000 'Lbl 2000
+CLS
+SCREEN 12
+LOCATE 4, 5
+PRINT "Designed entirely by David Fifield for use exclusively by BAM Corp."
+CIRCLE (0, 479), 320, 4
+PAINT (0, 479), 4, 4
+LINE (1, 159)-(4, 156)
+LINE -(8, 159)
+LINE (4, 156)-(4, 150)
+LINE (1, 153)-(8, 153)
+LINE -(8, 144)
+FOR stripe = 144 TO 149 STEP 2
+LINE (9, stripe)-(16, stripe), 4
+LINE (9, stripe + 1)-(16, stripe + 1), 15
+NEXT stripe
+LINE (8, 144)-(12, 147), 1, B
+LINE (9, 145)-(11, 146), 1, B
+CIRCLE (4, 148), 2
+LINE (50, 150)-(130, 150), 1
+LINE -(130, 120), 1
+LINE -(50, 120), 1
+LINE -(50, 90), 1
+LINE -(590, 90), 1
+LINE (140, 105)-(190, 105), 1
+LINE -(190, 130), 1
+LINE -(140, 130), 1
+LINE (140, 105)-(140, 150), 1
+LINE (200, 105)-(200, 150), 1
+LINE (200, 105)-(260, 105), 1
+LINE -(260, 150), 1
+LINE (200, 130)-(260, 130), 1
+LINE (300, 105)-(270, 105), 1
+LINE -(270, 150), 1
+LINE -(300, 150), 1
+LINE (370, 105)-(310, 105), 1
+LINE -(310, 150), 1
+LINE -(370, 150), 1
+LINE (310, 130)-(370, 130), 1
+LINE (380, 150)-(380, 105), 1
+LINE -(400, 150), 1
+LINE -(420, 105), 1
+LINE -(420, 150), 1
+LINE (430, 150)-(430, 105), 1
+LINE -(490, 105), 1
+LINE -(490, 150), 1
+LINE (430, 120)-(490, 120), 1
+LINE (500, 150)-(500, 105), 1
+LINE -(560, 150), 1
+LINE -(560, 105), 1
+LOCATE 18, 42
+PRINT "1 - Start Mission"
+PRINT
+LOCATE , 44
+PRINT "2 - Briefing"
+PRINT
+LOCATE , 46
+PRINT "3 - Mission Length"
+PRINT
+LOCATE , 48
+PRINT "4 - Return to BAM"
+
+DO
+k$ = INKEY$
+LOOP UNTIL k$ = "1" OR k$ = "2" OR k$ = "3" OR k$ = "4" OR k$ = "5"
+IF k$ = "1" THEN
+        CLS
+        x = 320
+        y = 240
+        B = 0
+        h = 0
+        w = 1
+        v = 1
+        q = 1
+        a = f
+        LINE (0, 370)-(620, 370), 15
+        LOCATE 25, 5
+        PRINT "D I S T A N C E"
+        LINE (4, 410)-(6, 412), , B
+        LINE (204, 410)-(206, 412), , B
+        LOCATE 28, 10
+        PRINT "D A M A G E"
+        FOR c = 170 TO 250 STEP 20
+        LINE (c, 438)-(c + 3, 441), 4, BF
+        LINE (c - 1, 437)-(c + 4, 442), 14, B
+        NEXT c
+        c = 5
+        LOCATE 26, 60
+        PRINT "K I L L S : "; h
+
+1                 'Lbl 1
+        d = w - u / 3
+        e = w + u / 3
+        g = v - (1 + 1 / 3) * u
+        I = v + (1 + 1 / 3) * u
+        j = v - u
+        l = v + u
+        m = v - (1 / 3) * u
+        n = v + (1 / 3) * u
+        IF q = 1 THEN
+                GOTO 3
+                END IF
+        GOTO 9
+        DO
+20         'Lbl 20
+        delay del
+          col1 = INT(RND * 640)
+        col2 = INT(RND * 369)
+        pcol = INT(RND * 14) + 1
+        PSET (col1, col2), pcol
+        col1 = INT(RND * 640)
+        col2 = INT(RND * 369)
+        col3 = INT(RND * 640)
+        col4 = INT(RND * 369)
+        LINE (col1, col2)-(col3, col4), 0
+        Z = x
+        oo = y
+        LOCATE 26, 72
+        PRINT h
+        LINE (f / a * 200 + 4, 410)-(f / a * 200 + 6, 412), , B
+        f = f - .01
+        IF B = 0 THEN
+                u = 1
+                RANDOMIZE TIMER
+                v = (INT(RND * 620))
+                w = (INT(RND * 238)) + 66
+                END IF
+        B = 1
+        GOTO 1
+9 'Lbl 9
+        delay del
+        LINE (g, e)-(j, w), 0
+        LINE (l, w)-(I, e), 0
+        LINE (j, w)-(l, w), 0
+        LINE (n, w)-(v, d), 0
+        LINE (m, w)-(v, d), 0
+        u = u + .01 * u
+        IF u > 200 AND u < 266 THEN
+                GOTO 9
+                END IF
+        IF u > 266 THEN
+               delayer = 5500       ' Increase this or decrease for earthquake delay
+               FOR quake = 1 TO delayer
+               'OUT &H3D4, 8: OUT &H3D5, quake: OUT &H3D4, 8
+               NEXT quake
+               ' OUT &H3D4, 8: OUT &H3D5, 0
+                delay 0.25
+                LINE (150 + c * 20, 438)-(153 + c * 20, 441), 0, BF
+                c = c - 1
+                IF c = 0 THEN
+                        GOTO 13
+                        END IF
+                B = 0
+                GOTO 8
+                END IF
+        q = 1
+        GOTO 1
+3         'Lbl 3
+        q = 0
+        LINE (g, e)-(j, w), 8
+        LINE (l, w)-(I, e), 8
+        LINE (j, w)-(l, w), 8
+        LINE (n, w)-(v, d), 8
+        LINE (m, w)-(v, d), 8
+8       'Lbl 8
+        LINE (x - 10, y)-(x + 10, y)
+        LINE (x, y - 10)-(x, y + 10)
+        LINE (0, 370)-(x, y), 0
+        LINE (640, 370)-(x, y), 0
+        getk$ = INKEY$
+        IF getk$ = CHR$(0) + "K" THEN
+                x = x - 10
+        ELSEIF getk$ = CHR$(0) + "H" THEN
+                y = y - 10
+        ELSEIF getk$ = CHR$(0) + "M" THEN
+                x = x + 10
+        ELSEIF getk$ = CHR$(0) + "P" THEN
+                y = y + 10
+        ELSEIF getk$ = "C" THEN
+                x = v
+                y = w
+                getk$ = " "
+        ELSEIF getk$ = "" THEN
+                GOTO 20
+                END IF
+        IF x >= 639 THEN
+                x = 639
+        ELSEIF x <= 1 THEN
+                x = 1
+        ELSEIF y <= 1 THEN
+                y = 1
+        ELSEIF y >= 369 THEN
+                y = 369
+                END IF
+        LINE (Z - 10, oo)-(Z + 10, oo), 0
+        LINE (Z, oo - 10)-(Z, oo + 10), 0
+        IF getk$ = " " THEN
+                LINE (0, 370)-(x, y), 4
+                LINE (640, 370)-(x, y), 4
+                'SOUND 850, 1
+                'SOUND 800, 1
+                'SOUND 825, 1
+                IF g <= x AND I >= x AND e >= y AND d <= y THEN
+                        h = h + 1
+                        FOR d = 1 TO (1 / 3) * u
+                        CIRCLE (v, w), d, d / (u / 15)
+                        delay del
+                        NEXT
+                        FOR d = 1 TO (1 / 3) * u
+                        CIRCLE (v, w), d, 0
+                        delay del
+                        NEXT
+                        IF h = 10 AND callsign$ <> "" THEN
+                                LOCATE 25, 25
+                                BEEP
+                                PRINT "You sure you're a rookie, "; callsign$; "?           "
+                        ELSEIF h = 25 AND callsign$ <> "" THEN
+                                LOCATE 25, 25
+                                BEEP
+                                PRINT "Impressive, young "; callsign$; ".              "
+                        ELSEIF h = 40 AND callsign$ <> "" THEN
+                                LOCATE 25, 25
+                                BEEP
+                                PRINT "I gotta admit; you put me to shame, "; callsign$; ".        "
+                        ELSEIF h > high AND callsign$ <> "" THEN
+                                high = h
+                                LOCATE 25, 25
+                                PRINT h; " kills. That's a new record.              "
+                                END IF
+                        B = 0
+                        LINE (g, e)-(j, w), 0
+                        LINE (j, w)-(l, w), 0
+                        LINE (m, w)-(v, d), 0
+                        LINE (n, w)-(v, d), 0
+                        LINE (l, w)-(I, e), 0
+                        END IF
+                END IF
+        LINE (0, 370)-(640, 370), 15
+        PRINT ""
+        LOOP WHILE f > 0
+100         'Lbl 100
+        CLS
+        IF f <= 0 THEN
+                LOCATE 15, 30
+                PRINT "MISSION ACCOMPLISHED"
+                FOR mis = 1 TO 25
+                COLOR .5 * mis
+                LOCATE mis, 1
+                PRINT "BAM!"
+                LOCATE mis, 76
+                PRINT "BAM!"
+                NEXT
+                LOCATE 17, 32
+                COLOR 15
+                PRINT "YOU HAD"; h; "KILLS."
+                LOCATE 20, 25
+                IF h = 0 THEN
+                        PRINT "You're a disgrace!"
+                ELSEIF h >= 1 AND h <= 4 THEN
+                        PRINT "Not bad... for a private"
+                ELSEIF h >= 5 AND h <= 9 THEN
+                        PRINT "Good job-Sergeant"
+                ELSEIF h >= 10 AND h <= 19 THEN
+                        PRINT "Nice shootin', Tex"
+                ELSEIF h >= 20 AND h <= 39 THEN
+                        PRINT "Holy Macaroni!"
+                ELSEIF h >= 40 AND h <= 69 THEN
+                        PRINT "BAM!"
+                ELSEIF h >= 70 THEN
+                        PRINT "You are a true Spaceman master."
+                        LOCATE 21, 25
+                        PRINT "All others must obey and respect you."
+                        LOCATE 22, 25
+                        PRINT "You are the pinnacle of skill,"
+                        LOCATE 23, 25
+                        PRINT "a champion in every way."
+                        END IF
+        SLEEP 2
+        DO WHILE INKEY$ <> CHR$(13)
+        LOOP
+        f = 150
+        GOTO 2000
+       
+        END IF
+       
+13 'Lbl 13
+IF c = 0 THEN
+        IF callsign$ <> "" THEN
+                LOCATE 25, 25
+                PRINT "So long, "; callsign$; ".                        "
+        END IF
+     FOR blood = 1 TO 10
+     RANDOMIZE TIMER
+     FOR spl = 50 TO 0 STEP -10
+rander:
+     randx = RND * 640
+     randy = RND * 480
+     IF POINT(randx, randy) = 4 THEN GOTO rander
+     splat = RND * spl + 10
+     CIRCLE (randx, randy), splat, 4
+     PAINT (randx, randy), 4, 4
+     NEXT spl
+     NEXT blood
+     LOCATE 10, 32
+     PRINT "Y O U  L O S E"
+     LOCATE 12, 29
+     PRINT "<Any Key to Continue>"
+     LINE (0, 0)-(640, 2), 0, BF
+     'PLAY OFF
+     DIM melt%(6000)
+  key$ = ""
+  DO
+    key$ = INKEY$
+    RANDOMIZE TIMER
+    xx = INT(RND * 539)
+    RANDOMIZE TIMER
+    yx = INT(RND * 370)
+    GET (xx, yx)-(xx + 100, yx + 100), melt%
+    PUT (xx, yx + 1), melt%, PSET
+    delay del
+    bloodcount = bloodcount + 1
+    IF bloodcount > 200 AND key$ <> "" THEN EXIT DO
+  LOOP
+        bloodcount = 0
+        CLS
+        GOTO 2000
+        END IF
+END IF
+IF k$ = "2" THEN
+CLS
+LOCATE 5, 5
+COLOR 4
+PRINT "You are a pilot for the Space Division of the United States Marine Corps."
+LOCATE 10, 5
+PRINT "Your mission is to escort a transport to the next station."
+LOCATE 15, 5
+PRINT "If you meet any hostile ships,"
+LOCATE 16, 5
+PRINT "open fire."
+LOCATE 20, 5
+PRINT "There is one cheat - the legendary *KAWS* beam."
+LOCATE 28, 65
+COLOR 14
+PRINT "Press Enter"
+COLOR 15
+DO WHILE INKEY$ = ""
+LOOP
+GOTO 2000
+END IF
+IF k$ = "3" THEN
+CLS
+34 'Lbl 34
+INPUT "Enter a mission length (75 to 500):"; f
+IF f < 75 OR f > 500 THEN
+        GOTO 34
+        END IF
+COLOR 15
+GOTO 2000
+END IF
+IF k$ = "4" THEN
+        SYSTEM
+        END IF
+IF k$ = "5" THEN
+        callsign$ = ""
+        PRINT
+        PRINT
+        PRINT
+        PRINT
+        DO WHILE callsign$ = ""
+        INPUT "Enter callsign:", callsign$
+        LOOP
+        callsign$ = LTRIM$(callsign$)
+        callsign$ = RTRIM$(callsign$)
+        callsign$ = LEFT$(callsign$, 10)
+        CLS
+        GOTO 2000
+        END IF
+END
+
+SUB delay (seconds!)
+start# = TIMER
+DO WHILE TIMER - start# < seconds!
+LOOP
+END SUB

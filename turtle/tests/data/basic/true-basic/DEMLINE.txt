@@ -1,0 +1,47 @@
+! DemLine
+
+! Experiments with lines.
+
+LIBRARY "TrueCtrl.trc"
+
+READ xl, xr, yb, yt
+DATA 0, 500, 100, 400
+
+CALL TC_Init
+
+CALL TC_Show (0)
+CALL TC_Win_Active (0)
+
+CALL TC_PushBtn_Create (qbid, "Quit", .70, .84, .83, -99999)
+CALL TC_PushBtn_Create (cbid, "Change", .70, .84, .72, -99999)
+
+LET object$ = "LINE"
+CALL TC_Graph_Create (cid, object$, rnd, rnd, rnd, rnd)
+CALL TC_Graph_SetBrush (cid, 0, 2, "")
+LET width = 3
+CALL TC_Graph_SetPen (cid, width, 2, "DASH", "")
+
+DO
+   CALL TC_Event (0, event$, window, x1, x2)
+
+   IF event$ = "HIDE" then EXIT DO
+   IF event$ = "CONTROL DESELECTED" then
+      IF x2 = qbid then
+         EXIT DO
+
+      ELSE IF x2 = cbid then
+         CALL TC_SetRect (cid, rnd, rnd, rnd, rnd)
+
+         LET width = width + 1
+         IF width > 5 then LET width = 1
+         CALL TC_Graph_SetPen (cid, width, 2, "", "")
+
+      END IF
+
+   END IF
+
+LOOP
+
+CALL TC_Cleanup
+
+END

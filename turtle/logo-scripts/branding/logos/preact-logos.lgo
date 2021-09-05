@@ -1,0 +1,44 @@
+; Inspired by logos at:
+; https://preactjs.com/branding
+
+make "preactPurple "#673ab8
+
+to preactLogo :height :color
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	setFillColor :color
+	setPenSize 0
+	jumpForward :height / 2
+	circle :height * 0.12
+	setPenColor :color
+	setPenSize :height * 0.056
+	setFillColor transparent
+	repeat 2 [
+		setHeading :oldHeading + (repcount - 1.5) * 75
+		ellipse :height * 0.694 :height * 0.265
+	]
+	setTurtleState :oldState
+end
+
+to preactSimpleLogo :height
+	preactLogo :height :preactPurple
+end
+
+to preactSymbol :height
+	localmake "oldState turtleState
+	localmake "innerHeight :height * 0.5518
+	setFillColor :preactPurple
+	setPenSize 0
+	jumpForward :height / 2
+	regularPolygon :height / 2 6
+	jumpBackward :innerHeight / 2
+	preactLogo :innerHeight "white
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 5
+jumpLeft :separation / 2
+preactSimpleLogo :height
+jumpRight :separation
+preactSymbol :height

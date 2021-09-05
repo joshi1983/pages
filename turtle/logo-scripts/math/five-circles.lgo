@@ -1,0 +1,39 @@
+; Inspired by drawing at:
+; https://www.facebook.com/photo/?fbid=4080882805520141
+to fiveCircles :height
+	localmake "oldState turtleState
+	localmake "innerRadius :height * 0.17
+	localmake "thickness :height * 0.01
+	localmake "innerRadius2 :innerRadius - :thickness / 2
+	localmake "radius (:height - :thickness) / 2 / (1 + cos 90 - 360 / 5)  
+	localmake "radius2 :radius + :thickness / 2
+	setFillColor transparent
+	setPenSize :thickness
+	setPenColor "white
+	jumpForward :height / 2
+	localmake "center pos
+	circle :innerRadius
+	repeat 5 [
+		circleRight :radius
+		right 360 / 5
+	]
+	setFillColor "#8f00
+	jumpRight :radius
+	localmake "center2 pos
+	jumpRight :radius2
+	setPenSize 0
+	polyStart
+	localmake "arcAngle getArcLeftAngleToCircle :radius2 :center :innerRadius2 
+	arcLeft :arcAngle :radius2
+	setHeading (towards :center) - 90
+	arcRight 1 :innerRadius2
+	localmake "arcAngle2 getArcRightAngleToCircle :innerRadius2 :center2 :radius2 
+	arcRight :arcAngle2 :innerRadius2
+	setHeading (towards :center2) + 90
+	arcLeft :arcAngle :radius2
+	polyEnd
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+fiveCircles 100

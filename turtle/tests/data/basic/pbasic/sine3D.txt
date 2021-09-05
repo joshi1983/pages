@@ -1,0 +1,65 @@
+// sinewave3D.bas — Isometric 3D Sine Wave Ripple
+// Ported from Arduino LED cube sketch to pBasic
+//
+// Animation driven by a top-level FOR loop (not TIMER) because the
+// TIMER mini-executor does not support FOR/NEXT inside callbacks.
+// The main executor handles FOR loops correctly.
+// Each outer loop iteration = one animation frame.
+// CTRL-C to stop.
+//
+// Isometric projection:
+//   screen_x = cx + (xi - zi) * tw
+//   screen_y = cy + (xi + zi) * th - yval * ys
+// 12x12 grid flattened to single FOR idx=0 TO 143 to avoid nesting.
+
+var gsize : Float = 12.0
+var tw    : Float = 50.0
+var th    : Float = 25.0
+var ys    : Float = 32.0
+var cx    : Float = 630.0
+var cy    : Float = 430.0
+var cap   : Float = 25.0
+var twopi : Float = 6.2831853
+
+var t     : Float = 0.0
+var xi    : Float = 0.0
+var zi    : Float = 0.0
+var idx   : Float = 0.0
+var frame : Float = 0.0
+var dist  : Float = 0.0
+var rads  : Float = 0.0
+var yval  : Float = 0.0
+var sx    : Float = 0.0
+var sy_b  : Float = 0.0
+var sy_t  : Float = 0.0
+var rr    : Float = 0.0
+var gg    : Float = 0.0
+var bb    : Float = 0.0
+
+// 500 frames — press CTRL-C to stop early
+BUFFER:1
+FOR frame = 0 TO 500 STEP 1
+    CLR
+    FOR idx = 0 TO 143 STEP 1
+        xi    = INT(idx / gsize)
+        zi    = idx - xi * gsize
+        dist  = SQRT((xi - 6) * (xi - 6) + (zi - 6) * (zi - 6))
+        rads  = (dist / 4.0) * 3.0 + t
+        rads  = rads - INT(rads / twopi) * twopi
+        yval  = 4.0 + SIN(rads) * 3.999
+        sx    = cx + (xi - zi) * tw
+        sy_b  = cy + (xi + zi) * th
+        sy_t  = sy_b - yval * ys
+        rr    = yval / 8.0
+        gg    = SIN(yval / 8.0 * 3.1415927)
+        bb    = 1.0 - yval / 8.0
+        LINE(sx, sy_b, sx, sy_t, rr, gg, bb, 1.0)
+        LINE(sx - cap, sy_t, sx + cap, sy_t, rr, gg, bb, 1.0)
+    NEXT idx
+    BUFFER		// swap: back → FRONT atomically, front → back
+    t = t + 0.32
+    t = t - INT(t / twopi) * twopi
+NEXT frame
+BUFFER:0
+//CLR
+END

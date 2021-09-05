@@ -1,0 +1,27 @@
+!  SGFunc3   Graph many functions.
+
+LIBRARY "SGFunc.trc"
+LIBRARY "SGLib.trc"
+
+DIM legend$(3)
+
+MAT READ legend$
+DATA #1, #2, #3
+
+CALL SetText ("Various Waves", "X Values", "Y Values")
+LET colors$ = "red green cyan magenta blue"
+CALL ManyFgraph (-pi, 2*pi, 3, legend$, colors$)
+
+END
+
+DEF F(x)
+    PUBLIC fnum
+    SELECT CASE fnum
+    CASE 1
+         LET F = Sin(x)
+    CASE 2
+         LET F = 1.5 * Cos(x*2)
+    CASE 3
+         LET F = .5 * Cos(x+pi/2)
+    END SELECT
+END DEF

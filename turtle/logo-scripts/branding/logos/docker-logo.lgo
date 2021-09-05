@@ -1,0 +1,48 @@
+make "dockerBlue "#2496ed
+
+to drawBoxes :height
+	localmake "oldState turtleState
+	localmake "squareSize1 :height * 0.162
+	localmake "squareSize1b :squareSize1 * 1.045
+	localmake "squareSize2 :squareSize1 * 0.85
+	localmake "gap (:squareSize1 - :squareSize2) / 2
+	localmake "rows [[3 1] [1 3] [0 5]]
+	jumpForward :height - :squareSize2 - :gap
+	jumpLeft :height * 0.515
+	repeat count :rows [
+		localmake "pos1 pos
+		localmake "rowInfo item repcount :rows
+		jumpRight :squareSize1b * first :rowInfo
+		jumpForward :gap
+		repeat last :rowInfo [
+			stripes :squareSize2 :squareSize2 [:dockerBlue]
+			jumpRight :squareSize1b
+		]
+		jumpTo :pos1
+		jumpBackward :squareSize1
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by logo at
+; https://en.wikipedia.org/wiki/Docker_(software)#/media/File:Docker_logo.svg
+; This is a more minimalist or simplified version of
+; https://en.wikipedia.org/wiki/File:Docker_(container_engine)_logo.svg
+to dockerLogo :height
+	localmake "oldState turtleState
+	drawBoxes :height
+	jumpLeft :height * 0.6862
+	jumpForward :height * 0.5124
+	setPenSize 0
+	setFillColor :dockerBlue
+	polyStart
+	arcLines [[168 0] [15 0.35] [30 0.49] [40 0.37] [20 0.635]
+	[13 1] [7 0.5] [45.7 0.72] [-72 0] [10 0.28] [30 0.205]
+	[28.2 0.163] [0.042] [83 0] [0.03] [20 0.15] [23.7 0.275]
+	[-93 0] [40 0.21] [6.6 0.55] [89 0] [5 0.5] [20 0.22] [15 0.3]
+	[29.5 0.163] [-95 0] [-28.7 0.19843964]] :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+dockerLogo 100

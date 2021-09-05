@@ -1,0 +1,52 @@
+make "jiffyRed "#97002E
+
+; Inspired by logo at:
+; https://en.wikipedia.org/wiki/Jiffy_Lube#/media/File:Jiffy_lube_brand_logo.png
+to jiffyLubeLogo :height :color
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "shapes [
+		; vertical stroke and bottom arc
+		[0.215 0.828 [[90 0] [0.161] [79 0] [0.467] [-70 0.07]
+			[-40 0.1] [-50 0.05] [81 0] [0.163] [96 0] [60 0.212]
+			[22 0.32] [85 0.222]]]
+
+		; upper-left shape
+		[-0.0272 0.601 [[90 0] [0.085] [50 0.25] [37.5 0.185]
+			[92.5 0] [0.161] [68 0] [-68 0.085] [0.05]]]
+
+		; arrow
+		[0.207 0.601 [[-90 0] [0.075] [79 0] [0.076] [-126 0] [0.203]
+			[-95 0] [0.25] [-140 0] [0.082] [102 0] [0.077]]]
+	]
+	jumpForward :height / 2
+	setPenColor :color
+	setPenSize :height * 0.037
+	setFillColor transparent
+	circle (:height - penSize) / 2
+	setPenSize 0
+	setFillColor :color
+	jumpTo :oldPos
+	drawArcLineShapes :shapes :height
+	setTurtleState :oldState
+end
+
+to jiffyLubeWhiteOnRedLogo :height
+	localmake "oldState turtleState
+	localmake "innerHeight :height * 0.9
+	stripes :height :height [:jiffyRed]
+	jumpForward (:height - :innerHeight) / 2
+	jiffyLubeLogo :innerHeight "white
+	setTurtleState :oldState
+end
+
+to jiffyLubeRedLogo :height
+	jiffyLubeLogo :height :jiffyRed
+end
+
+make "height 100
+make "separation :height * 5
+jumpLeft :separation / 2
+jiffyLubeWhiteOnRedLogo :height
+jumpRight :separation
+jiffyLubeRedLogo :height

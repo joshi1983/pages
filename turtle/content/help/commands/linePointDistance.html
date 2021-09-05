@@ -1,0 +1,42 @@
+<code>print linePointDistance [0 0] [1 0] [5 0]
+; prints 0 because point [5 0] will 
+; be on the line that intersects [0 0] and [1 0]
+
+print linePointDistance [0 0] [0 1] [0 6]
+; Also prints 0 because point [0 6]
+; will be on the line intersecting [0 0] with [0 1]
+
+print linePointDistance [0 0] [1 0] [0 4]
+; prints 4 because [0 4] is 4 away from the line
+; at closest
+
+print linePointDistance [0 0] [1 0] [123 4]
+; prints 4 because [123 4] is 4 away from the line
+; at closest.
+; The closest point on the line would be [123 0]
+; [123 4] is 4 away from that closest point.</code>
+<code>make "p1 [0 0]
+
+; Randomly select a second point.
+; This will cause the direction or slope of the line
+; to be random between 0 and 90 degrees
+make "p2 [randomRatio randomRatio]
+
+jumpTo :p1
+setHeading towards :p2
+jumpBackward 50
+; Draw a black line indicating direction of the line.
+forward 200
+
+; Draw lots of randomly positioned circles
+; Each circle will run tanguent to the line.
+setPenColor "red
+setPenSize 0.1
+repeat 100 [
+	make "point [randomRatio * 100 randomRatio * 100]
+	make "r linePointDistance :p1 :p2 :point 
+	if :r > 0 [
+		jumpTo :point
+		circle :r
+	]
+]</code>

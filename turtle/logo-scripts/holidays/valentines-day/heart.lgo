@@ -1,0 +1,29 @@
+to curvyLeaf :size :delta
+	if :size > 1 [
+		localmake "oldState turtleState
+		localmake "oldHeading heading
+		forward :size * 0.2
+		left 80
+		curvyLeaf :size * 0.3 :delta
+		right 80
+		forward :size * 0.05
+		right 80
+		curvyLeaf :size * 0.25 -:delta
+		setHeading :oldHeading + :delta
+		curvyLeaf :size * 0.9 :delta
+		setTurtleState :oldState
+	]
+end
+
+to drawHeart
+	setPenColor "#ff1665
+	setPenSize 1
+	setXY 0 -100
+	left 51.2
+	curvyLeaf 200 8
+	right 102.4
+	curvyLeaf 200 -8
+end
+
+setScreenColor "black
+drawHeart

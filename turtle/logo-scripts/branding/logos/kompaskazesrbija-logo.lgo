@@ -1,0 +1,25 @@
+; Inspired by logo at:
+; https://www.facebook.com/kompaskazesrbija
+to kompaskazesrbijaLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "largeRadius :height * 0.41
+	localmake "heartArcs1 [
+		[-51.5 0] [12 2] [19 0.5] [190 0.198311539] [-79.5 0]
+	]
+	jumpForward :height - :largeRadius
+	setPenSize 0
+	setFillColor "#ffb68a
+	circle :largeRadius
+	setFillColor "#ff914c
+	circle :height * 0.32
+	jumpTo :oldPos
+	setFillColor "#0a989a
+	polyStart
+	arcLines :heartArcs1 :height
+	arcLines reverse :heartArcs1 :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+kompaskazesrbijaLogo 100

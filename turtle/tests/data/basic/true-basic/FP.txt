@@ -1,0 +1,24 @@
+!
+!  FP. Show overlaid frequency polygons.
+!
+LIBRARY "Stat2Lib.trc"
+
+DIM n(0), p(0)
+
+CALL SimNormal (100, 75, 5, n)
+CALL SimPoisson (100, 75, p)
+CALL SetTitle ("Normal and Poisson Distributions")
+CALL ReserveLegend
+CALL PlotFP (n, 55, 95, 5, 4, 1, "")
+
+CALL SetOverlay (1)
+CALL PlotFP (p, 55, 95, 5, 13, 2, "")
+
+CALL SkewM (n, skn)
+CALL AddLegend ("Normal (Skew = " & Str$(skn) & ")", 2, 1, "1")
+CALL SkewM (p, skp)
+CALL AddLegend ("Poisson (Skew = " & Str$(skp) & ")", 2, 2, "1")
+CALL DrawLegend
+
+END
+

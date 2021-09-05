@@ -1,0 +1,28 @@
+// copied from https://turtletoy.net/turtle/3209687a01
+Canvas.setpenopacity(1);
+
+const spacing = 3;
+const tilt = 20;     // min=-80 max=80 step=1
+const wave = 30;      // min=0 max=80 step=1
+const squeeze = 100;  // min=10 max=100 step=1
+
+const turtle = new Turtle();
+
+const factor = 50 / squeeze;
+
+for (let y = -500; y <= 500; y += spacing) {
+
+    const x1 = -80;
+    const x2 = 80;
+
+    const shift = Math.sin(y * 0.08) * wave;
+
+    const y1 = y * factor;
+    const y2 = (y + tilt) * factor;
+
+    turtle.penup();
+    turtle.goto(x1 + shift, y1);
+
+    turtle.pendown();
+    turtle.goto(x2 - shift, y2);
+}

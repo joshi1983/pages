@@ -1,0 +1,20 @@
+EXTERNAL
+
+SUB MkDirsub (l$(), options$)
+
+    LIBRARY "{WB_c}WBmkdir.trc"
+
+    WHEN EXCEPTION IN
+         CALL WB_Mkdir (l$(), options$)
+         PRINT "Done with Mkdir."
+    USE
+         IF extype = 1 then
+            PRINT extext$
+         ELSE
+            PRINT extype, extext$
+            PRINT exline$
+            PRINT "Error in Mkdir."
+         END IF
+    END WHEN
+
+END SUB

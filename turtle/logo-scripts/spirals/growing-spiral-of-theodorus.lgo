@@ -1,0 +1,107 @@
+to drawDottedCircle :radius
+	localmake "oldState turtleState
+	localmake "center pos
+	localmake "numDots ceiling :radius * 2 / penSize
+	localmake "dotRadius penSize / 2
+	setFillColor penColor
+	setPenSize 0
+	repeat :numDots [
+		jumpForward :radius
+		circle :dotRadius
+		right 360 / :numDots
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by a post at:
+; https://www.facebook.com/share/p/1B3Nq63SQM
+; by Mathematics Learning
+;
+; You can learn more about the Spiral of Theodorus at:
+; https://en.wikipedia.org/wiki/Spiral_of_Theodorus
+to spiralOfTheodorus :height :numSteps
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	setPenSize :height * 0.003
+	localmake "radius1 (:height - penSize) / 2
+	localmake "maxV sqrt :numSteps
+	localmake "endLength :radius1 / :maxV
+	localmake "points []
+	localmake "useDotCircle? :numSteps < 20
+	localmake "tinyCircleRadius :height * mix 0.004 0.01 clamp :numSteps / 40 0 1 
+	jumpForward :height / 2
+	localmake "center pos
+	setFillColor transparent
+	circle :radius1
+	setPenColor "#4000
+	setPenSize :height * 0.003
+	if not :useDotCircle? [
+		setPenSize penSize * mix 0.2 0.5 clamp :numSteps / 40 0 1
+	]
+	repeat int :numSteps [
+		localmake "v sqrt repcount
+		localmake "radius :radius1 * :v / :maxV
+		ifelse :useDotCircle? [
+			drawDottedCircle :radius
+		] [
+			circle :radius
+		]
+	]
+	setHeading :oldHeading + 90
+	setPenSize :height * mix 0.002 0.005 clamp :numSteps / 40 0 1
+	forward :radius1 / :maxV
+	queue2 "points pos
+	repeat :numSteps - 1 [
+		localmake "radius2 :radius1 * (sqrt 1 + repcount) / :maxV
+		localmake "angle arcSin :endLength / :radius2
+		jumpTo :center
+		left :angle
+		forward :radius2
+		queue2 "points pos
+	]
+	setPenColor "red
+	setPenSize :height * mix 0.003 0.005 clamp :numSteps / 40 0 1
+	jumpTo first :points
+	for ["i 2 count :points] [
+		setPos item :i :points
+	]
+	setPenSize 0
+	setFillColor "#008
+	repeat count :points [
+		jumpTo item repcount :points
+		circle :tinyCircleRadius
+	]
+	setFontSize :height * mix 0.05 0.018 power 0.9 :numSteps
+	setHeading :oldHeading + 90
+	for ["i 2 count :points] [
+		localmake "v1 item :i :points
+		localmake "v2 item :i - 1 :points
+		localmake "outerV mix :v1 :v2 0.5
+		jumpTo mix :center :outerV mix 0.05 0.5 (:i / (1 + :numSteps))
+		jumpBackward :height * 0.03
+		label word "√ str :i
+	]
+	setTurtleState :oldState
+end
+
+make "t clamp animation.timeRatio * 1.05 0 1; the * 1.05 is to stop for a second at the end.
+make "t interpolateRatio easeInOut interpolateRatio easeIn :t
+make "numSteps mix 128 2 :t
+spiralOfTheodorus 100 :numSteps
+
+to animation.snapshotstyle
+	output createPList2 [
+		["position.y 50]
+		["zoom.scale 7]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 20
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

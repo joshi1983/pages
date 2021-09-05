@@ -1,0 +1,130 @@
+to drawOuterShapes :height
+	localmake "oldState turtleState
+	localmake "center pos
+	localmake "oldHeading heading
+	localmake "arcRadius1 :height * 0.7
+	localmake "arcRadius2 :height * 0.6
+	localmake "line1 [
+		[130 0] [17 0.75] [110 0] [0.024] [70 0]
+	]
+	localmake "line2 [
+		[130 0] [18 0.45] [110 0] [0.024] [67 0]
+	]
+	repeat 4 [
+		setHeading :oldHeading + repcount * 360 / 4
+		localmake "heading1 heading
+		jumpForward :height / 2
+		localmake "top pos
+		polyStart
+		arcLines :line1 :height
+		localmake "angle1 getArcRightAngleToLine :arcRadius1 :center :top
+		arcRight :angle1 :arcRadius1
+		setHeading :heading1 * 2 + 180 - heading
+		arcRight :angle1 :arcRadius1
+		arcLines reverse :line1 :height
+		polyEnd
+		jumpTo :center
+		setHeading :heading1
+		jumpForward :height * 0.428
+		polyStart
+		arcLines :line2 :height
+		localmake "angle1 getArcRightAngleToLine :arcRadius2 :center :top
+		arcRight :angle1 :arcRadius2
+		setHeading :heading1 * 2 + 180 - heading
+		arcRight :angle1 :arcRadius2
+		arcLines reverse :line2 :height
+		polyEnd
+		jumpTo :center
+	]
+
+	setTurtleState :oldState
+end
+
+to drawInnerShapes :height
+	localmake "center pos
+	localmake "oldHeading heading
+	localmake "arcRadius3 :height * 0.69
+	localmake "arcRadius4 :height * 0.3
+	localmake "arcRadius5 :height * 0.4
+	localmake "arcRadiusFactor 0.6
+	localmake "arcRadiusFactor2 0.61
+	localmake "line3 [
+		[127 0] [36 0.61] [130 0] [0.029] [45.8 0]
+	]
+	localmake "arc1 [-17 0.35]
+	localmake "arc2 [13 0.4]
+	localmake "turn1 [-53 0]
+	localmake "angle2 45
+	localmake "angle3 50
+	repeat 4 [
+		setHeading :oldHeading + 45 + repcount * 360 / 4
+		localmake "heading1 heading
+		localmake "nextHeading1 heading + 90
+		jumpRight :height / 2
+		localmake "nextTop pos
+		jumpTo :center
+		jumpForward :height / 2
+		localmake "top pos
+
+		polyStart
+		arcLines :line3 :height
+		arcRight (getArcRightAngleToLine :arcRadius3 :center :top) :arcRadius3
+		setHeading :heading1 * 2 + 180 - heading
+		arcRight 38 :arcRadius3
+		left :angle2
+		localmake "angle1 getArcRightAngleToLine :arcRadius4 :center :nextTop
+		arcRight :angle1 :arcRadius4
+		setHeading :nextHeading1 * 2 + 180 - heading
+		arcRight :angle1 :arcRadius4
+		left :angle2
+		arcRight 5 :arcRadius3
+		arcLines [[130 0] [0.03] [60 0] [2.5 0.61]] :height
+		right :angle3
+		localmake "angle1 getArcLeftAngleToLine :arcRadius5 :center :nextTop
+		arcLeft :angle1 :arcRadius5
+		setHeading :nextHeading1 * 2 + 180 - heading
+		arcLeft :angle1 :arcRadius5
+		right :angle3
+		localmake "d distance :top
+		localmake "angle1 2 * arcSin :d / 2 / :arcRadius3
+		setHeading (towards :top) + :angle1 / 2
+		arcLeft :angle1 :arcRadius3
+		polyEnd
+
+		jumpTo :center
+		setHeading :heading1
+		jumpForward :height * 0.432
+		localmake "startPos pos
+		polyStart
+		arcLines
+			[[-133 0] [-39.2 :arcRadiusFactor2] [51 0] :arc1 [-82 0] :arc1
+			[51 0] [-8 0.61] [-50 0] [0.032] [-132 0] [10.5 :arcRadiusFactor]
+			:turn1 :arc2 [92.5 0] :arc2 :turn1]
+		 :height
+		localmake "angle1 getArcLeftAngleToLine :arcRadiusFactor * :height :center :top
+		arcLeft :angle1 :height * :arcRadiusFactor
+		setHeading :heading1 * 2 + 180 - heading
+		arcLines [[21 :arcRadiusFactor] [-55 0] [0.029]] :height
+		localmake "arcRadius :height * :arcRadiusFactor2
+		localmake "angle1 2 * arcSin (distance :startPos) / 2 / :arcRadius
+		setHeading (towards :startPos) - :angle1 / 2
+		arcRight :angle1 :arcRadius
+		polyEnd
+		jumpTo :center
+	]
+end
+
+
+; Inspired by logo at:
+; https://en.wikipedia.org/wiki/Vistara#/media/File:Vistara_Logo.svg
+to vistaraLogo :height
+	localmake "oldState turtleState
+	jumpForward :height / 2
+	setPenSize 0
+	setFillColor "#bb9753
+	drawOuterShapes :height
+	drawInnerShapes :height
+	setTurtleState :oldState
+end
+
+vistaraLogo 100

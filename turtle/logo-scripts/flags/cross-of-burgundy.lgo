@@ -1,0 +1,88 @@
+make "edgeAngle1 135
+make "edgeAngle2 45
+
+to edge :length :angle
+	localmake "oldHeading heading
+	localmake "size1 :length * 0.52
+	left :angle
+	jumpForward :size1
+	setHeading :oldHeading
+	jumpForward :length
+	right 180 - :angle
+	jumpForward :size1
+	setHeading :oldHeading
+end
+
+to tripleEdge :length :angle
+	localmake "length1 :length / 7
+	repeat 3 [
+		jumpForward :length1
+		edge :length1 :angle
+	]
+	jumpForward :length1
+end
+
+to fullEdge :length :sign :startSize
+	localmake "length1 :length * 0.42
+	localmake "length2 :length * 0.42
+	localmake "endSize :length * 0.033
+	localmake "angle :edgeAngle1 * :sign
+	jumpForward :startSize
+	tripleEdge :length1 :angle
+	localmake "angle :edgeAngle2 * :sign
+	jumpForward :length - :length1 - :length2 - :endSize - :startSize
+	tripleEdge :length2 :angle
+	jumpForward :endSize
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_El_Salvador#/media/File:Flag_of_Cross_of_Burgundy.svg
+; This drawing doesn't perfectly line up with the SVG above.
+; This WebLogo drawing is more straight and semetrical.
+; Some of the imperfectly straight lines and asymmetry looked like it could be mistakes.
+to crossOfBurgundyFlag :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "size1 :height * 0.0575
+	localmake "size2 :height * 0.1315
+	localmake "width :height * 3 / 2
+	localmake "angle1 arcTan (:width - :size1) / (:height - :size2)
+	localmake "size3 hypot [:width - :size1 :height - :size2]
+	localmake "startSize1 :height * 0.035
+	stripes :width :height ["white]
+	jumpLeft :width / 2 - :size1
+	setPenSize 0
+	setFillColor "#d9171a
+	polyStart
+	jumpLeft :size1
+	jumpForward :size2
+	right :angle1
+	fullEdge :size3 1 0
+	setHeading :oldHeading
+	jumpRight :size1
+	jumpBackward :size2
+	left 180 - :angle1
+	fullEdge :size3 1 :startSize1
+	polyEnd
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpRight :width / 2 - :size1
+	polyStart
+	jumpRight :size1
+	jumpForward :size2
+	left :angle1
+	fullEdge :size3 -1 0
+	setHeading :oldHeading
+	jumpLeft :size1
+	jumpBackward :size2
+	right 180 - :angle1
+	fullEdge :size3 -1 :startSize1
+	polyEnd
+
+	setTurtleState :oldState
+end
+
+setScreenColor "#888
+crossOfBurgundyFlag 100

@@ -1,0 +1,58 @@
+to dotsForward :circleRadius :separation :numCircles
+	repeat :numCircles [
+		circle :circleRadius
+		jumpForward :separation
+	]
+	jumpBackward :separation
+end
+
+to bigDotsWings :circleRadius
+	localmake "oldPos pos
+	localmake "separation :circleRadius * 3.13
+	repeat 2 [
+		localmake "numCircles 6 - repcount
+		dotsForward :circleRadius :separation :numCircles
+		jumpTo :oldPos
+		left 90
+		jumpForward :separation
+	]
+end
+
+; Inspired by logo at
+; https://en.wikipedia.org/wiki/IndiGo#/media/File:IndiGo.svg
+; Some of the dots in the big wings and along the fuselage
+; don't line up well with the original SVG.
+; The misalignment is because I couldn't see a good reason for
+; the inconsistent spacing and positioning in the SVG.
+; It seemed better to only align some of the dots but
+; keep most of the dot-separation consistent and fuselage straight.
+to indiGoLogo :height
+	localmake "oldState turtleState
+	localmake "radius :height * 0.0408
+	localmake "separation1 :radius * 3
+	localmake "separation2 :radius * 3.18
+	setFillColor "#001B94
+	setPenSize 0
+	jumpLeft :height * 0.2153
+	jumpForward :radius
+	dotsForward :radius :separation1 3
+	localmake "smallWingPos pos
+	left 90
+	dotsForward :radius :separation1 3
+
+	jumpBackward :height * 0.733
+	jumpRight :height * 0.49
+	localmake "bigWingPos pos
+	bigDotsWings :radius
+
+	jumpTo :smallWingPos
+	setHeading towards :bigWingPos
+	jumpForward :separation2
+	dotsForward :radius :separation2 4
+	jumpTo :bigWingPos
+	jumpForward :separation2
+	dotsForward :radius :separation2 2
+	setTurtleState :oldState
+end
+
+indiGoLogo 100

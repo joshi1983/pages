@@ -1,0 +1,39 @@
+; Inspired by the coronavirus graphics shown at
+; https://creakyjoints.org/wp-content/uploads/2021/03/0321_COVID-19_Antibody_Testing_Immunocompromised-scaled-800x531.jpg
+
+to drawCoronavirus :size
+	localmake "redColor "#ca3435
+	localmake "pinkColor "#da7877
+	localmake "mainRadius :size * 3 / 4
+	localmake "spikeThickness :size / 15
+	localmake "spikeEllipseLength :spikeThickness * 2
+	localmake "spikeEllipseWidth :spikeThickness
+	localmake "spikeLength :size - :mainRadius
+	setFillColor :pinkColor
+	setPenSize :spikeThickness * 0.75
+	setPenColor :redColor
+	circle :mainRadius
+	setFillColor :redColor
+
+	; draw each and every spike protein around circumference.
+	repeat 20 [
+		jumpForward :mainRadius
+		setPenSize :spikeThickness
+		setPenColor :redColor
+		forward :spikeLength
+		setPenSize 0
+		ellipse :spikeEllipseLength :spikeEllipseWidth
+		jumpBackward :mainRadius + :spikeLength
+		right 18
+	]
+	; draw the forward-facing spikes in a spiral.
+	repeat 6 [
+		forward :mainRadius * 0.7
+		circle :spikeEllipseLength
+		backward :mainRadius * 0.7
+		right 60
+	]
+	circle :spikeEllipseLength
+end
+
+drawCoronavirus 200

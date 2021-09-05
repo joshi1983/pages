@@ -1,0 +1,40 @@
+; Inspired by logo at:
+; https://www.yelp.ca/biz_photos/elmtech-solutions-brantford-2?select=WMBfny-kebtqbswSFYiu2w
+to elmTechSolutionsLogo :height
+	localmake "oldState turtleState
+	localmake "arcs [
+		[0 0 0.514 0.478 145 90 90]
+		[0.04 1 0.392 0.365 24 209 -90]
+		[0.44 0.73 0.305 0.282 0 235 -158]
+	]
+	setPenSize 0
+	setFillColor "#ed6b37
+	repeat count :arcs [
+		localmake "arcInfo item repcount :arcs
+		localmake "x first :arcInfo	
+		localmake "y item 2 :arcInfo
+		localmake "outerArcRadius item 3 :arcInfo
+		localmake "innerArcRadius item 4 :arcInfo
+		localmake "arcAngle1 item 5 :arcInfo
+		localmake "outerAngle2 item 6 :arcInfo
+		localmake "totalOuterAngle :arcAngle1 + :outerAngle2
+		localmake "chordAngle :totalOuterAngle / 2
+		localmake "chordLength :outerArcRadius * 2 * (sin :chordAngle)
+
+		localmake "sinRatio :chordLength / 2 / :innerArcRadius
+		localmake "innerArcAngle 360 - 2 * arcSin :sinRatio
+		localmake "startAngle item 7 :arcInfo
+		localmake "angle1 180 + :totalOuterAngle / 2 - :innerArcAngle / 2
+
+		drawArcLineShape [:x :y
+			[[:startAngle 0] [-:arcAngle1 :outerArcRadius]
+			[:angle1 0]
+			[:innerArcAngle :innerArcRadius]
+			[:angle1 0]
+			[-:outerAngle2 :outerArcRadius]]
+		] :height
+	]
+	setTurtleState :oldState
+end
+
+elmTechSolutionsLogo 100

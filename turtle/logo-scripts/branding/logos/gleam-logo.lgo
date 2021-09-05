@@ -1,0 +1,46 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Gleam_(programming_language)#/media/File:Gleam_Lucy.png
+to gleamLucyLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "eyeSeparation :height * 0.325
+	setPenSize :height * 0.04
+
+	setPenColor "black
+	setLineJoinStyle "round
+	setFillColor "#ffaff3
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.4805
+	jumpRight :height * 0.024
+	left 9.8
+	roundIsoStar :height * 0.566 :height * 0.3 5 :height * 0.055 :height * 0.0825
+
+	setPenSize 0
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height / 2
+	localmake "center1 pos
+	jumpRight :height * 0.02
+	setHeading :oldHeading - 10
+	setFillColor "black
+	jumpLeft :eyeSeparation / 2
+	repeat 2 [
+		circle :height * 0.04
+		jumpRight :eyeSeparation
+	]
+	jumpTo :center1
+	jumpBackward :height * 0.075
+	jumpRight :height * 0.02
+	localmake "arcAngle 162
+	setLineCap "round
+	setPenSize :height * 0.035
+	localmake "mouthRadius :height * 0.035
+	jumpLeft :mouthRadius * sin :arcAngle / 2
+	left 270 - :arcAngle / 2
+	arcLeft :arcAngle :mouthRadius
+	setTurtleState :oldState
+end
+
+gleamLucyLogo 100
