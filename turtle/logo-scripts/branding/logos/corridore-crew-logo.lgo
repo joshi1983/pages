@@ -1,0 +1,48 @@
+; Inspired by logo at:
+; https://www.youtube.com/@CorridorCrew
+to corridoreCrewLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "trapHeight :height * 0.13
+	localmake "parallelogramWidth :trapHeight / cos 45
+	localmake "angleStep 90
+	localmake "startY :height * 0.401
+	localmake "startX :height * 0.102
+	stripes :height :height ["#fff217]
+	setPenSize 0
+	setFillColor "black
+	localmake "gap :height * 0.115
+	jumpForward :startY
+	jumpLeft :startX
+	localmake "center pos
+	left 45
+	localmake "baseWidth :gap * 1.45
+	localmake "topWidth :baseWidth + :trapHeight * 2
+	repeat 3 [
+		jumpForward :gap
+		isoTrapezoid :baseWidth :topWidth :trapHeight
+		left :angleStep
+		jumpTo :center
+	]
+	setHeading :oldHeading + 45
+	jumpForward :height * 0.31
+	localmake "baseWidth :height * 0.52
+	localmake "topWidth :trapHeight * 2 + :baseWidth
+	isoTrapezoid :baseWidth :topWidth :trapHeight
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpRight :height * 0.03
+	parallelogram :parallelogramWidth :height * 0.535 45
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpLeft :height / 2
+	jumpForward :height * 0.535
+	right 90
+	parallelogram :parallelogramWidth :height * 0.53 -45
+	setTurtleState :oldState
+end
+
+corridoreCrewLogo 100

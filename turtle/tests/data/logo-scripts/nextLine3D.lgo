@@ -1,0 +1,19 @@
+to NextLine3D :size
+; Save 2D image position and orientation
+make "savepos2d posxyz
+make "saveori2d orientation
+; Restore 3D image position and orientation
+setposxyz :savepos3d
+setorientation :saveori3d
+; Next scan line (notice it looks just 2D code)
+bk item 2 :size
+rt 90
+fd 1
+lt 90
+; Save 3D image position and orientation
+make "savepos3d posxyz
+make "saveori3d orientation
+; Restore 2D image position and orientation
+setposxyz :savepos2d
+setorientation :saveori2d
+end

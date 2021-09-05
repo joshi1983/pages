@@ -1,0 +1,23 @@
+!
+!  RESID2. Show data with polynomial fitting and
+!  quadratic residuals in two windows.
+!
+LIBRARY "Stat2Lib.trc"
+
+DIM x(50), y(50)
+
+FOR i = 1 to 50                   ! Create fake data
+    LET x(i) = i
+    LET y(i) = (i/10)^2 + (Rnd-.5)
+NEXT i
+
+OPEN #1: screen 0, 1, .5, 1       ! Show parabolic fit
+CALL SetPolyFit (2)
+CALL SetTitle ("Polynomial Curve Fit")
+CALL PlotScat (x, y, 6, 3, "")
+
+OPEN #2: screen 0, 1, 0, .49      ! ...and show residuals
+CALL SetTitle ("Quadratic Residuals")
+CALL PlotPolyResid (x, y, 2, 6, 0, "")
+
+END

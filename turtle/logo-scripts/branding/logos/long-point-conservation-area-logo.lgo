@@ -1,0 +1,58 @@
+to drawTree :height
+	localmake "oldState turtleState
+	setFillColor "#00853e
+	setPenSize :height * 0.02
+	setLineJoinStyle "miter
+	drawArcLineShape [0 0
+		pathMirror [[90 0] [0.12] [-90 0] [0.23] [90 0] [0.3] [-119 0]
+		[0.87]]
+	] :height	
+
+	setTurtleState :oldState
+end
+
+to drawWave :length
+	localmake "oldState turtleState
+	localmake "waveLength penSize * 3
+	localmake "arcAngle 100
+	localmake "arcRadius :waveLength / 2 / sin :arcAngle / 2
+	localmake "numWaves int :length / :waveLength
+	jumpBackward :numWaves * :waveLength / 2
+	right :arcAngle / 2
+	setLineJoinStyle "round
+	repeat :numWaves [
+		arcLeft :arcAngle :arcRadius
+		right :arcAngle
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://www.lprca.on.ca
+to longPointRegionConservationAuthorityLogo :height
+	localmake "oldState turtleState
+	localmake "radius :height * 0.35
+	setPenSize 0
+	setFillColor "#ffe716
+	jumpForward :height / 2
+	localmake "center pos
+	roundIsoStar :height / 2 :height * 0.3 16 0 :height * 0.6
+	setFillColor "#0055a5
+	circle :radius
+	jumpBackward :height * 0.23
+	setPenColor "white
+	drawTree :height * 0.53
+	jumpForward :height * 0.02
+	setPenSize :height * 0.025
+	right 90
+	repeat 2 [
+		drawWave 2 * distanceToCircle :center :radius
+		jumpRight :height * 0.08
+	]
+	jumpTo :center
+	setFillColor transparent
+	circle :radius
+	setTurtleState :oldState
+end
+
+longPointRegionConservationAuthorityLogo 100

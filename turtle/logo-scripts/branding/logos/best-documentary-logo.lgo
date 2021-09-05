@@ -1,0 +1,64 @@
+to drawCameraShutter :radius
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "center pos
+	localmake "colors [
+		"#869bd4 "#ffdf08 "#fda21e "#ef641f
+		"#e74f4e "#e15d8c
+	]
+	setFillColor "lime
+	setPenSize 0
+	repeat count :colors [
+		setHeading :oldHeading - 96 + repcount * 360 / count :colors
+		setFillColor item repcount :colors
+		jumpForward :radius
+		right 90
+		polyStart
+		arcRight 54.5 :radius
+		right 34.5
+		arcRight 54 :radius
+		right 149.06
+		arcLeft 81 :radius
+		polyEnd
+		jumpTo :center
+	]
+
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://www.youtube.com/@BestDoc
+to bestDocumentaryLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "blackRadius :height * 0.285
+	localmake "blackArcAngle 316
+	setPenSize :height * 0.105
+	setPenColor "#333
+	jumpForward penSize / 2 + :blackRadius
+	localmake "center pos
+	drawCameraShutter :height * 0.203
+	left 90 + (360 - :blackArcAngle) / 2
+	jumpForward :blackRadius
+	left 90
+	arcLeft :blackArcAngle :blackRadius
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height - penSize / 2
+	jumpRight :height * 0.05
+	right 130
+	localmake "topHeading heading
+	repeat 3 [
+		localmake "startPos pos
+		setHeading :oldHeading + 180
+		forward distanceToCircle :center :blackRadius
+		jumpTo :startPos
+		setHeading :topHeading
+		jumpForward :height * 0.153
+	]
+	setTurtleState :oldState
+end
+
+bestDocumentaryLogo 100

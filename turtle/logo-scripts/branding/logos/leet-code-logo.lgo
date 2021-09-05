@@ -1,0 +1,60 @@
+; Inspired by logo at
+; https://leetcode.com/
+to leetCodeLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "thickness :height * 0.117
+	localmake "arcRadius :height * 0.171
+	localmake "size1 :height * 0.148
+	localmake "size2 :height * 0.25
+	localmake "leetCodeWhite "white
+	localmake "leetCodeOrange "#f89f1b
+	jumpForward :thickness / 2
+	setPenSize 0
+	jumpLeft :height * 0.018
+	left 90
+	arcRight 45 :arcRadius
+	localmake "startPos pos
+	right 180
+	setPenSize :thickness
+	setLineCap "round
+	setPenColor :leetCodeOrange
+	arcLeft 90 :arcRadius
+	forward :size1
+	localmake "endPos1 pos
+
+	; left-most straight line and arc
+	jumpTo :startPos
+	setHeading :oldHeading - 45
+	setPenColor :leetCodeWhite
+	forward :size2
+	arcRight 90 :arcRadius
+	localmake "pos1 pos
+
+	; upper orange arc and straight line
+	jumpForward :height * 0.25
+	setPenColor :leetCodeOrange
+	arcRight 90 :arcRadius
+	forward :size1
+	localmake "endPos2 pos
+
+	; white line near the top of the logo
+	jumpTo :pos1
+	setHeading :oldHeading + 45
+	setPenColor :leetCodeWhite
+	forward :height * 0.585
+
+	; Calculate mid point between the 2 end points.
+	; This makes sure the horizontal line is exactly 
+	; midway between the orange shapes
+	jumpTo mix :endPos1 :endPos2 0.5
+	setHeading :oldHeading + 90
+	jumpForward :height * 0.152
+	setPenColor "#b4b2b1
+	backward :height * 0.41
+
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+leetCodeLogo 100

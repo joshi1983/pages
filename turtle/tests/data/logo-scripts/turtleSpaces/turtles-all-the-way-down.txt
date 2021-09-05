@@ -1,0 +1,45 @@
+TO turtlesallthewaydown
+
+  reset
+
+  snappy:setposition [-0.0567188571145 -41.2097873969 -9.14256453631]
+  snappy:setvectors [
+    [0.0177688320245 0.192937058466 -0.981050233209]
+    [-0.00350577343795 0.981211134942 0.192905205264]
+    [0.999835975629 1.16396598173E-05 0.0181113694522]
+  ]
+  ;position Snappy where we want him to reproduce the image
+
+  make "defaultcols colors
+  ;make a copy of the default color palette
+
+  penup dropanchor
+  pullout 50 tether
+  ;we want 'orbit' in a circle
+
+  left 90 orbitright 39
+  ;because we tethered, we can point away
+  ;then orbit around the anchor point
+
+  repeat 800 [
+    setfillshade -5 + repcount / 20
+    ;set the shade of the fill color, the color used
+    ;to create the voxels that make up the turtle, amongst others
+
+    make "offset remainder repcount + 11 14
+    ;why +11? So we get the default turtle colors in the right place!
+
+    repeat 14 [
+      definecolor repcount item 2 + remainder (:offset + repcount) 14 :defaultcols
+      ;shuffle the color palette. We need to start at item 2 because 1 is black
+      ;(item is 1-based, whereas definecolor is 0-based -- 0 being black)
+
+    ]
+
+    stamp "myrtle
+    ;make a copy of myrtle in the current position
+
+    orbitleft 22.95 lower 1
+  ]
+
+END

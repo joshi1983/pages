@@ -1,0 +1,45 @@
+to queTextLogoCustomColors :height :colors
+	localmake "oldState turtleState
+	localmake "linesInfo [
+		[0.79 0.16] ; bottom line
+		[0.55 -0.28]
+		[0.725 0.194]
+		[0.83 -0.14] ; top line
+	]
+	localmake "thickness :height * 0.173
+	localmake "cornerRadius :height * 0.055
+	localmake "vStep (:height - :thickness) / 3
+	jumpForward :thickness / 2
+	setPenSize 0
+	repeat count :linesInfo [
+		localmake "pos1 pos
+		localmake "lineInfo item repcount :linesInfo
+		localmake "width :height * first :lineInfo
+		setFillColor item repcount :colors
+		jumpLeft :height * last :lineInfo
+		roundRect :width :thickness :cornerRadius
+		jumpTo :pos1
+		jumpForward :vStep
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by logo at
+; https://www.quetext.com/
+to queTextPrimaryLogo :height
+	queTextLogoCustomColors :height ["#272ca3 "#ff5a5f "#42ba96 "#272ca3]
+end
+
+; Inspired by the white logo shown on text near the footer of
+; https://www.quetext.com/
+to queTextWhiteLogo :height
+	stripes :height * 3 :height ["black]
+	queTextLogoCustomColors :height duplicate "white 4
+end
+
+make "height 100
+make "separation :height * 8
+jumpLeft :separation * 0.5
+queTextPrimaryLogo :height
+jumpRight :separation
+queTextWhiteLogo :height

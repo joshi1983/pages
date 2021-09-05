@@ -1,0 +1,32 @@
+; Inspired by logo at:
+; https://www.pinterest.ca/newscomauhq/
+to newsAustraliaLogo :size
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "jumpDistance :size * 0.65
+	localmake "squareSize :size - :jumpDistance
+	localmake "arcRadius :size * 0.05
+	localmake "straightLength :squareSize - :arcRadius * 2
+	localmake "colors ["#c90000 "#f46a00 "#81888c
+		"#4aa90f "#00838d "#1691db "#7c28b6 "#d51387]
+	localmake "numColors count :colors
+	setPenSize 0
+	repeat :numColors [
+		setHeading :oldHeading + (repcount - 1) * 360 / :numColors
+		jumpForward :jumpDistance
+		jumpLeft :straightLength / 2
+		setFillColor item repcount :colors
+		right 90
+		polyStart
+		repeat 4 [
+			jumpForward :straightLength
+			arcLeft 90 :arcRadius
+		]
+		polyEnd
+		jumpTo :oldPos
+	]
+	setTurtleState :oldState
+end
+
+newsAustraliaLogo 100

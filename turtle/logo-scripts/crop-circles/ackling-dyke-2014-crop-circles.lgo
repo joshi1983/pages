@@ -1,0 +1,64 @@
+make "darkColor "green
+
+; Inspired by crop circles shown at:
+; https://www.pinterest.ca/pin/309059593173777775/
+; These circles were reported in June 2014.
+; They were located at Ackling Dyke, 
+; Nr Sixpenny Handley, Dorset, United Kingdom
+;
+; This video walks through them:
+; https://www.youtube.com/watch?v=hFj5-YwFCCY
+to acklingDyke2014CropCircles :height
+	localmake "oldState turtleState
+	localmake "outerRadius1 :height * 0.125
+	localmake "outerRadius2 :outerRadius1 / 3
+	localmake "darkRadius :outerRadius1 * 0.7
+	localmake "gap (:height - :outerRadius1 * 2) / (1 + cos 180 / 5)
+	localmake "lightColor "#fe5
+	localmake "thickness :height * 0.008
+	localmake "starRadius :height * 0.35
+	localmake "largeStarCircleRadius :height * 0.06
+	localmake "smallStarCircleRadius :height * 0.02
+	localmake "pentagonSideLength :starRadius * 2 * sin 180 / 5
+	localmake "starLength1 :pentagonSideLength * 2 * (cos 36)
+	localmake "gap2 :pentagonSideLength * sin 36
+	jumpForward :height - :gap - :outerRadius1
+	localmake "center pos
+	setPenSize 0
+	setPenColor :lightColor
+	repeat 5 [
+		jumpForward :gap
+		localmake "outerCenter pos
+		setFillColor :lightColor
+		setPenSize 0
+		circle :outerRadius1
+		jumpForward :outerRadius1 - :darkRadius
+		setFillColor :darkColor
+		circle :darkRadius
+		jumpTo :outerCenter
+		setFillColor :lightColor
+		circle :outerRadius2
+		setPenSize :thickness
+		backward :gap + :starRadius
+		jumpTo :center
+		right 360 / 5
+	]
+	right 180 / 5
+	setPenSize 0
+	setFillColor :lightColor
+	repeat 5 [
+		jumpForward :starRadius
+		circle :largeStarCircleRadius
+		jumpBackward :gap2
+		circle :smallStarCircleRadius
+		jumpBackward :thickness / 2
+		stripes :starLength1 :thickness [:lightColor]
+		jumpTo :center
+		right 360 / 5
+	]
+	circle :height * 0.055
+	setTurtleState :oldState
+end
+
+setScreenColor :darkColor
+acklingDyke2014CropCircles 100

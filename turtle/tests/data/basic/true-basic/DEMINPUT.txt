@@ -1,0 +1,32 @@
+PROGRAM DemInput
+
+! This program demonstrates how to use the one-line Input Dialog Box.
+
+! Note that the default output window is not shown until the
+! first output is directed to it.
+
+LIBRARY "TrueDial.trc"
+
+LET message$ = "Enter your name:"
+LET buttons$ = "Ok|Cancel|Quit"
+
+DO
+
+   LET name$ = ""
+   CALL TD_Input (message$, buttons$, name$, 1, result)
+   SELECT CASE result
+   CASE 1                         ! Ok
+        PRINT "You just entered: "; name$
+        PAUSE 1
+   CASE 2                         ! Cancel
+        PRINT "You just canceled"
+        PAUSE 1
+   CASE 3                         ! Quit
+        PRINT "You just quit"
+        PAUSE 1
+        EXIT DO
+   END SELECT
+
+LOOP
+
+END

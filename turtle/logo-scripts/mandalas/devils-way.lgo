@@ -1,0 +1,97 @@
+to drawDot :radius
+	localmake "oldState turtleState
+	setPenColor "yellow
+	setFillColor "red
+	setPenSize :radius * 0.5
+	circle :radius - penSize / 2
+	setTurtleState :oldState
+end
+
+to drawWhiteArcs :size :angle
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "center pos
+	localmake "spread :size / 3
+	localmake "maxInnerSize :size * 0.5
+	localmake "minInnerSize :maxInnerSize - :spread
+	localmake "arcAngle 60
+	localmake "thickness :size * 0.02
+	localmake "maxSize :size - :thickness / 2
+	localmake "minSize :maxSize - :spread
+	localmake "redWidth :size * 0.12
+	setPenSize 0
+	jumpForward :minSize
+	localmake "topPos pos
+	jumpBackward :minSize - :maxInnerSize
+	localmake "bottomPos pos
+	jumpForward :spread * 0.2
+	jumpLeft :redWidth / 2
+	localmake "leftPos pos
+	jumpRight :redWidth
+	setFillBlendMode "lighter
+		; lighter so this polygon won't hide any white lines
+	polygon [pos :bottomPos :leftPos :topPos]
+
+	jumpTo :center
+	setPenColor "white
+	setPenSize :thickness
+	setLineJoinStyle "round
+	setLineCap "round
+	repeat 4 [
+		localmake "innerSize mix :minInnerSize :maxInnerSize repRatio
+		localmake "size mix :minSize :maxSize repRatio
+		jumpForward :size
+		localmake "topPos pos
+		jumpTo :center
+		right :angle
+		ifelse repcount = 4 [
+			forward :innerSize
+		] [
+			jumpForward :innerSize
+		]
+		localmake "endPos pos
+		jumpTo :center
+		left :angle * 2
+		jumpForward :innerSize
+		localmake "arcRadius (distance :topPos) / 2 / sin :arcAngle / 2
+		setHeading (towards :topPos) - :arcAngle / 2
+		arcRight :arcAngle :arcRadius
+		setHeading (towards :endPos) - :arcAngle / 2
+		arcRight :arcAngle :arcRadius
+		jumpTo :center
+		setHeading :oldHeading
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by image at:
+; https://ca.pinterest.com/pin/914862421250868/
+to devilsWay :height
+	localmake "oldState turtleState
+	localmake "dotRadius :height * 0.017
+	localmake "arcSize :height / 2 - :dotRadius * 2
+	jumpForward :height / 2
+	localmake "center pos
+	setFillColor "red
+	setPenSize 0
+	isotoxalStar :height * 0.085 :height * 0.18  8
+
+	repeat 8 [
+		drawWhiteArcs :arcSize 360 / 8
+		jumpForward :arcSize + :dotRadius
+		drawDot :dotRadius
+		jumpTo :center
+		right 180 / 8
+		jumpForward :arcSize * 0.81
+		drawDot :dotRadius
+		jumpTo :center
+		right 180 / 8
+	]
+	setFillColor "green
+	setPenSize 0
+	circle :height * 0.01
+	setTurtleState :oldState
+end
+
+setScreenColor "#300
+devilsWay 100

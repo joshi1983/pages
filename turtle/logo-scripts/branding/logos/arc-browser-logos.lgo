@@ -1,0 +1,147 @@
+make "angle1 25.5
+make "arcAngle1 92
+make "arcAngle2 51.5
+make "arcAngleOffset 4
+make "thicknessRatio 0.257
+make "arcOffsetRatio 0.567
+make "startLeftRatio 0.383
+make "outlineThicknessRatio 0.85
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Arc_(web_browser)#/media/File:Arc_(browser)_logo.svg
+to arcBrowserLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "thickness :height * :thicknessRatio
+	localmake "size1 :height * 0.3
+	localmake "size2 ((:height - :thickness) / cos :angle1)
+	localmake "size3 :size2 - :size1
+	localmake "arcRadius :height * 0.5
+	localmake "tinyArcRadius :height * 0.017
+	localmake "arcBrowserDarkPink "#ff536a
+	setLineCap "round
+	setLineJoinStyle "round
+	setPenSize :thickness
+	jumpForward :thickness / 2
+	jumpLeft :height * :startLeftRatio
+	setPenColor "#1a007f
+	right :angle1
+	forward :size1
+	setPenColor :arcBrowserDarkPink
+	forward :size3
+	localmake "topPoint pos
+	localmake "heading1 :oldHeading + 180 - :angle1
+	setHeading :heading1
+	jumpForward :height * :arcOffsetRatio
+	localmake "pos1 pos
+	right 90 - :arcAngleOffset
+	setPenColor "#002dc8
+	arcRight :arcAngle1 :arcRadius
+	jumpTo :pos1
+	setHeading :heading1 - 90 - :arcAngleOffset
+	setPenColor "#ff9396
+	arcLeft :arcAngle2 :arcRadius	
+
+	setPenColor :arcBrowserDarkPink
+	jumpTo :topPoint
+	setHeading :heading1
+	forward :size2
+
+	; Fill in the tiny arc just above the center of the logo
+	jumpTo :topPoint
+	setHeading :oldHeading
+	jumpBackward (:thickness / 2 + :tinyArcRadius) / sin :angle1
+	left 90 - :angle1
+	jumpForward :tinyArcRadius
+	setPenSize 0
+	right 90
+	setFillColor :arcBrowserDarkPink
+	polyStart
+	arcRight 180 - :angle1 * 2 :tinyArcRadius
+	jumpLeft :tinyArcRadius
+	jumpBackward :height * 0.1
+	polyEnd
+	setTurtleState :oldState
+end
+
+to outlineForward :length
+	localmake "oldState turtleState
+	localmake "oldPenSize penSize
+	localmake "innerThickness :oldPenSize * :outlineThicknessRatio
+	localmake "outlineThickness :oldPenSize - :innerThickness
+	setFillColor "white
+	setPenSize :outlineThickness
+	circlePair :innerThickness / 2 :innerThickness / 2 :length
+	setTurtleState :oldState
+	jumpForward :length
+end
+
+to outlineArcLeft :angle :arcRadius
+	localmake "oldState turtleState
+	localmake "oldPenSize penSize
+	localmake "innerThickness :oldPenSize * :outlineThicknessRatio
+	localmake "outlineThickness :oldPenSize - :innerThickness
+	setPenSize :outlineThickness
+	jumpRight :innerThickness / 2
+	right 180
+	setFillColor "white
+	polyStart
+	arcRight 180 :innerThickness / 2
+	arcLeft :angle :arcRadius - :innerThickness / 2
+	arcRight 180 :innerThickness / 2
+	arcRight :angle :arcRadius + :innerThickness / 2
+	polyEnd
+	setTurtleState :oldState
+	setPenSize 0
+	arcLeft :angle :arcRadius
+	setPenSize :oldPenSize
+end
+
+; Inspired by logo shown near the end of the video at
+; https://youtu.be/LoxkGw1Qxrw?t=342
+; The image in the video is horizontally scaled differently from vertical scaling.
+; arcBrowserOutlineLogo does not copy that stretching/scaling.
+; arcBrowserOutlineLogo uses the same proportions as the filled logo(arcBrowserLogo).
+to arcBrowserOutlineLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "thickness :height * :thicknessRatio
+	localmake "size2 ((:height - :thickness) / cos :angle1)
+	localmake "arcRadius :height * 0.5
+	jumpLeft :height * :startLeftRatio
+	jumpForward :thickness / 2
+	setPenColor "black
+	setPenSize :thickness
+	right :angle1
+	outlineForward :size2
+	localmake "topPoint pos
+	setHeading :oldHeading + 180 - :angle1 
+	jumpForward :height * :arcOffsetRatio
+	right 90 - :arcAngleOffset
+	setPenSize 0
+	arcRight :arcAngle1 :arcRadius
+	right 180
+	setPenSize :thickness
+	outlineArcLeft :arcAngle1 + :arcAngle2 :arcRadius
+
+	jumpTo :topPoint
+	setHeading :oldHeading + 180 - :angle1
+	localmake "innerThickness :thickness * :outlineThicknessRatio
+	localmake "outlineThickness :thickness - :innerThickness
+	outlineForward :size2
+	jumpTo :topPoint
+	right 2 * :angle1
+	setPenSize 0
+	setFillColor "white
+	
+	localmake "innerRadius (:innerThickness - :outlineThickness) / 2
+	circlePair :innerRadius :innerRadius :height * 0.3
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 5
+jumpLeft :separation * 0.5
+arcBrowserLogo :height
+jumpRight :separation
+arcBrowserOutlineLogo :height

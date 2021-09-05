@@ -1,0 +1,141 @@
+; Inspired by Windows 3.1 logo and trademark
+; https://www.pinterest.ca/pin/379639443599817813/
+
+make "windowsRed "#fe0000
+make "windowsBlue "#0000fe
+make "windowsGreen "#017f01
+make "windowsYellow "#fefe00
+make "windowsBlack "#231f20
+
+to parallelogram2 :size1
+	localmake "oldState turtleState
+	localmake "size2 :size1 * 1.1
+	localmake "angle1 -26.3
+	jumpForward :size1 / 2
+	right 90
+	parallelogram :size1 :size2 :angle1
+	setTurtleState :oldState
+end
+
+to windows3.1CurvedRegion :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "arcAngle1 60
+	localmake "arcAngle2 52.5
+	localmake "arcAngle3 20
+	localmake "arcAngle4 19.3
+	localmake "arcAngle5 26.2217
+	localmake "arcRadius1 :height * 0.583
+	localmake "arcRadius2 :height * 0.6591122
+	localmake "arcRadius3 :height * 0.43
+	jumpForward :height * 0.075
+	jumpRight :height * 0.03
+	localmake "bottomLeftPos pos
+	right 60.4
+	setPenColor "red
+	setPenSize 0
+	setFillColor :windowsBlack
+	polyStart
+	arcRight :arcAngle1 :arcRadius1
+	setHeading :oldHeading
+	jumpForward :height * 0.858
+	left 63
+	arcLeft :arcAngle2 :arcRadius2
+	polyEnd
+
+	jumpTo :bottomLeftPos
+	setHeading :oldHeading
+	jumpForward :height * 0.122
+	setFillColor :windowsBlue
+	right 64
+	polyStart
+	arcRight :arcAngle3 :arcRadius1
+	setHeading :oldHeading
+	jumpForward :height * 0.263
+	left 96
+	arcLeft :arcAngle3 :arcRadius1
+	polyEnd
+
+	jumpTo :bottomLeftPos
+	setHeading :oldHeading
+	jumpForward :height * 0.47
+	right 64
+	setFillColor :windowsRed
+	polyStart
+	arcRight :arcAngle3 :arcRadius1
+	setHeading :oldHeading
+	jumpForward :height * 0.273
+	left 96
+	arcLeft :arcAngle3 :arcRadius1
+	polyEnd
+
+	setFillColor :windowsYellow
+	jumpTo :bottomLeftPos
+	setHeading :oldHeading
+	jumpRight :height * 0.272
+	jumpForward :height * 0.184
+	localmake "pos1 pos
+	right 89
+	polyStart
+	arcRight :arcAngle4 :arcRadius1
+	setHeading :oldHeading
+	jumpForward :height * 0.273
+	left 69
+	arcLeft :arcAngle5 :arcRadius3
+	polyEnd
+
+	setFillColor :windowsGreen
+	jumpTo :pos1
+	setHeading :oldHeading
+	jumpForward :height * 0.35
+	right 89
+	polyStart
+	arcRight :arcAngle4 :arcRadius1
+	setHeading :oldHeading
+	jumpForward :height * 0.275
+	left 70
+	arcLeft 22.112 :height * 0.51
+	polyEnd
+	setTurtleState :oldState
+end
+
+to parallelograms :colors :step :size
+	localmake "oldState turtleState
+	repeat count :colors [
+		setFillColor item repcount :colors
+		parallelogram2 :size
+		jumpForward :step
+	]
+	setTurtleState :oldState
+end
+
+to windows3.1Logo :height
+	localmake "oldPos pos
+	windows3.1CurvedRegion :height
+	localmake "colors duplicate :windowsBlack 7
+	jumpForward :height * 0.021
+	jumpLeft :height * 0.098
+	setPenSize 0
+	parallelograms :colors :height * 0.125 :height * 0.109
+	setItem 2 "colors :windowsBlue
+	setItem 3 "colors :windowsBlue
+	setItem 5 "colors :windowsRed
+	setItem 6 "colors :windowsRed
+	jumpTo :oldPos
+	jumpLeft :height * 0.22
+	parallelograms :colors :height * 0.124 :height * 0.1
+	jumpLeft :height * 0.11
+	jumpForward :height * 0.014
+	parallelograms :colors :height * 0.1235 :height * 0.09
+	jumpLeft :height * 0.099
+	jumpForward :height * 0.016
+	parallelograms :colors :height * 0.1235 :height * 0.069
+	jumpLeft :height * 0.098
+	jumpForward :height * 0.055
+	parallelograms :colors :height * 0.1235 :height * 0.055
+	jumpLeft :height * 0.087
+	jumpForward :height * 0.045
+	parallelograms :colors :height * 0.1235 :height * 0.04
+end
+
+windows3.1Logo 100

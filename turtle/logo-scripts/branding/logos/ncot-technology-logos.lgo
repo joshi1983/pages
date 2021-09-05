@@ -1,0 +1,82 @@
+make "ncotPink "#fe74ff
+
+to drawRow :width :thickness
+	localmake "oldState turtleState
+	localmake "arcs1 [[-10 2.35] [-80 0.1]]
+	localmake "penThickness :thickness * 0.02
+	jumpTo [0 0]
+	setHeading 0
+	arcLines :arcs1 1
+	localmake "curveOffset xCor
+	localmake "arcs (combine :arcs1 [[(:width - :penThickness) / :thickness - 2 * :curveOffset]] reverse :arcs1)
+	localmake "shape [:penThickness / 2 / :thickness 0.5 combine :arcs :arcs]
+	setTurtleState :oldState
+	setPenSize :penThickness
+	drawArcLineShape :shape :thickness
+	setTurtleState :oldState
+end
+
+to drawN :fontHeight
+	localmake "oldState turtleState
+	localmake "width :fontHeight * 1.04
+	localmake "rowSeparation :fontHeight / 7
+	localmake "rowThickness :fontHeight * 0.115
+	localmake "rowGap :rowSeparation - :rowThickness
+	localmake "sideWidth1 :fontHeight * 0.295
+	jumpForward :fontHeight / 2
+	localmake "center pos
+	setFillColor "#00ffff
+	setPenColor "black
+	repeat 2 [
+		jumpRight :width / 2 - :sideWidth1
+		jumpForward :rowSeparation / 2 + :rowGap
+		repeat 3 [
+			drawRow :sideWidth1 :rowThickness
+			jumpForward :rowSeparation
+		]
+		jumpBackward :rowSeparation
+		jumpLeft :width - :sideWidth1
+		repeat 3 [
+			localmake "w :sideWidth1 + (repcount - 1) * :fontHeight * 0.15
+			drawRow :w :rowThickness
+			jumpBackward :rowSeparation
+		]
+		right 180
+		jumpTo :center
+	]
+	jumpLeft :width / 2
+	jumpBackward :rowThickness / 2
+	drawRow :width :rowThickness
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://www.youtube.com/@ncot_tech
+to ncotTechnologyLogo :height
+	localmake "oldState turtleState
+	localmake "fontHeight :height * 0.5
+	stripes :height :height [:ncotPink]
+	jumpForward (:height - :fontHeight) / 2
+	drawN :fontHeight
+	setTurtleState :oldState
+end
+
+to ncotTechnologyCircleLogo :height
+	localmake "oldState turtleState
+	localmake "fontHeight :height * 0.5
+	jumpForward :height / 2
+	setFillColor :ncotPink
+	setPenSize 0
+	circle :height / 2
+	jumpBackward :fontHeight / 2
+	drawN :fontHeight
+	
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 5
+jumpLeft :separation / 2
+ncotTechnologyLogo :height
+jumpRight :separation
+ncotTechnologyCircleLogo :height

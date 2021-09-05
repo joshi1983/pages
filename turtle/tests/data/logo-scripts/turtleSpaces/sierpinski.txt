@@ -1,0 +1,34 @@
+; copied from: https://turtlespaces.org/news/logo-sierpinski/
+TO half_s :size :level
+  penup
+  if :level = 0 [fd :size stop]
+
+  pin
+  ;pin marks a point for use with pinfrag
+
+  half_s :size :level - 1
+  lt 45 fd :size * sqrt 2 lt 45
+  half_s :size :level - 1
+  rt 90 fd :size rt 90
+  half_s :size :level - 1
+  lt 45 fd :size * sqrt 2 lt 45
+  half_s :size :level - 1
+
+  pinfrag
+  ;creates a triangle out of the last three 'pins'
+
+END
+
+
+TO sierpinski :size :level
+  repeat 2 [
+    half_s :size :level
+    rt 90 fd :size rt 90
+  ]
+END
+
+TO sierp
+  cs pu back 180 pd sierpinski 3 5
+END
+
+sierp

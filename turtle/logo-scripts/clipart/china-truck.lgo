@@ -1,0 +1,71 @@
+to drawTruckBody :height
+	localmake "oldState turtleState
+	localmake "arcRadius :height * 0.49
+	localmake "cabinWidth :arcRadius + :height * 0.035
+	setFillColor "white
+	setPenColor "black
+	setLineCap "butt
+	setLineJoinStyle "miter
+	setPenSize 0
+	jumpLeft :height * 1.02
+	polyStart
+	jumpForward :height
+	jumpRight :height * 1.55
+	right 90
+	arcRight 90 :arcRadius
+	jumpForward :height - :arcRadius
+	setPenSize :height * 0.01
+	polyEnd
+	jumpRight :cabinWidth
+	backward :height
+	jumpForward :height / 2
+	left 90
+	forward :cabinWidth
+	setTurtleState :oldState
+end
+
+to wheel :radius
+	localmake "oldState turtleState
+	localmake "tireThickness :radius * 0.25
+	localmake "tireRadius2 :radius - :tireThickness / 2
+	setPenColor "black
+	setFillColor "white
+	setPenSize :tireThickness
+	circle :tireRadius2
+	setPenSize 0
+	setFillColor "black
+	circle :radius * 0.1
+	setTurtleState :oldState
+end
+
+; Inspired by figure 9-4-12 shown near the bottom right of
+; page 149 of a book called
+; 中华学习机 LOGO语言及其编程技巧 - 人民邮电出版社
+; Google Translate translated that title to:
+; China Learning Machine LOGO Language and Its Programming Skills
+;  Published 1991-02-02
+; You can find the book at:
+; https://archive.org/details/logo-renmin-youdian-chuban-she-zhonghua-xuexi-ji-logo-yuyan-ji-qi-biancheng-jiqiao-cec-i/page/148/mode/2up
+to truck :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "tireThickness :height * 0.05
+	localmake "tireRadius1 :height * 0.165
+	jumpForward :tireRadius1
+	drawTruckBody :height - :tireRadius1
+
+	; draw wheels.
+	jumpTo :oldPos
+	jumpForward :tireRadius1
+	setPenSize :tireThickness
+	jumpLeft :height * 0.466
+	wheel :tireRadius1
+	jumpRight :height * 1.107
+	wheel :tireRadius1
+
+	setTurtleState :oldState
+end
+
+setScreenColor "#bbd
+stripes 300 1 ["black] ; a little pavement
+truck 100

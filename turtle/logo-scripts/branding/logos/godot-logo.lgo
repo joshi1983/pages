@@ -1,0 +1,65 @@
+to drawEyes :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "eyeSeparation :height * 0.49
+	localmake "eyeSeparation2 :height * 0.47
+	jumpForward :height * 0.485
+	jumpLeft :eyeSeparation / 2
+	setFillColor "white
+	repeat 2 [
+		circle :height * 0.103
+		jumpRight :eyeSeparation
+	]
+	jumpTo :oldPos
+	jumpForward :height * 0.48
+	setFillColor "black
+	jumpLeft :eyeSeparation2 / 2
+	repeat 2 [
+		circle :height * 0.07
+		jumpRight :eyeSeparation2
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://en.wikipedia.org/wiki/Godot_(game_engine)#/media/File:Godot_logo.svg
+to goDotLogo :height
+	localmake "oldState turtleState
+	localmake "radius1 0.0172
+	localmake "jawArcs1 [
+		[-90 0] [15 1] [15 0.39] [20 0.29] [20 0.12]
+		[16 0.23] [5.2 0.5] [94.4 0] [0.155] [80 0]
+		[0.078] [-81.5 :radius1] [0.186] [-85.7 :radius1]
+		[0.07334] [81.6 0] [0.0746421951]
+	]
+	localmake "upperFaceArcs1 [
+		[-90 0] [0.0918] [-81.8 :radius1] [0.072]
+		[86 0] [0.151] [82 0] [0.077] [-80.7 :radius1]
+		[0.175] [84.5 0] [0.28] [-39 0] [8.8 0.75]
+		[62.1 0] [11.1 0.8] [73 0] [8.35 0.75] [-76 0]
+		[10.9 0.66] [-67 0] [7.45 0.9] [64.4 0]
+		[14.23 0.6] [71 0] [7.1 0.92] [-73 0]
+		[6.57 0.48709202]
+	]
+	localmake "blueShapes [
+		[0 0
+		combine :jawArcs1 reverse :jawArcs1]
+		[0 0.284
+		combine :upperFaceArcs1 reverse :upperFaceArcs1]
+	]
+	setPenSize 0
+	setFillColor "#478cbf
+	drawArcLineShapes :blueShapes :height
+	drawEyes :height
+
+	; draw the nose
+	jumpForward :height * 0.4055
+	setPenSize :height * 0.0665
+	setPenColor "white
+	setLineCap "round
+	forward :height * 0.09
+
+	setTurtleState :oldState
+end
+
+goDotLogo 100

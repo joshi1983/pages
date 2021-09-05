@@ -1,0 +1,27 @@
+!  KRUSKAL.
+!
+!  Use Kruskal-Wallis H test to see if different Harvard graduate
+!  divisions had "substantial" differences in admission practices.
+!  We consider the top 11 departments university-wide.
+!
+!  Data from "Beginning Statistics with Data Analysis" by F. Mosteller, pp. 487-488.
+!
+LIBRARY "Stat3Lib.trc"
+
+DIM d(4,3), diff(0,0)
+
+CALL SetMissing (-1)              ! Use -1 as missing value
+MAT READ d
+
+CALL KruskalWallisH (d, .05, h, p, diff)
+PRINT "Kruskal-Wallis H statistic: "; h
+PRINT "Significance probability: "; Using$("#.###",p)
+IF p > .1 then PRINT "Not significant at the 90% level."
+
+! Columns are: Natural Sciences, Social Sciences, Humanities
+DATA 34.5, 23.0, 25.4
+DATA 36.0, 26.6, 24.6
+DATA 25.0, 20.3, 18.8
+DATA 28.2, -1,   58.3
+
+END

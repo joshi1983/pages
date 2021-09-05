@@ -1,0 +1,80 @@
+to setCircleGradient :radius
+	localmake "colorStops createPList2 [
+		[0 "#00A3D0] [0.2712 "#00A3D0] [0.4972 "#0097C9]
+		[0.751 "#1668AB] [1 "#2D378C]
+	]
+	setFillGradient createRadialGradient pos :radius :colorStops
+end
+
+to drawStar :size
+	localmake "arcsInfo [
+		[89 0.033] [-3 6] [-3 3] [-5 1.3]
+		[-10 0.53] [-10 0.45] [-13 0.258]
+	]
+	setFillColor "white
+	setPenSize 0
+	jumpRight :size
+	right 180
+	polyStart
+	repeat 4 [
+		arcsRight :arcsInfo :size
+		arcsRight reverse :arcsInfo :size
+	]
+	polyEnd
+end
+
+; Inspired by logo and favicon at
+; https://www.nao.ac.jp
+; National Astronomical Observatory of Japan
+to naojLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "largeRadius :height * 0.4885
+	localmake "smallRadius :height * 0.333
+	localmake "bottomGap :height - :largeRadius * 2
+	jumpForward :largeRadius + :bottomGap
+	jumpLeft :height * 0.015
+	localmake "largeCenter pos
+	jumpBackward :bottomGap + :largeRadius - :smallRadius
+	jumpRight :height * 0.182
+	localmake "smallCenter pos
+	localmake "separation distance :largeCenter
+	localmake "angle triLengthsToAngle :largeRadius :separation :smallRadius
+	localmake "smallAngle1a arcSin (:largeRadius * sin :angle) / :smallRadius
+	localmake "smallAngle1 360 - 2 * :smallAngle1a
+	if :separation > :largeRadius * cos :angle [
+		localmake "smallAngle1 2 * :smallAngle1a
+	]
+	localmake "largeArcAngle 360 - :angle * 2
+	jumpTo :largeCenter
+	setPenSize 0
+	setCircleGradient :largeRadius
+	setHeading (towards :smallCenter) + :angle
+	jumpForward :largeRadius
+	right 90
+	polyStart
+	arcRight :largeArcAngle :largeRadius
+	setHeading (towards :smallCenter) + 90
+	arcLeft :smallAngle1 :smallRadius
+	polyEnd
+	localmake "pos1 pos
+	jumpTo :smallCenter
+	setCircleGradient :smallRadius
+	jumpTo :pos1
+	setHeading (towards :smallCenter) + 90
+	polyStart
+	arcLeft 360 - :smallAngle1 :smallRadius
+	setHeading (towards :largeCenter) - 90
+	arcRight 360 - :largeArcAngle :largeRadius
+	polyEnd
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.7313
+	jumpLeft :height * 0.212
+	drawStar :height * 0.248
+	setTurtleState :oldState
+end
+
+naojLogo 100

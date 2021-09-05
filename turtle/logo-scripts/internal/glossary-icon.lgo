@@ -1,0 +1,78 @@
+to glossaryA :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "angle1 20
+	localmake "verticalPos :height * 0.4696
+	localmake "size1 :height * 0.113
+	localmake "size2 :height * 0.128
+	localmake "size3 (:height - :verticalPos) / cos :angle1
+	jumpLeft :height / 2
+	jumpForward :verticalPos
+	setFillColor "black
+	setPenSize 0
+	polyStart
+	jumpRight :size1
+	right :angle1
+	jumpForward :size2
+	localmake "pos1 pos
+	setHeading :oldHeading
+	jumpRight :height * 0.212
+	setHeading :oldHeading + 180 - :angle1
+	jumpForward :size2
+	setHeading :oldHeading
+	jumpRight :size1
+	left :angle1
+	jumpForward :size3
+	setHeading :oldHeading
+	jumpLeft :size1
+	right 180 - :angle1
+	jumpForward :height * 0.34
+	setHeading :oldHeading
+	jumpLeft :height * 0.259
+	polyEnd
+
+	jumpTo :pos1
+	setHeading :oldHeading + :angle1
+	polyStart
+	jumpForward :height * 0.4365
+	setHeading :oldHeading
+	jumpLeft :size1
+	left 180 - :angle1
+	jumpForward :height * 0.4365
+	polyEnd
+
+	setTurtleState :oldState
+end
+
+to glossaryZ :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "angle1 39.1
+	jumpRight :height / 2
+	setFillColor "green
+	setPenSize 0
+	polyStart
+	jumpForward :height * 0.09
+	jumpLeft :height * 0.3015
+	right :angle1
+	jumpForward :height * 0.46
+	setHeading :oldHeading
+	jumpForward :height * 0.084
+	jumpLeft :height * 0.388
+	jumpBackward :height * 0.09
+	jumpRight :height * 0.247
+	left 180 - :angle1
+	jumpForward :height * 0.445
+	setHeading :oldHeading
+	jumpBackward :height * 0.095640696
+	polyEnd
+
+	setTurtleState :oldState
+end
+
+to glossaryIcon :height
+	glossaryZ :height
+	glossaryA :height
+end
+
+glossaryIcon 32

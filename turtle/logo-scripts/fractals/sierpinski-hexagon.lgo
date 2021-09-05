@@ -1,0 +1,68 @@
+to sierpinskiTriangle :height
+	localmake "width :height * 2 * tan 30
+	isoTriangle :width :height
+	if :height > penSize * 2 [
+		localmake "oldState turtleState
+		localmake "smallerHeight :height / (1 + sin 30)
+		localmake "gap :smallerHeight - :height / 2
+		jumpForward :height - :smallerHeight
+		localmake "center pos
+		repeat 3 [
+			jumpForward :gap
+			sierpinskiTriangle :smallerHeight - :gap
+			jumpTo :center
+			right 360 / 3
+		]
+		setTurtleState :oldState
+	]
+end
+
+to drawSierpsinkiTriangleLevel2 :height
+	localmake "oldState turtleState
+	localmake "colorStops createPList2 [
+		[0 "green] [0.5 "#cc8] [1 "#f00]
+	]
+	localmake "oldPos pos
+	jumpForward :height
+	localmake "top pos
+	setPenGradient createLinearGradient :oldPos :top :colorStops "pad
+	jumpTo :oldPos
+	setPenSize :height * 0.01
+	setFillColor transparent
+	sierpinskiTriangle :height
+
+	setTurtleState :oldState
+end
+
+to drawSierpsinkiTriangleLevel1 :height
+	localmake "oldState turtleState
+	localmake "smallerHeight :height / 2
+	localmake "gap :smallerHeight / 3
+	jumpForward :smallerHeight + :gap
+	localmake "center pos
+	right 60
+	repeat 3 [
+		jumpForward :gap
+		drawSierpsinkiTriangleLevel2 :smallerHeight
+		jumpTo :center
+		right 360 / 3
+	]
+
+	setTurtleState :oldState
+end
+
+; Inspired by:
+; https://ca.pinterest.com/pin/163185186493866386
+to sierpinskiHexagon :height
+	localmake "oldState turtleState
+	jumpForward :height / 2
+	repeat 6 [
+		drawSierpsinkiTriangleLevel1 :height / 2
+		right 360 / 6
+	]
+
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+sierpinskiHexagon 100

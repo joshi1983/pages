@@ -1,0 +1,87 @@
+to drawTrail :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "cornerRadius :height * 0.005
+	localmake "thickness :height * 0.036
+	localmake "lines [
+		[0.1774 0.5 5 60 0.267]
+		[0.204 0.618 20 50 0.6]
+		[0.267 0.736 35 52 0.47]
+	]
+	setPenSize 0
+	repeat count :lines [
+		localmake "lineInfo item repcount :lines
+		localmake "startAngle item 3 :lineInfo
+		localmake "leftAngle item 4 :lineInfo
+		localmake "leftLength :thickness / sin :leftAngle
+		localmake "topStraightWidth :height * last :lineInfo
+
+		; This is wrong because it ignores the rounded corners
+		; but it looks reasonably correct.
+		localmake "bottomStraightLength :topStraightWidth +
+			:leftLength * (cos :leftAngle) - 
+			:thickness * tan :startAngle
+		jumpRight :height * first :lineInfo
+		jumpForward :height * item 2 :lineInfo
+		right :startAngle
+		polyStart
+		arcLeft 90 + :startAngle :cornerRadius
+		jumpForward :topStraightWidth
+		arcLeft :leftAngle :cornerRadius
+		jumpForward :leftLength
+		arcLeft 180 - :leftAngle :cornerRadius
+		jumpForward :bottomStraightLength
+		arcLeft 90 - :startAngle :cornerRadius
+		polyEnd
+		jumpTo :oldPos
+		setHeading :oldHeading
+	]
+	setTurtleState :oldState
+end
+
+to drawG :height
+	localmake "oldState turtleState
+	jumpLeft :height * 0.06
+	setPenSize 0
+	polyStart
+	arcLines [[-90 0] [30 0.59] [30 0.55] [34 0.52]
+	[86.5 0.015] [0.45] [64.5 0.03] [0.165] [115 0.02]
+	[0.26] [-119 0] [-30 0.3] [-30 0.195] [-20 0.31]
+	[-20 0.15] [-40 0.2] [-20 0.3] [-40 0.27] [-30 0.32]
+	[-50 0.18] [-8 0.5] [62 0.018] [0.24] [100 0.015]
+	[20 0.5] [20 0.33] [50 0.51] [40 0.65] [40 0.44]
+	[40 0.46] [30 0.438]] :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+to drawO :height
+	localmake "oldState turtleState
+	jumpLeft :height * 0.06
+	setPenSize 0
+	polyStart
+	arcLines [[-90 0] [30 0.59] [30 0.55] [34 0.54]
+	[80 0.43] [80 0.6] [50 0.4] [40 0.505] [20 0.43]
+	[175 0.124] [-100 0.215] [-45 0.31]
+	[-50 0.265] [-60 0.2] [-65 0.27] [-38 0.32]
+	] :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by:
+; https://en.wikipedia.org/wiki/Go_(programming_language)#/media/File:Go_Logo_Blue.svg
+to goLanguageLogo :height
+	localmake "oldState turtleState
+	setFillColor "#00ACD7
+	jumpLeft :height * 0.9
+	drawTrail :height
+	jumpRight :height * 0.76
+	drawG :height
+	jumpRight :height * 0.965
+	drawO :height
+	setTurtleState :oldState
+end
+
+goLanguageLogo 100

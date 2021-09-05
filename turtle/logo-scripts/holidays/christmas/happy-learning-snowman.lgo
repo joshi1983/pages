@@ -1,0 +1,98 @@
+to drawArmSticks :height :gap
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	setLineCap "round
+	setPenColor "#a5313f
+	repeat 2 [
+		setHeading :oldHeading + 90 + repcount * 180
+		jumpForward :gap
+		forward :height * 0.221
+		jumpBackward :height * 0.03
+		localmake "pos1 pos
+		left 45
+		repeat 2 [
+			forward :height * 0.03
+			right 90
+			jumpTo :pos1
+		]
+		jumpTo :oldPos
+	]	
+	setTurtleState :oldState
+end
+
+to drawEyes :eyeHeight
+	localmake "oldState turtleState
+	localmake "eyeSeparation :eyeHeight * 1.35
+	setPenColor "black
+	setFillColor "white
+	setPenSize :eyeHeight * 0.35
+	localmake "radius (:eyeHeight - penSize) / 2
+	jumpForward :eyeHeight / 2
+	jumpLeft :eyeSeparation / 2
+	repeat 2 [
+		circle :radius
+		jumpRight :eyeSeparation
+	]	
+	setTurtleState :oldState
+end
+
+to drawHat :hatHeight
+	localmake "oldState turtleState
+	setFillColor "black
+	setPenColor fillColor
+	setPenSize :hatHeight * 0.17
+	setLineJoinStyle "round
+	jumpForward :hatHeight / 2
+	rect :hatHeight * 0.23 :hatHeight - penSize
+	jumpBackward :hatHeight * 0.17
+	stripes :hatHeight * 0.3 :hatHeight * 0.08 ["red]
+	setTurtleState :oldState
+end
+
+to drawNose :noseLength
+	localmake "oldState turtleState
+	setFillColor "#ffb507
+	setPenColor fillColor
+	setLineJoinStyle "round
+	jumpLeft :noseLength * 0.1
+	polyStart
+	jumpRight :noseLength
+	left 100
+	jumpForward :noseLength * 0.95
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://www.youtube.com/watch?v=_LFuF3V60kA
+to drawHappyLearningSnowman :height
+	localmake "oldState turtleState
+	localmake "radii [0.192 0.1435 0.096]
+	setFillColor "white
+	setPenColor "#0df
+	setPenSize :height * 0.012
+	localmake "hatHeight :height - penSize / 2
+	jumpForward penSize / 2
+	repeat count :radii [
+		localmake "radius :height * item repcount :radii
+		jumpForward :radius
+		circle :radius
+		if repcount = 2 [
+			localmake "middlePos pos
+		]
+		jumpForward :radius
+		localmake "hatHeight :hatHeight - :radius * 2
+	]
+	drawHat :hatHeight
+	jumpBackward :radius * 0.95
+	drawEyes :height * 0.029
+	jumpBackward :height * 0.023
+	drawNose :height * 0.19
+	jumpTo :middlePos
+	drawArmSticks :height :height * item 2 :radii
+	setTurtleState :oldState
+end
+
+setScreenColor "#eef
+drawHappyLearningSnowman 100
