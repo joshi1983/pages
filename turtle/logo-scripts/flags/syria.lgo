@@ -1,0 +1,91 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Syria#/media/File:Flag_of_Syria.svg
+; Referenced from:
+; https://en.wikipedia.org/wiki/Flag_of_Syria
+to syriaFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 9 / 6
+	localmake "starSeparation :height / 2
+	localmake "starSize1 :height * 0.052788
+	localmake "starSize2 :height * 0.1381935
+	localmake "colors ["black "white "#ce1126]
+	stripes :width :height :colors
+	setPenSize 0
+	jumpForward :height * 0.486804
+	setFillColor "#007a3d
+	jumpRight :starSeparation / 2
+	isotoxalStar :starSize2 :starSize1 5
+	jumpLeft :starSeparation
+	isotoxalStar :starSize2 :starSize1 5
+	setTurtleState :oldState
+end
+
+to syrianOppositionFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 3 / 2
+	localmake "starSeparation :width / 4
+	localmake "starSize1 :height * 0.052788
+	localmake "starSize2 :height * 0.1381935
+	stripes :width :height ["black "white "#007a3d]
+	setPenSize 0
+	jumpForward :height * 0.486804
+	setFillColor "#ce1126
+	jumpRight :starSeparation
+	repeat 3 [
+		isotoxalStar :starSize2 :starSize1 5
+		jumpLeft :starSeparation
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Syria#/media/File:Flag_of_Kingdom_of_Syria_(1920-03-08_to_1920-07-24).svg
+; Referenced from:
+; https://en.wikipedia.org/wiki/Flag_of_Syria
+to kingdomOfSyriaFlag :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "width :height * 2
+	localmake "colors ["white "#007a3d "black]
+	localmake "angle arcTan :width / :height
+	localmake "starSize1 :height * 0.179
+	localmake "starSize2 :height * 0.077
+	stripes :width :height :colors
+	jumpLeft :width / 2
+	setPenSize 0
+	setFillColor "#ce1126
+	polyStart
+	jumpForward :height
+	right 180 - :angle
+	jumpForward (hypot [:height :width]) / 2
+	polyEnd
+	setHeading :oldHeading
+	jumpLeft :height * 0.6234
+	jumpForward :height * 0.007
+	setFillColor "white
+	isotoxalStar :starSize1 :starSize2 7
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Syria#/media/File:Flag_of_Syria_French_mandate.svg
+to syriaFrenchStateFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 3 / 2
+	stripes :width :height ["#007a3d "white "#007a3d]
+	jumpForward :height * 3 / 4
+	left 90
+	stripes :height / 2 :width / 2 ["#cd1226 "white "#002654]
+	setTurtleState :oldState
+end
+
+make "size 100
+make "separation :size * 3
+jumpLeft :separation * 1.5
+syriaFlag :size
+jumpRight :separation
+syrianOppositionFlag :size
+jumpRight :separation
+kingdomOfSyriaFlag :size
+jumpRight :separation
+syriaFrenchStateFlag :size

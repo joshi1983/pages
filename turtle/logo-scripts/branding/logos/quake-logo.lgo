@@ -1,0 +1,73 @@
+to drawCrescent :height
+	localmake "oldState turtleState
+	localmake "outerArcGap 40
+	localmake "outerArcRadius :height / (1 + cos :outerArcGap / 2)
+	localmake "innerArcRadius :outerArcRadius * 0.88
+	localmake "gapLength :outerArcRadius * 2 * sin :outerArcGap / 2
+	localmake "innerArcGap 2 * arcSin :gapLength / 2 / :innerArcRadius
+	setFillColor "white
+	jumpForward :outerArcRadius
+	setPenSize 0
+	right :outerArcGap / 2
+	jumpForward :outerArcRadius
+	right 90
+	polyStart
+	arcRight 360 - :outerArcGap :outerArcRadius
+	right 180 + (:outerArcGap - :innerArcGap) / 2
+	arcLeft 360 - :innerArcGap :innerArcRadius
+	polyEnd
+	setTurtleState :oldState
+end
+
+to drawBase :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "size1 :height * 0.4
+	localmake "arcsInfo [
+		[30 0.05] [30 0.08] [30 0.12]
+	]
+	localmake "angle1 9
+	localmake "tinySize :height * 0.01
+	localmake "size2 :height - :tinySize - :size1 * cos :angle1
+	localmake "topWidth :size1 * 2 * sin :angle1
+	setHeading 0
+	jumpTo [0 0 0]
+	setPenSize 0
+	arcsRight :arcsInfo :height
+	localmake "topWidth :topWidth + 2 * xCor
+	localmake "size2 :size2 - yCor
+	jumpTo :oldPos
+	setHeading :oldHeading
+	setFillColor "white
+	right :angle1
+	polyStart
+	jumpForward :size1
+	left :angle1
+	jumpForward :size2
+	arcsRight :arcsInfo :height
+	setHeading :oldHeading
+	jumpForward :tinySize
+	jumpLeft :topWidth
+	jumpBackward :tinySize
+	right 90
+	arcsRight reverse :arcsInfo :height
+	jumpForward :size2
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Quake_(video_game)#/media/File:Quake1cover.jpg
+to quakeLogo :height
+	localmake "oldState turtleState
+	localmake "crescentOffset 0.303
+	jumpForward :height * :crescentOffset
+	drawCrescent :height * (1 - :crescentOffset)
+	setTurtleState :oldState
+	drawBase :height * 0.555
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+quakeLogo 100

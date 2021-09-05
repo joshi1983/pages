@@ -1,0 +1,166 @@
+; This animation depicts a torus.
+; A torus is like a donut but with exacting precision
+; and simplicity.
+
+; This draws in green various contours
+; representing different intersections between a torus and
+; a planes with constant z-coordinates.
+; 
+; In black focuses on a specific plane where z
+; is related to animation time.
+;
+; You can think of these cuts a little like the various
+; curved shapes you'd see by cutting an apple in very flat
+; slices from end to end except an apple is more spherical
+; than a torus.
+
+; If you want to learn more about the torus shape, see:
+; https://en.wikipedia.org/wiki/Torus
+
+make "ringRadius 100
+make "thicknessRadius 30
+
+to getHeightAt :x :y
+	localmake "r1 hypot [:x :y]
+	localmake "deltaR abs :ringRadius - :r1
+	if :deltaR <= :thicknessRadius [
+		output sqrt :thicknessRadius * :thicknessRadius - :deltaR * :deltaR
+	]
+	output -1 ; indicate that the height couldn't be calculated.
+end
+
+; Note that the turtle's position and heading are ignored.
+to drawCutAtZ :z
+	localmake "z abs :z ; A cut at -40 would look the same as a cut at 40.
+	localmake "oldState turtleState
+	localmake "maxR :ringRadius + :thicknessRadius
+	localmake "minR :ringRadius - :thicknessRadius
+	localmake "maxX 0
+	if :z < :maxR [
+		localmake "maxX sqrt :maxR * :maxR - :z * :z
+	]
+	localmake "minX 0
+	if :z < :minR [
+		localmake "minX sqrt :minR * :minR - :z * :z
+	]
+	localmake "heights []
+	repeat 100 [
+		localmake "x mix :minX :maxX repRatio
+		queue2 "heights [(getHeightAt :x :z) :x]
+	]
+	localmake "revHeights reverse :heights
+
+	repeat count :heights [
+		localmake "p item repcount :heights
+		ifelse repcount=1 [
+			jumpTo :p
+			polyStart
+		] [
+			setHeading towards :p
+			jumpForward distance :p
+		]
+	]
+	; If only 1 shape is needed.
+	if :minX = 0 [
+		repeat count :heights [
+			localmake "p item repcount :revHeights
+			localmake "p [first :p -last :p]
+			setHeading towards :p
+			jumpForward distance :p
+		]
+		repeat count :heights [
+			localmake "p item repcount :heights
+			localmake "p [-first :p -last :p]
+			setHeading towards :p
+			jumpForward distance :p
+		]
+	]
+
+	repeat count :heights [
+		localmake "p item repcount :revHeights
+		localmake "p [-first :p last :p]
+		setHeading towards :p
+		jumpForward distance :p
+	]
+
+	; If 2 shapes are needed, draw the second shape.
+	if :minX > 0 [
+		polyEnd
+		repeat count :heights [
+			localmake "p item repcount :revHeights
+			localmake "p [first :p -last :p]
+			ifelse repcount = 1 [
+				jumpTo :p
+				polyStart
+			] [
+				setHeading towards :p
+				jumpForward distance :p
+			]
+		]
+		repeat count :heights [
+			localmake "p item repcount :heights
+			localmake "p [-first :p -last :p]
+			setHeading towards :p
+			jumpForward distance :p
+		]
+	]
+	polyEnd
+	setTurtleState :oldState
+end
+
+to drawCountours
+	localmake "maxZ :ringRadius + :thicknessRadius
+	localmake "numContours 20
+	setPenSize 0.1
+	setPenColor "#080
+	repeat :numContours [
+		localmake "z mix 0 :maxZ repRatio
+		drawCutAtZ :z
+	]
+end
+
+to drawPerpendicularView :z
+	localmake "oldState turtleState
+	localmake "maxVal :ringRadius + :thicknessRadius
+	localmake "size :maxVal * 2
+	right 90
+	jumpForward :maxVal * 1.4
+	setPenColor "green
+	circle :maxVal
+	if :ringRadius > :thicknessRadius [
+		circle :ringRadius - :thicknessRadius
+	]
+	setPenColor "black
+	jumpForward :z
+	jumpLeft :size / 2
+	right 90
+	forward :size
+	setTurtleState :oldState
+end
+
+make "ratio clamp animation.time / animation.duration 0 1
+make "maxZ :ringRadius + :thicknessRadius
+make "z mix -:maxZ :maxZ :ratio
+setLineJoinStyle "round
+drawCountours
+setPenSize 2
+setPenColor "black
+drawCutAtZ :z
+drawPerpendicularView :z
+
+to animation.snapshotstyle
+	localmake "result createPList
+	setProperty "result "zoom.scale 1.9
+	setProperty "result "position.x 120
+	output :result
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 3
+	; Edit this if you want to change the length of your animation.
+	localmake "result createPList
+	setProperty "result "duration :minutes * 60 + :seconds
+	setProperty "result "thumbnailTime 0.65
+	output :result
+end

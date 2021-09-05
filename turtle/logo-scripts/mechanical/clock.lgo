@@ -1,0 +1,128 @@
+; Inspired by:
+; https://www.pinterest.ca/pin/660762576580663203/
+; The animation simulates 12 hours of clock hand movement 
+; in 12 seconds.
+
+make "goldColor1 "#fe0
+make "goldColor2 "#db0
+make "goldColor3 "#860
+
+to linePattern :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "numLines 7
+	localmake "maxAngle 25
+	localmake "shortLength :size * 0.2
+	localmake "circleRadius :size * 0.05
+	localmake "maxLongLen :size - :shortLength + :circleRadius * 2
+	setPenSize :size * 0.005
+	setPenColor :goldColor3
+	jumpForward :shortLength * (cos :maxAngle)
+	localmake "shortSideVertex pos
+	right 180 - :maxAngle
+	repeat :numLines [
+		jumpTo :shortSideVertex
+		forward :shortLength
+		right :maxAngle * 2 / (:numLines - 1)
+	]
+	jumpTo :shortSideVertex
+	setHeading :oldHeading
+	jumpBackward :circleRadius
+	localmake "longSideVertex pos
+	setHeading :oldHeading - :maxAngle
+	repeat :numLines [
+		localmake "len :maxLongLen * (1 - abs (repcount - 0.5 - :numLines / 2) / :numLines)
+		jumpTo :longSideVertex
+		forward :len
+		right :maxAngle * 2 / (:numLines - 1)
+	]
+
+	jumpTo :shortSideVertex
+	setHeading :oldHeading
+	jumpBackward :circleRadius
+	setFillColor "black
+	circle :circleRadius
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to circleGradient :radius
+	localmake "colorStops createPList
+	setProperty "colorStops 0 :goldColor1
+	setProperty "colorStops 0.88 :goldColor2
+	setProperty "colorStops 0.89 mix :goldColor2 :goldColor3 0.5
+	setProperty "colorStops 0.9 :goldColor2
+	setProperty "colorStops 0.94 :goldColor1
+	setProperty "colorStops 0.95 "white
+	setProperty "colorStops 0.96 :goldColor1
+	setProperty "colorStops 0.98 :goldColor2
+	setProperty "colorStops 0.99 :goldColor3
+	setProperty "colorStops 1 "black
+	setFillGradient createRadialGradient pos :radius :colorStops
+	setPenSize 0
+	circle :radius
+end
+
+to sizeToClockRadius :size
+	output :size * 0.4
+end
+
+to circleDesign :size
+	localmake "oldPos pos
+	localmake "radius sizeToClockRadius :size
+	localmake "linePatternSize :size - :radius
+	localmake "numNotches 12
+	repeat :numNotches [
+		jumpTo :oldPos
+		jumpForward :radius
+		linePattern :linePatternSize
+		right 360 / :numNotches
+	]
+	jumpTo :oldPos
+	circleGradient :radius
+end
+
+to drawClockHands :radius :hours :minutes
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "minuteHandLength :radius * 0.8
+	localmake "minuteHandThickness :radius * 0.03
+	localmake "hourHandLength :radius * 0.5
+	localmake "hourHandThickness :radius * 0.05
+	setPenColor :goldColor3
+	; draw minute hand.
+	setPenSize :minuteHandThickness
+	setHeading :oldHeading + :minutes * 360 / 60
+	forward :minuteHandLength
+	jumpTo :oldPos
+	setHeading :oldHeading + :hours * 360 / 12
+	setPenSize :hourHandThickness
+	forward :hourHandLength
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to drawClock :size :hours :minutes
+	localmake "radius sizeToClockRadius :size
+	circleDesign :size
+	drawClockHands :radius :hours :minutes
+end
+
+make "timeRatio animation.time / 12
+make "hours int :timeRatio * 12
+make "minutes remainder (int :timeRatio * 12 * 60) 60
+drawClock 300 :hours :minutes
+
+to animation.snapshotstyle
+	localmake "result createPList
+	output :result
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 12
+	; Edit this if you want to change the length of your animation.
+	localmake "result createPList
+	setProperty "result "duration :minutes * 60 + :seconds
+	output :result
+end

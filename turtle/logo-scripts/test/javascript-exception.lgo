@@ -1,0 +1,52 @@
+; Loading this code into the code editor leads to this stack trace:
+;DataTypes.js:113  Uncaught Error: Unable to find type for name null
+    at DataTypes.createFromName (DataTypes.js:113:10)
+    at DataTypes.js:314:22
+    at Array.map (<anonymous>)
+    at DataTypes.parseTokensToDataTypeSet (DataTypes.js:312:25)
+    at DataTypes.parse (DataTypes.js:335:21)
+    at dataTypesToEnglish (dataTypesToEnglish.js:52:31)
+    at validateBinaryOperatorTokenBasics (validateBinaryOperatorParameters.js:21:145)
+    at validateBinaryOperatorToken (validateBinaryOperatorParameters.js:29:17)
+    at validateBinaryOperatorParameters.js:67:15
+    at Array.forEach (<anonymous>)
+createFromName @ DataTypes.js:113
+(anonymous) @ DataTypes.js:314
+parseTokensToDataTypeSet @ DataTypes.js:312
+parse @ DataTypes.js:335
+dataTypesToEnglish @ dataTypesToEnglish.js:52
+validateBinaryOperatorTokenBasics @ validateBinaryOperatorParameters.js:21
+validateBinaryOperatorToken @ validateBinaryOperatorParameters.js:29
+(anonymous) @ validateBinaryOperatorParameters.js:67
+validateBinaryOperatorParameters @ validateBinaryOperatorParameters.js:66
+analyzeCodeQuality @ analyzeCodeQuality.js:134
+refreshAnimationSetupFromTree @ refreshAnimationSetupFromTree.js:22
+getFixedCode @ autoFixCodeMenuItem.js:34
+refreshDisabled @ autoFixCodeMenuItem.js:64
+
+
+to liberiaFlagStripes :width :height
+	localmake "oldState turtleState
+	localmake "stripeThickness :height / 11
+	setLineCap "butt
+	setPenColor "white
+	setPenSize :width
+	forward :height
+	setPenColor "#002868
+	repeat 6 [
+		backward :stripeThickness
+		jumpBackward :stripeThickness
+	]
+	setTurtleState :oldState
+end
+
+to liberiaFlag :height
+	localmake "width :height * 1140 / 600
+	localmake "starWidth 
+	liberiaFlagStripes :width :height
+	setPenColor "#002868
+	jumpLeft (:width - :starWidth) / 2
+end
+
+liberiaFlag 100
+imageAlpha 100 * 1140 / 600 100 'local://liberia.svg' 0.5

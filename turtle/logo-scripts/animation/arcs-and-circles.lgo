@@ -1,0 +1,57 @@
+; Inspired by:
+; https://www.pinterest.ca/pin/429249408239342693/
+to arcsAndCircles :size :progress
+	localmake "tinyRatio :progress * 3 - int (:progress * 3)
+	localmake "maxTinyRadius :size * 0.08
+	localmake "tinyRadius :maxTinyRadius * :tinyRatio
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	setPenSize 0
+	setFillColor "white
+	if :tinyRadius > 0 [
+		circle :tinyRadius
+	]
+	jumpForward :tinyRadius * 10
+	repeat 3 [
+		circle :maxTinyRadius
+		forward :maxTinyRadius * 10
+	]
+	jumpTo :oldPos
+	setLineCap "round
+	setPenSize :maxTinyRadius * 2.5
+	localmake "ps penSize
+	setPenColor "white
+	repeat 4 [
+		localmake "ratio repcount / 4
+		localmake "ratio1 :ratio * 2.5 + :progress * 2.8
+		localmake "angleScale 1 + cos (90 + :ratio1 * 360)
+		localmake "radius :size * :ratio
+		localmake "angle 360 - 18 * :angleScale / :ratio
+		jumpBackward :radius
+		setPenSize 0
+		left 90
+		arcRight :angle * 0.5 :radius
+		right 180
+		setPenSize :ps
+		arcLeft :angle :radius
+		jumpTo :oldPos
+		setHeading :oldHeading
+	]
+end
+
+setScreenColor "black
+arcsAndCircles 150 animation.time * 0.1
+
+to animation.snapshotstyle
+	localmake "result createPList
+	output :result
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 10
+	; Edit this if you want to change the length of your animation.
+	localmake "result createPList
+	setProperty "result "duration :minutes * 60 + :seconds
+	output :result
+end
