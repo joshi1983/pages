@@ -1,0 +1,91 @@
+make "arcRadiusRatio1 0.3163
+make "arcRadiusRatio2 0.239
+make "arcRadiusRatio3 0.1455
+make "angle1 188
+
+to tikTokFlatShape :height
+	localmake "oldState turtleState
+	localmake "arcRadius1 :height * :arcRadiusRatio1
+	localmake "arcLinesInfo [
+		[180 0] [:angle1 + 90 :arcRadiusRatio1] [0.352]
+		[-127 0] [37.8 0.39] [89.2 0] [0.171] [90 0]
+		[-90.11845 :arcRadiusRatio2] [90.11845 0] [0.171] [90 0]
+		[1 - :arcRadiusRatio1] [-287.21703 :arcRadiusRatio3]
+	]
+	left 90
+	arcRight :angle1 :arcRadius1
+	polyStart
+	arcLines :arcLinesInfo :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+to tikTokFlatIntersection :height
+	localmake "oldState turtleState
+	localmake "arcRadius1 :height * :arcRadiusRatio1
+	localmake "angle2 179
+	localmake "angle3 11.4
+	localmake "angle4 :angle2 + 90 - 134.5 - :angle3
+	localmake "arcLinesInfo [
+		[180 0] [134.5 :arcRadiusRatio1] [:angle3 0] [:angle4 :arcRadiusRatio1] [0.352]
+		[-127 0] [37.8 0.39] [89.2 0] [0.136] [78.2 0]
+		[-36 :arcRadiusRatio2] [16 0] [-48.2 :arcRadiusRatio2] 
+		[80 0] [0.125] [90 0]
+		[1 - :arcRadiusRatio1] [-144 :arcRadiusRatio3] 
+		[25.5 0] [-168.5 :arcRadiusRatio3]
+	]
+	left 90
+	arcRight :angle2 :arcRadius1
+	polyStart
+	arcLines :arcLinesInfo :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by logo at
+; https://en.wikipedia.org/wiki/File:TikTok_logo.svg
+to tikTokLogo :height
+	localmake "oldState turtleState
+	localmake "height1 :height * 0.96
+	setPenSize 0
+	setFillColor "#FF004F
+	jumpLeft :height * 0.095
+	localmake "redPos pos
+	tikTokFlatShape :height1
+
+	jumpForward :height * 0.04
+	jumpLeft :height * 0.049
+	setFillColor "#00F2EA
+	tikTokFlatShape :height1
+
+	setFillColor "black
+	jumpTo :redPos
+	tikTokFlatIntersection :height1
+	setTurtleState :oldState
+end
+
+to tikTokBlackLogo :height
+	localmake "oldState turtleState
+	setPenSize 0
+	setFillColor "black
+	tikTokFlatShape :height
+	setTurtleState :oldState	
+end
+
+to tikTokWhiteLogo :height
+	localmake "oldState turtleState
+	setPenSize 0
+	setFillColor "white
+	stripes :height * 3 :height ["black]
+	tikTokFlatShape :height
+	setTurtleState :oldState	
+end
+
+make "height 100
+make "separation :height * 4
+jumpLeft :separation
+tikTokLogo :height
+jumpRight :separation
+tikTokWhiteLogo :height
+jumpRight :separation
+tikTokBlackLogo :height

@@ -1,0 +1,225 @@
+to drawHouse :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "baseWidth :height * 1.15
+	localmake "baseHeight :height * 0.6
+	localmake "roofHeight :height - :baseHeight
+	localmake "topWidth :baseWidth * 0.62
+	localmake "roofAngle arcTan (:baseWidth - :topWidth) / :roofHeight / 2
+	localmake "roofSlantedHeight :roofHeight / cos :roofAngle
+	localmake "doorHeight :baseHeight / 2
+	localmake "windowSize :height * 0.07
+	jumpForward :baseHeight / 2
+	setPenColor "brown
+	setFillColor "#009f01
+	setPenSize :height * 0.015
+	rect :baseWidth :baseHeight
+	jumpForward :baseHeight / 2
+	setFillColor "#aa5400
+	isoTrapezoid :baseWidth :topWidth :roofHeight
+	jumpForward :roofHeight
+	jumpRight :topWidth / 2
+	left 180 - :roofAngle
+	forward :roofSlantedHeight
+	setHeading :oldHeading + 180
+	forward :baseHeight
+	jumpRight :topWidth / 2
+	setFillColor "yellow
+	jumpBackward :doorHeight / 2
+	rect :doorHeight / 2 :doorHeight
+	setFillColor screenColor
+	jumpBackward :height * 0.26
+	jumpLeft :height * 0.1
+	rect :windowSize :windowSize
+	setTurtleState :oldState
+end
+
+to drawJet :length
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "wingLen 0.43
+	localmake "wingAngle1 70
+	localmake "tipAngle 30
+	localmake "tipLength1 0.2
+	localmake "lines1 [
+		[-90 0] [0.1] [15 0] [0.2] [160 0]
+		[0.195] [-85 0] [0.22] [-:wingAngle1 0] [:wingLen]
+		[2 * :wingAngle1 0] [:wingLen] [-:wingAngle1 0]
+		[0.12] [:tipAngle 0] [:tipLength1] [-:tipAngle 0]
+		[0.2] [90 0]
+	]
+	localmake "tailSeparation :length * 0.14
+	localmake "width1 :length * 0.2
+	setLineCap "round
+	setLineJoinStyle "miter
+	setPenSize :length * 0.01
+	drawArcLineShape [0 0
+		combine :lines1 reverse :lines1
+	] :length
+	jumpLeft :width1 / 2
+	jumpForward :length * 0.2
+	repeat 2 [
+		stripes penSize :length * 0.4 [penColor]
+		jumpRight :width1
+	]
+	jumpTo :oldPos
+	jumpForward :length * 0.7
+	stripes :width1 penSize [penColor]
+	jumpTo :oldPos
+	left 180
+	jumpLeft :tailSeparation / 2
+	repeat 2 [
+		isoTriangle :length * 0.05 :length * 0.05
+		jumpRight :tailSeparation
+	]	
+	setTurtleState :oldState
+end
+
+to drawT :height
+	localmake "oldState turtleState
+	localmake "width :height * 0.65
+	forward :height
+	right 90
+	jumpBackward :width / 2
+	forward :width
+	setTurtleState :oldState
+end
+
+to drawK :height
+	localmake "oldState turtleState
+	localmake "angle1 35
+	localmake "len1 :height / 2 / cos :angle1
+	forward :height	
+	jumpBackward :height / 2
+	right :angle1
+	forward :len1
+	jumpBackward :len1
+	right 180 - :angle1 * 2
+	forward :len1
+	setTurtleState :oldState
+end
+
+to drawP :height
+	localmake "oldState turtleState
+	forward :height
+	repeat 3 [
+		right 90
+		forward :height * 0.5
+	]	
+
+	setTurtleState :oldState
+end
+
+to drawS :height
+	localmake "oldState turtleState
+	localmake "h 0.5
+	localmake "w 0.76
+	localmake "lines1 [
+		[:w] [90 0] [:h] [90 0]
+	]
+	right 90
+	arcLines :lines1 :height
+	arcLines :lines1 -:height
+	forward :w * :height
+	setTurtleState :oldState
+end
+
+to drawText :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "fontHeight :height * 0.21
+	setPenColor "blue
+	setPenSize :height * 0.005
+	jumpForward :height * 0.565
+	jumpLeft :height * 0.13
+	drawT :fontHeight
+	jumpRight :height * 0.16
+	drawK :fontHeight
+	jumpRight :height * 0.16
+	drawP :fontHeight
+
+	setPenColor "red
+	jumpTo :oldPos
+	jumpLeft :height * 0.3
+	jumpForward :height * 0.31
+	repeat 2 [
+		drawS :fontHeight
+		jumpRight :height * 0.25
+	]
+
+	setTurtleState :oldState
+end
+
+; Inspired by video at:
+; https://www.youtube.com/watch?v=fR1A6GWiU5Y
+; Wintel Tang implemented his animation using a Logo version called
+; HKULogo.
+;
+; TKPSS is a secondary school in Hong Kong.
+; Learn more at:
+; https://en.wikipedia.org/wiki/Tin_Ka_Ping_Secondary_School
+;
+; This was implemented in WebLogo by tracing
+; a few frames of his youtube video.
+to drawEverything :height :timeRatio
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "jetLength :height * 0.3
+	localmake "jetAngle :timeRatio * 180
+	localmake "showText? false
+	if :jetAngle > 40 [
+		localmake "jetAngle 40
+		setScreenColor "black
+		setFillColor "brown
+		localmake "showText? true
+	]
+
+	jumpRight :height * 0.382
+	jumpForward :height * 0.18
+	drawHouse :height * 0.28
+
+	jumpTo :oldPos
+	jumpLeft :height * 0.6
+	jumpBackward :height * 0.3
+	right :jetAngle
+	jumpForward :height * 1.2
+	right 90
+	drawJet :jetLength
+
+	if :showText? [
+		jumpTo :oldPos
+		setHeading :oldHeading
+		drawText :height
+		setPenColor "red
+		jumpForward :height * 0.81
+		jumpLeft :height * 5 * (0.4 - :timeRatio)
+		right 90
+		setFillColor transparent
+		repeat 4 [
+			drawJet :jetLength
+			jumpBackward :height * 1.3
+		]
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "aqua
+make "timeRatio animation.clampedTimeRatio
+drawEverything 100 :timeRatio
+
+to animation.snapshotstyle
+	output createPList2 [
+		["position.y 50]
+		["zoom.scale 5.3]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 10
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

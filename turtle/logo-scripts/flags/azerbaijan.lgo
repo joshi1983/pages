@@ -1,0 +1,105 @@
+to crescent :largeRadius :smallRadius :backgroundColor
+	setPenSize 0
+	setFillColor "white
+	circle :largeRadius
+	setFillColor :backgroundColor
+	jumpRight :largeRadius * 2 / 9
+	circle :smallRadius
+end
+
+to star :largeSize :smallSize
+	setFillColor "white
+	isotoxalStar :largeSize :smallSize 8
+end
+
+; Inspired by
+; https://upload.wikimedia.org/wikipedia/commons/d/dd/Flag_of_Azerbaijan.svg
+to azerbaijanFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 2
+	localmake "colors ["#509e2f "#ef3340 "#00b5e2]
+	setLineCap "butt
+	setPenSize :width
+	repeat count :colors [
+		setPenColor item repcount :colors
+		forward :height / count :colors
+	]
+	jumpBackward :height / 2
+	jumpLeft :height * 3 / 60
+	crescent :height * 9 / 60 :height * 7.5 / 60 item 2 :colors
+	jumpRight :height * 8 / 60
+	star :height * 5 / 60 :height * 2.5 / 60
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Azerbaijan#/media/File:Flag_of_the_Democratic_Republic_of_Azerbaijan_(1918).svg
+to azerbaijanFlag1918 :height
+	localmake "oldState turtleState
+	localmake "width :height * 2
+	setLineCap "butt
+	setPenSize :width
+	setPenColor "#e00034
+	forward :height
+	jumpBackward :height / 2
+	jumpLeft :height * 4 / 120
+	crescent :height * 88 / 600 :height * 72 / 600 penColor
+	jumpRight :height * 75.5 / 600
+	star :height * 39.5 / 600 :height * 22 / 600
+	setTurtleState :oldState
+end
+
+; Very similar to azerbaijanFlag except the 
+; moon and star are slightly bigger.
+to azerbaijanFlag1918to1920 :height
+	localmake "oldState turtleState
+	localmake "width :height * 2
+	localmake "colors ["#509e2f "#ef3340 "#00b5e2]
+	setLineCap "butt
+	setPenSize :width
+	repeat count :colors [
+		setPenColor item repcount :colors
+		forward :height / count :colors
+	]
+	jumpBackward :height / 2
+	jumpLeft :height * 19 / 600
+	crescent :height * 90 / 600 :height * 75 / 600 item 2 :colors
+	jumpRight :height * 80 / 600
+	star :height * 50 / 600 :height * 25 / 600
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Azerbaijan#/media/File:Flag_of_the_Azerbaijan_Soviet_Socialist_Republic_(1920).svg
+to azerbaijanFlag1920 :height
+	localmake "oldState turtleState
+	localmake "width :height * 2
+	setLineCap "butt
+	setPenSize :width
+	setPenColor "#e00034
+	forward :height
+	jumpBackward :height * 16.25 / 60
+	jumpLeft :height * 72 / 120
+	setPenSize 0
+	setFillColor "white
+	ellipse :height * 149 / 600 :height * 132 / 600
+	setFillColor penColor
+	jumpLeft :height * 65 / 600
+	ellipse :height * 160 / 740 :height * 132 / 740
+	jumpLeft :height * 64 / 600
+	setFillColor "white
+	right 17.5
+	isotoxalStar :height * 49 / 600 :height * 23 / 600 5
+	setTurtleState :oldState
+end
+
+make "size 100
+make "separation :size * 3
+jumpLeft :separation * 1.5
+azerbaijanFlag :size
+jumpRight :separation
+azerbaijanFlag1918 :size
+jumpRight :separation
+azerbaijanFlag1918to1920 :size
+jumpRight :separation
+azerbaijanFlag1920 :size

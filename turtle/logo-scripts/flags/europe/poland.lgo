@@ -1,0 +1,55 @@
+make "polandRed "#dc143c
+
+; Inspired by
+; https://en.wikipedia.org/wiki/File:Flag_of_Poland.svg
+to polandFlag :height
+	localmake "width :height * 8 / 5
+	localmake "colors [:polandRed "white]
+	stripes :width :height :colors
+end
+
+to rightBorder :height
+	localmake "oldState turtleState
+	setLineCap "butt
+	setPenSize :height / 10
+	localmake "size1 (:height - penSize) / 2 
+	jumpForward penSize / 2
+	right 90
+	forward :size1
+	left 90
+	forward :size1
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/List_of_Polish_flags#/media/File:Roundel_of_Poland.svg
+; Also called the "airforce roundel"
+to airforceCheckerboard :height
+	localmake "oldState turtleState
+	localmake "borderSize :height / 10
+	localmake "size1 :height / 2 - :borderSize
+	stripes :height :height ["white]
+	setPenColor :polandRed
+	rightBorder :height
+	jumpForward :borderSize
+	jumpLeft :size1 / 2
+	setPenSize :size1
+	setLineCap "butt
+	forward :size1
+	jumpRight :size1
+	forward :size1
+	jumpForward :borderSize
+	jumpLeft :size1 / 2
+	right 180
+	rightBorder :height
+	
+	setTurtleState :oldState
+end
+
+setScreenColor "#eee
+make "height 100
+make "separation :height * 4
+jumpLeft :separation * 0.5
+polandFlag :height
+jumpRight :separation
+airforceCheckerboard :height

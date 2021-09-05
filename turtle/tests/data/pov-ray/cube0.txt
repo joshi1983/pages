@@ -1,0 +1,40 @@
+// copied from
+// https://www.f-lohmueller.de/pov_tut/x_sam/sam_370e.htm
+
+//====== Cube formed by tubes =====
+#declare R = 0.20; //radius of tubes
+#declare BigCube1 =
+union{
+// 8 Corners
+sphere{<-1,-1,-1>,R}
+sphere{< 1,-1,-1>,R}
+sphere{<-1,-1, 1>,R}
+sphere{< 1,-1, 1>,R}
+sphere{<-1, 1,-1>,R}
+sphere{< 1, 1,-1>,R}
+sphere{<-1, 1, 1>,R}
+sphere{< 1, 1, 1>,R}
+// 4 in x direction
+cylinder {<-1,-1,-1>,< 1,-1,-1>,R}
+cylinder {<-1,-1, 1>,< 1,-1, 1>,R}
+cylinder {<-1, 1,-1>,< 1, 1,-1>,R}
+cylinder {<-1, 1, 1>,< 1, 1, 1>,R}
+// 4 in y direction
+cylinder {<-1,-1,-1>,<-1, 1,-1>,R}
+cylinder {<-1,-1, 1>,<-1, 1, 1>,R}
+cylinder {< 1,-1,-1>,< 1, 1,-1>,R}
+cylinder {< 1,-1, 1>,< 1, 1, 1>,R}
+// 4 in z direction
+cylinder {<-1,-1,-1>,<-1,-1, 1>,R}
+cylinder {<-1, 1,-1>,<-1, 1, 1>,R}
+cylinder {< 1,-1,-1>,< 1,-1, 1>,R}
+cylinder {< 1, 1,-1>,< 1, 1, 1>,R}
+texture{pigment{color rgb<1,0.8,0>}
+        finish{ diffuse 0.9 phong 1}}
+}//-- End of wireframed cube -------
+
+//------------- Draw it  -----------
+object{BigCube1 scale 0.7
+       rotate<0,60,0>
+       translate<0,1.2,0>}
+//------------------------------ end

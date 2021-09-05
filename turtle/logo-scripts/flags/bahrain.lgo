@@ -1,0 +1,35 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Bahrain#/media/File:Flag_of_Bahrain.svg
+; and follows construction sheet at
+; https://en.wikipedia.org/wiki/Flag_of_Bahrain#/media/File:Flag_of_Bahrain_(construction_sheet).svg
+; This looks similar to the flag of Qatar but with a few differences:
+; - Bahrain flag has 5 points instead of Qatar's 9.
+; - Bahrain flag uses a brighter red color instead of maroon.
+to bahrainFlag :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "width :height * 5 / 3
+	localmake "triHeight :height / 5
+	localmake "triWidth :height * 15 / 60
+	localmake "size1 hypot [:triWidth :triHeight / 2]
+	localmake "angle1 arcTan :triWidth / (:triHeight / 2)
+	stripes :width :height ["#DA291C]
+	jumpLeft :width / 2
+	setPenSize 0
+	setFillColor "white
+	polyStart
+	jumpRight :height * 25 / 60
+	repeat 5 [
+		right :angle1
+		jumpForward :size1
+		setHeading :oldHeading - :angle1
+		jumpForward :size1
+		setHeading :oldHeading		
+	]
+	jumpLeft :height * 25 / 60
+	polyEnd
+	setTurtleState :oldState
+end
+
+setScreenColor "#ddd
+bahrainFlag 100

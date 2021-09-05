@@ -1,0 +1,42 @@
+make "darkColor "#880
+
+; Mentioned at:
+; http://www.cropcircleconnector.com/2016/whitesheethill/comments.html
+; Drone footage of the field is shown at:
+; https://www.youtube.com/watch?v=YpNT2Gk2Crc
+; These were reported June 29, 2016.
+; The location was White Sheet Hill, Stourton, Wiltshire.
+to whiteSheet2016CropCircles :height
+	localmake "oldState turtleState
+	localmake "lightColor "#ffd
+	localmake "pentagonRadius :height * 0.435
+	localmake "gap :pentagonRadius * cos 180 / 5
+	localmake "littleRadius :height * 0.07
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize :height * 0.02
+	setPenColor :lightColor
+	setFillColor transparent
+	circle (:height - penSize) / 2
+	setPenSize 0
+	setFillColor :lightColor
+	circle :height * 0.45
+	setFillColor :darkColor
+	regularPolygon :pentagonRadius 5
+	setFillColor :lightColor
+	right 180
+	repeat 5 [
+		jumpForward :gap
+		circle :littleRadius
+		jumpTo :center
+		right 360 / 5
+	]
+	circle :height * 0.04
+	setFillColor transparent
+	setPenSize :height * 0.015
+	circle :littleRadius
+	setTurtleState :oldState
+end
+
+setScreenColor :darkColor
+whiteSheet2016CropCircles 100

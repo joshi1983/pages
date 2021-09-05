@@ -1,0 +1,51 @@
+to drawSpiral :size
+	localmake "oldState turtleState
+	localmake "size1 :size * 0.1602564
+	localmake "size2 :size * 0.3230769
+	localmake "sizeStep :size * 0.1730769
+	setLineCap "butt
+	setLineJoinStyle "miter
+
+	repeat 7 [
+		ifelse odd? repcount [
+			forward :size1
+			localmake "size1 :size1 + :sizeStep
+		] [
+			forward :size2
+			localmake "size2 :size2 + :sizeStep
+		]
+		right 90
+	]
+	forward :size * 0.8361538
+
+	setTurtleState :oldState
+end
+
+; Inspired by a spiral from a book cover.
+; The Book title was "Il Logo per il Commodore 64".
+; It was published by McGraw Hill Libri Italia
+; The book was published in April 1986.
+; 
+; A digital version of the book is at:
+; https://archive.org/details/illogoperilcommodore64
+to logoForCommodore64BookCoverSpiral :height
+	localmake "oldState turtleState
+	localmake "size :height / 2 / cos 45
+	left 45
+	jumpRight :size / 2
+	stripes :size :size ["#4ca5c1]
+	jumpForward :size / 2
+	jumpRight :size * 0.16
+	right 180
+	setPenSize :size * 0.0513
+	setPenColor "white
+	drawSpiral :size
+	setPenColor "#d81010
+	setPenSize :size * 0.013
+	drawSpiral :size
+
+	setTurtleState :oldState
+end
+
+setScreenColor "#c3b1a7
+logoForCommodore64BookCoverSpiral 100

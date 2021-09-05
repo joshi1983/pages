@@ -1,0 +1,50 @@
+make "ratio 0.41379
+
+; Inspired by:
+; https://www.facebook.com/photo?fbid=10235881155393338
+to squaresRatio :height
+	localmake "oldState turtleState
+	localmake "numIterations 50
+	localmake "colors ["yellow "#4bf]
+	localmake "separationFactor 1 + :ratio
+	setLineJoinStyle "miter
+	jumpForward :height / 2
+	localmake "center pos
+	repeat :numIterations [
+		localmake "indexOffset remainder repcount count :colors
+		localmake "separation :height * :separationFactor
+		setPenSize :height * 0.01
+		localmake "height1 :height - penSize
+		jumpRight :separation / 2
+		repeat 2 [
+			localmake "index 1 + remainder (2 + :indexOffset - repcount) 2
+			setFillColor item :index :colors
+			rect :height1 :height1
+			jumpLeft :separation
+		]
+		jumpTo :center
+		left 90
+		localmake "height :height * :ratio
+	]
+	setTurtleState :oldState
+end
+
+squaresRatio 100
+
+to animation.snapshotstyle
+	localmake "zoomScale 2 + power 2
+			40 * interpolateRatio easeInOut animation.clampedTimeRatio
+	output createPList2 [
+		["position.y 50]
+		["zoom.scale :zoomScale]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 12
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

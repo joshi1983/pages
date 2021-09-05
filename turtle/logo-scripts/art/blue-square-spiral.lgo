@@ -1,0 +1,49 @@
+make "colors ["white "aqua "blue "navy]
+
+to getColor :ratio
+	localmake "ratio :ratio - int :ratio
+	localmake "index1 1 + (int :ratio * count :colors)
+	localmake "index2 1 + remainder (1 + :index1) count :colors
+	localmake "c1 item 1 + (remainder :index1 count :colors) :colors
+	localmake "c2 item :index2 :colors
+	localmake "ratio (:ratio * count :colors)
+	localmake "ratio :ratio - int :ratio
+	output mix :c2 :c1 :ratio
+end
+
+to square :size
+	right 45
+	rect :size :size
+	left 45
+end
+
+to drawGradientCircle :radius
+	localmake "oldState turtleState
+	localmake "colorStops createPList2 [
+		[0 "white] [0.3 "#ddf] [0.7 "blue] [0.8 "navy]
+		[1 "black]
+	]
+	localmake "radialGradient createRadialGradient pos :radius :colorStops
+	setFillGradient :radialGradient
+	setPenSize 0
+	circle :radius
+	setTurtleState :oldState
+end
+
+to squareSpiral :size
+	localmake "size1 :size
+	localmake "totalTwistAngle 90
+	localmake "numRepeats 300
+	localmake "angleChange :totalTwistAngle / :numRepeats
+	drawGradientCircle :size * 0.2
+	repeat :numRepeats [
+		setPenSize :size1 * 0.005
+		setPenColor getColor (repcount / 20)
+		square :size1
+		localmake "size1 :size1 * 0.99
+		right :angleChange
+	]
+end
+
+setScreenColor "black
+squareSpiral 300

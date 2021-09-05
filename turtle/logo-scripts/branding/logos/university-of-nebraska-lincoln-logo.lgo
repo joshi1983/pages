@@ -1,0 +1,49 @@
+; Inspired by logo at:
+; https://engineering.unl.edu/
+; Also shown at:
+; https://en.wikipedia.org/wiki/University_of_Nebraska%E2%80%93Lincoln#/media/File:Nebraska_Cornhuskers_logo.svg
+to universityOfNebraskaLincolnLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angle -57.6
+	localmake "angle2 90 - :angle
+	localmake "outlineInfo [
+		[0.1855] [90 0] [0.0657] [-90 0] [0.283] [-90 0]
+		[0.408] [-90 0] [0.283] [-90 0] [0.0657] [90 0]
+		[0.421] [90 0] [0.0657] [-90 0] [0.283] [-90 0]
+		[0.3435] [:angle 0] [0.5625] [:angle2 0]
+	]
+	localmake "innerLineInfo [
+		[0.309] [90 0] [0.0657] [-90 0] [0.231] [-90 0]
+		[0.355] [-90 0] [0.231] [-90 0] [0.0653] [90 0]
+		[0.474] [90 0] [0.0657] [-90 0] [0.23] [-90 0]
+		[0.303] [:angle 0] [0.639] [:angle2 0]
+	]
+	jumpForward :height * 0.475
+	jumpLeft :height * 0.1512
+	right 180
+	setPenColor "#d00000
+	setPenSize :height * 0.013
+	setFillColor transparent
+	polyStart
+	arcLines :outlineInfo :height
+	jumpForward :height * 0.0065
+	arcLines :outlineInfo :height
+	polyEnd
+
+	setFillColor penColor
+	setPenSize 0
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.572
+	jumpLeft :height * 0.1775
+	right 180
+	polyStart
+	arcLines :innerLineInfo :height
+	arcLines :innerLineInfo :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+universityOfNebraskaLincolnLogo 100

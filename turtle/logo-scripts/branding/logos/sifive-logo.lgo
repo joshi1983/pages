@@ -1,0 +1,44 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/SiFive#/media/File:SiFive_Logo.png
+
+; The main difference here is the lines at 
+; the bottom are thicker than in the actual logo.
+; I made the lower line thicker because I didn't see a 
+; strong reason to be thinner than the top and upper sides.
+; The unusually thin outline at the bottom is possibly a mistake.
+; Keeping a consistently thick outline also lead to simpler 
+; WebLogo code.
+to siFiveLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	setPenSize :height * 0.096
+	localmake "outerRadius :height / (1 + cos 180 / 5)
+	jumpForward :height - :outerRadius * cos 180 / 5
+	setPenColor "black
+	setFillColor "white
+	right 180 / 5
+	regularPolygon :outerRadius - penSize / 2 / cos 180 / 5 5
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.646
+	jumpRight :height * 0.09
+	setPenSize 0
+	setFillColor penColor
+	parallelogram :height * 0.53 :height * 0.095 18
+	jumpTo :oldPos
+	jumpForward :height * 0.391
+	jumpLeft :height * 0.43
+	polyStart
+	jumpRight :height * 0.3
+	right 90 + 180 / 5
+	jumpForward :height * 0.16
+	left 360 / 5
+	jumpForward :height * 0.312
+	setHeading :oldHeading
+	jumpLeft :height * 0.7
+	polyEnd
+	setTurtleState :oldState
+end
+
+siFiveLogo 100
