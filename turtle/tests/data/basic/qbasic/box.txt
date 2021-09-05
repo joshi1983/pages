@@ -1,0 +1,61 @@
+REM copied from: https://www.bamsoftware.com/bzr/qbasic/box.bas
+DECLARE FUNCTION frac! (number!)
+DECLARE FUNCTION valu! (number!)
+DECLARE FUNCTION valu2! (number!)
+
+SCREEN 13
+CLS
+x = 159.5
+y = 99.5
+xint = 0
+yint = 0
+RANDOMIZE TIMER
+
+FOR i = 0 TO 63
+OUT &H3C8, i
+OUT &H3C9, i
+OUT &H3C9, i
+OUT &H3C9, i
+NEXT
+
+WHILE 1
+WAIT &H3DA, 8
+LINE (INT(x) - 5, INT(y) - 5)-(INT(x) + 6, INT(y) + 6), 0, BF
+k$ = INKEY$
+IF k$ = CHR$(0) + "K" THEN xint = xint - 1 / 64
+IF k$ = CHR$(0) + "M" THEN xint = xint + 1 / 64
+IF k$ = CHR$(0) + "P" THEN yint = yint + 1 / 64
+IF k$ = CHR$(0) + "H" THEN yint = yint - 1 / 64
+IF x > 319 OR x < 0 THEN x = 159.5: y = 99.5
+IF y > 199 OR y < 0 THEN x = 159.5: y = 99.5
+IF xint > 5 THEN xint = 5
+IF yint > 5 THEN yint = 5
+IF xint < -5 THEN xint = -5
+IF yint < -5 THEN yint = -5
+x = x + xint
+y = y + yint
+LINE (INT(x) - 4, INT(y) - 4)-(INT(x) + 5, INT(y) + 5), 63, BF
+LINE (INT(x) - 4, INT(y) - 5)-(INT(x) + 5, INT(y) - 5), valu2(y)
+LINE (INT(x) - 4, INT(y) + 6)-(INT(x) + 5, INT(y) + 6), valu(y)
+LINE (INT(x) - 5, INT(y) - 4)-(INT(x) - 5, INT(y) + 5), valu2(x)
+LINE (INT(x) + 6, INT(y) - 4)-(INT(x) + 6, INT(y) + 5), valu(x)
+PSET (INT(x) - 5, INT(y) - 5), (1 - frac(x)) * (1 - frac(y)) * 63
+PSET (INT(x) - 5, INT(y) + 6), (1 - frac(x)) * frac(y) * 63
+PSET (INT(x) + 6, INT(y) - 5), frac(x) * (1 - frac(y)) * 63
+PSET (INT(x) + 6, INT(y) + 6), frac(x) * frac(y) * 63
+WEND
+
+FUNCTION frac (number)
+frac = number - INT(number)
+END FUNCTION
+
+FUNCTION valu (number)
+numb = number - INT(number)
+valu = INT(numb * 63)
+END FUNCTION
+
+FUNCTION valu2 (number)
+numb = number - INT(number)
+numb = 1 - numb
+valu2 = INT(numb * 63)
+END FUNCTION

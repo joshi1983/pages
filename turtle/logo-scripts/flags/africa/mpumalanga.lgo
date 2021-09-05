@@ -1,0 +1,91 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Mpumalanga
+; I couldn't find a construction sheet but there is a
+; description of how to construct it at:
+; https://www.fotw.info/flags/za-mp.html#fl
+; Any details that couldn't be found were estimated by overlaying
+; Wikipedia's SVG.
+
+to barbertonDaisy :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "innerCircleRadius :size * 0.1795
+	localmake "numPetals 16
+	localmake "angle1 8.7
+	localmake "angle2 30.5
+	localmake "angle3 360 - (180 - :angle1 * 2) - :angle2 * 2
+	localmake "angle3b  (180 - :angle3) / 2
+	localmake "oppositeLength sin :angle1
+	localmake "size2a :oppositeLength / sin :angle3b
+	localmake "scale :size / ((:size2a * cos :angle3b) + (cos :angle1))
+	localmake "size2 :size2a * :scale
+	localmake "size1 :scale - :innerCircleRadius
+	setPenColor "#c92725
+	setPenSize 0
+	circle :size
+	setPenSize :size * 0.033
+	setFillColor transparent
+	circle :innerCircleRadius
+	setFillColor penColor
+	setPenSize 0
+	repeat :numPetals [
+		setHeading :oldHeading + (repcount) * 360 / :numPetals
+		left :angle1
+		jumpForward :innerCircleRadius
+		polyStart
+		jumpForward :size1
+		right :angle2
+		jumpForward :size2
+		right :angle3
+		jumpForward :size2
+		right :angle2
+		jumpForward :size1
+		polyEnd
+		jumpTo :oldPos
+	]
+	setHeading :oldHeading
+end
+
+to mpumalangaFlag :height
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "width :height * 3 / 2
+	localmake "daisySize :height * 0.2617
+	localmake "colors ["#2a1f74 "white "#00a13a]
+	localmake "size1 :height * 0.4
+	localmake "size2 :height * 0.42
+	localmake "diagonalSize 0.4 * hypot [:width :height]
+	localmake "angle1 arcTan 2 / 3
+	setLineCap "butt
+	setPenSize :width
+	setPenColor "#f2ea00
+	forward :height
+	jumpLeft :height * 0.4422
+	jumpBackward :height * 0.307
+	barbertonDaisy :daisySize
+	jumpTo :oldPos
+	jumpLeft :width / 2
+	localmake "pos1 pos
+	repeat count :colors [
+		localmake "size4 :width - :size2 - (:diagonalSize * cos :angle1)
+		localmake "size5 :size1 + (:diagonalSize * sin :angle1)
+		setFillColor item repcount :colors
+		polyStart
+		jumpForward :size1
+		right 90
+		jumpForward :size2
+		left :angle1
+		jumpForward :diagonalSize
+		right :angle1
+		jumpForward :size4
+		right 90
+		jumpForward :size5
+		polyEnd
+		jumpTo :pos1
+		setHeading :oldHeading
+		localmake "size1 :size1 - :height / 10
+		localmake "size2 :size2 + :height * 0.03
+	]
+end
+
+mpumalangaFlag 100

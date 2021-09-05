@@ -1,0 +1,25 @@
+; Inspired by logo at:
+; https://ca.pinterest.com/pin/68745130240
+to overlappingTriangles :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "colors ["#f0f "#08f "#ff0]
+	localmake "triangleRadius :height * 0.47
+	localmake "offset (:height - :triangleRadius * 2 * sin 60) / (1 + cos 60)
+	setPenSize 0
+	setFillBlendMode "multiply
+	jumpForward :height - :triangleRadius * (sin 60) - :offset * cos 60
+	localmake "center pos
+	repeat count :colors [
+		setHeading :oldHeading - 60 + repcount * 360 / count :colors
+		setFillColor item repcount :colors
+		jumpForward :offset
+		setHeading :oldHeading + 90
+		regularPolygon :triangleRadius 3
+		jumpTo :center
+		right 360 / count :colors
+	]
+	setTurtleState :oldState
+end
+
+overlappingTriangles 100

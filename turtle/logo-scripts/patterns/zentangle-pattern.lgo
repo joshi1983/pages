@@ -1,0 +1,49 @@
+to drawTrianglePattern :size :colors
+	localmake "oldState turtleState
+	localmake "numRepeats 4
+	setPenSize 0
+	repeat :numRepeats [
+		localmake "height :size * (:numRepeats + 1 - repcount) / :numRepeats
+		localmake "width :height * 2
+		localmake "index 1 + modulo repcount count :colors
+		setFillColor item :index :colors
+		isoTriangle :width :height
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by:
+; https://www.facebook.com/photo?fbid=555661454102617
+to zentanglePattern :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "smallSize1 :height / 4
+	localmake "smallSize2 :smallSize1 / 2 / cos 45
+	localmake "colors ["black "white]
+	jumpLeft :smallSize1 * 1.5
+	jumpForward :height - :smallSize1 / 2
+	repeat 4 [
+		localmake "startPos pos
+		localmake "offset repcount
+		repeat 4 [
+			left 45
+			if even? :offset [
+				right 180
+			]
+			if odd? :offset + repcount [
+				left 90
+			]
+			drawTrianglePattern :smallSize2 :colors
+			right 180
+			drawTrianglePattern :smallSize2 reverse :colors
+
+			setHeading :oldHeading
+			jumpRight :smallSize1
+		]
+		jumpTo :startPos
+		jumpBackward :smallSize1
+	]	
+	setTurtleState :oldState
+end
+
+zentanglePattern 100

@@ -1,0 +1,50 @@
+; Inspired by
+; https://www.facebook.com/photo/?fbid=547341867419928
+; https://wevolver.com is a good place to find engineering-related news and content.
+
+make "angle 31
+make "circleRadiusRatio 0.18816
+
+to edge :len
+	localmake "oldPenSize penSize
+	localmake "gap :len * 0.35
+	localmake "len1 :len - :gap * 2
+	setPenSize :len * 0.1
+	jumpForward :gap
+	forward :len1
+	jumpForward :gap
+	setPenSize :oldPenSize
+end
+
+to vShape :edgeLength
+	localmake "circleRadius :edgeLength * :circleRadiusRatio
+	circle :circleRadius
+	right 180 - :angle
+	edge :edgeLength
+	circle :circleRadius
+	left 180 - :angle * 2
+	edge :edgeLength
+	circle :circleRadius
+	left :angle
+end
+
+to wevolverLogo :height
+	localmake "edgeLength :height * 0.82 / 2 / cos :angle
+	localmake "horizontalShift :edgeLength * sin :angle
+	setLineCap "round
+	setPenSize 0
+	jumpForward :height / 2
+	localmake "oldPos pos
+	jumpLeft :horizontalShift * 2
+	setPenColor "black
+	setFillColor "black
+	vShape :edgeLength
+	vShape :edgeLength
+	jumpTo :oldPos
+	left :angle
+	jumpForward :edgeLength
+	right :angle
+	vShape :edgeLength
+end
+
+wevolverLogo 100

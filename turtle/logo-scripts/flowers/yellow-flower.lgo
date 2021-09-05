@@ -1,0 +1,51 @@
+to drawPetal :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "colorStops createPList2 [
+		[0 "orange] [1 "yellow]
+	]
+	jumpForward :height
+	setFillGradient createLinearGradient :oldPos pos :colorStops "pad
+	setPenSize :height * 0.01
+	setPenColor "orange
+	setLineJoinStyle "round
+	right 180
+	jumpForward penSize / 2
+	arcPair :height - penSize 90
+	forward :height
+	setTurtleState :oldState
+end
+
+; Inspired by an image at:
+; https://upload.wikimedia.org/wikipedia/commons/3/3f/Kojo-screenshot.png
+to yellowFlower :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "numPetals 7
+	localmake "petalHeight :height / (1 + cos 180 / :numPetals)
+	localmake "backgroundColorStops createPList2 [
+		[0 "black] [1 "#555]
+	]
+	jumpLeft :height
+	localmake "left pos
+	right 90
+	jumpForward :height * 2
+	setPenGradient createLinearGradient :left pos :backgroundColorStops "pad
+	setPenSize :height
+	jumpLeft :height / 2
+	setLineCap "butt
+	backward :height * 2
+		
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height - :petalHeight
+	repeat :numPetals [
+		drawPetal :petalHeight
+		right 360 / :numPetals
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+yellowFlower 100

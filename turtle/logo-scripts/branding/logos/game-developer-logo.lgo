@@ -1,0 +1,47 @@
+make "gameDevRed "#f32624
+
+to gameDeveloperLogoCustomColor :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "outerAngle 294
+	setPenSize :height * 0.075
+	setLineCap "round
+	setLineJoinStyle "round
+	localmake "outerRadius (:height - penSize) / 2
+	localmake "innerRadius :outerRadius * sin (:outerAngle - 270)
+	jumpForward :height / 2
+	right 90
+	localmake "p1 pos
+	forward :outerRadius
+	localmake "p2 pos
+	right 90
+	arcRight :outerAngle :outerRadius
+	setHeading :oldHeading + 180
+	forward distanceToLine :p1 :p2	
+	arcRight 270 :innerRadius
+	setTurtleState :oldState
+end
+
+; Inspired by logo at
+; https://www.gamedeveloper.com
+to gameDeveloperLogoRed :height
+	localmake "oldState turtleState
+	setPenColor :gameDevRed
+	gameDeveloperLogoCustomColor :height
+	setTurtleState :oldState
+end
+
+to gameDeveloperLogoWhite :height
+	localmake "oldState turtleState
+	stripes :height * 2 :height [:gameDevRed]
+	setPenColor "#fff
+	gameDeveloperLogoCustomColor :height
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 4
+jumpLeft :separation * 0.5
+gameDeveloperLogoRed :height
+jumpRight :separation
+gameDeveloperLogoWhite :height

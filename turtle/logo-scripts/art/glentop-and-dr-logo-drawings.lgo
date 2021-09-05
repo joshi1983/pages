@@ -1,0 +1,226 @@
+; These drawings are inspired by drawings
+; from a book called
+; Glentop - Using DR LOGO on the Amstrad
+; The book was published in 1985.
+; An electronic version of the book can be found at
+; https://archive.org/details/using-dr-logo-on-the-amstrad-martin-simsacme/
+; The book is focused on a different Logo interpreter called DR Logo.
+; The drawings in this script are optimized for WebLogo.
+
+; Inspired by page 46
+; https://archive.org/details/using-dr-logo-on-the-amstrad-martin-simsacme/page/n45/mode/2up
+to triangleSpiral :height
+	localmake "oldState turtleState
+	localmake "numArms 10
+	localmake "heightStep :height / :numArms / 3
+	setPenSize :height * 0.02
+	setLineJoinStyle "miter
+	setLineCap "butt
+	setPenColor "black
+	localmake "height :height - penSize / 2 / cos 60
+	jumpRight :height / tan 60
+	left 30
+	repeat :numArms * 3 [
+		localmake "slantedLength :height / sin 60
+		forward :slantedLength
+		left 120
+		localmake "height :height - :heightStep
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by page 52
+; https://archive.org/details/using-dr-logo-on-the-amstrad-martin-simsacme/page/n51/mode/2up
+to building :height
+	localmake "oldState turtleState
+	localmake "width :height * 0.4
+	localmake "numFloors 3
+	localmake "numWindowsPerFloor 2
+	setPenSize :height * 0.01
+	localmake "height1 :height - penSize
+	localmake "floorHeight :height1 / :numFloors
+	localmake "windowHeight :floorHeight * 0.4
+	localmake "windowWidth :windowHeight * 0.7
+	localmake "windowSeparation :width / (:numWindowsPerFloor)
+	setFillColor "#dcc
+	setPenColor "black
+	jumpForward penSize / 2
+	isoTrapezoid :width :width :height1
+	jumpForward :floorHeight * 0.55
+	jumpRight (:width) / 2 - :windowSeparation / 2
+	setFillColor "#ddd
+	repeat :numFloors [
+		repeat :numWindowsPerFloor [
+			rect :windowWidth :windowHeight
+			jumpLeft :windowSeparation
+		]
+		jumpRight :windowSeparation * :numWindowsPerFloor
+		jumpForward :floorHeight
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by an image near the top of page 65
+; https://archive.org/details/using-dr-logo-on-the-amstrad-martin-simsacme/page/n63/mode/2up
+to rectangularFace :height
+	localmake "oldState turtleState
+	localmake "width :height * 0.8
+	localmake "eyeSeparation :height * 0.4
+	localmake "eyeHeight :height * 0.13
+	setPenSize :height * 0.02
+	localmake "height1 :height - penSize
+	setFillColor "#edd
+	setLineCap "butt
+	setLineJoinStyle "miter
+	jumpForward penSize / 2 + :height1 / 2
+
+	; draw face background
+	rect :width :height1
+	jumpBackward :height * 0.28
+	setPenSize :height * 0.3
+
+	; draw lips
+	forward :height * 0.02
+	setPenSize :height * 0.02
+	jumpForward :height * 0.18
+
+	; draw nose
+	forward :height * 0.2
+
+	jumpBackward :height * 0.05
+	jumpRight :eyeSeparation / 2
+	forward :eyeHeight
+	jumpLeft :eyeSeparation
+	backward :eyeHeight
+	setTurtleState :oldState
+end
+
+to grillPattern :maxWidth :numLevels :step :thickness
+	repeat :numLevels [
+		jumpBackward :step
+		setPenSize :maxWidth * repcount / :numLevels
+		backward :thickness
+	]
+end
+
+; Inspired by an image near the bottom of page 65
+; https://archive.org/details/using-dr-logo-on-the-amstrad-martin-simsacme/page/n63/mode/2up
+to tree :height
+	localmake "oldState turtleState
+	localmake "maxWidth :height * 0.6
+	localmake "numLevels 10
+	localmake "thickness :height * 0.03
+	localmake "step :height * 0.8 / :numLevels - :thickness
+	setLineCap "butt
+	setPenSize :height * 0.04
+	setPenColor "#620
+	forward :height
+	setPenColor "#070
+	grillPattern :maxWidth :numLevels :step :thickness
+	setTurtleState :oldState
+end
+
+; Inspired by an image on page 66
+; https://archive.org/details/using-dr-logo-on-the-amstrad-martin-simsacme/page/n65/mode/2up
+to snowflake :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "maxWidth :height * 0.4
+	localmake "numLevels 10
+	localmake "thickness :height * 0.01
+	localmake "step :height / 2 / :numLevels - :thickness
+	jumpForward :height / 2
+	setPenColor "#35d
+	localmake "center pos
+	repeat 4 [
+		setHeading :oldHeading + repcount * 360 / 4
+		setPenSize :height * 0.02
+		forward :height / 2
+		grillPattern :maxWidth :numLevels :step :thickness
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+to squareSpiral :height
+	localmake "oldState turtleState
+	localmake "numArms 10
+	localmake "heightStep :height / :numArms / 4
+	setPenSize :height * 0.02
+	setLineJoinStyle "miter
+	setLineCap "butt
+	setPenColor "black
+	localmake "height :height - penSize / 2
+	jumpRight :height / 2
+	repeat :numArms * 4 [
+		forward :height
+		left 90
+		localmake "height :height - :heightStep
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by eye drawing on page 246
+; https://archive.org/details/using-dr-logo-on-the-amstrad-martin-simsacme/page/n245/mode/2up
+to eye :height
+	localmake "oldState turtleState
+	localmake "angle 45
+	localmake "angle2 180 - :angle * 2
+	localmake "penSize1 :height * 0.03
+	localmake "height1 :height - :penSize1 * sin :angle
+	localmake "size1 :height1 / 2 / cos :angle
+	localmake "arcRadius :size1 * 0.8
+	localmake "arcRadius2 :arcRadius * 0.4
+	localmake "middleArcAngle 45
+	localmake "len1 :arcRadius * sin :middleArcAngle / 2
+	localmake "middleArcAngle2 2 * arcSin :len1 / :arcRadius2
+	jumpRight :height1 / 4 * tan :angle
+	jumpForward :height / 2
+	setPenSize :penSize1
+	left :angle
+	jumpForward :size1
+
+	; Draw the eyelid.
+	backward :size1
+	left :angle2
+	forward :size1
+	jumpBackward :size1 - :arcRadius
+	right 90
+	localmake "eyeArcStartPoint pos
+	localmake "eyeArcStartHeading heading
+	setPenSize 0
+	arcRight (:angle2 - :middleArcAngle) / 2 :arcRadius
+
+	; Draw colored part of eye
+	setFillColor "brown
+	polyStart
+	arcRight :middleArcAngle :arcRadius
+	right 180 - (:middleArcAngle + :middleArcAngle2) / 2
+	arcRight :middleArcAngle2 :arcRadius2
+	polyEnd
+
+	; Draw the arc outlining the eyeball
+	setPenSize :penSize1
+	jumpTo :eyeArcStartPoint
+	setHeading :eyeArcStartHeading
+	arcRight :angle2 :arcRadius
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 1.5
+setLineCap "butt
+jumpLeft :separation * 3
+triangleSpiral :height
+jumpRight :separation
+building :height
+jumpRight :separation
+rectangularFace :height
+jumpRight :separation
+tree :height
+jumpRight :separation
+snowflake :height
+jumpRight :separation
+squareSpiral :height
+jumpRight :separation
+eye :height

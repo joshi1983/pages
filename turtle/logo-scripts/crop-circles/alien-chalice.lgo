@@ -1,0 +1,81 @@
+; Inspired by:
+; https://www.pinterest.ca/pin/490610953169498624
+to cropCircleAlienChalice :height :lightColor :darkColor
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "smallRadius :height * 0.11
+	localmake "maxArcRadius :height * 0.3
+	localmake "arcThickness :height * 0.01
+	localmake "minArcRadius :smallRadius + :arcThickness / 2
+	localmake "arcStep (:maxArcRadius - :minArcRadius) / 8
+	localmake "maxInnerArcRadius :maxArcRadius - :arcStep
+	localmake "middleLength1 :height - :smallRadius * 2
+	localmake "smallInnerRadius :smallRadius - :arcStep
+	jumpForward :smallRadius
+	setFillColor :lightColor
+	setPenSize 0
+	circle :smallRadius
+	localmake "baseCenter pos
+	setPenSize :height * 0.07
+	setPenColor :lightColor
+	forward :middleLength1
+	setPenSize 0
+	circle :smallRadius
+	localmake "center pos
+	jumpRight :maxArcRadius
+	right 180
+	polyStart
+	arcRight 180 :maxArcRadius
+	polyEnd
+	setPenSize :arcThickness
+	setLineCap "butt
+	setPenColor :darkColor
+	localmake "innerGap :arcStep + penSize
+	localmake "baseArcAngle 360 - 2 * arcSin :innerGap / 2 / :smallInnerRadius
+	repeat 7 [
+		jumpTo :center
+		setHeading :oldHeading
+		localmake "arcRadius mix :maxInnerArcRadius :minArcRadius repRatio
+		ifelse repcount = 7 [
+			localmake "gap :innerGap
+		] [
+			localmake "gap :arcStep
+		]
+		localmake "angleStep1 arcSin :arcStep  / 2 / :arcRadius
+		localmake "angleStep2 arcSin :gap  / 2 / :arcRadius
+		localmake "arcAngle1 90 - :angleStep2 - :angleStep1
+		localmake "arcAngle2 180 - :arcAngle1 * 2 - :angleStep1 * 2
+		jumpRight :arcRadius
+		right 180
+		penUp
+		arcRight :angleStep1 :arcRadius
+		penDown
+		arcRight :arcAngle1 :arcRadius
+		ifelse repcount = 7 [
+			localmake "pos1 pos
+			localmake "heading1 heading
+			setHeading :oldHeading + 180
+			localmake "middleLength2 distanceToCircle :baseCenter :smallInnerRadius
+			forward :middleLength2
+			setHeading (towards :baseCenter) - 90
+			arcRight :baseArcAngle :smallInnerRadius
+			setHeading :oldHeading
+			forward :middleLength2
+			left 90 - :arcAngle2 / 2
+			arcRight :arcAngle1 :arcRadius
+			jumpTo :pos1
+			setHeading :heading1
+		] [
+			penUp
+			arcRight :arcAngle2 :arcRadius
+			penDown
+			arcRight :arcAngle1 :arcRadius
+		]
+	]
+	jumpTo :center
+	setHeading :oldHeading
+	setTurtleState :oldState
+end
+
+setScreenColor "#880
+cropCircleAlienChalice 100 "#ee8 screenColor

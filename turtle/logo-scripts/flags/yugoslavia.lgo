@@ -1,0 +1,57 @@
+; Most of these flags were active only until around 
+; 1990 to 1992
+; Croatia, Serbia... changed flags when they became
+; independent of Yugoslavia.
+; This was also when USSR was ending.
+
+make "blueColor "#003893
+make "redColor "#DE0000
+make "yellowColor "#FCD115
+
+to stripesStar :height :colors
+	localmake "oldState turtleState
+	localmake "width :height * 2
+	localmake "starSize1 :height * 0.3047
+	stripes :width :height :colors
+	jumpForward :height / 2
+	yugoStar :starSize1
+	setTurtleState :oldState
+end
+
+to yugoStar :radius
+	setPenColor :yellowColor
+	setFillColor :redColor
+	setPenSize :radius * 0.0577
+	regularStar :radius 5
+end
+
+; https://en.wikipedia.org/wiki/Flag_of_Yugoslavia#/media/File:Flag_of_Yugoslavia_(1946-1992).svg
+to yugoslaviaFlag :height
+	stripesStar :height [:redColor "white :blueColor]
+end
+
+; https://en.wikipedia.org/wiki/Flag_of_Yugoslavia#/media/File:Flag_of_Croatia_(1947%E2%80%931990).svg
+to croatiaFlag :height
+	stripesStar :height [:blueColor "white :redColor]
+end
+
+; https://en.wikipedia.org/wiki/Flag_of_Yugoslavia#/media/File:Flag_of_Serbia_(1947%E2%80%931992);_Flag_of_Montenegro_(1946%E2%80%931993).svg
+to serbiaFlag :height
+	stripesStar :height ["white :blueColor :redColor]
+end
+
+; https://en.wikipedia.org/wiki/File:Flag_of_Slovenia_(1945%E2%80%931991).svg
+to slaveniaFlag :height
+	stripesStar :height [:redColor :blueColor "white]
+end
+
+make "height 100
+make "separation :height * 4
+jumpLeft :separation
+yugoslaviaFlag :height
+jumpRight :separation
+croatiaFlag :height
+jumpRight :separation
+serbiaFlag :height
+jumpRight :separation
+slaveniaFlag :height

@@ -1,0 +1,137 @@
+make "thicknessFactor 0.007
+make "colors ["white "red "yellow "blue]
+
+to squares :height :timeRatio :colorOffset
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angle1 arcTan 0.5
+	localmake "height1 :height / cos :angle1
+	localmake "thickness :height * :thicknessFactor
+	setPenSize 0
+	parallelogram :thickness :height1 :angle1
+	right 90
+	parallelogram :thickness :height1 -:angle1
+	setHeading :oldHeading + :angle1
+	jumpForward :height1
+	localmake "top pos
+
+	localmake "stepScaleFactor 1 / 2 * (1 + 1 / (tan :angle1) ) / cos 45
+	localmake "minFactor 0.0065
+	localmake "maxFactor 0.2
+	localmake "timeRatio 1 / (1 + :timeRatio) - 0.5
+	localmake "factor mix :maxFactor :minFactor :timeRatio
+	localmake "step :height * :factor
+	jumpTo :oldPos
+	localmake "endReached? false
+	localmake "index :colorOffset
+	do.while [
+		setHeading :oldHeading - 45
+		localmake "index 1 + remainder :index count :colors
+		setFillColor item :index :colors
+		jumpRight :step
+		localmake "d distanceToLine :oldPos :top
+		localmake "squareSize :d / cos 45
+		localmake "dToOld distance :oldPos
+		localmake "maxSquareSize :height + :squareSize / 2 - (:dToOld * cos 45)
+		if :squareSize > :maxSquareSize [
+			localmake "endReached? true
+			jumpLeft (:squareSize - :maxSquareSize) * cos 45
+			localmake "squareSize :maxSquareSize
+		]
+		right 45
+		square :squareSize
+		localmake "step :squareSize * :stepScaleFactor
+	] not :endReached?
+	setTurtleState :oldState
+end
+
+to drawSquare2 :height :timeRatio
+	localmake "oldState turtleState
+	localmake "height2 :height / 2
+	localmake "thickness :height / 2 * :thicknessFactor
+	jumpForward :height / 2
+	localmake "center pos
+	repeat 4 [
+		jumpRight :height2
+		left 90
+		squares :height2 :timeRatio 2
+		jumpTo :center
+	]
+	setPenColor fillColor
+	setFillColor transparent
+	setPenSize :thickness
+	square :height
+	setFillColor penColor
+	setPenSize 0
+	rect :height :thickness
+	jumpBackward :height2
+	stripes :thickness :height [penColor]
+	
+	setTurtleState :oldState
+end
+
+to drawSquare1 :height :timeRatio
+	localmake "oldState turtleState
+	localmake "height2 :height / 2
+	jumpForward :height2
+	repeat 4 [
+		squares :height2 :timeRatio 0
+		right 90
+	]
+	setPenColor fillColor
+	setFillColor transparent
+	setPenSize :height * :thicknessFactor / 2
+	square :height
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://www.facebook.com/share/r/12M7RZySXfe/
+; which was made by Dominic Pons
+;
+; Dominic Pons indicated his animation was inspired by
+; an image from Michael Sterling Helso at:
+; https://www.facebook.com/groups/391950357895182/?multi_permalinks=2080975932325941
+to drawSquareGrid :height :timeRatio
+	localmake "oldState turtleState
+	localmake "numCells 5
+	localmake "step :height / :numCells
+	jumpLeft :step * (:numCells - 1) / 2
+
+	repeat :numCells [
+		localmake "offset bitAnd repcount 1
+		repeat :numCells [
+			ifelse even? :offset + repcount [
+				drawSquare1 :step :timeRatio
+			] [
+				drawSquare2 :step :timeRatio
+			]
+			jumpRight :step
+		]
+		jumpLeft :numCells * :step
+		jumpForward :step
+	]
+	setTurtleState :oldState
+end
+
+make "timeRatio interpolateRatio easeInOut animation.clampedTimeRatio
+setScreenColor "black
+setFillColor "white
+drawSquareGrid 100 :timeRatio
+
+to animation.snapshotstyle
+	output createPList2 [
+		["position.y 50]
+		["zoom.scale 7]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 10
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

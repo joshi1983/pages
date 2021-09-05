@@ -1,0 +1,131 @@
+make "thinWidthRatio 0.003
+make "thinLineGapRatio 0.02
+
+to drawK :diagramHeight
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "size1 :diagramHeight * 0.102
+	localmake "size2 :diagramHeight * 0.1
+	localmake "size3 :diagramHeight * 0.035
+	localmake "size4 :diagramHeight * 0.063
+	localmake "angle1 134
+	localmake "size5 2 * (:size1 + ((:size2 - :size4) * sin :angle1) - :size3)
+	localmake "thinWidth :diagramHeight * :thinWidthRatio
+
+	jumpBackward :diagramHeight * 0.2
+	jumpRight :size1
+	setPenSize 0
+	polyStart
+	jumpLeft :size1 * 2
+	left :angle1
+	jumpForward :size2
+	localmake "lowerLeftPos pos
+	setHeading :oldHeading
+	jumpRight :size3
+	right :angle1 - 90
+	jumpForward :size4
+	setHeading :oldHeading
+	jumpRight :size5
+	right :angle1
+	jumpForward :size4
+	setHeading :oldHeading
+	jumpRight :size3
+	polyEnd
+
+	setPenSize :thinWidth
+	jumpTo :lowerLeftPos
+	setHeading :oldHeading
+	jumpRight :size3 / 2
+	setHeading :oldHeading - :angle1
+	jumpForward :diagramHeight * :thinLineGapRatio
+	forward :diagramHeight * 0.15
+	jumpForward :diagramHeight * 0.1
+	setHeading :oldHeading + 90
+	setPenSize 0
+	label "k
+
+	setTurtleState :oldState
+end
+
+to drawLabelledDashes :diagramHeight :letter
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "dashSize :diagramHeight * 0.162
+	localmake "dashLength :dashSize * 0.7
+	localmake "dashGap :dashSize - :dashLength
+	jumpRight :dashSize * 1.5 - :dashGap / 2
+	setLineCap "round
+	setPenSize :diagramHeight * 0.01
+	left 90
+	repeat 3 [
+		forward :dashLength
+		jumpForward :dashGap
+	]
+	jumpForward :diagramHeight * :thinLineGapRatio - :dashGap
+	setPenSize :diagramHeight * :thinWidthRatio
+	forward :diagramHeight * 0.24
+	jumpForward :diagramHeight * 0.06
+	jumpLeft :diagramHeight * 0.01
+	setHeading :oldHeading + 90
+	setPenSize 0
+	label :letter
+	setTurtleState :oldState
+end
+
+to lowerCurve :diagramHeight
+	localmake "oldState turtleState
+	localmake "size1 :diagramHeight * 0.12
+	localmake "size2 :diagramHeight * 0.134
+	setPenSize :diagramHeight * 0.005
+	jumpRight :size1
+	forward :size2
+	arcLeft 180 :size1
+	forward :size2
+	setTurtleState :oldState
+end
+
+; Inspired by a PNG that lead to:
+; https://en.wikipedia.org/wiki/Vacuum_tube#/media/File:Tetrode.svg
+; That SVG was actually uploaded by me(Josh Greig) by
+; exporting the drawing from WebLogo.
+; It looks like the original PNG was deleted because links are broken to it.
+to tetrodeDiagram :height
+	localmake "oldState turtleState
+	localmake "thinWidth :height * :thinWidthRatio
+	localmake "oldHeading heading
+	setFontSize :height * 0.1
+	setLineCap "butt
+	setPenColor "black
+	setPenSize :height * 0.01
+	jumpRight :height * 0.0865
+	localmake "bottomMiddle pos
+	jumpForward :height * 0.51
+	localmake "center pos
+	circle :height * 0.37
+	jumpForward :height * 0.24
+	setPenSize :height * 0.3
+	forward :height * 0.025
+	setPenSize :thinWidth
+	forward :height * 0.2
+	jumpBackward :height * 0.025
+	jumpRight :height * 0.06
+	right 90
+	setPenSize 0
+	setFillColor "black
+	label "a
+
+	jumpTo :center
+	setHeading :oldHeading
+	drawK :height
+
+	jumpForward :height * 0.01
+	drawLabelledDashes :height "g
+	jumpForward :height * 0.115
+	drawLabelledDashes :height "r
+
+	jumpTo :bottomMiddle
+	lowerCurve :height
+	setTurtleState :oldState
+end
+
+tetrodeDiagram 100

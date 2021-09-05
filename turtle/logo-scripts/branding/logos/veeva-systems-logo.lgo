@@ -1,0 +1,33 @@
+; Inspired by logo at
+; https://en.wikipedia.org/wiki/Veeva_Systems#/media/File:Veeva_Systems_logo.svg
+to veevaSystemsLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "grayHeight :height * 0.44
+	localmake "outerAngle arcTan 1 / 2
+	localmake "outerLength :height / cos :outerAngle
+	localmake "width1 :height * 0.175
+	localmake "innerLength :outerLength - :width1 / sin :outerAngle
+	setPenSize 0
+	jumpForward :height
+	right 180
+	setFillColor "#8b8c8e
+	isoTriangle :grayHeight :grayHeight
+	setFillColor "#f89c27
+	jumpRight :height / 2
+	left :outerAngle
+	polyStart
+	jumpForward :outerLength
+	left 180 - :outerAngle * 2
+	jumpForward :outerLength
+	setHeading :oldHeading
+	jumpLeft :width1
+	left 180 - :outerAngle
+	jumpForward :innerLength
+	right 180 - :outerAngle * 2
+	jumpForward :innerLength		
+	polyEnd
+	setTurtleState :oldState	
+end
+
+veevaSystemsLogo 100

@@ -1,0 +1,100 @@
+; Inspired by a figure in a book called:
+; K Power's Logo Fun
+; The book was published in 1985.
+; The figure is on page 60 and page 42
+;
+; A digital version is at:
+; https://archive.org/details/k-power-logo-fun
+;
+; An Apple Logo program drawing the figure in the book is on page 42.
+; https://archive.org/details/k-power-logo-fun/page/42/mode/2up
+;
+; This WebLogo version was written by tracing 
+; this drawing over a screenshot of the page.
+; Extra colour, variation in line thickness, extra curves were added
+; for more visual appeal and realism.
+to clintsPlane :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "wheelRadius :height * 0.13
+	localmake "thickness :height * 0.01
+	localmake "cabinGlassShape [1.66 0.75
+		[[59.5 0] [100 0.85] [115 0] [1.3]]
+	]
+	localmake "cabinColorStops createPList2 [
+		[0 "#0fff] [0.9 "#0fff] [1 "#fff]
+	]
+	localmake "bodyBrown "#836E5D
+	localmake "bodyColorStops createPList2 [
+		[0 "#8b5] [0.2 :bodyBrown]  [0.4 "#8b5] [0.6 :bodyBrown] [0.93 "#8b5] [1 "#fff]
+	]
+	setPenColor "black
+	setPenSize :height * 0.01
+	setFillColor "#8888
+	drawArcLineShape :cabinGlassShape :height
+	jumpBackward :height * 0.5
+	setFillGradient createRadialGradient pos :height * 1.95 :cabinColorStops
+	jumpTo :oldPos
+	drawArcLineShape :cabinGlassShape :height
+
+	jumpTo :oldPos
+	setHeading :oldHeading - 20
+	jumpLeft :height * 2.44
+	localmake "leftPos pos
+	jumpRight :height * 4.9
+	setFillGradient createLinearGradient :leftPos pos :bodyColorStops "pad
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpRight :height * 1.3
+	setPenSize :height * 0.07
+	jumpForward :wheelRadius + penSize / 2
+	setLineCap "butt
+	drawArcLineShape [-1 0
+		[[180 0] [180 1]]
+	] :wheelRadius
+	setPenSize :height * 0.03
+	drawArcLineShape [0 0
+		[[-90 0] [0.75] [30 0.2] [0.33] [60 0] [0.1] [35 0]
+		[0.2] [54 0.25] [0.45] [35 0] [-70 0.75] [45.5 0]
+		[2.58] [-85 0] [0.67] [75 0] [0.24] [153 0.32]
+		[0.5]]
+	] :height
+
+	jumpTo :oldPos
+	jumpLeft :height * 2.22
+	jumpForward :height * 0.32
+	stripes :thickness :height * 0.63 [penColor]
+	right 89
+	stripes :thickness :height * 0.47 [penColor]
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpRight :height * 2.45
+	jumpForward :height * 0.4
+	rect 0 :height * 0.75 ; propeller
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	setFillColor transparent
+	setPenSize :height * 0.02
+	setLineJoinStyle "round
+	drawArcLineShape [0.3 0.16
+		[[-90 0] [1.12] [37 0] [0.58] [143 0] [1]]
+	] :height
+	jumpRight :height * 2.297
+	jumpForward :height * 0.28
+	stripes :height * 0.02 :height * 0.36 [penColor]
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpRight :height * 0.17
+	jumpForward :height * 0.32
+	setPenSize :height * 0.005
+	setFillColor "white
+	isotoxalStar :height * 0.16 :height * 0.09 10
+	setTurtleState :oldState
+end
+
+setScreenColor "#D2D2F9
+clintsPlane 100

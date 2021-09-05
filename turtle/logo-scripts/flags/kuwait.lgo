@@ -1,0 +1,22 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Kuwait
+
+; Implemented based on construction sheet on the wikipedia article.
+; This was Kuwait's flag from 1961 to present(2023).
+to kuwaitFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 12 / 6
+	localmake "colors ["#ce1126 "white "#007a3d]
+	stripes :width :height :colors
+	jumpLeft :width / 2
+	jumpForward :height / 2
+	right 90
+	setPenSize 0
+	setFillColor "black
+	isoTrapezoid :height :height / 3 :height / 2
+	setTurtleState :oldState
+end
+
+; Avoid clashing the screen color with any in the flag.
+setScreenColor "#ddd
+kuwaitFlag 100

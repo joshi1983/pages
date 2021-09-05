@@ -1,0 +1,41 @@
+; Inspired by:
+; https://ca.pinterest.com/pin/422281212083783
+;
+; That pin was shared by: Clémence Aulas
+;
+; This WebLogo code was written by Josh Greig.
+to inspirationalAffiche :height
+	localmake "oldState turtleState
+	localmake "thickness 0.36
+	localmake "pairs [
+		[1 / 2 - :thickness / 2 :thickness / 2 "yellow "orange]
+		[:thickness / 2 (1 - :thickness) / 2 "#f0f "#088 ]
+	]
+	setPenSize :height * :thickness
+	jumpForward :height / 2
+	localmake "center pos
+	setPenBlendMode "darken
+	repeat count :pairs [
+		localmake "pair item repcount :pairs
+		localmake "separation :height * first :pair
+		localmake "startOffset :height * item 2 :pair
+		for ["i 3 count :pair] [
+			setPenColor item :i :pair
+			jumpBackward :separation
+			jumpLeft :startOffset
+			right 90
+			forward :height * :thickness
+			jumpTo :center
+			right 90
+		]
+		right 90
+	]
+	setFillColor "#6000
+	setFillBlendMode penBlendMode
+	setPenSize 0
+	circle :height * 0.215
+
+	setTurtleState :oldState
+end
+
+inspirationalAffiche 100

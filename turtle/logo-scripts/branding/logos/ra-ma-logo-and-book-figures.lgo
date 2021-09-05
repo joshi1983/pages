@@ -1,0 +1,172 @@
+; This module includes procedures to draw figures from a book.
+; The book is called:
+; Aprende LOGO con AMSTRAD - Ficheros en Castellano
+; That title roughly translates to:
+; Learn LOGO with AMSTRAD - Files in Spanish
+;
+; Amstrad is a mostly British company that built and sold
+; microcomputer/desktop computers in the 1980's.
+; 
+; https://archive.org/details/aprende-logo-con-amstrad.-ficheros-en-castellano-f-javier-alvarezacme/
+
+; Inspired by logo on the inside of the book.
+; 
+; A digital version is near the bottom of the page at:
+; https://archive.org/details/aprende-logo-con-amstrad.-ficheros-en-castellano-f-javier-alvarezacme/page/n1/mode/2up
+;
+; The logo is also on the cover of the book.
+to raMaLogo :height
+	localmake "oldState turtleState
+	localmake "gap :height * 0.1
+	localmake "arrowLength :height / 2 - :gap
+	setPenSize :height * 0.2
+	setPenColor "black
+	jumpForward :height / 2
+	localmake "center pos
+	repeat 4 [
+		jumpForward :gap
+		arrow :arrowLength 40 :height * 0.13
+		jumpTo :center
+		right 90
+	]
+	setTurtleState :oldState
+end
+
+; raMaLogo2 draws a more accurate replication of Ra Ma's real logo.
+; raMaLogo2's implementation is also little longer and 
+; more difficult to understand, though.
+to raMaLogo2 :height
+	localmake "oldState turtleState
+	localmake "squareSize :height * 0.24
+	localmake "gapRatio 0.1
+	localmake "angle 17
+	localmake "len1 0.13
+	localmake "height1 :len1 * cos 45
+	localmake "len2 :height1 / cos 45 - :angle
+	localmake "lines1 [
+		[:len1] [-90 - :angle 0] [:len2]
+		[-45 + :angle 0]
+	]
+	jumpForward :height / 2
+	setPenSize 0
+	setFillColor "black
+	isotoxalStar :height / 2 :height * 0.29 4
+	setFillColor "white
+	square :squareSize
+	repeat 4 [
+		drawArcLineShape [:gapRatio :gapRatio
+			combine :lines1 reverse :lines1
+		] :height
+		right 90
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by a figure on page 13.
+;
+; A digital version of the page is at:
+; https://archive.org/details/aprende-logo-con-amstrad.-ficheros-en-castellano-f-javier-alvarezacme/page/12/mode/2up
+to drawTurtleIcon :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "angle 25
+	setPenSize :height * 0.03
+	localmake "sideLength (:height - penSize) / cos :angle
+	localmake "baseWidth :sideLength * sin :angle
+	localmake "arcAngle 90
+	setLineJoinStyle "round
+	localmake "arcRadius :baseWidth  / sin :arcAngle / 2
+	setPenColor "black
+	setFillColor "white
+	jumpForward :height - penSize / 2
+	left 180 - :angle
+	polyStart
+	jumpForward :sideLength
+	setHeading :oldHeading + 90 - :arcAngle / 2
+	arcRight :arcAngle :arcRadius
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by a figure on page 99.
+; Extra color and details were added in this procedure for extra visual appeal.
+to drawPencil :height
+	localmake "oldState turtleState
+	localmake "straightHeight :height * 0.83
+	localmake "width :height * 0.17
+	localmake "graphiteHeight :height * 0.05
+	
+	setPenSize :height * 0.01
+	setPenColor "black
+	setLineJoinStyle "round
+	jumpForward (:straightHeight + penSize) / 2
+	setFillColor "#fe0
+	rect :width :straightHeight
+	rect :width * 0.5 :straightHeight
+
+	jumpForward :straightHeight / 2
+	localmake "sharpenedHeight :height - penSize - :straightHeight
+	setFillColor "#fa6
+	isoTriangle :width :sharpenedHeight
+	jumpForward :sharpenedHeight - :graphiteHeight
+	setFillColor "#888
+	localmake "graphiteWidth :width * :graphiteHeight / :sharpenedHeight
+	isoTriangle :graphiteWidth :graphiteHeight
+	setTurtleState :oldState
+end
+
+to drawWheel :height
+	localmake "oldState turtleState
+	setPenSize :height * 0.2
+	jumpForward :height / 2
+	circle (:height - penSize) / 2	
+
+	setTurtleState :oldState
+end
+
+; Inspired by a figure on page 100.
+;
+; A digital version is at:
+; https://archive.org/details/aprende-logo-con-amstrad.-ficheros-en-castellano-f-javier-alvarezacme/page/100/mode/2up
+;
+; Extra color and a more realistic tire appearance was made
+; for more visual appeal.
+to truck :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "bodyHeight :height * 0.41
+	localmake "bodyWidth :height * 1.63
+	localmake "gap :height * 0.3
+	jumpLeft :height * 0.52
+	setFillColor "#9b9
+	repeat 2 [
+		drawWheel :height * 0.3
+		jumpRight :height * 1.045
+	]
+	jumpTo :oldPos
+	jumpForward :gap + :bodyHeight / 2
+	setLineJoinStyle "round
+	rect :bodyWidth :bodyHeight
+	jumpForward :bodyHeight / 2
+	jumpRight :bodyWidth / 2
+	setFillColor transparent
+	polyStart
+	jumpLeft :bodyWidth * 0.48
+	jumpForward :height - :gap - :bodyHeight - penSize / 2
+	jumpRight :bodyWidth * 0.3
+	polyEnd
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 3
+jumpLeft :separation * 2
+raMaLogo :height
+jumpRight :separation
+raMaLogo2 :height
+jumpRight :separation
+drawTurtleIcon :height
+jumpRight :separation
+drawPencil :height
+jumpRight :separation
+truck :height

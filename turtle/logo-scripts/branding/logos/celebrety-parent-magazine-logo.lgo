@@ -1,0 +1,48 @@
+; Inspired by logo at:
+; https://celebrityparentsmag.com
+to celebretyParentMagazineLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "arcRadius1 0.235
+	localmake "cArcRadius :height * 0.245
+	localmake "outline1 [
+		[90 0] [0.4] [-90 :arcRadius1] [0.435] [-90 :arcRadius1]
+		[0.2] [60 0] [0.11] [-60 0] [0.145]
+	]
+	localmake "innerRadius :height * 0.397
+	localmake "arcAngle 265
+	setPenSize :height * 0.025
+	setLineJoinStyle "miter
+	setLineCap "round
+	setPenColor "black
+	jumpForward penSize / 2
+	setFillColor transparent
+	drawArcLineShape [0 0
+		combine :outline1 reverse :outline1
+	] :height - penSize
+	jumpForward :height * 0.065
+	left 90
+	setPenSize :height * 0.02
+	arcRight 373 :innerRadius
+	setHeading :oldHeading
+	arcLines [[0.14] [-90 0] [0.221] [180 0.177] [0.31]] :height
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.55
+	right 175 - :arcAngle / 2
+	jumpForward :cArcRadius
+	left 90
+	arcLeft :arcAngle :cArcRadius
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.96
+	jumpRight :height * 0.256
+	right 90
+	forward :height * 0.15
+	setTurtleState :oldState
+end
+
+celebretyParentMagazineLogo 100

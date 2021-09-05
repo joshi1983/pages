@@ -1,0 +1,140 @@
+to drawLips :height
+	localmake "oldState turtleState
+	setPenColor "black
+	setLineCap "butt
+	setPenSize :height * 0.03
+	jumpForward :height * 0.57
+	jumpLeft :height * 0.361
+	right 180
+	arcLines [
+		[0.03] [94.5 0.05] [0.19] [-42 0.1]
+		[0.18] [90 0.1]
+	] :height
+	setTurtleState :oldState
+end
+
+to drawNose :height
+	localmake "oldState turtleState
+	setPenColor "black
+	setPenSize :height * 0.01
+	setLineCap "round
+	jumpForward :height * 0.666
+	jumpRight :height * 0.02
+	left 50
+	arcLines [[98 0.11]] :height
+	setTurtleState :oldState
+end
+
+to drawGlasses :height :topRight :bottomRight
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	jumpForward :height * 0.685
+	jumpRight :height * 0.164
+	localmake "rightPos pos
+	left 60
+	setPenSize :height * 0.03
+	setPenColor "black
+	arcLeft 30 :height * 0.5
+	setFillColor "white
+	setPenSize :height * 0.02
+	drawArcLineShape [0 0
+		[[-105 0] [25 0.3] [46 0.03] [30 0.3]
+		[15 0.7] [60 0.05] [26 0.47] [65 0.05]
+		[31 0.53] [40 0.06] [15 0.3]
+		]
+		] :height
+
+	jumpTo :rightPos
+	setPenSize 0
+	setFillColor "white
+	setHeading :oldHeading + 10
+	localmake "startHeading heading
+	polyStart
+	localmake "lines1 [[-22 0.3] [-56 0.07]]
+	arcLines :lines1 :height
+	localmake "arcRadiusFactor 0.5
+	localmake "arcRadius :height * :arcRadiusFactor
+	localmake "arcAngle getArcRightAngleToLine :arcRadius :bottomRight :topRight
+	arcRight :arcAngle :arcRadius
+	setHeading :oldHeading + 180
+	arcLines [[0.37] [-106 0]] :height
+	localmake "lines2 [[-14.5 1.3] [-46 0.05]
+		[-20 0.4]]
+	localmake "pos2 pos
+	localmake "heading2 heading
+	arcLines :lines2 :height
+	polyEnd
+
+	setPenSize :height * 0.02
+	jumpTo :rightPos
+	setHeading :startHeading
+	arcLines :lines1 :height
+	arcRight :arcAngle :arcRadius
+
+	jumpTo :pos2
+	setHeading :heading2
+	arcLines :lines2 :height
+
+	setTurtleState :oldState
+end
+
+to drawEyes :height
+	localmake "oldState turtleState
+	localmake "eyeRadius 0.069
+	setFillColor "black
+	setPenSize 0
+	drawArcLineShapes [
+		[-0.296 0.8
+			[[167 0] [180 :eyeRadius]]
+		]
+		[0.242 0.681
+			[[160 0] [180 :eyeRadius]]
+		]
+	] :height	
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://www.youtube.com/@TsodingDaily
+to tsodingDailyLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	stripes :height :height ["#ffe6d5]
+	drawLips :height
+	drawNose :height
+
+	jumpLeft :height / 2
+	localmake "bottomLeft pos
+	jumpForward :height
+	localmake "topLeft pos
+	jumpRight :height
+	localmake "topRight pos
+	jumpBackward :height
+	localmake "bottomRight pos
+
+	jumpTo :topLeft
+
+	setPenSize 0
+	setFillColor "#535c6b
+	polyStart	
+	jumpRight :height * 0.1
+	left 175
+	localmake "arcRadius :height * 0.6
+	localmake "arcAngle getArcRightAngleToLine :arcRadius :topLeft :bottomLeft
+	arcRight :arcAngle :arcRadius
+	polyEnd
+	right 180
+	setPenColor "black
+	setPenSize :height * 0.015
+	arcLeft :arcAngle :arcRadius
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	drawGlasses :height :topRight :bottomRight
+	drawEyes :height
+
+	setTurtleState :oldState
+end
+
+tsodingDailyLogo 100

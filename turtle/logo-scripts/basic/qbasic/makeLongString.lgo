@@ -1,0 +1,10 @@
+; Converts the specified long(32-bit integer) to a 4-character string
+; Similar to QBasic's MKL$ function
+to makeLongString :longVal
+	localmake "result "
+	repeat 4 [
+		localmake "byteVal bitAnd ( bitShiftRight :longVal 8 * ( 4 - repcount ) ) 255
+		localmake "result word :result char :byteVal
+	]
+	output :result
+end

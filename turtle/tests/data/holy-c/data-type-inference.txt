@@ -1,0 +1,19 @@
+// copied from: https://holyc-lang.com/docs/language-spec/learn-types
+
+class Person
+{
+  U8 *name;
+  I64 age;
+};
+
+auto PersonNew(U8 *name, I64 age=40)
+{
+  Person *p = MAlloc(sizeof(Person));
+  p->name = name;
+  p->age = age;
+  return p;
+}
+
+auto i = 10;
+auto p = PersonNew("Terry",42);
+"%d %s => %d",i,p->name,p->age;

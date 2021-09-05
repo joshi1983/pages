@@ -1,0 +1,84 @@
+make "thicknessRatio 0.151
+make "oRadiusRatio (0.754 - :thicknessRatio) / 2
+
+to drawD :fontHeight
+	localmake "oldState turtleState
+	localmake "radius :fontHeight * :oRadiusRatio
+	setPenColor fillColor
+	drawO :fontHeight
+	jumpRight :radius
+	setPenSize :fontHeight * :thicknessRatio
+	jumpForward :radius + penSize / 2
+	setLineCap "round
+	forward :fontHeight - :radius - penSize
+	setTurtleState :oldState
+end
+
+to drawO :fontHeight
+	localmake "oldState turtleState
+	setPenSize :fontHeight * :thicknessRatio
+	localmake "radius :fontHeight * :oRadiusRatio
+	setPenColor fillColor
+	setFillColor transparent
+	jumpForward penSize / 2 + :radius
+	circle :radius
+	setTurtleState :oldState
+end
+
+to odooLogo :height :firstColor :rightColors
+	localmake "oldState turtleState
+	localmake "fontSeparation :height * 0.7905
+	setPenSize 0
+	jumpLeft :height * 1.185
+	setFillColor :firstColor
+	drawO :height
+	jumpRight :fontSeparation
+	setFillColor :rightColors
+	drawD :height
+	jumpRight :fontSeparation
+	drawO :height
+	jumpRight :fontSeparation
+	drawO :height
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://commons.wikimedia.org/wiki/File:Odoo_Official_Logo.png
+; This code draws something very similar but
+; you can get the exact graphics at:
+; https://www.odoo.com/page/brand-assets
+to odooStandardLogo :height
+	odooLogo :height "#a24689 "#8f8f8f
+end
+
+; Inspired by a version of the logo at:
+; https://www.odoo.com/page/brand-assets
+to odooWhiteTextLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "width :height * 3
+	localmake "innerHeight :height * 0.8
+	localmake "colorStops createPList2 [
+		[0 "#432c3d] [1 "#714b67]
+	]
+	jumpRight :height
+	localmake "fromPos pos
+	jumpLeft :height * 2
+	jumpForward :height
+	setPenGradient createLinearGradient :fromPos pos :colorStops "pad
+	jumpTo :oldPos
+	setPenSize :width
+	setLineCap "butt
+	forward :height
+	jumpTo :oldPos
+	jumpForward (:height - :innerHeight) / 2
+	odooLogo :innerHeight "white "white
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 6
+jumpLeft :separation / 2
+odooStandardLogo :height
+jumpRight :separation
+odooWhiteTextLogo :height

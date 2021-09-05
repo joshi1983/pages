@@ -1,0 +1,282 @@
+make "wheelLeftFactor 1.06
+make "wheelRightFactor 1.98
+
+to drawWindowsAndDoorCracks :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "arcsInfo [
+		[2.2 24] [22.5 0] [3.77 10] [74 0]
+	]
+	localmake "gap1 :height * 0.033
+	localmake "gap2 :height * 0.055
+	localmake "size1 :height * 0.135
+	localmake "size2 :size1 + :gap1 + :gap2
+	setFillColor "black
+	jumpForward :height * 0.6737
+	jumpLeft :height * 1.1
+	polyStart
+	right 70.2
+	arcsRight :arcsInfo :height
+	jumpForward :size1
+	polyEnd
+	setPenSize :height * 0.002
+	setPenColor "black
+	jumpBackward :gap1 + :size1
+	forward :size2
+	setHeading :oldHeading - 178
+	forward :height * 0.35
+	setHeading :oldHeading
+	jumpLeft :height * 0.547
+	jumpBackward :height * 0.01
+	localmake "pos1 pos
+	forward :height * 0.335
+	right 23
+	forward :height * 0.1
+	jumpTo :pos1
+	setHeading :oldHeading
+	jumpLeft :height * 0.6
+	left 1
+	forward :height * 0.305
+	right 26
+	forward :height * 0.1
+	setTurtleState :oldState
+end
+
+to getWheelOuterGradient :radius
+	localmake "colorStops createPList2 [[0 "#08101c] [1 "#555]]
+	jumpBackward :radius
+	localmake "fromPos pos
+	jumpForward :radius * 2
+	localmake "gradient createLinearGradient :fromPos pos :colorStops "pad
+	jumpBackward :radius
+	output :gradient
+end
+
+to drawWheel :radius
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "arcAngle1 120
+	jumpForward :radius
+	setFillColor "#0d1724
+	setPenGradient getWheelOuterGradient :radius
+	setPenSize :radius * 0.03
+	circle :radius - penSize / 2
+	setFillColor "#081012
+	setPenSize 0
+	circle :radius * 0.6
+	setPenSize :radius * 0.05
+	setPenColor "black
+	left :arcAngle1 / 2
+	arc :arcAngle1 :radius * 0.2
+	setPenColor "#112
+	setHeading :oldHeading + 180 - :arcAngle1 / 2
+	arc :arcAngle1 :radius * 0.2
+	setTurtleState :oldState
+end
+
+to wheelArch :archHeight :rotation
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	setFillColor "#181f2e
+	left :rotation
+	localmake "heading1 heading
+	repeat 2 [
+		localmake "sideLength :archHeight / cos 30
+		localmake "archWidth :sideLength * (0.5 + sin 30)
+		jumpLeft :archWidth
+		right 30
+		polyStart
+		repeat 3 [
+			jumpForward :sideLength
+			right 60
+		]
+		polyEnd
+		jumpTo :oldPos
+		setHeading :heading1
+		setFillColor "black
+		localmake "archHeight :archHeight * 0.85
+	]
+	setTurtleState :oldState
+end
+
+to drawArchesAndTrim :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "archSize :height * 0.33
+	jumpLeft :height * :wheelLeftFactor
+	jumpForward :height * 0.27
+	wheelArch :archSize 2
+	jumpRight :height * :wheelRightFactor
+	wheelArch :archSize 0
+
+	setPenColor "#181f2e
+	jumpTo :oldPos
+	jumpLeft :height * 0.72
+	jumpForward :height * 0.285
+	setLineCap "butt
+	setPenSize :height * 0.1
+	right 89
+	forward :height * 1.3
+	setTurtleState :oldState
+end
+
+to drawBase :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	jumpForward :height * 0.372
+	jumpLeft :height * 1.5
+	setPenSize 0
+	setFillColor "black
+	polyStart
+	arcLines [[-169 0] [0.05] [68 0] [0.01] [-60 0] [0.05] [45 0.09]
+		[0.05] [-47 0] [0.04] [70 0] [0.04] [70 0] [0.025]] :height
+	setHeading :oldHeading + 3
+	jumpRight :height * 0.2
+	setHeading :oldHeading
+	jumpRight :height * 1.9
+	left 3
+	jumpRight :height * 0.64
+	arcLines [[-23 0] [0.053] [-53 0.04] [0.06] [60 0.015] [0.07]
+		[105 0.005] [0.105]] :height
+	jumpRight :height * 0.035
+	jumpForward :height * 0.4
+	jumpLeft :height * 0.12
+	setHeading :oldHeading - 90
+	jumpForward :height * 1.9
+	jumpRight :height * 0.1
+	polyEnd
+	setTurtleState :oldState
+end
+
+to drawWheels :height
+	localmake "oldState turtleState
+	localmake "radius :height * 0.235
+	jumpForward :height * 0.03
+	jumpLeft :height * :wheelLeftFactor
+	drawWheel :radius
+	jumpRight :height * :wheelRightFactor
+	drawWheel :radius
+	setTurtleState :oldState
+end
+
+to createMirrorGradient :width
+	localmake "colorStops createPList2 [
+		[0 "#555] [0.7 "#8555] [1 "#0555]
+	]
+	localmake "fromPos pos
+	jumpRight :width
+	localmake "gradient createLinearGradient :fromPos pos :colorStops "pad
+	jumpLeft :width
+	output :gradient
+end
+
+to drawMirror :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "arcsInfo [
+		[27 0.17] [60 0.025] [15 0.1] [8 0.4]
+	]
+	jumpForward :height * 0.7488
+	jumpLeft :height * 0.66
+	localmake "pos1 pos
+	right 30
+	localmake "heading1 heading
+	setPenSize 0
+	setFillColor "#111
+	repeat 2 [
+		polyStart
+		arcsRight :arcsInfo :height
+		polyEnd
+		setFillGradient createMirrorGradient :height * 0.03
+		setHeading :heading1
+		jumpTo :pos1
+	]
+
+	setHeading :oldHeading
+	jumpLeft :height * 0.027
+	jumpBackward :height * 0.05
+	setFillColor "#5000
+	right 155
+	polyStart
+	arcLeft 36 :height * 0.1
+	setHeading :oldHeading + 87.4
+	arcLines [[0.09] [140 0] [-15 0.095] [-41 0.04]] :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+to drawFrontLightGradients :height
+	localmake "oldState turtleState
+	localmake "gradientLength :height * 3
+	jumpLeft :height * 1.37
+	jumpForward :height * 0.57
+	left 90
+	localmake "fromPos pos
+	localmake "colorStops createPList2 [
+		[0 "#1eef] [1 "#0eef]
+	]
+	jumpForward :gradientLength
+	setPenGradient createLinearGradient :fromPos pos :colorStops "pad
+	setPenSize :height * 0.08
+	repeat 10 [
+		backward :gradientLength
+		setPenSize penSize * 0.8
+		jumpForward :gradientLength
+	]
+	setTurtleState :oldState
+end
+
+to drawFrontLight :height
+	setFillColor "white
+	drawArcLineShape [-1.368 0.62 [
+		[-0.04] [101 0] [0.1125] [-90 0] [0.023]
+	]] :height
+end
+
+; Inspired by a photo at
+; https://www.tesla.com/cybertruck
+to cyberTruck :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angle1 70
+	localmake "arcsInfo1 [
+		[2.7 25] [21.5 0] [4 10] [1.25 50]
+	]
+	drawFrontLightGradients :height
+	jumpForward :height * 0.62
+	jumpLeft :height * 1.369
+	right :angle1
+	setPenSize 0
+	setFillColor "#a3b0c3
+	localmake "startPos pos
+	polyStart
+	arcsRight :arcsInfo1 :height
+	polyEnd
+	setFillColor "#202a3a
+	setHeading towards :startPos
+	polyStart
+	jumpForward distance :startPos
+	setHeading :oldHeading - 180 + :angle1
+	jumpForward :height * 0.12
+	left 80
+	jumpForward :height * 0.3
+	setHeading :oldHeading
+	jumpRight :height * 2.85
+	jumpForward :height * 0.13
+	jumpRight :height * 0.08
+	polyEnd
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	drawWindowsAndDoorCracks :height
+	drawArchesAndTrim :height
+	drawBase :height
+	drawWheels :height
+	drawMirror :height
+	drawFrontLight :height
+	setTurtleState :oldState
+end
+
+setScreenColor "#080808
+cyberTruck 100

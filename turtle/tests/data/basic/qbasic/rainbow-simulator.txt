@@ -1,0 +1,65 @@
+REM copied from:
+REM https://www.facebook.com/share/p/1Cgeu1yr8T/
+
+DECLARE SUB PlotColor (th!)
+DECLARE SUB Setup ()
+' A simple rainbow simulator.  Approximates light being refracted and
+' reflected inside a raindrop.  The colors are represented by red, green,
+' and blue pixels.  Dispersion is simulated by randomly varying the index of
+' refraction.  Produces a primary and secondary bow.  The original code
+' was written around 1990 and was going to be the basis for a more accurate
+' physics-based model (drop-shapes, distributions, scattering, etc.).
+' I never got around to writing the advanced version.
+COMMON SHARED X, Y, B, C
+CONST Pi = 3.14159
+CONST PiOver2 = Pi / 2
+CONST PiOver3 = Pi / 3
+Setup
+DO
+' Get coordinate.
+  DO
+    X = -1 + 2! * RND(1)
+    Y = -1 + 2! * RND(1)
+    B = SQR(X * X + Y * Y)
+  LOOP UNTIL B < 1
+' Get color and index.
+  C = 1 + INT(3 * RND(1))   ' Randomizes the refractive index to
+                            ' simulate dispersion.
+  n = 1.33 + .01 * (C - 1)  ' 1.33 == Index of refraction.
+' Find angles.
+  I = ATN(B / SQR(1! - B * B))
+  R = ATN(B / SQR(n * n - B * B))
+  T1 = (4 * R - 2 * I)
+  T2 = (6 * R - 2 * I) - Pi
+'  Find Intensities.
+  Rs = (SIN(I - R) / SIN(I + R)) ^ 2
+  Rp = (TAN(I - R) / TAN(I + R)) ^ 2
+  Rb = (1! - Rp) ^ 2
+  Rc = (1! - Rs) ^ 2
+  I1 = (Rs * Rc + Rp * Rb)
+  I2 = (Rs * Rs * Rc + Rp * Rp * Rb)
+  IF I1 >= .02 * RND(1) THEN
+    CALL PlotColor(T1)
+  END IF
+  IF I2 >= .01 * RND(1) THEN
+    CALL PlotColor(T2)
+  END IF
+' Press <Esc> to exit.
+LOOP UNTIL INKEY$ = CHR$(27)
+' Sets a pixel.
+SUB PlotColor (th)
+  IF ABS(th) > PiOver3 THEN EXIT SUB
+  Th2 = ABS(th) / B
+  Xp = Th2 * X
+  Yp = Th2 * ABS(Y)
+  PSET (Xp, Yp), C
+END SUB
+' Enters graphics mode 9, sets up the palette, and scales the window.
+SUB Setup ()
+  SCREEN 9
+  CLS
+  PALETTE 1, 36
+  PALETTE 2, 18
+  PALETTE 3, 9
+  WINDOW (-1.1, 0)-(1.1, 1.5)
+END SUB

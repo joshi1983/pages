@@ -1,0 +1,81 @@
+to calculateFactors :numRects
+	localmake "w 1
+	localmake "a 0
+	localmake "factors [[:w :a]]
+	repeat :numRects [
+		localmake "a :a + arcTan 1/:w
+		localmake "w hypot [:w 1]
+		queue2 "factors [:w :a]
+	]
+	output :factors
+end
+
+to drawColoredGrid :width :height :color
+	localmake "oldState turtleState
+	localmake "numLines 20
+	localmake "step :height / :numLines
+	localmake "lineThickness :step * 0.15
+	jumpBackward :height / 2
+	repeat :numLines [
+		jumpForward :step
+		stripes :width :lineThickness [:color]
+	]
+	jumpLeft :width / 2
+	jumpBackward :height / 2
+	right 90
+	repeat floor :width / :step [
+		jumpForward :step
+		stripes :height :lineThickness [:color]
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by:
+; https://www.pinterest.ca/pin/476044623124299643/
+; Also shown at:
+; https://regolo54.tumblr.com/post/140961002147/fractal
+;
+; Some of the involved math is explained at:
+; https://en.wikipedia.org/wiki/Spiral_of_Theodorus
+to rainbowRectSpiral :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "numRects 9
+	localmake "factors calculateFactors :numRects
+	setPenSize :height * 0.008
+	localmake "upwardInfo item 4 :factors
+	localmake "upwardLen abs (first :upwardInfo) * sin last :upwardInfo
+	localmake "downwardInfo last :factors
+	localmake "downLen abs (first :downwardInfo) * sin last :downwardInfo
+	localmake "rectWidth (:height - penSize) / (:upwardLen + :downLen)
+	localmake "rectHeight :rectWidth
+	localmake "colors ["yellow "orange "red "blue "black "green]
+	setLineJoinStyle "round
+	setLineCap "round
+	jumpForward (:height - penSize / 2) - :rectHeight * :upwardLen
+	jumpRight :height * 0.165
+	localmake "center pos
+	repeat :numRects [
+		localmake "info item repcount :factors
+		localmake "rectWidth :rectHeight * first :info
+		localmake "a last :info
+		setHeading :oldHeading - :a
+		jumpForward :rectHeight / 2
+		jumpRight :rectWidth / 2
+		drawColoredGrid :rectWidth :rectHeight mixItems2 :colors repRatio
+		jumpTo :center
+	]
+	repeat :numRects [
+		localmake "info item repcount :factors
+		localmake "rectWidth :rectHeight * first :info
+		localmake "a last :info
+		setHeading :oldHeading - :a
+		jumpForward :rectHeight / 2
+		jumpRight :rectWidth / 2
+		rect :rectWidth :rectHeight
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+rainbowRectSpiral 100

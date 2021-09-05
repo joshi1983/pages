@@ -1,0 +1,63 @@
+; Inspired by:
+; https://fishshell.com
+to fishShellLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "vLines1 [[126 0] [0.24] [136 0] [0.08] [44 0]
+			[0.153] [-87.5 0] [0.157] [43 0] [0.082]
+			[137 0] [0.248]]
+	localmake "vLines2 [[-140 0] [0.27] [132 0] [0.085] [48 0]
+			[0.175] [-96 0] [0.175] [49 0] [0.082]
+			[131 0] [0.27]]
+	localmake "greenShapes [
+		[-0.494 0 
+			[[6 0] [0.11] [-12 0] [0.055] [90 0] [0.067]
+			[90 0] [0.055] [25 0] [0.115]]
+		]
+		[-0.214 1
+			:vLines1
+		]
+		[0.135 0.4
+			:vLines2
+		]
+		[0.09 0.448
+			combine [[179.7 0]] :vLines2
+		]
+		[-0.952 0.552
+			:vLines2
+		]
+		[-0.505 0.195
+			[[75 0] [-25.3 0.6] [-54 0] [0.05]
+		[-124.5 0] [63 0.54] [-125 0] [0.053] [-53 0]
+		[-35 0.535]]
+		]
+		[-0.13 0.637
+			[[-8 0] [0.048] [55 0] [70 0.485] [55 0]
+			[0.05] [123 0] [-64 0.5135]]
+		]
+	]
+	
+	setFillColor "#4aae47
+	setPenSize 0
+	drawArcLineShapes :greenShapes :height
+	jumpForward :height * 0.571
+	jumpLeft :height * 0.634
+	right 7
+	rect :height * 0.067 :height * 0.085
+
+	jumpTo :oldPos
+	setFillColor "#4a9bc8
+	setHeading :oldHeading
+	drawArcLineShape [0.459 0.395
+		[[-10 0] [0.026] [-90 0] [0.06] [90 0.07]
+		[95 0.077] [18 0.4] [-112 0] [0.055] [-70 0]
+		[-22 0.4] [-120 0.118] [-46 0.08] [149 0]
+		[-150 0.13] [-30.2 0.35] [-70 0] [0.059]
+		[-115 0] [30 0.3] [160 0.085] [17.1 0.3]]
+	] :height
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+fishShellLogo 100

@@ -1,0 +1,26 @@
+; Inspired by logo at:
+; https://www.treno.io
+to trenoLogo :height
+	localmake "oldState turtleState
+	localmake "radius :height / 6
+	setPenSize 0
+	jumpForward :height + :radius
+	jumpLeft :radius * 2
+	repeat 3 [
+		localmake "numCircles 2
+		if repcount = 2 [
+			localmake "numCircles 3
+		]
+		setFillColor "#9FD1FF
+		jumpBackward :numCircles * 2 * :radius
+		repeat :numCircles [
+			circle :radius
+			jumpForward :radius * 2
+			setFillColor "#0288FF
+		]
+		jumpRight :radius * 2
+	]
+	setTurtleState :oldState
+end
+
+trenoLogo 100

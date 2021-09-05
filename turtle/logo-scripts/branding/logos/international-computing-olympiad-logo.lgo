@@ -1,0 +1,37 @@
+; Inspired by logo at:
+; https://www.computingolympiad.org
+to internationalComputingOlympiadLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "width :height * 1.643
+	localmake "thickness :height * 0.137
+	localmake "colorStops createPList2 [
+		[0 "#832881] [1 "#e37fb4]
+	]
+	localmake "arcRadius1 :height * 0.38
+	localmake "height1 :arcRadius1 + :thickness * 0.3
+	jumpLeft :width / 2
+	localmake "fromPos pos
+	jumpRight :width
+	setFillGradient createLinearGradient :fromPos pos :colorStops "pad
+	setPenSize 0
+	jumpTo :oldPos
+	drawArcLineShape [0 0.48
+		[[-40 0] [0.23] [-302 0.3994] [-58 0] [0.19]
+		[-140 0] [60 0.295] [110 0.25] [100 0.277]
+		[48.3 0.2] [0.62] [-276 0.402] [-90 0] [0.13]
+		[-89 0] [270 0.27]]
+	] :height
+	jumpLeft (:width - :thickness) / 2
+	jumpForward :arcRadius1
+	setPenSize :thickness
+	setLineCap "butt
+	setPenGradient fillGradient
+	forward :height1
+	setPenSize 0
+	jumpForward :height - :height1 - :arcRadius1 - :thickness / 2
+	circle :thickness / 2
+	setTurtleState :oldState
+end
+
+internationalComputingOlympiadLogo 100

@@ -1,0 +1,54 @@
+; Inspired by:
+; https://en.wikipedia.org/wiki/Avengers_(Marvel_Cinematic_Universe)#/media/File:Symbol_from_Marvel's_The_Avengers_logo.svg
+to avengersLogo :height :color
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "thickness1 0.1245
+	localmake "angle1 156.85
+	localmake "angle2 115.84
+	localmake "shapes [
+		; triangle in lower-right of A below the arrow head
+		[0.076 0.194 [[-90 0] [:thickness1] [90 0] [0.117]]]
+
+		; most of the A
+		[0.0803 0.513 [[0.26] [:angle1 0] [0.8407] [90 - :angle1 0] [0.162]
+		[-:angle2 0] [1.1111] [180 + :angle2 0] [0.13] [-90 0] [0.6027]]]
+	]
+	localmake "outerRadius :height * 0.43
+	localmake "innerRadius :height * 0.362
+	setFillColor :color
+	setPenSize 0
+	drawArcLineShapes :shapes :height
+
+	jumpForward :height * 0.356
+	jumpLeft :height * 0.15
+	right 90
+	setPenColor :color
+	setPenSize :height * 0.125
+	arrow :height * 0.365 43 :height * 0.065
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.44
+	localmake "center pos
+	left 152.5
+	jumpForward :outerRadius
+	left 90
+	setPenSize 0
+	polyStart
+	arcLeft 333 :outerRadius
+	left 116
+	jumpForward distanceToCircle :center :innerRadius
+	setHeading (towards :center) - 90
+	arcRight 328 :innerRadius
+	polyEnd
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 5
+jumpLeft :separation / 2
+avengersLogo :height "black
+jumpRight :separation
+avengersLogo :height "#d00

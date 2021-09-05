@@ -1,0 +1,164 @@
+make "darkColor "#680
+make "lightColor "#efc
+make "scale 0.63
+make "branchAngle 45
+make "radiusRatio 0.1810447
+
+to drawNode :radius :thickness :iteration
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	if :iteration <> 0 [
+		localmake "iteration1 :iteration - 1
+		localmake "radius1 :radius * :scale
+		localmake "radius2 :radius
+		left :branchAngle
+		jumpForward :radius2
+		drawNode :radius1 :thickness :iteration1
+		jumpTo :oldPos
+		right :branchAngle * 2
+		jumpForward :radius2
+		drawNode :radius1 :thickness :iteration1
+	]
+	jumpTo :oldPos
+	ifelse even? :iteration [
+		setPenSize :thickness
+		setFillColor :darkColor
+		circle :radius
+		if :iteration > 0 [
+			setPenSize 0
+			setFillColor :lightColor
+			circle :radius * 0.3
+		]
+	] [
+		setPenSize 0
+		setFillColor :lightColor
+		circle :radius
+	]
+	setTurtleState :oldState
+end
+
+to drawDotLine :maxRadius
+	localmake "oldPos pos
+	localmake "gap :maxRadius
+	setPenSize 0
+	setFillColor :lightColor
+	jumpForward :maxRadius
+	repeat 3 [
+		localmake "radius :maxRadius * mix 0.3 1 repRatio 
+		circle :radius
+		jumpForward :radius + :gap
+	]
+	jumpTo :oldPos
+end
+
+to drawSide :height :thickness :iteration
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "oldRadius :height * :radiusRatio
+	localmake "radius :oldRadius
+	drawNode :radius :thickness :iteration
+	localmake "offset1 0
+	repeat :iteration [
+		localmake "iteration1 :iteration + 1 - repcount
+		ifelse odd? :iteration1 [
+			localmake "offset1 :offset1 + :radius * cos 45
+		] [
+			localmake "offset1 :offset1 + :radius
+		]
+		if repRatio <> 1 [
+			localmake "radius :radius * :scale
+		]
+	]
+	localmake "ratio1 0.47
+	localmake "separations vectorScale [:ratio1 0.71 :ratio1]  :oldRadius 
+	repeat 3 [
+		setHeading :oldHeading + (repcount - 2) * 45
+		localmake "separation item repcount :separations
+		jumpForward :offset1
+		if repcount <> 2 [
+			jumpForward :offset1 * 0.12
+		]
+		jumpLeft :separation
+		repeat 3 [
+			drawDotLine :oldRadius * 0.15
+			jumpRight :separation
+		]
+		jumpTo :oldPos
+	]
+	setHeading :oldHeading
+	jumpForward :oldRadius * 0.72
+	localmake "size1 :oldRadius * 0.7
+	localmake "pos1 pos
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		setHeading :oldHeading + 90 + repcount * 180
+		jumpForward :offset1
+		drawDotLine :oldRadius * 0.15
+		jumpBackward :size1
+		right :sign * 45
+		jumpForward :size1 * 1.15
+		drawDotLine :oldRadius * 0.15
+		
+		jumpTo :pos1
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://ecoutelaterre.fr/public/conferences/crop-circles-message-chilbolton
+;
+; A video tries to explain some of the geometry at: 
+; https://www.youtube.com/watch?v=wfIsPKl_1XU
+; I traced over photos of the field, though.
+; If the visualization in the video matches the real crop circles, 
+; it could be far more precise but I didn't spend the time to verify.
+;
+; Reported on August 13, 2000
+; located in Chilbolton, Hampshire near a radio telescope
+to chilboltonCropCircles :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	jumpForward :height / 2
+	localmake "thickness :height * 0.010841
+	localmake "largeRadius :height * 0.3306505
+	localmake "center pos
+	setPenColor :lightColor
+	right 90
+	repeat 2 [
+		jumpForward :largeRadius
+		drawSide :height :thickness 4
+		right 180
+		jumpTo :center
+	]
+	setPenSize 0
+	setFillColor :lightColor
+	circle :height * 0.02
+	setFillColor transparent
+	setPenSize :thickness * 2
+	circle :height * 0.1
+	setPenSize :thickness
+	circle :largeRadius
+	setPenSize 0
+	localmake "smallRadius :height * :radiusRatio
+	localmake "angle2 2 * arcSin :smallRadius / 2 / :largeRadius
+	localmake "angle1 90 - :angle2 / 2
+	localmake "arcsInfo [[:angle1 1] [90 - :angle2 / 2 0] 
+			[:angle2 :largeRadius / :smallRadius]
+		]
+	localmake "gap :largeRadius - :smallRadius
+	setFillColor :lightColor
+	repeat 2 [
+		setHeading :oldHeading + repcount * 180
+		jumpLeft :gap
+		polyStart
+		arcLines :arcsInfo :smallRadius
+		arcLines reverse :arcsInfo :smallRadius
+		polyEnd
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor :darkColor
+chilboltonCropCircles 100

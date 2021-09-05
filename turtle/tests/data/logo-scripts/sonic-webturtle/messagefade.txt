@@ -1,0 +1,41 @@
+; Copied from http://www.sonic.net/~nbs/webturtle/webturtle.cgi?file=messagefade
+; Example 8 - Message Fade:
+
+LET $A Fading in is fun!
+LET $O RED
+LET $I GREEN
+LET S 10
+
+; Move to top left corner:
+
+LEFT 45
+MOVE 200
+RIGHT 200
+
+
+; Draw fade-in:
+
+LET T 100
+REPEAT 100/S
+  LET T T-S
+  TRANSPARENT T
+  PRINT $A
+  MOVE S
+NEXT
+
+
+; Draw outline of final text:
+
+THICK 3
+TRANSPARENT 50
+COLOR $O
+PRINT $A
+
+; Draw inside of final text:
+
+THICK 2
+TRANSPARENT 0
+COLOR $I
+PRINT $A
+
+END

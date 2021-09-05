@@ -1,0 +1,19 @@
+!
+!  SCAT.  Show scatter plot.
+!  Source: World Almanac & Book of Facts 1982, p. 916.
+!
+LIBRARY "Stat2Lib.trc"
+
+DIM x(0), y(1961:1970)            ! Note use of null X array
+
+MAT READ y
+DATA 139.130, 140.293, 143.137, 147.350, 151.388, 144.317
+DATA 151.207, 152.882, 156.867, 155.749
+
+CALL SetLS (1)                    ! Get least-squares line
+CALL SetConfBand (.95,3)          ! ...and 95% confidence bands
+CALL SetText ("Indianapolis 500 Auto Race Results", "Year", "Winning Speed")
+CALL PlotScat (x, y, 10, 0, "black black red")
+
+END
+

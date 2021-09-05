@@ -1,0 +1,139 @@
+make "darkColor "#680
+make "lightColor "#ffa
+
+to drawRightSide :height :height1 :thickness :innerRadius :separation
+	localmake "oldState turtleState
+	localmake "rightOffset :height * 0.563
+	localmake "centerRight pos
+	localmake "angle1 triLengthsToAngle :innerRadius :height / 2 :separation
+	localmake "arcAngle1 180 - :angle1
+	localmake "arcAngle2 arcSin (:innerRadius * sin :arcAngle1) / (:height / 2)
+	localmake "turnAngle 180 - :arcAngle1 + :arcAngle2
+	localmake "arcsInfo [[:arcAngle1 1] [:turnAngle 0] [-:arcAngle2 :height / 2 / :innerRadius]]
+	jumpRight :rightOffset / 2
+	localmake "center1 pos
+	repeat 2 [
+		jumpBackward (:height1) / 2 - :thickness
+		repeat 2 [
+			stripes :rightOffset :thickness [:lightColor]
+			jumpBackward :thickness * 2
+		]
+		jumpForward :thickness * 3
+		stripes :rightOffset :thickness [:darkColor]
+		right 180
+		jumpTo :center1
+	]
+	setPenSize 0
+	setFillColor :darkColor
+	jumpTo :centerRight
+	jumpRight :innerRadius
+	polyStart
+	arcLines :arcsInfo :innerRadius
+	arcLines reverse :arcsInfo :innerRadius
+	polyEnd
+	setTurtleState :oldState
+end
+
+to drawLeftSide :height :height1 :thickness :innerRadius :separation
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "leftOffset :height * 0.65
+	localmake "height2 :height1 - :thickness * 4
+	localmake "innerHeight :height1 / 2 - :thickness
+	localmake "arcAngle arcSin :height2 / 2 / :innerRadius
+	localmake "straightLength :separation / :innerRadius
+	localmake "arcsInfo [[-:arcAngle 1] [90 + :arcAngle 0] [:straightLength] [90 - :arcAngle 0] 
+	[:arcAngle 1]]
+	localmake "a1 triLengthsToAngle :separation :height / 2 :innerRadius 
+	localmake "a2 arcCos :separation / 2 / (:height / 2)
+	localmake "thicknessAngle1 :a2 - :a1
+	localmake "a3 triLengthsToAngle :separation :innerRadius :height / 2
+	localmake "a4 arcSin :innerHeight / :innerRadius
+	localmake "arcAngle1 :a3 - :a4
+	localmake "a5 arcSin (:innerHeight + :thickness) / :innerRadius
+	localmake "thicknessAngle2 :a5 - :a4
+	localmake "a6 arcSin :height1 / 2 / (:height / 2)
+	localmake "arcAngle2 :a2 - :a6
+	jumpRight :separation
+	localmake "rightCenter pos
+	jumpTo :oldPos
+	jumpLeft :leftOffset / 2
+	localmake "pos1 pos
+	repeat 2 [
+		jumpForward :innerHeight
+		stripes :leftOffset :thickness [:lightColor]
+		jumpTo :pos1
+		right 180
+	]
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpRight :thickness
+	setPenSize 0
+	setFillColor :darkColor
+	polyStart
+	arcLines :arcsInfo :innerRadius
+	arcLines reverse :arcsInfo :innerRadius
+	polyEnd
+	jumpTo :oldPos
+	setHeading :oldHeading
+	localmake "offsetX :separation / 2
+	jumpRight :offsetX
+	localmake "pos1 pos
+	localmake "startOffset sqrt :height * :height / 4 - :offsetX * :offsetX
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		setHeading :oldHeading + 180 * repcount
+		jumpForward :startOffset
+		setHeading (towards :oldPos) + :sign * -90
+		polyStart
+		arcLeft :sign * -:thicknessAngle1 :height / 2
+		setHeading (towards :rightCenter) + :sign * 90
+		arcLeft :sign * :arcAngle1 :innerRadius
+		setHeading :oldHeading - 90
+		jumpForward distanceToCircle :oldPos :innerRadius
+		setHeading (towards :oldPos) - :sign * 90
+		arcLeft :sign * -:thicknessAngle2 :innerRadius
+		setHeading :oldHeading + 90
+		jumpForward distanceToCircle :rightCenter :height / 2
+		setHeading (towards :rightCenter) - :sign * 90
+		arcLeft :sign * -:arcAngle2 :height / 2
+		polyEnd
+		jumpTo :pos1
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://www.cropcirclecenter.com/ccdata/2008/06/24/UK20080624_A_F_SA.jpg
+; It was mentioned at:
+; https://temporarytemples.co.uk/crop-circles/2008-crop-circles
+; and
+; https://wallpaperset.com/crop-circle-wallpaper
+; This was reported June 28, 2008.
+; The location was Horton, near Devizes, Wiltshire.
+to horton2008cropCircles :height
+	localmake "oldState turtleState
+	localmake "separation :height / 2
+	localmake "thickness :height * 0.04
+	localmake "innerRadius (:height / 2) - :thickness
+	localmake "height1 :height * 0.54
+	jumpForward :height / 2
+	jumpLeft :separation / 2
+	setPenSize 0
+	setFillColor :lightColor
+	circle :height / 2
+	jumpRight :separation
+	setFillColor transparent
+	setPenColor :lightColor
+	setPenSize :thickness
+	localmake "radius1 (:height - penSize) / 2
+	circle :radius1
+	drawRightSide :height :height1 :thickness :innerRadius :separation
+	jumpLeft :separation
+	drawLeftSide :height :height1 :thickness :innerRadius :separation
+	setTurtleState :oldState
+end
+
+setScreenColor :darkColor
+horton2008cropCircles 100

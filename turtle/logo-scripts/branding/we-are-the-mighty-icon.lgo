@@ -1,0 +1,36 @@
+; Inspired by icon at:
+; https://www.wearethemighty.com/
+to weAreTheMightyIcon :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "triangles [
+		["white 0.36]
+		["#c12541 0.255]
+	]
+	stripes :height :height ["#1e376d]
+	jumpForward :height
+	jumpLeft :height / 2
+	localmake "topLeft pos
+	left 45
+	setPenSize 0
+	repeat count :triangles [
+		localmake "triangleInfo item repcount :triangles
+		localmake "triangleHeight :height * last :triangleInfo
+		localmake "triangleWidth :triangleHeight * 2
+		jumpBackward :triangleHeight
+		setFillColor first :triangleInfo
+		isoTriangle :triangleWidth :triangleHeight
+		jumpTo :topLeft
+	]
+	setFillColor "white
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.43
+	jumpRight :height * 0.02
+	regularStar :height * 0.395 5
+	setTurtleState :oldState
+end
+
+setScreenColor "#ddd
+weAreTheMightyIcon 100

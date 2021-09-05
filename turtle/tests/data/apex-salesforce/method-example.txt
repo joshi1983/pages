@@ -1,0 +1,50 @@
+/**
+ * Calculates the total price for a list of products, applying a discount.
+ * @param productCodes A List of unique product codes to calculate the price for.
+ * Each code must correspond to an existing Product2 record.
+ * @param discountPercentage The discount percentage to apply (e.g., 10.5 for 10.5%).
+ * Must be between 0.0 and 100.0.
+ * @return The calculated total price as a Decimal after applying the discount.
+ * Returns 0.0 if productCodes is null or empty.
+ * @throws InvalidArgumentException if discountPercentage is out of range.
+ * @throws ProductNotFoundException if any productCode does not match an
+ * existing product.
+ */
+public Decimal calculateTotalPrice(
+  List<String> productCodes,
+  Decimal discountPercentage
+) {
+    if (discountPercentage < 0.0 || discountPercentage > 100.0) {
+        throw new IllegalArgumentException(
+          'Discount percentage must be between 0.0 and 100.0.'
+        );
+    }
+    if (productCodes == null || productCodes.isEmpty()) {
+        return 0.0;
+    }
+    //... implementation logic to fetch prices and calculate total...
+    return 100.0;
+}
+
+/**
+ * copied from:
+ * https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_doc_examples.htm * Represents an exception thrown when a requested product cannot be found.
+ * This custom exception provides a clear indication that a product lookup failed,
+ * allowing calling code to handle the 'not found' scenario specifically.
+ * It is typically thrown by methods attempting to retrieve Product2 records.
+ * @example
+ * {@code
+ * List<Product2> products = [
+ *   SELECT Id
+ *   FROM Product2
+ *   WHERE ProductCode = :productCode
+ *   LIMIT 1
+ * ];
+ * if (products.isEmpty()) {
+ *   throw new ProductNotFoundException(
+ *    'Product with code ' + productCode + ' not found.'
+ *  );
+ * }
+ * }
+ */
+public class ProductNotFoundException extends Exception {}

@@ -1,0 +1,21 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/List_of_Greek_flags#/media/File:Flag_of_the_Free_State_of_Ikaria.svg
+to freeStateOfIkariaFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 3 / 2
+	localmake "crossSize :height * 68 / 216
+	stripes :width :height ["#0d5eaf]
+	jumpForward :height / 2
+	setPenSize :height * 42 / 216
+	setLineCap "butt
+	setPenColor "white
+	repeat 2 [
+		jumpBackward :crossSize
+		forward :crossSize * 2
+		jumpBackward :crossSize
+		right 90
+	]
+	setTurtleState :oldState
+end
+
+freeStateOfIkariaFlag 100

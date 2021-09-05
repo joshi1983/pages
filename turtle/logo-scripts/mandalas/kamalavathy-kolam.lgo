@@ -1,0 +1,129 @@
+make "triangleSizeRatio 0.375
+
+to drawTriangles :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "triSize1 :height * :triangleSizeRatio
+	localmake "triSize2 :triSize1 / cos 30
+	localmake "isoTriangleHeight :triSize2 / 2 * tan 30
+	localmake "colors [
+		["#216bd8 "#2aace7 "#203daf]
+		["#d33e68 "#ee8038 "#9e1e3a]
+	]
+	repeat 6 [
+		setHeading :oldHeading + (repcount + 0.5) * 360 / 6
+		localmake "colorPaletteIndex 1 + remainder repcount 2
+		localmake "colorPalette item :colorPaletteIndex :colors
+		setFillColor item 2 :colorPalette
+		jumpForward :triSize1
+		right 180
+		isoTriangle :triSize2 :triSize1
+		repeat 2 [
+			setFillColor item 1 + (repcount - 1) * 2 :colorPalette
+			jumpForward :isoTriangleHeight
+			left 60
+			jumpForward :isoTriangleHeight
+			right 180
+			isoTriangle :triSize2 :isoTriangleHeight
+		] 
+		jumpTo :oldPos
+	]
+
+	setTurtleState :oldState
+end
+
+to drawSpirals :size :directionSign
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "arcsInfo [
+		[-130 0.02] [-100 0.025] [-100 0.05] [-80 0.035]
+		[-20 0.1] [-50 0.08] [-33 0.04] [50 0.15]
+		[131 0.03] [-200 0.08] [-100 0.065] [-100 0.059]
+		[-200 0.03] [-180 0.015]
+	]
+	localmake "arcsInfo2 [
+		[180 0] [20 0.09] [100 0.13]
+	]
+	setPenSize :size * 0.025
+	setPenColor "white
+	setLineCap "round
+	jumpForward :size * 0.088
+	jumpRight :size * 0.046 * :directionSign
+	arcLines :arcsInfo :size * :directionSign
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpRight :size * 0.184 * :directionSign
+	jumpForward :size * 0.165
+	circle :size * 0.01
+	arcLines :arcsInfo2 :size * :directionSign
+	setTurtleState :oldState
+end
+
+to drawWhiteDotsAndSpirals :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "tinyRadius :height * 0.015
+	localmake "tinyRadius2 :height * 0.012
+	localmake "triSize1 :height * :triangleSizeRatio + :tinyRadius2
+	localmake "triSize2 :triSize1 / cos 30
+	localmake "numCircles int :triSize2 / 2 / :tinyRadius2
+	localmake "circleStep :triSize2 / :numCircles
+	localmake "tinySize1 2 * sqrt :tinyRadius2 * 2 - :circleStep / 2
+	setFillColor "white
+	repeat 6 [
+		setHeading :oldHeading + (repcount + 0.5) * 360 / 6
+		jumpForward :triSize1
+		localmake "middle pos
+		jumpLeft :circleStep * :numCircles / 2
+		repeat :numCircles [
+			circle :tinyRadius2
+			jumpRight :circleStep
+		]
+		jumpTo :middle
+		jumpForward :tinySize1
+		jumpRight :circleStep / 2
+		repeat 4 [
+			localmake "numCirclesInRow 5 - repcount
+			localmake "offset :numCirclesInRow / 2 * :circleStep
+			jumpLeft :offset
+			repeat :numCirclesInRow [
+				circle :tinyRadius2
+				jumpRight :circleStep
+			]
+			jumpLeft :offset
+			jumpForward :tinySize1
+		]
+		jumpTo :middle
+		jumpLeft :triSize2 / 2
+		drawSpirals :triSize2 1
+		jumpRight :triSize2
+		drawSpirals :triSize2 -1
+		jumpTo :oldPos
+	]	
+	circle :tinyRadius
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://www.facebook.com/photo/?fbid=122135453834093180
+; Also shown at:
+; https://www.instagram.com/p/C4KLyQaBRmS/
+;
+; The original artist's profile is at:
+; https://www.facebook.com/profile.php?id=61552795409377
+; and at https://www.instagram.com/kamalavathy_art
+to kamalavathyKolam :height
+	localmake "oldState turtleState
+	jumpForward :height / 2
+	setPenSize 0
+	drawTriangles :height
+	drawWhiteDotsAndSpirals :height
+	setTurtleState :oldState
+end
+
+setScreenColor "#331e1d
+kamalavathyKolam 100

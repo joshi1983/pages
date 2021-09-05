@@ -1,0 +1,165 @@
+; The following were inspired by figures found in a book.
+; The Book title was "Il Logo per il Commodore 64".
+; It was published by McGraw Hill Libri Italia
+; The book was published in April 1986.
+;
+; A digital version of the book can be found at:
+; https://archive.org/details/illogoperilcommodore64/page/n149/mode/2up
+
+
+; Inspired by a figure on page 148 of the book
+; 
+; A digital version of the book page is at:
+; https://archive.org/details/illogoperilcommodore64/page/n149/mode/2up
+to fish :height
+	localmake "oldState turtleState
+	localmake "lines1 [
+		[-45 2.9] [-37 2]
+	]
+	setLineCap "round
+	setLineJoinStyle "round
+	setPenSize :height * 0.1
+	jumpForward penSize / 2
+	jumpLeft :height * 1.55
+	right 45
+	arcLines :lines1 :height
+	right 106
+	arcLines reverse :lines1 :height
+	setTurtleState :oldState
+end
+
+to drawBicycleWheel :radius
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "numIterations 6
+	setFillColor transparent
+	setPenSize :radius * 0.07
+	circle :radius - penSize / 2
+	repeat :numIterations [
+		jumpBackward :radius
+		stripes penSize :radius * 2 [penColor]
+		jumpTo :oldPos
+		right 180 / :numIterations
+	]
+
+	setTurtleState :oldState
+end
+
+; Inspired by a figure on page 149 of the book
+; 
+; A digital version of the book page is at:
+; https://archive.org/details/illogoperilcommodore64/page/n149/mode/2up
+to bicycle :height
+	localmake "oldState turtleState
+	localmake "wheelRadius :height * 0.28
+	localmake "oldHeading heading
+	localmake "handleBarLength :height * 0.27
+	jumpForward :wheelRadius
+	localmake "pos1 pos
+	jumpLeft :height * 0.52
+	drawBicycleWheel :wheelRadius
+	localmake "rearWheelPos pos
+	setPenSize :height * 0.02
+	right 66
+	localmake "mainHeading heading
+	forward :height * 0.85
+	right 85
+	forward distanceToLine :pos1 :rearWheelPos
+	localmake "heading1 heading
+	setHeading :oldHeading
+	drawBicycleWheel :wheelRadius
+
+	setHeading :heading1
+	backward :height * 0.81
+	jumpForward :handleBarLength
+	right 150
+	forward :handleBarLength
+
+	; Draw the seat
+	jumpTo :rearWheelPos
+	setHeading :mainHeading
+	jumpForward :height * 0.58
+	setHeading :oldHeading - 90
+	forward :height * 0.2
+	setTurtleState :oldState
+end
+
+to drawCarWheel :radius
+	localmake "oldState turtleState
+	setPenColor "black
+	setPenSize :radius * 0.25
+	setFillColor "white
+	circle :radius - penSize / 2
+	setTurtleState :oldState
+end
+
+; Inspired by a figure on page 149
+; https://archive.org/details/illogoperilcommodore64/page/n149/mode/2up
+to car :height
+	localmake "oldState turtleState
+	localmake "wheelRadius :height * 0.23
+	localmake "steeringWheelSize :height * 0.19
+	jumpLeft :height * 0.44
+	jumpForward :wheelRadius
+	drawCarWheel :wheelRadius
+	jumpRight :height * 0.91
+	drawCarWheel :wheelRadius
+	setPenSize :height * 0.03
+	setLineJoinStyle "round
+	setFillColor "#4ca5c1
+	drawArcLineShape [0.33 -0.03
+		[[50 0.25] [40 0.4] [1.05] [55 0] [0.34]]
+	] :height
+	setFillColor "#2000
+	drawArcLineShape [0 0.26
+		[[60 0.48] [50 0.6] [69 0.5]]
+	] :height
+	jumpForward :height * 0.26
+	left 45
+	forward :height * 0.29
+	right 90
+	jumpBackward :steeringWheelSize / 2
+	forward :steeringWheelSize
+	setTurtleState :oldState
+end
+
+to boat :height
+	localmake "oldState turtleState
+	localmake "boatHeight1 0.18
+	localmake "flagHeight :height * 0.04
+	setFillColor "#4ca5c1
+	setPenSize :height * 0.02
+	setPenColor "black
+	setLineJoinStyle "round
+	jumpForward penSize / 2
+	drawArcLineShape [0.28 0
+		[[90 0] [0.7] [-90 0] [:boatHeight1] [-90 0] [0.83]]
+		] :height
+	jumpForward :boatHeight1 * :height
+	jumpRight :height * 0.22
+	forward :height * (1 - :boatHeight1) - penSize
+	left 90
+	jumpLeft :flagHeight / 2
+	setFillColor "#ce170f
+	setPenSize :height * 0.005
+	isoTriangle :flagHeight :height * 0.12
+	jumpLeft :height * 0.09
+	setPenSize :height * 0.01
+	setFillColor "#ddd
+	polyStart
+	jumpLeft :height * 0.64
+	jumpForward :height * 0.52
+	polyEnd
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 4
+jumpLeft :separation * 1.5
+fish :height
+jumpRight :separation
+bicycle :height
+jumpRight :separation
+car :height
+jumpRight :separation
+boat :height

@@ -1,0 +1,95 @@
+; Mokorotlo is a kind of hat from Lesotho.
+to drawBlackMokorotlo :height
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "topArcsInfo [
+		[-0.113] [-35.5 0] [18 1] [30 0.35] [40 0.154]
+		[20 0.1] [17.5 0.19985718]
+	]
+	localmake "weaves [
+		[154.4 7 0 0.106 63] [162.6 -9 0 0.106 87] [170.2 -6 0 0.107 91] 
+		[178.5 -2 0 0.115 93] [188.2 2 0.01 0.114 95]
+		[197 5 0.01 0.106 97] [205.5 9.5 0.02 0.081 95]
+	]
+	localmake "middleArcRadius :height * 0.582
+	localmake "middleArcAngle 74
+	setPenSize :height * 0.07065
+	setPenColor "black
+	setLineCap "round
+	forward (:height - penSize) / 2
+	jumpTo :oldPos
+	setPenSize :height * 0.097826
+	arrow :height * 0.3315 45 :height * 0.0543
+	setPenSize :height * 0.042
+	jumpTo :oldPos
+	arcLines :topArcsInfo :height
+	arcLines reverse :topArcsInfo :height
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.47
+	localmake "center pos
+	jumpBackward :height * 0.274
+	setPenSize 0
+	setFillColor penColor
+	left 180 - :middleArcAngle / 2
+	polyStart
+	jumpForward :middleArcRadius
+	setHeading (towards :center) + 90
+	localmake "arcRadius distance :center
+	localmake "middleArcAngle2 2 * arcSin (:middleArcRadius * sin :middleArcAngle / 2) / :arcRadius
+	arcLeft :middleArcAngle2 :arcRadius
+	polyEnd
+	setLineCap "butt
+	localmake "weaveRadius :arcRadius * 0.96
+	repeat count :weaves [
+		localmake "weaveInfo item repcount :weaves
+		jumpTo :center
+		localmake "headingOffset first :weaveInfo
+		setHeading :oldHeading + :headingOffset
+		jumpForward :weaveRadius
+		setHeading :oldHeading + 150 + item 2 :weaveInfo
+		setPenSize :height * 0.04
+		jumpForward :height * item 3 :weaveInfo
+		forward :height * 0.17
+		jumpBackward :height * item 4 :weaveInfo
+		right item 5 :weaveInfo
+		setPenSize :height * 0.0225
+		forward :height * 0.1
+	]
+	jumpTo :center
+	localmake "arcAngle 51.1
+	localmake "arcRadius :height * 0.943
+	localmake "notchLength :height * 0.16
+	setHeading :oldHeading + 180 + :arcAngle / 2
+	jumpForward :arcRadius - :notchLength
+	setLineJoinStyle "miter
+	setPenSize :height * 0.055
+	forward :notchLength
+	setHeading (towards :center) + 90
+	arcLeft :arcAngle :arcRadius
+	setHeading towards :center
+	forward :notchLength
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Lesotho#/media/File:Flag_of_Lesotho.svg
+; The colors were copied from
+; https://en.wikipedia.org/wiki/Flag_of_Lesotho
+to lesothoFlag :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "width :height * 3 / 2
+	localmake "stripeHeight :height * 0.3
+	stripes :width :height ["white]
+	stripes :width :stripeHeight ["#009543]
+	jumpForward :height - :stripeHeight
+	stripes :width :stripeHeight ["#00209F]
+
+	jumpTo :oldPos
+	jumpForward :height / 2
+	drawBlackMokorotlo :height * 0.368
+	setTurtleState :oldState
+end
+
+setScreenColor "#ddd
+lesothoFlag 100
