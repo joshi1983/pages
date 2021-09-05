@@ -1,0 +1,70 @@
+to drawTopShape :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "lines1 [[147.7 0] [0.295] [-31.7 0] [0.183]]
+	localmake "lines2 [[119.3 0.5] [84.7 0] [0.36] [36.8 0]]
+	localmake "innerArcAngle 70.8
+	localmake "outerRadius :height / 2
+	localmake "angle1 38.8
+	jumpForward :height / 2
+	localmake "center pos
+	jumpForward :height * 0.308
+	polyStart
+	arcLines :lines1 :height
+	localmake "innerRadius distance :center
+	localmake "angle2 heading - ((towards :center) - 90)
+	left :angle2
+	arcRight :innerArcAngle :innerRadius
+	left :angle1
+	localmake "len1 distanceToCircle :center :outerRadius
+	jumpForward :len1
+	localmake "angle3 heading - ((towards :center) + 90)
+	left :angle3
+	arcLines :lines2 :height
+
+	; point of symmetry
+
+	localmake "len2 distanceToLine :center :oldPos
+	jumpForward :len2
+	arcLines [[27.15662 * 2 - 180  0] [:len2 / :height]] :height
+	arcLines reverse :lines2 :height
+	arcLines [[:angle3 0] [1] [:angle1 0]] :len1
+	arcRight :innerArcAngle :innerRadius
+	left :angle2
+	arcLines reverse :lines1 :height
+	
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by logo in:
+; https://en.wikipedia.org/wiki/Zilog#/media/File:Zilog_logo_1991.svg
+to zilog1991Logo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "angle1 24.3
+	localmake "angle2 94.34
+	localmake "angle3 :angle1 + :angle2
+	localmake "bottomWidth 0.5 * sin :angle1
+	localmake "len1 :bottomWidth / cos (180 - :angle3)
+	localmake "bottomArcs [[90 0] [-:angle1 0.5] [-:angle2 0] [:len1] [:angle3 0]]
+	localmake "bottomShape [0 0 combine :bottomArcs reverse :bottomArcs]
+	setPenSize 0
+	setFillColor "black
+	drawArcLineShape :bottomShape :height
+	drawTopShape :height
+	setFillColor "white
+	jumpForward :height * 0.5
+	localmake "center pos
+	jumpBackward :height * 0.257
+	polyStart
+	arcLines [[270 - :angle3 0] [0.073]] :height
+	setHeading (towards :center) + 90
+	localmake "arcRadius distance :center
+	localmake "arcAngle getArcLeftAngleToLine :arcRadius :oldPos :center
+	arcLeft :arcAngle * 2 :arcRadius
+	polyEnd
+	setTurtleState :oldState
+end
+
+zilog1991Logo 100
