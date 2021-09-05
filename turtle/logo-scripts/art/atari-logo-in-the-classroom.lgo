@@ -1,0 +1,230 @@
+; Inspired by a figures from a book called:
+; Atari Logo In The Classroom
+; The book was published in 1984.
+
+to drawSquares :squareSize :numSquares
+	localmake "oldPos pos
+	jumpForward :squareSize / 2
+	repeat :numSquares [
+		rect :squareSize :squareSize
+		jumpForward :squareSize
+	]
+	jumpTo :oldPos
+end
+
+; Inspired by a figure on page 14 of a book called:
+; Atari Logo In The Classroom
+; The book was published in 1984.
+;
+; A digital version of the book can be found at:
+; https://archive.org/details/AtariLogoInTheClassroom/page/n27/mode/2up
+to squareBody :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "headSize :height * 0.31
+	localmake "tinySize :height * 0.08
+	setPenSize :height * 0.015
+	setPenColor "black
+	setLineJoinStyle "miter
+	jumpForward :height - (:headSize + penSize) / 2
+	localmake "torsoSize :height - :headSize - :tinySize * 3 - penSize
+	localmake "legSeparation :torsoSize - :tinySize
+	rect :headSize :headSize
+
+	setFillColor "#ccc
+	jumpBackward (:headSize + :torsoSize) / 2
+	localmake "torsoCenter pos
+	rect :torsoSize :torsoSize
+
+	jumpLeft :legSeparation / 2
+	jumpBackward :torsoSize / 2
+	right 180
+	repeat 2 [
+		drawSquares :tinySize 3
+		jumpLeft :legSeparation
+	]
+
+	jumpTo :torsoCenter
+	setHeading :oldHeading
+	jumpForward (:torsoSize - :tinySize) / 2
+	localmake "torsoTop pos
+	repeat 2 [
+		setHeading :oldHeading + 90 + repcount * 180
+		jumpForward :torsoSize / 2
+		drawSquares :tinySize 3
+		jumpTo :torsoTop
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by a figure on page 30
+; 
+; A digital version of the book can be found at:
+; https://archive.org/details/AtariLogoInTheClassroom/page/n43/mode/2up
+to butterfly :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "antennaAngle 23
+	localmake "antennaLength :height * 0.37
+	localmake "wingLines1 [
+		[35 0] [0.24] [19 0] [0.35] [103 0] [0.2] [36 0]
+		[0.29] [60 0] [0.23] [-120 0] [0.29] [46 0] [0.2]
+		[70 0] [0.15] [39 0] [0.15] [44 0] [0.31239833]
+		[-62 0]
+	]
+	localmake "colorStops createPList2 [
+		[0 "yellow] [0.3 "red] [0.6 "lime] [1 "blue]
+	]
+	jumpForward :height * 0.45
+	setFillGradient createRadialGradient pos :height * 0.6 :colorStops
+	jumpForward :height * 0.14
+	setLineJoinStyle "round
+	setLineCap "round
+	left :antennaAngle
+	repeat 2 [
+		forward :antennaLength
+		jumpBackward :antennaLength
+		right :antennaAngle * 2
+	]
+	setHeading :oldHeading
+	drawArcLineShape [0 0
+		combine :wingLines1 reverse :wingLines1
+	] :height
+	setTurtleState :oldState
+end
+
+to drawFlower :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "leafSize :height * 0.2
+	localmake "bloomRadius :height * 0.21
+	localmake "colorStops createPList2 [
+		[0 "yellow] [1 "red]
+	]
+	localmake "numPetals 12
+	forward :height - :bloomRadius
+	isotoxalStar :bloomRadius * 1.05 :bloomRadius * 0.9 12
+	setFillGradient createRadialGradient pos :bloomRadius :colorStops
+	regularPolygon :bloomRadius :numPetals
+	repeat :numPetals [
+		stripes penSize * 0.5 :bloomRadius ["black]
+		right 360 / :numPetals
+	]
+	jumpBackward :height * 0.43
+	localmake "leafCenter pos
+	setFillColor "lime
+	repeat 2 [
+		setHeading :oldHeading + 90 + repcount * 180
+		jumpBackward :leafSize
+		isoTriangle :leafSize :leafSize
+		jumpTo :leafCenter
+	]
+	setTurtleState :oldState
+end
+
+
+
+; Inspired by the flowers on page 34
+; 
+; A digital version of the book can be found at:
+; https://archive.org/details/AtariLogoInTheClassroom/page/n47/mode/2up
+to flowers :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "flowerPoints [
+		[0.45 0] [-0.03 0.16] [-0.46 0.16]
+	]
+	localmake "butterflies [
+		[0.38 0.75 30] [-0.75 0.95 -130]
+	]
+	repeat count :flowerPoints [
+		localmake "flowerPoint vectorScale (item repcount :flowerPoints) :height
+		jumpRight first :flowerPoint
+		jumpForward last :flowerPoint
+		drawFlower :height * 0.72
+		jumpTo :oldPos
+	]
+	repeat count :butterflies [
+		localmake "butterflyInfo item repcount :butterflies
+		jumpRight :height * first :butterflyInfo
+		jumpForward :height * item 2 :butterflyInfo
+		left last :butterflyInfo
+		butterfly :height * 0.16
+		setHeading :oldHeading
+		jumpTo :oldPos
+	]
+	setTurtleState :oldState
+end
+
+to drawWellBase :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "width :height * 1.5
+	localmake "brickWidth :width / 6
+	localmake "brickHeight :height / 8
+	jumpForward :height / 2
+	setFillColor "#db8
+	setLineJoinStyle "round
+	rect :width :height
+	jumpLeft 2 * :brickWidth
+	jumpBackward :height / 2
+	repeat 5 [
+		stripes penSize :height [penColor]
+		jumpRight :brickWidth
+	]
+	jumpTo :oldPos
+	jumpForward :brickHeight - penSize / 2
+	repeat 7 [
+		stripes :width penSize [penColor]
+		jumpForward :brickHeight
+	]
+	setTurtleState :oldState
+end
+
+to drawWellMiddle :height
+	localmake "oldState turtleState
+	localmake "bucketHeight :height * 0.25 
+	localmake "bucketOffset :height * 0.25
+	localmake "bucketTopOffset :bucketOffset - :bucketHeight / 2
+	rect :height * 1.3 :height
+
+	jumpBackward :bucketOffset
+	setFillColor "#bbb
+	rect :height * 0.35 :bucketHeight
+	jumpForward :bucketHeight / 2
+	stripes penSize :height / 2 + :bucketTopOffset [penColor]
+	setTurtleState :oldState
+end
+
+; Inspired by a figure on page 95
+;
+; A digital version of the book can be found at:
+; https://archive.org/details/AtariLogoInTheClassroom/page/n107/mode/2up
+to well :height
+	localmake "oldState turtleState
+	localmake "baseHeight :height * 0.43
+	localmake "middleHeight :height * 0.415
+	setPenSize :height * 0.02
+	localmake "roofHeight :height - :middleHeight - :baseHeight - penSize
+	jumpForward penSize / 2
+	drawWellBase :baseHeight
+	jumpForward :baseHeight + :middleHeight / 2
+	drawWellMiddle :middleHeight
+
+	jumpForward :middleHeight / 2
+	setFillColor "#b88
+	isoTrapezoid :height * 0.63 :height * 0.3 :roofHeight
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 3
+jumpLeft :separation * 1.5
+squareBody :height
+jumpRight :separation
+butterfly :height
+jumpRight :separation
+flowers :height
+jumpRight :separation
+well :height

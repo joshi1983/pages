@@ -1,0 +1,74 @@
+; Note that this is for educational purposes only.
+; Do not print or distribute prints from these designs.
+; James Coffman and Zara are the original designers for
+; the sources of inspiration used here and this 
+; code draws very similar designs.
+
+; Inspired by:
+; https://ca.pinterest.com/pin/527202700146294679
+; It is also shown at:
+; https://www.instagram.com/p/C6w6AxySy8T
+to jamesCoffmanFace :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "shoulderLines1 [
+		[90 0] [0.49] [-106 0.029]
+		[-18 0.6] [-35 0.19] [-7 0.9]
+		[40 0.1] [0.3191708666] [-54 0]
+	]
+	localmake "eyeSeparation :height * 0.255
+	localmake "eyeWidth :height * 0.128
+	setPenSize 0
+	setFillColor "black
+	drawArcLineShape [0 0
+		combine :shoulderLines1 reverse :shoulderLines1
+	] :height
+	jumpForward :height * 0.62095
+	roundIsoStar :height * 0.4 :height * 0.25 16 :height * 0.009 :height * 0.003
+	jumpTo :oldPos
+	jumpForward :height * 0.482
+	stripes :height * 0.07 :height * 0.035 ["white]
+	jumpForward :height * 0.075
+	setFillColor "white
+	isoTrapezoid :height * 0.04 :height * 0.03 :height * 0.149
+	jumpForward :height * 0.097
+	right 90
+	jumpBackward (:eyeSeparation + :eyeWidth) / 2
+	repeat 2 [
+		arcPair :eyeWidth 120		
+		jumpForward :eyeSeparation
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by:
+; https://ca.pinterest.com/pin/532269249730846916
+; It is also shown at:
+; https://www.instagram.com/p/Cn5WRDfvKhP
+to jamesCoffmanStarPlatform :height
+	localmake "oldState turtleState
+	localmake "angle1 112
+	localmake "angle2 70
+	localmake "platformLines1 [
+		[90 0] [1.22] [-:angle1 0.04] [0.56] [:angle1 - 180 0.06]
+		[0.31] [:angle2 0.04] [0.36] [-:angle2 0.05] [0.4739771]
+	]
+	localmake "squareSize1 :height * 0.15
+	setPenSize 0
+	setFillColor "#1445d8
+	drawArcLineShape [0 0
+		combine :platformLines1 reverse :platformLines1
+	] :height * 0.292
+	jumpForward :height * 0.645
+	roundIsoStar :height * 0.4 :height * 0.2 16 :height * 0.0104 :height * 0.003
+	setFillColor "white
+	roundRect :squareSize1 :squareSize1 :height * 0.065
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 5
+jumpLeft :separation / 2
+jamesCoffmanFace :height
+jumpRight :separation
+jamesCoffmanStarPlatform :height
