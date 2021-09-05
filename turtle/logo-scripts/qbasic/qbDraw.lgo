@@ -1,0 +1,106 @@
+to psetCoordsColor :coords :color
+	localmake "oldPos pos
+	jumpTo :coords
+	stripes 1 1 [ :color ]
+	jumpTo :oldPos
+end
+
+to qbDrawCommandA :vals :scale
+	right 90 * first :vals
+end
+
+to qbDrawCommandC :vals :scale
+	setPenColor first :vals
+end
+
+to qbDrawCommandD :vals :scale
+	backward :scale * first :vals
+end
+
+to qbDrawCommandE :vals :scale
+	right 45
+	forward :scale * ( 1 / cos 45 ) * first :vals
+	left 45
+end
+
+to qbDrawCommandF :vals :scale
+	right 135
+	forward :scale * ( 1 / cos 45 ) * first :vals
+	left 135
+end
+
+to qbDrawCommandG :vals :scale
+	left 135
+	forward :scale * ( 1 / cos 45 ) * first :vals
+	right 135
+end
+
+to qbDrawCommandH :vals :scale
+	left 45
+	forward :scale * ( 1 / cos 45 ) * first :vals
+	right 45
+end
+
+to qbDrawCommandL :vals :scale
+	left 90
+	forward :scale * first :vals
+	right 90
+end
+
+to qbDrawCommandM :vals :scale
+	jumpTo vectorScale :vals :scale
+end
+
+to qbDrawCommandP :vals :scale
+	setFillColor first :vals
+	setPenColor item 2 :vals
+end
+
+to qbDrawCommandR :vals :scale
+	right 90
+	forward :scale * first :vals
+	left 90
+end
+
+to qbDrawCommandT :vals :scale
+	setHeading :scale * first :vals
+end
+
+to qbDrawCommandU :vals :scale
+	forward :scale * first :vals
+end
+
+to qbDrawCommandGetValues :commandSubstring
+	localmake "result [ ]
+	localmake "valStrings split :commandSubstring ','
+	repeat count :valStrings [
+		localmake "num parseNumber item repcount :valStrings
+		queue2 "result :num
+	]
+	output :result
+end
+
+; Similar to QBasic's draw subroutine
+to qbDraw :drawString
+	localmake "oldState turtleState
+	setHeading 0
+	localmake "scale 1
+	localmake "commands 'ACDEFGHLMPRTU'
+	localmake "commandSubstrings ( split :drawString )
+	repeat count :commandSubstrings [
+		localmake "commandSubstring item repcount :commandSubstrings
+		localmake "ch upperCase first :commandSubstring
+		localmake "vals qbDrawCommandGetValues
+		butFirst :commandSubstring
+		ifelse :ch = "S [
+			localmake "scale ( first :vals ) / 4
+		] [
+			localmake "validCommand? substring? :ch :commands
+			if :validCommand? [
+				localmake "name word "qbDrawCommand :ch
+				( invoke :name :vals :scale )
+			]
+		]
+	]
+	setTurtleState :oldState
+end
