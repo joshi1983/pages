@@ -1,0 +1,45 @@
+; Inspired by logo at:
+; https://www.fantuan.ca
+to fantuanDeliveryLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "lines1 [
+		[5 1.5] [15 0.63] [15 0.29] [10 0.2658]
+	]
+	localmake "faceOutline1 [
+		[0.165] [90 0.15] [20 0.35] [20 0.62] [28 0.32]
+		[22 0.162758575]
+	]
+	localmake "eyeSeparation :height * 0.26
+	setPenSize 0
+	setFillColor "#13c2c2
+	right 90
+	polyStart
+	repeat 4 [
+		arcLines :lines1 :height
+		arcLines reverse :lines1 :height
+	]
+	polyEnd
+	setPenSize :height * 0.042
+	setPenColor "black
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.22
+	setFillColor "white
+	drawArcLineShape [0 0
+		(combine [[-90 0]] :faceOutline1 reverse :faceOutline1)
+	] :height
+	stripes :height * 0.305 :height * 0.15 ["black]
+	jumpForward :height * 0.29
+	jumpLeft :eyeSeparation / 2
+	setPenSize 0
+	setFillColor penColor
+	repeat 2 [
+		ellipse :height * 0.041 :height * 0.046
+		jumpRight :eyeSeparation
+	]
+	setTurtleState :oldState
+end
+
+fantuanDeliveryLogo 100

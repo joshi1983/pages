@@ -1,0 +1,23 @@
+; Inspired by logo at:
+; https://motioncares.ca
+to motionCaresLogo :height
+	localmake "oldState turtleState
+	localmake "colors ["#FFCE01 "#B3B1B1]
+	setLineCap "butt
+	setPenSize :height * 0.0615
+	localmake "maxRadius (:height - penSize) / 2
+	localmake "minRadius :maxRadius - penSize * 4
+	jumpForward :height / 2
+	right 90
+	repeat 2 [
+		setPenColor item repcount :colors
+		repeat 3 [
+			localmake "radius mix :maxRadius :minRadius repRatio
+			arc 180 :radius
+		]
+		right 360 / 2
+	]
+	setTurtleState :oldState
+end
+
+motionCaresLogo 100

@@ -1,0 +1,58 @@
+to drawPartialCircle :outerRadius :thickness :gap
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "center pos
+	localmake "innerRadius :outerRadius - :thickness
+	localmake "gapAngle arcSin :gap / 2 / :outerRadius
+	localmake "innerArcAngle 90 - 2 * arcSin :gap / 2 / :innerRadius
+	repeat 4 [
+		setHeading :oldHeading + :gapAngle + repcount * 360 / 4
+		jumpForward :outerRadius
+		right 90
+		polyStart
+		arcRight 90 - :gapAngle * 2 :outerRadius
+		right 90 + :gapAngle
+		jumpForward distanceToCircle :center :innerRadius
+		setHeading (towards :center) + 90
+		arcLeft :innerArcAngle :innerRadius
+		polyEnd
+		jumpTo :center
+	]
+
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://vistasolutions.ca
+to vistaSolutionsLogo :height :color
+	localmake "oldState turtleState
+	localmake "outerGap :height * 0.183
+	localmake "thickness :height * 0.09
+	localmake "outerRadius hypot [:height / 2 :outerGap / 2]
+	jumpForward :height / 2
+	setFillColor :color
+	setPenSize 0
+	drawPartialCircle :outerRadius :thickness :outerGap
+	right 45
+	drawPartialCircle :height * 0.3 :thickness :height * 0.08
+	
+	setTurtleState :oldState
+end
+
+to vistaSolutionsLogoOnBlack :height
+	localmake "oldState turtleState
+	localmake "innerHeight :height * 0.8
+	stripes :height :height ["black]
+	jumpForward (:height - :innerHeight) / 2
+	vistaSolutionsLogo :innerHeight "white
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 4
+jumpLeft :separation
+vistaSolutionsLogo :height "#F65C0D
+jumpRight :separation
+vistaSolutionsLogoOnBlack :height
+jumpRight :separation
+vistaSolutionsLogo :height "#0a18a1
