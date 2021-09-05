@@ -1,0 +1,97 @@
+to getOutlineGradient :height
+	localmake "oldState turtleState
+	localmake "size1 :height / 2
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#4260c5
+	setProperty "colorStops 0.8 "#5a8ee0
+	setProperty "colorStops 1 "#5a8ee0
+	jumpForward :height / 2
+	left 60
+	jumpBackward :size1
+	localmake "fromPos pos
+	jumpForward :size1 * 2
+	localmake "result createLinearGradient :fromPos pos :colorStops "pad
+	setTurtleState :oldState
+	output :result
+end
+
+to isoTriangleReversed :width :height
+	jumpForward :height
+	right 180
+	isoTriangle :width :height
+	right 180
+	jumpBackward :height
+end
+
+to crossGradient1 :radius
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#444
+	setProperty "colorStops 1 "#aaa
+	output createRadialGradient pos :radius :colorStops
+end
+
+to crossGradient2 :size
+	localmake "oldState turtleState
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#0aaa
+	setProperty "colorStops 0.5 "#4000
+	setProperty "colorStops 1 "#0aaa
+	jumpRight :size
+	localmake "fromPos pos
+	jumpLeft :size * 2
+	localmake "result createLinearGradient :fromPos pos :colorStops "pad
+	setTurtleState :oldState
+	output :result
+end
+
+; Inspired by logo at
+; https://dzone.com/
+to dZoneLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "thickness :height * 0.04
+	localmake "arcRadius :height * 0.1
+	localmake "angle 360 / 6
+	localmake "height1 :height * 0.986795 - :arcRadius * 2 * (1 - cos 30)
+	localmake "size1 :height1 / (1 + 2 * sin 30)
+	localmake "size2 :size1 - :arcRadius * 2 * sin 30
+	localmake "hexagonSize :height * 0.35
+	localmake "triangleWidth :hexagonSize * 2 * cos 30
+	localmake "triangleHeight :hexagonSize * sin 30
+	setPenGradient getOutlineGradient :height
+	jumpForward :thickness / 2
+	setFillColor transparent
+	right 90
+	setPenSize 0
+	arcLeft :angle / 2 :arcRadius
+	setPenSize :thickness
+	right 180
+	polyStart
+	repeat 6 [
+		arcRight :angle :arcRadius
+		jumpForward :size2
+	]
+	polyEnd
+	setPenColor "#aaa
+	setLineJoinStyle "round
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height / 2
+	regularPolygon :hexagonSize 6
+	left 60
+	localmake "gradients [crossGradient1 :height * 0.15 crossGradient2 :height * 0.2]
+	repeat count :gradients [
+		setPenGradient item repcount :gradients
+		isoTriangleReversed :triangleWidth :triangleHeight
+		right 180
+		isoTriangleReversed :triangleWidth :triangleHeight
+		right 180
+	]
+	setPenColor "#aaa
+	jumpBackward :hexagonSize
+	forward :hexagonSize * 2
+	setTurtleState :oldState
+end
+
+dZoneLogo 100

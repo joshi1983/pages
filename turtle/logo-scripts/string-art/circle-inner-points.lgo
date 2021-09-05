@@ -1,0 +1,79 @@
+to getPointClosestTo :heading :points
+	localmake "result item 1 :points
+	localmake "minDiff abs :heading - (towards :result)
+	repeat count :points [
+		localmake "p item repcount :points
+		localmake "heading2 towards :p
+		localmake "diff abs :heading - :heading2
+		if :diff < :minDiff [
+			localmake "result :p
+			localmake "minDiff :diff
+		]
+	]
+	output :result
+end
+
+to circlePattern :radius :timeRatio
+	localmake "groupPoints []
+	localmake "points []
+	localmake "oldPos pos
+	localmake "numNails 100
+	localmake "groupSize 10
+	localmake "numGroupPoints int :numNails / :groupSize
+	localmake "groupRadius :radius * :timeRatio
+	repeat :numNails [
+		jumpForward :radius
+		queue2 "points pos
+		jumpTo :oldPos
+		right 360 / :numNails
+	]
+	repeat :numGroupPoints [
+		jumpForward :groupRadius
+		queue2 "groupPoints pos
+		jumpTo :oldPos
+		right 360 / :numGroupPoints
+	]
+	; draw lines.
+	setPenColor "#61EDFF
+	setPenSize :radius * 0.002
+	repeat :numNails [
+		localmake "fromPoint item repcount :points
+		localmake "toPoints []
+		localmake "midGroupIndex round repcount / :groupSize
+		jumpTo :fromPoint
+		repeat 3 [
+			localmake "groupIndex 1 + remainder :numGroupPoints + :midGroupIndex - 2 + repcount :numGroupPoints
+			localmake "heading towards item :groupIndex :groupPoints
+			queue2 "toPoints getPointClosestTo :heading :points
+		]
+		repeat count :toPoints [
+			setPos item repcount :toPoints
+			jumpTo :fromPoint
+		]
+	]
+	
+	setPenSize 0
+	setFillColor "white
+	repeat :numNails [
+		jumpTo item repcount :points
+		circle :radius * 0.01
+	]
+end
+
+setScreenColor "black
+circlePattern 100 interpolateRatio easeInOut animation.time / animation.duration
+
+to animation.snapshotstyle
+	localmake "result createPList
+	setProperty "result "zoom.scale 3.5
+	output :result
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 3
+	; Edit this if you want to change the length of your animation.
+	localmake "result createPList
+	setProperty "result "duration :minutes * 60 + :seconds
+	output :result
+end
