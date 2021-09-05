@@ -1,0 +1,21 @@
+; Inspired by a logo at.
+; https://www.greggs.com
+to greggsLogo :height
+	localmake "oldState turtleState
+	localmake "squareSize :height * 0.42
+	localmake "offset (:height - :squareSize) / 2 
+	setPenSize 0
+	setFillColor "#fdb71a
+	jumpForward :height / 2
+	localmake "center pos
+	repeat 4 [
+		jumpRight :offset
+		jumpForward :offset
+		roundRect :squareSize :squareSize :height * 0.07
+		jumpTo :center
+		right 360 / 4
+	]
+	setTurtleState :oldState
+end
+
+greggsLogo 100

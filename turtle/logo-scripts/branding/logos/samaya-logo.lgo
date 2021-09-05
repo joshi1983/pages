@@ -1,0 +1,39 @@
+; Inspired by logo at:
+; https://www.samaya-equipment.com/fr-ca?gad_source=1&gad_campaignid=19833148747&gclid=CjwKCAiA4KfLBhB0EiwAUY7GAWlhhyDR9YPoPsJcYrcos5qczWXgE0LiIrJuYRoPe5wAtclN_BNMeRoCYbkQAvD_BwE&shpxid=602a6dd1-660a-4974-a6a8-9032b3ebf210
+to samayaLogo :height :color
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "outerThickness :height * 0.1
+	localmake "radius (:height - :outerThickness) / 2 / cos 180 / 6
+	jumpForward :height / 2
+	setLineJoinStyle "miter
+	setPenSize :outerThickness
+	setFillColor transparent
+	setPenColor :color
+	right 180 / 6
+	regularPolygon :radius 6
+	setPenSize 0
+	setFillColor :color
+	setHeading :oldHeading 
+	repeat 3 [
+		rect :radius * 2 :height * 0.05
+		right 360 / 6
+	]
+	setTurtleState :oldState
+end
+
+to samayaWhiteOnBlack :height
+	localmake "oldState turtleState
+	localmake "innerHeight :height * 0.8
+	stripes :height :height ["black]	
+	jumpForward (:height - :innerHeight) / 2
+	samayaLogo :innerHeight "white
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 5
+jumpLeft :separation / 2
+samayaLogo :height "black
+jumpRight :separation
+samayaWhiteOnBlack :height
