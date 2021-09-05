@@ -1,0 +1,45 @@
+; Inspired by logo at:
+; https://en.wikipedia.org/wiki/XPeng#/media/File:XPeng_logo.svg
+to xPengLogo :height
+	localmake "oldState turtleState
+	localmake "len1 0.077
+	localmake "angle1 -62.1
+	localmake "angle2 -131
+	localmake "angle3 -46
+	localmake "cornerRadius1 0.02
+	localmake "cornerRadius2 0.1
+	localmake "cornerRadius3 0.022
+	localmake "len2 (0.5 - :len1 - 
+		:cornerRadius1 * (sin -:angle1) -
+		:cornerRadius2 * (1 - sin -:angle1)) / 
+		cos -:angle1
+	localmake "len3 0.545
+	localmake "len4 0.399
+	localmake "cornerRadius4 0.05
+	localmake "angle4 :angle2 + :angle3
+	localmake "len5 0.5 
+		- :cornerRadius3 * (1 + sin -:angle2 - 90)
+		- :cornerRadius4 * ((sin -:angle4 - 90) - (sin -:angle2 - 90))
+		- :len3 * (cos -:angle2 - 90)
+		- :len4 * sin -:angle4
+	localmake "lines1 [
+		[:len1] [:angle1 :cornerRadius1] [:len2]
+		[-90 - :angle1 :cornerRadius2] [0.135]
+		[:angle2 :cornerRadius3] [:len3]
+		[:angle3 :cornerRadius4] [:len4]
+		[270 - :angle4  0] [:len5]
+	]
+	setPenSize 0
+	setFillColor "black
+	jumpForward :height / 2
+	repeat 2 [
+		drawArcLineShape [0.016 0
+			combine :lines1 reverse :lines1
+		] :height
+		right 180
+	]
+
+	setTurtleState :oldState
+end
+
+xPengLogo 100

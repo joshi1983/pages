@@ -1,0 +1,106 @@
+to drawLines :lines :scale
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	repeat count :lines [
+		localmake "line item repcount :lines
+		jumpRight :scale * first :line
+		jumpForward (abs :scale) * item 2 :line
+		localmake "p1 pos
+		jumpTo :oldPos
+		jumpRight :scale * item 3 :line
+		jumpForward (abs :scale) * last :line
+		setHeading towards :p1
+		forward distance :p1
+		setHeading :oldHeading
+		jumpTo :oldPos
+	]
+end
+
+to drawEye :radius
+	localmake "oldState turtleState
+	localmake "offset :radius * 0.44
+	setFillColor "black
+	setPenSize 0
+	circle :radius
+	jumpForward :offset
+	jumpLeft :offset
+	setFillColor "white
+	circle :radius * 0.3
+	setTurtleState :oldState
+end
+
+to drawBunnySide :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "lines [
+		[0 0 0.03 -0.03] [0 0.11 0.05 0.16]
+	]
+	localmake "coilStep 0.0527
+	localmake "x1 0.129
+	localmake "x2 0.217
+	localmake "diagonalCoilLines []
+	localmake "x1_ :x1
+	localmake "x2_ :x2
+	localmake "bunnyPink "#fc807e
+	if :height > 0 [
+		swap "x1_ "x2_
+	]
+	repeat 6 [
+		localmake "y 0.423 + repcount * :coilStep
+		queue2 "lines [:x1 :y :x2 :y]
+		if repcount <> 1 [
+			queue2 "diagonalCoilLines [:x2_ :y :x1_ :y - :coilStep]
+		]
+	]
+	drawLines :lines :height
+	setPenColor :bunnyPink
+	jumpRight :height * mix :x1 :x2 0.5
+	jumpForward abs :height * 0.44
+	forward abs :height * 0.31
+	jumpTo :oldPos
+	setPenColor "black
+	drawLines :diagonalCoilLines :height
+	jumpRight :height * 0.16
+	jumpForward (abs :height) * 0.26
+	drawEye abs :height * 0.073
+	jumpBackward abs :height * 0.2
+	jumpRight :height * 0.018
+	setFillColor :bunnyPink
+	setPenSize abs :height * 0.003
+	circle abs :height * 0.053
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://www.youtube.com/@UsagiElectric
+to usagiElectricLogo :height
+	localmake "oldState turtleState
+	localmake "radius1Ratio 0.306
+	localmake "angle1 127
+	localmake "topArcs1 [[80 0.02] [0.027] [-80 0.02] [0.02] 
+		[70 0.01] [-70 0.01] [90 0.005]
+	]
+	localmake "topArcs combine :topArcs1 reverse :topArcs1
+	localmake "arcs (combine [[-90 0] [:angle1 :radius1Ratio]
+		[90 - :angle1 0] [0.4]] :topArcs  [[0.291316544929]
+		[-106.8649324274416 0] [16.86490 :radius1Ratio]])
+	localmake "backgroundShape [0 0 combine :arcs reverse :arcs]
+	localmake "mouthOffset :height * 0.13
+	localmake "snoutHeight :height * 0.11
+	setPenSize :height * 0.017
+	setLineJoinStyle "round
+	setPenColor "black
+	setFillColor "#f2cca5
+	jumpForward penSize / 2
+	drawArcLineShape :backgroundShape :height
+	setPenSize :height * 0.013
+	jumpForward :mouthOffset
+	forward :snoutHeight
+	jumpBackward :snoutHeight
+	repeat 2 [
+		drawBunnySide :height * sign repcount - 1.5
+	]
+	setTurtleState :oldState
+end
+
+usagiElectricLogo 100

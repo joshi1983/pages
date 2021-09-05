@@ -1,0 +1,46 @@
+; This illustrates the various heading angles
+; used by commands such as heading and setHeading.
+
+; Inspired by a compass shown in a book
+; The book is called "Explorer's guide to Commodore Logo"
+; The compass is shown on page 14
+; https://archive.org/details/explorers-guide-to-commodore-logo/page/n31/mode/2up
+to logoHeadingCompass :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "radius :height * 0.35
+	localmake "labelRadius :radius * 1.17
+	localmake "labelGaps [0 0.05 0.03 0.055]
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize :height * 0.02
+	setPenColor "black
+	setFillColor "black
+	circle :radius
+	setPenColor "white
+	circle :radius - penSize
+	setPenSize 0
+	setFillColor "white
+	isotoxalStar :radius * 0.8 :radius * 0.18 4
+	setFontSize :height * 0.1
+	setFillColor "black
+	repeat 4 [
+		localmake "angleDegrees (repcount - 1) * 360 / 4
+		setHeading :oldHeading + :angleDegrees
+		jumpForward :labelRadius
+		jumpForward :height * item repcount :labelGaps
+
+		setHeading :oldHeading + 90
+		localmake "text word str :angleDegrees "°
+
+		; Roughly center the label.
+		jumpBackward fontSize * 0.27 * count :text
+		jumpRight fontSize * 0.35
+
+		label :text
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+logoHeadingCompass 100
