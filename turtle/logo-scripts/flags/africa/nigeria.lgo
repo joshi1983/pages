@@ -1,0 +1,77 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Nigeria#/media/File:Flag_of_Nigeria.svg
+to nigeriaFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 2
+	jumpLeft :width / 2
+	jumpForward :height / 2
+	right 90
+	stripes :height :width ["#008751 "white "#008751]
+	setTurtleState :oldState
+end
+
+to nigeriaFlagWithBackgroundColor :height :color
+	localmake "oldState turtleState
+	localmake "width :height * 2
+	stripes :width :height [:color]
+	jumpForward :height / 2
+	jumpLeft :width / 4
+	nigeriaFlag :height / 2
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Nigeria#/media/File:Civil_Ensign_of_Nigeria.svg
+to nigeriaCivilEnsignia :height
+	nigeriaFlagWithBackgroundColor :height "#d1081d
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Nigeria#/media/File:Government_Ensign_of_Nigeria.svg
+to nigeriaStateEnsignia :height
+	nigeriaFlagWithBackgroundColor :height "#00247d
+end
+
+; Inspired by
+; https://upload.wikimedia.org/wikipedia/commons/7/78/Flag_of_Nigeria_%28original_proposal%29.svg
+to nigeria1959FlagProposal :height
+	localmake "oldState turtleState
+	localmake "numRays 8
+	localmake "largeRadius :height * 0.018
+	localmake "smallRadius :height * 0.013
+	localmake "innerDistance :height * 0.105
+	localmake "largeDistance :innerDistance + :largeRadius
+	localmake "smallDistance :innerDistance + :smallRadius
+	nigeriaFlag :height
+	jumpForward :height / 2
+	setPenSize 0
+	setFillColor "#d30909
+	circle :height * 0.086
+	localmake "center pos
+	repeat :numRays [
+		jumpForward :largeDistance
+		circlePair :largeRadius 0 :height * 0.1573
+		jumpTo :center
+		right 360 / :numRays
+	]
+	right 180 / :numRays
+	repeat :numRays [
+		jumpForward :smallDistance
+		circlePair :smallRadius 0 :height * 0.1185785
+		jumpTo :center
+		right 360 / :numRays
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "#eee
+make "height 100
+make "separation :height * 3
+jumpLeft :separation * 1.5
+nigeriaFlag :height
+jumpRight :separation
+nigeriaCivilEnsignia :height
+jumpRight :separation
+nigeriaStateEnsignia :height
+jumpRight :separation
+nigeria1959FlagProposal :height

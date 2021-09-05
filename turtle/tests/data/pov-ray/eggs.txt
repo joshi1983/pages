@@ -1,0 +1,64 @@
+// Copied from
+// https://www.f-lohmueller.de/pov_tut/x_sam/sam_390e.htm
+
+//--------------------------------------
+#declare Egg_Tex =            //  <--1
+texture{ pigment{color White}
+         normal {bumps 0.4 scale 0.01}
+         finish {diffuse 0.9 phong 0.1}
+       } // end of texture
+//---------------------------//  <--2
+#declare Egg_upperpart =
+intersection{
+ sphere{<0,0,0>,1 scale<1,1.75,1>}
+ box{<-1,0,-1>,<1,1.75,1>}
+//Alternativly with "difference":
+// difference{
+// sphere{<0,0,0>,1 scale<1,1.75,1>}
+// box{<-1,-1.75,-1>,<1,0,1>}
+ }//------------------------------------
+
+ #declare Egg_lowerpart =
+intersection{
+ sphere{<0,0,0>,1 scale<1,1,1>}
+ box{<-1,-1,-1>,<1,0,1>}
+//Alternativly with "difference":
+//difference{
+// sphere{<0,0,0>,1 scale<1,1,1>}
+// box{<-1,0,-1>,<1,1,1>}
+ }//------------------------------------
+
+ #declare Egg =
+union{ object{Egg_upperpart }
+       object{Egg_lowerpart}
+       texture{Egg_Tex}
+ }//--------------------------// <--3
+object{ Egg_upperpart
+        translate<-1.1,1.1,0>
+        texture{Egg_Tex}}
+object{ Egg_lowerpart
+        translate<-1.1,0.9,0>
+        texture{Egg_Tex}}
+object{ Egg       translate< 1.1,1.0,0>}
+//-------------------------------- end
+
+//----------------------------//from <--1
+#declare Egg_Tex =
+ texture{pigment{color rgb<1,0.85,0.0>}
+         normal {bumps 0.75 scale 0.1}
+         finish {diffuse 0.9 phong 1}}
+                              //to <--2
+//--------------------------//from <--3
+union{
+object{ Egg scale 0.4 translate<-1,1,-1>}
+object{ Egg scale 0.4 translate< 0,1,-1>}
+object{ Egg scale 0.4 translate< 1,1,-1>}
+object{ Egg scale 0.4 translate<-1,1, 0>}
+object{ Egg scale 0.4 translate< 0,1, 0>}
+object{ Egg scale 0.4 translate< 1,1, 0>}
+object{ Egg scale 0.4 translate<-1,1, 1>}
+object{ Egg scale 0.4 translate< 0,1, 1>}
+object{ Egg scale 0.4 translate< 1,1, 1>}
+rotate<-40,40,0>
+translate<0.3,0.7,-0.1>
+}//---------------------------------- end

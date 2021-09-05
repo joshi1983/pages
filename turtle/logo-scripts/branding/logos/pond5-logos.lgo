@@ -1,0 +1,69 @@
+make "pondBlueColor "#0080c6
+
+; Inspired by favicon/browser tab icon at:
+; https://www.pond5.com
+to pond5SmallLogo :height
+	localmake "oldState turtleState
+	setPenSize :height * 0.027
+	localmake "halfHeight (:height - penSize) / 2
+	localmake "upperWidth :halfHeight * 1.082
+	setLineCap "butt
+	setLineJoinStyle "miter
+	jumpLeft :height * 0.395
+	setPenColor "#1d84fa
+	jumpForward penSize / 2
+	setFillColor transparent
+	polyStart
+	jumpForward :halfHeight
+	jumpRight :upperWidth + :height * 0.257
+	jumpForward :halfHeight
+	jumpLeft :upperWidth
+	jumpBackward :halfHeight * 2
+	polyEnd
+	setTurtleState :oldState
+end
+
+to pond5StarLogoCustomColors :height :color :starColor
+	localmake "oldState turtleState
+	localmake "circleRadius :height * 0.19
+	localmake "starRadius (:height - 2 * :circleRadius) / (1 + cos 180 / 5)
+	jumpForward :height - (:circleRadius + :starRadius)
+	localmake "center pos
+	setPenSize 0
+	setFillColor :color
+	repeat 5 [
+		jumpForward :starRadius
+		circle :circleRadius
+		jumpTo :center
+		right 360 / 5
+	]
+	setFillColor :starColor
+	regularStar :starRadius 5
+	setTurtleState :oldState
+end
+
+; Inspired by logo shown in various places like:
+; https://www.youtube.com/watch?v=3svLwqQUw8g
+; and
+; https://www.footagesecrets.com/?attachment_id=2730
+to bluePond5StarLogo :height
+	pond5StarLogoCustomColors :height :pondBlueColor "#bfff
+end
+
+; Inspired by logo shown in various places like
+; https://www.stockphotosecrets.com/news/pond5-now-has-the-largest-video-library-on-the-internet.html
+; and https://techcrunch.com/2014/07/16/pond5-raises-61-million-series-a-led-by-accel-partners-stripes-group/
+; This might be an older logo since I don't see it on pond5.com as I type this in 2024.
+to whitePond5StarLogo :height
+	stripes :height * 2 :height [:pondBlueColor]
+	pond5StarLogoCustomColors :height "white mix :pondBlueColor transparent 0.6
+end
+
+make "height 100
+make "separation :height * 4
+jumpLeft :separation
+pond5SmallLogo :height
+jumpRight :separation
+bluePond5StarLogo :height
+jumpRight :separation
+whitePond5StarLogo :height

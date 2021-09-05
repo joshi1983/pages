@@ -1,0 +1,84 @@
+; height should be height of the middle arrow from base to tip
+to barbadosTrident :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "arcAngle1 30
+	localmake "middleArrowWidth :height * 0.2817332
+	localmake "arcRadius1 :middleArrowWidth / 2 / sin :arcAngle1 / 2
+	localmake "arcAngle2 25
+	localmake "straightAngle1 118.4906
+	localmake "straightLength1 (:middleArrowWidth / 2) / cos 180 - :straightAngle1
+	localmake "arcRadius2 :straightLength1 / 2 / sin :arcAngle2 / 2
+	localmake "arcsInfo [
+		[-4.65 2]
+		[95 0.004]
+		[-18.96 1.2]
+		[134 0.008]
+		[-8.3 0.3]
+		[-146.3 0.0009]
+		[-37.5 0.4]
+		[-134.49 0.004]
+		[35.38 1.048]
+		[-93 0.0005]
+		[-8 0.7]
+		[12 0.6]
+	]
+	setPenSize :height * 0.1056757
+	setLineCap "butt
+	setPenColor "black
+	forward :height * 0.8255917
+
+	; draw middle arrow head
+	setPenSize 0
+	jumpLeft :middleArrowWidth / 2
+	jumpBackward :height * 0.08513914
+	setFillColor penColor
+	setHeading :oldHeading + 90 - :arcAngle1 / 2
+	polyStart
+	arcRight :arcAngle1 :arcRadius1
+	left (:arcAngle1 + :arcAngle2) / 2 + :straightAngle1
+	arcRight :arcAngle2 :arcRadius2
+	setHeading :oldHeading - :arcAngle2 / 2 - 270 + :straightAngle1
+	arcRight :arcAngle2 :arcRadius2
+	polyEnd
+
+	; draw left side
+	localmake "angle1 95
+	setTurtleState :oldState
+	jumpForward :height * 0.374
+	localmake "sideStartPos pos
+	setFillColor "black
+	left :angle1
+	setPenSize 0
+	polyStart
+	arcsRight :arcsInfo :height
+	polyEnd
+
+	; draw right side
+	setTurtleState :oldState
+	jumpTo :sideStartPos
+	right :angle1
+	setPenSize 0
+	setFillColor "black
+	polyStart
+	arcsLeft :arcsInfo :height
+	polyEnd	
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/List_of_Barbadian_flags#/media/File:Flag_of_Barbados.svg
+to barbadosFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 3 / 2
+	jumpLeft :width / 2
+	jumpForward :height / 2
+	right 90
+	stripes :height :width ["#00267f "#ffc726 "#00267f]
+	setTurtleState :oldState
+	jumpForward :height * 0.25775
+	barbadosTrident :height * 0.484501
+	setTurtleState :oldState
+end
+
+barbadosFlag 100

@@ -1,0 +1,52 @@
+to drawCircles :points :height
+	localmake "oldPos pos
+	localmake "dotRadius :height * 0.031
+	repeat count :points [
+		localmake "point item repcount :points
+		jumpRight :height * first :point
+		jumpForward :height * last :point
+		circle :dotRadius
+		jumpTo :oldPos		
+	]
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Asia_Times#/media/File:Asia_Times_logo.svg
+to asiaTimesLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	setPenSize :height * 0.032
+	localmake "radius1 (:height - penSize) / 2
+	localmake "radius2 :radius1 * 63.5 / 62.5
+	localmake "aPoints [
+		[-0.32 0.376] [-0.064 0.376]
+		[-0.256 0.5] [-0.128 0.5]
+		[-0.192 0.6245]
+	]
+	localmake "tPoints [
+		[0.193 0.377] [0.193 0.5] [0.193 0.6245]
+		[0.064 0.6245] [0.32 0.6245]
+	]
+	jumpForward :height / 2
+	localmake "center pos
+	setPenColor "#05a2ff
+	setFillColor "white
+	ellipse :radius2 :radius1
+	setPenSize 0
+	setFillColor penColor
+	left 27.5
+	jumpForward :radius1
+	setHeading (towards :center) - 90
+	polyStart
+	arcRight 180 :radius1
+	polyEnd
+	jumpTo :oldPos
+	setHeading :oldHeading
+	drawCircles :aPoints :height
+	setFillColor "white
+	drawCircles :tPoints :height
+	setTurtleState :oldState
+end
+
+asiaTimesLogo 100

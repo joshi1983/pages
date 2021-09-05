@@ -1,0 +1,30 @@
+; Inspired by logo at:
+; https://visionclinicsydney.com.au/
+to visionClinicSydneyLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "colors ["#e22901 "#f6a002 "#fbde00 "#62cc1d
+		"#03a1b7 "#0371c5 "#0371c3 "#b3056d]
+	localmake "triangleWidth :height * 0.4
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	setFillColor "black
+	circle :height * 0.09
+	setFillColor "white
+	right 45
+	jumpForward :height * 0.04
+	circle :height * 0.03
+	repeat count :colors [
+		setHeading :oldHeading + (repcount - 1) * 360 / count :colors
+		setFillColor item repcount :colors
+		jumpTo :center
+		jumpForward (:height - :triangleWidth) / 2
+		jumpRight :height * 0.095
+		left 90
+		isoTriangle :triangleWidth :height * 0.2
+	]
+	setTurtleState :oldState
+end
+
+visionClinicSydneyLogo 100

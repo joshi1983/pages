@@ -1,0 +1,36 @@
+to colorsToCircleGradient :radius :colors
+	localmake "colorStops createPList
+	repeat count :colors [
+		setProperty "colorStops repRatio item repcount :colors
+	]
+	output createRadialGradient pos :radius :colorStops
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Logo_(programming_language)#/media/File:Remi_turtlegrafik.png
+; Some Logo code is shared with that image but it doesn't express 
+; the gradient and colors.
+; This expresses everything shown in the image
+to circleOfCircles :height
+	localmake "oldState turtleState
+	localmake "numCircles 30
+	localmake "radius1 :height / 2
+	localmake "tinyRadius :radius1 / 2
+	setPenColor "#db4500
+	jumpForward :height / 2
+	setPenSize 0
+	setFillGradient colorsToCircleGradient :radius1 [ "#A83500 "#B83E00 "#CB4200 "#A33400 "#401000]
+	circle :radius1
+	setFillColor transparent
+	setPenGradient colorsToCircleGradient :radius1 ["#FFBD9E "#FF5100 "#db4500 "#FFBD9E]
+	setPenSize :height * 0.002
+	left 5
+	repeat :numCircles [
+		circleLeft :tinyRadius
+		right 360 / :numCircles
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "#401000
+circleOfCircles 100

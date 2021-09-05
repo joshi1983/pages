@@ -1,0 +1,35 @@
+; Inspired by logo at:
+; https://oceaninfinity.com
+to oceanInfinityLogo :height
+	localmake "oldState turtleState
+	localmake "angle1 150
+	localmake "startAngle 15
+	localmake "lines1 [
+		[-:startAngle 1.55]
+		[-10 0.5]
+		[-10 0.34]
+		[-40 0.445]
+	]
+	localmake "lastArc [-75 0.445]
+	localmake "thickness :height * 0.192
+	queue2 "lines1 :lastArc
+
+	setPenSize :thickness
+	localmake "size :height - penSize / 2
+	setPenColor "white
+	jumpForward :height / 2
+	setLineCap "round
+	left :angle1
+	arcLines 
+		(combine :lines1 reverse :lines1 flipAngles :lines1 flipAngles [:lastArc])
+	:size
+	arcLeft 27 :size * 0.4
+	setPenSize 0
+	arcLeft 32 :size * 0.6
+	setFillColor penColor
+	circle :thickness * 0.55
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+oceanInfinityLogo 100

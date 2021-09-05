@@ -1,0 +1,147 @@
+; Inspired by reddit branding graphics for the website:
+; https://www.reddit.com/
+
+to redditAntenna :size
+	localmake "oldState turtleState
+	jumpForward :size * 0.81
+	setLineJoinStyle "round
+	right 17.7
+	forward :size * 0.174
+	right 85.5
+	forward :size * 0.1425
+	left 90
+	circleRight :size * 0.053
+	setTurtleState :oldState
+end
+
+to redditEars :size
+	localmake "oldState turtleState
+	localmake "earSeparation1 :size * 0.2767
+	localmake "earRadius :size * 0.0691
+	jumpForward :size * 0.7035
+	jumpRight :earSeparation1
+	circle :earRadius
+	jumpLeft :earSeparation1 * 2
+	circle :earRadius
+	setTurtleState :oldState
+end
+
+to redditFace :size
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "width :size * 0.31
+	localmake "height :size * 0.2
+	localmake "arcAngle1 32.5
+	localmake "arcRadius1 :size * 0.1
+	localmake "eyeSeparation1 :size * 0.1083
+	localmake "eyeRadius :size * 0.0495
+	jumpForward :size * 0.612
+	ellipse :width :height
+	jumpBackward :size * 0.0925
+	jumpLeft :size * 0.107
+	right 135
+	setLineCap "round
+
+	; lips
+	arcLeft :arcAngle1 :arcRadius1
+	arcLeft 25 :size * 0.265
+	arcLeft :arcAngle1 :arcRadius1
+
+	setFillColor "#fe2200
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :size * 0.6505
+	jumpRight :eyeSeparation1
+	setPenSize 0
+	; eyes
+	circle :eyeRadius
+	jumpLeft :eyeSeparation1 * 2
+	circle :eyeRadius
+	setTurtleState :oldState
+end
+
+to redditArms :size
+	localmake "oldState turtleState
+	localmake "armSeparation :size * 0.081
+	localmake "armRadius :size * 0.145
+	jumpForward :size * 0.287
+	jumpRight :armSeparation
+	circle :armRadius
+	jumpLeft :armSeparation * 2
+	circle :armRadius
+	setTurtleState :oldState
+end
+
+to redditFeet :size
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "size1 :size * 0.21
+	localmake "arcRadius1 :size * 0.061
+	localmake "arcRadius2 :size * 0.089
+	localmake "arcAngle1 70
+	localmake "arcAngle2 90
+	localmake "angle1 78
+	jumpForward penSize / 2
+	localmake "pos1 pos
+	setLineJoinStyle "round
+	polyStart
+	left 90
+	jumpForward :size1
+	right :angle1
+	arcRight :arcAngle1 :arcRadius1	
+	arcRight :arcAngle2 :arcRadius2	
+	polyEnd
+	jumpTo :pos1
+	setHeading :oldHeading + 90
+	polyStart
+	jumpForward :size1
+	left :angle1
+	arcLeft :arcAngle1 :arcRadius1
+	arcLeft :arcAngle2 :arcRadius2
+	polyEnd
+	setTurtleState :oldState
+end
+
+to redditChest :size
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "arcAngle1 20
+	localmake "arcAngle2 20
+	localmake "arcAngle3 25
+	localmake "arcRadius1 :size * 0.68
+	localmake "arcRadius2 :size * 0.38
+	localmake "arcRadius3 :size * 0.18
+	jumpForward :size * 0.43
+	jumpLeft :size * 0.147
+	left 171
+	setFillColor "white
+	polyStart
+	arcLeft :arcAngle1 :arcRadius1
+	arcLeft :arcAngle2 :arcRadius2
+	arcLeft :arcAngle3 :arcRadius3
+	localmake "angle1 abs (heading - :oldHeading - 90)
+	left :angle1
+	jumpForward :size * 0.08
+	left :angle1
+	arcLeft :arcAngle3 :arcRadius3
+	arcLeft :arcAngle2 :arcRadius2
+	arcLeft :arcAngle1 :arcRadius1
+	polyEnd	
+	setTurtleState :oldState
+end
+
+to redditAlien :size
+	setPenSize :size * 0.028
+	setPenColor "black
+	setFillColor "white
+	redditArms :size
+	redditFeet :size
+	redditChest :size
+	redditAntenna :size
+	redditEars :size
+	redditFace :size
+end
+
+setScreenColor "#d3f3fe
+redditAlien 100

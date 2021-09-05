@@ -1,0 +1,134 @@
+make "ohioRed "#bf0a30
+
+to offsetsToPositions :offsets :scale
+	localmake "oldPos pos
+	localmake "result []
+	repeat count :offsets [
+		localmake "offset item repcount :offsets
+		localmake "offset vectorScale :offset :scale
+		jumpRight first :offset
+		jumpForward item 2 :offset
+		queue2 "result pos
+		jumpTo :oldPos
+	]
+	output :result
+end
+
+to drawBurgeeStripes :height
+	localmake "oldState turtleState
+	localmake "width1 13 / 8 / 2
+	localmake "rightHeight1 5 / 8 / 2
+	localmake "midWidth 7 / 16
+	localmake "points1 [
+		[-:width1 0.5] [:width1 :rightHeight1]
+		[:midWidth 0] [:width1 -:rightHeight1]
+		[-:width1 -0.5]
+	]
+	localmake "thickness1 1 / 16
+	localmake "midStripeX1 mix :width1 :midWidth :thickness1 / :rightHeight1
+	localmake "midStripePoints [
+		[-:width1 :thickness1] [:midStripeX1 :thickness1]
+		[:midWidth 0] [:midStripeX1 -:thickness1]
+		[-:width1 -:thickness1]
+	]
+	; There is likely a way to calculate this
+	; number from simple fractions but I didn't
+	; quickly find a way.
+	localmake "rightMixRatio 0.35368255
+	
+	localmake "topStripePoints [
+		[-:width1 0.5] [:width1 :rightHeight1]
+		mix item 3 :points1 item 2 :points1  :rightMixRatio
+		[-:width1 0.37417068]
+		; The 0.37... is likely calculatable from rightMixRatio.
+		; I just didn't spend the time to.
+	]
+	setPenSize 0
+	setFillColor "white
+	jumpForward :height / 2
+	localmake "points offsetsToPositions :points1 :height
+	polygon :points
+	localmake "points offsetsToPositions :midStripePoints :height
+	setFillColor :ohioRed
+	polygon :points
+	localmake "points offsetsToPositions :topStripePoints :height
+	polygon :points
+
+	; Negate the y part of the points to turn 
+	; the top stripe into the bottom stripe.
+	repeat count :topStripePoints [
+		localmake "p item repcount :topStripePoints
+		setItem 2 "p -last :p
+	]
+	localmake "points offsetsToPositions :topStripePoints :height
+	polygon :points
+
+	setTurtleState :oldState
+end
+
+to drawOhioTriangularCanton :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "starRadius :height * 0.0391
+	localmake "angleSeparation 29.135
+	localmake "angleSeparation2 19.3
+	localmake "gap1 :height * 0.24645
+	localmake "gap2 :height * 0.371
+	jumpForward :height / 2
+	jumpLeft :height * 13 / 8 / 2
+	setPenSize 0
+	right 90
+	setFillColor "#001c5a
+	isoTriangle :height :height
+	setPenColor "white
+	setFillColor :ohioRed
+	setPenSize :height * 0.0625
+	jumpForward :height * 0.3091
+	circle :height * 0.156
+	localmake "center pos
+	setPenSize 0
+	setFillColor "white
+	left 180 - :angleSeparation * 4
+	repeat 9 [
+		jumpForward :gap1
+		regularStar :starRadius 5
+		left :angleSeparation
+		jumpTo :center
+	]
+	setHeading :oldHeading + 90
+	jumpForward :gap1
+	regularStar :starRadius 5
+	jumpForward :height * 0.25
+	regularStar :starRadius 5
+	jumpTo :center
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		setHeading :oldHeading + 90 - :sign * 121.7 - :angleSeparation2 / 2
+		repeat 2 [
+			jumpForward :gap2
+			regularStar :starRadius 5
+			right :angleSeparation2			
+			jumpTo :center
+		]
+	]
+	setHeading :oldHeading + 90 - :angleSeparation2 / 2
+	repeat 2 [
+		jumpForward :gap2
+		regularStar :starRadius 5
+		right :angleSeparation2			
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by:
+; https://en.wikipedia.org/wiki/Flag_of_Ohio#/media/File:Flag_of_Ohio.svg
+to ohioStateFlag :height
+	localmake "oldState turtleState
+	drawBurgeeStripes :height
+	drawOhioTriangularCanton :height
+	setTurtleState :oldState
+end
+
+setScreenColor "#000
+ohioStateFlag 100

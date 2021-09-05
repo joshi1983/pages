@@ -1,0 +1,20 @@
+REM copied from:
+REM Holger Palmroth's facebook post at:
+REM https://www.facebook.com/photo?fbid=2422611318183299&set=pcb.4277366392574757
+10 e = EXP 1
+20 i = 2*e/360
+30 f= -e
+40 s = f+i
+50 p3= PI * PI * PI
+60 sc=40
+62 ox=128:oy=60
+70 INK 2
+80 PLOT ox+f*sc, oy+ SQR (e) * sc
+90 FOR x=s TO e step i
+100 y= SIN (p3*x) * ( SQR (EXP 2 - x*x)/2)+ SQR (ABS (x))
+110 PROC DRWto( ox+x*sc, oy+y*sc)
+120 NEXT x
+130 STOP
+140 DEFPROC DRWto(xc, yc)
+150 DRAW xc - PEEK 23677, yc - PEEK 23678
+160 ENDPROC

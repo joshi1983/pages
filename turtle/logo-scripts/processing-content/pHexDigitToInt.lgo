@@ -1,0 +1,14 @@
+to pHexDigitToInt :hexDigit
+	localmake "a ascii :hexDigit
+	if and :a <= ascii '9' :a >= ascii '0' [
+		output :a - ascii '0'
+	]
+	if and :a <= ascii 'f' :a >= ascii 'a' [
+		output :a + 10 - ascii 'a'
+	]
+	if and :a <= ascii 'F' :a >= ascii 'A' [
+		output :a + 10 - ascii 'A'
+	]
+	; hexDigit is not really a hex digit.
+	output 0 ; weird case but make sure result is an int anyway.
+end

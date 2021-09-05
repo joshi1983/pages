@@ -1,0 +1,59 @@
+to drawEllipticalDash :width :height
+	localmake "oldState turtleState
+	localmake "ellipseRadius1 :width * 0.22
+	jumpForward :ellipseRadius1
+	setPenSize 0
+	ellipse :width / 2 :ellipseRadius1
+	setLineCap "butt
+	setPenSize :width
+	setPenColor fillColor
+	forward :height - :ellipseRadius1 * 2
+	setPenSize 0
+	ellipse :width / 2 :ellipseRadius1
+	setTurtleState :oldState
+end
+
+; Implemented to be similar to:
+; https://www.givesendgo.com
+to giveSendGoLogo :height :backgroundColor :color
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "offsetY 0.54
+	localmake "gap 0.182
+	localmake "lines [
+		[0 1 - :offsetY - :gap :gap]
+		[45 0.2 :gap]
+		[90 0.28 :gap]
+		[135 0.2 :gap]
+		[180 :offsetY - :gap :gap]
+		[225 0.417 -0.035]
+		[270 0.46 0]
+		[315 0.417 -0.035]
+	]
+	localmake "thickness :height * 0.093
+	if :backgroundColor <> transparent [
+		stripes :height * 2 :height [:backgroundColor]
+	]
+	jumpForward :height * :offsetY
+	localmake "center pos
+	setFillColor :color
+	repeat count :lines [
+		localmake "lineInfo item repcount :lines
+		setHeading :oldHeading + first :lineInfo
+		jumpForward :height * item 3 :lineInfo
+		drawEllipticalDash :thickness :height * item 2 :lineInfo
+		jumpTo :center
+	]
+	setHeading :oldHeading
+	setPenSize 0
+	jumpRight :height * 0.023
+	circle :height * 0.03
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 5
+jumpLeft :separation / 2
+giveSendGoLogo :height "black "white
+jumpRight :separation
+giveSendGoLogo :height transparent "#881817

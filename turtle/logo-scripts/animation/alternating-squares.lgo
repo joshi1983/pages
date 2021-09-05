@@ -1,0 +1,63 @@
+make "colors ["black "purple "blue "green "#8f0 "yellow "orange "red]
+make "scaleFactor interpolateRatio easeOut animation.clampedTimeRatio
+
+to squaresRecursive :height :min :max
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "center pos
+	localmake "scale (:max - :min) * :scaleFactor
+	localmake "minBase (mix :min :max 0.5) - :scale / 2
+	ifelse :height < 0.5 [
+		localmake "val clamp (:min + :max) / 2 0 1
+		setFillColor mixItems2 :colors :val
+		localmake "height1 :height * 1.1 ; a little larger than height to reduce
+		; artifacts from antialiasing showing background colours between neighbouring squares.
+		setPenSize 0
+		square :height1
+	] [
+		repeat 4 [
+			localmake "baselineValue :minBase + (modulo repcount 2) * :scale
+			localmake "min1 :baselineValue - :scale / 2
+			localmake "max1 :baselineValue + :scale / 2
+			setHeading :oldHeading + 45 + repcount * 90
+			jumpForward :height / 4 / cos 45
+			left 45
+			squaresRecursive :height / 2 :min1 :max1
+			jumpTo :center
+		]
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by an image at:
+; https://www.facebook.com/photo/?fbid=10234930296610707
+;
+; A very similar animation was exported to:
+; https://www.facebook.com/share/v/1GLWRuGQ6N/
+;
+to squares :height
+	localmake "oldState turtleState
+	jumpForward :height / 2
+	squaresRecursive :height 0 1
+
+	setTurtleState :oldState
+end
+
+squares 100
+
+to animation.snapshotstyle
+	output createPList2 [
+		["position.y 50]
+		["zoom.scale 7]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 5
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+		["thumbnailTime 2]
+	]
+end

@@ -1,0 +1,108 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_the_United_Arab_Emirates#/media/File:Flag_of_the_United_Arab_Emirates.svg
+to unitedArabEmiratesFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 2
+	localmake "redWidth :width * 3 / 12
+	stripes :width :height ["black "white "#00732f]
+	jumpLeft (:width - :redWidth) / 2
+	stripes :redWidth :height ["red]
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_the_United_Arab_Emirates#/media/File:Flag_of_the_Trucial_States_(1968–1971).svg
+; The star in the following code doesn't exactly line up with the SVG.
+; The difference might be a mistake on the behalf of the SVG author, though.
+; I couldn't find a construction sheet for the Trucial States flag.
+to trucialStatesFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 50 / 27
+	localmake "redColor "#bf0000
+	localmake "redThickness :height * 5 / 18
+	localmake "starRadius :height * 0.15
+	stripes :width :height ["white]
+	repeat 2 [
+		jumpForward :height
+		right 180
+		stripes :width :redThickness [:redColor]
+	]
+	jumpForward :height / 2 - :starRadius * (1 - cos 180 / 7) / 2
+	setPenSize 0
+	setFillColor "#90a95a
+	regularStar :height * 0.15 7
+	setTurtleState :oldState
+end
+
+to drawMoonCrescent :radius
+	localmake "oldState turtleState
+	localmake "outerArcAngle 270
+	localmake "innerArcAngle 240
+	localmake "chordLength :radius * 2 * sin :outerArcAngle / 2
+	localmake "innerArcRadius :chordLength / 2 / sin :innerArcAngle / 2	
+	right :outerArcAngle / 2 - 90
+	jumpForward :radius
+	left 90
+	polyStart
+	arcLeft :outerArcAngle :radius
+	left 180 - (:outerArcAngle - :innerArcAngle) / 2
+	arcRight :innerArcAngle :innerArcRadius
+	polyEnd
+	setTurtleState :oldState
+end
+
+to drawMoonCrescents :height
+	localmake "oldState turtleState
+	localmake "outerSeparationRatio 0.582
+	localmake "separations vectorScale [:outerSeparationRatio 0.642 :outerSeparationRatio] :height
+	localmake "outerOffset 0.07
+	localmake "offsets vectorScale [:outerOffset 0.055 :outerOffset] :height
+	localmake "separationY :height * 0.25
+	localmake "moonRadius :height * 0.057
+	jumpBackward :separationY
+	jumpLeft :height * 0.015
+	repeat 3 [
+		localmake "pos1 pos
+		localmake "numCrescents 2 + remainder repcount 2
+		localmake "separation item repcount :separations
+		jumpLeft :separation * (:numCrescents - 1) / 2 + item repcount :offsets
+		repeat :numCrescents [
+			drawMoonCrescent :moonRadius
+			jumpRight :separation
+		]
+		jumpTo :pos1
+		jumpForward :separationY
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Omani_Empire#/media/File:Ya'ariba_Dynasty's_ensign.jpg
+to yaaribaDynastysEnsign :height
+	localmake "oldState turtleState
+	localmake "width :height * 1658 / 900
+	localmake "greenColor "#037e01
+	localmake "redColor "#f61b2f
+	localmake "yellowColor "#f8f301
+	localmake "ryyg [:redColor :yellowColor :yellowColor :greenColor]
+	stripes :width :height (combine [:greenColor "white] :ryyg :ryyg :ryyg ["white :redColor])
+	setPenSize 0
+	jumpForward :height / 2
+	setFillColor :greenColor
+	drawMoonCrescents :height
+	jumpRight :width / 2
+	left 90
+	setFillColor "white
+	isoTriangle :height :height * 0.33
+	setTurtleState :oldState
+end
+
+setScreenColor "#ddd
+make "height 100
+make "separation :height * 4
+jumpLeft :separation
+unitedArabEmiratesFlag :height
+jumpRight :separation
+trucialStatesFlag :height
+jumpRight :separation
+yaaribaDynastysEnsign :height

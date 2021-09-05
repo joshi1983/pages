@@ -1,0 +1,266 @@
+make "vanishingYRatio 0.43
+
+to drawCitgoSignAndBuilding :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "w :height * 0.32
+	localmake "h :height * 0.27
+	localmake "colors ["#d40608 "#f33505 "#e90520 ]
+	localmake "triHeight :h * 0.2
+	localmake "triWidth :triHeight * 2 * tan 60
+	localmake "supportHeight :h * 0.16
+	localmake "supportThickness :h * 0.08
+	localmake "supportSeparation :w * 0.65
+	localmake "buildingWidth :h * 1.5
+	localmake "buildingHeight :height * 0.6
+	jumpLeft :height * 0.325
+	jumpForward :height * 0.821
+	setFillColor "white
+	setPenColor "black
+	setPenSize :h * 0.02
+	roundRect :w :h :h * 0.1
+	localmake "rectCenter pos
+	setPenSize 0
+	jumpForward :h * 0.07
+	repeat 3 [
+		jumpBackward :triHeight
+		setFillColor item repcount :colors
+		isoTriangle :triWidth :triHeight
+		jumpForward :triHeight
+		right 360 / 3
+	]
+	setFillColor "#035aa9
+	setPenColor "black
+	setPenSize :h * 0.003
+	setFontSize :h * 0.28
+	jumpBackward :h * 0.5
+	jumpLeft :w * 0.4
+	right 90
+	setFontFamily "Arial
+	label "CITGO
+	jumpTo :rectCenter
+	setHeading :oldHeading
+	jumpBackward :h / 2
+	localmake "bottom pos
+	jumpLeft (:supportSeparation + :supportThickness) / 2
+	setPenSize :h * 0.02
+	right 180
+	repeat 2 [
+		forward :supportHeight
+		jumpLeft :supportThickness
+		backward :supportHeight
+		jumpLeft :supportSeparation - :supportThickness
+	]
+	setHeading :oldHeading
+	jumpTo :bottom
+	jumpBackward :supportHeight + :buildingHeight / 2
+	jumpLeft :buildingWidth * 0.07
+	setFillColor "#ccc
+	rect :buildingWidth :buildingHeight
+	setTurtleState :oldState
+end
+
+to drawTree :height
+	localmake "oldState turtleState
+	localmake "topRadius :height * 0.52
+	localmake "angleStep 20
+	localmake "branchAngle 40
+	localmake "branchRadius :topRadius * 0.22
+	setPenSize :height * 0.04
+	setPenColor "brown
+	forward :height - :topRadius
+	localmake "topBranchStartPos pos
+	left :angleStep * 3
+	setPenSize :height * 0.02
+	repeat 7 [
+		localmake "heading1 heading
+		setPenColor mix "brown "green 0.5
+		forward :topRadius
+		repeat 2 [
+			jumpBackward :branchRadius
+			left :branchAngle
+			repeat 2 [
+				setPenColor "green
+				forward :branchRadius
+				jumpBackward :branchRadius
+				right :branchAngle * 2
+			]
+			setHeading :heading1
+			jumpBackward :topRadius * 0.2
+		]
+		jumpTo :topBranchStartPos
+		setHeading :heading1 + :angleStep
+	]
+	setTurtleState :oldState
+end
+
+to drawRoadAndSidewalks :vanishingY
+	localmake "oldState turtleState
+	localmake "crackY :vanishingY
+	setPenSize :vanishingY * 0.015
+	setPenColor "black
+	setFillColor "white
+	setLineJoinStyle "miter
+	localmake "sidewalkWidth :vanishingY * 3.5
+	jumpForward penSize / 2
+	isoTriangle :sidewalkWidth :vanishingY
+	jumpForward :vanishingY
+	localmake "vanishingPoint pos
+	repeat 10 [
+		localmake "crackWidth :sidewalkWidth * :crackY / :vanishingY
+		jumpBackward :crackY
+		
+		stripes :crackWidth :crackY * 0.01 ["black]
+		jumpTo :vanishingPoint
+		localmake "crackY :crackY * 0.7
+	]
+	jumpBackward :vanishingY
+	setFillColor "#aaa
+	isoTriangle :vanishingY * 1.8 :vanishingY
+	setTurtleState :oldState
+end
+
+to drawTrees :height
+	localmake "oldState turtleState
+	localmake "separationStart :height * 1.17
+	localmake "vanishingY :height * :vanishingYRatio
+	localmake "pairs [[0.1 0.366] [0.27 0.1] [0.03 0.07]]
+	localmake "y 0
+	drawRoadAndSidewalks :vanishingY
+	repeat count :pairs [
+		localmake "pair item repcount :pairs
+		localmake "dy :height * first :pair
+		localmake "y :y + :dy
+		localmake "separation :separationStart * (1 - :y / :vanishingY)
+		localmake "treeHeight :height * last :pair
+		jumpForward :dy
+		localmake "pos1 pos
+		jumpLeft :separation / 2
+		repeat 2 [
+			drawTree :treeHeight
+			jumpRight :separation
+		]
+		jumpTo :pos1
+	]
+	setTurtleState :oldState
+end
+
+to drawBuildingShape :depth :width :height :angle :color
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "oldPenSize penSize
+	localmake "totalWidth :depth + :width
+	localmake "height1 :height - :depth * tan :angle
+	localmake "depthLength :depth / cos :angle
+	localmake "angle1 90 - :angle
+	jumpLeft :totalWidth / 2
+	setLineJoinStyle "round
+	localmake "startPos pos
+	setPenSize 0
+	setFillColor :color
+	polyStart
+	jumpForward :height1
+	right :angle1
+	jumpForward :depthLength
+	setHeading :oldHeading
+	jumpRight :width
+	jumpBackward :height	
+
+	polyEnd
+	jumpTo :startPos
+	setPenSize :oldPenSize
+	forward :height1
+	right :angle1
+	forward :depthLength
+	setHeading :oldHeading
+	backward :height
+	jumpForward :height
+	right 90
+	forward :width
+	right 90
+	forward :height	
+	setTurtleState :oldState
+end
+
+to drawBackgroundBuildings :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "pointyBuildingArcs [
+		[0.495] [-45 0.05] [0.023] [45 0.01] [0.07]
+	]
+	setPenColor "black
+	setPenSize :height * 0.004
+	setFillColor "#eef
+	jumpLeft :height * 0.115
+	polyStart
+	arcLines :pointyBuildingArcs :height
+	right 180
+	arcLines reverse :pointyBuildingArcs :height
+	polyEnd
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpRight :height * 0.017
+	drawBuildingShape :height * 0.03 :height * 0.095 :height * 0.71 45 "white
+	jumpRight :height * 0.368
+	stripes :height * 0.005 :height * 0.88 ["black]
+	localmake "height1 :height * 0.83
+	jumpForward :height1 / 2
+	rect :height * 0.09 :height1
+	jumpBackward :height1 / 2
+	jumpLeft :height * 0.01
+	drawBuildingShape :height * 0.06 :height * 0.12 :height * 0.775 30 "#eee
+	jumpLeft :height * 0.16
+	drawBuildingShape :height * 0.1 :height * 0.2 :height * 0.59 43.5 "brown
+	jumpRight :height * 0.2
+	drawBuildingShape :height * 0.15 :height * 0.14 :height * 0.61 39 "#ddd
+	setTurtleState :oldState
+end
+
+to drawSkyAndGround :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "gradientRadius :height * 2
+	localmake "gapBelowGradient :height * 0.2
+	localmake "colorStops createPList2 [
+		[0 "#ddf] [0.8 "#8def] [1 "#0ddf]
+	]
+	jumpForward :gapBelowGradient + :gradientRadius
+	setPenGradient createRadialGradient pos :gradientRadius :colorStops	
+	jumpTo :oldPos
+	setPenSize :height * 3.5
+	setLineCap "butt
+	forward :height
+	jumpTo :oldPos
+	localmake "colorStops createPList2 [
+		[0 "#2b2] [0.8 "#82b2] [1 "#02b2]
+	]
+	jumpBackward :gradientRadius - :height * 0.5
+	setPenGradient createRadialGradient pos :gradientRadius :colorStops	
+	jumpTo :oldPos
+	forward :vanishingYRatio * :height
+	setTurtleState :oldState
+end
+
+; Inspired by an IBM Logo program written by Carole Jabbawy.
+; Carole's Logo drawing is shown in a book called
+; Beyond MINDSTORMS : Teaching with IBM Logo
+; The book was published in 1985.
+; The drawing is shown on page 360.
+; A digital version of the book can be borrowed at
+; https://archive.org/details/bwb_W8-ALH-433/page/360/mode/2up?view=theater
+; The drawing is figure 17.9.
+; I(Josh Greig) didn't see her code so I wrote some WebLogo 
+; code to draw something that looks similar.
+; Some colour and extra detail was added for more visual appeal
+to kenmoreSquare :height
+	localmake "oldState turtleState
+	drawSkyAndGround :height
+	drawBackgroundBuildings :height
+	drawCitgoSignAndBuilding :height
+	drawTrees :height
+	setTurtleState :oldState
+end
+
+setScreenColor "#888
+kenmoreSquare 100

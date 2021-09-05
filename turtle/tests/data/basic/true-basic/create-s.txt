@@ -1,0 +1,23 @@
+EXTERNAL
+
+SUB Create (l$(), codes$)
+
+    LIBRARY "{WB_c}WBsccs.trc"
+
+    ! This subroutine imitates the Unix Admin command,
+    ! which sets up an sccs-format file(s).
+
+    WHEN exception in
+         CALL WB_Create (l$(), codes$)
+         PRINT "Done with Create."
+    USE
+         IF extype = 1 then
+            PRINT extext$
+         ELSE
+            PRINT extype, extext$
+            PRINT exline$
+            PRINT "Error in Create."
+         END IF
+    END WHEN
+
+END SUB

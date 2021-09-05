@@ -1,0 +1,31 @@
+!
+!  SCAT2. Overlay two scatter plots.
+!  Data from Information Please Almanac 1989, p. 589.
+!
+LIBRARY "Stat2Lib.trc"
+
+DIM sus(32), y1(32), cant(12), y2(12)
+
+MAT READ sus, y1
+DATA 1410,1298,1280,1158,1074,1067,1013,1006,988,853,712,712,704,701,668,655
+DATA 655,610,610,608,600,564,549,533,525,525,500,497,488,488,488,486
+DATA 1981,1964,1937,1957,1973,1931,1966,1964,1966,1950,1973,1967,1936,1939,1970,1951
+DATA 1960,1951,1957,1959,1970,1929,1961,1926,1972,1977,1965,1924,1952,1903,1969,1883
+
+CALL ReserveLegend
+CALL SetText ("Longest Bridge Lengths", "Year Completed", "Meters")
+CALL SetYScale (0, 1500)
+CALL PlotScat (y1, sus, 5, 0, "black black black")
+
+MAT READ cant, y2
+DATA 549,521,510,501,480,457,427,376,369,366,366,360
+DATA 1917,1890,1974,1974,1958,1943,1936,1968,1955,1930,1976,1909
+
+CALL AddScatPlot (y2, cant, 10, 0, "black")
+
+CALL AddLegend ("Suspension", 3, 5, "black")
+CALL AddLegend ("Cantilever", 3, 10, "black")
+CALL DrawLegend
+
+END
+

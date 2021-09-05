@@ -1,0 +1,136 @@
+make "radiusRatio1 0.304
+
+to centralColors :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "radius1 :height * :radiusRatio1
+	localmake "radius2 :height * 0.2121
+	localmake "size1 :height * 0.13188
+	localmake "angle1 35.05
+	localmake "angle2 72.1
+	localmake "angle3 60
+	localmake "colors1 ["#AA182C "#005640 "#0A2240]
+	localmake "colors2 ["#E64B38 "#348F41 "#006098]
+	localmake "colors3 ["#E2E735 "#80BC00 "#54C8E8]
+	localmake "centers []
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	repeat count :colors1 [
+		setHeading :oldHeading - 78 + repcount * 360 / 3
+		setFillColor item repcount :colors1
+		polyStart
+		jumpForward :radius1
+		right 90
+		arcRight 360 / 3 :radius1
+		polyEnd
+		jumpTo :center
+	]
+	repeat count :colors2 [
+		setFillColor item repcount :colors2
+		setHeading :oldHeading - 78 + repcount * 360 / 3
+		jumpForward :size1
+		localmake "center2 pos
+		queue2 "centers :center2
+		jumpTo :center
+		left 60
+		localmake "size3 distanceToCircle :center2 :radius2
+		jumpForward :size3
+		setHeading (towards :center2) - 90
+		polyStart
+		arcRight :angle1 :radius2
+		setHeading (towards :center) - 90
+		arcRight :angle2 :radius1
+		setHeading (towards :center2) - 90
+		arcRight :angle1 :radius2
+		setHeading (towards :center2) - 10
+		; distance center2 isn't symmetrical but the main goal here is achieved.
+		; This asymmetry will be hidden by later shapes.
+		jumpForward distance :center2
+		polyEnd
+		jumpTo :center
+	]
+	repeat count :colors3 [
+		setHeading :oldHeading - 138 + repcount * 360 / 3
+		localmake "center2 item repcount :centers
+		localmake "index 1 + remainder (1 + repcount) 3
+		localmake "center3 item :index :centers
+		setFillColor item repcount :colors3
+		jumpForward :size3
+		setHeading (towards :center2) + 90
+		arcLeft :angle3 :radius2
+		right 180
+		polyStart
+		arcRight :angle3 :radius2
+		setHeading (towards :center3) - 90
+		arcRight :angle3 :radius2
+		polyEnd
+		localmake "center4 pos
+		jumpTo :center
+	]
+	setFillColor "white
+	jumpTo :center4
+	localmake "whiteArcAngle 54.8397
+	setHeading (towards :center) - 30 - :whiteArcAngle / 2
+	polyStart
+	repeat 3 [
+		arcRight :whiteArcAngle :radius2
+		right 120 - :whiteArcAngle
+	]
+	polyEnd
+
+	setTurtleState :oldState
+end
+
+to drawCircles :height
+	localmake "oldState turtleState
+	localmake "circlesInfo [
+		[0.009 0.4935] [0.0115 0.4765] [0.0038 0.46115]
+		[0.0038 0.3129]
+	]
+	localmake "waveLargeRadius :height * 0.493
+	localmake "numArcs 57
+	localmake "arcAngle1 83
+	localmake "arcAngle2 :arcAngle1 + 360 / :numArcs
+
+	; Something isn't correct about the following arcRadius calculation.
+	; The 1.106 is an ugly fix that roughly lines up the wavey pattern correctly.
+	localmake "arcRadius :waveLargeRadius * 1.106 * (sin 180 / :numArcs) * (sin :arcAngle1 / 2)
+	jumpForward :height / 2
+	setPenSize :height * 0.1905
+	setPenColor "white
+	setFillColor transparent
+	circle :height * :radiusRatio1 + penSize / 2
+	setPenColor "black
+	repeat count :circlesInfo [
+		localmake "circleInfo item repcount :circlesInfo
+		setPenSize :height * first :circleInfo
+		circle :height * last :circleInfo
+	]
+	; Draw the wavey pattern around the outer circle.
+	setPenColor "white
+	setPenSize :height * 0.0035
+	jumpForward :waveLargeRadius
+	right 90 + (:arcAngle1 + 180 / :numArcs) / 2
+	polyStart
+	repeat :numArcs [
+		arcLeft :arcAngle1 :arcRadius
+		arcRight :arcAngle2 :arcRadius
+	]
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by the official seal of 
+; Gwinnett County, Georgia
+; https://en.wikipedia.org/wiki/Gwinnett_County,_Georgia#/media/File:Gwinnett_County_Seal.svg
+; Their site is:
+; https://www.gwinnettcounty.com
+to gwinnettCountySeal :height
+	localmake "oldState turtleState
+	centralColors :height
+	drawCircles :height
+	setTurtleState :oldState
+end
+
+gwinnettCountySeal 100

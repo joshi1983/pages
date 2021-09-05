@@ -1,0 +1,75 @@
+make "leafAngle 41
+
+to adidasLeaf :height
+	arcPair :height :leafAngle * 2
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/File:Original_Adidas_logo.svg
+to adidasLogo1 :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "oldPos pos
+	localmake "leafShift :height * 0.094
+	localmake "sideHeight :height * 0.937
+	localmake "stripeThickness :height * 0.055
+	localmake "sideGap :height * 0.01
+	jumpLeft :leafShift
+	setPenSize 0
+	setFillColor "black
+	repeat 3 [
+		setHeading :oldHeading + (repcount - 2) * :leafAngle
+		ifelse repcount = 2 [
+			adidasLeaf :height
+		] [
+			jumpForward :sideGap
+			adidasLeaf :sideHeight
+			jumpBackward :sideGap
+		]
+		setHeading :oldHeading
+		jumpRight :leafShift
+	]
+	jumpTo :oldPos
+	setPenColor "white
+	setLineCap "butt
+	setPenSize :height * 1.3
+	jumpForward :height * 0.127
+	repeat 3 [
+		forward :stripeThickness
+		jumpForward :stripeThickness
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Adidas#/media/File:Adidas_Logo.svg
+to adidasLogo2 :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "lengths [1.152 0.745 0.352]
+	localmake "thickness :height * 0.385
+	localmake "step :height * 0.139
+	localmake "angle 30
+	jumpRight :height * 0.828
+	setFillColor "black
+	setPenSize 0
+	repeat count :lengths [
+		localmake "length item repcount :lengths
+		left :angle
+		polyStart
+		jumpForward :length * :height
+		jumpLeft :thickness
+		jumpBackward :length * :height - :thickness * tan :angle
+		polyEnd
+		setHeading :oldHeading
+		jumpLeft :step
+	]
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 4
+jumpLeft :separation / 2
+adidasLogo1 :height
+jumpRight :separation
+adidasLogo2 :height

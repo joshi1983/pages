@@ -1,0 +1,64 @@
+make "sizeRatio1 0.19
+
+to leaf :arcRadius :angle
+	polyStart
+	arcLeft :angle :arcRadius
+	localmake "endPos pos
+	localmake "endHeading heading
+	left :angle
+	arcLeft :angle :arcRadius
+	polyEnd
+	jumpTo :endPos
+	setHeading :endHeading
+end
+
+to arcSpiral :height :directionSign
+	localmake "oldState turtleState
+	localmake "angle 90 * :directionSign
+	repeat 10 [
+		leaf :height :angle
+		localmake "height :height * 0.62
+	]
+	setTurtleState :oldState
+end
+
+to arcShapes :height :directionSign
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "angle 90 * :directionSign
+	localmake "size1 :height * :sizeRatio1
+	jumpForward :height / 2
+	localmake "startPos pos
+	leaf :height / 2 :angle
+	leaf :size1 :angle
+	jumpTo :startPos
+	setHeading :oldHeading + 180
+	arcSpiral :height * 0.307 :directionSign
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://www.facebook.com/photo?fbid=10233323321369086
+; Ghee Beom Kim's profile is at:
+; https://www.facebook.com/ghee.b.kim
+to gheeBeomKimSymol :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	setPenSize 0
+	setFillColor "white
+	jumpForward :height / 2
+	localmake "center pos
+	repeat 4 [
+		setHeading :oldHeading + (floor (repcount - 0.7) / 2) * 180
+		localmake "directionSign sign (remainder repcount 2) - 0.5
+		arcShapes :height / 2 -:directionSign
+		right 90
+		jumpForward :height / 4
+		arcSpiral :height / 4 :directionSign
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+gheeBeomKimSymol 100

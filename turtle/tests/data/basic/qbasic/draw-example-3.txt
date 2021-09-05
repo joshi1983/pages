@@ -1,0 +1,10 @@
+REM copied from https://qb64.com/wiki/DRAW
+DO: sec$ = RIGHT$(TIME$, 2) ' get actual seconds from TIME$ function
+  degree$ = STR$(VAL(sec$) * -6) ' 60 second moves. TA uses negative angles for clockwise moves
+  PSET (175, 250), 9 ' stay at clock center
+  DRAW "TA" + degree$ + "U90" ' up becomes TA directional line
+  DO: LOOP UNTIL RIGHT$(TIME$, 2) <> sec$ ' wait for a new second value
+  IF INKEY$ <> "" THEN EXIT DO ' any key exit
+  PSET (175, 250), 0 ' set at clock center to erase line
+  DRAW "TA" + degree$ + "U90" ' erases old second hand line using color 0 from PSET
+LOOP

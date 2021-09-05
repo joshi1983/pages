@@ -1,0 +1,102 @@
+make "radius1Ratio 0.4070271923
+make "centerOffsetRatio 0.018
+make "centerY1Ratio 0.66389
+
+to drawPieces :logoHeight
+	localmake "oldHeading heading
+	localmake "oldPos pos
+	localmake "arcAngle1 119.5
+	localmake "arcAngle2a 103.575
+	localmake "arcAngle3 40.3071685
+	localmake "arcAngle2b 360 - :arcAngle2a - :arcAngle1 - :arcAngle3
+	localmake "arcAngle4 120.5
+	localmake "arcAngle5 95.1435
+	localmake "arcAngle6 360 - :arcAngle5 * 2 - :arcAngle4
+	localmake "arcRadius1 :logoHeight * 0.019
+	localmake "arcRadius2 :logoHeight * 0.34
+	localmake "separation :logoHeight * 0.215
+	localmake "size1 :logoHeight * 0.2269
+	localmake "size2 :logoHeight * 0.269345
+	; Draw right and left pieces.
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		setHeading :oldHeading
+		jumpRight :separation * :sign / 2
+		left 90 * :sign
+		polyStart
+		arcLeft :arcAngle1 * :sign :arcRadius1
+		jumpForward :size1
+		arcLeft :arcAngle2a * :sign :arcRadius1
+		arcLeft :arcAngle3 * :sign :arcRadius2
+		arcLeft :arcAngle2b * :sign :arcRadius1
+		polyEnd
+		jumpTo :oldPos
+	]
+
+	; Draw middle piece.
+	setHeading :oldHeading
+	jumpBackward :logoHeight * 0.021
+	right 90
+	arcRight :arcAngle4 / 2 :arcRadius1
+	left 180
+	polyStart
+	arcLeft :arcAngle4 :arcRadius1
+	jumpForward :size2
+	arcLeft :arcAngle5 :arcRadius1
+	arcLeft :arcAngle6 :arcRadius2
+	arcLeft :arcAngle5 :arcRadius1
+	polyEnd
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/File:Kroger_(2021)_logo.svg
+to krogerLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "wheelRadius :height * 0.0845
+	localmake "wheelSeparation :height * 0.69524
+	localmake "angle1 180 - arcSin :centerOffsetRatio / :radius1Ratio
+	localmake "arcAngle2 :angle1 - 90
+	localmake "radiusRatio2 (1 - :centerY1Ratio) / (1 - cos :arcAngle2)
+	localmake "thicknessRatio 0.13
+	localmake "thickness :height * :thicknessRatio
+	localmake "radiusRatio4 :radius1Ratio + :thicknessRatio
+	localmake "angle2 90 - arcSin :centerOffsetRatio / :radiusRatio4
+	localmake "radiusRatio3 (1 - :centerY1Ratio - :thicknessRatio) / (1 - cos :angle2)
+	localmake "x1 :height * 0.1
+	localmake "y1 :height * :centerY1Ratio
+	setFillColor "#21409a
+
+	; draw wheels.
+	jumpRight :x1 - :wheelSeparation / 2
+	jumpForward :wheelRadius
+	setPenSize 0
+	circle :wheelRadius
+	jumpRight :wheelSeparation
+	circle :wheelRadius
+
+	; Draw curvy cart shape.
+	jumpTo :oldPos
+	setLineCap "butt
+	jumpRight :x1 + :radius1Ratio * :height
+	jumpForward :y1
+	left :angle1
+	polyStart
+	arcsRight [[:arcAngle2 * 2 :radius1Ratio] [-:arcAngle2 :radiusRatio2]] :height
+	setHeading :oldHeading
+	jumpBackward :thickness
+	right 90
+	arcsRight [[:angle2 :radiusRatio3] [-:angle2 * 2 :radiusRatio4]] :height
+	polyEnd
+
+	; Draw what looks like orange or lemon pieces
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :y1
+	jumpRight :x1
+	drawPieces :height
+	setTurtleState :oldState
+end
+
+krogerLogo 100

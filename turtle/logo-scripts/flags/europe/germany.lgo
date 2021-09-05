@@ -1,0 +1,141 @@
+to germanyFlagCustomWidth :width :height
+	localmake "colors ["black "#D00 "#FFCE00]
+	stripes :width :height :colors
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Germany#/media/File:Flag_of_Germany.svg
+to germanyFlag :height
+	localmake "width :height * 5 / 3
+	germanyFlagCustomWidth :width :height
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Germany#/media/File:Flag_of_Germany_(Hanging).svg
+to germanyVerticalFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 3 / 5
+	jumpForward :height / 2
+	jumpLeft :width / 2
+	right 90
+	germanyFlag :width
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/File:Flag_of_Germany_(1867%E2%80%931918).svg
+to northGermanConfederationFlag :height
+	localmake "width :height * 3 / 2
+	localmake "colors ["#d00 "white "black]
+	stripes :width :height :colors
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Germany#/media/File:Merchant_flag_of_Germany_(1919%E2%80%931933).svg
+to merchantFlagOfWeimarRepublic :height
+	localmake "oldState turtleState
+	localmake "width :height * 3 / 2
+	localmake "germanyFlagHeight :height * 0.214
+	localmake "germanyFlagWidth :germanyFlagHeight * 1.51
+	localmake "whiteStripWidth :germanyFlagWidth * 0.03
+	northGermanConfederationFlag :height
+	jumpForward :height
+	jumpLeft (:width - :germanyFlagWidth) / 2
+	right 180
+	germanyFlagCustomWidth :germanyFlagWidth :germanyFlagHeight
+	jumpLeft (:germanyFlagWidth + :whiteStripWidth) / 2
+	stripes :whiteStripWidth :germanyFlagHeight ["white]
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://commons.wikimedia.org/wiki/File:Flag_of_Germany_(1935%E2%80%931945).svg
+; Follows construction sheet at:
+; https://upload.wikimedia.org/wikipedia/commons/5/51/Flag_of_Germany_%281935%E2%80%931945%29_-_Construction_sheet.svg
+to naziFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 5 / 3
+	localmake "swastikaSize1 :height * 24 / 120
+	localmake "swastikaSize2 :height * 30 / 120
+	stripes :width :height ["#d00]
+	jumpForward :height / 2
+	jumpLeft :width / 20
+	setPenSize 0
+	setFillColor "white
+	circle :height * 45 / 120
+	setLineCap "butt
+	setLineJoinStyle "miter
+	localmake "center pos
+	setPenSize :height * 12 / 120
+	right 45
+	repeat 4 [
+		forward :swastikaSize1
+		right 90
+		forward :swastikaSize2
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://commons.wikimedia.org/wiki/File:German_Olympic_flag_(1959-1968).svg
+to unitedTeamOfGermanyOlympicFlag :height
+	localmake "oldState turtleState
+	localmake "radius :height * 0.093
+	localmake "ringSeparation :radius * 2.38
+	localmake "ringSeparation2 :radius * 1.04
+	jumpForward :height
+	right 180
+	germanyFlag :height
+
+	; olympic rings
+	setPenColor "white
+	setPenSize :height * 0.0165
+	jumpForward (:height - :ringSeparation2) / 2
+	localmake "pos1 pos
+	jumpLeft :ringSeparation
+	repeat 3 [
+		circle :radius
+		jumpRight :ringSeparation
+	]
+	jumpTo :pos1
+	jumpForward :ringSeparation2
+	jumpLeft :ringSeparation / 2
+	repeat 2 [
+		circle :radius
+		jumpRight :ringSeparation
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Germany#/media/File:Flag_of_East_Germany_with_cut_out_emblem.svg
+; Emblem of East Germany removed after fall of Berlin Wall
+to germanyNoEmblemFlag :height
+	localmake "oldState turtleState
+	jumpForward :height
+	right 180
+	germanyFlag :height
+	jumpForward :height / 2
+	setPenSize 0
+	setFillColor "white
+	circle :height * 0.85 / 3
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 2.5
+jumpLeft :separation * 3
+germanyFlag :height
+jumpRight :separation
+germanyVerticalFlag :height
+jumpRight :separation
+northGermanConfederationFlag :height
+jumpRight :separation
+merchantFlagOfWeimarRepublic :height
+jumpRight :separation
+naziFlag :height
+jumpRight :separation
+unitedTeamOfGermanyOlympicFlag :height
+jumpRight :separation
+germanyNoEmblemFlag :height

@@ -1,0 +1,13 @@
+#absrectype (*, **) tree = * + ** # (*, **) tree # (*, **) tree
+#    with tiptree x = abstree(inl x)
+#    and comptree (y, t1, t2) = abstree(inr(y, t1, t2))
+#    and istip t = isl(reptree t)
+#    and tipof t = outl(reptree t) ? failwith `tipof`
+#    and labelof t = fst(outr(reptree t)) ? failwith `labelof`
+#    and sonsof t = snd(outr(reptree t)) ? failwith `sonsof`;;
+tiptree = - : (* -> (*, **) tree)
+comptree = - : ((** # (*, **) tree # (*, **) tree) -> (*, **) tree)
+istip = - : ((*, **) tree -> bool)
+tipof = - : ((*, **) tree -> *)
+labelof = - : ((*, **) tree -> **)
+sonsof = - : ((*, **) tree -> ((*, **) tree # (*, **) tree))

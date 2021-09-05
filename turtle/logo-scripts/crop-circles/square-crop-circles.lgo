@@ -1,0 +1,32 @@
+; Inspired by
+; https://www.pinterest.ca/pin/515873332299317178/
+; Reported in: August 1, 2013 
+; Normanton Down nr Stonehenge, Wiltshire
+to squareCropCircles :height
+	localmake "oldState turtleState
+	localmake "lightColor "#ffb
+	localmake "size :height / 2
+	jumpForward :size
+	localmake "center pos
+	setPenSize :height * 0.01
+	setPenColor :lightColor
+	circle (:height - penSize) / 2
+	setFillColor :lightColor
+	setPenSize 0
+	repeat 5 [
+		localmake "size :size * mix 0.8 cos 45 repRatio
+		repeat 4 [
+			jumpLeft :size
+			polyStart
+			arcRight 90 :size
+			jumpBackward :size		
+			polyEnd
+			jumpTo :center
+		]
+	]
+	circle :height * 0.04
+	setTurtleState :oldState
+end
+
+setScreenColor "#880
+squareCropCircles 100

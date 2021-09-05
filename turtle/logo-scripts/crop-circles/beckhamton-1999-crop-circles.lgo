@@ -1,0 +1,48 @@
+make "darkColor "#780
+make "lightColor "#ff8
+
+; Inspired by:
+; https://www.pinterest.ca/pin/497788565043919957/
+; Reported in July 28, 1999
+; Beckhampton, near Avebury, Wiltshire
+to beckhampton1999CropCircles :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "thickness :height * 0.18
+	localmake "gap :height * 0.12
+	localmake "baseWidth :height * 0.46
+	localmake "tinyGap :height * 0.014
+	localmake "topWidth :baseWidth - 2 * :thickness * tan 30
+	localmake "leftOffset1 :gap * (tan 180 / 6)
+	localmake "leftOffset :baseWidth / 2 - :leftOffset1 + :tinyGap
+	localmake "parallelogramWidth :baseWidth + :leftOffset1 * 2
+	localmake "size1 :parallelogramWidth - (:baseWidth - :leftOffset1 + :tinyGap) + :thickness * (tan 30)
+	localmake "triWidth :size1
+		- ((:thickness + :gap) * (tan 30) + :tinyGap / cos 30)
+	localmake "triOffset :size1 - :triWidth / 2
+	jumpForward :height / 2
+	localmake "center pos
+	setFillColor :lightColor
+	setPenSize 0
+	circle :height / 2
+	setFillColor :darkColor
+	repeat 6 [
+		setHeading :oldHeading + repcount * 360 / 6
+		jumpForward :gap
+		jumpLeft :leftOffset
+		setFillColor :darkColor
+		isoTrapezoid :baseWidth :topWidth :thickness
+
+		jumpTo :center
+		jumpForward :gap + :thickness
+		jumpRight :triOffset
+		left 180
+		isoTriangle :triWidth :triWidth * cos 30
+
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor :darkColor
+beckhampton1999CropCircles 100

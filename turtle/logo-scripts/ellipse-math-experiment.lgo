@@ -1,0 +1,70 @@
+; math is from:
+; https://math.stackexchange.com/questions/91132/how-to-get-the-limits-of-rotated-ellipse
+to getEllipseLimits :angle :radius1 :radius2
+	localmake "sinAngle sin :angle
+	localmake "cosAngle cos :angle
+	localmake "y hypot [(:radius1 * :sinAngle) (:radius2 * :cosAngle)]
+	localmake "x hypot [(:radius1 * :cosAngle) (:radius2 * :sinAngle)]
+	output [:x :y]
+end
+
+to getX :angle :radius1 :radius2 :y
+	localmake "cosA cos :angle
+	localmake "cosASQR :cosA * :cosA
+	localmake "sinA sin :angle
+	localmake "sinASQR :sinA * :sinA
+	localmake "radius1SQR :radius1 * :radius1
+	localmake "radius2SQR :radius2 * :radius2
+	localmake "a :cosASQR / :radius1SQR + :sinASQR / :radius2SQR
+	localmake "b 2 * :y * :sinA * :cosA * ((1/:radius1SQR) - (1/:radius2SQR))
+	localmake "c :y * :y * (:sinASQR / :radius1SQR + :cosASQR / :radius2SQR) - 1
+	localmake "results solveQuadratic :a :b :c
+	if (count :results) > 0 [
+		output first :results
+	]
+	output 0
+end
+
+forward 1000
+backward 2000
+home
+right 90
+forward 1000
+backward 2000
+home
+setHeading 0
+
+make "colors createPList2 [
+	[0 "red] [1 "black]
+]
+setFillGradient createLinearGradient [0 0] [100 100] :colors "pad
+
+make "angle animation.timeRatio * 360
+make "radius1 200
+make "radius2 100
+make "props getEllipseLimits :angle :radius1 :radius2
+right :angle
+;forward 150
+ellipse :radius1 :radius2
+setHeading 0
+setXY (item 1 :props) (item 2 :props)
+circle 5
+
+for ["y -200 200 1] [
+	make "x getX :angle :radius1 :radius2 -:y
+	setXY :x :y
+	circle 5
+]
+
+to animation.snapshotstyle
+	output createPList
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 10
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

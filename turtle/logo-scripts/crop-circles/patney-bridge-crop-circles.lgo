@@ -1,0 +1,106 @@
+make "darkColor "#780
+make "circleRadiusRatio 0.22
+
+to drawTree :stickLength :drawAllCircles?
+	localmake "oldState turtleState
+	localmake "center pos
+	localmake "oldHeading heading
+	localmake "lightColor penColor
+	localmake "circleRadius :stickLength * :circleRadiusRatio
+	localmake "thickness1 :stickLength * 0.1
+	localmake "inset :stickLength * 0.03
+	localmake "lineThickness :stickLength * 0.02
+	localmake "thickness2 :thickness1 - :inset * 2
+	localmake "circleRadius2 :circleRadius - :inset
+	localmake "insetLen1 sqrt (:circleRadius2 * :circleRadius2 - :thickness2 * :thickness2 / 4)
+	localmake "stickLength2 :stickLength - :insetLen1 * 2
+	localmake "cornerAngle arcSin :thickness2 / 2 / :circleRadius2
+	localmake "arcAngle1 120 - 2 * :cornerAngle
+	localmake "arcAngle2 360 - 2 * :cornerAngle
+	localmake "leftAngle 90 - :cornerAngle
+	setPenSize 0
+	circle :circleRadius
+	repeat 3 [
+		setHeading :oldHeading + (repcount + 0.5) * 360 / 3
+		setPenSize :thickness1
+		forward :stickLength
+		if or :drawAllCircles? repcount <> 1 [
+			setPenSize 0
+			circle :circleRadius
+		]
+		jumpTo :center
+		right 360 / 3
+	]
+	setPenColor :darkColor
+	setPenSize :lineThickness
+	setHeading :oldHeading
+	jumpTo :center
+	jumpBackward :stickLength - :insetLen1
+	jumpLeft :thickness2 / 2
+	forward :stickLength2
+	setHeading (towards :center) - 90
+	repeat 2 [
+		arcRight :arcAngle1 :circleRadius2
+		left :leftAngle
+		forward :stickLength2
+		left :leftAngle
+		arcRight :arcAngle2 :circleRadius2
+		left :leftAngle
+		forward :stickLength2
+		left :leftAngle
+	]
+	arcRight :arcAngle1 :circleRadius2
+	left :leftAngle
+	forward :stickLength2
+	if :drawAllCircles? [
+		jumpTo :center
+		setHeading :oldHeading
+		jumpBackward :stickLength
+		circle :circleRadius2
+		localmake "center2 pos
+		repeat 3 [
+			jumpForward :circleRadius2
+			stripes :thickness2 + :lineThickness :circleRadius - :circleRadius2 [:darkColor]
+			jumpBackward :lineThickness
+			stripes :thickness2 - :lineThickness :circleRadius [:lightColor]
+			jumpTo :center2
+			right 360 / 3
+		]
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by:
+; https://ca.pinterest.com/pin/38618373681002916
+; Reported on August 8, 2020
+; This was located: Patney Bridge, Wiltshire
+;
+; The main difference is that 2 of the minor branch angles are 
+; look about 30 or 45 degrees different in the real crop circles.
+; I didn't try to copy that for a couple reasons.
+; 1. It looks aesthetically pleasing with the perfectly symmetrical 
+; look this code draws.
+; 2. The math and code would be a little more complicated and I could still
+; get the real crop circle's angles wrong.  
+; Distortion from curves in the field or wide angle camera make it very 
+; difficult to get exact angles in the real crop circles.
+to patneyBridgeCropCircles :height
+	localmake "oldState turtleState
+	localmake "stickLength :height / (2 + 2 * (sin 30) + :circleRadiusRatio * 2)
+	localmake "tinyCircleRadius :stickLength * :circleRadiusRatio
+	localmake "lightColor "#ef8
+	jumpForward :stickLength * (1 + sin 30) + :tinyCircleRadius
+	localmake "center pos
+	setFillColor :lightColor
+	setPenColor :lightColor
+	repeat 3 [
+		jumpForward :stickLength
+		drawTree :stickLength repcount = 3
+		jumpTo :center
+		right 360 / 3
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor :darkColor
+patneyBridgeCropCircles 100

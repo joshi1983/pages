@@ -1,0 +1,59 @@
+; Inspired by 
+; https://en.wikipedia.org/wiki/Xbox#/media/File:Xbox_logo_(2019).svg
+to xBoxLogo :height :color
+	localmake "oldState turtleState
+	localmake "radius :height / 2
+	localmake "bottomLines1 [
+		[-90 0] [40 1] [60 0.12] [20 0.5]
+		[10 1.8] [11.8 3.0105965]
+		[-141.8 0]
+	]
+	localmake "topLines1 [
+		[-90 0] [-33.5 1] [-170 0] [30 0.25] [15 0.9]
+		[7.7 1.61489] [150.8 0]
+	]
+	localmake "startAngle -37.7
+	localmake "sideLines1 [
+		[:startAngle 0] [83.4 1] [29.8 0] [22 0.1]
+		[15 0.2] [15 0.6] [7.02 2.2] [85.4 0] [-10 3.5]
+		[-5 2.3] [-6 1.4] [-3 0.7] [-10 0.6] [-18 0.33]
+	]
+	setPenSize 0
+	setFillColor :color
+	drawArcLineShapes [
+		[0 0
+			combine :bottomLines1 reverse :bottomLines1
+		]
+		[0 2
+			combine :topLines1 reverse :topLines1
+		]
+	] :radius
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		drawArcLineShape [cos :startAngle 1 + sin :startAngle
+			:sideLines1
+		] :radius * :sign
+	]
+	setTurtleState :oldState
+end
+
+to xBoxOnBlackLogo :height
+	localmake "oldState turtleState
+	localmake "innerHeight :height * 0.7
+	stripes :height :height ["black]
+	jumpForward (:height - :innerHeight) / 2
+	xBoxLogo :innerHeight "white
+
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 4
+jumpLeft :separation
+xBoxLogo :height "black
+jumpRight :separation
+xBoxOnBlackLogo :height
+jumpRight :separation
+; Inspired by:
+; https://sv.wikipedia.org/wiki/Xbox_Cloud_Gaming#/media/Fil:Xbox_one_logo.svg
+xBoxLogo :height "#107c10

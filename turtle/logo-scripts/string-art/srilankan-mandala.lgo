@@ -1,0 +1,158 @@
+; Inspired by a string art design by
+; Pasindu Deshan
+; His facebook profile is at:
+; https://www.facebook.com/pasindudeshan.pasindudeshan.7
+
+make "colours ["red "orange "yellow "lime "aqua "blue "navy]
+
+to stringArtCircle :radius :numOuterPoints :stringNailOffset
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angleOffset 360 * :stringNailOffset / :numOuterPoints
+	repeat :numOuterPoints [
+		localmake "heading1 heading
+		jumpTo :oldPos
+		jumpForward :radius
+		localmake "toPos pos
+		jumpTo :oldPos
+		setHeading :heading1 + :angleOffset
+		jumpForward :radius
+		setHeading towards :toPos
+		forward distance :toPos
+		setHeading :heading1 + 360 / :numOuterPoints
+	]
+	setHeading :oldHeading
+	jumpTo :oldPos
+end
+
+to colourfulOuterCircle :radius
+	localmake "numColours count :colours
+	repeat :numColours [
+		localmake "c item repcount :colours
+		setPenColor :c
+		localmake "ratio repRatio
+		localmake "r :radius * (0.2 + 0.8 * :ratio)
+		localmake "numOuterPoints int mix 32 12 :ratio
+		localmake "numInnerPoints int mix 6 4 :ratio
+		stringArtCircle :r :numOuterPoints :numInnerPoints
+	]
+end
+
+to fanOut :radius1 :radius2 :numFans :numPointsPerFan
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "fanAngle 360 / :numFans
+	localmake "nailAngle :fanAngle / :numPointsPerFan
+	repeat :numFans [
+		localmake "fanStartAngle heading + :nailAngle * 0.5
+		jumpTo :oldPos
+		right :fanAngle * 0.5
+		jumpForward :radius2
+		localmake "fanPoint pos
+		setHeading :fanStartAngle
+		repeat :numPointsPerFan [
+			jumpTo :oldPos
+			jumpForward :radius1
+			setHeading towards :fanPoint
+			forward distance :fanPoint
+			setHeading :fanStartAngle + repcount * :nailAngle
+		]
+		setHeading :oldHeading + repcount * :fanAngle
+	]
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to fanOutColourful :radius1 :radius2 :numFans
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "numColours count :colours
+	localmake "numPointsPerFan 2 * :numColours - 1
+	localmake "fanAngle 360 / :numFans
+	localmake "nailAngle :fanAngle / :numPointsPerFan
+	repeat :numFans [
+		localmake "fanStartAngle heading + :nailAngle * 0.5
+		jumpTo :oldPos
+		right :fanAngle * 0.5
+		jumpForward :radius2
+		localmake "fanPoint pos
+		setHeading :fanStartAngle
+		repeat :numPointsPerFan [
+			localmake "index getIndex repcount
+			setPenColor item :index  :colours
+			jumpTo :oldPos
+			jumpForward :radius1
+			setHeading towards :fanPoint
+			forward distance :fanPoint
+			setHeading :fanStartAngle + repcount * :nailAngle
+		]
+		setHeading :oldHeading + repcount * :fanAngle
+	]
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to getIndex :i
+	localmake "numColours count :colours
+	localmake "index max 1 (abs :numColours - :i)
+	output :numColours - :index
+end
+
+to colourfulFan :radius1 :radius2
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "numColours count :colours
+	localmake "numPointsPerFan 2 * :numColours - 1
+	localmake "fanAngle 180
+	localmake "nailAngle :fanAngle / :numPointsPerFan
+	localmake "fanStartAngle :oldHeading + 90 + :nailAngle * 0.5
+	jumpBackward :radius1
+	localmake "fanPoint pos
+	setHeading :fanStartAngle
+	repeat :numPointsPerFan [
+		localmake "index getIndex repcount
+		setPenColor item :index  :colours
+		jumpTo :oldPos
+		jumpForward :radius2
+		setHeading towards :fanPoint
+		forward distance :fanPoint
+		setHeading :fanStartAngle + repcount * :nailAngle
+	]
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to sriLankanWallDesign :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "numAngles 16
+	localmake "size1 :size * 0.98
+	localmake "outerCircleRadius :size1 * 0.13
+	localmake "outerCircleDistance :size1 - :outerCircleRadius
+	setPenSize 0
+	setFillColor "black
+	circle :size
+	setPenSize :size * 0.005
+	setLineJoinStyle "round
+	setLineCap "round
+	repeat :numAngles [
+		jumpTo :oldPos
+		jumpForward :outerCircleDistance
+		colourfulOuterCircle :outerCircleRadius
+		colourfulFan :outerCircleDistance - :size * 0.5 :outerCircleRadius
+		right 360 / :numAngles
+	]
+	jumpTo :oldPos
+	colourfulOuterCircle :size * 0.2
+	setPenColor "yellow
+	setHeading :oldHeading + 360 / :numAngles
+	fanOut :size * 0.2 :size * 0.5 :numAngles * 0.5 7
+	setHeading :oldHeading + 360 / :numAngles
+	fanOut :size * 0.5 :size * 0.65 :numAngles 5
+	setHeading :oldHeading
+	fanOutColourful :size * 0.2 :size * 0.5 :numAngles * 0.5
+	setHeading :oldHeading
+end
+
+setScreenColor "#888
+sriLankanWallDesign 100

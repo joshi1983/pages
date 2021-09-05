@@ -1,0 +1,64 @@
+; Inspired by logo at
+; https://web.dev/
+to webDevLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "radius :height * 0.13655
+	localmake "angle 45
+	localmake "len1 (:height - :radius * 2) / 2 / sin :angle
+	localmake "webDevBlue "#06F
+	localmake "offsetLeft :height * 0.366
+	localmake "offsetRight :height * 0.3666
+	localmake "offsets :offsetLeft + :offsetRight
+	localmake "size1 :radius * ((1 / tan :angle) + 1 / sin :angle)
+	localmake "tinyRadius :height * 0.018
+	setLineCap "round
+	setLineJoinStyle "round
+	jumpForward :height - :radius
+	jumpLeft :offsetLeft
+	setPenSize :radius * 2
+	setPenColor :webDevBlue
+	right 90 + :angle
+	forward :len1
+	setHeading :oldHeading - 90 - :angle
+	forward :len1
+	setLineCap "butt
+	setPenColor "#6CF
+	setHeading :oldHeading + 90
+	forward :offsets
+	jumpBackward :offsets
+	setPenSize 0
+	jumpLeft :radius
+	localmake "p1 pos
+	jumpForward :size1
+	localmake "p2 pos
+	setHeading :oldHeading - 90 - :angle
+	setFillColor "#C6F
+	polyStart
+	jumpForward :size1
+	arcRight 180 :radius
+	jumpForward distanceToLine :p1 :p2
+	polyEnd
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :radius
+	jumpRight :offsetRight
+	setFillColor :webDevBlue
+	circle :radius
+	jumpLeft :offsets + (:radius / sin :angle) - (:len1 * cos :angle) + :tinyRadius / sin :angle
+	jumpForward (:height - :radius * 2) / 2
+	right :angle
+	jumpForward :tinyRadius
+	right 90
+	polyStart
+	arcRight 180 - :angle * 2 :tinyRadius
+	setHeading :oldHeading
+	jumpRight :tinyRadius / sin :angle
+	jumpForward :tinyRadius * 2
+	polyEnd
+	setTurtleState :oldState
+end
+
+webDevLogo 100

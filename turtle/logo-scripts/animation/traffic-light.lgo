@@ -1,0 +1,83 @@
+; Animation of a traffic light that changes from 
+; green, yellow, and red states.
+; It spends roughly 3.3 seconds per state.
+
+; Draws a few things to make the traffic light look more realistic.
+; Draws a black arc around the top to give the 
+; impression of a sun shade or glare protector.
+to trafficLightOutline :lightRadius
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+
+	; Draw an arc in white to represent highlights 
+	; from the sky reflecting on the light.
+	jumpLeft :lightRadius * 1.05
+	setPenColor "#FFEF85
+	setPenSize :lightRadius * 0.05
+	arcRight 180 :lightRadius * 1.05
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpLeft :lightRadius
+
+	; Draw the dark shadow under the cap.
+	setPenColor "black
+	setPenSize :lightRadius * 0.05
+	arcRight 180 :lightRadius
+
+	setTurtleState :oldState
+end
+
+; State should be 1, 2, or 3.
+; 1 represents green light on
+; 2 represents yellow light on
+; 3 represents red light on
+to trafficLights :state :height
+	localmake "state clamp int :state 1 3
+	; Force state to be exactly 1, 2, or 3.
+	; If state was specified as 1.1, it'll become 1.
+	; If state was 4.9, it'll become 3.
+
+	localmake "width :height * 0.4
+	localmake "colors ["lime "yellow "red]
+	localmake "lightBoxSize :height / 3
+	localmake "lightRadius :lightBoxSize * 0.4	
+	jumpBackward :height * 0.5
+	setPenSize :width
+	setLineCap "butt
+	setPenColor "#FFA200
+	forward :height ; draw the background.
+
+	jumpBackward :lightBoxSize * 0.5
+	setPenSize 0
+	repeat 3 [
+		; Set the light's color.
+		setFillColor item repcount :colors
+		if :state <> repcount [
+			; If the state does not match the color index, make it dark.
+			; mix 60% black with 40% of the bright light color to make it dark.
+			setFillColor mix "black fillColor 0.6
+		]
+		circle :lightRadius
+		trafficLightOutline :lightRadius
+		jumpBackward :lightBoxSize
+	]
+end
+
+setScreenColor "#B1BBEC
+trafficLights 1 + animation.timeRatio * 3  100
+
+to animation.snapshotstyle
+	output createPList2 [
+		["zoom.scale 4]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 10
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

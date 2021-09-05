@@ -1,0 +1,74 @@
+to drawEye :radius
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "radius1 abs :radius
+	setPenSize 0
+	jumpRight :radius * 0.15
+	setFillColor "#eee
+	circle :radius1
+	jumpTo :oldPos
+	setFillColor "black
+	circle :radius1 * 2 /  3
+	setTurtleState :oldState
+end
+
+to drawEyes :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "eyeRadius :height * 0.105
+	jumpForward :height * 0.644
+	jumpRight :height * 0.09
+	drawEye :eyeRadius
+
+	jumpTo :oldPos
+	jumpForward :height * 0.713
+	jumpLeft :height * 0.163
+	drawEye -:eyeRadius
+
+	setTurtleState :oldState
+end
+
+to drawEyebrows :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	setPenColor "black
+	setLineCap "round
+	setPenSize :height * 0.05
+	jumpForward :height * 0.783
+	jumpRight :height * 0.193
+	left 45
+	arcLeft 43 :height * 0.15
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.891
+	jumpLeft :height * 0.053
+	left 69
+	arcLeft 43 :height * 0.15
+	setTurtleState :oldState
+end
+
+; Inspired by image at:
+; https://en.wikipedia.org/wiki/Office_Assistant#/media/File:Windows_11_Clippy_paperclip_emoji.png
+to clippyEmoji :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	setLineCap "round
+	setPenColor "#b0b0af
+	setPenSize :height * 0.05
+	jumpForward :height * 0.54
+	jumpRight :height * 0.257
+	arcLines [[135 0] [52 0.257] [0.135] [-146 0.15] [-37 0.5]
+		[-5 2] [-22 0.8] [-5 0.85] [-160 0.12] [-10 0.4] [27 0.8]
+		[-13 0.4] [-145 0.06] [-30 0.3] [-4.5 1]] :height
+	jumpTo :oldPos
+	setHeading :oldHeading
+	drawEyes :height
+
+	drawEyebrows :height
+	setTurtleState :oldState
+end
+
+clippyEmoji 100

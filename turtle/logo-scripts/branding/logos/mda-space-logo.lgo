@@ -1,0 +1,197 @@
+to mdaMainLogo :height
+	localmake "oldState turtleState
+	localmake "radiusRatio 0.5
+	localmake "radiusRatio1 0.43
+	localmake "radiusRatio2 0.52
+	localmake "angle1 45
+	localmake "angle2 42.26
+	localmake "angleTotal :angle1 + :angle2
+	localmake "arcs1 [[0.5441]
+		[:angle1 :radiusRatio1] [:angle2 :radiusRatio2]
+		[180 - :angleTotal 0]
+	]
+	localmake "arcs combine :arcs1 :arcs1
+	localmake "shapes [
+		[:radiusRatio 0 :arcs]
+		[-:radiusRatio 0 flipAngles :arcs]
+	]
+	setPenSize 0
+	drawArcLineShapes :shapes :height
+	setTurtleState :oldState
+end
+
+to drawM :fontHeight
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "angle1 -61
+	localmake "arcs1 [[90 0] [:angle1 0.079] [0.715]
+		[90 - :angle1 0.061] [0.84]
+	]
+	jumpForward :fontHeight * 0.205
+	localmake "middle pos
+	setPenSize :fontHeight * 0.19
+	setLineCap "butt
+	setLineJoinStyle "round
+	setPenColor fillColor
+	arcLines :arcs1 :fontHeight
+	jumpTo :middle
+	setHeading :oldHeading
+	arcLines flipAngles :arcs1 :fontHeight
+	setTurtleState :oldState
+end
+
+to drawD :fontHeight
+	localmake "oldState turtleState
+	localmake "arcs1 [[-90 0] [0.545] [60 0.4] [30 0.6]]
+	localmake "arcs combine :arcs1 reverse :arcs1
+	jumpLeft :fontHeight * 0.39
+	setLineJoinStyle "miter
+	setLineCap "butt
+	setPenSize :fontHeight * 0.19
+	setPenColor fillColor
+	setFillColor transparent
+	jumpForward penSize / 2
+	drawArcLineShape [0 0 :arcs] :fontHeight - penSize
+	setTurtleState :oldState
+end
+
+to drawA :fontHeight
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "angle1 66.55
+	localmake "angle2 66.95
+	localmake "outerRadiusFactor 0.185
+	localmake "outerLen (1 - :outerRadiusFactor * (1 - cos :angle1)) / sin :angle1
+	localmake "arcs1 [[90 0] [:angle1 :outerRadiusFactor]
+		[:outerLen]
+		[180 - :angle1 0] [0.215] [:angle2 0] [0.84]
+		[-:angle2 0.01227292]]
+	jumpForward :fontHeight * 0.233
+	stripes :fontHeight * 0.72 :fontHeight * 0.167 [fillColor]
+
+	jumpTo :oldPos
+	setPenSize 0
+	drawArcLineShape [0 1
+		combine :arcs1 reverse :arcs1
+	] :fontHeight
+	
+	setTurtleState :oldState
+end
+
+to drawS :fontHeight
+	localmake "oldState turtleState
+	setPenSize 0
+	drawArcLineShape [-0.435 0.327
+		[[-90 0] [0.24] [-80 0] [40 0.15]
+		[20 0.12] [15 0.3] [10 0.65] [25 0.2] [70 0.065]
+		[50 0.09] [15 0.28] [5 2] [-10 0.75]
+		[-25 0.35] [-30 0.213] [-45 0.28]
+		[-30 0.23] [-30 0.53] [-10 0.95]
+		[-20 0.38] [-40 0.3] [-18.3 0.25]
+		[-91.6 0] [0.243] [-79.5 0] [40 0.11]
+		[28 0.12] [20 0.42] [20 0.195] [90 0.066]
+		[35 0.08] [13 0.4] [4 2] [-12 0.78] [-20 0.27]
+		[-40 0.3] [-60 0.243] [-25 0.37] [-10 1] [-27 0.62]
+		[-65 0.308]
+		]
+	] :fontHeight
+	setTurtleState :oldState
+end
+
+to drawP :fontHeight
+	localmake "oldState turtleState
+	localmake "pHeight :fontHeight * 0.97
+	localmake "arcs1 [[-90 0] [0.45] [-90 0.23]]
+	localmake "arcs combine :arcs1 reverse :arcs1
+	jumpLeft :fontHeight * 0.32
+	jumpForward :fontHeight * 0.015
+	stripes :fontHeight * 0.225 :pHeight [fillColor]
+	setPenSize :fontHeight * 0.2
+	jumpForward :pHeight - penSize / 2
+	setPenColor fillColor
+	arcLines :arcs :pHeight
+	setTurtleState :oldState
+end
+
+to drawC :fontHeight
+	localmake "oldState turtleState
+	localmake "innerArcs1 [
+		[0.258] [-68.5 0] [50 0.2]
+		[16 0.4] [20 0.44] [50 0.271] [22.5 0.29]
+	]
+	localmake "innerArcs combine :innerArcs1 reverse :innerArcs1
+	localmake "outerARcs1 [
+		[-95 0] [-50 0.33] [-30 0.55] [-20 1] [-50 0.4]
+		[-25 0.57]
+	]
+	localmake "outerArcs combine :outerARcs1 reverse :outerARcs1
+	setPenSize 0
+	drawArcLineShape [0.543 0.647
+		(combine [[90 0]] :innerArcs :outerArcs)
+	] :fontHeight
+	setTurtleState :oldState
+end
+
+to drawE :fontHeight
+	localmake "oldState turtleState
+	localmake "eHeight :fontHeight * 0.97
+	localmake "thickness :fontHeight * 0.225
+	localmake "thickness2 :eHeight * 0.21
+	localmake "separation :eHeight - :thickness2
+	jumpForward :fontHeight * 0.015
+	jumpLeft :fontHeight * 0.292
+	stripes :thickness :eHeight [fillColor]
+	jumpForward :thickness2 / 2
+	right 90
+	repeat 2 [
+		stripes :thickness2 :eHeight * 0.71 [fillColor]
+		jumpLeft :separation
+	]
+	jumpRight :separation * 1.5
+	stripes :thickness2 :eHeight * 0.62 [fillColor]
+	setTurtleState :oldState
+end
+
+to drawMDA :height
+	localmake "oldState turtleState
+	jumpLeft :height * 1.09
+	drawM :height
+	jumpRight :height * 1.24
+	drawD :height
+	jumpRight :height * 1.015
+	drawA :height
+	setTurtleState :oldState
+end
+
+to drawSpace :fontHeight
+	localmake "oldState turtleState
+	jumpLeft :fontHeight * 5.57
+	drawS :fontHeight
+	jumpRight :fontHeight * 2.68
+	drawP :fontHeight
+	jumpRight :fontHeight * 2.83
+	drawA :fontHeight
+	jumpRight :fontHeight * 2.9
+	drawC :fontHeight
+	jumpRight :fontHeight * 2.77
+	drawE :fontHeight
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://en.wikipedia.org/wiki/MDA_(company)#/media/File:MDA_Ltd._Logo.svg
+to mdaSpaceLogo :height
+	localmake "oldState turtleState
+	localmake "largeFontHeight :height * 0.4685
+	localmake "spaceFontHeight :height * 0.134
+	setFillColor "black
+	jumpLeft :height * 0.853
+	mdaMainLogo :height
+	jumpRight :height * 1.4
+	drawSpace :spaceFontHeight
+	jumpForward :height * 0.223
+	drawMDA :largeFontHeight
+	setTurtleState :oldState
+end
+
+mdaSpaceLogo 100

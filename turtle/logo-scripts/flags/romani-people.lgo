@@ -1,0 +1,79 @@
+; Inspired by
+; https://upload.wikimedia.org/wikipedia/commons/1/10/Flag_of_the_Romani_people.svg
+; Referenced from:
+; https://en.wikipedia.org/wiki/Romani_people
+to romaniWheel :radius
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "numSpokes 16
+	localmake "radius1 :radius * 0.79
+	localmake "radius2 :radius * 0.286
+	localmake "angle1 8
+	localmake "arcRadius1 :radius * 0.102
+	localmake "arcRadius2 :arcRadius1  * :radius2 / :radius1
+	localmake "arcAngle1 190.8
+	localmake "arcAngle2 360 - :arcAngle1
+	localmake "size1 :radius * 0.038
+	setPenColor "#f80000
+	setPenSize :radius * 0.01
+	forward :radius ; conceal tiny gap in filled shape from below.
+	jumpTo :oldPos
+	setPenSize 0
+	setFillColor penColor
+
+	; outer shape
+	polyStart
+	jumpForward :radius
+	setHeading :oldHeading - 90
+	arcLeft 359.99 :radius
+	setHeading towards :oldPos
+	jumpForward distance :oldPos
+	repeat :numSpokes [
+		setHeading :oldHeading + :angle1 / 2 + repcount * 360 / :numSpokes
+		jumpForward :radius1
+		arcRight :arcAngle1 :arcRadius1
+		setHeading towards :oldPos
+		jumpForward distance :oldPos
+	]
+	polyEnd
+
+	; inner shape
+	setHeading :oldHeading + :angle1 / 2
+	polyStart
+	jumpForward :radius2
+	repeat :numSpokes [
+		setHeading :oldHeading + 164 + (repcount * 360 / :numSpokes)
+		arcLeft :arcAngle2 :arcRadius2
+		right :angle1 / 2
+		jumpRight :size1
+	]
+	polyEnd
+end
+
+to romaniPeopleFlag :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "width :height * 900 / 600
+	localmake "wheelRadius :height / 3
+	localmake "colors ["#0080ff "#008000]
+	setPenSize :height / 2
+	jumpForward :height - penSize / 2
+	jumpLeft :width / 2
+	setLineCap "butt
+	right 90
+	repeat count :colors [
+		setPenColor item repcount :colors
+		forward :width
+		jumpRight penSize
+		jumpBackward :width
+	]
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height / 2
+	romaniWheel :wheelRadius
+
+	setTurtleState :oldState
+end
+
+romaniPeopleFlag 100

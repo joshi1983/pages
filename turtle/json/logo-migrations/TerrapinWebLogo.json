@@ -1,0 +1,1248 @@
+{
+	"name": "Terrapin WebLogo",
+	"description": "A version of Terrapin Logo made as a web application so people can run almost all Terrapin Logo programs in a web browser.  This is a very modern(2025) product and not to be confused with Terrapin 3 for Apple 2 which is from the 1980's.",
+	"externalLink": "https://resources.terrapinlogo.com/weblogo/",
+	"toProcPath": "logo-scripts/terrapin",
+	"commands": [
+		{
+			"primaryName": ".DEFMACRO",
+			"args": [
+				{"name": "name", "types": "string"},
+				{"name": "instructionlist", "types": "instructionlist"}
+			],
+			"description": "Defines a procedure just like the DEFINE command",
+			"to": "to"
+		},
+		{
+			"primaryName": ".macro",
+			"args": [
+				{"name": "procname", "types": "string"}
+			],
+			"argCount": {
+				"min": 1
+			},
+			"description": "Defines a macro"
+		},
+		{
+			"primaryName": ".who",
+			"args": [],
+			"description": "Reports the list of currently active turtles"
+		},
+		{
+			"primaryName": "abs",
+			"to": "abs"
+		},
+		{
+			"primaryName": "alert",
+			"args": [
+				{"name": "message", "types": "string"}
+			],
+			"argCount": {
+				"min": 1
+			},
+			"description": "Displays an alert box",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "alias",
+			"args": [
+				{"name": "oldName"},
+				{"name": "newName"}
+			],
+			"description": "Defines a new procedure name with the same meaning as an existing procedure",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "allturtles",
+			"args": [],
+			"description": "Returns a list of the names of every turtle that currently defined in Logo",
+			"returnTypes": "list<int>",
+			"migrateToCode": "[]"
+		},
+		{
+			"primaryName": "alpha",
+			"args": [],
+			"description": "Returns the first active turtle's alpha value",
+			"toProc": "alpha"
+		},
+		{
+			"primaryName": "and",
+			"to": "and"
+		},
+		{
+			"primaryName": "arc",
+			"to": "arc"
+		},
+		{
+			"primaryName": "arcCos",
+			"names": ["acos"],
+			"to": "arcCos"
+		},
+		{
+			"primaryName": "arcCot",
+			"names": ["acot"],
+			"args": [
+				{"name": "ratio", "types": "num"}
+			],
+			"description": "Returns arcCotangent.  In other words, returns arcTan 1 / :ratio.",
+			"returnTypes": "num"
+		},
+		{
+			"primaryName": "arcCsc",
+			"names": ["acsc"],
+			"args": [
+				{"name": "ratio", "types": "num"}
+			],
+			"description": "Returns arccosecant.  In other words, returns arcCos 1 / :ratio",
+			"returnTypes": "num",
+			"toProc": "arcCsc"
+		},
+		{
+			"primaryName": "arcSec",
+			"names": ["asec"],
+			"args": [
+				{"name": "ratio", "types": "num"}
+			],
+			"description": "Returns arcsecant.  In other words, returns arcSin 1 / :ratio",
+			"returnTypes": "num",
+			"toProc": "arcSec"
+		},
+		{
+			"primaryName": "arcSin",
+			"names": ["asin"],
+			"args": [
+				{"name": "ratio", "types": "num"}
+			],
+			"to": "arcSin"
+		},
+		{
+			"primaryName": "arcTan",
+			"names": ["atan"],
+			"to": "arcTan"
+		},
+		{
+			"primaryName": "arcTan2",
+			"to": "arcTan2"
+		},
+		{
+			"primaryName": "array",
+			"args": [
+				{"name": "val", "types": "list|num|string"}
+			],
+			"argCount": {
+				"min": 1,
+				"max": 2
+			},
+			"description": "Creates an array",
+			"migrateToCode": "[]",
+			"returnTypes": "list"
+		},
+		{
+			"primaryName": "array?",
+			"names": ["arrayp"],
+			"to": "list?"
+		},
+		{
+			"primaryName": "aset",
+			"args": [
+				{"name": "array"},
+				{"name": "listOrNum", "types": "list<int>|num"},
+				{"name": "newValue"}
+			],
+			"description": "Roughly translates to setItem in WebLogo",
+			"returnTypes": null
+		},
+		{
+			"primaryName": "back",
+			"names": ["bk"],
+			"to": "backward"
+		},
+		{
+			"primaryName": "background",
+			"names": ["bg"],
+			"to": "screenColor"
+		},
+		{
+			"primaryName": "backtrace",
+			"names": ["bt"],
+			"argCount": {
+				"min": 0,
+				"max": 1
+			},
+			"description": "Prints a list of nested procedure calls",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "bounce",
+			"args": [],
+			"description": "Lets the turtles bounce off the graphics bounds inside the Graphics canvas",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "bpclear",
+			"args": [],
+			"description": "Deletes all breakpoints",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "bury",
+			"args": [
+				{"name": "procedureName", "types": "string"}
+			],
+			"argCount": {
+				"min": 1
+			},
+			"description": "Makes names and procedures invisible",
+			"removeInMigration": true,
+			"returnTypes": null
+		},
+		{
+			"primaryName": "buryAll",
+			"args": [
+			],
+			"description": "Makes all names and procedures invisible",
+			"removeInMigration": true,
+			"returnTypes": null
+		},
+		{
+			"primaryName": "buryName",
+			"args": [
+				{"name": "nameOrList", "types": "list<string>|string"}
+			],
+			"description": "makes either a single name or a list of names invisible",
+			"removeInMigration": true,
+			"returnTypes": null
+		},
+		{
+			"primaryName": "buryNames",
+			"args": [],
+			"description": "Makes all names invisible",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "buryProc",
+			"args": [
+				{"name": "nameOrList", "types": "list<string>|string"}
+			],
+			"description": "Makes one or more procedures invisible",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "button?",
+			"names": ["buttonp"],
+			"args": [],
+			"description": "Returns the state of the left mouse button",
+			"migrateToCode": "false",
+			"returnTypes": "bool"
+		},
+		{
+			"primaryName": "clearScreen",
+			"names": ["cs"],
+			"to": "clearScreen"
+		},
+		{
+			"primaryName": "clearText",
+			"names": ["ct"],
+			"args": [],
+			"description": "Clears text",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "continue",
+			"args": [],
+			"description": "Ends a pause",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "cos",
+			"to": "cos"
+		},
+		{
+			"primaryName": "cot",
+			"args": [
+				{"name": "angle", "types": "num"}
+			],
+			"description": "Returns the cotangent of its input.  In other words, returns 1 / tan :angle",
+			"returnTypes": "num",
+			"toProc": "cot"
+		},
+		{
+			"primaryName": "csc",
+			"toProc": "csc"
+		},
+		{
+			"primaryName": "do.while",
+			"to": "do.while"
+		},
+		{
+			"primaryName": "dot?",
+			"names": ["dotp"],
+			"args": [],
+			"argCount": {
+				"min": 0,
+				"max": 1
+			},
+			"description": "Tests if pixel at specified point or turtle's current position is set.",
+			"migrateToCode": "false"
+		},
+		{
+			"primaryName": "draw",
+			"args": [],
+			"description": "Clears the current graphics canvas and resets all attached turtles",
+			"to": "clearScreen"
+		},
+		{
+			"primaryName": "edit",
+			"names": ["ed"],
+			"args": [
+				{"name": "whatToEdit", "types": "list|sring"}
+			],
+			"argCount": {
+				"min": 0,
+				"max": 1
+			},
+			"description": "Edits parts or all of the Logo workspace",
+			"removeInMigration": true,
+			"returnTypes": null
+		},
+		{
+			"primaryName": "equalp",
+			"names": [".eq", "equal?"],
+			"to": "equal?"
+		},
+		{
+			"primaryName": "expn",
+			"to": "exp"
+		},
+		{
+			"primaryName": "fence",
+			"args": [],
+			"description": "Fences all turtles inside the drawing bounds",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "fill",
+			"args": [],
+			"description": "Flood fills an area with the current fill color starting at the turtle's position",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "foreach",
+			"args": [
+				{"name": "list", "types": "list"},
+				{"name": "instructionlist", "types": "instructionlist"}
+			],
+			"description": "Runs a list for each element of its first input"
+		},
+		{
+			"primaryName": "forever",
+			"args": [
+				{"name": "instructionList", "types": "instructionlist"}
+			],
+			"to": "forever"
+		},
+		{
+			"primaryName": "forward",
+			"names": ["fd"],
+			"to": "forward"
+		},
+		{
+			"primaryName": "freezepic",
+			"args": [],
+			"description": "Freezes the display of the current graphics",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "fullscreen",
+			"names": ["fs"],
+			"args": [],
+			"description": "Switches to the Full Screen perspective",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "getX",
+			"names": ["xCor"],
+			"to": "xCor"
+		},
+		{
+			"primaryName": "getXY",
+			"names": ["pos"],
+			"to": "xyCor"
+		},
+		{
+			"primaryName": "getY",
+			"names": ["yCor"],
+			"to": "yCor"
+		},
+		{
+			"primaryName": "go",
+			"args": [
+				{"name": "label"}
+			],
+			"description": "Jumps to the specified label",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "grid",
+			"args": [
+				{"name": "size"}
+			],
+			"argCount": {
+				"min": 1,
+				"max": 2
+			},
+			"description": "Sets the characteristics of the graphics grid",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "gridOff",
+			"args": [],
+			"description": "Hides the grid of the Graphics panel",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "gridOn",
+			"args": [],
+			"description": "Displays the grid of the Graphics panel",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "halt",
+			"argCount": {
+				"min": 0,
+				"max": 1
+			},
+			"description": "Stops one or all background programs",
+			"to": "stop"
+		},
+		{
+			"primaryName": "home",
+			"to": "home"
+		},
+		{
+			"primaryName": "ht",
+			"names": ["hideturtle"],
+			"to": "hideTurtle"
+		},
+		{
+			"primaryName": "ignore",
+			"args": [
+				{"name": "object"}
+			],
+			"description": "Ignores the output of a procedure",
+			"removeCallTokenOnly": true
+		},
+		{
+			"primaryName": "int",
+			"to": "int"
+		},
+		{
+			"primaryName": "iseq",
+			"args": [
+				{"name": "from"},
+				{"name": "to"}
+			],
+			"argCount": {
+				"min": 2,
+				"max": 3
+			},
+			"description": "Returns a list of sequential integers",
+			"to": "iseq"
+		},
+		{
+			"primaryName": "item",
+			"to": "item"
+		},
+		{
+			"primaryName": "join",
+			"to": "str"
+		},
+		{
+			"primaryName": "label",
+			"args": [
+				{"name": "name", "types": "string"}
+			],
+			"description": "Unlike many other versions of Logo, Terrapin's label command indicates a place in the code for the go command to jump to.  This is similar to labels from the Basic programming language.",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "last",
+			"to": "last"
+		},
+		{
+			"primaryName": "left",
+			"names": ["lt"],
+			"to": "left"
+		},
+		{
+			"primaryName": "less?",
+			"names": [".lt", "lessp"],
+			"to": "less?"
+		},
+		{
+			"primaryName": "list?",
+			"names": ["listp"],
+			"to": "list?"
+		},
+		{
+			"primaryName": "localmake",
+			"names": ["lmake"],
+			"to": "localmake"
+		},
+		{
+			"primaryName": "lockshape",
+			"args": [],
+			"description": "Prevents the shapes for all active turtles and bitmaps from rotating when the widget turns",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "log",
+			"names": ["ln"],
+			"to": "ln"
+		},
+		{
+			"primaryName": "log10",
+			"to": "log10"
+		},
+		{
+			"primaryName": "logand",
+			"to": "bitand"
+		},
+		{
+			"primaryName": "lognot",
+			"to": "bitnot"
+		},
+		{
+			"primaryName": "logor",
+			"to": "bitor"
+		},
+		{
+			"primaryName": "logxor",
+			"to": "bitxor"
+		},
+		{
+			"primaryName": "lowerCase",
+			"to": "lowerCase"
+		},
+		{
+			"primaryName": "lsh",
+			"description": "Shift left with sign extension",
+			"to": "bitShiftLeft"
+		},
+		{
+			"primaryName": "lshift",
+			"description": "Shift left without sign extension",
+			"to": "bitShiftLeft"
+		},
+		{
+			"primaryName": "macroExpand",
+			"args": [
+				{"name": "info", "types": "list"}
+			],
+			"description": "Outputs the expansion of a macro"
+		},
+		{
+			"primaryName": "make",
+			"to": "make"
+		},
+		{
+			"primaryName": "milliseconds",
+			"args": [],
+			"description": "Returns the number of milliseconds spent",
+			"migrateToCode": "animation.time * 1000"
+		},
+		{
+			"primaryName": "minus",
+			"args": [
+				{"name": "val", "types": "num"}
+			],
+			"description": "Returns the specified value with the sign changed.",
+			"returnTypes": "num"
+		},
+		{
+			"primaryName": "modulo",
+			"to": "modulo"
+		},
+		{
+			"primaryName": "motors",
+			"args": [
+				{"name": "speed"}
+			],
+			"description": "Controls the speed or a robot's motors",
+			"removeInMigration": true,
+			"returnTypes": null
+		},
+		{
+			"primaryName": "mouse",
+			"args": [],
+			"description": "Returns the position of the mouse cursor",
+			"migrateToCode": "[0 0]",
+			"returnTypes": "list<num>"
+		},
+		{
+			"primaryName": "mouseShape",
+			"args": [],
+			"description": "Returns the number of the current mouse pointer shape as defined with the SETMOUSESHAPE command",
+			"migrateToCode": "1"
+		},
+		{
+			"primaryName": "not",
+			"to": "not"
+		},
+		{
+			"primaryName": "opacity",
+			"args": [],
+			"description": "Returns the opacity value of the first active turtle as a value between 0(transparent and 1(opaque).  This should translate to returning the opacity of the pen color in WebLogo.",
+			"toProc": "opacity"
+		},
+		{
+			"primaryName": "or",
+			"to": "or"
+		},
+		{
+			"primaryName": "pause",
+			"args": [],
+			"description": "Pauses a procedure",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "penDown",
+			"names": ["pd"],
+			"to": "penDown"
+		},
+		{
+			"primaryName": "pi",
+			"to": "pi"
+		},
+		{
+			"primaryName": "play",
+			"args": [
+				{"name": "notesData", "types": "list"}
+			],
+			"description": "Plays musical notes",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "pon",
+			"args": [
+				{"name": "name", "types": "string"}
+			],
+			"description": "PON prints the name given by its first input if it is unburied",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "pons",
+			"args": [],
+			"description": "Prints all Logo names",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "popl",
+			"args": [
+				{"name": "nameOrList", "types": "list<string>|string"}
+			],
+			"description": "Prints one or more Logo property lists",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "popls",
+			"args": [],
+			"description": "prints the unburied Logo property list or the list of unburied Logo property lists",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "pops",
+			"args": [],
+			"description": "Prints all Logo procedures",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "pot",
+			"args": [
+				{"name": "nameOrList", "types": "list<string>|string"}
+			],
+			"description": "Prints the title line of one or more user-defined procedures",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "pots",
+			"args": [],
+			"description": "prints the titles of all user-defined procedures",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "power",
+			"to": "power"
+		},
+		{
+			"primaryName": "primitives",
+			"args": [],
+			"description": "Returns a structured contents list with all primitives",
+			"returnTypes": "list",
+			"migrateToCode": "[]"
+		},
+		{
+			"primaryName": "print",
+			"names": ["pr"],
+			"to": "print"
+		},
+		{
+			"primaryName": "printout",
+			"names": ["po"],
+			"args": [
+				{"name": "procName"}
+			],
+			"argCount": {
+				"min": 1
+			},
+			"description": "Prints procedures, names, or properties",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "probot.close",
+			"args": [],
+			"description": "Disconnects the Pro-Bot from Logo",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "probot.lights",
+			"args": [
+				{"name": "onOrOff", "types": "bool"}
+			],
+			"description": "Disconnects the Pro-Bot from Logo",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "probot.read",
+			"args": [],
+			"description": "Uploads all Pro-Bot procedures into Logo's workspace",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "probot.sound",
+			"args": [
+				{"name": "soundNumber", "types": "int"}
+			],
+			"description": "Plays Pro-Bot sounds",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "probot.write",
+			"args": [],
+			"argCount": {
+				"min": 0,
+				"max": 1
+			},
+			"description": "Downloads all Pro-Bot procedures to the Pro-Bot",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "probot?",
+			"names": ["probotp", "probot.open"],
+			"args": [],
+			"description": "Tests if a Pro-Bot is connected and ready to receive commands",
+			"migrateToCode": "false"
+		},
+		{
+			"primaryName": "procedures",
+			"args": [],
+			"description": "Returns a list containing all user-defined, unburied procedure names",
+			"returnTypes": "list<string>",
+			"migrateToCode": "[]"
+		},
+		{
+			"primaryName": "product",
+			"to": "product"
+		},
+		{
+			"primaryName": "pu",
+			"to": "penUp"
+		},
+		{
+			"primaryName": "quote",
+			"args": [
+				{"name": "valueToQuote", "types": "string"}
+			],
+			"description": "Quotes its input.  In other words adds a quotation mark prefixing the specified value.",
+			"returnTypes": "string"
+		},
+		{
+			"primaryName": "quotient",
+			"to": "quotient"
+		},
+		{
+			"primaryName": "radArcTan",
+			"to": "radArcTan"
+		},
+		{
+			"primaryName": "radCos",
+			"to": "radCos"
+		},
+		{
+			"primaryName": "radSin",
+			"to": "radSin"
+		},
+		{
+			"primaryName": "random",
+			"to": "random"
+		},
+		{
+			"primaryName": "redo",
+			"args": [],
+			"description": "Redoes the last drawing command after an UNDO command",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "remainder",
+			"to": "remainder"
+		},
+		{
+			"primaryName": "restart",
+			"argCount": {
+				"min": 0,
+				"max": 1
+			},
+			"description": "Erases everything and restarts Logo.",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "round",
+			"to": "round"
+		},
+		{
+			"primaryName": "rseq",
+			"to": "rseq"
+		},
+		{
+			"primaryName": "rt",
+			"to": "right"
+		},
+		{
+			"primaryName": "sec",
+			"toProc": "sec"
+		},
+		{
+			"primaryName": "select.bluetooth",
+			"args": [],
+			"description": "Selects a Bluetooth device",
+			"migrateToCode": "[\"BLUEBOT \"BETTY]"
+		},
+		{
+			"primaryName": "sentence",
+			"names": ["se"],
+			"to": "sentence"
+		},
+		{
+			"primaryName": "setAlpha",
+			"args": [
+				{"name": "newAlpha", "types": "num"}
+			],
+			"description": "Sets the default alpha value for colors"
+		},
+		{
+			"primaryName": "setbg",
+			"to": "setScreenColor"
+		},
+		{
+			"primaryName": "setBounds",
+			"args": [
+				{"name": "newBounds", "types": "list<num>|num"}
+			],
+			"argCount": {
+				"min": 0,
+				"max": 1
+			},
+			"description": "sets the drawing bounds of the current Graphics canvas",
+			"removeInMigration": true,
+			"returnTypes": null
+		},
+		{
+			"primaryName": "setFont",
+			"args": [
+				{"name": "familyName", "types": "string"},
+				{"name": "size", "types": "num"},
+				{"name": "attributes", "types": "int"}
+			],
+			"argCount": {
+				"min": 0
+			},
+			"description": "Sets the turtle drawing font"
+		},
+		{
+			"primaryName": "setHeading",
+			"names": ["seth"],
+			"to": "setHeading"
+		},
+		{
+			"primaryName": "setMouseShape",
+			"args": [
+				{"name": "newShape", "types": "int"}
+			],
+			"description": "Sets the shape of the mouse cursor",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "setOpacity",
+			"args": [
+				{"name": "newOpacityRatio", "types": "num", "min": 0, "max": 1}
+			],
+			"description": "sets the opacity value of all active turtles.  This should translate to setting the opacity of the pen color in WebLogo.",
+			"returnTypes": null,
+			"toProc": "setOpacity"
+		},
+		{
+			"primaryName": "setOrigin",
+			"argCount": {
+				"min": 0,
+				"max": 1
+			},
+			"description": "Sets the coordinate system origin of the active turtles",
+			"returnTypes": null,
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "setP",
+			"args": [
+				{"name": "distance", "types": "num"},
+				{"name": "angle", "types": "num"}
+			],
+			"description": "Sets the turtle's polar position"
+		},
+		{
+			"primaryName": "setPattern",
+			"args": [
+				{"name": "patternValue", "types": "list|num|plist"}
+			],
+			"description": "Sets the turtle pattern",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "setPC",
+			"to": "setPenColor"
+		},
+		{
+			"primaryName": "setPen",
+			"args": [
+				{"name": "attributes", "types": "list"}
+			],
+			"description": "Sets the pen characteristics",
+			"returnTypes": null
+		},
+		{
+			"primaryName": "setShadow",
+			"args": [
+				{"name": "value"}
+			],
+			"description": "Sets the drop shadow for all active turtles"
+		},
+		{
+			"primaryName": "setSpeed",
+			"args": [
+				{"name": "newSpeed", "types": "num"}
+			],
+			"description": "Sets the speed at which turtle commands are executed",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "SETSTEPSIZE",
+			"args": [
+				{"name": "stepDistance", "types": "num"}
+			],
+			"description": "Sets the step size of all active turtles and bitmaps",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "setturtleSize",
+			"names": ["setts"],
+			"argCount": {
+				"min": 1,
+				"max": 2
+			},
+			"description": "sets the scaling factor of the widget",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "SETVELOCITY",
+			"args": [
+				{"name": "num"}
+			],
+			"description": "Controls the speed of an independently moving widget",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "setWidth",
+			"names": ["setw"],
+			"to": "setPenSize"
+		},
+		{
+			"primaryName": "setXY",
+			"args": [
+				{"name": "coords"}
+			],
+			"argCount": {
+				"min": 1,
+				"max": 2
+			},
+			"externalLink": "https://resources.terrapinlogo.com/weblogo/commands/drawing#setxy",
+			"to": "setPos"
+		},
+		{
+			"primaryName": "shown?",
+			"names": ["shownp"],
+			"to": "shown?"
+		},
+		{
+			"primaryName": "showTurtle",
+			"names": ["st"],
+			"to": "showTurtle"
+		},
+		{
+			"primaryName": "sin",
+			"to": "sin"
+		},
+		{
+			"primaryName": "speed",
+			"args": [],
+			"description": "Returns the current speed at which the turtle(s) moves on the screen",
+			"returnTypes": "num",
+			"migrateToCode": "1"
+		},
+		{
+			"primaryName": "splitscreen",
+			"names": ["ss"],
+			"args": [],
+			"description": "Makes both the Listener panel and the Graphics canvas visible",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "sqrt",
+			"to": "sqrt"
+		},
+		{
+			"primaryName": "stampoval",
+			"args": [
+				{"name": "width"},
+				{"name": "height"}
+			],
+			"argCount": {
+				"min": 2,
+				"max": 4
+			},
+			"description": "draws an oval around the current turtle(s)",
+			"removeInMigration": true,
+			"returnTypes": null
+		},
+		{
+			"primaryName": "stamprect",
+			"args": [
+				{"name": "width", "types": "num"},
+				{"name": "height", "types": "num"}
+			],
+			"argCount": {
+				"min": 2,
+				"max": 4
+			},
+			"description": "draws a rectangle with a width in turtle steps defined by its first input and a height defined by its second input",
+			"removeInMigration": true,
+			"returnTypes": null
+		},
+		{
+			"primaryName": "sum",
+			"to": "sum"
+		},
+		{
+			"primaryName": "tan",
+			"to": "tan"
+		},
+		{
+			"primaryName": "tell",
+			"args": [
+				{"name": "turtle", "types": "int|list|plist"}
+			],
+			"description": "Defines a list of objects listening to commands",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "tellall",
+			"args": [
+				{"name": "first", "types": "int"},
+				{"name": "last", "types": "int"}
+			],
+			"description": "Tells a range of turtle numbers",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "telleven",
+			"args": [],
+			"description": "Tells all turtles with even numbers.",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "tellodd",
+			"args": [],
+			"description": "Tells all turtles with odd numbers.",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "textscreen",
+			"names": ["ts"],
+			"args": [],
+			"description": "Minimizes the Graphics canvas and maximizes the Listener panel",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "thing",
+			"args": [
+				{"name": "name", "types": "string"}
+			],
+			"description": "Returns the value of a name"
+		},
+		{
+			"primaryName": "time",
+			"args": [],
+			"description": "Outputs the time in the format [hours minutes seconds]",
+			"returnTypes": "list<num>(minlen=3)",
+			"toProc": "time"
+		},
+		{
+			"primaryName": "toplevel",
+			"args": [],
+			"description": "Stops execution of all Logo commands and returns Logo to toplevel, the command mode",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "towards",
+			"to": "towards"
+		},
+		{
+			"primaryName": "tuffbot.battery",
+			"args": [],
+			"description": "Returns Tuff-Bot's battery level",
+			"returnTypes": "num",
+			"migrateToCode": "0"
+		},
+		{
+			"primaryName": "tuffbot.buttons",
+			"args": [
+				{"name": "obstacle", "types": "bool"},
+				{"name": "speed", "types": "int", "min": 0, "max": 2}
+			],
+			"description": "Programs Tuff-Bot's buttons",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "tuffbot.clear",
+			"args": [],
+			"description": "Clears all commands stored in Tuff-Bot's memory",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "tuffbot.close",
+			"args": [],
+			"description": "Disconnects the Tuff-Bot from Logo.",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "tuffbot.go",
+			"args": [],
+			"description": "Executes commands stored in Tuff-Bot's memory",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "tuffbot?",
+			"names": ["tuffbotp", "tuffbot.open"],
+			"args": [],
+			"description": "Tests if the Tuff-Bot is connected and ready to receive commands.",
+			"migrateToCode": "false"
+		},
+		{
+			"primaryName": "turtleText",
+			"names": ["tt"],
+			"to": "label"
+		},
+		{
+			"primaryName": "typeof",
+			"args": [
+				{"name": "val"}
+			],
+			"description": "Reports the type of a value",
+			"returnTypes": "string"
+		},
+		{
+			"primaryName": "unfreezepic",
+			"args": [],
+			"description": "undoes the FREEZEPIC command",
+			"removeInMigration": true,
+			"returnTypes": null
+		},
+		{
+			"primaryName": "unicode",
+			"args": [
+				{"name": "character", "types": "string(minlen=1)"}
+			],
+			"description": "Converts a character into its Unicode value",
+			"returnTypes": "int",
+			"to": "ascii"
+		},
+		{
+			"primaryName": "unlockshape",
+			"args": [],
+			"description": "restores the normal rotation of the bitmap, cancelling the effects of LOCKSHAPE",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "until",
+			"description": "Runs a list until a condition is true",
+			"to": "until"
+		},
+		{
+			"primaryName": "upperCase",
+			"to": "upperCase"
+		},
+		{
+			"primaryName": "wait",
+			"args": [
+				{"name": "interval", "types": "num"}
+			],
+			"description": "",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "when",
+			"argCount": {
+				"min": 0,
+				"max": 5
+			},
+			"description": "Monitors a change to a Logo property or to a Logo event",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "width",
+			"to": "penSize"
+		},
+		{
+			"primaryName": "window",
+			"args": [],
+			"description": "Removes the boundary for turtle movements",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "word",
+			"to": "word"
+		},
+		{
+			"primaryName": "xlist",
+			"args": [
+				{"name": "object1"},
+				{"name": "object2"}
+			],
+			"argCount": {
+				"min": 1
+			},
+			"description": "Returns an executable list composed of its inputs",
+			"to": "list"
+		}
+	],
+	"operators": [],
+	"keywords": []
+}

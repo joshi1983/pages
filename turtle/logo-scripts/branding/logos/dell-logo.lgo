@@ -1,0 +1,73 @@
+to drawD :fontHeight
+	localmake "oldState turtleState
+	localmake "thickness :fontHeight * 0.21
+	localmake "arcsInfo [
+		[0.27] [90 0.403]
+	]
+	localmake "bottomGap :fontHeight * 0.02
+	localmake "fontHeight1 :fontHeight - :bottomGap
+	jumpForward :bottomGap
+	jumpLeft :fontHeight * 0.27
+	stripes :thickness :fontHeight1 [fillColor]
+	setPenSize :fontHeight * 0.19
+	jumpForward penSize / 2
+	setLineCap "butt
+	right 90
+	arcLines combine :arcsInfo reverse :arcsInfo :fontHeight1
+	setTurtleState :oldState
+end
+
+to drawE :fontHeight
+	localmake "oldState turtleState
+	localmake "thickness :fontHeight * 0.19
+	localmake "separation :fontHeight * 0.35
+	localmake "angle 16
+	setPenSize 0
+	right 36
+	jumpLeft :thickness * 0.3
+	repeat 3 [
+		parallelogram :thickness :fontHeight * 0.88 :angle
+		jumpLeft :separation
+	]
+	jumpRight :separation * 2
+	parallelogram :separation * 2 + :thickness :thickness * 1.1 :angle
+	setTurtleState :oldState
+end
+
+to drawL :fontHeight
+	localmake "oldState turtleState
+	localmake "fontHeight1 :fontHeight * 0.97
+	localmake "thickness :fontHeight * 0.21
+	localmake "width :fontHeight * 0.6
+	jumpForward :fontHeight - :fontHeight1
+	stripes :width :thickness [fillColor]
+	jumpLeft (:width - :thickness) / 2
+	stripes :thickness :fontHeight1 [fillColor]
+	
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Dell#/media/File:Dell_logo_2016.svg
+to dellLogo :height
+	localmake "oldState turtleState
+	localmake "fontHeight :height * 0.227
+	jumpForward :height / 2
+	setPenSize :height * 0.051
+	setPenColor "#007db8
+	setFillColor transparent
+	circle (:height - penSize) / 2
+	jumpLeft :height * 0.27
+	jumpBackward :height * 0.115
+	setFillColor penColor
+	drawD :fontHeight
+	jumpRight :height * 0.23
+	drawE :fontHeight
+	jumpRight :height * 0.199
+	drawL :fontHeight
+	jumpRight :height * 0.16
+	drawL :fontHeight
+	setTurtleState :oldState
+end
+
+dellLogo 100

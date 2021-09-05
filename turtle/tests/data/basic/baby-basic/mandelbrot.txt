@@ -1,0 +1,88 @@
+' DEMO: Golden Halo Mandelbrot - Soft Breathing Light- Living Fire Border [Color Cycling]
+Number gw = 200
+Number gh = 150
+Number scale = 4 ' scale up to 800x600
+Number vw = 2.7 ' view width (zoom)
+Number cx = -0.75 ' center x
+Number mx = 60 ' max iterations for color
+Number dx = 0
+Number x0 = 0
+Number y0 = 0
+Number px = 0
+Number py = 0
+Number cr = 0
+Number ci = 0
+Number zr = 0
+Number zi = 0
+Number zr2 = 0
+Number zi2 = 0
+Number tz = 0
+Number it = 0
+Number escape = 0
+Number k = 0
+Number rr = 0
+Number gg = 0
+Number bb = 0
+Number tt = 0
+Number count = 0
+Number time = 0
+Text col = ""
+Array Xs ' store X positions of border
+Array Ys ' store Y positions of border
+Array Its ' store iteration count for color
+Window.SetGameBackground("black")
+Window.Width = 800
+Window.Height = 600
+dx = vw / gw
+x0 = cx - vw / 2
+y0 = 0 - (dx * gh) / 2
+' 1 - CALCULATE MANDLEBROT ONLY ONCE AND SAVE BORDER POINTS
+For py = 0 To gh - 1
+  ci = y0 + py * dx
+  For px = 0 To gw - 1
+    cr = x0 + px * dx
+    zr = 0
+    zi = 0
+    it = 0
+    escape = 0
+    For k = 0 To 30
+      If escape = 0 Then
+        zr2 = zr * zr
+        zi2 = zi * zi
+        If (zr2 + zi2) > 4 Then
+          escape = 1 ' point escaped -> border
+        Else
+          tz = 2 * zr * zi + ci
+          zr = zr2 - zi2 + cr
+          zi = tz
+          it = it + 2
+        EndIf
+      EndIf
+    EndFor
+    If escape = 1 Then
+      Xs[count] = px * scale
+      Ys[count] = py * scale
+      Its[count] = it
+      count = count + 1
+    EndIf
+  EndFor
+EndFor
+' 2 - ANIMATE ONLY COLORS (NO HEAVY MATH) - FIRE BREATHING EFFECT
+LOOP
+  Window.SetGameBackground("black")
+  time = time + 1
+  For k = 0 To count - 1
+    tt = Its[k] / mx + time * 0.05
+    If tt > 1 Then tt = tt - 1 EndIf ' loop the palette
+    ' fire gradient: dark red -> yellow -> white
+    rr = 15 + 240 * tt * tt * tt
+    gg = 25 + 210 * tt * tt * tt * tt
+    bb = 70 - 45 * tt * tt
+    If rr > 255 Then rr = 255 EndIf
+    If gg > 255 Then gg = 255 EndIf
+    If bb < 0 Then bb = 0 EndIf
+    col = "rgba(" + rr + "," + gg + "," + bb + ",1)"
+    Window.SetBrushColor(col)
+    Window.DrawSolidRectangle(Xs[k], Ys[k], scale, scale)
+  EndFor
+END LOOP

@@ -1,0 +1,29 @@
+; Inspired by flag at:
+; https://en.wikipedia.org/wiki/Flag_of_Antarctica#/media/File:True_South_Antarctic_Flag.svg
+to trueSouthFlagProposal :height
+	localmake "oldState turtleState
+	localmake "width :height * 5 / 3
+	localmake "darkBlueColor "#1b2f4c
+	localmake "triWidth :height * 5 / 9
+	localmake "triHeight :height * 0.445
+	stripes :width :height ["white :darkBlueColor]
+	jumpForward :height / 2
+	right 180
+	setPenSize 0
+	setFillColor :darkBlueColor
+	isoTriangle :triWidth :triHeight
+	setFillColor "white
+	jumpLeft :triWidth / 2
+	localmake "sidePos1 pos
+	jumpRight :triWidth
+	localmake "sidePos2 pos
+	jumpLeft :triWidth / 2
+	jumpBackward :triHeight
+	localmake "verticalPos1 pos
+	jumpForward :triHeight * 5 / 4
+	polygon [:sidePos1 pos :sidePos2 :verticalPos1]
+	setTurtleState :oldState
+end
+
+setScreenColor "#ddd
+trueSouthFlagProposal 100

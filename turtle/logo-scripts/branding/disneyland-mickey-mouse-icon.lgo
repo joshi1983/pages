@@ -1,0 +1,28 @@
+; Inspired by favicon(browser tab icon) at:
+; https://disneyland.disney.go.com
+to disneylandMickeyMouseEars :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "disneyBlue "#223b56
+	localmake "separation :height * 0.35
+	setPenColor :disneyBlue
+	jumpForward :height / 2
+	setFillColor transparent
+	setPenSize :height * 0.08
+	circle (:height - penSize) / 2
+	jumpBackward :height * 0.095
+	setPenSize 0
+	setFillColor :disneyBlue
+	circle :height * 0.185
+	jumpForward :height * 0.19
+	jumpLeft :separation / 2
+	repeat 2 [
+		right 42 * sign repcount - 1.5
+		ellipse :height * 0.125 :height * 0.11
+		setHeading :oldHeading
+		jumpRight :separation
+	]
+	setTurtleState :oldState
+end
+
+disneylandMickeyMouseEars 100

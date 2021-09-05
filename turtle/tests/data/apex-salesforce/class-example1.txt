@@ -1,0 +1,72 @@
+/**
+ * copied from:
+https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_doc_examples.htm
+
+ * Manages customer account information and related operations.
+ * This class bypasses user record access via 'without sharing' so that it 
+ * can be used in a batch classes.
+ * @author John Developer
+ * @since 0.1.0
+ * @version 0.3.1
+ * @see AccountProcessingBatch
+ * @group Account
+ * @example
+ * {@code
+ * Account a;
+ * try {
+ *  a = new AccountManager().createAccount('Acme', 'Agriculture');
+ * } catch (AccountManager.AccountException caught) {
+ *   LOGGER.log(caught);
+ *   // further exception handling
+ * }
+ * }
+ */
+public without sharing class AccountManager {
+
+    /**
+     * The default region for new accounts if not specified.
+     */
+    public static final String DEFAULT_REGION = 'North America';
+
+    /**
+     * Stores the count of active accounts managed by this instance.
+     * Populated after using the {@link AccountService}.
+     */
+    @TestVisible
+    private Integer activeAccountCount;
+
+    /**
+     * Creates a new Account sObject with the given name and industry.
+     * @param accountName The desired name for the new account. Cannot be null or empty.
+     * @param industry The industry classification for the new account.
+     * @return The newly created Account sObject with its ID populated.
+     * @throws AccountManager.AccountException if accountName is invalid
+     * or if DML operation fails.
+     */
+    public Account createAccount(String accountName, String industry) {
+        if (String.isBlank(accountName)) {
+            throw new AccountManager.AccountException('Account name cannot be blank.');
+        }
+        Account acc = new Account(Name = accountName, Industry = industry);
+        // Potentially more logic here
+        try {
+            insert acc;
+        } catch (DmlException e) {
+            throw new AccountManager.AccountException(
+                'Failed to create account: ' + e.getMessage()
+            );
+        }
+        return acc;
+    }
+
+    // more methods...
+
+    /**
+     * Represents an exception specific to AccountManager operations.
+     * @example
+     * {@code
+     * throw new AccountManager.AccountException('Account not found with provided Id.');
+     * }
+     */
+    public class AccountException extends Exception {}
+}

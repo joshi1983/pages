@@ -1,0 +1,32 @@
+; Copied from http://www.sonic.net/~nbs/webturtle/webturtle.cgi?file=repoly
+; Example 11: Recursive Polygons
+
+; S is the number of sides
+; D is how deep to recurse
+
+LET S 5
+LET D 4
+
+LEFT 90
+MOVE 10*D
+RIGHT 90
+GO REPOLY
+END
+
+# REPOLY
+  IF D > 0
+    REPEAT S
+      DRAW D*D*5
+      RIGHT 360/S
+
+      PUSH D
+      LET D D-1
+      REMEMBER
+      LEFT 360/S
+      LEFT 180/S
+      GO REPOLY
+      GOBACK
+      POP D
+    NEXT
+  ENDIF
+RETURN

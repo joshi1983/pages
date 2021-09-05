@@ -1,0 +1,22 @@
+; Implemented to be similar to the 
+; nf function from Processing.
+; https://processing.org/reference/nf_.html
+; This is for cases with 2 parameters.
+to pNumberFormat2 :num :numDigits
+
+	localmake "result "
+	localmake "prefix "
+	if :num < 0 [
+		localmake "num -:num
+		localmake "prefix "-
+	]
+	localmake "i 0
+	while or :i < :numDigits :num >= 1 [
+		localmake "digitVal modulo :num 10
+		localmake "digitChar char :digitVal + ascii "0
+		localmake "result word :digitChar :result
+		localmake "num int :num / 10
+		localmake "i :i + 1
+	]
+	output word :prefix :result
+end

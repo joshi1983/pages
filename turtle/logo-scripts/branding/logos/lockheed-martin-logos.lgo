@@ -1,0 +1,54 @@
+make "lockheedBlue "#003478
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Lockheed_Martin#/media/File:Lockheed_Martin_logo.svg
+to lockheedMartinLogo :height :color
+	localmake "oldState turtleState
+	localmake "cornerRatio 0.0042
+	localmake "angle 13.8
+	localmake "shapes [
+		[0 0 [
+			[-:angle 0] [0.3717] [-50.75 0] [0.547] [154.35 :cornerRatio]
+			[0.425] [-106.2 0] [0.4015] [153.5 :cornerRatio]
+			[0.532] [-47.1 0] [1.58] [178.7 :cornerRatio]
+			[1.734] [84 0] [0.048] [97 0] [0.115] [-137.3 0] [0.265]
+			[-143.15 0] [0.231] [99.3 0] [0.229] [-147.7 0] [0.303]
+			[48.51 0] [0.4012] [176.95 :cornerRatio]
+		]]
+		[0.059 0.36
+			[[-10.9 0] [0.22] [-80 0] [0.047] [-104.5 0] [0.2]]
+		]
+		[0.029 0.333
+			[[116.7 0] [0.466] [-176.15 :cornerRatio]
+			[0.494]]
+		]
+		[-0.125 0.538
+			[[133 0] [0.283] [-177 :cornerRatio]
+			[0.261]]
+		]
+	]
+	jumpForward :height * 0.00322
+	jumpRight :height * 0.3
+	setPenSize 0
+	setFillColor :color
+	drawArcLineShapes :shapes :height
+	setTurtleState :oldState
+end
+
+to lockheedMartinBlueForegroundLogo :height
+	lockheedMartinLogo :height :lockheedBlue
+end
+
+to lockheedMartinWhiteForegroundLogo :height
+	localmake "innerHeight :height * 0.9
+	stripes :height * 3 :height [:lockheedBlue]
+	jumpForward (:height - :innerHeight) / 2
+	lockheedMartinLogo :innerHeight "white
+end
+
+make "height 100
+make "separation :height * 5
+jumpLeft :separation / 2
+lockheedMartinBlueForegroundLogo :height
+jumpRight :separation
+lockheedMartinWhiteForegroundLogo :height
