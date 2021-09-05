@@ -1,0 +1,29 @@
+; Inspired by:
+; https://upload.wikimedia.org/wikipedia/commons/d/d8/Flag_of_the_Federal_Supreme_Court_of_Brazil.svg
+to matoGrossoFlag :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "width :height * 10 / 7
+	localmake "whiteLen :height * 0.7
+	localmake "whiteAngle 33
+	localmake "radius :height / 4
+	stripes :width :height ["#28166f]
+	setPenSize 0
+	setFillColor "white
+	jumpForward :height / 2
+	localmake "center pos
+	jumpBackward :whiteLen * sin :whiteAngle
+	left :whiteAngle
+	jumpRight :whiteLen / 2
+	parallelogram :whiteLen :whiteLen :whiteAngle * 2 - 90
+	jumpTo :center
+	setFillColor "#00923f
+	circle :radius
+	setFillColor "#f8c300
+	setHeading :oldHeading
+	regularStar :radius 5
+	setTurtleState :oldState
+end
+
+make "height 100
+matoGrossoFlag :height

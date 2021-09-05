@@ -1,0 +1,13 @@
+; Inserts a string(insertedString) at a specified position within s
+; Similar to assigning a value to QBasic's mid$ where 3 parameters are passed to $mid
+to qbMidStringReplace4 :s :startIndex :lenRemoved :insertedString
+	localmake "prefix "
+	localmake "tailString "
+	if :startIndex > 1 [
+		localmake "prefix substring :s 1 :startIndex - 1
+	]
+	if :startIndex + :lenRemoved <= count :s [
+		localmake "tailString substring :s :startIndex + :lenRemoved 0
+	]
+	output (word :prefix :insertedString :tailString)
+end

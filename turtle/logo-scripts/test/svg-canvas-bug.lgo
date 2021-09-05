@@ -1,0 +1,16 @@
+; Steps to reproduce bug:
+; 1. Include the logo-scripts/test/svg-canvas-bug.svg' in your assets.
+; 2. run this code.
+; 3. Notice the aspect ratio in canvas.  Click Drawing -> Download.
+; Notice that the SVG has a different aspect ratio in SVG.
+; That's the bug.
+; We want everything drawn in canvas to be the same in SVG.
+
+; Notice that height, width, and viewBox are not specified in the SVG.
+; That seems to be part of what causes the bug but we should be able to work around that.
+; WebLogo could automatically add a width, height, viewBox when it isn't 
+; specified in RasterRectangle when processing the data URL of an SVG.
+; Ideally, we'll get a width, height that corresponds with the dimensions used by
+; an SVG image element referencing the same SVG, though.
+
+imageAlpha 100 * 2 100 'local://svg-canvas-bug.svg' 0.5

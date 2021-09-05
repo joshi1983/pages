@@ -1,0 +1,37 @@
+; Inspired by logo at:
+; https://www.youtube.com/@BetterSoftwareConference
+to betterSoftwareConferenceLogo :height
+	localmake "oldState turtleState
+	localmake "angle 10
+	localmake "radius :height / (1 + cos :angle)
+	localmake "len1 0.24
+	localmake "pair [-59 0.1]
+	localmake "lines1 [
+		[0.155] [:len1] :pair
+		[120 0.1]
+	]
+	localmake "innerLines1 [
+		[125.8 0.1]
+		[-67 0.08] [:len1]
+		[-79 0.043] [-10 0.86583902]
+	]
+	localmake "innerLines2 combine :innerLines1 reverse :innerLines1
+	repeat 5 [
+		repeat count :innerLines2 [
+			localmake "e item repcount :innerLines2
+			queue2 "lines1 :e
+		]
+	]
+	setPenSize 0
+	setFillColor "#e68e10
+	drawArcLineShape [sin :angle 0
+		(combine [[:angle - 90 0]
+		[360 - :angle * 2 1]
+		[90 + :angle 0] [0.1]] :lines1 
+		[[125.8 0.1]
+		[-67 0.08]])
+	] :radius
+	setTurtleState :oldState
+end
+
+betterSoftwareConferenceLogo 100
