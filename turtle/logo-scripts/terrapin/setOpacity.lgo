@@ -1,0 +1,12 @@
+to setOpacity :newOpacityRatio
+	localmake "newOpacityRatio clamp :newOpacityRatio 0 1
+	ifelse penColor = transparent [
+		setPenColor mix "black transparent :newOpacityRatio
+	] [
+		localmake "c penColor
+		if 4 = count :c [
+			localmake "c butFirst :c
+		]
+		setPenColor mix :c transparent :newOpacityRatio
+	]
+end

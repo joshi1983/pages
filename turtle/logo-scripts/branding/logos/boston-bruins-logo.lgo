@@ -1,0 +1,94 @@
+make "bbGold "#fcb514
+
+to drawB :fontHeight
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "outlineArcs [[0.257] [45 0] [0.086] [-45 0] [0.159]
+	[-90 0] [0.618] [-45 0] [0.233] [-45 0] [0.245] [-45 0] [0.087]
+	[45 0]
+	]
+	localmake "middleArcs [[0.272] [45 0] [0.09] [-45 0] [0.09]
+	[-90 0] [0.55] [-45 0] [0.182] [-45 0] [0.22] [-45 0] [0.105]
+	[45 0]
+	]
+	localmake "innerArcs [[0.27] [45 0] [0.069] [45 0] [0.05]]
+	localmake "innerWhiteArcs [[0.185] [45 0] [0.03] [45 0] [0.028]]
+	setLineJoinStyle "miter
+	setFillColor :bbGold
+	setPenColor "black
+	setPenSize :fontHeight * 0.0333
+	jumpForward :fontHeight / 2
+	localmake "center pos
+	jumpLeft :fontHeight * 0.333
+	polyStart
+	arcLines :outlineArcs :fontHeight
+	arcLines reverse :outlineArcs :fontHeight
+	polyEnd
+	jumpTo :center
+	setHeading :oldHeading
+	setPenSize 0
+	setFillColor "black
+	jumpLeft :fontHeight * 0.281
+	polyStart
+	arcLines :middleArcs :fontHeight
+	arcLines reverse :middleArcs :fontHeight
+	polyEnd
+	setPenSize :fontHeight * 0.027
+	setPenColor :bbGold
+	setHeading :oldHeading
+	repeat 2 [
+		setHeading :oldHeading + repcount * 360 / 2
+		localmake "sign sign repcount - 1.5
+		jumpTo :center
+		jumpForward :fontHeight * 0.078
+		jumpLeft :fontHeight * 0.14 * :sign
+		right 90 * :sign
+		polyStart
+		arcLines :innerArcs :fontHeight * :sign
+		arcLines reverse :innerArcs :fontHeight * :sign
+		polyEnd
+	]
+	setPenSize 0
+	setFillColor "white
+	repeat 2 [
+		setHeading :oldHeading + repcount * 360 / 2
+		localmake "sign sign repcount - 1.5
+		jumpTo :center
+		jumpForward :fontHeight * 0.128
+		jumpLeft :fontHeight * 0.08 * :sign
+		right 90 * :sign
+		polyStart
+		arcLines :innerWhiteArcs :fontHeight * :sign
+		arcLines reverse :innerWhiteArcs :fontHeight * :sign
+		polyEnd
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by:
+; https://en.wikipedia.org/wiki/Boston_Bruins#/media/File:Boston_Bruins.svg
+to bostonBruinsLogo :height
+	localmake "oldState turtleState
+	localmake "len1 :height * 0.45
+	localmake "outerThickness :height * 0.019
+	localmake "innerThickness :height * 0.07
+	localmake "fontHeight :height * 0.56
+	jumpForward :height / 2
+	repeat 8 [
+		stripes :height * 0.097 :len1 ["black]
+		stripes :height * 0.057 :len1 [:bbGold]
+		right 360 / 8
+	]
+	setFillColor transparent
+	setPenColor :bbGold
+	setPenSize :outerThickness
+	circle (:height - penSize) / 2
+	setPenColor "black
+	setPenSize :innerThickness
+	circle (:height - :innerThickness) / 2 - :outerThickness
+	jumpBackward :fontHeight / 2
+	drawB :fontHeight
+	setTurtleState :oldState
+end
+
+bostonBruinsLogo 100

@@ -1,0 +1,99 @@
+to drawEye :radius
+	localmake "oldState turtleState
+	setFillColor "white
+	setPenColor "black
+	setPenSize :radius * 0.2
+	circle :radius
+	setPenSize 0
+	setFillColor "black
+	jumpForward :radius * 0.3
+	jumpRight :radius * 0.3
+	circle :radius * 0.7
+	setTurtleState :oldState	
+end
+
+; Inspired by Maccy shown at:
+; https://www.youtube.com/@MacintoshLibrarian
+;
+; Ms. Fox gives a good overview of LOGO's history at:
+; https://www.youtube.com/watch?v=cwnMhI9XjO8
+to macintoshLibrarianMaccy :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	stripes :height :height ["#7b4b2a]
+	setPenColor "#000
+	setPenSize 0
+	localmake "angle1 56
+	setFillColor "#85482c
+	drawArcLineShape [0 0
+		[[0.5] [:angle1 0] [0.6] [180 - :angle1 0] [0.6]
+		[13 0] [0.2415]
+		]
+	] :height
+	setFillColor "#cd9974
+	drawArcLineShape [0 0.5
+		[[:angle1 0] [0.6] [-:angle1 0] [0.035] [-84 0] [0.73]
+		[-7 0] [0.14]
+		]
+	] :height
+	setPenSize :height * 0.001
+	setFillColor "#dfb688
+	drawArcLineShape [-0.364 0
+		[[9 0] [0.81] [-91.5 0.03] [0.84] [-90.3 0.02]
+		[0.88] [-80 0.03] [0.068]]
+	] :height
+
+	jumpLeft :height * 0.32
+	setPenColor "#000
+	setPenSize :height * 0.001
+	right 80
+	arcLeft 8.6 :height * 5.5
+
+	setHeading :oldHeading
+	jumpTo :oldPos
+	setFillColor "#a3643b
+	setPenSize 0
+	drawArcLineShape [-0.379 0.702
+		[[-81.2 0.03] [0.67] [-40 0.03] [-100 0] [0.4]]] :height
+	setFillColor "#e9c9a3
+	drawArcLineShape [-0.268 0.33
+		[[170 0] [0.15] [114 0.023] [0.68] [50 0.022]
+		[80 0] [0.1]]
+	] :height
+
+	setFillColor "black
+	drawArcLineShapes [
+		[0 0.274
+		[[-77 0] [1 20] [84 0.03] [1.15 20] [88 0.015]
+		[2.75 13] [88 0.025] [2.55 10] [88 0.024]]]
+
+		[0.095 0.072
+		[[5 0] [0.02] [-79.7 0] [0.31] [-95 0] [0.016]]
+		]
+	] :height
+	setFillColor "#cacdd4
+	drawArcLineShape [0 0.29
+		[[-77 0] [0.33] [85 0] [0.42] [91 0] [0.58] [90 0]
+		[0.455]]] :height
+
+	jumpForward :height * 0.544
+	jumpLeft :height * 0.133
+	drawEye :height * 0.058
+
+	jumpRight :height * 0.29
+	jumpForward :height * 0.055
+	drawEye :height * 0.055
+
+	jumpTo :oldPos
+	jumpForward :height * 0.448
+	jumpLeft :height * 0.106
+	setLineCap "round
+	right 91
+	setPenSize :height * 0.01
+	arcLeft 24 :height * 0.65
+	setTurtleState :oldState
+end
+
+setScreenColor "#888
+macintoshLibrarianMaccy 100

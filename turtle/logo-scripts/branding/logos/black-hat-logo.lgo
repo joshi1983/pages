@@ -1,0 +1,24 @@
+; Inspired by logo at:
+; https://www.blackhat.com
+to blackHatLogo :height
+	localmake "oldState turtleState
+	localmake "outerArcAngle 130
+	localmake "outerArcRadius 1 / (1 + sin :outerArcAngle - 90)
+	localmake "lines1 [
+		[90 0] [:outerArcAngle :outerArcRadius]
+		[110 0] [-32 0.08] [-23 0.7] [110 0]
+		[20 0.3] [-90 0] [-38 0.1] [110 0]
+		[-21.5 0.4] [76 0] [-30 0.3] [-20 0.06]
+		[-50 0.03] [-42 0.05] [-24 0.3] [78 0]
+		[-10 0.8] [-11 0.3] [-62.5 0.05] [0.1335810527]
+	]
+	setPenSize 0
+	setFillColor "white
+	drawArcLineShape [0 1
+		combine :lines1 reverse :lines1
+	] :height
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+blackHatLogo 100

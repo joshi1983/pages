@@ -1,0 +1,73 @@
+to drawHexWebLayer :height
+	localmake "oldState turtleState
+	localmake "numRows 6
+	localmake "separation :height / :numRows
+	localmake "radius :separation / 2 / cos 30
+	localmake "jointSize :radius * 0.1
+	localmake "vSeparation :radius * (1 + sin 30)
+	setPenGradient createRadialGradient pos :height / 2 createPList2 [
+		[0 "white] [1 "#0fff]
+	]
+	jumpBackward :separation * (:numRows - 1) / 2
+	localmake "thickness :height * 0.005
+	repeat :numRows [
+		localmake "pos1 pos
+		jumpLeft :separation * (:numRows - modulo repcount 2)  / 2
+		repeat :numRows [
+			localmake "pos2 pos
+			setPenSize :thickness
+			setFillColor transparent
+			regularPolygon :radius 6
+			jumpForward :radius
+			setPenSize 0
+			setFillGradient penGradient
+			circle :jointSize
+			right 60
+			jumpTo :pos2
+			jumpForward :radius
+			circle :jointSize
+			left 60
+			jumpTo :pos2
+			jumpRight :separation
+		]
+		jumpTo :pos1
+		jumpForward :vSeparation
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by image at:
+; https://ca.pinterest.com/pin/31243791152593842
+; The pin was posted by a user named Mary Lynne.
+to hexWeb :height :t
+	localmake "oldState turtleState
+	localmake "scale 2
+	jumpForward :height / 2
+	repeat 4 [
+		localmake "z 1 + repcount * :scale - :t * 9
+		if :z > 0 [
+			drawHexWebLayer :height * (1 + :scale) / :z
+		]
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+make "t animation.clampedTimeRatio
+hexWeb 100 :t
+
+to animation.snapshotstyle
+	output createPList2 [
+		["position.y 50]
+		["zoom.scale 5.5]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 10
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

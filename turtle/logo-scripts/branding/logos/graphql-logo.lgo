@@ -1,0 +1,28 @@
+; Inspired by logo at
+; https://graphql.org/brand/
+to graphQLLogo :height
+	localmake "oldState turtleState
+	localmake "circleRadius :height * 0.089086
+	localmake "hexSize :height / 2 - :circleRadius
+	localmake "thickness1 :height * 0.0423
+	setPenColor "#e10098
+	setPenSize :thickness1
+	jumpForward :height / 2
+	setFillColor transparent
+	regularPolygon :hexSize 6
+	setPenSize 0
+	setFillColor penColor
+	localmake "center pos
+	repeat 6 [
+		jumpForward :hexSize
+		circle :circleRadius
+		jumpTo :center
+		right 360 / 6
+	]
+	setFillColor transparent
+	setPenSize :thickness1
+	regularPolygon :hexSize 3
+	setTurtleState :oldState
+end
+
+graphQLLogo 100

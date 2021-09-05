@@ -1,0 +1,67 @@
+to getY :x :k
+	localmake "val1  power (abs :x) 2/3
+	output :val1 +
+		0.9 * (radSin :k * :x) * sqrt (3 - (:x * :x))
+end
+
+; Inspired by a video at:
+; https://www.facebook.com/share/r/1JWzgufuWR/
+; It was posted by The Brain Maze.
+to heartWave :height :k
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "numDivisions 5000
+	localmake "scale :height / 4.2
+	localmake "points []
+	jumpForward :height * 0.45
+	localmake "center pos
+	repeat :numDivisions [
+		localmake "x (repRatio - 0.5) * 2 * sqrt 3
+		localmake "y getY :x :k
+		jumpForward :scale * :y
+		jumpRight :scale * :x
+		queue2 "points pos
+		jumpTo :center
+		setHeading :oldHeading		
+	]
+	setLineJoinStyle "round
+	localmake "r clamp :k / 200 0 1
+	setPenSize :height * mix 0.005 0.003 :r
+	setPenColor "#f77
+	jumpTo first :points
+	for ["i 2 count :points] [
+		setPos item :i :points
+	]
+
+	setPenSize 0
+	setFillColor "#fff
+	jumpTo :oldPos
+	right 90
+	jumpBackward :height * 0.3
+	setFontSize :height * 0.06
+	label word 'k=' str :k
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+make "t interpolateRatio easeInOutCubic animation.clampedTimeRatio
+make "k (1 - cos :t * 360) * 120
+heartWave 100 :k
+
+to animation.snapshotstyle
+	output createPList2 [
+		["position.y 50]
+		["zoom.scale 6]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 20
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+		["thumbnailTime :seconds / 2]
+	]
+end

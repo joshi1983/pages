@@ -1,0 +1,106 @@
+to drawBuilding :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "roofAngle 34
+	localmake "roofThickness :height * 0.08
+	localmake "roofLength :height * 0.62
+	localmake "color "white
+	localmake "pillerSeparation :height * 0.207
+	stripes :height * 0.97 :height * 0.025 [:color]
+	jumpLeft :pillerSeparation * 1.5
+	repeat 4 [
+		stripes :height * 0.115 :height * 0.075 [:color]
+		stripes :height * 0.04 :height * 0.612 [:color]
+		jumpRight :pillerSeparation
+	]
+
+	jumpTo :oldPos
+	jumpForward :height * 0.66
+	stripes :height * 0.8 :height * 0.03 [:color]
+
+	jumpTo :oldPos
+	jumpForward :height
+	localmake "top pos
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		setHeading :oldHeading + :roofAngle * :sign
+		jumpRight :roofLength / 2 * :sign
+		jumpBackward :roofThickness
+		stripes :roofLength :roofThickness [:color]
+		jumpTo :top
+	]
+	setTurtleState :oldState	
+end
+
+to drawWheatArc :radius :numParts :directionSign
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "angle 13.5
+	localmake "angleDelta :directionSign * :angle
+	localmake "innerShape [0.12 0
+		[[-80 0] [40 0.3] [20 0.8] [0.9] [150 0]
+		[0.4] [40 1.1] [29.5 0.5] [62 0.04]]
+	]
+	localmake "outerShape [-0.12 0
+		[[-90 0] [90 0.1] [15 0.8] [0.7] [10 0.8]
+		[140 0] [30 1.7] [10 0.7] [25 0.3] [23 0.08]]
+	]
+	localmake "partSize 2 * :radius * sin :angle / 2
+	localmake "partSize1 :partSize * :directionSign
+	localmake "center pos
+	repeat :numParts [
+		setHeading :oldHeading + repcount * :angleDelta
+		localmake "splitAngle :directionSign * mix -5 20 repRatio
+		localmake "partSize2 :partSize1 * mix 0.9 1.05 repRatio
+		jumpLeft :radius * :directionSign
+		right :splitAngle
+		drawArcLineShape :innerShape :partSize2
+		left :splitAngle * 2
+		drawArcLineShape :outerShape :partSize2
+		jumpTo :center
+	]
+	setHeading :oldHeading + (:numParts + 1) * :angleDelta
+	jumpLeft :radius * :directionSign
+	jumpForward :partSize * 0.1
+	circlePair :partSize * 0.17 0 :partSize
+	setTurtleState :oldState
+end
+
+to drawWheatArcs :radius
+	localmake "oldState turtleState
+	localmake "startAngle 77
+	localmake "numParts 8
+	setFillColor "#bdbdbd
+	setPenSize 0
+	left :startAngle
+	drawWheatArc :radius :numParts 1
+	right :startAngle * 2
+	drawWheatArc :radius :numParts -1
+
+	setTurtleState :oldState	
+end
+
+; Inspired by logo at:
+; https://www.youtube.com/@HistoriaMilitum
+to historiaMilitumLogo :height
+	localmake "oldState turtleState
+	jumpForward :height / 2
+	setPenSize :height * 0.028
+	setPenColor "black
+	setFillColor "red
+	circle (:height - penSize) / 2
+	setPenSize 0
+	setFillColor "black
+	circle :height * 0.463
+	localmake "center pos
+	jumpForward :height * 0.01
+	drawWheatArcs :height * 0.36
+
+	jumpTo :center
+	jumpBackward :height * 0.136
+	drawBuilding :height * 0.345
+	setTurtleState :oldState
+end
+
+historiaMilitumLogo 100

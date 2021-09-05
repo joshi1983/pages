@@ -1,0 +1,10 @@
+; Similar to QB64's _RGB32 function when 1 parameter is passed to it.
+; _RGB32 is documented at: https://qb64phoenix.com/qb64wiki/index.php/RGB32
+to _rgb32FromIntensity :intensity
+	localmake "intensity clamp :intensity 0 255
+	output (bitOr :intensity
+		(bitShiftLeft :intensity 8)
+		(bitShiftLeft :intensity 16)
+		(bitShiftLeft 255 24)
+	)
+end

@@ -1,0 +1,52 @@
+; Inspired by logo at:
+; https://gsceverywhere.ca
+to greenShieldLogo :height :color1 :color2
+	localmake "oldState turtleState
+	localmake "widthFactor 0.72
+	localmake "width :height * :widthFactor
+	localmake "thicknessFactor 0.132
+	localmake "thickness :height * :thicknessFactor
+	localmake "trapezoidTopWidth :width * 0.74
+	localmake "trapezoidBottomWidth :trapezoidTopWidth - :thickness * 2
+	localmake "angle1 45
+	localmake "angle2 180 - :angle1 * 2
+	localmake "bottomLen ((:widthFactor - :thicknessFactor) / 2 / sin :angle1)
+	localmake "height1 1 - :bottomLen * (cos :angle1) - :thicknessFactor / 2 / sin :angle1
+	localmake "rightHeight :height1 - :thicknessFactor / sin :angle1
+	jumpForward :height - :thickness
+	jumpLeft (:width - :trapezoidTopWidth) / 2
+	setPenSize 0
+	setFillColor :color1
+	isoTrapezoid :trapezoidBottomWidth :trapezoidTopWidth :thickness
+	setLineCap "butt
+	setLineJoinStyle "miter
+	jumpLeft (:trapezoidTopWidth - :thickness) / 2
+	jumpForward :thickness
+	setPenSize :thickness
+	setPenColor fillColor
+	arcLines [
+		[180 0] [:height1] [:angle1 0] [:bottomLen] [:angle2 0]
+		[:bottomLen] [:angle1 0] [:rightHeight]
+	] :height
+	setFillColor :color2
+	setPenSize 0
+	jumpRight :thickness / 2
+	polyStart
+	jumpForward :thickness / sin :angle1
+	left 180 - :angle1
+	jumpForward :height * 0.64
+	jumpLeft :thickness
+	polyEnd
+	setTurtleState :oldState
+end
+
+to greenShieldMainColoursLogo :height
+	greenShieldLogo :height "#00564e "#308540
+end
+
+make "height 100
+make "separation :height * 4
+jumpLeft :separation / 2
+greenShieldMainColoursLogo :height
+jumpRight :separation
+greenShieldLogo :height "#01383b "#01383b

@@ -1,0 +1,33 @@
+to drawT :fontWidth :fontHeight
+	localmake "oldState turtleState
+	localmake "thickness :fontHeight * 0.25
+	stripes :thickness :fontHeight [penColor]
+	jumpForward :fontHeight - :thickness
+	stripes :fontWidth :thickness [penColor]
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://www.youtube.com/@TechTangents
+to techTangentsLogo :height
+	localmake "oldState turtleState
+	localmake "ttBlack "#1a1e29
+	localmake "fontHeight :height * 0.5
+	localmake "separation :height * 0.375
+	localmake "fontColors [:ttBlack "#564bd6]
+	stripes :height :height [:ttBlack]
+	jumpLeft :height / 4
+	stripes :height / 2 :height ["#f54a5c]
+	jumpForward :height * 0.25
+	jumpRight :height / 4 - :separation / 2
+	setPenSize 0
+	repeat 2 [
+		setPenColor item repcount :fontColors
+		drawT :separation :fontHeight
+		jumpRight :separation
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+techTangentsLogo 100

@@ -1,0 +1,25 @@
+make "angle 120
+
+; Inspired by:
+; https://ca.pinterest.com/pin/206321226672762143
+to triangleTree :height
+	localmake "oldState turtleState
+	localmake "thickness1 :height * 0.05
+	setPenSize 0
+	setFillColor "black
+	ifelse :height > 1 [
+		localmake "trunkHeight :height * 0.5
+		isoTrapezoid :thickness1 :thickness1 * (:height - :trunkHeight) / :height :trunkHeight
+		jumpForward :trunkHeight
+		left :angle
+		repeat 3 [
+			triangleTree :height - :trunkHeight
+			right :angle
+		]
+	] [
+		isoTriangle :thickness1 :height
+	]
+	setTurtleState :oldState
+end
+
+triangleTree 100

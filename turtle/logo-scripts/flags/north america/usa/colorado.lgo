@@ -1,0 +1,29 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Colorado#/media/File:Flag_of_Colorado.svg
+to coloradoFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 3 / 2
+	localmake "radius :height * 200 / 1200
+	localmake "cArcThickness :radius
+	localmake "cArcRadius :radius + :cArcThickness / 2
+	localmake "angle 22.024
+	localmake "colors ["#002868 "white "#002868]
+	stripes :width :height :colors
+	setFillColor "gold
+	setPenSize 0
+	jumpForward :height / 2
+	jumpLeft :height * 7 / 60
+	circle :radius
+	setLineCap "butt
+	right 90 - :angle
+	jumpForward :cArcRadius
+	left 90
+	setPenSize :cArcThickness
+	setPenColor "#BF0A30
+	arcLeft 360 - :angle * 2 :cArcRadius
+	setTurtleState :oldState
+end
+
+setScreenColor "#eee
+make "height 100
+coloradoFlag :height

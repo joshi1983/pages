@@ -1,0 +1,46 @@
+<code>; The myDrawArcLineShape works the same way as the built in drawArcLineShape command.
+; The drawArcLineShape command is available so you don't need to implement it yourself.
+; Reviewing this implementation could help you implement something similar using procedures, though.
+to myDrawArcLineShape :shapeInfo :scale
+	localmake "oldHeading heading
+	localmake "oldPos pos
+	jumpRight :scale * first :shapeInfo
+	jumpForward (abs :scale) * item 2 :shapeInfo
+	polyStart
+	arcLines item 3 :shapeInfo :scale
+	polyEnd
+	setHeading :oldHeading
+	jumpTo :oldPos
+end
+
+setFillColor "red
+
+; Draws a red circle
+myDrawArcLineShape [1 0 [[360 1]]] 100
+
+setFillColor "green
+make "shapeInfo [-0.3 0.3 [
+		[45 0] ; same as left 45.
+		[0.2] ; same as jumpForward 0.2 * :scale.
+		[-180 0.1] ; arcRight 120 0.1 * :scale
+		[90 0] ; same as left 60
+		[-180 0.1] ; arcRight 120 0.1 * :scale
+	]
+]
+; Draws a green shapes
+myDrawArcLineShape :shapeInfo 100</code>
+<code>setFillColor "red
+
+; Draws a red circle
+drawArcLineShape [1 0 [[360 1]]] 100
+
+setFillColor "green
+; Draws a green heart shape
+drawArcLineShape [-0.3 0.3 [
+		[45 0] ; same as left 45.
+		[0.2] ; same as jumpForward 0.2 * :scale.
+		[-180 0.1] ; arcRight 120 0.1 * :scale
+		[90 0] ; same as left 60
+		[-180 0.1] ; arcRight 120 0.1 * :scale
+	]
+] 100</code>

@@ -1,0 +1,36 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/File:Flag_of_Mauritania.svg
+; The actual flag might use an elliptical curve in the crescent.
+; The mauritaniaFlag uses a circular arc to keep the code simple but
+; it doesn't line up as well with the flag.
+to mauritaniaFlag :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "width :height * 3 / 2
+	localmake "starSize :height * 0.106
+	localmake "arcRadius1 :height * 0.375
+	localmake "arcRadius2 :height * 0.4
+	localmake "angleGap 2
+	localmake "angle1 arcCos (:arcRadius1 * cos :angleGap) / :arcRadius2
+	stripes :width :height ["#d01c1f "#00a95c "#00a95c "#00a95c "#d01c1f]
+	setPenSize 0
+	jumpForward :height * 0.663
+	setFillColor "#ffd700
+	jumpLeft :arcRadius1
+	right 180 - :angleGap
+	polyStart
+	arcLeft 180 - :angleGap * 2 :arcRadius1
+	setHeading :oldHeading + 180 + :angle1
+	arcRight 180 - :angle1 * 2 :arcRadius2
+	polyEnd
+
+	setFillColor "#ffd700
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.7 - :starSize
+	regularStar :starSize 5
+	setTurtleState :oldState
+end
+
+mauritaniaFlag 100

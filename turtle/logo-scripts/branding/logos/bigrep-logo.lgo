@@ -1,0 +1,26 @@
+; Inspired by logo at:
+; https://bigrep.com
+to bigrepLogo :height
+	localmake "oldState turtleState
+	localmake "colors [
+		"#df5c35 "#68a1af "#4a3d32 "#010303
+	]
+	localmake "len1 0.85
+	localmake "innerSize 0.25
+	localmake "line1 [
+		[90 0] [:len1] [90 0] [:len1 - :innerSize] [45 0]
+		[:innerSize / 2 / cos 45]
+	]
+	setPenSize 0
+	jumpForward :height / 2
+	repeat count :colors [
+		setFillColor item repcount :colors
+		drawArcLineShape [1 1
+			combine :line1 reverse :line1
+		] :height / 2
+		right 360 / count :colors
+	]
+	setTurtleState :oldState
+end
+
+bigrepLogo 100

@@ -1,0 +1,97 @@
+to drawF :height
+	localmake "oldState turtleState
+	localmake "width :height * 0.65
+	setLineJoinStyle "miter
+	setLineCap "butt
+	jumpLeft (:width - penSize) / 2
+	localmake "bottomLeft pos
+	forward :height - penSize / 2
+	right 90
+	forward :width - penSize / 2
+	jumpTo :bottomLeft
+	jumpLeft :height * 0.465
+	forward :width * 0.875 - penSize / 2	
+	setTurtleState :oldState
+end
+
+to drawE :height
+	localmake "oldState turtleState
+	localmake "width :height * 0.68
+	jumpForward penSize / 2
+	jumpRight :width / 2
+	setLineCap "butt
+	left 90
+	forward :width - penSize / 2
+	localmake "bottomLeft pos
+	arcLines [[-90 0]
+		[(:height - penSize) / :height] [-90 0]
+		[(:width - penSize / 2) * 0.97 / :height]
+	] :height
+	jumpTo :bottomLeft
+	jumpLeft (:height - penSize) * 0.525
+	forward (:width	- penSize / 2) * 0.77
+
+	setTurtleState :oldState
+end
+
+to drawDiagonalShape :width
+	localmake "oldState turtleState
+	localmake "path [
+		[0.19] [90 0.15] [0.7092] [-70 0.15]
+		[160 0]
+	]
+	drawArcLineShape [0.5 0
+		combine :path :path
+	] :width
+	setTurtleState :oldState
+end
+
+to drawRedShapes :height
+	localmake "oldState turtleState
+	localmake "separation :height * 0.31
+	localmake "size :height * 0.86
+	setPenSize 0
+	jumpBackward :height * 0.19
+	localmake "center pos
+	jumpForward :separation + :height * 0.007
+	jumpRight :height * 0.01
+	drawDiagonalShape :size * 1.02
+
+	jumpTo :center
+	setFillColor "#f2272d
+	jumpBackward :separation
+	repeat 3 [
+		drawDiagonalShape :size
+		jumpForward :separation
+	]
+	
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://www.youtube.com/@FinancialExpress
+to financialExpressLogo :height
+	localmake "oldState turtleState
+	localmake "fontHeight :height * 0.402
+	setPenSize 0
+	jumpForward :height / 2
+	localmake "center pos
+	setFillColor "#085188
+	circle :height / 2
+	jumpLeft :height * 0.054
+	jumpBackward :fontHeight / 2
+	setPenSize :fontHeight * 0.19
+	setPenColor "white
+	drawF :fontHeight
+	jumpRight :height * 0.315
+	drawE :fontHeight
+
+	jumpTo :center
+	jumpLeft :height * 0.312
+	right 42
+	drawRedShapes :height * 0.295
+	
+	setTurtleState :oldState
+end
+
+financialExpressLogo 100

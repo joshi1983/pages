@@ -1,0 +1,74 @@
+make "colors ["#00778B "#FFC72C "#00778B]
+
+to bahamasFlagCustomWidth :width :height
+	localmake "oldState turtleState
+	stripes :width :height :colors
+	setFillColor "black
+	setPenSize 0
+	jumpLeft :width / 2
+	jumpForward :height / 2
+	right 90
+	isoTriangle :height :height * cos 30
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_the_Bahamas#/media/File:Flag_of_the_Bahamas.svg
+; Mostly based on
+; https://en.wikipedia.org/wiki/Flag_of_the_Bahamas#/media/File:Flag_of_the_Bahamas_(construction_sheet).svg
+to bahamasFlag :height
+	localmake "width :height * 2
+	bahamasFlagCustomWidth :width :height
+end
+
+to bahamasEnsignia :height :backgroundColor :foregroundColor
+	localmake "oldState turtleState
+	localmake "width :height * 2
+	localmake "smallFlagHeight :height * 13 / 30
+	localmake "smallFlagWidth :width * 14 / 30
+	stripes :width :height [:backgroundColor]
+	setLineCap "butt
+	setPenColor :foregroundColor
+	setPenSize :height * 2 / 15
+	forward :height
+	jumpBackward :height / 2
+	right 90
+	jumpBackward :width / 2
+	forward :width
+	jumpBackward :width - :smallFlagWidth / 2
+	jumpLeft penSize / 2
+	left 90
+	bahamasFlagCustomWidth :smallFlagWidth :smallFlagHeight
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_the_Bahamas#/media/File:Civil_Ensign_of_the_Bahamas.svg
+to bahamasCivilEnsignia :height
+	bahamasEnsignia :height "#cf142b "white
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_the_Bahamas#/media/File:Government_Ensign_of_the_Bahamas.svg
+to bahamasStateEnsignia :height
+	bahamasEnsignia :height "white "#00247d
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_the_Bahamas#/media/File:Naval_Ensign_of_the_Bahamas.svg
+to bahamasNavalEnsignia :height
+	bahamasEnsignia :height "white "#cf142b
+end
+
+; #eee for a little contrast with white in the flag
+setScreenColor "#eee
+make "height 100
+make "separation :height * 4
+jumpLeft :separation * 1.5
+bahamasFlag :height
+jumpRight :separation
+bahamasCivilEnsignia :height
+jumpRight :separation
+bahamasStateEnsignia :height
+jumpRight :separation
+bahamasNavalEnsignia :height

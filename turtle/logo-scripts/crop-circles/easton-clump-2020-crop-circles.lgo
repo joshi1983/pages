@@ -1,0 +1,54 @@
+make "darkColor "#780
+
+; Inspired by:
+; https://ca.pinterest.com/pin/615022892854508231/
+; Drone footage of this appeared in:
+; https://youtu.be/xfuENYifjP0?t=112
+; Reported in July 10, 2020
+; Located at: Easton Clump, near Easton Royal, Wiltshire
+to eastonClump2020Logo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "lightColor "#ef8
+	localmake "innerCircles [
+		[0.16 false 8] [0.075 true 4]
+	]
+	localmake "tinyCircleRadius :height * 0.03
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize :height * 0.02
+	setPenColor :lightColor
+	setFillColor transparent
+	circle (:height - penSize) / 2
+	setPenSize 0
+	setFillColor :lightColor
+	circle :height * 0.23
+	setPenSize :height * 0.015
+	setPenColor :darkColor
+	setFillColor transparent
+	repeat count :innerCircles [
+		circle :height * first item repcount :innerCircles
+	]
+	setPenSize 0
+	setFillColor :darkColor
+	repeat count :innerCircles [
+		localmake "circleInfo item repcount :innerCircles
+		localmake "gap :height * first :circleInfo
+		localmake "rotateStart? item 2 :circleInfo
+		localmake "numTinyCircles last :circleInfo
+		setHeading :oldHeading
+		if :rotateStart? [
+			right 180 / :numTinyCircles
+		]
+		repeat :numTinyCircles [
+			jumpForward :gap
+			circle :tinyCircleRadius
+			jumpTo :center
+			right 360 / :numTinyCircles
+		]
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor :darkColor
+eastonClump2020Logo 100

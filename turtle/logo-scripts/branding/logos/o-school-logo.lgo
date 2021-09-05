@@ -1,0 +1,57 @@
+to drawInnerGradient :height :littleRadius
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "littleArcAngle 2 * arcCos (:height / 2 - :littleRadius) / :littleRadius
+	localmake "colorStops createPList2 [
+		[0 "#fff] [0.3 "#00D6F8] [0.85 "#2600EE] [1 "#000]
+	]
+	jumpForward :height
+	setFillGradient createLinearGradient :oldPos pos :colorStops "pad
+	jumpBackward :height / 2
+	jumpLeft :height / 2 - :littleRadius
+	localmake "littleCenterLeft pos
+	jumpTo :oldPos
+	right 90
+	setPenSize 0
+	polyStart
+	arcLeft 180 :height / 2
+	setHeading towards :oldPos
+	jumpForward distanceToCircle :littleCenterLeft :littleRadius
+	setHeading (towards :littleCenterLeft) - 90
+	arcRight :littleArcAngle :littleRadius
+	polyEnd
+	setTurtleState :oldState
+end
+
+to drawForegroundGradient :height :littleRadius
+	localmake "oldState turtleState
+	localmake "colorStops createPList2 [
+		[0 "#2E3092] [0.5 "#5802FF] [1 "#9500FF]
+	]
+	localmake "oldPos pos
+	jumpForward :height	
+	setFillGradient createLinearGradient :oldPos pos :colorStops "pad
+	jumpTo :oldPos
+	right 90
+	setPenSize 0
+	arcLeft 90 :height / 2
+	left 180
+	polyStart
+	arcRight 360 :littleRadius
+	left 180
+	arcLeft 360 :height / 2
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://www.o.school
+to oSchoolLogo :height
+	localmake "oldState turtleState
+	localmake "littleRadius :height * 0.334
+	drawInnerGradient :height :littleRadius
+	drawForegroundGradient :height :littleRadius	
+	setTurtleState :oldState
+end
+
+oSchoolLogo 100

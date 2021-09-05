@@ -1,0 +1,56 @@
+; Inspired by logo at:
+; https://www.perl.org
+;
+; Also similar to:
+; https://en.wikipedia.org/wiki/Perl#/media/File:Perl-logo.svg
+to perlLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "backgroundColorStops createPList2 [
+		[0 "#003656] [1 "#00729f]
+	]
+	localmake "innerRadius :height * 0.4498
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize :height / 2 - :innerRadius
+	left 60
+	jumpBackward :innerRadius
+	localmake "fromPos pos
+	jumpForward :innerRadius * 2
+	setFillGradient createLinearGradient :fromPos pos :backgroundColorStops "pad
+	setPenColor "white
+	jumpTo :center
+	circle (:height - penSize) / 2
+	jumpTo :oldPos
+ 	setHeading :oldHeading
+	setPenSize 0
+	setFillColor penColor
+	drawArcLineShapes [
+		; lower-right leg
+		[0.321 0.172
+			[[30 0] [-29.5 0.2] [83 0] [0.058] [80 0] [0.027]
+			[34 0] [0.09] [13 0] [0.05]]
+		]
+
+		; top of head
+		[-0.105 0.765
+			[[75 0] [75 0.032] [-73 0] [40 0.1] [-30 0.05] [120 0]
+			[92 0.028] [-90 0.03] [50 0] [0.05] [118 0] [-30 0.1]]
+		]
+
+		; other leg and most of the camel
+		[0.079 0.05
+			[[-25 0] [30.5 0.22] [-39 0] [24 0.23] [50 0.14] [50 0]
+			[-50 0.23] [-28 0.4] [81 0.022] [-30 0.15] [50 0.01] [-22 0.1]
+			[-124 0.01] [100 0] [-90 0.022] [-70 0.078] [0.04] [-57 0]
+			[0.03] [120 0.017] [0.045] [-68 0] [-50 0.08] [-11 0.5]
+			[30 0.2] [70 0.09] [15 0.4] [-7 0.9] [-45 0.2] [-56 0] [-57 0.45]
+			[-53 0] [-17.5 0.62] [82 0.02] [-10 0.8] [10 0.7]]
+		]
+	] :height
+	setTurtleState :oldState
+end
+
+setScreenColor "#ddd
+perlLogo 100

@@ -1,0 +1,68 @@
+make "colors ["#786332 "#FFEF9E]
+
+to circlesForward :radius :numCircles
+	localmake "step :radius
+	jumpForward :step * :numCircles
+	localmake "newPos pos
+	repeat :numCircles [
+		setFillColor item (1 + remainder repcount 2) :colors
+		circle :radius
+		jumpBackward :step		
+	]
+	jumpTo :newPos
+end
+
+to branch1 :circleRadius
+	localmake "oldState turtleState
+	jumpForward :circleRadius * 4
+	left 180 / 3
+	branch2 :circleRadius
+	right 360 / 3
+	branch2 :circleRadius
+	setTurtleState :oldState	
+	circlesForward :circleRadius 4
+	setTurtleState :oldState	
+end
+
+to branch2 :circleRadius
+	localmake "oldState turtleState
+	circlesForward :circleRadius 2
+	setTurtleState :oldState	
+end
+
+; Inspired by
+; https://www.earthfiles.com/wp-content/uploads/2017/09/1FussellMolecule.jpg
+; It is referenced from:
+; https://temporarytemples.co.uk/crop-circles/2003-crop-circles
+; The location is mentioned to be:
+; North Down, Wiltshire | 10th August 2003
+;
+; I guess the original designer is an alien.
+to molecularCropCircles :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "circleRadius :height * 0.05885
+	setPenSize 0
+	jumpForward :height * 0.5296
+	localmake "center pos
+	repeat 3 [
+		localmake "heading1 :oldHeading + (repcount + 0.5) * 360 / 3
+		setHeading :heading1
+		jumpForward :circleRadius * 4
+		setHeading :heading1 - 180 / 3
+		branch1 :circleRadius
+		setHeading :heading1 + 180 / 3
+		branch1 :circleRadius
+		
+		jumpTo :center
+		setHeading :heading1
+		circlesForward :circleRadius 4
+		jumpTo :center
+	]
+	setFillColor last :colors
+	circle :circleRadius
+	setTurtleState :oldState
+end
+
+setScreenColor first :colors
+molecularCropCircles 100

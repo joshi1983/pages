@@ -1,0 +1,34 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Bahia#/media/File:Flag_Revolt_of_the_Tailors.svg
+; Flag of the Revolt of the Tailors -- Bahia, 1798
+to revoltOfTheTailorsFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 3 / 2
+	localmake "blueColor "#0A14C8
+	localmake "redColor "#C8140A
+	localmake "starRadius1 :height * 0.163
+	localmake "starRadius2 :height * 0.05
+	jumpLeft :width / 2
+	jumpForward :height / 2
+	right 90
+	stripes :height :width	[:blueColor "white :blueColor]
+	jumpForward :width / 2
+	jumpRight :height * 0.023
+	setPenSize 0
+	setFillColor :redColor
+	right 180 / 10
+	regularStar :starRadius1 5
+	jumpLeft :height * 0.005
+	localmake "center pos
+	right 180 / 5
+	repeat 5 [
+		jumpForward :starRadius1 * 0.93
+		regularStar :starRadius2 5
+		jumpTo :center
+		right 360 / 5
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "#bbb
+revoltOfTheTailorsFlag 100

@@ -1,0 +1,43 @@
+; Inspired by logo at:
+; https://allisrael.com
+to allIsraelLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angle 30
+	localmake "thickness :height * 0.27
+	localmake "largeWidth1 :height / cos :angle
+	localmake "largeWidth2 :largeWidth1 - :thickness * 2 * tan :angle 
+	localmake "smallWidth1 :largeWidth1 * 0.613
+	localmake "smallWidth2 :smallWidth1 + :largeWidth2 - :largeWidth1
+	jumpForward :height / 2
+	jumpLeft :height / 2 * tan :angle
+	right 90 + :angle
+	setPenSize 0
+	setFillColor "#2a97cf
+	isoTrapezoid :largeWidth1 :largeWidth2 :thickness
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpRight :height * tan :angle
+	left :angle
+	jumpForward :smallWidth1 / 2
+	left 90
+	isoTrapezoid :smallWidth1 :smallWidth2 :thickness
+	setTurtleState :oldState
+end
+
+; Inspired by logo on dark background at:
+; https://en.wikipedia.org/wiki/All_Israel_News#/media/File:All-Israel-News-Logo.jpg
+to darkBackgroundWithLogo :height
+	localmake "width :height * 4
+	stripes :width :height ["#0c1e34]
+	allIsraelLogo :height
+end
+
+make "height 100
+make "separation :height * 5
+jumpLeft :separation * 0.5
+allIsraelLogo :height
+jumpRight :separation
+darkBackgroundWithLogo :height

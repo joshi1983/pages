@@ -1,0 +1,46 @@
+to drawU :height
+	localmake "oldState turtleState
+	localmake "outerInfo [[-98.2 0] [-10 1.15] [-7 1.7] [-8.2 0.52]
+	[-60 0] [-30 0.27] [-20 0.45] [-16 0.85] [-15 1.3] [-5.6 1.62532348]]
+	localmake "innerInfo [[0.3] [30 0.2] [30 0.28] [20 0.48] [10 0.63098325]]
+	jumpForward :height / 2
+	jumpRight :height * 0.3955
+	setPenSize 0
+	polyStart
+	arcLines :outerInfo :height
+	arcLines reverse :outerInfo :height
+	arcLines :innerInfo :height
+	arcLines reverse :innerInfo :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by logo at
+; https://en.wikipedia.org/wiki/Under_Armour#/media/File:Under_armour_logo.svg
+to underArmourLogoCustomColor :height
+	localmake "oldState turtleState
+	jumpForward :height / 2
+	repeat 2 [
+		drawU :height
+		right 180
+	]
+	setTurtleState :oldState
+end
+
+to underArmourLogoBlack :height
+	setFillColor "black
+	underArmourLogoCustomColor :height
+end
+
+to underArmourLogoWhite :height
+	stripes :height * 3 :height ["black]
+	setFillColor "white
+	underArmourLogoCustomColor :height
+end
+
+make "height 100
+make "separation :height * 5
+jumpLeft :separation / 2
+underArmourLogoBlack :height
+jumpRight :separation
+underArmourLogoWhite :height

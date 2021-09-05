@@ -1,0 +1,32 @@
+<code>forward 10
+right 90
+forward 20
+pitchUp 90
+forward 30
+
+to animation.snapshotStyle
+	localmake "box drawing.box
+	localmake "miX getProperty "box "minX ; roughly 0
+	localmake "miY getProperty "box "minY ; roughly 0
+	localmake "maX getProperty "box "maxX ; roughly 20
+	localmake "maY getProperty "box "maxY ; roughly 10
+	localmake "averageX mix :miX :maX 0.5
+	localmake "averageY mix :miY :maY 0.5
+
+	; I included the 1 to max 1... expression to
+	; ensure we won't be dividing by 0
+	; even if the drawing has no shapes.
+	localmake "length (max 1 :maX - :miX :maY - :miY)
+	localmake "scale 500 / :length
+	output createPList2 [
+		["position.x :averageX]
+		["position.y :averageY]
+		["zoom.scale :scale]
+	]
+end
+
+to animation.setup
+	output createPList2 [
+		["duration 10]
+	]
+end</code>

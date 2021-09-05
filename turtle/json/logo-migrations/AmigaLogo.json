@@ -1,0 +1,453 @@
+{
+	"name": "Amiga Logo",
+	"description": "A Logo interpreter and development tool for the Amiga personal computer",
+	"externalLink": "https://archive.org/details/amiga-logo-manual",
+	"commands": [
+		{
+			"primaryName": "abs",
+			"to": "abs"
+		},{
+			"primaryName": "and",
+			"to": "and"
+		},{
+			"primaryName": "arcTangent",
+			"to": "arcTan"
+		},{
+			"primaryName": "ascii",
+			"to": "ascii"
+		},{
+			"primaryName": "aspect",
+			"description": "Returns the aspect ratio number",
+			"reason": "Not supported in WebLogo because the Graphics screen in WebLogo always maintains an equal scaling between x and y."
+		},{
+			"primaryName": "back",
+			"to": "backward"
+		},{
+			"primaryName": "background",
+			"to": "screenColor",
+			"description": "Returns the color palette index currently used with the background color.  WebLogo's screenColor is close enough to translate to but it returns the color as a list of 3 or 4 numbers or transparent object."
+		},{
+			"primaryName": "bury",
+			"description": "Hides a package from workspace commands",
+			"reason": "WebLogo has no packages."
+		},{
+			"primaryName": "butFirst",
+			"to": "butFirst"
+		},{
+			"primaryName": "butLast",
+			"to": "butLast"
+		},{
+			"primaryName": "buttonp",
+			"names": ["button?"],
+			"description": "Returns true if and only if a mouse button is currently pressed",
+			"reason": "WebLogo is not supporting it because WebLogo is not intended for creating user-interfaces.  Drawings and animations can be made without collecting information on user-input devices."
+		},{
+			"primaryName": "catalog",
+			"description": "Lists all file names in a directory.  Unlike dir, you can specify a path to get the files from.",
+			"reason": "Not supported in WebLogo because WebLogo has no access to the file system."
+		},{
+			"primaryName": "catch",
+			"description": "Catches an exception",
+			"reason": "Not supported in WebLogo because exception-handling doesn't seem useful for the types of programs written in it.  Commands like try and catch might become useful later and get added then.  Exception-handling is complex enough to learn and correctly use that it isn't worth adding if the only benefit is extra similarity to other Logo interpreters."
+		},{
+			"primaryName": "char",
+			"to": "char"
+		},{
+			"primaryName": "clean",
+			"description": "clears the screen without affecting the turtle"
+		},{
+			"primaryName": "clearScreen",
+			"to": "clearScreen"
+		},{
+			"primaryName": "clearText",
+			"description": "Clears all text.",
+			"reason": "WebLogo code shouldn't have this kind of control over the text in Commander.  There is no other place where a command called clearText would have any similar effect.  Learn more at: https://archive.org/details/amiga-logo-manual/page/n139/mode/2up"
+		},{
+			"primaryName": "continue",
+			"description": "Continues execution after the program was paused.",
+			"reason": "WebLogo has a command named 'continue' but it does something very different.  I'm not sure if the Amiga Logo documentation on 'continue' is for a command or some other feature.  I'm mentioning it here in case it is considered a command.  Learn more at: https://archive.org/details/amiga-logo-manual/page/n139/mode/2up"
+		},{
+			"primaryName": "copydef",
+			"description": "Copies a procedure to a new name so you end up with 2 procedures behaving exactly the same but under 2 different names.",
+			"reason": "Not supported by WebLogo because you can copy/paste a procedure definition easily enough in WebLogo's code editor instead."
+		},{
+			"primaryName": "cosine",
+			"to": "cos"
+		},{
+			"primaryName": "count",
+			"to": "count"
+		},{
+			"primaryName": "cursor",
+			"description": "Outputs a list of 2 integers representing the coordinates of the text cursor.",
+			"reason": "Not supported by WebLogo because there is no text cursor for WebLogo to be concerned with.  There is a Commander feature but there is no reason for WebLogo code to read or write anything in it."
+		},{
+			"primaryName": "define",
+			"to": "to",
+			"description": "define is used for defining procedures but replacing 'define' with 'to' is not enough because Amiga Logo lists the procedure's parameters and ends the instruction list differently than WebLogo.  WebLogo has a special autofix feature for converting some define-defined procedures, though."
+		},{
+			"primaryName": "difference",
+			"to": "difference"
+		},{
+			"primaryName": "dir",
+			"description": "Outputs a list of all files in the current working directory",
+			"reason": "Not supported by WebLogo because WebLogo has no access to the file system.  Listing all asset names would be a possible command but I can't think of how that would be useful for WebLogo and help make more useful drawings or animation."
+		},{
+			"primaryName": "dot",
+			"description": "Draws a dot at the specified point without affecting the turtle",
+			"reason": "Not supported by WebLogo because WebLogo lets users zoom in or out of a drawing at any scale independent of the Logo program.  The arbitrary scale leads to us not having an obvious appropriate size for such a dot.  You can call circle 1 but the 1 may not be the scale you need."
+		},{
+			"primaryName": "dumpEdit",
+			"names": ["de"],
+			"description": "Prints content from the edit buffer",
+			"reason": "WebLogo doesn't support this because no website can directly ask the printer to do anything and if it did, it would still be outside the focus of creating drawings and animation.  Users can print anything they want by interacting with the browser instead of WebLogo.  I wonder how AmigaLogo would get around potentially wasting lots of paper and ink if someone did something like forever [dumpEdit]. Learn more at https://archive.org/details/amiga-logo-manual/page/n145/mode/2up"
+		},{
+			"primaryName": "dumpGraphics",
+			"description": "Prints the drawing",
+			"reason": "WebLogo doesn't support this because no website can directly ask the printer to do anything and if it did, it would still be outside the focus of creating drawings and animation.  Users can print anything they want by interacting with the browser instead of WebLogo.  I wonder how AmigaLogo would get around potentially wasting lots of paper and ink if someone did something like forever [dumpGraphics]. Learn more at https://archive.org/details/amiga-logo-manual/page/n145/mode/2up"
+		},{
+			"primaryName": "dumpText",
+			"description": "Prints all text",
+			"reason": "WebLogo doesn't support this because no website can directly ask the printer to do anything and if it did, it would still be outside the focus of creating drawings and animation.  Users can print anything they want by interacting with the browser instead of WebLogo.  Learn more at https://archive.org/details/amiga-logo-manual/page/n145/mode/2up"
+		},{
+			"primaryName": "edit",
+			"description": "Edits a variable or procedure.  Not supported in WebLogo.",
+			"reason": "In WebLogo, you can type edit followed by a procedure name in the Commander feature but it is not a command that could be called from within a procedure or from the Code Editor.  Learn more at https://archive.org/details/amiga-logo-manual/page/n147/mode/2up"
+		},{
+			"primaryName": "editNames",
+			"description": "Edits variable names.  Not supported in WebLogo.",
+			"reason": "In WebLogo, you'd edit the code in the code editor and variable names won't change at runtime.  Learn more at https://archive.org/details/amiga-logo-manual/page/n149/mode/2up"
+		},{
+			"primaryName": "emptyp",
+			"names": ["empty?"],
+			"to": "empty?"
+		},{
+			"primaryName": "equal?",
+			"to": "equal?"
+		},{
+			"primaryName": "erase",
+			"description": "Removes a procedure from the workspace.  Not supported in WebLogo because WebLogo gives a more static code editing environment.  At runtime, you don't add or remove procedures.  Learn more at https://archive.org/details/amiga-logo-manual/page/n151/mode/2up"
+		},{
+			"primaryName": "eraseNames",
+			"description": "Removes all variables in the workspace or package.  Not supported in WebLogo because you can edit and remove the variables in a more intuitive way using the Code Editor.  Learn more at https://archive.org/details/amiga-logo-manual/page/n153/mode/2up"
+		},{
+			"primaryName": "eraseProcs",
+			"description": "Removes all procedures in the workspace or package.  Not supported in WebLogo because you can edit and remove the procedures in a more intuitive way using the Code Editor.  Learn more at https://archive.org/details/amiga-logo-manual/page/n153/mode/2up"
+		},{
+			"primaryName": "error",
+			"description": "Outputs information about the last error.  Not supported in WebLogo because all error details are shown automatically every time a runtime error happens."
+		},{
+			"primaryName": "exit",
+			"description": "Exits or quits out of Amiga Logo.  Not supported in WebLogo because we can't close the web browser using JavaScript.  The command would also giving more control to code than is helpful in WebLogo since WebLogo code is supposed to focus strictly on creating drawings and animation."
+		},{
+			"primaryName": "fence",
+			"description": "Prevents turtle from moving out of graphics screen.  Not supported in WebLogo because you can always scroll the Graphics Screen to find the turtle or other parts of the drawing that you don't initially see.  You can zoom out or in after the WebLogo program finishes drawing too."
+		},{
+			"primaryName": "fill",
+			"description": "Performs a flood fill in an area with the same color.  Not supported in WebLogo because no flood fill is.  Learn more at https://archive.org/details/amiga-logo-manual/page/n155/mode/2up"
+		},{
+			"primaryName": "fillin",
+			"description": "Performs a flood fill in an area bounded by a color.  Not supported in WebLogo because no flood fill is.  Learn more at https://archive.org/details/amiga-logo-manual/page/n155/mode/2up"
+		},{
+			"primaryName": "first",
+			"to": "first"
+		},{
+			"primaryName": "firstPut",
+			"to": "fput"
+		},{
+			"primaryName": "forward",
+			"to": "forward"
+		},{
+			"primaryName": "fullScreen",
+			"description": "Maximizes graphics screen.  Not supported in WebLogo as a command because that extra control given to code would be control taken away from the end user over his development user interface.  A developer can click buttons to shrink the editor, hide Command input... to achieve the same effect instead of typing code to do something code shouldn't really be able to do.  Learn more at https://archive.org/details/amiga-logo-manual/page/n157/mode/2up"
+		},{
+			"primaryName": "getProp",
+			"to": "getProperty"
+		},{
+			"primaryName": "go",
+			"description": "Jumps control to a specified code label.  Not supported in WebLogo because using it would be unstructured programming and generally considered a bad programming practice.  Learn more at https://archive.org/details/amiga-logo-manual/page/n159/mode/2up."
+		},{
+			"primaryName": "graphicsType",
+			"to": "label",
+			"description": "graphicsType in Amiga Logo is the same as label in WebLogo.  Amiga Logo also has a label command but Amiga Logo's label command can't be translated to WebLogo because it means something completely different."
+		},{
+			"primaryName": "heading",
+			"to": "heading"
+		},{
+			"primaryName": "hideTurtle",
+			"to": "hideTurtle"
+		},{
+			"primaryName": "home",
+			"to": "home"
+		},{
+			"primaryName": "if",
+			"to": "if",
+			"description": "Not always a perfect translation because AmigaLogo's if could work like WebLogo's ifelse if 2 instruction lists follow it.  Learn more at https://archive.org/details/amiga-logo-manual/page/n161/mode/2up"
+		},{
+			"primaryName": "iffalse",
+			"description": "Runs an instruction list if a previously tested expression evaluated to false."
+		},{
+			"primaryName": "iftrue",
+			"description": "Runs an instruction list if a previously tested expression evaluated to true."
+		},{
+			"primaryName": "integer",
+			"to": "int"
+		},{
+			"primaryName": "item",
+			"to": "item"
+		},{
+			"primaryName": "label",
+			"description": "labels a line and section of code for use with a go to jump.  Not supported by WebLogo because go to statements are generally considered a bad programming practice and a big step away from structured programming.  WebLogo has a command called 'label', THE EXACT SAME NAME.  The label command in WebLogo does something completely different which is drawing text on the drawing using the current font, font size...  These 2 commands having the same name will cause a problem if someone tries migrating code from Amiga to WebLogo.  Learn more at https://archive.org/details/amiga-logo-manual/page/n165/mode/2up"
+		},{
+			"primaryName": "last",
+			"to": "last"
+		},{
+			"primaryName": "lastPut",
+			"to": "lput",
+			"description": "Not a perfect translation since lastPut in Amiga Logo also supports appending to the end of a string"
+		},{
+			"primaryName": "left",
+			"to": "left"
+		},{
+			"primaryName": "list",
+			"to": "list"
+		},{
+			"primaryName": "listp",
+			"names": ["list?"],
+			"to": "list?"
+		},{
+			"primaryName": "load",
+			"description": "Loads file into workspace or package.  Not supported by WebLogo since WebLogo has no access to the file system and has no packages.  Assets are similar to files, though.  Learn more at https://archive.org/details/amiga-logo-manual/page/n169/mode/2up"
+		},{
+			"primaryName": "local",
+			"description": "Declares a variable locally within a procedure.  This is not supported by WebLogo but localmake is.  localmake requires an initial value so it isn't similar enough to automatically translate to.  Learn more at https://archive.org/details/amiga-logo-manual/page/n169/mode/2up"
+		},{
+			"primaryName": "make",
+			"to": "make"
+		},{
+			"primaryName": "memberP",
+			"names": ["member?"],
+			"to": "member?"
+		},{
+			"primaryName": "mouse",
+			"description": "Returns a list of 2 numbers representing the current mouse coordinates.  Not supported in WebLogo because WebLogo is not intended to wait for user-input and respond to it.  Learn more at https://archive.org/details/amiga-logo-manual/page/n171/mode/2up"
+		},{
+			"primaryName": "name",
+			"description": "The closest command in WebLogo is make except the parameter order are reversed.  Since the only difference between name and make is order of parameters, it doesn't seem worth making a new command for it in WebLogo.  A new command to do something so frequently done with make would become an extra thing that would either confuse or users would need to memorize and for next to no benefit.  Learn more at https://archive.org/details/amiga-logo-manual/page/n171/mode/2up"
+		},{
+			"primaryName": "namep",
+			"names": ["name?"],
+			"description": "Checks if the given name is of a variable with a value.  Not supported by WebLogo because there should be no reason to check this at runtime in WebLogo.  Learn more at https://archive.org/details/amiga-logo-manual/page/n171/mode/2up"
+		},{
+			"primaryName": "not",
+			"to": "not"
+		},{
+			"primaryName": "numberp",
+			"names": ["number?"],
+			"to": "number?"
+		},{
+			"primaryName": "or",
+			"to": "or"
+		},{
+			"primaryName": "output",
+			"to": "output"
+		},{
+			"primaryName": "package",
+			"description": "Puts a specific procedure into a package.  Not supported in WebLogo because WebLogo does not support packages.  Learn more at https://archive.org/details/amiga-logo-manual/page/n175/mode/2up"
+		},{
+			"primaryName": "packageAll",
+			"description": "Puts all procedures into a package.  Not supported in WebLogo because WebLogo does not support packages.  Learn more at https://archive.org/details/amiga-logo-manual/page/n175/mode/2up"
+		},{
+			"primaryName": "pause",
+			"description": "Pauses the running Amiga Logo program.  Not supported in WebLogo because users can click the 'pause' button, use breakpoints, or run the program very slowly instead of adding code to pause it.  Pausing execution is best left to the user/developer and not the code in WebLogo."
+		},{
+			"primaryName": "pen",
+			"description": "Returns a list representing the full state of the pen including penColor and whether the pen is up or down.  The most similar command is turtleState but that's too different to automatically translate to."
+		},{
+			"primaryName": "penColor",
+			"to": "penColor"
+		},{
+			"primaryName": "penDown",
+			"to": "penDown"
+		},{
+			"primaryName": "penErase",
+			"description": "It will erase previous lines.  Not supported by a similar command in WebLogo.  Learn more at https://archive.org/details/amiga-logo-manual/page/n179/mode/2up"
+		},{
+			"primaryName": "penReverse",
+			"description": "Puts pen in its reverse state.  It will erase where there are lines and draw where there are no previous lines.  Not supported by a similar command in WebLogo.  Learn more at https://archive.org/details/amiga-logo-manual/page/n179/mode/2up"
+		},{
+			"primaryName": "penUp",
+			"to": "penUp"
+		},{
+			"primaryName": "position",
+			"to": "pos"
+		},{
+			"primaryName": "primitivep",
+			"names": ["primitive?"],
+			"description": "Outputs if the specified string is of a primitive in Amiga Logo.  primitive? \"pen is true but primitive? \"one is false.  WebLogo supports type checking with commands like number?, string? but that is for immediate values.  It looks like Amiga Logo's primitive? command even checks things like command names.  The primitive? command doesn't seem useful in WebLogo."
+		},{
+			"primaryName": "print",
+			"to": "print"
+		},{
+			"primaryName": "printOut",
+			"description": "Prints variable names and procedure names. Learn more at https://archive.org/details/amiga-logo-manual/page/n181/mode/2up"
+		},{
+			"primaryName": "printOutNames",
+			"description": "Prints variable names. Learn more at https://archive.org/details/amiga-logo-manual/page/n181/mode/2up"
+		},{
+			"primaryName": "printOutProcs",
+			"description": "Prints procedure names, packages... Learn more at https://archive.org/details/amiga-logo-manual/page/n183/mode/2up"
+		},{
+			"primaryName": "printOutTitles",
+			"description": "Prints procedure names. Learn more at https://archive.org/details/amiga-logo-manual/page/n183/mode/2up"
+		},{
+			"primaryName": "proplist",
+			"to": "plist"
+		},{
+			"primaryName": "putprop",
+			"to": "setProperty"
+		},{
+			"primaryName": "quit",
+			"description": "Unsupported in WebLogo"
+		},{
+			"primaryName": "quotient",
+			"to": "quotient"
+		},{
+			"primaryName": "readchar",
+			"description": "Reads a character from keyboard.  Not supported by WebLogo because WebLogo is for creating drawings and animation and not user-interactive software.  Learn more at https://archive.org/details/amiga-logo-manual/page/n185/mode/2up"
+		},{
+			"primaryName": "readlist",
+			"description": "Reads list typed from keyboard.  Not supported by WebLogo because WebLogo is for creating drawings and animation and not user-interactive software.  Learn more at https://archive.org/details/amiga-logo-manual/page/n185/mode/2up"
+		},{
+			"primaryName": "recycle",
+			"description": "Invokes garbage collection.  Not supported by WebLogo because garbage collection of memory happens constantly and implicitly within the web browser.  Learn more at https://archive.org/details/amiga-logo-manual/page/n187/mode/2up"
+		},{
+			"primaryName": "remainder",
+			"to": "remainder"
+		},{
+			"primaryName": "rgb",
+			"description": "Returns the red, green, blue list for a given color palette index.  Not supported in WebLogo since WebLogo has no color palette.  screenColor is the closest WebLogo command because Amiga Logo's palette is used for screen colors but it is too different to automatically translate to.  Learn more at https://archive.org/details/amiga-logo-manual/page/n189/mode/2up"
+		},{
+			"primaryName": "right",
+			"to": "right"
+		},{
+			"primaryName": "round",
+			"to": "round"
+		},{
+			"primaryName": "run",
+			"description": "Not supported in WebLogo because you can just list your instructions and they'll run.  run may be useful for making things more dynamic but it is more dynamic than what WebLogo supports because the code gets harder to read for humans and harder to statically analyze by WebLogo.  Learn more at https://archive.org/details/amiga-logo-manual/page/n191/mode/2up"
+		},{
+			"primaryName": "save",
+			"description": "Not supported in WebLogo because it is a responsibility of the graphical user interface and under the user's control.  A command to do this would be pointless.  Learn more at https://archive.org/details/amiga-logo-manual/page/n191/mode/2up"
+		},{
+			"primaryName": "saveEdit",
+			"description": "Not supported in WebLogo because it is a responsibility of the graphical user interface and under the user's control.  A command to do this would be pointless.  Learn more at https://archive.org/details/amiga-logo-manual/page/n191/mode/2up"
+		},{
+			"primaryName": "say",
+			"description": "Reads the text as audio using Amiga's speech synthesis.  WebLogo not supporting this because WebLogo is not for creating audio.  Learn more at https://archive.org/details/amiga-logo-manual/page/n193/mode/2up"
+		},{
+			"primaryName": "scrunch",
+			"description": "returns the scrunch value or aspect ratio of graphics screen.  Not supported in WebLogo because setScrunch is not supported.  Learn more at https://archive.org/details/amiga-logo-manual/page/n193/mode/2up"
+		},{
+			"primaryName": "setAspect",
+			"description": "Sets aspect ratio of graphics screen.  Not supported in WebLogo because it would take control of the graphical user interface of WebLogo when the user should have full control over it.  It also sounds like setScrunch which scales x and y differently which could confuse the use of many other commands like forward, setX, setHeading... because an x scale different from y scale is much more unusual than 1 x being the same distance as 1 y.  Learn more at https://archive.org/details/amiga-logo-manual/page/n193/mode/2up"
+		},{
+			"primaryName": "setBackground",
+			"to": "setScreenColor",
+			"description": "Uses a color palette index in Amiga Logo which is different from WebLogo.  Learn more at https://archive.org/details/amiga-logo-manual/page/n195/mode/2up."
+		},{
+			"primaryName": "setCursor",
+			"description": "Sets cursor position in text area.  No similar command in WebLogo.  The Command Input box is text-like but programmatically moving the cursor to arbitrary positions would create more problems and confusion than it would help.  Learn more at https://archive.org/details/amiga-logo-manual/page/n195/mode/2up."
+		},{
+			"primaryName": "setHeading",
+			"to": "setHeading"
+		},{
+			"primaryName": "setPen",
+			"description": "WebLogo has no similar enough command for automatic translation.  setTurtleState, penDown, penUp, setPenColor, penNormal are the most similar commands in WebLogo.  Learn more at https://archive.org/details/amiga-logo-manual/page/n197/mode/2up"
+		},{
+			"primaryName": "setPenColor",
+			"to": "setPenColor"
+		},{
+			"primaryName": "setPosition",
+			"to": "setPos"
+		},{
+			"primaryName": "setRgb",
+			"description": "No similar command in WebLogo because WebLogo has no color palette.  setScreenColor is closely related but is not related to a color palette.  Learn more at https://archive.org/details/amiga-logo-manual/page/n197/mode/2up"
+		},{
+			"primaryName": "setScrunch",
+			"description": "No similar command in WebLogo"
+		},{
+			"primaryName": "setx",
+			"to": "setx"
+		},{
+			"primaryName": "sety",
+			"to": "sety"
+		},{
+			"primaryName": "show",
+			"to": "show"
+		},{
+			"primaryName": "shownp",
+			"names": ["shown?"],
+			"to": "turtleVisible?"
+		},{
+			"primaryName": "showTurtle",
+			"to": "showTurtle"
+		},{
+			"primaryName": "sine",
+			"to": "sin"
+		},{
+			"primaryName": "splitscreen",
+			"description": "Splits the screen between text and graphics.  WebLogo has no similar command but will set the Code Editor to restored size if 'splitscreen' is typed into the command input box.  Learn more at https://archive.org/details/amiga-logo-manual/page/n203/mode/2up"
+		},{
+			"primaryName": "sqrt",
+			"to": "sqrt"
+		},{
+			"primaryName": "stop",
+			"to": "stop"
+		},{
+			"primaryName": "sum",
+			"to": "sum"
+		},{
+			"primaryName": "tangent",
+			"to": "tan"
+		},{
+			"primaryName": "test",
+			"description": "Evaluates and stores result of a boolean expression for later use in iftrue, iffalse commands"
+		},{
+			"primaryName": "text",
+			"description": "Outputs information about a procedure.  WebLogo has no similar command because you can see all procedures easily enough in the code editor.  Learn more at https://archive.org/details/amiga-logo-manual/page/n205/mode/2up"
+		},{
+			"primaryName": "textscreen",
+			"description": "Hides graphics screen to show only text.  In WebLogo, the intent could be to maximize the Code Editor or expand the Command Input box.  Either way, the command is completely pointless if run from the Code Editor and makes only a little sense running from the Command input box.  You're always better off using WebLogo's buttons and menu to achieve a similar effect.  Learn more at https://archive.org/details/amiga-logo-manual/page/n205/mode/2up"
+		},{
+			"primaryName": "thing",
+			"description": "Returns the value of an arbitrary variable's name.  WebLogo lets you read a variable's value but has no command to read an arbitrary(runtime-determined) variable's value.  Until an example illustrates how useful this would be, WebLogo won't get a similar command.  The command seems a bit like code-reflection.  Adding a similar command would make it a little more difficult to rule out a variable being read in modules like validateUnusedVariables but the most important reason not to have the command is that I haven't seen anything indicating it is a very useful command.  The example at https://archive.org/details/amiga-logo-manual/page/n205/mode/2up shows how it could be used but the example doesn't make it look practically useless at all.  You're better off using a constant and immediately obvious variable name preceded by : such as :x to read a variable named x."
+		},
+		{
+			"primaryName": "throw",
+			"description": "Throws an exception.  WebLogo has no similar command.  Learn more at https://archive.org/details/amiga-logo-manual/page/n207/mode/2up"
+		},
+		{
+			"primaryName": "to",
+			"to": "to"
+		},{
+			"primaryName": "toplevel",
+			"description": "Returns control to top level code and halts any procedure.  WebLogo's stop and break commands seem most similar but none are close enough to automatically translate to.  More can be learned at https://archive.org/details/amiga-logo-manual/page/n207/mode/2up"
+		},
+		{
+			"primaryName": "towards",
+			"to": "towards"
+		},{
+			"primaryName": "type",
+			"to": "type"
+		},
+		{
+			"primaryName": "unbury",
+			"description": "Unburies names from a package.  This is the opposite of bury.  WebLogo has no equivalent command."
+		},
+		{
+			"primaryName": "version",
+			"description": "Returns the version number of the interpreter.  Learn more at https://archive.org/details/amiga-logo-manual/page/n209/mode/2up"
+		}
+	],
+	"keywords": []
+}

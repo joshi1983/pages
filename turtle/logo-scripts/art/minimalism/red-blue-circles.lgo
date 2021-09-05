@@ -1,0 +1,28 @@
+; Inspired by image at:
+; https://ca.pinterest.com/pin/91479436177014516
+to redBlueCircles :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "offset :height * 0.54
+	localmake "blueStops createPList2 [
+		[0.25 "#024e9c] [0.35 "#091c47] [0.5 "black]
+	]
+	jumpForward :offset
+	localmake "gradientCenter pos
+	setPenGradient createRadialGradient pos :height :blueStops
+	setPenSize :height * 0.87
+	setLineCap "butt
+	jumpTo :oldPos
+	forward :height
+	jumpTo :gradientCenter
+	setPenSize 0
+	setFillColor "black
+	circle :height * 0.255
+
+	setFillColor "#e31311
+	circle :height * 0.023
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+redBlueCircles 100

@@ -1,0 +1,37 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_the_Comoros#/media/File:Flag_of_the_Comoros.svg
+; Mostly based on construction sheet at:
+; https://commons.wikimedia.org/wiki/File:Flag_of_the_Comoros_(construction_sheet).svg
+to comorosFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 5 / 3
+	localmake "comorosGreen "#009639
+	localmake "A :height * 118 / 13 / 144
+	localmake "starSize :height * 14 / 144 / 2
+	stripes :width :height ["#003da5 "#ef3340 "white "#ffd100]
+	jumpLeft :width / 2
+	jumpForward :height / 2
+	right 90
+	setPenSize 0
+	setFillColor :comorosGreen
+	isoTriangle :height :width / 2
+	jumpForward :height * 41 / 144
+	setFillColor "white
+	circle :height * 68 / 144 / 2
+	localmake "size1 :height * 13 / 144
+	jumpForward :size1
+	setFillColor :comorosGreen
+	circle :height * 66 / 144 / 2
+	jumpBackward :size1 - :A
+	jumpLeft :height * 2 * 15 / 144 + :starSize
+	left 90
+	setFillColor "white
+	repeat 4 [
+		jumpBackward :height * 15 / 144
+		regularStar :starSize 5
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "#eee
+comorosFlag 100

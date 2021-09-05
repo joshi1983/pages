@@ -1,0 +1,26 @@
+; Inspired by lgoo at
+; https://www.pinterest.ca/saatchiart
+; The main difference is colors for 
+; intersections/overlaps are not 
+; the same as that original logo.
+; For example, the original logo mixes the 
+; yellow and blue to make green.
+; The original mixes colours more like color pigments(paint, pastel) 
+; than luminous light(colored LED).
+to saatchiArtLogo :height
+	localmake "oldState turtleState
+	localmake "colors ["#3099db "#aaeba400 "#aae22600]
+	jumpForward :height / 2
+	setFillColor transparent
+	setPenSize :height * 0.056
+	localmake "ellipseRadius1 :height / 3
+	localmake "ellipseRadius2 (:height - penSize) / 2
+	repeat count :colors [
+		setPenColor item repcount :colors
+		ellipse :ellipseRadius1 :ellipseRadius2
+		right 360 / 2 / count :colors
+	]
+	setTurtleState :oldState
+end
+
+saatchiArtLogo 100

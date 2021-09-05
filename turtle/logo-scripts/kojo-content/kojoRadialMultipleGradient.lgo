@@ -1,0 +1,13 @@
+; Similar to Kojo's ColorMaker.radialMultipleGradient function
+to kojoRadialMultipleGradient :x :y :radius :stopNumbers :colors :cyclic?
+	localmake "colorStops createPList
+	localmake "spreadMethod "pad
+	assert (count :stopNumbers) = (count :colors)
+	repeat count :stopNumbers [
+		setProperty "colorStops (item repcount :stopNumbers) item repcount :colors
+	]
+	if :cyclic? [
+		localmake "spreadMethod "reflect
+	]
+	output createRadialGradient2 [:x :y] [:x :y] :radius :colorStops :spreadMethod
+end

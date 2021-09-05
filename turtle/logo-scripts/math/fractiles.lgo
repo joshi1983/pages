@@ -1,0 +1,333 @@
+; Inspired by
+; https://www.pinterest.ca/pin/677791812685057542/
+
+make "borderThickness 0.005
+
+to poly2 :size
+	localmake "oldState turtleState
+	localmake "angle1 360 / 7
+	localmake "angle2 :angle1 * 2
+	left :angle1
+	localmake "heading2 heading
+	polyStart
+	forward :size
+	right :angle2
+	forward :size
+	setHeading :heading2 + 180
+	forward :size
+	polyEnd
+	setTurtleState :oldState
+end
+
+to yellowTile :size
+	localmake "oldState turtleState
+	localmake "angle1 360 / 7
+	localmake "angle2 180 - :angle1
+	setPenSize :size * :borderThickness
+	setFillColor "#ffe73f
+	polyStart
+	forward :size
+	right :angle1
+	forward :size
+	right :angle2
+	forward :size
+	polyEnd
+	setTurtleState :oldState
+end
+
+to redTile :size
+	localmake "oldState turtleState
+	localmake "angle1 360 / 14
+	localmake "angle2 180 - :angle1
+	setPenSize :size * :borderThickness
+	setFillColor "red
+	polyStart
+	forward :size
+	right :angle1
+	forward :size
+	right :angle2
+	forward :size
+	polyEnd
+	setTurtleState :oldState
+end
+
+to blackTile :size
+	setPenSize 0
+	setFillColor "black
+	poly2 :size
+end
+
+to blueTile1 :size
+	setPenSize :size * :borderThickness
+	setFillColor "#069dec
+	poly2 :size
+end
+
+to blueTile2 :size
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "angle1 90 - 360 / 7
+	left :angle1
+	jumpForward :size
+	setHeading :oldHeading + 90
+	blueTile1 :size
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://www.pinterest.ca/pin/677791812685057542/
+to fractile1 :size
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "size1 :size * 0.255
+	localmake "angle1 360 / 7
+	repeat 7 [
+		setHeading :oldHeading + repcount * :angle1
+		jumpTo :oldPos
+		yellowTile :size1
+		jumpForward :size1
+		blackTile :size1
+		right :angle1
+		jumpForward :size1
+		right :angle1
+		repeat 3 [
+			left :angle1
+			yellowTile :size1
+		]
+		repeat 2 [
+			right :angle1
+			jumpForward :size1
+			blueTile1 :size1
+			jumpBackward :size1
+		]
+	]
+	; restore original position and heading.
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://www.fractiles.com/wp/wp-content/uploads/2020/06/FractilesLogoFR.png
+; from https://www.fractiles.com/gallery/
+to fractile2 :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "tileSize :size * 0.445
+	localmake "angle1 360 / 7
+	repeat 7 [
+		jumpTo :oldPos
+		setHeading :oldHeading + (repcount - 1) * :angle1
+		yellowTile :tileSize
+		jumpForward :tileSize
+		blueTile1 :tileSize
+		right :angle1
+		jumpForward :tileSize
+		left :angle1 * 2
+		jumpForward :tileSize
+		right :angle1 * 3
+		redTile :tileSize
+	]
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to fractile3Branch :tileSize
+	localmake "oldState turtleState
+	localmake "angle2 360 / 14
+	left :angle2
+	yellowTile :tileSize
+	right :angle2 * 2
+	jumpForward :tileSize
+	left :angle2 * 2
+	redTile :tileSize
+	jumpForward :tileSize
+	redTile :tileSize
+	jumpForward :tileSize
+	left :angle2
+	yellowTile :tileSize
+	left :angle2 * 2
+	blueTile1 :tileSize
+	right :angle2 * 2
+	jumpForward :tileSize
+	yellowTile :tileSize
+	jumpForward :tileSize
+	left :angle2
+	redTile :tileSize
+	left :angle2 * 1.5
+	blueTile2 :tileSize
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://www.fractiles.com/largeedition/#iLightbox[gallery_image_1]/4
+; from https://www.fractiles.com/gallery/
+to fractile3 :size
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "tileSize :size * 0.145
+	localmake "angle1 360 / 7
+	localmake "angle2 360 / 14
+	repeat 7 [
+		setHeading :oldHeading + repcount * :angle1
+		redTile :tileSize
+		jumpForward :tileSize
+		fractile3Branch :tileSize
+		jumpTo :oldPos
+		right :angle2
+		jumpForward :tileSize
+		fractile3Branch :tileSize
+		jumpTo :oldPos
+	]
+	setTurtleState :oldState
+end
+
+to fractile4SmallBranch :tileSize
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angle1 360 / 7
+	localmake "angle2 360 / 14
+	yellowTile :tileSize
+	right :angle1
+	jumpForward :tileSize
+	left :angle1
+	redTile :tileSize
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :tileSize
+	right :angle2
+	redTile :tileSize
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to fractile4LongBranch :tileSize
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angle1 360 / 7
+	localmake "angle2 360 / 14
+	localmake "angle3 360 / 28
+	yellowTile :tileSize
+	jumpForward :tileSize
+	right :angle2
+	redTile :tileSize
+	jumpTo :oldPos
+	setHeading :oldHeading + :angle1
+	jumpForward :tileSize
+	left :angle2
+	yellowTile :tileSize
+	left :angle2
+	redTile :tileSize
+	right :angle2
+	jumpForward :tileSize
+	right :angle3
+	blueTile2 :tileSize
+	setHeading :oldHeading + :angle2 * 3
+	localmake "pos1 pos
+	jumpForward :tileSize
+	left :angle1
+	fractile4SmallBranch :tileSize
+	jumpTo :pos1
+	setHeading :oldHeading
+	jumpForward :tileSize
+	right :angle2
+	blueTile1 :tileSize
+	left :angle1 * 2
+	blueTile1 :tileSize
+	setHeading :oldHeading - :angle2
+	jumpForward :tileSize
+	right :angle1
+	yellowTile :tileSize
+	jumpForward :tileSize
+	left :angle2 * 7
+	redTile :tileSize
+	setHeading :oldHeading + :angle3 * 3
+	blueTile2 :tileSize
+	setHeading :oldHeading + :angle2 * 3
+	jumpForward :tileSize
+	right :angle2 * 3
+	yellowTile :tileSize
+	setHeading :oldHeading
+	repeat 2 [
+		redTile :tileSize
+		right :angle2
+	]
+	setHeading :oldHeading + :angle2
+	jumpForward :tileSize
+	left :angle2
+	yellowTile :tileSize
+	right :angle2
+	jumpBackward :tileSize
+	setHeading :oldHeading + :angle1 * 3
+	jumpForward :tileSize
+	right :angle2
+	redTile :tileSize
+	setHeading :oldHeading + :angle3
+	blueTile2 :tileSize
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+; Inspired by
+; https://www.fractiles.com/wp/wp-content/uploads/2019/02/LargeCover1024px96ppi95q-600x600.jpg
+; from https://www.fractiles.com/largeedition/#
+; and at https://www.pinterest.ca/pin/917256649081928133/
+to fractile4 :size
+	localmake "tileSize :size * 0.12728
+	localmake "angle1 360 / 7
+	repeat 7 [
+		fractile4LongBranch :tileSize
+		right :angle1
+	]
+end
+
+; Inspired by
+; https://www.pinterest.ca/pin/637189047292666996/
+to fractile5 :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "tileSize :size * 0.2224
+	localmake "angle1 360 / 7
+	localmake "angle2 360 / 14
+	localmake "angle3 360 / 28
+	repeat 7 [
+		setHeading :oldHeading + repcount * :angle1
+		redTile :tileSize
+		right :angle2
+		jumpForward :tileSize
+		left :angle2
+		yellowTile :tileSize
+		jumpForward :tileSize
+		right :angle1
+		jumpForward :tileSize
+		right :angle2 * 3
+		blueTile1 :tileSize
+		left :angle2 * 2
+		jumpForward :tileSize
+		right :angle3 * 5
+		blueTile2 :tileSize
+		left :angle3 * 3
+		jumpForward :tileSize
+		right :angle2
+		yellowTile :tileSize
+		jumpForward :tileSize
+		right :angle2
+		redTile :tileSize
+		jumpTo :oldPos
+	]
+	setHeading :oldHeading
+end
+
+make "size 100
+make "sideStepSize :size * 3
+jumpLeft :sideStepSize * 2
+setScreenColor "black
+fractile1 :size
+jumpRight :sideStepSize
+fractile2 :size
+jumpRight :sideStepSize
+fractile3 :size
+jumpRight :sideStepSize
+fractile4 :size
+jumpRight :sideStepSize
+fractile5 :size

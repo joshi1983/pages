@@ -1,0 +1,23 @@
+; Inspired by favicon at:
+; https://globalnews.ca
+to globalNewsLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "angle 36.45
+	localmake "thickness1 :height * 0.2856
+	localmake "slantedHeight1 :height * 0.4807
+	localmake "slantedHeight2 (:height - :thickness1) / (sin :angle) - :slantedHeight1
+	setPenSize 0
+	jumpLeft :height * 0.089
+	jumpForward :thickness1 / 2
+	right 90
+	setFillColor "#EF2601
+	parallelogram :thickness1 :slantedHeight1 -:angle
+	left :angle
+	jumpForward :slantedHeight1
+	setHeading :oldHeading - 90
+	parallelogram :thickness1 :slantedHeight2 :angle
+	setTurtleState :oldState
+end
+
+globalNewsLogo 100

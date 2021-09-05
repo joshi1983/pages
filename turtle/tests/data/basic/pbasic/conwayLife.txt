@@ -1,0 +1,170 @@
+// life.bas
+// Conway's Game of Life in pBasic
+// Grid: 70x55 cells, pen 18, full canvas
+// Colours: White=newborn, Green=stable, Yellow=lonely, Red=crowded
+
+cls
+clr
+pen 18
+
+var gridW    : Int = 70
+var gridH    : Int = 55
+var gridTotal: Int = 3850
+var cellSize : Int = 18
+
+var curr[3850] : Int
+var nxt[3850] : Int
+
+var gx   : Int = 0
+var gy   : Int = 0
+var idx  : Int = 0
+var px   : Int = 0
+var py   : Int = 0
+var alive: Int = 0
+var gen  : Int = 0
+var nb   : Int = 0
+
+// ── Count live neighbours for cell at flat index ci ───────────────────────
+// Unrolled 8-neighbour check — no dx/dy loop needed
+func countN(cx, cy, gW, gH) {
+    var nbCount : Int = 0
+    var nx : Int = 0
+    var ny : Int = 0
+    var ni : Int = 0
+
+    // NW
+    nx = cx - 1
+    ny = cy - 1
+    if (nx >= 0 && ny >= 0) then ni = ny * gW + nx
+    if (nx >= 0 && ny >= 0) then nbCount = nbCount + curr[ni]
+    // N
+    ny = cy - 1
+    if (ny >= 0) then ni = ny * gW + cx
+    if (ny >= 0) then nbCount = nbCount + curr[ni]
+    // NE
+    nx = cx + 1
+    ny = cy - 1
+    if (nx < gW && ny >= 0) then ni = ny * gW + nx
+    if (nx < gW && ny >= 0) then nbCount = nbCount + curr[ni]
+    // W
+    nx = cx - 1
+    if (nx >= 0) then ni = cy * gW + nx
+    if (nx >= 0) then nbCount = nbCount + curr[ni]
+    // E
+    nx = cx + 1
+    if (nx < gW) then ni = cy * gW + nx
+    if (nx < gW) then nbCount = nbCount + curr[ni]
+    // SW
+    nx = cx - 1
+    ny = cy + 1
+    if (nx >= 0 && ny < gH) then ni = ny * gW + nx
+    if (nx >= 0 && ny < gH) then nbCount = nbCount + curr[ni]
+    // S
+    ny = cy + 1
+    if (ny < gH) then ni = ny * gW + cx
+    if (ny < gH) then nbCount = nbCount + curr[ni]
+    // SE
+    nx = cx + 1
+    ny = cy + 1
+    if (nx < gW && ny < gH) then ni = ny * gW + nx
+    if (nx < gW && ny < gH) then nbCount = nbCount + curr[ni]
+
+    return nbCount
+}
+
+// ── Seed: ~30% random density ─────────────────────────────────────────────
+idx = 0
+while (idx < gridTotal) {
+    if (RND(0) < 0.30) then curr[idx] = 1
+    idx = idx + 1
+}
+
+// ── Draw initial state ────────────────────────────────────────────────────
+gy = 0
+while (gy < gridH) {
+    gx = 0
+    while (gx < gridW) {
+        idx = gy * gridW + gx
+        px = gx * cellSize + cellSize / 2
+        py = gy * cellSize + cellSize / 2
+        if (curr[idx] == 1) then POINT(px, py, 0.0, 0.9, 0.2, 1.0)
+        gx = gx + 1
+    }
+    gy = gy + 1
+}
+
+locate 1, 1
+print "Life gen 0"
+
+// ── Main generation loop ──────────────────────────────────────────────────
+gen = 0
+while (gen < 500) {
+
+    // ── Pass 1: compute next generation ──────────────────────────────────
+    gy = 0
+    while (gy < gridH) {
+        gx = 0
+        while (gx < gridW) {
+            idx = gy * gridW + gx
+            nb = countN(gx, gy, gridW, gridH)
+            alive = curr[idx]
+            nxt[idx] = 0
+            if (alive == 1 && nb == 2) then nxt[idx] = 1
+            if (alive == 1 && nb == 3) then nxt[idx] = 1
+            if (alive == 0 && nb == 3) then nxt[idx] = 1
+            gx = gx + 1
+        }
+        gy = gy + 1
+    }
+
+    // ── Pass 2: draw with colour coding ──────────────────────────────────
+    clr
+    idx = 0
+    gy = 0
+    while (gy < gridH) {
+        gx = 0
+        while (gx < gridW) {
+            idx = gy * gridW + gx
+            px = gx * cellSize + cellSize / 2
+            py = gy * cellSize + cellSize / 2
+            nb = countN(gx, gy, gridW, gridH)
+            alive = curr[idx]
+
+            if (nxt[idx] == 1 && alive == 0) then POINT(px, py, 1.0, 1.0, 1.0, 1.0)
+            if (nxt[idx] == 1 && alive == 1) then POINT(px, py, 0.0, 0.9, 0.2, 1.0)
+            if (nxt[idx] == 0 && alive == 1 && nb < 2) then POINT(px, py, 0.9, 0.8, 0.0, 1.0)
+            if (nxt[idx] == 0 && alive == 1 && nb > 3) then POINT(px, py, 0.9, 0.1, 0.1, 1.0)
+
+            gx = gx + 1
+        }
+        gy = gy + 1
+    }
+
+    // ── Pass 3: copy next to curr ─────────────────────────────────────────
+    idx = 0
+    while (idx < gridTotal) {
+        curr[idx] = nxt[idx]
+        idx = idx + 1
+    }
+
+    gen = gen + 1
+    locate 1, 1
+    print "Life gen "
+    print gen
+
+    // ── Extinction check ──────────────────────────────────────────────────
+    alive = 0
+    idx = 0
+    while (idx < gridTotal) {
+        alive = alive + curr[idx]
+        idx = idx + 1
+    }
+    if (alive == 0) then gen = 500
+
+}
+
+locate 2, 1
+print "Done. "
+print alive
+print " cells alive."
+end

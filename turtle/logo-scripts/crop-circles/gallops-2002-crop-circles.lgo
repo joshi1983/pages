@@ -1,0 +1,38 @@
+make "darkColor "#780
+
+; Inspired by
+; https://ca.pinterest.com/pin/60306082504236522
+; Also mentioned at:
+; https://www.crystalinks.com/cropcircles2002.html
+; Reported in July 28, 2002
+; Located at The Gallops, nr Beckhampton, Wiltshire
+to gallops2002CropCircles :height
+	localmake "oldState turtleState
+	localmake "numAngles 82
+	localmake "lightColor "#ef8
+	localmake "radius :height * 0.49
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	repeat 3 [
+		localmake "outerRadius :height / 2 - (repcount - 1) * :height / 6
+		localmake "starLargeRadius :outerRadius - :height * 0.01
+		setFillColor :lightColor
+		circle :outerRadius
+		setFillColor :darkColor
+		isotoxalStar :starLargeRadius :starLargeRadius * 0.95 :numAngles
+	]
+	setPenSize :height * 0.002
+	setPenColor :lightColor
+	right 180 / :numAngles
+	repeat :numAngles / 2 [
+		jumpBackward :radius
+		forward :radius * 2
+		right 360 / :numAngles
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor :darkColor
+gallops2002CropCircles 100

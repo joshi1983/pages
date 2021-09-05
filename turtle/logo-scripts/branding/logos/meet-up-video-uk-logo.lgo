@@ -1,0 +1,80 @@
+to drawVShape :size :color
+	localmake "oldState turtleState
+	localmake "angle 29
+	localmake "height1 :size * 0.6
+	localmake "slantedHeight :height1 / cos :angle
+	localmake "width 2 * :height1 * tan :angle
+	jumpBackward :size
+	setLineCap "round
+	setLineJoinStyle "round
+	setPenSize :size * 0.33
+	setPenColor :color
+	jumpLeft :width / 2
+	right :angle
+	forward :slantedHeight
+	right 180 - :angle * 2
+	forward :slantedHeight
+	setTurtleState :oldState
+end
+
+to drawTapeHighlightsAndBranding :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "darkPurpleColor "#630d94
+	localmake "outlineColor "#ba98d4
+	localmake "arcs [
+		[-180 279 0.495 0.01 :outlineColor]
+		[-175 190 0.32 0.02 :darkPurpleColor]
+		[16 84 0.41 0.065 "#f8f8f8]
+	]
+	localmake "innerColors [:outlineColor :darkPurpleColor]
+	localmake "separation :height * 0.08
+	jumpForward :height / 2
+	setPenSize 0
+	setFillColor "#f8f8f8
+	circle :height * 0.215
+	setLineCap "butt
+	repeat count :arcs [
+		localmake "arcInfo item repcount :arcs
+		localmake "arcAngle item 2 :arcInfo
+		localmake "arcRadius :height * item 3 :arcInfo
+		setHeading :oldHeading + first :arcInfo
+		setPenSize :height * item 4 :arcInfo
+		setPenColor last :arcInfo
+		arc :arcAngle :arcRadius
+	]
+	setHeading :oldHeading
+	jumpBackward :height * 0.096
+	repeat 2 [
+		stripes :height * 0.19 :height * 0.008 [:outlineColor]
+		jumpForward :height * 0.178
+	]
+	jumpTo :oldPos
+	jumpForward :height * 0.557
+	jumpLeft :separation / 2
+	setPenSize 0
+	repeat 2 [
+		setFillColor item 3 - repcount :innerColors
+		circle :height * 0.02
+		drawVShape :height * 0.116 item repcount :innerColors
+		jumpRight :separation
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by:
+; https://www.facebook.com/share/p/19hmGYiha1
+to meetUpVideoUKLogo :height
+	localmake "oldState turtleState
+	localmake "innerHeight :height * 0.983
+	setPenSize 0
+	setFillColor "black
+	jumpForward :height / 2
+	circle :height / 2	
+	jumpBackward :innerHeight / 2
+	drawTapeHighlightsAndBranding :innerHeight
+	setTurtleState :oldState
+end
+
+meetUpVideoUKLogo 100

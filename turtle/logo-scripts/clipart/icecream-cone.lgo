@@ -1,0 +1,65 @@
+to drawCone :height
+	localmake "pointRadius 0.02
+	localmake "coneAngle1 22.7
+	localmake "coneAngle2 90 - :coneAngle1
+	localmake "coneSlantedLength 
+		(1 - :pointRadius * (1 - cos :coneAngle2)) / (cos :coneAngle1)
+	localmake "halfConeWidth :coneSlantedLength * (sin :coneAngle1) +
+		:pointRadius * sin :coneAngle2
+	localmake "coneLines1 [
+		[-:coneAngle2  :pointRadius]
+		[:coneSlantedLength] [-:coneAngle1 - 90 0]
+		[:halfConeWidth]
+	]
+	drawArcLineShape [0 0
+		(combine [[90 0]] :coneLines1 reverse :coneLines1
+		)
+	] :height
+end
+
+to drawIceCreamScoop :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "smallRadius :height * 0.18
+	localmake "largeRadius :height * 0.67
+	localmake "largeArcAngle 180 + 2 * (arcSin (:height - :largeRadius - :smallRadius) / :largeRadius)
+	localmake "numSmallCircles 6
+	localmake "separation (:largeRadius * 2 * sin :largeArcAngle / 2) / 
+		(:numSmallCircles - 0.5)
+	jumpForward :height - :largeRadius
+	left :largeArcAngle / 2
+	jumpForward :largeRadius
+	right 90
+	polyStart
+	arcRight :largeArcAngle :largeRadius
+	polyEnd
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :smallRadius
+	jumpLeft :separation * (:numSmallCircles - 1) / 2
+	repeat :numSmallCircles [
+		circle :smallRadius
+		jumpRight :separation
+	]
+	
+	setTurtleState :oldState
+end
+
+; Inspired by:
+; https://publicdomainvectors.org/en/free-clipart/Ice-cream-icon-vector-graphics/18055.html
+to iceCreamInCone :height
+	localmake "oldState turtleState
+	localmake "coneHeight :height * 0.541
+	localmake "scoupHeight (:height - :coneHeight) * 0.94
+	setPenSize 0
+	setFillColor "white
+	drawCone :coneHeight
+	jumpForward :height - :scoupHeight
+	drawIceCreamScoop :scoupHeight
+	setTurtleState :oldState
+end
+
+setScreenColor "red
+iceCreamInCone 100

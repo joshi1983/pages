@@ -1,0 +1,61 @@
+; Inspired by an animation at:
+; https://www.facebook.com/share/v/1C5n1s2uqz
+to powerOfSine :height :t
+	localmake "oldState turtleState
+	localmake "colors ["black "navy  "blue  "purple 
+		"maroon "red "orange "#ff0 "#8f0  "#0b0 "green]
+	localmake "numPoints 100
+	jumpLeft :height / 2
+	localmake "startPos pos
+	repeat 2 [
+		localmake "root? repcount = 1
+		repeat count :colors [
+			ifelse :root? [
+				localmake "exponent repcount
+			] [
+				localmake "exponent 1/repcount
+			]
+			localmake "points []
+			repeat :numPoints [
+				localmake "t1 :t * repRatio
+				localmake "sineValue radSin :t1 * pi
+				localmake "x :t1 * :height
+				localmake "y :height * power :sineValue :exponent
+				jumpTo :startPos
+				jumpRight :x
+				jumpForward :y
+				queue2 "points pos
+			]
+			jumpTo first :points
+			setPenSize :height * 0.003
+			setPenColor item repcount :colors
+			for ["i 2 count :points] [
+				setPos item :i :points
+			]
+			setFillColor penColor
+			setPenSize 0
+			circle :height * 0.005
+		]
+	]
+	setTurtleState :oldState
+end
+
+make "t animation.clampedTimeRatio
+powerOfSine 100 :t
+
+to animation.snapshotstyle
+	output createPList2 [
+		["position.y 50]
+		["zoom.scale 5]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 5
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+		["thumbnailTime :seconds * 0.75]
+	]
+end

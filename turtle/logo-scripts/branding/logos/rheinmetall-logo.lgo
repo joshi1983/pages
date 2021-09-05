@@ -1,0 +1,32 @@
+; Inspired by logo at:
+; https://en.wikipedia.org/wiki/Rheinmetall#/media/File:Rheinmetall_Logo_2021.svg
+to rheinmetallLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "slantedLen :height * 0.4221
+	localmake "angle 24.05
+	localmake "angle1 -69.55
+	jumpLeft :height * 0.3359444
+	localmake "startPos pos
+	jumpForward :height * 0.36
+	right 90
+	setPenSize 0
+	setFillColor "#000824
+	parallelogram :height * 0.1 :slantedLen -:angle
+
+	jumpTo :startPos
+	setHeading :oldHeading
+	setFillColor "#00406E
+	drawArcLineShape [0 0.311
+		[[:angle1 0.085] [0.35243] [180 - :angle1 0] [0.293]
+		[:angle - 90 0.083] [0.3537] [-:angle - 90 0.0095]]
+	] :height
+	setFillColor "#007EC1
+	drawArcLineShape [0 0.338
+		[[:angle - 90 0.092] [0.6493] [90 - :angle 0.1] [0.2141]
+		[90 + :angle 0.008] [0.7] [90 - :angle 0.095]]
+	] :height
+	setTurtleState :oldState
+end
+
+rheinmetallLogo 100

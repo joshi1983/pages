@@ -1,0 +1,51 @@
+to drawSpiralArc :size :isRight
+	localmake "originalPos pos
+	localmake "a 280
+	ifelse :isRight [
+		arcRight :a :size
+		left :a
+	] [
+		arcleft :a :size
+		right :a
+	]
+	penup
+	setpos :originalPos
+	pendown
+end
+
+to drawSpiralArcs :size
+	drawSpiralArc :size true
+	drawSpiralArc :size false
+end
+
+to snowflake5 :size
+	localmake "size1 :size * 0.4
+	localmake "size2 :size * 0.3
+	localmake "size3 :size * 0.2
+	localmake "size4 :size * 0.03
+	localmake "size5 :size * 0.02
+	localmake "size6 :size * 0.01
+	localmake "size7 :size * 0.08
+	localmake "size8 :size * 0.15
+	localmake "size9 :size * 0.04
+	localmake "backSize :size1 + :size2 + :size3
+	setpensize :size * 0.02
+	repeat 6 [
+		setpensize :size4
+		forward :size1
+		setpensize :size5
+		drawSpiralArcs :size7
+		forward :size2
+		setpensize :size6
+		drawSpiralArcs :size8
+		forward :size3
+		drawSpiralArcs :size9
+		penup
+		back :backSize
+		pendown
+		right 60
+	]
+end
+
+setpencolor "midnightblue
+snowflake5 200

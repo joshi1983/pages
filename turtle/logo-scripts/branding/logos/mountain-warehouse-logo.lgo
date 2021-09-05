@@ -1,0 +1,76 @@
+; Inspired by logo at:
+; https://www.mountainwarehouse.com
+to mountainWarehouseLogo :height :color
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "line1 [
+		[-55 0] [0.42] [103 0] [0.462957]
+		[42 0]
+	]
+	localmake "thicknessFactor 0.07
+	localmake "cornerRadius 0.1
+	jumpForward :height / 2
+	setPenSize 0
+	setFillColor :color
+	right 45 
+	repeat 2 [
+		rect :height * 0.8 :height * 0.01
+		right 90
+	]
+	repeat 4 [
+		drawArcLineShape [0 0.09
+			combine :line1 reverse :line1
+		] :height
+		right 360 / 4
+	]
+	jumpTo :oldPos
+	setHeading :oldHeading
+	setPenSize :height * :thicknessFactor
+	setPenColor fillColor
+	jumpForward :height - penSize / 2
+	jumpLeft (:height - penSize) / 2
+	setLineCap "square
+	setLineJoinStyle "miter
+	arcLines [
+		[180 0] [1 - :thicknessFactor - :cornerRadius]
+		[90 :cornerRadius] [1 - :cornerRadius * 2 - :thicknessFactor]
+		[90  :cornerRadius] [1 - :cornerRadius * 2 - :thicknessFactor]
+		[90 :cornerRadius]
+	] :height
+	closePath
+	setTurtleState :oldState
+end
+
+to mountainWarehouseStar :height :color
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "separation :height * 0.15
+	setFillColor :color
+	jumpForward :height / 2
+	setPenSize 0
+	localmake "center pos	
+	repeat 4 [
+		setHeading :oldHeading + repcount * 360 / 4
+		jumpForward :height / 2
+		localmake "top pos
+		jumpBackward :height * 0.49
+		localmake "start pos
+		jumpForward :separation / 2
+		jumpLeft :separation / 2
+		localmake "side1 pos
+		jumpRight :separation
+		polygon [:start :side1 :top pos]
+		
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+make "height 100
+make "separation :height * 5
+jumpLeft :separation / 2
+mountainWarehouseLogo :height "white
+jumpRight :separation
+mountainWarehouseStar :height "white

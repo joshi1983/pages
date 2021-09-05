@@ -1,0 +1,72 @@
+to drawPlus :size
+	localmake "oldState turtleState
+	localmake "oldPenSize penSize
+	setPenSize 0
+	setFillColor penColor
+	repeat 2 [
+		rect :oldPenSize :size
+		right 90
+	]
+	setTurtleState :oldState
+end
+
+to drawMinus :size
+	localmake "oldState turtleState
+	localmake "oldPenSize penSize
+	setPenSize 0
+	setFillColor penColor
+	rect :oldPenSize :size
+	setTurtleState :oldState
+end
+
+to drawEyebrow :arcRadius
+	localmake "oldState turtleState
+	localmake "arcAngle 90
+	left 90 - :arcAngle / 2
+	arc -:arcAngle :arcRadius
+
+	setTurtleState :oldState
+end
+
+; Inspired by profile image at:
+; https://ca.pinterest.com/choi2896
+to danChoiProfileImage :height
+	localmake "oldState turtleState
+	localmake "faceRadius :height / 2
+	localmake "littleRadius :height * 0.055
+	localmake "eyeRadius :height* 0.114
+	localmake "eyeSeparation (:eyeRadius + :littleRadius) * 2
+	localmake "thickness :height * 0.02
+
+	setPenSize 0
+	setFillColor "#e8e8e8
+	jumpForward :faceRadius
+	circle :faceRadius
+
+	jumpBackward :faceRadius
+	setPenSize :thickness
+	setPenColor "black
+	jumpForward :height * 0.5
+	left 90
+	setLineCap "butt
+	arc 180 :height * 0.34
+	jumpLeft :height * 0.06
+	arc 180 :littleRadius
+	jumpRight :height * 0.17
+	arc -180 :littleRadius
+	jumpForward :eyeSeparation / 2
+	setFillColor transparent
+	circle :eyeRadius
+	drawPlus :height * 0.11
+	jumpBackward :eyeSeparation
+	circle :eyeRadius
+	drawMinus :height * 0.11
+	jumpRight :height * 0.084
+	repeat 2 [
+		drawEyebrow :eyeRadius
+		jumpForward :eyeSeparation
+	]
+	setTurtleState :oldState
+end
+
+danChoiProfileImage 100

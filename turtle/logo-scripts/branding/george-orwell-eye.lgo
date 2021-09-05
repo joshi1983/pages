@@ -1,0 +1,61 @@
+make "orellOrange "#f57921
+
+to drawHeadlessMan :height
+	localmake "oldState turtleState
+	localmake "legHeight 0.513
+	localmake "armHeight 0.325
+	localmake "gap1 0.013
+	localmake "line1 [
+		[90 0] [:gap1] [90 0] [:legHeight]
+		[-90 0] [0.108] [-90 0] [:legHeight + :armHeight]
+		[90 0] [:gap1 * 2] [90 0] [:armHeight]
+		[-90 0] [0.09] [-90 0] [:armHeight + 0.032]
+		[-90 0.13] [0.107]
+	]
+	setPenSize 0
+	setFillColor "black
+	drawArcLineShape [0 1 - item 2 arcLinesInfo :line1
+	combine :line1 reverse :line1
+	] :height
+
+	setTurtleState :oldState
+end
+
+to drawEye :height
+	localmake "oldState turtleState
+	setPenSize 0
+	localmake "eyeLine1 [
+		[35 0.65] [16.10261 2]
+	]
+	localmake "info arcLinesInfo :eyeLine1
+	localmake "angle 180 - (360 - first :info) * 2
+	localmake "eyeLine2 (combine :eyeLine1
+		[[:angle 0]] reverse :eyeLine1)
+	drawArcLineShape [0 0.5
+		(combine [[90 0]] :eyeLine2 :eyeLine2)
+	] :height
+	setFillColor :orellOrange
+	circle :height * 0.33
+	setFillColor "black
+	circle :height * 0.16
+	setTurtleState :oldState
+end
+
+; Inspired by an image at:
+; https://ca.pinterest.com/pin/3096293490502182
+to georgeOrwellEye :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "eyeHeight :height * 0.425
+	jumpForward :height - :eyeHeight / 2
+	setFillColor "white
+	drawEye :eyeHeight
+
+	jumpTo :oldPos	
+	drawHeadlessMan :height * 0.697
+
+	setTurtleState :oldState
+end
+
+setScreenColor :orellOrange
+georgeOrwellEye 100

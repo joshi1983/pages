@@ -1,0 +1,116 @@
+make "rmBlue "#0075ce
+make "rmRed "#f32926
+
+to drawR :height
+	localmake "oldState turtleState
+	localmake "thickness1Factor 0.33
+	localmake "angle1 44.2
+	localmake "slantedHeight1 0.5 / cos :angle1
+	localmake "redLines1 [[:angle1 0] [:slantedHeight1] [-2 * :angle1 0]
+		[:slantedHeight1 / 2] [2 * :angle1 0] [:slantedHeight1 / 2]
+		]
+	localmake "redShape [1.02 0
+		(combine :redLines1 [[90 - :angle1 0] [:thickness1Factor] [90 + :angle1 0]] 
+		reverse flipAngles :redLines1)
+	]
+	jumpLeft :height * 0.425
+	stripes :height * 0.25 :height [:rmBlue]
+	
+	setPenSize 0
+	setFillColor :rmRed
+	drawArcLineShape :redShape :height
+	setTurtleState :oldState
+end
+
+to drawM :height
+	localmake "oldState turtleState
+	localmake "angle1 45
+	localmake "len1 0.415
+	localmake "height1 0.63
+	localmake "height2 0.54
+	localmake "len2 :height1 / cos :angle1
+	localmake "shape [-0.83 0
+		[[1] [-90 0] [0.24] [-:angle1 0] [:len1] [180 - :angle1 0]
+		[:len1 * sin :angle1] [-90 0] [0.23] [-:angle1 0] [1 / cos :angle1]
+		[-180 + :angle1 0] [0.35] [-:angle1 0] [:len2] [90 + :angle1 0]
+		[:height2] [-90 - :angle1 0] [:height2 / cos :angle1] [90 + :angle1 0]
+		[:height1]]
+	]
+	setPenSize 0
+	setFillColor :rmBlue
+	drawArcLineShape :shape :height
+	setTurtleState :oldState
+end
+
+; Inspired by logo for:
+; Research Machines Limited.
+; Research Machines Limited created a version of Logo called RM Logo.
+;
+; The company logo is shown in a manual
+; titled: Nimbus. RM LOGO
+; The manual was published in 1985.
+; A digital version of the manual is at:
+; https://archive.org/details/nimbusrmlogopn143941985
+to researchMachines1985Logo :height
+	localmake "oldState turtleState
+	jumpLeft :height * 0.9
+	drawR :height
+	jumpRight :height * 1.46
+	drawM :height
+	setTurtleState :oldState
+end
+
+to drawRNew :height
+	localmake "oldState turtleState
+	localmake "width1 0.285
+	localmake "arcRadius 0.205
+	localmake "angle1 37
+	localmake "finalLen (1 - :arcRadius * 2 - penSize / :height) / sin :angle1
+	jumpForward penSize / 2
+	arcLines [[1 - penSize / :height] [-90 0] [:width1] [-180 :arcRadius]
+		[:width1] [-0.13] [-:angle1 0] [-:finalLen]] :height
+	setTurtleState :oldState
+end
+
+to drawMNew :height
+	localmake "oldState turtleState
+	localmake "angle1 12.3
+	localmake "angle2 -146.7
+	localmake "angle3 180 + :angle2 - :angle1
+	localmake "angle :angle1  - :angle2 - :angle3
+	localmake "innerHeight :height - penSize
+	localmake "innerHeightFactor :innerHeight / :height
+	localmake "len1 :innerHeightFactor / cos :angle1
+	localmake "len2 -:innerHeightFactor / cos :angle1 - :angle2
+	localmake "lines1 [[-:angle1 0] [:len1] [:angle2 0]
+		[:len2]]
+	localmake "lines (combine :lines1 [[(:angle) 0]] reverse :lines1)
+	jumpForward penSize / 2
+	jumpLeft :height * 0.48
+	arcLines :lines :height
+	setTurtleState :oldState
+end
+
+; Inspired by:
+; https://www.rmplc.com
+; also like:
+; https://en.wikipedia.org/wiki/RM_plc#/media/File:RM_Education_(logo).svg
+to researchMachinesNewLogo :height
+	localmake "oldState turtleState
+	setPenSize :height * 0.21
+	setPenColor "black
+	setLineCap "round
+	setLineJoinStyle "round
+	jumpLeft :height * 0.865
+	drawRNew :height
+	jumpRight :height * 1.16
+	drawMNew :height
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 5
+jumpLeft :separation / 2
+researchMachines1985Logo :height
+jumpRight :separation
+researchMachinesNewLogo :height

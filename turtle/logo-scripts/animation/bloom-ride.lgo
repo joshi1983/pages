@@ -1,0 +1,93 @@
+to drawFlower :innerRadius :angle :innerColor :outerColor :t
+	localmake "oldState turtleState
+	localmake "center pos
+	localmake "numPetals 12
+	localmake "minGap :innerRadius
+	localmake "maxGap :innerRadius * 3
+	localmake "petalLength :innerRadius
+	localmake "t clamp :t 0 1
+	setPenSize 0
+	right :angle
+	setFillColor :outerColor
+	repeat 3 [
+		repeat :numPetals [
+			localmake "ratio clamp repRatio * 0.7 - 1 + :t * 2 0 1
+			localmake "gap mix :maxGap :minGap :ratio
+			localmake "arcAngle mix 0 90 power :ratio 4
+			jumpForward :gap
+			arcPair :petalLength :arcAngle
+			right 360 / :numPetals
+			jumpTo :center
+		]
+		localmake "t :t - 1
+	]
+	setFillColor :innerColor
+	
+	circle :innerRadius
+	setTurtleState :oldState
+end
+
+; Inspired by an animation at:
+; https://www.facebook.com/share/v/1WW5DkfMa6
+to bloomField :scale :t
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "numLayers 50
+	localmake "sizes [0.1 0.03 0.05 0.12 0.02]
+	localmake "innerColors ["red "orange]
+	localmake "outerColors ["blue "violet "white "#ff0 "#08f]
+	localmake "gridCount 3
+	localmake "tCurved interpolateRatio easeInOut :t
+	setFillBlendMode "lighter
+	repeat :numLayers [
+		localmake "z (0.1 - :tCurved * 5 + (:numLayers - repcount) / 5) * 3
+		right 20
+		if :z > 0.0001 [
+			localmake "layerScale :scale / :z
+			for ["x -:gridCount :gridCount] [
+				for ["y -:gridCount :gridCount] [
+					localmake "fadeRatio clamp 1/(:z + 1) 0 1
+					if :fadeRatio < 1 [
+						localmake "angle 1000 * (repRatio + :x + :y)
+						localmake "ratio modulo (1 + sin 360 * 10 * 
+							(repRatio + :x * 0.12 + :y * 0.213))
+							1
+						localmake "outerColor mixItems :outerColors :ratio
+						localmake "index 1 + modulo :x + :y + repcount count :innerColors
+						localmake "innerColor item :index :innerColors
+						localmake "innerColor mix  "black :innerColor :fadeRatio
+						localmake "outerColor mix  "black :outerColor :fadeRatio
+						localmake "index 1 + modulo :x + :y + repcount count :sizes
+						localmake "flowerSize :layerScale * item :index :sizes
+						localmake "t2 modulo :t * 5 + :x * 0.5 + :y * 0.2 1
+						jumpRight (:x + 0.5) * :layerScale
+						jumpForward (:y + 0.5) * :layerScale
+						drawFlower :flowerSize :angle :innerColor :outerColor :t2
+						jumpTo :oldPos
+					]
+				]
+			]
+		]
+	]
+ 
+	setTurtleState :oldState
+end
+
+make "t animation.clampedTimeRatio
+setScreenColor "black
+bloomField 100 :t
+
+to animation.snapshotstyle
+	output createPList2 [
+		["zoom.scale 2]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 10
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

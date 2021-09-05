@@ -1,0 +1,21 @@
+; Inspired by logo at:
+; https://en.wikipedia.org/wiki/Krupp#/media/File:Krupp_Logo.svg
+to kruppLogo :height
+	localmake "oldState turtleState
+	localmake "radius :height * 0.34
+	localmake "gap (:height - :radius * 2) / (1 + sin 30)
+	jumpForward :height - (:radius + :gap)
+	localmake "center pos
+	setPenSize :height * 0.067
+	setFillColor transparent
+	setPenColor "black
+	repeat 3 [
+		jumpForward :gap
+		circle :radius - penSize / 2
+		jumpTo :center
+		right 360 / 3
+	]
+	setTurtleState :oldState
+end
+
+kruppLogo 100

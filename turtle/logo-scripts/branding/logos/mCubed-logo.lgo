@@ -1,0 +1,83 @@
+to drawBottomCorner :height :angle1
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "bottomSize1 :height * 0.29
+	localmake "angle2 90 - :angle1
+	setLineCap "round
+	setPenColor "white
+	setPenSize :height * 0.03
+	jumpForward penSize / 2
+	localmake "bottomPos pos
+	left :angle2
+	jumpForward :bottomSize1
+	right 180
+	forward :bottomSize1
+	left :angle1 * 2
+	forward :bottomSize1
+	jumpTo :bottomPos
+	setHeading :oldHeading
+	forward :height * 0.425
+	setTurtleState :oldState
+end
+
+to drawM :height :angle1
+	localmake "oldState turtleState
+	localmake "sideThickness 0.09
+	localmake "middleWidth 0.34
+	localmake "linesInfo [
+		[:middleWidth] [90 + :angle1 0] [0.5] [-90 - :angle1 0]
+		[:sideThickness] [:angle1 - 90 0] [0.58] [-90 - :angle1 0]
+		[:sideThickness + :middleWidth]
+	]
+	jumpForward :height * 0.5
+	left 90 - :angle1
+	setPenSize 0
+	setFillColor "white
+	polyStart
+	arcLines :linesInfo :height
+	left :angle1 * 2
+	arcLines reverse :linesInfo :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+to drawTop :height :angle1
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "width1 0.43
+	localmake "thin 0.024
+	localmake "thick 0.035
+	localmake "innerWidth :width1 - :thin - :thick
+	localmake "linesInfo [
+		[90 - :angle1 0] [:width1] [:angle1 * 2 - 180 0] [:width1] [-:angle1 * 2 0]
+		[:thin] [:angle1 * 2 - 180 0] [:innerWidth] [180 - :angle1 * 2 0]
+		[:width1 - :thin]
+	]
+	jumpForward :height * 0.615
+	localmake "startPos pos
+	setPenSize 0
+	setFillColor "white
+	repeat 2 [
+		localmake "height1 :height * sign repcount - 1.5
+		polyStart
+		arcLines :linesInfo :height1
+		polyEnd
+		jumpTo :startPos
+		setHeading :oldHeading
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by logo at
+; https://www.youtube.com/@themcubed
+to mCubedLogo :height
+	localmake "oldState turtleState
+	localmake "angle1 26
+	drawBottomCorner :height :angle1
+	drawM :height :angle1
+	drawTop :height :angle1
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+mCubedLogo 100

@@ -1,0 +1,41 @@
+to innerCircleWithLines :height
+	localmake "oldState turtleState
+	localmake "center pos
+	localmake "numLines 65
+	localmake "lineSeparation (:height - penSize) / (:numLines - 1)
+	localmake "circlePaddedRadius :height * 0.085
+	jumpForward :height / 2
+	jumpLeft (:height - penSize) / 2
+	right 180
+	repeat :numLines [
+		localmake "distanceToCircle distanceToCircle :center :circlePaddedRadius
+		localmake "height1 :height
+		if :distanceToCircle >= 0 [
+			localmake "height1 :distanceToCircle
+		]
+		stripes penSize :height1 [penColor]
+		jumpLeft :lineSeparation
+	]
+	jumpTo :center
+	setFillColor penColor
+	setPenColor "white
+	circle :circlePaddedRadius
+
+	setTurtleState :oldState
+end
+
+; Inspired by drawing at:
+; https://ca.pinterest.com/pin/167055467418528371/
+to circleInLines :height
+	localmake "oldState turtleState
+	setPenSize :height * 0.005
+	setFillColor transparent
+	setPenColor "black
+	setLineJoinStyle "miter
+	jumpForward :height / 2
+	square :height - penSize
+	innerCircleWithLines :height * 0.94
+	setTurtleState :oldState
+end
+
+circleInLines 100

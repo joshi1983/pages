@@ -1,0 +1,21 @@
+; Inspired by logo at:
+; https://www.youtube.com/@Homeneer
+to homeneerLogo :height
+	localmake "oldState turtleState
+	localmake "size :height * 0.225
+	localmake "separation (:height - :size) / 3
+	jumpRight :height * 0.445
+	for ["column 1 4] [
+		localmake "color mix "#01a35a "#01ff8b (:column - 1) / 3
+		repeat :column [
+			stripes :size :size [:color]
+			jumpForward :separation
+		]
+		jumpBackward :separation * :column
+		jumpLeft :separation
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+homeneerLogo 100

@@ -1,0 +1,27 @@
+; Inspired by logo at:
+; https://ottawatourism.ca
+to ottawaTourismLogo :height
+	localmake "oldState turtleState
+	localmake "radius 0.1627
+	localmake "x 0.1473
+	localmake "startY sqrt :radius * :radius - :x * :x
+	localmake "levelY 0.384
+	localmake "angle 60.2159455
+	localmake "lines1 [[:levelY - :startY] [90 0.01] [0.071] [-:angle 0] [0.116]
+			[:angle 0.01]]
+	localmake "arcAngle 2 * (90 - arcTan2 :x :startY)
+	setPenSize 0
+	setFillColor "white
+	jumpForward :height / 2
+	repeat 6 [
+		drawArcLineShape [:x :startY
+			(combine :lines1 reverse :lines1 
+			[[90 + :arcAngle / 2 0] [-:arcAngle :radius]])
+		] :height
+		right 360 / 6
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "#ed002e
+ottawaTourismLogo 100

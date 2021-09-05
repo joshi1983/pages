@@ -1,0 +1,25 @@
+EXTERNAL
+
+SUB Dir (l$(), a$)
+
+    ! This routine assumes the current file is result of
+    ! a Files command, perhaps obtained through Echo.
+    ! Constructs a single-Dir list that can be used
+    ! to construct script files.
+
+    LIBRARY "{WB_c}WBDir.trc"
+
+    WHEN EXCEPTION IN
+         CALL WB_Dir (l$(), a$)
+         PRINT "Done with Dir."
+    USE
+         IF extype = 1 then
+            PRINT extext$
+         ELSE
+            PRINT extype, extext$
+            PRINT exline$
+            PRINT "Error in Dir."
+         END IF
+    END WHEN
+
+END SUB

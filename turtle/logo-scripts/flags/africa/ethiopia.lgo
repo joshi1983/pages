@@ -1,0 +1,118 @@
+make "greenColor "#078930
+make "yellowColor "#FCDD09
+make "redColor "#DA121A
+make "flagColors [:redColor :yellowColor :greenColor]
+
+to coatOfArms :diameter
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "radius :diameter / 2
+	localmake "angle1 36
+	localmake "angle2 180 - :angle1
+	localmake "angle3 72
+	localmake "size1 :radius * 0.618022
+	localmake "size2 :radius * 0.1134203
+	localmake "size3 :radius * 0.581234
+	localmake "size4 :size3 - (:size2 * cos :angle1) - (:size2 * (sin :angle1) * tan 18)
+	setPenSize 0
+	circle :radius
+	setPenColor :yellowColor
+	setPenSize :radius * 4 / 120
+	setLineCap "butt
+	right 180 / 5
+	repeat 5 [
+		jumpForward :radius * 11 / 30
+		forward :radius * 13 / 30
+		jumpTo :oldPos
+		right 360 / 5
+	]
+	setPenSize 0
+	setFillColor penColor
+	localmake "heading1 heading
+	repeat 5 [
+		setHeading :heading1 + 360 * repcount / 5
+		jumpLeft :radius * 0.1909796
+		jumpForward :radius * 0.0844135
+		right 54
+		polyStart
+		forward :size1
+		left :angle1
+		forward :size2
+		left :angle2
+		forward :radius * 0.42528
+		right :angle3
+		forward :size3
+		left :angle2
+		forward :size2
+		left :angle1
+		forward :size4
+		right 108
+		forward :radius * 0.1927417
+		polyEnd
+		jumpTo :oldPos
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by:
+; https://en.wikipedia.org/wiki/Flag_of_Ethiopia#/media/File:Flag_of_Ethiopia.svg
+to ethiopiaFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 2
+	stripes :width :height :flagColors
+	jumpForward :height / 2
+	setFillColor "#0f47af
+	coatOfArms :height * 2/3
+	setTurtleState :oldState
+end
+
+; Inspired by:
+; https://en.wikipedia.org/wiki/Flag_of_Ethiopia#/media/File:Flag_of_Ethiopia_(1996%E2%80%932009).svg
+to ethiopiaDemocraticRepublicFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 2
+	stripes :width :height :flagColors
+	jumpForward :height / 2
+	setFillColor "#00a5db
+	coatOfArms :height * 2/3
+	setTurtleState :oldState
+end
+
+; Inspired by:
+; https://en.wikipedia.org/wiki/Flag_of_Ethiopia#/media/File:Flag_of_Ethiopia_(1975%E2%80%931987).svg
+to ethiopianEmpireFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 3 / 2
+	stripes :width :height :flagColors
+	setTurtleState :oldState
+end
+
+; Inspired by:
+; https://en.wikipedia.org/wiki/Flag_of_Ethiopia#/media/File:Ethiopian_Pennants.svg
+to pennants :height
+	localmake "oldState turtleState
+	localmake "width :height * 3 / 2
+	localmake "numColors count :flagColors
+	localmake "triSize :height / :numColors
+	setPenSize 0
+	jumpLeft :width / 2
+	right 90
+	jumpLeft :triSize / 2
+	repeat :numColors [
+		setFillColor item 1 + :numColors - repcount :flagColors
+		isoTriangle :triSize :width
+		jumpLeft :triSize
+	]
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 3.5
+jumpLeft :separation * 1.5
+ethiopiaFlag :height
+jumpRight :separation
+ethiopiaDemocraticRepublicFlag :height
+jumpRight :separation
+ethiopianEmpireFlag :height
+jumpRight :separation
+pennants :height

@@ -1,0 +1,42 @@
+; Inspired by a logo at:
+; https://aviationsourcenews.com
+to aviationSourceNewsLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "width1 :height * 0.55
+	localmake "height1 :height * 0.38
+	localmake "angle 45
+	localmake "triWidth :height * 0.55
+	localmake "triHeight :triWidth / 2
+	jumpRight :height * 0.25
+	right 90
+	setPenSize 0
+	setFillColor "white
+	jumpLeft :width1 / 2
+	parallelogram :width1 :height1 -:angle
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height
+	jumpRight :height * 0.08
+	left 180
+	parallelogram :width1 :height1 :angle
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.295
+	jumpLeft :height * 0.2
+	localmake "center pos
+	left 45
+	repeat 2 [
+		jumpForward :height * 0.095
+		isoTriangle :triWidth :triHeight
+		jumpTo :center
+		right 180
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+aviationSourceNewsLogo 100

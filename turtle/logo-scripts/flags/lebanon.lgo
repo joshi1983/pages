@@ -1,0 +1,164 @@
+make "tripoliYellow "#FFE24B
+make "tripoliRed "#CE0F25
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Lebanon#/media/File:Flag_of_the_Lebanese_Army.svg
+to lebanonArmyFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 3 / 2
+	stripes :width :height ["white]
+	jumpLeft :width / 2
+	setPenSize 0
+	setFillColor "#ed1c24
+	polyStart
+	jumpRight :width
+	jumpForward :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/County_of_Tripoli#/media/File:Banner_of_Arms_of_the_House_of_Toulouse-Tripoli.svg
+to bannerOfTripoli :height
+	localmake "oldState turtleState
+	localmake "width :height * 3 / 2
+	localmake "stripeWidth :height * 167 / 800
+	stripes :width :height [:tripoliRed]
+	stripes :stripeWidth :height [:tripoliYellow]
+	jumpForward (:height - :stripeWidth) / 2
+	stripes :width :stripeWidth [:tripoliYellow]
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://upload.wikimedia.org/wikipedia/commons/0/01/Banner_of_the_County_of_Tripoli.png
+to countyOfTripoliFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 3 / 2
+	localmake "stripeWidth1 :height * 0.25
+	localmake "gap :stripeWidth1 * 0.281
+	localmake "stripeWidth2 :stripeWidth1 - :gap * 2
+	localmake "height1 :height - :gap * 2
+	stripes :width :height [:tripoliRed]
+	stripes :stripeWidth1 :height [:tripoliYellow]
+	jumpForward (:height - :stripeWidth1) / 2
+	stripes :width :stripeWidth1 [:tripoliYellow]
+	jumpForward :gap
+	stripes :width - :gap * 2 :stripeWidth2 [:tripoliRed]
+	jumpBackward :height1 / 2 - :stripeWidth2 / 2
+	stripes :stripeWidth2 :height1 [:tripoliRed]
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://upload.wikimedia.org/wikipedia/commons/d/d7/Deir_El_Qamar_Flag.svg
+to deirElQamarFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 3 / 2
+	localmake "stripeWidth :height * 0.1944444
+	localmake "stripeColor "#090
+	stripes :width :height ["#cc0000]
+	stripes :stripeWidth :height [:stripeColor]
+	jumpForward (:height - :stripeWidth) / 2
+	stripes :width :stripeWidth [:stripeColor]
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Lebanon#/media/File:Flag_of_Lebanon.svg
+to lebanonFlag :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "width :height * 3 / 2
+	localmake "flagRed "#ed1c24
+	localmake "arcsInfo [
+		; draw right side of tree
+		[121 0.006] [42 0.014] [10 0.03] [-10 0.05] [-10 0.18]
+		[-17 0.08] [-15 0.04] [-14 0.12] [-4.5 0.3] [-110 0.0158]
+		[5 0.3] [23 0.043] [2 1.15] [-30 0.072] [-10 0.2] [20 0.05]
+		[155 0.009] [10 0.25] [6.1 0.5] [-20 0.02] [-107 0.011]
+		[-63 0.03] [30 0.05] [160 0.0075] [-20 0.1] [11 0.18]
+		[30 0.038] [6 0.1] [-90 0.004] [-92 0.0095] [7.5 0.4]
+		[156.5 0.006] [5 0.7] [-180 0.0072] [5.3 0.4] [130 0.0053]
+		[32 0.008] [-10 0.2] [-6 0.5] [17 0.12] [-160 0.008]
+		[-20 0.05] [22 0.08] [70 0.004] [90 0.003]
+		[-18 0.11] [3 0.2] [-50 0.0045] [-70 0.0027] [-40 0.02]
+		[130 0.005] [28 0.01] [15 0.2] [20 0.07] [-30 0.04]
+		[-30 0.065] [-2.99512 0.4] [130 0] ; top of tree
+		[-29 0.125] [11 0.1] [70 0.004] [90 0.002]
+		[-50 0.01] [-40 0.006] [-80 0.0045]
+		[-10 0.15] [17 0.08] [120 0.0045]
+		[15 0.01] [3 0.1] [-100 0.0065]
+		[-90 0.011] [35 0.008]
+		[40 0.03] [-39 0.028] [7 0.4] [160 0.0085]
+		[10 0.1] [-110 0.015] [-47 0.025] [3 0.2] [-30 0.035]
+		[30 0.1] [-8 0.1] [152 0.008]
+		[20 0.06] [6 0.1] [-180 0.0145]
+		[-10 0.1] [10 0.3] [-7.5 0.3]
+		[135 0.005] [28 0.04] [9 0.25] [10 0.2] [-90 0.017]
+		[-70 0.007] [-29 0.035] [-8.6 0.5] [165 0.008]
+		[25 0.18] [-3 0.7] [-135 0.0285] [-29 0.14]
+		[-22 0.05] [19 0.1] [200 0.005] [-54 0.027]
+		[20 0.1] [20 0.06] [-13 0.1] [-50 0.02]
+		[13 0.05] [35 0.01] [-68 0.0152] [-35 0.007]
+		[35 0.02] [10 0.03] [-11 0.13] [140 0.003]
+		[-30 0.02] [-70 0.007] [-18 0.1]
+		[-40 0.032] [38 0.0241]
+	]
+	localmake "circlesInfo [
+		[0.063 0.6476 0.007] [-0.048 0.636 0.009] [-0.02 0.6394 0.0075]
+		[0.005 0.5863 0.008] [-0.025 0.5856 0.0085] [-0.065 0.5754 0.012]
+		[-0.057 0.5754 0.011] [-0.098 0.5365 0.0105] [0.008 0.428 0.01]
+		[-0.027 0.5028 0.005] [0.02 0.5229 0.006] [0.053 0.5169 0.0065]
+	]
+	localmake "ellipsesInfo [
+		[0.071 0.428 -70 0.015 0.009] [0.039 0.4235 -60 0.01 0.005]
+		[-0.006 0.507 -70 0.013 0.01] [-0.095 0.4531 -70 0.011 0.019]
+		[-0.1405 0.4409 -60 0.012 0.017] [0.012 0.6343 -64 0.009 0.016]
+		[0.052 0.6137 -50 0.009 0.017] [0.073 0.575 -60 0.01 0.013]
+		[0.104 0.5652 38 0.01 0.016] [0.117 0.484 -80 0.012 0.024]
+	]
+	stripes :width :height [:flagRed "white "white :flagRed]
+	setPenSize 0
+	setFillColor "#00a651
+	jumpForward :height * 0.251
+	jumpRight :height * 0.102
+	right 110
+	polyStart
+	arcsLeft :arcsInfo :height
+	polyEnd
+	setFillColor "white
+	repeat count :circlesInfo [
+		jumpTo :oldPos
+		setHeading :oldHeading
+		localmake "circleInfo item repcount :circlesInfo
+		jumpForward :height * item 2 :circleInfo
+		jumpLeft :height * first :circleInfo
+		circle :height * last :circleInfo
+	]
+	repeat count :ellipsesInfo [
+		jumpTo :oldPos
+		setHeading :oldHeading
+		localmake "ellipseInfo item repcount :ellipsesInfo
+		jumpForward :height * item 2 :ellipseInfo
+		jumpLeft :height * first :ellipseInfo
+		left item 3 :ellipseInfo
+		ellipse :height * item 4 :ellipseInfo :height * last :ellipseInfo
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "gray
+make "height 100
+make "separation :height * 2.5
+jumpLeft :separation * 2
+lebanonArmyFlag :height
+jumpRight :separation
+bannerOfTripoli :height
+jumpRight :separation
+countyOfTripoliFlag :height
+jumpRight :separation
+deirElQamarFlag :height
+jumpRight :separation
+lebanonFlag :height

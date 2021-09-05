@@ -1,0 +1,24 @@
+import { formatNumber } from '../modules/formatNumber.js';
+import { testInOutPairs } from './helpers/testInOutPairs.js';
+
+export function testFormatNumber(logger) {
+	const cases = [
+		{'in': 0, 'out': '0'},
+		{'in': -1, 'out': '-1'},
+		{'inArgs': [-0.000001, 2], 'out': '0'},
+		{'in': 5, 'out': '5'},
+		{'in': 5.1, 'out': '5.1'},
+		{'in': 5.12, 'out': '5.12'},
+		{'in': 5.123, 'out': '5.12'},
+		{'in': 5.126, 'out': '5.13'},
+		{'in': Infinity, 'out': 'Infinity'},
+		{'in': -Infinity, 'out': '-Infinity'},
+	];
+	cases.forEach(function(caseInfo) {
+		if (caseInfo.in !== undefined) {
+			caseInfo.inArgs = [caseInfo.in, 2];
+			caseInfo.in = undefined;
+		}
+	});
+	testInOutPairs(cases, formatNumber, logger);
+};

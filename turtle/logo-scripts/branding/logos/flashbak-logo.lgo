@@ -1,0 +1,33 @@
+; Inspired by logo at
+; https://flashbak.com/
+to flashbakLogo :height
+	localmake "oldState turtleState
+	localmake "kHeight1 :height * 0.486
+	localmake "angle 43
+	setPenSize :height * 0.018
+	setPenColor "black
+	jumpForward :height / 2
+	localmake "center pos
+	setFillColor transparent
+	circle (:height - penSize) / 2
+	jumpLeft :height * 0.15
+	localmake "leftPos pos
+	jumpBackward :kHeight1 / 2
+	stripes :height * 0.095 :kHeight1 [penColor]
+
+	jumpTo :center
+	setLineJoinStyle "miter
+	setLineCap "butt
+	setPenSize :height * 0.09
+	setPenColor "#66c1be
+	jumpForward :height * 0.215
+	jumpRight :height * 0.247
+	left 90 + :angle
+	localmake "len distanceToLine :leftPos :center
+	forward :len
+	left 180 - :angle * 2
+	forward :len
+	setTurtleState :oldState
+end
+
+flashbakLogo 100

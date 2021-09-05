@@ -1,0 +1,59 @@
+; Inspired by
+; https://upload.wikimedia.org/wikipedia/commons/d/de/Motorola.svg
+; Referenced from:
+; https://en.wikipedia.org/wiki/Motorola
+
+to motorolaLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "angle1 17
+	localmake "angle2 146.3
+	localmake "angle3 180 - (180 - :angle1 - :angle2) * 2
+	localmake "angle4 13.5
+	localmake "size1 :height * 0.3209
+	localmake "size2 :height * 0.2354
+	localmake "size3 :height * 0.619
+	localmake "size4 :height * 0.48692115
+	localmake "size5 :height * 0.0335
+	localmake "radius :height / 2
+	localmake "arcAngle1 3
+	localmake "arcAngle2 10
+	localmake "angle5 21.1
+	localmake "arcRadius1 :height * 1.3
+	localmake "arcRadius2 :height * 0.49
+	localmake "arcsInfo1 [[11 0.25] [20 0.11]]
+	localmake "arcsInfo (combine 
+		:arcsInfo1 [[60.4 0.085]] reverse :arcsInfo1
+		[[10 0.53148093]]
+	)
+	jumpForward :radius
+	setFillColor "#005daa
+	setPenSize 0
+	circle :radius
+	jumpLeft :size1
+	jumpBackward :size2
+	right :angle1
+	setFillColor "white
+	polyStart
+	jumpForward :size3
+	right :angle2
+	jumpForward :size4
+	left :angle3 ; point of reflection
+	jumpForward :size4
+	right :angle2
+	jumpForward :size3
+	setHeading :oldHeading
+	jumpLeft :size5
+	left :angle4
+	arcLeft :arcAngle1 :arcRadius1
+	arcLeft :arcAngle2 :arcRadius2
+	arcsLeft :arcsInfo :height
+	right 180 - :angle5 * 2
+	arcsLeft reverse :arcsInfo :height
+	arcLeft :arcAngle2 :arcRadius2
+	arcLeft :arcAngle1 :arcRadius1
+	polyEnd
+	setTurtleState :oldState
+end
+
+motorolaLogo 100

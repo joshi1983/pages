@@ -1,0 +1,103 @@
+; Inspired by figures from a book called:
+; Data Becker - Das Grosse LOGO Buch zu CPC und JOYCE
+; The book was published in 1986
+
+make "numPetals 9
+make "triangleColors ["red "black "blue]
+
+to drawLeaf :height :angle
+	localmake "oldState turtleState
+	localmake "arcRadius :height / 2 /  sin :angle / 2
+	left :angle / 2
+	polyStart
+	arcRight :angle :arcRadius
+	right 180 - :angle
+	arcRight :angle :arcRadius
+	polyEnd
+	setTurtleState :oldState
+end
+
+to drawLeafs :radius :angle
+	localmake "oldState turtleState
+	repeat :numPetals [
+		drawLeaf :radius :angle
+		right 360 / :numPetals
+	]
+	setTurtleState :oldState
+end
+
+;Inspired by a figure on page 115
+;
+; A digital version of the book is at:
+; https://archive.org/details/das-grosse-logo-buch-zu-cpc-und-joyce-gerhard-saueracme/page/114/mode/2up
+to flower :height
+	localmake "oldState turtleState
+	localmake "colorStops createPList2 [
+		[0 "yellow] [0.55 "red] [1 "black]
+	]
+	jumpForward :height / 2
+	setLineJoinStyle "round
+	setFillGradient createRadialGradient pos :height / 2 :colorStops
+	setPenSize 0
+	repeat 2 [
+		drawLeafs :height * 0.49 90
+		setPenSize :height * 0.01
+		setFillColor transparent
+	]
+	setPenColor "#800f
+	circle :height * 0.12
+	circle :height * 0.08
+	circle :height * 0.05
+	setPenColor "#8fff
+	drawLeafs :height * 0.37 60
+
+	setPenColor "#8ff0
+	left 360 / :numPetals / 2
+	drawLeafs :height * 0.37 60
+
+	setTurtleState :oldState
+end
+
+to triangleOfTrianglesRecursive :height :colorIndex
+	if :height < 2 [
+		stop ; end the recursion if the size is too small.
+	]
+	localmake "oldState turtleState
+	localmake "sideLength :height / cos 30
+	localmake "sideLength2 :sideLength / 2
+	jumpForward :sideLength2 * tan 30
+	localmake "center pos
+	jumpBackward :sideLength2 / 2 * tan 30
+	setPenSize max 0.5 :height * 0.015
+	setPenColor item :colorIndex :triangleColors
+	isoTriangle :sideLength2 :height / 2
+
+	localmake "colorIndex 1 + remainder :colorIndex + 1 count :triangleColors
+
+	repeat 3 [
+		jumpTo :center
+		jumpForward :sideLength2 / 2 * tan 30
+		triangleOfTrianglesRecursive :height / 2 :colorIndex
+		right 360 / 3
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by a figure on page 263
+;
+; A digital version of the book is at:
+; https://archive.org/details/das-grosse-logo-buch-zu-cpc-und-joyce-gerhard-saueracme/page/262/mode/2up
+to triangleOfTriangles :height
+	localmake "oldState turtleState
+	setLineJoinStyle "miter
+	triangleOfTrianglesRecursive :height 1
+
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 5
+jumpLeft :separation / 2
+flower :height
+jumpRight :separation
+triangleOfTriangles :height

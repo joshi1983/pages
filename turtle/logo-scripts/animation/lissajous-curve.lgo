@@ -1,0 +1,59 @@
+to tToXY :t
+	localmake "t :t * pi * 2
+	output [
+		radCos 33 * :t
+		radSin 37 * :t
+	]
+end
+
+; Inspired by an animation at:
+; https://www.facebook.com/share/r/14QjoNKJzwD/
+;
+; You can learn more about Lissajous curves at:
+; https://en.wikipedia.org/wiki/Lissajous_curve
+to lissajousCurve :size :t
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "numPoints 5000
+		; the more points, the more smooth and accurate the curve.
+	setPenColor "aqua
+	localmake "points []
+	repeat :numPoints [
+		localmake "t1 repRatio * :t
+		localmake "p vectorScale tToXY :t1 :size
+		jumpRight first :p
+		jumpForward item 2 :p
+		queue2 "points pos
+		jumpTo :oldPos
+	]
+	jumpTo first :points
+	setLineJoinStyle "round
+	setLineCap "round
+	for ["i 2 count :points] [
+		setPos item :i :points
+	]
+	setPenSize 0
+	setFillColor "white
+	circle :size * 0.03
+	setTurtleState :oldState
+end
+
+make "t animation.clampedTimeRatio
+setScreenColor "black
+lissajousCurve 100 interpolateRatio easeInOut :t
+
+to animation.snapshotstyle
+	output createPList2 [
+		["zoom.scale 3]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 10
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+		["thumbnailTime 5]
+	]
+end

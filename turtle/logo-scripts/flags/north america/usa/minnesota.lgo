@@ -1,0 +1,34 @@
+; Inspired by
+; https://www.cnn.com/2023/12/19/us/new-minnesota-state-flag-reaj/index.html
+; and
+; https://en.wikipedia.org/wiki/Flag_of_Minnesota#/media/File:Flag_of_Minnesota_(2023_redesign).svg
+to minnesotaFlag :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "width :height * 5 / 3
+	localmake "oldHeading heading
+	localmake "angle 29.5
+	localmake "size1 :height / 2 / cos :angle
+	localmake "size2 :height * 0.1
+	stripes :width :height ["#73C6E5]
+	jumpRight :size2
+	left :angle
+	jumpForward :size1
+	setPenSize 0
+	setFillColor "#002C5A
+	polyStart
+	jumpBackward :size1
+	setHeading :oldHeading
+	jumpLeft :width / 2 + :size2
+	jumpForward :height
+	jumpRight :width / 2 + :size2
+	polyEnd
+	jumpTo :oldPos
+	jumpForward :height / 2
+	jumpLeft :width * 0.29
+	setFillColor "white
+	isotoxalStar :height * 0.183 :height * 0.099 8
+	setTurtleState :oldState
+end
+
+minnesotaFlag 100

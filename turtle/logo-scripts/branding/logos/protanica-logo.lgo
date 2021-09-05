@@ -1,0 +1,21 @@
+; Inspired by logo at:
+; https://www.protanica.com/
+to protanicaLogo :height
+	localmake "oldState turtleState
+	setPenSize :height * 0.05
+	localmake "radius1 (:height / 2 - penSize) / 2
+	setPenColor "#304e3e
+	setFillColor transparent
+	jumpForward :height / 2
+	localmake "center pos
+	repeat 6 [
+		stripes penSize :radius1 * 2 + penSize / 2 [penColor]
+		jumpForward :radius1 + penSize / 2
+		ellipse :height * 0.183 :radius1
+		jumpTo :center
+		right 360 / 6
+	]
+	setTurtleState :oldState
+end
+
+protanicaLogo 100

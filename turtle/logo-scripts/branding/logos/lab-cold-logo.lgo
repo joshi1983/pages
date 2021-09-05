@@ -1,0 +1,47 @@
+; Inspired by logo at:
+; https://labcold.com
+to labColdLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "thickness :height * 0.035
+	localmake "startGap :thickness * 0.7
+	localmake "size1 :height * 0.17
+	localmake "angle 59
+	localmake "size2 :height / 2 - :size1 - :startGap * (3 + 2 * cos :angle)
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize :thickness
+	setLineCap "butt
+	setLineJoinStyle "miter
+	setPenColor "#00aeef
+	repeat 6 [
+		setHeading :oldHeading + repcount * 360 / 6
+		jumpForward :height / 2
+		jumpRight :startGap
+		localmake "pos1 pos
+		backward :size1
+		localmake "pos2 pos
+		right :angle
+		forward :size1
+		jumpRight :startGap * 2
+		right 180
+		localmake "size3 distanceToLine :pos1 :pos2
+		forward :size3
+		left :angle
+		forward :size2
+		left 180 - 360 / 6
+		forward :size2
+		left :angle
+		forward :size3
+		jumpRight :startGap * 2
+		right 180
+		forward :size1
+		right :angle
+		backward :size1
+		
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+labColdLogo 100

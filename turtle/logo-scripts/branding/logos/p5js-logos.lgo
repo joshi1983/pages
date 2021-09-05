@@ -1,0 +1,20 @@
+; Inspired by logo at:
+; https://p5js.org
+to p5JsLogo :height :color
+	localmake "oldState turtleState
+	localmake "thickness :height * 0.225
+	localmake "size1 (:height - :thickness / 2 * sin 180 / 5) / (1 + cos 180 / 5)
+	jumpForward :height - :size1
+	repeat 5 [
+		stripes :thickness :size1 [:color]
+		right 360 / 5		
+	]
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 5
+jumpLeft :separation / 2
+p5JsLogo :height "black
+jumpRight :separation
+p5JsLogo :height "#ed225d

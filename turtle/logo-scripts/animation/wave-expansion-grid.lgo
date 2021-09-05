@@ -1,0 +1,50 @@
+; Inspired by animation at:
+; https://ca.pinterest.com/pin/14847873766677657
+to dotGrid :scale :timeRatio
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "numRows 50
+	localmake "start -:numRows / 2
+	localmake "endVal :numRows / 2
+	localmake "step :scale / :numRows
+	localmake "maxR :numRows / 2 / cos 45
+	localmake "dotRadius :step / 3
+	localmake "angleOffset -:timeRatio * 2 * 360
+	setFillColor "white
+	setPenSize 0
+	for ["x :start :endVal] [
+		for ["y :start :endVal] [
+			localmake "px :x * :step
+			localmake "py :y * :step
+			localmake "r hypot [:px :py]
+			localmake "rScale :r / :maxR / 2
+			localmake "r :r * (1 + 0.3 * sin 360 * :rScale + :angleOffset)
+			setHeading :oldHeading + arcTan2 :px :py
+			jumpForward :r
+			circle :dotRadius
+			jumpTo :oldPos
+		]
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+make "timeRatio animation.timeRatio
+dotGrid 100 :timeRatio
+
+to animation.snapshotstyle
+	output createPList2 [
+		["position.y 0]
+		["zoom.scale 5]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 5
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

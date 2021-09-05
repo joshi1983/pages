@@ -1,0 +1,52 @@
+to drawAntenna :length :leftAngle
+	localmake "oldState turtleState
+	localmake "circleRadius :length * 0.08
+	penDown
+	left :leftAngle
+	forward :length - :circleRadius * 2
+	right 90
+	circleLeft :circleRadius	
+	setTurtleState :oldState
+end
+
+; Inspired by a symbol illustrating "Bug Box" in a manual called
+; Atari Logo: Introduction to Programming Through Turtle Graphics
+; The book was published in 1983.
+; The bug symbol is on page 85.
+; You can download a PDF of the book at:
+; http://www.atarimania.com/documents/Atari_LOGO_Introduction_to_Programming_Through_Turtle_Graphics.pdf
+to bugBoxSymbol :height
+	localmake "oldState turtleState
+	localmake "smallArcRadiusRatio 0.155
+	localmake "smallArcRadius :height * :smallArcRadiusRatio
+	localmake "antennaLength :height * 0.2843
+	setLineCap "round
+	setLineJoinStyle "round
+	setPenSize :height * 0.01
+	jumpRight :height * 0.066
+	jumpForward penSize / 2
+	right 47
+	setPenColor "black
+
+	; Draw the B.
+	forward :height * 0.34
+	arcsLeft [[160 0.18] [-130 0] [150 :smallArcRadiusRatio]] :height
+	localmake "topPos pos
+	localmake "topHeading heading
+	forward :height * 0.33
+	left 90
+	forward :height * 0.395
+
+	; Draw the antenna.
+	jumpTo :topPos
+	setHeading :topHeading + 180
+	penUp
+	arcRight 15 :smallArcRadius
+	drawAntenna :antennaLength 74
+	arcRight 56 :smallArcRadius
+	drawAntenna :antennaLength 106
+
+	setTurtleState :oldState
+end
+
+bugBoxSymbol 100

@@ -1,0 +1,58 @@
+! AppMaker
+! Converts compiled files (.TRC's) to TrueApps (.TRA's)
+! 
+! Scott Hepler
+! 1998.7.30
+! copyright 1998, True BASIC, Inc.
+
+OPTION TYPO
+LOCAL in_name$, in_name_tmp$, out_name$, ext_pos, trans_tmp$, full_path$
+
+
+! get the name of the file to fixup
+CALL TD_GetFile("trc", in_name$, 1)    ! filename$ will be null on cancel
+IF in_name$="" then STOP
+ASK DIRECTORY full_path$
+LET full_path$ = full_path$ & "\"
+
+
+! copy the file
+LET in_name_tmp$ = LCASE$(in_name$)    ! to get a case-insensitive search
+LET ext_pos = POSR(in_name_tmp$,".trc")
+IF ext_pos = 0 then LET ext_pos = LEN (in_name$)+1    ! if no or different extension, append
+LET out_name$ = in_name$[1:ext_pos-1] & ".TRA"
+PRINT "old: ";full_path$ & in_name$
+PRINT "new: ";full_path$ & out_name$
+
+OPEN #1: NAME full_path$ & in_name$, ACCESS input, CREATE old, ORG byte
+OPEN #2: NAME full_path$ & out_name$, ACCESS output, CREATE new, ORG byte
+
+READ #1, BYTES maxnum: trans_tmp$      ! maxnum is the largest number available in TB
+WRITE #2: trans_tmp$
+
+CLOSE #1
+CLOSE #2
+
+
+! report success and exit
+PRINT "Please find the converted file as ", full_path$ & out_name$
+
+END
+
+!
+! TD_GetFile (from True Dialogs)
+!
+! If changedir = 0, the current directory will not be changed;
+! If changedir = 1, the current directory may be changed.
+! Extension$ contains the search extension.
+! Upon exit, filename$ contains the file name selected
+! If the user selected Cancel, filename$ = "".
+SUB TD_GetFile (extension$, filename$, changedir)
+
+    LOCAL result, dbox_timeout
+
+    LET filename$ = ""
+
+    CALL TBD (-1, -1, 2, "Open file:", extension$, filename$, "", "", 0, changedir, dbox_timeout, result)
+
+END SUB                           ! TD_GetFile

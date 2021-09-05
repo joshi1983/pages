@@ -1,0 +1,34 @@
+; Inspired by logo at:
+; https://en.wikipedia.org/wiki/Processing#/media/File:Processing_2021_logo.svg
+to processingLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "arcRadius :height * 0.324
+	localmake "thickness :height * 0.24
+	setLineCap "butt
+	setPenSize :height * 0.24
+	jumpForward :height - penSize / 2 - :arcRadius
+	jumpRight :height * 0.055
+	right 180
+	setPenColor "#0468FF
+	ellipseArc 180 :arcRadius * 1.11 :arcRadius 0
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpLeft :height * 0.33
+	right 36.8
+	jumpLeft :thickness / 2
+	stripes :thickness :height * 0.804 ["#1F34AB]
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.233
+	jumpLeft :height * 0.265
+	left 26.5
+	stripes :thickness :height * 0.359 ["#85AEFF]
+	
+	setTurtleState :oldState
+end
+
+processingLogo 100

@@ -1,0 +1,37 @@
+to brick :width :height
+	localmake "oldPos pos
+	localmake "gapThickness :height * 0.05
+	setLineCap "butt
+	setPenSize :width
+	setPenColor "#BDA8A8
+	jumpRight :width / 2
+	forward :height
+	setPenSize :width - :gapThickness * 2
+	setPenColor "maroon
+	jumpBackward :gapThickness
+	backward :height - :gapThickness * 2
+	jumpTo :oldPos
+end
+
+to brickPattern :brickCountWidth :brickCountHeight
+	localmake "width 10
+	localmake "height 4
+	repeat :brickCountHeight [
+		localmake "pos1 pos
+		if even? repcount [
+			brick :width / 2 :height
+			jumpRight :width / 2
+		]
+		repeat :brickCountWidth [
+			brick :width :height
+			jumpRight :width
+		]
+		if odd? repcount [
+			brick :width / 2 :height
+		]
+		jumpTo :pos1
+		jumpForward :height
+	]
+end
+
+brickPattern 25 5

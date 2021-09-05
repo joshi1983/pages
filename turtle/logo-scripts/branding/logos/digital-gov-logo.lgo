@@ -1,0 +1,31 @@
+; Inspired by logo at
+; https://digital.gov
+to digitalGovLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "size1 :height * sin 180 / 6
+	localmake "size2 :height / 2 * cos 180 / 6
+	localmake "thickness :height * 0.2925
+	localmake "colors ["#2572DE "#004F8B "#004F8B]
+	setPenSize 0
+	jumpForward :height / 2
+	localmake "center pos
+	repeat 3 [
+		localmake "heading1 :oldHeading + (repcount - 1) * 360 / 3
+		setHeading :heading1
+		jumpLeft :size2
+		jumpBackward :size1 / 2
+		setFillColor item repcount :colors
+		polyStart
+		jumpForward :size1
+		right 60
+		jumpForward :thickness / sin 60
+		setHeading :heading1
+		jumpBackward :size1 + :thickness * 2 * tan 30
+		polyEnd
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+digitalGovLogo 100

@@ -1,0 +1,31 @@
+; Inspired by:
+; https://ca.pinterest.com/pin/2251868557129474
+to retroStripes :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "straightLen :height * 4
+	localmake "color1 "#f7ba5f
+	localmake "color2 "#cb3d27
+	localmake "numStripes 4
+	localmake "thicknessFactor 0.85
+	localmake "separation :height / 2 / (0.5 * :thicknessFactor + :numStripes)
+	jumpForward :height / 2
+	jumpLeft (:straightLen + :height / 2) / 2
+	localmake "startPos pos
+	setPenSize :separation * :thicknessFactor
+	setLineCap "butt
+	repeat :numStripes [
+		localmake "r :separation * repcount
+		setPenColor mix :color2 :color1 repRatio
+		jumpBackward :r
+		right 90
+		forward :straightLen
+		arcLeft 270 :r
+		setHeading :oldHeading
+		jumpTo :startPos		
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+retroStripes 100

@@ -1,0 +1,199 @@
+make "lightOrangeColor "#e29e46
+make "centralRed "#b54825
+
+to drawCentralWhiteArcs :size
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "arcRadius :size * 0.33
+	localmake "straightLength :size * 0.58
+	setFillColor "white
+	repeat 6 [
+		localmake "heading1 heading
+		polyStart
+		jumpForward :straightLength
+		arcLeft 180 + 59 :arcRadius		
+		jumpForward :straightLength
+		polyEnd
+		jumpTo :oldPos
+		setHeading :heading1 + 360 / 6
+	]
+	setTurtleState :oldState
+end
+
+to drawCirclePairs :largeRadius
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "smallRadius :largeRadius * 0.078
+	localmake "separation :smallRadius * 3.5
+	localmake "connectionThickness :largeRadius * 0.03
+	setPenColor "#dfc6a8
+	setFillColor transparent
+	setPenSize :largeRadius * 0.02
+	repeat 12 [
+		setHeading :oldHeading + (repcount + 0.5) * 360 / 12
+		jumpForward :largeRadius - :connectionThickness / 2
+		stripes :separation :connectionThickness [penColor]
+		jumpForward :connectionThickness / 2
+		jumpLeft :separation / 2
+		repeat 2 [
+			circle :smallRadius / 2
+			circle :smallRadius
+			jumpRight :separation
+		]
+		jumpTo :oldPos
+	]
+	setTurtleState :oldState
+end
+
+to drawRadiatingLines :minRadius :maxRadius :numLines
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	setPenColor "black
+	repeat :numLines [
+		jumpForward :minRadius
+		forward :maxRadius - :minRadius
+		jumpTo :oldPos
+		right 360 / :numLines
+	]
+	setTurtleState :oldState
+end
+
+to drawCirclesAndCorners :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "numCircles 10
+	localmake "numCorners 6 * 12
+	setPenSize :height * 0.001
+	setPenColor "black
+	repeat :numCircles [
+		localmake "radius :height * mix 0.41 0.168 repRatio
+		setFillColor transparent
+		circle :radius
+		if (and repcount <> 1 repcount <> 4 repcount <> 9) [
+			setFillColor :lightOrangeColor
+			repeat :numCorners [
+				if 1 <> remainder repcount 6 [
+					jumpForward :radius
+					circle :height * 0.003
+					jumpTo :oldPos
+				]
+				right 360 / :numCorners
+			]
+		]
+	]
+	setTurtleState :oldState
+end
+
+to drawCircles :circlesInfo :scale
+	localmake "oldState turtleState
+	setFillColor transparent
+	repeat count :circlesInfo [
+		localmake "circleInfo item repcount :circlesInfo
+		setPenColor first :circleInfo
+		setPenSize :scale * item 2 :circleInfo
+		circle :scale * last :circleInfo
+	]
+	setTurtleState :oldState
+end
+
+to drawCentralRedArcs :outerRadius
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "innerRadius :outerRadius / 3
+	localmake "littleRadius :innerRadius / 3
+	setPenColor "black
+	repeat 6 [
+		localmake "heading1 :oldHeading + repcount * 360 / 6
+		setHeading :heading1
+		jumpForward :outerRadius
+		left 90
+		setFillColor :centralRed
+		polyStart
+		arcLeft 60 :outerRadius
+		repeat 2 [
+			left 180
+			arcRight 120 :innerRadius
+		]
+		polyEnd
+		jumpTo :oldPos
+		setHeading :heading1
+		setFillColor "#5e92b3
+		jumpForward :outerRadius - :innerRadius
+		circle :littleRadius
+		jumpTo :oldPos
+	]
+	setTurtleState :oldState
+end
+
+to drawPanels :minRadius :maxRadius
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "arcAngle 360 / 12 / 3
+	setFillColor "white
+	setPenSize 0
+	repeat 12 [
+		setHeading :oldHeading + (repcount + 4/6) * 360 / 12
+		jumpForward :minRadius
+		left 90
+		polyStart
+		arcLeft :arcAngle :minRadius
+		right 90
+		jumpForward :maxRadius - :minRadius
+		right 90
+		arcRight :arcAngle :maxRadius
+		polyEnd
+		jumpTo :oldPos
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://www.pinterest.ca/pin/488499890822038772
+to circularStainedWindow :height
+	localmake "oldState turtleState
+	localmake "circlesInfo1 [
+		["#820 0.065 0.45] ["#fff 0.05 0.067]
+		["#222 0.005 0.487] ["#000 0.002 0.456]
+		["#000 0.002 0.432] ["#000 0.002 0.425] ["#000 0.005 0.465]
+		["#000 0.008 0.383] ["#000 0.008 0.248] ["#000 0.008 0.095]
+	]
+	localmake "circlesInfo2 [
+		[:lightOrangeColor 0.01 0.0445]
+		[:lightOrangeColor 0.065 0.135] ["#522 0.025 0.134]
+		[:centralRed 0.001 0.1075] [:centralRed 0.001 0.1175]
+		[:centralRed 0.001 0.151] [:centralRed 0.001 0.163]
+		["#000 0.001 0.0395] ["#000 0.001 0.0495] ["#000 0.001 0.079]
+	]
+	setFillColor "#B3E8FF
+	setPenColor "#51524f
+	setPenSize :height * 0.02
+	jumpForward :height / 2
+	circle (:height - penSize) / 2
+
+	drawCircles :circlesInfo1 :height
+	setPenSize :height * 0.001
+	drawCentralRedArcs :height * 0.079
+	drawCircles :circlesInfo2 :height
+	drawCirclePairs :height * 0.1327
+	drawPanels :height * 0.303 :height * 0.356
+	setPenSize :height * 0.001
+	setPenColor "black
+	drawCentralWhiteArcs :height * 0.0395
+	setPenSize :height * 0.001
+	drawRadiatingLines :height * 0.095 :height * 0.465 6 * 12
+	drawRadiatingLines :height * 0.0395 :height * 0.0495 12
+	setFillColor :centralRed
+	regularPolygon :height * 0.01 6
+
+	setPenSize :height * 0.004
+	drawRadiatingLines :height * 0.095 :height * 0.465 12
+
+	drawCirclesAndCorners :height
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+circularStainedWindow 100

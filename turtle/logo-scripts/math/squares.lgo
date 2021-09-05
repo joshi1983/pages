@@ -1,0 +1,32 @@
+; Inspired by image at:
+; https://ca.pinterest.com/pin/135389532544565720/
+to squares :height
+	localmake "oldState turtleState
+	localmake "triangleHeight :height / 6
+	localmake "triangleWidth :triangleHeight * 2
+	localmake "triangle2Height :triangleHeight * cos 45
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	setFillColor "white
+	repeat 4 [
+		jumpForward :height / 2 - :triangleHeight
+		repeat 2 [
+			isoTriangle :triangleWidth :triangleHeight
+			jumpBackward :triangleHeight
+		]
+		jumpForward :triangleHeight
+		jumpRight :triangleHeight
+		right 45
+		jumpForward :triangle2Height
+		right 180
+		isoTriangle 2 * :triangle2Height :triangle2Height
+		
+		jumpTo :center
+		right 45
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+squares 100

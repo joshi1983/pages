@@ -15,7 +15,7 @@ public class Config {
 		// defaults
 		minFrameIndex = 0;
 		maxFrameIndex = Integer.MAX_VALUE;
-		directory = "D:/uhdcircles/volumetric_frames";
+		directory = "D:/fractal_animation/UAVSim/frames";
 
 		if (get(DIR_KEY, a) != null)
 			directory = get(DIR_KEY, a);

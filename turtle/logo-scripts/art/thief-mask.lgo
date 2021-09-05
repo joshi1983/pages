@@ -1,0 +1,26 @@
+; Inspired by a mask at.
+; https://www.goodfreephotos.com/public-domain-images/thief-mask-vector-clipart.png.php
+to thiefMask :height
+	localmake "oldState turtleState
+	localmake "lines1 [
+		[90 0] [32 0.2] [0.25] [-47 0.4] [-20 1] [-12 0.2] [50 0.3]
+		[-90 0.27] [-40 0.1] [-13 1] [60 0.12] [-60 0] [0.18] [-147 0]
+		[-21 1] [50 0.18] [32 0.1] [50 0.3] [30 0.46] [5 0.1] [0.2]
+		[-60 0.33] [-5 3] [26 0.297176]
+	]
+	localmake "eyeHole [-0.196 0.382
+		[[80 0] [-20 0.1] [0.18] [70 0.25] [14.8 0.8] [105 0]
+		[-10 0.2] [10 1] [55 0.28]]
+	]
+	setPenSize 0
+	setFillColor "black
+	drawArcLineShape [0 0.228
+		combine :lines1 reverse :lines1
+	] :height
+	setFillColor "white
+	drawArcLineShape :eyeHole :height
+	drawArcLineShape :eyeHole -:height
+	setTurtleState :oldState
+end
+
+thiefMask 100

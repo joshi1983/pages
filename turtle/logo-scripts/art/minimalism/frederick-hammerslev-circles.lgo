@@ -1,0 +1,41 @@
+; Inspired by image at:
+; https://ca.pinterest.com/pin/948992952706778325
+;
+; It is also at:
+; https://www.tumblr.com/polkadotmotmot/187852281860/frederick-hammersley-couplet-15-1965
+to frederickHammersleyCircles :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "circleRadius :height * 0.383
+	localmake "colorPair ["black "white]
+	localmake "backgroundColor "#4d85b4
+	localmake "arcAngle 2 * arcCos :circleRadius / 2 / :circleRadius
+	localmake "middleHeight 2 * :circleRadius * sin :arcAngle / 2
+	jumpForward :height / 2
+	localmake "center pos
+	setFillColor :backgroundColor
+	setPenSize :height * 0.01
+	setLineJoinStyle "miter
+	rect :height * 1.37 :height - penSize
+	setPenSize 0
+	repeat 2 [
+		setHeading :oldHeading + repcount * 180
+		jumpLeft :circleRadius / 2
+		repeat 2 [
+			setFillColor item repcount :colorPair
+			drawArcLineShape [-1 0
+				[[-180 1]]
+			] :circleRadius
+			right 180
+		]
+		jumpTo :center
+	]
+	setHeading :oldHeading
+	jumpBackward :middleHeight / 2
+	setFillColor :backgroundColor
+	arcPair :middleHeight :arcAngle 
+	setTurtleState :oldState
+end
+
+make "limit 255
+frederickHammersleyCircles 100

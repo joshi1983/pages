@@ -1,0 +1,129 @@
+make "codingGirlRed "#f50100
+make "codingGirlYellow "#fdaf42
+
+to outerCircles :height
+	localmake "oldState turtleState
+	setFillColor transparent
+	setPenSize :height * 0.015
+	setPenColor :codingGirlRed
+	circle (:height - penSize) / 2
+	setPenColor "white
+	circle :height / 2 - penSize * 1.5
+	setTurtleState :oldState
+end
+
+to drawG :radius
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "y1 :radius * 0.75
+	localmake "x1 sqrt :radius * :radius - :y1 * :y1
+	localmake "innerRadius1 :y1
+	localmake "innerRadius2 :radius * 0.42
+	localmake "innerRadius3 :innerRadius2 - (:radius - :innerRadius1)
+	localmake "redAngle1a arcTan :x1 / :y1
+	localmake "redAngle1 :redAngle1a + 90 + arcSin :innerRadius2 / :radius
+	localmake "redAngle2 90 + arcSin :innerRadius2 / :innerRadius1
+	localmake "dx1 (sqrt :radius * :radius - :innerRadius2 * :innerRadius2) -
+		(sqrt :innerRadius1 * :innerRadius1 - :innerRadius2 * :innerRadius2)
+	localmake "x2 sqrt :innerRadius2 * :innerRadius2 - :innerRadius3 * :innerRadius3
+	setPenSize 0
+	setFillColor :codingGirlRed
+	jumpForward :y1
+	jumpRight :x1
+	setHeading (towards :oldPos) + 90
+	polyStart
+	arcLeft :redAngle1 :radius
+	setHeading :oldHeading
+	jumpRight :dx1
+	setHeading (towards :oldPos) - 90
+	arcRight :redAngle2 :innerRadius1
+	polyEnd
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	setFillColor :codingGirlYellow
+	jumpBackward :innerRadius3
+	jumpRight :x2
+	setHeading (towards :oldPos) - 90
+	polyStart
+	arcRight 180 + arcSin :x2 / :innerRadius2 :innerRadius2
+	jumpForward sqrt :radius * :radius - :innerRadius2 * :innerRadius2
+	setHeading (towards :oldPos) - 90
+	arcRight :redAngle1 :radius
+	setHeading :oldHeading + 90
+	jumpForward :x1
+	arcLeft 90 + arcSin :innerRadius3 / :innerRadius1 :innerRadius1
+	setHeading :oldHeading - 90
+	jumpForward sqrt :innerRadius1 * :innerRadius1 - :innerRadius3 * :innerRadius3
+	arcLeft 180 :innerRadius3
+	polyEnd
+	setTurtleState :oldState
+end
+
+to drawHats :logoHeight
+	localmake "oldState turtleState
+	localmake "hatSize :logoHeight * 0.04
+	localmake "hatAngle 45
+	jumpForward :logoHeight * 0.184
+	jumpRight :logoHeight * 0.046
+	setPenColor :codingGirlRed
+	setLineCap "butt
+	setPenSize :logoHeight * 0.014
+	left :hatAngle
+	forward :hatSize
+	left 90
+	forward :hatSize * 0.45
+	jumpForward :hatSize * 0.4
+	jumpLeft :hatSize * 0.57
+	right 90
+	forward :hatSize
+	left 90
+	forward :hatSize
+	setTurtleState :oldState
+end
+
+to drawCodingGirlText :logoHeight
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "text '{CODING_GIRL};'
+	localmake "len count :text
+	localmake "totalAngle 125
+	localmake "textArcRadius :logoHeight * 0.415
+	localmake "angleStep :totalAngle / :len
+	localmake "colors (combine [:codingGirlYellow] duplicate "white (:len - 3) duplicate :codingGirlYellow 2)
+	setFontFamily "monospace
+	setFontSize :logoHeight * 0.09
+	setPenSize 0
+	setFillColor "blue
+	repeat :len [
+		localmake "angle :totalAngle / 2 - :angleStep * (repcount - 0.5)
+		setFillColor item repcount :colors
+		localmake "ch item repcount :text
+		setHeading :oldHeading + :angle
+		jumpBackward :textArcRadius
+		right 90 - :angleStep / 2
+		label :ch
+		jumpTo :oldPos
+	]		
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://www.facebook.com/photo/?fbid=107571715759287&set=a.107568249092967
+to codingGirlLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	jumpForward :height / 2
+	outerCircles :height
+	drawCodingGirlText :height
+	jumpForward :height * 0.036
+	drawG :height * 0.222
+	jumpTo :oldPos
+	drawHats :height
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+codingGirlLogo 100

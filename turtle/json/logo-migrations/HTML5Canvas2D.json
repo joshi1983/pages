@@ -1,0 +1,248 @@
+{
+	"name": "HTML5's Canvas 2D Context",
+	"description": "This migration is for migrating code from HTML5's standard canvas '2d' context.  Unlike most other migrations, this isn't for a Logo varient or even a library.",
+	"externalLink": "https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D",
+	"caseSensitiveCommandNames": true,
+	"commands": [
+		{
+			"primaryName": "beginPath",
+			"args": [],
+			"ofClassName": "CanvasRenderingContext2D",
+			"isIndependentFunction": false,
+			"to": "polyStart"
+		},
+		{
+			"primaryName": "fill",
+			"args": [],
+			"ofClassName": "CanvasRenderingContext2D",
+			"isIndependentFunction": false,
+			"to": "polyEnd"
+		},
+		{
+			"primaryName": "fillText",
+			"args": [{
+				"name": "text",
+				"types": "string"
+			}, {
+				"name": "x",
+				"types": "num"
+			}, {
+				"name": "y",
+				"types": "num"
+			}],
+			"ofClassName": "CanvasRenderingContext2D",
+			"isIndependentFunction": false,
+			"to": "label"
+		},
+		{
+			"primaryName": "moveTo",
+			"args": [
+				{"name": "x", "types": "num"},
+				{"name": "y", "types": "num"}
+			],
+			"ofClassName": "CanvasRenderingContext2D",
+			"isIndependentFunction": false,
+			"wrapAllParametersWithSquareBrackets": true,
+			"to": "jumpTo"
+		},
+		{
+			"primaryName": "stroke",
+			"args": [],
+			"ofClassName": "CanvasRenderingContext2D",
+			"isIndependentFunction": false,
+			"to": "polyEnd"
+		},
+		{
+			"primaryName": "strokeText",
+			"args": [{
+				"name": "text",
+				"types": "string"
+			}, {
+				"name": "x",
+				"types": "num"
+			}, {
+				"name": "y",
+				"types": "num"
+			}],
+			"ofClassName": "CanvasRenderingContext2D",
+			"isIndependentFunction": false,
+			"to": "label"
+		}
+	],
+	"properties": [
+		{
+			"name": "direction",
+			"ofClassName": "CanvasRenderingContext2D",
+			"set": {
+				"removeInMigration": true
+			}
+		},
+		{
+			"name": "fillStyle",
+			"ofClassName": "CanvasRenderingContext2D"
+		},
+		{
+			"name": "font",
+			"ofClassName": "CanvasRenderingContext2D",
+			"description": "Translates to commands like setFontSize, setFontFamily in WebLogo."
+		},
+		{
+			"name": "fontKerning",
+			"ofClassName": "CanvasRenderingContext2D",
+			"set": {
+				"removeInMigration": true
+			},
+			"externalLink": "https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/fontKerning"
+		},
+		{
+			"name": "fontStretch",
+			"ofClassName": "CanvasRenderingContext2D",
+			"set": {
+				"removeInMigration": true
+			},
+			"externalLink": "https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/fontStretch"
+		},
+		{
+			"name": "fontVariantCaps",
+			"ofClassName": "CanvasRenderingContext2D",
+			"set": {
+				"removeInMigration": true
+			},
+			"externalLink": "https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/fontVariantCaps"
+		},
+		{
+			"name": "globalAlpha",
+			"ofClassName": "CanvasRenderingContext2D",
+			"types": "num",
+			"set": {
+				"removeInMigration": true
+			},
+			"externalLink": "https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/globalAlpha"
+		},
+		{
+			"name": "globalCompositeOperation",
+			"ofClassName": "CanvasRenderingContext2D",
+			"set": {
+				"removeInMigration": true
+			}
+		},
+		{
+			"name": "imageSmoothingEnabled",
+			"ofClassName": "CanvasRenderingContext2D",
+			"set": {
+				"removeInMigration": true
+			}
+		},
+		{
+			"name": "imageSmoothingQuality",
+			"ofClassName": "CanvasRenderingContext2D",
+			"set": {
+				"removeInMigration": true
+			}
+		},
+		{
+			"name": "letterSpacing",
+			"ofClassName": "CanvasRenderingContext2D",
+			"set": {
+				"removeInMigration": true
+			}
+		},
+		{
+			"name": "lineCap",
+			"ofClassName": "CanvasRenderingContext2D",
+			"set": {
+				"toCommand": "setLineCap"
+			},
+			"get": {
+				"toCommand": "lineCap"
+			}
+		},
+		{
+			"name": "lineJoin",
+			"ofClassName": "CanvasRenderingContext2D",
+			"set": {
+				"toCommand": "setLineJoinStyle"
+			},
+			"get": {
+				"toCommand": "lineJoinStyle"
+			}
+		},
+		{
+			"name": "lineWidth",
+			"ofClassName": "CanvasRenderingContext2D",
+			"set": {
+				"toCommand": "setPenSize"
+			},
+			"get": {
+				"toCommand": "penSize"
+			},
+			"types": "num",
+			"externalLink": "https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/lineWidth"
+		},
+		{
+			"name": "miterLimit",
+			"ofClassName": "CanvasRenderingContext2D",
+			"set": {
+				"toCommand": "setMiterLimit"
+			},
+			"get": {
+				"toCommand": "miterLimit"
+			}
+		},
+		{
+			"name": "shadowBlur",
+			"ofClassName": "CanvasRenderingContext2D",
+			"set": {
+				"removeInMigration": true
+			}
+		},
+		{
+			"name": "shadowColor",
+			"ofClassName": "CanvasRenderingContext2D",
+			"set": {
+				"removeInMigration": true
+			}
+		},
+		{
+			"name": "shadowOffsetX",
+			"ofClassName": "CanvasRenderingContext2D",
+			"set": {
+				"removeInMigration": true
+			}
+		},
+		{
+			"name": "shadowOffsetY",
+			"ofClassName": "CanvasRenderingContext2D",
+			"set": {
+				"removeInMigration": true
+			}
+		},
+		{
+			"name": "strokeStyle",
+			"ofClassName": "CanvasRenderingContext2D"
+		},
+		{
+			"name": "textAlign",
+			"ofClassName": "CanvasRenderingContext2D",
+			"set": {
+				"removeInMigration": true
+			}
+		},
+		{
+			"name": "textBaseline",
+			"ofClassName": "CanvasRenderingContext2D",
+			"set": {
+				"removeInMigration": true
+			}
+		},
+		{
+			"name": "wordSpacing",
+			"ofClassName": "CanvasRenderingContext2D",
+			"set": {
+				"removeInMigration": true
+			}
+		}
+	],
+	"operators": [],
+	"keywords": []
+}
