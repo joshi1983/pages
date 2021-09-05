@@ -1,0 +1,96 @@
+to drawRadialGradient :radius
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "white
+	setProperty "colorStops 0.05 "#000
+	setProperty "colorStops 0.2 "#fff
+	setProperty "colorStops 0.5 "#47f
+	setProperty "colorStops 1 "#0fff
+	setPenSize 0
+	setFillGradient createRadialGradient pos :radius :colorStops
+	circle :radius
+end
+
+; Inspired by
+; https://www.pinterest.ca/pin/178032991511493495/
+; Also, shown at
+; https://commons.wikimedia.org/wiki/File:Spidron_Hexagon.JPG#mw-jump-to-license
+to spidron :height
+	localmake "oldState turtleState
+	localmake "colors ["#800 "#f00 "#0f0 "#ff0]
+	localmake "maxDepth 20
+	localmake "oldHeading heading
+	setPenColor "black
+	setLineJoinStyle "round
+	jumpForward :height / 2
+	localmake "center pos
+	localmake "triHeight1 :height
+	setPenSize 0
+	setFillColor "black
+	right 60
+	localmake "lens []
+	drawRadialGradient :height / 2
+	repeat :maxDepth [
+		setFillColor mixItems2 :colors repRatio
+		queue2 "lens :triHeight1
+		localmake "triWidth :triHeight1 * tan 30
+		localmake "triHeight2 :triWidth / 2 * tan 30
+		repeat 3 [
+			jumpBackward :triHeight1 / 2
+			isoTriangle :triWidth :triHeight2
+			right 360 / 3
+			jumpTo :center
+		]
+		localmake "triHeight1 (:triHeight1 - :triHeight2 / cos 30) * cos 45
+		right 30
+	]
+	setHeading :oldHeading + 90
+	for ["i 2 count :lens] [
+		localmake "previousLen item :i - 1 :lens
+		localmake "triHeight1 (item :i :lens)
+		localmake "triWidth :triHeight1 * tan 30
+		localmake "triHeight2 ((:previousLen / cos 30) - :triHeight1) / 2
+		localmake "ratio (:i - 2) / ((count :lens) - 2)
+		setFillColor mixItems2 :colors 1 - :ratio
+		repeat 3 [
+			jumpBackward :triHeight1 / 2
+			right 180
+			isoTriangle :triWidth :triHeight2
+			left 180
+			- (360 / 3
+			)jumpTo :center
+		]
+		right 360 / 12
+	]
+	setFillColor transparent
+	repeat :maxDepth [
+		localmake "size1 item repcount :lens
+		localmake "size2 :size1 * tan 30
+		setPenSize :size1 * 0.005
+		right 30
+		repeat 3 [
+			rect :size1 :size2
+			right 360 / 6
+		]
+	]
+	setTurtleState :oldState
+end
+
+spidron 100
+
+to animation.snapshotstyle
+	localmake "timeRatio clamp animation.time / animation.duration 0 1
+	localmake "timeRatio interpolateRatio easeInOut :timeRatio
+	localmake "result createPList
+	setProperty "result "position.y 50
+	setProperty "result "zoom.scale 4 * power 3.5 10 * :timeRatio
+	output :result
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 10
+	; Edit this if you want to change the length of your animation.
+	localmake "result createPList
+	setProperty "result "duration :minutes * 60 + :seconds
+	output :result
+end

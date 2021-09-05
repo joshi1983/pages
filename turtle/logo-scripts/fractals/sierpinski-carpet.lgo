@@ -1,0 +1,54 @@
+; This is the fractal explained at:
+; https://en.wikipedia.org/wiki/Sierpi%C5%84ski_carpet
+
+to square :size
+	repeat 4 [
+		forward :size
+		right 90
+	]
+end
+
+to sierpinskiCarpet :x :y :size
+	if :size > 2 [
+		jumpTo [:x :y]
+		localmake "small :size / 3
+		square :small
+		for ["dx 0 2 1] [
+			for ["dy 0 2 1] [
+				if (or (:dx<>:dy) (:dx<>1)) [
+					sierpinskiCarpet 
+						:x+:dx*:small
+						:y+:dy*:small
+						:small
+				]
+			]
+		]
+	]
+end
+
+to sierpinskiCarpetUsingCircles :x :y :size
+	ifelse :size > 2 [
+		localmake "small :size / 3
+		for ["dx 0 2 1] [
+			for ["dy 0 2 1] [
+				if or :dx<>:dy :dx<>1 [
+					sierpinskiCarpetUsingCircles 
+						:x+:dx*:small
+						:y+:dy*:small
+						:small
+				]
+			]
+		]
+	] [
+		jumpTo [:x :y]
+		circle 3
+	]
+end
+
+setPenSize 2
+sierpinskiCarpet -100 -100 200
+setFillColor "black
+right 90
+jumpForward 200
+setPenSize 0
+sierpinskiCarpetUsingCircles 200 -100 200

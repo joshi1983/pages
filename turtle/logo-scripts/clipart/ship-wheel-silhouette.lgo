@@ -1,0 +1,54 @@
+to roundedLine :length
+	localmake "oldState turtleState
+	setPenSize :length * 0.3
+	setLineCap "round
+	right 90
+	jumpBackward :length / 2
+	forward :length
+	setTurtleState :oldState
+end
+
+; Inspired by image at:
+; https://publicdomainvectors.org/en/free-clipart/Ship-wheel-silhouette/88602.html
+to shipWheelSillouette :height
+	localmake "oldState turtleState
+	localmake "radius :height / 2
+	localmake "roundedLineSize :radius * 0.09
+	jumpForward :radius
+	localmake "center pos
+	setPenColor "black
+	setPenSize :radius * 0.135
+	circle :radius * 0.517
+	setPenSize :radius * 0.018
+	circle :radius * 0.61
+	setPenSize 0
+	setFillColor penColor
+	repeat 4 [
+		ellipse :radius * 0.045 :radius * 0.5
+		right 180 / 4
+	]
+	repeat 8 [
+		jumpForward :radius * 0.84
+		ellipse :radius * 0.05 :radius * 0.16
+		jumpBackward :radius * 0.17
+		roundedLine :roundedLineSize
+		jumpBackward :radius * 0.03
+		roundedLine :roundedLineSize
+		jumpTo :center
+		right 360 / 8
+	]
+	setFillColor "white
+	repeat 8 [
+		jumpForward :radius * 0.53
+		circle :radius * 0.03
+		jumpTo :center
+		right 360 / 8
+	]
+	setPenSize :radius * 0.04
+	setPenColor "white
+	setFillColor transparent
+	circle :radius * 0.075
+	setTurtleState :oldState
+end
+
+shipWheelSillouette 100

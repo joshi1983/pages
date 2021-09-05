@@ -1,0 +1,83 @@
+to drawStripes :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "oldPenSize penSize
+	localmake "stripeHeading :oldHeading + 113
+	localmake "arcsInfo [
+		[40 0.495] [55 0.39] [60 0.2] [50 0.26]
+		[40 0.5]
+	]
+	localmake "stripesInfo [
+		[-0.044 0.336 0.55 0.55] [0.144 0.28 0.53 0.51]
+		[0.34 0.25 0.4 0.2]
+	]
+	jumpForward :height * 0.142
+	jumpLeft :height * 0.23
+	right 131
+	setFillColor penColor
+	localmake "pos1 pos
+	localmake "heading1 heading
+	polyStart
+	arcsLeft :arcsInfo :height
+	polyEnd
+	setFillColor "#fc5604
+	setPenSize 0
+	repeat count :stripesInfo [
+		jumpTo :oldPos
+		setHeading :oldHeading
+		localmake "stripeInfo item repcount :stripesInfo
+		localmake "stripeWidth1 :height * item 3 :stripeInfo
+		localmake "stripeWidth2 :height * item 4 :stripeInfo
+		localmake "stripeThickness :height * 0.08
+		jumpRight :height * first :stripeInfo
+		jumpForward :height * item 2 :stripeInfo
+		setHeading :stripeHeading
+		isoTrapezoid :stripeWidth1 :stripeWidth2 :stripeThickness
+	]
+	setFillColor transparent
+	setPenSize :oldPenSize
+	jumpTo :pos1
+	setHeading :heading1
+	polyStart
+	arcsLeft :arcsInfo :height
+	polyEnd
+
+	setTurtleState :oldState
+end
+
+; Inspired by logo at
+; https://en.wikipedia.org/wiki/MicroBee#/media/File:MicroBee_Systems.gif
+to microBeeLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "oldPos pos
+	setFillColor "white
+	setPenSize :height * 0.04
+	setPenColor "black
+	drawStripes :height
+	jumpForward :height * 0.165
+	jumpLeft :height * 0.29
+	left 82
+	polyStart
+	arcsRight [
+		[60 0.132] [50 0.153] [35 0.195]
+		[54 0.15]
+	] :height
+	polyEnd
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.735
+	jumpLeft :height * 0.205
+	circle :height * 0.244
+
+	jumpTo :oldPos
+	jumpForward :height * 0.69
+	jumpRight :height * 0.079
+	right 47
+	ellipse :height * 0.24 :height * 0.325
+	setTurtleState :oldState
+end
+
+microBeeLogo 100

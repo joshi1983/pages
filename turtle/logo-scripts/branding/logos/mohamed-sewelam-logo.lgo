@@ -1,0 +1,52 @@
+to getGradient :height
+	localmake "oldPos pos
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "yellow
+	setProperty "colorStops 1 "red
+	jumpBackward :height / 2
+	localmake "fromPos pos
+	jumpForward :height
+	localmake "result createLinearGradient :fromPos pos :colorStops "pad
+	jumpTo :oldPos
+	output :result
+end
+
+; Inspired by
+; https://www.youtube.com/watch?v=ai-PfqaKUw8
+; The video shows how to draw a very similar logo using Corel Draw.
+; He has a lot of great designs at:
+; https://www.behance.net/mm4mmmm4mm8f7c
+to mohamedSewelamLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "radius1 :height / 2
+	localmake "radius3 :height / 5
+	localmake "radius2 (:radius1 + :radius3) / 2
+
+	jumpForward :radius1
+	localmake "center pos
+	jumpRight :radius1
+	setPenSize 0
+	setFillGradient getGradient -:height
+	polyStart
+	arcLeft 360 :radius1
+	right 180
+	arcRight 360 :radius2
+	polyEnd
+
+	jumpTo :center
+	setHeading :oldHeading + 45
+	jumpForward :height * 0.1
+	setFillGradient getGradient :radius1
+	jumpTo :center
+	setHeading :oldHeading
+	jumpRight :radius1 - :radius2 * 2
+	polyStart
+	arcRight 360 :radius3
+	right 180
+	arcLeft 360 :radius2
+	polyEnd
+	setTurtleState :oldState
+end
+
+mohamedSewelamLogo 100

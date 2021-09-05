@@ -1,0 +1,229 @@
+make "generalThicknessRatio 0.07
+make "circleRadiusFactor 1.3
+make "iCapWidthRatio 0.15
+
+to drawO :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	setPenSize :height * :generalThicknessRatio
+	localmake "radius1 :height * 0.26
+	localmake "radius2 (:height - penSize) / 2
+	localmake "crossSize1 :height * 0.127
+	localmake "crossSize2 :height * 0.45
+	localmake "crossAngle 44
+	jumpForward :height / 2
+	setFillColor transparent
+	ellipse :radius1 :radius2
+	localmake "center pos
+	setPenSize :height * 0.03
+	setLineJoinStyle "miter
+	repeat 2 [
+		setHeading :oldHeading + repcount * 360 / 2
+		jumpRight :crossSize1
+		left :crossAngle
+		jumpForward :crossSize2
+		backward :crossSize2
+		left 180 - :crossAngle * 2
+		forward :crossSize2
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+to drawT :height
+	localmake "oldState turtleState
+	setPenSize :height * :generalThicknessRatio
+	localmake "gap penSize
+	stripes :height * 0.2 penSize [penColor]
+	setFillColor transparent
+	setLineCap "butt
+	forward :height / 2 - :gap
+	jumpForward :gap
+	circle penSize * :circleRadiusFactor
+	jumpForward :gap
+	forward :height / 2 - :gap - penSize
+	stripes :height * 0.58 penSize [penColor]
+	setTurtleState :oldState
+end
+
+to drawY :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "height1 :height * 0.6
+	localmake "angle1 27
+	localmake "angle2 45
+	setPenSize :height * :generalThicknessRatio
+	localmake "size1 (:height - :height1 - penSize / 2) / cos :angle1
+	localmake "size2 :height * 0.11
+	localmake "size3 :height * 0.18
+	stripes :height * 0.15 penSize [penColor]
+	setLineCap "butt
+	setLineJoinStyle "miter
+	forward :height1
+	localmake "sign 1
+	localmake "startPos pos
+	repeat 2 [
+		left :angle1 * :sign
+		forward :size1
+		setHeading :oldHeading - 90 * :sign
+		forward :size2
+		localmake "sign -1
+		setHeading :oldHeading
+		jumpTo :startPos
+	]
+	jumpForward :height * 0.34
+	left :angle2
+	setPenSize penSize * 0.8
+	jumpBackward :size3
+	forward :size3
+	left 180 - :angle2 * 2
+	forward :size3
+	setTurtleState :oldState
+end
+
+to drawI :height
+	localmake "oldState turtleState
+	localmake "width1 :height * :iCapWidthRatio
+	setPenSize :height * :generalThicknessRatio
+	stripes :width1 penSize [penColor]
+	setLineCap "butt
+	forward :height
+	jumpBackward penSize
+	stripes :width1 penSize [penColor]
+
+	setTurtleState :oldState
+end
+
+to drawK :height
+	localmake "oldState turtleState
+	localmake "width2 :height * 0.13
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angle1 25
+	localmake "angle2 90 - :angle1
+	localmake "gap :height * 0.04
+	localmake "slantedHeight1 (:height / 2 - :gap) / cos :angle1
+	localmake "penSize1 :height * :generalThicknessRatio
+	localmake "slantedHeight2 (:height - :penSize1) / 2 / cos :angle1
+	drawI :height
+
+	jumpTo :oldPos
+	jumpForward :height / 2
+	setPenSize 0
+	localmake "middlePos pos
+	setFillColor penColor
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		setHeading :oldHeading + repcount * 360 / 2
+		jumpForward :gap
+		parallelogram :penSize1 :slantedHeight1 :angle1 * :sign
+		jumpTo :middlePos
+	]	
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpRight :height * 0.5
+	setPenSize :penSize1
+	setHeading :oldHeading - 90
+	jumpRight :penSize1 / 2 * :sign
+	forward :width2
+	right :angle2
+	forward :slantedHeight2
+	right :angle1 * 2
+	forward :slantedHeight2
+	setHeading :oldHeading + 90
+	forward :width2
+	setTurtleState :oldState
+end
+
+to drawE :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	jumpForward :height / 2
+	localmake "middlePos pos
+	setPenSize :height * :generalThicknessRatio
+	localmake "gap penSize
+	setFillColor transparent
+	circle penSize * :circleRadiusFactor
+	right 90
+	jumpForward :gap
+	forward :height * 0.2
+	stripes :height * 0.15 penSize [penColor]
+
+	jumpTo :middlePos
+	setHeading :oldHeading
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		setHeading :oldHeading + repcount * 360 / 2		
+		jumpForward :gap
+		forward :height / 2 - :gap - penSize / 2
+		right 90 * :sign
+		jumpBackward :height * 0.08
+		forward :height * 0.47
+		right 90 * :sign
+		forward :height * 0.08
+		jumpTo :middlePos
+	]
+	setTurtleState :oldState
+end
+
+to drawN :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "width :height * 0.5
+	localmake "angle 38
+	localmake "width1 :height * :iCapWidthRatio / 2
+	localmake "slantedHeight1 (:width - :width1) / sin :angle
+	localmake "slantedHeight2 :width / sin :angle
+	localmake "thickness1 :height * 0.125
+	drawI :height
+	jumpRight :width
+	drawI :height
+	setFillColor penColor
+	setPenSize 0
+	jumpLeft :height * :iCapWidthRatio / 2
+	left :angle
+	polyStart
+	jumpForward :slantedHeight1
+	setHeading :oldHeading
+	jumpForward :thickness1
+	right 180 - :angle
+	jumpForward :slantedHeight2
+	polyEnd
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height
+	jumpRight :width1
+	right 180 - :angle
+	polyStart
+	jumpForward :slantedHeight1
+	setHeading :oldHeading
+	jumpBackward :thickness1
+	left :angle
+	jumpForward :slantedHeight2
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by the way Otyken is written 
+; on a drum at:
+; https://youtu.be/hl4qKWELnH0?t=106
+to otykenDrumSymbol :height
+	localmake "oldState turtleState
+	jumpLeft :height * 1.57
+	drawO :height
+	jumpRight :height * 0.57
+	drawT :height
+	jumpRight :height * 0.62
+	drawY :height
+	jumpRight :height * 0.4
+	drawK :height
+	jumpRight :height * 0.65
+	drawE :height
+	jumpRight :height * 0.59
+	drawN :height
+	setTurtleState :oldState
+end
+
+otykenDrumSymbol 100

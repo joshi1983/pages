@@ -1,0 +1,63 @@
+make "thicknessRatio 0.04913
+
+to clojureShape :logoHeight
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "innerRadius :logoHeight * (1/2 - :thicknessRatio)
+	localmake "x :logoHeight * 0.36675
+	localmake "y sqrt :innerRadius * :innerRadius - :x * :x
+	jumpLeft :x
+	jumpForward :y
+	setHeading (towards :oldPos) - 90
+	polyStart
+	arcRight 152 :innerRadius
+	arcRight 60 :logoHeight * 0.175
+	arcRight 58 :logoHeight * 0.23
+	arcRight 24 :logoHeight * 0.15
+	arcRight 17 :logoHeight * 0.48
+	arcLeft 9 :logoHeight * 0.9
+	arcLeft 95 :logoHeight * 0.2475
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Clojure#/media/File:Clojure_logo.svg
+; One of the biggest differences between the SVG and this drawing is
+; I made the blue and green sides of the lambda symbol more symmetrical.
+to clojureLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "colors1 ["#63b132 "#5881d8]
+	jumpForward :height / 2
+	setPenSize 0
+	setFillColor "white
+	circle :height / 2
+	repeat 2 [
+		setHeading :oldHeading + repcount * 360 / 2
+		setFillColor item repcount :colors1
+		clojureShape :height
+	]
+	setFillColor "#5fff
+	setPenSize :height * :thicknessRatio
+	setPenColor "white
+	circle :height * 0.264
+	setPenSize 0
+	setFillColor "white
+	jumpLeft :height * 0.015
+	left 156
+	polyStart
+	jumpForward :height * 0.08
+	arcLeft 10 :height * 0.5
+	arcLeft 25 :height * 0.22
+	right 120
+	jumpForward :height * 0.071
+	right 78
+	arcRight 20 :height * 0.31
+	jumpForward :height * 0.2
+	polyEnd
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+clojureLogo 100

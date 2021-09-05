@@ -1,0 +1,90 @@
+to whatsAppGreenGradient :logoHeight
+	localmake "oldPos pos
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#23b33a
+	setProperty "colorStops 1 "#57d163
+	jumpForward :logoHeight * 0.16
+	localmake "fromPos pos
+	jumpForward :logoHeight * 0.856
+	localmake "gradient createLinearGradient :fromPos pos :colorStops "pad
+	jumpTo :oldPos
+	output :gradient
+end
+
+to whatsAppGreenShape :logoHeight
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "oldPos pos
+	setPenSize 0
+	setFillColor "white
+	jumpLeft :logoHeight * 0.425991
+	jumpForward :logoHeight * 0.081548
+	right 75.2
+	polyStart
+	jumpForward :logoHeight * 0.23
+	right 43.6
+	arcLeft 328.7 :logoHeight * 0.42
+	polyEnd
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	setFillGradient whatsAppGreenGradient :logoHeight
+	jumpLeft :logoHeight * 0.32518148
+	jumpForward :logoHeight * 0.18108457
+
+	right 75.1
+	polyStart
+	jumpForward :logoHeight * 0.1365484
+	right 48.1
+	arcLeft 337.8 :logoHeight * 0.3485
+	polyEnd
+	setTurtleState :oldState
+end
+
+to whatsAppPhone :logoHeight
+	localmake "arcsInfo [
+		[21 0.28]
+		[75 0.012]
+		[-20 0.15]
+		[-49 0.014]
+		[1.07 5]
+		[-65 0.023]
+		[-5 0.28]
+		[-35 0.033]
+		[-50 0.11]
+		[-34 0.16]
+		[-12 0.6]
+		[-40 0.37]
+		[-25 0.08]
+		[-25 0.12]
+		[-30 0.07]
+		[-21.8 0.1]
+		[-58.5 0.0085]
+		[-1.3 4]
+		[-10 0.08]
+		[-67 0.015]
+		[0.81 4]
+		[72.45 0.014]
+		[18.18 0.31]
+	]
+	jumpForward :logoHeight * 0.454
+	jumpLeft :logoHeight * 0.041
+	left 50
+	setPenSize 0
+	setFillColor "white
+	polyStart
+	arcsRight :arcsInfo :logoHeight
+	polyEnd
+end
+
+; Inspired by
+; https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg
+to whatsAppLogo :height
+	localmake "oldState turtleState
+	whatsAppGreenShape :height
+	whatsAppPhone :height
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+whatsAppLogo 100
