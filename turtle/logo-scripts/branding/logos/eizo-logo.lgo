@@ -1,0 +1,108 @@
+to drawGreenPart :rectThickness :width
+	localmake "oldState turtleState
+	localmake "numNotches 7
+	localmake "notchSize :width / :numNotches * cos 45
+	setPenSize 0
+	setFillColor "#009640
+	polyStart
+	jumpRight :rectThickness
+	right 45
+	repeat :numNotches [
+		jumpForward :notchSize
+		jumpLeft :notchSize
+	]
+	left 135
+	jumpForward :rectThickness
+	polyEnd
+	setTurtleState :oldState
+end
+
+to drawBlueShape :width :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "waveAngle 90
+	localmake "numWaves 3.5
+	localmake "waveLength :height / :numWaves
+	localmake "waveArcRadius :waveLength / 4 / sin :waveAngle / 2
+	localmake "squaresOffset1 :height * 0.207
+	localmake "squareSize :height * 0.12207684
+	setPenSize 0
+	setFillColor "#005CA9
+	polyStart
+	jumpLeft :width
+	left :waveAngle / 2
+	repeat :numWaves [
+		arcRight :waveAngle :waveArcRadius
+		arcLeft :waveAngle :waveArcRadius
+	]
+	arcRight :waveAngle :waveArcRadius
+	setHeading :oldHeading
+	jumpRight :squaresOffset1
+	; The following repeat loop draws some of the checkboard pattern.
+	; We want to avoid fringing artifacts where a bit of white could show 
+	; between 2 touching edges for the blue squares at the edges.
+	; If it wasn't for the fringing artifacts, I would have drawn 
+	; all blue squares in the same loop.
+	right 180
+	repeat 3 [
+		repeat 2 [
+			jumpForward :squareSize
+			jumpLeft :squareSize
+			jumpForward :squareSize
+			jumpRight :squareSize
+		]
+		jumpForward :squareSize
+		left 90
+	]
+	localmake "pos1 pos
+	jumpBackward :width - :squareSize * 5 - :squaresOffset1
+	polyEnd
+	jumpTo :pos1
+	jumpForward :squareSize
+	jumpLeft :squareSize / 2
+	repeat 2 [
+		localmake "pos1 pos
+		stripes :squareSize :squareSize [fillColor]
+		jumpForward :squareSize * 2
+		stripes :squareSize :squareSize [fillColor]
+		jumpBackward :squareSize
+		jumpLeft :squareSize
+		stripes :squareSize :squareSize [fillColor]
+		jumpTo :pos1
+		jumpLeft :squareSize * 2
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Eizo#/media/File:EIZO_Logo.svg
+to eizoLogo :height
+	localmake "oldState turtleState
+	localmake "greenSize :height * 0.0566
+	localmake "whiteWidth1 :height * 0.65
+	localmake "whiteWidth2 :height * 0.6685
+	localmake "whiteHeight :height * 0.745
+	localmake "redWidth :height * 0.6034
+	localmake "redHeight :height * 0.10439
+	localmake "whiteThickness :height * 0.03
+	localmake "greenWidth :whiteWidth2 - :redWidth
+	localmake "blueWidth :redWidth - :whiteThickness
+	localmake "blueHeight :whiteHeight - :redHeight - :whiteThickness
+	jumpLeft :greenSize / 2
+	right 45
+	jumpLeft :whiteWidth1 / 2
+	stripes :whiteWidth1 :whiteHeight ["white]
+	jumpLeft (:whiteWidth2 - :whiteWidth1) / 2
+	stripes :whiteWidth2 :height * 0.2 ["white]
+	jumpLeft (:whiteWidth2 - :redWidth) / 2
+	stripes :redWidth :redHeight ["#E4032E]
+	jumpRight :redWidth / 2
+	drawGreenPart :greenWidth :whiteHeight
+	jumpLeft :whiteThickness
+	jumpForward :redHeight + :whiteThickness
+	drawBlueShape :blueWidth :blueHeight
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+eizoLogo 100
