@@ -1,0 +1,81 @@
+to fillYinYangShape :radius :openEnd?
+	localmake "oldState turtleState
+	localmake "arcsInfoLast [
+		[180 1] [180 0] [-180 0.5]
+	]
+	ifelse :openEnd? [
+		localmake "arcsInfoFirst [[90 0] [-180 0.5] [180 0]]
+	] [
+		localmake "arcsInfoFirst [[180 0.5]]
+	]
+	polyStart
+	arcLines :arcsInfoFirst :radius
+	arcLines :arcsInfoLast :radius
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://www.facebook.com/reel/1005887041009014
+to yinYangRotation :height :timeRatio
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "rotation :timeRatio * 360
+	localmake "darkColor "black
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	setFillColor "white
+	circle :height / 2
+	left :rotation
+	localmake "heading1 heading
+	setFillColor :darkColor
+	fillYinYangShape :height / 2 true
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		setHeading :heading1 + repcount * 180
+		jumpForward :height / 4
+		setHeading :oldHeading + 3 * :rotation * :sign - 90 - (repcount - 1) * 90
+		setFillColor :darkColor
+		fillYinYangShape :height / 4 even? repcount
+		setFillColor item repcount ["white :darkColor]
+		if repcount = 2 [
+			right 90
+		]
+		jumpLeft :height / 8
+		circle :height * 0.05
+		jumpRight :height / 4
+		setFillColor :darkColor
+		setHeading :oldHeading + 9 * :rotation * :sign + 90
+		fillYinYangShape :sign * :height / 8 false
+		jumpLeft :height / 16 * :sign
+		setFillColor "white
+		circle :height * 0.025
+		jumpRight :height / 8 * :sign
+		setFillColor :darkColor
+		circle :height * 0.025
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "#888
+make "timeRatio clamp animation.time / animation.duration 0 1
+make "timeRatio interpolateRatio easeIn :timeRatio
+yinYangRotation 100 :timeRatio * :timeRatio
+
+to animation.snapshotstyle
+	localmake "result createPList
+	setProperty "result "position.y 50
+	setProperty "result "zoom.scale 5
+	output :result
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 10
+	; Edit this if you want to change the length of your animation.
+	localmake "result createPList
+	setProperty "result "duration :minutes * 60 + :seconds
+	output :result
+end

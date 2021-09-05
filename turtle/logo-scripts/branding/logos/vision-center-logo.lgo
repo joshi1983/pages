@@ -1,0 +1,36 @@
+; Inspired by logo at
+; https://www.visioncenter.org/
+to visionCenterLogo :height
+	localmake "oldState turtleState
+	localmake "angle 35.3
+	localmake "thickness :height * 0.415
+	localmake "len (:height - :thickness) / cos :angle
+	setLineCap "round
+	setLineJoinStyle "round
+	setPenSize :thickness
+	jumpForward penSize / 2
+	localmake "startPos pos
+	left :angle
+	jumpForward :len
+	setPenColor "#714FFF
+	backward :len
+	right :angle * 2
+	forward :len
+	jumpForward penSize / 2
+	localmake "endPos pos
+	jumpBackward penSize / 2
+	jumpLeft penSize / 2
+	setPenSize 0
+	localmake "colorStops createPList
+	setProperty "colorStops 0.3 "#2A18A4
+	setProperty "colorStops 1 "#21C2F4
+	setFillGradient createLinearGradient :startPos :endPos :colorStops "pad
+	localmake "radiusRatio :thickness / :height / 2
+	polyStart
+	arcLines [[-180 :radiusRatio] [0.16] [-50 :radiusRatio * 1.33] [-20 :radiusRatio * 1.2]
+	[-34.2 :radiusRatio * 1.98]] :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+visionCenterLogo 100
