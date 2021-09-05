@@ -1,0 +1,101 @@
+make "axiosBlack "#222
+
+; Inspired by logo at:
+; https://www.axios.com
+to axiosLogo :height
+	localmake "oldState turtleState
+	localmake "angle 24
+	localmake "width :height * 0.265
+	localmake "slantedHeight :height / cos :angle
+	localmake "separation :height * 2 * tan :angle
+	jumpLeft :separation / 2
+	setPenSize 0
+	setFillColor "#3B6BE3
+	parallelogram :width :slantedHeight :angle
+	setFillColor :axiosBlack
+	jumpRight :separation
+	parallelogram :width :slantedHeight -:angle
+	setTurtleState :oldState
+end
+
+to drawA :fontHeight
+	localmake "oldState turtleState
+	jumpForward :fontHeight * 0.0314
+	axiosLogo :fontHeight * 0.939
+	setTurtleState :oldState
+end
+
+to drawX :fontHeight
+	localmake "oldState turtleState
+	localmake "angle 34
+	localmake "xHeight :fontHeight * 0.94
+	localmake "slantedHeight :xHeight / cos :angle
+	localmake "thickness :xHeight * 0.28
+	localmake "separation :xHeight * tan :angle
+	jumpForward :fontHeight * 0.03
+	jumpLeft :separation / 2
+	setPenSize 0
+	setFillColor :axiosBlack
+	parallelogram :thickness :slantedHeight :angle
+	jumpRight :separation
+	parallelogram :thickness :slantedHeight -:angle
+	setTurtleState :oldState
+end
+
+to drawI :fontHeight
+	localmake "oldState turtleState
+	jumpForward :fontHeight * 0.03
+	stripes :fontHeight * 0.28 :fontHeight * 0.94 [:axiosBlack]
+	setTurtleState :oldState
+end
+
+to drawO :fontHeight
+	localmake "oldState turtleState
+	jumpForward :fontHeight / 2
+	setPenSize :fontHeight * 0.28
+	setPenColor :axiosBlack
+	setFillColor transparent
+	circle (:fontHeight - penSize) / 2	
+	setTurtleState :oldState
+end
+
+to drawS :fontHeight
+	localmake "oldState turtleState
+	localmake "shape [-0.382 0.3143 
+		[[-76.4 0] [0.222] [-100 0] [60 0.16]
+		[40 0.205] [40 0.108] [100 0.071] [15.5 0.16] [0.14]
+		[-15 0.43] [-20 0.32] [-40 0.24] [-75 0.3] [-30 0.49]
+		[-70.5 0.315] [-83 0] [0.217] [-95 0] [30 0.2] [35 0.1]
+		[25 0.2] [80 0.095] [60 0.06] [19 0.2] [0.155] [-80 0.294]
+		[-40 0.23] [-40 0.4] [-50 0.45] [-40 0.28] [-90 0]
+		]
+	]
+	setPenSize 0
+	setFillColor :axiosBlack
+	drawArcLineShape :shape :fontHeight
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://upload.wikimedia.org/wikipedia/commons/c/c8/Axios_logo_%282020%29.svg
+to axiosWideLogo :height
+	localmake "oldState turtleState
+	jumpLeft :height * 1.428
+	drawA :height
+	jumpRight :height * 0.77
+	drawX :height
+	jumpRight :height * 0.65
+	drawI :height
+	jumpRight :height * 0.68
+	drawO :height
+	jumpRight :height * 0.92
+	drawS :height
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 6
+jumpLeft :separation / 2
+axiosLogo :height
+jumpRight :separation
+axiosWideLogo :height

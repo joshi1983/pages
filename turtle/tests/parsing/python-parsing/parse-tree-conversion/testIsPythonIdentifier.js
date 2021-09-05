@@ -1,0 +1,47 @@
+import { isPythonIdentifier } from '../../../../modules/parsing/python-parsing/parse-tree-conversion/isPythonIdentifier.js';
+import { testInOutPairs } from '../../../helpers/testInOutPairs.js';
+
+export function testIsPythonIdentifier(logger) {
+	const cases = [
+		{'in': '', 'out': false},
+		{'in': '\n', 'out': false},
+		{'in': '=', 'out': false},
+		{'in': '-', 'out': false},
+		{'in': '+', 'out': false},
+		{'in': '*', 'out': false},
+		{'in': '/', 'out': false},
+		{'in': '1', 'out': false},
+		{'in': '12', 'out': false},
+		{'in': '1a', 'out': false},
+		{'in': '1a3', 'out': false},
+		{'in': 'aa$%@%', 'out': false},
+		{'in': 'async', 'out': false},
+		{'in': 'await', 'out': false},
+		{'in': 'Bike#_4', 'out': false},
+		{'in': 'for', 'out': false},
+		{'in': 'False', 'out': false},
+		{'in': 'global', 'out': false},
+		{'in': 'hello', 'out': true},
+		{'in': 'MyClass', 'out': true},
+		{'in': 'not', 'out': false},
+		{'in': 'return', 'out': false},
+		{'in': 'pass', 'out': false},
+		{'in': 'True', 'out': false},
+		{'in': 'while', 'out': false},
+		{'in': 'x', 'out': true},
+		{'in': 'X', 'out': true},
+		{'in': 'xy', 'out': true},
+		{'in': 'x y', 'out': false},
+		{'in': 'x\ny', 'out': false},
+		{'in': 'x+iy', 'out': false},
+		{'in': 'yield', 'out': false},
+		{'in': 'x1', 'out': true},
+		{'in': 'x1y', 'out': true},
+		{'in': '_x', 'out': true},
+		{'in': '__x', 'out': true},
+		{'in': '_', 'out': true},
+		{'in': '__', 'out': true},
+		{'in': '_x_y', 'out': true},
+	];
+	testInOutPairs(cases, isPythonIdentifier, logger);
+};
