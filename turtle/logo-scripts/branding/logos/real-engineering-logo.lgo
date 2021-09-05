@@ -1,0 +1,70 @@
+to getBackgroundGradient :radius
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#177ac6
+	setProperty "colorStops 1 "#0b3885
+	output createRadialGradient pos :radius :colorStops
+end
+
+to drawGrid :height
+	localmake "oldPos pos
+	localmake "thinThickness :height * 0.001
+	localmake "gridSize :height / 8
+	setPenSize :height * 0.01
+	setPenColor "#8848a1dd
+	jumpForward :height / 2
+	localmake "center pos
+	repeat 2 [
+		jumpTo :center
+		jumpBackward :height / 2
+		forward :height
+		right 90
+	]
+	setPenSize :height
+	repeat 2 [
+		jumpTo :center
+		jumpBackward :height / 2
+		repeat 7 [
+			jumpForward :gridSize - :thinThickness
+			forward :thinThickness
+		]
+		right 90
+	]
+	jumpTo :oldPos
+end
+
+to drawOmegaSymbol :height
+	localmake "arcsInfo1 [
+		[-2.8 1.7] [-50 0.02] [-34.5 0.9] [70 0]
+		[-8 0.2] [-64.7 0.028] [0.04] [-115 0]
+		[11.7 0.6] [-75.5 0.015] [34.2 0.8] [54.6 0]
+		[0.047343362]
+	]
+	jumpForward :height * 0.836
+	right 90
+	polyStart
+	arcLines :arcsInfo1 :height
+	arcLines reverse :arcsInfo1 :height
+	polyEnd
+end
+
+; Inspired by logo at
+; https://www.youtube.com/@RealEngineering
+to realEngineeringLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	jumpForward :height / 2
+	setPenSize :height
+	setLineCap "butt
+	setPenGradient getBackgroundGradient :height / sqrt 2
+	jumpTo :oldPos
+	forward :height
+	jumpTo :oldPos
+	drawGrid :height
+	setPenSize 0
+	setFillColor "white
+	drawOmegaSymbol :height
+	setTurtleState :oldState
+end
+
+setScreenColor "#083362
+realEngineeringLogo 100

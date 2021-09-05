@@ -1,0 +1,154 @@
+make "thicknessRatio 0.04
+make "innerGapRatio 0.155
+make "lengths [
+1 0.64 1.175 0.72 1.115 0.765 1.13 0.77 1
+0.8 1.21 0.68 0.965 0.648 1.08 0.72]
+make "numSides count :lengths
+
+; Inspired by
+; https://www.facebook.com/photo/?fbid=633406462146073
+to metDaanConstructionLines :height
+	localmake "oldState turtleState
+	localmake "outlineThickness :height * 0.005
+	localmake "height1 :height - :outlineThickness
+	localmake "thickness :height1 * :thicknessRatio
+	localmake "innerGap :height1 * :innerGapRatio
+	localmake "maxLength (:height1 - :thickness) / 2 - :innerGap
+	localmake "backgroundWidth :height * 2.5
+
+	setPenGradient metDaanHorizontalGradient :backgroundWidth true
+	setPenSize :backgroundWidth
+	setLineCap "butt
+	forward :height
+
+	jumpBackward :height / 2
+	localmake "center pos
+	setPenColor "white
+	setPenSize :outlineThickness
+	setFillColor transparent
+	repeat :numSides [
+		localmake "len :maxLength * item repcount :lengths
+		jumpForward :innerGap
+		circle :thickness / 2
+		circlePair :thickness / 2 :thickness / 2 :len
+		jumpTo :center
+		right 360 / :numSides
+	]
+	setTurtleState :oldState
+end
+
+to metDaanCustomized :height :innerGradient :outerGradient
+	localmake "oldState turtleState
+	localmake "thickness :height * :thicknessRatio
+	localmake "innerGap :height * :innerGapRatio
+	localmake "maxLength (:height - :thickness) / 2 - :innerGap
+	jumpForward :height / 2
+	localmake "center pos
+	setPenGradient :outerGradient
+	setPenSize :thickness
+	setLineCap "round
+	repeat :numSides [
+		localmake "len :maxLength * item repcount :lengths
+		jumpForward :innerGap
+		forward :len
+		jumpTo :center
+		right 360 / :numSides
+	]
+	setPenSize 0
+	setFillGradient :innerGradient
+	repeat :numSides [
+		jumpForward :innerGap
+		circle :thickness / 2
+		jumpTo :center
+		right 360 / :numSides
+	]
+	setTurtleState :oldState
+end
+
+to metDaanHorizontalGradient :width :fadeEdges
+	localmake "colorStops createPList
+	localmake "blueColor "#0dadbd
+	localmake "purpleColor "#924289
+	localmake "orangeColor "#ff7232
+	ifelse :fadeEdges [
+		setProperty "colorStops 0 mix :blueColor transparent 0 
+		setProperty "colorStops 0.2 :blueColor
+		setProperty "colorStops 0.8 :orangeColor
+		setProperty "colorStops 1 mix :orangeColor transparent 0
+	] [
+		setProperty "colorStops 0 :blueColor 
+		setProperty "colorStops 1 :orangeColor
+	]
+	setProperty "colorStops 0.5 :purpleColor
+	jumpLeft :width / 2
+	localmake "fromPos pos
+	jumpRight :width
+	localmake "result createLinearGradient :fromPos pos :colorStops "pad
+	jumpLeft :width / 2
+	output :result
+end
+
+; Inspired by logo at
+; https://www.facebook.com/photo/?fbid=633406458812740&set=a.107631144723610
+; It is used by
+; https://www.facebook.com/MetDaanMagazine
+to metDaanMagazineLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "width :height * 831 / 771
+	localmake "outerGradient metDaanHorizontalGradient :width false
+	localmake "innerGradient metDaanHorizontalGradient :width / 4 false
+	jumpTo :oldPos
+	metDaanCustomized :height :innerGradient :outerGradient	
+	
+	setTurtleState :oldState
+end
+
+to metDaanCafeBackgroundGradient :height
+	localmake "oldState turtleState
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#005e2083
+	setProperty "colorStops 0.3 "#5e2083
+	setProperty "colorStops 0.7 "#5e2083
+	setProperty "colorStops 1 "#005e2083
+	localmake "width :height * 3
+	setLineCap "butt
+	setPenSize :width
+	jumpLeft :width / 2
+	localmake "fromPos pos
+	jumpRight :width
+	setPenGradient createLinearGradient :fromPos pos :colorStops "pad
+	jumpLeft :width / 2
+	forward :height
+	setTurtleState :oldState
+end
+
+; Inspired by logo at
+; https://www.facebook.com/MetDaanCakes/
+to metDaanCafeLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#0fff
+	setProperty "colorStops 0.2 "#0fff
+	setProperty "colorStops 1 "white
+	metDaanCafeBackgroundGradient :height
+	jumpForward :height / 2
+	localmake "outerGradient createRadialGradient pos :height * 0.3 :colorStops
+	setProperty "colorStops 0 "white
+	localmake "innerGradient createRadialGradient pos 1 :colorStops
+	jumpTo :oldPos
+	metDaanCustomized :height :innerGradient :outerGradient	
+	
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+make "height 100
+make "separation :height * 4
+jumpLeft :separation
+metDaanConstructionLines :height
+jumpRight :separation
+metDaanMagazineLogo :height
+jumpRight :separation
+metDaanCafeLogo :height

@@ -1,0 +1,76 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Python_(programming_language)#/media/File:Python-logo-notext.svg
+; Referenced from:
+; https://en.wikipedia.org/wiki/Python_(programming_language)
+
+to pythonSingleShapeGradient :size :colors
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	left 45
+	jumpForward :size * 0.4
+	localmake "colorStops createPList
+	setProperty "colorStops 0 item 1 :colors
+	setProperty "colorStops 1 item 2 :colors
+	setFillGradient createLinearGradient :oldPos pos :colorStops "pad
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to pythonSingleShape :size :colors
+	localmake "oldState turtleState
+	localmake "arcAngle1 10 
+	localmake "arcAngle2 45
+	localmake "arcAngle3 90 - :arcAngle1 - :arcAngle2
+	localmake "arcRadius1 :size * 0.7 
+	localmake "arcRadius2 :size * 0.151
+	localmake "arcRadius3 :size * 0.1
+	localmake "scale 1.02
+	localmake "arcRadius1b :arcRadius1 * :scale
+	localmake "arcRadius2b :arcRadius2 * :scale
+	localmake "arcRadius3b :arcRadius3 * :scale
+	pythonSingleShapeGradient :size :colors
+	jumpForward :size / 2
+	right 90
+	polyStart
+	setPenSize 0
+	arcRight :arcAngle1 :arcRadius1
+	arcRight :arcAngle2 :arcRadius2
+	arcRight :arcAngle3 :arcRadius3
+	jumpForward :size * 0.232
+	arcRight 90 :size * 0.12
+	jumpForward :size * 0.235
+	arcLeft 90 :size * 0.15
+	jumpForward :size * 0.107
+	right 90
+	jumpForward :size * 0.09
+	arcRight :arcAngle3 :arcRadius3b
+	arcRight :arcAngle2 :arcRadius2b
+	arcRight :arcAngle1 * 2 :arcRadius1b
+	arcRight :arcAngle2 :arcRadius2b
+	arcRight :arcAngle3 :arcRadius3b
+	jumpForward :size * 0.357
+	jumpLeft :size * 0.031
+	jumpBackward :size * 0.238
+	left 90
+	jumpForward :size * 0.094296408
+	arcRight :arcAngle3 :arcRadius3
+	arcRight :arcAngle2 :arcRadius2
+	arcRight :arcAngle1 :arcRadius1
+	polyEnd
+	jumpRight :size * 0.119
+	jumpBackward :size * 0.133
+	setFillColor "white
+	circle :size * 0.045	
+	setTurtleState :oldState
+end
+
+to pythonLogo :height
+	localmake "oldState turtleState
+	jumpForward :height / 2
+	pythonSingleShape :height ["#306998 "#4c8cbf]
+	right 180
+	pythonSingleShape :height ["#ffe873 "#ffd43b]
+	setTurtleState :oldState
+end
+
+pythonLogo 100

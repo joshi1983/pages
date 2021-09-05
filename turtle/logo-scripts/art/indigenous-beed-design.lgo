@@ -1,0 +1,398 @@
+; Inspired by
+; https://www.pinterest.ca/pin/4574037113445601/
+
+make "hotColor1 "#f70
+make "hotColor2 "#fb0
+make "hotColor3 mix :hotColor1 "black 0.8
+make "coolColor1 "#179
+make "offWhite "#fff8f0
+make "darkColor1 "#333
+make "beedDimensionRatio 0.55
+
+to beed :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "beedLength :size
+	localmake "beedWidth :size * :beedDimensionRatio
+	localmake "thickness :size * 0.07
+	setPenSize :thickness
+	setPenColor mix fillColor "black 0.7
+	jumpForward :thickness * 0.5
+	left 90
+	jumpForward (:beedWidth - :thickness) * 0.5
+	
+	polyStart
+	repeat 2 [
+		right 90
+		forward :beedLength - :thickness
+		right 90
+		forward :beedWidth - :thickness
+	]
+	polyEnd
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to diamondOutlineRow :beedSize :numBeeds
+	localmake "oldPos pos
+	localmake "beedWidth :beedSize * :beedDimensionRatio
+	if :numBeeds > 1 [
+		jumpLeft :beedWidth * :numBeeds / 2
+	]
+	beed :beedSize
+	if :numBeeds > 1 [
+		right 90
+		localmake "gapWidth :beedWidth * :numBeeds
+		jumpForward :gapWidth
+		left 90
+		beed :beedSize
+	]
+	jumpTo :oldPos
+end
+
+to diamondOutline :size :numBeedsSize
+	localmake "oldPos pos
+	localmake "beedSize :size / :numBeedsSize
+	localmake "halfNumBeeds :numBeedsSize / 2
+	repeat :halfNumBeeds [
+		localmake "numBeeds (repcount * 2) - 2		
+		diamondOutlineRow :beedSize :numBeeds
+		jumpForward :beedSize ; go to next row
+	]
+	if odd? :numBeedsSize [
+		diamondOutlineRow :beedSize :numBeedsSize - 1
+		jumpForward :beedSize ; go to next row
+	]
+	repeat :halfNumBeeds [
+		localmake "numBeeds ((:halfNumBeeds - repcount) * 2) - 1
+		diamondOutlineRow :beedSize :numBeeds
+		jumpForward :beedSize ; go to next row
+	]
+	jumpTo :oldPos
+end
+
+to diamondPattern :size
+	localmake "numBeedsSize1 13
+	localmake "numBeedsSize2 11
+	localmake "numBeedsSize3 9
+	localmake "beedLength :size / :numBeedsSize1
+	localmake "size2 :size * :numBeedsSize2 / :numBeedsSize1
+	localmake "size3 :size * :numBeedsSize3 / :numBeedsSize1
+	setFillColor :offWhite
+	setPenSize 0
+	diamondOutline :size :numBeedsSize1
+	jumpForward :beedLength * 2
+	diamondOutline :size3 :numBeedsSize3
+	setFillColor :coolColor1
+	jumpBackward :beedLength
+	diamondOutline :size2 :numBeedsSize2
+	setFillColor :hotColor3
+	jumpForward :beedLength * 2
+	localmake "numBeedsSize4 :numBeedsSize3
+	localmake "size4 :size3
+	while :numBeedsSize4 > 0 [
+		localmake "numBeedsSize4 :numBeedsSize4 - 2
+		localmake "size4 :size4 - :beedLength * 2
+		diamondOutline :size4 :numBeedsSize4
+		jumpForward :beedLength
+	]
+end
+
+to crossPattern :size
+	localmake "oldPos pos
+	localmake "diamondSize :size * 0.415
+	localmake "diamondRadius :size - :diamondSize
+	localmake "weaveSize :size * 0.7
+	localmake "weavesRadius :size * 0.1
+	repeat 4 [
+		jumpTo :oldPos
+		jumpForward :weavesRadius
+		weaves :weaveSize
+		jumpForward :diamondRadius - :weavesRadius
+		diamondPattern :diamondSize
+		right 360 / 4
+	]
+	jumpTo :oldPos
+end
+
+to drawWeb :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "numArcs 16
+	localmake "angle1 110
+	localmake "angle2 160
+	localmake "arcRadius :size * 0.6
+	
+	repeat :numArcs [
+		jumpTo :oldPos
+		setHeading :oldHeading + repcount * 360 / :numArcs
+		jumpForward :size
+		right :angle1
+		arcRight :angle2 :arcRadius
+	]
+	repeat :numArcs [
+		jumpTo :oldPos
+		setHeading :oldHeading + repcount * 360 / :numArcs
+		jumpForward :size
+		left :angle1
+		arcLeft :angle2 :arcRadius
+	]
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to centreBeeds :size
+	localmake "oldPos pos
+	localmake "radius1 :size * 0.79
+	localmake "radius2 :size * 0.2
+	localmake "radius3 :size * 0.1
+	localmake "radius4 :size * 0.2
+	localmake "radius5 :size * 0.05
+	localmake "radius6 (:size - :radius1) * 0.5
+	localmake "radius7 :radius1 * 0.88
+	setFillColor transparent
+	setPenSize :size * 0.05
+	setPenColor :hotColor2
+	circle :size
+	circle :radius1
+	setPenSize :size * 0.03
+	circle :radius7
+	setPenSize :size * 0.01
+	drawWeb :radius7
+	setFillColor "aqua
+	setPenSize 0
+	circle :radius2
+	setPenColor :hotColor3
+	repeat 4 [
+		setPos :oldPos
+		forward :radius2 + :radius3
+		setFillColor :darkColor1
+		circle :radius3
+		setFillColor "gray
+		circle :radius3 * 0.2
+		forward :radius3 + :radius4
+		setFillColor :offWhite
+		ellipse :radius5 :radius4
+		forward :radius4 + :radius6
+		setFillColor :hotColor2
+		setPenSize :radius6 * 0.1
+		circle :radius6
+		setPenSize 0
+		right 360 / 4
+	]
+	setPos :oldPos
+end
+
+to drawWeaveArcs :width
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angle1 45.5847
+	localmake "radius1 :width * 0.7
+	localmake "angle2 79.5613
+	right 90
+	jumpBackward :width * 0.5
+	arcLeft :angle1 :radius1
+	jumpTo :oldPos
+	setHeading :oldHeading
+	left 90
+	jumpBackward :width * 0.5
+	
+	arcRight :angle2 :radius1
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to weaves :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "width :size * 0.12
+	localmake "arcLevelHeight :width * 0.5
+	localmake "numArcLevels :size / :arcLevelHeight
+	localmake "sideColor mix :hotColor3 "black 0.5
+	localmake "colorStops createPList
+	setProperty "colorStops 0 :sideColor
+	setProperty "colorStops 0.5 :hotColor2
+	setProperty "colorStops 1 :sideColor
+	left 90
+	forward :width * 0.5
+	localmake "fromPos pos
+	backward :width
+	localmake "gradient createLinearGradient :fromPos pos :colorStops "pad
+	setFillGradient :gradient
+	setPenSize 0
+	polyStart
+	repeat 2 [
+		jumpForward :width
+		right 90
+		jumpForward :size
+		right 90
+	]
+	polyEnd
+	jumpTo :oldPos
+	setHeading :oldHeading
+	setPenColor "black
+	setPenSize :arcLevelHeight * 0.02
+	repeat :numArcLevels [
+		drawWeaveArcs :width
+		jumpForward :arcLevelHeight
+	]
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to circles :size
+	localmake "colorStops createPList
+	localmake "radius1 :size * 0.8
+	localmake "circleThickness :size * 0.05
+	localmake "radius2 :size - :circleThickness * 0.5
+	setProperty "colorStops 0 "black
+	setProperty "colorStops 0.07 "black
+	setProperty "colorStops 0.15 :hotColor1
+	setProperty "colorStops 1 "black
+	localmake "gradient createRadialGradient pos :size * 1.1 :colorStops
+	setFillGradient :gradient
+	setPenSize 0
+	circle :radius1
+	setPenSize :circleThickness
+	setPenColor :hotColor2
+	setFillColor transparent
+	circle :radius1
+	circle :radius2
+end
+
+to beededLine :size :numBeeds
+	localmake "oldPos pos
+	localmake "beedLength :size / :numBeeds
+	repeat :numBeeds [
+		beed :beedLength
+		jumpForward :beedLength
+	]
+	jumpTo :oldPos
+end
+
+to beededParallelogram1 :size
+	localmake "oldPos pos
+	localmake "numBeeds 9
+	localmake "beedLength :size / :numBeeds
+	localmake "beedWidth :beedLength * :beedDimensionRatio
+	repeat 5 [
+		beededLine :size :numBeeds
+		forward :beedLength
+		right 90
+		forward :beedWidth
+		left 90
+	]
+	jumpTo :oldPos
+end
+
+to beededParallelogram2 :size
+	localmake "oldPos pos
+	localmake "numBeeds 9
+	localmake "beedLength :size / :numBeeds
+	localmake "beedWidth :beedLength * :beedDimensionRatio
+	repeat 5 [
+		beededLine :size :numBeeds
+		forward :beedLength
+		left 90
+		forward :beedWidth
+		right 90
+	]
+	jumpTo :oldPos
+end
+
+to parallelogramDiagonal1 :size1 :numParallelograms
+	localmake "size2 :size1 * 4 / 9
+	localmake "width1 :size1 * 5 / 9 * :beedDimensionRatio
+	repeat :numParallelograms [
+		beededParallelogram1 :size1
+		jumpForward :size2
+		jumpLeft :width1
+	]
+end
+
+to parallelogramDiagonal2 :size1 :numParallelograms
+	localmake "size2 :size1 * 4 / 9
+	localmake "width1 :size1 * 5 / 9 * :beedDimensionRatio
+	repeat :numParallelograms [
+		beededParallelogram2 :size1
+		jumpForward :size2
+		jumpRight :width1
+	]
+end
+
+to parallelogramPattern1 :size
+	localmake "oldPos pos
+	localmake "size1 :size * 27 / (32 * 3)
+	jumpLeft :size1 / 2 * :beedDimensionRatio
+	localmake "shiftedPosition pos
+	setFillColor :darkColor1
+	parallelogramDiagonal1 :size1 4
+	jumpTo :shiftedPosition
+	jumpForward :size1
+	setFillColor :coolColor1
+	parallelogramDiagonal1 :size1 3
+	jumpTo :oldPos
+end
+
+to parallelogramPattern2 :size
+	localmake "oldPos pos
+	localmake "size1 :size * 27 / (32 * 3)
+	jumpRight :size1 / 2 * :beedDimensionRatio
+	localmake "shiftedPosition pos
+	setFillColor :darkColor1
+	parallelogramDiagonal2 :size1 4
+	jumpTo :shiftedPosition
+	jumpForward :size1
+	setFillColor :coolColor1
+	parallelogramDiagonal2 :size1 3
+	jumpTo :oldPos
+end
+
+to outerParallelograms :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "size2 :size * 0.65
+	repeat 4 [
+		jumpTo :oldPos
+		jumpForward :size
+		right 180
+		parallelogramPattern1 :size2
+		parallelogramPattern2 :size2
+		right 360 / 4
+	]
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to innerParallelograms :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "size2 :size * 1.006
+	localmake "size3 :size * 0.056
+	right 90
+	repeat 2 [
+		jumpTo :oldPos
+		jumpForward :size
+		right 90
+		jumpForward :size3
+		right 90
+		parallelogramPattern1 :size2
+		jumpRight :size3 * 2
+		parallelogramPattern2 :size2
+	]
+	setHeading :oldHeading
+	jumpTo :oldPos
+end
+
+to fullDesign :size1
+	localmake "size2 :size1 * 0.73
+	outerParallelograms :size1
+	circles :size2
+	innerParallelograms :size2 * 0.73
+	crossPattern :size2
+	centreBeeds :size2 * 0.2
+end
+
+setScreenColor "#444
+setFillColor "red
+fullDesign 150

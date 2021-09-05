@@ -1,0 +1,71 @@
+make "timeRatio clamp animation.time / animation.duration 0 1
+make "timeRatio interpolateRatio easeOut :timeRatio
+make "wavelengthFactor 5 * :timeRatio
+
+to tToRadius :t
+	output 4 * (round (power (radSin (2 * :t)) 2))
+	+ 2 * radCos (radCos (:wavelengthFactor * :t))
+end
+
+; Inspired by
+; https://www.pinterest.ca/pin/510454939032025986/
+to plotInCircle :radius
+	localmake "scale :radius * 0.14
+	localmake "numPoints 5000
+	localmake "oldHeading heading
+	localmake "oldPos pos
+	setFillColor "white
+	setPenSize 0
+	circle :radius
+	setFillColor transparent
+	setPenColor "black
+	setPenSize :radius * 0.002
+	repeat 6 [
+		circle :scale * repcount
+	]
+	localmake "points []
+	setLineCap "round
+	setLineJoinStyle "round
+	setPenColor "#003
+	setPenSize :radius * 0.005
+	repeat :numPoints [
+		localmake "t 10 * pi * repRatio
+		setHeading :oldHeading + :t * 180 / pi
+		jumpForward :scale * tToRadius :t
+		queue2 "points pos
+		jumpTo :oldPos
+	]
+	jumpTo first :points
+	for ["i 2 count :points] [
+		localmake "p item :i :points
+		setHeading towards :p
+		forward distance :p
+	]
+end
+
+setScreenColor "#800
+make "colorStops createPList
+setProperty "colorStops 0 "black
+setProperty "colorStops 1 transparent
+setPenGradient createRadialGradient pos 200 :colorStops
+jumpBackward 100
+setPenSize 400
+setLineCap "butt
+forward 200
+jumpTo [0 0 0]
+plotInCircle 100
+
+to animation.snapshotstyle
+	localmake "result createPList
+	setProperty "result "zoom.scale 2.65
+	output :result
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 10
+	; Edit this if you want to change the length of your animation.
+	localmake "result createPList
+	setProperty "result "duration :minutes * 60 + :seconds
+	output :result
+end

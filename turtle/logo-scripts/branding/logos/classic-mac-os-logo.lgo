@@ -1,0 +1,105 @@
+to smile :width
+	localmake "oldState turtleState
+	localmake "oldPenSize penSize
+	localmake "arcsInfo [
+		[10 3]
+		[20 1.5]
+	]
+	left 90
+	setPenSize 0
+	repeat count :arcsInfo [
+		localmake "arcInfo item repcount :arcsInfo
+		localmake "angle item 1 :arcInfo
+		localmake "radius :width * item 2 :arcInfo
+		arcRight :angle :radius
+	]
+	right 180
+	setPenSize :oldPenSize
+	localmake "arcsInfo combine reverse :arcsInfo :arcsInfo
+	arcsLeft :arcsInfo :width
+	setTurtleState :oldState
+end
+
+to drawEyes :logoHeight
+	localmake "oldState turtleState
+	localmake "eyeHeight :logoHeight * 0.113
+	localmake "eyeSeparation :logoHeight * 0.407
+	jumpForward :logoHeight * 0.638
+	jumpLeft :eyeSeparation / 2 + :logoHeight * 0.014
+	repeat 2 [
+		forward :eyeHeight
+		jumpBackward :eyeHeight
+		jumpRight :eyeSeparation
+	]
+	setTurtleState :oldState	
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Classic_Mac_OS#/media/File:MacOS_original_logo.svg
+to macOSClassicLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "gap1 :height * 0.13
+	localmake "thickness :height * 0.045
+	localmake "angle1 26
+	localmake "backgroundWidth :height * 0.96
+	localmake "backgroundHeight :height - :gap1 * 2
+	jumpForward :gap1
+	stripes :backgroundWidth :backgroundHeight  ["#89A1D4]
+
+	setPenSize :thickness
+	setLineCap "butt
+	setLineJoinStyle "miter
+	jumpTo :oldPos
+	jumpForward :height * 0.285
+	smile :height * 0.3198
+
+	jumpTo :oldPos
+	setPenColor "black
+	drawEyes :height
+
+	; make one side dark bluish.
+	localmake "polyPoints [
+		[:height * 0.05 :backgroundHeight + :gap1]
+		[-:backgroundWidth / 2 :backgroundHeight + :gap1]
+		[-:backgroundWidth / 2 :gap1]
+		[:height * 0.085 :gap1]
+		[:height * 0.05 :height * 0.3]
+		[:height * 0.08 :height * 0.45]
+		[-:height * 0.1 :height * 0.45]
+		[-:height * 0.04 :height * 0.7]
+	]
+	setFillColor "#aa2744B9
+	jumpTo first :polyPoints
+	setPenSize 0
+	polyStart
+	for ["index 2 count :polyPoints] [
+		localmake "p item :index :polyPoints
+		setHeading towards :p
+		jumpForward distance :p
+	]
+	polyEnd
+
+	; draw line through chin and nose.
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpRight :height * 0.13
+	jumpForward :thickness / 2 * sin :angle1
+	left :angle1
+	setPenColor "black
+	setPenSize :thickness
+	arcRight 25 :height * 0.65
+	arcRight 16 :height * 0.6
+	setHeading :oldHeading - 90
+
+	; bottom of nose
+	forward :height * 0.1728
+	right 93.2
+	arcRight 25 :height * 0.8
+	arcRight 11.8 :height * 1.2
+
+	setTurtleState :oldState
+end
+
+macOSClassicLogo 100

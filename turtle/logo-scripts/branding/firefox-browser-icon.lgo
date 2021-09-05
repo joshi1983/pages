@@ -1,0 +1,305 @@
+; Inspired by
+; https://upload.wikimedia.org/wikipedia/commons/a/a0/Firefox_logo%2C_2019.svg
+; Referenced from:
+; https://en.wikipedia.org/wiki/Firefox#/media/File:Firefox_logo,_2019.svg
+; And from:
+; https://en.wikipedia.org/wiki/Firefox
+
+to firefoxCircle :radius
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "size1 :radius * 0.2
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#8c5afd
+	setProperty "colorStops 1 "#5939af
+	setFillGradient createRadialGradient pos :radius :colorStops
+	setPenSize 0
+	circle :radius
+	setProperty "colorStops 0 "#0f9a
+	setProperty "colorStops 1 "#6f9a
+	right 45
+	jumpBackward :size1
+	jumpForward :radius + :size1
+	setFillGradient createLinearGradient :oldPos pos :colorStops "pad
+	jumpTo :oldPos
+	circle :radius
+	setTurtleState :oldState
+end
+
+to firefoxHeadGradient1 :headHeight
+	localmake "oldPos pos
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#ffaf1e
+	setProperty "colorStops 0.2 "#ffaf1e
+	setProperty "colorStops 1 "#ff5435
+	jumpBackward :headHeight * 0.9
+	localmake "result createLinearGradient :oldPos pos :colorStops "pad
+	jumpTo :oldPos
+	output :result
+end
+
+to headShape1 :headHeight
+	localmake "oldState turtleState
+	localmake "arcAngle1 15
+	localmake "arcAngle2 55
+	localmake "arcAngle3 20
+	localmake "arcAngle4 49.7
+	localmake "arcAngle5 65.35
+	localmake "arcAngle6 47
+	localmake "arcAngle7 9
+	localmake "arcAngle8 44.2
+	localmake "arcAngle9 22
+	localmake "arcAngle10 4
+	localmake "arcAngle11 10
+	localmake "arcAngle12 14
+	localmake "arcAngle13 23
+	localmake "arcAngle14 16.2
+	localmake "arcRadius1 :headHeight * 0.22
+	localmake "arcRadius2 :headHeight * 1.04
+	localmake "arcRadius3 :headHeight * 0.68
+	localmake "arcRadius4 :headHeight * 0.536
+	localmake "arcRadius5 :headHeight * 0.315
+	localmake "arcRadius6 :headHeight * 0.44
+	localmake "arcRadius7 :headHeight * 0.8
+	localmake "arcRadius8 :headHeight * 0.585
+	localmake "arcRadius9 :headHeight * 0.015
+	localmake "arcRadius10 :headHeight * 1.4
+	localmake "arcRadius11 :headHeight * 1.2
+	localmake "arcRadius12 :headHeight * 0.2
+	localmake "arcRadius13 :headHeight * 0.51
+	localmake "arcRadius14 :headHeight * 0.715
+	left 112
+	setPenSize 0
+	polyStart
+	arcLeft :arcAngle1 :arcRadius1
+	arcLeft :arcAngle2 :arcRadius2
+	left 59.95
+	jumpForward :headHeight * 1.07
+	left 90
+	arcLeft 93 :headHeight * 0.002
+	arcRight :arcAngle3 :arcRadius3
+	arcRight :arcAngle4 :arcRadius4
+	left 95.2
+	arcRight :arcAngle5 :arcRadius5
+	right 82.8
+	arcRight :arcAngle6 :arcRadius6
+	arcRight :arcAngle7 :arcRadius7
+	arcLeft :arcAngle8 :arcRadius8
+	left 108
+	arcLeft :arcAngle9 :arcRadius9
+	arcLeft :arcAngle10 :arcRadius10
+	arcRight :arcAngle11 :arcRadius11
+	arcRight :arcAngle12 :arcRadius12
+	arcLeft :arcAngle13 :arcRadius13
+	arcLeft 12 :headHeight * 0.2
+	arcLeft :arcAngle14 :arcRadius14
+	right 53
+	arcRight 20 :headHeight * 0.1
+	arcRight 14 :headHeight * 0.43
+	arcRight 6.3 :headHeight * 1.56
+	polyEnd
+	setTurtleState :oldState
+end
+
+to firefoxEarGradient :earHeight
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#ffbe3b
+	setProperty "colorStops 1 "#ff833c
+	right 35
+	jumpBackward :earHeight * 1.2
+	localmake "result createLinearGradient :oldPos pos :colorStops "pad
+	setTurtleState :oldState
+	output :result
+end
+
+to firefoxEar :earHeight
+	localmake "oldState turtleState
+	setFillGradient firefoxEarGradient :earHeight
+	left 116.05
+	setPenSize 0
+	polyStart
+	arcLeft 23.3 :earHeight * 3.1
+	left 130
+	arcRight 25 :earHeight * 2.38
+	left 131.88
+	arcRight 31 :earHeight * 1.87
+	polyEnd
+	setTurtleState :oldState
+end
+
+to snoutGradient :headHeight
+	localmake "oldState turtleState
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#ffa315
+	setProperty "colorStops 1 "#ffde3f
+	right 70
+	jumpBackward :headHeight * 0.25
+	localmake "fromPos pos
+	jumpForward :headHeight * 0.7
+	localmake "result createLinearGradient :fromPos pos :colorStops "pad
+	setTurtleState :oldState
+	output :result
+end
+
+to firefoxSnout :headHeight
+	localmake "oldState turtleState
+	setFillGradient snoutGradient :headHeight
+	setPenSize 0
+	left 62
+	polyStart
+	arcRight 30 :headHeight * 0.59
+	arcRight 28.13 :headHeight * 0.41
+	right 24
+	arcRight 35 :headHeight * 0.26
+	arcRight 35 :headHeight * 0.47
+	jumpForward :headHeight * 0.034
+	arcLeft 29.5 :headHeight * 0.042
+	arcLeft 26 :headHeight * 0.36
+	arcLeft 10 :headHeight * 0.09
+	arcLeft 18 :headHeight * 0.0235
+	arcLeft 40 :headHeight * 0.002
+	left 45
+	jumpForward :headHeight * 1.1
+	left 137
+	jumpForward :headHeight
+	left 16
+	arcLeft 11 :headHeight * 1.35
+	polyEnd
+	setTurtleState :oldState
+end
+
+; headHeight is vertical distance from top of highest ear 
+; to bottom of neck curve
+to firefoxHead :headHeight
+	localmake "oldPos pos
+	localmake "earHeight :headHeight * (80.1551 - 68.5438) / 39.0591
+	jumpRight :headHeight * 0.3355
+	jumpBackward :headHeight * 0.0787
+	firefoxEar :earHeight
+	jumpTo :oldPos
+	jumpBackward :headHeight * 1.398
+	jumpRight :headHeight * 0.485
+	firefoxSnout :headHeight
+	jumpTo :oldPos
+	setFillGradient firefoxHeadGradient1 :headHeight
+	headShape1 :headHeight
+end
+
+to backgroundTail :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#fff04c
+	setProperty "colorStops 0.3 "#fece4a
+	setProperty "colorStops 0.5 "#fb9754
+	setProperty "colorStops 0.75 "#fa6c59
+	setProperty "colorStops 1 "#e60a72
+	jumpBackward :height
+	setFillGradient createLinearGradient :oldPos pos :colorStops "pad
+	jumpTo :oldPos
+	left 120
+	setPenSize 0
+	polyStart
+	arcLeft 90 :height * 0.33
+	right 119
+	jumpForward :height * 0.4997
+	left 82.7
+	arcLeft 90 :height * 0.47
+	circle 0.1
+	arcLeft 40 :height * 0.49
+	circle 0.1
+	arcLeft 84 :height * 0.465
+	arcLeft 28.2 :height * 0.24
+	left 149.9
+	arcRight 14.9 :height * 0.6
+	right 168
+	arcLeft 20 :height * 0.59
+	arcRight 8 :height * 1.2
+	arcRight 15.022 :height * 0.23
+	arcLeft 90 :height * 0.0011
+	polyEnd
+	setTurtleState :oldState
+end
+
+to firefoxTail1 :height
+	localmake "oldState turtleState
+	jumpForward :height * 0.6335
+	jumpRight :height * 0.095
+	localmake "pos1 pos
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#ffe545
+	setProperty "colorStops 1 "#ff5535
+	jumpBackward :height * 0.35
+	setFillGradient createLinearGradient :pos1 pos :colorStops "pad
+	jumpTo :pos1
+	right 82
+	setPenSize 0
+	polyStart
+	arcRight 45 :height * 0.16
+	arcRight 13 :height * 0.15
+	arcRight 35 :height * 0.2
+	arcRight 128 :height * 0.27
+	arcRight 172 :height * 0.037
+	arcLeft 55 :height * 0.215
+	arcLeft 82 :height * 0.193
+	arcLeft 10 :height * 0.25
+	arcLeft 31.8 :height * 0.173
+	polyEnd
+	setTurtleState :oldState
+end
+
+to firefoxTail2 :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	jumpLeft :height * 0.4706
+	jumpForward :height * 0.532
+	localmake "pos1 pos
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#ff5435
+	setProperty "colorStops 0.2 "#ff5435
+	setProperty "colorStops 0.5 "#ff4b3b
+	setProperty "colorStops 1 "#ffe545
+	right 60
+	jumpForward :height * 0.8
+	setFillGradient createLinearGradient :pos1 pos :colorStops "pad
+	jumpTo :pos1
+	setHeading :oldHeading
+	left 175
+	setPenSize 0
+	polyStart
+	arcLeft 25 :height * 0.3
+	arcLeft 80 :height * 0.485
+	arcLeft 90 :height * 0.403
+	arcLeft 7.75 :height * 0.6
+	left 170
+	arcRight 43 :height * 0.29
+	arcRight 40 :height * 0.43
+	arcRight 39.5 :height * 0.285
+	arcRight 45 :height * 0.4
+	polyEnd
+	setTurtleState :oldState
+end
+
+to firefoxIcon :height
+	localmake "oldPos pos
+	localmake "circleRadius :height * 0.233
+	jumpForward :height	* 0.991
+	jumpRight :height * 0.149
+	backgroundTail :height
+	jumpTo :oldPos
+	jumpForward :height * 0.495
+	jumpRight :height * 0.003
+	firefoxCircle :circleRadius
+	jumpTo :oldPos
+	firefoxTail1 :height
+	firefoxTail2 :height
+
+	jumpTo :oldPos
+	jumpLeft :height * 0.291382
+	jumpForward :height * 0.832205
+	firefoxHead :height * (0.832205 - 0.441614)
+end
+
+firefoxIcon 100

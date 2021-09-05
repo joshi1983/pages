@@ -1,0 +1,63 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/9gag#/media/File:9gag_logo.svg
+to nineGagLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "angle1 30
+	localmake "angle2 90 - :angle1
+	localmake "size1 :height * 0.5
+	localmake "size2 :height * 0.2
+	localmake "size3 :size1 - :size2
+	localmake "size4 :size2 * 1
+	localmake "size5 :size1 * 1
+	localmake "size6 :size2 * sin :angle1
+	setFillColor "white
+	setPenSize 0
+	jumpForward :size1
+	right :angle2
+	jumpForward :size1
+	setHeading :oldHeading + 180
+	polyStart
+	repeat 2 [
+		jumpForward :size1
+		right :angle2
+	]
+	; now at old position
+	jumpForward :size1
+	right 180 - :angle2
+	jumpForward :size2
+	right :angle2
+	repeat 2 [
+		jumpForward :size3
+		left :angle2
+	]
+	jumpForward :size4
+	left 90 + :angle1
+	jumpForward :size3
+	right :angle2
+	jumpForward :size5
+	setHeading :oldHeading
+	jumpForward :size6
+	right :angle2
+	jumpForward :size5
+	right :angle2
+	jumpForward :size5
+	setHeading :oldHeading - 90 - :angle1
+	jumpForward :size2
+	right :angle2
+	jumpForward :size3
+	left :angle2
+	jumpForward :size2
+	left 90 + :angle1
+	jumpForward :size2
+	left :angle2
+
+	jumpForward :size2 * 2
+	right :angle2
+	jumpForward :size2
+	polyEnd
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+nineGagLogo 100

@@ -1,0 +1,22 @@
+to hexGridPattern :scale :width :height
+	localmake "separationX :scale * 2 * cos 30
+	localmake "separationY :scale * (1 + sin 30)
+	localmake "polySize :scale
+	setPenSize :scale * 0.08
+	jumpLeft (:width - 0.5) * :separationX / 2
+	jumpForward :scale
+	repeat :height [
+		localmake "posBeforeHeightIteration pos
+		if even? repcount [
+			jumpRight :separationX / 2
+		]
+		repeat :width [
+			regularPolygon :polySize 6
+			jumpRight :separationX
+		]
+		jumpTo :posBeforeHeightIteration
+		jumpForward :separationY
+	]
+end
+
+hexGridPattern 10 30 3

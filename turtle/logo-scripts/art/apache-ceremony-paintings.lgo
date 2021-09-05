@@ -1,0 +1,299 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/File:Naiche_ChiriApache_hidepainting_1900_OHS.jpg
+
+to diamond :size
+	localmake "oldState turtleState
+	localmake "angle 30
+	localmake "size1 :size * cos :angle
+	localmake "size2 :size * sin :angle
+	jumpForward :size1
+	isotoxalStar :size1 :size2 2
+	setTurtleState :oldState
+end
+
+to blueDiamond :size
+	localmake "oldState turtleState
+	setFillColor "#8df
+	diamond :size
+	setTurtleState :oldState
+end
+
+to redDiamond :size
+	localmake "oldState turtleState
+	setFillColor "#b30
+	diamond :size
+	setTurtleState :oldState
+end
+
+to hexStar1 :height
+	localmake "oldState turtleState
+	localmake "radius :height / 2
+	localmake "outerCircleThickness :height * 0.05
+	localmake "radius1 :radius - :outerCircleThickness / 2
+	localmake "largeDiamondSize :height * 0.245
+	localmake "tinyDiamondSize :largeDiamondSize / 5
+	localmake "tinyDiamondSize2 :tinyDiamondSize * 2 * cos 30
+	localmake "middleDiamondSize :largeDiamondSize - :tinyDiamondSize * 2
+	localmake "middleDiamondSize2 :middleDiamondSize * 2 * cos 30
+	localmake "middleDiamondSize3 :largeDiamondSize / 2 + :tinyDiamondSize
+	localmake "tinyDiamondSeparation (:largeDiamondSize - :tinyDiamondSize) * 2 * (sin 30)
+	jumpForward :radius
+	setPenSize :outerCircleThickness
+	setPenColor "#800
+	setFillColor "#ddf
+	circle :radius1
+	localmake "center pos
+	setPenSize :height * 0.005
+	setPenColor "black
+	repeat 6 [
+		blueDiamond :largeDiamondSize		
+		redDiamond :tinyDiamondSize
+		jumpForward :tinyDiamondSize2
+		redDiamond :middleDiamondSize
+		jumpForward :middleDiamondSize2
+		redDiamond :tinyDiamondSize
+		jumpBackward :middleDiamondSize3
+		jumpRight :tinyDiamondSeparation / 2
+		redDiamond :tinyDiamondSize
+		jumpLeft :tinyDiamondSeparation
+		redDiamond :tinyDiamondSize
+		jumpTo :center
+		right 360 / 6
+	]
+	setTurtleState :oldState
+end
+
+to hexStar2 :height
+	localmake "oldState turtleState
+	localmake "starSize1 :height * 0.46
+	localmake "centralStarSize :height * 0.1
+	localmake "circleRadius :height * 0.17
+	localmake "diamondSize :height * 0.08
+	localmake "diamondSize2 :diamondSize * cos 30
+	jumpForward :height / 2
+	setPenSize :height * 0.04
+	setPenColor "#800
+	setFillColor "#ddf
+	regularStar :starSize1 6
+	setFillColor "#fb8
+	setPenColor "black
+	setPenSize :height * 0.005
+	circle :circleRadius
+	setFillColor "#ad40
+	regularPolygon :centralStarSize 4
+	localmake "center pos
+	repeat 4 [
+		jumpForward :circleRadius - :diamondSize2
+		diamond :diamondSize
+		setPos :center
+		right 360 / 4
+	]
+	setTurtleState :oldState
+end
+
+to arcWithDirection :arcAngle :arcRadius :arcDirectionSign
+	ifelse :arcDirectionSign < 0 [
+		arcRight :arcAngle :arcRadius
+	] [
+		arcLeft :arcAngle :arcRadius
+	]
+end
+
+to treeBranch1 :size :directionSign
+	localmake "oldState turtleState
+	setPenSize :size * 0.05
+	setLineCap "round
+	setLineJoinStyle "round
+	left 20 * :directionSign
+	arcWithDirection 60 :size * 0.5 :directionSign
+	setPenColor "#080
+	setPenSize penSize * 0.6
+	localmake "pos1 pos
+	localmake "heading1 heading
+	repeat 6 [
+		setHeading :heading1 - 12 * repcount * :directionSign
+		arcWithDirection 45 :size * 0.9 :directionSign
+		jumpTo :pos1
+	]
+	setTurtleState :oldState
+end
+
+to tree1 :height
+	localmake "oldState turtleState
+	localmake "trunkTwistAngle 20
+	localmake "trunkLengthFactor 10.62
+	localmake "numStages 12
+	setFillColor "#4b40
+	setPenSize :height * 0.001
+	setPenColor "black
+	isoTrapezoid :height * 0.13 :height * 0.15 :height * 0.12
+	localmake "trunkSize :height * 0.02
+	jumpForward :trunkSize
+	right :trunkTwistAngle / 2 + 1.4
+	setPenSize 0
+	setFillColor "#400
+	repeat :numStages [
+		ifelse even? repcount [
+			right :trunkTwistAngle
+		] [
+			left :trunkTwistAngle
+		]
+		localmake "newTrunkSize :trunkSize * 0.8
+		circlePair :trunkSize :newTrunkSize :trunkSize * :trunkLengthFactor
+		localmake "directionSign (2 * remainder repcount 2) - 1
+		treeBranch1 :trunkSize * :trunkLengthFactor :directionSign
+		localmake "trunkSize :newTrunkSize
+	]
+	setTurtleState :oldState
+end
+
+to plant1Trunk :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "trunkBaseWidth :height * 0.16
+	localmake "trunkTopWidth :trunkBaseWidth * 0.5
+	localmake "trunkOutlineRatio 0.15
+	localmake "trunkTopOuterThickness :trunkTopWidth * :trunkOutlineRatio
+	localmake "trunkBaseOuterThickness :trunkBaseWidth * :trunkOutlineRatio
+	localmake "trunkTopInnerWidth :trunkTopWidth - :trunkTopOuterThickness * 2
+	localmake "trunkBaseInnerWidth :trunkBaseWidth - :trunkBaseOuterThickness * 2
+	localmake "trunkOuterAngle arcTan (:trunkBaseWidth - :trunkTopWidth) / 2 / :height
+	localmake "trunkInnerAngle arcTan (:trunkBaseInnerWidth - :trunkTopInnerWidth) / 2 / :height
+	localmake "outerHeight1 :height / cos :trunkOuterAngle
+	localmake "innerHeight :height / cos :trunkInnerAngle
+	; trunk
+	setPenSize 0
+	setFillColor "white
+	isoTrapezoid :trunkBaseWidth :trunkTopWidth :height
+	jumpRight :trunkBaseWidth / 2
+	setFillColor "black
+	left :trunkOuterAngle
+	polyStart
+	jumpForward :outerHeight1
+	setHeading :oldHeading
+	jumpLeft :trunkTopOuterThickness
+	right 180 - :trunkInnerAngle
+	jumpForward :innerHeight
+	setHeading :oldHeading
+	jumpLeft :trunkBaseInnerWidth
+	right :trunkInnerAngle
+	jumpForward :innerHeight
+	setHeading :oldHeading
+	jumpLeft :trunkTopOuterThickness
+	left 180 - :trunkOuterAngle
+	jumpForward :outerHeight1
+	polyEnd
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height
+	localmake "topPos pos
+	localmake "minPenSize :height * 0.002
+	localmake "maxPenSize :height * 0.015
+	repeat 10 [
+		setPenSize mix :minPenSize :maxPenSize repRatio
+		jumpTo mix :topPos :oldPos repRatio
+		localmake "width mix :trunkTopInnerWidth :trunkBaseInnerWidth repRatio
+		stripes :width penSize ["black]
+	]
+	setTurtleState :oldState
+end
+
+to plant1Branches :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "numBranches 10
+	localmake "branchAngle 90
+	setPenColor "#170
+	setPenSize :height * 0.03
+	setLineCap "round
+	setLineJoinStyle "round
+	repeat :numBranches [
+		localmake "arcAngle mix -:branchAngle :branchAngle repRatio
+		localmake "arcRadius :height / abs sin :arcAngle
+		setHeading :oldHeading + :arcAngle
+		arcWithDirection abs :arcAngle :arcRadius sign :arcAngle
+		jumpTo :oldPos
+	]
+	setTurtleState :oldState
+end
+
+to plant1 :height
+	localmake "oldState turtleState
+	localmake "trunkHeight :height * 0.5
+	plant1Trunk :trunkHeight
+	jumpForward :trunkHeight
+	plant1Branches :height - :trunkHeight
+	setTurtleState :oldState
+end
+
+to fireWood :size
+	localmake "oldState turtleState
+	localmake "numBranches 22
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "size1 :size * 0.7
+	localmake "angle1 45
+	localmake "size2 (:size - :size1) / cos :angle1
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "yellow
+	setProperty "colorStops 0.5 "red
+	setProperty "colorStops 1 "black
+	setPenGradient createRadialGradient pos :size :colorStops
+	setPenSize :size * 0.03
+	setLineCap "round
+	setLineJoinStyle "round
+	repeat :numBranches [
+		setHeading :oldHeading + repcount * 360 / :numBranches
+		forward :size1
+		left :angle1
+		forward :size2
+		jumpBackward :size2
+		right :angle1 * 2
+		forward :size2	
+		jumpTo :oldPos
+	]
+	setTurtleState :oldState
+end
+
+to fireFlames :size
+	localmake "oldState turtleState
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#6fff
+	setProperty "colorStops 0.2 "#6ff0
+	setProperty "colorStops 0.5 "#3f00
+	setProperty "colorStops 1 "#1000
+	setFillGradient createRadialGradient pos :size :colorStops
+	setPenSize 0
+	circlePair :size * 0.4 :size * 0.2 :size * 0.8
+	setTurtleState :oldState
+end
+
+to fire :height
+	localmake "oldState turtleState
+	localmake "firewoodSize :height * 0.25
+	localmake "maxFlamesHeight :height * 0.65
+	localmake "numFameIterations 10
+	jumpForward :firewoodSize
+	fireWood :firewoodSize
+	jumpForward :height * 0.1
+	repeat :numFameIterations [
+		fireFlames :maxFlamesHeight * repcount / :numFameIterations
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "#bbb
+make "height 100
+make "separation :height * 1.5
+jumpLeft :separation * 2
+hexStar1 :height
+jumpRight :separation
+tree1 :height
+jumpRight :separation
+fire :height
+jumpRight :separation
+plant1 :height
+jumpRight :separation
+hexStar2 :height

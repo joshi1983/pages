@@ -1,0 +1,53 @@
+; Inspired by
+; https://www.pinterest.ca/pin/480477854008097636/
+
+to drawLinesToPoint :numPoints :len :endPoint
+	localmake "oldHeading heading
+	localmake "step :len / :numPoints
+	penDown
+	setPenSize penSize * 2
+	forward :len
+	setPenSize penSize / 2
+	; don't draw trail.  Just get points.
+	jumpBackward :len
+	repeat :numPoints [
+		jumpForward :step
+		localmake "tempPos pos
+		penDown
+		setHeading towards :endPoint
+		; draw line to end point
+		forward distance :endPoint
+		penUp
+		jumpTo :tempPos
+		setHeading :oldHeading
+	]
+end
+
+to triangle :size :numLines
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	right 30
+	jumpForward :size * 0.5
+	localmake "endPoint pos
+	penUp
+	jumpTo :oldPos
+	setHeading :oldHeading
+	repeat 3 [
+		drawLinesToPoint :numLines :size :endPoint
+		right 360 / 3
+	]
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to hexStarStringArt :size
+	setPenSize :size * 0.01
+	localmake "colors ["black "red "navy "darkGreen "orange "brown]
+	repeat 6 [
+		setPenColor item repcount :colors
+		triangle :size 16
+		right 360 / 6
+	]
+end
+
+hexStarStringArt 100

@@ -1,0 +1,72 @@
+; Inspired by
+; https://www.pinterest.ca/pin/137430226123605352/
+; which is also at:
+; https://dribbble.com/shots/10090344-Settings-Icon
+
+make "color1 "#0f70e2
+
+to settingsIcon :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	setPenColor "white
+	setPenSize 0.5
+	repeat 6 [
+		settingsIconArc :size
+		right 60
+	]
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to getArcGradient :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "size1 :size * 0.1
+	localmake "size2 :size1 + :size * 2 * sin 30
+	localmake "colorStops createPList
+	setProperty "colorStops 0 mix :color1 transparent 0.1
+	setProperty "colorStops 1 :color1
+	left 60
+	forward :size1
+	localmake "fromPos pos
+	backward :size2
+	localmake "gradient createLinearGradient :fromPos pos :colorStops "pad
+	setPos :oldPos
+	setHeading :oldHeading
+	output :gradient
+end
+
+to settingsIconArc :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angle1 10
+	localmake "angle2 79
+	localmake "angle3 72
+	localmake "angle4 39
+	localmake "angle5 57.5
+	localmake "arcRadius1 :size * 0.4
+	localmake "arcRadius2 :size * 0.58
+	localmake "arcRadius3 :size * 0.8
+	setPenSize 0
+	jumpForward :size
+	setFillGradient getArcGradient :size
+	left 90
+	arcLeft :angle1 :size
+	right 180
+	polyStart
+	arcRight :angle1 * 2 :size
+	right :angle2
+	arcLeft :angle2 * 1.492 :arcRadius1
+	right :angle2
+	arcRight :angle1 * 2 :size
+	right :angle3
+	arcRight :angle4 :arcRadius2
+	arcRight :angle5 :arcRadius3
+	arcRight :angle4 :arcRadius2
+	polyEnd
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+setScreenColor "black
+settingsIcon 100

@@ -1,0 +1,58 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/JSON#/media/File:JSON_vector_logo.svg
+; Referenced from:
+; https://en.wikipedia.org/wiki/JSON
+
+to jsonShape :diameter
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "black
+	setProperty "colorStops 1 "#fff
+	left 45
+	jumpBackward :diameter / 2
+	localmake "fromPos pos
+	jumpForward :diameter
+	setFillGradient createLinearGradient pos :fromPos :colorStops "pad
+	jumpTo :oldPos
+	left 45
+	jumpLeft :diameter / 2
+	setPenSize 0
+	polyStart
+	arcRight 180 :diameter * 0.5
+	arcRight 15 :diameter * 0.24
+	arcRight 20 :diameter * 0.3
+	arcRight 20 :diameter * 0.4
+	arcRight 20 :diameter * 0.35
+	arcRight 10 :diameter * 0.75
+	arcRight 20 :diameter * 0.43
+	arcRight 20 :diameter * 0.32
+	arcRight 20 :diameter * 0.3
+	arcRight 20 :diameter * 0.27
+	arcRight 20 :diameter * 0.17
+	arcRight 17.3 :diameter * 0.18
+	right 132
+	arcLeft 30 :diameter * 0.263
+	arcLeft 30 :diameter * 0.25
+	arcLeft 30 :diameter * 0.32
+	arcLeft 30 :diameter * 0.255
+	arcLeft 60 :diameter * 0.165
+	arcLeft 40 :diameter * 0.29
+	arcLeft 20 :diameter * 0.37
+	arcLeft 20.2 :diameter * 0.6
+	arcLeft 50 :diameter * 0.38
+	arcLeft 12 :diameter * 0.35
+	polyEnd
+	setTurtleState :oldState
+end
+
+to jsonLogo :diameter
+	localmake "oldState turtleState
+	jumpForward :diameter / 2
+	jsonShape :diameter
+	right 180
+	jsonShape :diameter
+	setTurtleState :oldState
+end
+
+jsonLogo 100
