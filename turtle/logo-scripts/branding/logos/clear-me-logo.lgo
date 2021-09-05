@@ -1,0 +1,30 @@
+; Inspired by logo at:
+; https://www.clearme.com
+to clearMeLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "radius :height * 0.04
+	localmake "numAngles 10
+	localmake "startJumpDistance (:height / 2 - :radius) / cos 360 / 2 / :numAngles
+	localmake "separation :height * 0.185
+	jumpForward :height / 2
+	setPenSize 0
+	setFillColor "#041a55
+	localmake "center pos
+	repeat :numAngles [
+		setHeading :oldHeading + (repcount - 0.5) * 360 / :numAngles
+		jumpForward :startJumpDistance
+		circle :radius
+		jumpBackward :separation
+		circle :radius
+		jumpTo :center
+		right 180 / :numAngles
+		jumpForward :startJumpDistance - :separation / 2
+		circle :radius
+		jumpTo :center
+	]
+
+	setTurtleState :oldState
+end
+
+clearMeLogo 100
