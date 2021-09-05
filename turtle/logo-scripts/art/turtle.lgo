@@ -1,0 +1,46 @@
+; Inspired by
+; https://www.pinterest.ca/pin/811140582865530692/
+to turtle :size
+	localmake "outerRadius :size * 0.45
+	localmake "headRadius :size * 0.18
+	localmake "angle1 58
+	localmake "angle2 69
+	localmake "angle3 109
+	localmake "radius1 :size * 0.115
+	localmake "radius2 :size * 0.095
+	setPenSize 0
+	jumpForward :size * 0.363
+	setFillColor "#6f9d43
+	localmake "backCentre pos
+	localmake "bodyParts [
+		[:headRadius :angle1 :size * 0.05]
+		[:radius1 :angle2 0]
+		[:radius2 :angle3 0]
+		[:radius2 :angle2 0]
+		[:radius1 :angle1 0]
+	]
+	repeat count :bodyParts [
+		localmake "bodyPart item repcount :bodyParts
+		localmake "partRadius item 1 :bodyPart
+		localmake "extraJump item 3 :bodyPart
+		localmake "angle 50 * :partRadius / :outerRadius
+		localmake "angle3 360 - :angle
+		localmake "angle2 90
+		jumpForward :outerRadius + :extraJump
+		localmake "heading1 heading
+		right 90
+		arcRight :angle :outerRadius
+		left :angle2
+		polyStart
+		arcLeft :angle3 :partRadius
+		polyEnd
+		setHeading :heading1 + item 2 :bodyPart
+		jumpTo :backCentre
+	]
+
+	setPenColor "white
+	setPenSize :size * 0.05
+	circle :size * 0.37
+end
+
+turtle 200

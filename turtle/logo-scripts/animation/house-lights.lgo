@@ -1,0 +1,108 @@
+to drawWindow :height :lightOn?
+	localmake "color ifelse :lightOn? "yellow "black
+	stripes :height * 1.2 :height [:color]
+end
+
+to getWindowLightStates :time
+	localmake "windowLights [
+		[false false]
+		[false false]
+	]
+	localmake "changeCount min 8 int :time * 9
+	localmake "x 1
+	localmake "y 2
+	; go through the light state changes.
+	repeat :changeCount [
+		localmake "row item :y :windowLights
+		localmake "newVal not item :x :row
+		setItem :x "row :newVal
+		localmake "x 1 + remainder :x 2
+		if :x = 1 [
+			localmake "y 1 + remainder :y 2
+		]
+	]
+	output :windowLights
+end
+
+; Inspired by:
+; https://www.youtube.com/watch?v=VZbsd-DlolM
+; which was uploaded by someone with the name Dennis Lloyd
+;
+; In case the video becomes unavailable, Dennis's user profile is at:
+; https://www.youtube.com/@dennislloyd98
+;
+; It looks like Dennis's animation was made by interacting with
+; a program written in BBC Basic(a version of BASIC for the BBC Micro)
+;
+; This WebLogo version creates a similar effect by making the window light states
+; be a function of time.
+to bbcHouse :height :time
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "baseWidth :height * 0.95
+	localmake "baseHeight :height * 0.54
+	localmake "windowHeight :height * 0.1
+	localmake "windowSeparation :height * 0.56
+	localmake "windowVerticalSeparation :height * 0.22
+	localmake "windowLights getWindowLightStates :time
+
+	; grass
+	stripes :height * 2 :height * 0.3 ["lime]
+
+	; vertical part of the house
+	jumpForward :height * 0.2
+	stripes :baseWidth :baseHeight ["#d40]
+	localmake "houseBottomCenter pos
+
+	; door
+	stripes :height * 0.15 :height * 0.2 ["black]
+
+	jumpForward :baseHeight
+	jumpRight :baseWidth / 2
+
+	; draw the roof.
+	setFillColor "black
+	setPenSize 0
+	polyStart
+	jumpLeft :baseWidth
+	right 60
+	jumpForward :height * 0.35
+	polyEnd
+
+	; draw the windows
+	jumpTo :houseBottomCenter
+	setHeading :oldHeading
+	jumpLeft :windowSeparation / 2
+	jumpForward :height * 0.1
+	repeat 2 [
+		for ["x 1 2] [
+			localmake "lightOn? item :x item repcount :windowLights
+			drawWindow :windowHeight :lightOn?
+			jumpRight :windowSeparation
+		]
+		jumpForward :windowVerticalSeparation
+		jumpLeft :windowSeparation * 2
+	]
+	setTurtleState :oldState
+end
+
+make "time animation.clampedTimeRatio
+setScreenColor "aqua
+bbcHouse 100 :time
+
+to animation.snapshotstyle
+	output createPList2 [
+		["position.y 50]
+		["zoom.scale 5]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 7
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+		["thumbnailTime :seconds * 0.7]
+	]
+end

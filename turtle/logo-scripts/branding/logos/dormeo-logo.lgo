@@ -1,0 +1,22 @@
+; Inspired by
+; https://www.dormeousa.com
+to dormeoLogo :height
+	localmake "oldState turtleState
+	localmake "filledCircleRadius :height * 0.133
+	localmake "numCircles 8
+	localmake "gap (:height * 0.5 - :filledCircleRadius) / cos 180 / :numCircles
+	jumpForward :height / 2
+	localmake "center pos
+	right 180 / :numCircles
+	setPenSize 0
+	setFillColor "#e45420
+	repeat :numCircles [
+		jumpForward :gap
+		circle :filledCircleRadius
+		jumpTo :center
+		right 360 / :numCircles
+	]
+	setTurtleState :oldState
+end
+
+dormeoLogo 100
