@@ -1,0 +1,65 @@
+make "colors ["#f26623 "white "#f26623]
+
+to motifRing :width :height
+	localmake "height :height - penSize
+	localmake "width :width - penSize
+	localmake "step (:height - penSize) / (2 *  count :colors)
+	repeat count :colors [
+		setFillColor item repcount :colors
+		roundRect :width :height :height / 2
+		localmake "width :width - :step * 2
+		localmake "height :height - :step * 2
+	]
+end
+
+to drawTile :size
+	localmake "oldState turtleState
+	localmake "stripeSeparation (:size - penSize) / count :colors
+	jumpBackward :size / 2
+	stripes :size :size :colors
+	; draw the black lines.
+	jumpForward penSize / 2
+	jumpRight (:size) / 2
+	left 90
+	repeat 4 [
+		stripes penSize :size [penColor]
+		jumpRight :stripeSeparation
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by Eengineering drawing Cad 2's CAD tutorial at:
+; https://www.youtube.com/watch?v=5dN7hJwf6jE
+to eengineeringSimpleMotif :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "radius :height / 6
+	setPenSize :height * 0.005
+	setPenColor "black
+	jumpForward :height / 2
+	localmake "center pos
+	repeat 4 [
+		setHeading :oldHeading + repcount * 360 / 4
+		jumpForward :radius
+		motifRing :height :radius * 2
+		jumpTo :center
+	]
+	jumpLeft :radius * 2.5
+	jumpForward :radius * 1.5
+	for ["y 0 3] [
+		repeat 4 [
+			setHeading :oldHeading
+			jumpRight :radius
+			if odd? repcount + :y [
+				right 90
+			]
+			drawTile :radius
+		]
+		setHeading :oldHeading
+		jumpLeft :radius * 4
+		jumpBackward :radius
+	]
+	setTurtleState :oldState
+end
+
+eengineeringSimpleMotif 100

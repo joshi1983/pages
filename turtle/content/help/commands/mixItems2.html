@@ -1,0 +1,30 @@
+<code>print mixItems2 [1 2] 0
+; prints 1
+
+print mixItems2 [1 2] 0.25
+; prints 1.25
+
+print mixItems2 [1 2] 0.5
+; prints 1.5
+
+print mixItems2 [1 2] 1
+; prints 2</code>
+<code>; myMixItems2 procedure works exactly like the mixItems2 command.
+; The mixItems2 command is available so you don't need to implement it yourself.
+; Reviewing this implementation could help you implement something similar using procedures, though.
+to myMixItems2 :items :ratio
+	output mixItems :items :ratio * (-1 + count :items) / (count :items)
+end
+
+make "items [1 2]
+repeat 5 [
+	; print the outputs from mixItems2 and myMixItems2
+	; next to each other to demonstrate that they behave the same.
+	print [mixItems2 :items repRatio myMixItems2 :items repRatio]
+]
+; The above repeat-loop prints
+; [1 1]
+; [1.25 1.25]
+; [1.5 1.5]
+; [1.75 1.75]
+; [2 2]</code>

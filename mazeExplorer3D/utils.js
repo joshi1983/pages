@@ -82,3 +82,11 @@ function getRandomColour() {
 		getRandomColourValue()
 	];
 }
+
+function vectorMultiply(v, scale) {
+	var result = [];
+	for (var i = 0; i < v.length; i++) {
+		result.push(v[i] * scale);
+	}
+	return result;
+}
