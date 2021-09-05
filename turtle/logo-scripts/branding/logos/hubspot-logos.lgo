@@ -1,0 +1,43 @@
+make "hubSpotOrange "#FF7A59
+
+; Inspired by logo at:
+; https://www.hubspot.com
+to hubSpotLogo :height :color
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "radius1 :height * 0.197
+	localmake "lines [
+		[0 0.094 0.265] [-50.3 0.1 0.565] [-134.3 0.086 0.27]
+	]
+	setFillColor transparent
+	setPenColor :color
+	setPenSize :height * 0.13
+	jumpForward :height * 0.412
+	jumpRight :height * 0.194
+	circle :radius1
+	localmake "center pos
+	setFillColor penColor
+	repeat count :lines [
+		localmake "line item repcount :lines
+		setHeading :oldHeading + first :line
+		jumpForward :radius1
+		setPenSize :height * 0.083
+		forward :height * last :line
+		setPenSize 0
+		circle :height * item 2 :line
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+to hubSpotOrangeBackgroundLogo :height
+	stripes :height * 3 :height [:hubSpotOrange]
+	hubSpotLogo :height "white
+end
+
+make "height 100
+make "separation :height * 7
+jumpLeft :separation / 2
+hubSpotLogo :height :hubSpotOrange
+jumpRight :separation
+hubSpotOrangeBackgroundLogo :height

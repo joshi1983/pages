@@ -1,0 +1,60 @@
+to cbcLogo :height :color
+	localmake "oldState turtleState
+	localmake "radius :height * 0.1796
+	localmake "arc1Angle 120
+	localmake "squareSize :height / 2.5
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	setFillColor :color
+	repeat 4 [
+		localmake "heading1 heading
+		jumpForward :height / 2 - :radius
+		left :arc1Angle / 2
+		jumpForward :radius
+		right 90
+		polyStart
+		arcRight :arc1Angle :radius
+		polyEnd
+
+		jumpTo :center
+		setHeading :heading1
+		jumpForward :squareSize / 2
+		localmake "pos1 pos
+		jumpLeft :radius
+		polyStart
+		arcRight 180 :radius
+		polyEnd
+
+		jumpTo :pos1
+		setHeading :heading1
+		jumpRight :squareSize / 2
+		polyStart
+		jumpForward :radius
+		right 90
+		arcRight 90 :radius
+		polyEnd
+
+		jumpTo :center
+		right 90
+	]
+	circle :radius
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Canadian_Broadcasting_Corporation#/media/File:CBC_logo.svg
+to cbcRedLogo :height
+	cbcLogo :height "#d8232a
+end
+
+to cbcBlackLogo :height
+	cbcLogo :height "black
+end
+
+make "height 100
+make "separation :height * 4
+jumpLeft :separation / 2
+cbcRedLogo :height
+jumpRight :separation
+cbcBlackLogo :height

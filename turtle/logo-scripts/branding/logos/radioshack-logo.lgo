@@ -1,0 +1,35 @@
+to drawR :height
+	localmake "oldState turtleState
+	localmake "pArcLines [[-90 0] [0.34] [-18 0.6] [-30 0.34] [-65 0.33]
+		[-50 0.34] [-17 0.7] [0.2] [-90 0] [0.217] [-90 0] [0.216] [40 0.17]
+		[20 0.095] [70 0.11] [30 0.14] [20 0.17] [0.4]
+		]
+	jumpLeft :height * 0.32
+	stripes :height * 0.277 :height [penColor]
+	setFillColor penColor
+	setPenSize 0
+	drawArcLineShape [0 1
+		:pArcLines
+	] :height
+	jumpRight :height * 0.62
+	parallelogram :height * 0.315 :height * 0.6 -34
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://en.wikipedia.org/wiki/RadioShack#/media/File:RadioShack_Logo_2013.png
+to radioShackLogo :height
+	localmake "oldState turtleState
+	localmake "fontHeight :height * 0.57
+	setFillColor transparent
+	setPenSize :height * 0.092
+	setPenColor "#ff4f37
+	jumpForward :height / 2
+	circle (:height - penSize) / 2
+	jumpLeft :height * 0.063
+	jumpBackward :fontHeight / 2
+	drawR :fontHeight
+	setTurtleState :oldState
+end
+
+radioShackLogo 100

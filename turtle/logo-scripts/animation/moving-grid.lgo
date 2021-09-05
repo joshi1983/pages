@@ -1,0 +1,112 @@
+make "skyLineColor "#d0d
+make "groundLineColor "#0ff
+
+to drawBackgroundGradients :width :height :horizonRatio
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "opacity1 0.4
+	localmake "outerOffset2 0.1
+	localmake "outerOffset 0.01
+	localmake "innerOffset 0.004
+	jumpForward :height
+	setPenGradient createLinearGradient :oldPos pos createPList2 [
+		[:horizonRatio - :outerOffset2 mix :groundLineColor transparent 0]
+		[:horizonRatio - :outerOffset mix :groundLineColor transparent :opacity1]
+		[:horizonRatio - :innerOffset :groundLineColor]
+		[:horizonRatio "white]
+		[:horizonRatio + :innerOffset :skyLineColor]
+		[:horizonRatio + :outerOffset mix :skyLineColor transparent :opacity1]
+		[:horizonRatio + :outerOffset2 mix :skyLineColor transparent 0]
+	] "pad
+	setLineCap "butt
+	setPenSize :width
+	backward :height
+
+	setTurtleState :oldState
+end
+
+to getDistanceToRect :width :height :angle
+	localmake "distanceToHeight :height / cos :angle
+	localmake "distanceToWidth :width / 2  / sin :angle
+	output min :distanceToHeight :distanceToWidth
+end
+
+to drawHorizontalLines :width :height :numLines :timeRatio :lineColor
+	localmake "oldState turtleState
+	localmake "vanishingPoint pos
+
+	repeat :numLines [
+		localmake "z repcount * 0.25 + 1 - :timeRatio / 2
+		localmake "thicknessRatio 1 / :z
+		localmake "offset :height / :z
+		if (abs :offset) <= (abs :height) [
+			jumpTo :vanishingPoint
+			jumpForward :offset
+			stripes :width penSize * :thicknessRatio [:lineColor]
+		]
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by animation at:
+; https://www.facebook.com/share/v/1CRuCwqpuB
+; which was posted by a facebook user named Tony Balendonk.
+; Tony used QB64 to make the animation.
+; QB64 is a modern reverse-engineered complete rewrite of Microsoft's QBASIC.
+to gridFly :width :height :time
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "timeRatio :time - int :time
+	localmake "horizonRatio 0.5
+	localmake "horizonHeight :horizonRatio * :height
+	localmake "skyHeight :height - :horizonHeight
+	localmake "numHorizontalGroundLines 300
+	localmake "numDiagonalGroundLines 50
+	localmake "numSkyLines 300
+	localmake "maxThickness :height * 0.007
+	drawBackgroundGradients :width :height :horizonRatio
+	jumpForward :height * :horizonRatio
+	localmake "vanishingPoint pos
+	setPenSize :maxThickness
+	drawHorizontalLines :width -:horizonHeight :numHorizontalGroundLines :timeRatio :groundLineColor
+	drawHorizontalLines :width :skyHeight :numSkyLines :timeRatio :skyLineColor
+
+	setPenSize 0	
+	setFillColor :groundLineColor
+	repeat :numDiagonalGroundLines [
+		localmake "angle arcTan (repcount - 0.5) / 1
+		localmake "d1 getDistanceToRect :width :horizonHeight :angle
+		localmake "thickness1 :maxThickness * :d1 * (cos :angle) / :horizonHeight
+		repeat 2 [
+			localmake "sign sign repcount - 1.5
+			jumpTo :vanishingPoint
+			setHeading :oldHeading + 180 + :angle * :sign
+			polyStart
+			jumpForward :d1
+			setHeading :oldHeading
+			jumpLeft :thickness1
+			polyEnd
+		]
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+make "timeRatio animation.timeRatio
+gridFly 500 100 :timeRatio * 10
+
+to animation.snapshotstyle
+	output createPList2 [
+		["position.y 50]
+		["zoom.scale 5.5]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 5
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

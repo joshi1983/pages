@@ -1,0 +1,49 @@
+; Inspired by
+; https://de.pinterest.com/pin/9218374220582684
+to pumpingEllipses :maxHeight :timeRatio
+	localmake "oldState turtleState
+	localmake "maxHeight2 :maxHeight * 0.85
+	localmake "thickness :maxHeight * 0.003
+	localmake "timeRadiusOffset :maxHeight * 0.06 * (1 + cos 101 + :timeRatio * 360)
+	localmake "ellipseRadius1 :maxHeight * 0.13
+	localmake "ellipseRadius2 :maxHeight * 0.25 - :timeRadiusOffset
+	localmake "gapSpread :maxHeight * 0.14
+	localmake "maxGap (:maxHeight2 - :thickness) / 2 - :gapSpread
+	localmake "gap :maxGap - :gapSpread
+	localmake "gapStep :gapSpread / 10
+	jumpForward :maxHeight / 2
+	localmake "center pos
+	setPenColor "white
+	setPenSize :thickness
+	setFillColor transparent
+	right 180 / 10
+	repeat 10 [
+		jumpForward :gap
+		repeat 10 [
+			ellipse :ellipseRadius1 :ellipseRadius2
+			jumpForward :gapStep			
+		]
+		jumpTo :center
+		right 360 / 10
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+pumpingEllipses 100 animation.timeRatio
+
+to animation.snapshotstyle
+	output createPList2 [
+		["position.y 50]
+		["zoom.scale 5]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 10
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

@@ -1,0 +1,53 @@
+make "darkColor "#780
+make "lightColor "#ff8
+
+; Inspired by images at:
+; http://www.cropcircleconnector.com/2018/yarnburycastle/yarnburycastle2018a.html
+; Reported in June 24, 2018.
+; This was located at Yarnbury Castle, Nr Steeple Langford, Wiltshire
+to yarnburyCastleCropCircles :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "outerCircleRadius :height * 0.033
+	localmake "arcAngle 107
+	jumpForward :height / 2
+	localmake "center pos
+	setFillColor :lightColor
+	setPenSize 0
+	setPenColor :lightColor
+	regularPolygon :height * 0.36 6
+	repeat 6 [
+		setPenSize :height * 0.015
+		forward :height / 2 - :outerCircleRadius
+		setPenSize 0
+		circle :outerCircleRadius
+		jumpTo :center
+		right 360 / 6
+	]
+	setPenSize 0
+	setFillColor :darkColor
+	repeat 2 [
+		setHeading :oldHeading + repcount * 360 / 2
+		; Make leaf-like shapes that line up perfectly with a 
+		; top and bottom circle.
+		jumpForward :height * 0.185
+		localmake "center2 pos
+		localmake "radius2 :height * 0.1555
+		jumpTo :center
+		left 360 / 2 / 6
+		repeat 2 [
+			localmake "heading1 heading
+			localmake "sign sign repcount - 1.5
+			jumpForward distanceToCircle :center2 :radius2
+			setHeading (towards :center2) + (90 -  :arcAngle / 2) * :sign
+			arcPair :radius2 * 2 * sin :arcAngle / 2 :arcAngle
+			jumpTo :center
+			setHeading :heading1 + 360 / 6
+		]
+	]
+	
+	setTurtleState :oldState
+end
+
+setScreenColor :darkColor
+yarnburyCastleCropCircles 100

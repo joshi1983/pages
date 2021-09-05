@@ -1,0 +1,69 @@
+; Inspired by logo at
+; https://vetswhocode.io/
+; An animated version is also at:
+; https://github.com/Vets-Who-Code
+to vetsWhoCode :height
+	localmake "oldState turtleState
+	jumpLeft :height * 0.025
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angle 9.5
+	localmake "slantHeight :height / cos :angle
+	localmake "stripeWidth :height * 0.1
+	localmake "verticalGap (:height - 4 * :stripeWidth) / 5
+	localmake "slantedGap :verticalGap / cos :angle
+	localmake "verticalSeparationSlanted (:verticalGap + :stripeWidth) / cos :angle
+	localmake "minSlantLength (:verticalGap + :stripeWidth / 2) / cos :angle
+	localmake "maxSlantLength (:height + :verticalGap + :stripeWidth) / 2 / cos :angle
+	localmake "horizontalSeparation :height * 0.224
+	setPenSize 0
+	jumpRight :horizontalSeparation + :stripeWidth / 2
+	localmake "topSlantLength :minSlantLength
+	localmake "vetsRed "#cc1d48
+	localmake "vetsBlue "#091f3e
+	localmake "topColor :vetsRed
+	repeat 4 [
+		localmake "pos1 pos
+		setFillColor :vetsRed
+		parallelogram :stripeWidth :minSlantLength :angle
+		right :angle
+		jumpForward :slantHeight - :topSlantLength
+		left :angle
+		setFillColor :topColor
+		parallelogram :stripeWidth :topSlantLength :angle
+		if repcount = 2 [
+			localmake "topColor :vetsBlue
+			localmake "topSlantLength :maxSlantLength
+		]
+		jumpTo :pos1
+		jumpLeft :horizontalSeparation
+	]
+	jumpTo :oldPos
+	right :angle
+	jumpForward :slantedGap
+	jumpLeft :height * 0.045
+	localmake "maxRedWidth :height * 0.92
+	localmake "redWidth :maxRedWidth
+	repeat 4 [
+		setHeading :oldHeading
+		stripes :redWidth :stripeWidth [:vetsRed]
+		right :angle
+		jumpForward :verticalSeparationSlanted
+		if repcount = 2 [
+			setHeading :oldHeading
+			jumpRight :redWidth / 4
+			localmake "redWidth :redWidth / 2
+		]
+	]
+	setHeading :oldHeading
+	jumpLeft :maxRedWidth / 2
+	repeat 2 [
+		right :angle
+		jumpBackward :verticalSeparationSlanted
+		setHeading :oldHeading
+		stripes :redWidth :stripeWidth [:vetsBlue]
+	]
+	setTurtleState :oldState
+end
+
+vetsWhoCode 100

@@ -1,0 +1,123 @@
+make "hotColor "#c4122f
+make "coldColor "#007dc6
+
+to bryantLogoRedPart :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "redSize1 :height
+	localmake "redSize2 :height * 0.63
+	localmake "numRedPoints 5
+	localmake "redAngle1 45 / :numRedPoints
+	localmake "size1 :redSize2 * sin :redAngle1
+	localmake "size2 :redSize1 - :redSize2 * cos :redAngle1
+	localmake "redAngle2 arcTan :size1 / :size2
+	localmake "redAngle3 180 - 2 * :redAngle2
+	localmake "diagonalSize1 hypot [:size1 :size2]
+	setFillColor :hotColor
+	setPenSize 0
+	jumpLeft :redSize1
+	left 90 - :redAngle2
+	polyStart
+	repeat :numRedPoints [
+		right :redAngle3
+		jumpForward :diagonalSize1
+		left :redAngle3 - 2 * :redAngle1
+		jumpForward :diagonalSize1
+	]
+	setHeading :oldHeading
+	jumpBackward :redSize1
+	polyEnd
+	setTurtleState :oldState
+end
+
+to bryantLogoBluePart :height
+	localmake "oldState turtleState
+	localmake "turns [
+		[150 0.12]
+		[75 0.06]
+		[-60 0.055]
+		[-115 0.067]
+		[102 0.07]
+		[68 0.1]
+		[-50 0.06]
+		[-125 0.12]
+	]
+	setFillColor :coldColor
+	setPenSize 0
+	polyStart
+	jumpForward :height
+	repeat 3 [
+		repeat count :turns [
+			localmake "turnInfo item repcount :turns
+			right item 1 :turnInfo
+			jumpForward :height * item 2 :turnInfo
+		]
+		right 124
+		repeat count :turns [
+			localmake "turnInfo item ((count :turns) + 1 - repcount) :turns
+			jumpForward :height * item 2 :turnInfo
+			right item 1 :turnInfo
+		]
+		right 172
+	]
+	repeat 5 [
+		localmake "turnInfo item repcount :turns
+		right item 1 :turnInfo
+		jumpForward :height * item 2 :turnInfo
+	]
+	jumpForward :height * 0.0071645995688479938
+	polyEnd
+	setTurtleState :oldState
+end
+
+to house :houseHeight
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "roofAngle1 50
+	localmake "height1 :houseHeight * 0.48
+	localmake "roofGap :houseHeight * 0.08
+	localmake "width1 ((:houseHeight - :height1) * tan :roofAngle1) - :roofGap
+	localmake "roofDiagonalLength (:width1 + :roofGap) / sin :roofAngle1
+	localmake "roofAngle2 180 - 2 * :roofAngle1
+	setPenSize 0
+	setFillColor "white
+	polyStart
+	jumpLeft :width1
+	jumpForward :height1
+	jumpLeft :roofGap
+	right :roofAngle1
+	jumpForward :roofDiagonalLength
+	right :roofAngle2
+	jumpForward :roofDiagonalLength
+	setHeading :oldHeading - 90
+	jumpForward :roofGap
+	jumpLeft :height1
+	polyEnd
+	jumpTo :oldPos
+	setHeading :oldHeading
+	setPenColor :hotColor
+	setLineCap "butt
+	setPenSize :houseHeight * 0.22
+	forward :height1
+	setTurtleState :oldState
+end
+
+; Inspired by logo for:
+; https://www.bryantheating.ca/
+; Note that Bryant's company logo is copyright 2023
+; Service Experts LLC. Service Experts and 
+; the Service Experts Heating & Air Conditioning logo
+; and design are registered or common law trademarks of Service Experts LLC.
+
+; This WebLogo implementation is purely for educational purposes.
+to bryantLogo :height
+	localmake "oldState turtleState
+	bryantLogoRedPart :height
+	bryantLogoBluePart :height
+	house :height * 0.55
+	setTurtleState :oldState
+end
+
+setScreenColor "#eee
+bryantLogo 100

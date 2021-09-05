@@ -1,0 +1,524 @@
+{
+	"name": "Atari Logo",
+	"description": "A Logo interpreter for the Atari personal Computer",
+	"externalLink": "http://www.atarimania.com/documents/Atari_LOGO_Introduction_to_Programming_Through_Turtle_Graphics.pdf",
+	"commands": [
+		{
+			"primaryName": ".call",
+			"description": "Jumps to machine code at the specified RAM memory address",
+			"reason": "WAY too low level for something that runs in a Web browser.  This would be an insanely insecure capability if it was given to JavaScript.  I'm surprised Atari Logo had a command like this because it seems odd to mix an interpretted program like this with running machine code."
+		},
+		{
+			"primaryName": ".deposit",
+			"description": "Writes bytes directly to RAM",
+			"reason": "WAY too low level for something that runs in a web browser.  This combined with .call would easily become a way for websites to infect computers with viruses if JavaScript was allowed to write machine code to arbitrary memory addresses and jump the CPU into it."
+		},{
+			"primaryName": ".examine",
+			"description": "Outputs contents of address n",
+			"reason": "WebLogo doesn't have memory laid out like Atari Logo."
+		},{
+			"primaryName": ".primitives",
+			"description": "Prints a list of all logo primitives",
+			"reason": "I don't understand the command based on the documentation.  It could be something for a need that is better served by WebLogo's debugger feature which shows all variables, current procedures...  It could also be something served by the Code Editor since that shows all code in one place."
+		},
+		{
+			"primaryName": ".setscr",
+			"description": "Sets aspect ratio of the screen",
+			"reason": "Not supported in WebLogo because we have zoom instead in WebLogo.  The zoom is not controlled by WebLogo code but by the end-user's mouse wheel, multitouch pinch on touch-enabled devices, or Zoom -> In/Out/Normal."
+		},
+		{
+			"primaryName": "and",
+			"to": "and"
+		},
+		{
+			"primaryName": "ascii",
+			"to": "ascii"
+		},
+		{
+			"primaryName": "ask",
+			"description": "Prompts a user and gets a string from him/her",
+			"reason": "WebLogo programs do not collect or respond to user-input.  The drawings and animations are purely based on tim, randomness, or data collected online.  There is no need to use input from a user for it."
+		},
+		{
+			"primaryName": "back",
+			"names": ["bk"],
+			"to": "backward"
+		},
+		{
+			"primaryName": "bg",
+			"to": "screenColor",
+			"description": "Returns the background color number.  Not exactly the same as WebLogo's screenColor because screenColor would usually return a list of 3 numbers corresponding with red, green, and blue.  Atari Logo's bg command returns an integer."
+		},
+		{
+			"primaryName": "butfirst",
+			"to": "butfirst"
+		},
+		{
+			"primaryName": "butlast",
+			"names": ["bl"],
+			"to": "butlast"
+		},
+		{
+			"primaryName": "catalog",
+			"description": "Displays names from a specified device"
+		},
+		{
+			"primaryName": "char",
+			"to": "char"
+		},
+		{
+			"primaryName": "clean",
+			"description": "Clears graphics without moving turtle",
+			"reason": "WebLogo supports clearScreen descpite it being almost useless.  clean would be even more useless.  clean and clearScreen are more useful for user-interactive Logo programs or programs that show animations using 'wait'.  WebLogo defines animations without 'wait'."
+		},
+		{
+			"primaryName": "color",
+			"description": "Outputs number representing the turtle color",
+			"reason": "WebLogo has penColor and fillColor commands.  One or a mix of them may be the closest alternative but none seem similar enough to automatically translate to."
+		},
+		{
+			"primaryName": "cond",
+			"description": "Outputs true if the given condition is true"
+		},
+		{
+			"primaryName": "cos",
+			"to": "cos"
+		},
+		{
+			"primaryName": "count",
+			"to": "count"
+		},
+		{
+			"primaryName": "cs",
+			"to": "clearScreen"
+		},
+		{
+			"primaryName": "ct",
+			"description": "Clears text"
+		},
+		{
+			"primaryName": "each",
+			"description": "Runs a specified instruction list on each and every turtle.  It seems like this is like a concurrent version of 'run'.",
+			"reason": "WebLogo has only 1 turtle"
+		},{
+			"primaryName": "edit",
+			"names": ["ed"],
+			"description": "Initiates editing of a specified procedure",
+			"reason": "edit works in a similar way if typed into the Commander but 'edit' is not treated like a command in WebLogo.  You can't, for example, run it in a procedure or run it in a loop."
+		},{
+			"primaryName": "edsh",
+			"description": "Initiates editing of a specified shape",
+			"reason": "WebLogo has no collection of shapes that can be edited by the end-user so there is no need for a command to initiate editing any of them.  Even if WebLogo had a managed set of shapes, it would likely use a menu or button to edit them instead of a command."
+		},{
+			"primaryName": "erall",
+			"description": "Erase all the logo procedures in computer memory"
+		},{
+			"primaryName": "erase",
+			"names": ["er"],
+			"description": "erases a procedure or a list of procedures from the current workspace",
+			"reason": "Deleting code from WebLogo's Code Editor is easy enough that there's no reason to add a command for it.  Such a command seems more useful in very old Logo interpreters where text-based interfaces were more important and you had less screen resolution to fit things."
+		},{
+			"primaryName": "erf",
+			"description": "Deletes a file from disk"
+		},{
+			"primaryName": "ern",
+			"description": "Erases all named variables"
+		},{
+			"primaryName": "erps",
+			"description": "Erases all procedures from the current workspace"
+		},{
+			"primaryName": "first",
+			"to": "first"
+		},{
+			"primaryName": "forward",
+			"names": ["fd"],
+			"to": "forward"
+		},{
+			"primaryName": "fput",
+			"to": "fput"
+		},{
+			"primaryName": "fs",
+			"args": [],
+			"description": "Switches to full screen mode.  I found it explained at: https://archive.org/details/logo-potenza-e-semplicita/page/174/mode/2up  https://www.atarimania.com/documents/Atari_LOGO_Introduction_to_Programming_Through_Turtle_Graphics.pdf indexed the fs command and wrote that it would be explained in a chapter but I couldn't find the detailed explanation from a quick glossing over the content.",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "getsh",
+			"description": "Gets a shape by a specific index number",
+			"reason": "WebLogo has no collection of shapes similar to Atari Logo's shape collection."
+		},
+		{
+			"primaryName": "heading",
+			"to": "heading"
+		},
+		{
+			"primaryName": "home",
+			"to": "home"
+		},
+		{
+			"primaryName": "ht",
+			"to": "hideTurtle"
+		},
+		{
+			"primaryName": "if",
+			"to": "if"
+		},
+		{
+			"primaryName": "int",
+			"to": "int"
+		},
+		{
+			"primaryName": "joy",
+			"description": "Outputs current position of the specified joystick",
+			"reason": "WebLogo has no reason to handle input from joy sticks"
+		},
+		{
+			"primaryName": "joyb",
+			"description": "Outputs true if the button on the specified joystick is pressed",
+			"reason": "WebLogo has no reason to handle input from joy sticks"
+		},
+		{
+			"primaryName": "keyp",
+			"description": "Returns current key",
+			"reason": "WebLogo is not to made to respond to user-input or wait for it."
+		},
+		{
+			"primaryName": "last",
+			"to": "last"
+		},
+		{
+			"primaryName": "left",
+			"names": ["lt"],
+			"to": "left"
+		},
+		{
+			"primaryName": "list",
+			"to": "list"
+		},
+		{
+			"primaryName": "listp",
+			"to": "list?"
+		},
+		{
+			"primaryName": "load",
+			"description": "Loads code from disk",
+			"reason": "WebLogo has no direct access to the file system. WebLogo's environment is always saved and loaded with the web browser's local storage but that is done without any user-interaction and without any WebLogo commands involved."
+		},
+		{
+			"primaryName": "memberp",
+			"to": "member?"
+		},
+		{
+			"primaryName": "namep",
+			"description": "Returns true if the specified name corresponds with a value",
+			"reason": "WebLogo analyzes code for references to uninitialized variables.  The debugger shows all variables with their values when programs run.  There is no use for a namep command with features like those."
+		},
+		{
+			"primaryName": "not",
+			"to": "not"
+		},
+		{
+			"primaryName": "numberp",
+			"to": "number?"
+		},
+		{
+			"primaryName": "or",
+			"to": "or"
+		},
+		{
+			"primaryName": "output",
+			"to": "output"
+		},
+		{
+			"primaryName": "over",
+			"description": "Checks if there is a collision between a turtle and a specific pen",
+			"reason": "WebLogo doesn't detect collisions because it doesn't seem useful for drawings and animation.  Amiga Logo focuses more on collisions because it is more geared toward game development."
+		},
+		{
+			"primaryName": "paddle",
+			"description": "Used for input from special Amiga hardware"
+		},
+		{
+			"primaryName": "paddles",
+			"description": "Used for input from special Amiga hardware"
+		},
+		{
+			"primaryName": "pc",
+			"description": "Gets the color for a pen indicated by a number.",
+			"reason": "penColor gets the pen color in WebLogo but it doesn't take any input."
+		},
+		{
+			"primaryName": "pe",
+			"description": "Erases previous lines while the turtle moves.  Instead of drawing lines as the turtle moves, the turtle's trail acts more like an eraser.",
+			"reason": "WebLogo is not supporting any kind of erasing partly because 'erase everything here' doesn't translate well to vector graphics.  You have to basically avoid making changes that you want to later erase.  You can use clearScreen to clear everything."
+		},
+		{
+			"primaryName": "pen",
+			"description": "Outputs the current pen state as a list",
+			"reason": "The turtleState command is similar but not worth translating to."
+		},
+		{
+			"primaryName": "pendown",
+			"names": ["pd"],
+			"to": "penDown"
+		},
+		{
+			"primaryName": "penup",
+			"names": ["pu"],
+			"to": "penUp"
+		},
+		{
+			"primaryName": "po",
+			"description": "Prints procedure definitions.",
+			"reason": "WebLogo's code editor shows all the procedures."
+		},
+		{
+			"primaryName": "poall",
+			"description": "Prints names and values of all variables and procedure definitions.",
+			"reason": "WebLogo's debugger feature shows all variables any time you want.  WebLogo's code editor shows all the procedures."
+		},
+		{
+			"primaryName": "pod",
+			"description": "Prints when demon number currently in action.",
+			"reason": "WebLogo doesn't support when demons.  When demons are related to collision detection and collision handling.  WebLogo doesn't have a lot of focus on collisions because it isn't focused on creating games as much as Atari Logo."
+		},
+		{
+			"primaryName": "pods",
+			"description": "Prints when demons currently in action.",
+			"reason": "WebLogo doesn't support when demons.  When demons are related to collision detection and collision handling.  WebLogo doesn't have a lot of focus on collisions because it isn't focused on creating games as much as Atari Logo."
+		},
+		{
+			"primaryName": "pons",
+			"description": "Prints names and values of all variables.",
+			"reason": "WebLogo's debugger feature shows all variables any time you want.  You can also use breakpoints, slow execution to any speed, and click the pause button to stop execution and look at the values longer."
+		},
+		{
+			"primaryName": "pops",
+			"description": "Prints definitions of all procedures.",
+			"reason": "Open the Code Editor in WebLogo and you can see all the procedures.  That is clearer and simpler than any command ever could show."
+		},
+		{
+			"primaryName": "pos",
+			"to": "pos"
+		},
+		{
+			"primaryName": "print",
+			"names": ["pr"],
+			"to": "print"
+		},
+		{
+			"primaryName": "product",
+			"to": "product"
+		},
+		{
+			"primaryName": "px",
+			"description": "A mixture of pendown and pen erase",
+			"reason": "WebLogo is not supporting any kind of erasing"
+		},
+		{
+			"primaryName": "rc",
+			"description": "Reads a character from input",
+			"reason": "WebLogo programs are not interactive and don't respond to user-input."
+		},
+		{
+			"primaryName": "recycle",
+			"description": "Invokes garbage collection",
+			"reason": "WebLogo relies on the web browser's garbage collection which is implicit and continuous."
+		},
+		{
+			"primaryName": "remainder",
+			"to": "remainder"
+		},
+		{
+			"primaryName": "repeat",
+			"to": "repeat"
+		},
+		{
+			"primaryName": "right",
+			"names": ["rt"],
+			"to": "right"
+		},
+		{
+			"primaryName": "rl",
+			"description": "Reads line from device"
+		},
+		{
+			"primaryName": "round",
+			"to": "round"
+		},
+		{
+			"primaryName": "run",
+			"description": "Runs the specified instruction list",
+			"reason": "Too dynamic for WebLogo.  It takes away from static analysis of code for both WebLogo and people trying to make sense of code."
+		},
+		{
+			"primaryName": "save",
+			"description": "Saves code to file",
+			"reason": "Not supported because WebLogo has no access to the file system.  You can click in the menu File -> Download to get the code but that is not triggered by WebLogo code."
+		},
+		{
+			"primaryName": "se",
+			"to": "sentence"
+		},
+		{
+			"primaryName": "setbg",
+			"to": "setScreenColor"
+		},
+		{
+			"primaryName": "setc",
+			"to": "setColors"
+		},
+		{
+			"primaryName": "setEnv",
+			"description": "Sets envelope of voice for TOOT so volume reduces by one unit every duration",
+			"reason": "I don't understand what this command is doing.  Maybe it is related to sound or speech synthesis."
+		},
+		{
+			"primaryName": "seth",
+			"to": "setHeading"
+		},
+		{
+			"primaryName": "setpc",
+			"description": "Sets the specified pen to the specified color"
+		},
+		{
+			"primaryName": "setPos",
+			"to": "setPos"
+		},
+		{
+			"primaryName": "setRead",
+			"description": "Sets the device to read from",
+			"reason": "WebLogo does not read from any input device.  WebLogo programs can use asset data or read from URL's but not read from the keyboard, mouse, joy sticks..."
+		},
+		{
+			"primaryName": "setSh",
+			"description": "Sets a shape",
+			"reason": "WebLogo has no collection of shapes similar to Atari Logo's shape collection."
+		},
+		{
+			"primaryName": "setSP",
+			"description": "Sets execution speed",
+			"reason": "You can control speed through the Debugging -> Maximum Speed/Fast/Medium/Slow/Very Slow... dropdown menu.  Controlling it through both the developer user interface and from code leads to a conflict between the two.  It is better that code has no power over its execution speed."
+		},
+		{
+			"primaryName": "setWrite",
+			"description": "Sets a device or file to send a copy of all characters displayed on the screen to",
+			"reason": "Doesn't sound like this command would help creating drawings or animations"
+		},
+		{
+			"primaryName": "setX",
+			"to": "setX"
+		},
+		{
+			"primaryName": "sety",
+			"to": "sety"
+		},
+		{
+			"primaryName": "shownp",
+			"to": "turtleVisible?"
+		},
+		{
+			"primaryName": "sin",
+			"to": "sin"
+		},
+		{
+			"primaryName": "speed",
+			"description": "Returns the speed of the turtle",
+			"reason": "WebLogo doesn't let code set or read its own execution speed"
+		},
+		{
+			"primaryName": "sqrt",
+			"to": "sqrt"
+		},
+		{
+			"primaryName": "ss",
+			"description": "ss is short for split screen.",
+			"reason": "WebLogo doesn't let code control this but you can resize the code editer and commander to whatever you want using various buttons."
+		},
+		{
+			"primaryName": "st",
+			"to": "showTurtle"
+		},
+		{
+			"primaryName": "stop",
+			"to": "stop"
+		},
+		{
+			"primaryName": "sum",
+			"to": "sum"
+		},
+		{
+			"primaryName": "tell",
+			"description": "Indicates which turtle to talk with",
+			"reason": "WebLogo only supports 1 turtle so there is no need to have a similar command for talking to a specific other turtle"
+		},
+		{
+			"primaryName": "thing",
+			"description": "Outputs value associated with the specified name",
+			"reason": "You should always have a more direct and simple way to read the value of an object than having to calculate the name at runtime.  For example, if you want the value of a variable named x, :x is simpler than thing \"x or make \"y \"x print thing :y."
+		},
+		{
+			"primaryName": "to",
+			"to": "to"
+		},
+		{
+			"primaryName": "toot",
+			"args": [
+				{"name": "x", "types": "num"},
+				{"name": "y", "types": "num"},
+				{"name": "z", "types": "num"},
+				{"name": "t", "types": "num"}
+			],
+			"description": "Produces a sound on a specified frequency and specified duration",
+			"reason": "WebLogo does not play sounds.  It isn't important for creating drawings or animation.  An audio track could be useful in an exported video but WebLogo would have other commands for that, if it ever supports exporting audio with an animation.  Playing audio while developing would make more sense if WebLogo programs were expected to continue running for extended periods such as software that interacts with the end-user.  If audio is eventually generated by WebLogo scripts for inclusion with animations, it'll be done in a way consistent with how the animations are defined with relation to animation.time and animation.duration.",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "touching",
+			"description": "Checks if 2 specified turtles are touching",
+			"reason": "WebLogo doesn't focus on collision detection because it is more useful for developing games than for making drawings and animation"
+		},
+		{
+			"primaryName": "ts",
+			"description": "Fills screen with text",
+			"reason": "WebLogo lets you expand the Commander or Code Editor any size you want without calling any commands.  Atari Logo likely has a command for it because that was a better solution in the 1980's with very old mouse devices, low resolution screens, and simpler software."
+		},
+		{
+			"primaryName": "wait",
+			"description": "Sleeps or pauses the program for a specified time interval",
+			"reason": "Not supported by WebLogo because WebLogo programs are either to run as quickly as possible or be run at a speed dictated by Debugger -> Maximum Speed/Fast/Medium/Slow/Very Slow...  Wait is used by other Logo interpreters as part of showing animation or defining a user-interface but WebLogo has a very different way of defining animations and does not wait for any user input."
+		},
+		{
+			"primaryName": "when",
+			"description": "It looks is a way to define an event listener in Atari Logo for collisions between turtles and parts of the drawing or with other turtles.  Learn more from the manual at http://www.atarimania.com/documents/Atari_LOGO_Introduction_to_Programming_Through_Turtle_Graphics.pdf",
+			"reason": "WebLogo doesn't support it because WebLogo supports only 1 turtle and collision detection doesn't seem like it would help the creation of drawings or animations."
+		},
+		{
+			"primaryName": "window",
+			"description": "Allows the turtle to move off the screen.  Learn more from the manual at http://www.atarimania.com/documents/Atari_LOGO_Introduction_to_Programming_Through_Turtle_Graphics.pdf",
+			"reason": "Not supported in WebLogo because WebLogo always lets the turtle go out of the viewing area.  You're also free to scroll around and zoom the graphics screen and find the graphics screen any time."
+		},
+		{
+			"primaryName": "word",
+			"to": "word"
+		},
+		{
+			"primaryName": "wordp",
+			"to": "word?"
+		},
+		{
+			"primaryName": "wrap",
+			"description": "Causes the turtle to wrap around the graphics screen",
+			"reason": "WebLogo turtles never wrap and it is best kept that way.  The user can scroll or zoom to see parts of the drawing that go off the screen."
+		},
+		{
+			"primaryName": "xcor",
+			"to": "xcor"
+		},
+		{
+			"primaryName": "ycor",
+			"to": "ycor"
+		}
+	],
+	"keywords": []
+}

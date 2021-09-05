@@ -1,0 +1,244 @@
+to drawBackgroundGradients :width :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "greenHeight :height / 2
+	localmake "skyHeight :height - :greenHeight
+	setLineCap "butt
+	jumpForward :greenHeight
+	setPenGradient createLinearGradient :oldPos pos createPList2 [
+		[0 "#080] [0.8 "#41AF65] [1 "#8CE3B8]
+	] "pad
+	setPenSize :width
+	backward :greenHeight
+	jumpForward :greenHeight
+	localmake "oldPos pos
+	jumpForward :skyHeight
+	setPenGradient createLinearGradient :oldPos pos createPList2 [
+		[0 "#8ff] [1 "#08f]
+	] "pad
+	backward :skyHeight
+	setTurtleState :oldState
+end
+
+to drawPath :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	setPenSize 0
+	setFillColor "#4000
+	isoTrapezoid :height * 0.7 :height * 0.32 :height
+
+
+	jumpForward :height
+	setFillGradient createLinearGradient :oldPos pos createPList2 [
+		[0 "#da8] [1 "#B9885F]
+	]	"pad
+	right 180
+	isoTrapezoid :height * 0.3 :height * 0.6 :height
+	setTurtleState :oldState
+end
+
+to drawDoor :width :height
+	localmake "oldState turtleState
+	jumpForward :height / 2
+	setFillColor "#fdd
+	rect :width :height
+	jumpBackward :height * 0.1
+	jumpLeft :width * 0.1
+	circle :height * 0.03
+	setTurtleState :oldState
+end
+
+to drawHouse :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "roofHeight :height * 0.3
+	localmake "mainWidth :height * 1.75
+	localmake "mainHeight :height - :roofHeight
+	localmake "numBrickLayers 7
+	localmake "numBricksWide 6
+	localmake "brickHeight :mainHeight / :numBrickLayers
+	localmake "brickWidth :mainWidth / :numBricksWide
+	setPenSize :mainWidth
+	setLineCap "butt
+	setPenColor "#DD6836
+	forward :mainHeight
+	setPenColor "black
+	setLineJoinStyle "round
+	setPenSize :height * 0.015
+	setFillColor "#9C5711
+	isoTrapezoid :mainWidth * 1.15 :mainWidth * 0.6 :roofHeight
+	jumpLeft :mainWidth * 0.33
+	localmake "roofAngle1 55
+	right :roofAngle1
+	forward :roofHeight / cos :roofAngle1
+
+	setHeading :oldHeading
+	jumpTo :oldPos
+	repeat :numBrickLayers [
+		localmake "rowStartPos pos
+		stripes :mainWidth penSize ["black]
+		jumpLeft :mainWidth / 2
+		localmake "numBricksWide1 :numBricksWide
+		ifelse even? repcount [
+			jumpLeft :brickWidth / 2
+		] [
+			localmake "numBricksWide1 :numBricksWide1 - 1
+		]
+		repeat :numBricksWide1 [
+			jumpRight :brickWidth
+			stripes penSize :brickHeight ["black]
+		]
+		jumpTo :rowStartPos
+		jumpForward :brickHeight
+	]
+	jumpTo :oldPos
+	jumpLeft :brickWidth * 1.5
+	stripes penSize :mainHeight ["black]
+
+	jumpTo :oldPos
+	drawDoor :brickWidth * 1.5 :brickHeight * 5
+	setTurtleState :oldState
+end
+
+to drawV :length :angle
+	localmake "oldState turtleState
+	left :angle
+	stripes penSize :length [penColor]
+	right :angle * 2
+	stripes penSize :length [penColor]
+
+	setTurtleState :oldState
+end
+
+to drawBranch :length
+	localmake "oldState turtleState
+	localmake "littleLength :length * 0.2
+	localmake "angle1 45
+	forward :length
+	jumpBackward :length * 0.2
+	repeat 2 [
+		drawV :littleLength :angle1
+		jumpBackward :length * 0.3
+	]
+	setTurtleState :oldState
+end
+
+to drawTree1 :height
+	localmake "oldState turtleState
+	localmake "trunkHeight :height * 0.5
+	localmake "angle1 120
+	localmake "numBranches 8
+	localmake "branchLength :height - :trunkHeight
+	setPenColor "#400
+	forward :trunkHeight
+	localmake "trunkTop pos
+	left :angle1 / 2
+	repeat :numBranches [
+		drawBranch :branchLength
+		right :angle1 / (:numBranches - 1)
+		jumpTo :trunkTop
+	]
+	setTurtleState :oldState
+end
+
+to drawTree2 :height
+	localmake "oldState turtleState
+	localmake "trunkHeight :height * 0.8
+	localmake "branchLength :height - :trunkHeight
+	localmake "numBranches 12
+	localmake "branchColor "#600
+	setPenColor :branchColor
+	forward :trunkHeight
+	localmake "trunkTop pos
+	repeat :numBranches [
+		setPenColor :branchColor
+		forward :branchLength
+		jumpBackward :branchLength * 0.3
+		setPenColor "#0c0
+		drawV :branchLength * 0.2 50
+
+		right 360 / :numBranches	
+		jumpTo :trunkTop
+	]
+
+	setTurtleState :oldState
+end
+
+to drawFenceShape :width :height
+	localmake "oldState turtleState
+	localmake "angle 70
+	localmake "height1 :height - :width / 2 / tan :angle
+	localmake "slantedWidth :width / 2 / sin :angle
+	setLineJoinStyle "miter
+	setPenColor "black
+	setFillColor "#fff
+	jumpLeft :width / 2
+	polyStart
+	jumpForward :height1
+	right :angle
+	jumpForward :slantedWidth
+	right 180 - :angle * 2
+	jumpForward :slantedWidth
+	right :angle
+	jumpForward :height1
+	polyEnd
+	setTurtleState :oldState
+end
+
+to drawFence :width :height
+	localmake "oldState turtleState
+	localmake "separation :height * 0.3
+	localmake "numShapes 1 + int :width / :separation
+	localmake "shapeWidth :separation * 0.95
+	setPenSize :height * 0.02
+	setLineJoinStyle "miter
+	repeat :numShapes [
+		drawFenceShape :shapeWidth :height
+		jumpLeft :separation
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by an illustration in a September, 1982 
+; issue of a newsletter called Turtle News.
+;
+; The illustration is called illustration 2 and it is near
+; the bottom of the second page from the newsletter.
+; 
+; A digital version of the newsletter is at:
+; https://archive.org/details/turtle-news-vol-one-num-eleven-september-1982/page/n1/mode/2up 
+to houseWithFence :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "width :height * 4
+	localmake "pathHeight :height * 0.45
+	localmake "fenceGap :height * 0.4
+	localmake "fenceHeight :height * 0.23
+	localmake "fenceBaseOffset :height * 0.02
+	drawBackgroundGradients :width :height
+	jumpRight :height * 0.2
+	localmake "pathPos pos
+	drawPath :pathHeight
+	jumpForward :pathHeight
+	drawHouse :height * 0.45
+	jumpLeft :height * 0.8
+	drawTree1 :height * 0.4
+	jumpRight :height * 1.31
+	drawTree2 :height * 0.3
+
+	jumpTo :pathPos
+	jumpLeft :fenceGap / 2
+	localmake "fenceWidth (distance :oldPos) + :width / 2
+	jumpForward :fenceBaseOffset
+	drawFence :fenceWidth :fenceHeight
+
+	jumpTo :oldPos
+	jumpRight :width / 2 - :fenceHeight * 0.2
+	localmake "fenceWidth (distance :pathPos) - :fenceGap / 2
+	jumpForward :fenceBaseOffset
+	drawFence :fenceWidth :fenceHeight
+	setTurtleState :oldState
+end
+
+houseWithFence 100

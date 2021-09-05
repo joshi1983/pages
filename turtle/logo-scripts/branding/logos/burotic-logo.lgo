@@ -1,0 +1,35 @@
+; Inspired by logo at
+; https://burotic.ca/
+to buroticLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "width :height * 0.582
+	localmake "bottomLeftHeight :height * 0.085
+	localmake "lHeight :height * 0.593
+	jumpLeft :width / 2
+	setPenSize :height * 0.107
+	localmake "arcRadius :height - penSize - :lHeight 
+	jumpForward :height - penSize / 2
+	setPenColor "white
+	setLineCap "round
+	setLineJoinStyle "round
+	backward :lHeight
+	right 90
+	forward :width * 0.49
+	
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward penSize / 2
+	jumpLeft :width / 2
+	jumpForward :bottomLeftHeight
+	backward :bottomLeftHeight
+	right 90
+	forward :width * 0.49
+	arcLeft 180 :arcRadius
+	forward :height * 0.067
+	setTurtleState :oldState
+end
+
+setScreenColor "#404656
+buroticLogo 100
