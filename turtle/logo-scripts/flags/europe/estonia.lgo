@@ -1,0 +1,90 @@
+make "estoniaBlue "#0072ce
+make "colors ["white "black :estoniaBlue]
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Estonia#/media/File:Flag_of_Estonia.svg
+to estoniaFlag :height
+	localmake "width :height * 11 / 7
+	stripes :width :height :colors
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Estonia#/media/File:Flag_of_Estonia_(vertical).svg
+to estoniaVerticalFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 7 / 11
+	jumpForward :height / 2
+	jumpRight :width / 2
+	left 90
+	estoniaFlag :width
+	setTurtleState :oldState
+end
+
+to crossArms :height :width
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "tanRatio :height / :width
+	localmake "angle1 arcTan :tanRatio
+	localmake "crossThickness :height / 7
+	localmake "crossSize1 :crossThickness / 2 / sin :angle1
+	localmake "crossSize2 :crossThickness / 2 / cos :angle1
+	localmake "angle2 abs 90 - :angle1
+	localmake "diagonalLength1 hypot [:width - :crossSize1 :height - :crossSize2]
+	setPenSize 0
+	setFillColor "black
+	jumpLeft :width / 2 - :crossSize1
+	polyStart
+	jumpLeft :crossSize1
+	jumpForward :crossSize2
+	right :angle2
+	jumpForward :diagonalLength1
+	setHeading :oldHeading
+	jumpRight :crossSize1
+	jumpBackward :crossSize2
+	polyEnd
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height
+	jumpLeft :width / 2 - :crossSize1
+	polyStart
+	jumpLeft :crossSize1
+	jumpBackward :crossSize2
+	right 90 + :angle1
+	jumpForward :diagonalLength1
+	setHeading :oldHeading
+	jumpRight :crossSize1
+	jumpForward :crossSize2
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Estonia#/media/File:Naval_Jack_of_Estonia.svg
+to navalJackOfEstonia :height
+	localmake "oldState turtleState
+	localmake "width :height * 11 / 7
+	stripes :width :height ["white]
+	crossArms :height :width
+	setLineCap "butt
+	setPenSize :height * 2 / 7
+	setPenColor :estoniaBlue
+	forward :height
+	jumpBackward :height / 2
+	jumpLeft :width / 2
+	right 90
+	forward :width
+	setTurtleState :oldState
+end
+
+; off white for a little contrast with white parts of the flag
+setScreenColor "#eee
+make "height 100
+make "separation :height * 4
+jumpLeft :separation
+estoniaFlag :height
+jumpRight :separation
+estoniaVerticalFlag :height
+jumpRight :separation
+navalJackOfEstonia :height
