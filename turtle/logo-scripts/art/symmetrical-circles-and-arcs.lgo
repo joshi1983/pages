@@ -1,0 +1,96 @@
+; Inspired by:
+; https://www.pinterest.ca/pin/32580797296597590/
+to setRadialGradient :radius
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "white
+	setProperty "colorStops 0.5 "white
+	setProperty "colorStops 1 fillColor
+	setFillGradient createRadialGradient pos :radius :colorStops
+end
+
+to backgroundGradient :width :height
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "color "#006600
+	localmake "colorStops createPList
+	setProperty "colorStops 0 transparent
+	setProperty "colorStops 0.3 :color
+	setProperty "colorStops 0.5 transparent
+	setProperty "colorStops 0.7 :color
+	setProperty "colorStops 1 transparent
+	jumpLeft :width * 0.5
+	localmake "fromPos pos
+	jumpRight :width
+	setPenGradient createLinearGradient :fromPos pos :colorStops "pad
+	left 90
+	setLineCap "butt
+	setPenSize :height
+	forward :width
+
+	; restore original turtle position and heading
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to getArcAngleMatchingHeight :radius :size
+	output 2 * arcSin (:size / :radius)
+end
+
+to circles :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "greenColor "green
+	localmake "colors [
+		"#A5A5FD
+		"blue
+		mix "blue :greenColor 0.5
+		:greenColor
+		mix :greenColor "yellow 0.5
+		"yellow
+	]
+	localmake "numColors count :colors
+	localmake "radiusIncrement :size / :numColors
+	backgroundGradient :size * 20 :size * 2
+	setPenSize 0
+	repeat :numColors [
+		jumpTo :oldPos
+		localmake "radius :size * (:numColors + 1 - repcount) / :numColors
+		setFillColor item repcount :colors
+		jumpLeft :radius
+		setRadialGradient :radius
+		circle :radius
+		jumpRight :radius * 2
+		setRadialGradient :radius
+		circle :radius
+	]
+	; add some larger arcs to continue the pattern horizontally.
+	localmake "radius :size
+	repeat 16 [
+		localmake "radius :radius + :radiusIncrement
+		localmake "arcPenSize :size * 0.04
+		setPenColor item 1 + remainder repcount :numColors :colors
+		localmake "angle getArcAngleMatchingHeight :radius :size
+		jumpTo :oldPos
+		setHeading :oldHeading
+		jumpLeft :radius * 2
+		setPenSize 0
+		arcRight :angle * 0.5 :radius
+		setPenSize :arcPenSize
+		right 180
+		; draw arc on left side.
+		arcLeft :angle :radius
+
+		; draw arc on right side.
+		jumpTo :oldPos
+		setHeading :oldHeading
+		jumpRight :radius * 2
+		setPenSize 0
+		arcLeft :angle * 0.5 :radius
+		right 180
+		setPenSize :arcPenSize
+		arcRight :angle :radius
+	]
+end
+
+setScreenColor "black
+circles 100

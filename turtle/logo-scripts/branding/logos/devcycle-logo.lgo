@@ -1,0 +1,48 @@
+; Inspired by logo at
+; https://devcycle.com
+to devCycleLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "width1 :height * 1.14
+	localmake "height1 :height * 0.66
+	localmake "thickness :height * 0.078
+	localmake "topRadius :height * 0.075
+	localmake "smileAngle 80
+	localmake "smileRadius :height * 0.12
+	localmake "eyeSeparation (:width1 - :height1) * 1.1
+	localmake "eyeRadius :height1 * 0.217
+	setPenSize :thickness
+	jumpForward (:height1 + penSize) / 2
+	setFillColor transparent
+	setPenColor "#1d49f4
+	setLineCap "round
+	roundRect :width1 :height1 :height1 / 2
+	jumpForward :height1 / 2
+	forward :height - penSize - :height1 - :topRadius * 2
+	right 90
+	circleLeft :topRadius
+
+	; draw smiling lips
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height1 * 0.22
+	right 90
+	penUp
+	arcLeft :smileAngle / 2 :smileRadius
+	penDown
+	right 180
+	arcRight :smileAngle :smileRadius
+
+	; draw eyes
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height1 * 0.57
+	jumpLeft :eyeSeparation / 2
+	circle :eyeRadius
+	jumpRight :eyeSeparation + :eyeRadius
+	arcLeft 180 :eyeRadius
+	setTurtleState :oldState
+end
+
+devCycleLogo 100
