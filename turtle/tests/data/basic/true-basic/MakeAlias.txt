@@ -1,0 +1,27 @@
+EXTERNAL
+
+SUB MakeAliasFile (l$(), options$)
+
+    ! Both arguments are ignored.
+
+    OPEN #1: name "tempfile.tru"
+
+    DO WHILE MORE #1
+       LINE INPUT #1: line$
+       IF pos(line$, "{do}") > 0 then EXIT DO
+    LOOP
+       
+    OPEN #2: name "loadalia", create newold
+    ERASE #2
+    SET #2: MARGIN 1000
+
+    CALL SYSTEM (0, dir$, r2$, r3$)    ! Pick up current directory
+
+    PRINT #2: "alias " & line$ & ", " & dir$ & "\tools\"
+    PRINT #2: "alias {WB_c}, " & dir$ & "\c\"
+    PRINT #2: "alias {WB_man}, " & dir$ & "\man\"
+
+    CLOSE #1
+    CLOSE #2
+
+END SUB

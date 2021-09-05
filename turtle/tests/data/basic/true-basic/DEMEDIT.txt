@@ -1,0 +1,72 @@
+! DemEdit
+
+! This checks several TC routines, but especially Edit Fields.
+
+LIBRARY "TrueCtrl.trc"
+LIBRARY "TrueDial.trc"
+
+CALL TC_Init
+
+CLEAR
+READ xl, xr, yt, spacing
+DATA .6, .8, .9, .1
+
+DIM elist(6), tlist$(6), stlist(6), ans$(6), format$(6)
+MAT READ tlist$
+DATA Name, Address, City, State, Zip, Soc. Sec.
+MAT READ format$
+DATA "", "", "", "", zip, SS
+
+LET win = 0
+CALL TC_Win_SetBrush (win, 15, -1, "")      ! White background
+SET COLOR 4
+CLEAR
+CALL TC_Show (win)
+CALL TC_Win_Active (win)          ! Move it to the front
+
+FOR i = 1 to 6
+
+    CALL TC_Stext_Create (stlist(i), tlist$(i), xl-.2, xr-.2, yt-i*spacing, -99999)
+    CALL TC_Edit_Create (elist(i), "", xl, xr, yt-i*spacing, -99999)
+    CALL TC_Edit_SetFormat (elist(i), format$(i))
+
+NEXT i
+
+CALL TC_PushBtn_Create (pid, "Show", xl-.2, xl-.05, yt, -99999)
+CALL TC_PushBtn_Create (qid, "Quit", xl, xl+.15, yt, -99999)
+
+DO
+   CALL TC_Event (0, event$, window, x1, x2)
+
+   IF event$ = "HIDE" then EXIT DO
+   IF event$ = "CONTROL DESELECTED" then
+
+      IF x2 = qid then EXIT DO    ! Quit
+
+      IF x2 = pid then            ! Check and show the current values
+         FOR i = 1 to 6
+             CALL TC_Edit_CheckField (elist(i), errormess$)
+             IF errormess$ <> "" then
+                CALL TD_Message ("", errormess$, "Accept|Change", 1, result)
+                IF result = 2 then
+                   CALL TC_Select (elist(i))
+                   EXIT FOR
+
+                END IF
+
+             END IF
+             CALL TC_Edit_GetText (elist(i), ans$(i))
+             PRINT tlist$(i), ans$(i)
+
+         NEXT i
+         PRINT
+
+      END IF
+
+   END IF
+
+LOOP
+
+CALL TC_Cleanup
+
+END

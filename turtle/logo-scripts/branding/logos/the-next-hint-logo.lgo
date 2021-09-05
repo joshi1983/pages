@@ -1,0 +1,31 @@
+; Inspired by logo at:
+; https://www.thenexthint.com
+to theNextHintLogo :height
+	localmake "oldState turtleState
+	localmake "colors ["#02aaea "#1b4974]
+	localmake "angle 44
+	localmake "outerRadius 0.265
+	localmake "outerHeight 0.555
+	localmake "len1 0.423
+	localmake "thickness 0.153
+	localmake "innerRadius :outerRadius - :thickness
+	localmake "innerHeight :outerHeight + (:thickness * tan :angle)
+	localmake "y1 (:len1 * sin :angle) + :outerRadius * (1 - cos :angle)
+	localmake "len2 :len1 + :thickness * tan :angle
+	setPenSize 0
+	jumpForward :height / 2
+	right 90
+	repeat count :colors [
+		setFillColor item repcount :colors
+		drawArcLineShape [ (:y1 - 0.5) 0.21
+			[[180 - :angle 0] [:len1]
+			[90 + :angle :outerRadius] [:outerHeight] [90 - :angle 0]
+			[:thickness / cos :angle] [90 + :angle 0] [:innerHeight]
+			[-:angle - 90 :innerRadius] [:len2]]
+		] :height
+		right 180
+	]
+	setTurtleState :oldState
+end
+
+theNextHintLogo 100

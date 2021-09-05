@@ -1,0 +1,109 @@
+to drawCircles :height :timeRatio :rotationSpeeds :numIterations
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "circles [
+	]
+	localmake "r 0.245
+	repeat count :rotationSpeeds [
+		queue2 "circles [:r 360 * item repcount :rotationSpeeds]
+		localmake "r :r / 3
+	]
+
+	localmake "points []
+	repeat :numIterations [
+		localmake "angleScale :timeRatio * repRatio
+		setHeading :oldHeading - :angleScale * last first :circles
+		repeat count :circles [
+			localmake "info item repcount :circles
+			localmake "factor last :info
+			localmake "radius :height * first :info
+
+			if repcount <> 1 [
+				jumpForward :radius
+				setHeading :oldHeading + :factor * :angleScale
+			]
+			jumpForward :radius
+		]
+		queue2 "points pos
+		jumpTo :oldPos
+	]
+	setFillColor transparent
+	setPenSize :height * 0.002
+	setLineJoinStyle "round
+	jumpTo first :points
+	for ["i 2 count :points] [
+		setPos item :i :points
+	]
+	setTurtleState :oldState
+	output :circles
+end
+
+; Inspired by:
+; https://www.facebook.com/share/v/1H61QA8KtR
+to drawBenice :height :timeRatio
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "rotationSpeeds [1 4 -16 64 -256 1028]
+	localmake "colors ["red "blue "green "purple "black]
+	localmake "circles []
+	jumpForward :height / 2
+	localmake "numIterations 100
+	repeat count :colors [
+		setPenColor item repcount :colors
+		localmake "rotationSpeeds1 sublist :rotationSpeeds 1 repcount + 1
+		localmake "timeRatio2 (:timeRatio * count :colors) + 1 - repcount
+		if :timeRatio2 <= 0 [
+			break
+		]
+		localmake "timeRatio2 interpolateRatio easeInOut clamp :timeRatio2 0 1
+		localmake "timeRatio3 :timeRatio2
+		localmake "lastDrawnColor penColor
+		localmake "circles drawCircles :height :timeRatio3 :rotationSpeeds1 :numIterations
+		localmake "numIterations :numIterations * 3.5
+	]
+	setPenColor "red
+	setPenSize :height * 0.005
+	localmake "angleScale :timeRatio3
+	if not empty? :circles [
+		setHeading :oldHeading - :angleScale * last first :circles
+		repeat count :circles [
+			localmake "info item repcount :circles
+			localmake "radius :height * first :info
+			localmake "factor last :info
+			if repcount <= count :colors [
+				setPenColor item repcount :colors
+			]
+			if repcount <> 1 [
+				jumpForward :radius
+				setHeading :oldHeading + :factor * :angleScale
+			]
+			circle :radius
+			jumpForward :radius
+		]
+		setFillColor :lastDrawnColor
+		setPenSize 0
+		circle :height * 0.01
+	]
+	setTurtleState :oldState
+end
+
+make "timeRatio interpolateRatio easeOut animation.clampedTimeRatio
+drawBenice 100 :timeRatio
+
+to animation.snapshotstyle
+	output createPList2 [
+		["position.y 50]
+		["zoom.scale 6]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 20
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+		["thumnailTime :seconds * 0.5]
+	]
+end

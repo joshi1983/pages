@@ -1,0 +1,78 @@
+!
+!  STATSCI.  Show moving averages on data.
+!  Requires Scientific and Statistics Graphics Toolkits.
+!
+
+! The sources for SGFunc and SGLib are in the SciGraTK folder
+LIBRARY "SGFunc.trc", "SGLib.trc", "Stat2Lib.trc"
+PUBLIC x(50), y(50), w
+
+CALL SetTitle ("Moving Averages: Three Window Sizes")
+CALL ReserveLegend
+
+MAT READ x, y
+CALL PlotScat (x, y, 4, 0, "")    ! Show points
+
+CALL SortPoints (x, y)            ! Set up for average lines
+CALL SetGrain (100)
+CALL AskXY (xmin, xmax, ymin, ymax)
+
+LET ls = 3
+FOR w = 1 to 5 step 2             ! Draw lines with 3 'w' sizes
+    CALL SetOverlay (1)           ! Overlay on existing graph
+    CALL Fgraph (xmin, xmax, ls, "")
+    CALL AddLegend (Str$(2*w+1), 2, ls, "black")
+    LET ls = ls - 1               ! Use 3 different line styles
+
+NEXT w
+CALL DrawLegend                   ! Now show custom legend
+
+DATA 13.61, 15.86, 15.18, 16.08, 17.66, 18.79, 20.37, 20.82, 21.49, 22.62, 25.10
+DATA 26.23, 26.23, 28.48, 29.83, 30.73, 31.63, 33.89, 33.66, 34.56, 35.69, 40.65
+DATA 42.23, 44.93, 47.41, 48.54, 50.34, 49.44, 51.69, 53.72, 55.30, 55.30, 58.23
+DATA 60.25, 60.70, 62.73, 65.21, 66.11, 66.11, 67.69, 68.82, 70.39, 71.75, 76.48
+DATA 76.48, 77.38, 78.28, 80.31, 83.92, 88.20
+DATA 48.87, 50.92, 53.38, 54.81, 56.24, 59.92, 61.36, 62.17, 62.17, 56.85, 69.13
+DATA 68.31, 66.68, 72.20, 65.65, 62.58, 64.02, 59.92, 55.63, 52.97, 49.08, 28.82
+DATA 34.35, 28.82, 34.14, 38.03, 42.74, 47.03, 48.87, 60.33, 60.54, 63.81, 68.11
+DATA 62.38, 58.29, 74.25, 74.86, 71.18, 66.47, 67.90, 60.13, 56.45, 46.83, 37.42
+DATA 34.76, 32.51, 31.69, 32.10, 41.30, 40.08
+
+END
+
+MODULE MyMod
+
+    DECLARE PUBLIC x(), y(), w
+
+    SHARE yi, sz
+
+    LET sz = Size(x)
+
+    DEF F(fx)
+
+        IF fx <= x(1) then        ! Starting at left side of graph
+           LET yi = 1
+        ELSE IF fx > x(yi) then   ! Bump to next y() value
+           LET yi = yi+1
+        END IF
+
+        LET start = yi-w          ! Find 'window' around yi
+        LET end   = yi+w
+        IF start<1 then
+           LET end   = end + (1-start)
+           LET start = 1
+
+        ELSE IF end>sz then
+           LET start = start - (end-sz)
+           LET end   = sz
+
+        END IF
+
+        FOR i = start to end      ! Get F = mean value of window
+            LET sum = sum + y(i)
+        NEXT i
+        LET F = sum / (end-start+1)
+
+    END DEF
+
+END MODULE

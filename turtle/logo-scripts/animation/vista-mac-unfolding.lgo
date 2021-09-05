@@ -1,0 +1,68 @@
+; Inspired by:
+; https://www.youtube.com/shorts/zkeveD-iNGI
+;
+; That is partly from a 1987 video from Apple:
+; https://youtu.be/mPvqJgivelg?t=140
+; It was a comedic vision of 
+; Apple's 10 years into the future.
+to vistaMacUnfolding :height :t
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "lowerHeight :height * 0.63
+	localmake "glassesLines1 [
+		[90 0] [70 0.04] [-45 0.05] [-20 0.2]
+		[-5 0.5] [0.06] [-90 0.02] [0.1] [-90 0]
+		[0.25411176]
+	]
+	localmake "offset :height * 0.2416
+	localmake "armLength :height * 0.44
+	setPenSize :height * 2
+	setLineCap "butt
+	setPenColor "#ba8e01
+	forward :lowerHeight
+	setPenColor "#c5b0ff
+	forward :height - :lowerHeight
+
+	jumpTo :oldPos
+	setPenSize 0
+	setFillColor "white
+	drawArcLineShape [0 0.295
+		combine :glassesLines1 reverse :glassesLines1
+	] :height
+
+	jumpForward :height * 0.31
+	localmake "midPoint pos
+	setPenSize :height * 0.025
+	setPenColor fillColor
+	jumpLeft :offset
+	right mix 0 90 interpolateRatio easeInOut clamp 3 * (:t - 0.1) 0 1
+	forward :armLength
+
+	jumpTo :midPoint
+	setHeading :oldHeading
+	jumpRight :offset
+	left mix 0 90 interpolateRatio easeInOut clamp 3 * (:t - 0.5) 0 1
+	forward :armLength
+
+	setTurtleState :oldState
+end
+
+make "t animation.clampedTimeRatio
+vistaMacUnfolding 100 :t
+
+to animation.snapshotstyle
+	output createPList2 [
+		["position.y 50]
+		["zoom.scale 7]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 2
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end
