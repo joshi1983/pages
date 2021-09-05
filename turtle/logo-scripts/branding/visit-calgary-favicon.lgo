@@ -1,0 +1,62 @@
+; Inspired by a favicon at:
+; https://www.visitcalgary.com
+to visitCalgaryFavicon :height
+	localmake "oldState turtleState
+	setPenSize 0
+	setFillColor "#FFDA24
+	jumpForward :height / 2
+	roundIsoStar :height / 2 :height * 0.39 10 0 :height * 0.1
+	setTurtleState :oldState
+end
+
+; Shows the sun over the same blue used in a lot of the 
+; visitcalgary.com website
+to visitCalgaryFaviconOnBlue :height
+	localmake "oldState turtleState
+	localmake "innerHeight :height * 0.8
+	stripes :height :height ["#0064ff]
+	jumpForward (:height - :innerHeight) / 2
+	visitCalgaryFavicon :innerHeight
+	setTurtleState :oldState
+end
+
+; Inspired by a pattern at:
+; https://www.visitcalgary.com
+to visitCalgaryC :height
+	localmake "oldPos pos
+	localmake "cPattern [
+		' ###'
+		'#####'
+		'## ##'
+		'##'
+		'## ##'
+		'#####'
+		' ###'
+	]
+	localmake "tileSize :height / count :cPattern
+	jumpLeft :tileSize * 2
+	repeat count :cPattern [
+		localmake "line item repcount :cPattern
+		localmake "startPos pos
+		repeat count :line [
+			localmake "c item repcount :line
+			if :c <> ' ' [
+				visitCalgaryFavicon :tileSize
+			]
+			jumpRight :tileSize
+		]
+		jumpTo :startPos
+		jumpForward :tileSize
+	]
+	jumpTo :oldPos
+end
+
+setScreenColor "black
+make "height 100
+make "separation :height * 4
+jumpLeft :separation
+visitCalgaryFavicon :height
+jumpRight :separation
+visitCalgaryFaviconOnBlue :height
+jumpRight :separation
+visitCalgaryC :height

@@ -1,0 +1,26 @@
+; Implemented based on construction sheet at:
+; https://en.wikipedia.org/wiki/Flag_of_Laos
+to laosFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 30 / 20
+	localmake "stripes [
+		["#CE1126 5 / 20]
+		["#002868 10 / 20]
+		["#CE1126 5 / 20]
+	]
+	setLineCap "butt
+	setPenSize :width
+	repeat count :stripes [
+		localmake "stripeInfo item repcount :stripes
+		setPenColor item 1 :stripeInfo
+		forward :height * item 2 :stripeInfo
+	]
+	jumpBackward :height / 2
+	setPenSize 0
+	setFillColor "white
+	circle :height * 4 / 20
+
+	setTurtleState :oldState
+end
+
+laosFlag 100

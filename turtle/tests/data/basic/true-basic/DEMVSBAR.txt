@@ -1,0 +1,52 @@
+! DemVSBar
+
+! This program creates and manipulates a vertical scroll bar
+
+LIBRARY "TrueCtrl.trc"
+
+CALL TC_Init
+
+! Get details for default output window.
+
+CALL TC_Show (0)                  ! Use the default output window.
+CALL TC_Win_Active (0)            ! Move it to the front
+
+PRINT "Press ESC to quit."
+
+CALL TC_SBar_Create (cid, "VSCROLL", -99999, .95, .05, .95)
+
+! The 0, 110, and 10 are more-or-less arbitrary.
+! The SB thumb is at the top if position = 0.
+! The SB thumb is at the bottom if position = 110 - 10 = 100.
+
+CALL TC_Sbar_SetRange (cid, 0, 110, 10)
+CALL TC_SBar_SetPosition (cid, 0)      ! Default is 1
+
+! The 1 for the single increment is typical.
+! The 20 for the page increment is arbitrary.
+
+CALL TC_Sbar_SetIncrements (cid, 1, 20)
+
+! Report the scroll bar position.
+
+CALL TC_GroupBox_Create (gbid, "Scroll Bar Setting", .30, .55, .35, .42)
+CALL TC_SText_Create (tid, "0", .4, .5, .36, -99999)
+
+LET prev = 0
+DO
+   CALL TC_Event (0, event$, wid, x1, x2)
+
+   CALL TC_Sbar_GetPosition (cid, position)
+   IF position <> prev then
+      CALL TC_SetText (tid, str$(position))
+      LET prev = position
+   END IF
+
+   IF event$ = "HIDE" then EXIT DO
+   IF event$ = "KEYPRESS" and x1 = 27 then EXIT DO
+
+LOOP
+
+CALL TC_Cleanup
+
+END

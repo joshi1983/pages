@@ -1,0 +1,33 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Cape_Verde#/media/File:Flag_of_Cape_Verde.svg
+; Some of the stars are not lined up with stars in that SVG.
+; That difference seems acceptable because text with that document indicates that the size 
+; and number of stars is not clearly standardized.
+; The different positions may be due to mistakes from the person making the SVG, too.
+; The code below positions the stars at uniform separations and that could be what the 
+; SVG author intended.  Some vector graphic tools expect people to eye-ball everything.
+to capeVerdeFlag :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "width :height * 17 / 10
+	localmake "whiteHeight :height * 0.255215575
+	localmake "numStars 10
+	stripes :width :height ["#003893]
+	jumpForward :height * 0.2444
+	stripes :width :whiteHeight ["white "#cf2027 "white]
+	jumpForward :whiteHeight / 2
+	jumpLeft :height * 0.21
+	localmake "center pos
+	setPenSize 0
+	setFillColor "#f7d116
+	repeat :numStars [
+		setHeading :oldHeading + repcount * 360 / :numStars
+		jumpForward :whiteHeight
+		setHeading :oldHeading
+		regularStar :height * 0.05 5		
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+capeVerdeFlag 100

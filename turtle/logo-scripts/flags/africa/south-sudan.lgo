@@ -1,0 +1,29 @@
+; Inspired by flag at:
+; https://en.wikipedia.org/wiki/Flag_of_South_Sudan#/media/File:Flag_of_South_Sudan.svg
+to southSudanFlag :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "width :height * 2
+	stripes :width :height ["#00914C "#E22028 "black]
+	jumpForward :height / 2
+	localmake "center pos
+	repeat 2 [
+		jumpForward :height * 0.15
+		stripes :width :height * 0.05 ["white]
+		jumpTo :center
+		right 180
+	]
+	jumpLeft :width / 2
+	right 90
+	setPenSize 0
+	setFillColor "#00B6F2
+	isoTriangle :height :height * 0.866
+	jumpForward :height * 0.288
+	setHeading :oldHeading
+	setFillColor "#FFE51A
+	regularStar :height * 0.165 5
+	setTurtleState :oldState
+end
+
+setScreenColor "#ddd
+southSudanFlag 100

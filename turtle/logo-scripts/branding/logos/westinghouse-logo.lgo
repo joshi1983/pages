@@ -1,0 +1,43 @@
+; Inspired by:
+; https://en.wikipedia.org/wiki/Westinghouse_Electric_Corporation#/media/File:WestinghouseLogo.svg
+to westingHouseLogo :height :color
+	localmake "oldState turtleState
+	localmake "tinyRadius :height * 0.075
+	localmake "wSeparation :height * 0.24
+	localmake "wAngle 27
+	localmake "wAngle2 180 - :wAngle * 2
+	localmake "wSeparation2 :height * 0.25
+	localmake "wLen2 :height * 0.29
+	localmake "wLen :wSeparation2 / (sin :wAngle) - :wLen2
+	jumpForward :height / 2
+	setFillColor transparent
+	setPenSize :height * 0.0375
+	setPenColor :color
+	circle (:height - penSize) / 2
+	jumpBackward :height * 0.214
+	setPenSize 0
+	setFillColor penColor
+	roundRect :height * 0.422 :height * 0.113 :height * 0.05
+	jumpForward :height * 0.402
+	localmake "wMiddleTop pos
+	jumpLeft :wSeparation
+	repeat 3 [
+		circle :tinyRadius
+		jumpRight :wSeparation
+	]
+	jumpTo :wMiddleTop
+	jumpLeft :wSeparation2
+	setPenSize :height * 0.04
+	setLineJoinStyle "miter
+	right 180 - :wAngle
+	forward :wLen2
+	left :wAngle2
+	forward :wLen
+	right :wAngle2
+	forward :wLen
+	left :wAngle2
+	forward :wLen2
+	setTurtleState :oldState
+end
+
+westingHouseLogo 100 "#000066

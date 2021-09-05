@@ -1,0 +1,30 @@
+REM  Module for relative plotting
+
+EXTERNAL
+
+MODULE relative_plot
+
+SHARE lastx, lasty             ! Must remember previous position
+
+SUB plot_start(x, y)           ! Start new curve
+    PLOT
+    PLOT x, y;
+    LET lastx = x
+    LET lasty = y
+END SUB
+
+SUB plot_rel(dx, dy)           ! Relative plot
+    LET lastx = lastx + dx     ! Apply increments
+    LET lasty = lasty + dy
+    PLOT lastx, lasty;
+END SUB
+
+SUB move_rel(dx, dy)                      ! Relative move
+    CALL plot_start(lastx+dx, lasty+dy)   ! New starting location
+END SUB
+
+SUB flood_rel(dx, dy)          ! Flood at relative point
+    FLOOD lastx+dx, lasty+dy
+END SUB
+
+END MODULE

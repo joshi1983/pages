@@ -1,0 +1,18 @@
+; Converts the specified integer value to hexidecimal notation.
+; Similar to QBasic's hex$ function
+to hexString :intVal
+	localmake "result "
+	while :intVal <> 0 [
+		localmake "digitVal bitAnd :intVal 15
+		ifelse :digitVal < 10 [
+			; Get a digit from '0' to '9'.
+			localmake "char char (ascii "0 ) + :digitVal
+		] [
+			; Get a letter from 'A' to 'F'.
+			localmake "char char (ascii "A ) + (:digitVal - 10)
+		]
+		localmake "intVal bitShiftRight :intVal 4
+		localmake "result word :char :result
+	]
+	output :result
+end

@@ -1,0 +1,59 @@
+; Inspired by logo at:
+; https://www.onlogic.com
+; The original logo has some lines that aren't exactly parallel.
+; The main difference with the code below is it draws everything 
+; parallel.  A couple sizes are a few percent different too.
+to onLogicLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "height1 :height * 0.429
+	localmake "size1 :height * 0.627
+	localmake "size2 :height * 0.411
+	localmake "width1 :height * 0.395
+	localmake "angle1 23.55
+	jumpRight :height * 0.28869484
+	jumpForward :height * 0.3725
+	left 90
+	setPenSize 0
+	setFillColor "#ff8300
+	parallelogram :height1 :size1 :angle1
+
+	jumpLeft :height1 / 2
+	setFillColor "#003057
+	localmake "corner1 pos
+	right :angle1
+	polyStart
+	jumpForward :size2
+	setHeading :oldHeading
+	jumpForward :height1
+	left 90 + :angle1
+	jumpForward :width1
+	setHeading :oldHeading
+	jumpBackward :height1
+	right 90 + :angle1
+	jumpForward :size2
+	polyEnd
+
+	setFillColor "#0075c9
+	jumpTo :corner1
+	setHeading :oldHeading - 90 + :angle1
+	localmake "gap :height * 0.22
+	localmake "size3 :size1 - :gap
+	jumpForward :gap
+	setHeading :oldHeading
+	polyStart
+	jumpForward :height1
+	left 90 - :angle1
+	jumpForward :size3
+	setHeading :oldHeading + 90 - :angle1
+	jumpForward :size3
+	setHeading :oldHeading + 90 + :angle1
+	jumpForward :size3
+	setHeading :oldHeading
+	jumpBackward :height1
+	polyEnd
+
+	setTurtleState :oldState
+end
+
+onLogicLogo 100

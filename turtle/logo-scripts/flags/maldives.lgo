@@ -1,0 +1,26 @@
+; Inspired by:
+; https://en.wikipedia.org/wiki/Maldives#/media/File:Flag_of_Maldives.svg
+; Construction sheet is at:
+; https://commons.wikimedia.org/wiki/File:Flag_of_Maldives.svg#/media/File:Flag_of_the_Maldives_(construction_sheet).svg
+to maldivesFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 3 / 2
+	localmake "maldivesGreen "green
+	localmake "radius :height * 16 / 2 / 48
+	setLineJoinStyle "miter
+	setPenSize :height / 4
+	setPenColor "red
+	setFillColor :maldivesGreen
+	jumpForward :height / 2
+	rect :width - penSize :height - penSize
+	setFillColor "white
+	setPenSize 0
+	jumpRight :height * 3 / 48
+	circle :radius
+	setFillColor :maldivesGreen
+	jumpRight :height * 3 / 48
+	circle :radius
+	setTurtleState :oldState
+end
+
+maldivesFlag 100

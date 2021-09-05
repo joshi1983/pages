@@ -1,0 +1,45 @@
+; Inspired by
+; https://www.pinterest.ca/pin/988610555679955813/
+to spiralCropCircles :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "numArms 4
+	localmake "thickness :height * 0.03
+	localmake "maxRadius (:height - :thickness) / 2
+	localmake "tinyRadius :maxRadius / 2 / :numArms
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize :thickness
+	setPenColor "#dfa
+	setFillColor penColor
+	repeat 2 [
+		setHeading :oldHeading + 180 * repcount
+		localmake "radius :maxRadius * (:numArms + 1) / :numArms
+		jumpRight :radius - :tinyRadius
+		setPenSize :thickness
+		circle :tinyRadius
+		jumpTo :center
+		repeat :numArms [
+			localmake "radius :maxRadius * (1 - (repcount - 1) / :numArms)
+			arcLeft 180 :radius
+		]
+		jumpLeft :tinyRadius * 2
+		repeat :numArms [
+			localmake "radius :maxRadius * repcount / (:numArms )
+			arcRight 180 :radius
+		]
+		localmake "radius :tinyRadius + :thickness / 2
+		setPenSize 0
+		repeat 4 [
+			circle :radius
+			jumpLeft :radius * 1.5
+			localmake "radius :radius * 0.6
+			jumpLeft :radius
+		]
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "#370
+spiralCropCircles 100

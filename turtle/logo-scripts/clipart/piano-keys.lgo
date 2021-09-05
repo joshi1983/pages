@@ -1,0 +1,52 @@
+; Inspired by
+; https://publicdomainvectors.org/en/free-clipart/Vector-illustration-of-a-keyboard/8644.html
+to pianoKeys :numKeys :height
+	localmake "oldState turtleState
+	localmake "blackKeyHeight :height * 0.575
+	localmake "widthRatio 0.227
+	localmake "thinWidth :height * 0.01
+	localmake "keyWidth :height * :widthRatio
+	localmake "blackKeyWidth :keyWidth * 0.5
+	localmake "width :numKeys * :keyWidth + :thinWidth
+	localmake "keyWidth1 :keyWidth - :thinWidth
+	setPenColor "black
+	setLineCap "butt
+	setPenSize :width
+	forward :height
+	jumpBackward :height / 2
+	jumpLeft :width / 2
+	localmake "leftSide pos
+	right 90
+	setPenSize :height - :thinWidth * 2
+	setPenColor "white
+	; the white keys
+	repeat :numKeys [
+		jumpForward :thinWidth
+		forward :keyWidth1
+	]
+
+	; the black keys(flats)
+	localmake "numScales int :numKeys / 7
+	jumpTo :leftSide
+	jumpLeft (:height - :blackKeyHeight) / 2
+	setPenSize :blackKeyHeight
+	setPenColor "black
+	localmake "size1 :keyWidth - :blackKeyWidth / 2
+	localmake "size2 :keyWidth - :blackKeyWidth
+	repeat :numScales [
+		jumpForward :size1
+		forward :blackKeyWidth
+		jumpForward :size2
+		forward :blackKeyWidth
+		jumpForward :size1 * 2
+		repeat 3 [
+			forward :blackKeyWidth
+			jumpForward :size2
+		]
+		jumpForward :blackKeyWidth / 2
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+pianoKeys 42 100

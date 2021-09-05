@@ -1,0 +1,46 @@
+; Inspired by
+; https://commons.wikimedia.org/wiki/File:Tesla_Motors.svg
+to teslaLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "arcsInfo [
+		[78 0] [10 0.6] [17 0.15] [20 0.059] [30 0.06]
+		[9.397 0.11] [-106 0] [-15 0.34] [-17.8 0.266]
+		[-101.6 0] [-21.02 1] [-53.67 0]
+	]
+	localmake "outerArcsInfo1 [
+		[87 0] [12.7 0.29] [80.9 0]
+	]
+	localmake "outerAngle1 44.31
+	localmake "outerArcRadiusFactor 1.33
+	localmake "outerArcsInfo (combine :outerArcsInfo1 [[-45.51 1.22530906]] 
+		reverse :outerArcsInfo1 [[:outerAngle1 :outerArcRadiusFactor]])
+	localmake "outerArcRadius :height * :outerArcRadiusFactor
+	localmake "size1 :height * 0.16304102
+	right 10.07
+	setPenSize 0
+	setFillColor "#e82127
+	; Draw the T.
+	polyStart
+	jumpForward :height * 0.8025
+	arcsRight :arcsInfo :height
+	jumpForward :size1
+	setHeading :oldHeading - 39.377
+	jumpForward :size1
+	arcsRight reverse :arcsInfo :height
+	polyEnd
+
+	; Draw the top arc.
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height
+	right 90
+	arcRight :outerAngle1 / 2 :outerArcRadius
+	polyStart
+	arcsRight :outerArcsInfo :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+teslaLogo 100

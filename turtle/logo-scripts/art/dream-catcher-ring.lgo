@@ -1,0 +1,181 @@
+to drawArcs :radius
+	localmake "oldState turtleState
+	localmake "center pos
+	localmake "tinyRadius :radius * 0.058
+	localmake "offset1 :tinyRadius * 0.6
+	setPenSize :radius * 0.007
+	jumpForward :radius
+	localmake "pos1 pos
+	jumpBackward  :offset1
+	localmake "startPos pos
+	left 90
+	localmake "arcAngle getArcRightAngleToCircle :tinyRadius :center :radius
+	arcRight :arcAngle :tinyRadius
+	localmake "len1 distance :pos1
+	localmake "angle 2 * arcSin :len1 / 2 / :radius
+	setHeading (towards :center) + 90 - :angle - :arcAngle
+	arcRight :arcAngle * 2 :tinyRadius
+	jumpTo :startPos
+	setHeading (towards :center) - 90
+	arcLeft :arcAngle :tinyRadius
+	setHeading (towards :center) - 90 + :angle + :arcAngle
+	arcLeft :arcAngle * 2 :tinyRadius
+	setTurtleState :oldState
+end
+
+to drawStar :radius :innerRadius
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "center pos
+	localmake "angle1 157
+	localmake "angle2 2 * (180 - :angle1)
+	localmake "numPoints 8
+	setLineCap "round
+	setLineJoinStyle "round
+	repeat :numPoints [
+		setHeading :oldHeading + (repcount + 0.5) * 360 / :numPoints
+		jumpForward :radius
+		right :angle1
+		localmake "len distanceToCircle :center :innerRadius 
+		localmake "pos1 pos
+		forward :len
+		jumpTo :pos1
+		right :angle2
+		forward :len
+		setHeading (towards :center) + 90
+		localmake "pointWidth1 :len * sin :angle2 / 2
+		localmake "pointAngleWidth arcSin :pointWidth1 / :innerRadius
+		localmake "arcAngle 360 / :numPoints - 2 * :pointAngleWidth
+		arcLeft :arcAngle :innerRadius
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+to drawArrow :radius
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angle 175
+	localmake "arcAngle 45
+	localmake "arcRadius :radius * 0.35
+	localmake "lines1 [
+		[:arcAngle / 2 0] [-:arcAngle * 1.25 1] [:arcAngle * 1.5 1]
+		[-:arcAngle 1]
+	]
+	setLineJoinStyle "miter
+	jumpForward :radius
+	localmake "upPos pos
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		setHeading :oldHeading + :sign * :angle
+		jumpTo :oldPos
+		jumpForward :radius
+		setHeading :oldHeading
+		arcLines :lines1 :arcRadius
+		if repcount = 1 [
+			localmake "firstPoint pos
+		]
+	]
+	setHeading :oldHeading + 120
+	forward :radius * 0.2
+	left 150
+	localmake "len distanceToLine :oldPos :upPos
+	forward :len
+	left 180 + 2 * (heading - :oldHeading)
+	forward :len
+	setPos :firstPoint
+	setTurtleState :oldState
+end
+
+to drawJaggedEdges :size
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "width :size / 2
+	localmake "angle1 62
+	localmake "angle2 180 - 2 * (90 - :angle1)
+	localmake "dash :width / 3 / cos :angle1
+	localmake "len1 :size * 0.1
+	localmake "points []
+	setLineJoinStyle "miter
+	repeat 3 [
+		setHeading :oldHeading + (repcount - 2) * 90
+		jumpForward :width
+		jumpLeft :width
+		queue2 "points pos
+		right 90
+		repeat 3 [
+			left :angle1
+			forward :dash
+			right :angle2
+			forward :dash
+			left :angle1
+		]
+		jumpTo :oldPos
+	]
+	setHeading :oldHeading
+	jumpTo first :points
+	setHeading :oldHeading - :angle1
+	backward :len1
+	setHeading :oldHeading
+	localmake "len2 distanceToLine :oldPos item 2 :points
+	forward :len2
+	right 90
+	forward (distance :oldPos) * 2 * cos 45
+	right 90
+	forward :len2
+	left 180 - :angle1
+	forward :len1
+	closePath
+	setTurtleState :oldState
+end
+
+; Inspired by a drawing at:
+; https://www.facebook.com/photo/?fbid=29029860723324268
+to microWorldsPentaFlower :height :color1 :color2
+	localmake "oldState turtleState
+	localmake "thickness1 :height * 0.005
+	localmake "innerRadius :height * 0.245
+	setPenSize :height * 0.07
+	setPenColor :color1
+	jumpForward :height / 2
+	setFillColor :color2
+	localmake "radius1 (:height - penSize) / 2
+	circle :radius1
+	setPenSize :height * 0.04
+	setPenColor :color2
+	setFillColor transparent
+	circle :radius1
+	setPenColor :color1
+	setPenSize :height * 0.03
+	localmake "radius2 :radius1 + penSize / 2
+	localmake "tinySquareSize penSize
+	circle :radius1
+	localmake "center pos
+	setPenSize 0
+	repeat 12 [
+		jumpForward :radius1
+		setFillColor :color2
+		rect :tinySquareSize * 1.2 :tinySquareSize * 1.05
+		setFillColor :color1
+		circle :tinySquareSize * 0.4
+		jumpTo :center
+		right 180 / 12
+		setPenColor :color2
+		drawArcs :radius2
+		jumpTo :center
+		right 180 / 12
+	]
+	setPenSize :thickness1
+	setPenColor :color1
+	setFillColor transparent
+	circle :innerRadius
+	drawStar :height * 0.42 :height * 0.3
+	drawArrow :innerRadius
+	jumpForward :height * 0.02
+	drawJaggedEdges :height * 0.22
+	setTurtleState :oldState
+end
+
+microWorldsPentaFlower 100 "black "white

@@ -1,0 +1,36 @@
+; Inspired by a drawing on the cover of a book called:
+; 1978 Car Shop Manual
+; Volume 4 Body
+;
+; The cover also shows the Ford logo with text "75th Anniversary".
+; You can see the cover at:
+; https://www.auto-repair-manuals.com/Ford-1978-Cars-Factory-Shop-Manual-5-Volume-Set.html
+; also at:
+; https://d2w9rnfcy7mm78.cloudfront.net/11631141/original_3398afd60c68c81a35727854ca9267a2.png?1618766932?bc=0
+to fordCarShopManualCover1978 :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "thicknessFactor 0.01
+	localmake "maxRadius (0.5 - :thicknessFactor / 2) / 2
+	localmake "arcs [[229 0.115] [240 0.15] [252 0.182] [269 :maxRadius]]
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize :height * :thicknessFactor
+	setLineCap "butt
+	setPenColor "#f5e0cd
+	repeat 4 [
+		localmake "heading1 :oldHeading + repcount * 360 / 4
+		repeat count :arcs [
+			localmake "arcInfo item repcount :arcs
+			localmake "arcAngle first :arcInfo
+			localmake "arcRadius :height * last :arcInfo
+			setHeading :heading1
+			jumpTo :center
+			arcLeft :arcAngle :arcRadius
+		]		
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "#574533
+fordCarShopManualCover1978 100

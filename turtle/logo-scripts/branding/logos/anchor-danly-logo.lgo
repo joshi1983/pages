@@ -1,0 +1,92 @@
+to drawAnchor :height
+localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "circleRadius :height * 0.156
+	localmake "thickness1 :height * 0.12
+	localmake "thickness2 :height * 0.14
+	localmake "bottomTinyRadius :height * 0.06
+	localmake "anchorDanlyBrown "#d79928
+	localmake "middleHeight1 :height - :circleRadius * 2 - :thickness1 / 2
+	localmake "arrowWhiteLine [[90 0] [-53.8 0.52] [84 0] [0.08] [-121 0]
+		[4.5 3.5] [-128 0] [14 1.2] [-133 0]
+		[0.08] [105 0] [48.3 0.4]]
+	localmake "arrowShape1 [0 0.032
+		:arrowWhiteLine
+	]
+	localmake "arrowBrownLine [
+		[90 0] [-57.6 0.49] [89 0] [0.065] [-123 0]
+		[3.6 3] [-126 0] [14.2 0.8] [-131 0] [0.055]
+		[100 0] [50.8 0.45]
+	]
+	localmake "brownArrow [0 0.05
+		:arrowBrownLine
+	]
+	setPenSize 0
+	setFillColor "white
+	drawArcLineShape :arrowShape1 :height
+	drawArcLineShape :arrowShape1 -:height
+	jumpForward :height * 0.625
+	localmake "crossPos pos
+	roundRect :height * 0.47 :height * 0.145 :height * 0.056
+
+	jumpTo :oldPos
+	jumpForward :height - :circleRadius
+	setFillColor transparent
+	setPenColor "white
+	setPenSize :thickness1
+	circle :circleRadius - penSize / 2
+	setLineCap "butt
+	setPenSize :thickness2
+	jumpBackward :circleRadius - :thickness1 / 2
+	setPenColor "white
+	backward :middleHeight1
+	setPenSize :height * 0.095
+	setPenColor :anchorDanlyBrown
+	forward :middleHeight1
+	jumpForward :circleRadius - :thickness1 / 2
+	setPenSize :height * 0.067
+	circle :circleRadius - :thickness1 / 2
+
+	jumpTo :oldPos
+	jumpForward :bottomTinyRadius
+	setPenSize 0
+	setFillColor "white
+	circle :bottomTinyRadius
+	setFillColor :anchorDanlyBrown
+	circle :height * 0.035
+
+	jumpTo :crossPos
+	roundRect :height * 0.425 :height * 0.097 :height * 0.04
+
+	jumpTo :oldPos
+	drawArcLineShape :brownArrow :height
+	drawArcLineShape :brownArrow -:height
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://www.anchordanly.com
+to anchorDanlyLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "radius1 :height * 0.76
+	localmake "radius2 :height * 0.32
+	localmake "padding :height * 0.025
+	localmake "innerRadius1 :radius1 - :padding
+	localmake "innerRadius2 :radius2 - :padding
+	jumpForward :height * 0.45
+	setPenSize 0
+	setFillColor "#003e6f
+	ellipse :radius1 :radius2
+	setFillColor transparent
+	setPenColor "white
+	setPenSize :height * 0.01
+	ellipse :innerRadius1 :innerRadius2
+
+	jumpTo :oldPos
+	drawAnchor :height
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+anchorDanlyLogo 100

@@ -7,6 +7,7 @@ import java.awt.image.BufferedImage;
 
 
 public class BlendFrameCluster {
+	public static final String framePrefix = "frame_";
 	public int frameIndex;
 	public HashSet<String> filenames;
 
@@ -16,18 +17,18 @@ public class BlendFrameCluster {
 	}
 
 	public static boolean isBlendFrame(String filename) {
-		if (!filename.endsWith(".png") || filename.indexOf("cloud_frame_") == -1)
+		if (!filename.endsWith(".png") || filename.indexOf(framePrefix) == -1)
 			return false;
 
-		int index = filename.indexOf("cloud_frame_");
-		filename = filename.substring(index + ("cloud_frame_".length()));
+		int index = filename.indexOf(framePrefix);
+		filename = filename.substring(index + (framePrefix.length()));
 
 		return filename.indexOf("_") != -1;
 	}
 
 	public static int getFrameIndexFrom(String filename) {
-		int index = filename.indexOf("cloud_frame_");
-		filename = filename.substring(0, filename.length() - 4).substring(index + ("cloud_frame_".length()));
+		int index = filename.indexOf("frame_");
+		filename = filename.substring(0, filename.length() - 4).substring(index + (framePrefix.length()));
 		index = filename.indexOf("_");
 		if (index > 0) {
 			filename = filename.substring(0, index);

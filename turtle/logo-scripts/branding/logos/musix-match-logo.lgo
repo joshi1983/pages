@@ -1,0 +1,27 @@
+; Inspired by
+; https://www.musixmatch.com/
+to musixMatchLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "arcRadiusRatio 0.11
+	localmake "thicknessRatio 0.09
+	localmake "angle 127.5
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize :height * :thicknessRatio
+	setPenColor "black
+	setLineCap "butt
+	repeat 2 [
+		setHeading :oldHeading + repcount * 180
+		jumpForward :height * 0.195
+		jumpLeft :height * 0.5
+		right :angle
+		arcLines [[1.03] [:angle :arcRadiusRatio]
+			[1 - :arcRadiusRatio * 2 - :thicknessRatio]
+			[:angle :arcRadiusRatio] [1]] :height
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+musixMatchLogo 100

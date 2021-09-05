@@ -1,0 +1,90 @@
+make "darkColor "#680
+
+to drawArcs :gap :len
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "arcAngle 85
+	localmake "arcAngle2 :arcAngle * 2
+	localmake "arcRadius :len / 8 / sin :arcAngle
+	repeat 6 [
+		setHeading :oldHeading + repcount * 360 / 6
+		jumpForward :gap
+		left :arcAngle
+		repeat 2 [
+			arcRight :arcAngle2 :arcRadius
+			arcLeft :arcAngle2 :arcRadius
+		]
+		jumpTo :oldPos
+	]
+	setHeading :oldHeading
+end
+
+; Inspired by crop circles shown at:
+; https://www.cropcircleconnector.com/2014/Gussage/Gussage2014a.html
+; These crop circles were reported August 13, 2014
+; The location was:
+; Gussage St Andrews, Nr Sixpenny Handley, Dorset, United Kingdom
+to gussage2014CropCircles :height
+	localmake "oldState turtleState
+	localmake "thickness :height * 0.005
+	localmake "lightColor "#fe8
+	localmake "hexRadius :height * 0.18
+	localmake "largeHexRadius (:hexRadius + :thickness / 2) / (cos 180 / 6)
+	localmake "largeHexSideLength :largeHexRadius * 2 * sin 180 / 6
+	localmake "largeHexInnerRadius :largeHexRadius * cos 180 / 6
+	localmake "triHeight :height / 2 - :largeHexInnerRadius
+	localmake "angles [57 30 12]
+	jumpForward :height / 2
+	localmake "center pos
+	repeat 6 [
+		jumpBackward :height / 2
+		stripes :thickness :height [:lightColor]
+		jumpTo :center
+		right 360 / 12
+	]
+	setPenSize :thickness
+	setPenColor :lightColor
+	setLineJoinStyle "round
+	drawArcs :largeHexRadius :height / 2 - :largeHexRadius - penSize / 2
+	right 180 / 6
+	repeat 6 [
+		localmake "heading1 heading
+		jumpForward :largeHexInnerRadius
+		isoTriangle :largeHexSideLength :triHeight
+		localmake "pos1 pos
+		jumpForward :triHeight
+		localmake "topPos pos
+		jumpTo :pos1
+		jumpLeft :largeHexSideLength / 2
+		localmake "sidePos1 pos
+		jumpRight :largeHexSideLength
+		localmake "sidePos2 pos
+		jumpTo :pos1
+		repeat 2 [
+			localmake "sign sign repcount - 1.5
+			localmake "sidePos item repcount [:sidePos1 :sidePos2]
+			repeat count :angles [
+				localmake "angle item repcount :angles
+				setHeading :heading1 + :sign * :angle
+				forward distanceToLine :sidePos :topPos
+				jumpTo :pos1
+			]
+		]
+		jumpTo :center
+		setHeading :heading1 + 360 / 6
+	]
+	setFillColor :lightColor
+	setPenSize 0
+	regularPolygon :hexRadius 6
+	setFillColor transparent
+	setPenColor :darkColor
+	setPenSize :height * 0.015
+	repeat 3 [
+		localmake "radius penSize * (repcount * 2 + 3)
+		circle :radius
+	]	
+	setTurtleState :oldState
+end
+
+setScreenColor :darkColor
+gussage2014CropCircles 100

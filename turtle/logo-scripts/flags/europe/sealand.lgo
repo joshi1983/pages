@@ -1,0 +1,25 @@
+; Inspired by
+; https://upload.wikimedia.org/wikipedia/commons/e/e5/Flag_of_Sealand.svg
+to sealandFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 3 / 2
+	localmake "size1 :height / 3
+	stripes :width :height ["white]
+	setPenSize 0
+	setFillColor "#ED2939
+	jumpLeft :width / 2
+	polyStart
+	jumpForward :height
+	jumpRight :width
+	polyEnd
+	jumpBackward :size1
+	setFillColor "black
+	polyStart
+	jumpBackward :height - :size1
+	jumpLeft :width * (:height - :size1) / :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+setScreenColor "#ddd
+sealandFlag 100

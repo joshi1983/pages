@@ -1,0 +1,113 @@
+; Inspired by a design from Phan Bá Thành.
+; Phan's facebook profile is at:
+; https://www.facebook.com/thanh.ba86
+;
+; One photo of the physical string art is at:
+; https://www.facebook.com/photo?fbid=4086860548104770
+
+to triangle :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "numLines 24
+	localmake "step :size / :numLines
+	localmake "angle 135
+	localmake "angle2 5
+	left :angle - :angle2
+	jumpForward :size
+	localmake "toPos pos
+	jumpTo :oldPos
+	repeat :numLines [
+		
+		setHeading :oldHeading + :angle + :angle2
+		jumpForward :step
+		localmake "tempPos pos
+		setHeading towards :toPos
+		forward distance :toPos
+		jumpTo :tempPos
+	]
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to innerPattern :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "numLines 12
+	localmake "result []
+	repeat :numLines [
+		setHeading :oldHeading + 360 * repcount / :numLines
+		jumpTo :oldPos
+		jumpForward :size
+		queue2 "result pos
+	]
+	repeat :numLines [
+		localmake "fromPos item repcount :result
+		localmake "toPoints [
+			item 1 + remainder (repcount + 4) :numLines :result
+			item 1 + remainder (repcount + :numLines - 4) :numLines :result
+		]
+		repeat count :toPoints [
+			localmake "toPos item repcount :toPoints
+			jumpTo :fromPos
+			setHeading towards :toPos
+			forward distance :toPos
+		]
+	]
+	jumpTo :oldPos
+	output :result
+end
+
+to solarOctagon :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "tradius :size * 0.83
+	localmake "triangleSize :size * 0.38
+	localmake "innerRadius :size * 0.45
+	localmake "numLines 48
+	setLineJoinStyle "round
+	setFillColor "black
+	setPenSize 0
+	circle :size
+	setFillColor transparent
+	setPenColor "#b40
+	setPenSize :size * 0.05
+	circle :size * 0.91
+	setPenColor "#740
+	setPenSize :size * 0.03
+	circle :size * 0.84
+	setPenColor "#ff8
+	circle :size * 0.87
+	setPenSize :size * 0.015
+	circle :innerRadius
+	setPenSize :size * 0.003
+	repeat 8 [
+		jumpTo :oldPos
+		jumpForward :tradius
+		triangle :triangleSize
+		right 360 / 8
+	]
+	jumpTo :oldPos
+	localmake "innerPoints innerPattern :size * 0.1
+	localmake "factor (count :innerPoints) / :numLines
+	repeat :numLines [
+		localmake "h :oldHeading + 360 * repcount / :numLines
+		localmake "toPoints [
+			item 1 + int remainder int (10 + repcount * :factor) (count :innerPoints) :innerPoints
+			item 1 + int remainder (0 + int repcount * :factor) (count :innerPoints) :innerPoints
+		]
+		setHeading :h
+		jumpTo :oldPos
+		jumpForward :innerRadius
+		localmake "endPoint pos
+		repeat count :toPoints [
+			localmake "toP item repcount :toPoints
+			jumpTo :endPoint
+			setHeading towards :toP
+			forward distance :toP
+		]
+	]
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+solarOctagon 150

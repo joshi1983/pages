@@ -1,0 +1,219 @@
+; The cross calculations required more math than in most flags.
+
+to calculateArcAngle1
+	localmake "a 2
+	localmake "b -218
+	localmake "c 109 * 109 - 104 * 104
+	localmake "roots solveQuadratic :a :b :c
+	localmake "d min item 1 :roots item 2 :roots
+	output arcSin :d / 104
+end
+
+; Uses Law of Cosines to compute the cosine ratio of one vertex in a triangle
+; with lengths a, b, and c
+; More can be learned about the Law of Cosines at:
+; https://en.wikipedia.org/wiki/Law_of_cosines
+to getCosRatio :a :b :c
+	if :a * :b = 0 [
+		; avoid division by zero.
+		output 0
+	]
+	output (:a * :a + :b * :b - :c * :c) / (2 * :a * :b)
+end
+
+to calculateArcAngle2
+	localmake "c 54
+	localmake "b 104
+	localmake "a hypot [74 109]
+	localmake "angle1 arcTan 74 / 109
+	localmake "cosRatio getCosRatio :a :b :c
+	localmake "angle2 arcCos :cosRatio
+	output :angle1 - :angle2
+end
+
+to georgiaCross :flagHeight
+	localmake "oldState turtleState
+	localmake "largeRadius :flagHeight * 104 / 200
+	localmake "smallRadius :flagHeight * 54 / 200
+	localmake "size1 5 * :flagHeight / 200
+	localmake "angle1 calculateArcAngle1
+	localmake "angle2 calculateArcAngle2
+	localmake "y 109 - 104 * cos :angle2
+	localmake "angle3 arcSin :y / 54
+	localmake "angle4 :angle2 + 90 + :angle3
+	localmake "angle2 :angle2 - :angle1
+	setPenSize 0
+	jumpForward :size1
+	right 90
+	arcLeft :angle1 :largeRadius
+	polyStart
+	repeat 4 [
+		arcLeft :angle2 :largeRadius
+		right :angle4
+		arcLeft :angle3 * 2 :smallRadius	
+		right :angle4
+		arcLeft :angle2 :largeRadius
+		left 90 + :angle1 * 2
+	]
+	polyEnd
+	setTurtleState :oldState
+end
+
+to georgiaFlagCustomized :width :height :redColor
+	localmake "oldState turtleState
+	localmake "crossThickness :height * 4 / 20
+	localmake "subflagHeight (:height - :crossThickness) / 2
+	localmake "subflagWidth (:width - :crossThickness) / 2
+	localmake "size1 (:subflagHeight + :crossThickness) / 2
+	localmake "size2 (:subflagWidth + :crossThickness) / 2
+	setLineCap "butt
+	setPenSize :width
+	setPenColor "white
+	forward :height
+	setPenSize :crossThickness
+	setPenColor :redColor
+	backward :height
+	jumpForward :height / 2
+	jumpLeft :width / 2
+	right 90
+	forward :width
+	jumpBackward :subflagWidth / 2
+	jumpLeft :size1
+	setFillColor :redColor
+	georgiaCross :height
+	jumpRight :size1 * 2
+	georgiaCross :height
+	jumpBackward :size2 * 2
+	georgiaCross :height
+	jumpLeft :size1 * 2
+	georgiaCross :height
+	setTurtleState :oldState
+end
+
+; Based on construction sheet at:
+; https://en.wikipedia.org/wiki/Flag_of_Georgia_(country)
+to georgiaFlag :height
+	georgiaFlagCustomized :height * 3 / 2 :height "red
+end
+
+; https://commons.wikimedia.org/wiki/File:QueenTamarFlag.svg
+to queenTamarFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 3 / 2
+	setLineCap "butt
+	setPenColor "black
+	setPenSize :width
+	forward :height
+	setPenSize :width / 2
+	setPenColor "#a00
+	jumpLeft :width / 4
+	backward :height / 2
+	jumpRight :width / 2
+	backward :height / 2
+	setTurtleState :oldState
+end
+
+to diagonalStripes :height
+	localmake "oldState turtleState
+	localmake "thickness :height * 0.21
+	localmake "thickness2 :height * 0.4
+	localmake "oldHeading heading
+	localmake "angle 135
+	setFillColor "green
+	setPenSize 0
+	localmake "size :height * 0.154
+	jumpForward :size
+	repeat 2 [
+		localmake "pos1 pos
+		polyStart
+		jumpForward :thickness
+		left :angle
+		jumpForward (:size + :thickness) / sin :angle
+		left :angle
+		jumpForward :thickness
+		polyEnd
+		jumpTo :pos1
+		setHeading :oldHeading
+		jumpForward :thickness2
+		localmake "size min :height :size + :thickness2
+	]
+	polyStart
+	jumpForward :height - :size
+	jumpLeft :thickness - (:height - :size)
+	localmake "pos1 pos
+	left :angle
+	jumpForward :height / sin :angle
+	left :angle
+	jumpForward :thickness
+	polyEnd
+	jumpTo :pos1
+	setHeading :oldHeading
+	jumpLeft :thickness2 - :thickness
+	polyStart
+	jumpLeft :thickness
+	left :angle
+	jumpForward :height * 0.6
+	left :angle
+	jumpForward :thickness
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by:
+; https://commons.wikimedia.org/wiki/File:Flag_of_the_Kingdom_of_Egris-Abkhazia_v2.svg
+; Kingdom of Egris Abkhazia
+to kingdomOfGeorgia1008Flag :height
+	localmake "oldState turtleState
+	localmake "width :height * 1785 / 1229
+	localmake "widthLeft :width * 0.495
+	; The 0.495 is not 0.5 because
+	; the SVG doesn't split exactly at 0.5.
+	; It seemed like a possible mistake but I wanted to line up better with the SVG
+	; instead of using 0.5.
+
+	setLineCap "butt
+	setPenSize :width
+	setPenColor "white
+	; white background
+	forward :height
+	jumpBackward :height
+
+	jumpRight :width / 2
+	diagonalStripes :height
+	jumpLeft :width - :widthLeft
+	jumpForward :height / 2
+	left 90
+	georgiaFlagCustomized :height :widthLeft "#bf0101
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://commons.wikimedia.org/wiki/File:Flag_of_Kingdom_of_Kartli-Kakheti.svg
+to kingdomOfKarliKakheti1762Flag :height
+	localmake "oldState turtleState
+	localmake "width :height * 2
+	setPenColor "black
+	setLineCap "butt
+	setPenSize :width
+	forward :height
+	setPenColor "white
+	setPenSize :height * 91.2 / 350
+	backward :height
+	jumpForward :height / 2
+	jumpLeft :width / 2
+	right 90
+	forward :width
+	setTurtleState :oldState
+end
+
+setScreenColor "#ddd
+make "height 100
+make "separation :height * 3
+jumpLeft :separation * 1.5
+georgiaFlag :height
+jumpRight :separation
+queenTamarFlag :height
+jumpRight :separation
+kingdomOfGeorgia1008Flag :height
+jumpRight :separation
+kingdomOfKarliKakheti1762Flag :height

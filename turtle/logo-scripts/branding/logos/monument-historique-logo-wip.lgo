@@ -1,0 +1,135 @@
+; This is incomplete.  
+; That's why the file name ends with "wip" as in work-in-progress.
+; It needs the following tasks completed:
+; 1. The lower left part needs filled in.
+; 2. The corner shapes need to get connected properly to the lines that 
+; come close to connecting.  The would-be joints look nasty right now.
+
+to drawCorners :height
+	localmake "oldState turtleState
+	localmake "center pos
+	localmake "oldHeading heading
+	localmake "maxCornerGap :height * 0.113
+	localmake "minCornerGap :height * 0.042
+	localmake "gap :height / 2 - :maxCornerGap - penSize / 2
+	repeat 4 [
+		setHeading :oldHeading + repcount * 360 / 4
+		jumpForward :gap
+		localmake "cornerCenter pos
+		localmake "heading1 heading
+		repeat 4 [
+			setHeading :heading1
+			localmake "innerGap mix :minCornerGap :maxCornerGap repRatio
+			localmake "sideLength :innerGap * 2 * tan 180 / 8
+			localmake "bottomLength (:innerGap - penSize * (5 - repcount) * 2) / cos 45
+			if repcount = 1 [
+				localmake "bottomLength :height * 0.01
+			]
+			jumpLeft :innerGap
+			jumpBackward :sideLength / 2
+			left 45
+			jumpBackward :bottomLength
+			forward :bottomLength
+			right 45
+			repeat 5 [
+				forward :sideLength
+				right 45
+			]
+			forward :bottomLength
+			jumpTo :cornerCenter
+		]
+		jumpTo :center	
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Monument_historique#/media/File:Logo_monument_historique_-_rouge_ombré,_encadré.svg
+to monumentHistoriqueLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "innerGap :height * 0.0721
+	localmake "midGap :height * 0.2325
+	localmake "height1 :height * 0.119
+	localmake "step (:midGap - :innerGap) / 7
+	jumpForward :height / 2
+	localmake "center pos
+	setLineJoinStyle "miter
+	setLineCap "butt
+	setPenColor "blue
+	setPenSize :step / 2
+	repeat 4 [
+		repeat 8 [
+			jumpTo :center
+			localmake "size (mix :midGap :innerGap repRatio) + penSize / 2
+			jumpForward :size - penSize
+			localmake "width :size * 2 * tan 180 / 8
+			stripes :width penSize [penColor]
+		]
+		stripes penSize :height1 [penColor]
+		right 90		
+	]
+	repeat 4 [
+		localmake "heading1 :oldHeading + repcount * 360 / 4
+		repeat 4 [
+			setHeading :heading1
+			jumpTo :center
+			localmake "size :midGap + :step * repcount
+			jumpForward :size
+			localmake "width :size * 2 * tan 180 / 8
+			localmake "middleGap :step * (2 * repcount)
+			localmake "len (:width - :middleGap) / 2
+			localmake "height1 :height * 0.12 - repcount * 3
+			jumpRight :width / 2
+			left 90
+			forward :len
+			right 90
+			forward :height1
+			jumpLeft :middleGap
+			backward :height1
+			left 90
+			forward :len
+			setHeading :heading1
+		]
+	]
+	localmake "gapIndexes1 [
+		[false false true false false false true false false true]
+		[false true false false true false false true false false true]
+		[false false true false false true false false false true]
+	]
+	localmake "gapWidth penSize * 3
+	repeat 3 [
+		localmake "heading1 :oldHeading - 135 + repcount * 360 / 4
+		localmake "gapIndexes item repcount :gapIndexes1
+		repeat 12 [
+			setHeading :heading1
+			jumpTo :center
+			localmake "size :innerGap + (repcount - 1) * :step - penSize / 2
+			jumpForward :size
+			localmake "width (:size + penSize) * 2 * tan 180 / 8
+			ifelse and (repcount <= count :gapIndexes) (item repcount :gapIndexes) [
+				localmake "width1 (:width - :gapWidth)  / 2
+				jumpBackward :step
+				stripes penSize :step * 2 [penColor]
+				jumpForward :step
+				jumpRight (:width - :width1) / 2
+				repeat 2 [
+					stripes :width1 penSize [penColor]
+					jumpLeft :gapWidth + :width1
+				]
+			] [
+				stripes :width penSize [penColor]
+			]
+		]
+	]
+	setHeading :oldHeading
+	jumpTo :center
+	drawCorners :height
+	setHeading :oldHeading - 135
+	jumpForward :innerGap - penSize / 2
+	stripes penSize :step * 11 + penSize [penColor]
+	setTurtleState :oldState
+end
+
+monumentHistoriqueLogo 100
+imageAlpha 100 100 'local://monument_historique.svg' 0.5

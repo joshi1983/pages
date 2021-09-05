@@ -1,0 +1,42 @@
+; Inspired by a drawing and code from:
+; http://www.sonic.net/~nbs/webturtle/webturtle.cgi?file=dragon
+; Which was written for WebTurtle by Geert Pante (Geert.Pante@rug.ac.be)
+; January 1999
+
+; The following is rewritten for WebLogo by Josh Greig in 2024.
+;
+; You can paste WebTurtle code into WebLogo's code editor and use
+; Edit -> Auto-fix Code to translate most of the differences.
+
+to dragon :len :D :directionSign
+	ifelse :D > 0 [
+		localmake "D :D - 1
+		localmake "sign1 -:directionSign
+		localmake "sign2 :directionSign
+		if :directionSign > 0 [
+			swap "sign1 "sign2
+		]
+		right 45 * :directionSign
+		dragon :len :D :sign1
+		left 90 * :directionSign
+		dragon :len :D :sign2
+		right 45 * :directionSign
+	] [
+		forward :len
+	]
+end
+
+to drawWholeDragon :size
+	localmake "oldState turtleState
+	localmake "D 12
+	localmake "len :size * 0.0155
+	jumpForward :size * 0.337
+	jumpRight :size * 0.25
+	left 90
+	setPenSize :len
+	dragon :len :D 1
+	setTurtleState :oldState
+end
+
+setLineJoinStyle "round
+drawWholeDragon 100

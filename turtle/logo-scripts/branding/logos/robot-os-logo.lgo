@@ -1,0 +1,97 @@
+to drawDotGrid :height
+	localmake "oldState turtleState
+	localmake "dotRadius :height * 0.11
+	localmake "separation :height / 2 - :dotRadius
+	setPenSize 0
+	jumpLeft :separation
+	jumpForward :dotRadius
+	repeat 3 [
+		repeat 3 [
+			circle :dotRadius
+			jumpRight :separation
+		]
+		jumpLeft :separation * 3		
+		jumpForward :separation
+	]
+	setTurtleState :oldState
+end
+
+to drawR :fontHeight
+	localmake "oldState turtleState
+	localmake "thickness :fontHeight * 0.125
+	localmake "width1 :fontHeight * 0.35
+	localmake "arcRadius :fontHeight * 0.24
+	localmake "height1 :fontHeight - :thickness / 2
+	localmake "angle 25
+	localmake "slantedHeight (:height1 - :arcRadius * 2) / cos :angle
+	setPenColor fillColor
+	jumpLeft :fontHeight * 0.31
+	setPenSize :thickness
+	setLineCap "butt
+	setLineJoinStyle "miter
+	forward :height1
+	right 90
+	forward :width1
+	arcRight 180 :arcRadius
+	forward :width1
+	jumpBackward :width1 * 0.98
+	left 90
+	setPenSize 0
+	parallelogram :thickness :slantedHeight -:angle
+	setTurtleState :oldState
+end
+
+to drawO :fontHeight
+	localmake "oldState turtleState
+	localmake "lines1 [
+		[30 0.27] [20 0.34] [20 0.41] [20 0.6]
+	]
+	localmake "lines2 combine :lines1 reverse :lines1
+	setPenColor fillColor
+	setPenSize :fontHeight * 0.125
+	jumpForward penSize / 2
+	right 90
+	arcLines combine :lines2 :lines2 :fontHeight
+	closePath
+	setTurtleState :oldState
+end
+
+to drawS :fontHeight
+	localmake "oldState turtleState
+	jumpLeft :fontHeight * 0.32
+	jumpForward :fontHeight * 0.18
+	right 140
+	setPenSize :fontHeight * 0.13
+	setPenColor fillColor
+	setLineCap "butt
+	arcLines [
+		[40 0.35] [20 0.6] [110 0.2] [45 0.3]
+		[0.16] [-150 0.2] [-65 0.34]
+	] :fontHeight
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://en.wikipedia.org/wiki/Robot_Operating_System#/media/File:Ros_logo.svg
+;
+; It is also at:
+; https://www.ros.org
+to robotOSLogo :height
+	localmake "oldState turtleState
+	localmake "dotGridHeight :height * 0.84
+	localmake "fontHeight :dotGridHeight
+	setFillColor "#22314E
+	jumpLeft :height * 1.236
+	jumpForward (:height - :dotGridHeight) / 2
+	drawDotGrid :dotGridHeight
+	setLineJoinStyle "round
+	jumpRight :height
+	drawR :fontHeight
+	jumpRight :height * 0.8
+	drawO :fontHeight
+	jumpRight :height * 0.78
+	drawS :fontHeight
+	setTurtleState :oldState
+end
+
+robotOSLogo 100

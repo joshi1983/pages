@@ -1,0 +1,54 @@
+to drawShape :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "cornerRadius 0.06
+	localmake "cornerRadius2 0.023
+	localmake "angle1 57
+	localmake "angle2 60
+	localmake "line1 [
+		[90 0] [-:angle1 :cornerRadius]
+		[1] [-:angle2 :cornerRadius] [1.19967]
+		[:angle1 + :angle2 - 180 :cornerRadius]
+	]
+	localmake "triangleLine [
+		[-90 0] [:angle1 :cornerRadius2]
+		[0.28] [180 - :angle1 :cornerRadius2]
+	]
+	localmake "stops createPList2 [
+		[0.35 "#fb730d] [0.95 "#1841e9]
+	]
+	localmake "height1 :height / item 2 arcLinesInfo :line1
+	jumpForward :height
+	localmake "topPos pos
+	setFillGradient createLinearGradient :oldPos pos :stops "pad
+	setPenSize 0
+	jumpTo :oldPos
+	polyStart
+	arcLines pathMirror :line1 :height1
+	setHeading :oldHeading
+	jumpForward :height * 0.11
+	arcLines :triangleLine :height
+	localmake "len1 distanceToLine :oldPos :topPos
+	jumpForward :len1 * 2
+	arcLines reverse :triangleLine :height
+	polyEnd
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.273
+	circle :height * 0.06
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://www.linkedin.com/company/predictstreet/?originalSubdomain=gi
+to predictStreetLogo :height
+	localmake "oldState turtleState
+	jumpForward :height * 0.126
+	drawShape :height * 0.758
+	setTurtleState :oldState
+end
+
+setScreenColor "#020820
+predictStreetLogo 100

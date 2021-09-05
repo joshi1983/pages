@@ -1,0 +1,32 @@
+; Inspired by logo at:
+; https://en.wikipedia.org/wiki/Open_access#/media/File:Open_Access_logo_PLoS_transparent.svg
+to openAccessLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "thickness :height * 0.107
+	localmake "radius1 :height * 0.262
+	localmake "radius2 :height * 0.215
+	localmake "upperLeftOffset :height * 0.034
+	jumpForward :thickness / 2 + :radius1
+	localmake "center pos
+	setPenSize 0
+	setFillColor "#f68212
+	circle :height * 0.088
+
+	setPenColor fillColor
+	
+	setPenSize :thickness
+	setFillColor transparent
+	circle :radius1
+
+	jumpTo :oldPos
+	jumpForward :height - :thickness / 2 - :radius2 - :upperLeftOffset
+	jumpLeft :radius2
+	setLineCap "butt
+	forward :upperLeftOffset
+	arcRight 180 :radius2
+	forward distanceToCircle :center :radius1
+	setTurtleState :oldState
+end
+
+openAccessLogo 100

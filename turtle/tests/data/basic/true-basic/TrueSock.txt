@@ -1,0 +1,190 @@
+MODULE TrueSockets
+OPTION TYPO
+
+
+PUBLIC TSM_SOCKET, TSM_BIND, TSM_LISTEN, TSM_ACCEPT, TSM_CONNECT, TSM_RECV, TSM_SEND, TSM_CLOSE
+PUBLIC TSM_GETHOSTBYNAME
+PUBLIC AF_UNIX, AF_INET
+PUBLIC SOCK_STREAM, SOCK_DGRAM
+PUBLIC IPPROTO_TCP, IPPROTO_UDP
+
+
+SUB TS_Init
+    DIM v(0)
+
+    READ TSM_SOCKET, TSM_BIND, TSM_LISTEN, TSM_ACCEPT, TSM_CONNECT, TSM_RECV, TSM_SEND, TSM_CLOSE
+	DATA      0,        1,          2,         3,           4,          5,        6,        7
+
+	READ TSM_GETHOSTBYNAME
+	DATA        8
+
+    READ AF_UNIX, AF_INET
+	DATA     1,      2
+
+    READ SOCK_STREAM, SOCK_DGRAM
+	DATA      1,           2
+
+    READ IPPROTO_TCP, IPPROTO_UDP
+	DATA      6,           17
+
+END SUB ! TS_Init
+
+
+DEF TS_Socket(family,type,protocol)
+    DIM v(3)
+	
+	LET v(1) = family
+	LET v(2) = type
+	LET v(3) = protocol
+
+	CALL Socket(TSM_SOCKET,"",v)
+
+	LET TS_Socket = v(1)
+
+END DEF ! TS_Socket
+
+
+SUB TS_Bind(tb_socket,family,port,addr$)
+    DECLARE DEF Create_SockAddr$
+    LOCAL sockaddr$,v(1)
+
+    LET v(1) = tb_socket
+	LET sockaddr$ = Create_SockAddr$(family,port,addr$)
+	CALL Socket(TSM_BIND,sockaddr$,v)
+
+END SUB ! TS_Bind
+
+
+SUB TS_Connect(tb_socket,family,port,addr$)
+    DECLARE DEF Create_SockAddr$
+    LOCAL sockaddr$,v(1)
+
+    LET v(1) = tb_socket
+	LET sockaddr$ = Create_SockAddr$(family,port,addr$)
+	CALL Socket(TSM_CONNECT,sockaddr$,v)
+
+END SUB ! TS_Bind
+
+
+DEF TS_Receive$(tb_socket,n)
+    LOCAL v(1),tmp$
+
+	LET v(1) = tb_socket
+	LET tmp$ = repeat$(chr$(0),n)
+	CALL Socket(TSM_RECV,tmp$,v)
+	LET TS_Receive$ = tmp$
+
+END DEF ! TS_Receive$
+
+
+SUB TS_Send(tb_socket,send$)
+    LOCAL v(1)
+
+	LET v(1) = tb_socket
+	CALL Socket(TSM_SEND,send$,v)
+
+END SUB ! TS_Send
+
+
+SUB TS_Listen(tb_socket,backlog)
+    LOCAL v(2)
+
+	LET v(1) = tb_socket
+	LET v(2) = backlog
+	CALL Socket(TSM_LISTEN,"",v)
+
+END SUB ! TS_Listen
+
+
+DEF TS_Accept(tb_socket,family,port,addr$)
+    DECLARE DEF Create_SockAddr$
+    LOCAL sockaddr$,v(1)
+
+    LET v(1) = tb_socket
+	LET sockaddr$ = Create_SockAddr$(family,port,addr$)
+	CALL Socket(TSM_ACCEPT,sockaddr$,v)
+	LET TS_Accept = v(1)
+
+END DEF ! TS_Accept
+
+
+SUB TS_Close(tb_socket)
+    DIM v(1)
+
+	LET v(1) = tb_socket
+
+	CALL Socket(TSM_CLOSE,"",v)
+
+END SUB ! TS_Close
+
+
+DEF TS_GetHostByName$(name$)
+	LOCAL v(0),tmp$,addr$
+
+    LET tmp$ = name$
+	CALL Socket(TSM_GETHOSTBYNAME,tmp$,v)
+	LET addr$ = ""
+	LET addr$ = addr$ & str$(unpackb(tmp$,1,8)) & "."
+	LET addr$ = addr$ & str$(unpackb(tmp$,9,8)) & "."
+	LET addr$ = addr$ & str$(unpackb(tmp$,17,8)) & "."
+	LET addr$ = addr$ & str$(unpackb(tmp$,25,8))
+	LET TS_GetHostByName$ = addr$
+
+END DEF ! TS_GetHostByName$
+
+
+DEF Create_SockAddr$(family,port,addr$)
+    LOCAL sockaddr$, tmp$
+    LOCAL p,oldp,count,longaddr
+
+    !
+	! We build everything here, but worry about byte ordering
+	! in the Socket routine, to make this work anywhere.
+	!
+
+	LET sockaddr$ = repeat$(chr$(0),16)
+    CALL packb(sockaddr$,1,16,family)
+
+	IF family = AF_UNIX THEN
+	   !
+	   ! Ignore port; addr$ is a name.
+	   !
+	   LET addr$ = addr$[1:14]
+	   LET sockaddr$[5:5+len(addr$)-1] = addr$
+	ELSE IF family = AF_INET THEN
+	   !
+	   ! Socket, address should be zero if we don't care.
+	   !
+	   CALL packb(sockaddr$,17,16,port)
+	   WHEN EXCEPTION IN
+	        !
+			! Might already be a long.
+			!
+	        LET longaddr = val(addr$)
+			CALL packb(sockaddr$,33,32,longaddr)
+	   USE
+	        !
+			! Expect dotted notation, e.g., 192.168.0.1
+			!
+			LET oldp = 1
+			LET count = 33
+			DO
+				LET p = pos(addr$,".",oldp)
+				IF p = 0 THEN
+				   CALL packb(sockaddr$,count,8,val(addr$[oldp:maxnum]))
+				   EXIT DO
+				ELSE
+				   CALL packb(sockaddr$,count,8,val(addr$[oldp:p-1]))
+				   LET count = count + 8
+				   LET oldp = p + 1
+				END IF
+			LOOP
+	   END WHEN
+	ELSE
+	END IF
+
+	LET Create_SockAddr$ = sockaddr$
+
+END DEF ! Create_SockAddr$
+
+END MODULE ! TrueSockets

@@ -1,0 +1,68 @@
+; Inspired by image at:
+; https://ca.pinterest.com/pin/563018698504508
+to kotlinMascot :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "cornerRadius1 0.13
+	localmake "angle1 28.5
+	localmake "outline [
+		[-90 0] [0.46] [90 :cornerRadius1] [1 - :cornerRadius1 * 2]
+		[90 + :angle1 :cornerRadius1] [0.412124945] [-:angle1 0.075]
+	]
+	localmake "separation :height * 0.47
+	setPenSize 0
+	setFillColor "#7F52FF
+	drawArcLineShape [0 0
+		combine :outline reverse :outline
+	] :height
+	jumpForward :height * 0.38
+	setFillColor "black
+	roundRect :height * 1 :height * 0.56 :height * 0.11
+
+	setFillColor transparent
+	setPenColor "white
+	setPenSize :height * 0.075
+	jumpTo :oldPos
+	jumpForward :height * 0.407
+	jumpLeft :separation / 2
+	repeat 2 [
+		circle :height * 0.162
+		jumpRight :separation
+	]
+	setTurtleState :oldState
+end
+
+to kotlinLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "colorStops createPList2 [
+		[0 "#7f52ff] [1 "#e3465d]
+	]
+	localmake "len :height / 2 / cos 45
+	right 45
+	localmake "fromPos pos
+	jumpForward :height
+	setFillGradient createLinearGradient :fromPos pos :colorStops "pad
+	jumpTo :oldPos
+	setPenSize 0
+	setHeading :oldHeading
+	jumpLeft :height / 2
+	polyStart
+	jumpRight :height
+	left 45
+	jumpForward :len
+	right 90
+	jumpForward :len
+	left 135
+	jumpForward :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 5
+jumpLeft :separation / 2
+kotlinMascot :height
+jumpRight :separation
+kotlinLogo :height

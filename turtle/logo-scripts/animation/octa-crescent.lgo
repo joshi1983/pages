@@ -1,0 +1,70 @@
+; Inspired by:
+; https://www.pinterest.ca/pin/274860383500043569/
+
+to octaCrescent :size :ratio
+	localmake "ratio clamp :ratio 0 1
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "numSides 8
+	localmake "innerRadius :size
+	localmake "outerRadius :innerRadius * 0.35
+	localmake "angleStep arcSin :outerRadius / :innerRadius
+	localmake "ellipseColor "red
+	ifelse :ratio < 0.25 [
+		localmake "ratioRadius :outerRadius * (0.25 - :ratio) * 4
+		localmake "ellipseColor "black
+	] [
+		ifelse :ratio < 0.5 [
+			localmake "ratioRadius :outerRadius * (:ratio - 0.25) * 4
+			localmake "ellipseColor "white
+		] [
+			ifelse :ratio < 0.75 [
+				localmake "ratioRadius :outerRadius * (0.75 - :ratio) * 4
+				localmake "ellipseColor "white
+			] [
+				localmake "ratioRadius :outerRadius * (:ratio - 0.75) * 4
+				localmake "ellipseColor "black
+			]
+		]
+	]
+	setPenSize 0
+	repeat :numSides [
+		setHeading :oldHeading + (repcount - 1) * 360 / :numSides
+		jumpForward :innerRadius
+		right :angleStep
+		setFillColor "white
+		polyStart
+		ifelse :ratio > 0.5 [
+			arcRight 180 :outerRadius
+		] [
+			right 180
+			arcLeft 180 :outerRadius
+		]
+		polyEnd
+		setFillColor :ellipseColor
+		if :ratioRadius > 0 [
+			if :ratio < 0.5 [
+				right 180
+			]
+			ellipse2 :ratioRadius :outerRadius 
+		]
+		jumpTo :oldPos
+	]
+end
+
+setScreenColor "black
+octaCrescent 240 interpolateRatio easeInOut animation.clampedTimeRatio
+
+to animation.snapshotstyle
+	output createPList
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 2
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+		["thumbnailTime 0.3]
+	]
+end

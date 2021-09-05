@@ -1,0 +1,26 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Nueva_Esparta#/media/File:Flag_of_Nueva_Esparta.svg
+to nuevaEspartaStateFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 3 / 2
+	localmake "oldPos pos
+	stripes :width :height ["#fc0]
+	jumpForward :height / 2
+	jumpRight :height * 0.25
+	setPenSize 0
+	setFillColor "white
+	circle :height * 0.25
+	jumpTo :oldPos
+	stripes :width :height / 2 ["#00247d "#008033]
+	jumpForward :height * 3 / 8
+	jumpLeft :width / 3
+	setFillColor "white
+	repeat 3 [
+		regularStar :height * 0.097 5
+		jumpRight :width / 3
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "#888
+nuevaEspartaStateFlag 100

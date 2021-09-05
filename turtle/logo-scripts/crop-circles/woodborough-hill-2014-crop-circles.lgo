@@ -1,0 +1,46 @@
+make "darkColor "#880
+
+; Drone footage of the field is shown at:
+; https://www.youtube.com/watch?v=meFwHQj3Uzc
+; These were reported in June 20, 2014.
+; The location was Woodborough Hill.
+; This might be less accurate than most of the other crop circle examples
+; because I couldn't find an undistorted top down view of these crop circles.
+; The large circles looked roughly equal in radius so I made them exactly the same here.
+; The string of small circles looked tilted a bit.
+; I implemented with 10 degrees below but that could be +/- 5 degrees of error.
+; The string of little circles puts 1 more circle below than above.
+; That is intentional because the drone footage shows that same asymmetry.
+; The drone footage looks a bit distorted due to its wide angle camera.
+to woodboroughHill2014CropCircles :height
+	localmake "oldState turtleState
+	localmake "lightColor "#ffd
+	localmake "smallRadius :height * 0.048
+	localmake "largeRadius :height * 0.24
+	localmake "separation (:largeRadius + :smallRadius) * 2 + :height * 0.015
+	localmake "smallAngle 10
+	localmake "numSmallCircles 10
+	; calculate the smallSeparation such that
+	; the top and bottom circle exactly matches the specified height.
+	localmake "smallSeparation (:height - :smallRadius * 2) / (:numSmallCircles - 1) / (cos :smallAngle) 
+	localmake "backOffset :smallSeparation * 5
+	jumpForward :backOffset * (cos :smallAngle) + :smallRadius
+	jumpLeft :separation / 2
+	setPenSize 0
+	setFillColor :lightColor
+	circle :largeRadius
+	jumpRight :separation
+	circle :largeRadius
+	jumpLeft :separation / 2
+	right :smallAngle
+	jumpBackward :backOffset
+	stripes :height * 0.008 :smallSeparation * 9 [:lightColor]
+	repeat :numSmallCircles [
+		circle :smallRadius
+		jumpForward :smallSeparation
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor :darkColor
+woodboroughHill2014CropCircles 100

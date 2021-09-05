@@ -1,0 +1,45 @@
+; Inspired by a logo found advertised in several issues of BEEBUG
+; It is on page 41 of volume 6 issue 6.
+; A digital version is at:
+; https://archive.org/details/beebugv0606/page/40/mode/2up?view=theater
+to masterPagesLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angle1 70
+	localmake "height1 0.835
+	localmake "innerHeight1 0.67
+	localmake "width1 (1 - :height1) / cos :angle1
+	localmake "angle2 115
+	localmake "width2 0.175
+	localmake "innerHeight2 :innerHeight1 + :width2 * cos :angle2 
+	setPenColor "black
+	setFillColor penColor
+	setLineCap "butt
+	setLineJoinStyle "miter
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		jumpRight :sign * :height * 0.52
+		setPenSize :height * 0.015
+		arcLines [[1 - penSize / :height / 2] [90 0] [0.047]] :height * :sign
+		jumpTo :oldPos
+		setHeading :oldHeading
+		jumpRight :height * 0.185 * :sign
+		arcLines [[0.58] [-65 0] [0.15]] :height * :sign
+		jumpTo :oldPos
+		setHeading :oldHeading
+		setPenSize 0
+		drawArcLineShape [0.02 0
+			[[:height1] [-:angle1 0] [:width1] [:angle1 - 180 0]
+			[1] [-90 0] [0.16] [-90 0] [:innerHeight1] [:angle2 0] [:width2]
+			[180 - :angle2 0] [:innerHeight2]]
+		] :height * :sign
+		
+		jumpTo :oldPos
+		setHeading :oldHeading
+	]
+	
+	setTurtleState :oldState
+end
+
+masterPagesLogo 100

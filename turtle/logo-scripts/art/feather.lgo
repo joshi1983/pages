@@ -1,0 +1,77 @@
+; Inspired by drawing at:
+; https://www.pinterest.ca/pin/955677983399378753/
+make "darkColor1 "#000
+make "darkColor2 "#208
+make "lightColor1 "#fff
+make "lightColor2 "#8bf
+
+to straight :size
+	localmake "oldState turtleState
+	setPenSize :size * 0.02
+	forward :size
+	right 90
+	jumpForward penSize
+	right 90
+	setPenColor mix penColor :darkColor1 0.5
+	forward :size
+	setTurtleState :oldState
+end
+
+to straight2 :size :size2
+	localmake "oldPos pos
+	jumpForward :size2
+	straight :size
+	jumpTo :oldPos
+end
+
+to drawFeather :size
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "size1 :size * 1.4619
+	localmake "angle 40
+	localmake "numDots 80
+	localmake "size2 :angle / :numDots
+	localmake "size3 :size * 0.001
+	localmake "size4 :size * 0.1
+	jumpRight :size1
+	localmake "arcCentre pos
+	jumpTo :oldPos
+	setHeading :oldHeading
+	circle :size
+	setFillColor :darkColor2
+	setPenSize 0
+	polyStart
+	arcRight :angle :size1
+	localmake "endPos pos
+	right 179
+	arcLeft :angle * 0.995 :size1
+	polyEnd
+	setFillColor :lightColor1
+	repeat :numDots [
+		setPenSize 0
+		jumpTo :arcCentre
+		setHeading repcount * :size2 - 90
+		localmake "w 0.005 * :size1 * ( 1 - repcount / :numDots )
+		jumpForward :size1 - :w
+		circle :size3 * ( 1.01 - repcount / :numDots ) *
+		( 2 + remainder repcount 2 )
+		if repcount > :numDots * 0.05 [
+			setPenColor :lightColor2
+			localmake "angle2 60 - 30 * repcount / :numDots
+			right 90 + :angle2
+			localmake "d min :size4 ( distance :endPos ) -
+			:size4 * 0.3
+			localmake "dRatio max 0 :d / :size4
+			localmake "dRatio sqrt :dRatio
+			localmake "d ( :size4 * :dRatio )
+			straight2 :d :w * 1.5
+			left :angle2 * 2
+			straight2 :d :w * 1.5
+		]
+	]
+	setTurtleState :oldState
+end
+
+setPenSize 0.1
+drawFeather 100

@@ -1,0 +1,27 @@
+; Inspired by logo at
+; https://mywfcu.ca
+to wfcuLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "separation :height / 2
+	localmake "largeSize :height / 2 / cos 45
+	localmake "smallSize :separation / 2 / cos 45
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	setFillColor "#002856
+	jumpLeft :separation / 2
+	repeat 2 [
+		left 45
+		square :largeSize
+		setHeading :oldHeading
+		jumpRight :separation
+	]
+	jumpTo :center
+	left 45
+	setFillColor "#7a9ac0
+	square :smallSize
+	setTurtleState :oldState
+end
+
+wfcuLogo 100

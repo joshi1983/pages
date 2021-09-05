@@ -1,0 +1,59 @@
+to getThicknessRatioFromTime
+	localmake "t animation.timeRatio
+	ifelse :t < 0.5 [
+		output mix 0.01 0.002 interpolateRatio easeInOut animation.timeRatio / 0.5
+	] [
+		output mix 0.0005 0.01 interpolateRatio easeInOut (animation.timeRatio - 0.5) / 0.5
+	]
+end
+
+; Inspired by an image at:
+; https://www.facebook.com/share/p/1AvpYyXDBy/
+to johnSeftonPattern :height
+	localmake "oldState turtleState
+	localmake "numAngles 128
+	localmake "numRadii 7
+	setFillColor transparent
+	setPenColor "yellow
+	setPenSize :height * getThicknessRatioFromTime
+	localmake "center pos
+	repeat :numRadii [
+		localmake "radius repcount * :height * 0.32
+		localmake "offset repcount * :height * 0.31
+		repeat :numAngles [
+			jumpRight :offset
+			circleRight :radius
+			jumpTo :center
+			right 360 / :numAngles
+		]
+	]
+	repeat :numAngles [
+		jumpBackward :height
+		forward :height * 2
+		jumpTo :center
+		right 360 / :numAngles
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+johnSeftonPattern 100
+
+to animation.snapshotstyle
+	localmake "th getThicknessRatioFromTime
+	localmake "pos1 mix [0 0] [-30 -70] interpolateRatio easeInOut animation.timeRatio
+	output createPList2 [
+		["position.y first :pos1]
+		["position.x last :pos1]
+		["zoom.scale 0.01 / :th]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 10
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

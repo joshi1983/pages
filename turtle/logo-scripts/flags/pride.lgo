@@ -1,0 +1,185 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Rainbow_flag_(LGBT)#/media/File:Gay_Pride_Flag.svg
+to prideFlag :height
+	localmake "width :height * 500 / 307
+	localmake "colors ["#93298e "#3954a5 "#0c9b49 "#f1eb1b  "#f89620 "#ec2225]
+	stripes :width :height :colors
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/File:LGBTQ%2B_rainbow_flag_Quasar_%22Progress%22_variant.svg
+to lgbtqRainbowFlag :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "width :height * 1280 / 815
+	localmake "triangleOffset :height * 0.0356
+	localmake "colors ["#750787 "#004dff "#008026 "#ffed00 "#ff8c00 "#e40303]
+	localmake "angle 45
+	stripes :width :height :colors
+	jumpLeft :triangleOffset
+	jumpForward :height / 2
+	localmake "colors ["black "#613915]
+	localmake "size1 :height / 2 / cos :angle
+	localmake "startTriHeight :width / 2 - :triangleOffset
+	localmake "stripeThickness1 (:startTriHeight - :size1 * sin :angle) / 2
+	setPenSize 0
+	repeat count :colors [
+		localmake "pos1 pos
+		setFillColor item repcount :colors
+		left :angle
+		polyStart
+		jumpForward :size1
+		setHeading :oldHeading
+		jumpLeft :stripeThickness1
+		jumpBackward :height
+		jumpRight :stripeThickness1
+		polyEnd
+		jumpTo :pos1
+		jumpLeft :stripeThickness1
+	]
+	localmake "colors ["#74d7ee "#ffafc8 "white]
+	localmake "triHeight :startTriHeight - :stripeThickness1 * 2
+	jumpLeft :triHeight
+	right 90
+	repeat count :colors [
+		localmake "triWidth 2 * :triHeight / tan :angle
+		setFillColor item repcount :colors
+		isoTriangle :triWidth :triHeight
+		localmake "triHeight :triHeight - :stripeThickness1
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Pride_flag#/media/File:Gay_Pride_flag_of_Israel.svg
+to gayPrideFlagOfIsrael :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "width :height * 11 / 8
+	localmake "colors ["#750787 "#004dff "#008026 "#ff0 "#ff8c00 "#e40303]
+	localmake "starSize1 :height * 0.091
+	localmake "triangleHeight :starSize1 * 3
+	localmake "triangleWidth :triangleHeight * 2 / tan 60
+	stripes :width :height :colors
+	setPenColor "white
+	setPenSize :height * 0.034
+	setLineJoinStyle "miter
+	setFillColor transparent
+	jumpForward :height / 2
+	localmake "center pos
+	repeat 2 [
+		setHeading :oldHeading + (repcount - 1) * 360 / 6
+		jumpForward :starSize1
+		right 180
+		isoTriangle :triangleWidth :triangleHeight
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Pride_flag#/media/File:Asexual_Pride_Flag.svg
+to asexualPrideFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 5 / 3
+	localmake "colors ["purple "white "#a3a3a3 "black]
+	stripes :width :height :colors
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Pride_flag#/media/File:Bisexual_Pride_Flag.svg
+to bisexualPrideFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 5 / 3
+	localmake "colors ["#0038a8 "#0038a8 "#9b4f96 "#d60270 "#d60270]
+	stripes :width :height :colors
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Pride_flag#/media/File:Demisexual_Pride_Flag.svg
+to demisexualPrideFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 5 / 3
+	localmake "stripesInfo [
+		["#D2D2D2 5 / 12]
+		["#6E0070 2 / 12]
+		["white 5 / 12]
+	]
+	setLineCap "butt
+	setPenSize :width
+	repeat count :stripesInfo [
+		localmake "stripeInfo item repcount :stripesInfo
+		setPenColor item 1 :stripeInfo
+		forward :height * item 2 :stripeInfo
+	]
+	jumpBackward :height / 2
+	jumpLeft :width / 2
+	right 90
+	setPenSize 0
+	setFillColor "black
+	isoTriangle :height :height * 0.6375014
+	setTurtleState :oldState
+end
+
+to venusSymbol :height
+	localmake "oldState turtleState
+	localmake "crossSize :height * 0.32
+	setPenSize :height * 0.08
+	localmake "radius (:height - :crossSize - penSize) / 2
+	setLineCap "butt
+	setPenColor "white
+	forward :crossSize + penSize / 2
+	localmake "pos1 pos
+	jumpBackward (:crossSize + penSize) / 2
+	right 90
+	jumpBackward :crossSize / 2
+	forward :crossSize
+	left 90
+	jumpTo :pos1
+	jumpForward :radius
+	circle :radius
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Pride_flag#/media/File:Lesbian_Pride_double-Venus_canton_rainbow_flag.svg
+to lesbianPrideFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 5 / 3
+	localmake "colors ["#750787 "#2f93da "#008026 "#ffed00 "#ff8c00 "#e40303]
+	localmake "smallWidth :width * 2 / 5
+	localmake "smallHeight :height / 2
+	localmake "venusHeight :smallHeight * 0.74
+	localmake "venusSeparation :venusHeight * 0.435
+	stripes :width :height :colors
+	jumpForward :height / 2
+	jumpLeft (:width - :smallWidth) / 2
+	stripes :smallWidth :height / 2 ["#291c6c]
+	jumpForward :smallHeight * 0.117
+	jumpLeft :venusSeparation / 2
+	venusSymbol :venusHeight
+	jumpRight :venusSeparation
+	venusSymbol :venusHeight
+	setTurtleState :oldState
+end
+
+; for subtle contrast with white in the flags
+setScreenColor "#eee
+make "height 100
+make "separation :height * 2
+jumpLeft :separation * 3
+prideFlag :height
+jumpRight :separation
+lgbtqRainbowFlag :height
+jumpRight :separation
+gayPrideFlagOfIsrael :height
+jumpRight :separation
+asexualPrideFlag :height
+jumpRight :separation
+bisexualPrideFlag :height
+jumpRight :separation
+demisexualPrideFlag :height
+jumpRight :separation
+lesbianPrideFlag :height

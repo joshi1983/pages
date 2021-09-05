@@ -1,0 +1,33 @@
+; Inspired by a book cover.
+; The book is called Informatik - Logo Lern- und Arbeitsbuch
+; It was published in 1986.
+;
+; A scanned version of the book is at:
+; https://archive.org/details/logo-lern-und-arbeitsbuch
+to informatikStar :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "middleOffset :height * 0.041
+	localmake "thickness :height * 0.005
+	localmake "len1 :height * 0.47
+	localmake "angle 2 * arcSin :middleOffset / :len1
+	localmake "numPoints int (360 / :angle)
+	setPenSize :thickness
+	setPenColor "yellow
+	setLineJoinStyle "miter
+	setLineCap "butt
+	setMiterLimit 200
+	jumpForward :height / 2
+	localmake "center pos
+	repeat :numPoints [
+		setHeading :oldHeading + repcount * 360 / :numPoints
+		jumpLeft :middleOffset
+		arcLines [[1] [:angle - 180 0] [1]] :len1
+		jumpTo :center
+	]
+
+	setTurtleState :oldState
+end
+
+setScreenColor "#9b1379
+informatikStar 100

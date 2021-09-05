@@ -1,0 +1,64 @@
+REM copied from https://www.bamsoftware.com/hacks/qbasic/index.html
+REM                              Press F5
+DECLARE SUB delay (seconds!)
+CLS
+LOCATE 1, 1
+PRINT "VIRUS (C)BAM1996"
+DO WHILE INKEY$ = ""
+LOOP
+CLS
+SCREEN 12
+LOCATE 15, 37
+PRINT "LOADING..."
+LINE (220, 240)-(420, 260), , B
+FOR i = 221 TO 419 STEP .1
+LOCATE 1, CINT(.4 * (i - 221)) + 1
+IF i MOD 16 = 0 THEN
+        PRINT "\"
+ELSEIF i MOD 16 = 4 THEN
+        PRINT "|"
+ELSEIF i MOD 16 = 8 THEN
+        PRINT "/"
+ELSEIF i MOD 16 = 12 THEN
+        PRINT "-"
+        END IF
+LOCATE 18, 39
+percent = .5 * (i - 221)
+PRINT USING "##&"; percent; "%"
+LINE (i, 241)-(i, 259), 1
+delay 0.001
+NEXT i
+LOCATE 2, 1
+PRINT "HARD DRIVE ERASURE INITIATED"
+'FOR f = 1 TO 50000
+'NEXT f
+delay 2
+SCREEN 0
+LOCATE 1, 1
+PRINT "C:\>"
+DO WHILE INKEY$ = ""
+IF INKEY$ <> "" THEN
+        EXIT DO
+        END IF
+LOOP
+LOCATE 1, 5
+PRINT "delete *.*"
+LOCATE 3, 1
+'PLAY "a64 p4"
+PRINT " Volume in drive C has no label"
+PRINT " Volume Serial Number is 1D03-BAAA"
+PRINT " Directory of C:\"
+PRINT
+PRINT "File not found"
+PRINT
+PRINT "C:\>"
+DO WHILE INKEY$ = ""
+LOOP
+
+
+
+SUB delay (seconds!)
+start# = TIMER
+DO WHILE TIMER - start# < seconds!
+LOOP
+END SUB

@@ -1,0 +1,47 @@
+to getLeafRadius :leafLength :angle
+	output :leafLength * 0.5  / sin (:angle * 0.5)
+end
+
+to leaf1 :size :angle
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angle :angle * 2
+	localmake "arcRadius getLeafRadius :size :angle
+	setLineJoinStyle "round
+	left :angle * 0.5
+	arcRight :angle :arcRadius
+	right 180 - :angle
+	arcRight :angle :arcRadius
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to getLeafWidth :ratio :angle_
+	localmake "ratio 2 * abs (0.5 - :ratio)
+	; ratio is now between 0 and 1.
+	localmake "x1 sin :angle_
+	localmake "x :ratio * :x1
+	localmake "y2 abs cos :angle_
+	localmake "y sqrt (1 - :x * :x)
+	localmake "result 2 * (:y - :y2)
+	output [:x1 :x :y :y2 :result]
+end
+
+make "angle 1 + animation.time * 8.9
+make "size 100
+right 90
+setPenColor "blue
+leaf1 :size :angle
+make "radius getLeafRadius :size :angle * 2
+jumpTo [0 0]
+setPenColor "red
+setHeading 90 - :angle
+circleRight :radius
+setPenColor "black
+repeat 100 [
+	make "ratio repcount / 100
+	make "outputs getLeafWidth :ratio :angle
+
+	jumpTo [:ratio * :size 0.5 * :radius * (item 5 :outputs)]
+	circle 1
+]

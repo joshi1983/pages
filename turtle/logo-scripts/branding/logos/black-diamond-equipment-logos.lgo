@@ -1,0 +1,39 @@
+; Inspired by logo at:
+; https://www.blackdiamondequipment.com/
+to blackDiamondEquipmentLogo :height :color
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angle 34.85
+	localmake "len1 0.5 / cos :angle
+	localmake "len2 0.194
+	localmake "len3 :len1 - :len2
+	localmake "parallelogramSize :height * 0.315
+	setPenSize 0
+	setFillColor :color
+	polyStart
+	arcLines [[:angle 0] [:len1] [-:angle * 2 0] [:len1]
+	[:angle * 2 - 180 0] [:len2] [-2 * :angle 0] [:len3]
+	[2 * :angle 0] [:len3]
+	] :height
+	polyEnd
+
+	jumpTo :oldPos
+	setHeading :oldHeading + :angle
+	jumpForward :height * :len1 - :parallelogramSize / 2
+	left 90
+	parallelogram :parallelogramSize :parallelogramSize 90 - 2 * :angle
+	setTurtleState :oldState
+end
+
+to blackDiamondEquipmentWhiteLogo :height
+	stripes :height * 3 :height ["black]
+	blackDiamondEquipmentLogo :height "white
+end
+
+make "height 100
+make "separation :height * 5
+jumpLeft :separation / 2
+blackDiamondEquipmentLogo :height "black
+jumpRight :separation
+blackDiamondEquipmentWhiteLogo :height

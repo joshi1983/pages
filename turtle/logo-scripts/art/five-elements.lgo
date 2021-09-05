@@ -1,0 +1,57 @@
+to fillSquares :colors :height
+	localmake "oldPos pos
+	localmake "size :height / 2
+	jumpLeft :size / 2
+	repeat count :colors [
+		localmake "cols item repcount :colors
+		repeat count :cols [
+			stripes :size :size [item repcount :cols]
+			jumpRight :size
+		]
+		jumpLeft :size * count :cols
+		jumpForward :size
+	]
+	jumpTo :oldPos
+end
+
+; Inspired by a painting from an artist named:
+; Sayed Haider Raza
+; You can learn more about the artist at:
+; https://en.wikipedia.org/wiki/S._H._Raza
+; The painting is shown at:
+; https://ca.pinterest.com/pin/419257046577715891
+to fiveElements :height
+	localmake "oldState turtleState
+	localmake "borderColors1 [
+		["black "#1d2a78]
+		["#ff7e05 "#e62a00]
+	]
+	localmake "innerColors [
+		["#0a1b54 "#9d180e]
+		["#ffb65e "#ff8a09]
+	]
+	localmake "elementColors ["black "#141d69 "#cd190c "#ff7e07 "#ffe7ac]
+	localmake "innerHeight :height * 0.96
+	localmake "radius :innerHeight * 0.485
+	localmake "elementThickness :height * 0.001
+	localmake "elementRadius (:radius - :elementThickness) / count :elementColors
+	stripes :height :height ["#f6ab53]
+	fillSquares :borderColors1 :height
+	jumpForward (:height - :innerHeight) / 2
+	fillSquares :innerColors :innerHeight
+	jumpForward :innerHeight / 2
+	setFillColor "black
+	setPenColor "white
+	setPenSize :elementThickness
+	circle :radius
+	jumpBackward :elementRadius * 2 * (-1 + count :elementColors) / 2
+	repeat count :elementColors [
+		setFillColor item repcount :elementColors
+		circle :elementRadius
+		jumpForward :elementRadius * 2
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+fiveElements 100

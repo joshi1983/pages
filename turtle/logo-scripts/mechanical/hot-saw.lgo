@@ -1,0 +1,39 @@
+; Inspired by image at:
+; https://www.facebook.com/share/p/16SPt6RhN4/
+to hotSawBlade :height
+	localmake "oldState turtleState
+	localmake "bladeNotch [
+		[106 0] [23.5 0.59] [-166 0] [-17 0.40]
+		[68.7 0]
+	]
+	localmake "sawRed "#ff3a04
+	localmake "hotColors createPList2 [
+		[0 "yellow] [1 :sawRed]
+	]
+	localmake "numPoints 24
+	localmake "desiredNotchSideLength :height * sin 360 / 2 / :numPoints
+	localmake "notchInfo arcLinesInfo :bladeNotch
+	setPenSize 0
+	jumpForward :height / 2
+	localmake "center pos
+	setFillGradient createRadialGradient pos :height / 2 :hotColors
+	jumpForward :height / 2
+	right 4.8575
+	polyStart
+	repeat :numPoints [
+		arcLines :bladeNotch :desiredNotchSideLength / item 2 :notchInfo
+		left 360 / :numPoints + first :notchInfo
+	]
+	polyEnd
+	jumpTo :center
+	setFillColor transparent
+	setPenColor mix :sawRed transparent 0.2
+	setPenSize :height * 0.005
+	repeat 50 [
+		circle :height * 0.45 * repcount / 50
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+hotSawBlade 100

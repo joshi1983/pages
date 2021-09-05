@@ -1,0 +1,42 @@
+make "colors ["#0055A4 "#FFFFFF "#EF4135]
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_France#/media/File:Roundel_of_France.svg
+; and
+; https://en.wikipedia.org/wiki/Flag_of_France#/media/File:Tricolour_Cockade.svg
+; The center color is a different shade of blue between those.
+; This uses the darker blue.
+to franceAirforceRoundel :height
+	localmake "oldState turtleState
+	localmake "radius :height / 2
+	jumpForward :radius
+	setPenSize 0
+	repeat count :colors [
+		localmake "index (count :colors) - repcount + 1
+		localmake "radius1 :index * :radius / count :colors
+		setFillColor item :index :colors
+		circle :radius1
+	]
+	setTurtleState :oldState
+end
+
+
+; Described at
+; https://en.wikipedia.org/wiki/Flag_of_France
+to franceFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 3 / 2
+	jumpForward :height / 2
+	jumpLeft :width / 2
+	right 90
+	stripes :height :width :colors
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 4
+setScreenColor "gray ; for higher contrast with the colors
+jumpLeft :separation * 0.5
+franceFlag :height
+jumpRight :separation
+franceAirforceRoundel :height

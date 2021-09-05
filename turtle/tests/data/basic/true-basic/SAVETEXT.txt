@@ -1,0 +1,107 @@
+EXTERNAL
+
+SUB SaveText (line$(), arg$)
+    OPTION TYPO
+    LOCAL eol$,list$(0),choice,result,n,filename$
+
+    LET arg$ = ucase$(arg$)
+    SELECT CASE arg$
+    CASE "DOS","WINDOWS","OS/2"
+         LET eol$ = chr$(13)&chr$(10)
+    CASE "UNIX"
+         LET eol$ = chr$(10)
+    CASE "MACINTOSH"
+         LET eol$ = chr$(13)
+    CASE ELSE
+         READ n
+         MAT REDIM list$(n)
+         MAT READ list$
+         DATA 5,"DOS","Windows","OS/2","Unix","Macintosh"
+         CALL TD_List("Save for which platform?", "Select|Cancel", list$, choice, 1, result)
+         IF result = 2 or choice = 0 then EXIT SUB
+
+         CALL SaveText(line$,list$(choice))
+         EXIT SUB
+
+    END SELECT
+
+    CALL TD_SaveFile("",filename$)
+    IF filename$ = "" THEN EXIT SUB
+
+    WHEN EXCEPTION IN
+         OPEN #1:name filename$,create newold,access outin,org byte
+         ERASE #1
+         FOR n = lbound(line$) to ubound(line$)
+             WRITE #1:line$(n)&eol$
+         NEXT n
+         CLOSE #1
+    USE
+         LET n = extype
+         WHEN EXCEPTION IN
+              CLOSE #1
+         USE
+         END WHEN
+         CALL TD_Warn("Error saving file. ("&str$(n)&")","Ok",1,result)
+    END WHEN
+
+END SUB                           ! SaveText
+
+!
+! TD_Warn
+!
+! Displays warning message on the screen at a central position.
+!
+SUB TD_Warn (message$, button$, default, result)
+
+    CALL TBD (-1, -1, 1, "", message$, button$, "", "", 0, default, 0, result)
+
+END SUB                           ! TD_Warn
+
+!
+! TD_SaveFile
+! 
+! Presents a "Save File" dialog box, using extension$ to screen the
+! file names shown.  The suggested file name is in filename$.  Upon
+! return, the file name selected is in filename$.  If Cancel was
+! chosen, filename$ is nul.
+!
+SUB TD_SaveFile (extension$, filename$)
+
+    LOCAL name$,  result
+
+    LET name$ = ""
+
+    CALL TBD (-1, -1, 3, "Save File:", extension$, filename$, "", "", 0, 0, 0, result)
+
+END SUB                           ! TD_Save  
+
+!
+! TD_List
+!
+! Presents a (scrollable) list of choices in list$().
+! The instruction to the user should be given in message$.
+! Choice specifies which is to be highlighted.
+! Upon exit, choice contains the choice, and result contains
+! the button selected.
+SUB TD_List (message$, button$, list$(), choice, default, result)
+
+    LOCAL tlst$
+
+    CALL Concat (list$, tlst$)
+
+    CALL TBD (-1, -1, 4, "", message$, button$, tlst$, "", choice, default, 0, result)
+
+END SUB                           ! TD_List
+
+SUB Concat (in$(), out$)
+
+    LOCAL k
+
+    LET out$ = ""
+    FOR k = lbound(in$) to ubound(in$) - 1
+        LET out$ = out$ & in$(k) & "|"
+    NEXT k
+    LET out$ = out$ & in$(k)
+
+END SUB                           ! Concat
+

@@ -1,0 +1,102 @@
+to drawYellowLayer :triWidth :triHeight1 :triHeight2
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "oldPenSize penSize
+	localmake "center pos
+	localmake "circleRadius :triHeight1 * 0.26
+	; We want a little overlap so the background 
+	; doesn't show through in a fringe.
+	localmake "overlapAngle 10
+	localmake "arcAngle 360 / 3 + :overlapAngle * 2
+	localmake "len1 :triHeight2 / (cos :overlapAngle) - :circleRadius
+	localmake "len2 :triWidth / 2 + :triHeight2 * sin :overlapAngle
+	setFillColor transparent
+	setPenColor "#aa0
+	setPenSize 0
+	setFillColor "#ffd
+	repeat 3 [
+		setHeading :oldHeading + repcount * 360 / 3
+		right :overlapAngle
+		jumpForward :circleRadius
+		left 90
+		polyStart
+		arcLeft :arcAngle :circleRadius
+		setHeading (towards :center) + 180
+		jumpForward :len1
+		right 90 + :overlapAngle
+		jumpForward :len2
+		right 120
+		jumpForward :len2
+		polyEnd
+		jumpTo :center
+	]
+	setHeading :oldHeading
+	setFillColor transparent
+	setPenSize :oldPenSize
+	circle :circleRadius
+	right 180 / 3
+	jumpBackward :triHeight2
+	isoTriangle :triWidth :triHeight1
+	setTurtleState :oldState
+end
+
+; Inspired by a hand drawing at:
+; https://www.pinterest.ca/pin/106890191148822605/
+; It looks like the artist is named Jennifer Edwards.
+;
+; The main difference here is I made the arcs near the center line up with
+; outside arcs.
+; In the hand drawing, half of the arcs in the center are rotated to meet
+; at the little circle in the center.
+to trianglesAndArcs :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "thickness :height * 0.01
+	localmake "height1 :height - :thickness
+	localmake "triWidth :height1 * sin 60
+	localmake "triHeight1 :triWidth / 2 / tan 30
+	localmake "triHeight2 :height1 / 2 * cos 60
+	localmake "arcRadius :height * 0.2
+	localmake "arcColor "black
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize :thickness
+	setPenColor :arcColor
+	repeat 3 [
+		setHeading :oldHeading + repcount * 360 / 3
+		circleRight :arcRadius
+		jumpTo :center
+	]
+
+	setPenColor "navy
+	setFillColor "#8df
+	jumpForward :triHeight2
+	right 180
+	setLineJoinStyle "round
+	isoTriangle :triWidth :triHeight1
+	setFillColor transparent
+	setPenColor :arcColor
+	jumpTo :center
+	repeat 3 [
+		stripes penSize :height1 / 2 ["navy]
+		jumpTo :center
+		right 360 / 3
+	]
+	repeat 3 [
+		setHeading :oldHeading + (repcount - 0.5) * 360 / 3
+		circleRight :arcRadius
+		right 360 / 6
+		arcRight 58 :arcRadius
+		jumpTo :center
+	]
+	setHeading :oldHeading + 180 / 3
+	drawYellowLayer :triWidth :triHeight1 :triHeight2
+	repeat 6 [
+		setHeading :oldHeading + repcount * 360 / 6
+		arcLeft 180 :arcRadius
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+trianglesAndArcs 100

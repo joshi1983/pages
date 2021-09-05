@@ -1,0 +1,72 @@
+<html>
+	<head>
+		<link rel="stylesheet" type="text/css" href="./svgRect.css">
+		<script>
+function init() {
+	const rect = document.getElementById('rect');
+	const xyCircle = document.getElementById('xyCircle');
+	const attrs = ['x', 'y', 'width', 'height', 'rx'];
+	const x = document.getElementById('x');
+	const y = document.getElementById('y');
+	function updateXYCircle() {
+		xyCircle.setAttribute('cx', parseFloat(x.value));
+		xyCircle.setAttribute('cy', parseFloat(y.value));
+	}
+	attrs.forEach(function(key) {
+		const e = document.getElementById(key);
+		function updateE() {
+			rect.setAttribute(key, parseFloat(e.value));
+			if (key === 'x' || key === 'y')
+				updateXYCircle();
+		}
+		e.addEventListener('input', updateE);
+		updateE();
+	});
+	const rotation = document.getElementById('rotation');
+	function updateRotation() {
+		const angle = parseFloat(rotation.value);
+		rect.setAttribute('transform', `rotate(${angle})`);
+	}
+	rotation.addEventListener('input', updateRotation);
+	updateRotation();
+}
+document.addEventListener('DOMContentLoaded', init);
+		</script>
+	</head>
+	<body>
+		<div>
+			<svg>
+				<g transform="scale(2,2), translate(200,200)">
+					<rect id="rect" fill="red" stroke-color="black" />
+					<circle id="xyCircle" cx="0" cy="0" r="1" stroke-width="0" fill="#000" />
+				</g>
+			</svg>
+			<div class="inputs">
+				<label>x<input id="x" type="range"
+				min="-200"
+				max="200"
+				value="0"></label>
+				<label>y<input id="y" type="range"
+				min="-200"
+				max="200"
+				value="0"></label>
+				<label>width<input id="width" type="range"
+				min="0"
+				max="200"
+				value="10"></label>
+				<label>height<input id="height" type="range"
+				min="0"
+				max="200"
+				value="20"></label>
+				<label>rotation<input id="rotation" type="range"
+				min="0"
+				max="360"
+				value="0"></label>
+				<label>rx<input id="rx" type="range"
+				min="0"
+				max="200"
+				value="0"></label>
+			</div>
+		</div>
+	</body>
+</html>

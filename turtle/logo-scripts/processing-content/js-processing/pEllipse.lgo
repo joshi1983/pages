@@ -1,0 +1,18 @@
+; Similar to P5.js's ellipse function
+; The interpretation of parameters depends on ellipseMode.
+to pEllipse :x :y :width :height
+	ifelse or :ellipseMode = "center :ellipseMode = "radius [
+		jumpTo [:x :y]
+	] [
+		jumpTo [:x + :width / 2 :y - :height / 2]
+	]
+	ifelse :ellipseMode = "radius [
+		ellipse :width / 2 :height / 2
+	] [
+		ifelse :ellipseMode = "corners [
+			ellipse abs (:width - :x) / 2 abs (:height - :y) / 2
+		] [
+			ellipse :width :height
+		]
+	]
+end

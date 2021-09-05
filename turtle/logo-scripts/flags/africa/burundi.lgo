@@ -1,0 +1,48 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Burundi#/media/File:Flag_of_Burundi.svg
+; Based on construction sheet at:
+; https://en.wikipedia.org/wiki/Flag_of_Burundi#/media/File:Flag_of_Burundi_(construction_sheet).svg
+to burundiFlag :height
+	localmake "oldState turtleState
+	localmake "whiteThickness :height * 2 / 15
+	localmake "width :height * 5 / 3
+	localmake "angle arcTan :height / :width
+	localmake "width1 :width - :whiteThickness / sin :angle
+	localmake "height1 :height - :whiteThickness / cos :angle
+	localmake "starDistance :height * 44 / 150 / 2
+	localmake "starSize :height * (10 - 0.9) / 150
+	stripes :width :height ["white]
+	setPenSize 0
+	setFillColor "#C8102E
+	isoTriangle :width1 :height1 / 2
+	jumpForward :height
+	right 180
+	isoTriangle :width1 :height1 / 2
+	jumpRight :width / 2
+	jumpForward :height / 2
+	left 90
+	setFillColor "#43B02A
+	isoTriangle :height1 :width1 / 2
+	jumpForward :width
+	right 180
+	isoTriangle :height1 :width1 / 2
+
+	setFillColor "white
+	jumpForward :width / 2
+	circle :height * 85 / 150 / 2
+	localmake "center pos
+	left 90 + 360 / 6
+	setPenColor "#43B02A
+	setPenSize :height * 0.9 / 150
+	setFillColor "#C8102E
+	repeat 3 [
+		jumpForward :starDistance
+		regularStar :starSize 6
+		jumpTo :center
+		right 360 / 3
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "#888
+burundiFlag 100

@@ -1,0 +1,79 @@
+; Inspired by:
+; https://ca.pinterest.com/pin/276338127126254919/
+to pentagonStripes :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "bottomOffset :height * (cos 180 / 5) / (1 + cos 180 / 5)
+	localmake "maxRadius :height - :bottomOffset
+	localmake "maxRadius2 :maxRadius / cos 180 / 5
+	localmake "outerAngle 180 - 360 / 5
+	localmake "outerAngle2 :outerAngle / 2
+	localmake "stripeThickness :height * 0.0379
+	localmake "radiusStep :stripeThickness * 2
+	setLineJoinStyle "miter
+	setPenSize :stripeThickness
+	setPenColor "black
+	setFillColor transparent
+	jumpForward :bottomOffset
+	localmake "center pos
+	localmake "radius :radiusStep * 3 / 4
+	right 180 / 5
+	while :radius + penSize / 2 < :bottomOffset [
+		regularPolygon :radius 5
+		localmake "radius :radius + :radiusStep
+	]
+	localmake "distance1 :maxRadius - :radius * (cos 180 / 5)
+	localmake "distanceTop :distance1 - :stripeThickness / 2
+	localmake "topWidth abs :distanceTop * 2 * tan :outerAngle2
+	localmake "notchLength :stripeThickness / 2 / cos :outerAngle2
+	localmake "bottomWidth :distance1 * 2 * (tan :outerAngle2)
+	setPenSize 0
+	setFillColor penColor
+	repeat 5 [
+		localmake "heading1 :oldHeading + repcount * 360 / 5
+		setHeading :heading1
+		jumpForward :maxRadius - :distanceTop
+		jumpLeft :topWidth / 2
+		left 90 + 180 / 5
+		polyStart
+		jumpForward :notchLength
+		setHeading :heading1 + 180
+		jumpForward :stripeThickness / 2
+		setHeading :heading1 + 90
+		jumpForward :bottomWidth
+		jumpLeft :stripeThickness / 2
+		left 90 + :outerAngle2
+		jumpForward :notchLength
+		polyEnd
+		jumpTo :center
+	]
+	setFillColor penColor
+	localmake "radius :radius + :radiusStep
+
+	setHeading :oldHeading
+	while :radius + :stripeThickness < :maxRadius2 [
+		localmake "distance1 :maxRadius - :radius * (cos 180 / 5)
+		localmake "width1 abs (:distance1 + :stripeThickness / 2) * 2 * tan :outerAngle2
+		localmake "widthTop abs (:distance1 - :stripeThickness / 2) * 2 * tan :outerAngle2
+		repeat 5 [
+			jumpForward :maxRadius - :distance1 - :stripeThickness / 2
+			isoTrapezoid :width1 :widthTop :stripeThickness
+			jumpTo :center
+			right 360 / 5
+		]
+		localmake "radius :radius + :radiusStep
+	]
+	localmake "triangleHeight (:maxRadius2 - :radius + :stripeThickness / 2) * cos 180 / 5
+	if :triangleHeight > 0 [
+		localmake "baseWidth :triangleHeight * 2 * tan :outerAngle2
+		repeat 5 [
+			jumpForward (:radius - :stripeThickness / 2) * cos 180 / 5
+			isoTriangle :baseWidth :triangleHeight
+			jumpTo :center
+			right 360 / 5
+		]
+	]
+	setTurtleState :oldState
+end
+
+pentagonStripes 100

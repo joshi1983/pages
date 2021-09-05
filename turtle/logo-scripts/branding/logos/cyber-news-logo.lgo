@@ -1,0 +1,20 @@
+; Inspired by logo at:
+; https://www.youtube.com/@cybernews
+to cyberNewsLogo :height
+	localmake "oldState turtleState
+	localmake "linesInfo [[1.5] [90 0] [4]
+		[90 0] [2]]
+	localmake "blockSize :height / 5
+	setPenColor "white
+	stripes :blockSize :blockSize * 3 [penColor]
+	jumpForward :blockSize * 3
+	jumpRight :blockSize * 2
+	setLineCap "butt
+	setPenSize :blockSize
+	arcLines :linesInfo :blockSize
+	arcLines reverse :linesInfo :blockSize
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+cyberNewsLogo 100

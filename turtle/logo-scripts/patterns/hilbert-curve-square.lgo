@@ -1,0 +1,49 @@
+to a :scale :count
+	if :count > 0 [
+		localmake "count :count - 1
+		left 90
+		b :scale :count
+		forward :scale
+		right 90
+		a :scale :count
+		forward :scale
+		a :scale :count
+		right 90
+		forward :scale
+		b :scale :count
+		left 90		
+	]
+end
+
+to b :scale :count
+	if :count > 0 [
+		localmake "count :count - 1
+		right 90
+		a :scale :count
+		forward :scale
+		left 90
+		b :scale :count
+		forward :scale
+		b :scale :count
+		left 90
+		forward :scale
+		a :scale :count
+		right 90		
+	]
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Hilbert_curve
+; The implementations for procedures a and b were mostly
+; translating the Lindenmayer system part of the article.
+to hilbertCurveSquare :height
+	localmake "oldState turtleState
+	localmake "scale :height * 0.03216
+	setPenSize :height * 0.003
+	jumpRight :height
+	jumpForward penSize / 2
+	a :scale 5
+	setTurtleState :oldState
+end
+
+hilbertCurveSquare 100

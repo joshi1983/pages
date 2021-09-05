@@ -1,0 +1,44 @@
+; Inspired by monday.com logo at
+; https://en.wikipedia.org/wiki/Monday.com#/media/File:Monday_logo.svg
+; The colors are exactly the same
+; but a very subtle layout change was made.
+; The slashes were moved and changed length to perfectly touch 
+; the same bottom that the circle did.
+; The actual logo leaves a gap of roughly 0.8% the height of the logo
+; between both slashes and the lowest point of the circle.
+to monday.comLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "radius :height * 0.189
+	localmake "slashThickness :radius * 2.15
+	; 
+	localmake "slashAngle 32.5
+	localmake "slashLength ((:height - :slashThickness) / cos :slashAngle)
+	setPenSize 0
+
+	; the green circle
+	jumpRight :height * 0.636
+	jumpForward :radius
+	setFillColor "#00ca72
+	circle :radius
+
+	; yellow slash
+	jumpLeft :height * 0.63
+	jumpForward (:slashThickness - :radius * 2) / 2
+	right :slashAngle
+	setPenSize :slashThickness
+	setLineCap "round
+	setPenColor "#fc0
+	forward :slashLength
+	jumpBackward :slashLength ; return to old position
+
+	setHeading :oldHeading
+	jumpLeft :height * 0.635
+	right :slashAngle
+	setPenColor "#f62b54
+	forward :slashLength
+
+	setTurtleState :oldState
+end
+
+monday.comLogo 100

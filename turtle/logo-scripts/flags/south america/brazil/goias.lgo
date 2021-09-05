@@ -1,0 +1,44 @@
+; Inspired by flag at:
+; https://en.wikipedia.org/wiki/File:Flag_of_Goi%C3%A1s.svg
+to goiasFlag :height
+	localmake "oldState turtleState
+	localmake "goiasYellow "#ffdd00
+	localmake "goiasGreen "#1fa22e
+	localmake "width :height * 10 / 7
+	localmake "cornerWidth :height * 0.5
+	localmake "cornerHeight :height * 3 / 8
+	localmake "starSize1 :height * 0.06
+	localmake "starSize2 :height * 0.08
+	localmake "separation :height * 0.298
+	localmake "vSeparation :height * 0.175
+	localmake "stripeColors []
+	repeat 4 [
+		queue2 "stripeColors :goiasYellow
+		queue2 "stripeColors :goiasGreen
+	]
+	stripes :width :height :stripeColors
+	jumpForward :height - :cornerHeight
+	jumpLeft (:width - :cornerWidth) / 2
+	stripes :cornerWidth :cornerHeight ["#00519e]
+	jumpForward :cornerHeight / 2
+	setFillColor "white
+	setPenSize 0
+	localmake "center pos
+	jumpBackward :starSize1 * (1 - cos 180 / 5) / 2
+	regularStar :starSize1 5
+	jumpTo :center
+	jumpBackward :vSeparation / 2 + :starSize2 * (1 - cos 180 / 5) / 2
+	jumpLeft :separation / 2
+	repeat 2 [
+		localmake "pos1 pos
+		repeat 2 [
+			regularStar :starSize2 5
+			jumpForward :vSeparation
+		]
+		jumpTo :pos1
+		jumpRight :separation
+	]
+	setTurtleState :oldState
+end
+
+goiasFlag 100

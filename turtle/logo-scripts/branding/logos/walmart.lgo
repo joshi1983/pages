@@ -1,0 +1,24 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Walmart#/media/File:Walmart_logo.svg
+to walmartLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "height1 :height * 0.263
+	jumpForward :height / 2
+	setPenSize 0
+	localmake "center pos
+	setFillColor "#FFC220
+	repeat 6 [
+		setHeading :oldHeading + repcount * 360 / 6
+		jumpForward :height * 0.1935
+		ellipse :height * 0.045 :height * 0.03
+		jumpBackward :height * 0.003
+		isoTrapezoid :height * 0.0895 :height * 0.137 :height1
+		jumpForward :height1
+		ellipse :height * 0.0684 :height * 0.046
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+walmartLogo 100

@@ -1,0 +1,43 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Fermilab#/media/File:Fermilab_logo.svg
+to fermilabLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "arcRadius :height * 0.15
+	localmake "size1 :height * 0.105
+	localmake "size2 :height / 2 - :size1 - :arcRadius
+	localmake "width1 :height * 0.247
+	localmake "size3 :size1 + :width1 / 2
+	localmake "thickness :height * 0.16
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize :thickness
+	setLineCap "butt
+	setPenColor "#004c97
+	repeat 4 [
+		setHeading :oldHeading + repcount * 360 / 4
+		jumpForward :height / 2
+		jumpRight :size1
+		right 180
+		forward :size2
+		arcLeft 90 :arcRadius
+		forward :size2
+		jumpTo :center
+	]
+	right 90
+	repeat 2 [
+		jumpForward :height * 0.254
+		; The middle is slightly farther from the center than the sides
+		stripes :size1 :thickness [penColor]
+		jumpBackward :height * 0.015
+		jumpRight :size3
+		stripes :width1 :thickness [penColor]
+		jumpLeft :size3 * 2
+		stripes :width1 :thickness [penColor]
+		right 180
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+fermilabLogo 100

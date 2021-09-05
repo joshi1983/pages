@@ -1,0 +1,31 @@
+REM copied from https://www.schoolfreeware.com/assets/files/4CornerCircleSide.bas
+DIM DH AS INTEGER
+DIM DW AS INTEGER
+DIM Col AS INTEGER
+DIM x AS INTEGER
+
+DW = _DESKTOPWIDTH
+DH = _DESKTOPHEIGHT
+
+SCREEN _NEWIMAGE(DW, DH, 256)
+_MOUSEHIDE
+_FULLSCREEN
+
+
+DO
+
+    Col = 255
+    FOR x = 1 TO DW * 3
+        _LIMIT 100
+        CIRCLE (0 + x, 0 + x), x, Col
+        CIRCLE (0 + x, DH - x), x, Col
+        CIRCLE (DW - x, 0 + x), x, Col
+        CIRCLE (DW - x, DH - x), x, Col
+        Col = Col - 1
+        IF Col = -1 THEN
+            Col = 255
+        END IF
+        _DISPLAY
+    NEXT
+LOOP UNTIL INKEY$ <> ""
+_MOUSESHOW

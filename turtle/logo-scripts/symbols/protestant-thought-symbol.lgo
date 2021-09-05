@@ -1,0 +1,47 @@
+; Inspired by a symbol on the cover of a book.
+; The book is titled: Protestant Thought.
+; The book was published in 1969.
+; The book was authored by Karl Barth.
+; A digital version of the book can be seen at:
+; https://archive.org/details/protestantthough00bart/mode/2up
+to protestantThoughtSymbol :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	setPenSize :height * 0.005
+	localmake "height1 (:height - penSize) / 2	
+	localmake "parallelogramWidth :height * 0.172
+	localmake "parallelogramHeight1 :height1 - :parallelogramWidth * cos 45
+	localmake "parallelogramHeight2 :parallelogramWidth / cos 45
+	localmake "pHeightStep :parallelogramWidth * (cos 45) / 2
+	localmake "pHeightStep2 :pHeightStep * 2
+	jumpForward :height / 2
+	setPenColor "white
+	setLineJoinStyle "round
+	localmake "center pos
+	repeat 4 [
+		setHeading :oldHeading + (repcount - 0.5) * 360 / 4
+		jumpRight :parallelogramWidth / 2
+		parallelogram :parallelogramWidth :parallelogramHeight1 45
+		right 45
+		jumpForward :parallelogramHeight1
+		left 45
+		parallelogram :parallelogramWidth :parallelogramHeight2 -45 
+		left 45
+		jumpForward :parallelogramHeight2
+		right 45
+		jumpLeft :parallelogramWidth / 2
+		localmake "len :parallelogramHeight1 - :pHeightStep * 2
+		left 135
+		repeat 2 [
+			stripes penSize :len [penColor]
+			jumpBackward :pHeightStep2
+			jumpLeft :pHeightStep2
+			localmake "len :len + :pHeightStep2
+		]
+		jumpTo :center
+	]	
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+protestantThoughtSymbol 100

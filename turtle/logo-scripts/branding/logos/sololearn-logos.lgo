@@ -1,0 +1,84 @@
+; Inspired by
+; https://www.thedailystar.net/sites/default/files/feature/images/sololearn.jpg
+; This logo was active on sololearn.com for a few years until 2021 or so.
+; The shapes drawn by sololearnLogo1 don't line up with the actual logo
+; because the shapes in the original logo were likely eyeballed into position.
+; The code below uses pure symmetry.
+to sololearnLogo1 :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "colors ["#e9579e "#2fb5e8 "#0f8d99 "#6ab74f "#ee7642 "#e7545e]
+	localmake "numShapes count :colors
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	repeat :numShapes [
+		setHeading :oldHeading + repcount * 360 / :numShapes
+		setFillColor item repcount :colors
+		jumpLeft :height * 0.107
+		jumpForward :height * 0.2052
+		right 46.8
+		polyStart
+		arcRight 25 :height * 0.6
+		arcRight 22 :height * 0.33
+		arcRight 30 :height * 0.28
+		arcRight 32 :height * 0.23
+		arcRight 36.6 :height * 0.42
+		right 150
+		arcLeft 30 :height * 0.383
+		arcLeft 30 :height * 0.412
+		arcLeft 15 :height * 0.58
+		arcLeft 10.68 :height * 0.799
+		polyEnd
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://1.bp.blogspot.com/-tOjxrKybEts/WYWrOSwC0FI/AAAAAAAAICc/1zDSMrgNwzYYv0nSWHOpmzsCDgSGOGrEgCLcBGAs/s1600/unnamed%2B%25286%2529.webp
+to sololearnLogo2 :height
+	localmake "smallerHeight :height * 0.9
+	localmake "padding (:height - :smallerHeight) / 2
+	stripes :height :height ["black]
+	jumpForward :padding
+	sololearnLogo1 :smallerHeight
+	jumpBackward :padding
+end
+
+; Inspired by the current(2023) logo at
+; https://www.sololearn.com/
+to sololearnLogo3 :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "colors ["#8252DD "#F20057 "#149EF2 "#FFA310]
+	localmake "numShapes count :colors
+	localmake "cornerRadius :height * 0.035
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	repeat :numShapes [
+		setHeading :oldHeading + repcount * 360 / :numShapes
+		setFillColor item repcount :colors
+		jumpLeft :height * 0.207
+		jumpForward :height * 0.099
+		left 7.5
+		polyStart
+		arcRight 181.8 :height * 0.356
+		arcRight 144.8 :cornerRadius
+		arcLeft 111.02 :height * 0.3545
+		arcRight 140 :cornerRadius
+		polyEnd
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 3
+jumpLeft :separation
+sololearnLogo1 :height
+jumpRight :separation
+sololearnLogo2 :height
+jumpRight :separation
+sololearnLogo3 :height

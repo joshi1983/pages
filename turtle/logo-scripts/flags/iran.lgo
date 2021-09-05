@@ -1,0 +1,131 @@
+make "iranRed "#da0000
+
+to drawAllahuAkbar :squareSize
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "lines [
+		[3 2] [1 2] [3 4] [3 2] [3 4] [5 2] [5 2] [5 0]
+	]
+	localmake "horizontalLines [
+		[4 5] [1 3] [2 4] [2]
+		[0 4] [2 3] [2 4] [2]
+		[0 13]
+	]
+	setLineCap "butt
+	setLineJoinStyle "miter
+	setPenSize :squareSize
+	repeat count :lines [
+		localmake "lineInfo item repcount :lines
+		localmake "len :squareSize * first :lineInfo
+		forward :len
+		jumpBackward :len
+		jumpRight :squareSize * last :lineInfo
+	]
+	jumpTo :oldPos
+	jumpForward :squareSize / 2
+	jumpLeft :squareSize / 2
+	right 90
+	localmake "lineStartPos pos
+	repeat count :horizontalLines [
+		localmake "lineInfo item repcount :horizontalLines
+		ifelse 1 = count :lineInfo [
+			jumpTo :lineStartPos
+			jumpLeft :squareSize * first :lineInfo
+			localmake "lineStartPos pos
+		] [
+			jumpForward :squareSize * first :lineInfo
+			forward :squareSize * last :lineInfo
+		]
+	]
+	setTurtleState :oldState
+end
+
+to drawArabicWriting :height :squareSize
+	localmake "oldState turtleState
+	localmake "msgWidth :squareSize * 19
+	jumpForward :height / 3 - :squareSize * 7
+	jumpLeft :height * 0.8477
+	setPenColor "white
+	repeat 2 [
+		localmake "pos1 pos
+		repeat 11 [
+			drawAllahuAkbar :squareSize
+			jumpRight :msgWidth + :squareSize
+		]
+		jumpTo :pos1
+		jumpForward :height / 3 + 9 * :squareSize
+	]
+	setTurtleState :oldState
+end
+
+to drawTawhid :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "shapes [
+		[0.1405481 0.2470164 [[104 0] [136 0.2545]
+		[157.1 0] [-90 0.333]]]
+		[0.1095 0.2408 [[130.3 0] [158 0.304] [165 0] [-128 0.332016]]]
+		[0 0.30821 [[150 0] [-139.7 0.0454] [148.5 0] [30 0.05] [160 0.0479]]]
+	]
+	localmake "middleArcsInfo [[144 0] [-28.3 0.105] [65 0] [1.55 19.5] [33.869 0]
+	[0.0438263] [53.881 0]]
+	setPenSize 0
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		repeat count :shapes [
+			localmake "shape item repcount :shapes
+			jumpLeft :sign * :height * first :shape
+			jumpForward :height * item 2 :shape
+			polyStart
+			arcLines last :shape :sign * :height
+			polyEnd
+			jumpTo :oldPos
+			setHeading :oldHeading
+		]
+	]
+	jumpForward :height * 0.2623
+	polyStart
+	arcLines :middleArcsInfo :height
+	arcLines reverse :middleArcsInfo :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Iran#/media/File:Flag_of_Iran.svg
+; A construction sheet is at:
+; https://www.fotw.info/flags/ir'.html
+; I had trouble understanding the instruction sheet so I traced the 
+; SVG instead.
+; The main problem I had with the instruction sheet is that the size of gaps 
+; between the Arabic messages didn't match what I saw in the SVG.
+to iranFlag :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "width :height * 7/4
+	localmake "squareSize :height * 2 / 257.15
+	localmake "stripeWidth :squareSize * 9.108
+	stripes :width :height [:iranRed "white "#239f40]
+	jumpForward :height / 3 - :squareSize
+	jumpLeft :width * 0.4666
+	localmake "pos1 pos
+	repeat 2 [
+		repeat 22 [
+			stripes :stripeWidth :squareSize ["white]
+			jumpRight :stripeWidth + :squareSize * .894
+		]
+		jumpTo :pos1
+		jumpForward :height / 3 + :squareSize
+	]
+	setFillColor :iranRed
+	jumpTo :oldPos
+	jumpForward :height / 2
+	drawTawhid :height * 63 / 84 / 2
+	jumpTo :oldPos
+	drawArabicWriting :height :squareSize
+	setTurtleState :oldState
+end
+
+setScreenColor "#ddd
+iranFlag 100

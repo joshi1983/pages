@@ -1,0 +1,71 @@
+; Inspired by part of a book called:
+; Discovering Apple Logo:
+; An invitation to the art and pattern of nature
+; The figure is on page 94
+;
+; A similar spiral is shown at:
+; https://en.wikipedia.org/wiki/Golden_ratio#/media/File:Fibonacci_Spiral.svg
+;
+; You can find an electronic version of the book at:
+; https://archive.org/details/discoveringapple0000thor/page/94
+to goldenRatioSpiral :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "ratio goldenRatio
+	localmake "thickness :height * 0.01
+	localmake "colors ["black "white]
+	localmake "numRepeats 13
+	jumpForward :height / 2
+	setPenSize :thickness
+	setFillColor first :colors
+	rect :height * :ratio - penSize :height - penSize
+	localmake "height :height - penSize * :ratio
+	localmake "arcRadius :height
+	jumpLeft :height * :ratio / 2
+	jumpForward -:height / 2
+	localmake "startPos pos
+
+	localmake "arcRadius1 :arcRadius
+	setPenSize 0
+	repeat :numRepeats [
+		localmake "index1 1 + remainder repcount 2
+		setFillColor item :index1 :colors 
+		polyStart
+		arcRight 90 :arcRadius1
+		localmake "endPos pos
+		localmake "endAngle heading
+		jumpRight :arcRadius1
+		polyEnd
+		jumpLeft :arcRadius1
+		right 180
+		localmake "index1 1 + remainder :index1 2
+		setFillColor item :index1 :colors
+		polyStart
+		arcLeft 90 :arcRadius1
+		jumpBackward :arcRadius1
+		polyEnd		
+
+		jumpTo :endPos
+		setHeading :endAngle
+		localmake "arcRadius1 :arcRadius1 / :ratio
+	]
+
+	setPenSize :thickness
+	setPenColor "red
+	setLineCap "butt
+	jumpTo :startPos
+	setHeading :oldHeading
+	repeat :numRepeats [
+		arcRight 90 :arcRadius
+		localmake "arcRadius :arcRadius / :ratio
+	]
+
+	; Round the end of the spiral.
+	setPenSize 0
+	setFillColor penColor
+	circle :thickness / 2
+
+	setTurtleState :oldState
+end
+
+goldenRatioSpiral 100

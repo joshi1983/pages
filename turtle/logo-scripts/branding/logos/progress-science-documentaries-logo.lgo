@@ -1,0 +1,45 @@
+; Inspired by logo at:
+; https://www.youtube.com/@progress-science
+to progressScienceDocumentariesLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "backgroundColorStops createPList2 [
+		[0 "black] [1 "#01244e]
+	]
+	localmake "numTeeth 8
+	jumpForward :height / 2
+	localmake "center pos
+	jumpTo :oldPos
+	jumpLeft :height / 2
+	right 45
+	localmake "fromPos pos
+	jumpForward :height / cos 45
+	setFillGradient createLinearGradient :fromPos pos :backgroundColorStops "pad
+	jumpTo :center
+	setHeading :oldHeading
+	square :height
+	jumpTo :oldPos
+	jumpForward :height / 2
+	setPenColor "white
+	setPenSize :height * 0.045
+	setFillColor transparent
+	circle :height * 0.164
+	setPenSize :height * 0.035
+	circle :height * 0.234
+	localmake "center pos
+	setPenSize 0
+	setFillColor penColor
+	right 180 / :numTeeth
+	repeat :numTeeth [
+		jumpForward :height * 0.23
+		isoTrapezoid :height * 0.155 :height * 0.115 :height * 0.115
+		jumpTo :center
+		right 360 / :numTeeth
+	]
+
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+progressScienceDocumentariesLogo 100

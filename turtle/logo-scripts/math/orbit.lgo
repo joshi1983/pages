@@ -1,0 +1,76 @@
+; This simulates the orbit of a white object around a light blue one.
+; The blue object is kept still as if the white object has 0 mass.
+
+to updateSimulation :fromState :timeInterval
+	localmake "position getProperty "fromState "position
+	localmake "velocity getProperty "fromState "velocity
+	localmake "distance hypot :position
+	localmake "direction vectorScale :position -1/:distance
+	localmake "acceleration vectorScale :direction :timeInterval / (:distance * :distance)
+	; Calculate acceleration toward the center of gravity.
+
+	localmake "velocity vectorAdd :velocity :acceleration
+	; simulate some acceleration toward the center of gravity
+
+	localmake "position vectorAdd :position vectorScale :velocity :timeInterval	
+	; displace the position by the current velocity.
+
+	setProperty "fromState "velocity :velocity
+	setProperty "fromState "position :position
+end
+
+to draw :height :timeLimit
+	localmake "timeInterval 1
+	setPenSize 0
+	setFillColor "aqua
+	circle :height * 0.1
+	localmake "state createPList2 [
+		["position vectorScale [0 1] :height]
+		["velocity [0.12 0]]
+	]
+	localmake "points [getProperty "state "position]
+	localmake "time 0
+	while :time < :timeLimit [
+		localmake "timeInterval min :timeInterval :timeLimit - :time
+		updateSimulation :state :timeInterval
+		queue2 "points getProperty "state "position
+		localmake "time :time + :timeInterval
+	]
+
+	if not empty? :points [
+		jumpTo first :points
+		setPenSize :height * 0.02
+		setPenColor "#8fff
+		if 2 <= count :points [
+			for ["i 2 count :points] [
+				localmake "point item :i :points
+				setHeading towards :point
+				forward distance :point
+			]
+		]
+	]
+
+	setPenSize 0
+	jumpTo last :points
+	setFillColor "white
+	circle :height * 0.05
+end
+
+setScreenColor "black
+draw 100 15000 * animation.timeRatio
+
+to animation.snapshotstyle
+	output createPList2 [
+		["zoom.scale 1.3]
+		["position.y -70]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 10
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

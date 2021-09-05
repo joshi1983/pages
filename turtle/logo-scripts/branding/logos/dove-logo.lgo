@@ -1,0 +1,26 @@
+; Inspired by logo at:
+; https://en.wikipedia.org/wiki/Dove_(Unilever_brand)#/media/File:Dove_logo.png
+to doveLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "darkColor "#bf933e
+	localmake "lightColor "#fee8b2
+	jumpLeft :height
+	localmake "leftPos pos
+	jumpRight :height * 2
+	setFillGradient createLinearGradient :leftPos pos createPList2 [
+		[0 :darkColor] [0.5 :lightColor] [1 :darkColor]
+	] "pad
+
+	jumpTo :oldPos
+	setPenSize 0
+	drawArcLineShape [0 0
+		[[-90 0] [51 0.75] [12 1] [0.2] [-50 0.26] [115 0]
+		[90 0.25] [10 1] [-20 0.5] [-160 0.01] [35 0.3] [90 0.2]
+		[40 0.45] [-15 2] [-19.5 0.9] [147 0] [45 1] [-167 0.015]
+		[-25 1] [-10.5 3.5] [156.5 0] [15 3.01] [19 1.35]]
+	] :height
+	setTurtleState :oldState
+end
+
+doveLogo 100

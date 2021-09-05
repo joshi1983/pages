@@ -1,0 +1,105 @@
+make "angularSteps [
+	[0.43 54]
+	[0.5887 78]
+	[0.473635282 38]
+]
+make "startAngle 61
+make "outlineThicknessRatio 0.047
+
+to drawAngularBackground :height
+	localmake "numSteps count :angularSteps
+	setPenColor "#b3b3b3
+	setFillColor "#dd1b16
+	setPenSize :height * :outlineThicknessRatio
+	jumpForward :height * 0.028
+	right :startAngle
+	polyStart
+	repeat :numSteps [
+		localmake "stepInfo item repcount :angularSteps
+		jumpForward :height * item 1 :stepInfo
+		left item 2 :stepInfo
+	]
+	repeat :numSteps [
+		localmake "index :numSteps + 1 - repcount
+		localmake "stepInfo item :index :angularSteps
+		jumpForward :height * item 1 :stepInfo
+		if :index > 1 [
+			localmake "stepInfo item :index - 1 :angularSteps
+			left item 2 :stepInfo
+		]
+	]
+	polyEnd
+end
+
+to angularLetterA :height
+	localmake "oldHeading heading
+	localmake "oldPos pos
+	localmake "width :height * 0.59
+	localmake "height1 :height * 0.642
+	localmake "angle1 arcTan :width / 2 / :height1
+	localmake "size1 hypot [:width / 2 :height1]
+	localmake "size2 :height * 0.095
+	localmake "size3 :height * 0.479005479
+	setFillColor "white
+	setPenSize 0
+	jumpForward :height * 0.268
+	jumpLeft :width / 2
+	right :angle1
+	polyStart
+	jumpForward :size1
+	right 180 - :angle1 * 2
+	jumpForward :size1
+	setHeading :oldHeading
+	jumpLeft :size2
+	left :angle1
+	jumpForward :size3
+	setHeading :oldHeading - 180 + :angle1
+	jumpForward :size3
+	polyEnd
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.417
+	setPenSize :height * 0.35
+	setLineCap "butt
+	setPenColor fillColor
+	forward :height * 0.086
+end
+
+to angularShadow :height
+	setFillColor "#4000
+	setPenSize 0
+	jumpForward :height * 0.0548683
+	right :startAngle
+	localmake "thickness :outlineThicknessRatio / 2
+
+	; prevOffset and cornerOffset
+	; represent the amounts that polygon lines are to shorten within
+	; the gray outline of the logo.
+	localmake "prevOffset :thickness / tan :startAngle
+	polyStart
+	repeat count :angularSteps [
+		localmake "stepInfo item repcount :angularSteps
+		localmake "angle item 2 :stepInfo
+		localmake "cornerOffset :thickness * tan (:angle / 2)
+		localmake "len (item 1 :stepInfo) - :cornerOffset - :prevOffset
+		jumpForward :height * :len
+		left item 2 :stepInfo
+		localmake "prevOffset :cornerOffset
+	]
+	polyEnd
+end
+
+; Inspired by
+; https://commons.wikimedia.org/wiki/File:AngularJS_logo.svg
+to angularLogo :height
+	localmake "oldState turtleState
+	drawAngularBackground :height
+	setTurtleState :oldState
+	angularLetterA :height
+	setTurtleState :oldState
+	angularShadow :height
+	setTurtleState :oldState
+end
+
+angularLogo 100

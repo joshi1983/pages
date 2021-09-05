@@ -1,0 +1,42 @@
+; Inspired by:
+; https://en.wikipedia.org/wiki/Flag_of_Algeria#/media/File:Flag_of_Algeria.svg
+; Partly based on construction sheet at:
+; https://commons.wikimedia.org/wiki/File:Flag_of_Algeria.svg#/media/File:Flag_of_Algeria_(construction).svg
+to algeriaFlag :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "width :height * 3 / 2
+	localmake "starRadius :height * 5 / 2 / 20
+	localmake "crescentOuterRadius :height * 10 / 2 / 20
+	localmake "crescentInnerRadius :height * 8 / 2 / 20
+	localmake "chordLength1 :crescentOuterRadius * sin 30
+	localmake "innerArcAngle 360 - 2 * arcSin :chordLength1 / :crescentInnerRadius
+	stripes :width :height ["white]
+	jumpLeft :width / 4
+	stripes :width / 2 :height ["#063]
+	jumpForward :height / 2
+	jumpRight :width / 4
+	localmake "center pos
+	right 60
+	jumpForward :crescentOuterRadius
+	left 90
+	setPenSize 0
+	setFillColor "#d21034
+	polyStart
+	arcLeft 360 - 60 :crescentOuterRadius
+	left 180 - (300 - :innerArcAngle) / 2
+	arcRight :innerArcAngle :crescentInnerRadius 
+	polyEnd
+
+	setHeading :oldHeading
+	jumpTo :center
+	jumpRight :starRadius * cos 360 / 2 / 5
+	right 360 / 4 / 5
+	regularStar :starRadius 5
+	setTurtleState :oldState
+end
+
+; Set screen color to something that will 
+; make the white in the flag stand out.
+setScreenColor "#ddd
+algeriaFlag 100

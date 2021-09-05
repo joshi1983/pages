@@ -1,0 +1,126 @@
+// mandelbrot.bas v0.7
+
+cls
+print "pBasic Mandelbrot Explorer v0.7"
+
+var viewX   : Float = -2.5
+var viewY   : Float = -1.25
+var zoom    : Float = 3.5
+var redraw  : Int   = 1
+var running : Int   = 1
+var plotW   : Int   = 126
+var plotH   : Int   = 100
+var penSize : Float = 10.0
+
+// Mandelbrot working globals
+var zr         : Float = 0.0
+var zi         : Float = 0.0
+var zr2        : Float = 0.0
+var zi2        : Float = 0.0
+var zing       : Float = 0.0
+var escaped    : Int   = 0
+var mIter      : Int   = 0
+var escapeIter : Int   = 0
+var result     : Int   = 0
+var cr         : Float = 0.0
+var ci         : Float = 0.0
+var screenX    : Float = 0.0
+var screenY    : Float = 0.0
+
+while (running == 1) {
+    if redraw == 1 then drawFrame()
+    var k$ : String = INKEY$
+    if k$ == "ESC" then running = 0
+    if k$ == "^U" then viewY = viewY - (zoom * 0.25 * (plotH / plotW))
+    if k$ == "^U" then redraw = 1
+    if k$ == "^D" then viewY = viewY + (zoom * 0.25 * (plotH / plotW))
+    if k$ == "^D" then redraw = 1
+    if k$ == "^L" then viewX = viewX - (zoom * 0.25)
+    if k$ == "^L" then redraw = 1
+    if k$ == "^R" then viewX = viewX + (zoom * 0.25)
+    if k$ == "^R" then redraw = 1
+    if k$ == " " then redraw = 1
+    if k$ == "z" then zoomIn()
+    if k$ == "z" then redraw = 1
+    if k$ == "x" then zoomOut()
+    if k$ == "x" then redraw = 1
+}
+CLS
+print "Goodbye from the Mandelbrot set!"
+end
+
+func zoomIn() {
+    var oldZoom : Float = zoom
+    zoom = zoom * 0.75
+    viewX = viewX + (oldZoom - zoom) * 0.5
+    viewY = viewY + (oldZoom - zoom) * 0.5 * (plotH / plotW)
+    return 0
+}
+
+func zoomOut() {
+    var oldZoom : Float = zoom
+    zoom = zoom * 1.333333
+    viewX = viewX - (zoom - oldZoom) * 0.5
+    viewY = viewY - (zoom - oldZoom) * 0.5 * (plotH / plotW)
+    return 0
+}
+
+func drawFrame() {
+    redraw = 0
+    print ".. "; 
+    BUFFER:1
+    CLR
+    PEN penSize
+    var maxIter : Int   = 64
+    var dx      : Float = zoom / plotW
+    var dy      : Float = (zoom * plotH / plotW) / plotH
+    var px      : Int   = 0
+    while (px < plotW) {
+        var py : Int = 0
+        while (py < plotH) {
+            cr = viewX + px * dx
+            ci = viewY + py * dy
+            var iters : Int = 0
+            iters = mandelbrot(cr, ci, maxIter)
+            var r : Float = 0.0
+            var g : Float = 0.0
+            var b : Float = 0.0
+            if iters < maxIter then r = 0.5 + 0.5 * SIN((iters / 32.0) * 6.2832)
+            if iters < maxIter then g = 0.5 + 0.5 * SIN((iters / 32.0) * 6.2832 + 2.094)
+            if iters < maxIter then b = 0.5 + 0.5 * SIN((iters / 32.0) * 6.2832 + 4.188)
+            screenX = px * penSize
+            screenY = py * penSize
+            POINT(screenX, screenY, r, g, b, 1.0)
+            py = py + 1
+        }
+        px = px + 1
+    }
+    BUFFER
+    print "•"
+    return 0
+}
+
+func mandelbrot(cr, ci, maxIter) {
+    zr         = 0.0
+    zi         = 0.0
+    zr2        = 0.0
+    zi2        = 0.0
+    zing       = 0.0
+    escaped    = 0
+    mIter      = 0
+    escapeIter = 0
+    while (mIter < maxIter) {
+        zr2        = zr * zr - zi * zi + cr
+        zi2        = 2.0 * zr * zi + ci
+        zr         = zr2
+        zi         = zi2
+        zing       = zr * zr + zi * zi
+        if (zing > 4.0) then escaped    = 1
+        if (zing > 4.0) then escapeIter = mIter
+        if escaped == 0 then mIter      = mIter + 1
+        if escaped == 1 then mIter      = maxIter
+    }
+    result = maxIter
+    if escaped == 1 then result = escapeIter
+    return result
+}

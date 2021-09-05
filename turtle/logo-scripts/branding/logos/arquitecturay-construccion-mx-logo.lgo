@@ -1,0 +1,153 @@
+to drawHome :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "roofAngle1 50
+	localmake "cornerRadius1 :height * 0.05
+	localmake "roofCornerRadius1 :height * 0.026
+	localmake "roofStartPos :height * 0.87128099
+	localmake "roofSize1 :height * 0.705
+	localmake "roofThickness1 :height * 0.122
+	localmake "roofSize2 :roofThickness1 - :roofCornerRadius1 * 2
+	localmake "roofSize3 :height * 0.22
+	localmake "chimneyHeight1 :height - :roofStartPos - :roofCornerRadius1 +
+		((:roofSize1 - :roofSize3) * cos :roofAngle1)
+		- :roofThickness1 * sin :roofAngle1
+	localmake "chimneyWidth1 :height * 0.147
+	localmake "totalChimneyWidth :roofCornerRadius1 * 2 + :chimneyWidth1
+	localmake "chimneyHeight2 :chimneyHeight1 - :totalChimneyWidth / tan :roofAngle1
+	localmake "chimneyToPeakDistance ((:roofSize1 - :roofSize3) * sin :roofAngle1) + 
+		(:roofThickness1 * cos :roofAngle1) - :totalChimneyWidth
+	localmake "roofTopCornerRadius :height * 0.1
+	localmake "roofTopCornerSize1 :roofTopCornerRadius * cos :roofAngle1
+	localmake "roofSize4 (:chimneyToPeakDistance - :roofTopCornerSize1) / sin :roofAngle1
+	localmake "roofSize5 :roofSize4 + :roofSize3 + :totalChimneyWidth / sin :roofAngle1
+	localmake "size1 :height * 0.1
+	localmake "size2 :height * 0.3
+	localmake "baseStraightHeight :height * 0.38
+	localmake "slantedSize1 (:size1 + :size2 + :cornerRadius1) / sin :roofAngle1
+	localmake "doorHeight :height * 0.3
+	setFillColor "black
+	setPenSize 0
+
+	; Draw first floor of house with door.
+	jumpRight :size1
+	polyStart
+	jumpRight :size2
+	right 90
+	arcLeft 90 :cornerRadius1
+	jumpForward :baseStraightHeight
+	left :roofAngle1
+	jumpForward :slantedSize1
+	left 180 - 2 * :roofAngle1
+	jumpForward :slantedSize1
+	left :roofAngle1
+	jumpForward :baseStraightHeight
+	arcLeft 90 :cornerRadius1
+	jumpForward :size2
+	jumpLeft :doorHeight
+	jumpForward :size1 * 2
+	polyEnd
+
+	; Draw roof.
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :roofStartPos
+	right 180 - :roofAngle1
+	polyStart
+	jumpForward :roofSize1
+	arcLeft 90 :roofCornerRadius1
+	jumpForward :roofSize2
+	arcLeft 90 :roofCornerRadius1
+	jumpForward :roofSize3
+	setHeading :oldHeading
+	jumpForward :chimneyHeight1
+	arcLeft 90 :roofCornerRadius1
+	jumpForward :chimneyWidth1
+	arcLeft 90 :roofCornerRadius1
+	jumpForward :chimneyHeight2
+	setHeading :oldHeading - :roofAngle1
+	jumpForward :roofSize4
+	arcLeft 180 - 2 * :roofAngle1 :roofTopCornerRadius
+	jumpForward :roofSize5
+	arcLeft 90 :roofCornerRadius1
+	jumpForward :roofSize2
+	arcLeft 90 :roofCornerRadius1
+	polyEnd
+
+	setTurtleState :oldState
+end
+
+; The original logo at https://arquitecturayconstruccion.mx/
+; has some differences in the tower.
+; I didn't replicate those differences because I didn't understand the pattern.
+; I'm drawing stripes that are simple rectangles but the original has 
+; what appears to be white parallelograms.
+to drawTower :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+
+	; widthRatios are used to approximate the curves on the left side.
+	localmake "widthRatios [0.85 0.85 0.6 0.85 0.85 1 1 1 1]
+	localmake "cornerRadius :height * 0.07
+	localmake "width :height * 0.475
+	localmake "width2 :width * 0.92
+	localmake "numLines 30
+	localmake "lineHeight :height / :numLines
+	localmake "gapSize :lineHeight * 0.6
+	localmake "lineThickness :lineHeight - :gapSize
+	setLineCap "butt
+	setPenColor "black
+	setPenSize :width
+	repeat :numLines [
+		jumpForward :gapSize
+		localmake "pos1 pos
+		localmake "width1 :width2 * mixItems2 :widthRatios repRatio
+		setPenSize :width1
+		jumpRight (:width2 - :width1) / 2
+		forward :lineThickness
+
+		jumpTo :pos1
+		jumpForward :lineThickness
+	]
+	jumpTo :oldPos
+	setPenSize :height * 0.04
+	setLineJoinStyle "miter
+	jumpLeft :width * 0.33
+	setFillColor transparent
+	jumpForward penSize / 2
+	polyStart
+	jumpForward :height * 0.15
+	right 90
+	arcLeft 50 :cornerRadius
+	forward :height * 0.04
+	arcLeft 90 :cornerRadius
+	jumpForward :height * 0.1
+	setHeading :oldHeading
+	jumpForward :height * 0.146
+	arcLeft 90 :cornerRadius
+	setHeading :oldHeading
+	jumpForward :height * 0.37545635028826
+	jumpRight :width - penSize
+	right 180
+	jumpForward :height - penSize
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by logo at
+; https://arquitecturayconstruccion.mx/
+to arquitectYCLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	jumpRight :height * 0.29
+	drawTower :height
+
+	jumpTo :oldPos
+	jumpLeft :height * 0.175
+	drawHome :height * 0.543
+	setTurtleState :oldState
+end
+
+arquitectYCLogo 100

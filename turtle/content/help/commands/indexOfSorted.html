@@ -1,0 +1,29 @@
+<code>print indexOfSorted 1 [-1 0 1 2 3]
+; prints 3 because 1 is at index 3.
+; In other words 1 = item 3 [-1 0 1 2 3]
+
+print indexOfSorted 1 []
+; prints 0 indicating 1 was not found
+
+print indexOfSorted "c ["a "c "f "g]
+; prints 2 because "c = item 2 ["a "c "f "g]</code>
+<code>to compareByFirst :list1 :list2
+	localmake "first1 first :list1
+	localmake "first2 first :list2
+	ifelse :first1 &lt; :first2 [
+		output -1 ; a negative indicates less than
+	] [
+		if :first1 = :first2 [
+			output 0 ; indicate equal.
+		]
+		output 1 ; &gt; 0 results indicate greater than
+	]
+end
+
+make "haystack [[10 "hello] [20 "world] [21 "wow]]
+print (indexOfSorted [21 "yo] :haystack "compareByFirst)
+; prints 3 because the 21 from [21 "yo] 
+; is equal to 21 from [21 "wow]
+
+print (indexOfSorted [19 "yo] :haystack "compareByFirst)
+; prints 0 because no first element matches 19.</code>

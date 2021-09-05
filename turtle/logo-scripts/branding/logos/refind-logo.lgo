@@ -1,0 +1,31 @@
+; Inspired by logo and favicon at:
+; https://refind.com/
+to refindLogo :height
+	localmake "oldState turtleState
+	localmake "circleRadius :height / 5
+	localmake "outerArcAngleGap 20.7
+	localmake "innerArcAngleGap 26
+	localmake "arcCenterAngle 135
+	localmake "thickness2 :height * 0.152
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	setFillColor "#278fdc
+	circle :circleRadius
+	setPenSize 0
+	right :arcCenterAngle - :outerArcAngleGap / 2
+	localmake "arcRadius :height / 2
+	jumpForward :arcRadius
+	left 90
+	polyStart
+	arcLeft 360 - :outerArcAngleGap :arcRadius
+	left 95.8
+	jumpForward :thickness2
+	localmake "innerArcRadius distance :center
+	setHeading (towards :center) - 90
+	arcRight 360 - :innerArcAngleGap :innerArcRadius
+	polyEnd
+	setTurtleState :oldState
+end
+
+refindLogo 100

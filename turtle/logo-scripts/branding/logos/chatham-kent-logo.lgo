@@ -1,0 +1,55 @@
+; Inspired by logo at:
+; https://www.chatham-kent.ca/Pages/default.aspx
+to chathamKentLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "arcRadius1Ratio 0.7515
+	localmake "startTurnAngle 12.979026
+	localmake "arcLines2 [
+		[0.197] [-19 :arcRadius1Ratio]
+	]
+	localmake "angle1 17.5
+	left 45
+	setPenSize 0
+	repeat 2 [
+		localmake "heading1 :oldHeading - 225 + repcount * 360 / 2
+		localmake "pos1 pos
+		setHeading :heading1
+		setFillColor "#0087c7
+		right :startTurnAngle
+		localmake "startHeading heading
+		polyStart
+		arcLeft :angle1 :arcRadius1Ratio * :height
+		localmake "heading2 heading
+		localmake "pos2 pos
+		setHeading :heading1 + 90
+		jumpForward :height * 0.46
+		setHeading :startHeading - 180 - :angle1
+		arcRight :angle1 :arcRadius1Ratio * :height
+		polyEnd
+
+		jumpTo :pos2
+		setHeading :heading2
+		arcLeft 2.46 :arcRadius1Ratio * :height
+		jumpForward :height * 0.0036
+		localmake "pos2 pos
+		localmake "heading2 heading
+
+		setFillColor "#71a536
+		polyStart
+		arcLines :arcLines2 :height
+		localmake "heading2 heading
+		setHeading :heading1 + 90
+		jumpForward :height * 0.215
+		setHeading :heading2 + 180
+		arcLines reverse :arcLines2 -:height
+		polyEnd
+
+		jumpTo :pos1
+		setHeading :oldHeading + (repcount - 1) * 360 / 2
+		jumpForward :height
+	]
+	setTurtleState :oldState
+end
+
+chathamKentLogo 100

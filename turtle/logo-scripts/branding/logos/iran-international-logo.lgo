@@ -1,0 +1,24 @@
+; Inspired by logo at:
+; https://www.iranintl.com
+; This simple version of the logo is used
+; in the website's favicon(browser tab icon) 
+to iranInternationalLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "colors ["#CF2023 "#0084BC]
+	localmake "colorWidth :height * 0.4834
+	localmake "separation :height - :colorWidth
+	jumpLeft :separation / 2
+	repeat count :colors [
+		stripes :colorWidth :height [item repcount :colors]
+		jumpRight :separation
+	]
+	jumpTo :oldPos
+	jumpForward :height / 2
+	setFillColor "white
+	setPenSize 0
+	roundRect :height / 6 :height * 2 / 3 :height * 0.0085
+	setTurtleState :oldState
+end
+
+iranInternationalLogo 100

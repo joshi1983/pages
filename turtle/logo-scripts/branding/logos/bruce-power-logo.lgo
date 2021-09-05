@@ -1,0 +1,22 @@
+; Inspired by logo at:
+; https://www.brucepower.com
+to brucePowerLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	setPenColor "white
+	setLineCap "butt
+	repeat 7 [
+		localmake "angle mix 90 -90 repRatio
+		jumpTo :oldPos
+		setPenSize :height * mix 0.185 0.087 repRatio
+		setHeading :oldHeading
+		jumpForward abs penSize / 2 * sin :angle
+		right :angle
+		forward :height * (1 - 0.1 * abs sin :angle)
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+brucePowerLogo 100

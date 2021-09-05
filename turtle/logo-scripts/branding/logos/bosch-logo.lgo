@@ -1,0 +1,64 @@
+; Inspired by logo at
+; https://www.bosch.com
+to boschLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "separation1 :height * 0.23
+	localmake "width1 :height * 0.392
+	localmake "height1 :height * 0.58
+	localmake "arcRadius (hypot [:width1 :height1]) / 2
+	localmake "arcAngle 2 * arcTan :height1 / :width1
+	setFillColor transparent
+	setPenSize :height * 0.05
+	setPenColor "black
+	jumpForward :height / 2
+	localmake "center pos
+	circle (:height - penSize) / 2
+	jumpBackward (:separation1 + penSize) / 2
+	setLineCap "butt
+	repeat 2 [
+		stripes :width1 penSize [penColor]
+		jumpForward :separation1
+	]
+	jumpTo :center
+	setLineJoinStyle "miter
+	setPenSize penSize * 0.85
+	repeat 2 [
+		setHeading :oldHeading + 90 + repcount * 360 / 2
+		jumpForward :width1 / 2
+		jumpRight :height1 / 2
+		setHeading (towards :center) + 90
+		arcLeft :arcAngle :arcRadius
+		jumpTo :center
+	]
+	localmake "height2 :height1 + penSize * sin :arcAngle / 2
+	localmake "thickness1 penSize
+	localmake "arcRadius2 :arcRadius + :thickness1 / 2
+	localmake "tinyArcAngle 2
+	setFillColor penColor
+	setPenSize 0
+	repeat 2 [
+		localmake "heading1 :oldHeading + 90 + repcount * 360 / 2
+		setHeading :heading1
+		jumpForward (:width1 - :thickness1) / 2
+		jumpRight :height2 / 2
+		polyStart
+		localmake "size1 distanceToCircle :center :arcRadius2
+		jumpForward :size1
+		setHeading (towards :center) + 90
+		arcLeft :tinyArcAngle :arcRadius2
+		setHeading :heading1 - 90
+		jumpForward :thickness1
+		jumpForward distanceToCircle :center :arcRadius2
+		setHeading (towards :center) + 90
+		arcLeft :tinyArcAngle :arcRadius2
+		setHeading :heading1
+		jumpBackward :size1
+		polyEnd
+		jumpTo :center
+	]
+	
+	setTurtleState :oldState
+end
+
+boschLogo 100

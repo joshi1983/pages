@@ -1,0 +1,28 @@
+; This is used in the code editor's menu.
+; It is next to the Reset&Run feature.
+; It is downloaded and copied to images/icons/exclamation-arrow.svg
+;
+; This mixes the look of an exclamation mark with an arrow.
+; The exclamation mark is to blend in with the Reset&Run text as if it says Reset&Run!.
+; The arrow is intended to hint at how it connects with a drop down menu.
+to exclamationArrow :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "triangleHeight :height * 0.3
+	setPenSize 0
+	setFillColor penColor
+	jumpForward :height
+	right 180
+	isoTrapezoid :height * 0.25 :height * 0.12 :height * 0.55
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :triangleHeight
+	right 180
+	isoTriangle :height * 0.25 :triangleHeight
+
+	setTurtleState :oldState
+end
+
+exclamationArrow 100

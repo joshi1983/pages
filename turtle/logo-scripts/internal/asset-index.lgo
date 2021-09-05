@@ -1,0 +1,93 @@
+; Inspired by
+; https://fontawesome.com/icons/file-pdf?s=solid
+
+to assetIcon :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "cornerRadius :size * 0.12
+	localmake "width :size * 0.75
+	localmake "height1 :size - :cornerRadius * 2
+	localmake "width1 :width - :cornerRadius * 2
+	localmake "width2 :width1 * 0.85
+	localmake "sharpCornerSize1 :width - :width2 - :cornerRadius
+	localmake "sharpCornerLength :sharpCornerSize1 / sin 45
+	localmake "height2 :height1 + :width2 - :width1
+	localmake "penSize1 :size * 0.06
+	localmake "sharpCornerSize2 :sharpCornerSize1 + :penSize1 * 0.5
+	setlineJoinStyle "round
+	setPenSize 0
+	jumpForward :cornerRadius
+	right 90
+	jumpBackward :width * 0.5
+	localmake "startPos pos
+	setHeading :oldHeading
+	setFillColor "black
+	polyStart
+	jumpForward :height1
+	arcRight 90 :cornerRadius
+	forward :width2
+	right 45
+	forward :sharpCornerLength
+	right 45
+	forward :height2
+	arcRight 90 :cornerRadius
+	forward :width1
+	arcRight 90 :cornerRadius
+	polyEnd
+	setPenColor "white
+	jumpTo :startPos
+	setHeading :oldHeading
+	jumpForward :size - :cornerRadius
+	right 90
+	jumpForward :cornerRadius + :width2 - :penSize1 * 0.5
+	setPenSize :penSize1
+	penDown
+	right 90
+	forward :sharpCornerSize2
+	left 90
+	forward :sharpCornerSize2
+	penUp
+	jumpTo :oldPos
+	setHeading :oldHeading - 40
+	jumpForward :size * 0.3
+	right 90 + 40
+	setFillColor "white
+	setFontSize :size * 0.6
+	label "A
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to searchIcon :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "radius :size * 0.4
+	localmake "size1 :size * 0.3778
+	localmake "angle 45
+	localmake "penSize1 :size * 0.1
+	localmake "firstForward :penSize1 * 0.5
+	setPenSize :penSize1
+	setLineJoinStyle "Miter
+	right :angle
+	jumpForward :firstForward
+	penDown
+	forward :size1 - :firstForward
+	jumpForward :radius
+	penDown
+	circle :radius
+	penUp
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to assetIndex :size
+	localmake "angle 61.5
+	searchIcon :size
+	right :angle
+	forward :size * 0.63
+	left :angle
+	assetIcon :size * 0.5
+end
+
+setScreenColor transparent
+assetIndex 32

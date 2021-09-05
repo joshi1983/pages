@@ -1,0 +1,67 @@
+to drawOutline :height
+	localmake "oldState turtleState
+	localmake "thicknessFactor 0.11
+	localmake "arcRadius 0.06
+	localmake "arcRadius2 0.312
+	localmake "arcRadius3 0.083
+	localmake "len1 0.383
+	localmake "len2 0.4
+	localmake "lenDifference 0.01
+	localmake "len3 :len1 - :lenDifference
+	localmake "len4 :len2 - :lenDifference
+	jumpForward :height * 0.24
+	jumpRight :height * 0.4
+	right 90
+	setPenSize :height * 0.008
+	setPenColor "#aaa
+	setFillColor transparent
+	polyStart
+	arcLines [[:thicknessFactor / 2] [90 :arcRadius] [:len1]
+	[180 :arcRadius2] [:len3] [-180 :arcRadius3] [:len4]
+	[90 :arcRadius] [:thicknessFactor] [90 :arcRadius]
+	[:len1] [180 :arcRadius2] [:len3] [-180 :arcRadius3] [:len4]
+	[90 :arcRadius]
+	] :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+to drawInnerColors :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "thickness :height * 0.12
+	localmake "tinyRadius :height * 0.035
+	localmake "arcRadius 0.198
+	setPenSize :thickness
+	setPenColor "#91b13d
+	setLineCap "butt
+	jumpForward :height * 0.5
+	right 180
+	arcLines [[0.19] [-180 :arcRadius] [0.36]] :height
+	setFillColor penColor
+	setPenSize 0
+	roundRect :thickness :tinyRadius * 2 :tinyRadius
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.38
+	setPenColor "#f16f24
+	setPenSize :thickness
+	arcLines [[0.305] [-180 :arcRadius] [0.36]] :height
+	setFillColor penColor
+	setPenSize 0
+	roundRect :thickness :tinyRadius * 2 :tinyRadius
+	
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://www.unhookedmedia.com
+to unhookedMediaLogo :height
+	localmake "oldState turtleState
+	drawOutline :height
+	drawInnerColors :height
+	setTurtleState :oldState
+end
+
+unhookedMediaLogo 100

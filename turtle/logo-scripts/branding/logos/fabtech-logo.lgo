@@ -1,0 +1,37 @@
+; Inspired by logo at:
+; https://www.fabtechexpo.com
+to fabTechLogo :height
+	localmake "oldState turtleState
+	localmake "angle1 24
+	localmake "angle2 32
+	localmake "angle3 90 - :angle2 - :angle1
+	localmake "thicknessFactor 0.27
+	localmake "thickness :height * :thicknessFactor
+	localmake "maxWidthFactor 0.98
+	localmake "minWidthFactor 0.315
+	localmake "widthFactors [:minWidthFactor 0.7 :maxWidthFactor]
+	localmake "height1 :height * (1 - :maxWidthFactor 
+		* (sin :angle1))
+	localmake "separation ((:height1 / sin :angle3) - :thickness)/2
+	setPenSize 0
+	jumpRight :height * 0.23
+	left :angle1
+	setFillColor "#97999A
+	localmake "heading1 heading
+	repeat 3 [
+		localmake "startPos pos
+		localmake "width :height * item repcount :widthFactors
+		jumpRight :width / 2
+		parallelogram :width :thickness -:angle2
+
+		jumpTo :startPos
+
+		left :angle2
+		jumpForward :separation
+		setHeading :heading1
+	]
+
+	setTurtleState :oldState
+end
+
+fabTechLogo 100

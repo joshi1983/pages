@@ -1,0 +1,78 @@
+; Inspired by logo at:
+; https://en.wikipedia.org/wiki/Taco_Bell#/media/File:Taco_Bell_2023.svg
+to tacoBellLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "topArcRadius 0.55
+	localmake "outline [
+		[:topArcRadius] [90 0] [1 - :topArcRadius]
+		[90 :topArcRadius]
+	]
+	localmake "ellipseRadius1 :height * 0.395
+	localmake "ellipseRadius2 :height * 0.095
+	localmake "x1 0.16
+	localmake "x2 -0.38
+	localmake "x3 -0.24
+	localmake "topAngle abs arcSin :x3 / :topArcRadius
+	localmake "darkColor "#5b2994
+	setPenSize 0
+	setFillColor "white
+	drawArcLineShape [0 0
+		pathMirror :outline
+	] :height
+	jumpForward :height * 0.255
+	jumpRight :height * 0.075
+	setPenSize :height * 0.03
+	left 28.5
+	setPenSize 0
+	setFillColor :darkColor
+	localmake "ellipseCenter pos
+	localmake "ellipseHeading heading
+	ellipse :ellipseRadius1 :ellipseRadius2
+	setHeading :oldHeading
+	jumpLeft :height * 0.17
+	jumpForward :height * 0.015
+	setFillColor "white
+	circle :height * 0.14
+	jumpTo :ellipseCenter
+	setHeading :ellipseHeading
+	
+	setPenSize :height * 0.03
+	setPenColor :darkColor
+	setFillColor transparent
+	ellipse :ellipseRadius1 :ellipseRadius2
+
+	
+	jumpTo :oldPos
+	setHeading :oldHeading
+	setFillColor :darkColor
+	setPenSize 0
+	drawArcLineShapes [
+		; bottom right corner
+		[-:x1 0
+			[[-90 0] [:topArcRadius + :x1] [90 0] [0.49] [159 0]
+			[-25 0.5] [-10 1] [-10 1.5] [-7 1.2] [-7 0.7]]
+		]
+
+		; left side
+		[:x2 0
+			[[90 0] [:topArcRadius + :x2] [-90 0] [1 - :topArcRadius]
+			[-54.5 :topArcRadius] [-175 0] [65 0.05] [0.021] [-60 0.025]
+			[57 0.36] [0.18] [-10 0.07] [130 0] [-19 1.1] [-20 0.2]
+			[-158 0] [25 1.08] [20 0.32] [40 0.1] [40 0.06] [10 0.15]]
+		]
+
+		; top right
+		[:x3 1 - :topArcRadius * (1 - cos :topAngle)
+			[[-90 + :topAngle 0] [-:topAngle - 74.7 :topArcRadius]
+			[-137 0] [25 0.2] [0.025] [-42 0.22] [7 1.5] [30 0.34]
+			[24 0.3] [-19 0.08] [-43 0.025] [0.02] [50 0.05]]
+		]
+	] :height
+
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+tacoBellLogo 100

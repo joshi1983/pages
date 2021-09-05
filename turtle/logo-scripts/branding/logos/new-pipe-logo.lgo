@@ -1,0 +1,47 @@
+; Inspired by logo at:
+; https://de.wikipedia.org/wiki/NewPipe#/media/Datei:NewPipelogo.svg
+;
+; The logo is also at:
+; https://newpipe.net
+to newPipeLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "outerLen :height * 0.66
+	localmake "thickness :height * 0.1
+	jumpForward :height / 2
+	setPenSize 0
+	setFillColor "#cf2928
+	circle :height / 2
+	jumpBackward :outerLen / 2
+	jumpLeft :outerLen / 2 * tan 30
+	right 60
+
+	; Calculate some guide points.
+	localmake "lowerLeft pos
+	jumpForward :height * 0.2
+	localmake "lower pos
+
+	jumpTo :lowerLeft
+	setHeading :oldHeading
+	setFillColor "white
+	polyStart
+	repeat 2 [
+		jumpForward :outerLen
+		right 120
+	]
+	localmake "lastLen distance :lower
+	jumpForward :lastLen
+	setHeading :oldHeading
+	jumpForward :thickness / cos 30
+	right 60
+	jumpForward :lastLen - :thickness * ((tan 30) + 1 / tan 30)
+	left 120
+	jumpForward :outerLen - :thickness * 2  / tan 30
+	left 120
+	jumpForward distanceToLine :lowerLeft :lower
+	polyEnd
+	
+	setTurtleState :oldState
+end
+
+newPipeLogo 100

@@ -1,0 +1,40 @@
+make "darkColor "#780
+
+; Inspired by:
+; https://www.pinterest.co.uk/pin/263531015686363821/
+; Reported July 29, 2020
+; Located at Batemoor, Derbyshire
+to batemoor2020CropCircles :height
+	localmake "oldState turtleState
+	localmake "lightColor "#ef8
+	localmake "littleRadius :height * 0.08
+	localmake "thickness :height * 0.003
+	localmake "largeRadius (:height - :littleRadius * 2 - :thickness / 2) / 2
+	jumpForward :height - :largeRadius - :littleRadius
+	localmake "center pos
+	setPenSize :thickness
+	setPenColor :lightColor
+	circle :largeRadius
+	right 180 / 3
+	repeat 3 [
+		jumpForward :largeRadius
+		circle :littleRadius
+		jumpTo :center
+		right 360 / 3
+	]
+	setFillColor :lightColor
+	setPenSize 0
+	circle :littleRadius
+	left 180 / 3
+	repeat 3 [
+		jumpForward :largeRadius
+		circle :littleRadius
+		jumpTo :center
+		right 360 / 3
+	]
+	
+	setTurtleState :oldState
+end
+
+setScreenColor :darkColor
+batemoor2020CropCircles 100

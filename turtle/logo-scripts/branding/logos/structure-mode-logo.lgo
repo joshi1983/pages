@@ -1,0 +1,66 @@
+; Inspired by logo at:
+; https://www.structuremode.com/
+to structureModeLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "width :height * 343 / 400
+	localmake "gap :height * 0.01
+	localmake "height1 :height / 7
+	localmake "height2 (:height + :gap) / 7
+	localmake "width1 :width / 6
+	localmake "width2 (:width + :gap) / 6
+	localmake "diagonalLength hypot [:height1 :width1]
+	localmake "angle1 arcTan :width1 / :height1
+	localmake "gap2 :gap * :diagonalLength / :width1
+	jumpLeft :width / 2
+	setPenSize 0
+	setFillColor "#FF4338
+	polyStart
+	jumpForward :height - :height1
+	right :angle1
+	jumpForward :diagonalLength
+	right 90 - :angle1
+	jumpForward :width - :width1
+	setHeading :oldHeading
+	jumpBackward :height - :height1
+	left 180 - :angle1	
+	jumpForward :diagonalLength
+	polyEnd
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height1
+	setFillColor "white
+	repeat 3 [
+		jumpLeft :width1 / 2
+		parallelogram :width1 * 3 :diagonalLength :angle1
+		jumpRight :width1 / 2
+		jumpBackward :gap
+		stripes :width :gap [fillColor]
+		jumpForward :height2
+		stripes :width :gap [fillColor]
+		jumpForward :height2 + :gap
+	]
+	jumpTo :oldPos
+	jumpLeft :width / 2
+	parallelogram :gap2 :diagonalLength * 6 :angle1
+	localmake "lowerLeft pos
+	jumpRight :width2 - :gap2 / 2
+	repeat 5 [
+		localmake "i  6 - repcount
+		stripes :gap :height [fillColor]
+		jumpRight :gap2 / 2
+		parallelogram :gap2 :diagonalLength * :i :angle1
+		jumpRight :width2 - :gap2 / 2
+	]
+	jumpTo :lowerLeft
+	repeat 5 [
+		localmake "i 7 - repcount
+		jumpForward :height2
+		parallelogram :gap2 :diagonalLength * :i :angle1
+	]
+	setTurtleState :oldState
+end
+
+structureModeLogo 100

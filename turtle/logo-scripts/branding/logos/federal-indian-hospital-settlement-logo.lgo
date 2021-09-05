@@ -1,0 +1,82 @@
+to drawDots :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "dotRadius 0.006
+	localmake "points [
+		[0.08 0.1] [0.36 0.4] [0.015 0.5 - :dotRadius]
+	]
+	localmake "dotRadius :height * 0.006
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		repeat 25 [
+			localmake "p bezier :points repRatio
+			jumpRight :sign * :height * first :p
+			jumpForward :height * last :p
+			circle :dotRadius
+			jumpTo :oldPos
+		]
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by a logo at:
+; https://ihsettlement.ca
+to federalIndianHospitalLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "pinkColor "#8F3457
+	localmake "orangeColor "#C3912C
+	localmake "pinkLine1 [
+		[90 0] [98 0.069] [18 0.5] [165 0]
+		[-13 0.6] [0.7 0.1] [-88.7 0.033223]
+	]
+	localmake "blueLine1 [
+		[90 0] [60 0.2] [55 0.125] [10 0.35] [6.6 1.5]
+		[165 0] [-15 0.65] [-60 0.11] [-30 0.06] [-11.6 0.167777]
+	]
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	setFillColor :orangeColor
+	circle :height * 0.07
+	repeat 2 [
+		ellipse :height * 0.217 :height * 0.01
+		right 90
+	]
+	setFillColor :pinkColor
+	circle :height * 0.048
+	repeat 4 [
+		drawArcLineShape [0 0.306
+			combine :pinkLine1 reverse :pinkLine1
+		] :height
+		right 90
+	]
+	right 45
+	repeat 4 [
+		jumpForward :height * 0.055
+		setFillColor :orangeColor
+		circlePair :height * 0.022 :height * 0.017 :height * 0.044
+		jumpTo :center
+		jumpForward :height * 0.158
+		setFillColor "#6A6D3E
+		repeat 4 [
+			jumpForward :height * mix 0.067 0.028 repRatio
+			circle :height * mix 0.03 0.007 repRatio
+		]
+		jumpTo :center
+		right 90
+	]
+	setFillColor "#3E506D
+	setHeading :oldHeading
+	repeat 4 [
+		drawArcLineShape [0 0.475
+			combine :blueLine1 reverse :blueLine1
+		] :height
+		drawDots :height
+		right 90
+	]
+	
+	setTurtleState :oldState
+end
+
+federalIndianHospitalLogo 100

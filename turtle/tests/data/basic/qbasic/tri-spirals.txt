@@ -1,0 +1,48 @@
+REM copied from a comment by Bobby Brightling
+REM to a post at:
+REM https://www.facebook.com/share/p/17CNTGFzy1/
+
+DECLARE FUNCTION CosRad (x!) AS DOUBLE
+DECLARE SUB PROCtri (s!, x!, y!, a!, F%)
+DECLARE FUNCTION SinRad (x!) AS DOUBLE
+' BBC BASIC version of a recursive graphic by Ghee Beom Kim
+' https://www.facebook.com/photo.php?fbid=10239855079978969
+' BBC BASIC version by Richard Russell, http://rtrussell.co.uk/, 23-Oct-2025
+' Needs v5 or later, e.g. ARM BASIC, Brandy, BB4W or BBCSDL
+' Modifed for QB by Bobby Brightling, 23-Oct-2025.
+CONST TRUE = -1
+CONST FALSE = 0
+CONST DEPTH = 200
+DIM t%
+COMMON SHARED Pi180, CosRad30
+Pi180 = ATN(1) / 45
+CosRad30 = CosRad(30)
+SCREEN 12: WINDOW (-620 * 4 / 3, -620)-(620 * 4 / 3, 620)
+FOR t% = 1 TO 15: PALETTE t%, 1027 * t% + 18: NEXT t%
+PROCtri DEPTH, 0, 0, 30, TRUE
+PROCtri DEPTH, 0, 0, 150, TRUE
+PROCtri DEPTH, 0, 0, 270, TRUE
+WHILE INKEY$ = "": WEND
+END
+FUNCTION CosRad (x) AS DOUBLE
+CosRad = COS(Pi180 * x)
+END FUNCTION
+SUB PROCtri (s, x, y, a, F%)
+IF s < 4 THEN EXIT SUB
+DIM t%, x1, x2, y1, y2
+FOR t% = 15 TO 1 STEP -1
+x1 = x + s * CosRad(a - 60) * t% / 15: y1 = y + s * SinRad(a - 60) * t% / 15
+x2 = x + s * CosRad(a + 60) * t% / 15: y2 = y + s * SinRad(a + 60) * t% / 15
+COLOR t%: LINE (x, y)-(x1, y1): LINE -(x2, y2): LINE -(x, y)
+NEXT
+x1 = x + s * CosRad(a - 60): y1 = y + s * SinRad(a - 60)
+x2 = x + s * CosRad(a + 60): y2 = y + s * SinRad(a + 60)
+IF F% THEN
+s = s * CosRad30: a = a - 30
+PROCtri s, x2, y2, a, TRUE
+PROCtri s, (x1 + x2) / 2, (y1 + y2) / 2, a, FALSE
+END IF
+END SUB
+FUNCTION SinRad (x) AS DOUBLE
+SinRad = SIN(Pi180 * x)
+END FUNCTION

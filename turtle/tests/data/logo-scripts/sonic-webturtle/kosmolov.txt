@@ -1,0 +1,35 @@
+; Copied from http://www.sonic.net/~nbs/webturtle/webturtle.cgi?file=kosmolov
+; Kosmolov - A line system fractal
+; Written for WebTurtle by
+; Geert Pante (Geert.Pante@rug.ac.be)
+; January 1999
+
+LET D 10
+LET LEN 40/D
+
+RIGHT 90
+MOVE 75
+RIGHT 90
+MOVE 50
+RIGHT 90
+GO REPOLY
+END
+
+# REPOLY
+  IF D > 0
+    RIGHT 45
+    PUSH D
+    LET D D-1
+    GO REPOLY
+    POP D
+    LEFT 90
+    PUSH D
+    LET D D-1
+    GO REPOLY
+    POP D
+    RIGHT 45
+  ENDIF
+  IF D = 0
+    DRAW LEN
+  ENDIF
+RETURN

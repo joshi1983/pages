@@ -1,0 +1,21 @@
+!  BGBar2   Draw a simple multi-bar graph.
+
+!  Last year's sales in yellow; this year's in green.
+
+LIBRARY "BGLib.trc"
+
+DIM data(4,2), units$(4), legend$(2)
+
+MAT READ data, units$, legend$
+DATA 103,106, 47,68, 112,115, 87,94
+DATA Books, Software, Cards, Candy
+DATA Last Year, This Year
+
+CALL SetBarType ("side")
+CALL SetLayout ("h")
+CALL SetGrid ("v")
+CALL SetText ("Sales: Last Year and Current", "Thousands","Category")
+
+CALL MultiBar (data, units$, legend$, "red red yellow green")
+
+END

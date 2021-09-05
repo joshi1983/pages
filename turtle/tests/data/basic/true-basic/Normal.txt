@@ -1,0 +1,23 @@
+!
+!
+!  NORMAL.  Add a normal plot over a histogram.
+!
+LIBRARY "Stat2Lib.trc"
+
+DECLARE DEF st_mean,st_var
+
+DIM n(150), st(0)
+DEF R = 8 + Int(10*Rnd)
+
+FOR i = 1 to 150
+    LET n(i) = R + R              ! Get a binomial distribution
+NEXT i
+
+CALL SetTitle ("Histogram with Normal Curve Added")
+CALL SetHist ("rel")
+CALL PlotHist (n, 15, 35, 2, "")
+
+CALL Stats (n, st)
+CALL AddNormalPlot (1, st(st_mean), st(st_var), 1, "")
+
+END

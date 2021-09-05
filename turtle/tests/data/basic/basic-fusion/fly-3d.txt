@@ -1,0 +1,181 @@
+REM copied from https://basicfusion.org/index.html?open=examples/fly3d.bf
+
+SCREEN 12
+FASTGRAPHICS
+
+DIM mapH(128, 128)
+DIM mapC$(128, 128)
+
+FOR x = 0 TO 127
+  FOR z = 0 TO 127
+    h1 = SIN(x * 0.08) * 20 + COS(z * 0.09) * 20
+    h2 = SIN((x + z) * 0.04) * 30
+    h3 = COS((x - z) * 0.15) * 8
+    h = h1 + h2 + h3 + 40
+    IF h < 5 THEN h = 5
+    mapH(x, z) = h
+  NEXT
+NEXT
+
+FOR x = 0 TO 127
+  FOR z = 0 TO 127
+    h = mapH(x, z)
+    
+    lx = x - 1
+    lz = z - 1
+    IF lx < 0 THEN lx = lx + 128
+    IF lz < 0 THEN lz = lz + 128
+    
+    slope = h - mapH(lx, lz)
+    
+    c$ = "#3B5323"
+    IF h > 60 THEN c$ = "#8B7355"
+    IF h > 80 THEN c$ = "#E5E5E5"
+    IF h < 15 THEN c$ = "#1E90FF"
+    IF h >= 15 AND h < 25 THEN c$ = "#C2B280"
+    
+    IF h >= 25 AND h <= 60 THEN
+      IF slope > 1.5 THEN c$ = "#4D6B2E"
+      IF slope < -1.5 THEN c$ = "#2A3D18"
+    END IF
+    IF h > 60 AND h <= 80 THEN
+      IF slope > 1.5 THEN c$ = "#A68D6A"
+      IF slope < -1.5 THEN c$ = "#69553D"
+    END IF
+    IF h > 80 THEN
+      IF slope > 1.5 THEN c$ = "#FFFFFF"
+      IF slope < -1.5 THEN c$ = "#B0B0B0"
+    END IF
+    IF h < 15 THEN
+      IF slope > 0.5 THEN c$ = "#1874CD"
+    END IF
+    
+    mapC$(x, z) = c$
+  NEXT
+NEXT
+
+shipX = 64
+shipZ = 64
+shipY = 80
+shipAngle = 0
+shipPitch = 0
+tilt = 0
+speed = 0
+
+BASEURL = "https://basicfusion.org/cloud/assets/3d/starship/"
+SETFONT "Arial"
+FONTSIZE 14
+TEXT (5, 15), "LOADING...", WHITE
+SYNC
+
+model = LOAD3DUVOBJECT(BASEURL + "StarShip2.obj")
+textureShip = LOADIMAGE(BASEURL + "Material.001_Base_color.jpg")
+SET3DTEXTURE model, 0, textureShip
+
+DO
+  CLS
+  PAINT "#87CEEB"
+  
+  targetTilt = 0
+  IF KEY("ARROWLEFT") THEN 
+    shipAngle = shipAngle - 4
+    targetTilt = 30
+  END IF
+  IF KEY("ARROWRIGHT") THEN 
+    shipAngle = shipAngle + 4
+    targetTilt = -30
+  END IF
+  
+  tilt = tilt + (targetTilt - tilt) * 0.15
+  
+  IF KEY("A") THEN shipPitch = shipPitch + 2
+  IF KEY("Z") THEN shipPitch = shipPitch - 2
+  
+  IF shipPitch > 40 THEN shipPitch = 40
+  IF shipPitch < -40 THEN shipPitch = -40
+  IF NOT KEY("A") AND NOT KEY("Z") THEN shipPitch = shipPitch + (0 - shipPitch) * 0.1
+  
+  IF KEY("ARROWUP") THEN
+    speed = speed + 0.05
+  ELSE IF KEY("ARROWDOWN") THEN
+    speed = speed - 0.04
+  ELSE 
+    speed = speed - 0.02
+  END IF
+
+  IF speed < 2 THEN speed = 2
+  IF speed > 4 THEN speed = 4  
+  
+  rA = shipAngle * 3.14159 / 180
+  sA = SIN(rA)
+  cA = COS(rA)
+  
+  shipX = shipX + sA * speed
+  shipZ = shipZ + cA * speed
+  
+  shipY = shipY + (shipPitch * 0.15) * speed
+  
+  mx = INT(shipX) MOD 128
+  mz = INT(shipZ) MOD 128
+  IF mx < 0 THEN mx = mx + 128
+  IF mz < 0 THEN mz = mz + 128
+  
+  targetY = mapH(mx, mz) + 30
+  IF shipY < targetY THEN shipY = shipY + (targetY - shipY) * 0.2
+  
+  horizon = 200 + shipPitch * 4
+  
+  shX_u = shipX + sA * 25
+  shZ_u = shipZ + cA * 25
+  
+  FOR x = 0 TO 636 STEP 3
+    rayAng = (shipAngle - 30) + (x / 640) * 60
+    rRad = rayAng * 3.14159 / 180
+    rSin = SIN(rRad)
+    rCos = COS(rRad)
+    
+    maxY = 440
+    
+    FOR d = 1 TO 164 STEP 2
+      px = INT(shipX + rSin * d) MOD 128
+      pz = INT(shipZ + rCos * d) MOD 128
+      IF px < 0 THEN px = px + 128
+      IF pz < 0 THEN pz = pz + 128
+      
+      h = mapH(px, pz)
+      
+      sy = horizon + ((shipY - h) / d) * 100
+      
+      IF sy < maxY THEN
+        c$ = mapC$(px, pz)
+        
+        IF d > 15 AND d < 35 THEN
+          pX_u = shipX + rSin * d
+          pZ_u = shipZ + rCos * d
+          dx = pX_u - shX_u
+          dz = pZ_u - shZ_u
+          
+          alt = shipY - h
+          rad = 20 - alt * 0.2
+          IF rad < 3 THEN rad = 3
+          
+          IF (dx * dx + dz * dz) < rad THEN
+            c$ = "#0A1505"
+          END IF
+        END IF
+        
+        BOX (x, sy)-(x + 6, maxY), c$
+        maxY = sy
+      END IF
+    NEXT
+  NEXT
+  
+  DRAW3DUVOBJECT model, 0, 0 + shipPitch * 1.5, 0, 3, -15 - shipPitch, 0, tilt
+  
+  BOX (0, 440)-(640, 480), "#000000"
+  TEXT (15, 465), "SPEED: " + STR$(INT(speed * 25)) + " KM/H", "#00FF00"
+  TEXT (180, 465), "ALTITUDE: " + STR$(INT(shipY)) + " M", "#00FF00"
+  TEXT (430, 465), "CONTROLS: ARROWS / A / Z", "#FFFFFF"
+  
+  SYNC(60)
+LOOP

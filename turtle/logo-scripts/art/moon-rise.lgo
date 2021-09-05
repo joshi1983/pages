@@ -1,0 +1,34 @@
+; Inspired by a pin from Paul Wenlock at:
+; https://ca.pinterest.com/pin/21532904463816847
+;
+; Paul's profile is at:
+; https://ca.pinterest.com/paulw7968
+to moonRise :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "mountains [
+		[0.31 0.34 "#406fa3]
+		[0.304 0.25 "#005595]
+		[0.15 0.258 "#01447b]
+	]
+	localmake "width 0.5
+	stripes :height * :width :height ["#0096d1]
+	jumpForward :height * 0.34
+	jumpLeft :height * 0.08
+	setPenSize 0
+	setFillColor "white
+	circle :height * 0.067
+	repeat count :mountains [
+		localmake "mountain item repcount :mountains
+		localmake "heightRight first :mountain
+		localmake "heightLeft item 2 :mountain
+		setFillColor last :mountain
+		jumpTo :oldPos
+		drawArcLineShape [:width / 2 :heightRight
+			[[-:heightRight] [90 0] [:width] [-90 0] [:heightLeft]]
+		] :height
+	]
+	setTurtleState :oldState
+end
+
+moonRise 100

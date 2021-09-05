@@ -1,0 +1,47 @@
+; Inspired by
+; https://www.pinterest.ca/pin/72198400268466654/
+; which links to:
+; https://momentaryink.com
+to squareIllusion :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "thickness :height * 0.005
+	localmake "cornerRadius :height * 0.007
+	localmake "size1 (:height - :cornerRadius * 2 - :thickness) / 2 /
+		(1 + 2 * (cos 45) + 1 / cos 45)
+	localmake "size2 :size1 / cos 45
+	jumpForward :height / 2
+	localmake "center pos
+	setPenColor "black
+	setPenSize :thickness
+	setLineCap "round
+	setFillColor "black
+	repeat 8 [
+		setHeading :oldHeading + repcount * 360 / 8
+		jumpForward :size1
+		jumpLeft :size1 + :size2
+		right 90
+		forward (:size1 + :size2) * 2
+		circle :cornerRadius
+		right 90
+		circle :cornerRadius
+		forward :size1 * 4
+		circle :cornerRadius
+		right 90
+		forward :size1 * 2
+		jumpTo :center
+	]
+	repeat 2 [
+		setFillColor ifelse even? repcount "red "blue
+		repeat 4 [
+			jumpForward :size2
+			circle :cornerRadius * 2
+			jumpTo :center
+			right 90
+		]
+		right 45
+	]
+	setTurtleState :oldState
+end
+
+squareIllusion 100

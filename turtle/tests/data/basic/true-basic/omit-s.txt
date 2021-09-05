@@ -1,0 +1,20 @@
+EXTERNAL
+
+SUB Omit (line$(),arg$)
+
+    LIBRARY "{WB_c}WBkeep.trc"
+
+    WHEN EXCEPTION IN
+         CALL WB_Omit (line$(), arg$)
+         PRINT "Done with Omit."
+    USE
+         IF extype = 1 then
+            PRINT extext$
+         ELSE
+            PRINT exline$
+            PRINT extype, extext$
+            PRINT "Error in Omit."
+         END IF
+    END WHEN
+
+END SUB

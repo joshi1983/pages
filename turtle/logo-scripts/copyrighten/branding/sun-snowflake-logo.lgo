@@ -1,0 +1,111 @@
+; This was moved from logo-scripts/branding/sun-snowflake-logo.lgo.
+; It was moved due to a high risk of infringing on copyrights.
+
+; Inspired by
+; https://www.pinterest.ca/pin/762304674448432418/
+
+to drawSun :size
+	localmake "oldState turtleState
+	localmake "largeRadius :size * 0.48
+	localmake "numStarPoints 19
+	localmake "colorStops createPList2 [
+		[0 "#f09a2b] [1 "#f24f46]
+	]
+	jumpForward :size / 2
+	setFillGradient createRadialGradient pos :largeRadius :colorStops
+	setPenSize :size * 0.001
+	right 2
+	isotoxalStar :largeRadius :size * 0.16 :numStarPoints
+	setTurtleState :oldState
+end
+
+to halfSnowflakeBranch :radius :angle
+	localmake "oldState turtleState
+	localmake "branchSize1 :radius * 0.27
+	forward :radius
+	jumpBackward :radius * 0.27
+	right :angle
+	forward :branchSize1
+	jumpBackward :branchSize1
+	left :angle
+	jumpBackward :radius * 0.33
+	right :angle
+	forward :branchSize1
+	setTurtleState :oldState
+end
+
+to snowflakeBranch :radius :angle
+	localmake "oldHeading heading
+	localmake "oldState turtleState
+	localmake "branchSize1 :radius * 0.27
+	forward :radius
+	jumpBackward :radius * 0.27
+	localmake "pos1 pos
+	right :angle
+	forward :branchSize1
+	jumpTo :pos1
+	left :angle * 2
+	forward :branchSize1
+	jumpTo :pos1
+	setHeading :oldHeading
+	jumpBackward :radius * 0.33
+	right :angle
+	localmake "pos1 pos
+	forward :branchSize1
+	jumpTo :pos1
+	left :angle * 2
+	forward :branchSize1
+	setTurtleState :oldState
+end
+
+to drawSnowflake :size
+	localmake "oldState turtleState
+	localmake "radius :size / 2
+	localmake "radius1 :radius * 0.97
+	localmake "angleStep 180 / 4
+	jumpForward :radius
+	setFillColor "white
+	setPenSize 0
+	right 135
+	localmake "center pos
+	localmake "startHeading heading
+	polyStart
+	jumpRight :radius
+	arcLeft 180 :radius
+	polyEnd
+	localmake "colorStops createPList2 [
+		[0 "#1cabe7] [1 "#2c89c2]
+	]
+	setPenGradient createRadialGradient pos :radius :colorStops
+	jumpTo :center
+	setHeading :startHeading - 90
+	setPenSize :size * 0.025
+	halfSnowflakeBranch :radius1 45
+	right 180
+	halfSnowflakeBranch :radius1 -45
+	left :angleStep
+	repeat 3 [
+		snowflakeBranch :radius1 45
+		left :angleStep
+	]
+
+	; Draw white padding just off the center
+	setHeading :startHeading
+	jumpBackward penSize / 2
+	setPenColor "white
+	jumpRight :radius
+	setLineCap "butt
+	left 90
+	forward :radius * 2
+	
+	setTurtleState :oldState
+end
+
+to sunSnowLogo :size
+	setLineCap "round
+	setLineJoinStyle "round
+	drawSun :size
+	drawSnowflake :size
+end
+
+sunSnowLogo 100

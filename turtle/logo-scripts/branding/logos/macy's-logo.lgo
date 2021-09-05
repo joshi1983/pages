@@ -1,0 +1,141 @@
+make "thicknessRatio 0.06
+make "height1Ratio 0.51
+make "bottomGapRatio 0.174
+
+to drawM :height
+	localmake "oldState turtleState
+	localmake "arcRadius :height * 0.163
+	localmake "thickness :height * :thicknessRatio
+	localmake "height1 :height * :height1Ratio
+	localmake "height2 :height1 - :arcRadius - :thickness / 2
+	jumpLeft :arcRadius * 2
+	jumpForward :height * :bottomGapRatio
+	stripes :thickness :height1 [fillColor]
+	setLineCap "butt
+	setPenSize :thickness
+	setPenColor fillColor
+	forward :height2
+	arcRight 180 :arcRadius
+	forward :height2
+	backward :height2
+	right 180
+	arcRight 180 :arcRadius
+	forward :height2
+	setTurtleState :oldState
+end
+
+to drawA :height
+	localmake "oldState turtleState
+	localmake "radius :height * ((:height1Ratio - :thicknessRatio) / 2)
+	localmake "height1 :height * :height1Ratio
+	setPenColor fillColor
+	setFillColor transparent
+	setPenSize :height * :thicknessRatio
+	jumpForward :height * (:bottomGapRatio + :thicknessRatio / 2) + :radius
+	circle :radius
+	jumpRight :radius
+	jumpBackward :radius + penSize / 2
+	stripes penSize :height1 [penColor]
+	setTurtleState :oldState
+end
+
+to drawC :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "radius :height * ((:height1Ratio - :thicknessRatio) / 2)
+	localmake "thickness :height * :thicknessRatio
+	localmake "outerRadius :radius + :thickness / 2
+	localmake "innerRadius :radius - :thickness / 2
+	jumpForward :radius + :thickness / 2 + :height * :bottomGapRatio
+
+	localmake "center pos
+	right 76
+	jumpForward :radius + :thickness / 2
+	localmake "outerUpperStartPos pos
+	left 90
+	polyStart
+	arcLeft 331 :outerRadius
+	localmake "outerChordLength distance :outerUpperStartPos
+	localmake "innerArcAngle 360 - 2 * arcSin :outerChordLength / 2 / :innerRadius
+	setHeading :oldHeading - 90
+	jumpForward distanceToCircle :center :innerRadius
+	setHeading (towards :center) - 90
+	arcRight :innerArcAngle :innerRadius
+	polyEnd
+	setTurtleState :oldState
+end
+
+to drawY :height
+	localmake "oldState turtleState
+	localmake "angle 23
+	localmake "angle2 21.5
+	localmake "height1 :height * :height1Ratio
+	localmake "bottomGap :height * :bottomGapRatio
+	localmake "bottomGap1 :bottomGap + :height * 0.025
+	localmake "height2 (:height1 + :bottomGap) / cos :angle
+	localmake "thickness :height * :thicknessRatio
+	localmake "thickness1 :thickness / cos :angle
+	localmake "slantedHeight2 (:height2 - :bottomGap1 / cos :angle) * (cos :angle) / (cos :angle2)
+	jumpLeft :height * 0.067
+	parallelogram :thickness1 :height2 :angle
+	right :angle
+	jumpForward :bottomGap1 / cos :angle
+	left :angle
+	parallelogram :thickness1 :slantedHeight2 -:angle2
+	
+	setTurtleState :oldState
+end
+
+to drawApostrophe :height
+	localmake "oldState turtleState
+	localmake "smallStarRadius :height * 0.11
+	jumpForward :height - :smallStarRadius
+	regularStar :smallStarRadius 5
+	setTurtleState :oldState
+end
+
+to drawS :height
+	localmake "oldState turtleState
+	jumpLeft :height * 0.129
+	jumpForward :height * 0.347
+	right 180
+	setLineCap "butt
+	setPenSize :height * :thicknessRatio
+	setPenColor fillColor
+	arcLines [[0.025] [80 0.118] [30 0.14] [80 0.116]
+	[1 1] [58 0.088] [5 1] [-18 0.18] [-53 0.08]
+	[-30 0.135] [-40 0.08] [-30 0.15] [-83 0.096] [0.029]] :height
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Macy%27s#/media/File:Macy's_logo.svg
+to macysLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "largeStarRadius :height * 0.457
+	jumpLeft :height * 1.3385
+	setPenSize 0
+	setFillColor "#e11a2b
+	jumpForward :height - :largeStarRadius
+	regularStar :largeStarRadius 5
+	
+	setFillColor "black
+	jumpTo :oldPos
+	jumpLeft :height * 0.487
+	drawM :height
+	jumpRight :height * 0.67
+	drawA :height
+	jumpRight :height * 0.57
+	drawC :height
+	jumpRight :height * 0.45
+	drawY :height
+	jumpRight :height * 0.283
+	drawApostrophe :height
+	jumpRight :height * 0.14
+	drawS :height
+
+	setTurtleState :oldState
+end
+
+macysLogo 100

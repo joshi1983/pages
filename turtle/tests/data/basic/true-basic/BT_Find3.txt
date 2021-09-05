@@ -1,0 +1,79 @@
+!------------------------------------------------------------------------
+! Program .. Bt-Find3                                                   |
+! This program displays the Key of each Data Base entry which has a     |
+! last name equal to the name you specify.  The program will display    |
+! the keys in alphabetical order.                                       |
+!------------------------------------------------------------------------
+ 
+LIBRARY "BTreeLib.trc"
+
+!------------------------------------------------------------------------ 
+! First, the program Opens the Data Base.                               |
+!------------------------------------------------------------------------
+ 
+CALL BtOpen ("NameAdPh", DataBaseSize, #1)
+
+!------------------------------------------------------------------------ 
+! The following lines of code prompt for a person's (last) name.        |
+! The program uses this name to build the Data Base search Key.         |
+!------------------------------------------------------------------------
+
+CLEAR
+SET CURSOR 2, 2
+INPUT PROMPT "Enter the person's last name .. ": LastName$
+
+LET LastName$ = UCASE$ (LastName$)
+
+!------------------------------------------------------------------------ 
+! The following B-Tree subroutine builds a list of Data Base keys.      |
+! The subroutine stores the keys in alphabetical order.                 |
+! InitNext must be called if the program is going to be using the       |
+! B-Tree subroutine (GetNext).                                          |
+!------------------------------------------------------------------------
+
+CALL InitNext
+
+!------------------------------------------------------------------------ 
+! The following lines of code cycle through the list of keys created    |
+! by the (InitNext) subroutine.                                         |
+!                                                                       |
+!    The B-Tree subroutine (GetNext) gets the next Key from the         |
+!    list, and stores it in variable (NextKey$).                        |
+!                                                                       |
+!    If variable (NextKey$) is equal to CHR$(127), then either the      |
+!    Data Base is empty, or there are no more Keys in the list.         |
+!    If this happens, then the program is finished.                     |
+!                                                                       |
+!    The (LET) statements extract the last name field from the          |
+!    (NextKey$) string.                                                 |
+!                                                                       |
+!    If (NextKey$) has the same last name as the name you specified     |
+!    then the Key is displayed.                                         |
+!                                                                       |
+!    Once (NextKey$) is past the name you specified, then the program   |
+!    is finished.                                                       |
+!------------------------------------------------------------------------
+
+PRINT
+
+DO UNTIL KeyLastName$ > LastName$
+
+   CALL GetNext (NextKey$, #1)
+
+   IF NextKey$ = CHR$(127) THEN EXIT DO
+   LET PositionSpace = POS (NextKey$, " ", 1)
+   LET LastChar = PositionSpace - 1
+   LET KeyLastName$ = NextKey$ [1: LastChar]
+   IF KeyLastName$ = LastName$ THEN PRINT " "; NextKey$
+   LOOP
+
+PRINT
+PRINT " Press any key to end the program .. ";
+DO WHILE KEY INPUT
+   GET KEY KeyPressed
+   LOOP
+GET KEY KeyPressed
+
+CALL BtClose (#1)
+CLEAR
+END

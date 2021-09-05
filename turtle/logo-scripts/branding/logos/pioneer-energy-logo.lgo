@@ -1,0 +1,46 @@
+; Inspired by logo at:
+; https://en.wikipedia.org/wiki/Pioneer_Energy#/media/File:Pioneer_Energy_logo.svg
+to pioneerEnergyLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "pioneerDarkRed "#b4131d
+	localmake "radius :height / 2
+	jumpForward :height / 2
+	setFillColor :pioneerDarkRed
+	setPenSize 0
+	circle :radius
+	setFillColor "#9cc2ea
+	setPenSize :height * 0.036
+	setPenColor :pioneerDarkRed
+	setLineJoinStyle "miter
+	drawArcLineShape [0 0.397
+		[[-69.2 0] [1.156] [-131.3 0] [1.12] [43 0] [0.54]
+		[-134 0] [1.7]]
+	] :radius
+
+	setPenSize 0
+	setFillColor "#ee293d
+	drawArcLineShape [-0.61 -0.105
+		[[-114 0] [-20 2.4] [-9 1.5] [-107.9 0] [-265 0.856]]
+	] :radius
+	setFillColor "white
+	jumpRight :radius * 1.0188
+	jumpForward :radius * 0.747
+	localmake "corner1 pos
+	polyStart
+	arcLines [[111 0] [1.75] [137.5 0.12] [0.9]] :radius
+	polyEnd
+	setHeading :oldHeading
+	localmake "lowLeft pos
+	jumpTo mix :lowLeft :corner1 0.771
+	setFillColor "#d3e3f6
+	polyStart
+	arcLines [[81 0] [0.81] [20 0.33] [30 0.1] [95 0.035] [5.5 0.4] [16.9 0]] :radius
+	setHeading towards :lowLeft
+	jumpForward :height * 0.73
+	polyEnd
+
+	setTurtleState :oldState
+end
+
+pioneerEnergyLogo 100

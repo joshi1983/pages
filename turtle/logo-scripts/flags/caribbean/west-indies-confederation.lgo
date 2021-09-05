@@ -1,0 +1,78 @@
+to drawWave :width :thickness
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "arcAngle 50
+	localmake "numCompleteWaves 3.5
+	localmake "arcRadius (:width / :numCompleteWaves) / 4 / sin :arcAngle / 2
+	localmake "line1 [[:arcAngle / 2 - 90 0]]
+	repeat int :numCompleteWaves [
+		queue2 "line1 [-:arcAngle 1]
+		queue2 "line1 [:arcAngle 1]
+	]
+	if :numCompleteWaves > int :numCompleteWaves [
+		queue2 "line1 [-:arcAngle 1]
+	]
+	jumpLeft :width / 2
+	polyStart
+	arcLines :line1 :arcRadius
+	setHeading :oldHeading
+	jumpForward :thickness
+	left 90 - :arcAngle / 2
+	arcLines reverse :line1 -:arcRadius	
+	polyEnd
+
+	setTurtleState :oldState
+end
+
+; Inspired by flag at:
+; https://en.wikipedia.org/wiki/Flag_of_the_West_Indies_Federation#/media/File:Flag_of_the_West_Indies_Federation_(1958%E2%80%931962).svg
+to westIndiesFederationFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 2
+	stripes :width :height ["#002d82]
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	setFillColor "white
+	repeat 2 [
+		jumpForward :height * 0.092
+		repeat 2 [
+			drawWave :width :height * 0.08
+			jumpForward :height * 0.23
+		]
+
+		jumpTo :center
+		right 180
+	]
+
+	setFillColor "#ffa100
+	circle :height * 0.25
+	setTurtleState :oldState
+end
+
+; Inspired by flag at:
+; https://en.wikipedia.org/wiki/Flag_of_the_West_Indies_Federation#/media/File:Naval_Ensign_of_the_West_Indies_Federation_(1958%E2%80%931962).svg
+to westIndiesNavalFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 15 / 8
+	localmake "thickness :height / 8
+	localmake "weWidth (:width - :thickness) / 2
+	stripes :width :height ["white]	
+	jumpForward :height / 2
+	setPenSize 0
+	setFillColor "#cf142b
+	rect :thickness :height
+	rect :width :thickness
+	jumpForward :thickness / 2
+	jumpLeft (:width - :weWidth) / 2
+	westIndiesFederationFlag (:height - :thickness) / 2
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+make "height 100
+make "separation :height * 5
+jumpLeft :separation / 2
+westIndiesFederationFlag :height
+jumpRight :separation
+westIndiesNavalFlag :height

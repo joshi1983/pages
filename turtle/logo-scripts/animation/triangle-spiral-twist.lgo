@@ -1,0 +1,64 @@
+; Inspired by a similar spiral on pinterest at:
+; https://ca.pinterest.com/pin/14988611254149197
+to triangleSpiral :height :time
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "numSides 21
+	localmake "scaleFactor 0.8
+	localmake "scaleFactor2 1 - :scaleFactor
+	localmake "gapFactor 0.01
+	localmake "scaleFactor3 :scaleFactor2 - :gapFactor
+	localmake "baseWidthFactor 1.3
+	setPenColor "black
+	jumpForward :height / 2
+	localmake "center pos
+	repeat 24 [
+		localmake "thickness :height * 0.01
+		localmake "radius (:height - :thickness) / 2
+		localmake "radius2 :radius * (1 - :gapFactor)
+		localmake "triangleHeight :radius * :scaleFactor3
+		localmake "maxTriangleWidth 3 * :radius2 * tan (180 / :numSides)
+		localmake "startAngle repcount * 45 + :time * 360
+		setHeading :oldHeading + repcount * 180 / :numSides
+		localmake "startHeading heading
+		setPenSize :thickness
+		setFillColor transparent
+		regularPolygon :radius :numSides
+		setPenSize 0
+		setFillColor "black
+
+		right 180 / :numSides
+		repeat :numSides [
+			localmake "angle1 :startAngle + repcount * 360 / :numSides
+			localmake "triangleWidth :maxTriangleWidth * (:baseWidthFactor + sin :angle1) / (2 + :baseWidthFactor) 
+			setHeading :startHeading + (repcount + 0.5) * 360 / :numSides
+			jumpForward :radius2
+			right 180
+			isoTriangle :triangleWidth :triangleHeight
+			right 360 / :numSides
+			jumpTo :center
+		]
+		localmake "height :height * :scaleFactor
+	]
+
+	setTurtleState :oldState
+end
+
+make "time animation.clampedTimeRatio
+triangleSpiral 100 :time
+
+to animation.snapshotstyle
+	output createPList2 [
+		["position.y 50]
+		["zoom.scale 5]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 3
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

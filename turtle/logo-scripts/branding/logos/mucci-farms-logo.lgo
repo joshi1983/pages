@@ -1,0 +1,46 @@
+; Inspired by logo at
+; https://www.muccifarms.com
+to mucciFarmsLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "oldPos pos
+	localmake "radius :height * 0.46
+	setPenSize :height * 0.0325
+	jumpForward :height - :radius - penSize / 2
+	setPenColor "#646569
+	circle :radius
+
+	setPenSize 0
+	setFillColor "white
+	jumpTo :oldPos
+	jumpForward :height * 0.4765
+	jumpLeft :height * 0.508
+	right 87
+	polyStart
+	arcsRight [
+	[30 0.45] [40 0.5] [12 0.45] [-165 0]
+	[12 0.45] [69 0.633] [87.15 0] [178.6 0.56]] :height
+	polyEnd
+
+	setFillColor "#77bc1f
+	setHeading :oldHeading
+	jumpTo :oldPos
+	jumpForward :height * 0.0161
+	jumpLeft :height * 0.0346
+	polyStart
+	arcsLeft [[2 0] [92.3 0.4512] [93.5 0] [75.9 0.519] [138.38 0]] :height
+	jumpForward :height * 0.38
+	polyEnd
+
+	setHeading :oldHeading
+	jumpTo :oldPos
+	jumpRight :height * 0.001
+	polyStart
+	arcsRight [[80.25 0.624] [90 0] [93.6 0.525] [133 0] 
+		[-4.55 6] [-175.2 0] [0.5 20] [2 7] [12.9 0.426]] :height
+	polyEnd
+
+	setTurtleState :oldState
+end
+
+mucciFarmsLogo 100

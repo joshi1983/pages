@@ -1,0 +1,28 @@
+; Inspired by logo at:
+; https://www.verabank.com/
+to veraBank :height
+	localmake "oldState turtleState
+	localmake "tileSize :height / 3
+	localmake "separation :height / 2 / (cos 45) - :tileSize
+	localmake "sideColors ["#9e9e9e "#00958e]
+	setPenSize 0
+	setFillColor "#e56b1f
+	jumpForward :height / 2
+	left 45
+	square :tileSize
+	localmake "center pos
+	repeat count :sideColors [
+		setFillColor item repcount :sideColors
+		jumpLeft :separation
+		square :tileSize
+		jumpForward :separation
+		square :tileSize
+		jumpRight :separation
+		square :tileSize
+		jumpTo :center
+		right 180
+	]
+	setTurtleState :oldState
+end
+
+veraBank 100

@@ -1,0 +1,36 @@
+; Inspired by a drawing at:
+; https://www.youtube.com/watch?v=DPcIwN0j0M4
+to microWorldsPentaFlower :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "thickness :height * 0.025
+	localmake "ratio1 2 * sin 180 / 5
+	localmake "pentagonRadius (:height - :thickness) / (1 + 2 * :ratio1 * (cos 180 / 5 / 2)
+		+ (cos 180 / 5) + :ratio1 * sin 180 / 5)
+	; Calculate a pentagon radius such that the flower drawing will precisely fit within the
+	; specified height
+
+	setPenSize :thickness
+	setLineJoinStyle "round
+	setPenColor "black
+	jumpForward :pentagonRadius * (1 + 2 * cos 180 / 5) + :thickness / 2
+	localmake "center pos
+	setFillColor "yellow
+	repeat 5 [
+		setHeading :oldHeading + (repcount + 0.5) * 360 / 5
+		jumpForward 2 * :pentagonRadius * cos 180 / 5
+		regularPolygon :pentagonRadius 5
+		jumpTo :center
+	]
+	setPenColor fillColor
+	setFillColor "blueviolet
+	setLineJoinStyle "bevel
+	setHeading :oldHeading
+	setPenSize penSize * 1.1 
+	; increase size to overlap all of the inner black lines.
+
+	regularPolygon :pentagonRadius 5
+	setTurtleState :oldState
+end
+
+microWorldsPentaFlower 100

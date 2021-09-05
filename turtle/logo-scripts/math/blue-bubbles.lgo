@@ -1,0 +1,26 @@
+; Inspired by logo at:
+; https://ca.pinterest.com/pin/26529085300184040
+to blueBubbles :height
+	localmake "oldState turtleState
+	localmake "smallRadius :height * 0.231
+	localmake "c "#0cf
+	localmake "colorStops createPList2 [
+		[0 mix :c transparent 0]
+		[1 [mix :c transparent 0.7 easeInCubic]]
+	]
+	jumpForward :height / 2
+	setPenSize 0
+	localmake "center pos
+	repeat 6 [
+		jumpForward :height / 2 - :smallRadius
+		setFillGradient createRadialGradient pos :smallRadius :colorStops
+		circle :smallRadius
+		jumpTo :center
+		right 360 / 6
+	]
+	
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+blueBubbles 100

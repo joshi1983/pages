@@ -1,0 +1,40 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Olympic_symbols#/media/File:Olympic_rings_without_rims.svg 
+to olympicRings :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "radius :height * 0.31165
+	localmake "separationX :height * 0.737
+	localmake "colors ["#0078D0 "#FFB114 "black "#00a651 "#F0282D]
+	localmake "overlapAngles [93 12 93 12 0]
+	localmake "overlapAngle 20
+	setPenSize :height * 0.06
+	localmake "yOffset :height - :radius * 2 - penSize
+	jumpForward :height - :radius - penSize / 2
+	jumpLeft :separationX
+	localmake "topLeftCenter pos
+	repeat count :colors [
+		setPenColor item repcount :colors
+		circle :radius
+		jumpRight :separationX / 2
+		jumpBackward :yOffset * sign (remainder repcount 2) - 0.5
+	]
+	jumpTo :topLeftCenter
+	setLineCap "butt
+	repeat count :colors [
+		setPenColor item repcount :colors
+		setHeading :oldHeading + (item repcount :overlapAngles) + :overlapAngle / 2
+		localmake "pos1 pos
+		jumpForward :radius
+		left 90
+		arcLeft :overlapAngle :radius
+		jumpTo :pos1
+		setHeading :oldHeading
+		jumpRight :separationX / 2
+		jumpBackward :yOffset * sign (remainder repcount 2) - 0.5
+	]
+
+	setTurtleState :oldState
+end
+
+olympicRings 100

@@ -1,0 +1,18 @@
+; This is a very rough translation of Kojo's setBackgroundH command.
+; There are some significant differences, though.
+; - This will draw over existing shapes which Kojo's setBackgroundH might not do.
+; - This also uses a hardcoded dimensions and position.
+;  Kojo's setBackgroundH likely uses the viewport dimensions and position dynamically.
+to kojoSetBackgroundH :leftColor :rightColor
+	localmake "oldState turtleState
+	localmake "colorStops createPList2 [
+		[0 :leftColor] [1 :rightColor]
+	]
+	localmake "width 1000
+	setFillGradient createLinearGradient [-:width / 2 0] [:width / 2 0] :colorStops "pad
+	jumpTo [0 0]
+	setPenSize 0
+	rect :width 300
+	setTurtleState :oldState
+	setScreenColor :rightColor
+end

@@ -1,0 +1,32 @@
+; Inspired by logo at:
+; https://www.stericycle.ca
+to stericycleLogo :height
+	localmake "oldState turtleState
+	localmake "tinyRadius :height * 0.063
+	localmake "midRaadius :height * 0.103
+	localmake "midSeparation :height * 0.337
+	setPenSize 0
+	setFillColor "#20855B
+	jumpForward :height / 2
+	localmake "center pos
+	circle :height * 0.106
+	repeat 2 [
+		jumpForward :height / 2 - :tinyRadius
+		circle :tinyRadius
+		jumpTo :center
+		jumpForward :height * 0.248
+		jumpLeft :midSeparation / 2
+		repeat 2 [
+			circle :midRaadius
+			jumpRight :midSeparation
+		]
+		jumpTo :center
+		jumpRight :height * 0.354
+		circle :height * 0.152
+		jumpTo :center
+		right 180
+	]
+	setTurtleState :oldState
+end
+
+stericycleLogo 100

@@ -1,0 +1,44 @@
+make "starsInsiderPink "#dc2555
+
+; Inspired by logo at:
+; https://www.starsinsider.com
+to starsInsiderLogo :height :foregroundColor :starColor
+	localmake "oldState turtleState
+	localmake "angle1 150
+	localmake "angle2 35
+	localmake "len1 -1 / cos :angle1
+	localmake "len2 0.45
+	localmake "triWidth1 -tan :angle1
+	localmake "len3 (:triWidth1 - :len2) / cos :angle2
+	localmake "outerLines1 [[:angle1 0]
+		[:len1] [270 - :angle1 0]
+		[:len2] [:angle2 0] [:len3] [-:angle2 0]
+	]
+	setPenSize 0
+	setFillColor :foregroundColor
+	drawArcLineShape [0 1
+		combine :outerLines1 reverse :outerLines1] :height
+	setFillColor :starColor
+	jumpForward :height * 0.36
+	regularStar :height * 0.26 5
+	setTurtleState :oldState
+end
+
+to starsInsiderPinkBackgroundLogo :height
+	localmake "oldState turtleState
+	localmake "innerHeight :height * 0.9
+	stripes :height * 2 :height [:starsInsiderPink]
+	jumpForward (:height - :innerHeight) / 2
+	starsInsiderLogo :innerHeight "white :starsInsiderPink
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+make "height 100
+make "separation :height * 5
+jumpLeft :separation
+starsInsiderLogo :height "white "black
+jumpRight :separation
+starsInsiderPinkBackgroundLogo :height
+jumpRight :separation
+starsInsiderLogo :height :starsInsiderPink "black

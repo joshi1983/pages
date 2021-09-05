@@ -1,0 +1,39 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/List_of_Greek_flags#/media/File:Flag_of_National_Union_of_Greece.svg
+to nationalUnionOfGreeceFlag :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "width :height * 3 / 2
+	localmake "innerRadius :height * 0.2075
+	localmake "arcThickness1 :height * 0.144
+	localmake "arcAngle1 77
+	stripes :width :height ["#6290c1]
+	jumpForward :height / 2
+	setLineCap "butt
+	setPenColor "black
+	localmake "center pos
+	setPenSize :height * 0.158
+	jumpRight :height * 0.087668
+	jumpBackward :height * 0.008
+	left 90
+	forward :height * 0.38
+	setHeading :oldHeading
+	jumpTo :center
+	jumpRight :height * 0.037
+	localmake "center pos
+	right 51.5
+	jumpForward :innerRadius
+	left 90
+	setPenSize 0
+	setFillColor penColor
+	polyStart
+	arcLeft 277.7 :innerRadius
+	right :arcAngle1
+	jumpForward :arcThickness1
+	setHeading (towards :center) - 90
+	arcRight 284.5 distance :center
+	polyEnd
+	setTurtleState :oldState
+end
+
+nationalUnionOfGreeceFlag 100

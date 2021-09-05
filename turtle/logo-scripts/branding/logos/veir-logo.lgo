@@ -1,0 +1,61 @@
+; Inspired by logo at:
+; https://veir.com
+to veirLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "thickness :height * 0.01
+	localmake "colors ["#f36f24 "#fdc216 "#f78e20]
+	localmake "startOffset (:height - :thickness) / 2
+	localmake "arcAngles [360 / 3 118 115 111.5 108 104 100]
+	localmake "angleStep 6
+	localmake "angleOffset 10
+	localmake "pointArcs [[1.775 1] [-144 0] [-3 1]]
+	jumpForward :height / 2
+	localmake "center pos
+	setLineCap "butt
+	setPenSize :thickness
+	repeat count :colors [
+		setHeading :oldHeading + :angleOffset + repcount * 360 / count :colors
+		localmake "heading1 heading + 90
+		setPenColor item repcount :colors
+		jumpForward :startOffset
+		localmake "startPos pos
+		repeat count :arcAngles [
+			setHeading :heading1 + :angleStep * (repcount - 1)
+			localmake "arcAngle item repcount :arcAngles
+			arcRight :arcAngle :startOffset
+			jumpTo :startPos
+		]
+		jumpTo :center
+	]
+	; clean up some overlapping shapes and points.
+	repeat count :colors [
+		setHeading :oldHeading + :angleOffset + repcount * 360 / count :colors
+		setPenColor item repcount :colors
+		jumpForward :startOffset
+		localmake "startPos pos
+		right 90 + :angleStep * (-1 + count :arcAngles)
+		localmake "heading1 heading
+		setPenSize :thickness
+		; Draw arc far enough to clean up the overlap but 
+		; not too far.  
+		; If we used the original arc angle, 
+		; we'd reintroduce the problem we're trying to fix.
+		arcRight 50 :startOffset
+
+		; Fill the point.
+		setFillColor penColor
+		setPenSize 0
+		jumpTo :startPos
+		setHeading :heading1 + 180
+		jumpLeft :thickness / 2
+		polyStart
+		arcLines :pointArcs :startOffset
+		polyEnd
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+veirLogo 100

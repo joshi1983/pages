@@ -1,0 +1,45 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/F_Sharp_(programming_language)#/media/File:F_Sharp_logo.svg
+to fSharpLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "gap1 :height * 0.018
+	localmake "outerSize1 :height / 4
+	localmake "outerSize2 (:height - :outerSize1 * 2) / 2 / cos 45
+
+	; I'm not sure if this is a mistake or not but
+	; the right side of the F# logo SVG doesn't line up properly with 45 degrees.
+	localmake "outerAngle 44
+	localmake "outerSize3 :height / 2 / sin :outerAngle
+	localmake "innerTriangleSize :height * 0.3568
+	setFillColor "#30b9db
+	setPenSize 0
+	localmake "sign 1
+	repeat 2 [
+		jumpRight :gap1 * :sign
+		polyStart
+		jumpForward :outerSize1
+		right 45 * :sign
+		jumpForward :outerSize2
+		jumpLeft :outerSize2 * :sign
+		left 45 * :sign
+		jumpForward :outerSize1
+		right (90 + :outerAngle) * :sign
+		jumpForward :outerSize3
+		polyEnd
+		setFillColor "#378bba
+		jumpTo :oldPos
+		setHeading :oldHeading
+		localmake "sign -1
+		localmake "outerAngle 45
+		localmake "outerSize3 :height / 2 / sin :outerAngle
+	]
+	jumpLeft :gap1
+	jumpForward :height / 2
+	left 90
+	isoTriangle :innerTriangleSize :innerTriangleSize / 2
+	setTurtleState :oldState
+end
+
+fSharpLogo 100

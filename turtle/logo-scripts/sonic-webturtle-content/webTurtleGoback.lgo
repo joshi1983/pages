@@ -1,0 +1,9 @@
+; Similar to the goback command documented at
+; http://www.sonic.net/~nbs/webturtle/commands/
+to webTurtleGoback
+	if not empty? :$$$REMEMBER_STACK_NAME$$$ [
+		localmake "newState dequeue2 "$$$REMEMBER_STACK_NAME$$$
+		jumpTo last :newState
+		setHeading first :newState
+	]
+end
