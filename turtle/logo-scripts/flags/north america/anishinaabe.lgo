@@ -1,0 +1,213 @@
+make "anishinaabeAngle 36
+
+to anishinaabeThunderbirdHead :flagHeight :colors
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "flagBackground item 1 :colors
+	localmake "birdColor item 2 :colors
+	jumpForward :flagHeight * 0.652
+	jumpRight :flagHeight * 0.097
+	setPenSize 0
+	setFillColor :birdColor
+	polyStart
+	left 21
+	; right side of neck
+	arcsLeft [[9.8 0.55] [54 0.013] [9.1 0.55]] :flagHeight
+
+	; beak
+	arcsLeft [[80 0.0185] [20 0.027] [39 0.016] [130 0]
+	[-20 0.018] [-40 0.008] [-20 0.0048] [-30 0.0055]
+	[-60 0.0095] [-30 0.016] [-5 0.1] [-4 0.2]] :flagHeight
+	jumpForward :flagHeight * 0.04
+	polyEnd
+
+	; eye
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :flagHeight * 0.717
+	jumpRight :flagHeight * 0.0095
+	setFillColor :flagBackground
+	circle :flagHeight * 0.0087
+end
+
+to anishinaabeThunderbirdMiddleAndLower :flagHeight :colors
+	localmake "oldHeading heading
+	localmake "angle1 :anishinaabeAngle
+	localmake "size1 :flagHeight * 0.135
+	localmake "size3 :flagHeight * 0.2
+	localmake "size4 :flagHeight * 0.09
+	localmake "size5 :flagHeight * 0.086
+	localmake "size2 :flagHeight * 0.11
+	localmake "size6 :flagHeight * 0.065
+	localmake "size7 (:size2 + :size6) / sin :angle1
+	localmake "size8 :size7 * :size2 / (:size2 + :size6)
+	localmake "flagBackground item 1 :colors
+	localmake "birdColor item 2 :colors
+	jumpForward :flagHeight * 0.255
+	localmake "birdBottom pos
+	setPenSize 0
+	setFillColor :birdColor
+	setLineJoinStyle "miter
+	isoTriangle :size1 * 2 :size1 / tan :angle1
+	setFillColor :flagBackground
+	jumpForward :flagHeight * 0.04
+	isoTriangle :flagHeight * 0.09 :flagHeight * 0.065
+ 	jumpBackward :flagHeight * 0.03
+	setFillColor :birdColor
+	isoTriangle :flagHeight * 0.09 :flagHeight * 0.065
+
+	jumpTo :birdBottom
+	setPenSize 0
+	setFillColor :birdColor
+	setHeading :oldHeading
+	jumpRight :size2
+	jumpForward :size5
+	polyStart
+	jumpRight :size6
+	left :angle1
+	jumpForward :size7
+
+	left 180 - :angle1 * 2
+	jumpForward :size7
+	setHeading :oldHeading
+	jumpRight :size6
+	right :angle1
+	jumpForward :size8
+	polyEnd
+	
+
+	jumpTo :birdBottom
+	setHeading :oldHeading
+	jumpForward :flagHeight * 0.385
+	right 180
+	isoTriangle :size3 * 2 :size3 / tan :angle1
+	setFillColor transparent
+	jumpForward :flagHeight * 0.04
+	setPenColor :flagBackground
+	setPenSize :flagHeight * 0.024
+	isoTriangle :size4 * 2 :size4 * 1.5
+end
+
+to anishinaabeThunderbirdWings :height :color
+	localmake "oldHeading heading
+	localmake "size1 :height * 0.28
+	localmake "size2 :height * 0.064
+	localmake "size3 :height * 0.013
+	localmake "size4 :height * 0.05
+	localmake "angle1 :anishinaabeAngle
+	localmake "angle2 121
+	localmake "angle3 56
+	localmake "featherThickness :height * 0.06
+	localmake "featherBevel :height * 0.01
+	localmake "featherBevel2 :featherBevel / 2 / sin :angle1
+	localmake "featherGap :height * 0.01
+	localmake "featherLength :height * 0.04
+	localmake "featherLengthIncrement (:featherThickness + :featherGap / sin :angle3) * cos :angle3
+	localmake "size5 :height * 0.141421382
+	setFillColor :color
+	setPenSize 0
+	jumpForward :height * 0.65733
+	jumpLeft :height * 0.17468
+	left :angle2
+	polyStart
+	jumpForward :size1
+	setHeading :oldHeading + 180 - :angle1
+	jumpForward :size2
+	setHeading :oldHeading
+	jumpRight :size3
+	repeat 3 [
+		setHeading :oldHeading
+		jumpRight :featherThickness
+		left :angle1
+		jumpForward :featherLength
+		setHeading :oldHeading + :angle3
+		jumpForward :featherGap
+		setHeading :oldHeading - :angle1
+		jumpBackward :featherLength + :featherGap / tan :angle3
+		localmake "featherLength :featherLength + :featherLengthIncrement
+	]
+	setHeading :oldHeading
+	jumpRight :featherThickness - :featherBevel
+	right :angle1
+	jumpForward :featherBevel2
+	setHeading :oldHeading - :angle1
+	localmake "featherBeveledLength :featherLength - :featherBevel2
+	jumpForward :featherBeveledLength
+	jumpRight :size4
+	setHeading :oldHeading
+	jumpRight :size5 * 2 ; point of symmetry
+	setHeading :oldHeading + 90 - :angle3
+	jumpRight :size4
+	setHeading :oldHeading + :angle1
+	jumpBackward :featherBeveledLength
+	setHeading :oldHeading - :angle1
+	jumpBackward :featherBevel2
+	setHeading :oldHeading
+	jumpRight :featherThickness - :featherBevel
+	localmake "featherLength :featherLength +  (:featherGap / tan :angle3) - :featherLengthIncrement
+	repeat 3 [
+		setHeading :oldHeading + :angle1
+		jumpForward :featherLength
+		setHeading :oldHeading + 90 - :angle3
+		jumpRight :featherGap
+		setHeading :oldHeading + :angle1
+		jumpBackward :featherLength - :featherGap / tan :angle3
+		setHeading :oldHeading
+		jumpRight :featherThickness
+		localmake "featherLength :featherLength - :featherLengthIncrement
+	]
+	jumpRight :size3
+	right :angle1
+	jumpForward :size2
+	setHeading :oldHeading + :angle2 + 180
+	jumpForward :size1
+	polyEnd
+end
+
+to anishinaabeThunderbirdFlagCustomColors :height :colors
+	localmake "oldState turtleState
+	localmake "birdColor item 2 :colors
+	anishinaabeThunderbirdWings :height :birdColor
+	setTurtleState :oldState
+	anishinaabeThunderbirdMiddleAndLower :height :colors
+	setTurtleState :oldState
+	anishinaabeThunderbirdHead :height :colors
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://commons.wikimedia.org/wiki/File:Anishinabe.svg
+to anishinaabeThunderbirdFlag :height
+	localmake "colors ["white "black]
+	localmake "width :height * 3 / 2
+	stripes :width :height ["white]
+	anishinaabeThunderbirdFlagCustomColors :height :colors
+end
+
+; Color scheme inspired by
+; https://www.reddit.com/r/vexillology/comments/3h60e4/flag_of_the_anishinabek_nation_a_group_of_the/
+; and
+; https://www.redbubble.com/people/kbelleau/works/880461-anishinabek-flag-revision
+to anishinaabeThunderbirdRedFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 2
+	localmake "colors ["#b01 "white]
+	localmake "smallerHeight :height * 0.9
+	stripes :width :height [item 1 :colors]
+	setFillColor transparent
+	setPenColor item 2 :colors
+	setPenSize :height * 0.05
+	jumpForward :height / 2
+	circle :height * 0.425
+	jumpBackward :smallerHeight / 2
+	anishinaabeThunderbirdFlagCustomColors :smallerHeight :colors
+	setTurtleState :oldState
+end
+
+setScreenColor "#888
+make "height 100
+make "separation :height * 4
+jumpLeft :separation * 0.5
+anishinaabeThunderbirdFlag :height
+jumpRight :separation
+anishinaabeThunderbirdRedFlag :height

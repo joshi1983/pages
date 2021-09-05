@@ -1,0 +1,76 @@
+make "darkColor "#780
+
+to drawCirclePair :circleRadius :separation
+	jumpLeft :separation / 2
+	circle :circleRadius
+	jumpRight :separation
+	circle :circleRadius
+	jumpLeft :separation / 2
+end
+
+; Inspired by images at:
+; https://kutulisdiblog.blogspot.com/2011/06/crop-circle-muncul-di-tidcombe.html
+; It seems to have been reported in June 2011.
+; This was located at Tidcombe near Burbage, Wiltshire
+to tidCombeCropCircles :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "lightColor "#ff8
+	localmake "innerRadius :height * 0.1
+	localmake "littleRadius :height * 0.03
+	localmake "littleSeparation :littleRadius * 2.1
+	localmake "chordLength (:height / 2 - :littleRadius - :littleSeparation * 2 - :innerRadius)
+	; arcAngle is not 180 because 180 would make them intersect
+	; which is not what happens in the real crop circles.
+	localmake "arcAngle 177
+	localmake "arcRadius :chordLength / 2 / sin :arcAngle / 2
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	setFillColor :lightColor
+	circle :height * 0.05
+	repeat 8 [
+		jumpForward :innerRadius
+		repeat 3 [
+			circle :littleRadius
+			jumpForward :littleSeparation / 2
+			if repcount <> 3 [
+				drawCirclePair :height * 0.005 :height * 0.055
+			]
+			jumpForward :littleSeparation / 2
+		]
+		jumpBackward :littleSeparation
+		repeat 2 [
+			jumpForward :chordLength / 2
+			circle :littleRadius
+		]
+		jumpBackward :chordLength / 4
+		drawCirclePair :height * 0.01 :height * 0.04
+
+		jumpTo :center
+		right 360 / 8
+	]
+	
+	setPenColor :lightColor
+	setPenSize :height * 0.005
+	setFillColor transparent
+	circle :innerRadius
+	repeat 8 [
+		localmake "heading1 :oldHeading + repcount * 360 / 8
+		setHeading :heading1
+		jumpForward :innerRadius
+		right :arcAngle / 2
+		arcLeft :arcAngle :arcRadius
+		setHeading :heading1
+		forward :chordLength / 2
+		jumpBackward :chordLength
+		left :arcAngle / 2
+		arcRight :arcAngle :arcRadius
+		jumpTo :center
+	]
+
+	setTurtleState :oldState
+end
+
+setScreenColor :darkColor
+tidCombeCropCircles 100
