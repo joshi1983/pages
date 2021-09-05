@@ -1,0 +1,36 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_S%C3%A3o_Tom%C3%A9_and_Pr%C3%ADncipe#/media/File:Flag_of_S%C3%A3o_Tom%C3%A9_and_Pr%C3%ADncipe.svg
+; Using construction sheet at
+; https://commons.wikimedia.org/wiki/File:Flag_of_S%C3%A3o_Tom%C3%A9_and_Pr%C3%ADncipe_(construction_sheet).svg
+; to calculate A, D and make proper use of them
+to saoTomePrincipeFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 2
+	localmake "flagGreen "#009739
+	localmake "yellowHeight :height * 36 / 84
+	localmake "dUnscaled (260 - 52 * sqrt 5) / 5
+	localmake "starRadius :height * :dUnscaled / 84 / 2
+	localmake "aUnscaled (:dUnscaled - 26) / 2
+	localmake "aScaled :height * :aUnscaled / 84
+	stripes :width :height [:flagGreen]
+	jumpForward (:height - :yellowHeight) / 2
+	stripes :width :yellowHeight ["#ffd100]
+	jumpForward :yellowHeight / 2
+	localmake "center pos
+	jumpLeft :width / 2
+	right 90
+	setPenSize 0
+	setFillColor "#ef3340
+	isoTriangle :height :height / 2
+	jumpTo :center
+	left 90
+	jumpBackward :aScaled
+	setFillColor "black
+	repeat 2 [
+		regularStar :starRadius 5
+		jumpRight :height * 42 / 84
+	]
+	setTurtleState :oldState
+end
+
+saoTomePrincipeFlag 100

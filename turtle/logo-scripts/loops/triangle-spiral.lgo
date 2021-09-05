@@ -1,0 +1,33 @@
+; Inspired by cover of a book called
+; IBM logo Primer
+; The book was published in 1985
+; The book was published by Reston, Va. : Reston Pub. Co.
+; A digital version of the book can be found at:
+; https://archive.org/details/ibmlogoprimer0000bitt
+; I used black instead of yellow because black has 
+; more contrast on a white background.
+;
+; A similar pattern can be found at:
+; https://ca.pinterest.com/pin/698058011016705097/
+; and https://ca.pinterest.com/pin/582090320572601859/
+to triangleSpiral :height
+	localmake "oldState turtleState
+	setPenSize :height * 0.02
+	localmake "len :height * tan 30
+	localmake "lenStep :len / 20
+	setLineJoinStyle "miter
+	setLineCap "round
+	jumpForward penSize / 2
+	left 90
+	jumpBackward :len + :lenStep / 2
+	forward :len
+	while :len > 0 [
+		forward :len
+		right 120
+		forward :len
+		localmake "len :len - :lenStep
+	]
+	setTurtleState :oldState
+end
+
+triangleSpiral 100

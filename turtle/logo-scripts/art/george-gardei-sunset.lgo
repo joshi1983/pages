@@ -1,0 +1,31 @@
+; Inspired by the final drawing at:
+; https://youtu.be/mvgsV6raUzw?t=611
+;
+; George Gardei uses QBasic in the video to draw his version.
+; This shows how WebLogo can draw something similar.
+to georgeGardeiSunset :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "sunRadius :height * 0.28
+	localmake "skyColorStops createPList2 [
+		[0 "yellow] [0.02 "yellow] [0.3 "orange] [0.6 "red] [1 "black]
+	]
+	jumpForward :height
+	setPenSize 0
+	setFillGradient createLinearGradient :oldPos pos :skyColorStops "pad
+	drawArcLineShape [-2 0
+		[[180 0] [0.43] [45 0] [0.15] [17 0] [0.2] [-30 0] [0.26] [25 0]
+		[0.27458033] [33 0] [2.72] [40 0] [0.05] [-12 0] [0.31] [20 0]
+		[0.1] [-93 0] [0.22] [-10 0] [0.117715088] [55 0] [0.18] [90 0]
+		[1]]
+	] :height
+
+	setFillColor "white
+	jumpTo :oldPos
+	drawArcLineShape [1 0 [[180 1]]] :sunRadius
+
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+georgeGardeiSunset 100

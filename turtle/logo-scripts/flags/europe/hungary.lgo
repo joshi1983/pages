@@ -1,0 +1,38 @@
+to hungaryFlagCustomWidth :width :height
+	localmake "colors ["#477050 "white "#ce2939]
+	stripes :width :height :colors
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Hungary#/media/File:Flag_of_Hungary.svg
+to hungaryFlag :height
+	hungaryFlagCustomWidth :height * 2 :height
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Hungary#/media/File:Civil_Ensign_of_Hungary.svg
+to hungaryCivilFlag :height
+	hungaryFlagCustomWidth :height * 3 / 2 :height
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Hungary#/media/File:Flag_of_Hungary_vertical.svg
+to hungaryStateFlagVertical :height
+	localmake "oldState turtleState
+	localmake "width :height / 2
+	jumpLeft :width / 2
+	jumpForward :height / 2
+	right 90
+	hungaryFlag :width
+	setTurtleState :oldState
+end
+
+setScreenColor "#eee
+make "height 100
+make "separation :height * 4
+jumpLeft :separation
+hungaryFlag :height
+jumpRight :separation
+hungaryCivilFlag :height
+jumpRight :separation
+hungaryStateFlagVertical :height
