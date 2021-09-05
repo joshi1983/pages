@@ -1,0 +1,41 @@
+; Inspired by logo at
+; https://scrolller.com
+to scrolllerLogo :height
+	localmake "oldState turtleState
+	localmake "heightOffset :height * -0.012
+	localmake "heightStep :height * 0.25
+	localmake "cornerRadius :height * 0.022
+	localmake "halfWidth :height * 0.2588
+	localmake "width1 :height * 0.155
+	localmake "width1_ :halfWidth - :width1 / 2
+	localmake "straightWidth :width1 - :cornerRadius * 2
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	setFillColor "#b11733
+	repeat 2 [
+		localmake "heading1 heading
+		jumpLeft :halfWidth
+		repeat 3 [
+			localmake "pos1 pos
+			localmake "height1 :heightOffset + repcount * :heightStep
+			localmake "straightHeight :height1 - :cornerRadius
+			jumpForward :height / 2 - :height1
+			polyStart
+			jumpForward :straightHeight
+			arcRight 90 :cornerRadius
+			jumpForward :straightWidth
+			arcRight 90 :cornerRadius
+			jumpForward :straightHeight
+			polyEnd
+			jumpTo :pos1
+			setHeading :heading1
+			jumpRight :width1_
+		]
+		jumpTo :center
+		right 180
+	]
+	setTurtleState :oldState
+end
+
+scrolllerLogo 100

@@ -1,0 +1,46 @@
+to greekPiece :height
+	localmake "oldState turtleState
+	localmake "lengths1 [6.5 4 2.5]
+	localmake "lengths2 [2.5 4 6]
+	localmake "unit :height / 9
+	setPenSize :unit
+	repeat 3 [
+		forward (item repcount :lengths1) * :unit
+		right 90
+	]
+	jumpRight :unit
+	jumpForward 2 * :unit
+	repeat 3 [
+		left 90
+		forward (item repcount :lengths2) * :unit
+	]
+	setTurtleState :oldState
+end
+
+; A similar design can be found in many places.
+; This pattern seems to have been used for 100's of years in Greece.
+; I think it is safe to consider this design is public domain.
+;
+; I(Josh Greig), the writer of this WebLogo code example, am not 
+; adding extra copyright restrictions for this example.
+to greekSpiralStrip :height :numPiecesWidth
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "pieceWidth :height * 8 / 9
+	localmake "width :pieceWidth * :numPiecesWidth
+	jumpLeft :height * 0.5 / 9
+	stripes :width :height / 9 ["black]
+	jumpForward :height * 8 / 9
+	stripes :width :height / 9 ["black]
+	jumpTo :oldPos
+	jumpLeft :width / 2
+	setLineCap "butt
+	setLineJoinStyle "miter
+	repeat :numPiecesWidth [
+		greekPiece :height
+		jumpRight :pieceWidth
+	]
+	setTurtleState :oldState
+end
+
+greekSpiralStrip 100 12
