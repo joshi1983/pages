@@ -1,0 +1,1516 @@
+{
+	"name": "FMSLogo",
+	"description": "A Logo interpreter for Windows",
+	"externalLink": "https://fmslogo.sourceforge.io",
+	"commands": [
+		{
+			"primaryName": ".setbf",
+			"args": [
+				{"name": "list"},
+				{"name": "value"}
+			],
+			"description": "Changes the BUTFIRST of the list input to a given value."
+		},
+		{
+			"primaryName": ".setitem",
+			"args": [
+				{"name": "index"},
+				{"name": "array"},
+				{"name": "value"}
+			],
+			"description": "Change the indexth item of array to be value",
+			"to": "setItem"
+		},
+		{
+			"primaryName": "activearea",
+			"args": [],
+			"description": "Outputs the current active area, as set by SETACTIVEAREA",
+			"returnTypes": "list<int>",
+			"migrateToCode": "[0 0 1 1]"
+		},
+		{
+			"primaryName": "allopen",
+			"description": "Outputs a list whose members are the names of all files currently open.  Learn more at https://fmslogo.sourceforge.io/manual/command-allopen.html"
+		},
+		{
+			"primaryName": "arity",
+			"description": "Outputs a list of three numbers: the minimum, default, and maximum number of inputs for the procedure whose name is the input. It is an error if there is no such procedure. A maximum of -1 means that the number of inputs is unlimited."
+		},
+		{
+			"primaryName": "array",
+			"args": [
+				{"name": "size"}
+			],
+			"argCount": {
+				"min": 1,
+				"max": 2
+			},
+			"description": "Outputs an array of size items, each of which initially is the empty list",
+			"migrateToCode": "[]"
+		},
+		{
+			"primaryName": "arrayToList",
+			"args": [
+				{"name": "array"}
+			],
+			"description": "Outputs a list whose members are the elements of the input array",
+			"removeCallTokenOnly": true
+		},
+		{
+			"primaryName": "back",
+			"names": ["bk"],
+			"to": "backward"
+		},
+		{
+			"primaryName": "bitblock",
+			"args": [
+				{"name": "width"},
+				{"name": "height"}
+			],
+			"description": "Draws an opaque block (rectangle) of the given dimensions such that the turtle's current position is at the lower-left corner of the block",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "bitcopy",
+			"args": [
+				{"name": "width"},
+				{"name": "height"}
+			],
+			"description": "Copies part of the image and stores it in memory (or the clipboard, if BITINDEX is 0)",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "bitcut",
+			"args": [
+				{"name": "width"},
+				{"name": "height"}
+			],
+			"description": "Cuts out part of the image and stores it in memory",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "bitindex",
+			"args": [],
+			"description": "Outputs current bitmap index, as set by SETBITINDEX. The default index is 0",
+			"migrateToCode": "0"
+		},
+		{
+			"primaryName": "bitload",
+			"args": [
+				{"name": "filename"}
+			],
+			"description": "Loads the bitmap specified by the filename input",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "bitloadsize",
+			"args": [
+				{"name": "filename"}
+			],
+			"description": "Loads the bitmap specified by the filename input",
+			"migrateToCode": "[0 0]"
+		},
+		{
+			"primaryName": "bitmode",
+			"args": [],
+			"description": "Returns the bitmap mode that is set using setbitmode",
+			"returnTypes": "int",
+			"migrateToCode": "1"
+		},
+		{
+			"primaryName": "bitpaste",
+			"args": [],
+			"description": "Pastes the image that was BITCUT into the bitmap index specified by BITINDEX",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "bitpastetoindex",
+			"args": [
+				{"name": "index", "types": "int"},
+				{"name": "x", "types": "int"},
+				{"name": "y", "types": "int"}
+			],
+			"description": "Pastes the image that was BITCUT into the bitmap index specified by BITINDEX",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "bitsave",
+			"args": [
+				{"name": "filename", "types": "string"}
+			],
+			"argCount": {
+				"min": 1,
+				"max": 2
+			},
+			"description": "Saves a picture of a portion of the drawing surface to a file as a bitmap",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "bitsize",
+			"args": [
+			],
+			"description": "Output the width and height of the bitmap specified by the current BITINDEX",
+			"returnTypes": "list",
+			"migrateToCode": "[0 0]"
+		},
+		{
+			"primaryName": "buttoncreate",
+			"args": [
+				{"name": "parent"},
+				{"name": "name"},
+				{"name": "label"},
+				{"name": "xpos"},
+				{"name": "ypos"},
+				{"name": "width"},
+				{"name": "height"},
+				{"name": "callback"}
+			],
+			"description": "Creates a button",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "buttondelete",
+			"args": [
+				{"name": "name"}
+			],
+			"description": "Deletes a button with the specified name",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "buttonenable",
+			"args": [
+				{"name": "name"},
+				{"name": "state"}
+			],
+			"description": "Enables a button",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "cascade",
+			"description": "Outputs the result of applying a template (or several templates, see the section entitled Template-Based Iteration) repeatedly, with a given value filling the slot the first time, and the result of each application filling the slot for the following application.  Learn more at https://fmslogo.sourceforge.io/manual/command-cascade.html"
+		},
+		{
+			"primaryName": "CASCADE.2",
+			"description": "Outputs the result of invoking CASCADE with the same inputs"
+		},
+		{
+			"primaryName": "clean",
+			"description": "Erases all lines that the turtle has drawn on the graphics window.  The turtle's state(position, heading, pen mode, etc.) is not changed."
+		},
+		{
+			"primaryName": "clearPalette",
+			"args": [],
+			"description": "CLEARPALETTE does nothing. It has been kept for compatibility with old programs, but its function is no longer needed.  Historically, early versions of Microsoft Windows supported video displays that were limited to showing at most 256 colors at one time, although each of the colors used a full 24-bit range",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "clearScreen",
+			"names": ["cs"],
+			"to": "clearScreen"
+		},
+		{
+			"primaryName": "close",
+			"args": [
+				{"name": "filename"}
+			],
+			"description": "Closes file",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "closeall",
+			"args": [],
+			"description": "Closes all open files.  Learn more at https://fmslogo.sourceforge.io/manual/command-closeall.html",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "combine",
+			"to": "combine"
+		},
+		{
+			"primaryName": "comboboxaddstring",
+			"args": [
+				{"name": "name"},
+				{"name": "item"}
+			],
+			"description": "Adds a string to a combobox",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "comboboxcreate",
+			"args": [
+				{"name": "parent"},
+				{"name": "name"},
+				{"name": "xpos"},
+				{"name": "ypos"},
+				{"name": "width"},
+				{"name": "height"}
+			],
+			"description": "Creates a combobox",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "comboboxdelete",
+			"args": [
+				{"name": "name"}
+			],
+			"description": "Deletes a combobox",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "comboboxdeletestring",
+			"args": [
+				{"name": "name"},
+				{"name": "index", "types": "int"}
+			],
+			"description": "Deletes a string from a combobox",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "comboboxenable",
+			"args": [
+				{"name": "name"},
+				{"name": "state"}
+			],
+			"description": "Enables or disables the a combobox identifiedby name",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "comboboxgettext",
+			"args": [
+				{"name": "name"}
+			],
+			"description": "Gets text from a combobox identified by the specified name",
+			"migrateToCode": "''"
+		},
+		{
+			"primaryName": "comboboxsettext",
+			"args": [
+				{"name": "name"},
+				{"name": "item"}
+			],
+			"description": "Sets text in a combobox",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "continue",
+			"names": ["co"],
+			"args": [
+				{"name": "value"}
+			],
+			"argCount": {
+				"min": 0,
+				"max": 1
+			},
+			"description": "Ends the current interactive pause, returning to the context of the PAUSE invocation that began it. Exceptionally, the CONTINUE command can be used without its default input and without parentheses provided that nothing follows it on the instruction line.",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "copydef",
+			"args": [
+				{"name": "newname"},
+				{"name": "oldname"}
+			],
+			"description": "Makes a new procedure called newname that is identical to procedure oldname, which may be a primitive",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "crossmap",
+			"description": "Outputs a list containing the results of template evaluations. Learn more at https://fmslogo.sourceforge.io/manual/command-crossmap.html"
+		},
+		{
+			"primaryName": "define",
+			"description": "Defines a procedure with name procname and definition text.  Learn more at https://fmslogo.sourceforge.io/manual/command-define.html.  The closest analogue in WebLogo is 'to' but the translation is complicated by removal of square brackets and more."
+		},
+		{
+			"primaryName": "dialogcreate",
+			"args": [
+				{"name": "parent"},
+				{"name": "name", "types": "string"},
+				{"name": "title", "types": "list<string>|string"},
+				{"name": "xpos", "types": "int"},
+				{"name": "ypos", "types": "int"},
+				{"name": "width", "types": "int"},
+				{"name": "height", "types": "int"},
+				{"name": "setup", "types": "instructionlist"}
+			],
+			"description": "Creates a window that is suitable for use as a dialog box",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "dialogenable",
+			"args": [
+				{"name": "name", "types": "string"},
+				{"name": "state"}
+			],
+			"description": "Enables a dialog",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "dialogfileopen",
+			"args": [
+				{"name": "filename", "types": "string"}
+			],
+			"description": "Displays a standard \"Open\" windows dialog box",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "dialogfilesave",
+			"args": [
+				{"name": "filename", "types": "string"}
+			],
+			"description": "Displays a standard \"Save As\" windows dialog box",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "downpitch",
+			"names": ["down"],
+			"description": "Pitches the turtle's nose downward by the specified angle, measured in degrees (1/360 of a circle).  Learn more at https://fmslogo.sourceforge.io/manual/command-downpitch.html",
+			"to": "pitchDown"
+		},
+		{
+			"primaryName": "dribble",
+			"args": [
+				{"name": "filename", "types": "string"}
+			],
+			"description": "Creates a new file whose name is the filename input, like OPENWRITE, and begins recording in that file everything that is read from the keyboard",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "ellipse",
+			"to": "ellipse"
+		},
+		{
+			"primaryName": "ellipsearc",
+			"to": "ellipsearc"
+		},
+		{
+			"primaryName": "erall",
+			"args": [],
+			"argCount": {
+				"min": 0,
+				"max": 1
+			},
+			"description": "Erases all unburied procedures, variables, and property lists from the workspace",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "erase",
+			"names": ["er"],
+			"args": [
+				{"name": "contentslist"}
+			],
+			"description": "Erases the procedures, variables, and property lists named in contentslist",
+			"reason": "WebLogo's Code Editor makes editing code more familiar and intuitive than using commands to erase it",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "erns",
+			"description": "Erases all unburied variables from the workspace"
+		},
+		{
+			"primaryName": "erps",
+			"description": "Erases all unburied procedures from the workspace"
+		},
+		{
+			"primaryName": "fill",
+			"description": "Flood fills",
+			"reason": "WebLogo uses polyStart and polyEnd instead of fill because their meanings are more consistent with both 2D and 3D graphics"
+		},
+		{
+			"primaryName": "filter",
+			"description": "Outputs a word or list, depending on the type of the data input, containing a subset of the members (for a list) or characters (for a word) of the input. Learn more at https://fmslogo.sourceforge.io/manual/command-filter.html"
+		},
+		{
+			"primaryName": "find",
+			"description": "Outputs the first item of the data input for which the value produced by evaluating conditiontemplate with that item in its slot is TRUE. Learn more at https://fmslogo.sourceforge.io/manual/command-find.html"
+		},
+		{
+			"primaryName": "first",
+			"to": "first"
+		},
+		{
+			"primaryName": "floodcolor",
+			"names": ["floodcolour"],
+			"to": "fillColor",
+			"description": "Returns the flood color.  Learn more at https://fmslogo.sourceforge.io/manual/command-floodcolor.html"
+		},
+		{
+			"primaryName": "for",
+			"to": "for"
+		},
+		{
+			"primaryName": "foreach",
+			"description": "Command that evaluates the templatelist repeatedly, once for each item in datalist.  Learn more at https://fmslogo.sourceforge.io/manual/command-foreach.html"
+		},
+		{
+			"primaryName": "forward",
+			"names": ["fd"],
+			"to": "forward"
+		},
+		{
+			"primaryName": "fulltext",
+			"description": "Outputs a representation of the procedure procname in which formatting information is preserved",
+			"reason": "Open WebLogo's Code Editor and you'll see procedures in a format more familiar and intuitive than from any command"
+		},
+		{
+			"primaryName": "gensym",
+			"args": [],
+			"description": "Outputs a unique word each time it is invoked. The words are of the form G1, G2, etc. This is typically used to dynamically generate variable names.",
+			"migrateToCode": "\"G1"
+		},
+		{
+			"primaryName": "getFocus",
+			"description": "Outputs the caption (title) of the window in focus.  Learn more at https://fmslogo.sourceforge.io/manual/command-getfocus.html",
+			"reason": "WebLogo is not for creating graphical user interfaces or managing windows."
+		},
+		{
+			"primaryName": "gifload",
+			"args": [
+				{"name": "filename"}
+			],
+			"description": "Loads the GIF picture specified by the filename input",
+			"migrateToCode": "[0 0]"
+		},
+		{
+			"primaryName": "gifsave",
+			"args": [
+				{"name": "filename"}
+			],
+			"argCount": {
+				"min": 1,
+				"max": 6
+			},
+			"description": "Save a picture of your work as a GIF image",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "gifsize",
+			"args": [
+				{"name": "filename"}
+			],
+			"description": "Output the width and height of the GIF file that is specified by the filename input",
+			"migrateToCode": "[0 0]"
+		},
+		{
+			"primaryName": "gprop",
+			"to": "getProperty"
+		},
+		{
+			"primaryName": "heading",
+			"to": "heading"
+		},
+		{
+			"primaryName": "hideAndShow",
+			"description": ""
+		},
+		{
+			"primaryName": "hideTurtle",
+			"to": "hideTurtle"
+		},
+		{
+			"primaryName": "home",
+			"to": "home"
+		},
+		{
+			"primaryName": "ingameport",
+			"args": [
+				{"name": "mask", "types": "int"}
+			],
+			"description": "Reads the value (or resistance across) the game port channel specified by mask",
+			"migrateToCode": "-1"
+		},
+		{
+			"primaryName": "iseq",
+			"to": "iseq"
+		},
+		{
+			"primaryName": "label",
+			"to": "label"
+		},
+		{
+			"primaryName": "last",
+			"to": "last"
+		},
+		{
+			"primaryName": "left",
+			"names": ["lt"],
+			"to": "left"
+		},
+		{
+			"primaryName": "leftroll",
+			"names": ["lr"],
+			"args": [
+				{"name": "angle"}
+			],
+			"description": "Rolls the turtle toward his left side by the specified angle, measured in degrees (1/360 of a circle).  Learn more at https://fmslogo.sourceforge.io/manual/command-leftroll.html",
+			"to": "rollLeft"
+		},
+		{
+			"primaryName": "list",
+			"to": "list"
+		},
+		{
+			"primaryName": "listboxaddstring",
+			"args": [
+				{"name": "name", "types": "string"},
+				{"name": "item"}
+			],
+			"description": "Adds to a listbox",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "listboxcreate",
+			"args": [
+				{"name": "parent"},
+				{"name": "name"},
+				{"name": "xpos"},
+				{"name": "ypos"},
+				{"name": "width"},
+				{"name": "height"}
+			],
+			"description": "Creates a listbox",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "listboxdelete",
+			"args": [
+				{"name": "name"}
+			],
+			"description": "Deletes a listbox",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "listboxenable",
+			"args": [
+				{"name": "name"},
+				{"name": "state"}
+			],
+			"description": "Enables a listbox",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "listboxgetselect",
+			"args": [
+				{"name": "name", "types": "string"}
+			],
+			"description": "Gets a select from a listbox",
+			"migrateToCode": "[]"
+		},
+		{
+			"primaryName": "local",
+			"description": "Creates variables that are local to the currently running procedure.  Learn more at https://fmslogo.sourceforge.io/manual/command-local.html",
+			"reason": "WebLogo supports localmake which should be used instead.  local declares variables but doesn't assign a value to them.  The only kind of variable that can be read without causing problems is one with a value."
+		},
+		{
+			"primaryName": "localmake",
+			"to": "localmake"
+		},
+		{
+			"primaryName": "machine",
+			"args": [],
+			"description": "Returns a list of information about the machine",
+			"returnTypes": "list"
+		},
+		{
+			"primaryName": "make",
+			"to": "make"
+		},
+		{
+			"primaryName": "map",
+			"description": "Outputs a word or list, depending on the type of the data input, of the same length as that data input.  Learn more at https://fmslogo.sourceforge.io/manual/command-map.html"
+		},
+		{
+			"primaryName": "map.se",
+			"description": "Outputs a list formed by evaluating templatelist repeatedly and concatenating the results using SENTENCE.  Learn more at https://fmslogo.sourceforge.io/manual/command-map.se.html"
+		},
+		{
+			"primaryName": "maximize",
+			"args": [
+				{"name": "caption"}
+			],
+			"description": "Maximizes the window whose title matches caption",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "mci",
+			"args": [
+				{"name": "mciCommandList", "types": "instructionlist"}
+			],
+			"description": "Lets you write Logo procedures to manipulate multimedia devices",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "mdarray",
+			"args": [
+				{"name": "sizelist"}
+			],
+			"argCount": {
+				"min": 1,
+				"max": 2
+			},
+			"description": "Outputs a multi-dimensional array",
+			"migrateToCode": "[]"
+		},
+		{
+			"primaryName": "mditem",
+			"args": [
+				{"name": "indexlist"},
+				{"name": "mdarray"}
+			],
+			"description": "Outputs an item of the multi-dimensional array",
+			"to": "item"
+		},
+		{
+			"primaryName": "mdsetitem",
+			"args": [
+				{"name": "indexlist"},
+				{"name": "mdarray"},
+				{"name": "value"}
+			],
+			"description": "Replaces an item in a multi-dimensional array with a new value"
+		},
+		{
+			"primaryName": "messagebox",
+			"args": [
+				{"name": "title", "types": "string"},
+				{"name": "message", "types": "string"}
+			],
+			"description": "Displays a dialog box with title in the title bar and message as the message",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "midiclose",
+			"args": [],
+			"description": "Closes the MIDI device that was opened with MIDIOPEN",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "midimessage",
+			"args": [
+				{"name": "message", "types": "list"}
+			],
+			"description": "Sends a MIDI message to the MIDI sequencer.",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "midiopen",
+			"args": [],
+			"description": "Opens the MIDI device and accesses it through a MIDI device driver.",
+			"returnTypes": "list"
+		},
+		{
+			"primaryName": "minimize",
+			"args": [
+				{"name": "caption", "types": "string"}
+			],
+			"description": "Minimizes the window whose title matches caption.",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "name",
+			"description": "Like make except with the name and value swapped",
+			"reason": "Not supported because it is rarely used and seems better removed in WebLogo than added"
+		},
+		{
+			"primaryName": "netAcceptOff",
+			"args": [
+			],
+			"description": "Stops accepting incoming connection",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "netAcceptOn",
+			"args": [
+				{"name": "localport", "types": "int"},
+				{"name": "sendready"},
+				{"name": "receiveready"}
+			],
+			"description": "Listens for and accepts new network connections on TCP port localport",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "netAcceptReceiveValue",
+			"args": [],
+			"description": "Outputs the value of the last network data received on the connection created with NETACCEPTON",
+			"migrateToCode": "true"
+		},
+		{
+			"primaryName": "netconnecton",
+			"args": [
+				{"name": "remotemachinename"},
+				{"name": "remoteport"},
+				{"name": "sendready"},
+				{"name": "receiveready"}
+			],
+			"description": "Initiates a connection over the network to the TCP port remoteport on remotemachinename",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "netconnectsendvalue",
+			"args": [
+				{"name": "data"}
+			],
+			"description": "Sends data out the connection that was created with NETCONNECTON",
+			"returnTypes": "bool",
+			"migrateToCode": "false"
+		},
+		{
+			"primaryName": "netShutdown",
+			"args": [
+			],
+			"description": "Turns off networking in FMSLogo",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "netStartup",
+			"args": [
+			],
+			"argCount": {
+				"min": 0,
+				"max": 1,
+				"default": 0
+			},
+			"description": "Turns on networking in FMSLogo",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "nodribble",
+			"args": [],
+			"description": "Stops copying information to the dribble file and closes the file.",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "openAppend",
+			"description": "Opens the file named filename for writing.  If the file with the given filename already exists, the write position is initially set to the end of the old file. Learn more at https://fmslogo.sourceforge.io/manual/command-openappend.html"
+		},
+		{
+			"primaryName": "openRead",
+			"args": [
+				{"name": "filename", "types": "string"}
+			],
+			"argCount": {
+				"min": 1,
+				"max": 2
+			},
+			"description": "Opens the file named filename for reading. Learn more at https://fmslogo.sourceforge.io/manual/command-openread.html",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "openUpdate",
+			"description": "Opens the file named filename for reading and writing.  Learn more at https://fmslogo.sourceforge.io/manual/command-openupdate.html"
+		},
+		{
+			"primaryName": "openWrite",
+			"description": "Opens the specified file for writing"
+		},
+		{
+			"primaryName": "orientation",
+			"description": "Outputs a list, the turtle's [roll pitch heading] each in degrees.  Learn more at: https://fmslogo.sourceforge.io/manual/command-orientation.html"
+		},
+		{
+			"primaryName": "pause",
+			"args": [],
+			"description": "Pauses execution and waits for the end-user or developer to click a button in a dialog before continuing.",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "pen",
+			"description": "Outputs a list containing the pen's position, mode, and"
+		},
+		{
+			"primaryName": "penColor",
+			"names": ["pc", "pencolour"],
+			"to": "penColor"
+		},
+		{
+			"primaryName": "penDown",
+			"names": ["pd"],
+			"to": "penDown"
+		},
+		{
+			"primaryName": "pendownp",
+			"names": ["penDown?"],
+			"description": "Outputs TRUE if the pen is down, FALSE if it's up"
+		},
+		{
+			"primaryName": "penErase",
+			"description": ""
+		},
+		{
+			"primaryName": "penMode",
+			"description": "Outputs one of the words 'paint', 'erase', or 'reverse' according to the current pen mode"
+		},
+		{
+			"primaryName": "penNormal",
+			"to": "penNormal"
+		},
+		{
+			"primaryName": "penpaint",
+			"names": ["ppt"],
+			"description": ""
+		},
+		{
+			"primaryName": "penpattern",
+			"description": "Outputs hardware-specific pen information"
+		},
+		{
+			"primaryName": "penreverse",
+			"names": ["px"],
+			"description": ""
+		},
+		{
+			"primaryName": "penSize",
+			"to": "penSize"
+		},
+		{
+			"primaryName": "penUp",
+			"names": ["pu"],
+			"to": "penUp"
+		},
+		{
+			"primaryName": "perspective",
+			"args": [],
+			"description": "Tells the turtle to enter 'perspective' mode",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "pick",
+			"to": "pick"
+		},
+		{
+			"primaryName": "pitch",
+			"description": "Outputs the angle of the turtle's pitch in degrees.  Read more at https://fmslogo.sourceforge.io/manual/command-pitch.html"
+		},
+		{
+			"primaryName": "plist",
+			"to": "plist"
+		},
+		{
+			"primaryName": "polyend",
+			"args": [],
+			"description": "Completes the definition of a polygon.  Should be used with polystart.",
+			"to": "polyEnd"
+		},
+		{
+			"primaryName": "polystart",
+			"args": [],
+			"description": "Starts the definition of a new polygon",
+			"to": "polyStart"
+		},
+		{
+			"primaryName": "polyview",
+			"args": [],
+			"description": "POLYVIEW erases the screen and renders all polygons defined with POLYSTART and POLYEND as shaded polygons",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "popl",
+			"description": "Prints the contents of the named property lists(s) to the current write stream"
+		},
+		{
+			"primaryName": "posxyz",
+			"to": "pos"
+		},
+		{
+			"primaryName": "pot",
+			"description": "Prints the title lines of the named procedures, the definitions of the named variables, and the contents of the named property lists to the current write stream."
+		},
+		{
+			"primaryName": "pprop",
+			"to": "setProperty"
+		},
+		{
+			"primaryName": "print",
+			"to": "print"
+		},
+		{
+			"primaryName": "questionbox",
+			"args": [
+				{"name": "title", "types": "string"},
+				{"name": "question", "types": "string"}
+			],
+			"description": "Displays a dialog box with title in the title bar and message as the message",
+			"migrateToCode": "\"Yes"
+		},
+		{
+			"primaryName": "quoted",
+			"args": [
+				{"name": "thing"}
+			],
+			"description": "If the input is a word, QUOTED outputs the word with a double-quote character (\") appended to the front. Otherwise, QUOTED outputs whatever the input is."
+		},
+		{
+			"primaryName": "quotient",
+			"to": "quotient"
+		},
+		{
+			"primaryName": "radiobuttoncreate",
+			"args": [
+				{"name": "parent"},
+				{"name": "group"},
+				{"name": "name"},
+				{"name": "label"},
+				{"name": "xpos"},
+				{"name": "ypos"},
+				{"name": "width"},
+				{"name": "height"}
+			],
+			"description": "Creates a radio button control",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "radiobuttonget",
+			"args": [
+				{"name": "name"}
+			],
+			"description": "Outputs the state (TRUE or FALSE) of the radio button that is identified by name",
+			"returnTypes": "bool",
+			"migrateToCode": "true"
+		},
+		{
+			"primaryName": "radiobuttonset",
+			"args": [
+				{"name": "name", "types": "string"},
+				{"name": "state"}
+			],
+			"description": "Sets the state of the radio button that is identified by name to state",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "readchar",
+			"names": ["rc"],
+			"args": [],
+			"description": "Reads a single character from the read stream and outputs it",
+			"migrateToCode": "\"a",
+			"returnTypes": "list|string(minlen=1)"
+		},
+		{
+			"primaryName": "readlist",
+			"names": ["rl"],
+			"args": [],
+			"description": "Reads a line from the read stream (initially the popup dialog) and outputs that line as a list",
+			"migrateToCode": "[]"
+		},
+		{
+			"primaryName": "readword",
+			"args": [],
+			"description": "Reads a line from the read stream and outputs that line as a word (without the end-of-line sequence)",
+			"returnTypes": "string",
+			"migrateToCode": "''"
+		},
+		{
+			"primaryName": "redefp",
+			"description": "If true, allows primitives to be erased.  Learn more at https://fmslogo.sourceforge.io/manual/command-redefp.html"
+		},
+		{
+			"primaryName": "reduce",
+			"description": "Outputs the result of applying the template to accumulate the items of the data input, two items at a time. Learn more at https://fmslogo.sourceforge.io/manual/command-reduce.html"
+		},
+		{
+			"primaryName": "refresh",
+			"description": ""
+		},
+		{
+			"primaryName": "remainder",
+			"to": "remainder"
+		},
+		{
+			"primaryName": "remdup",
+			"description": "Outputs a copy of its input with duplicate members removed"
+		},
+		{
+			"primaryName": "remove",
+			"args": [
+				{"name": "thingtoremove"},
+				{"name": "things"}
+			],
+			"description": "Outputs a new thing that is equal to things with all members equal to thingtoremove removed",
+			"to": "remove"
+		},
+		{
+			"primaryName": "remprop",
+			"to": "removeProperty"
+		},
+		{
+			"primaryName": "repeat",
+			"to": "repeat"
+		},
+		{
+			"primaryName": "restore",
+			"args": [
+				{
+					"name": "caption"
+				}
+			],
+			"description": "Restores (unminimizes or unmaximizes) the window whose title matches caption to the size and position it had before it was minimized or maximized",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "right",
+			"names": ["rt"],
+			"to": "right"
+		},
+		{
+			"primaryName": "rightroll",
+			"names": ["rr"],
+			"args": [
+				{"name": "angle"}
+			],
+			"description": "Rolls the turtle toward his right side by the specified angle, measured in degrees (1/360 of a circle).  Learn more at https://fmslogo.sourceforge.io/manual/command-rightroll.html",
+			"to": "rollRight"
+		},
+		{
+			"primaryName": "roll",
+			"to": "roll",
+			"description": "Outputs the angle of the turtle's roll in degrees.  Learn more at https://fmslogo.sourceforge.io/manual/command-roll.html"
+		},
+		{
+			"primaryName": "rseq",
+			"to": "rseq"
+		},
+		{
+			"primaryName": "run",
+			"args": [
+				{"name": "instructionlist", "types": "instructionlist"}
+			],
+			"description": "Runs the specified instruction list.  The instruction list may come from a variable.",
+			"isIndependentlyUseful": true,
+			"returnTypes": "*"
+		},
+		{
+			"primaryName": "screenColor",
+			"names": ["screencolour"],
+			"to": "screenColor"
+		},
+		{
+			"primaryName": "scrollbarcreate",
+			"args": [
+				{"name": "parent"},
+				{"name": "name"},
+				{"name": "xpos"},
+				{"name": "ypos"},
+				{"name": "width"},
+				{"name": "height"},
+				{"name": "callback"}
+			],
+			"description": "Creates a scrollbar",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "scrollbardelete",
+			"args": [
+				{"name": "name"}
+			],
+			"description": "Deletes a scrollbar",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "scrollbarenable",
+			"args": [
+				{"name": "name"},
+				{"name": "state"}
+			],
+			"description": "Enables or disables a scrollbar",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "scrollbarget",
+			"args": [
+				{"name": "name"}
+			],
+			"description": "Output the current position of the scrollbar control that is identified by name",
+			"migrateToCode": "1"
+		},
+		{
+			"primaryName": "scrollbarset",
+			"args": [
+				{"name": "name"},
+				{"name": "min"},
+				{"name": "max"},
+				{"name": "position"}
+			],
+			"description": "Set the range and current position of the scrollbar control that is identified by name",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "scrollx",
+			"args": [
+				{"name": "deltaX"}
+			],
+			"description": "Scrolls the horizontal scrollbar of the \"Screen\" window.  Learn more at https://fmslogo.sourceforge.io/manual/command-scrollx.html",
+			"reason": "WebLogo doesn't support scrollX because we want users and the graphical user interface to have full control over scrolling of the graphics screen.  This command would move some of that control to a running Logo program instead of the graphical user interface.",
+			"returnTypes": null,
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "scrolly",
+			"args": [
+				{"name": "deltaY"}
+			],
+			"description": "Scrolls the vertical scrollbar of the \"Screen\" window.  Learn more at https://fmslogo.sourceforge.io/manual/command-scrolly.html",
+			"reason": "WebLogo doesn't support scrollY because we want users and the graphical user interface to have full control over scrolling of the graphics screen.  This command would move some of that control to a running Logo program instead of the graphical user interface.",
+			"returnTypes": null,
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "setactivearea",
+			"args": [
+				{"name": "area", "types": "list<int>"}
+			],
+			"description": "Sets the active area for printing and saving pictures",
+			"returnTypes": null,
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "setbitindex",
+			"args": [
+				{"name": "index"}
+			],
+			"description": "Sets the current bitmap cut buffer according to index",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "setbitmode",
+			"args": [
+				{"name": "mode", "types": "int"}
+			],
+			"description": "Sets the current bitmap mode according to mode",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "setFloodColor",
+			"names": ["setfc", "setfloodcolour"],
+			"to": "setFillColor"
+		},
+		{
+			"primaryName": "setFocus",
+			"description": "Selects a window whose caption (or title) is caption",
+			"reason": "WebLogo is not for creating graphical user interfaces or managing windows"
+		},
+		{
+			"primaryName": "setHeading",
+			"names": ["seth"],
+			"to": "setHeading"
+		},
+		{
+			"primaryName": "setlight",
+			"args": [
+				{
+					"name": "properties",
+					"types": "list"
+				}
+			],
+			"description": "Sets how POLYVIEW illuminates polygons",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "setOrientation",
+			"description": "Orients the turtle to a new absolute orientation"
+		},
+		{
+			"primaryName": "setPen",
+			"description": "Sets the pen's position, mode, and hardware-dependent charactaristics",
+			"reason": "setTurtleState sets a lot more than setPen and seems more useful.  In the 700+ examples written in WebLogo, I didn't see the need for a setPen or pencommand.  Adding a command for no reason other than to copy other Logo programming tools doesn't seem like a net benefit since it becomes an additional command to document, maintain for people maintaining the WebLogo project.  It also becomes an extra command to teach, and learn.  This effort is worth it if the command is something people will actually use reasonably frequently but pen and setPen seems like it would almost never need to be used."
+		},
+		{
+			"primaryName": "setPenSize",
+			"to": "setPenSize"
+		},
+		{
+			"primaryName": "setPitch",
+			"to": "setPitch",
+			"description": "Pitches the turtle to a new absolute pitch.  Learn more at https://fmslogo.sourceforge.io/manual/command-setpitch.html"
+		},
+		{
+			"primaryName": "setpixel",
+			"args": [
+				{
+					"name": "colorvector",
+					"types": "list"
+				}
+			],
+			"description": "Sets the pixel under the turtle to the color described by colorvector",
+			"returnTypes": null
+		},
+		{
+			"primaryName": "setPos",
+			"args": [
+				{"name": "position", "types": "list(minlen=2)"}
+			],
+			"description": "Moves the turtle to an absolute X,Y coordinate.  setPos also adds the new point to vertex lists within 3D polygon paths that are started with polystart.",
+			"to": "setPos"
+		},
+		{
+			"primaryName": "setPosXYZ",
+			"to": "setPos"
+		},
+		{
+			"primaryName": "setRead",
+			"args": [
+				{"name": "filename", "types": "list<string>|string"}
+			],
+			"description": "Sets the read stream to the file named filename",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "setReadPos",
+			"description": ""
+		},
+		{
+			"primaryName": "setRoll",
+			"to": "setRoll",
+			"description": "Rolls the turtle to a new absolute roll.  Learn more at https://fmslogo.sourceforge.io/manual/command-setroll.html"
+		},
+		{
+			"primaryName": "setScreenColor",
+			"names": ["setsc", "setScreenColour"],
+			"to": "setScreenColor"
+		},
+		{
+			"primaryName": "setTurtle",
+			"args": [
+				{"name": "turtleNumber", "types": "int"}
+			],
+			"argCount": {
+				"min": 1,
+				"max": 2
+			},
+			"description": "Selects turtle index for control.",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "setWrite",
+			"description": ""
+		},
+		{
+			"primaryName": "setWritePos",
+			"description": ""
+		},
+		{
+			"primaryName": "setX",
+			"to": "setX"
+		},
+		{
+			"primaryName": "setXY",
+			"to": "setXY"
+		},
+		{
+			"primaryName": "setXYZ",
+			"to": "setXYZ"
+		},
+		{
+			"primaryName": "setY",
+			"to": "setY"
+		},
+		{
+			"primaryName": "setZ",
+			"to": "setZ"
+		},
+		{
+			"primaryName": "show",
+			"to": "show"
+		},
+		{
+			"primaryName": "shownp",
+			"names": ["shown?"],
+			"to": "shown?"
+		},
+		{
+			"primaryName": "showTurtle",
+			"to": "showTurtle"
+		},
+		{
+			"primaryName": "sign",
+			"to": "sign"
+		},
+		{
+			"primaryName": "soundoff",
+			"args": [],
+			"description": "Shutoff a sound turned on by SOUNDON.",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "soundon",
+			"args": [
+				{"name": "frequency", "types": "num"}
+			],
+			"description": "Shutoff a sound turned on by SOUNDON.",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "startup",
+			"description": "If assigned a list value in a file that is loaded by load, that value is run as an instruction list after loading"
+		},
+		{
+			"primaryName": "staticcreate",
+			"args": [
+				{"name": "parent", "types": "string"},
+				{"name": "name", "types": "string"},
+				{"name": "text"},
+				{"name": "xpos", "types": "num"},
+				{"name": "ypos", "types": "num"},
+				{"name": "width", "types": "num"},
+				{"name": "height", "types": "num"}
+			],
+			"description": "Creates a static text control.",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "staticdelete",
+			"args": [
+				{"name": "name", "types": "string"}
+			],
+			"description": "Deletes(closes) the static control that is identified by the name.",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "staticupdate",
+			"args": [
+				{"name": "name", "types": "string"},
+				{"name": "text"}
+			],
+			"description": "Replaces the text of the static control identified by name with text..",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "text",
+			"description": "Outputs the text of the procedure named procname in the form expected by define.  Learn more at https://fmslogo.sourceforge.io/manual/command-text.html"
+		},
+		{
+			"primaryName": "thing",
+			"description": "Outputs the value of the variable whose name is the input word"
+		},
+		{
+			"primaryName": "timemilli",
+			"args": [],
+			"description": "Outputs the time since Windows started, measured in milliseconds",
+			"migrateToCode": "(animation.time * 1000)"
+		},
+		{
+			"primaryName": "towardsxyz",
+			"args": [
+				{"name": "pos", "types": "list<num>(minlen=3)"}
+			],
+			"description": "Outputs a list of pitch roll, heading to orient the turtle toward the specified position",
+			"returnTypes": "list<num>(minlen=3)"
+		},
+		{
+			"primaryName": "transfer",
+			"args": [
+				{"name": "endtest"},
+				{"name": "template"},
+				{"name": "inbasket"}
+			],
+			"description": "Outputs the result of repeated evaluation of the template input",
+			"returnTypes": "list"
+		},
+		{
+			"primaryName": "unburyall",
+			"description": ""
+		},
+		{
+			"primaryName": "unicon",
+			"args": [
+				{"name": "caption"}
+			],
+			"description": "Unminimizes (restores) the window whose title matches caption",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "until",
+			"to": "until"
+		},
+		{
+			"primaryName": "uppitch",
+			"names": ["up"],
+			"args": [
+				{"name": "angle"}
+			],
+			"description": "Pitches the turtle's nose upward by the specified angle, measured in degrees (1/360 of a circle).  Learn more at https://fmslogo.sourceforge.io/manual/command-uppitch.html",
+			"to": "pitchUp"
+		},
+		{
+			"primaryName": "wait",
+			"args": [
+				{"name": "delay"}
+			],
+			"description": "Delays further execution for about delay 1/60ths of a second",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "while",
+			"to": "while"
+		},
+		{
+			"primaryName": "window",
+			"description": "Tells the turtle to enter 'window' mode. Learn more at https://fmslogo.sourceforge.io/manual/command-window.html"
+		},
+		{
+			"primaryName": "windowcreate",
+			"args": [
+				{"name": "parent"},
+				{"name": "name"},
+				{"name": "title"},
+				{"name": "xpos"},
+				{"name": "ypos"},
+				{"name": "width"},
+				{"name": "height"},
+				{"name": "setup"}
+			],
+			"description": "Creates a window",
+			"removeInMigration": true,
+			"returnTypes": null
+		},
+		{
+			"primaryName": "windowdelete",
+			"args": [
+				{"name": "name"}
+			],
+			"description": "Deletes a window with the specified name",
+			"removeInMigration": true,
+			"returnTypes": null
+		},
+		{
+			"primaryName": "windowfileedit",
+			"args": [
+				{"name": "filename"},
+				{"name": "callback"}
+			],
+			"description": "Opens the editor on the file with the given filename",
+			"removeInMigration": true,
+			"returnTypes": null
+		},
+		{
+			"primaryName": "wrap",
+			"description": "Tells the turtle to enter 'wrap' mode. Learn more at https://fmslogo.sourceforge.io/manual/command-wrap.html"
+		},
+		{
+			"primaryName": "xCor",
+			"to": "xCor"
+		},
+		{
+			"primaryName": "yCor",
+			"to": "yCor"
+		},
+		{
+			"primaryName": "yesnobox",
+			"args": [
+				{"name": "title"},
+				{"name": "question"}
+			],
+			"description": "Displays a dialog box with title in the title bar and question as the message",
+			"migrateToCode": "true"
+		},
+		{
+			"primaryName": "zCor",
+			"to": "zCor"
+		},
+		{
+			"primaryName": "zoom",
+			"description": "Sets the scale of the \"Screen\" window.  Learn more at https://fmslogo.sourceforge.io/manual/command-zoom.html",
+			"reason": "WebLogo is not supporting it because it would take away some ability of the end-user to control zoom as the program runs."
+		}
+	],
+	"keywords": [],
+	"operators": []
+}

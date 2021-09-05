@@ -1,0 +1,43 @@
+; Converts a string to its numberic equivalent.
+; For example qbVal '123' outputs 123.
+; Similar to QBasic's val function
+to qbVal :s
+	localmake "s lowerCase :s
+	localmake "base 10
+	localmake "startIndex 1
+	ifelse '&' = first :s [
+		ifelse 'h' = item 2 :s [
+			; hex(base 16) number
+			localmake "base 16
+		] [
+			; octal
+			localmake "base 8
+		]
+		localmake "startIndex 3
+	] [
+		if '#' = first :s [
+			localmake "base 16
+			localmake "startIndex 2
+		]
+	]
+	localmake "result 0
+	localmake "negative? false
+	if "- = item :startIndex :s [
+		localmake "negative? true
+		localmake "startIndex :startIndex + 1
+	]
+	for ["i :startIndex count :s] [
+		localmake "result :result * :base
+		localmake "digit item :i :s
+		ifelse :digit <= '9' [
+			localmake "digitValue (ascii :digit) - (ascii '0')
+		] [
+			localmake "digitValue (ascii :digit) - (ascii 'a') + 10
+		]
+		localmake "result :result + :digitValue
+	]
+	if :negative? [
+		localmake "result -:result
+	]
+	output :result
+end
