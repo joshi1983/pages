@@ -1,0 +1,24 @@
+to drawStripes :width :thickness :gap :numStripes
+	localmake "oldState turtleState
+	setPenSize :width
+	repeat :numStripes [
+		forward :thickness
+		jumpForward :gap
+	]
+	setTurtleState :oldState
+end
+
+to squareGridPattern :scale :width :height
+	localmake "oldState turtleState
+	localmake "thickness :scale * 0.05
+	localmake "separation :scale - :thickness
+	setLineCap "butt
+	drawStripes :width * :scale :thickness :separation 1 + :height
+	jumpForward :scale * :height / 2
+	jumpLeft :scale * :width / 2
+	right 90
+	drawStripes :height * :scale :thickness :separation 1 + :width
+	setTurtleState :oldState
+end
+
+squareGridPattern 10 30 3

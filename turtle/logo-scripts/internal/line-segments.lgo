@@ -1,0 +1,49 @@
+; Used in Line Segments export feature
+
+make "dotSizeRatio 0.1
+
+to drawSquareFrame :size
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "dotSize :size * :dotSizeRatio
+	rect :size :size
+	setPenSize 0
+	setFillColor "black
+	repeat 4 [
+		jumpRight :size / 2
+		jumpForward :size / 2
+		circle :dotSize
+		jumpTo :oldPos
+		right 90		
+	]
+	setTurtleState :oldState
+end
+
+to lineSegmentsIcon :height
+	localmake "oldState turtleState
+	localmake "height1 :height * 0.65
+	localmake "dotSize :height1 * :dotSizeRatio
+	localmake "oldHeading heading
+	localmake "separation (:height - :height1 - 2 * :dotSize) / cos 45
+	localmake "height2 :height1 / 2 / cos 45
+	setPenSize :height * 0.04
+	jumpLeft (:height - :height1) / 2
+	jumpForward :height1 / 2 + :dotSize
+	setFillColor transparent
+	drawSquareFrame :height1
+	localmake "center pos
+	repeat 4 [
+		jumpTo :center
+		setHeading :oldHeading + (repcount + 0.5) * 360 / 4
+		jumpForward :height2
+		setHeading :oldHeading + 45
+		forward :separation
+	]
+	setHeading :oldHeading
+	jumpLeft :height1 / 2
+	jumpBackward :height1 / 2
+	drawSquareFrame :height1
+	setTurtleState :oldState
+end
+
+lineSegmentsIcon 32
