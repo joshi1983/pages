@@ -1,0 +1,37 @@
+; Inspired by logo at:
+; https://obsproject.com
+to obsStudioLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "shadowGradientStops createPList2 [
+		[0 "black] [0.8 "black] [1 transparent]
+	]
+	localmake "line1 [
+		[122.5 0] [207 0.197] [-61 0] [-88 0.24] [59.5 0]
+	]
+	localmake "triskelion (combine :line1 :line1 :line1)
+	localmake "shadowRadius :height * 0.48
+	localmake "foregroundRadius :height * 0.484
+	jumpForward :shadowRadius
+	setFillGradient createRadialGradient pos :shadowRadius :shadowGradientStops
+	setPenSize 0
+	circle :shadowRadius
+
+	setPenSize :height * 0.002
+	setPenColor "#888
+	setFillColor "white
+	jumpTo :oldPos
+	jumpForward :height - :foregroundRadius - penSize / 2
+	circle :foregroundRadius
+	setPenSize 0
+	setFillColor "black
+	circle :height * 0.437
+
+	setFillColor "white
+	drawArcLineShape [-0.103 0.404
+		:triskelion
+	] :height
+	setTurtleState :oldState
+end
+
+obsStudioLogo 100
