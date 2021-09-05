@@ -1,0 +1,43 @@
+; Inspired by logo at
+; https://www.youtube.com/@cody-house
+to codyHouseLogo :height :eyeColor
+	localmake "oldState turtleState
+	localmake "shapes [
+		[0.411 0.353
+			[[-130 0] [0.02] [-33 0.1] [0.306155] [-107 0] [0.105]
+			[-73 0] [0.243]]
+		]
+		[0.425 0.495
+			[[0.107] [-90 0] [0.165] [-90 0] [0.107]]
+		]
+		[0.385 0.75
+			[[-60 0] [0.02] [28.5 0.1] [0.22] [121.5 0] [0.12]
+			[59 0] [0.15]]
+		]
+	]
+	localmake "lines1 [
+		[-90 0] [30 0.25] [40 0.41] [30 0.77] [15 0.5]
+		[65 0] [0.078] [-71 0] [30 0.4] [30 0.15] [11 0.19491387]
+	]
+	localmake "eyeSeparation :height * 0.37
+	setFillColor "white
+	setPenSize 0
+	drawArcLineShapes :shapes :height
+	drawArcLineShapes :shapes -:height
+	drawArcLineShape [0 0.02
+		combine :lines1 reverse :lines1
+	] :height
+	jumpForward :height * 0.315
+	setFillColor :eyeColor
+	circle :height * 0.105
+	jumpForward :height * 0.235
+	jumpLeft :eyeSeparation / 2
+	repeat 2 [
+		circle :height * 0.075
+		jumpRight :eyeSeparation
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "#e80d4f
+codyHouseLogo 100 screenColor

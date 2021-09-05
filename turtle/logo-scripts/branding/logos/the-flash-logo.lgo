@@ -1,0 +1,30 @@
+; Inspired by logo at:
+; https://logos-world.net/flash-logo/
+to theFlashLogo :height
+	localmake "oldState turtleState
+	localmake "thickness :height * 0.004
+	localmake "lines1 [
+		[-39 0] [0.41] [130 0] [0.14] [-134 0]
+		[0.32] [135 0] [0.145] [-143 0] [0.7176]
+		[-129 0]
+	]
+	localmake "flashYellow "#ffd600
+	jumpForward :height / 2
+	setPenSize :thickness
+	setPenColor "black
+	setFillColor :flashYellow
+	circle :height * 0.43
+	setFillColor "#e5281a
+	circle :height * 0.39
+	setFillColor :flashYellow
+	setMiterLimit 3.5 
+	; we want to miter all joins 
+	; except the sharpest points at the top and bottom.
+
+	drawArcLineShape [-0.37 -0.4984
+		combine :lines1 :lines1
+	] :height
+	setTurtleState :oldState
+end
+
+theFlashLogo 100
