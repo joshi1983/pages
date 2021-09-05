@@ -1,0 +1,30 @@
+; Inspired by logo at:
+; https://commons.wikimedia.org/wiki/File:MEDICARE_COMPANY_LOGO.png
+to medicareRevolutionaryMedicationsLogo :height
+	localmake "oldState turtleState
+	localmake "radius1 0.13
+	localmake "radius2 0.06
+	localmake "radius3 0.135
+	localmake "len1 0.345
+	localmake "difference :radius1 * 2 - (:radius3 - :radius2)
+	localmake "len2 :len1 - :difference
+	localmake "line1 [
+		[-45 0] [-45 :radius3] [:len1] [-180 :radius1]
+		[:len2] [45 :radius2]
+	]
+	jumpForward :height / 2
+	setPenSize :height * 0.045
+	setPenColor "#2e2d78
+	setFillColor transparent
+	localmake "offsetY :radius1 * 3 + :radius3 * ((cos 45) - 1) + :radius2 + :len2 +
+		penSize / 2 / :height - 0.5
+	repeat 2 [
+		drawArcLineShape [-0.092 :offsetY
+			combine :line1 reverse :line1
+		] :height
+		right 180
+	]
+	setTurtleState :oldState
+end
+
+medicareRevolutionaryMedicationsLogo 100

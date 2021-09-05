@@ -1,0 +1,100 @@
+make "numPoints 16
+
+to drawBlackShape :outerRadius :outerRadius2
+	localmake "oldState turtleState
+	localmake "chordLength :outerRadius * 2 * sin 180 / :numPoints
+	localmake "arcAngle 180 - 360 / :numPoints
+	localmake "littleRadius :chordLength / 2 / sin :arcAngle / 2
+	setFillColor "black
+	isotoxalStar :outerRadius2 :outerRadius2 * 0.06 :numPoints
+	isotoxalStar :outerRadius2 :outerRadius2 * 0.04 4
+	isotoxalStar :outerRadius2 * 0.02 :outerRadius2 * 1.2  2
+	jumpForward :outerRadius
+	right 180
+	polyStart
+	repeat :numPoints [
+		arcLeft :arcAngle :littleRadius
+		right 180
+	]
+	polyEnd
+	
+	setTurtleState :oldState
+end
+
+to drawRedGradient :radius
+	localmake "oldState turtleState
+	localmake "colorStops createPList2 [
+		[0.8 "#d00] [0.86 "#8d00] [0.9 "#6d00]
+		[0.95 "#2d00] [1 "#0d00]
+	]
+	setFillGradient createRadialGradient pos :radius :colorStops
+	setPenSize 0
+	circle :radius
+	setTurtleState :oldState
+end
+
+to drawLittleCircles :largeRadius
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "midRadius :largeRadius * 0.11
+	localmake "largeThickness :largeRadius * 0.002
+	setPenSize :largeThickness
+	setPenColor "#800
+	setFillColor mix "white screenColor 0.4
+	repeat :numPoints [
+		jumpForward :largeRadius
+		circle :largeRadius * 0.03
+		right 360 / :numPoints
+		jumpTo :oldPos	
+	]
+	right 180 / :numPoints
+	repeat :numPoints [
+		localmake "heading1 heading
+		jumpForward :largeRadius * 0.87
+		setPenSize :largeThickness
+		drawRedGradient :midRadius * 1.2
+		circle :midRadius
+		localmake "center1 pos
+		setPenSize :largeThickness * 0.5
+		repeat 4 [
+			setHeading :heading1 + 110 * (repRatio - 0.5)
+			localmake "tinyRadius :largeRadius * mixItems [0.025 0.01] repRatio
+			jumpForward :midRadius + :tinyRadius
+			circle :tinyRadius
+			jumpTo :center1
+		]
+		setHeading :heading1 + 360 / :numPoints
+		jumpTo :oldPos	
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by a set from an episode of Space: 1999.
+; The episode is named Catacombs Guardian of Piri.
+; Part of the design is in the background at:
+; https://www.imdb.com/title/tt0706343/mediaviewer/rm620563200/
+;
+; Some images of it are shown at:
+; https://catacombs.space1999.net/main/epimghd/tigop15.html
+;
+; That show's design was less symmetrical and more random looking.
+; This code doesn't make anything random and makes everything symmetrical
+; to be easier to program while looking good.
+to space1999PiriPortal :height
+	localmake "oldState turtleState
+	localmake "radius :height * 0.32
+	localmake "brightColorStops createPList2 [
+		[0 "#fff] [0.9 "#ffd] [0.99 "#ff8] [1 "#ff0]
+	]
+	jumpForward :height / 2
+	setPenSize 0
+	drawRedGradient :height * 0.45
+	drawBlackShape :height * 0.41 :height / 2
+	drawLittleCircles :height * 0.45
+	setFillGradient createRadialGradient pos :radius :brightColorStops
+	circle :radius
+	setTurtleState :oldState
+end
+
+setScreenColor "#bba
+space1999PiriPortal 100

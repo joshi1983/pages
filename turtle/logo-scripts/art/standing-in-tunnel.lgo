@@ -1,0 +1,73 @@
+to drawMan :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "legSeparation :height * 0.1
+	localmake "headRadius :height * 0.05
+	jumpLeft :legSeparation / 2
+	repeat 2 [
+		stripes :height * 0.05 :height * 0.5 ["black] 	
+		jumpRight :legSeparation
+	]
+	jumpTo :oldPos
+	jumpForward :height * 0.66
+	setPenSize 0
+	setFillColor "black
+	jumpLeft :height * 0.02
+	roundRect :height * 0.25 :height * 0.45 :height * 0.12
+	jumpTo :oldPos
+	jumpForward :height - :headRadius
+	circle :headRadius
+	setTurtleState :oldState
+end
+
+; Inspired by:
+; https://ca.pinterest.com/pin/49328558414037402
+to standingInTunnel :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "cy :height * 0.5
+	localmake "width :height * 2 / 3
+	localmake "colorStopPairs [
+		[0 "white] [0.24 "white] [0.35 "black]
+	]
+	localmake "limit 0.32
+	localmake "interval 0.1
+	repeat 20 [
+		localmake "ratio mix 1 0.26 power repRatio 1.4
+		localmake "c "black
+		if :ratio < :limit [
+			localmake "ratio2 (:limit - :ratio) / :interval
+			localmake "c mix "white "black  :ratio2
+		]
+		localmake "offset1 0.01 * :ratio
+		queue2 "colorStopPairs [:ratio - :offset1 :c]
+		queue2 "colorStopPairs [:ratio "white]
+		queue2 "colorStopPairs [:ratio + :offset1 * 2 :c]		
+	]
+	localmake "backgroundColorStops createPList2 :colorStopPairs
+	jumpForward :cy
+	localmake "center pos
+	setPenGradient createRadialGradient pos :height * 0.58 :backgroundColorStops
+	setLineCap "butt
+	setPenSize :width
+	jumpTo :oldPos
+	forward :height
+	jumpTo :oldPos
+	setPenSize 0
+	setFillColor "white
+	repeat 14 [
+		localmake "y :height * (0.5 - mix 0.16 0.5  interpolateRatio easeOut repRatio)
+		jumpForward :y
+		localmake "d distance :center
+		localmake "thickness 0.05 * :d
+		localmake "width1 0.3 * :d
+		localmake "topWidth :width1 * (:d - :thickness) / :d
+		isoTrapezoid :width1 :topWidth :thickness
+		jumpTo :oldPos
+	]
+	jumpForward :height * 0.33
+	drawMan :height * 0.066
+	setTurtleState :oldState
+end
+
+standingInTunnel 100

@@ -1,0 +1,42 @@
+; Inspired by logo at:
+; https://embed.letterboxd.com
+to letterBoxdLogo :height
+	localmake "oldState turtleState
+	localmake "colors ["#FF8000 "#00E054 "#40BCF4]
+	localmake "separationRatio 0.86
+	localmake "separation :height * :separationRatio
+	localmake "intersectionHeight :height * sqrt 1 - :separationRatio * :separationRatio
+	localmake "intersectionAngle 2 * arcCos :separationRatio 
+	jumpLeft :separation * ((count :colors) - 1) / 2
+	jumpForward :height / 2
+	setPenSize 0
+	repeat count :colors [
+		setFillColor item repcount :colors
+		circle :height / 2
+		jumpRight :separation
+	]
+	jumpBackward :intersectionHeight / 2
+	setFillColor "white
+	jumpLeft :separation / 2
+	repeat (count :colors) - 1 [
+		jumpLeft :separation
+		arcPair :intersectionHeight :intersectionAngle
+	]
+	setTurtleState :oldState
+end
+
+to letterBoxdLogoOnBlack :height
+	localmake "oldState turtleState
+	localmake "innerHeight :height * 0.8
+	stripes :height * 3 :height ["black]
+	jumpForward (:height - :innerHeight) / 2
+	letterBoxdLogo :innerHeight
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 5
+jumpLeft :separation / 2
+letterBoxdLogo :height
+jumpRight :separation
+letterBoxdLogoOnBlack :height

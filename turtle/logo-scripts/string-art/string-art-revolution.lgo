@@ -1,0 +1,54 @@
+; Inspired by an animation at:
+; https://ca.pinterest.com/pin/15340454978241623
+to stringArtRevolution :height :timeRatio
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "numAngles 32
+	localmake "angleRange 85
+	localmake "angleOffset :timeRatio * :angleRange * 2 / :numAngles
+	setPenSize :height * 0.01
+	localmake "radius (:height - penSize) / 2
+	setPenColor "#f88
+	jumpForward :height / 2
+	localmake "center pos
+	circle :radius
+	setPenColor "red
+	setPenSize :height * 0.002
+	repeat 2 [
+		jumpLeft :radius * sign repcount - 1.5
+		localmake "startPos pos
+		localmake "mainHeading (towards :center) + :angleOffset
+		repeat :numAngles [
+			left mix -:angleRange :angleRange repRatio
+			forward :radius * 0.01
+			; move just enough that the distanceToCircle won't return 0.
+
+			forward distanceToCircle :center :radius
+			setHeading :mainHeading
+			jumpTo :startPos
+		]
+		jumpTo :center
+		setHeading :oldHeading
+	]
+
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+stringArtRevolution 100 animation.timeRatio
+
+to animation.snapshotstyle
+	output createPList2 [
+		["position.y 50]
+		["zoom.scale 6]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 1
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end
