@@ -1,0 +1,33 @@
+; Inspired by logo at:
+; https://www.fdd.org
+to foundationForDedefenseOfDemocraciesLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "stars [
+		[0.059 1 0.045] [0.039 0.876 0.038]
+		[-0.033 0.78 0.036] [-0.116 0.692 0.029]
+	]
+	setFillColor "#0d59a0
+	setPenSize 0
+	drawArcLineShape [-0.189 0
+		[[15.5 0] [-77 0.395] [30 0.35] [15 0.33] [25 0.16]
+		[-167 0] [-30 0.67] [-50 0.43] [-20 0.58]]
+		] :height
+	repeat count :stars [
+		localmake "starInfo item repcount :stars
+		localmake "radius :height * last :starInfo
+		jumpRight :height * first :starInfo
+		jumpForward :height * item 2 :starInfo
+		jumpBackward :radius * cos 180 / 5
+		isotoxalStar :radius * 0.5 :radius 5
+		jumpTo :oldPos
+	]
+	setFillColor "#c8c9ca
+	drawArcLineShape [0.158 0.916
+		[[180 0] [-39 0.27] [-20 0.5] [55 0.38] [9 0.4] [165 0]
+		[-45 0.35] [0.11] [44 0.41]]
+	] :height
+	setTurtleState :oldState
+end
+
+foundationForDedefenseOfDemocraciesLogo 100
