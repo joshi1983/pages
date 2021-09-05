@@ -1,0 +1,125 @@
+to setPeddleGradient :size
+	localmake "oldPos pos
+	jumpForward :size
+	localmake "tipPos pos
+	localmake "colors createPList
+	setProperty "colors 0 "#fb0
+	setProperty "colors 0.3 "#ff0
+	setProperty "colors 1 "#ff6
+	localmake "gradient createLinearGradient :oldPos :tipPos :colors "pad
+	setFillGradient :gradient
+	jumpTo :oldPos	
+end
+
+to drawPeddle :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "size1 :size * 0.1
+	localmake "size2 :size * 0.3
+	localmake "size3 :size * 1.4006
+	localmake "size4 :size * 0.05
+	localmake "size5 :size * 0.05
+	localmake "size6 :size * 1.6
+	localmake "size7 :size * 0.8
+	localmake "angle1 45
+	localmake "angle2 32.57
+	localmake "angle3 123.9
+	localmake "angle4 74.5
+	localmake "angle5 35
+	setPenSize :size * 0.005
+	setPenColor "black
+	setPeddleGradient :size
+	left 90
+	polyStart
+	forward :size1
+	right 40.5
+	arcRight :angle1 :size2
+	arcRight :angle2 :size3
+	arcRight :angle3 :size4 ; symmetry
+	arcRight :angle2 :size3
+	arcRight :angle1 :size2
+	setHeading towards :oldPos
+	forward distance :oldPos
+	polyEnd
+	
+	setPenColor "olive
+	setHeading :oldHeading
+	right 90
+	jumpForward :size5
+	left :angle4
+	setPenSize :size * 0.008
+	arcLeft :angle5 :size6
+	jumpTo :oldPos
+	setHeading :oldHeading
+	left 90
+	jumpForward :size5
+	right :angle4
+	arcRight :angle5 :size6
+	jumpTo :oldPos
+	setHeading :oldHeading
+	left 90
+	jumpForward :size * 0.003
+	right 90.1
+	setPenSize 0
+	setFillColor "brown
+	polyStart
+	jumpForward :size7
+	right 179.58
+	jumpForward :size7
+	polyEnd
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to drawSeedPattern :size
+	setFillColor transparent
+	repeat 64 [
+		circleRight :size
+		right 360 / 64
+	]
+end
+
+to drawSunflower :size
+	localmake "oldPos pos
+	localmake "radius1 :size * 0.7
+	localmake "radius2 :size * 0.3
+	localmake "radius3 :size * 0.685
+	localmake "radius4 :size * 0.66
+	localmake "size1 :size * 0.4
+	localmake "size2 :size1 * 0.8
+	setFillColor "brown
+	setPenColor "black
+	setPenSize :size * 0.01
+	circle :radius1
+	setPenSize :size * 0.002
+	drawSeedPattern :radius1 * 0.5
+	setFillColor "olive
+	setPenSize 0
+	circle :radius2
+	setPenSize :size * 0.001
+	; 0.51 to look subtly more interesting than perfectly 
+	; lining up with the edge of the olive circle.
+	drawSeedPattern :radius2 * 0.51
+	; draw peddles
+	repeat 32 [
+		; Alternate size and position of peddles to make them look
+		; more natural.
+		; alternate position of peddles.
+		ifelse 0 = remainder repcount 3 [
+			jumpForward :radius3
+		] [
+			jumpForward :radius4
+		]
+		; alternate size of peddles.
+		ifelse 0 = remainder repcount 2 [
+			drawPeddle :size1
+		] [
+			drawPeddle :size2
+		]
+		jumpTo :oldPos
+		right 360 / 32
+	]
+end
+
+setScreenColor "#563
+drawSunflower 100

@@ -1,0 +1,91 @@
+<header>
+	<nav class="menu">
+		<ul>
+			<li>File
+				<ul>
+					<li class="select-container">
+						<select id="animation-download-mode">
+						</select>
+					</li>
+					<li class="select-container"
+					id="animation-download-repeat-count-li">
+						<select id="animation-download-repeat-count"
+						title="Repeat Count(Number of times the GIF animation will play)">
+							<option value="0">Infinity</option>
+							<option value="1">1</option>
+							<option value="2">2</option>
+							<option value="3">3</option>
+							<option value="4">4</option>
+							<option value="5">5</option>
+						</select>
+					</li>
+					<li>
+						<input id="animation-download-frame-prefix"
+							type="text" value="animation_frame_">
+					</li>
+					<li id="animation-download-start-frame-index-li">
+						<input id="animation-download-start-frame-index"
+						title="Start Frame Index" type="number" min="0" value="0" step="1">
+					</li>
+					<li class="select-container" id="animation-download-frame-format-li">
+						<select id="animation-download-frame-format"
+						title="File format for each frame">
+						</select>
+					</li>
+					<li id="animation-download-frame-lossless-li">
+						<label title="Lossless quality in frames will take more memory but lead to fewer compression artifacts and can lead to smaller encoded videos"
+						><input id="animation-download-frame-lossless" type="checkbox" checked>Lossless Quality</label>
+					</li>
+				</ul>
+			</li>
+			<li class="resolution">Resolution
+				<ul>
+					<li class="select-container">
+						<select id="animation-download-resolution"
+							title="Pixel dimensions of each frame"></select>
+					</li>
+				</ul>
+			</li>
+			<li class="timing">Timing
+				<ul>
+					<li class="select-container">
+						<select id="animation-download-frame-rate"
+							title="Frame rate"></select>
+					</li>
+					<li class="select-container">
+						<select id="animation-download-motion-blur-samples-per-frame"
+							title="Motion blur snapshots per frame">
+							<option value="1">No motion blur (1 snapshots/frame)</option>
+							<option value="3">Minimal (3 snapshots/frame)</option>
+							<option value="10">Good (10 snapshots/frame)</option>
+							<option value="32">Smooth (32 snapshots/frame)</option>
+							<option value="128">Super Smooth (128 snapshots/frame)</option>
+						</select>
+					</li>
+				</ul>
+			</li>
+		</ul>
+	</nav>
+</header>
+<div>
+	<div id="animation-download-predownload-stage">
+		<div id="animation-download-predownload-stage-for-frame-sequence-mode">
+			<p>Clicking "Download" will download <span class="animation-download-frame-count"></span> frames so check 
+		that your web browser's download directory is a good place for so many files.</p>
+		</div>
+		<div id="animation-download-predownload-stage-for-animated-gif-mode">
+			<p>Clicking "Download" will download a single animated GIF file named "<span class="animation-download-gif-filename"></span>".
+			The single GIF will be made from <span class="animation-download-frame-count"></span> frames.</p>
+			<div id="animation-download-gif-tips"></div>
+		</div>
+	</div>
+	<div id="animation-download-progress-message"></div>
+	<div id="animation-download-progress-report">
+		<p>Keep this browser tab in focus for fastest processing.</p>
+		<p>Processing frame 
+			<span id="animation-download-frame-index"></span> of 
+			<span class="animation-download-frame-count"></span>
+		</p>
+		<progress id="animation-download-progress" max="100"></progress>
+	</div>
+</div>

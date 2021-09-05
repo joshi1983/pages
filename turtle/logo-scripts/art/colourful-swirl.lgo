@@ -1,0 +1,56 @@
+; Inspired by:
+; https://www.pinterest.ca/pin/395894623493849341/
+
+make "colors ["red "yellow "green "blue "purple "black]
+
+to setRadialGradient :arcRadius :arcAngle :color
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "gradientRadius :arcRadius * 1.4
+	arcRight :arcAngle * 0.5 :arcRadius
+	right 70
+	jumpForward :arcRadius
+	localmake "colorStops createPList
+	setProperty "colorStops 0.65 mix "white :color 0.1
+	setProperty "colorStops 0.8 :color
+	setProperty "colorStops 1 "black
+	setFillGradient createRadialGradient pos pos :gradientRadius :colorStops "pad
+
+	; retore old position and heading.
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to colorfulSpiralWithGradients :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "size :size / 1.33
+	localmake "innerRadius :size * 0.15
+	localmake "arcAngle 90
+	localmake "arcRadius :size
+	localmake "numRepeats 2 * count :colors
+	localmake "angle1 360 / :numRepeats
+	localmake "angle2 :angle1 * 1.34
+	setPenSize 0
+	setFillColor "white
+	circle :size * 0.5
+	repeat :numRepeats [
+		localmake "ratio repcount / :numRepeats
+		jumpTo :oldPos
+		setHeading :oldHeading + repcount * :angle1
+		jumpForward :innerRadius
+		right 90
+		setRadialGradient :arcRadius :arcAngle mixItems :colors :ratio		polyStart
+		arcRight :arcAngle :arcRadius
+		left 134.8
+		arcLeft :angle2 :size
+		left 34
+		arcLeft :arcAngle :arcRadius
+		polyEnd
+	]
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+setScreenColor "gray
+colorfulSpiralWithGradients 100

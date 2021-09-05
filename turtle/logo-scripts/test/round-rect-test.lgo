@@ -1,0 +1,39 @@
+; This script can help with testing the
+; SVG export of rounded rect.
+
+to possibleArcLeft :angle :radius
+	ifelse :radius = 0 [
+		left :angle
+	] [
+		arcLeft :angle :radius
+	]
+end
+
+to roundedRectangle :width :height :cornerRadius
+	localmake "oldState turtleState
+	localmake "width1 :width - :cornerRadius * 2
+	localmake "height1 :height - :cornerRadius * 2
+	jumpRight :cornerRadius
+	right 90
+	polyStart
+	repeat 2 [
+		forward :width1
+		possibleArcLeft 90 :cornerRadius
+		forward :height1
+		possibleArcLeft 90 :cornerRadius
+	]
+	polyEnd
+	setTurtleState :oldState
+end
+
+right 0
+jumpForward 30
+setFillColor "blue
+circle 5
+jumpForward 200
+jumpRight 100
+circle 10
+jumpBackward 200
+jumpLeft 100
+setFillColor "red
+roundedRectangle 100 100 5

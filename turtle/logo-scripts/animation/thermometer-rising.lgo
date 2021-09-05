@@ -1,0 +1,98 @@
+to createHotColdGradient :len
+	localmake "oldPos pos
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#00f
+	setProperty "colorStops 0.5 "#f00
+	setProperty "colorStops 1 "#ff0
+	jumpForward :len
+	localmake "result createLinearGradient :oldPos pos :colorStops "pad
+	jumpTo :oldPos
+	output :result
+end
+
+; Inspired by
+; https://publicdomainvectors.org/en/free-clipart/Color-thermometer-icon-vector-graphics/21459.html
+to thermometerRising :height :temperatureRatio
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "arcRadius1 :height * 0.2
+	localmake "thickness1 :arcRadius1 * 1.2
+	localmake "arcRadius2 :thickness1 / 2
+	localmake "angle1 arcSin :arcRadius2 / :arcRadius1
+	localmake "angle2 180 - :angle1
+	localmake "angle3 90 - :angle1
+	localmake "penSize1 :height * 0.04
+	localmake "size1 :height - :penSize1 - :arcRadius1 * (1 + cos :angle1) - :arcRadius2
+	localmake "largeMercuryRadius :arcRadius1 * 0.6
+	localmake "maxTempHeight :height - :penSize1 - :arcRadius1 - :arcRadius2
+	localmake "minTempHeight :largeMercuryRadius
+	localmake "notchWidth :thickness1 * 0.5
+	localmake "numNotches 4
+	localmake "notchSeparation :size1 / :numNotches
+	localmake "notchThickness :notchSeparation * 0.2
+	localmake "notchGap :notchSeparation - :notchThickness
+
+	; Draw the outline.
+	setLineJoinStyle "miter
+	setLineCap "butt
+	setPenColor "black
+	jumpForward :penSize1 / 2
+	left 90
+	setPenSize 0
+	arcRight :angle2 :arcRadius1
+	left :angle3
+	jumpForward :size1
+	polyStart
+	jumpBackward :size1
+	left 90 + :angle1
+	arcLeft :angle2 * 2 :arcRadius1
+	right :angle3
+	jumpForward :size1
+	arcLeft 180 :arcRadius2
+	setFillColor "white
+	setPenSize :penSize1
+	polyEnd
+
+	; Fill the mercury.
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :arcRadius1 + :penSize1 / 2
+	localmake "hotColdGradient createHotColdGradient :maxTempHeight
+	setPenSize 0
+	setFillGradient :hotColdGradient
+	circle :largeMercuryRadius
+	setLineCap "butt
+	setPenSize :thickness1 * 0.5
+	setPenGradient :hotColdGradient
+	forward mix :maxTempHeight :minTempHeight :temperatureRatio
+
+	setPenColor "black
+	jumpTo :oldPos
+	jumpForward :arcRadius1 * 2 + :penSize1
+	jumpLeft (:thickness1 - :notchWidth) / 2
+	setPenSize :notchWidth
+	repeat :numNotches [
+		forward :notchThickness
+		jumpForward :notchGap
+	]
+
+	setTurtleState :oldState
+end
+
+setScreenColor "#ddd
+thermometerRising 100 interpolateRatio easeInOut animation.time / animation.duration
+
+to animation.snapshotstyle
+	localmake "result createPList
+	setProperty "result "zoom.scale 5
+	setProperty "result "position.y 55
+	output :result
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 2
+	; Edit this if you want to change the length of your animation.
+	output :minutes * 60 + :seconds
+end

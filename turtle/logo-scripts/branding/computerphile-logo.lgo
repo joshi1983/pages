@@ -1,0 +1,65 @@
+; Inspired by:
+; https://yt3.googleusercontent.com/ytc/AL5GRJWn6e2iLefhHdi7a7j0R9CfAW-uoWv_Jkf_AS6r9Q=s176-c-k-c0x00ffffff-no-rj
+; Referenced from:
+; https://www.youtube.com/@Computerphile
+
+; The ComputerPhile youtube channel has lots
+; of great educational videos about computers,
+; computer history, .
+
+make "bracketAngle 60
+
+to bracket :size
+	localmake "oldState turtleState
+	left 90 - :bracketAngle / 2
+	forward :size
+	arcRight 180 - :bracketAngle penSize / 2
+	forward :size
+	setTurtleState :oldState	
+end
+
+to computerPhileC :height
+	localmake "angle1 62
+	localmake "angle2 56
+	localmake "size1 :height * 0.218
+	localmake "size2 :height * 0.292
+	localmake "arcRadius1 :height * 0.16
+	localmake "arcRadius2 :height * 0.2
+	jumpRight :height * 0.255
+	jumpForward penSize / 2
+	left 90
+	forward :size1
+	arcRight :angle1 :arcRadius1
+	forward :size2
+	arcRight :angle2 :arcRadius2
+	forward :size2
+	arcRight :angle1 :arcRadius1
+	forward  :size1
+end
+
+to computerPhileLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "bracketSeparation :height * 1.15
+	localmake "bracketSize :height * 0.55
+	setLineCap "round
+	setLineJoinStyle "round
+	setPenColor "#14d70e
+	setPenSize :height * 0.125
+	jumpLeft :bracketSeparation / 2
+	jumpForward :height * 0.17
+	bracket :bracketSize
+	jumpRight :bracketSeparation
+	jumpForward (:bracketSize * 2 * sin :bracketAngle / 2) +
+		penSize * sin (180 - :bracketAngle) / 2
+	right 180
+	bracket :bracketSize
+	jumpTo :oldPos
+	setHeading :oldHeading
+	computerPhileC :height
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+computerPhileLogo 100

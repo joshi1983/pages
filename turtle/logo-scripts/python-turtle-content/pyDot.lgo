@@ -1,0 +1,18 @@
+; Draws a dot/circle with the specified size/radius and color
+; This is similar to Python Turtle's dot function.
+to pyDot :size :color
+	localmake "oldState turtleState
+	if not number? :size [
+		localmake "temp :color
+		localmake "color :size
+		localmake "size :temp ; complete swap.
+	]
+	if or (not number? :size) (:size < 1) [
+		localmake "size penSize + max penSize 4
+		; calculate default value for size.
+	]
+	setFillColor :color
+	setPenSize 0
+	circle :size * 0.5
+	setTurtleState :oldState
+end

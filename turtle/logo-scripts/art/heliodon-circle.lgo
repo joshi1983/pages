@@ -1,0 +1,90 @@
+to halfCircle :size :fromColor :toColor
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "numColors 6
+	repeat :numColors [
+		localmake "ratio min 1 repcount / (:numColors - 1)
+		localmake "radius :size * ((:numColors - repcount + 1) / :numColors)
+		localmake "c1 mix :fromColor :toColor :ratio
+		localmake "c2 mix :c1 :toColor 0.7
+		localmake "colorStops createPList
+		setProperty "colorStops 0 :c2
+		setProperty "colorStops 1 :c1
+		jumpRight :radius
+		localmake "gradient createRadialGradient pos pos :radius :colorStops "pad
+		setPos :oldPos
+		setFillGradient :gradient
+		polyStart
+		arcRight 180 :radius
+		polyEnd
+		setPos :oldPos
+		setHeading :oldHeading
+	]
+end
+
+; Similar to halfCircle except no gradients are used.
+to halfCircleFlat :size :fromColor :toColor
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "numColors 5
+	repeat :numColors [
+		localmake "ratio min 1 repcount / (:numColors - 1)
+		localmake "radius :size * ((:numColors - repcount + 1) / :numColors)
+		setFillColor mix :fromColor :toColor :ratio
+		polyStart
+		arcRight 180 :radius
+		polyEnd
+		setPos :oldPos
+		setHeading :oldHeading
+	]
+end
+
+; Inspired by
+; https://www.pinterest.ca/pin/577375614735499670/
+to heliodonCircle :size
+	localmake "oldState turtleState
+	halfCircle :size "#c00 "#fff
+	right 90
+	forward :size * 2
+	right 90
+	halfCircle :size "#04a "#fff
+	setTurtleState :oldState
+end
+
+; inspired by:
+; https://www.pinterest.ca/pin/229965124710565295/
+to theDotIsBlack :size
+	localmake "oldState turtleState
+	localmake "c1 "black
+	forward :size
+	right 90
+	forward :size
+	halfCircle :size :c1 "#fff
+	right 90
+	forward :size * 2
+	right 90
+	halfCircle :size :c1 "#fff
+	setTurtleState :oldState
+end
+
+; inspired by:
+; https://www.pinterest.ca/pin/84442561753001730/
+to theDotIsBlack2 :size
+	localmake "oldState turtleState
+	localmake "c1 "#486
+	halfCircleFlat :size :c1 "#fff
+	right 90
+	forward :size * 2
+	right 90
+	halfCircleFlat :size :c1 "#fff
+	setTurtleState :oldState
+end
+
+make "size 60
+make "separation :size * 2.3
+setPenSize 0
+heliodonCircle :size
+jumpRight :separation
+theDotIsBlack :size
+jumpRight :separation
+theDotIsBlack2 :size

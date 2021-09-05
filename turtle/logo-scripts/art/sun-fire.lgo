@@ -1,0 +1,76 @@
+; Inspired by
+; https://www.pinterest.ca/pin/144889313002854876/
+
+to curvedFlame :baseRadius
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "arcAngle 360 / 32
+	localmake "size :baseRadius * 1.4
+	left 90
+	penUp
+	arcLeft :arcAngle :baseRadius
+	right 180
+	penDown
+	polyStart
+	arcRight 2 * :arcAngle :baseRadius
+	left 120
+	arcRight 60 :size * 0.15
+	arcLeft 90 :size * 0.15
+	arcRight 80 :size * 0.12
+	left 165
+	arcLeft 80 :size * 0.13
+	arcRight 200 :size * 0.03
+	arcRight 50 :size * 0.08
+	left 170
+	arcLeft 90 :size * 0.08
+	arcRight 80 :size * 0.05
+	arcRight 100 :size * 0.03
+	arcRight 70 :size * 0.08
+	arcLeft 60 :size * 0.12
+	arcRight 60 :size * 0.05
+	left 165
+	arcLeft 60 :size * 0.05
+	arcRight 60 :size * 0.12
+	arcLeft 70 :size * 0.13
+	arcRight 60 :size * 0.07
+	arcRight 150 :size * 0.05
+	arcRight 40 :size * 0.1
+	left 160
+	arcLeft 90 :size * 0.1
+	polyEnd
+	penUp
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to sun :radius
+	localmake "oldPos pos
+	localmake "innerRadius :radius * 0.557
+	localmake "flameBaseRadius :innerRadius * 1.05
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "yellow
+	setProperty "colorStops 1 "white
+	setPenSize 0
+	jumpBackward :innerRadius
+	localmake "fromPos pos
+	jumpForward :innerRadius * 2
+	localmake "gradient createLinearGradient :fromPos pos :colorStops "pad 
+	setFillGradient :gradient
+	jumpTo :oldPos
+	circle :innerRadius
+	localmake "colorStops createPList
+	setProperty "colorStops 1 "red
+	setProperty "colorStops (:flameBaseRadius / :radius) "orange
+	setProperty "colorStops 0 "orange
+	localmake "gradient createRadialGradient pos pos :radius :colorStops "pad 
+	setFillGradient :gradient
+	repeat 16 [
+		jumpForward :flameBaseRadius
+		curvedFlame :flameBaseRadius
+		right 360 / 16
+		setPos :oldPos
+	]
+end
+
+setScreenColor "black
+sun 100

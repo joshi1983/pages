@@ -1,0 +1,102 @@
+make "colombiaRed "#CE1126
+make "colombiaBlue "#003893
+make "colombiaYellow "#FCD116
+make "colombiaGreen "#078930
+
+to stripes :width :height :stripesInfo
+	localmake "oldState turtleState
+	setLineCap "butt
+	setPenSize :width
+	repeat count :stripesInfo [
+		localmake "stripeInfo item repcount :stripesInfo
+		setPenColor item 1 :stripeInfo
+		forward :height * item 2 :stripeInfo
+	]
+	setTurtleState :oldState
+end
+
+; Based on instructions at:
+; https://en.wikipedia.org/wiki/Flag_of_Colombia
+to colombiaFlag :height
+	localmake "stripes [
+		[:colombiaRed 0.25]
+		[:colombiaBlue 0.25]
+		[:colombiaYellow 0.5]
+	]
+	stripes :height * 3 / 2 :height :stripes
+end
+
+; Based on construction instructions at:
+; https://commons.wikimedia.org/wiki/File:Civil_flag_of_Colombia_(construction_sheet).svg
+; The star's size indicated in the sheet was indicated as 10cm 
+; so I used that.
+; The image is inconsistent with those words and arrows, though.
+; The white star appears more like 13.333.. across.
+to civilColombiaFlag :height
+	localmake "oldState turtleState
+	localmake "ellipsePenSize :height * 5 / 200
+	localmake "ellipseRadius1 (:height * 40 / 200 - :ellipsePenSize) / 2 
+	localmake "ellipseRadius2 (:height * 50 / 200 - :ellipsePenSize) / 2 
+	localmake "starSize1 :height * 10 / 2 / 200
+	localmake "starSize2 :starSize1 * 0.55
+	colombiaFlag :height
+	setPenColor :colombiaRed
+	setFillColor :colombiaBlue
+	setPenSize :ellipsePenSize
+	jumpForward :height / 2
+	ellipse :ellipseRadius1 :ellipseRadius2
+	setPenSize 0
+	setFillColor "white
+	isotoxalStar :starSize1 :starSize2 8
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Colombia#/media/File:Flag_of_New_Granada_(1811-1814).svg
+to newGranada1811Flag :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "colors [:colombiaRed :colombiaYellow :colombiaGreen]
+	localmake "width :height * 3 / 2
+	localmake "width1 :width
+	localmake "height1 :height
+	localmake "step1 :height * 0.165
+	localmake "step2 :height * 0.175
+	setLineCap "butt
+	repeat count :colors [
+		setPenColor item repcount :colors
+		setPenSize :width1
+		forward :height1
+		jumpBackward :height1 - :step1
+		localmake "width1 :width1 - :step2 * 2
+		localmake "height1 :height1 - :step1 * 2
+	]
+	jumpTo :oldPos
+	jumpForward :height / 2
+	setFillColor "white
+	setPenSize 0
+	isotoxalStar :height * 0.16 :height * 0.068025 8
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://commons.wikimedia.org/wiki/File:Flag_of_New_Granada_(1814-1816).svg
+to newGranada1814Flag :height
+	localmake "stripes [
+		[:colombiaRed 1/3]
+		[:colombiaGreen 1/3]
+		[:colombiaYellow 1/3]
+	]
+	stripes :height * 3 / 2 :height :stripes
+end
+
+make "height 100
+make "separation :height * 3
+jumpLeft :separation * 1.5
+colombiaFlag :height
+jumpRight :separation
+civilColombiaFlag :height
+jumpRight :separation
+newGranada1811Flag :height
+jumpRight :separation
+newGranada1814Flag :height

@@ -1,0 +1,108 @@
+; Inspired by logo at:
+; https://www.rubrik.com/
+to roundedSquare :straightLength :arcRadius
+	localmake "oldState turtleState
+	jumpLeft :straightLength / 2 + :arcRadius
+	jumpBackward :straightLength / 2
+	polyStart
+	repeat 4 [
+		jumpForward :straightLength
+		arcRight 90 :arcRadius
+	]
+	polyEnd
+	setTurtleState :oldState
+end
+
+to roundedTriangle1 :size1
+	localmake "oldState turtleState
+	localmake "angle 45
+	localmake "angle2 108.5
+	localmake "size2 :size1 * 0.645
+	localmake "cornerRadius1 :size1 * 0.065
+	localmake "cornerRadius2 :size1 * 0.14
+	right 180
+	polyStart
+	arcLeft 180 - :angle :cornerRadius1
+	jumpForward :size1
+	arcLeft :angle2 :cornerRadius2
+	jumpForward :size2
+	arcLeft 360 - ((180 - :angle) + :angle2) :cornerRadius2
+	polyEnd	
+	setTurtleState :oldState
+end
+
+to roundedTriangle2 :size1
+	localmake "oldState turtleState
+	localmake "angle 45
+	localmake "angle2 117
+	localmake "size2 :size1 * 0.62
+	localmake "cornerRadius1 :size1 * 0.065
+	localmake "cornerRadius2 :size1 * 0.14
+	right 180
+	polyStart
+	arcLeft 180 - :angle :cornerRadius1
+	jumpForward :size1
+	arcLeft :angle2 :cornerRadius2
+	jumpForward :size2
+	arcLeft :angle2 :cornerRadius2
+	polyEnd	
+	setTurtleState :oldState
+end
+
+to rubrikLogo :size
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "largeSquareStraightLength :size * 0.193
+	localmake "largeSquareArcRadius :size * 0.021
+	localmake "smallSquareStraightLength :size * 0.125
+	localmake "smallSquareArcRadius :size * 0.02
+	localmake "triSize1 :size * 0.0935
+	localmake "triOffset1 :smallSquareStraightLength / 2 + :smallSquareArcRadius
+	localmake "triOffset2 :size * 0.107
+	jumpForward :size / 2
+	setPenSize 0
+	localmake "pos1 pos
+	repeat 4 [
+		localmake "heading1 :oldHeading + repcount * 360 / 4
+		setHeading :heading1
+		jumpForward :size * 0.341
+		right 45
+		roundedSquare :largeSquareStraightLength :largeSquareArcRadius
+		left 45
+		jumpRight :size * 0.255
+		jumpBackward :size * 0.086
+		localmake "pos2 pos
+		roundedSquare :smallSquareStraightLength :smallSquareArcRadius
+		jumpLeft :triOffset1
+		jumpForward :triOffset2
+		roundedTriangle1 :triSize1
+		jumpTo :pos2
+		jumpBackward :triOffset1 - :size * 0.01
+		jumpRight :triOffset2 - :size * 0.005
+		right 45
+		roundedTriangle2 :triSize1 * 1.04
+		jumpTo :pos1
+	]
+
+	setTurtleState :oldState
+end
+
+; Draw using a few colors used at https://www.rubrik.com/
+make "size 100
+make "separation :size * 2
+jumpLeft :separation
+setFillColor "black
+rubrikLogo :size
+jumpRight :separation
+setFillColor "#00deda
+rubrikLogo :size
+
+jumpRight :separation
+make "pos1 pos
+setPenColor "black
+setPenSize :separation
+jumpBackward (:separation - :size) / 2
+forward :separation
+jumpTo :pos1
+setFillColor "white
+rubrikLogo :size

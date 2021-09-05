@@ -1,0 +1,75 @@
+; Inspired by logo on
+; http://blascofs.es/
+; and https://www.pinterest.ca/pin/772437773604130531/
+
+to getBaseGradient :size
+	localmake "color1 "#06fcf7
+	localmake "colorStops createPList
+	setProperty "colorStops 0 mix :color1 "#00f 0.3
+	setProperty "colorStops 1 "#06fcf7
+	jumpForward :size * 0.5
+	localmake "fromPos pos
+	jumpBackward :size * 1.5
+	localmake "toPos pos
+	jumpForward :size
+	output createLinearGradient :toPos :fromPos :colorStops "pad
+end
+
+to blascofsLogo :size
+	localmake "backgroundFillGradient getBaseGradient :size
+	repeat 4 [
+		setFillGradient :backgroundFillGradient
+		blascoCurve :size
+		right 90
+	]
+end
+
+to blascoCurve :size
+	localmake "oldState turtleState
+	localmake "colorStops createPList
+	setProperty "colorStops 0 mix screenColor transparent 0.4
+	setProperty "colorStops 1 transparent
+	localmake "size1 :size * 0.06
+	localmake "size2 :size * 0.19
+	localmake "size3 :size * 0.07
+	localmake "size4 :size * 0.62
+	left 40.2
+	jumpForward :size * 0.78
+	left 4.8
+	setPenSize 0
+	polyStart
+	arcRight 90 :size1
+	arcRight 90 :size2
+	jumpForward :size * 0.26
+	localmake "pos1 pos
+	localmake "heading1 heading
+	arcLeft 90 :size3
+	jumpForward :size * 0.62
+	arcRight 90 :size2
+	arcRight 90 :size1
+	jumpForward :size * 0.8
+	arcRight 90 :size * 0.27
+	polyEnd
+
+	jumpTo :pos1
+	setHeading :heading1 - 90
+	jumpForward :size * 0.4
+	setFillGradient createLinearGradient :pos1 pos :colorStops "pad
+	jumpTo :pos1
+	setHeading :heading1
+
+	polyStart
+	arcLeft 90 :size3
+	jumpForward :size4
+	right 90
+	jumpForward :size * 0.25
+	right 90
+	jumpForward :size * 0.38
+	arcRight 89 :size * 0.31
+	polyEnd
+
+	setTurtleState :oldState
+end
+
+setScreenColor "#271c6b
+blascofsLogo 150

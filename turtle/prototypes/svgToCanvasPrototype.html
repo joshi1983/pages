@@ -1,0 +1,52 @@
+<html>
+	<head>
+		<title>SVG Troubleshoot Helper</title>
+		<base href="../">
+		<script src="./prototypes/svgToCanvasPrototype.js" type="module"></script>
+		<link rel="stylesheet" href="./prototypes/svgToCanvasPrototype.css">
+	</head>
+	<body>
+		<p>This is a tool to help with troubleshooting SVG-related problems.
+		Drawing directly to canvas should produce a similar appearance to drawing to SVG.
+		This tool helps compare the results side by side instead of having to click 
+		<strong>Drawing</strong> -&gt; <strong>Download</strong> from the main application.</p>
+		<button id="convert-escaped-text">Convert \n...</button>
+		<div class="editor">
+			<textarea>to peddle :len
+	localmake "oldState turtleState
+	localmake "angle1 28.4661027
+	localmake "arcAngle1 20
+	localmake "arcAngle3 180 - 2 * (-:angle1 + :arcAngle1)
+	localmake "arcRadius1 :len * 1.79830587
+	localmake "arcRadius3 :len * 0.2
+	left :angle1
+	polyStart
+	arcRight :arcAngle1 :arcRadius1
+	arcRight :arcAngle3 :arcRadius3
+	arcRight :arcAngle1 :arcRadius1
+	polyEnd
+	setTurtleState :oldState
+end
+
+setPenSize 30
+jumpRight 10
+left 30
+peddle 300</textarea>
+		</div>
+		<label for="difference-ratio">Difference Ratio</label>
+		<output id="difference-ratio">0.0001</output>
+		<label for="optimize-drawing">Optimize Drawing</label>
+		<input id="optimize-drawing" type="checkbox" checked="checked">
+		<div class="containers">
+			<div id="svg-canvas-container">
+				<label>SVG</label>
+				<div></div>
+			</div>
+			<div id="canvas-container">
+				<label>Canvas</label>
+				<div></div>
+			</div>
+		</div>
+		<div id="svg-text"></div>
+	</body>
+</html>

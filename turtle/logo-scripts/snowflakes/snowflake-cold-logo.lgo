@@ -1,0 +1,60 @@
+; Inspired by
+; a design from Kurnia Hari
+; https://www.vecteezy.com/vector-art/5286755-snow-vector-abstract-cold-logo
+; https://www.vecteezy.com
+; Copy this comment to give attribution to the original designer.
+
+; The original design mentioned above from Kurnia Hari 
+; was translated to WebLogo by Josh Greig
+
+to parallelogram :size
+	localmake "oldState turtleState
+	localmake "angle1 60
+	localmake "angle2 :angle1 / 2
+	left :angle2
+	polyStart
+	jumpForward :size
+	right :angle1
+	jumpForward :size
+	right 180 - :angle1
+	jumpForward :size
+	polyEnd
+	setTurtleState :oldState
+end
+
+to snowColdLogo :size
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	setPenColor "#0079c0
+	setFillColor "white
+	setLineJoinStyle "miter
+	jumpForward :size / 2
+	setPenSize :size * 0.034
+	circle :size * 0.031
+	setPenSize penSize * 0.9
+	localmake "center pos
+	repeat 6 [
+		localmake "cycleIndex remainder repcount - 1 3
+		jumpForward :size * 0.083
+		if 0 <> :cycleIndex [
+			jumpForward :size * 0.025
+			jumpLeft (:cycleIndex - 1.5) * 0.011 * :size
+		]
+		parallelogram :size * 0.224
+		jumpTo :center
+		right 360 / 6
+	]
+	setFillColor penColor
+	setPenSize 0
+	setHeading :oldHeading + 180 / 6
+	repeat 6 [
+		jumpForward :size * 0.339
+		parallelogram :size * 0.093
+		jumpTo :center
+		right 360 / 6		
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "#ddf
+snowColdLogo 100

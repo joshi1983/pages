@@ -1,0 +1,143 @@
+; Randomly generates mazes using recursive algorithm
+; described at: 
+; https://en.wikipedia.org/wiki/Maze_generation_algorithm#Recursive_implementation
+
+; offsets to potentially unvisited neighbouring maze cells
+make "offsets [
+	[-1 0] ; left
+	[1 0] ; down
+	[0 -1] ; right
+	[0 1] ; up
+]
+
+; initial position and heading of the turtle are ignored to keep this simple.
+; Draws at the home position with a heading of 0 corresponding with height.
+to drawMaze :cells :cellSize
+	localmake "width count :cells
+	localmake "firstColumn item 1 :cells
+	localmake "height count :firstColumn
+
+	setLineJoinStyle "miter
+	setLineCap "butt
+	setPenColor "white
+	setPenSize :cellSize * :height
+	setHeading 90
+	jumpTo [0 :cellSize * :height * 0.5]
+	forward :cellSize * :width
+
+	setLineJoinStyle "round
+	setLineCap "round
+	setPenSize :cellSize / 5
+	setPenColor "black
+	jumpTo [0 :cellSize]
+	setHeading 0
+	forward :cellSize * (-1 + :height)
+	; Draw left wall with opening at bottom representing maze start.
+	jumpTo [0 0]
+	setHeading 90
+	forward :cellSize * :width
+
+	repeat count :cells [
+		localmake "x repcount
+		localmake "column item repcount :cells
+		repeat count :column [
+			localmake "cell item repcount :column
+			localmake "y repcount
+			localmake "pos1 [(:x - 1) * :cellSize :y * :cellSize]
+			jumpTo :pos1
+			setHeading 90
+			ifelse item 1 :cell [
+				forward :cellSize
+			] [
+				jumpForward :cellSize
+			]
+			setHeading 180
+			if item 2 :cell [
+				forward :cellSize
+			]
+		]
+	]
+end
+
+to maze :width :height
+	localmake "cells []
+	repeat :width [
+		localmake "column []
+		repeat :height [
+			; represent the up and right walls for each cell.
+			queue2 "column [true true false]
+		]
+		queue2 "cells :column
+	]
+	generateMazeRecursive 1 1 :cells
+	drawMaze :cells 10
+end
+
+to getUnvisitedNeighbours :x :y :cells
+	; calculate the valid index ranges to iterate through.
+	localmake "maxX clamp :x + 1 1 count :cells
+	localmake "maxY clamp :y + 1 1 count item 1 :cells
+	localmake "result []
+
+	; loop over all adjacent cells.
+	repeat count :offsets [
+		localmake "offset item repcount :offsets
+		localmake "x1 :x + item 1 :offset
+		localmake "y1 :y + item 2 :offset
+		if (and (:x1 >= 1) (:y1 >= 1) (:x1 <= :maxX) (:y1 <= :maxY)) [
+			localmake "cell item :y1 item :x1 :cells
+			localmake "visited? item 3 :cell
+			if false = :visited? [
+				queue2 "result [:x1 :y1 repcount]
+			]
+		]
+	]
+	output :result
+end
+
+to removeWall :cell1 :cell2 :cells
+	localmake "x1 item 1 :cell1
+	localmake "x2 item 1 :cell2
+	localmake "y1 item 2 :cell1
+	localmake "y2 item 2 :cell2
+	ifelse :x1 = :x2 [
+		ifelse :y1 < :y2 [
+			localmake "cell item :y1 item :x1 :cells
+			; remove horizontal wall above cell1.
+		] [
+			localmake "cell item :y2 item :x2 :cells
+			; remove horizontal wall above cell2.
+		]
+		setItem 1 "cell false
+	] [
+		ifelse :x1 < :x2 [
+			localmake "cell item :y1 item :x1 :cells
+			; remove verticle wall right of cell1.
+		] [
+			localmake "cell item :y2 item :x2 :cells
+			; remove verticle wall above cell2.
+		]
+		setItem 2 "cell false
+	]
+end
+
+to generateMazeRecursive :x :y :cells
+	localmake "cell item :y item :x :cells
+	setItem 3 "cell true ; mark visited
+	localmake "unvisitedNeighbours getUnvisitedNeighbours :x :y :cells
+	shuffle "unvisitedNeighbours
+	repeat count :unvisitedNeighbours [
+		localmake "valToPush item repcount :unvisitedNeighbours
+		localmake "x2 item 1 :valToPush
+		localmake "y2 item 2 :valToPush
+		localmake "cell2 item :y2 item :x2 :cells
+		localmake "cell2Visited? item 3 :cell2
+		if false = :cell2Visited? [
+			removeWall [:x :y] :valToPush :cells
+			generateMazeRecursive :x2 :y2 :cells
+		]
+	]
+end
+
+setScreenColor "gray
+maze 60 10

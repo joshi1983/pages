@@ -1,0 +1,118 @@
+; Inspired by logos at:
+; https://www.alltreatment.com/
+make "mainAngle 54
+make "arcRadiusRatio1 0.352
+
+to largeShape :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "size1 :height * 0.03642159
+	localmake "arcAngle1 8.5
+	localmake "arcAngle2 69
+	localmake "arcRadius1 :height * :arcRadiusRatio1
+	localmake "arcRadius2 :height * 4
+	localmake "arcRadius3 :height * 0.10587966
+	localmake "arcRadius4 :height * 0.24
+	localmake "arcRadius5 :height * 3.4
+	jumpForward :height * 0.64714791
+	jumpRight :height * 0.6342759696
+	localmake "startPos pos
+	right 180
+	polyStart
+	arcRight 47 :arcRadius1
+	arcRight :arcAngle1 :arcRadius2
+	arcRight :arcAngle2 :arcRadius3 ; point of symmetry
+	arcRight :arcAngle1 :arcRadius2
+	arcRight 184 :arcRadius1
+	jumpForward :size1
+	; point of symmetry
+	setHeading :oldHeading + 43
+	jumpForward :size1
+	arcRight 55 :arcRadius1
+	setHeading :oldHeading - 130
+	jumpForward :height * 0.432435612
+	setHeading :oldHeading - 50
+	jumpForward :height * 0.18
+	arcLeft 176 :arcRadius4
+	arcLeft 9.9652838 :arcRadius5
+	setHeading :oldHeading + 55.9653
+
+	; arcRadius5 would be exactly symmetrical with the other side.
+	; multiplying by 1.085 to reach the starting point
+	arcLeft 13 :arcRadius5 * 1.085
+	polyEnd
+	setTurtleState :oldState
+	jumpTo :startPos
+end
+
+to allTreatmentLogo :height :colors
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "slantHeading :oldHeading - 131
+	localmake "size1 :height * 0.1484
+	localmake "arcRadius :height * :arcRadiusRatio1
+	localmake "colorStops createPList
+	setProperty "colorStops 0 item 1 :colors
+	setProperty "colorStops 1 item 2 :colors
+	setPenSize 0
+	right :mainAngle
+	jumpBackward :height * 0.2
+	localmake "fromPos pos
+	jumpForward :height * 1.1
+	setFillGradient createLinearGradient :fromPos pos :colorStops "pad
+	jumpTo :oldPos
+	setHeading :oldHeading
+	largeShape :height
+	arcLeft 16 :arcRadius
+	setFillColor item 3 :colors
+	polyStart
+	arcLeft 19 :arcRadius
+	localmake "arcPos1 pos
+	localmake "heading1 heading
+	setHeading :slantHeading
+	forward :height * 0.756075587
+	setHeading :oldHeading + 180
+	jumpForward :size1
+	polyEnd
+	setFillColor item 4 :colors
+	jumpTo :arcPos1
+	setHeading :heading1
+	arcLeft 13 :arcRadius
+	polyStart
+	arcLeft 19.106 :arcRadius
+	setHeading :slantHeading
+	jumpForward :height * 0.555464
+	setHeading :oldHeading + 180
+	jumpForward :size1
+	polyEnd
+	setTurtleState :oldState
+end
+
+to allTreatmentLogo1 :height
+	localmake "colors ["#0c6788 "#107ba2 "#77c4d8 "#ab956f]
+	allTreatmentLogo :height :colors
+end
+
+to allTreatmentLogo2 :height
+	localmake "colors ["#fff "#fff "#c5e6ee "#dbd2c2]
+	allTreatmentLogo :height :colors
+end
+
+to allTreatmentLogo2Background :logoHeight
+	localmake "oldPos pos
+	localmake "padding :logoHeight * 0.05
+	jumpBackward :padding
+	setPenColor "#0C6788
+	setPenSize :logoHeight * 5
+	forward :logoHeight + :padding * 2
+	jumpTo :oldPos
+end
+
+make "height 100
+make "separation :height * 5
+jumpLeft :separation / 2
+allTreatmentLogo1 :height
+jumpRight :separation
+allTreatmentLogo2Background :height
+allTreatmentLogo2 :height

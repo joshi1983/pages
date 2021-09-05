@@ -1,0 +1,95 @@
+make "g 6.5
+
+to glare :size
+	if :size < 0.1 [
+		stop
+	]
+	localmake "oldHeading heading
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "white
+	setProperty "colorStops 0.1 "#ff8
+	setProperty "colorStops 0.2 "#f00
+	setProperty "colorStops 1 "black
+	localmake "gradient createRadialGradient pos pos :size :colorStops "pad
+	setFillGradient :gradient
+	setPenSize 0
+	setHeading 0
+	isotoxalStar :size * 0.2 :size * 0.05 8
+	isotoxalStar :size * 0.3 :size * 0.1 32
+	localmake "gradient createRadialGradient pos pos :size * 2 :colorStops "pad
+	setFillGradient :gradient
+	isotoxalStar :size * 0.4 :size * 0.05 16
+	localmake "gradient createRadialGradient pos pos :size * 3 :colorStops "pad
+	setFillGradient :gradient
+	isotoxalStar :size * 0.5 :size * 0.02 4
+	setHeading :oldHeading
+end
+
+to explosion :explosionRadius :brightness
+	localmake "oldPos pos
+	localmake "numSparklers 32
+	localmake "radius :explosionRadius
+	repeat :numSparklers [
+		penUp
+		setPos :oldPos
+		jumpForward :radius
+		glare :brightness
+		right 360 / :numSparklers
+	]
+end
+
+to fireworks :size :maxElevation :time
+	localmake "oldHeading heading
+	localmake "explosionTime 3
+	localmake "initialSpeed :maxElevation / :explosionTime
+	localmake "elevation :time * :initialSpeed - :time * :time * :g
+	localmake "trailWidth :size * 0.01
+	localmake "from pos
+	jumpForward :elevation
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "black
+	setProperty "colorStops 0.5 "#841
+	setProperty "colorStops 1 "#a84
+	localmake "toPos pos
+	localmake "gradient createLinearGradient :from :toPos :colorStops "pad
+	setFillGradient :gradient
+	right 90
+	jumpForward :trailWidth * 0.5
+	right 90
+	setPenSize 0
+	if :elevation > 0.01 [
+		polyStart
+		repeat 2 [
+			forward :elevation
+			right 90
+			forward :trailWidth
+			right 90
+		]
+		polyEnd
+	]
+	setPos :toPos
+	setHeading :oldHeading
+	ifelse :time < :explosionTime [
+		glare :size * 0.05
+	] [
+		localmake "time :time - :explosionTime
+		localmake "explosionRadius :time * :size
+		explosion :explosionRadius :size * 0.05
+	]
+end
+
+setScreenColor "black
+fireworks 200 200 animation.time
+hideTurtle
+
+to animation.snapshotstyle
+	localmake "result createPList
+	output :result
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 10
+	; Edit this if you want to change the length of your animation.
+	output :minutes * 60 + :seconds
+end

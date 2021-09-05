@@ -1,0 +1,30 @@
+; The bug here is fromPoint is determined to be a "num" when it should be a list.
+; The code isn't running because of the bug.
+; The messages are:
+; Line 18: jumpTo command requires input of type(s) list The given data types were found to be num Click jumpTo to learn more about the command and its parameters.
+; Line 21: jumpTo command requires input of type(s) list The given data types were found to be num Click jumpTo to learn more about the command and its parameters.
+; fromPoint is likely determined to be a num because of the pritn round :fromPoint / :groupSize line.
+; If points was determined to be a list of list instead of just a list, the error messages would be much clearer.
+; Notice that only pos gets added to points meaning we should know the type of every element in points is a list.
+
+to circlePattern :radius
+	localmake "points []
+	localmake "numNails 100
+	localmake "groupSize 10
+	print :radius
+	repeat :numNails [
+		queue2 "points pos
+	]
+	repeat :numNails [
+		localmake "fromPoint item repcount :points
+		localmake "toPoints []
+		print round :fromPoint / :groupSize
+		jumpTo :fromPoint
+		repeat count :toPoints [
+			setPos item repcount :toPoints
+			jumpTo :fromPoint
+		]
+	]
+end
+
+circlePattern 100

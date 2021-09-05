@@ -1,0 +1,49 @@
+; Used for point cloud exporter
+; exported to images/icons/point-cloud-icon.svg
+
+to arcRightDots :angle :arcRadius :numDots
+	localmake "oldPenSize penSize
+	localmake "dotRadius penSize
+	localmake "angleStep :angle / :numDots
+	setPenSize 0
+	repeat :numDots [
+		arcRight :angleStep :arcRadius
+		circle :dotRadius
+	]
+	setPenSize :oldPenSize
+end
+
+to dotCloud :size
+	localmake "oldState turtleState
+	localmake "numBumps 5
+	localmake "angle1 95
+	localmake "angle2 (:angle1 * 2) - (360 / :numBumps)
+	localmake "size1 :size * 0.24
+	localmake "size2 :size * 0.5
+	localmake "numDots1 2
+	localmake "numDots2 int (:numDots1 * :size2 / :size1)
+
+	setPenSize 0
+	setFillColor "white
+	polyStart
+	repeat :numBumps [
+		arcRight :angle1 :size1
+		left :angle2
+		arcRight :angle1 :size2
+	]
+	polyEnd
+
+	setTurtleState :oldState
+	; Draws a circular thought bubble
+	setPenSize :size * 0.07
+	setFillColor "black
+	repeat :numBumps [
+		arcRightDots :angle1 :size1 :numDots1
+		left :angle2
+		arcRightDots :angle1 :size2 :numDots2
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor transparent
+dotCloud 100

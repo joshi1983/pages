@@ -1,0 +1,64 @@
+import { ArrayUtils } from '../../../modules/ArrayUtils.js';
+import { fetchJson } from '../../../modules/fetchJson.js';
+import { fetchText } from '../../../modules/fetchText.js';
+import { isLikelyPythonCode, likelyContainsForInRange, likelyContainsMethodCall } from '../../../modules/parsing/python-parsing/isLikelyPythonCode.js';
+import { prefixWrapper } from '../../helpers/prefixWrapper.js';
+import { pythonTurtleExampleFiles } from '../../helpers/parsing/pythonTurtleExampleFiles.js';
+import { testInOutPairs } from '../../helpers/testInOutPairs.js';
+const examples = await fetchJson('json/scriptExamples.json');
+const copyrightenExamples = await fetchJson('tests/data/copyrightenScripts.json');
+ArrayUtils.pushAll(examples, copyrightenExamples);
+
+function testLikelyContainsMethodCall(logger) {
+	const cases = [
+	{'in': '', 'out': false},
+	{'in': 'print animation.time', 'out': false},
+	{'in': 'print (animation.time)', 'out': false},
+	{'in': 'penup()', 'out': false},
+	{'in': '.penup(', 'out': true},
+	{'in': 't.penup(', 'out': true},
+	{'in': 't.penup()', 'out': true},
+	];
+	testInOutPairs(cases, likelyContainsMethodCall, logger);
+};
+
+function testLikelyContainsForInRange(logger) {
+	const cases = [
+	{'in': '', 'out': false},
+	{'in': 'print animation.time', 'out': false},
+	{'in': 'for i in x:', 'out': false},
+	{'in': 'for i in range(x):', 'out': true},
+	{'in': 'for i in range (x):', 'out': true},
+	{'in': 'for \ti \tin \trange \t(x):', 'out': true},
+	{'in': 'for\ti\tin\trange\t(x):', 'out': true},
+	{'in': 'for\t x\tin\trange\t(y):', 'out': true},
+	];
+	testInOutPairs(cases, likelyContainsForInRange, logger);
+}
+
+function testPythonExamplesDetectedAsLikelyPython(logger) {
+	pythonTurtleExampleFiles.forEach(async function(filename) {
+		const url = 'tests/data/python/' + filename;
+		const pythonCode = await fetchText(url);
+		const result = isLikelyPythonCode(pythonCode);
+		if (result !== true)
+			logger(`${filename} expected to be considered "likely Python" but got ${result}`);
+	});
+}
+
+function testNoLoadableExampleDetectedAsLikelyPython(logger) {
+	examples.forEach(async function(exampleInfo) {
+		const url = `logo-scripts/${exampleInfo.filename}`;
+		const webLogoCode = await fetchText(url);
+		const result = isLikelyPythonCode(webLogoCode);
+		if (result !== false)
+			logger(`${url} expected to be considered NOT "likely Python" but got ${result}`);
+	});
+}
+
+export function testIsLikelyPythonCode(logger) {
+	testLikelyContainsForInRange(prefixWrapper('testLikelyContainsForInRange', logger));
+	testLikelyContainsMethodCall(prefixWrapper('testLikelyContainsMethodCall', logger));
+	testNoLoadableExampleDetectedAsLikelyPython(prefixWrapper('testNoLoadableExampleDetectedAsLikelyPython', logger));
+	testPythonExamplesDetectedAsLikelyPython(prefixWrapper('testPythonExamplesDetectedAsLikelyPython', logger));
+};

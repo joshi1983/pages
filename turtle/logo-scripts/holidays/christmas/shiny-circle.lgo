@@ -1,0 +1,36 @@
+; This could be a helpful part of a Christmas decoration
+
+; Color of the circle is determined by pen color
+to shinyCircle :radius
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "white
+	setProperty "colorStops 0.35 mix penColor "white 0.7
+	setProperty "colorStops 0.7 penColor
+	setProperty "colorStops 0.85 mix penColor "black 0.7
+	setProperty "colorStops 1 "black
+	right 45
+	jumpForward :radius * 0.5
+	localmake "gradient createRadialGradient :oldPos pos :radius :colorStops "pad
+	setPenSize 0
+	jumpTo :oldPos
+	setFillGradient :gradient
+	circle :radius
+	setHeading :oldHeading
+end
+
+; show the circle in various colors.
+make "radius 30
+make "separation :radius * 2.5
+make "colors ["red "purple "blue "green "yellow "gray "black]
+right 90
+jumpBackward :separation * (0.5 * (-1 + count :colors))
+penUp
+repeat count :colors [
+	setPenColor item repcount :colors
+	left 90
+	shinyCircle :radius
+	right 90
+	forward :separation
+]

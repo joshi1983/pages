@@ -1,0 +1,55 @@
+to stripes :height :width :colors
+	localmake "oldState turtleState
+	setLineCap "butt
+	setPenSize :width
+	repeat count :colors [
+		setPenColor item repcount :colors
+		forward :height / count :colors
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Indonesia#/media/File:Flag_of_Indonesia.svg
+to indonesiaFlag :height
+	stripes :height :height * 3 / 2 ["white "red]	
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Indonesia#/media/File:Naval_flag_of_Majapahit_Kingdom.svg
+to majapahitKingdomFlag :height
+	localmake "colors []
+	repeat 6 [
+		queue2 "colors "red
+		queue2 "colors "white
+	]
+	queue2 "colors "red
+	stripes :height :height * 3 / 2 :colors
+end
+
+to baliKingdomFlag :height
+	localmake "colors []
+	repeat 3 [
+		queue2 "colors "blue
+		queue2 "colors "white
+		queue2 "colors "red
+	]
+	stripes :height :height * 3 / 2 :colors
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Indonesia#/media/File:Flag_of_the_Netherlands.svg
+to dutchFlag :height
+	stripes :height :height * 3 / 2 ["#21468B "white "#AE1C28]
+end
+
+make "height 100
+make "separation :height * 3
+jumpLeft :separation * 1.5
+indonesiaFlag :height
+jumpRight :separation
+majapahitKingdomFlag :height
+jumpRight :separation
+dutchFlag :height
+jumpRight :separation
+baliKingdomFlag :height

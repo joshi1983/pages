@@ -1,0 +1,299 @@
+; Inspired by a few different company logos using the name 
+; "Everest Transport"
+; These examples look like different levels of abstraction and minimalism
+; while all depict Mount Everest.
+
+; You can learn more about minimalism at:
+; https://en.wikipedia.org/wiki/Minimalism
+
+; A similar process of simplification is explained at:
+; https://youtu.be/22osQzxenl8?t=193
+
+make "everestTransportLogo1Angle 57
+
+to triangle :height :isUp
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "angle2 :everestTransportLogo1Angle / 2
+	localmake "diagonalSize1 :height / cos :angle2
+	localmake "width :height * 2 * tan :angle2
+	ifelse :isUp [
+		polyStart
+		right :angle2
+		jumpForward :diagonalSize1
+		setHeading :oldHeading
+		jumpLeft :width
+		polyEnd
+	] [
+		jumpLeft :width / 2
+		polyStart
+		jumpRight :width
+		left :angle2
+		jumpForward :diagonalSize1
+		setHeading :oldHeading
+		polyEnd
+	]
+	setTurtleState :oldState
+end
+
+; This is inspired by a logo for an 
+; Everest Transport company from Belgium.
+; https://everesttransport.be
+to everestTransportLogo1 :height
+	localmake "oldState turtleState
+	localmake "colors [
+						"#cf1019 
+				"#cf1019 "#cf1019 "#aa0d16
+		"#5e080c "#cf1019 "white "#aa0d16 "#1f1b4b
+"#18153d "#362f87 "#1e1a4a "#2b246a "#1f1b4b "#1f1b4b "#2b2569
+]
+	localmake "angle2 :everestTransportLogo1Angle / 2
+	localmake "size1 :height * tan :angle2
+	localmake "triangleHeight :height / 4
+	localmake "triangleWidth :size1 / 2
+	setPenSize 0
+	jumpForward :height
+	right 180
+	localmake "colorIndex 1
+	for ["row 0 10] [
+		localmake "maxCol :row * 2 + 1
+		localmake "pos1 pos
+		for ["col 1 :maxCol] [
+			setFillColor item :colorIndex :colors
+			triangle :triangleHeight odd? :col
+			jumpLeft :triangleWidth / 2
+			localmake "colorIndex :colorIndex + 1
+			if :colorIndex > count :colors [
+				setTurtleState :oldState
+				stop
+			]
+		]
+		jumpTo :pos1
+		jumpRight :triangleWidth / 2
+		jumpForward :triangleHeight
+	]
+end
+
+; Inspired by logo at:
+; https://everest-ts.com/
+to everestTransportSystemsLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "penSize1 :height * 0.06
+	localmake "radius :height / 2
+	localmake "radius1 :radius - :penSize1 / 2
+	localmake "radius2 :radius1 - :penSize1 / 2
+	localmake "angle1 137
+	setLineCap "butt
+	setLineJoinStyle "miter
+	setPenColor "#06a44e
+	setPenSize :penSize1
+	jumpLeft :height * 0.217
+	jumpForward :height * 0.42
+	left :angle1
+	forward :height * 0.25
+	left 77
+	arcLeft 131 :radius1
+	setPenSize 0
+	jumpRight :penSize1 / 2
+	setFillColor penColor
+	polyStart
+	jumpLeft :penSize1
+	arcLeft 3.5 :radius2
+	polyEnd
+
+	setPenColor "#15286d
+	setPenSize :penSize1
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.48
+	jumpLeft :height * 0.168
+	right 180 - :angle1
+	forward :height * 0.122
+	right 90
+	forward :height * 0.17
+	jumpRight :height * 0.23
+	left 90
+	forward :height * 0.56
+	right 90
+	forward :height * 0.25
+	setPenSize 0
+	setFillColor penColor
+	jumpRight :penSize1 / 2
+	polyStart
+	jumpForward :height * 0.095
+	left 126
+	arcLeft 211 :radius
+	left 115
+	jumpForward :penSize1 * 1.2
+	left 62
+	arcRight 199 :radius2	
+	polyEnd
+
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://www.facebook.com/Everesttrasport/
+to everestTransportSystemsLogo2 :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	jumpLeft :height
+	right 90
+	setLineJoinStyle "round
+	setFillColor "#fd0002
+	setPenSize :height * 0.005
+	setPenColor "#800
+	polyStart
+	jumpForward :height * 1.8
+	arcLeft 20 :height * 0.5
+	arcLeft 40 :height * 0.1
+	arcLeft 60 :height * 0.05
+	arcLeft 25 :height * 0.1
+	arcLeft 20 :height * 0.5
+	left 160
+	arcRight 100 :height * 0.055
+	arcRight 40 :height * 0.1
+	polyEnd
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpLeft :height * 0.89
+	jumpForward :height * 0.07
+	right 44.5
+	setFillColor "#0580ff
+	setPenSize 0
+	polyStart
+	jumpForward :height * 0.52
+	right 45
+	jumpForward :height * 0.12
+	left 26
+	jumpForward :height * 0.33
+	left 28
+	jumpForward :height * 0.22
+	right 35
+	jumpForward :height * 0.08
+	left 33
+	jumpForward :height * 0.258
+	right 105
+	jumpForward :height * 0.29
+	left 35
+	jumpForward :height * 0.05
+	right 60
+	jumpForward :height * 0.13
+	left 27
+	jumpForward :height * 0.5
+	right 177
+	jumpForward :height * 0.35
+	left 160
+	jumpForward :height * 0.15
+	right 174
+	jumpForward :height * 0.22
+	left 10
+	jumpForward :height * 0.1
+	right 15
+	jumpForward :height * 0.12
+	left 50
+	jumpForward :height * 0.04
+	right 40
+	jumpForward :height * 0.12
+	left 135
+	jumpForward :height * 0.1
+	right 155
+	jumpForward :height * 0.2
+	left 145
+	jumpForward :height * 0.11
+	left 70
+	jumpForward :height * 0.02
+	right 50
+	jumpForward :height * 0.05
+	right 20
+	jumpForward :height * 0.1
+	right 28
+	jumpForward :height * 0.08
+	left 50
+	jumpForward :height * 0.05
+	right 25
+	jumpForward :height * 0.08
+	left 20
+	jumpForward :height * 0.1
+	right 112
+	jumpForward :height * 0.16
+	left 30
+	jumpForward :height * 0.12
+	left 95
+	jumpForward :height * 0.07
+	right 80
+	jumpForward :height * 0.22
+	left 80
+	jumpForward :height * 0.05
+	right 44
+	jumpForward :height * 0.19
+	right 150
+	jumpForward :height * 0.11
+	left 95
+	jumpForward :height * 0.05
+	polyEnd
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.31
+	jumpLeft :height * 0.242
+	right 42
+	polyStart
+	jumpForward :height * 0.13
+	right 60
+	jumpForward :height * 0.1
+	right 60
+	jumpForward :height * 0.08
+	right 135
+	jumpForward :height * 0.11
+	polyEnd
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.22
+	jumpRight :height * 0.08
+	polyStart
+	right 10
+	jumpForward :height * 0.15
+	right 35
+	jumpForward :height * 0.06
+	left 32
+	jumpForward :height * 0.08
+	right 60
+	jumpForward :height * 0.035
+	right 120
+	jumpForward :height * 0.14
+	right 35
+	jumpForward :height * 0.07
+	polyEnd
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.23
+	jumpRight :height * 0.65
+	left 27
+	polyStart
+	jumpForward :height * 0.1
+	left 3
+	jumpForward :height * 0.15
+	left 8
+	jumpForward :height * 0.25
+	left 165
+	jumpForward :height * 0.2
+	polyEnd
+
+	setTurtleState :oldState
+end
+
+make "size 100
+make "separation :size * 4
+jumpLeft :separation
+everestTransportLogo1 :size
+jumpRight :separation
+everestTransportSystemsLogo :size
+jumpRight :separation
+everestTransportSystemsLogo2 :size

@@ -1,0 +1,51 @@
+; Inspired by a design from:
+; Moondala String Art
+; Her facebook page is at:
+; https://www.facebook.com/moondalastringart
+; Her website is:
+; https://www.moondalastringart.com/
+
+make "colors ["#1fff "#8fff "white "brown "black "purple 
+"violet "aqua "blue "green "#E3E38C "#B30000 "black "white]
+
+to moonDalaGradient1 :size :innerRatio
+	localmake "innerRatio2 1 - :innerRatio
+	localmake "colorStops createPList
+	repeat count :colors [
+		localmake "ratio (repcount - 1) / count :colors
+		localmake "c item repcount :colors
+		setProperty "colorStops 1 - :ratio * :innerRatio2 :c
+	]
+	setProperty "colorStops :innerRatio "black
+	localmake "gradient createRadialGradient pos pos :size :colorStops "pad
+	setFillGradient :gradient
+end
+
+to moondalaCircle :size :innerRatio
+	moonDalaGradient1 :size :innerRatio
+	circle :size
+end
+
+to moondala1 :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "size1 :size * 0.23
+	localmake "size2 :size1 * 1.1
+	setPenSize 0
+	moondalaCircle :size 0.5
+	right 180 / 3
+	repeat 2 [
+		repeat 3 [
+			setPos :oldPos
+			jumpForward :size2
+			moondalaCircle :size1 0.2
+			right 360 / 3
+		]
+		right 180 / 3
+	]
+	setHeading :oldHeading
+	setPos :oldPos
+end
+
+setScreenColor "#638378
+moondala1 100
