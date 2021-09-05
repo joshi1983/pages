@@ -1,0 +1,81 @@
+; gives the impression of thin smoke reflecting 
+; light of the fire
+to drawBackgroundFireshipGradient :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "colorStops createPList2 [
+		[0 "#3ffc] [1 "#0ffc]
+	]
+	jumpForward :height / 2
+	setPenGradient createRadialGradient pos :height :colorStops
+	jumpTo :oldPos
+	setLineCap "butt
+	setPenSize :height * 2
+	forward :height
+	setTurtleState :oldState
+end
+
+to getFireShipGradient :height :colorTop :colorRight
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "colorStops createPList2 [
+		[0 :colorTop] [1 :colorRight]
+	]
+	jumpForward :height
+	localmake "fromPos pos
+	right 120
+	jumpForward :height
+	localmake "result createLinearGradient :fromPos pos :colorStops "pad
+	setHeading :oldHeading
+	jumpTo :oldPos
+	output :result
+end
+
+to getFireShipFillGradient :height
+	output getFireShipGradient :height "#fb8b41 "#f75f5a
+end
+
+to getBeyondFireShipFillGradient :height
+	output getFireShipGradient :height "#97fa47 "#5ef58a
+end
+
+to fireshipLogoCustomGradient :height :gradient
+	localmake "oldState turtleState
+	drawBackgroundFireshipGradient :height
+
+	setFillGradient :gradient
+	jumpRight :height * 0.1956
+	jumpForward :height * 0.002
+	setPenSize 0
+	polyStart
+	arcsLeft [[-22.5 0] [40 0.2] [131 0.004] [-28 0.29]
+	[-35 0.15] [-110 0.005] [20 0.2] [54 0.05] [2.2 4]
+	[-57 0.19] [136 0.007] [35 0.28] [15 0.4] [20 0.1]
+	[32 0.25] [-157 0.003] [-30 0.4] [-45 0.27] [-30 0.2]
+	[-15 0.88] [40.125 0.6467] [-122.3 0.01] [-30 1]
+	[-61.5 0.334] [140 0.005] [29 0.27] [25 0.15] [58 0.23]
+	[-155 0.005] [-30 0.3] [-20 0.4] [-30 0.22] [-54.42 0.38]
+	[-67 0.0026] [-65 0.0012]] :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by logo at
+; https://www.youtube.com/@Fireship
+to fireShipLogo :height
+	fireshipLogoCustomGradient :height getFireShipFillGradient :height
+end
+
+; Inspired by logo at
+; https://www.youtube.com/@beyondfireship
+to beyondFireshipLogo :height
+	fireshipLogoCustomGradient :height getBeyondFireShipFillGradient :height
+end
+
+setScreenColor "black
+make "height 100
+make "separation :height * 5
+jumpLeft :separation / 2
+fireShipLogo :height
+jumpRight :separation
+beyondFireshipLogo :height

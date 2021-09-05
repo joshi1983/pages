@@ -1,0 +1,37 @@
+make "usBlue "#0A1F61
+
+; Inspired by
+; https://www.transportation.gov
+to usdTransportationLogo :height :color
+	localmake "oldState turtleState
+	localmake "shape [-0.206 0.44 
+		[[-57 0] [-20 0.35] [-20 0.46] [-20 0.54] [-17 0.38]
+		[-20 0.55] [-28 0.29] [-30 0.2] [-155 0.176] [0.065]
+		[90 0.25] [16.7 0.41]
+		]
+	]
+	jumpForward :height / 2
+	setPenSize 0
+	setFillColor :color
+	repeat 3 [
+		drawArcLineShape :shape :height
+		right 120
+	]
+	setTurtleState :oldState
+end
+
+to usdtCustomBackgroundLogo :height :foregroundColor :backgroundColor
+	localmake "oldPos pos
+	localmake "innerHeight :height * 0.8
+	stripes :height :height [:backgroundColor]
+	jumpForward (:height - :innerHeight) / 2
+	usdTransportationLogo :innerHeight :foregroundColor
+	jumpTo :oldPos
+end
+
+make "height 100
+make "separation :height * 5
+jumpLeft :separation * 0.5
+usdTransportationLogo :height :usBlue
+jumpRight :separation
+usdtCustomBackgroundLogo :height "white :usBlue

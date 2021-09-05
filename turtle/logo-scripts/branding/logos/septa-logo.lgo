@@ -1,0 +1,43 @@
+; Inspired by logo at:
+; https://www.septa.org
+to septaLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "width :height * 1.35
+	localmake "colors ["#EA0029 "#00539F]
+	localmake "innerHeight 0.92
+	localmake "innerCornerRadius 0.12
+	localmake "angle1_ 45
+	localmake "angle1 180 - :angle1_
+	localmake "angle2 180 - :angle1_ * 2
+	localmake "len1 :innerHeight / 3 / sin :angle1_
+	localmake "tinyRadius 0.045
+	localmake "tinyHeight 0.253
+	localmake "len2 (:tinyHeight - :tinyRadius * (1 - cos :angle1_)) / sin :angle1_
+	localmake "centerLines1 [
+		[0.04] [-:angle1_ :tinyRadius] [:len2] [:angle1_ - 180 0]
+	]
+	jumpForward :height / 2
+	setPenSize 0
+	setFillColor "white
+	roundRect :width :height :height * 0.16
+	repeat 2 [
+		setHeading :oldHeading + repcount * 360 / 2
+		setFillColor item repcount :colors
+		drawArcLineShape [-0.25 -:innerHeight / 2
+			[[90 0] [0.27] [-90 :innerCornerRadius]
+			[:innerHeight - :innerCornerRadius * 2] [-90 :innerCornerRadius]
+			[0.295] [-:angle1 0] [:len1] [:angle2 0] [:len1]
+			[:angle1_ 0] [0.41]
+			]
+		] :height
+	]
+	setFillColor first :colors
+	drawArcLineShape [-0.158 :tinyHeight / 2
+		(combine [[-90 0]] :centerLines1 :centerLines1)
+		] :height
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+septaLogo 100
