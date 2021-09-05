@@ -1,0 +1,71 @@
+; Inspired by
+; https://www.pinterest.ca/pin/841469511643019348/
+; This is an attempt to convert a technical drawing
+; into WebLogo code.
+
+to coatHanger :scale
+	localmake "generalPenSize :scale * 4
+	localmake "angle1 130
+	localmake "angle2 (180 - :angle1) * 0.5
+	localmake "angle3 90 + :angle2
+	localmake "angle4 37
+	localmake "angle5 90 - (:angle4 * 0.5 + :angle2) 
+	localmake "angle6 90 - :angle4 * 0.5
+	localmake "angle7 360 - :angle4
+	localmake "size1 23.5 * :scale
+	localmake "size2 9.75 * :scale
+	localmake "size3 190 * :scale
+	localmake "arcRadius1 19 / 2 * :scale
+	localmake "tangentGap :arcRadius1 * sin :angle2
+	localmake "size4 (((:size3 - :size1) * 0.5 + :tangentGap) / cos :angle2) - :size2
+	setPenSize :generalPenSize
+	arcRight 180 11.5 * :scale
+	forward 14 * :scale
+	right 45
+	forward 10 * :scale
+	arcLeft 45 8 * :scale
+	forward 5.5 * :scale
+	; eyeballing the 5.5 because 
+	; I don't know the value by reading the technical drawing
+	;
+	; The drawing's numbers lead me to calculate:
+	; 19.25 - 9.75 = 9.5.
+	; 9.5 looks completely inconsistent from the drawing, 
+	; though. 
+
+	jumpRight :size1 * 0.5
+	left 90
+	repeat 2 [
+		forward :size1
+		arcRight 180 :size2
+	]
+	closePath
+	setPenSize 0
+	right 180
+	arcLeft :angle3 :size2
+	right 90
+	setPenSize :generalPenSize
+	forward :size4
+	setPenSize 0
+	arcLeft :angle5 :arcRadius1
+	right 180
+	setPenSize :generalPenSize
+	arcRight :angle7 :arcRadius1
+	setPenSize 0
+	right 180
+	arcLeft :angle6 :arcRadius1
+	setPenSize :generalPenSize
+	forward :size3
+	setPenSize 0
+	arcLeft :angle6 :arcRadius1
+	left 180
+	setPenSize :generalPenSize
+	arcRight :angle7 :arcRadius1
+	setPenSize 0
+	right 180
+	arcLeft :angle5 :arcRadius1
+	setPenSize :generalPenSize
+	forward :size4
+end
+
+coatHanger 1

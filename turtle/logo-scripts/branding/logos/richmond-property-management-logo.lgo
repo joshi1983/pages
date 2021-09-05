@@ -1,0 +1,127 @@
+to drawBase :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "squareSize :height * 0.144
+	localmake "width :height * 1.02
+	jumpForward penSize / 2 + :squareSize * cos 45
+	left 45
+	setFillColor "white
+	rect :squareSize :squareSize
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.032
+	jumpLeft :width / 2
+	repeat 2 [
+		localmake "sign sign 1.5 - repcount
+		localmake "pos1 pos
+		repeat 2 [
+			arcLines [[-68.5 0] [29.5 1.38]] :height * :sign
+			jumpTo :pos1
+			setHeading :oldHeading + 6 * :sign
+		]
+		setHeading :oldHeading
+		jumpRight :width
+	]
+	setTurtleState :oldState
+end
+
+to getHeadingChangeFromArcLines :arcLinesInfo
+	localmake "result 0
+	repeat count :arcLinesInfo [
+		localmake "pair item repcount :arcLinesInfo
+		if 2 = count :pair [
+			localmake "result :result + first :pair
+		] 
+	]
+	output :result
+end
+
+to fillWhiteStrokeBlack :arcLinesInfo1 :arcLinesInfo2 :scale
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	
+	setPenSize 0
+	localmake "angle1 getHeadingChangeFromArcLines :arcLinesInfo1
+	localmake "angle2 getHeadingChangeFromArcLines :arcLinesInfo2
+	right :angle1 + 180
+	arcLines :arcLinesInfo1 :scale
+	localmake "startPoint pos
+	setFillColor "white
+	setHeading :oldHeading
+	localmake "arcLines (combine reverse flipAngles :arcLinesInfo1 
+		[[180 - :angle2 * 2 0]] :arcLinesInfo2)
+	drawArcLineShape [0 0 :arcLines] :scale
+	setTurtleState :oldState
+	jumpTo :startPoint
+	arcLines :arcLines :scale
+	setTurtleState :oldState
+end
+
+to drawFloorLines :angle :maxLen :numLines
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "gap :maxLen * 0.34
+	localmake "lineLength :maxLen - :gap
+	localmake "separation :maxLen * 0.675
+	jumpForward :maxLen * 0.24
+	repeat :numLines [
+		jumpBackward :separation
+		right :angle
+		jumpForward :gap
+		forward :lineLength
+		jumpBackward :maxLen
+		setHeading :oldHeading
+	]	
+	setTurtleState :oldState
+end
+
+to drawBuildings :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "buildings [
+		[0.01 1 - penSize / 2 / :height 0.42 0.42 5 [0.27 0.045 0.03 0.053 0.09]]
+		[-0.2 0.7 0.52 0.16 2 [0.305 0.045 0.02 0.035 0.04]]
+		[0.24 0.755 0.25 0.6 5 [0.38 0.045 0.06]]
+	]
+	localmake "angle1 116
+	repeat count :buildings [
+		localmake "buildingInfo item repcount :buildings
+		localmake "topFactor item 2 :buildingInfo
+		jumpForward :height * :topFactor
+		jumpRight :height * first :buildingInfo
+		fillWhiteStrokeBlack [[0.165] [180 - :angle1 0] [item 3 :buildingInfo]]
+			[[0.17] [:angle1 - 180 0] [item 4 :buildingInfo]] :height
+		drawFloorLines :angle1 :height * 0.13 item 5 :buildingInfo
+		localmake "verticalLineInfo last :buildingInfo
+		repeat count :verticalLineInfo [
+			localmake "len :height * item repcount :verticalLineInfo
+			ifelse even? repcount [
+				penUp
+			] [
+				penDown
+			]
+			backward :len
+		]
+		penDown
+		jumpTo :oldPos
+		setHeading :oldHeading
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://richmondpm.ca
+to richmondPropertyManagementLogo :height
+	localmake "oldState turtleState
+	setPenColor "black
+	setLineCap "round
+	setLineJoinStyle "round
+	setPenSize :height * 0.015
+	drawBuildings :height
+	drawBase :height
+	setTurtleState :oldState
+end
+
+richmondPropertyManagementLogo 100
