@@ -1,0 +1,423 @@
+; Inspired by photo at:
+; https://detroit.fandom.com/wiki/Renaissance_Center
+; The Renaissance Center is an office building in downtown 
+; Detroit, Michigan, United States.
+; General Motors has some of its top offices in the Renaissance Center.
+
+; This is roughly how the building looks from 
+; across the river and border in Windsor, Ontario, Canada.
+
+make "towerDarkBlue "#445674
+make "towerLightBlue "#849DC8
+make "towerEllipseArcColor "#445674
+
+to backgroundTower :drawingHeight
+	localmake "oldState turtleState
+	setFillColor "#7E879A
+	jumpRight :drawingHeight * 0.03
+	setPenSize 0
+	polyStart
+	jumpRight :drawingHeight * 0.07
+	jumpForward :drawingHeight * 0.61
+	left 104
+	jumpForward :drawingHeight * 0.14
+	polyEnd
+	setTurtleState :oldState
+end
+
+to shadow :height1 :height2 :width
+	localmake "oldState turtleState
+	localmake "angle arcTan (:height2 - :height1) / :width
+	setFillColor "#4004
+	polyStart
+	jumpRight :width
+	jumpForward :height2
+	left 90 + :angle
+	jumpForward :width / cos :angle
+	polyEnd
+	setTurtleState :oldState
+end
+
+to darkLines :height1 :height2 :width :numLines
+	localmake "oldState turtleState
+	localmake "step :width / :numLines
+	repeat :numLines [
+		localmake "height mix :height2 :height1 repRatio
+		stripes :width * 0.1 / :numLines :height ["#6000] 
+		jumpRight :step
+	]
+	setTurtleState :oldState
+	jumpRight :width
+	darkLines2 :height1 :height2 :width
+	setTurtleState :oldState
+end
+
+to darkLines2 :height1 :height2 :width
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "numLines 40
+	localmake "step2 :height2 / :numLines
+	localmake "step1 :height1 / :numLines
+	setPenSize 0
+	setFillColor "#1000
+	repeat :numLines [
+		localmake "angle arcTan (:step2 - :step1) * repcount / :width
+		localmake "pos1 pos
+		polyStart
+		jumpForward :step2 / 2
+		left 90 + :angle
+		jumpForward :width / cos :angle
+		setHeading :oldHeading
+		jumpBackward :step1 / 2
+		polyEnd
+		jumpTo :pos1
+		setHeading :oldHeading
+		jumpForward :step2
+	]
+	setTurtleState :oldState
+end
+
+to horizontalGradient :sideColor :middleColor :width
+	localmake "colorStops createPList2 [
+		[0 :sideColor] [0.5 :middleColor] [1 :sideColor]
+	]
+	jumpLeft :width / 2
+	localmake "fromPos pos
+	jumpRight :width
+	setFillGradient createLinearGradient :fromPos pos :colorStops "pad
+	jumpLeft :width / 2
+end
+
+; Draws lots of elliptical arcs
+; Used to give a cylindrical appearance
+to ellipses :maxElevation :longDiameter :maxRatio :numArcs
+	localmake "oldState turtleState
+	localmake "longRadius :longDiameter / 2
+	localmake "step :maxElevation / :numArcs
+	repeat :numArcs [
+		localmake "shortRadius :maxRatio * :longRadius * repcount / :numArcs
+		ellipseArc 180 :longRadius :shortRadius 90
+		jumpForward :step
+	]
+	setTurtleState :oldState
+end
+
+to elevatorShaftOpening :height :width
+	localmake "oldPos pos
+	localmake "gapSize :height * 0.01
+	localmake "step1 :height / 4 - :gapSize
+	stripes :width :height ["#ccc]
+	setLineCap "butt
+	setPenColor "#888
+	setPenSize :width * 0.5
+	repeat 4 [
+		jumpForward :gapSize
+		forward :step1
+	]
+	jumpTo :oldPos
+end
+
+; Gives the impression of the "GM" signage 
+; at the top of the central tower
+to topSignage :drawingHeight
+	localmake "oldState turtleState
+	localmake "signHeight :drawingHeight * 0.033
+	localmake "innerSignHeight :signHeight * 0.6
+	localmake "oldHeading heading
+	localmake "leftAngle 60
+	localmake "leftWidthRatio 0.6
+	localmake "rightAngle 42
+	jumpForward :drawingHeight * 0.897
+	localmake "middlePos pos
+	jumpLeft :drawingHeight * 0.08
+	setPenSize 0
+	setFillColor "#369
+	; left sign
+	polyStart
+	arcLines [[1] [-:leftAngle 0] [:leftWidthRatio]] :signHeight
+	setHeading :oldHeading + 180
+	jumpForward :signHeight
+	polyEnd
+	setPenSize :signHeight * 0.1
+	setPenColor "#4fff
+	backward :signHeight
+	setFillColor "#6391BF
+	setPenSize :signHeight * 0.05
+	setPenColor "#775588aa
+	drawArcLineShape [0.25 0.33333
+		[[1] [-:leftAngle 0] [:leftWidthRatio * 0.95] [-120 0]
+		[1]]] :innerSignHeight
+
+	; right sign
+	setPenColor "#2E577F
+	setPenSize :signHeight * 0.1
+	jumpTo :middlePos
+	setHeading :oldHeading
+	jumpForward :signHeight * 1.2
+	jumpRight :drawingHeight * 0.07
+	backward :signHeight * 0.9
+	right 90 + :rightAngle
+	forward :signHeight * 0.6
+	setHeading :oldHeading
+	jumpForward :signHeight * 0.25
+	jumpLeft :signHeight * 0.03
+	setPenSize :signHeight * 0.05
+	setPenColor "#77517DA9
+	setFillColor "#6E99C4
+	polyStart
+	jumpForward :signHeight * 0.55
+	left :rightAngle
+	jumpForward :signHeight * 0.4
+	setHeading :oldHeading
+	jumpBackward :signHeight * 0.6
+	polyEnd
+
+	setPenColor "#6fff
+	setPenSize :drawingHeight * 0.006
+	jumpTo :middlePos
+	setHeading :oldHeading
+	jumpBackward :drawingHeight * 0.035
+	ellipseArc 180 :drawingHeight * 0.09 :drawingHeight * 0.045 90
+	setTurtleState :oldState
+end
+
+to centerTower :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "width :height * 0.172
+	localmake "arcAngle1 62
+	localmake "arcAngle2 180 - 2 * :arcAngle1
+	localmake "elevatorShaftWidth :height * 0.032
+	localmake "elevatorShaftRatio :elevatorShaftWidth / :width
+	localmake "height1 :height * 0.922
+	localmake "elevatorShaftHeight :height * 0.99
+	localmake "towerLines1 [
+		[-62 0.03] [-:arcAngle2 / 2 0.15]
+	]
+	localmake "towerLines combine :towerLines1 reverse :towerLines1
+	setFillColor :towerDarkBlue
+	jumpLeft :height * 0.04
+	localmake "middlePos pos
+	horizontalGradient :towerDarkBlue :towerLightBlue :width
+	setPenSize :height * 0.001
+	jumpLeft :width / 2
+	polyStart
+	jumpForward :height1
+	arcLines :towerLines :height
+	jumpForward :height1
+	polyEnd
+
+	setPenColor :towerEllipseArcColor
+	jumpTo :middlePos
+	setHeading :oldHeading
+	ellipses :height * 0.86 :width 0.45 60
+	jumpTo :middlePos
+	topSignage :height
+
+	jumpTo :middlePos
+	setHeading :oldHeading
+	jumpRight :height * 0.008
+	localmake "elevatorMiddlePos pos
+	horizontalGradient :towerDarkBlue :towerLightBlue :elevatorShaftWidth
+	jumpLeft :elevatorShaftWidth / 2
+	polyStart
+	jumpForward :elevatorShaftHeight
+	arcLines :towerLines :height * :elevatorShaftRatio
+	jumpForward :elevatorShaftHeight
+	polyEnd
+	jumpTo :elevatorMiddlePos
+	setHeading :oldHeading
+	ellipses :height * 0.98 :elevatorShaftWidth 0.5 60
+	setTurtleState :oldState
+end
+
+to getForegroundPenGradient :width
+	localmake "oldPos pos
+	localmake "colorStops createPList2 [
+		[0 "#0fff] [0.6 "#2fff] [0.65 "#ffff]
+		[0.7 "#3fff] [1 "#1fff]
+	]
+	jumpLeft :width / 2
+	localmake "fromPos pos
+	jumpRight :width
+	localmake "result createLinearGradient :fromPos pos :colorStops "pad
+	jumpTo :oldPos
+	output :result
+end
+
+; Draws the lower foreground building
+; This includes a large glass room that is semitransparent.
+to foreground :drawingHeight
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "oldPos pos
+	localmake "colorStripes [
+		["#81898f 0.02] ["#ddd 0.03] ["#778c99 0.05]]
+	localmake "height1 :drawingHeight * 0.1
+	localmake "width1 :drawingHeight * 0.25
+	localmake "angle1 18
+	localmake "angle2 72
+	localmake "arcAngle1 15
+	localmake "arcAngle2 180 - 2 * (:angle2 + :arcAngle1 - :angle1)
+	localmake "width2 :drawingHeight * 0.18
+	setPenSize :drawingHeight * 0.4
+	setPenColor "#888
+	forward :drawingHeight * 0.1
+	jumpTo :oldPos
+	jumpLeft :drawingHeight * 0.33
+	setPenSize :drawingHeight * 0.4
+	repeat 2 [
+		localmake "pos1 pos
+		repeat count :colorStripes [
+			localmake "stripeInfo item repcount :colorStripes
+			setPenColor item 1 :stripeInfo
+			forward :drawingHeight * item 2 :stripeInfo
+		]
+		jumpTo :pos1
+		jumpRight :drawingHeight * 0.65
+	]
+	setPenColor "#99acb8
+	setPenSize :drawingHeight * 0.04
+	jumpTo :oldPos
+	jumpLeft :drawingHeight * 0.012
+	localmake "middlePos pos
+	jumpLeft :width1 / 2 + :drawingHeight * 0.012
+	forward :height1
+	jumpBackward :height1
+	jumpRight :width1
+	forward :height1
+	jumpTo :middlePos
+
+	setPenGradient getForegroundPenGradient :width2
+	setFillColor "#dd638182
+	setPenSize :drawingHeight * 0.001
+	localmake "lobbyArcs1 [[0.145] [-72 0] [-15 0.33] [-:arcAngle2 / 2 0.17]]
+	jumpLeft :width2 / 2
+	left :angle1
+	polyStart
+	arcLines :lobbyArcs1 :drawingHeight
+	arcLines reverse :lobbyArcs1 :drawingHeight
+	polyEnd
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	setPenColor "#888
+	setPenSize :drawingHeight * 0.8
+	forward :drawingHeight * 0.02
+	jumpForward :drawingHeight * 0.04
+	setPenColor "#8def
+	setPenSize :drawingHeight * 0.28
+	forward :drawingHeight * 0.002
+	setTurtleState :oldState
+end
+
+to leftTower :drawingHeight
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "elevatorShaftWidth :drawingHeight * 0.057
+	setFillColor "#889
+	setPenSize 0
+	jumpLeft :drawingHeight * 0.38
+	localmake "bottomLeftPos pos
+	drawArcLineShape [0 0 
+		[[0.75] [-70 0] [0.14] [-42 0] [0.112] [112 0] [-0.745]]
+		] :drawingHeight
+
+	darkLines :drawingHeight * 0.75 :drawingHeight * 0.785 :drawingHeight * 0.1 20
+	jumpRight :drawingHeight * 0.04
+	shadow :drawingHeight * 0.65 :drawingHeight * 0.8 :drawingHeight * 0.05
+	jumpRight :drawingHeight * 0.1
+	darkLines :drawingHeight * 0.795 :drawingHeight * 0.755 :drawingHeight * 0.095 20
+
+	jumpTo :bottomLeftPos
+	setHeading :oldHeading
+	jumpRight :drawingHeight * 0.113
+	horizontalGradient :towerDarkBlue :towerLightBlue :elevatorShaftWidth
+	drawArcLineShape [:elevatorShaftWidth * -0.51 / :drawingHeight 0
+		[[0.84] [-45 0] [-90 0.041] [135 0] [-0.84]]] :drawingHeight
+
+	setPenColor :towerEllipseArcColor
+	setPenSize :drawingHeight * 0.001
+	ellipses :drawingHeight * 0.84 :elevatorShaftWidth 0.4 60
+
+	jumpForward :drawingHeight * 0.15
+	elevatorShaftOpening :drawingHeight * 0.27 :elevatorShaftWidth * 0.5
+	setTurtleState :oldState
+end
+
+to rightTower :drawingHeight
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "elevatorShaftWidth :drawingHeight * 0.057
+	setFillColor "#889
+	setPenSize 0
+	jumpRight :drawingHeight * 0.09
+	localmake "bottomLeftPos pos
+	drawArcLineShape [0 0
+		[[0.75] [-73 0] [0.14] [-42 0] [0.112] [115 0] [-0.745]]
+		] :drawingHeight
+
+	darkLines :drawingHeight * 0.75 :drawingHeight * 0.785 :drawingHeight * 0.12 20
+
+	jumpRight :drawingHeight * 0.04
+	shadow :drawingHeight * 0.62 :drawingHeight * 0.78 :drawingHeight * 0.07
+
+	jumpTo :bottomLeftPos
+	setHeading :oldHeading
+	jumpRight :drawingHeight * 0.138
+	localmake "middlePos pos
+	horizontalGradient :towerDarkBlue :towerLightBlue :elevatorShaftWidth
+	jumpLeft :elevatorShaftWidth * 0.51
+	polyStart
+	arcLines [[0.82] [-45 0] [-90 0.043] [135 0] [-0.82]] :drawingHeight
+	polyEnd
+
+	setPenColor :towerEllipseArcColor
+	jumpTo :middlePos
+	setHeading :oldHeading
+	setPenSize :drawingHeight * 0.001
+	ellipses :drawingHeight * 0.82 :elevatorShaftWidth 0.4 60
+	jumpForward :drawingHeight * 0.14
+	jumpRight :drawingHeight * 0.015
+	elevatorShaftOpening :drawingHeight * 0.27 :elevatorShaftWidth * 0.5
+	jumpTo :middlePos
+	jumpRight :elevatorShaftWidth * 0.6
+	darkLines :drawingHeight * 0.77 :drawingHeight * 0.74 :drawingHeight * 0.063 20
+
+	setTurtleState :oldState
+end
+
+; Gives impression of water at the bottom
+; Fades to transparent for a soft visual effect
+to water :drawingHeight
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "angle 50
+	localmake "width :drawingHeight * 1.1
+	localmake "arcRadius :width / 2 / sin :angle / 2
+	localmake "colorStops createPList2 [
+		[0 "#A4D8E5] [0.9 "#A4D8E5] [1 "#00A4D8E5]
+	]
+	jumpForward :arcRadius * cos :angle / 2
+	setFillGradient createRadialGradient pos :arcRadius :colorStops
+	jumpTo :oldPos
+	setPenSize 0
+	jumpLeft :width / 2
+	right 90 + :angle / 2
+	polyStart
+	arcLeft :angle :arcRadius
+	polyEnd
+	setTurtleState :oldState
+end
+
+to renaissanceCenter :height
+	setLineCap "butt
+	water :height
+	backgroundTower :height
+	centerTower :height
+	leftTower :height
+	rightTower :height
+	foreground :height
+end
+
+renaissanceCenter 100

@@ -1,0 +1,27 @@
+' copied from: https://www.bamsoftware.com/hacks/qbasic/index.html
+CLS
+SCREEN 13
+COLOR 9
+FOR a = 0 TO 320
+cx = -2 + a / 80
+FOR b = 0 TO 200
+cy = 2 - b / 50
+x0 = 0
+y0 = 0
+FOR i = 1 TO 20
+x1 = x0 * x0 - y0 * y0 + cx
+y1 = 2 * x0 * y0 + cy
+IF x1 * x1 + y1 * y1 > 4 THEN GOTO 160
+x0 = x1
+y0 = y1
+PSET (a, b), x1 * x1 + y1 * y1 + 39
+NEXT i
+PSET (a, b), x1 * x1 + y1 * y1
+160 NEXT b
+NEXT a
+' CHAIN "C:\dos\bmper.bas"
+DECLARE SUB bmper
+bmper
+
+DO WHILE INKEY$ = ""
+LOOP

@@ -1,0 +1,103 @@
+make "colors ["red "orange "#090 "#08f "purple "brown "black]
+
+to drawColorfulSquare :height :index :indexLimit
+	localmake "indexLimitInt floor :indexLimit
+	if and :index <= 1 + :indexLimitInt :index <= count :colors [
+		localmake "oldState turtleState
+		localmake "oldHeading heading
+		localmake "offset :height / 2 + :height / 6
+		localmake "oldPos pos
+		localmake "limit 3
+		ifelse :index = 1 [
+			localmake "limit 4
+		] [
+			if :index < count :colors [
+				jumpBackward :height / 3
+				jumpLeft :height
+				repeat 2 [
+					drawColorfulSquare :height / 3 :index + 1 :indexLimit
+					jumpRight :height * 2
+				]
+				jumpTo :oldPos
+				jumpBackward :height / 2 - :height / 18
+				localmake "separation :height + :height / 3
+				jumpLeft :separation / 2
+				repeat 2 [
+					drawColorfulSquare :height / 9 :index + 2 :indexLimit
+					jumpRight :separation
+				]
+				jumpTo :oldPos
+			]
+		]
+		left 90
+		repeat :limit [
+			jumpForward :offset
+			drawColorfulSquare :height / 3 :index + 1 :indexLimit
+			right 90
+			jumpTo :oldPos
+		]
+		setFillColor item :index :colors
+		if :index >= :indexLimitInt [
+			setFillColor mix fillColor transparent clamp 1 - (:index - :indexLimit) 0 1
+		]
+		setHeading :oldHeading
+		rect :height :height
+		if :index > 1 [
+			jumpBackward :height * 0.5
+			rect :height :height
+		]
+		setTurtleState :oldState
+	]
+end
+
+; Inspired by:
+; https://www.youtube.com/watch?v=5hSQVK1H2Dw
+to squareFractal :height :timeRatio
+	localmake "oldState turtleState
+	localmake "whiteStartTime 0.5
+	localmake "size :height * cos 45
+	jumpForward :height / 2
+
+	setPenSize 0
+	ifelse :timeRatio < :whiteStartTime [
+		localmake "timeRatio :timeRatio / :whiteStartTime
+		localmake "timeRatio1 :timeRatio * 2
+		localmake "indexLimit :timeRatio1 * (count :colors)
+		localmake "indexLimit clamp :indexLimit 1 count :colors
+
+		drawColorfulSquare :height / 2 1 :indexLimit 
+	] [
+		localmake "timeRatio (:timeRatio - :whiteStartTime) / (1 - :whiteStartTime)
+		localmake "mixRatio clamp 1 - :timeRatio 0 1
+		repeat count :colors [
+			setItem repcount "colors mix (item repcount :colors) "white :mixRatio
+		]
+		left 45
+		setFillColor "black
+		rect :size :size
+		right 45
+		drawColorfulSquare :height / 2 1 count :colors
+	]
+	setTurtleState :oldState
+end
+
+make "timeRatio interpolateRatio easeInOut animation.timeRatio
+make "timeRatio clamp :timeRatio * 1.2 0 1
+squareFractal 100 :timeRatio
+
+to animation.snapshotstyle
+	output createPList2 [
+		["position.y 50]
+		["zoom.scale 7]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 10
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+		["thumbnailTimeStamp 4]
+	]
+end

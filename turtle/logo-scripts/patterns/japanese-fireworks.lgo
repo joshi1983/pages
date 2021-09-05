@@ -1,0 +1,104 @@
+to drawSparks :radius :color
+	localmake "oldState turtleState
+	localmake "colorStops createPList2 [
+		[0 "white] [0.15 "white] [1 :color]
+	]
+	setFillGradient createRadialGradient pos :radius :colorStops
+	setPenSize 0
+	isotoxalStar :radius * 0.8 :radius * 0.3 24
+	isotoxalStar :radius :radius * 0.08 4
+	setTurtleState :oldState
+end
+
+to drawLifter :height :color
+	localmake "oldState turtleState
+	localmake "bottomPos pos
+	localmake "oldHeading heading
+	localmake "topArcRadius :height * 0.55
+	localmake "width :height
+	localmake "topArcAngle 2 * arcSin :width / 2 / :topArcRadius
+	localmake "topThickness :topArcRadius * (1 - cos :topArcAngle / 2)
+	localmake "innerArcAngle 60
+	localmake "innerArcRadius :width / 3 / 2 / sin :innerArcAngle / 2
+	localmake "arcAngle 30
+	jumpForward :height - :topThickness
+	jumpLeft :width / 2
+
+	; We don't want white because we want it to appear
+	; darker than the sparklers.
+	setFillColor mix "#888 :color 0.8
+	setPenSize 0
+	right 90 - :topArcAngle / 2
+	polyStart
+	arcRight :topArcAngle :topArcRadius
+	right 180 + (:innerArcAngle - :topArcAngle) / 2
+	localmake "connectionPoints [pos]
+	repeat 3 [
+		arcLeft :innerArcAngle :innerArcRadius
+		right :innerArcAngle
+		queue2 "connectionPoints pos
+	]		
+	polyEnd
+	setPenSize :height * 0.01
+	setPenColor mix "white :color 0.8
+	repeat count :connectionPoints [
+		localmake "endPoint item repcount :connectionPoints
+		jumpTo :bottomPos
+		setHeading towards :endPoint
+		forward distance :endPoint
+	]
+	jumpTo :bottomPos
+	setHeading :oldHeading
+	jumpForward :height - penSize / 2
+	localmake "topPos pos
+	setLineCap "round
+	setLineJoinStyle "round
+	setPenColor "#6000
+	for ["i 2 3] [
+		localmake "sign sign :i - 2.5
+		localmake "nextPos item :i :connectionPoints
+		localmake "arcRadius (distance :nextPos) / 2 / sin :arcAngle / 2
+		setHeading towards :nextPos
+		left -:arcAngle / 2 * :sign
+		arcLeft :sign * :arcAngle :arcRadius
+		jumpTo :topPos
+	]
+	setTurtleState :oldState
+end
+
+to drawFloatingSparkler :height :color
+	localmake "oldState turtleState
+	localmake "sparkRadius :height * 0.15
+	localmake "lifterHeight :height * 0.26
+	localmake "stringLength :height - :lifterHeight - :sparkRadius
+
+	jumpForward :sparkRadius
+	stripes :height * 0.002 :stringLength [mix "white :color 0.8]
+	drawSparks :sparkRadius :color
+	jumpForward :stringLength
+	drawLifter :lifterHeight :color
+	setTurtleState :oldState
+end
+
+; Inspired by:
+;https://www.pinterest.ca/pin/527695281336627104/
+to japaneseSparklers :height
+	localmake "oldState turtleState
+	localmake "numSparklers 35
+	localmake "sparklerHeight :height * 0.7
+	localmake "sparklerSeparation :sparklerHeight * 0.35
+	localmake "offset (:height - :sparklerHeight) 
+	localmake "colors ["blue "red "white]
+	jumpForward :offset
+	jumpLeft (:numSparklers - 1) * :sparklerSeparation / 2
+	repeat :numSparklers [
+		localmake "colorIndex 1 + remainder repcount count :colors
+		jumpForward ifelse even? repcount :offset -:offset
+		drawFloatingSparkler :sparklerHeight item :colorIndex :colors
+		jumpRight :sparklerSeparation 
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+japaneseSparklers 100
