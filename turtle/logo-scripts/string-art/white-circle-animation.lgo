@@ -1,0 +1,66 @@
+; Inspired by
+; https://www.pinterest.ca/pin/1196337391651767/
+; The animation looks most like the pinterest image at 2 seconds.
+
+to circleStringArt :radius :time
+	localmake "oldPos pos
+	localmake "numPoints 2000
+	localmake "points []
+	localmake "offset int (:numPoints * 0.25)
+	localmake "skipPeriod 4
+	localmake "skipPeriod2 6
+	circle :radius
+	repeat :numPoints [
+		jumpTo :oldPos
+		jumpForward :radius
+		queue2 "points pos
+		left 360 / :numPoints
+	]
+	repeat :numPoints [
+		localmake "fromPoint item repcount :points
+		localmake "index 1 + remainder int (repcount * :time) :numPoints
+		localmake "toPoint1 item :index :points
+		localmake "toPoints [:toPoint1]
+		if and (0 <> remainder repcount :skipPeriod) (0 <> remainder repcount :skipPeriod2) [
+			localmake "index 1 + remainder int (:numPoints * 100 + :index - :offset) :numPoints
+			localmake "toPoint2 item :index :points
+			queue2 "toPoints :toPoint2
+		]
+		repeat count :toPoints [
+			localmake "toPoint item repcount :toPoints
+			jumpTo :fromPoint
+			setHeading towards :toPoint
+			localmake "distance distance :toPoint
+			if :distance > 0 [
+				forward :distance
+			]
+		]
+	]
+	jumpTo :oldPos
+end
+
+setPenSize 0.05
+setScreenColor "black
+setPenColor "#fff
+make "t clamp animation.time / animation.duration 0 1
+make "t interpolateRatio easeOutCirc interpolateRatio easeInOut :t
+make "t 7.419391 * :t
+make "t (power 1.7 :t) - 1
+
+circleStringArt 100 :t
+
+to animation.snapshotstyle
+	localmake "result createPList
+	setProperty "result "zoom.scale 2.6
+	output :result
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 20
+	; Edit this if you want to change the length of your animation.
+	localmake "result createPList
+	setProperty "result "duration :minutes * 60 + :seconds
+	setProperty "result "thumbnailTime 20
+	output :result
+end

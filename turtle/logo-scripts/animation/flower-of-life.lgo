@@ -1,0 +1,79 @@
+; Inspired by
+; https://www.youtube.com/watch?v=7hOMDy1l7Gs
+; Unlike that animation from dreamexplorer, this one
+; - Uses 2 colors to make the pattern look more sophisticated
+; - scales up from 1 common center.
+; - Uses easing to scale in at a changing rate to 
+; start and stop at a slower pace.
+
+to flowerOfLife :size :timeRatio
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	setPenSize :size * mix 0.004 0.0001 :timeRatio
+	localmake "radius (:size - penSize) / (2 * (1 + 4 * cos 30))
+	localmake "offset :radius * :timeRatio
+	jumpForward :size / 2
+	localmake "center pos
+	setFillColor transparent
+	setPenColor "red
+	repeat 6 [
+		localmake "heading1 :oldHeading + (repcount - 1.5) * 360 / 6
+		repeat 4 [
+			localmake "numCircles repcount
+			setHeading :heading1
+			jumpTo :center
+			jumpForward :offset	* repcount
+			right 30
+			repeat :numCircles [
+				circle :radius
+				jumpRight :offset
+			]
+		]
+	]
+	setPenColor "#d000
+	jumpTo :center
+	circle :radius
+	repeat 6 [
+		localmake "heading1 :oldHeading + (repcount - 1.5) * 360 / 6
+		repeat 4 [
+			localmake "numCircles repcount / 2
+			setHeading :heading1
+			jumpTo :center
+			jumpForward :offset * repcount
+			right 30
+			if even? repcount [
+				jumpRight :offset
+			]
+			repeat :numCircles [
+				circle :radius
+				jumpRight :offset * 2
+			]
+		]
+	]
+	setTurtleState :oldState
+end
+
+flowerOfLife 100 getTimeRatio
+
+to getTimeRatio
+	localmake "timeRatio clamp animation.time / animation.duration 0 1
+	localmake "timeRatio interpolateRatio easeInOut :timeRatio
+	output :timeRatio
+end
+
+to animation.snapshotstyle
+	localmake "scale mix 4 12 getTimeRatio
+	localmake "result createPList
+	setProperty "result "position.y 50
+	setProperty "result "zoom.scale :scale
+	output :result
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 12
+	; Edit this if you want to change the length of your animation.
+	localmake "result createPList
+	setProperty "result "duration :minutes * 60 + :seconds
+	output :result
+end

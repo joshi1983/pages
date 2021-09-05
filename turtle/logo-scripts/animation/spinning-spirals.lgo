@@ -1,0 +1,79 @@
+; Inspired by
+; https://www.pinterest.ca/pin/703756177203415/
+
+to spiral :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "numRepeats 30
+	localmake "minArcRadius :size * 0.05
+	localmake "maxArcRadius :size
+	localmake "angle1 483.65 / :numRepeats
+	localmake "maxAngle2 360
+	localmake "minAngle2 1
+	localmake "maxBigPenSize :size * 0.05
+	localmake "minBigPenSize :size * 0.015
+	localmake "smallPenSize :size * 0.02
+	localmake "mainPenColor "white
+	localmake "smallPenColorEven "#b03DC5FF
+	localmake "smallPenColorOdd "#b0A83DFF
+
+	setLineJoinStyle "round
+	repeat :numRepeats [
+		localmake "ratio repcount / :numRepeats
+		localmake "arcRadius mix :maxArcRadius :minArcRadius :ratio
+		localmake "angle2 mix :minAngle2 :maxAngle2 interpolateRatio easeOut :ratio
+		localmake "bigPenSize mix :minBigPenSize :maxBigPenSize :ratio
+		setPenSize :bigPenSize
+		setPenColor :mainPenColor
+		arcRight :angle1 :arcRadius
+		localmake "pos1 pos
+		localmake "heading1 heading
+		right 15
+		setPenSize :smallPenSize
+		ifelse even? repcount [
+			setPenColor :smallPenColorEven
+		] [
+			setPenColor :smallPenColorOdd
+		]
+		arcRight :angle2 :arcRadius
+		setHeading :heading1
+		jumpTo :pos1
+	]
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to spinningSpirals :size :angle
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "size1 :size * 0.5
+	localmake "size2 :size * 0.5
+	localmake "numSides 5
+	repeat :numSides [
+		jumpTo :oldPos
+		setHeading :oldHeading + repcount * 360 / :numSides
+		jumpForward :size1
+		right :angle
+		spiral :size2
+	]
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+setScreenColor "black
+spinningSpirals 100 animation.time * 360 / 3
+
+to animation.snapshotstyle
+	localmake "result createPList
+	setProperty "result "zoom.scale 2.7
+	output :result
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 3
+	; Edit this if you want to change the length of your animation.
+	localmake "result createPList
+	setProperty "result "duration :minutes * 60 + :seconds
+	output :result
+end

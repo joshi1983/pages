@@ -1,0 +1,625 @@
+to drawSmudge :smudgeInfo :scale
+	localmake "oldState turtleState
+	localmake "x :scale * first :smudgeInfo
+	localmake "y :scale * item 2 :smudgeInfo
+	localmake "smudgeRadius :scale * item 3 :smudgeInfo
+	localmake "opacity last :smudgeInfo
+	localmake "colorStops createPList
+	setProperty "colorStops 0 mix "#000 transparent :opacity
+	setProperty "colorStops 1 "#0000
+	jumpLeft :x
+	jumpForward :y
+	setFillGradient createRadialGradient pos :smudgeRadius :colorStops
+	setPenSize 0
+	circle :smudgeRadius
+	setTurtleState :oldState
+end
+
+to drawSmudges :smudgesInfo :scale
+	repeat count :smudgesInfo [
+		drawSmudge (item repcount :smudgesInfo) :scale
+	]
+end
+
+to drawNeckGradient :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "gradients []
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#fff
+	setProperty "colorStops 0.3 "#fff
+	setProperty "colorStops 0.7 "#8ddd
+	setProperty "colorStops 1 "#9ddd
+	jumpForward :height * 0.5
+	queue2 "gradients createLinearGradient :oldPos pos :colorStops "pad
+	jumpTo :oldPos
+	localmake "size1 :height * 0.24
+	jumpLeft :size1
+	localmake "fromPos pos
+	jumpRight :size1 * 2
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#0000
+	setProperty "colorStops 0.1 "#08000000
+	setProperty "colorStops 0.5 "#0000
+	setProperty "colorStops 0.9 "#08000000
+	setProperty "colorStops 1 "#0000
+	queue2 "gradients createLinearGradient :fromPos pos :colorStops "pad
+	setPenSize 0
+	jumpTo :oldPos
+	repeat count :gradients [
+		setFillGradient item repcount :gradients
+		isoTriangle :height * 0.5 :height * 0.6
+	]
+	setTurtleState :oldState
+end
+
+; These might be depicting waves in the hair,
+; long earings or they could be carotid arteries
+; Hard to tell with a drawing as laughably bad as Napoleon Dynamite's Trisha
+to drawEarings :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "oldPos pos
+	localmake "size1 :height * 0.018
+	localmake "size2 :height * 0.11
+	setPenSize :height * 0.005
+	setPenColor "#4000
+	setFillColor "#8ddd
+	jumpForward :height * 0.31
+	jumpRight :height * 0.124
+	left 5
+	ellipse :size1 :size2
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.31
+	jumpLeft :height * 0.155
+	right 5
+	ellipse :size1 :size2
+	setTurtleState :oldState
+end
+
+to drawHairBackground :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#ccc
+	setProperty "colorStops 0.84 "#ccc
+	setProperty "colorStops 0.86 "#999
+	setProperty "colorStops 0.94 "#ccc
+	setProperty "colorStops 0.98 "#ccc
+	setProperty "colorStops 1 "#0ccc
+	left 3
+	jumpForward :height
+	setFillGradient createLinearGradient :oldPos pos :colorStops "pad
+	setHeading :oldHeading
+	jumpTo :oldPos
+	setPenSize 0
+	jumpLeft :height * 0.37
+	right 7
+	polyStart
+	jumpForward :height * 0.5
+	arcsRight [[-10 0.1] [30 0.6] [8 0.4] [33 0.2] [10 1.1] [115 0.11]
+		[-100 0] [100 0.12] [-35 0.2] [45 0.15] [-40 0.2] [40 0.45] [70 0.05]] :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+to drawBackground :height
+	localmake "smudgesInfo [
+		[0.1 0.25 0.1 0.2] [0.13 0.32 0.05 0.2]
+		[0.144 0.264 0.05 0.2] [0.3 0.07 0.07 0.1]
+		[0.168 0.82 0.08 0.2] [-0.115 0.375 0.08 0.2]
+	]
+	drawHairBackground :height
+	drawNeckGradient :height
+	drawSmudges :smudgesInfo :height
+	drawEarings :height
+end
+
+; Napoleon says he spent about 3 hours shading the upper lip.
+; https://www.youtube.com/watch?v=jhiAHoKm9Mo
+; Hopefully, he and Trisha would like how the following procedure draws the lips.
+to drawLips :height
+	localmake "oldState turtleState
+	localmake "arcsInfo [
+		[20 0.1] [-20 0.07] [-20 0.14] [-34 0.05] [30 0.02]
+		[-153 0] [-20 0.16] [20 0.02] [-10 0.02] [-10 0.25] [10 0.16]
+		[-169 0] [-26 0.3]
+	]
+	jumpForward :height * 0.3957
+	jumpLeft :height * 0.0906
+	drawSmudges [[0 0 0.005 0.5] [-0.005 -0.005 0.02 0.1] [-0.01 -0.02 0.02 0.1]
+		[-0.02 -0.025 0.03 0.1]
+		[-0.03 0 0.008 0.2] [-0.04 0 0.01 0.2] [-0.05 0 0.01 0.2] 
+		[-0.04 -0.01 0.01 0.2] [-0.05 -0.01 0.01 0.2] [-0.06 -0.01 0.01 0.1]
+		[-0.07 -0.01 0.01 0.2]  [-0.1 -0.005 0.01 0.2]  
+		[-0.11 -0.003 0.01 0.2]  [-0.12 0 0.01 0.2] [-0.011 -0.01 0.01 0.1]
+	] :height
+	right 95
+	setLineCap "round
+	setLineJoinStyle "round
+	setPenColor "#8000
+	setPenSize :height * 0.002
+	arcsRight :arcsInfo :height
+	setTurtleState :oldState
+end
+
+to chinShadows :height
+	drawSmudges [
+		[0.02 0.353 0.01 0.1] [0.01 0.353 0.01 0.1] [0.01 0.353 0.015 0.1]
+		[0 0.355 0.01 0.1] [0.02 0.353 0.01 0.15] [0.025 0.353 0.01 0.1] [-0.01 0.36 0.01 0.15]
+		 [-0.005 0.36 0.01 0.1]
+		[0.009 0.336 0.02 0.2] [0.009 0.32 0.02 0.2]
+		[-0.0228 0.255 0.02 0.25] [-0.0165 0.243 0.01 0.2] [-0.0378 0.2655 0.015 0.2]
+		[-0.0478 0.2755 0.015 0.2] [-0.06 0.29 0.015 0.2] [-0.069 0.301 0.015 0.15]
+		[-0.075 0.31 0.015 0.15] [-0.0809 0.321 0.015 0.15]
+	] :height
+end
+
+to getLeftCheekBoneGradient :height
+	localmake "oldPos pos
+	localmake "gradientRadius :height * 0.13
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#0000
+	setProperty "colorStops 0.6 "#0000
+	setProperty "colorStops 0.7 "#2000
+	setProperty "colorStops 1 "#0000
+
+	jumpForward :height * 0.53
+	jumpLeft :height * 0.1418
+	localmake "result createRadialGradient pos :gradientRadius :colorStops
+	jumpTo :oldPos
+	output :result
+end
+
+to cheekShadows :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "smudgeDarkness 0.05
+	drawSmudges [
+		[0.14 0.444 0.01 :smudgeDarkness] [0.13 0.43 0.02 :smudgeDarkness] [0.13 0.44 0.02 :smudgeDarkness]
+		 [0.12 0.43 0.02 :smudgeDarkness] [0.12 0.44 0.02 :smudgeDarkness]
+	] :height
+	repeat 10 [
+		drawSmudges  [[0.11 0.44 0.02 :smudgeDarkness]
+	 	[0.11 0.43 0.02 :smudgeDarkness] [0.11 0.42 0.02 :smudgeDarkness]] :height
+		jumpRight :height * 0.01
+	]
+
+	; draw shadow at right cheek bone bottom
+	jumpTo :oldPos
+	setFillColor "#1000
+	jumpForward :height * 0.48
+	jumpRight :height * 0.038
+	setPenSize 0
+	right 120
+	polyStart
+	arcsLeft [[60 0.07] [20 0.04] [30 0.07] [-170 0.005] [-25 0.2] [-135 0.04]] :height
+	polyEnd
+
+	; Left cheek bone shadow around eye and nose
+	jumpTo :oldPos
+	setHeading :oldHeading
+	setFillGradient getLeftCheekBoneGradient :height
+	jumpForward :height * 0.54
+	jumpLeft :height * 0.232
+	left 15
+	polyStart
+	arcsRight [[15 0.3] [110 0] [-60 0.12] [60 0.06] [35 0] [10 0.3] [20 0.12] [17 0.15]] :height
+	polyEnd
+
+	; draw shadow under right eye
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.6485
+	jumpRight :height * 0.0889
+	right 100
+	setFillColor "#28000000
+	polyStart
+	arcsLeft [[25 0.15] [35 0.03] [-70 0] [-70 0.02]
+	[-18 0.2] [-133 0.005] [60 0.08] [-120 0.013]] :height
+	polyEnd
+
+	setTurtleState :oldState
+end
+
+to drawEar :length
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "sizesInfo [
+		1 0.5 0.1
+	]
+	setPenSize :length * 0.03
+	setPenColor "#8666
+	setFillColor "#ddd
+	repeat count :sizesInfo [
+		localmake "len :length * item repcount :sizesInfo
+		localmake "circleRadius :length * mix 0.08 0.1 repRatio 
+		jumpBackward :len / 2
+		circlePair :circleRadius :circleRadius :len
+		jumpTo :oldPos
+	]
+	setTurtleState :oldState
+end
+
+to drawEars :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	jumpForward :height * 0.51
+
+	; draw right ear.
+	jumpRight :height * 0.178
+	right 15
+	drawEar :height * 0.13
+
+	; draw left ear
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.51
+	jumpLeft :height * 0.235
+	left 15
+	drawEar :height * 0.1
+
+	setTurtleState :oldState
+end
+
+to drawEyebrows :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "oldPos pos
+	setPenSize :height * 0.02
+	setPenColor "#4000
+
+	; Draw left eyebrow
+	setLineCap "round
+	jumpForward :height * 0.695
+	jumpLeft :height * 0.1376
+	left 92
+	arcLeft 15 :height * 0.3
+
+	; draw right eyebrow
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpRight :height * 0.1609
+	jumpForward :height * 0.6988
+	setPenSize 0
+	setFillColor penColor
+	right 95
+	polyStart
+	arcsLeft [[170 0.005] [34 0.22] [230 0.014] [-52.2 0.01] [-25.5 0.23]] :height
+	polyEnd	
+
+	setTurtleState :oldState
+end
+
+to drawLashes :largeRadius :shortRadius :numLashes :lashLengthFactor :xFactor :xBias
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	setPenSize :largeRadius * 0.02
+	setPenColor "#444
+	setLineCap "round
+	repeat :numLashes [
+		localmake "xOffset :largeRadius * :xFactor * (repRatio - 0.5 + :xBias)
+		localmake "angle arcCos :xOffset / :largeRadius
+		localmake "yOffset :shortRadius * sin :angle
+		localmake "arcAngle 200 * (repRatio - 0.5)
+		if (abs :arcAngle) < 0.1 [
+			localmake "arcAngle 0.1
+		]
+		localmake "arcRadius abs :largeRadius * :lashLengthFactor * 180 / pi / :arcAngle
+		jumpLeft :xOffset
+		jumpForward :yOffset
+		left :arcAngle * 0.7
+		arcLeft -:arcAngle :arcRadius
+		setHeading :oldHeading
+		jumpTo :oldPos
+	]
+	setTurtleState :oldState
+end
+
+to drawEyes :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "leftEyeAngle 15
+	localmake "rightEyeAngle 3
+
+	; Draw left eye.
+	jumpForward :height * 0.64
+	jumpLeft :height * 0.174
+	left :leftEyeAngle
+	setPenSize 0
+	setFillColor "#4000
+	ellipse :height * 0.043 :height * 0.02
+
+	setHeading :oldHeading
+	jumpBackward :height * 0.005
+	left :leftEyeAngle
+	setPenColor "#888
+	setPenSize :height * 0.002
+	setFillColor "#fff
+	localmake "largeRadius :height * 0.04
+	localmake "shortRadius :height * 0.015
+	drawLashes :largeRadius :shortRadius 12 0.5 1.8 0
+	ellipse :largeRadius :shortRadius
+	jumpLeft :height * 0.01
+	setFillColor "#2000
+	setPenColor "#8000
+	circle :height * 0.015
+	jumpLeft :height * 0.002
+	setPenSize 0
+	setFillColor "#8000
+	circle :height * 0.005
+
+	; draw right eye.
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.663
+	jumpRight :height * 0.128
+	setPenSize 0
+	setFillColor "#bbb
+	right :rightEyeAngle
+	ellipse :height * 0.043 :height * 0.014
+
+	setHeading :oldHeading
+	jumpBackward :height * 0.003
+	right :rightEyeAngle
+	setPenColor "#888
+	setPenSize :height * 0.002
+	setFillColor "#fff
+	localmake "largeRadius :height * 0.04
+	localmake "shortRadius :height * 0.013
+	drawLashes :largeRadius :shortRadius 8 0.3 1.2 0.22
+	ellipse :largeRadius :shortRadius
+	jumpLeft :height * 0.003
+	setFillColor "#4000
+	setPenColor "#a000
+	circle :height * 0.014
+	setPenSize 0
+	setFillColor "#a000
+	circle :height * 0.005
+
+	setTurtleState :oldState
+end
+
+; The philtrum is an indentation of skin
+; between the nose and lips.
+; It is indicated here by 2 nearly vertical lines.
+to drawPhiltrum :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	setPenSize :height * 0.001
+	setPenColor "#888
+	setLineCap "round
+
+	; Draw first line
+	jumpForward :height * 0.42
+	jumpLeft :height * 0.002
+	left 10
+	forward :height * 0.035
+
+	; Draw second line
+	setHeading :oldHeading
+	jumpLeft :height * 0.015
+	right 175
+	forward :height * 0.04
+	setTurtleState :oldState
+end
+
+to faceBackgroundGradient :height
+	localmake "oldPos pos
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#fff
+	setProperty "colorStops 0.7 "#fff
+	setProperty "colorStops 0.76 "#0fff
+	setProperty "colorStops 1 "#0fff
+	jumpForward :height
+	localmake "result createLinearGradient :oldPos pos :colorStops "pad
+	jumpTo :oldPos
+	output :result
+end
+
+to drawFace :height
+	localmake "oldState turtleState
+	localmake "arcsInfo [
+		[8 0.8] [22 0.5] [15 0.1] [5 0.9] [-20 0.1] [25 0.15] [10 0.5]
+		[82 0.06] [20 0.25] [10 0.38] [-20 0.1] [15 0.3]
+		[8.8 0.9] [26 0.08] [-13 0.4]
+	]
+	setFillGradient faceBackgroundGradient :height
+	jumpForward :height * 0.779
+	jumpLeft :height * 0.224
+	left 168.5
+	localmake "startPos pos
+	localmake "startHeading heading
+	setPenSize 0
+	polyStart
+	arcsLeft :arcsInfo :height
+	polyEnd
+	setPenSize :height * 0.005
+	setPenColor "#8000
+	setLineCap "round
+	jumpTo :startPos
+	setHeading :startHeading
+	arcsLeft :arcsInfo :height
+	setTurtleState :oldState
+	chinShadows :height
+	cheekShadows :height
+	drawLips :height
+	drawPhiltrum :height
+	drawNose :height
+	; smudge at top of face between eyebrows under bangs of hair
+	drawSmudge [0.012 0.705 0.07 0.25] :height
+
+	; smudge at top of face between eyebrows under bangs of hair
+	drawSmudge [0.2 0.73 0.07 0.5] :height
+
+	drawEyebrows :height
+	drawEyes :height
+	setTurtleState :oldState
+end
+
+to drawNasalSeptum :height
+	localmake "oldState turtleState
+	localmake "arcsInfo1 [
+		[20 0.2] [20 0.14] [15 0.11]
+	]
+	localmake "arcsInfo2 [
+		[20 0.2] [28 0.08]
+	]
+	jumpForward :height * 0.653
+	jumpLeft :height * 0.072
+	right 140
+	localmake "startPos pos
+	localmake "startHeading heading
+	setFillColor "#8fff
+	setPenColor "#5000
+	setLineCap "round
+	setLineJoinStyle "round
+	setPenSize 0
+	polyStart
+	arcsRight :arcsInfo1 :height
+	left 150
+	jumpForward :height * 0.032
+	left 60
+	localmake "startPos2 pos
+	localmake "startHeading2 heading
+	arcsRight :arcsInfo2 :height
+	polyEnd
+	jumpTo :startPos
+	setHeading :startHeading
+	setPenSize :height * 0.003
+	arcsRight :arcsInfo1 :height
+	jumpTo :startPos2
+	setHeading :startHeading2
+	arcsRight :arcsInfo2 :height
+	setTurtleState :oldState
+end
+
+to drawNose :height
+	localmake "oldState turtleState
+	localmake "arcsInfo [
+		[20 0.05] [100 0.01] [-70 0.015] [30 0.028]
+		[85 0.008] [20 0.07] [-65 0.01] [110 0.008]
+		[30 0.02]
+	]
+	localmake "smudgesInfo [
+		[0.0646 0.49 0.01 0.2] [0.0646 0.5 0.01 0.2] [0.055 0.487 0.017 0.17]
+		[0.06 0.49 0.01 0.1] [0.05 0.49 0.01 0.15]
+		[0.05 0.475 0.015 0.2] [0.04 0.475 0.015 0.1] [0.065 0.47 0.02 0.15] 
+		 [0.065 0.455 0.02 0.15]
+		[0.04 0.49 0.015 0.15] [0.04 0.485 0.015 0.2] [0.025 0.475 0.015 0.2]
+		[0.018 0.49 0.025 0.5]
+	]
+	drawSmudges :smudgesInfo :height
+	jumpForward :height * 0.5196
+	jumpLeft :height * 0.0569
+	left 160
+	localmake "startPos pos
+	localmake "startHeading heading
+	setPenSize 0
+	setFillColor "#fff
+	polyStart
+	arcsLeft :arcsInfo :height
+	polyEnd
+	jumpTo :startPos
+	setHeading :startHeading
+	setPenSize :height * 0.002
+	setPenColor "#8000
+	setLineCap "round
+	setLineJoinStyle "round
+	arcsLeft :arcsInfo :height
+
+	setTurtleState :oldState
+	drawNasalSeptum :height
+	setTurtleState :oldState
+end
+
+to drawHairBangs :height
+	localmake "oldState turtleState
+	localmake "arcRadius1 :height
+	localmake "numHairs 75
+	; a couple slightly different lengths
+	; so the end of the bangs looks softer and the
+	; hairs look more natural
+	localmake "bangHairLength1 :height * 0.148
+	localmake "bangHairLength2 :bangHairLength1 * 0.97
+	jumpForward :height * 0.87
+	jumpLeft :height * 0.02
+	localmake "startPos pos
+	setPenSize :height * 0.001
+	setPenColor "#666
+	left 4 ; head is not exactly level in drawing.
+	localmake "heading1 heading
+	repeat :numHairs [
+		localmake "xOffset :height * 0.42 * (repRatio - 0.5)
+		localmake "yOffset :arcRadius1 - sqrt :arcRadius1 * :arcRadius1 - :xOffset * :xOffset
+		localmake "arcAngle 240 * (repRatio - 0.5)
+		if (abs :arcAngle) < 0.1 [
+			localmake "arcAngle 0.1 
+			; avoid problems calculating an infinite arc radius or working 
+			;with an arc radius that is extremely huge.
+		]
+		localmake "bangHairLength item 1 + remainder repcount 2 [:bangHairLength1 :bangHairLength2]
+		localmake "arcRadius2 abs :bangHairLength * 180 / pi / :arcAngle
+		jumpLeft :xOffset
+		jumpBackward :yOffset
+		setHeading :heading1 + 180 + :arcAngle / 2
+		arcLeft :arcAngle :arcRadius2
+		setHeading :heading1
+		jumpTo :startPos
+	]
+	setTurtleState :oldState
+end
+
+to drawShirtCollar :width
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "oldPos pos
+	localmake "darkColor "#888
+	localmake "thickness :width * 0.09
+	localmake "numStripes 65
+	localmake "lineThickness :width * 0.2 / :numStripes
+	localmake "startAngle 10
+	localmake "endAngle -10
+	localmake "heading1 :oldHeading + 88
+	setHeading :heading1 + 90
+	jumpBackward :thickness / 2
+	stripes :width :lineThickness [:darkColor]
+	jumpForward :thickness
+	stripes :width :lineThickness [:darkColor]
+	jumpTo :oldPos
+	setHeading :heading1
+	jumpBackward :width / 2
+	
+	repeat :numStripes [
+		setHeading :heading1 + mix :endAngle :startAngle repRatio
+		stripes :thickness :lineThickness [:darkColor]
+		setHeading :heading1
+		jumpForward :width / :numStripes
+	]		
+	setTurtleState :oldState
+end
+
+; Inspired by portrait of Trish shown at:
+; https://www.youtube.com/watch?v=fIyPCcbKfSQ
+; It is from the movie Napoleon Dynamite.
+to trish :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	drawBackground :height
+	drawEars :height
+	drawFace :height
+	drawHairBangs :height
+	jumpForward :height * 0.13
+	drawShirtCollar :height * 0.4
+	jumpTo :oldPos
+	setTurtleState :oldState
+end
+
+trish 100

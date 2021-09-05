@@ -1,0 +1,157 @@
+make "nihDarkBlue "#113053
+make "nihGray "#606266
+make "nihBlue "#005294
+
+to pubmedShapes :height :width1 :gap :width2 :arcRadius :angle :color1 :color2
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "diagonalLen :height / 2 / cos :angle
+	jumpForward :height / 2
+	localmake "middle1 pos
+	jumpRight 10
+	localmake "middle2 pos
+	jumpTo :oldPos
+	setPenSize 0
+	jumpLeft :height * 0.02
+	left 90
+	setFillColor :color1
+	polyStart
+	jumpForward :width1
+	arcRight 90 :arcRadius
+	jumpForward :height - :arcRadius * 2
+	arcRight 90 :arcRadius
+	jumpForward :width1
+	right 90 - :angle
+	jumpForward :diagonalLen
+	polyEnd
+
+	setFillColor :color2
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpRight :gap
+	right :angle
+	polyStart
+	jumpForward :diagonalLen
+	left :angle * 2
+	jumpForward :diagonalLen
+	setHeading :oldHeading + 90
+	jumpForward :width2
+	arcRight 90 - :angle :arcRadius
+	localmake "diagonalLen2 distanceToLine :middle1 :middle2
+	jumpForward :diagonalLen2
+	right :angle * 2
+	jumpForward :diagonalLen2
+	arcRight 90 - :angle :arcRadius
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by favicon at
+; https://pubmed.ncbi.nlm.nih.gov/
+to pubmedFavicon :height
+	pubmedShapes :height :height * 0.432 :height * 0.1 :height * 0.11 :height * 0.12 31 :nihGray :nihBlue
+end
+
+to drawN :height
+	localmake "oldState turtleState
+	localmake "width :height * 0.637
+	localmake "angle arcTan :width / :height
+	localmake "w penSize
+	setLineCap "butt
+	forward :height
+	jumpRight :width
+	backward :height
+	setPenSize 0
+	setFillColor penColor
+	parallelogram :w :height / cos :angle -:angle
+	setTurtleState :oldState
+end
+
+to drawI :height
+	localmake "oldState turtleState
+	setLineCap "butt
+	forward :height
+	setTurtleState :oldState
+end
+
+to drawH :height
+	localmake "oldState turtleState
+	localmake "width :height * 0.625
+	setLineCap "butt
+	forward :height
+	jumpRight :width
+	backward :height
+	jumpLeft :width / 2
+	jumpForward (:height - penSize) * 0.549
+	stripes :width penSize * 0.86 [penColor]
+	setTurtleState :oldState
+end
+
+; Inspired by logo at
+; https://pubmed.ncbi.nlm.nih.gov/
+to pubmedNihLogo :height
+	localmake "oldState turtleState
+	localmake "fontSize :height * 0.446
+	jumpRight :height * 0.32
+	pubmedShapes :height :height * 0.985 :height * 0.05 :height * 0.08 :height * 0.1 29 "white "white
+	setPenColor :nihDarkBlue
+	setPenSize :height * 0.0778
+	jumpLeft :height * 0.918
+	jumpForward (:height - :fontSize) / 2
+	drawN :fontSize
+	jumpRight :fontSize * 0.972
+	drawI :fontSize
+	jumpRight :fontSize * 0.35
+	drawH :fontSize
+	setTurtleState :oldState
+end
+
+; Inspired by logo at
+; https://www.nih.gov
+to nihLogo :height
+	localmake "oldState turtleState
+	localmake "fontSize :height * 0.446
+	jumpRight :height * 0.32
+	pubmedShapes :height :height * 0.985 :height * 0.05 :height * 0.08 :height * 0.1 29 :nihGray :nihBlue
+	setPenColor "white
+	setPenSize :height * 0.0778
+	jumpLeft :height * 0.918
+	jumpForward (:height - :fontSize) / 2
+	drawN :fontSize
+	jumpRight :fontSize * 0.972
+	drawI :fontSize
+	jumpRight :fontSize * 0.35
+	drawH :fontSize
+	setTurtleState :oldState
+end
+
+to drawBackground :width :height
+	localmake "oldState turtleState
+	localmake "colorStops createPList
+	setProperty "colorStops 0 mix :nihDarkBlue transparent 0
+	setProperty "colorStops 0.3 :nihDarkBlue
+	setProperty "colorStops 0.7 :nihDarkBlue
+	setProperty "colorStops 1 mix :nihDarkBlue transparent 0
+	jumpLeft :width / 2
+	localmake "fromPos pos
+	jumpRight :width
+	setPenGradient createLinearGradient :fromPos pos :colorStops "pad
+	jumpLeft :width / 2
+	setLineCap "butt
+	setPenSize :width
+	forward :height
+	
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 6
+
+drawBackground :separation :height
+jumpLeft :separation
+pubmedFavicon :height
+jumpRight :separation
+pubmedNihLogo :height
+jumpRight :separation
+nihLogo :height

@@ -1,0 +1,35 @@
+; made to look like the glyph from Stackoverflow's logo
+; https://stackoverflow.design/brand/logo/
+
+to stackoverflowGlyph :size
+	localmake "orangeBarLength :size * 0.5567
+	localmake "sideStep :size * 0.14
+	localmake "y :size * 0.11
+	localmake "x :y
+	setPenColor "#bbb ; gray color
+	setPenSize :y
+	backward :y * 3.5
+	right 90
+	forward :size - :y
+	left 90
+	forward :y * 3.5
+	
+	jumpBackward :y * 1.5
+	left 90
+	jumpForward :y * 0.5 + :x
+	
+	setPenColor "#f58025
+
+	; draw the orange 
+	repeat 5 [
+		forward :orangeBarLength
+		
+		jumpBackward :orangeBarLength
+		right 95
+		jumpForward :sideStep
+		left 81.7
+		
+	]
+end
+
+stackoverflowGlyph 150

@@ -1,0 +1,50 @@
+; Inspired by
+; https://www.pinterest.ca/pin/552535448043997843/
+
+to stringArt1 :outerRadius :innerRadius
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "innerCount 24
+	localmake "outerCount 12
+	localmake "innerPoints []
+	penUp
+	repeat :innerCount [
+		setPos :oldPos
+		jumpForward :innerRadius
+		queue "innerPoints pos
+		right 360 / :innerCount
+	]
+	setHeading :oldHeading
+	repeat :outerCount [
+		setPos :oldPos
+		jumpForward :outerRadius
+		localmake "fromPos pos
+		repeat :innerCount [
+			setPos :fromPos
+			localmake "toPos item repcount :innerPoints
+			setHeading towards :toPos
+			penDown
+			forward distance :toPos
+			penUp
+		]
+		setHeading :oldHeading + repcount * 360 / :outerCount
+	]
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+; Draw a few times using different parameters
+; to show how the parameters affect the pattern
+setPenSize 0.1
+right 90
+make "separation 220
+jumpBackward :separation * 2
+stringArt1 100 20
+jumpForward :separation
+stringArt1 100 50
+jumpForward :separation
+stringArt1 100 70
+jumpForward :separation
+stringArt1 100 90
+jumpForward :separation
+stringArt1 100 100

@@ -1,0 +1,66 @@
+; Inspired by
+; https://www.pinterest.ca/pin/764134261756975956/
+
+to pacman :size :mouthOpenRatio
+	localmake "oldState turtleState
+	localmake "mouthAngle :mouthOpenRatio * 90
+	right 90 - :mouthAngle / 2
+	setFillColor "#FFD500
+	setPenSize 0
+
+	; We use a circle because the arc doesn't fill properly
+	; when mouthOpenRatio is extremely close to 0.
+	ifelse :mouthOpenRatio <= 0.001 [
+		circle :size
+	] [
+		polyStart
+		jumpForward :size
+		left 90
+		arcLeft 360 - :mouthAngle :size
+		polyEnd
+	]
+	setTurtleState :oldState
+end
+
+to pacmanFood :size
+	localmake "oldState turtleState
+	setPenSize 0
+	setFillColor "white
+	circle :size
+	setTurtleState :oldState
+end
+
+to pacmanDrawing :size :distance
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "foodSeparation :size * 1.5
+	localmake "ratio :distance / :size - int (:distance / :size)
+	localmake "mouthOpenRatio 2 * abs :ratio - 0.5
+	localmake "pacmanFoodSize :size * 0.25
+	jumpLeft :pacmanFoodSize + :foodSeparation * :ratio
+	repeat 10 [
+		jumpRight :foodSeparation
+		pacmanFood :pacmanFoodSize
+	]
+	jumpTo :oldPos
+	pacman :size :mouthOpenRatio
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+
+pacmanDrawing 100 animation.time * 200
+
+to animation.snapshotstyle
+	localmake "result createPList
+	output :result
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 2
+	; Edit this if you want to change the length of your animation.
+	localmake "result createPList
+	setProperty "result "duration :minutes * 60 + :seconds
+	output :result
+end

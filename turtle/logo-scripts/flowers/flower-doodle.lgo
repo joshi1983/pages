@@ -1,0 +1,113 @@
+to flowerCenter :radius
+	localmake "oldState turtleState
+	setFillColor "#1000
+	setPenSize 0
+	circle :radius * 1.2
+	setPenColor "#fea405
+	setFillColor "#ffcc00
+	setPenSize :radius * 0.27
+	circle :radius - penSize / 2
+	jumpForward :radius * 0.37
+	setFillColor "#fde500
+	setPenSize 0
+	ellipse :radius * 0.3 :radius * 0.23
+	setTurtleState :oldState
+end
+
+to flowerPeddle :size
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "arcsInfo [
+		[15 2]
+		[20 0.7]
+		[30 0.3]
+		[25 0.18965075]
+	]
+	localmake "angle2 120
+	localmake "arcAngle1 45
+	localmake "arcAngle2 31
+	localmake "arcAngle3 30
+	localmake "arcAngle4 272
+	localmake "arcRadius1 :size * 1.02
+	localmake "arcRadius2 :size * 1.09
+	localmake "arcRadius3 :size * 0.1696618
+	localmake "arcRadius4 :size * 0.175
+	setPenSize 0
+	setFillColor "#c50917
+	ellipse :size * 0.5 :size
+	setFillColor "#e41f29
+	jumpRight :size * 0.37
+	setFillColor "#e41f29
+	polyStart
+	arcsLeft :arcsInfo :size
+	arcsLeft reverse :arcsInfo :size
+	arcLeft :arcAngle1 :arcRadius1
+	left :angle2
+	arcLeft :arcAngle2 :arcRadius2
+	arcLeft :arcAngle3 :arcRadius3
+	arcRight :arcAngle4 :arcRadius4
+	arcLeft :arcAngle3 :arcRadius3
+	arcLeft :arcAngle2 :arcRadius2
+	left :angle2
+	arcLeft :arcAngle1 :arcRadius1
+	polyEnd
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :size * 0.6
+	jumpLeft :size * 0.1
+	right 30
+	setFillColor "#3fff
+	ellipse :size * 0.12 :size * 0.2
+	setTurtleState :oldState
+end
+
+to flowerLeaf :size
+	localmake "oldState turtleState
+	localmake "angle 58
+	localmake "arcRadius :size / (2 * sin :angle)
+	setPenSize 0
+	left :angle
+	polyStart
+	arcRight :angle * 2 :arcRadius
+	right 180 - :angle * 2
+	arcRight :angle * 2 :arcRadius
+	polyEnd
+	setTurtleState :oldState
+end
+
+to setLeafGradient :radius
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#30680f
+	setProperty "colorStops 1 "#45b81f
+	setFillGradient createRadialGradient pos :radius :colorStops
+end
+
+; Inspired by
+; https://publicdomainvectors.org/en/free-clipart/Flower-doodle/90480.html
+to flower :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	jumpForward :height / 2
+	localmake "center pos
+	right 180 / 8
+	setLeafGradient :height / 2
+	repeat 8 [
+		jumpForward :height * 0.15
+		flowerLeaf :height * 0.39
+		jumpTo :center
+		right 360 / 8
+	]
+	setHeading :oldHeading
+	repeat 8 [
+		jumpForward :height * 0.205
+		flowerPeddle :height * 0.15
+		jumpTo :center
+		right 360 / 8
+	]
+	flowerCenter :height * 0.121
+	setTurtleState :oldState
+end
+
+flower 100
