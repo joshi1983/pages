@@ -1,0 +1,73 @@
+to libyaStripes :width :height
+	localmake "oldState turtleState
+	localmake "arcsInfo [
+		["#239e46 6 / 24]
+		["black 12 / 24]
+		["#e70013 6 / 24]
+	]
+	setLineCap "butt
+	setPenSize :width
+	repeat count :arcsInfo [
+		localmake "arcInfo item repcount :arcsInfo
+		setPenColor item 1 :arcInfo
+		forward :height * item 2 :arcInfo
+	]
+	setTurtleState :oldState
+end
+
+; Based on construction sheet at
+; https://en.wikipedia.org/wiki/Flag_of_Libya#/media/File:Flag_of_Libya_(construction_sheet).svg
+; and colors from
+; https://en.wikipedia.org/wiki/Flag_of_Libya
+to libyaFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 2
+	localmake "A sqrt 706 - 480 * sqrt 2
+	localmake "B :A / 2 - 2
+	localmake "C (15 - 3 * sqrt 5) * (sqrt (5 + sqrt 5)) / 5
+	localmake "D 3 + :C * ((sqrt 5) - 1) / 8
+	localmake "starSize :height * :D / 2 / 24
+	libyaStripes :width :height
+	jumpForward :height / 2
+	setFillColor "white
+	setPenSize 0
+	circle :height * 3 / 24
+	setFillColor "black
+	jumpRight :height * :B / 24
+	circle :height * :A / 2 / 24
+	jumpRight :height * (:D - :B) / 24
+	setFillColor "white
+	left 180 / 10
+	regularStar :starSize 5
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Libya#/media/File:Flag_of_Libya_(without_crescent_and_star).svg
+to homeMadeCivilWarLibyaFlag :height
+	libyaStripes :height * 2 :height
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Libya#/media/File:Flag_of_Libya_(1969%E2%80%931972).svg
+to libyanArabRepublicFlag :height
+	localmake "colors ["black "white "#ce1126]
+	stripes :height * 2 :height :colors
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Libya#/media/File:Flag_of_Libya_(1977%E2%80%932011).svg
+to libyanArabJamahiriyaFlag :height
+	stripes :height * 2 :height ["#008542]
+end
+
+make "height 100
+make "separation :height * 4
+jumpLeft :separation * 1.5
+libyaFlag :height
+jumpRight :separation
+homeMadeCivilWarLibyaFlag :height
+jumpRight :separation
+libyanArabRepublicFlag :height
+jumpRight :separation
+libyanArabJamahiriyaFlag :height

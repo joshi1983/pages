@@ -1,0 +1,23 @@
+# copied from https://verselang.github.io/book/10_classes_interfaces/
+entity := class:
+    var Position : vector3 = vector3{}
+    var IsActive : logic = true
+
+    Activate() : void = set IsActive = true
+    Deactivate() : void = set IsActive = false
+
+character := class(entity):  # character inherits from entity
+    Name : string
+    var Health : int = 100
+
+    TakeDamage(Amount : int) : void =
+        set Health = Max(0, Health - Amount)
+        if (Health = 0):
+            Deactivate()  # Can call inherited methods
+
+player := class(character):  # player inherits from character
+    var Score : int = 0
+    var Lives : int = 3
+
+    AddScore(Points : int) : void =
+        set Score += Points

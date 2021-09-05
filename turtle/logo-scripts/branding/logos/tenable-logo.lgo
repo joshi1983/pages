@@ -1,0 +1,39 @@
+; Inspired by logo at:
+; https://www.tenable.com
+to tenableLogo :height :color
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "polygons [
+		[0 0.75]
+		[28 0.905]
+		[41 1.04]
+	]
+	setFillColor transparent
+	jumpForward :height / 2
+	setPenSize :height * 0.03
+	setPenColor :color
+	repeat count :polygons [
+		localmake "info item repcount :polygons
+		localmake "radius1 :height / 2 * last :info
+		localmake "cornerRadius :radius1 * 0.18
+		setHeading :oldHeading + first :info
+		roundRegularPolygon :radius1 6 :cornerRadius
+	]
+	setTurtleState :oldState
+end
+
+to tenableLogoOnBlack :height
+	localmake "oldState turtleState
+	localmake "innerHeight :height * 0.7
+	stripes :height :height ["black]	
+	jumpForward (:height - :innerHeight) / 2
+	tenableLogo :innerHeight "white
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 5
+jumpLeft :separation / 2
+tenableLogoOnBlack :height
+jumpRight :separation
+tenableLogo :height "black

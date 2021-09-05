@@ -1,0 +1,28 @@
+; Inspired by logo at
+; https://www.apartments.com
+to apartmentsDotComLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "offsetFromTop :height * 0.524
+	jumpForward :height - :offsetFromTop
+	localmake "center pos
+	setPenSize 0
+	setFillColor "#7cba27
+	repeat 5 [
+		setHeading :oldHeading + repcount * 360 / 5
+		jumpForward :offsetFromTop
+		jumpLeft :height * 0.09
+		right 123
+		polyStart
+		jumpForward :height * 0.235
+		right 95
+		jumpForward :height * 0.233
+		right 67
+		jumpForward :height * 0.365
+		polyEnd
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+apartmentsDotComLogo 100

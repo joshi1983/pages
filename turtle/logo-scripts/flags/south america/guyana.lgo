@@ -1,0 +1,77 @@
+to guyanaFlagCustomWidth :width :height
+	localmake "oldState turtleState
+	localmake "trianglesInfo [
+		["white 1 1]
+		["#FFC20E 0.93 0.93]
+		["black 1 0.5]
+		["#BE1E2D 0.922 0.46112699]
+	]
+	stripes :width :height ["#2A936A]
+	setPenSize 0
+	jumpForward :height / 2
+	jumpLeft :width / 2
+	right 90
+	repeat count :trianglesInfo [
+		localmake "triangleInfo item repcount :trianglesInfo
+		setFillColor item 1 :triangleInfo
+		localmake "triWidth :height * item 2 :triangleInfo
+		localmake "triHeight :width * item 3 :triangleInfo
+		isoTriangle :triWidth :triHeight
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Guyana#/media/File:Flag_of_Guyana.svg
+to guyanaFlag :height
+	guyanaFlagCustomWidth :height * 5 / 3 :height
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Guyana#/media/File:Naval_Ensign_of_Guyana.svg
+to navalEnsigniaOfGuyana :height
+	guyanaFlagCustomWidth :height * 2 :height
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Guyana#/media/File:Civil_Air_Ensign_of_Guyana.svg
+; The black lines in the upper left corner are different thicknesses between this and Wikipedia's SVG.
+; I'm deciding not to follow the SVG's black line thickness to keep this code simpler
+; and because it could be a mistake in the SVG.
+to civilAirEnsigniaOfGuyana :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "width :height * 11 / 7
+	localmake "smallFlagWidth :width / 2 - :height / 14
+	localmake "smallFlagHeight :height / 2 - :height / 14
+	stripes :width :height ["#6399ab]
+	setLineCap "butt
+	setPenSize :height / 7
+	setPenColor "white
+	repeat 2 [
+		forward :height
+		jumpBackward :height / 2
+		right 90
+		jumpBackward :width / 2
+		forward :width
+		jumpTo :oldPos
+		setHeading :oldHeading
+		setPenSize :height / 14
+		setPenColor "#002d72
+	]
+	jumpForward :height - :smallFlagHeight
+	jumpLeft (:width - :smallFlagWidth) / 2
+	guyanaFlagCustomWidth :smallFlagWidth :smallFlagHeight
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+make "height 100
+make "separation :height * 4
+jumpLeft :separation
+guyanaFlag :height
+jumpRight :separation
+navalEnsigniaOfGuyana :height
+jumpRight :separation
+civilAirEnsigniaOfGuyana :height

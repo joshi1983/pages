@@ -1,0 +1,101 @@
+to distanceBetween :pos1 :pos2
+	localmake "oldPos pos
+	jumpTo :pos1
+	localmake "result distance :pos2
+	jumpTo :oldPos
+	output :result
+end
+
+to drawOuterLines :height :cutoffLinePos1 :cutOffLinePos2
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+
+	jumpRight :height / 2
+	jumpForward :height / 2
+	setPenSize :height * 0.008
+	repeat 2 [
+		localmake "direction sign repcount - 1.5
+		repeat 50 [
+			localmake "angle arcTan (repcount - 1) / 20
+			localmake "len :height / 2 / cos :angle
+			if :direction < 0 [
+				localmake "angle 180 - :angle
+			]
+			setHeading :oldHeading - :angle
+			localmake "len min :len distanceToLine :cutoffLinePos1 :cutOffLinePos2
+			stripes penSize :len ["white]
+		]
+	]
+
+	setTurtleState :oldState
+end
+
+to drawCurve :height :cutoffLinePos1 :cutOffLinePos2
+	localmake "oldState turtleState
+	localmake "step :height * 0.0328
+	localmake "numPairs 56
+	localmake "angle 22
+	jumpRight :height / 2
+	jumpForward :height / 2
+	localmake "rightPos pos
+	localmake "points []
+	localmake "leftHeading heading - 90
+	for ["i 1 :numPairs] [
+		localmake "pair []
+		repeat 2 [
+			localmake "sign sign repcount - 1.5
+			setHeading :leftHeading + :sign * :angle
+			localmake "len :i * :step
+			jumpTo :rightPos
+			jumpForward :len
+			queue2 "pair pos
+		]
+		queue2 "points :pair
+	]
+	setPenColor "white
+	setPenSize :height * 0.005
+	repeat :numPairs [
+		localmake "index2 :numPairs + 1 - repcount 
+		localmake "startPos first item repcount :points
+		localmake "endPos last item :index2 :points
+		if (distanceBetween :rightPos :startPos) < distanceBetween :rightPos :endPos [
+			swap "endPos "startPos
+		]
+		jumpTo :startPos
+		setHeading towards :endPos
+		localmake "lenToCutOff distanceToLine :cutoffLinePos1 :cutOffLinePos2
+		if :lenToCutOff > 0 [
+			jumpForward :lenToCutOff
+		]
+		setPos :endPos
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://www.youtube.com/@CocoTownRetro
+;
+; You can see his version run for a few seconds at:
+; https://youtu.be/Chk8MlF5buU?t=77
+;
+; The channel has a lot of videos involving old computers so
+; the pixelated look is an important part of the logo.
+; It doesn't look pixelated in this version, though.
+to cocoTownLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	jumpLeft :height / 2
+	localmake "bottomLeft pos
+	jumpForward :height
+	localmake "topLeft pos
+
+	jumpTo :oldPos
+	drawOuterLines :height :topLeft :bottomLeft
+
+	drawCurve :height :topLeft :bottomLeft
+
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+cocoTownLogo 100

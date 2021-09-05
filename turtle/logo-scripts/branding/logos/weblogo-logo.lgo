@@ -1,0 +1,25 @@
+to triangle :baseWidth
+	setPenSize :baseWidth * 0.1
+	isoTriangle :baseWidth :baseWidth / 2
+end
+
+to turtle :height
+	localmake "oldState turtleState
+	jumpForward :height / 2
+	right 90
+
+	; calculate the size so the top and bottom
+	; touch but don't overlap the height limits.
+	localmake "size :height / (1.1 + 0.2 * cos 45)
+	setPenColor "black
+	triangle :size
+	setPenColor "green
+	jumpForward :size * 0.05
+	triangle :size * 0.8
+
+	; Restore original state of the turtle
+	; because we don't want this procedure to change the turtle's state.
+	setTurtleState :oldState
+end
+
+turtle 100

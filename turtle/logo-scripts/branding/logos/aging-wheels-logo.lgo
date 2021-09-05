@@ -1,0 +1,59 @@
+to agingWheelsBackground :height
+	localmake "oldState turtleState
+	localmake "shapeLines [[42 0] [0.45] [-90 0]
+		[-40 0.5] [-90 0] [0.072] [-94 0] [26 0.33]
+		[105 0.055] [25 0.3] [30 0.1]]
+	localmake "shape1 [0 -0.0
+		:shapeLines
+	]
+	localmake "shape2Lines1 [
+		[90 0] [30 0.34] [90 0.07] [30 0.33]
+		[30 0.149667]
+	]
+	setPenSize :height * 0.1
+	setPenColor "black
+	setFillColor transparent
+	jumpForward :height / 2
+	circle (:height - penSize) / 2
+	setPenSize :height * 0.01
+	setPenColor "white
+	circle :height * 0.483
+	right 180 / 5
+	setPenSize 0
+	setFillColor "black
+	repeat 5 [
+		drawArcLineShape :shape1 :height	
+		drawArcLineShape :shape1 -:height	
+		right 360 / 5
+	]	
+	setPenColor "white
+	setPenSize :height * 0.005
+	setFillColor transparent
+	repeat 5 [
+		drawArcLineShape [0 0.46
+			combine :shape2Lines1 reverse :shape2Lines1
+		] :height
+		right 360 / 5
+	]
+
+	setTurtleState :oldState
+end
+
+; Inspired by:
+; https://www.youtube.com/@agingwheels
+to agingWheelsLogo :height
+	localmake "oldState turtleState
+	agingWheelsBackground :height
+	setFillColor "white
+	setPenSize 0
+	jumpForward :height / 2
+	setFontFamily 'arial'
+	right 90
+	setFontSize :height * 0.16
+	jumpBackward :height * 0.13
+	jumpRight :height * 0.06
+	label "AW
+	setTurtleState :oldState
+end
+
+agingWheelsLogo 100

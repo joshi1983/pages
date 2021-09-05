@@ -1,0 +1,19 @@
+# copied from https://verselang.github.io/book/10_classes_interfaces/
+character := class:
+    Name : string
+    var Health : int = 100
+    var Level : int = 1
+    var MaxHealth : int = 100
+
+    TakeDamage(Amount : int) : void =
+        set Health = Max(0, Health - Amount)
+
+    Heal(Amount : int) : void =
+        set Health = Min(MaxHealth, Health + Amount)
+
+    IsAlive()<decides>:void= Health > 0
+
+    LevelUp() : void =
+        set Level += 1
+        set MaxHealth = 100 + (Level * 10)
+        set Health = MaxHealth  # Full heal on level up

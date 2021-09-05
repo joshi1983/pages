@@ -1,0 +1,88 @@
+; Inspired by a posted image at:
+; https://www.facebook.com/share/p/19SC4N2gDU
+;
+; The image was shared by a user by the name Nerwana.
+to pentaShutter :height :timeRatio
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "timeRatio mixItems2 [0 0.25 0.25 0.75 0.75 1] :timeRatio
+	ifelse :timeRatio < 0.5 [
+		localmake "timeRatio :timeRatio / 0.5
+	] [
+		localmake "timeRatio (1 - :timeRatio) / 0.5
+	]
+	ifelse :timeRatio < 0.5 [
+		localmake "timeRatio1 interpolateRatio easeInOut :timeRatio / 0.5
+		localmake "angle 180 / 5 * :timeRatio1
+	] [
+		localmake "timeRatio1 interpolateRatio easeInOut (:timeRatio - 0.5) / 0.5
+		localmake "angle mix 50 180 / 5 :timeRatio1
+	]
+	localmake "angle max 0.0000001 :angle
+	setPenSize :height * 0.035
+	localmake "outerRadius (:height - penSize / 2 * (1 + 1 / cos 180 / 5)) / (1 + cos 180 / 5)
+	localmake "innerRadius (:height - penSize * (1 + 1 / cos 180 / 5)) / (1 + cos 180 / 5)
+	localmake "sideLength :innerRadius * 2 * sin 180 / 5
+	setPenColor "black
+	setLineJoinStyle "miter
+	jumpForward penSize / 2 + :outerRadius * cos 180 / 5
+	localmake "center pos
+	setFillColor transparent
+	regularPolygon :outerRadius 5
+	setFillBlendMode "darken
+	setFillColor "#666
+	setLineJoinStyle "round
+	repeat 5 [
+		localmake "heading1 :oldHeading + repcount * 360 / 5
+		setPenSize :height * 0.003
+		setHeading :heading1
+		jumpForward :innerRadius
+		localmake "pos1 pos
+		left 90 + 180 / 5 + :angle
+		jumpForward 10
+		localmake "pos2 pos
+		jumpTo :center
+		setHeading :heading1 + 360 / 5
+		jumpForward :innerRadius
+		localmake "pos3 pos
+		left 90 + 180 / 5 + :angle
+		localmake "len1 distanceToLine :pos1 :pos2
+		forward :len1
+		localmake "len2 distance :pos1
+		localmake "pos4 pos
+		right 180 - :angle
+		forward distanceToLine :pos1 :pos3
+		jumpTo :pos4
+		setHeading (towards :pos1) + 180 - :angle
+		localmake "len3 (:len1 - :len2) * :len1 / :sideLength
+		forward :len3
+		localmake "len4 (distance :center) * 2 * sin 180 / 5
+		jumpBackward :len4
+		localmake "pos5 pos
+		left 180 - 360 / 5
+		jumpForward :len4
+		localmake "pos6 pos
+		setPenSize 0
+		polygon [:pos6  :pos5 :pos4  :pos1 :pos3]
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+pentaShutter 100 animation.clampedTimeRatio
+
+to animation.snapshotstyle
+	output createPList2 [
+		["position.y 50]
+		["zoom.scale 6.5]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 10
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

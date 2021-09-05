@@ -1,0 +1,102 @@
+; Inspired by:
+; https://en.wikipedia.org/wiki/DaVinci_Resolve#/media/File:DaVinci_Resolve_17_logo.svg
+; Referenced at:
+; https://en.wikipedia.org/wiki/DaVinci_Resolve
+
+to curve :size
+	localmake "oldState turtleState
+	localmake "angle1 81
+	localmake "arcRadius1 :size * 0.047
+	localmake "arcs1 [[-22 1.32] [-90 0.415] [-27.365 0.36]]
+	localmake "gradients [
+		whiteRadialGradient :size
+		whiteLinearGradient :size * 0.5
+	]
+	left 90
+	setPenSize 0
+	arcRight :angle1 / 2 :arcRadius1
+	localmake "heading1 heading
+	localmake "pos1 pos
+	repeat 3 [
+		polyStart
+		arcLines combine :arcs1 reverse :arcs1 :size
+		arcRight :angle1 :arcRadius1
+		polyEnd
+		setHeading :heading1
+		jumpTo :pos1
+		if repcount <= count :gradients [
+			setFillGradient item repcount :gradients
+		]
+	]
+	setTurtleState :oldState
+end
+
+to whiteRadialGradient :radius
+	localmake "colorStops createPList2 [
+		[0 "#ffff] [1 "#0fff]
+	]
+	output createRadialGradient pos :radius :colorStops
+end
+
+to whiteLinearGradient :size
+	localmake "colorStops createPList2 [
+		[0 "#0fff] [0.5 "#2fff] [1 "#0fff]
+	]
+	jumpRight :size / 2
+	localmake "fromPos pos
+	jumpLeft :size
+	localmake "result createLinearGradient :fromPos pos :colorStops "pad
+	jumpRight :size / 2
+	output :result
+end
+
+to colorfulOutline :radius :colors
+	localmake "oldState turtleState
+	localmake "penSize1 :radius * 0.05
+	localmake "radius1 :radius - :penSize1 / 2
+	localmake "numColors count :colors
+	localmake "size1 :radius1 * 2 * sin 180 / :numColors
+	setPenSize :penSize1
+	jumpForward :radius1
+	right 90
+	repeat :numColors [
+		localmake "heading1 heading
+		localmake "pos1 pos
+		localmake "colorStops createPList2 [
+			[0 item repcount :colors]
+			[1 item 1 + remainder repcount :numColors :colors]
+		]
+		right 180 / :numColors
+		localmake "fromPos pos
+		jumpForward :size1
+		setPenGradient createLinearGradient :fromPos pos :colorStops "pad
+		jumpTo :pos1
+		setHeading :heading1
+		arcRight 360 / :numColors :radius1
+	]
+	setTurtleState :oldState
+end
+
+to daVinciResolveLogo :size
+	localmake "oldState turtleState
+	localmake "jumpSize :size * 0.037
+	localmake "curveSize :size * 0.305
+	localmake "colors ["#0CA3DF "#FF1A30 "#FBFF29]
+	localmake "colors2 ["#0ff "#00F "#f0f "#F00 "#f80 "#Ff0 "#0f0]
+	setPenSize 0
+	setFillColor "black
+	circle :size / 2
+	colorfulOutline :size / 2 :colors2
+	jumpBackward :size * 0.02
+	localmake "pos1 pos
+	repeat 3 [
+		setFillColor item repcount :colors
+		jumpForward :jumpSize
+		curve :curveSize
+		jumpTo :pos1
+		right 360 / 3
+	]
+	setTurtleState :oldState
+end
+
+daVinciResolveLogo 200

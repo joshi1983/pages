@@ -1,0 +1,77 @@
+to drawLamp :height :topArcRadiusFactor
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "bottomArcRadius 0.19
+	localmake "bottomThickness 0.005
+	localmake "middleThickness :bottomThickness * 1.2
+	localmake "blackPath1 [
+		[-90 0] [:middleThickness / 2 + :bottomArcRadius]
+		[90 0] [:bottomThickness] [90 0] [-90 :bottomArcRadius]
+		[1 - :bottomThickness - :bottomArcRadius - :topArcRadiusFactor]
+		[-90 0] [:topArcRadiusFactor - :middleThickness / 2] [90 0]
+		[90 :topArcRadiusFactor]
+	]
+	setPenSize 0
+	setFillColor "black
+	drawArcLineShape [0 0
+		pathMirror :blackPath1
+	] :height
+	jumpLeft :height * 0.06
+	jumpForward :height * 0.54
+	circle :height * 0.021
+	stripes :height * 0.003 :height * 0.2 [fillColor]
+
+	jumpTo :oldPos
+	jumpForward :height * (1 - :topArcRadiusFactor * 0.61)
+	setFillColor "white
+	circle :height * 0.075
+
+	setTurtleState :oldState
+end
+
+to drawRainbow :height :widthFactor
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "width :height * :widthFactor
+	localmake "colors ["#e10078 "#e52f2c "#e8501e "#f49401 "#ffee2a]
+	localmake "angle1 151
+	jumpRight :width / 2
+	localmake "bottomRight pos
+	jumpForward :height - :width / 2
+	localmake "topRight pos
+	jumpLeft :width
+	localmake "topLeft pos
+	setPenSize 0
+	repeat count :colors [
+		localmake "ratio (repcount - 1) / count :colors
+		jumpTo mix :topRight :topLeft power :ratio 0.85
+		setFillColor item repcount :colors
+		setHeading :oldHeading + :angle1
+		polyStart
+		localmake "bottomDistance distanceToLine :oldPos :bottomRight
+		localmake "rightDistance distanceToLine :topRight :bottomRight
+		ifelse :bottomDistance < :rightDistance [
+			jumpForward :bottomDistance
+			left :angle1 - 90
+			jumpTo :bottomRight
+			jumpTo :topRight
+		] [
+			jumpForward :rightDistance
+			jumpTo :topRight
+		]
+		polyEnd
+	]	
+	setTurtleState :oldState
+end
+
+; Inspired by drawing at:
+; https://ca.pinterest.com/pin/519391769540987366
+to boLundbergLamp :height
+	localmake "topArcRadius 0.34
+	drawRainbow :height :topArcRadius * 2
+
+	drawLamp :height :topArcRadius
+end
+
+boLundbergLamp 100

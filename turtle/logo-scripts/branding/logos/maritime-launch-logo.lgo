@@ -1,0 +1,62 @@
+; Inspired by logo at:
+; https://www.maritimelaunch.com
+to maritimeLaunchLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angle1 23
+	localmake "topLen :height * 0.67
+	localmake "lowerLen1 :height * 0.21
+	localmake "lowerHeight :height * 0.462
+	localmake "lightBlueColor "#9ed9ee
+	localmake "darkBlueColor "#4199d4
+	localmake "angle2 154
+	setPenSize 0
+	setFillColor :lightBlueColor
+	jumpForward :lowerHeight
+	polyStart
+	left 90 + :angle1
+	jumpForward :lowerLen1
+	jumpTo :oldPos
+
+	; Add a small overlap to prevent background pixel colours
+	; from blending through the fringe between the bottom left and right triangles.
+	setHeading :oldHeading + 10
+	jumpForward :height * 0.4
+	polyEnd
+
+	setFillColor :darkBlueColor
+	jumpTo :oldPos
+	setHeading :oldHeading
+	polyStart
+	jumpForward :lowerHeight
+	right 90 + :angle1
+	jumpForward :lowerLen1
+	polyEnd
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height
+	localmake "top pos
+	polyStart
+	left :angle2
+	jumpForward :topLen
+	setHeading :oldHeading + 90 - :angle1
+	jumpForward (distanceToLine :oldPos :top) * 1.4
+	; Go past the middle to create an overlap.
+	; The benefit of overlap is the same as commented before.
+	polyEnd
+
+	setFillColor :lightBlueColor
+	jumpTo :top
+	setHeading :oldHeading + :angle2
+	polyStart
+	jumpForward :topLen
+	setHeading :oldHeading - 90 + :angle1
+	jumpForward distanceToLine :oldPos :top
+	polyEnd
+
+	setTurtleState :oldState
+end
+
+maritimeLaunchLogo 100

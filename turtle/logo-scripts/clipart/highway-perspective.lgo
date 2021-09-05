@@ -1,0 +1,91 @@
+; Inspired by
+; https://www.pinterest.ca/pin/616782111481022179/
+
+to sun :size
+	localmake "colorStops createPList2 [
+		[0 "#FFB833] [1 "#E66F00]
+	]
+	setFillGradient createRadialGradient pos :size :colorStops
+	setPenSize 0
+	circle :size
+end
+
+to filledIsoscelesTriangle :middleLength :angle
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "size1 :middleLength / cos (:angle * 0.5)
+	localmake "baseLength :middleLength * 2 * tan (:angle * 0.5)
+	right 180 - :angle * 0.5
+	polyStart
+	forward :size1
+	setHeading :oldHeading - 90
+	forward :baseLength
+	polyEnd
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to perspectiveDash :size :vanishingPointDistance :angle
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "topWidth :vanishingPointDistance * 2 * sin (:angle * 0.5)
+	localmake "baseWidth (:vanishingPointDistance + :size) * 2 * sin (:angle * 0.5)
+	localmake "size1 :size / cos (:angle * 0.5)
+	jumpRight :baseWidth * 0.5
+	left :angle * 0.5
+	polyStart
+	forward :size1
+	setHeading :oldHeading - 90
+	forward :topWidth
+	left 90 - :angle * 0.5
+	forward :size1
+	polyEnd
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to dashedCenterLine :size :angle
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "numDashes 3
+	localmake "dashLength :size * 0.5 * (:numDashes + 1) / (:numDashes*:numDashes)
+	jumpBackward :size
+	localmake "vanishingDistance :size
+	repeat :numDashes [
+		if repcount = :numDashes [
+			localmake "dashLength :vanishingDistance
+		]
+		localmake "vanishingDistance :vanishingDistance - :dashLength
+		perspectiveDash :dashLength :vanishingDistance :angle
+		localmake "vanishingDistance :vanishingDistance - :dashLength
+		jumpForward :dashLength * 2
+	]
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to highway :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "wideAngle 90
+	localmake "narrowAngle 70
+	localmake "centerLineAngle 15
+	setFillColor "black
+	filledIsoscelesTriangle :size :wideAngle
+	setFillColor "white
+	filledIsoscelesTriangle :size :narrowAngle
+	setFillColor "black
+	dashedCenterLine :size :centerLineAngle
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to highwayToSun :size
+	localmake "oldPos pos
+	jumpForward :size * 0.5
+	sun :size * 0.5
+	highway :size * 0.5
+	jumpTo :oldPos
+end
+
+highwayToSun 100

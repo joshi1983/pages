@@ -1,0 +1,45 @@
+!
+!  PROJECT3        version 2.0
+!
+!  Show three perspective views of a marked cube  (top row), 
+!  and the same three parallel views  (bottom row).
+!
+LIBRARY "3DLib.trc"
+
+OPEN #1: screen 0, .3, .5, 1      ! Perspective
+CALL PersWindow (0, 1, 0, 1, 0, 1)
+CALL SetCamera3 (.5, -2, .5)
+CALL MarkedCube
+CALL PlotText3 (.3, .5, 1.3, "Front")
+
+OPEN #2: screen .31, .6, .5, 1
+CALL PersWindow (0, 1, 0, 1, 0, 1)
+CALL SetCamera3 (3, -4, 4)
+CALL MarkedCube
+CALL PlotText3 (0, .5, 1.4, "Default")
+
+OPEN #3: screen .61, 1, .5, 1
+CALL PersWindow (0, 1, 0, 1, 0, 1)
+CALL SetCamera3 (.5, .5, 3)
+CALL MarkedCube
+CALL PlotText3 (.3, 1.5, 0, "Above")
+
+OPEN #4: screen 0, .3, 0, .5      ! Parallel
+CALL ParaWindow (0, 1, 0, 1, 0, 1)
+CALL SetCamera3 (.5, -2, .5)
+CALL MarkedCube
+CALL PlotText3 (.3, .5, 1.2, "Front")
+
+OPEN #5: screen .31, .6, 0, .5
+CALL ParaWindow (0, 1, 0, 1, 0, 1)
+CALL SetCamera3 (3, -4, 4)
+CALL MarkedCube
+CALL PlotText3 (0, .5, 1.5, "Default")
+
+OPEN #6: screen .61, 1, 0, .5
+CALL ParaWindow (0, 1, 0, 1, 0, 1)
+CALL SetCamera3 (.5, .5, 3)
+CALL MarkedCube
+CALL PlotText3 (.2, 1.3, 0, "Above")
+
+END

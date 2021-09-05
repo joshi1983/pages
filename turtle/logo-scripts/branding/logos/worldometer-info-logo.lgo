@@ -1,0 +1,28 @@
+; Inspired by favicon at
+; https://www.worldometers.info
+to worldometerLogo :height
+	localmake "oldState turtleState
+	localmake "arcRadius :height * 0.1695
+	localmake "size1 :height * 0.45
+	jumpForward :height / 2
+	setPenSize 0
+	setFillColor "#a3da50
+	roundRect :height :height :height * 0.12
+
+	setPenColor "white
+	setPenSize :height * 0.12
+	setLineCap "butt
+	setLineJoinStyle "miter
+	jumpForward :height * 0.33
+	jumpLeft :arcRadius * 2
+	right 180
+	repeat 2 [
+		forward :size1
+		arcLeft 180 :arcRadius
+		forward :size1
+		right 180
+	]
+	setTurtleState :oldState
+end
+
+worldometerLogo 100

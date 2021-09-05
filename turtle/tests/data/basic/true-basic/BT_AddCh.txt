@@ -1,0 +1,96 @@
+!------------------------------------------------------------------------
+! Program .. Bt-AddCh .. a modification of program Bt-Add.              |
+! This program either adds a new entry to the (NameAdPh) Data Base,     |
+! or if the entry is already in the Data Base, then changes the         |
+! existing entry.                                                       |
+!------------------------------------------------------------------------
+ 
+LIBRARY "BTreeLib.trc"
+
+!------------------------------------------------------------------------ 
+! First, the program Opens the Data Base.                               |
+!------------------------------------------------------------------------
+ 
+CALL BtOpen ("NameAdPh", DataBaseSize, #1)
+
+!------------------------------------------------------------------------ 
+! Then prompts for the person's name, and builds the entry's key.       |
+!------------------------------------------------------------------------
+
+CLEAR
+SET CURSOR 2, 2
+INPUT PROMPT "Enter the person's last name ............. ": LastName$
+SET CURSOR 4, 2
+INPUT PROMPT "Enter the person's first name ............ ": FirstName$
+
+LET DbKey$ = UCASE$(LastName$) & " " & UCASE$(FirstName$)
+
+!------------------------------------------------------------------------ 
+! Then checks to see if the person is already in the Data Base.         |
+!------------------------------------------------------------------------
+
+CALL Find (DbKey$, #1, AlreadyExists)
+
+!------------------------------------------------------------------------ 
+! Unlike program Bt-Add, this program does not display a message and    |
+! stop, if the entry is already in the Data Base.                       |
+! Regardless of the outcome of the (Find) command, this program goes    |
+! ahead and prompts for the person's address and phone number.          |
+!------------------------------------------------------------------------
+
+SET CURSOR 6, 2
+INPUT PROMPT "Enter the street address or box number ... ": Street$
+SET CURSOR 8, 2
+INPUT PROMPT "Enter the city ........................... ": City$
+SET CURSOR 10, 2
+INPUT PROMPT "Enter the 2 character state abreviation .. ": State$
+SET CURSOR 12, 2
+INPUT PROMPT "Enter the zip code ....................... ": Zip$
+SET CURSOR 14, 2
+INPUT PROMPT "Enter the phone number ................... ": Phone$
+
+!------------------------------------------------------------------------ 
+! The program is now ready to add the entry to the Data Base.           |
+! This time the program will use the B-Tree (Put) subroutine, instead   | 
+! of the B-Tree (Add) subroutine, to place the entry in the Data Base.  |
+! If the person is a new entry, then (Put) will add the entry to the    |
+! Data Base, just like the (Add) subroutine would do.                   |
+! If however, the person is already in the Data Base, then (Put) will   |
+! replace the existing entry with the new entry.                        |
+!------------------------------------------------------------------------
+
+LET DataString$ = Street$ & "\" & City$ & "\" & State$ & "\" & Zip$ & "\"
+LET DataString$ = DataString$ & Phone$
+
+CALL Put (DbKey$, DataString$, #1, AddedOk)
+
+!------------------------------------------------------------------------ 
+! The program is now ready to display a message indicating whether or   |
+! not the entry was successfully placed in the Data Base.               |
+! And if the entry was placed successfully, whether or not the person   |
+! was already in the Data Base.                                         |
+! After the appropriate message is displayed, the program will wait     |
+! for you to respond by pressing a key.  Once a key is pressed, the     |
+! program will stop.                                                    |
+!------------------------------------------------------------------------
+  
+SET CURSOR 16, 2
+IF AddedOk = 0 THEN
+   PRINT "B-Tree subroutine (Put) was unable to place the entry.";
+   ELSE
+   IF AlreadyExists = 1 THEN
+      PRINT "The existing Data Base entry was successfully replaced.";
+      ELSE
+      PRINT "The new entry was successfully added to the Data Base.";
+      END IF
+   END IF
+SET CURSOR 18, 2
+PRINT "Press any key to end the program .. ";
+DO WHILE KEY INPUT
+   GET KEY KeyPressed
+   LOOP
+GET KEY KeyPressed
+
+CALL BtClose (#1)
+CLEAR
+END

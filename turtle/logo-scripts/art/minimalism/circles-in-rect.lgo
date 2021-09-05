@@ -1,0 +1,50 @@
+; Inspired by image at:
+; https://ca.pinterest.com/pin/422281212325727
+; In case the pin becomes unavailable,
+; it was added by an account with name feyyy1769 and Anna.
+; It linked to anna.com but that site had an expired domain when I checked it.
+to circleInRect :height
+	localmake "oldState turtleState
+	localmake "maxRadius :height * 0.264
+	localmake "thickness :height * 0.04
+	localmake "width :height * 0.705
+	localmake "colors ["#f53101 "#f99dc4 "#0361d5 "#f9b104]
+	localmake "lens [:width / 2 :height / 2]
+	setPenSize :thickness
+	setPenColor "black
+	setFillColor "white
+	jumpForward :height / 2
+	localmake "center pos
+	setLineCap "butt
+	setPenSize 0
+	repeat 4 [
+		localmake "len item (1 + remainder repcount 2) :lens
+		localmake "len2 item (1 + remainder 1 + repcount 2) :lens 
+		jumpRight :maxRadius
+		setFillColor item repcount :colors
+		drawArcLineShape [0 0
+			[[90 :maxRadius / :height] [:len2 / :height] [-90 0]
+			[(:len - :maxRadius) / :height] [-90 0]
+			[(:len2 + :maxRadius) / :height]]
+		] :height
+		jumpTo :center
+		right 90
+	]
+	setPenSize :thickness
+	repeat 4 [
+		localmake "len item (1 + remainder repcount 2) :lens
+		jumpRight :maxRadius
+		forward :len		
+		jumpTo :center
+		right 90
+	]
+	setFillColor "white
+	repeat 4 [
+		localmake "radius :maxRadius  * mix 0.21 1 repRatio
+		circle :radius
+	]
+
+	setTurtleState :oldState
+end
+
+circleInRect 100

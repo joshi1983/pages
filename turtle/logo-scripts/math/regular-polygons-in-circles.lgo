@@ -1,0 +1,31 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/File:Kepler-constant.gif
+to regularPolygonsInCircles :height :maxSides
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "height1 :height * 0.99
+	localmake "radius :height1 / (1 + sin 30)
+	localmake "mixRatio 1 / (sqrt :maxSides)
+	localmake "minRadius :radius
+	for ["numSides 3 :maxSides] [
+		localmake "minRadius :minRadius * cos 180 / :numSides
+	]
+	jumpForward :radius + :height * 0.005
+	for ["numSides 3 :maxSides] [
+		localmake "ratio1 (:numSides - 3) / (:maxSides - 3)
+		localmake "ratio2 1 - (:radius - :minRadius) / (:height - :minRadius)
+		localmake "ratio mix :ratio1 :ratio2 :mixRatio
+		localmake "scale :height * mix 0.01 1 :ratio
+		setHeading :oldHeading + 180 / :numSides
+		setPenColor "black
+		setPenSize :scale * 0.01
+		regularPolygon :radius :numSides
+		localmake "radius :radius * cos 180 / :numSides
+		setPenColor "green
+		setPenSize :scale * 0.005
+		circle :radius
+	]
+	setTurtleState :oldState
+end
+
+regularPolygonsInCircles 100 50

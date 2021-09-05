@@ -1,0 +1,24 @@
+<code>; Draws a square of the specified size around current turtle position.
+; Does not change turtle position
+to drawSquare :size
+&nbsp;&nbsp;localmake "originalPos pos
+&nbsp;&nbsp;jumpForward :size * 0.5
+&nbsp;&nbsp;right 90
+&nbsp;&nbsp;jumpBackward :size * 0.5
+&nbsp;&nbsp;; Now, turtle is at desired heading and position.
+&nbsp;&nbsp;repeat 4 [
+&nbsp;&nbsp;&nbsp;&nbsp;forward :size
+&nbsp;&nbsp;&nbsp;&nbsp;right 90
+&nbsp;&nbsp;]
+&nbsp;&nbsp;jumpTo :originalPos
+&nbsp;&nbsp;; Restored original turtle position.
+&nbsp;&nbsp;left 90
+&nbsp;&nbsp;; Restored original heading
+end
+
+drawSquare 100
+
+; Draw squares of various sizes with the same center.
+repeat 50 [
+&nbsp;&nbsp;square 100 + repcount * 5
+]</code>

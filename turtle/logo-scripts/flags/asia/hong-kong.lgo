@@ -1,0 +1,46 @@
+; Inspired by the logo at:
+; https://upload.wikimedia.org/wikipedia/commons/5/5b/Flag_of_Hong_Kong.svg
+; Referenced from:
+; https://en.wikipedia.org/wiki/Hong_Kong
+
+to leaf :size
+	localmake "oldState turtleState
+	jumpForward :size * 0.0143
+	jumpLeft :size * 0.0176
+	left 48.1
+	setPenSize 0
+	polyStart
+	arcsRight [[115 0.219] [-99.8 0.26] [105.8 0.1565]
+	[-154 0] [-167 0.5135] [-165.5 0] [87.55 0.399] [99 0]] :size
+	jumpForward :size * 0.0085
+	right 81
+	arcLeft 88 :size * 0.389
+	polyEnd
+
+	setTurtleState :oldState
+end
+
+to hongKongFlag :height
+	localmake "oldHeading heading
+	localmake "leafSize :height * 0.2931
+	localmake "starSize :height * 0.02622214
+	localmake "width :height * 3 / 2
+	localmake "flagRed "#ee1c25
+	stripes :width :height [:flagRed]
+	jumpForward :height / 2
+	localmake "pos1 pos
+	setPenSize 0
+	repeat 5 [
+		setHeading :oldHeading + repcount * 360 / 5
+		setFillColor "white
+		leaf :leafSize
+		setFillColor :flagRed
+		jumpForward :leafSize * 0.6165
+		jumpLeft :leafSize * 0.056
+		left 23.5
+		regularStar :starSize 5
+		jumpTo :pos1
+	]
+end
+
+hongKongFlag 100

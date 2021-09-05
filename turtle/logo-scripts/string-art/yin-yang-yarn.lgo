@@ -1,0 +1,83 @@
+to addArcLeftPoints :angle :radius :numPoints :result
+	localmake "angleStep :angle / :numPoints
+	repeat :numPoints [
+		arcLeft :angleStep :radius
+		queue2 "result pos
+	]
+end
+
+to getYinYangPoints :height
+	localmake "oldState turtleState
+	localmake "outerRadius :height / 2
+	localmake "innerRadius :outerRadius / 2
+	localmake "result []
+	
+	jumpTo [0 0 0]
+	setHeading 180
+	setPenSize 0
+	jumpLeft :outerRadius
+		
+	addArcLeftPoints -180 :outerRadius 19 :result
+	addArcLeftPoints -180 :innerRadius 10 :result
+	addArcLeftPoints 180 :innerRadius 30 :result
+
+	setTurtleState :oldState
+	output :result
+end
+
+to convertPointUsingHeading :p
+	localmake "oldPos pos
+	jumpLeft first :p
+	jumpForward item 2 :p
+	localmake "result pos
+	jumpTo :oldPos
+	output :result
+end
+
+; Inspired by
+; https://www.artofmathematics.org/media/image-423
+to yinYangYarn :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "colors ["black "white]
+	localmake "points getYinYangPoints :height
+	setLineCap "round
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize :height * 0.002
+	setPenColor "black
+	circle :height / 2
+	; draw nails.
+	setFillColor "black
+	setPenSize 0
+	repeat count :colors [
+		repeat count :points [
+			localmake "p convertPointUsingHeading item repcount :points
+			jumpTo :p
+			circle :height * 0.015
+			jumpTo :center
+		]
+		right 360 / count :colors
+	]
+	setHeading :oldHeading
+	setPenSize :height * 0.01
+	repeat count :colors [
+		setPenColor item repcount :colors
+		localmake "heading1 :oldHeading + repcount * 360 / count :colors
+		repeat (count :points) / 2 [
+			setHeading :heading1
+			localmake "p1 convertPointUsingHeading item repcount :points
+			localmake "toIndex (count :points) + 1 - repcount
+			localmake "toPoint convertPointUsingHeading item :toIndex :points
+			jumpTo :p1
+			setHeading towards :toPoint
+			forward distance :toPoint
+			jumpTo :center
+		]
+	]
+	
+	setTurtleState :oldState
+end
+
+setScreenColor "brown
+yinYangYarn 100

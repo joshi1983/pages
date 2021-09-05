@@ -1,0 +1,60 @@
+make "pakistanGreen "#00401A
+
+; Based mostly on construction sheet at:
+; https://en.wikipedia.org/wiki/Flag_of_Pakistan#/media/File:Flag_of_Pakistan_(construction_sheet).svg
+to pakistanFlag :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "width :height * 3 / 2
+	localmake "whiteLeftWidth :height * 7.5 / 20
+	localmake "greenRightWidth :width - :whiteLeftWidth
+	localmake "angle arcTan 11.25 / 10
+	localmake "A :height / 20 * ((hypot [11.25 10]) - 13)
+	localmake "B :height * 4 / 20 - :A
+	localmake "starSize1 :height * 2 / 20
+	jumpLeft (:width - :whiteLeftWidth) / 2
+	setLineCap "butt
+	setPenColor "white
+	setPenSize :whiteLeftWidth
+	forward :height
+	jumpTo :oldPos
+	jumpRight (:width - :greenRightWidth) / 2
+	setPenColor :pakistanGreen
+	setPenSize :greenRightWidth
+	forward :height
+	jumpBackward :height / 2
+	setFillColor "white
+	setPenSize 0
+	circle :height * 6 / 20
+	right :angle
+	jumpForward :A
+	setFillColor :pakistanGreen
+	circle :height * 11 / 40
+	jumpForward :B
+	setFillColor "white
+	regularStar :starSize1 5
+	
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Pakistan#/media/File:Civil_Ensign_of_Pakistan.svg
+to civilEnsigniaOfPakistan :height
+	localmake "oldState turtleState
+	localmake "width :height * 3 / 2
+	localmake "smallHeight :height / 2
+	localmake "smallWidth :smallHeight * 3 / 2
+	stripes :width :height ["#d1081d]
+	jumpForward :height - :smallHeight
+	jumpLeft (:width - :smallWidth) / 2
+	pakistanFlag :smallHeight
+	setTurtleState :oldState
+end
+
+setScreenColor "#888
+make "height 100
+make "separation :height * 4
+jumpLeft :separation * 0.5
+pakistanFlag :height
+jumpRight :separation
+civilEnsigniaOfPakistan :height

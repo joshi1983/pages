@@ -1,0 +1,87 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Microsoft_365#/media/File:Microsoft_365_(2022).svg
+; Referenced from:
+; https://en.wikipedia.org/wiki/Microsoft_365
+
+make "microsoft360Ratio1 0.183
+
+to logoPiece :logoHeight
+	localmake "oldState turtleState
+	localmake "arcRadius :logoHeight * :microsoft360Ratio1
+	localmake "size2 :logoHeight * 0.3175
+	localmake "arcAngle1 120
+	localmake "arcAngle2 180 - :arcAngle1
+	polyStart
+	jumpForward :logoHeight * 0.215
+	arcRight :arcAngle1 :arcRadius
+	jumpForward :size2
+	arcRight :arcAngle2 :arcRadius
+	jumpForward :size2
+	right 180
+	arcLeft :arcAngle2 :arcRadius
+	jumpForward :size2
+	arcLeft :arcAngle2 :arcRadius
+	polyEnd
+	setTurtleState :oldState
+end
+
+to saturatedGradient :colors :logoHeight
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "colorStops createPList2 [
+		[0 item 1 :colors] [1 item 2 :colors]
+	]
+	left 60
+	jumpForward :logoHeight * 0.13
+	localmake "fromPos pos
+	jumpBackward :logoHeight * 0.78	
+	localmake "result createLinearGradient pos :fromPos :colorStops "pad
+	jumpTo :oldPos
+	setHeading :oldHeading
+	output :result
+end
+
+to shadowGradient :logoHeight
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "colorStops createPList2 [
+		[0 "#7000] [0.1 "#5000] [0.3 "#3000] [1 "#0000]
+	]
+	left 90
+	jumpForward :logoHeight * 0
+	localmake "fromPos pos
+	jumpBackward :logoHeight * 0.6	
+	localmake "result createLinearGradient :fromPos pos :colorStops "pad
+	jumpTo :oldPos
+	setHeading :oldHeading
+	output :result
+end
+
+to microsoft360Logo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "numSides 3
+	jumpForward :height / 2
+	setPenSize 0
+	localmake "center pos
+	localmake "colors [["#4fdcfb "#489adf] ["#d59dff "#8f68bd] ["#9a7ee0 "#597cdb]]
+	repeat :numSides [
+		setHeading :oldHeading + (repcount - 1) * 360 / :numSides
+		jumpLeft :height * :microsoft360Ratio1
+		jumpForward :height * 0.10246731
+		localmake "gradients [
+			saturatedGradient item repcount :colors :height
+			shadowGradient :height
+		]
+		; loop through gradients.
+		repeat count :gradients [
+			setFillGradient item repcount :gradients
+			logoPiece :height
+		]
+		jumpTo :center
+		right 120
+	]
+	setTurtleState :oldState
+end
+
+microsoft360Logo 100

@@ -1,0 +1,35 @@
+; Inspired by logo at:
+; https://www.mainstreetproject.ca/
+to mainStreetProjectLogo :height
+	localmake "oldState turtleState
+	localmake "rings [
+		[0.5 "#f0c186]
+		[0.43 "#f25b45]
+		[0.36 "#075d87]
+	]
+	localmake "len1 0.19
+	localmake "angle1 51
+	localmake "lines1 [
+		[:angle1 0] [:len1 / 2 / sin :angle1] [-:angle1 0]
+		[0.13] [-90 0] [:len1 / 2]
+	]
+	localmake "shape combine :lines1 reverse :lines1
+	localmake "numShapesPerRing 8
+	setPenSize 0
+	jumpForward :height / 2
+	repeat count :rings [
+		localmake "ring item repcount :rings
+		setFillColor last :ring
+		repeat :numShapesPerRing [
+			drawArcLineShape [0 -first :ring
+				:shape
+			] :height
+			right 360 / :numShapesPerRing
+		]
+		setFillBlendMode "darken
+		right 180 / :numShapesPerRing
+	]
+	setTurtleState :oldState
+end
+
+mainStreetProjectLogo 100

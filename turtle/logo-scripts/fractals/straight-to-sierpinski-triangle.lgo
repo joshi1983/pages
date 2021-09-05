@@ -1,0 +1,67 @@
+; Similar spirals are explained at: 
+; https://youtu.be/kMBj2fp52tA?t=556
+
+to getAngle
+	output 60 * interpolateRatio easeInOut animation.clampedTimeRatio
+end
+
+make "angle getAngle
+
+; x -> y + x + y
+to x :count
+	ifelse :count < 0 [
+		forward 1
+	] [
+		localmake "count :count - 1
+		y :count
+		right :angle
+		x :count
+		right :angle
+		y :count
+	]
+end
+
+; y -> x - y - x
+to y :count
+	ifelse :count < 0 [
+		forward 1
+	] [
+		localmake "count :count - 1
+		x :count
+		left :angle
+		y :count
+		left :angle
+		x :count
+	]
+end
+
+setPenSize clamp 2 / tan :angle 0.5 50
+right 90
+x 7
+
+to animation.snapshotstyle
+	localmake "box drawing.box
+	localmake "miX getProperty "box "minX
+	localmake "miY getProperty "box "minY
+	localmake "maX getProperty "box "maxX
+	localmake "maY getProperty "box "maxY
+	localmake "averageX mix :miX :maX 0.5
+	localmake "averageY mix :miY :maY 0.5
+	localmake "length (max 1 :maX - :miX :maY - :miY)
+	localmake "scale 570 / :length
+	output createPList2 [
+		["zoom.scale :scale]
+		["position.x :averageX]
+		["position.y :averageY]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 10
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+		["thumbnailTime 3]
+	]
+end

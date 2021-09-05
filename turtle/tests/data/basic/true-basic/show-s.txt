@@ -1,0 +1,20 @@
+EXTERNAL
+
+SUB Show (l$(), options$)
+
+    LIBRARY "{WB_c}WBfinds.trc"
+
+    WHEN EXCEPTION IN
+         CALL WB_Show (l$(), options$)
+         PRINT "Done with Show."
+    USE
+         IF extype = 1 then
+            PRINT extext$
+         ELSE
+            PRINT extype, extext$
+            PRINT exline$
+            PRINT "Error in Show."
+         END IF
+    END WHEN
+
+END SUB

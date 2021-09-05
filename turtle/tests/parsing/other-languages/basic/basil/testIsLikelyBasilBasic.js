@@ -1,0 +1,54 @@
+import { applesoftExamples } from
+'../../../../helpers/parsing/basic/applesoftExamples.js';
+import { basilBasicExamples } from
+'../../../../helpers/parsing/basic/basilBasicExamples.js';
+import { bbcBasicExamples } from
+'../../../../helpers/parsing/basic/bbcBasicExamples.js';
+import { commodoreBasicExamples } from
+'../../../../helpers/parsing/basic/commodoreBasicExamples.js';
+import { isLikelyBasilBasic } from
+'../../../../../modules/parsing/other-languages/basic/basil/isLikelyBasilBasic.js';
+import { pBasicExamples } from
+'../../../../helpers/parsing/basic/pBasicExamples.js';
+import { qbasicExamples } from
+'../../../../helpers/parsing/basic/qbasicExamples.js';
+import { sinclairBasicExamples } from
+'../../../../helpers/parsing/basic/sinclairBasicExamples.js';
+import { smallVisualBasicExamples } from
+'../../../../helpers/parsing/basic/smallVisualBasicExamples.js';
+import { testInOutPairs } from
+'../../../../helpers/testInOutPairs.js';
+import { trueBasicExamples } from
+'../../../../helpers/parsing/basic/trueBasicExamples.js';
+
+export function testIsLikelyBasilBasic(logger) {
+	const cases = [
+		{'in': `print pathCutFromStart [] 0
++; prints []
++
++print pathCutFromStart [[1]] 0.5
++; prints pathCutFromStart [[0.5]]
++
++print pathCutFromStart [[2]] 0.5
++; prints pathCutFromStart [[1]]
++
++print pathCutFromStart [[180 1]] 0.5
++; prints pathCutFromStart [[90 1]]<`,
+		'out': false}
+	];
+	bbcBasicExamples.concat(qbasicExamples).concat(applesoftExamples).concat(commodoreBasicExamples).
+	concat(pBasicExamples).concat(sinclairBasicExamples).concat(smallVisualBasicExamples).concat(trueBasicExamples).
+	forEach(function(code) {
+		cases.push({
+			'in': code,
+			'out': false
+		});
+	});
+	basilBasicExamples.forEach(function(content) {
+		cases.push({
+			'in': content,
+			'out': true
+		});
+	});
+	testInOutPairs(cases, isLikelyBasilBasic, logger);
+};

@@ -1,0 +1,53 @@
+; Inspired by
+; https://www.youtube.com/@CalculusCoder.
+; He discusses some of the challenges facing
+; junior software developers
+; and self-taught software developers.
+; He also gives some good honest advice.
+
+to calculusCoderLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "colorPalette ["#1365ae "#73b0f3 "#a3fedb "#78e8b8 "#7dfafc]
+	localmake "linesInfo [
+		[0 [0 1] [0.38 2] [0.21 3]]
+		[0.09 [0.07 1] [0.22 4] [0.08 2] [0.27 4] [0.05 4]]
+		[0.17 [0.24 3] [0.59 5]]
+		[0.09 [0.45 1] [0.08 4] [0.22 3] [0.29 5]]
+		[0.17 [0.72 2] [0.16 4]]
+		[0.17 [0.09 4] [0.17 3] [0.15 4]]
+		[0.09 [0.2 2] [0.17 4] [0.38 3]]
+		[0.03 [0.19 1] [0.35 4] [0.1 3]]
+		[0.08 [0 5] [0.38 4] [0.15 5]]
+		[0.17 [0.34 1] [0.11 2]]
+		[0.09 [0.16 2] [0.52 3]]
+		[0.17 [0.34 4] [0.14 3]]
+	]
+	localmake "lineHeight :height / 11.8
+	localmake "gap :lineHeight
+	jumpForward :height - :lineHeight / 2
+	jumpLeft :height * 0.69
+	setLineCap "round
+	setPenSize :lineHeight * 0.65
+	repeat count :linesInfo [
+		localmake "lineInfo item repcount :linesInfo
+		localmake "lineStartPos pos
+		jumpRight :height * first :lineInfo
+		right 90
+		for ["i 2 count :lineInfo] [
+			localmake "lineSegmentInfo item :i :lineInfo
+			localmake "colorIndex last :lineSegmentInfo
+			localmake "len :height * first :lineSegmentInfo
+			setPenColor item :colorIndex :colorPalette
+			forward :len
+			jumpForward :gap
+		]		
+		jumpTo :lineStartPos
+		setHeading :oldHeading
+		jumpBackward :lineHeight
+	]	
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+calculusCoderLogo 100

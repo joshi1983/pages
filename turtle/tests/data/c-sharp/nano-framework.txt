@@ -1,0 +1,12 @@
+// copied from https://nanoframework.net/
+using System.Device.Gpio;
+using System.Threading;
+
+var gpio = new GpioController();
+var led  = gpio.OpenPin(2, PinMode.Output);
+
+while (true)
+{
+    led.Toggle();
+    Thread.Sleep(500);  // that's it. blinky.
+}

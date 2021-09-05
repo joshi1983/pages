@@ -1,0 +1,31 @@
+// copied from: https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl-to-samplegrad
+
+// Object Declarations
+Texture2D g_txDiffuse;
+
+SamplerState g_samLinear
+{
+    Filter = ANISOTROPIC;
+    MaxAnisotropy = 8;
+    AddressU = Wrap;
+    AddressV = Wrap;
+};
+
+struct VSSceneOut
+{
+    float4 Pos : SV_POSITION;
+    float4 Color : COLOR0;
+    float2 Tex : TEXCOORD;
+    float2 Aniso : ANISOTROPY;
+};
+
+float4 PSSceneMain( VSSceneOut Input ) : SV_TARGET
+{
+    float2 ddx = Input.Aniso;
+    float2 ddy = Input.Aniso;
+    
+    // Shader body calling the intrinsic function
+    float4 diff = g_txDiffuse.SampleGrad( g_samLinear, Input.Tex, ddx, ddy);
+    
+    ...
+}

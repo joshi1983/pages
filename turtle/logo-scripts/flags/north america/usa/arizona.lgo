@@ -1,0 +1,54 @@
+to distanceToBoundary :width :height :angle
+	localmake "d1 abs :width / 2 / sin :angle
+	localmake "d2 abs :height / 2 / cos :angle
+	output min :d1 :d2
+end
+
+to radialStripes :width :height
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angleStep 182 / 13
+	localmake "angle -:angleStep * 5.5
+	repeat 6 [
+		setHeading :oldHeading + :angle
+		localmake "distance distanceToBoundary :width :height :angle
+		jumpForward :distance
+		polyStart
+		jumpBackward :distance
+		right :angleStep
+		localmake "distance distanceToBoundary :width :height :angle + :angleStep
+		jumpForward :distance
+		polyEnd
+		jumpTo :oldPos
+		localmake "angle :angle + :angleStep * 2
+	]
+	setHeading :oldHeading
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Arizona#/media/File:Flag_of_Arizona.svg
+; The stripes don't line up perfectly but the difference would be hard to notice
+; without overlaying this drawing over the SVG.
+to arizonaFlag :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "oldPos pos
+	localmake "width :height * 3 / 2
+	localmake "starSize :height * 0.277
+	stripes :width :height ["#002664 "#bb133e]
+	setFillColor "#fed700
+	setPenSize 0
+	jumpForward :height / 2
+	radialStripes :width :height
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.47475
+	setPenSize 0
+	setFillColor "#ce5c17
+	regularStar :starSize 5
+	setTurtleState :oldState
+end
+
+make "height 100
+arizonaFlag :height
