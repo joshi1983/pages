@@ -1,0 +1,46 @@
+; Inspired by
+; https://commons.wikimedia.org/wiki/File:Spotify_logo_with_text.svg
+to spotifyLogoCustomColor :height :color
+	localmake "oldState turtleState
+	localmake "maxThickness :height * 0.095
+	localmake "minThickness :height * 0.06
+	localmake "maxR :height * 0.9
+	localmake "minR :height * 0.6
+	localmake "gaps vectorScale [0.165 0.155 0] :height
+	localmake "angles [40 42 45]
+	setPenSize 0
+	setFillColor :color
+	jumpForward :height / 2
+	circle :height / 2
+	setLineCap "round
+	setPenColor "white
+	jumpForward :height * 0.185
+	jumpRight :height * 0.016
+	right 6.4
+	localmake "heading1 heading
+	repeat 3 [
+		localmake "pos1 pos
+		localmake "arcRadius mix :minR :maxR repRatio
+		localmake "arcAngle item repcount :angles
+		setPenSize 0
+		right 90
+		arcRight :arcAngle / 2 :arcRadius
+		setPenSize mix :minThickness :maxThickness repRatio
+		left 180
+		arcLeft :arcAngle :arcRadius
+		setHeading :heading1
+		jumpTo :pos1
+		jumpBackward item repcount :gaps
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "#eee
+make "colors ["#1ED760 "black]
+make "height 100
+make "separation :height * 5
+jumpLeft ((count :colors) - 1) * :separation / 2
+repeat count :colors [
+	spotifyLogoCustomColor :height item repcount :colors
+	jumpRight :separation
+]
