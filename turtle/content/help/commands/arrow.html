@@ -1,0 +1,52 @@
+<code>setPenSize 10
+setPenColor "red
+arrow 100 30 20
+; Draws a red arrow
+
+make "colorStops createPList2 [
+	[0 "red] [1 "blue]
+]
+setPenGradient createLinearGradient [0 100] [0 200] :colorStops "pad
+arrow 100 30 20
+; An arrow is drawn with a gradient</code>
+<code>; myArrow procedure behaves exactly like arrow command.
+; The arrow command is available so you don't need to implement it yourself.
+; Reviewing this implementation could help you implement something similar using procedures, though.
+to myArrow :length :headAngleDegrees :edgeSize
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "oldPenSize penSize
+	localmake "edgeWidth :oldPenSize + :edgeSize * 2
+	localmake "length1 :length - :edgeWidth / 2 / tan :headAngleDegrees
+	localmake "headSlantLength :edgeWidth / 2 / sin :headAngleDegrees
+	setFillColor penColor
+	if penGradient? [
+		setFillGradient penGradient
+	]
+	setPenSize 0
+	jumpRight :oldPenSize / 2
+	polyStart
+	jumpForward :length1
+	jumpRight :edgeSize
+	left :headAngleDegrees
+	jumpForward :headSlantLength
+	left 180 - 2 * :headAngleDegrees
+	jumpForward :headSlantLength
+	setHeading :oldHeading
+	jumpRight :edgeSize
+	jumpBackward :length1
+	polyEnd
+	setTurtleState :oldState
+	jumpForward :length
+end
+
+setPenSize 10
+setPenColor "red
+myArrow 100 30 20
+; Draws a red arrow
+
+make "colorStops createPList2 [
+	[0 "red] [1 "blue]
+]
+setPenGradient createLinearGradient [0 100] [0 200] :colorStops "pad
+myArrow 100 30 20</code>

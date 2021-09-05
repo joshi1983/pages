@@ -1,0 +1,35 @@
+; Inspired by logo at
+; http://www.tomelleri.com
+to tomelleriLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "innerSquareSize :height * 0.61
+	localmake "minThickness :height * 0.01
+	localmake "maxThickness :height * 0.065
+	localmake "thicknesses [:minThickness :maxThickness]
+	localmake "littleSquareSize :height * 0.42
+	localmake "separationY :height - :maxThickness - :littleSquareSize
+	localmake "separation :separationY
+	setPenColor "#010080
+	setLineJoinStyle "miter
+	setFillColor transparent
+	jumpForward (:littleSquareSize + :maxThickness) / 2
+	jumpLeft :separation / 2
+	for ["i 0 1] [
+		repeat 2 [
+			setPenSize item 1 + remainder repcount + :i 2 :thicknesses
+			rect :littleSquareSize :littleSquareSize
+			jumpRight :separation
+		]
+		jumpLeft :separation * 2
+		jumpForward :separationY
+	]
+
+	jumpTo :oldPos	
+	setPenSize :minThickness
+	jumpForward :height / 2
+	rect :innerSquareSize :innerSquareSize
+	setTurtleState :oldState
+end
+
+tomelleriLogo 100
