@@ -1,0 +1,105 @@
+; Camera shutter animation
+; inspired by:
+; http://golancourses.net/2014/wp-content/uploads/2014/01/harisusmai_shutter.gif
+
+to calculateShutterProperties :size :openRatio
+	localmake "y :size * :openRatio
+	localmake "x sqrt :size * :size - :y * :y
+	output [:x :y]
+end
+
+to drawSingleShutter :size :openRatio
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "coords calculateShutterProperties :size :openRatio
+	localmake "y item 2 :coords
+	localmake "x item 1 :coords
+	localmake "angle arcsin :x / :size
+	setpensize 0
+	fd :y
+	left 90
+	fd :x
+	right 180 - :angle
+	polystart
+	arcRight :angle * 2 :size
+	right 180 - :angle
+	forward :x + :x
+	polyend
+	setpos :oldPos
+	setHeading :oldHeading
+end
+
+to drawShutters :size :openRatio
+	localmake "oldFillColor fillcolor
+	localmake "oldHeading heading
+	localmake "oldPos pos
+	localmake "pw1 :size * 0.08
+	localmake "size1 :size - :pw1 * 0.5
+	localmake "nutRadius :size * 0.03
+	localmake "darkColor1 "#000
+	localmake "darkColor2 "#444
+	localmake "nutColor "#bbb
+
+	setpencolor :darkColor1
+	setfillcolor :darkColor2
+	repeat 6 [
+		drawSingleShutter :size :openRatio
+		right 360 / 6
+	]
+	setpensize :size * 0.01
+	repeat 6 [
+		localmake "coords calculateShutterProperties :size :openRatio
+		localmake "x item 1 :coords
+		localmake "y item 2 :coords
+		localmake "startCoord min :x (:y * tan (360 / 12))
+		penup
+		fd :y
+		right 90
+		fd :startCoord
+		right 180
+		pendown
+		fd :x + :startCoord
+		penup
+		setPos :oldPos
+		setHeading :oldHeading + repcount * 360 / 6
+	]
+	setpensize :pw1
+	setpencolor :darkColor2
+	setfillcolor transparent
+	pendown
+	circle :size1
+	setpencolor :darkColor1
+	setpensize :size * 0.01
+	circle :size1 - :pw1 * 0.5
+	circle :size1 + :pw1 * 0.5
+
+	setfillcolor :nutColor
+	setpencolor :darkColor1
+	setpensize :nutRadius * 0.1
+	repeat 6 [
+		penup
+		forward :size1
+		pendown
+		circle :nutRadius
+		penup
+		setPos :oldPos
+		pendown
+		right 360 / 6
+	]
+	setfillcolor :oldFillColor
+	setheading :oldHeading
+end
+
+drawShutters 250 animation.time / 3
+
+to animation.snapshotstyle
+	localmake "result plistCreate
+	output :result
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 3
+	; Edit this if you want to change the length of your animation.
+	output :minutes * 60 + :seconds
+end

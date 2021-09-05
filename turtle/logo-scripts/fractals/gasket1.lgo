@@ -1,0 +1,66 @@
+; This drawing was inspired by:
+; http://www.unariunwisdom.com/wp-content/uploads/2016/10/fractals-of-inifinity-1.png
+; Also, found at:
+; https://szimmetria-airtemmizs.tumblr.com/post/151527351408/fractal-based-on-steiner-chains
+
+to circlePattern :size
+	if :size > 3 [
+		localmake "originalPos pos
+		localmake "xDelta1 :size * 0.569
+		localmake "xDelta2 :size * 0.42
+		localmake "size1 :size * 0.28518
+		localmake "size2 :size * 0.332
+		localmake "size3 :size * 0.105
+		localmake "yDelta :size / 3
+		localmake "yDelta2 :size * 0.67
+		localmake "yDelta3 :size * 0.79
+		localmake "thickness :size * 0.05
+		if :thickness < 0.2 [
+			localmake "thickness 0.2
+		]
+		setpensize :thickness
+		circle :size
+		penup
+		back :size * 0.430
+		pendown
+
+		; lower side circles
+		penup
+		setx xcor - :xDelta1
+		pendown
+		circlePattern :size1
+		penup
+		setx xcor + :xDelta1 * 2
+		pendown
+		circlePattern :size1
+
+		; central circle
+		penup
+		setx item 1 :originalPos
+		sety -:yDelta2 + item 2 :originalPos
+		pendown
+		circlePattern :size2
+
+		penup
+		setx xcor - :xDelta2
+		sety -:yDelta3 + item 2 :originalPos
+		pendown
+		circlePattern :size3
+		penup
+		setx xcor + :xDelta2 * 2
+		pendown
+		circlePattern :size3
+
+		penup
+		setx item 1 :originalPos
+		sety :yDelta + item 2 :originalPos
+		pendown
+		circlePattern :size * 2 / 3
+		penup
+		setpos :originalPos
+		pendown
+	]
+end
+
+setfillcolor transparent
+circlePattern 150

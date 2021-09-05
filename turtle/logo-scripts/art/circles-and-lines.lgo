@@ -1,0 +1,188 @@
+; Most of this is inspired by
+; https://www.pinterest.ca/pin/11118330317350054/
+
+to penUpForward :len
+	penUp
+	forward :len
+	penDown
+end
+
+to hexagon :radius
+	localmake "oldPos pos
+	localmake "sideLength :radius
+	penUp
+	forward :radius
+	right 90 + 180 / 6
+	penDown
+	repeat 6 [
+		forward :sideLength
+		right 360 / 6
+	]
+	penUp
+	setPos :oldPos
+end
+
+to triangle :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "sideLength :size * 2 * sin 60
+	penUp
+	forward :size
+	right 90 + 60
+	penDown
+	repeat 3 [
+		forward :sideLength
+		right 360 / 3
+	]
+	penUp
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to starStraightLines :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "largeSize :size * 4 / 5
+	localmake "smallSize :size * 2 / 5
+	repeat 3 [
+		penUp
+		back :largeSize
+		penDown
+		forward :largeSize * 2
+		penUp
+		setPos :oldPos
+		right 360 / 6
+	]
+	hexagon :largeSize
+	hexagon :smallSize
+	repeat 2 [
+		triangle :largeSize
+		triangle :smallSize
+		right 360 / 6
+	]
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to circles :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "smallRadius :size / 5
+	localmake "largeRadius :smallRadius * 3
+	setFillColor transparent
+	setPenSize :size * 0.01
+	circle :smallRadius
+	circle :largeRadius
+	repeat 6 [
+		repeat 2 [
+			penUp
+			forward :smallRadius * 2
+			penDown
+			circle :smallRadius
+		]
+		penUp
+		setPos :oldPos
+		right 360 / 6
+	]
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to circles2 :size
+	localmake "radius :size * 0.5
+	circle :radius
+	repeat 6 [
+		circle2 :radius
+		right 360 / 6
+	]
+end
+
+to circleStar :size
+	circles :size
+	starStraightLines :size
+end
+
+to straightRingPiece :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "size1 :size * 0.278
+	penUp
+	forward :size - :size1
+	penDown
+	localmake "pos1 pos
+	setPenSize :size * 0.01
+	localmake "previousPos pos
+	localmake "d 0
+	repeat 5 [
+		forward :size1
+		localmake "pos2 pos
+		ifelse (or (repcount = 2) (repcount = 4)) [
+			setHeading towards :previouspos
+			localmake "d distance :previousPos
+			forward :d
+		] [
+			if repcount = 5 [
+				right 180 - (180 - 360 / 5) / 2
+				forward :d
+			]
+		]
+		penUp
+		localmake "previousPos :pos2
+		setPos :pos1
+		setHeading :oldHeading + repcount * 360 / 5
+		penDown
+	]
+	penUp
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+; Inspired by
+; https://www.pinterest.ca/pin/330451691419501772/
+to straightRing :size
+	localmake "numSides 10
+	repeat :numSides [
+		straightRingPiece :size
+		right 360 / :numSides
+	]
+end
+
+to designLabel :title
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "oldPenSize penSize
+	localmake "oldFillColor fillColor
+	localmake "fontSize :size * 0.2
+	setPenSize 0
+	back :size * 0.5
+	right 90
+	forward :size + :fontSize
+	left 90
+	setFontSize :size * 0.2
+	setFillColor "black
+	label :title
+	setPos :oldPos
+	setHeading :oldHeading
+	setPenSize :oldPenSize
+	setFillColor :oldFillColor
+end
+
+setScreenColor transparent
+make "size 100
+make "between :size * 2.2
+right 90
+penUpForward -:between * 1.5
+designLabel "circles2
+circles2 :size
+penUpForward :between
+designLabel "circles
+circles :size
+penUpForward :between
+designLabel "straightRing
+straightRing :size
+penUpForward :between
+designLabel "starStraightLines
+starStraightLines :size
+penUpForward :between
+designLabel "circleStar
+circleStar :size

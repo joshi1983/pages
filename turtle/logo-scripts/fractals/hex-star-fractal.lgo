@@ -1,0 +1,34 @@
+; Similar to the fractal shown at:
+; https://flickr.com/photos/182198016@N03/48123428537/
+
+make "colors ["white "white "DeepSkyBlue "RoyalBlue]
+
+to drawFractal :size :colorIndex
+	if :size > 0.5 [
+		localmake "len :size * pi / 3
+		localmake "len2 :len / 2 - :len / 18
+		localmake "len3 :len - :len2
+		localmake "ps max 0.5 :size * 0.03
+		localmake "pc item :colorIndex :colors
+		pendown
+		repeat 6 [
+			drawFractal :size / 3 min count :colors :colorIndex + 1
+			penup
+			forward :len2
+			drawFractal :size / 9 min count :colors :colorIndex + 1
+			penup
+			forward :len3
+			right 60
+		]
+		setpensize :ps
+		setpencolor :pc
+		pendown
+		repeat 6 [
+			forward :len
+			right 60
+		]
+	]
+end
+
+setscreencolor "black
+drawFractal 100 1

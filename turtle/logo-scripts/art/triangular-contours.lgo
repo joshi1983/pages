@@ -1,0 +1,87 @@
+; Inspired by
+; https://www.pinterest.ca/pin/281404676706260672/
+
+to getWrappedItem :index :items
+	localmake "index 1 + remainder :index (count :items)
+	output item :index :items
+end
+
+; calculates distance to circle's edge from 
+; current turtle and at current turtle heading
+; a negative value is returned only 
+; if no positive intersections could be found.
+to distanceToCircle :center :radius
+	localmake "angle heading - (towards :center)
+	localmake "d distance :center
+	localmake "a 1
+	localmake "b -2 * :d * (cos :angle)
+	localmake "c (:d * :d) - (:radius * :radius)
+	localmake "solutions solveQuadratic :a :b :c
+	repeat count :solutions [
+		localmake "val item repcount :solutions
+		if :val >= 0 [
+			output :val
+		]
+	]
+	output -1 ; indicate no intersection found. 
+end
+
+to design :size :numSides
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "points []
+	localmake "size1 :size * sin 90 / :numSides
+	localmake "numLines 26
+	setPenSize :size * 0.005
+	penDown
+	circle :size
+	penUp
+	repeat :numSides [
+		forward :size1
+		queue "points pos
+		setPos :oldPos
+		right 360 / :numSides
+	]
+	repeat :numLines [
+		setPos :oldPos
+		localmake "radius1 :size * (repcount - 1) / (:numLines - 1)
+		repeat :numSides [
+			forward :radius1
+			localmake "midPos pos
+			localmake "fromPos getWrappedItem repcount - 1 :points
+			localmake "toPos getWrappedItem repcount :points
+			setPos :fromPos
+			setHeading towards :midPos
+			localmake "d distance :midPos
+			right 180
+			localmake "d2 (distanceToCircle :oldPos :size)
+			right 180
+			if :d2 >= 0 [
+				localmake "d3 :d + :d2
+				setPos :fromPos
+				back :d2
+				penDown
+				forward :d3
+				setHeading towards :toPos
+				forward :d3
+				penUp
+			]
+			setPos :oldPos
+			setHeading :oldHeading + (180 + repcount * 360) / :numSides
+		]
+	]
+	setHeading :oldHeading
+end
+
+make "size 40
+make "separation :size * 2.2
+right 90
+penUp
+back :separation * 3.5
+penDown
+repeat 8 [
+	design :size repcount + 1
+	penUp
+	forward :separation
+	penDown
+]

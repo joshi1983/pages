@@ -1,0 +1,103 @@
+; Canadian flag
+; made to look like:
+; https://upload.wikimedia.org/wikipedia/commons/d/d9/Flag_of_Canada_%28Pantone%29.svg
+
+to drawLeaf :height
+	localmake "size1 :height * 0.038
+	localmake "size2 :height * 0.22
+	localmake "size3 :height * 0.225
+	localmake "size4 :height * 0.09
+	localmake "size5 :height * 0.305
+	localmake "size6 :height * 0.064
+	localmake "size7 :height * 0.154
+	localmake "size8 :height * 0.14
+	localmake "size9 :height * 0.15
+	localmake "size10 :height * 0.26
+	localmake "size11 :height * 0.095
+	localmake "size12 :height * 0.1785308
+	localmake "smallCornerRadius :height * 0.01
+	localmake "largeCornerRadius :height * 0.018
+	setpensize 0
+	right 90
+	forward :size1 * 0.5
+	polystart
+	left 92
+	forward :size2
+	arcRight 102 :largeCornerRadius
+	forward :size3
+	left 120
+	forward :size4
+	arcRight 70.5 :smallCornerRadius
+	forward :size5
+	left 117
+	forward :size6
+	arcRight 85 :smallCornerRadius
+	forward :size7
+	left 119
+	forward :size8
+	arcRight 77 :smallCornerRadius
+	forward :size6
+	left 113
+	forward :size9
+	arcRight 147 :largeCornerRadius
+	forward :size10
+	left 128
+	forward :size11
+	arcRight 88 :smallCornerRadius
+	forward :size12
+	; This is the point of symmetry in the flag.
+	left 180 - 29.5 * 2
+	forward :size12
+	arcRight 88 :smallCornerRadius
+	forward :size11
+	left 128
+	forward :size10
+	arcRight 147 :largeCornerRadius
+	forward :size9
+	left 113
+	forward :size6
+	arcRight 77 :smallCornerRadius
+	forward :size8
+	left 119
+	forward :size7
+	arcRight 85 :smallCornerRadius
+	forward :size6
+	left 117
+	forward :size5
+	arcRight 70.5 :smallCornerRadius
+	forward :size4
+	left 120
+	forward :size3
+	arcRight 102 :largeCornerRadius
+	forward :size2
+	left 92
+	forward :size1
+	polyend
+end
+
+to drawCanadaFlag :width
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "height :width * 0.5
+	localmake "red "#d52b1e
+	setpencolor :red
+	setpensize 0
+	right 90
+	back :width * 0.5
+	setpensize :height
+	forward :width * 0.25
+	setpencolor "white
+	forward :width * 0.5
+	setpencolor :red
+	forward :width * 0.25
+	penup
+	setpos :oldPos
+	left 90
+	back :height * (0.5 - 0.08)
+	setfillcolor :red
+	drawLeaf :height * 0.836
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+drawCanadaFlag 300

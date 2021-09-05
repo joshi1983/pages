@@ -1,0 +1,52 @@
+to heart :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "size1 :size * 1.8265
+	localmake "size2 :size * 0.29224
+	localmake "angle1 35
+	localmake "angle2 20
+	localmake "angle3 202.7
+	localmake "angle4 120
+	left :angle1
+	polystart
+	arcLeft :angle2 :size1
+	arcRight :angle3 :size2
+	left :angle4 
+	; point of symmetry
+	arcRight :angle3 :size2
+	arcLeft :angle2 :size1
+	polyend
+
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to fourLeafClover :size
+	localmake "oldPos pos
+	setpensize :size * 0.01
+	setfillcolor "green
+
+	; draw stem.
+	penup
+	back :size * 0.4
+	pendown
+	right 180
+	polystart
+	arcLeft 60 :size * 0.6
+	right 90
+	forward :size * 0.05
+	right 90
+	arcRight 60 :size * 0.6
+	polyend
+	penup
+	setPos :oldPos
+
+	; draw the 4 heart-shaped leafs.
+	repeat 4 [
+		heart :size * 0.5
+		right 90
+	]
+end
+
+fourLeafClover 100
+hideturtle

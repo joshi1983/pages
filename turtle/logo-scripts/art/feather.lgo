@@ -1,0 +1,89 @@
+; Inspired by drawing at:
+; https://www.pinterest.ca/pin/955677983399378753/
+make "darkColor1 "#000
+make "darkColor2 "#208
+make "lightColor1 "#fff
+make "lightColor2 "#8bf
+
+to straight :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "oldPenColor pencolor
+	setpensize :size * 0.02
+	forward :size
+	penup
+	right 90
+	forward pensize
+	right 90
+	pendown
+	setpencolor mix :oldPenColor :darkColor1 0.5
+	forward :size
+	penup
+	setpencolor :oldPenColor
+	setpos :oldPos
+	setheading :oldHeading
+end
+
+to straight2 :size :size2
+	localmake "oldPos pos
+	penup
+	forward :size2
+	pendown
+	straight :size
+	setPos :oldPos
+end
+
+to drawFeather :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "size1 :size  * 1.4619
+	localmake "angle 40
+	localmake "numDots 80
+	localmake "size2 :angle / :numDots
+	localmake "size3 :size * 0.001
+	localmake "size4 :size * 0.1
+	penup
+	right 90
+	forward :size1
+	localmake "arcCentre pos
+	setpos :oldPos
+	setHeading :oldHeading
+	pendown
+	circle :size
+	setfillcolor :darkColor2
+	setpensize 0
+	polystart
+	arcRight :angle :size1
+	localmake "endPos pos
+	right 179
+	arcLeft :angle * 0.995 :size1
+	polyend
+	setfillcolor :lightColor1
+	repeat :numDots [
+		setpensize 0
+		setpos :arcCentre
+		setHeading repcount * :size2 - 90
+		localmake "w 0.005 * :size1 * (1 - repcount / :numDots)
+		forward :size1 - :w
+		circle :size3 * (1.01 - repcount / :numDots) * (2 + remainder repcount 2)
+		if repcount > :numDots * 0.05 [
+			setpencolor :lightColor2
+			localmake "angle2 60 - 30 * repcount / :numDots
+			right 90 + :angle2
+			localmake "d min :size4 (distance :endPos) - :size4 * 0.3
+			localmake "dRatio max 0 :d / :size4
+			localmake "dRatio sqrt :dRatio
+			localmake "d (:size4 * :dRatio)
+			straight2 :d :w * 1.5
+			left :angle2 * 2
+			straight2 :d :w * 1.5
+		]
+	]
+	penup
+	setPos :oldPos
+	setheading :oldHeading
+end
+
+;setscreencolor "black
+setpensize 0.1
+drawFeather 100

@@ -1,0 +1,96 @@
+; draws logo for https://github.com
+
+to drawGithubLogo :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angle1 18.5
+	localmake "angle2 360 - :angle1 * 2
+	localmake "angle3 90 + :angle1
+	localmake "angle4 45
+	localmake "angle5 135
+	localmake "angle6 35
+	localmake "angle7 25
+	localmake "angle8 30
+	localmake "angle9 12
+	localmake "angle10 40
+	localmake "angle11 75
+	localmake "angle12 50
+	localmake "angle13 55
+	localmake "angle14 26
+	localmake "angle15 17.3
+	localmake "angle16 50.1
+	localmake "angle17 29.7
+	localmake "radius1 :size * 0.5
+	localmake "radius2 :size * 0.025
+	localmake "radius3 :size * 0.11
+	localmake "radius4 :size * 0.25
+	localmake "radius5 :size * 0.19
+	localmake "radius6 :size * 0.21
+	localmake "radius7 :size * 0.5
+	localmake "radius8 :size * 0.11
+	localmake "radius9 :size * 0.16
+	localmake "radius10 :size * 0.1
+	localmake "radius11 :size * 0.35
+	localmake "radius12 :size * 0.49
+	localmake "size1 :size * 0.155
+	setpensize 0
+
+	forward :size / 2
+	setpos :oldPos
+	left 90
+	arcRight :angle1 :radius1
+
+	polystart
+	arcRight :angle2 :radius1
+	arcRight :angle3 :radius2
+	forward :size1
+	arcLeft :angle4 :radius3
+	right :angle5
+	arcLeft :angle6 :radius4
+	arcLeft :angle7 :radius5
+	arcLeft :angle8 :radius6
+	arcLeft :angle9 :radius7
+	arcLeft :angle10 :radius8
+	right :angle11
+	arcLeft :angle12 :radius9
+	left :angle13
+	arcLeft :angle14 :radius10
+	arcLeft :angle15 :radius11
+	right :angle16
+	; point of symmetry at top of cat's head
+	arcLeft :angle17 :radius12
+	right :angle16
+	arcLeft :angle15 :radius11
+	arcLeft :angle14 :radius10	
+	left :angle13
+	arcLeft :angle12 :radius9
+	right :angle11
+	arcLeft :angle10 :radius8
+	arcLeft :angle9 :radius7
+	arcLeft :angle8 :radius6
+	arcLeft :angle7 :radius5
+	arcLeft :angle6 :radius4
+	right :angle5
+	; symmetric part ending
+	arcLeft 41 :radius3
+	; outline the tail	
+	right 58.5
+	arcRight 90 :size * 0.11
+	arcLeft 67 :size * 0.09
+	; tail tip
+	arcLeft 130 :size * 0.01
+	arcLeft 16 :size * 0.06
+	arcRight 45 :size * 0.12
+	arcLeft 70 :size * 0.09
+	arcLeft 8.8 :size * 0.6
+	right 94
+	forward :size * 0.092
+	arcRight :angle3 :radius2
+	polyend
+
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+setfillcolor "black
+drawGithubLogo 300

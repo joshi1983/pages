@@ -1,0 +1,56 @@
+; Inspired by:
+; https://www.pinterest.ca/pin/480126010285653073/
+
+to leafPath :size
+	localmake "oldHeading heading
+	localmake "oldPos pos
+	localmake "angle1 90
+	localmake "size1 :size * 0.7071
+	left :angle1 * 0.5
+	arcRight :angle1 :size1
+	right 180 - :angle1
+	arcRight :angle1 :size1
+	penup
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to sunburst :size :numAngles
+	setpensize 0
+	setfillcolor "black
+	repeat :numAngles [
+		polystart
+		leafPath :size
+		polyend
+		right 360 / :numAngles
+	]
+	setpensize :size * 0.04
+	setpencolor "white
+	repeat :numAngles [
+		pendown
+		leafPath :size
+		right 360 / :numAngles
+	]
+end
+
+; Draw with different parameters
+; to show how parameters change the look
+setpensize 1
+setpencolor "black
+penUp
+make "size 50
+make "separation :size * 2.2
+right 90
+back :separation * 2.5
+penDown
+sunBurst :size 3
+forward :separation
+sunBurst :size 6
+forward :separation
+sunBurst :size 8
+forward :separation
+sunBurst :size 12
+forward :separation
+sunBurst :size 16
+forward :separation
+sunBurst :size 32

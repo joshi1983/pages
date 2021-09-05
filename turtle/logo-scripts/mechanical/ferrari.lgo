@@ -1,0 +1,1286 @@
+; Inspired by:
+; https://www.deviantart.com/vincent-montreuil/art/Ferrari-Profile-Roadster-137752531
+
+to longShadow :width
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "numSegments 32
+	setPenSize 0
+	repeat :numSegments [
+		localmake "ratio (:numSegments - repcount) / (:numSegments - 1)
+		setFillColor mix "white "black :ratio
+		localmake "ratio min 1 (0.05 + :ratio * 0.95)
+		ellipse :ratio * :width :ratio * :width * 0.03
+	]
+
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to wheelSupport1 :len
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	setFillColor "#888
+	setPenSize 0
+	left 70
+	forward :len * 0.15
+	right 90
+	polyStart
+	forward :len
+	right 90
+	forward :len * 0.05
+	right 79
+	forward :len
+	polyEnd
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to wheelSupport2 :len
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	setPenSize 0
+	setFillColor "black
+	left 45
+	forward :len * 0.1
+	right 63
+	polyStart
+	forward :len * 0.95
+	right 174
+	forward :len * 0.85
+	polyEnd
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to wheel :radius :outlineColor
+	localmake "treadThickness :radius * 0.11
+	localmake "radius2 :radius - :treadThickness * 0.8
+	localmake "radius3 :radius * 0.6
+	localmake "wheelSupportLength :radius - :treadThickness * 1.4
+	localmake "numSupports 5
+	setFillColor "black
+	setPenSize 0
+	circle :radius
+	setPenColor "#444
+	setPenSize :treadThickness
+	setFillColor transparent
+	circle :radius2
+	setFillColor "#222
+	setPenSize 0
+	circle :radius3
+	setPenSize :radius * 0.02
+	setPenColor "#888
+	setFillColor transparent
+	circle :radius - :treadThickness * 1.3
+	setPenColor :outlineColor
+	circle :radius - :treadThickness * 1.15
+	repeat :numSupports [
+		wheelSupport1 :wheelSupportLength
+		right 360 / :numSupports
+	]
+	repeat :numSupports [
+		wheelSupport2 :wheelSupportLength
+		right 360 / :numSupports
+	]
+	setFillcolor "black
+	circle :radius * 0.05
+end
+
+to rotatedWheel :radius :outlineColor :rotationAngle
+	localmake "oldHeading heading
+	right :rotationAngle
+	wheel :radius :outlineColor
+	setHeading :oldHeading
+end
+
+to ferrariBodyBackground :length :paintColor
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "tinyRadius :length * 0.015
+	localmake "tinyRadius2 :length * 0.007
+	localmake "tinyRadius3 :length * 0.004
+	localmake "radius1 :length * 0.9
+	localmake "fenderRadius :length * 0.079
+	localmake "frontFenderRadius :length * 0.081
+	localmake "colorStops plistCreate
+	setProperty "colorStops 0 mix :paintColor "black 0.5
+	setProperty "colorStops 0.5 :paintColor
+	setProperty "colorStops 0.8 :paintColor
+	setProperty "colorStops 1 mix :paintColor "white 0.5
+	penUp
+	left 4
+	forward :length * 0.16
+	localmake "gradient createLinearGradient :oldPos pos :colorStops "pad
+	setFillGradient :gradient
+	setLineJoinStyle "round
+	setPos :oldPos
+	setHeading :oldHeading - 87
+	forward :length * 0.365
+	left 40
+	setPenColor "black
+	setPenSize :length * 0.001
+	polyStart
+	arcRight 40 :tinyRadius
+	arcRight 8.9 :length * 0.8
+	arcRight 124 :tinyRadius2
+	arcRight 25 :length * 0.49
+	arcRight 18 :length * 0.1
+	arcRight 11 :radius1
+	localmake "pos1 pos
+	localmake "heading1 heading
+	left 28
+	arcRight 11.5 :length * 0.5
+	arcRight 6 :tinyRadius
+	arcRight 5.5 :length
+	left 20
+	arcRight 5 :length * 1.4
+	arcRight 14 :length * 0.4
+	arcRight 1.6 :length * 5
+	arcLeft 12 :length * 0.18
+	right 120
+	arcLeft 51 :length * 0.008
+	arcRight 12.5 :length * 0.26
+	arcRight 40 :tinyRadius
+	arcRight 6.5 :length * 0.5
+	arcRight 43 :tinyRadius
+	arcRight 4.5 :length
+	arcRight 80 :tinyRadius3
+	arcRight 10 :length * 0.1
+	arcRight 17 :tinyRadius
+	arcLeft 185 :fenderRadius
+	forward :length * 0.025
+	arcRight 32 :length * 0.025
+	right 45
+	arcRight 2 :length * 2
+	arcRight 7 :tinyRadius
+	arcRight 4.08 :length * 5
+	right 105
+	arcLeft 14 :length * 0.23
+	arcLeft 5 :tinyRadius
+	arcLeft 180 :frontFenderRadius
+	arcLeft 13 :length * 0.2
+	polyEnd
+	penUp
+	setPos :pos1
+	setHeading :heading1
+	penDown
+	arcRight 3 :radius1
+	penUp
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to ferrariWindows :carLength
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "colorStops plistCreate
+	setProperty "colorStops 0 "black
+	setProperty "colorStops 0.25 "#444
+	setProperty "colorStops 0.3 "#222
+	setProperty "colorStops 0.35 "#555
+	setProperty "colorStops 0.55 "#ddd
+	setProperty "colorStops 0.6 "#aaa
+	setProperty "colorStops 0.65 "#eee
+	setProperty "colorStops 0.95 "white
+	setProperty "colorStops 1 "black
+	penUp
+	left 15
+	forward :carLength * 0.14
+	localmake "fromPos pos
+	forward :carLength * 0.068
+	localmake "gradient createLinearGradient :fromPos pos :colorStops "pad
+	setFillGradient :gradient
+	setPos :oldPos
+	setHeading :oldHeading - 51
+	forward :carLength * 0.25
+	right 120
+	setPenColor "black
+	setPenSize :carLength * 0.0015
+	polyStart
+	arcRight 11.5 :carLength * 1.2
+	arcRight 19.5 :carLength * 0.02
+	forward :carLength * 0.116
+	arcRight 55 :carLength * 0.02
+	right 90
+	forward :carLength * 0.2
+	polyEnd
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to ferrariFrontLights :carLength
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "colorStops plistCreate
+	setProperty "colorStops 0 "black
+	setProperty "colorStops 0.92 "black
+	setProperty "colorStops 1 "white
+	penUp
+	left 100
+	forward :carLength * 0.3
+	localmake "gRadius :carLength * 0.2
+	localmake "gradient createRadialGradient pos pos :gRadius :colorStops "pad
+	setFillGradient :gradient
+	setPos :oldPos
+	setHeading :oldHeading - 82.1
+	setPenColor "black
+
+	forward :carLength * 0.48
+	right 131
+	setPenSize :carLength * 0.001
+	setPenColor "black
+	polyStart
+	arcRight 14.5 :carLength * 0.46
+	right 154
+	arcRight 14.5 :carLength * 0.3
+	arcRight 28 :carLength * 0.03
+	arcRight 3 :carLength * 0.5
+	polyEnd
+	setPenSize 0
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+; This is to the upper-right of the front wheel.
+to highlights1 :carLength :paintColor
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "colorStops plistCreate
+	setProperty "colorStops 0 :paintColor
+	setProperty "colorStops 1 mix "white :paintColor 0.8
+	setPenSize 0
+	forward :carLength * 0.12
+	localmake "fromPos pos
+	forward :carLength * 0.03
+	localmake "gradient createLinearGradient :fromPos pos :colorStops "pad
+	setFillGradient :gradient
+	setPos :oldPos
+	setHeading :oldHeading - 61
+	forward :carLength * 0.25
+	right 23
+	polyStart
+	arcLeft 50 :carLength * 0.098
+	right 90
+	forward :carLength * 0.0012
+	right 87.2
+	arcRight 15 :carLength
+	polyEnd
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+; immediately infront of the rear wheel
+; lower part of the upper vent
+to highlights2 :carLength :paintColor
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	setPenSize 0
+	right 4
+	forward :carLength * 0.13
+	localmake "fromPos pos
+	forward :carLength * 0.05
+	localmake "colorStops plistCreate
+	setProperty "colorStops 0 mix "white :paintColor 0.1
+	setProperty "colorStops 0.3 mix "white :paintColor 0.6
+	setProperty "colorStops 0.8 :paintColor
+	setProperty "colorStops 1 mix "black :paintColor 0.5
+	localmake "gradient createLinearGradient :fromPos pos :colorStops "pad
+	setFillGradient :gradient
+	setPos :oldPos
+	setHeading :oldHeading
+	forward :carLength * 0.141
+	right 82.8
+	polyStart
+	arcRight 11.5 :carLength * 1.18
+	right 135
+	arcLeft 13 :carLength * 0.1
+	right 53.5
+	forward :carLength * 0.2
+	polyEnd
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to shadeFrontStrip :carLength :paintColor
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	setFillColor mix "black :paintColor 0.3
+	setPenSize 0
+	left 85.5
+	forward :carLength * 0.495
+	right 160
+	polyStart
+	arcRight 10 :carLength * 0.7
+	polyEnd
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+; in front of the front wheel and below the light
+to highlightFrontStrip :carLength :paintColor
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	setFillColor mix "white :paintColor 0.5
+	setPenSize 0
+	left 85.5
+	forward :carLength * 0.495
+	right 155
+	polyStart
+	arcRight 5 :carLength * 0.8
+	arcRight 15 :carLength * 0.1
+	arcRight 6 :carLength * 0.2
+	right 85
+	forward :carLength * 0.003
+	right 90
+	arcLeft 20 :carLength * 0.27
+	polyEnd
+	setPos :oldPos
+	setHeading :oldHeading
+	shadeFrontStrip :carLength :paintColor
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+; to the upper left of the front wheel
+to highlightUpperFrontCurve :carLength :paintColor
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	setPenSize 0
+	localmake "colorStops plistCreate
+	setProperty "colorStops 0 :paintColor
+	setProperty "colorStops 1 mix "white :paintColor 0.9
+	left 22
+	forward :carLength * 0.233
+	localmake "fromPos pos
+	forward :carLength * 0.025
+	localmake "gradient createLinearGradient :fromPos pos :colorStops "pad
+	setFillGradient :gradient
+	setPos :oldPos	
+	setHeading :oldHeading - 61.45
+	forward :carLength * 0.3325
+	left 30
+
+	polyStart
+	arcLeft 70 :carLength * 0.09
+	right 60
+	arcLeft 5.4 :carLength * 0.5
+	right 155
+	arcLeft 9.7 :carLength * 0.35
+	right 25
+	arcRight 8 :carLength * 0.5
+	arcRight 17.3 :carLength * 0.08
+	polyEnd
+
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+; This is part of the hood at front of the car.
+; This is above the front wheel.
+to frontVent :carLength :paintColor
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "colorStops plistCreate
+	setProperty "colorStops 0 :paintColor
+	setProperty "colorStops 1 "white
+	penUp
+	forward :carLength * 0.197
+	localmake "fromPos pos
+	left 9
+	forward :carLength * 0.01
+	localmake "gradient createLinearGradient :fromPos pos :colorStops "pad
+	setFillGradient :gradient
+	setPos :oldPos
+	setPenColor "black
+	setPenSize :carLength * 0.0008
+	setHeading :oldHeading - 61.5
+	forward :carLength * 0.337
+	right 138
+	polyStart
+	arcRight 12.7 :carLength * 0.3
+	arcRight 45 :carLength * 0.004
+	arcRight 7 :carLength * 0.1
+	right 134.5
+	arcLeft 8 :carLength * 0.5
+	polyEnd
+	penUp
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+; I'm not sure if this is a vent or a rear car seat.
+to topVent1 :carLength
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "colorStops plistCreate
+	setProperty "colorStops 0 "#222
+	setProperty "colorStops 1 "#999
+	penUp
+	left 48.8
+	forward :carLength * 0.004
+	localmake "gradient createLinearGradient :oldPos pos :colorStops "pad
+	setFillGradient :gradient
+	setPenColor "black
+	setPos :oldPos
+	setHeading :oldHeading + 39.1
+	forward :carLength * 0.258
+	polyStart
+	arcRight 12 :carLength * 0.11
+	right 37
+	forward :carLength * 0.006
+	arcRight 115 :carLength * 0.0018
+	forward :carLength * 0.013
+	right 45
+	forward :carLength * 0.014
+	polyEnd
+	penUp
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+; This may be a vent for the engine or a car seat.
+to topVent2 :carLength
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	penUp
+	left 45
+	forward :carLength * 0.005
+	localmake "colorStops plistCreate
+	setProperty "colorStops 0 "#222
+	setProperty "colorStops 1 "#888
+	localmake "gradient createLinearGradient :oldPos pos :colorStops "pad
+	setFillGradient :gradient
+	setPos :oldPos
+	setHeading :oldHeading + 42.5
+	forward :carLength * 0.275
+	setPenColor "black
+	polyStart
+	forward :carLength * 0.019
+	arcRight 35 :carLength * 0.01
+	arcRight 11.6 :carLength * 0.1
+	arcRight 25 :carLength * 0.005
+	arcRight 10 :carLength * 0.06
+	right 140
+	arcLeft 8 :carLength * 0.05
+	arcLeft 4.8 :carLength * 0.5
+	polyEnd
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to topRearVents :carLength
+	topVent1 :carLength
+	topVent2 :carLength
+end
+
+; This is at the top of the car.
+; It is immediately below what may be rear seats
+to topRearBodyCurve :carLength :paintColor
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "colorStops plistCreate
+	setProperty "colorStops 0 :paintColor
+	setProperty "colorStops 0.9 :paintColor
+	setProperty "colorStops 1 "white
+	right 85
+	forward :carLength * 0.27
+	localmake "gradient createRadialGradient pos pos :carLength * 0.2 :colorStops "pad
+	setFillGradient :gradient
+	penUp
+	setPos :oldPos
+	setPenColor "black
+	setPenSize :carLength * 0.001
+	setHeading :oldHeading + 40.5
+	forward :carLength * 0.258
+	polyStart
+	right 29.5
+	arcRight 3.6 :carLength
+	arcRight 10 :carLength * 0.03
+	arcRight 10 :carLength * 0.04
+	arcRight 4.8 :carLength * 0.08
+	arcRight 11.5 :carLength * 0.45
+	right 165
+	arcLeft 14 :carLength * 0.65
+	polyEnd
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+; This is immediately above rear wheel
+; Area stretches from the very rear to the middle of the door.
+to upperCurveHighlights :carLength :paintColor
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	penUp
+	forward :carLength * 0.13
+	localmake "fromPos pos
+	forward :carLength * 0.06
+	localmake "colorStops plistCreate
+	setProperty "colorStops 0 :paintColor
+	setProperty "colorStops 1 mix "white :paintColor 0.9	
+	localmake "gradient createLinearGradient :fromPos pos :colorStops "pad
+	setFillGradient :gradient
+	setPos :oldPos
+	forward :carLength * 0.144
+	right 74.4
+	setPenSize 0
+	polyStart
+	arcRight 2.55 :carLength * 3.5
+	arcRight 1 :carLength * 0.1
+	arcRight 5 :carLength * 0.8
+	arcRight 10.6 :carLength * 0.35
+	arcRight 1.7 :carLength * 5
+	arcLeft 10 :carLength * 0.17
+	right 160
+	forward :carLength * 0.118
+	right 72.5
+	arcLeft 75 :carLength * 0.09
+	right 25
+	forward :carLength * 0.019
+	right 147
+	arcLeft 1.68 :carLength
+	arcLeft 144.5 :carLength * 0.0025
+	arcLeft 7 :carLength * 0.8
+	arcLeft 1.85 :carLength * 5
+	polyEnd
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to doorMiddleHighlight :carLength :paintColor
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "colorStops plistCreate
+	setProperty "colorStops 0 mix "white :paintColor 0.12
+	setProperty "colorStops 0.33 mix "white :paintColor 0.45
+	setProperty "colorStops 0.7 mix "white :paintColor 0.45
+	setProperty "colorStops 1 mix "white :paintColor 0.38
+	setPenSize 0
+	forward :carLength * 0.13
+	localmake "fromPos pos
+	forward :carLength * 0.015
+	localmake "gradient createLinearGradient :fromPos pos :colorStops "pad
+	setFillGradient :gradient
+	setHeading :oldHeading - 36.9
+	setPos :oldPos
+	forward :carLength * 0.1835
+	right 127
+	polyStart
+	forward :carLength * 0.133
+	right 60
+	forward :carLength * 0.0194
+	right 120
+	forward :carLength * 0.07
+	right 14.7
+	arcLeft 4.1 :carLength
+	polyEnd
+
+	; restore old pen state.
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to vent1Opening :carLength
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "colorStops plistCreate
+	setProperty "colorStops 0 "black
+	setProperty "colorStops 1 "white
+	penUp
+	forward :carLength * 0.07
+	localmake "gradient createLinearGradient pos :oldPos :colorStops "pad 
+	setPenGradient :gradient
+	penUp
+	setPos :oldPos
+	right 60.5
+	forward :carLength * 0.131
+	right 23
+	setFillColor "black
+	setPenSize :carLength * 0.002
+	polyStart
+	arcRight 12 :carLength * 0.14
+	arcRight 19 :carLength * 0.03
+	arcRight 4.4 :carLength * 0.7
+	right 136
+	forward :carLength * 0.015
+	arcRight 41 :carLength * 0.02
+	forward :carLength * 0.05
+	polyEnd
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to vent1 :carLength :paintColor
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	setPenSize 0
+	forward :carLength * 0.035
+	localmake "fromPos pos
+	right 5
+	forward :carLength * 0.04
+	localmake "colorStops plistCreate
+	setProperty "colorStops 0 mix :paintColor transparent  0.1
+	setProperty "colorStops 0.2 :paintColor
+	setProperty "colorStops 1 "black
+	localmake "gradient createLinearGradient :fromPos pos :colorStops "pad
+	setFillGradient :gradient
+	setPos :oldPos
+	setHeading :oldHeading - 69
+	forward :carLength * 0.115
+	right 150.6
+	polyStart
+	arcRight 4.5 :carLength * 3
+	right 24.5
+	forward :carLength * 0.083
+	right 147.2
+	forward :carLength * 0.06
+	polyEnd
+	setPos :oldPos
+	setHeading :oldHeading
+	vent1Opening :carLength
+	penUp
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+; vent to the upper left of the rear wheel
+to vent2Opening :carLength
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	penUp
+	forward :carLength * 0.12
+	localmake "fromPos pos
+	forward :carLength * 0.05
+	localmake "colorStops plistCreate
+	setProperty "colorStops 0 "#ccc
+	setProperty "colorSTops 1 "#222
+	localmake "gradient createLinearGradient :fromPos pos :colorStops "pad
+	setPenGradient :gradient
+	setFillGradient :gradient
+	setFillColor "black
+	setPenSize :carLength * 0.002
+	setPos :oldPos
+	right 51.7
+	forward :carLength * 0.201
+	polyStart
+	forward :carLength * 0.08
+	right 36
+	arcRight 3.2 :carLength * 0.5
+	right 135
+	arcRight 15 :carLength * 0.26
+	arcRight 10 :carLength * 0.1
+	arcRight 22 :carLength * 0.049
+	polyEnd
+	penUp
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+; vent to the upper left of the rear wheel
+to vent2 :carLength :paintColor
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	setPenSize 0
+	localmake "colorStops plistCreate
+	setProperty "colorStops 0 :paintColor
+	setProperty "colorStops 0.91 :paintColor
+	setProperty "colorStops 1 mix :paintColor "black 0.3
+	right 160
+	forward :carLength * 0.3
+	localmake "gradient createRadialGradient pos pos :carLength * 0.47 :colorStops "pad
+	setFillGradient :gradient
+	setPos :oldPos
+	setHeading :oldHeading - 3
+	forward :carLength * 0.141
+	right 82
+	polyStart
+	arcRight 4.5 :carLength * 2.8
+	arcRight 8 :carLength * 0.3
+	arcRight 140 :carLength * 0.0025
+	arcRight 7 :carLength * 0.4
+	polyEnd
+	setPos :oldPos
+	setHeading :oldHeading
+	highlights2 :carLength :paintColor
+	vent2Opening :carLength
+end
+
+to vents :carLength :paintColor
+	frontVent :carLength :paintColor
+	vent1 :carLength :paintColor
+	vent2 :carLength :paintColor
+end
+
+to shade1 :carLength :paintColor
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "colorStops plistCreate
+	setProperty "colorStops 0 :paintColor
+	setProperty "colorStops 1 "black
+	setPenSize 0
+	left 21
+	back :carLength * 0.001
+	localmake "fromPos pos
+	forward :carLength * 0.01
+	localmake "gradient createLinearGradient :fromPos pos :colorStops "pad
+	setFillGradient :gradient
+	setHeading :oldHeading
+	setPos :oldPos
+	right 68.2
+	forward :carLength * 0.501
+	right 177
+	polyStart
+	forward :carLength * 0.1
+	left 175
+	forward :carLength * 0.1029
+	left 95
+	arcRight 39 :carLength * 0.0103
+	polyEnd
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+; Darkens area at rear of the car.
+; This is above the exhaust vents and near where signal lights would appear
+to shade2 :carLength :paintColor
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "colorStops plistCreate
+	setProperty "colorStops 0 :paintColor
+	setProperty "colorStops 0.8 mix "black :paintColor 0.4
+	setProperty "colorStops 1 mix "black :paintColor 0.8
+	setPenSize 0
+	right 69.4
+	forward :carLength * 0.4935
+	localmake "fromPos pos
+	setHeading :oldHeading + 95
+	back :carLength * 0.029
+	localmake "gradient createLinearGradient :fromPos pos :colorStops "pad
+	setFillGradient :gradient
+	setPos :fromPos
+	setHeading :oldHeading - 115
+	polyStart
+	forward :carLength * 0.032
+	left 60
+	forward :carLength * 0.013
+	left 98
+	forward :carLength * 0.045
+	polyEnd
+	penUp
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+; darkens area near top of the door
+to shade4 :carLength :paintColor
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "colorStops plistCreate
+	setProperty "colorStops 0 mix "white :paintColor 0.35
+	setProperty "colorStops 1 mix "black :paintColor 0.3
+	setPenSize 0
+	forward :carLength * 0.146
+	localmake "fromPos pos
+	forward :carLength * 0.02
+	localmake "gradient createLinearGradient :fromPos pos :colorStops "pad
+	setFillGradient :gradient
+	setPos :oldPos
+	left 33
+	forward :carLength * 0.175
+	right 102.4
+	polyStart
+	arcRight 22 :carLength * 0.3
+	forward :carLength * 0.061
+	right 165
+	arcLeft 5 :carLength * 0.8
+	polyEnd
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to processBlackPathHighlight :points :carLength :useColor
+	setLineJoinStyle "round
+	if :useColor [
+		setPenColor "#666
+	]
+	setPenSize :carLength * 0.002
+	repeat count :points [
+		ifelse repcount = 1 [
+			penUp
+			setPos item repcount :points
+		] [
+			penDown
+			setHeading towards item repcount :points
+			forward distance item repcount :points
+		]
+	]
+end
+
+; at bottom of the front of the car
+to blackPart1Highlight :carLength
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "points []
+	setPenSize 0
+	left 88.4
+	forward :carLength * 0.385
+	queue "points pos
+	right 20
+	setFillColor "#222
+	polyStart
+	forward :carLength * 0.007
+	queue "points pos
+	left 15
+	forward :carLength * 0.075
+	queue "points pos
+	left 150
+	forward :carLength * 0.024
+	polyEnd
+	processblackPathHighlight :points :carLength true
+	penUp
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+; at bottom front of rear wheel
+to blackPart2Highlight :carLength
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	setPenSize 0
+	setFillColor "#333
+	right 82.5
+	forward :carLength * 0.163
+	localmake "startPos pos
+	back :carLength * 0.0015
+	left 5
+	polyStart
+	forward :carLength * 0.0465
+	right 39
+	forward :carLength * 0.019
+	right 147
+	forward :carLength * 0.045
+	polyEnd
+
+	setPos :startPos
+	setLineJoinStyle "round
+	setPenSize :carLength * 0.0015
+	setPenColor "#6d6d6d
+	penDown
+	setHeading :oldHeading + 77
+	forward :carLength * 0.04
+	arcRight 40 :carLength * 0.015
+	forward :carLength * 0.013
+	penUp
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+; behind the rear wheel
+to blackPart3Highlight :carLength
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "colorStops plistCreate
+	setProperty "colorStops 0 "#444
+	setProperty "colorStops 0.15 "#333
+	setProperty "colorStops 1 "#222
+	left 15	
+	back :carLength * 0.07
+	localmake "fromPos pos
+	back :carLength * 0.023
+	localmake "gradient createLinearGradient :fromPos pos :colorStops "pad
+	setFillGradient :gradient
+	setPenSize 0
+	setPos :oldPos
+	setHeading :oldHeading + 88.1
+	forward :carLength * 0.35
+	localmake "startPos pos
+	left 42
+
+	polyStart
+	forward :carLength * 0.035
+	right 30
+	forward :carLength * 0.08
+	right 120
+	forward :carLength * 0.036
+	polyEnd
+
+	setPos :startPos
+	setHeading :oldHeading + 46
+	setPenColor "#777
+	setPenSize :carLength * 0.002
+	penDown
+	forward :carLength * 0.028
+	arcRight 30 :carLength * 0.025
+	forward :carLength * 0.072
+
+	setPenSize 0
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+; behind front wheel near the ground
+to blackPart4Highlight :carLength
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "colorStops plistCreate
+	setProperty "colorStops 0 "#444
+	setProperty "colorStops 0.5 "#999
+	setProperty "colorStops 1 "#444
+	setPenSize 0
+	left 90
+	forward :carLength * 0.04
+	localmake "fromPos pos
+	forward :carLength * 0.17
+	localmake "penGradient createLinearGradient :fromPos pos :colorStops "pad
+	setPenGradient :penGradient
+	setPos :oldPos
+	setHeading :oldHeading - 74
+	forward :carLength * 0.045
+	left 15.8
+	setFillColor "#333
+
+	penDown
+	polyStart
+	localmake "points [pos]
+	forward :carLength * 0.172
+	queue "points pos
+	left 70
+	forward :carLength * 0.005
+	queue "points pos
+	polyEnd
+	processBlackPathHighlight :points :carLength false
+
+	penUp
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to blackParts :carLength
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	setPenSize 0
+	setFillColor "black
+	left 89
+	forward :carLength * 0.45
+	polyStart
+	right 32
+	forward :carLength * 0.05
+	right 113
+	forward :carLength * 0.2
+	right 15
+	arcRight 40 :carLEngth * 0.2
+	arcLeft 50 :carLength * 0.5
+	arcRight 114 :carLength * 0.15
+	right 21
+	forward :carLength * 0.04
+	right 70
+	forward :carLength * 0.09
+	right 10
+	forward :carLength * 0.13
+	left 90
+	forward :carLength * 0.005
+	right 80
+	forward :carLength * 0.05
+	right 2
+	forward :carLength * 0.1
+	left 1
+	forward :carLength * 0.143
+	right 3
+	forward :carLength * 0.15
+	right 90
+	forward :carLength * 0.01
+	left 90
+	forward :carLength * 0.16
+	left 50
+	forward :carLength * 0.008
+	polyEnd
+	setPos :oldPos
+	setHeading :oldHeading
+	blackPart1Highlight :carLength
+	blackPart2Highlight :carLength
+	blackPart3Highlight :carLength
+	blackPart4Highlight :carLength
+
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to ferrariLogoSettings :size
+	output [:size * 0.3545 20]
+end
+
+to ferrariLogoPath :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "settings ferrariLogoSettings :size
+	localmake "arcRadius1 :size * 0.72
+	localmake "arcRadius2 :size * 1.2658
+	localmake "angle1 50
+	localmake "angle2 20
+	localmake "angle3 70
+	localmake "splitAngle item 2 :settings
+	localmake "size1 item 1 :settings
+	polyStart
+	left 60
+	arcRight :angle1 :arcRadius1
+	arcRight :angle2 :arcRadius2
+	right :angle3
+	forward :size1
+	right :splitAngle
+	forward :size1
+	right :angle3
+	arcRight :angle2 :arcRadius2
+	arcRight :angle1 :arcRadius1
+	polyEnd
+	penUp
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to ferrariLogo :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "settings ferrariLogoSettings :size
+	localmake "stripeSize :size * 0.03
+	localmake "size1 item 1 :settings
+	localmake "splitAngle item 2 :settings
+	localmake "size2 :size1 * 0.99
+	localmake "colors ["black "white "red "black]
+	setPenSize 0
+	setFillColor "#ec0
+	ferrariLogoPath :size
+	setFillColor transparent
+	setPenColor "black
+	setPenSize :size * 0.03
+	penUp
+	forward :size * 0.03
+	penDown
+	ferrariLogoPath :size * 0.9
+	setPos :oldPos
+	setHeading :oldHeading
+	penUp
+	forward :size * 0.5
+	setPenSize 0
+	setFillColor "#660
+	ellipse :size * 0.12 :size * 0.25
+	; the ellipse represents the horse from the actual logo.
+	; A detailed drawing of a horse would take lots of code 
+	; and an ellipse is sufficient for most ways the car will be seen.
+
+	setPos :oldPos
+	setPenSize :stripeSize
+	forward :size * 0.97
+	repeat count :colors [
+		localmake "size2_ :size2 + (repcount - 1) * :size * 0.003
+		setPenColor item repcount :colors
+		localmake "prevPos pos
+		setHeading :oldHeading + 90 + :splitAngle * 0.5
+		penDown
+		forward :size2_
+		setPos :prevPos
+		setHeading :oldHeading - 90 - :splitAngle * 0.5
+		penDown
+		forward :size2_
+		penUp
+		setPos :prevPos
+		setHeading :oldHeading
+		back :stripeSize
+	]
+end
+
+; behind front wheel
+to ferrariLogoOnCar :carLength
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	penUp
+	left 64
+	forward :carLength * 0.1985
+	setHeading :oldHeading
+	ferrariLogo :carLength * 0.023
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+; the colored strip to the upper left of the 
+; exhaust part at the rear of the car
+to drawPaintedExhaustPart :carLength :paintColor
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	setPenSize 0
+	right 75.7
+	forward :carLength * 0.505
+	localmake "topRightCorner pos
+	left 175
+	setFillColor mix "black :paintColor 0.5
+	polyStart
+	forward :carLength * 0.03
+	arcLeft 5 :carLength * 0.2
+	arcLeft 40.5 :carLength * 0.027
+	forward :carLength * 0.03
+	arcLeft 110 :carLength * 0.0035
+	left 70
+	forward :carLength * 0.034
+	arcRight 39 :carLength * 0.01
+	forward :carLength * 0.053
+	polyEnd
+	setPos :topRightCorner
+	setHeading :oldHeading - 18
+	setFillColor mix "white :paintColor 0.3 
+	polyStart
+	forward :carLength * 0.006
+	left 80
+	forward :carLength * 0.03
+	arcLeft 50 :carLength * 0.05
+	forward :carLength * 0.025
+	left 40
+	forward :carLength * 0.002
+	left 137.5
+	forward :carLength * 0.03
+	arcRight 49 :carLength * 0.03
+	polyEnd
+
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+; draws the exhaust pipe near the rear of the car
+; behind the rear wheel
+to drawExhaustPipe :carLength
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	penUp
+	right 79.7
+	forward :carLength * 0.423
+	right 11
+	penDown
+	setPenColor "#000
+	setPenSize :carLength * 0.002
+	setFillColor "#444
+	polyStart
+	arcLeft 8 :carLength * 0.2
+	arcLeft 38 :carLength * 0.015
+	arcLeft 8 :carLength * 0.15
+	arcLeft 124 :carLength * 0.002
+	arcLeft 8.5 :carLength * 0.2
+	arcLeft 46 :carLength * 0.01
+	forward :carLength * 0.02228
+	arcLeft 120 :carLength * 0.0018
+	polyEnd
+	penUp
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to drawExhaust :carLength :paintColor
+	drawPaintedExhaustPart :carLength :paintColor
+	drawExhaustPipe :carLength
+end
+
+to drawDoorLinesRight :carLength
+	setLineJoinStyle "round
+	penUp
+	right 58
+	forward :carLength * 0.12
+	left 16
+	setPenSize :carLength * 0.0004
+	setPenColor "black
+	penDown
+	arcLeft 7.3 :carLength * 0.6
+	left 90
+	arcRight 90 :carLength * 0.007
+	forward :carLength * 0.042 ; near upper vent
+	right 50
+	forward :carLength * 0.012
+	left 88
+	arcLeft 43 :carLength * 0.03 ; near top of painted part of door
+	; bottom of window
+end
+
+to drawDoorLinesLeft :carLength
+	setLineJoinStyle "round
+	setPenSize :carLength * 0.0005
+	setPenColor "black
+	penUp
+	left 70
+	forward :carLength * 0.135
+	penDown
+	arcRight 54 :carLength * 0.01
+	arcRight 5 :carLength * 0.8
+	arcRight 24 :carLength * 0.075
+	right 55
+	arcRight 10 :carLength * 1.28
+end
+
+to drawDoorLines :carLength
+	localmake "oldPos pos
+	localmake "oldHEading heading
+	drawDoorLinesRight :carLength
+	penUp
+	setPos :oldPos
+	setHeading :oldHeading
+	drawDoorLinesLeft :carLength
+	penUp
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to ferrariBody :length :paintColor
+	blackParts :length
+	topRearVents :length
+	topRearBodyCurve :length :paintColor
+	ferrariWindows :length
+	ferrariBodyBackground :length :paintColor
+	upperCurveHighlights :length :paintColor
+	doorMiddleHighlight :length :paintColor
+	ferrariFrontLights :length
+	vents :length :paintColor
+	highlights1 :length :paintColor
+	highlightFrontStrip :length :paintColor
+	highlightUpperFrontCurve :length :paintColor
+	shade1 :length :paintColor
+	shade2 :length :paintColor
+	ferrariLogoOnCar :length
+	drawExhaust :length :paintColor
+	shade4 :length :paintColor
+	drawDoorLines :length
+end
+
+to ferrari :length :paintColor :wheelRotation
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "wheelRadius :length * 71 / 984
+	localmake "frontWheelOffset :length * 285 / 984
+	localmake "rearWheelOffset :length * 285 / 984
+	longShadow :length * 0.8
+	ferrariBody :length :paintColor
+	penUp
+	forward :wheelRadius
+	left 90
+	forward :frontWheelOffset
+	penDown
+	rotatedWheel :wheelRadius :paintColor :wheelRotation
+	penUp
+	back :frontWheelOffset + :rearWheelOffset
+	penDown
+	rotatedWheel :wheelRadius :paintColor :wheelRotation
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+setPenSize 0
+ferrari 500 "#d00 animation.time * 100
+
+to animation.snapshotstyle
+	localmake "result plistCreate
+	setProperty "result "zoom.scale 1.7
+	setProperty "result "position.y 50
+	output :result
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 10
+	; Edit this if you want to change the length of your animation.
+	output :minutes * 60 + :seconds
+end

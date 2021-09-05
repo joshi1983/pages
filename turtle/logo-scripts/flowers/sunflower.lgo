@@ -1,0 +1,133 @@
+to setPeddleGradient :size
+	localmake "oldPenSize penSize
+	localmake "oldPos pos
+	setPenSize 0
+	forward :size
+	localmake "tipPos pos
+	localmake "colors plistCreate
+	setProperty "colors 0 "#fb0
+	setProperty "colors 0.3 "#ff0
+	setProperty "colors 1 "#ff6
+	localmake "gradient createLinearGradient :oldPos :tipPos :colors "pad
+	setFillGradient :gradient
+	setPos :oldPos
+	setPenSize :oldPenSize	
+end
+
+to drawPeddle :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "size1 :size * 0.1
+	localmake "size2 :size * 0.3
+	localmake "size3 :size * 1.4006
+	localmake "size4 :size * 0.05
+	localmake "size5 :size * 0.05
+	localmake "size6 :size * 1.6
+	localmake "size7 :size * 0.8
+	localmake "angle1 45
+	localmake "angle2 32.57
+	localmake "angle3 123.9
+	localmake "angle4 74.5
+	localmake "angle5 35
+	setpensize :size * 0.005
+	setpencolor "black
+	setPeddleGradient :size
+	left 90
+	polystart
+	forward :size1
+	right 40.5
+	arcRight :angle1 :size2
+	arcRight :angle2 :size3
+	arcRight :angle3 :size4 ; symmetry
+	arcRight :angle2 :size3
+	arcRight :angle1 :size2
+	setheading towards :oldPos
+	forward distance :oldPos
+	polyend
+	penup
+	setpencolor "olive
+	setheading :oldHeading
+	right 90
+	forward :size5
+	left :angle4
+	pendown
+	setpensize :size * 0.008
+	arcLeft :angle5 :size6
+	penup
+	setpos :oldPos
+	setHeading :oldHeading
+	left 90
+	forward :size5
+	right :angle4
+	pendown
+	arcRight :angle5 :size6
+	penup
+	setpos :oldPos
+	setHeading :oldHeading
+	left 90
+	forward :size * 0.003
+	right 90.1
+	setpenSize 0
+	setfillcolor "brown
+	polystart
+	forward :size7
+	right 179.58
+	forward :size7
+	polyend
+	setpos :oldPos
+	setheading :oldHeading
+end
+
+to drawSeedPattern :size
+	setfillcolor transparent
+	repeat 64 [
+		circle2 :size
+		right 360 / 64
+	]
+end
+
+to drawSunflower :size
+	localmake "oldPos pos
+	localmake "radius1 :size * 0.7
+	localmake "radius2 :size * 0.3
+	localmake "radius3 :size * 0.685
+	localmake "radius4 :size * 0.66
+	localmake "size1 :size * 0.4
+	localmake "size2 :size1 * 0.8
+	setfillcolor "brown
+	setpencolor "black
+	setpensize :size * 0.01
+	circle :radius1
+	setpensize :size * 0.002
+	drawSeedPattern :radius1 * 0.5
+	setfillcolor "olive
+	setpensize 0
+	circle :radius2
+	setpensize :size * 0.001
+	; 0.51 to look subtly more interesting than perfectly 
+	; lining up with the edge of the olive circle.
+	drawSeedPattern :radius2 * 0.51
+	penup
+	; draw peddles
+	repeat 32 [
+		; Alternate size and position of peddles to make them look
+		; more natural.
+		; alternate position of peddles.
+		ifelse 0 = remainder repcount 3 [
+			forward :radius3
+		] [
+			forward :radius4
+		]
+		; alternate size of peddles.
+		ifelse 0 = remainder repcount 2 [
+			drawPeddle :size1
+		] [
+			drawPeddle :size2
+		]
+		setPos :oldPos
+		right 360 / 32
+	]
+end
+
+setscreencolor "#563
+drawSunflower 100

@@ -1,0 +1,63 @@
+; Inspired by
+; https://fontawesome.com/icons/file-pdf?s=solid
+
+to pdfDocument :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "cornerRadius :size * 0.12
+	localmake "width :size * 0.75
+	localmake "height1 :size - :cornerRadius * 2
+	localmake "width1 :width - :cornerRadius * 2
+	localmake "width2 :width1 * 0.85
+	localmake "sharpCornerSize1 :width - :width2 - :cornerRadius
+	localmake "sharpCornerLength :sharpCornerSize1 / sin 45
+	localmake "height2 :height1 + :width2 - :width1
+	localmake "penSize1 :size * 0.06
+	localmake "sharpCornerSize2 :sharpCornerSize1 + :penSize1 * 0.5
+	setlineJoinStyle "round
+	setPenSize 0
+	forward :cornerRadius
+	right 90
+	back :width * 0.5
+	localmake "startPos pos
+	setHeading :oldHeading
+	setFillColor "black
+	polyStart
+	forward :height1
+	arcRight 90 :cornerRadius
+	forward :width2
+	right 45
+	forward :sharpCornerLength
+	right 45
+	forward :height2
+	arcRight 90 :cornerRadius
+	forward :width1
+	arcRight 90 :cornerRadius
+	polyEnd
+	setFontSize :size * 0.35
+	forward :height1 * 0.25
+	setPenColor "white
+	setFillColor "white
+	right 90
+	forward :size * 0.03
+	setPenSize :size * 0.02
+	label "PDF
+	setPenSize 0
+	penUp
+	setPos :startPos
+	setHeading :oldHeading
+	forward :size - :cornerRadius
+	right 90
+	forward :cornerRadius + :width2 - :penSize1 * 0.5
+	setPenSize :penSize1
+	penDown
+	right 90
+	forward :sharpCornerSize2
+	left 90
+	forward :sharpCornerSize2
+	penUp
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+pdfDocument 32

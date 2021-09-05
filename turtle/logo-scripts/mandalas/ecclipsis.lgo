@@ -1,0 +1,87 @@
+;Inspired by
+; https://www.pinterest.ca/pin/811422057877454250/
+; Also at https://mobile.twitter.com/ecclipsis/status/828395242718109698
+
+to ringOfCircles :ringRadius :circleRadius :numCircles
+	localmake "oldPos pos
+	setPenSize 0
+	repeat :numCircles [
+		setPos :oldPos
+		forward :ringRadius
+		circle :circleRadius
+		right 360 / :numCircles
+	]
+	setPos :oldPos
+end
+
+to arcsPath :arcRadius
+	repeat 4 [
+		right 180
+		arcLeft 90 :arcRadius
+	]
+end
+
+to pointyPattern :size :numAngles
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "arcRadius :size * 1.07
+	localmake "numRepeats int :numAngles / 4
+	localmake "middleRadius :arcRadius * (-1 + sqrt 2)
+	localmake "sideLength :middleRadius * 2 * sin 180 / :numAngles
+	setPenSize 0
+	repeat :numRepeats [
+		penUp
+		setPos :oldPos
+		forward :arcRadius
+		penDown
+		polyStart
+		arcsPath :arcRadius
+		polyEnd
+		right 360 / :numAngles
+	]
+	; Now fill the middle with white.
+	setHeading :oldHeading + 180 / :numAngles
+	setPos :oldPos
+	forward :middleRadius
+	right 90 + 180 / :numAngles
+	setFillColor "white
+	polyStart
+	repeat :numAngles [
+		forward :sideLength
+		right 360 / :numAngles
+	]
+	polyEnd
+	setHeading :oldHeading
+	setPenSize :size * 0.01
+	setPenColor "white
+	; Now, do the lines only.
+	repeat :numRepeats [
+		penUp
+		setPos :oldPos
+		forward :arcRadius
+		penDown
+		arcsPath :arcRadius
+		closePath
+		right 360 / :numAngles
+	]
+	penUp
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to ecclipsis :size
+	localmake "oldHeading heading
+	localmake "numAngles 16
+	localmake "innerCircleRadius :size * 0.25
+	localmake "tinyCircleRadius :size * 0.045
+	localmake "circleRingRadius :size * 0.785
+	setFillColor "black
+	pointyPattern :size :numAngles
+	setHeading :oldHeading + 180 / :numAngles
+	ringOfCircles :circleRingRadius :tinyCircleRadius :numAngles
+	setFillColor "black
+	circle :innerCircleRadius
+	setHeading :oldHeading
+end
+
+ecclipsis 100

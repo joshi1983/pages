@@ -1,0 +1,32 @@
+import { prefixWrapper } from '../../../../helpers/prefixWrapper.js';
+import { testBinaryOperatorToJavaScript } from './testBinaryOperatorToJavaScript.js';
+import { testCallCommandInstructionToJavaScript } from './testCallCommandInstructionToJavaScript.js';
+import { testConvertInstructionsToJavaScript } from './testConvertInstructionsToJavaScript.js';
+import { testConvertInstructionsToJavaScriptForMandelbrot } from './testConvertInstructionsToJavaScriptForMandelbrot.js';
+import { testConvertInstructionsToJavaScriptForTransparent } from './testConvertInstructionsToJavaScriptForTransparent.js';
+import { testGetInstructionParamTypes } from './testGetInstructionParamTypes.js';
+import { testGetJumpToIndexes } from './testGetJumpToIndexes.js';
+import { testGetStartIndexForInstructionCluster } from './testGetStartIndexForInstructionCluster.js';
+import { testIsLocalVariable } from './testIsLocalVariable.js';
+import { testMergeJavaScriptInstructions } from './testMergeJavaScriptInstructions.js';
+import { testMergeJavaScriptInstructionsWithInvoke } from './testMergeJavaScriptInstructionsWithInvoke.js';
+import { testPushInstructionToJavaScript } from './testPushInstructionToJavaScript.js';
+import { testUnaryOperatorToJavaScript } from './testUnaryOperatorToJavaScript.js';
+import { testVariableReadToJavaScript } from './testVariableReadToJavaScript.js';
+
+export function testInstructionsToJavaScript(logger) {
+	testBinaryOperatorToJavaScript(prefixWrapper('testBinaryOperatorToJavaScript', logger));
+	testCallCommandInstructionToJavaScript(prefixWrapper('testCallCommandInstructionToJavaScript', logger));
+	testConvertInstructionsToJavaScript(prefixWrapper('testConvertInstructionsToJavaScript', logger));
+	testConvertInstructionsToJavaScriptForMandelbrot(prefixWrapper('testConvertInstructionsToJavaScriptForMandelbrot', logger));
+	testConvertInstructionsToJavaScriptForTransparent(prefixWrapper('testConvertInstructionsToJavaScriptForTransparent', logger));
+	testGetInstructionParamTypes(prefixWrapper('testGetInstructionParamTypes', logger));
+	testGetJumpToIndexes(prefixWrapper('testGetJumpToIndexes', logger));
+	testGetStartIndexForInstructionCluster(prefixWrapper('testGetStartIndexForInstructionCluster', logger));
+	testIsLocalVariable(prefixWrapper('testIsLocalVariable', logger));
+	testMergeJavaScriptInstructions(prefixWrapper('testMergeJavaScriptInstructions', logger));
+	testMergeJavaScriptInstructionsWithInvoke(prefixWrapper('testMergeJavaScriptInstructionsWithInvoke', logger));
+	testPushInstructionToJavaScript(prefixWrapper('testPushInstructionToJavaScript', logger));
+	testUnaryOperatorToJavaScript(prefixWrapper('testUnaryOperatorToJavaScript', logger));
+	testVariableReadToJavaScript(prefixWrapper('testVariableReadToJavaScript', logger));
+};

@@ -1,0 +1,55 @@
+; Inspired by:
+; https://www.pinterest.ca/pin/98797785563848461/
+
+to drawPeddle :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angle1 30
+	localmake "angle2 15
+	localmake "angle3 30
+	localmake "angle4 120
+	localmake "size1 :size * 1.42925
+	localmake "size2 :size * 0.6
+
+	setPenSize 0
+	polystart
+	left :angle1
+	arcRight :angle2 :size1
+	arcRight :angle3 :size2
+	arcRight :angle2 :size1
+	right :angle4 ; point of symmetry
+	arcRight :angle2 :size1
+	arcRight :angle3 :size2
+	arcRight :angle2 :size1
+	polyend
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to drawFlower :size :numPeddles
+	localmake "oldPos pos
+	localmake "peddlePadding :size * 0.08
+	localmake "peddleSize :size * 0.5 - :peddlePadding
+	setfillcolor "black
+	setPenSize 0
+	repeat :numPeddles [
+		setPos :oldPos
+		forward :peddlePadding
+		drawPeddle :peddleSize
+		setPos :oldPos
+		right 360 / :numPeddles
+	]
+	setPos :oldPos
+end
+
+; Draw the flower with different numbers of peddles
+; to show how they look.
+make "size 50
+make "separation :size * 1.2
+right 90
+setPenSize 0
+back :separation * 2
+repeat 5 [
+	drawFlower :size repcount * 2
+	forward :separation
+]

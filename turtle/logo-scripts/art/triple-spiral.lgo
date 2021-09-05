@@ -1,0 +1,77 @@
+; Inspired by:
+; https://www.pinterest.ca/pin/70368812919029032/
+; and Triskelion inspired by
+; https://mythologian.net/celtic-symbols-meanings/
+
+to spiralArm :size
+	localmake "maxDotSize :size * 0.03
+	localmake "numDots 71.8
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "maxAngleDelta 100000 / :numDots
+	localmake "minAngleDelta 0
+	repeat :numDots [
+		localmake "dotSize max 0.01 (:maxDotSize * sin repcount * 180 / :numDots)
+		fd :dotSize * 3
+		circle :dotSize
+		left (mix :maxAngleDelta :minAngleDelta repcount / :numDots) * :dotSize / :size
+	]
+	setpos :oldPos
+	setheading :oldHeading
+end
+
+to triplePattern :size
+	localmake "oldPos pos
+	localmake "angle1 19
+	localmake "size1 :size * 1.02
+	repeat 3 [
+		back :size * 0.3
+		left :angle1
+		spiralArm :size1
+		setpos :oldPos
+		right 120 + :angle1
+	]
+end
+
+to triskelionArm :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angle 30
+	localmake "radius :size * 0.6
+	penDown
+	repeat 40 [
+		arcLeft :angle :radius
+		ifelse repcount > 3 [
+			localmake "radius :radius * 0.95
+		] [
+			localmake "radius :radius * 0.9
+		]
+	]
+	penUp
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to triskelion :size
+	localmake "oldPos pos
+	localmake "angle1 19
+	localmake "size1 :size * 1.00665
+	setPenSize :size * 0.02
+	setLineJoinStyle "round
+	repeat 3 [
+		penUp
+		back :size * 0.14
+		left :angle1
+		triskelionArm :size1
+		penUp
+		setpos :oldPos
+		right 120 + :angle1
+	]
+end
+
+setfillcolor "black
+setpensize 0
+right 90
+triplePattern 100
+forward 220
+triskelion 100

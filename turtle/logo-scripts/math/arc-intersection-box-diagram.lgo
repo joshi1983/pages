@@ -1,0 +1,78 @@
+; This script visualizes and tests a calculation to find 
+; the angle to intersect an arc with a rectangular box
+
+to calcAngleForWidthIntersection :angle :width :arcRadius
+	localmake "cx :arcRadius * sin :angle
+	localmake "dx :cx + :width
+	if (abs :dx) > :arcRadius [
+		output 360
+	]
+	output (arcSin :dx / :arcRadius) - :angle
+end
+
+to calcAngleForHeightIntersection :angle :height :arcRadius
+	localmake "cy :arcRadius * cos :angle
+	localmake "dy :cy - :height
+	if (abs :dy) > :arcRadius [
+		output 360
+	]
+	output (arcCos :dy / :arcRadius) - :angle
+end
+
+; Calculates a circular arc angle needed to intersect with a rectangle.
+; angle is the initial orientation of the arc.
+; width and height are dimensions of the rectangle.
+; Output is the number of degrees of arc needed to go from the 
+; initial point to the next intersection with the rectangle.
+to calcArcAngle :angle :width :height :arcRadius
+	localmake "result calcAngleForWidthIntersection :angle :width :arcRadius
+	localmake "result min :result calcAngleForHeightIntersection :angle :height :arcRadius
+	output :result
+end
+
+to drawDiagram :angle :width :height :arcRadius
+	localmake "oldHeading heading
+	localmake "resultAngle calcArcAngle :angle :width :height :arcRadius
+	right 90 + :angle
+	forward 50
+	localmake "startPos pos
+	right 90
+	setPenColor "navy
+	forward :arcRadius
+	setPenColor "black
+	circle :arcRadius
+	setPenColor "navy
+	left 180 - :resultAngle
+	forward :arcRadius
+	setPenColor "black
+	circle 2
+	penUp
+	setPos :startPos
+	setHeading :oldHeading + 90
+	penDown
+	setPenColor "red
+	forward :width
+	right 90
+	forward :height
+	right 90
+	forward :width
+end
+
+make "angle animation.time * 5
+make "width 30 + animation.time * 25
+make "height 150
+make "arcRadius 300
+
+drawDiagram :angle :width :height :arcRadius
+
+to animation.snapshotstyle
+	localmake "result plistCreate
+	output :result
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 10
+	; Edit this if you want to change the length of your animation.
+	output :minutes * 60 + :seconds
+end

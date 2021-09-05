@@ -1,0 +1,157 @@
+; Inspired by:
+; https://www.pinterest.ca/pin/421931058810509678/
+
+to isoscelesTriangle :width :height
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "len hypot [(:width * 0.5) :height]
+	localmake "angle arcTan :height / (:width / 2)
+	setPenSize 0
+	left 90
+	forward :width / 2
+	right 180 - :angle
+	polyStart
+	forward :len
+	right 180 - (90 - :angle) * 2
+	forward :len
+	polyEnd
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to diamondRow :width :height :numTriangles
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "wChange :width / :numTriangles
+	right 90
+	setPenSize 0
+	back (:width - :wChange) * 0.5
+	repeat :numTriangles [
+		right 90
+		isoscelesTriangle :wChange :height
+		left 90
+		forward :wChange
+	]
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to diamond :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "width :size * 0.5
+	localmake "numLevels 8
+	localmake "maxTriangles :numLevels * 2
+	localmake "levelHeight :size * 0.5 / :numLevels
+	localmake "triangleWidth :width / :maxTriangles
+	setPenSize 0
+	forward :levelHeight
+	repeat :numLevels [
+		localmake "numTriangles repcount
+		localmake "width_ :triangleWidth * :numTriangles
+		diamondRow :width_ :levelHeight :numTriangles
+		forward :levelHeight
+	]
+	right 180
+	forward :levelHeight
+	repeat :numLevels [
+		localmake "numTriangles :numLevels + 1 - repcount
+		localmake "width_ :triangleWidth * :numTriangles
+		diamondRow :width_ :levelHeight :numTriangles
+		back :levelHeight
+	]
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to triplePiece :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angle arcTan 4
+	localmake "angle1 90 + :angle
+	localmake "len1 :size * 0.9
+	localmake "numLines 20
+	localmake "lineSpace :size / :numLines
+	setPenSize 0
+	polyStart
+	forward :size
+	right :angle1
+	forward :len1
+	localmake "lenScale (distance :oldPos) / :numLines 
+	polyEnd
+	setPos :oldPos
+	setHeading :oldHeading
+	setPenSize :size * 0.01
+	penUp
+	repeat :numLines [
+		left 60
+		penDown
+		localmake "straightPos pos
+		forward (:numLines + 1 - repcount) * :lenScale
+		penUp
+		setPos :straightPos
+		setHeading :oldHeading
+		forward :lineSpace
+	]
+	setPenSize 0
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to triplePattern :size
+	localmake "angles 3
+	repeat :angles [
+		triplePiece :size
+		right 360 / :angles
+	]
+end
+
+to design :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "smallRadius :size * 0.8
+	localmake "radius1 :smallRadius * 0.5775
+	localmake "triplePatternSize :smallRadius * 0.27
+	localmake "numAngles 6
+	localmake "colorStops plistCreate
+	setProperty "colorStops 0 "white
+	setProperty "colorStops 0.7 "white
+	setProperty "colorStops 0.9 mix "white screenColor 0.08
+	setProperty "colorStops 1 screenColor
+	localmake "gradient createRadialGradient pos pos :size :colorStops "pad
+	setFillGradient :gradient
+	setPenSize 0
+	circle :size
+	setPenColor "black
+	setPenSize :size * 0.015
+	circle :size * 0.88
+
+	setFillColor "black
+	repeat :numAngles [
+		diamond :smallRadius
+		right 360 / :numAngles
+	]
+	forward :smallRadius
+	right 90 + 180 / 6
+	repeat :numAngles [
+		diamond :smallRadius
+		forward :smallRadius
+		right 360 / :numAngles
+	]
+	setPos :oldPos
+	setHeading :oldHeading + 180 / 6
+	repeat :numAngles [
+		forward :radius1
+		right 180 / 3
+		triplePattern :triplePatternSize
+		left 180 / 3
+		setPos :oldPos
+		right 360 / :numAngles
+	]
+	setHeading :oldHeading
+end
+
+setScreenColor "#222
+setFillColor "black
+design 200
+hideTurtle

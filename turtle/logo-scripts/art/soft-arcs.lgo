@@ -1,0 +1,77 @@
+; Inspired by
+; https://www.pinterest.ca/pin/175077504256404614/
+make "color1 "#fff
+
+to straightSmear :len
+	localmake "oldPos pos
+	localmake "numDivisions 10
+	penUp
+	forward :len / 2
+	penDown
+	repeat :numDivisions [
+		localmake "ratio repcount / :numDivisions
+		setFillColor mix :color1 transparent 0.5 * :ratio
+		ellipse :len * 0.1 * (1 - :ratio) :len
+	]
+	penUp
+	setPos :oldPos
+end
+
+to polyArc :squareSize
+	localmake "oldPos pos
+	localmake "oldHeading heading
+
+	polyStart
+	arcRight 90 :squareSize
+	right 180
+	forward :squareSize
+	polyEnd
+
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to blendedArc :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "colorStops plistCreate
+	setProperty "colorStops 0 "white
+	setProperty "colorStops 1/sqrt 2 "white
+	setProperty "colorStops 1 transparent
+	penUp
+	right 90
+	forward :size
+	setFillGradient createRadialGradient pos pos :size * sqrt 2 :colorStops "pad
+	setPos :oldPos
+	setHeading :oldHeading
+	polyArc :size
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to softArcs :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	repeat 5 [
+		setHeading :oldHeading + 180 * (repcount - 3) / 4
+		forward :size * 0.4
+		if and repcount <> 5 repcount <> 1 [ 
+			straightSmear :size * 0.4
+		]
+		setPos :oldPos
+		if repcount <> 5 [
+			blendedArc :size
+		]
+		left 45
+		forward :size * sqrt 2
+		right 135
+		if repcount <> 1 [
+			blendedArc :size
+		]
+		setPos :oldPos
+	]
+end
+
+setScreenColor "black
+setPenSize 0
+softArcs 150

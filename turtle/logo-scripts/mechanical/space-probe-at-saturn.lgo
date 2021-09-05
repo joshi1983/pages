@@ -1,0 +1,146 @@
+
+to solarPanels :size
+	localmake "oldPos pos
+	localmake "panelDark "#222
+	localmake "panelHighlight "#444
+	localmake "highlightThickness :size * 0.008
+	localmake "thickness :size * 0.2
+	localmake "size1 :size * 0.1
+	localmake "size2 :size - :size1
+	localmake "numSegments 10
+	setPenColor :panelDark
+	setPenSize :size * 0.2
+	penUp
+	forward :size1
+	localmake "basePosition pos
+	penDown
+	forward :size2
+	penUp
+	setPos :basePosition
+	setPenColor :panelHighlight
+	repeat :numSegments [
+		penDown
+		forward :highlightThickness
+		penUp
+		forward :size2 / :numSegments - :highlightThickness
+	]
+	setPos :basePosition
+	left 90
+	forward :thickness * 0.5
+	right 90
+	setPenSize :highlightThickness
+	repeat 3 [
+		penDown
+		forward :size2
+		penUp
+		back :size2
+		right 90
+		forward :thickness / 2
+		left 90
+	]
+	penUp
+	setPos :oldPos
+end
+
+to drawDish :radius
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "colorStops plistCreate
+	setProperty "colorStops 0 "#aaa
+	setProperty "colorStops 1 "#fff
+	forward :radius * 0.3
+	; move the darkest part of gradient
+	; to match the direction of light from the sun
+	localmake "gradient createRadialGradient :oldPos pos :radius :colorStops "pad
+	setFillGradient :gradient
+	setPenSize 0
+	setPos :oldPos
+	circle :radius
+	setPenColor "gray
+	setPenSize :radius * 0.01
+	; draw supporting pieces for the dish's antenna
+	repeat 4 [
+		penDown
+		forward :radius * 0.15
+		penUp
+		setPos :oldPos
+		right 360 / 4
+	]
+	setFillColor "gray
+	setPenColor "#666
+	circle :radius * 0.05 ; the dish antenna
+	penUp
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+; Draws something that resembles a radioactive 
+; power supply
+to drawRTG :size
+	localmake "oldPos pos
+	setPenColor "#111
+	penDown
+	setPenSize :size * 0.05
+	forward :size * 0.1
+	setPenSize :size * 0.15
+	forward :size * 0.8
+	setPenSize :size * 0.2
+	forward :size * 0.1
+	penUp
+	; return to original position
+	setPos :oldPos
+end
+
+; illustrates an antenna with a very narrow dark line
+to drawAntenna :size
+	localmake "oldPos pos
+	setPenSize :size * 0.002
+	setPenColor "#111
+	penDown
+	forward :size * 0.95
+	setPenSize :size * 0.004
+	forward :size * 0.05
+	penUp
+	setPos :oldPos
+end
+
+; Illustrates a few antenna and power supply
+to drawComponents :size
+	localmake "oldHeading heading
+	right 45
+	drawRTG :size * 0.2
+	right 100
+	; draw antenna at a few assymmetric angles
+	; to look somewhat natural
+	drawAntenna :size * 0.3
+	right 60
+	drawAntenna :size * 0.4
+	right 95
+	drawAntenna :size * 0.2
+	setHeading :oldHeading
+end
+
+to spaceProbe :size
+	drawComponents :size
+
+	; loop through 4 directions of solar panels.
+	repeat 4 [
+		solarPanels :size * 0.5
+		right 360 / 4
+	]
+	right 60
+	drawDish :size * 0.06
+end
+
+setScreenColor "black
+; draw Saturn using an image from wikipedia.
+image 200 100 'https://upload.wikimedia.org/wikipedia/commons/c/c7/Saturn_during_Equinox.jpg'
+
+; move over the image without drawing a trail.
+setPenSize 0
+right 30
+setPenColor "white
+forward 50
+
+; draw the probe over Saturn
+spaceProbe 50

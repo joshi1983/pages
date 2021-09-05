@@ -1,0 +1,44 @@
+; Inspired by
+; https://www.pinterest.ca/pin/1196337391651767/
+; The animation looks most like the pinterest image at 2 seconds.
+
+to circleStringArt :radius :time
+	localmake "oldPos pos
+	localmake "numPoints 3000
+	localmake "points []
+	circle :radius
+	penUp
+	repeat :numPoints [
+		setPos :oldPos
+		forward :radius
+		queue "points pos
+		right 360 / :numPoints
+	]
+	repeat :numPoints [
+		localmake "index 1 + remainder int (repcount * :time) :numPoints
+		localmake "toPoint item :index :points
+		penUp
+		setPos item repcount :points
+		setHeading towards :toPoint
+		penDown
+		forward distance :toPoint
+	]
+	penUp
+	setPos :oldPos
+end
+
+setPenSize 0.01
+circleStringArt 100 power animation.time 2
+
+to animation.snapshotstyle
+	localmake "result plistCreate
+	setProperty "result "zoom.scale 2.6
+	output :result
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 10
+	; Edit this if you want to change the length of your animation.
+	output :minutes * 60 + :seconds
+end

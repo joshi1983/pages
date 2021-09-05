@@ -1,0 +1,95 @@
+; American flag
+
+to drawStar :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	setpensize 0
+	right 18
+	forward :size * 1.4
+	left 162
+	setfillcolor "white
+	polystart
+
+	repeat 5 [
+		forward :size
+		right 72
+		forward :size
+		left 144
+	]
+	polyend
+	setpos :oldPos
+	setHeading :oldHeading
+end
+
+to drawStripes :width :height
+	localmake "redColor "#c60000
+	localmake "oldPos pos
+	localmake "stripSize :height / 13
+	setpencolor "white
+	setpensize :height
+	forward :width
+	penUp
+	back :width
+	penDown
+	setpensize 0
+	right 90
+	back (:height - :stripSize) * 0.5
+	left 90
+	setpensize :stripSize
+	setpencolor :redColor
+	repeat 7 [
+		pendown
+		forward :width
+		penup
+		back :width
+		right 90
+		forward pensize * 2
+		left 90
+	]
+	setpos :oldPos
+end
+
+to drawFlag :width :height
+	localmake "starSize :width * 0.013
+	localmake "blueWidth :width * 0.457
+	localmake "blueHeight :height * 7/13
+	localmake "starOffsetX :blueWidth * 0.172
+	left 90
+	drawStripes :width :height
+	forward :width - :blueWidth
+	right 90
+	forward (:height - :blueHeight) * 0.5
+	left 90
+	setpensize :blueHeight
+	setpencolor "#00008c
+	penDown
+	fd :blueWidth
+	penUp
+	back :blueWidth / 15
+	setpensize 0
+	right 90
+	fd :blueHeight * 0.5 - :starSize * 2
+	left 90
+	repeat 9 [
+		ifelse even? repcount [
+			back :blueWidth / 12
+			localmake "numStarsInRow 5
+		] [
+			localmake "numStarsInRow 6
+		]
+		repeat :numStarsInRow [
+			drawStar :starSize
+			back :starOffsetX
+		]
+		if :numStarsInRow = 5 [
+			forward :blueWidth / 12
+		]
+		forward :starOffsetX * :numStarsInRow
+		left 90
+		forward :blueHeight / 9.7
+		right 90
+	]
+end
+
+setscreencolor "black
+drawFlag 100 60

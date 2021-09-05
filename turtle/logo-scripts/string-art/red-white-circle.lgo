@@ -1,0 +1,102 @@
+; Inspired by
+; https://www.pinterest.ca/pin/746612444486336747/
+
+to fanLines :toPoints
+	localmake "oldHeading heading
+	localmake "oldPos pos
+	localmake "len count :toPoints
+	repeat :len [
+		penUp
+		setPos item repcount :toPoints
+		setHeading towards :oldPos
+		penDown
+		forward distance :oldPos
+	]
+	penUp
+	setPos :oldPos
+	setHeading :oldHeading	
+end
+
+to arcToPoints :angle :radius :numPoints
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "result []
+	penUp
+	repeat :numPoints [
+		setPos :oldPos
+		setHeading :oldHeading + :angle * (repcount - 1) / :numPoints
+		forward :radius
+		queue "result pos
+	]
+	setPos :oldPos
+	setHeading :oldHeading
+	output :result
+end
+
+to design :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "color1 "#e40
+	localmake "color2 "#fff
+	localmake "size1 :size * 0.05
+	localmake "size2 :size * 0.04
+	localmake "size3 :size * 0.01
+	localmake "radius3 :size2 + :size1 * 0.5
+	localmake "radius2 :size - :radius3
+	localmake "stringThickness :size * 0.008
+	localmake "numSegments 16
+	localmake "angle 360 / :numSegments
+	setFillColor transparent
+	setPenColor :color2
+	setPenSize :size1
+	circle :size2
+	setPenSize :size3
+	setPenColor :color1
+	circle :size2
+	setPenSize :size3
+	localmake "numRepeats 2
+	setPenSize :stringThickness
+	repeat :numRepeats [
+		localmake "numLines (repcount) * 5
+		localmake "ratio1 (repcount - 1) / :numRepeats
+		localmake "radius1_ :radius3 + :radius2 * repcount / :numRepeats
+		localmake "radius2_ :radius3 + :radius2 * :ratio1
+		penUp
+		setPos :oldPos
+		penDown
+		localmake "outerRepcount repcount
+		repeat :numSegments [
+			localmake "angle1 :oldHeading + repcount * 360 / :numSegments
+			penUp
+			setPos :oldPos
+			setHeading :angle1 
+			localmake "points arcToPoints :angle :radius1_ :numLines
+			ifelse even? :outerRepcount [
+				setPenColor :color2
+			] [
+				setPenColor :color1
+			]
+			setHeading :angle1
+			forward :radius2_
+			fanLines :points
+			penUp
+			setPos :oldPos
+			setHeading :angle1 - 360 / :numSegments
+			localmake "points arcToPoints :angle :radius2_ :numLines
+			ifelse even? :outerRepcount [
+				setPenColor :color1
+			] [
+				setPenColor :color2
+			]
+			setHeading :angle1
+			forward :radius1_
+			fanLines :points
+		]
+	]
+	penUp
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+setScreenColor "black
+design 100

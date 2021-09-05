@@ -1,0 +1,46 @@
+; Inspired by
+; https://www.pinterest.ca/pin/452189618843115451/
+
+make "colors ["white "skyblue "aqua "blue "red "orange]
+make "numColors count :colors
+
+to ratioToColor :ratio
+	localmake "ratio :ratio * :numColors
+	localmake "index1 int (1 + remainder (int :ratio) :numColors)
+	localmake "index2 int (1 + remainder :index1 :numColors)
+	localmake "c1 item :index1 :colors
+	localmake "c2 item :index2 :colors
+	localmake "ratio :ratio - int :ratio
+	localmake "resultRGB mix :c2 :c1 :ratio
+	output mix :resultRGB transparent  0.3
+end
+
+to peddle :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angle1 100
+	localmake "angle2 180 - :angle1
+	localmake "arcRadius :size * 0.5 / (sin :angle1 / 2)
+	left :angle1 * 0.5
+	polyStart
+	arcRight :angle1 :arcRadius
+	right :angle2
+	arcRight :angle1 - 0.5 :arcRadius
+	polyEnd
+	penUp
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to rainbowFlower :size
+	localmake "numPeddles 32
+	setPenSize 0
+	repeat :numPeddles [
+		setFillColor ratioToColor repcount / :numPeddles
+		peddle :size
+		right 360 / :numPeddles
+	]
+end
+
+setScreenColor "black
+rainbowFlower 150

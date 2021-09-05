@@ -1,0 +1,73 @@
+; Adapted from drawing at:
+; https://www.youtube.com/watch?v=exsn0aVTTlo
+
+to drawBuilding :size
+	localmake "radius :size * 0.22
+	localmake "platformThickness :size * 0.05
+	localmake "size1 :size * 0.9
+	localmake "size2 :size * 0.8
+	localmake "size3 :size * 0.58
+	localmake "floorHeight :size3 / 3
+	localmake "windowSize :floorHeight * 0.5
+	localmake "spaceBetweenWindows (:size2 - :windowSize * 4) / 5
+	localmake "color1 "saddleBrown
+	localmake "color2 "sienna
+	localmake "color3 "chocolate
+	localmake "color4 "sandyBrown
+	localmake "windowColor "khaki
+
+	forward :platformThickness * 4 + :size3
+	setfillcolor :color1
+	setpensize 0
+	; draw the circular dome.
+	circle :radius
+
+	; draw the platforms of roof.
+	setpensize :size2
+	setpencolor :color2
+	back :platformThickness
+	setpensize :size1
+	setpencolor :color3
+	back :platformThickness
+	setpensize :size2
+	setpencolor :color4
+
+	; draw the main wall.
+	back :size3
+
+	; draw the lowest platforms.
+	setpensize :size1
+	setpencolor :color3
+	back :platformThickness
+	setpensize :size
+	setpencolor :color1
+	back :platformThickness
+
+	; prepare to draw windows.
+	penup
+	forward :platformThickness * 2 + :floorHeight / 2
+	left 90
+	forward :size2 * 0.5
+	right 180
+	setpencolor :windowColor
+	setpensize :windowSize
+
+	; loop through floors of windows.
+	repeat 3 [
+		; loop through windows in the current floor.
+		repeat 4 [
+			penup
+			forward :spaceBetweenWindows
+			pendown
+			forward :windowSize
+		]
+		penup
+		back :size2 - :spaceBetweenWindows
+		left 90
+		forward :floorHeight
+		right 90
+	]
+end
+
+setScreenColor "black
+drawBuilding 100

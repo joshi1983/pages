@@ -1,0 +1,41 @@
+; Inspired by
+; https://www.pinterest.ca/pin/180566266299121201
+
+make "color1 "#def
+make "color2 "#056
+
+to triangle :size
+	localmake "oldHeading heading
+	localmake "oldPos pos
+	localmake "size1 :size * 0.5 / sin 60
+	penUp
+	forward :size1
+	right 150
+	penDown
+	polyStart
+	repeat 3 [
+		forward :size
+		right 120
+	]
+	polyEnd
+	penUp
+	setHeading :oldHeading
+	setPos :oldPos
+end
+
+to rotatedTriangle :size :maxSize
+	if :size < 2 [
+		stop
+	]
+	localmake "oldHeading heading
+	localmake "ratio sqrt :size / :maxSize
+	setHeading :oldHeading + 5
+	setFillColor mix :color1 :color2 :ratio
+	triangle :size
+	rotatedTriangle :size * 0.872 :maxSize
+end
+
+setScreenColor "#000
+setPenSize 0.2
+left 5
+rotatedtriangle 150 150

@@ -1,0 +1,123 @@
+; Inspired by:
+; https://www.pinterest.ca/pin/329818372719582768/
+
+setscreencolor "black
+
+to circles :numCircles :largeRadius :circleRadius
+	localmake "delta 360 / :numCircles
+	setpensize 0
+	repeat :numCircles [
+		fd :largeRadius
+		circle :circleRadius
+		back :largeRadius
+		right :delta
+	]
+end
+
+to drawCentreCircles :size
+	localmake "colors ["white "yellow "orange "red]
+	localmake "minRadius :size * 0.15
+	setfillcolor item 1 :colors
+	circle :minRadius
+	repeat 3 * (count :colors) [
+		localmake "colorIndex 1 + int (repcount / 3)
+		if :colorIndex > count :colors [
+			localmake "colorIndex count :colors
+		]
+		setfillcolor item :colorIndex :colors
+		localmake "radius :minRadius + 0.6 * (power repcount 1.72)
+		localmake "tinyRadius :radius / 14
+		circles 35 :radius :tinyRadius
+		right 5
+	]
+end
+
+to circleArc :angle :size
+	localmake "originalPos pos
+	localmake "originalHeading heading
+	localmake "numRepeats 10
+	localmake "angleDelta :angle * -2.7 / :numRepeats
+	localmake "step :size / :numRepeats
+	right :angle
+	repeat :numRepeats [
+		fd :step
+		circle :step * 0.4 * repcount / :numRepeats
+		right :angleDelta * (1 - repcount * 0.65 / :numRepeats)
+	]
+	penup
+	setpos :originalPos
+	setheading :originalHeading
+end
+
+to drawLeaf :colors :size
+	localmake "size :size * 1.5
+	localmake "numRepeat count :colors
+	localmake "minRadius :size * 0.25
+	setfillcolor item 1 :colors
+	fd :minRadius * 0.5
+	circle :minRadius * 0.5
+	back :minRadius * 0.5
+	localmake "minRadius :minRadius * 1.2
+	repeat :numRepeat [
+		setfillcolor item repcount :colors
+		localmake "arcSize :minRadius + :size * repcount / :numRepeat
+		circleArc 90 :arcSize
+		circleArc -90 :arcSize
+	]
+end
+
+to circleLine1 :len :maxRadius
+	localmake "originalPos pos
+	localmake "numRepeats 10
+	localmake "delta :len / :numRepeats
+	repeat :numRepeats [
+		circle repcount * :maxRadius / :numRepeats
+		fd :delta
+	]
+	setpos :originalPos
+end
+
+to circleLine2 :len :maxRadius
+	localmake "originalPos pos
+	localmake "numRepeats 10
+	localmake "delta :len / :numRepeats
+	repeat :numRepeats [
+		circle max 0.1 (:numRepeats - repcount) * :maxRadius / :numRepeats
+		fd :delta
+	]
+	setpos :originalPos
+end
+
+to draw :size
+	localmake "smallSize :size * 0.3
+	localmake "mSize :size * 0.6
+	localmake "leafSize1 :size * 0.2
+	localmake "leafSize2 :size * 0.3
+	localmake "greenColors ["white "olive "green "lime "olive "darkolivegreen "darkolivegreen "white ]
+	localmake "redColors ["orange "white "red "red "maroon "maroon "maroon "white ]
+	drawCentreCircles :smallSize
+	repeat 8 [
+		fd :smallSize
+		drawLeaf :greenColors :leafSize1
+		fd :smallSize
+		setfillcolor "lime
+		circleLine1 :smallSize :size * 0.015
+		fd :smallSize
+		setfillcolor "red
+		circleLine2 :smallSize :size * 0.015
+		back :smallSize * 3
+		right 360/8
+	]
+	right 360 / 16
+	repeat 8 [
+		fd :mSize
+		drawLeaf :redColors :leafSize2
+		back :mSize - :smallSize
+		setfillcolor "LimeGreen
+		circleLine2 :smallSize :size * 0.015
+		back :smallSize
+		right 360/8
+	]
+end
+
+draw 200

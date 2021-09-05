@@ -1,0 +1,19 @@
+; Draws a Sierpinski triangle using a randomized algorithm called
+; The Chaos game
+; You can learn more about the algorithm at:
+; https://en.wikipedia.org/wiki/Chaos_game
+
+make "points [[-200 -100] [0 200] [200 -100]]
+setpensize 0
+setfillcolor "red
+repeat 10000 [
+	; randomly select 1 of the 3 points.
+	make "otherPoint item 1 + random 3 :points
+
+	; move half way between current position and the random point.
+	setx xcor * 0.5 + 0.5 * item 1 :otherPoint
+	sety ycor * 0.5 + 0.5 * item 2 :otherPoint
+
+	; draw a circle to show where we are.
+	circle 1
+]

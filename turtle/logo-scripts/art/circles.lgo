@@ -1,0 +1,74 @@
+; Inspired by the top image at:
+; https://fmslogo.blogspot.com/2014/07/fms-logo.html
+
+to hatchedCircle :size
+	localmake "numCircles 10
+	repeat :numCircles [
+		circle2 repcount * :size / :numCircles
+	]
+end
+
+to radiatingCircle2 :size :numCircles :maxAngles
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "minAngles 3
+	localmake "radiusStep :size / :numCircles
+	left 90
+	forward :size
+	localmake "circlePos pos
+	repeat :numCircles [
+		localmake "numAngles mix :maxAngles :minAngles (repcount - 1) / (:numCircles - 1)
+		localmake "startRadius (repcount - 1) * :radiusStep
+		repeat :numAngles [
+			penUp
+			forward :startRadius
+			penDown
+			forward :radiusStep
+			penUp
+			right 360 / :numAngles
+			setPos :circlePos
+		]
+	]
+	; restore original heading and position.
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to filledCircleDesign :size
+	localmake "numSides 8
+	setFillColor "#4000
+	setPenSize 0
+	repeat :numSides [
+		circle2 :size / 2
+		right 360 / :numSides
+	]
+end
+
+to circleHatchingCircleDesign :size
+	localmake "numSides 8
+	setFillColor transparent
+	setPenSize :size * 0.01
+	repeat :numSides [
+		hatchedCircle :size / 2
+		right 360 / :numSides
+	]
+end
+
+to radiatingCircleDesign :size
+	localmake "numSides 8
+	setFillColor transparent
+	setPenSize :size * 0.003
+	repeat :numSides [
+		radiatingCircle2 :size / 2 20 70
+		right 360 / :numSides
+	]
+end
+
+make "size 50
+make "sideStepLength :size * 2.1
+jumpLeft :sideStepLength
+filledCircleDesign :size
+jumpRight :sideStepLength
+circleHatchingCircleDesign :size
+jumpRight :sideStepLength
+radiatingCircleDesign :size

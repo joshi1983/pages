@@ -1,0 +1,134 @@
+; Inspired by:
+; https://www.youtube.com/watch?v=WEUloPdIfRk
+; Code translated from Python to WebLogo
+
+; drawWindow draws a square window of size 50 by 50.
+; Since the window is drawn more than once, 
+; defining a procedure reduces code-duplication.
+to drawWindow
+	localmake "oldPos pos
+	penDown
+	setPenColor "black
+	setFillColor "white
+	; draw white background for window.
+	polyStart
+	repeat 4 [
+		forward 50
+		left 90
+	]
+	polyEnd
+
+	; draw cross on window.
+	penUp
+	forward 25
+	left 90
+	penDown
+	forward 50
+	penUp
+	setPos :oldPos
+	forward 25
+	right 90
+	penDown
+	forward 50
+	penUp
+end
+
+to fillRect :width :height
+	polyStart
+	repeat 2 [
+		forward :width
+		left 90
+		forward :height
+		left 90
+	]
+	polyEnd
+end
+
+setScreenColor "green
+
+; Sky
+penUp
+setXY -400 -100
+right 90
+penDown
+setColors "deepskyblue
+fillRect 800 500
+
+; Sun
+penUp
+setXY -320 225
+penDown
+setFillColor "yellow
+setPenColor "orange
+circle 35
+
+; Cloud
+penUp
+setXY 200 200
+penDown
+setColors "white
+circle 25
+penUp
+setXY 220 240
+penDown
+circle 25
+penUp
+setXY 230 215
+penDown
+circle 25
+penUp
+setXY 180 225
+penDown
+circle 25
+
+; House
+penUp
+setXY -100 -100
+penDown
+setPenSize 3
+setPenColor "chocolate
+setFillColor "orange
+fillRect 170 170
+
+; Chimney
+penUp
+setXY 20 130
+penDown
+setPenColor "brown
+setFillColor "firebrick
+fillRect 40 100
+
+; Roof
+penUp
+setXY -127 70
+penDown
+polyStart
+repeat 3 [
+	forward 225
+	left 120
+]
+polyEnd
+
+; Window 1
+penUp
+setXY 0 0
+drawWindow
+
+; Window 2
+setXY -80 0
+drawWindow
+
+; Door
+penUp
+setXY -40 -97
+penDown
+setColors "red
+fillRect 50 80
+
+; Door Handle/knob
+penUp
+setXY -30 -60
+penDown
+setColors "black
+circle 5
+hideturtle

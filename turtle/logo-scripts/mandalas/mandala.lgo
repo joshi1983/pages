@@ -1,0 +1,787 @@
+; Draws a complex mandala with many different shapes.
+
+make "lightColor1 "white
+make "lightColor2 "#bae6eb
+make "darkColor1 "black
+make "darkColor2 "#0c2f6d
+make "greenColor1 "#152
+make "neutralColor1 "#ddd
+make "neutralColor2 "#666
+make "hotColor1 "#910
+make "hotColor2 "#ff4
+make "hotColor3 "#f40
+make "hotColor4 "#510
+
+to circleOfCircles :size
+	localmake "oldPos pos
+	penup
+	repeat 32 [
+		fd :size
+		circle :size * 0.05
+		right 360 / 32
+		setpos :oldPos
+	]
+end
+
+to arcOfCircles :size :angle :numCircles
+	localmake "oldHeading heading
+	localmake "oldPos pos
+	localmake "oldFillColor fillcolor
+	localmake "oldPenSize pensize
+	localmake "oldPenDownp pendown?
+	localmake "x :size * sin :angle
+	localmake "y2 sqrt (:size * :size * 4 - :x * :x )
+	localmake "angle1 2 * arctan :x / :y2
+	penup
+	right :angle
+	fd :size
+	localmake "arcCorner pos
+	left :angle
+	back :y2
+	left 90
+	fd :x
+	localmake "innerArcCentre pos
+	setpos :arcCorner
+	right :angle1 * 0.5
+	if :oldPenDownp [
+		pendown
+	]
+	polystart
+	arcleft :angle1 :size * 2
+	right 180 + :angle1 * 0.5 - :angle
+	arcRight :angle * 2 :size
+	polyend
+	penup
+	setheading :oldHeading
+	setpos :oldpos
+	if :numCircles > 0 [
+		localmake "circleAngleDelta :angle * 2 / ( 1 + :numCircles )
+		localmake "startAngle :circleAngleDelta - :angle
+		localmake "a :startAngle
+		setpensize 0
+		setfillcolor pencolor
+		repeat :numCircles [
+			setheading :oldHeading + :a
+			fd :size
+			setheading towards :innerArcCentre
+			localmake "d  ((distance :innerArcCentre) - :size * 2)
+			fd :d * 0.5
+			circle :d * 0.5
+			setpos :oldPos
+
+			localmake "a :a + :circleAngleDelta
+		]
+	]
+	penup
+	setpos :oldPos
+	setheading :oldHeading
+	setfillcolor :oldFillColor
+	setpensize :oldPenSize
+	if :oldPenDownp [
+		pendown
+	]
+end
+
+to brightArc :radius
+	localmake "oldHeading heading
+	localmake "oldPos pos
+	setpensize 0
+	forward :radius
+	right 90
+	setfillcolor :hotColor2
+
+	polystart
+	arcRight 120 :radius
+	left 177
+	arcLeft 123 :radius
+	forward :radius * 0.7
+	left 176.20
+	forward :radius * 0.673
+	polyend
+	penup
+	setheading :oldHeading
+	setpos :oldPos
+end
+
+to straightloop :size
+	localmake "oldHeading heading
+	localmake "oldPos pos
+	localmake "size1 :size * 0.7
+	localmake "size2 :size * 0.25478
+	left 20
+	polystart
+	fd :size1
+	arcRight 220 :size2
+	fd :size1
+	; to get the best corner,
+	; retrace a bit at the start of the shape.
+	right 140
+	fd :size1 * 0.5
+	polyend
+	penup
+	setheading :oldHeading
+	setpos :oldPos
+	pendown
+end
+
+to curveLoop :size
+	localmake "oldHeading heading
+	localmake "oldPos pos
+	localmake "size1 :size * 2.835
+	localmake "size2 :size * 0.25
+	
+	left 26.825
+	polystart
+	arcRight 15 :size1
+	arcRight 203.617 :size2
+	arcRight 15 :size1
+	polyend
+	penup
+	setpos :oldPos
+	setHeading :oldHeading
+	pendown
+end
+
+to raindrop :size
+	localmake "oldHeading heading
+	localmake "oldPos pos
+	localmake "size1 :size * 0.6
+	localmake "size2 :size * 1.6
+	localmake "size3 :size * 0.3
+	
+	polystart
+	left 5.6
+	arcleft 30 :size1
+	arcRight 12 :size2
+	arcRight 227.2675 :size3
+	arcRight 12 :size2
+	arcleft 30 :size1
+	polyend
+
+	penup
+	setpos :oldPos
+	setHeading :oldHeading
+	pendown
+end
+
+to narrowLeaf :size :numVeins
+	localmake "oldHeading heading
+	localmake "oldPos pos
+	localmake "size1 :size
+	localmake "size2 :size * 0.12
+	localmake "oldPenSize pensize
+	left 30
+	polystart
+	arcRight 60 :size1
+	right 120
+	arcRight 60 :size1
+	polyend
+	setHeading :oldHeading
+	fd :size * 0.8
+	penup
+	back :size * 0.8
+	setpensize :oldPenSize * 0.2
+	fd :size * (0.25 + 0.4 / (1 + :numVeins))
+	if :numVeins > 0 [
+		localmake "veinDelta :size * 0.4 / :numVeins
+		repeat :numVeins [
+			right 45
+			pendown
+			fd :size2
+			penup
+			back :size2
+			left 90
+			pendown
+			fd :size2
+			penup
+			back :size2
+			right 45
+			fd :veinDelta
+		]
+	]
+	penup
+	setpos :oldPos
+	setheading :oldHeading
+	setpensize :oldPenSize
+	pendown
+end
+
+to rectangularLeaf :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angle1 79.6
+	localmake "size1 :size * 0.612
+	localmake "size2 :size * 1.864
+	localmake "size3 :size * 0.4
+
+	left 51.858
+	polystart
+	fd :size1
+	right :angle1
+	arcRight 20 :size2
+	arcleft 20 :size3
+	right 124.5
+	arcleft 20 :size3
+	arcRight 20 :size2
+	right :angle1
+	fd :size1
+	polyend
+
+	penup
+	setpos :oldPos
+	setheading :oldHeading
+	pendown
+end
+
+to ellipseCircle :size
+	localmake "oldPos pos
+	localmake "size1Ratio 0.1
+	localmake "size1 :size * :size1Ratio
+	localmake "size2 :size * 0.02
+	localmake "size3 :size * (1 - :size1Ratio)
+	setpensize 0
+	repeat 64 [
+		localmake "scale 0.5 - abs (8 - remainder (repcount - 1) 16) / 16
+		if :scale > 0 [
+			penup
+			fd :size3
+			pendown
+			ellipse :size2 * :scale :size1 * :scale
+			penup
+			setpos :oldPos
+		]
+		right 360 / 64
+	]
+end
+
+to spiralArc :minRadius :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angle 135
+	localmake "angle2 :angle * 0.666
+	localmake "size1 :size * 0.14
+	localmake "size2 :size * 0.1109
+	localmake "size3 :size * 0.1
+	localmake "size4 :size2 * 0.97
+	localmake "size5 :size1 * 1.0077
+	localmake "angle3 :angle * 1.03
+	localmake "angle4 :angle2 * 0.99
+	setpensize 0
+	penup
+	fd :minRadius
+	pendown
+	polystart
+	arcLeft :angle :size1
+	arcRight :angle2 :size2
+	fd :size3
+	right 178
+	fd :size3
+	arcLeft :angle4 :size4
+	arcRight :angle3 :size5
+	polyend
+	penup
+	setpos :oldPos
+	setheading :oldHeading
+end
+
+to spiralArc2 :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "size1 :size * 0.09
+	localmake "size2 :size * 0.1
+	localmake "size3 :size * 0.05
+	localmake "size4 :size * 0.06
+	localmake "size5 :size2 * 1.03
+	localmake "size6 :size * 0.07
+	setpensize 0
+	fd :size * 0.51
+	left 180
+	polystart
+	arcleft 90 :size1
+	arcRight 110 :size2
+	fd :size3
+	arcLeft 40 :size4
+	left 177
+	arcRight 37 :size4
+	forward :size3 * 1.03
+	arcLeft 25 :size5
+	right 165
+	arcLeft 18 :size5
+	forward :size6
+	arcRight 90 :size3
+	left 178
+	arcLeft 92 :size3
+	forward :size6
+	arcRight 25.7 :size5 * 0.96
+	arcLeft 77.4 :size5
+	arcRight 88.3 :size1
+	polyend
+	penup
+	setpos :oldPos
+	setheading :oldHeading
+end
+
+to spiralArc3 :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "size1 :size * 0.08
+	setpensize 0
+	forward :size * 0.51
+	right 180
+	polystart
+	arcLeft 80 :size1
+	right 176
+	arcRight 87 :size1 * 0.93
+	polyend
+	penup
+	setpos :oldPos
+	setheading :oldHeading
+end
+
+to spiralArc4 :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "oldPenSize pensize
+	localmake "oldPenDown pendown?
+	localmake "size1 :size * 0.27
+	localmake "size2 :size * 0.05
+	localmake "size3 :size * 0.092
+	setpensize 0
+	left 16.5
+	forward :size1
+
+	left 5
+	polystart
+	forward :size2
+	arcLeft 100 :size3
+	right 176
+	arcRight 104 :size3 * 0.97
+	polyend
+
+	setpensize :oldPenSize
+	setpos :oldPos
+	setheading :oldHeading
+	if :oldPenDown [
+		pendown
+	]
+end
+
+to darkenCircleOutline :size
+	localmake "oldHeading heading
+	localmake "oldPos pos
+	localmake "size1 :size * 0.9
+	localmake "size2 :size * 0.195
+	localmake "angle1 60
+	localmake "angle2 360 / 32
+	localmake "angle3 144.5
+	setpensize 0
+	repeat 32 [
+		fd :size1
+		polystart
+		arcleft :angle1 :size2
+		right :angle3
+		arcRight :angle2 :size
+		right :angle3
+		arcLeft :angle1 :size2
+		polyend
+		setpos :oldPos
+		setheading :oldHeading + (repcount * 360 / 32)
+	]
+	penup
+	setheading :oldHeading
+	setpos :oldPos
+end
+
+to raindropsAndArches :size
+	localmake "oldPos pos
+	localmake "radius1 :size * 0.82411
+	localmake "radius2 :size * 0.7
+	localmake "size1 :size * 0.3
+	localmake "size2 :size * 0.29
+	localmake "size3 :size * 0.165
+	localmake "size4 :size * 0.05
+	localmake "size5 :size * 0.08
+	localmake "size6 :size * 0.18
+	localmake "size7 :size * 0.8512
+	localmake "generalPenSize :size * 0.004
+	localmake "smallPenSize :generalPenSize * 0.5
+	setfillcolor transparent
+	setpensize :radius2 * 0.31
+	setpencolor :neutralColor1
+	circle :radius2 * 1.02
+	setpensize :generalPenSize
+	setpencolor :darkColor1
+	circle :radius1
+	penup
+	repeat 8 [
+		penup
+		fd :radius2
+		pendown
+		setpensize :generalPenSize
+		setpencolor :darkcolor1
+		setfillcolor :darkColor2
+		rectangularLeaf :size1
+		setpencolor :lightcolor1
+		rectangularLeaf :size2
+		setpencolor :lightColor2
+		setpensize 0
+		arcOfCircles :size3 45 5
+		setfillcolor :darkColor1
+		setpensize :generalPenSize
+		setpencolor :lightColor1
+		ellipse :size4 :size5
+		setpencolor :lightColor2
+		setpensize :smallPenSize
+		setfillcolor :lightColor1
+		circle :size * 0.005
+		penup
+		fd :size6
+		pendown		
+		raindrop :size5
+		penup
+		back :size6 + :radius2
+		right 360 / 16 + 180
+		back :radius2 + :size6 + :size5
+		setpencolor :darkColor1
+		setpensize 0
+		setfillcolor transparent
+		arcOfCircles :size6 + :size5 * 0.7 49 5
+		setpensize :generalPenSize
+		pendown
+		setfillcolor :lightColor1
+		raindrop :size6
+		setpensize 0
+		forward :size6 * 0.77
+		setpencolor :darkColor2
+		arcOfCircles :size6 * 0.2 70 4
+		setpos :oldPos
+		right 180 + 360 / 16
+	]
+	setfillcolor :darkColor1
+	setpensize 0
+	; put dark dots in the centre of bright dots.
+	repeat 8 [
+		forward :size7
+		circle :size * 0.005
+		setpos :oldPos
+		right 360 / 8
+	]
+end
+
+to loopRing :size
+	localmake "oldPos pos
+	localmake "size1 :size * 0.69
+	localmake "size2 :size * 0.1
+	localmake "size3 :size * 0.082
+	localmake "size4 :size * 0.01
+	localmake "size5 :size * 0.003
+	localmake "size6 :size * 0.67
+	localmake "size7 :size * 0.12
+	localmake "size8 :size * 0.01
+	localmake "size9 :size * 0.07
+	localmake "size10 :size * 0.065
+	localmake "size11 :size * 0.08
+	repeat 64 [
+		if (remainder repcount 8) >= 3 [
+			penup
+			fd :size1
+			pendown
+			setfillcolor :darkColor2
+			setpencolor :darkColor1
+			setpensize :size4
+			straightLoop :size2
+			fd :size4
+			setpencolor :lightColor1
+			setpensize :size5
+			straightLoop :size3
+			penup
+			back :size1 + :size4
+			pendown
+		]
+		right 360 / 64
+	]
+	repeat 8 [
+		penup
+		forward :size6
+		right 60
+		forward :size8
+		pendown
+		narrowLeaf :size7 0
+		penup
+		back :size8
+		left 120
+		forward :size8
+		pendown
+		narrowLeaf :size7 0
+		penup
+		back :size8
+		right 60
+
+		; draw tiny leafs on either side of ellipse		
+		forward :size9
+		right 60
+		forward :size10
+		narrowLeaf :size11 0
+		penup
+		back :size10
+		left 120
+		forward :size10
+		narrowLeaf :size11 0
+		penup
+		right 60
+		setpos :oldPos
+		pendown
+		right 360 / 8
+	]
+end
+
+to filledCircle :size
+	localmake "size1 :size * 0.9
+	localmake "size2 :size * 0.013
+	localmake "size3 :size * 0.1
+	localmake "colorStops plistCreate
+	setProperty "colorStops 0 :darkColor1
+	setProperty "colorStops 0.1 :lightColor2
+	setProperty "colorStops 1 :lightColor1
+	localmake "gradient createRadialGradient pos pos :size * 0.6 :colorStops "pad
+	setFillGradient :gradient
+	;setfillcolor :lightColor1
+	setpencolor :darkColor1
+	setpensize :size * 0.2
+	circle :size * 0.9
+	setfillcolor transparent
+	setpencolor :lightColor2
+	setpensize :size * 0.05
+	circle :size
+	setpensize 0
+	repeat 64 [
+		forward :size1
+		setfillcolor :lightColor1
+		circle :size2
+		forward :size3
+		setfillcolor :darkColor2
+		circle :size2
+		back :size1 + :size3
+		right 360 / 64
+	]
+	setfillcolor :darkColor1
+	darkenCircleOutline :size * 0.747
+end
+
+to filledSquare :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "size1 :size * 0.96
+	penup
+	localmake "colorStops plistCreate
+	setProperty "colorStops 0.2 :darkColor1
+	setProperty "colorStops 1 :neutralColor2
+	localmake "gradient createRadialGradient pos pos :size * 1.2 :colorStops "pad
+	setFillGradient :gradient
+
+	fd :size
+	right 90
+	back :size
+	pendown
+	;setfillcolor :neutralColor2
+	setpensize :size * 0.01
+	polystart
+	repeat 4 [
+		fd :size * 2
+		right 90
+	]
+	polyend
+	setfillcolor :lightColor2
+	setpensize 0
+	setpos :oldPos
+	forward :size1
+	right 90
+	back :size1
+	repeat 4 [
+		repeat 32 [
+			fd :size1 / 16
+			circle :size * 0.015
+		]
+		right 90
+	]
+	penup
+	setpos :oldPos
+	setheading :oldHeading
+end
+
+to drawLeafRing :size
+	localmake "oldHeading heading
+	localmake "size1 :size * 0.5
+	localmake "size2 :size * 0.2
+	localmake "size3 :size * 0.28
+	localmake "size4 :size * 0.38
+	localmake "penWidth1 :size * 0.006
+	setpensize :size * 0.01
+	setfillcolor :lightColor2
+	circle :size * 0.78
+	setfillcolor :darkColor2
+	setpensize :penWidth1
+	setpencolor :lightColor1
+	circle :size * 0.705
+	setfillcolor transparent
+	setpencolor :darkColor2
+	setpensize 0
+	right 45
+	repeat 4 [
+		penup
+		fd :size4
+		pendown
+		arcOfCircles :size4 30 5
+		penup
+		back :size4
+		pendown
+		right 90
+	]
+	left 45
+	setpencolor :lightColor1
+	setpensize :penWidth1
+	repeat 4 [
+		penup
+		fd :size1 * 0.5
+		setfillcolor :darkColor1
+		rectangularLeaf :size * 0.85
+		fd :size1 * 0.5
+		pendown
+		setfillcolor :greenColor1
+		narrowLeaf :size1 6
+		penup
+		right 90
+		fd :size2
+		left 90
+		pendown
+		setfillcolor :darkColor2
+		narrowLeaf :size3 3
+		penup
+		left 90
+		fd :size2 * 2
+		right 90
+		pendown
+		narrowLeaf :size3 3
+		left 90
+		penup
+		back :size2
+		right 90
+		back :size1
+		right 90
+		pendown
+	]
+	setheading :oldHeading
+end
+
+to drawSpirals :size
+	localmake "oldHeading heading
+	localmake "oldPos pos
+	localmake "minRadius :size * 0.268
+	localmake "largeRadius :size * 0.9
+	localmake "circleCentreRadius :size * 0.3
+	localmake "circleRadius :size * 0.04
+	localmake "circleRadius2 :size * 0.003
+	setfillcolor :darkColor1
+	repeat 4 [
+		spiralArc :minRadius :largeRadius
+		right 360 / 4
+	]
+	right 360 / 8
+	setfillcolor :lightColor1
+	repeat 4 [
+		spiralArc :minRadius :largeRadius
+		right 360 / 4
+	]
+	right 360 / 16
+	localmake "colors [:darkColor1 :lightColor1 ]
+	repeat 8 [
+		fd :circleCentreRadius
+		setfillcolor item (1 + remainder repcount 2) :colors
+		setpensize 0
+		circle :circleRadius
+		setfillcolor item (2 - remainder repcount 2) :colors
+		circle :circleRadius2
+		circleOfCircles :circleRadius
+		brightArc :circleRadius * 2.1
+		setPos :oldPos
+		setfillcolor :hotColor1
+		spiralArc2 :size
+		setfillcolor :darkColor2
+		spiralArc4 :size
+		setfillcolor :hotColor2
+		setpencolor :hotColor2
+		right 360 / 32
+		spiralArc3 :size
+		left 360 / 16
+		spiralArc3 :size
+		right 360 / 8 + 360 / 32
+		setPos :oldPos
+	]
+	right 360 / 64
+	penup
+	repeat 32 [
+		forward :size * 0.51
+		circleArc :size * 0.5
+		setPos :oldPos
+		right 360 / 32
+	]
+	setheading :oldHeading
+end
+
+to circleArc :size
+	localmake "oldHeading heading
+	localmake "size1 :size * 0.13
+	localmake "size2 :size1 * 0.125
+	localmake "size3 :size2 / 3
+	localmake "numCircles 8
+	right 180
+	setpensize 0
+	setfillcolor :darkColor1
+	repeat :numCircles [
+		localmake "ratio1 repcount / :numCircles
+		localmake "r mix :size3 :size2 :ratio1
+		setfillcolor mix :darkColor2 :darkColor1 :ratio1
+		circle :r
+		fd :r * 2.1
+		left 18 - 18 * :ratio1
+	]
+	setheading :oldHeading
+end
+
+to fillBackground :size
+	localmake "colorStops plistCreate
+	setProperty "colorStops 0.62 "#988
+	setProperty "colorStops 0.51 "#976
+	setProperty "colorStops 0.3 "#632
+	localmake "gradient createRadialGradient pos pos :size * 0.62 :colorStops "pad
+	setFillGradient :gradient
+	circle :size * 0.62
+end
+
+to drawMandala :size
+	localmake "oldHeading heading
+	fillBackground :size
+	raindropsAndArches :size
+	loopRing :size * 0.9
+
+	setfillcolor :hotColor4
+	darkenCircleOutline :size * 0.5642
+
+	drawSpirals :size
+	setfillcolor :neutralColor1
+	setpensize 0
+	right 360 / 64
+	circleOfCircles :size * 0.55
+	setheading :oldHeading
+
+	setfillcolor :hotColor2
+	ellipseCircle :size * 0.26
+	setfillcolor :darkColor1
+	ellipseCircle :size * 0.23
+	drawLeafRing :size * 0.242
+	filledSquare :size * 0.12
+	filledCircle :size * 0.1
+end
+
+setscreenColor "#948b7c
+drawMandala 300

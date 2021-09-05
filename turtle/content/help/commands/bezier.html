@@ -1,0 +1,21 @@
+<code>to graphBezier :points
+	localmake "numPoints 400
+	setPenSize 0.1
+	repeat :numPoints [
+		localmake "ratio repcount / :numPoints
+		localmake "p bezier :points :ratio
+		penUp
+		setPos :p
+		penDown
+		circle 0.1
+	]
+end
+
+
+make "points []
+; Get random points with coordinates between 0 to 100.
+repeat 10 [
+	queue "points [random 100 random 100]
+]
+
+graphBezier :points</code>

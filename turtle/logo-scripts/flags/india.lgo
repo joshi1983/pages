@@ -1,0 +1,69 @@
+to drawStripes :width :height
+	localmake "colors ["#f93 "#fff "#128807]
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	penup
+	forward :height * 1 / 3
+	left 90
+	forward :width / 2
+	right 180
+	setpensize :height / count :colors
+	pendown
+	repeat count :colors [
+		setpencolor item repcount :colors
+		forward :width		
+		penup
+		back :width
+		right 90
+		fd pensize
+		left 90
+		pendown
+	]
+	penup
+	setpos :oldPos
+	setHeading :oldHeading
+	pendown
+end
+
+to drawAshokaChakra :radius :darkColor
+	localmake "outerThickness :radius / 8
+	localmake "radius1 :radius - :outerThickness * 0.5
+	localmake "radius2 :radius / 20
+	localmake "len1 :radius * 0.4
+	localmake "len2 :radius * 0.555
+	setpensize :outerThickness
+	setpencolor :darkColor
+	setfillcolor transparent
+	circle :radius
+	setfillcolor :darkColor
+	setpensize 0
+	circle :radius / 5
+	right 360 / 48
+	repeat 24 [
+		fd :radius1
+		circle :radius2
+		back :radius1
+		right 360 / 24
+	]
+	left 12
+	repeat 24 [
+		polystart
+		forward :len1
+		right 7.735
+		forward :len2
+		right 173.52228
+		forward :len2
+		right 7.735
+		forward :len1
+		polyend
+		right 186.008	
+	]
+end
+
+to drawIndianFlag :width :height
+	localmake "navyBlue "#000080
+	drawStripes :width :height
+	drawAshokaChakra :height * 0.125 :navyBlue
+end
+
+drawIndianFlag 300 200

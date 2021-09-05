@@ -1,0 +1,22 @@
+to drawLightning :maxSize
+	localmake "len random :maxSize
+	if :maxSize > 5 [
+		localmake "originalHeading heading
+		localmake "originalPos pos
+		repeat :len / 2 [
+			setpensize :len * 0.1
+			fd 2
+			if random 20 = 1 [
+				drawLightning :len / 20
+			]
+		]
+		
+		setpos :originalPos
+		setheading :originalHeading
+	]
+end
+
+setscreencolor "black
+setpencolor "white
+pendown
+drawLightning 300

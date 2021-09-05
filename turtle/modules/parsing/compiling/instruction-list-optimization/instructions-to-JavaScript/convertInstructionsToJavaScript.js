@@ -1,0 +1,56 @@
+import { canBeConverted, instructionToJavaScript } from './instructionToJavaScript.js';
+import { convertExtraInstructionsToJavaScript } from './convertExtraInstructionsToJavaScript.js';
+import { getStartIndexForInstructionCluster } from './getStartIndexForInstructionCluster.js';
+import { JavaScriptInstruction } from '../../../execution/instructions/JavaScriptInstruction.js';
+import { mergeJavaScriptInstructions } from './mergeJavaScriptInstructions.js';
+import { processBinaryOperatorCluster, isBinaryOperatorCluster } from './processBinaryOperatorCluster.js';
+import { processPushCluster, isPushClusterInstruction } from './processPushCluster.js';
+import { removeInstructions } from '../removeInstructions.js';
+import { shouldPush } from './shouldPush.js';
+
+export function convertInstructionsToJavaScript(instructions, parameters, isForProcedure, compileOptions) {
+	for (let i = instructions.length - 1; i >= 0; i--) {
+		const instruction = instructions[i];
+		if (isPushClusterInstruction(instruction)) {
+			i = processPushCluster(instructions, i);
+			continue;
+		}
+		else if (isBinaryOperatorCluster(instructions, i)) {
+			i = processBinaryOperatorCluster(instructions, i);
+			continue;
+		}
+		const startIndex = getStartIndexForInstructionCluster(instructions, i);
+		if (canBeConverted(instruction) && startIndex !== undefined) {
+			let clusterCanBeConverted = true;
+			for (let j = i - 1; j >= startIndex; j--) {
+				if (!canBeConverted(instructions[j])) {
+					clusterCanBeConverted = false;
+					break;
+				}
+			}
+			if (clusterCanBeConverted) {
+				let code = instructionToJavaScript(instructions, i, {
+					'isForProcedure': isForProcedure,
+					'parameters': parameters
+				}, compileOptions);
+				let numToRemove = i - startIndex;
+				if (shouldPush(instructions, i)) {
+					code = 'context.valueStack.push(' + code + ')';
+				}
+				else
+					numToRemove++;
+				const jsInstruction = new JavaScriptInstruction(code, instruction.parseTreeToken);
+				instructions[startIndex] = jsInstruction;
+				removeInstructions(instructions, startIndex + 1, numToRemove);
+				i = startIndex;
+			}
+			else {
+				i = startIndex;
+			}
+		}
+	}
+	if (compileOptions.mergeJavaScriptInstructions === true) {
+		convertExtraInstructionsToJavaScript(instructions, isForProcedure, compileOptions);
+		mergeJavaScriptInstructions(instructions);
+	}
+};

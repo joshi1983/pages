@@ -1,0 +1,26 @@
+; Inspired by:
+; https://www.pinterest.ca/pin/462604192983665735/
+
+to spiral :size
+	localmake "oldPos pos
+	localmake "numCircles 64
+	setfillcolor "black
+	setpensize 0
+	localmake "r :size
+	repeat 90 [
+		localmake "r :r * 0.95
+		localmake "maxCircleRadius :r * 2.3 / :numCircles
+		repeat :numCircles [
+			localmake "cr :maxCircleRadius * (remainder repcount * 2 :numCircles) / :numCircles
+			if :cr > 0.05 [
+				forward :r
+				circle :cr
+				setPos :oldPos
+			]
+			right 360 / :numCircles
+		]
+		left 11.234 + 180 / :numCircles
+	]
+end
+
+spiral 200

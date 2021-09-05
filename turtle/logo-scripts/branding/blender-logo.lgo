@@ -1,0 +1,39 @@
+; Inspired by
+; https://animatorsresourcekit.blog/2017/03/15/blender-free/
+
+to blenderLogo :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "orange "#ff7021
+	localmake "blue "#003aa8
+	localmake "radius :size * 0.4
+	localmake "smallRadius :size * 0.2
+	localmake "lineLen :size * 0.75
+	localmake "generalPenSize :size * 0.21
+	localmake "linePenSize :size * 0.17
+	localmake "radius2 :radius + (:generalPenSize - :linePenSize) * 0.5
+	setPenSize :generalPenSize
+	setPenColor :orange
+	setFillColor transparent
+	circle :radius
+	setLineJoinStyle "round
+	penUp
+	localmake "lineHeadingStart :oldHeading - 45
+	setHeading :lineHeadingStart
+	setPenSize :linePenSize
+	repeat 3 [
+		forward :radius2
+		left 90
+		penDown
+		forward :lineLen
+		penUp
+		setPos :oldPos
+		setHeading :lineHeadingStart + repcount * 45
+	]
+	setFillColor :blue
+	setPenSize 0
+	circle :smallRadius
+	setHeading :oldHeading
+end
+
+blenderLogo 100

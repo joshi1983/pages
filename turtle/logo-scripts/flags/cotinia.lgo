@@ -1,0 +1,62 @@
+; This is made to look like the flag at:
+; https://althistory.fandom.com/wiki/Cotinia_(L%27Uniona_Homanus)
+make "width 300
+make "height :width * 2 / 3
+make "largeStripeWidth :height / 4
+make "circleOffset :width * 0.38
+
+to drawStripe :len
+	setpensize :largeStripeWidth
+	setpencolor "white
+	fd :len
+	penup
+	back :len
+	pendown
+	setpencolor "black
+	setpensize :largeStripeWidth * 0.5
+	fd :len
+	penup
+	back :len
+	right 90
+	fd :largeStripeWidth * 3 / 8
+	left 90
+	setpensize :largeStripeWidth * 3 / 32
+	pendown
+	fd :len
+	penup
+	back :len
+	left 90
+	fd :largeStripeWidth * 3 / 4
+	right 90
+	pendown
+	fd :len
+end
+
+setscreencolor "grey
+setpencolor "#c00
+setpensize :height
+setxy -0.5 * :width 0
+setheading 90
+forward :width
+
+penup
+setxy -0.5 * :width 0
+pendown
+drawStripe :width
+penup
+setxy :circleOffset - 0.5 * :width  -0.5 * :height
+pendown
+setheading 0
+drawStripe :height
+
+setfillcolor "white
+setpensize 0
+setxy :circleOffset - 0.5 * :width 0
+circle :width * 0.2
+
+setfillcolor "black
+circle :width * 0.18
+setheading 45
+fd :width * 0.045
+setfillcolor "white
+circle :width * 0.145

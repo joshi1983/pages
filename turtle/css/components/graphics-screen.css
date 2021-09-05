@@ -1,0 +1,71 @@
+#graphics-screen {
+	flex-grow: 1;
+	overflow: hidden;
+	position: relative;
+	cursor: crosshair;
+	box-shadow: 0 0 2px #000 inset;
+}
+
+#graphics-screen canvas {
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+
+#graphics-screen canvas.grid-2d {
+	width: 100%;
+	height: 100%;
+	opacity: 0;
+	transition: opacity 0.1s;
+}
+
+#graphics-screen:hover canvas.grid-2d,
+#graphics-screen.animation-time-changing canvas.grid-2d {
+	opacity: 1;
+}
+
+#graphics-screen #cursor-status {
+	position: absolute;
+	right: 4px;
+	bottom: 3px;
+	z-index: 1; /* overlap the canvas elements */
+}
+
+#graphics-screen #cursor-status-coordinates {
+	background-color: rgba(255, 255, 255, 0.75);
+	padding: 4px;
+}
+
+#graphics-screen #graphics-screen-help {
+	top: 0;
+	right: 0;
+	position: absolute;
+	padding-right: 4px;
+	padding-top: 4px;
+	display: none;
+}
+
+#graphics-screen:hover #graphics-screen-help {
+	cursor: pointer;
+	z-index: 1;
+	display: block;
+}
+
+#graphics-screen #cursor-status-turtle-camera {
+	display: none;
+	background-image: url('../../images/icons/turtle-camera.svg');
+}
+
+#graphics-screen #cursor-status-turtle-camera,
+#graphics-screen #cursor-status-home-camera {
+	background-repeat: no-repeat;
+	background-position: center center;
+	background-size: contain;
+	border-width: 1px;
+	width: 32px;
+	height: 22px;
+}
+
+#graphics-screen #cursor-status-home-camera {
+	background-image: url('../../images/icons/home-camera.svg');
+}

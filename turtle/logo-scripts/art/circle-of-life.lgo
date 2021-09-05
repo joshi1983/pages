@@ -1,0 +1,119 @@
+; Inspired by
+; https://www.pinterest.ca/pin/755478906246539801/
+
+make "coreBrightColor "#2bf
+make "coreColor "blue
+make "edgeColor "#8cf
+make "coreEdgeColor "#cc5
+make "edgeThicknessRatio 0.07
+
+to crescent :size :crescentRatio
+	if :size < 1 [
+		stop ; don't draw shapes that are too small to see.
+	]
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "size1 :size * (1 - :edgeThicknessRatio)
+	localmake "startThickness :size * :edgeThicknessRatio * :crescentRatio
+
+	penDown
+	setPenSize :size * 0.01
+	forward :startThickness
+	setPenSize 0
+	setFillColor penColor
+	polyStart
+	back :startThickness
+	left 90
+	arcRight 359.99 :size
+	right 90
+	forward :startThickness
+	right 90
+	arcLeft 359.99 :size1
+	polyEnd
+
+	penUp
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to coreCircle :size
+	localmake "colorStops plistCreate
+	setProperty "colorStops 0 :coreBrightColor
+	setProperty "colorStops 0.7 :coreColor
+	setProperty "colorStops 1 screenColor
+	localmake "gradient createRadialGradient pos pos :size :colorStops "pad
+	setFillGradient :gradient
+	circle :size
+end
+
+to drawBackground :brightestRadius
+	localmake "brightestRatio 0.8
+	localmake "circleRadius :brightestRadius / :brightestRatio
+	localmake "colorStops plistCreate
+	setProperty "colorStops 0 screenColor
+	setProperty "colorStops 1 - 2 * (1 - :brightestRatio) screenColor
+	setProperty "colorStops :brightestRatio * 0.99 "#04b
+	setProperty "colorStops :brightestRatio "#008
+	setProperty "colorStops 1 screenColor
+	localmake "gradient createRadialGradient pos pos :circleRadius :colorStops "pad
+	setFillGradient :gradient
+	setPenSize 0
+	circle :circleRadius
+end
+
+to circleOfLifeRecursive :size :solidCount :focusOffset
+	ifelse :solidCount = 0 [
+		coreCircle :size
+	] [
+		if :size < 0.3 [
+			stop ; Too small so draw nothing.
+		]
+		localmake "oldPos pos
+		localmake "oldHeading heading
+		setPenSize :size * 0.01
+		setPenColor "navy
+		setFillColor transparent
+		circle :size
+		penUp
+		localmake "crescentRadius :size * 0.559
+		localmake "smallRadius2 :crescentRadius * (1 - 2 * :edgeThicknessRatio)
+		back :crescentRadius
+		ifelse :solidCount < 3 [
+			setPenColor :coreEdgeColor
+		] [
+			setPenColor :edgeColor
+		]
+		crescent :crescentRadius :focusOffset
+		penUp
+		setPos :oldPos
+		circleOfLifeRecursive :smallRadius2 (:solidCount - 1) :focusOffset
+		localmake "numChildCircles 12
+		localmake "boundingRadius :crescentRadius
+		localmake "childRadius (:size * 0.95 - :boundingRadius) * 0.5
+		localmake "innerchildRadius :childRadius * (1 - :edgeThicknessRatio)
+		localmake "childStartRadius :boundingRadius + 2 * :childRadius
+		localmake "childFocusOffset mix 0 :focusOffset 0.6
+		setPenColor :edgeColor
+		repeat :numChildCircles [
+			penUp
+			forward :childStartRadius
+			right 180
+			crescent :childRadius :childFocusOffset
+			forward (:innerchildRadius + :childRadius) * 0.5
+			circleOfLifeRecursive :innerChildRadius 3 :childFocusOffset
+			penUp
+			setPos :oldPos
+			setHeading :oldHeading + repcount * 360 / :numChildCircles
+		]
+	]
+end
+
+to circleOfLife :size
+	drawBackground :size
+	circleOfLifeRecursive :size 3 1
+end
+
+setScreenColor "black
+circleOfLife 100
+
+hideTurtle

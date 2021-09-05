@@ -1,0 +1,56 @@
+to drawStar :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	setpensize 0
+	right 18
+	forward :size * 1.4
+	left 162
+	polystart
+
+	repeat 5 [
+		forward :size
+		right 72
+		forward :size
+		left 144
+	]
+	polyend
+	setpos :oldPos
+	setHeading :oldHeading
+end
+
+to drawChinaFlag :width :height
+	localmake "bigStarSize :height * 0.11
+	localmake "smallStarSize :bigStarSize / 3
+	localmake "smallStarArcRadius :width * 0.128
+	right 90
+	setpencolor "#EE1C25
+	setpensize :height
+	forward :width
+	setpensize 0
+	back :width
+	left 90
+	forward :height * 0.25
+	right 90
+	forward :width / 6
+	right 90 + 18
+	setfillcolor "#FF0
+	localmake "bigStarPosition pos
+	drawStar :bigStarSize
+	left 18
+	fd :height / 32
+	left 90
+	forward :width / 9
+	left 67.5
+	repeat 4 [
+		forward :smallStarArcRadius
+		localmake "tempHeading heading
+		setheading -18 + towards :bigStarPosition
+		drawStar :smallStarSize
+		setheading :tempHeading
+		back :smallStarArcRadius
+		right 45
+	]
+end
+
+setscreencolor "black
+drawChinaFlag 300 200

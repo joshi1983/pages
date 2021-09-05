@@ -1,0 +1,81 @@
+; Inspired by
+; https://www.pinterest.ca/pin/212091463681413825/
+
+make "orange "#ffad00
+make "lightYellow "#ffff80
+make "veryLightYellow "#ffffc0
+make "brown "#684000
+make "darkRed "#400000
+
+to flowerOfLifeSolidBackground :radius
+	localmake "colorStops plistCreate
+	setProperty "colorStops 0 "black
+	setProperty "colorStops 0.5 :darkRed
+	setProperty "colorStops 0.8 :brown
+	setProperty "colorStops 0.88 :orange
+	setProperty "colorStops 0.9 :lightYellow
+	setProperty "colorStops 0.92 :orange
+	setProperty "colorStops 0.98 :brown
+	setProperty "colorStops 0.99 :darkRed
+	setProperty "colorStops 1 "black
+	localmake "gradient createRadialGradient pos pos :radius :colorStops "pad
+	setFillGradient :gradient
+	setPenSize 0
+	circle :radius
+end
+
+to circleRing :circleRadius :tinyRadius :numCircles
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	repeat :numCircles [
+		penUp
+		setPos :oldPos
+		forward :tinyRadius
+		left 90
+		penDown
+		circle2 :circleRadius
+		setHeading :oldHeading + repcount * 360 / :numCircles
+	]
+	penUp
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to outerCircleRing :radius
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "tinyRadius :radius * 0.1
+	localmake "circleRadius (:radius - :tinyRadius) * 0.5
+	localmake "colorStops plistCreate
+	setProperty "colorStops 0 "black
+	setProperty "colorStops 0.1 "black
+	setProperty "colorStops 0.5 :brown
+	setProperty "colorStops 1 :orange
+	setPenGradient createRadialGradient pos pos :radius :colorStops "pad
+	setFillColor transparent
+	setPenSize :radius * 0.01
+	circleRing :circleRadius :tinyRadius 32
+	penUp
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to innerCircleRing :radius
+	localmake "colorStops plistCreate
+	setProperty "colorStops 0 :orange
+	setProperty "colorStops 0.6 :veryLightYellow
+	setProperty "colorStops 1 :lightYellow
+	setPenGradient createRadialGradient pos pos :radius :colorStops "pad
+	setFillColor transparent
+	setPenSize :radius * 0.02
+	circleRing :radius * 0.4 :radius * 0.15 20
+end
+
+to flowerOfLife :radius
+	flowerOfLifeSolidBackground :radius
+	outerCircleRing :radius * 0.78
+	innerCircleRing :radius * 0.3
+end
+
+setScreenColor "black
+flowerOfLife 150

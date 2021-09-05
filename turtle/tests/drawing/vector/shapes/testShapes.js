@@ -1,0 +1,32 @@
+import { prefixWrapper } from '../../../helpers/prefixWrapper.js';
+import { testArcShape } from './testArcShape.js';
+import { testCircleShape } from './testCircleShape.js';
+import { testCylinderShape } from './testCylinderShape.js';
+import { testEllipseShape } from './testEllipseShape.js';
+import { testEllipseArcShape } from './testEllipseArcShape.js';
+import { testGradients } from './gradients/testGradients.js';
+import { testLineSegmentShape } from './testLineSegmentShape.js';
+import { testMath } from './math/testMath.js';
+import { testPathShape } from './testPathShape.js';
+import { testPathShapeWithCurves } from './testPathShapeWithCurves.js';
+import { testRasterRectangleShape } from './testRasterRectangleShape.js';
+import { testSphereShape } from './testSphereShape.js';
+import { testStyle } from './style/testStyle.js';
+import { testTextShape } from './testTextShape.js';
+
+export function testShapes(logger) {
+	testArcShape(prefixWrapper('testArcShape', logger));
+	testCircleShape(prefixWrapper('testCircleShape', logger));
+	testCylinderShape(prefixWrapper('testCylinderShape', logger));
+	testEllipseArcShape(prefixWrapper('testEllipseArcShape', logger));
+	testEllipseShape(prefixWrapper('testEllipseShape', logger));
+	testGradients(prefixWrapper('testGradients', logger));
+	testLineSegmentShape(prefixWrapper('testLineSegmentShape', logger));
+	testMath(prefixWrapper('testMath', logger));
+	testPathShape(prefixWrapper('testPathShape', logger));
+	testPathShapeWithCurves(prefixWrapper('testPathShapeWithCurves', logger));
+	testRasterRectangleShape(prefixWrapper('testRasterRectangleShape', logger));
+	testSphereShape(prefixWrapper('testSphereShape', logger));
+	testStyle(prefixWrapper('testStyle', logger));
+	testTextShape(prefixWrapper('testTextShape', logger));
+};

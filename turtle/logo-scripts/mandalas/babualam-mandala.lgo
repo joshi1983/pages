@@ -1,0 +1,120 @@
+; Inspired by
+; https://www.pinterest.ca/pin/147352219046462037/
+
+to centerPoly :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	penUp
+	forward :size * 0.065
+	polyStart
+	repeat 12 [
+		arcRight 15 :size * 0.22
+		right 168
+		arcLeft 19 :size * 0.2
+
+		left 118 ; reflection point
+
+		arcLeft 19 :size * 0.2
+		right 168
+		arcRight 15 :size * 0.22
+		left 180
+	]
+	polyEnd
+
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to shape1 :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+
+	localmake "size1 :size * 0.12
+	localmake "arcRadius1 :size * 0.15
+	localmake "arcRadius2 :size * 0.045
+	localmake "arcRadius3 :size * 0.018
+	localmake "arcRadius4 :size * 0.014
+	localmake "arcRadius5 :size * 0.156234
+	localmake "angle1 7.5
+	penUp
+	forward :size1
+	polyStart
+	arcLeft 28 :arcRadius1
+	arcRight 13 :arcRadius1
+	arcRight 30 :arcRadius2
+	arcRight 68 :arcRadius3
+	left 150
+	arcRight 60 :arcRadius4
+	arcRight 25 :arcRadius3
+	arcRight :angle1 :arcRadius1
+	arcLeft 25.5 :arcRadius5
+
+	right 180 ; reflection point
+
+	arcLeft 25.5 :arcRadius5
+	arcRight :angle1 :arcRadius1
+	arcRight 25 :arcRadius3
+	arcRight 60 :arcRadius4
+	left 150
+	arcRight 68 :arcRadius3
+	arcRight 30 :arcRadius2
+	arcRight 13 :arcRadius1
+	arcLeft 27 :arcRadius1
+	polyEnd
+
+	setHeading :oldHeading
+	setPos :oldPos
+end
+
+to shape2 :size
+	localmake "oldHeading heading
+	localmake "oldPos pos
+
+	localmake "angle1 22.176305
+	forward :size * 0.073
+	left 30
+	polyStart
+	arcRight 45 :size * 0.15
+	arcLeft 40 :size * 0.11
+	arcLeft 48 :size * 0.04
+	right 140
+	arcRight 20 :size * 0.05
+	arcRight 68 :size * 0.018
+	arcRight 15 :size * 0.1
+	left 170
+	arcLeft 30 :size * 0.14
+	arcRight 72 :size * 0.025
+	arcLeft :angle1 :size * 0.1
+
+	right 140.3526 ; reflection point
+
+	arcLeft :angle1 :size * 0.1
+	arcRight 72 :size * 0.025
+	arcLeft 30 :size * 0.14
+	left 170
+	arcRight 15 :size * 0.1
+	arcRight 68 :size * 0.018
+	arcRight 20 :size * 0.05
+	right 140
+	arcLeft 48 :size * 0.04
+	arcLeft 40 :size * 0.11
+	arcRight 44 :size * 0.15
+	polyEnd
+
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to babualamMandala :size
+	setPenSize 0
+	setFillColor "black
+	centerPoly :size
+	repeat 12 [
+		shape1 :size
+		right 360 / 24
+		shape2 :size
+		right 360 / 24
+	]
+end
+
+babualamMandala 150

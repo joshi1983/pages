@@ -1,0 +1,195 @@
+; inspired by logo at
+; https://hackf.org/
+
+to spark :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	setFillColor "white
+	setPenSize 0
+	polyStart
+	forward :size
+	right 90
+	arcRight 3 :size
+	polyEnd
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to sparks :size
+	localmake "oldHeading heading
+	localmake "numTrails 4
+	localmake "angleChange 60 / :numTrails
+	repeat :numTrails [
+		spark :size
+		right :angleChange
+	]
+	setHeading :oldHeading
+end
+
+to hammerArm :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "armLength :size
+	localmake "armLength2 :size * 0.91
+	localmake "handleThickness :size * 0.12
+	localmake "tinySize1 :size * 0.05
+	localmake "tinySize2 :tinySize1 * 0.7
+	setPenSize :size * 0.009
+	setPenColor "white
+	setFillColor "black
+	polyStart
+	forward :armLength
+	left 90
+	forward :handleThickness
+	left 90
+	forward :tinySize1
+	left 55
+	forward :tinySize2
+	right 58
+	forward :armLength2
+	polyEnd
+	penUp
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to hammerHead :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	penUp
+	right 90
+	forward :size * 0.1
+	setFillColor "white
+	polyStart
+	left 178
+	forward :size * 1.3
+	right 75
+	forward :size * 0.65
+	right 60
+	forward :size * 0.32
+	right 43
+	forward :size * 0.6
+	left 90
+	forward :size * 0.08
+	right 90
+	forward :size * 0.5
+	right 30
+	forward :size * 0.2
+	left 30
+	forward :size * 0.3
+	right 30
+	forward :size * 0.15
+	right 60
+	forward :size * 0.65
+	right 60
+	forward :size * 0.15
+	right 30
+	forward :size * 0.3
+	polyEnd
+	penUp
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to hammer :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "armSize :size * 0.82
+	localmake "headSize :size - :armSize
+	hammerArm :armSize
+	forward :armSize
+	hammerHead :headSize
+	penUp
+	setPos :oldPos
+	setHEading :oldHeading
+end
+
+to hackforgeStationary :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "cornerRadius :size * 0.06
+	localmake "textBorderWidth :size * 0.018
+	localmake "textLength :size - :cornerRadius * 2 - :textBorderWidth
+	localmake "fontSize :size * 0.135
+	localmake "textPadding :cornerRadius * 0.9
+	localmake "textHeight :size * 0.08
+	setPenColor "white
+	setFillColor "white
+	setFontFamily "Arial
+	setPenSize :size * 0.0065
+	setFontSize :fontSize
+	penUp
+	forward :cornerRadius + :textBorderWidth * 0.5
+	penDown
+	label "HACKFORGE
+	right 90
+	penUp
+	forward :textPadding
+	left 90
+	penDown
+	setPenSize :textBorderWidth
+	repeat 2 [
+		forward :textLength
+		arcLeft 90 :cornerRadius
+		forward :textHeight
+		arcLeft 90 :cornerRadius
+	]
+	penUp
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to drawHammerSparks :size :sparkSize
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angle 7.4
+	localmake "hammerToSparkLength :size * 0.4
+	right :angle
+	forward :hammerToSparkLength
+	left 180
+	sparks :sparkSize
+	penUp
+	setPos :oldPos
+	setHeading :oldHeading
+	forward :size
+	right 180 - :angle
+	forward :hammerToSparkLength
+	right 132
+	sparks :sparkSize
+
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to hackforgeLogo :size :animationRatio
+	localmake "hammerLevel :size * 0.21
+	localmake "hammerPadding :size * 0.03
+	localmake "hammerSize :size * 0.45
+	right 90
+	hackforgeStationary :size
+	left 90
+	forward :hammerLevel
+	right 90
+	forward :hammerPadding
+	ifelse :animationRatio > 0.7 [
+		drawHammerSparks :size - :hammerPadding * 2 :size * 1.2 * (:animationRatio - 0.7)
+	] [
+		left 140 * (0.49 - power :animationRatio 2)
+	]
+	hammer :hammerSize
+end
+
+to animation.snapshotstyle
+	localmake "result plistCreate
+	output :result
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 10
+	; Edit this if you want to change the length of your animation.
+	output :minutes * 60 + :seconds
+end
+
+setScreenColor "black
+hackforgeLogo 100 animation.time * 0.1

@@ -1,0 +1,50 @@
+to drawTaiwanFlag :width :height
+	localmake "blueHeight :height * 0.5
+	localmake "blueWidth :width * 0.5
+	localmake "circleSize :blueHeight * 0.205
+	localmake "innerTriangleRadius :circleSize * 1.25
+	localmake "triangleAngle 18
+	localmake "circleSize2 :circleSize * 0.22
+	localmake "circleSize3 :circleSize2 / sin :triangleAngle
+	right 90
+	setpensize :height
+	setpencolor "#ef2900
+	fd :width
+	penup
+	back :width
+	left 90
+	fd (:height - :blueHeight) * 0.5
+	right 90
+	setpensize :blueHeight
+	setpencolor "#0707b9
+	pendown
+	forward :blueWidth
+	penup
+	back :bluewidth * 0.5
+	pendown
+	setpensize 0
+	setfillcolor "white
+	circle :circleSize
+
+	repeat 12 [
+		fd :innerTriangleRadius
+		left 90
+		fd :circleSize2
+		right 90 + :triangleAngle
+
+		; draw triangle
+		polystart
+		fd :circleSize3
+		right 180 - 2 * :triangleAngle
+		fd :circleSize3
+		right 90 + :triangleAngle
+		fd :circleSize2 * 2
+		polyend
+		back :circleSize2
+		right 90
+		back :innerTriangleRadius
+		right 360 / 12
+	]
+end
+
+drawTaiwanFlag 446 298

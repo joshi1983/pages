@@ -1,0 +1,229 @@
+; Inspired by:
+; https://www.pinterest.ca/pin/161707442857042888/
+
+make "colors ["white "black "green]
+
+to gradient1 :size
+	localmake "colorStops plistCreate
+	setProperty "colorStops 0 item 1 :colors
+	setProperty "colorStops 1 item 3 :colors
+	localmake "gradient createRadialGradient pos pos :size :colorStops "pad
+	setFillGradient :gradient
+end
+
+; draws a narrow 4-sides shape
+to narrowQuad :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angle1 30
+	localmake "size1 :size
+	localmake "size2 :size * 0.38
+	localmake "size3 :size1 * 0.91
+	right 90
+	penup
+	back :size * 0.05
+	pendown
+	setHeading :oldHeading + :angle1
+	polyStart
+	forward :size1
+	right 105
+	forward :size2
+	right 91
+	forward :size3
+	polyEnd
+	penup
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+; draws a narrow 4-sides shape
+to narrowQuad2 :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angle1 30
+	localmake "size1 :size
+	localmake "size2 :size * 0.3
+	localmake "size3 :size1 * 0.93
+	right :angle1
+	polyStart
+	forward :size1
+	right 105
+	forward :size2
+	right 90
+	forward :size3
+	setHeading towards :oldPos
+	forward distance :oldPos
+	polyEnd
+	penup
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to endQuad :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "size1 :size
+	localmake "size2 :size * 0.6
+	localmake "size3 :size
+	polystart
+	forward :size1
+	right 100
+	forward :size2
+	right 92
+	forward :size3
+	setHeading towards :oldPos
+	forward distance :oldPos
+	polyend
+	setHeading :oldHeading
+end
+
+to tinyCircle :size
+	gradient1 :size * 1.5
+	circle :size
+end
+
+to strip :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "size1 :size * 0.18
+	localmake "size2 :size * 0.4
+	localmake "tinyCircleRadius :size2 * 0.12
+	localmake "generalPenSize :size * 0.005
+	setPenSize 0
+	forward :size1
+	setfillcolor transparent
+	setPenSize :generalPenSize
+	narrowQuad :size2 * 1.2
+	gradient1 :size2
+	narrowQuad2 :size2
+	penup
+	right 33
+	forward :size2 * 1.18
+	pendown
+	tinyCircle :tinyCircleRadius
+	right 100
+	penup
+	forward :size2 * 0.24
+	pendown
+	tinyCircle :tinyCircleRadius
+	setHeading :oldHeading
+	penup
+	forward :size * 0.12
+	pendown
+	gradient1 :size * 0.25
+	right 20
+	endQuad :size * 0.25
+	left 80
+	penup
+	forward :size * 0.15
+	pendown
+	right 72
+	endQuad :size * 0.23
+	penup
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to greenParts :size
+	localmake "numStrips 16
+	repeat :numStrips [
+		strip :size
+		right 360 / :numStrips
+	]
+end
+
+to gearPath :size
+	localmake "size1 :size * 0.275
+	localmake "size2 :size * 0.25
+	localmake "size3 :size * 0.08
+	right 1.4
+	polystart
+	repeat 16 [
+		right 97.5
+		forward :size1
+		right 97
+		forward :size2
+		left 90
+		forward :size3
+		left 82
+		forward :size2
+	]
+	polyend
+end
+
+to drawCentre :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "innerSize :size * 0.6
+	setPenSize 0
+	forward :size
+	setPenSize :size * 0.035
+	setFillColor item 2 :colors
+	gearPath :size
+	setFillColor item 1 :colors
+	penup
+	setPos :oldPos
+	setHeading :oldHeading
+	forward :innerSize
+	pendown
+	gearPath :innerSize
+	penup
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to drawBrownStrip :size
+	localmake "size1 :size * 0.183
+	localmake "size2 :size * 0.45
+	localmake "size3 :size * 0.38
+	localmake "size4 :size * 0.19
+	localmake "size5 :size * 0.29
+	localmake "generalPenSize :size * 0.01
+	setPenSize :generalPenSize
+	penup
+	left 7.5
+	forward :size1
+	polystart
+	right 31
+	forward :size2
+	left 12
+	forward :size3 * 0.1
+	pendown
+	forward :size3 * 0.9
+	right 100
+	forward :size4
+	right 91
+	forward :size5
+	left 77
+	forward :size * 0.145
+	right 89
+	penup
+	forward :size * 0.08
+	right 90
+	forward :size * 0.19
+	setPenSize 0
+	polyend
+end
+
+to brownParts :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	setFillColor item 2 :colors
+	repeat 16 [
+		penDown
+		drawBrownStrip :size
+		penup
+		setPos :oldPos
+		setHeading :oldHeading + repcount * 360 / 16
+	]
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to drawPattern :size
+	brownParts :size
+	drawCentre :size * 0.15
+	greenParts :size
+end
+
+drawPattern 100

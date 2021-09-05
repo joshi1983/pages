@@ -1,0 +1,66 @@
+; Inspired by
+; https://www.pinterest.ca/pin/247416573268243030/
+
+make "colors ["white "violet "red "orange "yellow "limeGreen "green "blue "navy "black]
+
+to getColor :index
+	localmake "index 1 + remainder :index (count :colors)
+	output item :index :colors
+end
+
+to conicArcDesign :size :conicAngle
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "numArcs 32
+	localmake "arcAngle 180 + :conicAngle
+	localmake "maxArcRadius :size * sin (:conicAngle / 2)
+
+	repeat :numArcs [
+		localmake "ratio (1 + :numArcs - repcount) / (:numArcs - 1)
+		localmake "arcRadius :maxArcRadius * :ratio
+		penUp
+		setPos :oldPos
+		forward :size * :ratio
+		left :arcAngle / 2
+		localmake "centerPos pos
+		forward :arcRadius
+		right 90
+		penDown
+		setFillColor getColor repcount
+		circle2 :arcRadius
+		arcRight :arcAngle :arcRadius
+		penUp
+		setHeading :oldHeading
+		setPos :centerPos
+	]
+	setPos :oldPos
+end
+
+to design :size :numAngles
+	localmake "conicAngle 300 / :numAngles
+	localmake "size1 :size * 0.65
+	setPenSize :size * 0.002
+	repeat :numAngles [
+		conicArcDesign :size1 :conicAngle
+		right 360 / :numAngles
+	]
+end
+
+; Draw the design with different number of angles.
+; This shows how the :numAngles parameter affects the drawing.
+make "size 50
+make "separation :size * 2
+right 90
+penUp
+back :separation * 3
+design :size 1
+forward :separation * 1.2
+design :size 2
+forward :separation * 1.1
+design :size 3
+forward :separation * 1.05
+design :size 5
+forward :separation
+design :size 10
+forward :separation * 0.9
+design :size 20

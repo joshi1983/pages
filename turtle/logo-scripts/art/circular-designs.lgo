@@ -1,0 +1,470 @@
+; Inspired by
+; https://www.pinterest.ca/pin/123075002304467143/
+
+to cc37 :radius
+	localmake "numAngles 16
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "oldFillColor fillColor
+	localmake "radius1 :radius * 0.1
+	localmake "arcRadius1 :radius
+	localmake "arcRadius2 :radius * 0.2
+	circle :radius
+	setFillColor screenColor
+	repeat :numAngles [
+		forward :radius1
+		right 60
+		polyStart
+		arcRight 30 :arcRadius1
+		left 110
+		arcRight 60 :arcRadius2
+		left 142
+		arcLeft 37 :arcRadius1
+		polyEnd
+		setPos :oldPos
+		setHeading :oldHeading + repcount * 360 / :numAngles
+	]
+	setFillColor :oldFillColor
+	setHeading :oldHeading
+end
+
+to cc40 :radius
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "oldFillColor fillColor
+	localmake "arcAngle 60
+	localmake "arcRadius :radius * 0.9 / sin (:arcAngle)
+	circle :radius
+	setFillColor screenColor
+	back :radius * 0.9
+	left :arcAngle
+	polyStart
+	arcRight :arcAngle * 2 :arcRadius
+	right 180 - :arcAngle * 2
+	arcRight :arcAngle * 2 :arcRadius
+	polyEnd
+	repeat 2 [
+		setPenSize 0
+		setPos :oldPos
+		localmake "tempHeading :oldHeading + 180 * repcount
+		setHeading :tempHeading
+		setFillColor :oldFillColor
+		setPenSize :radius * 0.01
+		setPenColor "white
+		circle2 :radius * 0.6
+		setPenSize 0
+		right 145
+		setFillColor "white
+		polyStart
+		arcLeft 180 :radius * 0.25
+		right 148
+		arcRight 241 :radius * 0.291
+		polyEnd
+		setPenSize 0
+		setHeading :tempHeading + 90
+		setPos :oldPos
+		forward :radius * 0.8
+		setPenColor :oldFillColor
+		setPenSize :radius * 0.01
+		circle :radius * 0.23
+	]
+	setPenSize 0
+	setFillColor :oldFillColor
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to sideArm :radius
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "len :radius
+	circle :radius
+	right 90
+	repeat 3 [
+		localmake "radius :radius * 0.5
+		localmake "len :len + :radius
+		forward :len
+		circle :radius
+		setPos :oldPos
+		back :len
+		circle :radius
+		localmake "len :len + :radius
+		setPos :oldPos
+	]
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to cc43.arm :size :startAngle :numRepeats :maxSizeIteration :angleStepCoefficient :angleStepOffset :sideArmRadiusCoefficient
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angleStep :startAngle
+	localmake "previousRadius 0
+	repeat :numRepeats [
+		localmake "ratio 1 - abs (repcount - 5) / (:numRepeats - :maxSizeIteration)
+		localmake "radius :size * :ratio * :ratio * :ratio
+		forward :previousRadius + :radius
+		if :radius > 0 [
+			sideArm :radius * :sideArmRadiusCoefficient
+		]
+		left :angleStep
+		localmake "previousRadius :radius
+		localmake "angleStep :angleStep * :angleStepCoefficient + :angleStepOffset
+	]
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to cc43 :size
+	localmake "oldPos pos
+	localmake "size :size * 0.11
+	circle :size
+	repeat 3 [
+		forward :size
+		cc43.arm :size 30 20 5 0.8 2 1
+		setPos :oldPos
+		right 360 / 3
+	]
+end
+
+to cc45Arm :size
+	localmake "numRepeats 15
+	localmake "coefficient 0.6
+	localmake "radius :size * power :coefficient :numRepeats
+	localmake "angleStep 300 / :numRepeats
+	repeat :numRepeats [
+		forward :radius * (1 + :coefficient)
+		circle :radius
+		left :angleStep
+		localmake "radius :radius / :coefficient
+	]
+end
+
+to cc45 :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "numAngles 3
+	localmake "armSize :size * 0.4
+	repeat :numAngles [
+		cc45Arm :armSize
+		setPos :oldPos
+		setHeading :oldHeading + repcount * 360 / :numAngles
+	]
+	setHeading :oldHeading
+end
+
+to cc50line :len
+	penUp
+	forward :len * 0.3
+	setPenSize :len * 0.2
+	repeat 9 [
+		penDown
+		forward :len * 0.03
+		penUp
+		forward :len * 0.03
+	]
+	setPenSize :len * 0.03
+	penDown
+	forward :len * 0.2
+end
+
+to cc50 :radius
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "oldFillColor fillColor
+	localmake "oldPenColor penColor
+	localmake "oldPenSize penSize
+	localmake "angle1 (180 - 144) * 0.5
+	setPenSize :radius * 0.1
+	setPenColor :oldFillColor
+	setFillColor transparent
+	circle :radius - penSize * 0.5
+	localmake "radius1 :radius - penSize
+	localmake "size1 :radius1 * 0.73
+	setPenSize 0
+	setPos :oldPos
+	repeat 5 [
+		setHeading :oldHeading + :angle1 + (repcount) * 360 / 5
+		cc50line :radius1
+		penUp
+		setPos :oldPos
+	]
+	setHeading :oldHeading - :angle1
+	forward :radius1
+	right 144 + :angle1
+	setPenSize :radius * 0.03
+	setFillColor "white
+	polyStart
+	repeat 10 [
+		forward :size1
+		left 72
+		forward :size1
+		right 144
+	]
+	polyEnd
+	setFillColor :oldFillColor
+	setPenSize 0
+	setPos :oldPos
+	circle :radius * 0.15
+
+	setHeading :oldHeading	
+	setPenSize :oldPenSize
+	setPenColor :oldPenColor
+end
+
+to cc51.tree :size
+	if :size > 2 [
+		localmake "oldPenSize penSize
+		localmake "oldPos pos
+		localmake "oldHeading heading
+		setPenSize :size * 0.03
+		forward :size * 0.3
+		right 60
+		cc51.tree :size * 0.55
+		left 120
+		cc51.tree :size * 0.55
+		right 60
+		cc51.tree :size * 0.7
+		setPenSize 0
+		setPos :oldPos
+		setHeading :oldHeading
+		setPenSize :oldPenSize
+	]
+end
+
+to cc51 :radius
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "oldFillColor fillColor
+	localmake "len1 :radius
+	circle :radius
+	forward :radius
+	right 90 + 180 / 6
+	setFillColor screenColor
+	polyStart
+	repeat 6 [
+		forward :len1
+		right 360 / 6
+	]
+	polyEnd
+	setPos :oldPos
+	setHeading :oldHeading
+	repeat 6 [
+		setPenSize :radius * 0.03
+		penDown
+		forward :radius * 0.3
+		cc51.tree :radius * 0.7
+		setPenSize 0
+		setPos :oldPos
+		setHeading :oldHeading + repcount * 360 / 6
+	]
+	setPenSize 0
+	setPos :oldPos
+	setHeading :oldHeading
+	setFillColor :oldFillColor
+end
+
+to cc52 :radius
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "oldPenSize penSize
+	localmake "oldFillColor fillColor
+	localmake "innerRadius :radius * 0.2
+	localmake "radius2 :radius * 0.8
+	localmake "radius3 :radius * 0.7
+	localmake "radius4 :radius * 0.25
+	localmake "numAngles 6
+	setPenSize 0
+	circle :radius2
+	setPenSize :radius * 0.05
+	setFillColor transparent
+	circle :radius - penSize * 0.5
+	setPenSize 0
+	setFillColor screenColor
+	repeat :numAngles [
+		forward :innerRadius
+		right 100
+		polyStart
+		arcRight 30 :radius3
+		left 120
+		arcRight 60 :radius4
+		left 138
+		arcLeft 29 :radius3
+		left 17
+		arcLeft 12 :radius3
+		polyEnd
+		setPos :oldPos
+		setHeading :oldHeading + repcount * 360 / :numAngles
+	]
+	circle :innerRadius * 0.8
+
+	; restore old/original turtle state.
+	setPos :oldPos
+	setPenSize :oldPenSize
+	setFillColor :oldFillColor
+end
+
+to cc55 :radius
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "oldFillColor fillColor
+	localmake "oldPenSize penSize
+	localmake "numAngles 7
+	localmake "radius1 :radius * 0.5
+	localmake "radius2 :radius * 0.2835
+	localmake "radius3 :radius * 0.1
+	setPenSize :radius * 0.3
+	setPenColor :oldFillColor
+	setFillColor transparent
+	circle :radius1
+	localmake "radius1 :radius1 + penSize * 0.5
+	setFillColor :oldFillColor
+	setPenSize 0
+	repeat :numAngles [
+		forward :radius1
+		right 20
+		polyStart
+		arcRight 192 :radius2
+		right 178
+		arcLeft 160 :radius3
+		polyEnd
+		setPos :oldPos
+		setHeading :oldHeading + repcount * 360 / :numAngles
+	]
+	setPos :oldPos
+	setHeading :oldHeading
+	setPenSize :oldPenSize
+	setFillColor :oldFillColor
+end
+
+to cc56 :radius
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "oldFillColor fillColor
+	localmake "radius1 :radius * 0.95
+	localmake "radius2 :radius * 0.5
+	localmake "innerRadius :radius * 0.5
+	localmake "numAngles 16
+	circle :radius
+	setFillColor screenColor
+	repeat :numAngles [
+		forward :innerRadius
+		right 90
+		polyStart
+		arcRight 15 :innerRadius
+		left 15
+		arcLeft 65 :radius2
+		left 77
+		arcLeft 20 :radius1
+		left 105
+		arcRight 58 :radius2
+		polyEnd
+		setPos :oldPos
+		setHeading :oldHeading + repcount * 360 / :numAngles
+	]
+	setHeading :oldHeading
+	setFillColor :oldFillColor
+end
+
+to cc61.S :size
+	localmake "oldPenColor penColor
+	localmake "oldPenSize penSize
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "radius1 :size * 0.2
+	localmake "radius2 :size * 0.05
+	forward :size * 0.5
+	ellipse :size * 0.3 :size * 0.5
+	setPenSize :size * 0.1
+	setLineJoinStyle "round
+	setPenColor "white
+	localmake "midPos pos
+	localmake "tempHeading :oldHeading - 50
+	setHeading :tempHeading
+	repeat 2 [
+		penDown
+		arcRight 90 :radius1
+		arcLeft 50 :radius2
+		penUp
+		setPos :midPos
+		setHeading :tempHeading + 180
+	]
+	setPenSize :oldPenSize
+	setPenColor :oldPenColor
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to cc61 :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "numAngles 64
+	localmake "innerRadius :size * 0.8
+	localmake "shapeSize :size * 0.20851
+	repeat :numAngles [
+		forward :innerRadius
+		right 20
+		cc61.S :shapeSize
+		setPos :oldPos
+		setHeading :oldHeading + repcount * 360 / :numAngles
+	]
+	setHeading :oldHeading
+end
+
+to cc66 :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "radiusCoefficient 1.3
+	localmake "size :size * 0.9
+	localmake "startRadius :size * 0.01
+	localmake "radius :startRadius
+	localmake "numAngles 3
+	localmake "resetRadiusInterval 360 / :numAngles
+	localmake "curAngle 0
+	localmake "totalAngle 0
+	forward :size
+	right 90
+	while :totalAngle < 360 [
+		localmake "angle :radius * (1 + :radiusCoefficient) / :size * 180 / pi
+		circle :radius
+		arcRight :angle :size
+		localmake "curAngle :curAngle + :angle
+		localmake "totalAngle :totalAngle + :angle 
+		localmake "radius :radius * :radiusCoefficient
+		if :curAngle > :resetRadiusInterval [
+			arcRight :angle / -:numAngles :size
+			localmake "radius :startRadius
+			localmake "curAngle 0
+		]
+	]
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+setPenSize 0
+setFillColor "black
+make "size 50
+make "separation :size * 2.2
+right 90
+back :separation * 4.5
+cc37 :size
+forward :separation
+cc40 :size
+forward :separation
+cc43 :size
+forward :separation
+cc45 :size
+forward :separation
+cc50 :size
+forward :separation
+cc51 :size
+forward :separation
+cc52 :size
+forward :separation
+cc55 :size
+forward :separation
+cc56 :size
+forward :separation
+cc61 :size
+forward :separation
+cc66 :size

@@ -1,0 +1,221 @@
+; a drawing inspired by an image at:
+; https://icones.pro/es/21-lugares-para-obtener-imagenes-vectoriales-gratuitas-para-sus-disenos/
+
+; nearly black but subtly blue or violet as if we're seeing some
+; air light up between us and the silouettes
+make "dark "#080022
+
+to drawNeedle :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "trunkDegrees 30
+	localmake "trunkArcRadius :size * 72 / :trunkDegrees
+	left 10
+	setfillcolor :dark
+	pendown
+	setpensize 0.0001
+	polystart
+	arcRight :trunkDegrees :trunkArcRadius
+	right 178
+	arcleft :trunkDegrees :trunkArcRadius
+	setheading towards :oldPos
+	forward distance :oldPos
+	polyend
+	setheading :oldHeading
+end
+
+to drawNeedle2 :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "trunkDegrees 30
+	localmake "trunkArcRadius :size * 72 / :trunkDegrees
+	right 10
+	setfillcolor :dark
+	pendown
+	setpensize 0
+	polystart
+	arcleft :trunkDegrees :trunkArcRadius
+	right 178
+	arcRight :trunkDegrees :trunkArcRadius
+	setheading towards :oldPos
+	forward distance :oldPos
+	polyend
+	setheading :oldHeading
+end
+
+to drawBranch :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "numNeedles 100
+	localmake "needleSize :size * 0.2
+	localmake "branchThickness :size * 0.01
+	localmake "delta :size / :numNeedles
+	repeat :numNeedles [
+		setpensize :branchThickness
+		forward :delta
+		right 91
+		drawNeedle :needleSize * (1 - repcount * 0.5 / :numNeedles)
+		left 90
+	]
+	penup
+	setheading :oldHeading
+	setpos :oldPos
+end
+
+to drawBranch2 :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "numNeedles 100
+	localmake "needleSize :size * 0.2
+	localmake "branchThickness :size * 0.01
+	localmake "delta :size / :numNeedles
+	repeat :numNeedles [
+		setpensize :branchThickness
+		forward :delta
+		left 91
+		drawNeedle2 :needleSize * (1 - repcount * 0.5 / :numNeedles)
+		right 90
+	]
+	penup
+	setheading :oldHeading
+	setpos :oldPos
+end
+
+to drawTree :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	drawNeedle :size
+	right 1
+	forward :size * 0.9
+	right 19
+	repeat 4 [
+		drawBranch :size * 0.3
+		right 30
+	]
+	right 100
+	repeat 5 [
+		drawBranch2 :size * 0.3
+		right 30
+	]
+	penup
+	setheading :oldHeading
+	setpos :oldPos
+end
+
+to drawTree2 :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	drawNeedle2 :size
+	left 0.5
+	forward :size * 0.9
+	right 19.5
+	repeat 4 [
+		drawBranch :size * 0.3
+		right 30
+	]
+	right 100
+	repeat 5 [
+		drawBranch2 :size * 0.3
+		right 30
+	]
+	penup
+	setheading :oldHeading
+	setpos :oldPos
+end
+
+to drawGround
+	; Draws the ground as a graph of a sum of sin-waves.
+	; The waveData represents the summed functions.
+	; Enough wave functions added together leads to a natural appearance.
+	; Each pair represents amplitude and wavelength.
+	localmake "waveData [[5 0.5] [7 0.6] [13 0.8] [2 5]]
+	setpensize 0
+	setfillcolor :dark
+	setxy -245 -200
+	polystart
+	repeat 200 [
+		localmake "x repcount * 2.515 - 253
+		localmake "y -100
+		repeat count :waveData [
+			localmake "tuple item repcount :waveData
+			localmake "y :y + (item 2 :tuple) * sin (:x * (item 1 :tuple))
+		]
+		localmake "p [:x :y]
+		queue "p 0
+		setheading towards :p
+		fd distance :p
+	]
+	setheading 180
+	fd 100
+	polyend
+end
+
+to fillSkyColors :width :height
+	setPenSize 0
+	localmake "bottom pos
+	forward :height
+	localmake "top pos
+	localmake "colors plistCreate
+	setProperty "colors 0 "#9800ff
+	setProperty "colors 1 "#e87639
+	localmake "gradient createLinearGradient :top :bottom :colors "pad
+	setFillGradient :gradient
+	right 90
+	back :width / 2
+	polystart
+	repeat 2 [
+		forward :width
+		right 90
+		forward :height
+		right 90
+	]
+	polyend
+	setFillColor transparent
+	penup
+	setPos :bottom
+	left 90
+end
+
+setscreencolor :dark
+setpensize 0
+back 110
+fillSkyColors 500 300
+home
+forward 15
+
+; set up radial gradient for the sun.
+make "sunColors plistCreate
+setProperty "sunColors 0 "#ffc
+setProperty "sunColors 0.7 "#fea
+setProperty "sunColors 1 "#fc6
+make "gradient createRadialGradient pos pos 100 :sunColors "pad
+setFillGradient :gradient
+circle 100 ; draw the sun.
+
+back 170
+
+right 90
+back 500
+setpensize 0
+forward 400
+left 90
+forward 50
+
+drawTree 150
+right 30
+drawTree 120
+left 70
+drawTree2 130
+setheading 90
+forward 200
+left 60
+drawTree 105
+left 30
+drawTree2 175
+left 35
+drawTree2 80
+
+home
+setheading 90
+setxy -245 -104
+drawGround

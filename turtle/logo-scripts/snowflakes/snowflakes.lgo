@@ -1,0 +1,265 @@
+to penUpForward :len
+	penUp
+	forward :len
+end
+
+to drawBranch1 :branchsize
+	fd :branchsize
+	penup
+	back :branchsize
+	pendown
+end
+
+to snowflake1 :size :c
+	setpencolor :c
+	setfillcolor :c
+	setpensize :size * 0.1
+	circle :size * 0.05
+	setfillcolor transparent
+	circle :size * 0.2
+	setpensize :size * 0.05
+	repeat 6 [
+		penup
+		fd :size * 0.2
+		pendown
+		localmake "s :size * 0.4
+		repeat 4 [
+			fd :size * 0.2
+			right 60
+			drawBranch1 :s
+			left 120
+			drawBranch1 :s
+			right 60
+			localmake "s :s - :size * 0.1
+		]
+		penup
+		back :size
+		pendown
+		right 60
+	]
+end
+
+to snowflake2 :size :c
+	setpencolor :c
+	setfillcolor :c
+	setpensize :size * 0.1
+	circle :size * 0.05
+	setfillcolor transparent
+	circle :size * 0.2
+	setpensize :size * 0.05
+	repeat 6 [
+		penup
+		fd :size * 0.2
+		pendown
+		fd :size * 0.2
+		localmake "s :size * 0.4
+		repeat 2 [
+			fd :size * 0.2
+			right 60
+			drawBranch1 :s
+			left 120
+			drawBranch1 :s
+			right 60
+			localmake "s :s - :size * 0.25
+		]
+		penup
+		fd :size * 0.2
+		pendown
+		circle :size * 0.1
+		penup
+		back :size
+		pendown
+		right 60
+	]
+end
+
+to snowflake3 :size :c
+	setpencolor :c
+	setfillcolor :c
+	setpensize :size * 0.05
+	localmake "s :size * 0.2
+	penDown
+	repeat 6 [
+		repeat 5 [
+			fd :size * 0.2
+			right 45
+			fd :s
+			penup
+			back :s
+			pendown
+			left 90
+			fd :s
+			penup
+			back :s
+			right 45
+			pendown
+		]
+		penup
+		back :size
+		pendown
+		right 60
+	]
+end
+
+to snowflake4 :size
+	localmake "size1 :size * 1.5
+	localmake "size2 :size1 * 0.093691
+	localmake "size3 :size1 * 0.53334
+	localmake "size4 :size * 0.1
+
+	repeat 6 [
+		pendown
+		setpensize :size * 0.018
+		arcRight 25 :size1
+		arcRight 180 :size2
+		arcRight 25 :size1
+		left 175
+		setpensize :size * 0.011
+		forward :size3
+		setpensize :size * 0.01
+		repeat 4 [
+			arcleft 90 :size4
+			right 180
+		]
+		penup
+		back :size3
+		right 5
+	]
+end
+
+to drawSpiralArc :size :isRight
+	localmake "originalPos pos
+	localmake "a 280
+	ifelse :isRight [
+		arcRight :a :size
+		left :a
+	] [
+		arcleft :a :size
+		right :a
+	]
+	penup
+	setpos :originalPos
+	pendown
+end
+
+to drawSpiralArcs :size
+	drawSpiralArc :size true
+	drawSpiralArc :size false
+end
+
+to snowflake5 :size
+	localmake "size1 :size * 0.4
+	localmake "size2 :size * 0.3
+	localmake "size3 :size * 0.2
+	localmake "size4 :size * 0.03
+	localmake "size5 :size * 0.02
+	localmake "size6 :size * 0.01
+	localmake "size7 :size * 0.08
+	localmake "size8 :size * 0.15
+	localmake "size9 :size * 0.04
+	localmake "backSize :size1 + :size2 + :size3
+	setpensize :size * 0.02
+	repeat 6 [
+		setpensize :size4
+		forward :size1
+		setpensize :size5
+		drawSpiralArcs :size7
+		forward :size2
+		setpensize :size6
+		drawSpiralArcs :size8
+		forward :size3
+		drawSpiralArcs :size9
+		penup
+		back :backSize
+		pendown
+		right 60
+	]
+end
+
+to drawBranch :size :angle
+	localmake "originalPenSize penSize
+	localmake "arcRadius :size * 0.3
+	localmake "size1 :size * 0.2 - 1
+	localmake "originalPosition pos
+	localmake "originalHeading heading
+	right :angle
+	forward :size
+	setPenSize 0
+	setFillColor penColor
+	circle :originalPenSize * 0.5
+	setpensize :originalPenSize
+	penup
+	setpos :originalPosition
+	left :angle
+	back :size1
+	pendown
+	if (abs :angle) < 90 [
+		; curve corners
+		ifelse :angle > 0 [
+			arcRight :angle :arcRadius
+		] [
+			arcleft -:angle :arcRadius
+		]
+	]
+	setpos :originalPosition
+	setheading :originalHeading
+end
+
+to drawBranches :size :angle
+	drawBranch :size :angle
+	drawBranch :size (-:angle)
+end
+
+to snowflake6 :size
+	localmake "mainLineThickness :size * 0.04
+	localmake "minorLineThickness :size * 0.03						 
+	localmake "size2 :size * 0.1
+	localmake "size3 :size * 0.2
+	localmake "size4 :size * 0.5
+	localmake "size5 :size * 0.2
+	localmake "size6 :size * 0.05
+	localmake "backSize1 :size4 + :size5 * 2
+	localmake "backSize2 :size4 + :size2
+	setfillcolor pencolor
+
+	repeat 6 [
+		pendown
+		setpensize :mainLineThickness
+		forward :size4
+		drawBranches :size3 60
+		forward :size5
+		drawBranches :size3 60
+		forward :size5
+		setpensize 0
+		circle :size2
+		back :backSize1
+		right 30
+		setpensize :minorLineThickness
+		forward :size4
+		drawBranches :size2 140
+		drawBranches :size2 60
+		forward :size2
+		setpensize 0
+		circle :size6
+		penup
+		back :backSize2
+		pendown
+		right 30
+	]
+end
+
+make "snowFlakeSize 50
+make "separation :snowFlakeSize * 2.5
+right 90
+penUpForward -:separation * 2.5
+snowflake1 :snowFlakeSize "midnightblue
+penUpForward :separation
+snowflake2 :snowFlakeSize "midnightBlue
+penUpForward :separation
+snowflake3 :snowFlakeSize "midnightBlue
+penUpForward :separation
+snowflake4 :snowFlakeSize
+penUpForward :separation
+snowflake5 :snowFlakeSize
+penUpForward :separation
+snowflake6 :snowFlakeSize

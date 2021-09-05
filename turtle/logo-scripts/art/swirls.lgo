@@ -1,0 +1,74 @@
+to setFillGradientForPoint :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	penUp
+	forward :size * 0.75
+	localmake "colorStops plistCreate
+	setProperty "colorStops 0 "white
+	setProperty "colorStops 0.1 "red
+	setProperty "colorStops 0.2 "blue
+	setProperty "colorStops 0.3 "aqua
+	setProperty "colorStops 0.4 "purple
+	setProperty "colorStops 1 "#000
+	localmake "gradient createRadialGradient pos pos :size * 0.21 :colorStops "reflect
+	setFillGradient :gradient
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to fillDropPath :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "arcRadius1 :size * 0.28935
+	localmake "arcRadius2 :size * 0.25
+	localmake "arcRadius3 :size * 0.895
+	setPenSize 0
+	right 55
+	polyStart
+	arcLeft 127 :arcRadius1
+	arcRight 240 :arcRadius2
+	arcRight 49.43 :arcRadius3
+	arcRight 21.49 :arcRadius1
+	polyEnd
+	penUp
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to curvedArmWithGradient :size
+	setFillGradientForPoint :size
+	fillDropPath :size
+end
+
+to curvedArm :size
+	setFillColor "black
+	fillDropPath :size
+end
+
+to dropSwirl :size :numAngles
+	repeat :numAngles [
+		curvedArm :size
+		right 360 / :numAngles
+	]
+end
+
+to dropSwirlWithGradient :size :numAngles
+	repeat :numAngles [
+		curvedArmWithGradient :size
+		right 360 / :numAngles
+	]
+end
+
+make "separation 230
+make "numSamples 6
+right 90
+setPenSize 0
+back :separation * (:numSamples - 0.5)
+repeat :numSamples [
+	dropSwirlWithGradient 100 :numSamples + 3 - repcount
+	forward :separation
+]
+repeat :numSamples [
+	dropSwirl 100 2 + repcount
+	forward :separation
+]

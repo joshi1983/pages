@@ -1,0 +1,21 @@
+to spiralOfCircles :size
+	localmake "maxCircleSize :size * 0.01
+	localmake "center pos
+	setfillcolor "black
+	setpensize 0
+	repeat 20 [
+		localmake "outerRepcount repcount
+		localmake "radius :size * repcount / 20
+		localmake "numCircles :radius / :maxCircleSize
+		repeat :numCircles [
+			setpos :center
+			setheading 360 * repcount / :numCircles
+			forward :radius
+			circle :maxCircleSize * ( 1.01 +
+				sin ( :outerRepcount * 30 + repcount * 360 /
+				:numCircles ) )
+		]
+	]
+end
+
+spiralOfCircles 100

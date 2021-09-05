@@ -1,0 +1,44 @@
+; inspired by a symbol in
+; https://www.pinterest.ca/pin/32369691063833940/
+; It is in the upper right corner.
+
+to maze :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+
+	localmake "angle1 30
+	localmake "angle2 90 - :angle1
+	localmake "angle3 180 - :angle2
+	localmake "size1 :size / 3
+	localmake "size2 :size - :size1
+	setPenSize :size1 / 2
+	penDown	
+
+	right :angle1
+	forward :size1
+	left :angle2
+	forward :size2
+	right :angle1 * 2
+	forward :size1
+	right :angle3
+	forward :size2
+	left :angle3
+	forward :size1
+	left :angle2
+	forward :size
+	left :angle3
+	forward :size
+
+	penUp
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to mazeStar :size
+	repeat 6 [
+		maze :size
+		right 360 / 6
+	]
+end
+
+mazeStar 100

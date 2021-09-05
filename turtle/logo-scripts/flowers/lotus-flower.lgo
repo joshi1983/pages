@@ -1,0 +1,37 @@
+; Inspired by:
+; https://www.pinterest.ca/pin/507780926744057550/
+
+to lotusSingle :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angle 43
+	localmake "angle2 40
+	localmake "innerSize :size * 0.865
+	localmake "arcRadius1 :size * 0.5 / sin :angle
+	localmake "arcRadius2 :innerSize * 0.5 / sin :angle2
+	setPenSize 0
+	left :angle
+	polyStart
+	arcRight :angle * 2 :arcRadius1
+	right 180 - :angle * 2
+	arcRight :angle * 2 :arcRadius1
+	right 180 + :angle2 - :angle
+	arcLeft :angle2 * 2 :arcRadius2
+	left 180 - :angle2 * 2
+	arcLeft :angle2 * 2 :arcRadius2
+	polyEnd
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to lotusFlower :size
+	localmake "numSingles 9
+	left 90
+	repeat :numSingles + 1 [
+		lotusSingle :size
+		right 180 / :numSingles
+	]
+end
+
+setFillColor "black
+lotusFlower 100

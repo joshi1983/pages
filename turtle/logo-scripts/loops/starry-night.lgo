@@ -1,0 +1,39 @@
+; draws a starry night
+; randomly positions the stars.
+; uses the techniques described in Python from:
+; https://www.youtube.com/watch?v=GoAl_Vh9U38
+
+to star :size
+	setfillcolor "yellow
+	polystart
+	repeat 5 [
+		forward :size
+		right 144
+	]
+	polyend
+end
+
+to moon :size
+	; very dark gray to represent star-lit night side of moon
+	setfillcolor "#080808 
+	circle :size ; fill dark circle
+
+	; Draw the sun-lit part of the Moon using a white shape.
+	setfillcolor "white
+	back :size ; move back to the lower pole of the moon.
+	right 90 ; rotate to face tangent of the moon.
+	polystart
+	arcLeft 180 :size ; arc around half of the outside of dark circle.
+	left 157
+	arcRight 134 :size * 1.086359 ; arc with slightly larger radius to other pole.
+	polyend ; close shape and fill with white.
+end
+
+setscreencolor "black
+setpensize 0
+repeat 150 [
+	setxy (random 1000) - 500 (random 800) - 400
+	star 10
+]
+setxy -300 100
+moon 50

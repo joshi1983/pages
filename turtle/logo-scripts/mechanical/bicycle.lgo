@@ -1,0 +1,341 @@
+; This bicycle was used as reference:
+; https://www.pinterest.ca/pin/242701867394602546/
+make "treadColor "black
+make "frameColor "skyBlue
+make "frameShadeColor mix :frameColor "black 0.6
+make "seatColor "black
+make "gearColor "black
+make "gearHighlightColor "gray
+make "handleColor "black
+make "peddleWheelGearRatio 0.4
+
+; Draws a line with 2 darker outlines to 
+; look more interesting than the "forward" command.
+to bicycleFrameForward :len
+	localmake "oldPenSize penSize
+	localmake "oldPos pos
+	setPenColor :frameShadeColor
+	penDown
+	forward :len
+	penUp
+	setPos :oldPos
+	setPenSize :oldPenSize * 0.8
+	setPenColor :frameColor
+	penDown
+	forward :len
+	setPenSize :oldPenSize
+end
+
+to wheel :size :wheelAngle
+	localmake "oldHeading heading
+	localmake "numSpokes 32
+	localmake "oldPos pos
+	localmake "tireThickness :size * 0.06
+	localmake "rimThickness :size * 0.03
+	; 0.49 instead of 0.5 to prevent any 
+	localmake "rimRadius :size - (:tireThickness + :rimThickness) * 0.49
+	localmake "spokeRadius :size - :tireThickness
+	localmake "spokeThickness :size * 0.005
+	localmake "tinyRadius :size * 0.08
+	localmake "axilRadius :size * 0.03
+	localmake "nutRadius :size * 0.002
+	right :wheelAngle
+	setPenSize :tireThickness
+	setPenColor :treadColor
+	setFillColor transparent
+	circle :size
+	setPenSize :rimThickness
+	setPenColor "gray
+	circle :rimRadius
+	setPenSize 0
+	setFillColor "black
+	circle :tinyRadius
+	setPenSize :spokeThickness
+	repeat :numSpokes [
+		penup
+		forward :tinyRadius * 0.85
+		circle :nutRadius
+		forward :tinyRadius * 0.15
+		pendown
+		forward :spokeRadius - :tinyRadius
+		penup
+		setPos :oldPos
+		right 360 / :numSpokes
+	]
+	setFillColor transparent
+	circle :axilRadius
+	penUp
+	setHeading :oldHeading
+end
+
+to bicycleFork :size
+	localmake "forkThickness :size * 0.04
+	penDown
+	setPenSize :forkThickness
+	bicycleFrameForward :size
+end
+
+to bicycleHandleBars :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "oldPenColor penColor
+	pendown
+	forward :size * 0.05
+	setPenColor :handleColor
+	forward :size * 0.45
+	arcRight 150 :size * 0.32
+	forward :size * 0.13
+	arcRight 30 :size * 0.4 
+	penup
+	setPos :oldPos
+	setHeading :oldHeading
+	setPenColor :oldPenColor
+end
+
+to seatPost :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	penDown
+	bicycleFrameForward :size * 0.8
+	setPenColor :seatColor
+	setPenSize :size * 0.024
+	penDown
+	forward :size * 0.1
+	arcLeft 67 :size * 0.1
+	forward :size * 0.05
+	right 175
+	forward :size * 0.15
+	setPenSize 0
+	setFillColor :seatColor
+	polystart
+	left 90
+	forward :size * 0.012
+	right 90
+	forward :size * 0.06
+	arcRight 170.7 :size * 0.007
+	forward :size * 0.0622
+	polyend
+	penUp
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to bicyclePeddle :size :peddleAngle
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "peddleWidth :size * 0.3
+	localmake "peddleHeading heading - 11.5
+	right :peddleAngle
+	setPenColor :gearColor
+	setPenSize :size * 0.08
+	penDown
+	forward :size
+	penUp
+	setHeading :peddleHeading
+	back :peddleWidth * 0.5
+	penDown
+	forward :peddleWidth
+	penUp
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to bicyclePeddles :size :peddleAngle
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	penUp
+	bicyclePeddle :size :peddleAngle
+	setHeading :oldHeading
+	penUp
+	setPos :oldPos
+	right :peddleAngle
+	setFillColor :gearColor
+	penDown
+	circle :size * 0.05
+	repeat 5 [
+		penDown
+		forward :size * 0.4
+		penUp
+		setPos :oldPos
+		right 360 / 5
+	]
+	penDown
+	penUp
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to bicycleGearChanger :rearAxisPos :largeGearRadius
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "size distance :rearAxisPos
+	localmake "smallGearRadius :largeGearRadius * :peddleWheelGearRatio
+	localmake "tinyGearRadius :size * 0.035
+	localmake "mainGearChainAngle arcSin (:largeGearRadius - :smallGearRadius) / :size
+	localmake "angle1 150
+	localmake "angle2 :angle1 - 100
+	localmake "chainThickness :size * 0.01
+	localmake "gearChangeSize1 :size * 0.1
+	localmake "gearChangeSize2 :size * 0.03
+	localmake "gearChangeSize3 :size * 0.04
+
+	penUp
+	setHeading towards :rearAxisPos
+	right 90 - :mainGearChainAngle
+	forward :largeGearRadius
+	penDown
+	setPenSize :chainThickness
+	setPEnColor :gearHighlightColor
+	left 90
+	forward :size * cos :mainGearChainAngle
+	arcLeft :angle1 :smallGearRadius
+	forward :size * 0.05
+	setPenColor :gearColor
+	setFillColor :gearColor
+	setPenSize 0
+	right 90
+	forward :gearChangeSize2
+	left 90
+	circle :gearChangeSize1 * 0.5
+	setPenSize :gearChangeSize1
+	forward :size * 0.09
+	setPenSize 0
+	circle :gearChangeSize1 * 0.5
+	forward :gearChangeSize1 * 0.35
+	right :angle2
+	setPenSize :gearChangeSize3
+	forward :size * 0.12
+	setPenSize 0
+	circle :tinyGearRadius
+	setHeading (towards :oldPos) + 90
+	forward :tinyGearRadius
+	setHeading towards :oldPos
+	localmake "angle arcSin :largeGearRadius / :size
+	right :angle
+	setPenColor :gearHighlightColor
+	setPenSize :chainThickness
+	forward :size * cos :angle
+
+	penUp
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to bicycleGears :rearAxisPos :peddleAngle
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "oldPenColor penColor
+	localmake "size distance :rearAxisPos
+	localmake "frontGearSize :size * 0.2
+	setPos :rearAxisPos
+	setFillColor :gearColor
+	circle :size * 0.09
+	setFillColor transparent
+	setPenColor :gearHighlightColor
+	setPenSize :size * 0.005
+	; give impression of rear gears.
+	repeat 4 [
+		circle :size * 0.05 * ( 2 + repcount) / 4
+	]
+	penUp
+	setPos :oldPos
+	bicycleGearChanger :rearAxisPos :frontGearSize
+	setPenColor :gearColor
+	penDown
+	setPenSize :size * 0.1
+	setFillColor transparent
+	circle :frontGearSize
+	setPenColor :gearHighlightColor
+	setPenSize :size * 0.005
+	circle :frontGearSize
+	setPenColor :gearColor
+	setPenSize :size * 0.05
+	setHeading towards :rearAxisPos
+	forward :size
+	penup
+	setPos :oldPos
+	bicyclePeddles :size * 0.45 :peddleAngle
+	penup
+	setPos :oldPos
+	setHeading :oldHeading
+	setPenColor :oldPenColor
+end
+
+to bicycleFrame :size :peddleAngle
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "forkLength :size * 0.6
+	localmake "forkAngle 105
+	localmake "horizontalBarLength :size * 0.6
+	localmake "crossBarLength :size * 0.69
+	penup
+	back :size
+	localmake "rearAxisPos pos
+	setPos :oldPos
+	left :forkAngle
+	bicycleFork :forkLength
+	right :forkAngle
+	bicycleHandleBars :size * 0.2
+	penUp
+	right 80
+	forward :forkLength * 0.15
+	right 95
+	penDown
+	bicycleFrameForward :horizontalBarLength
+	localmake "seatPostConnection pos
+	penUp
+	back :horizontalBarLength
+	left 108
+	forward :forkLength * 0.1
+	penDown
+	right 63.5
+	penUp
+	localmake "previousHeading heading
+	localmake "previousPos pos
+	forward :crossBarLength
+	setHeading :oldHeading + 10
+	bicyclePeddle :size * 0.2 :peddleAngle
+	penUp
+	setPos :previousPos
+	setHeading :previousHeading
+	penDown
+	bicycleFrameForward :crossBarLength
+	setHeading towards :seatPostConnection
+	seatPost :size * 0.75
+	bicycleGears :rearAxisPos :peddleAngle
+	penup
+	setPos :rearAxisPos
+	penDown
+	setPenSize :size * 0.015
+	setHeading towards :seatPostConnection
+	bicycleFrameForward distance :seatPostConnection
+end
+
+to bicycle :size :peddleAngle
+	localmake "wheelRadius :size * 0.3
+	localmake "wheelAxisSeparation :wheelRadius * 3
+	wheel :wheelRadius :peddleAngle / :peddleWheelGearRatio
+	right 90
+	penup
+	forward :wheelAxisSeparation
+	pendown
+	wheel :wheelRadius :peddleAngle / :peddleWheelGearRatio
+	bicycleFrame :wheelAxisSeparation :peddleAngle
+end
+
+bicycle 300 (power animation.time * 0.3 2) * 360 / 2
+
+to animation.snapshotstyle
+	localmake "result plistCreate
+	setProperty "result "position.x 130
+	setProperty "result "position.y 40
+	setProperty "result "zoom.scale 1.7
+	output :result
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 10
+	; Edit this if you want to change the length of your animation.
+	output :minutes * 60 + :seconds
+end

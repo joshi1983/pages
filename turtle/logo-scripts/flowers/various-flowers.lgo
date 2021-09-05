@@ -1,0 +1,274 @@
+; Inspired by
+;  https://www.pinterest.ca/pin/819303357227621400/
+to peddle1 :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angle1 180 / 8
+	localmake "angle2 35
+	localmake "angle3 15
+	localmake "angle4 140
+	localmake "size1 :size * 0.64
+	localmake "size2 :size * 0.5
+	localmake "arcRadius1 :size * 0.269238816
+	localmake "arcRadius2 :size * 0.3
+	localmake "arcRadius3 :size * 0.13
+	penDown
+	left :angle1
+	setPenSize :size * 0.06
+	setFillColor "white
+	polyStart
+	forward :size1
+	arcRight 180 + :angle1 * 2 :arcRadius1
+	polyEnd
+	setPenSize 0
+	setPos :oldPos
+	setHeading :oldHeading
+	forward :size * 0.09
+	setHeading :oldHeading - :angle3
+	setFillColor "black
+	polyStart
+	forward :size2
+	arcRight :angle2 :arcRadius2
+	arcRight :angle4 :arcRadius3
+	arcRight :angle2 :arcRadius2
+	polyEnd
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to flower1 :size
+	localmake "innerRadius :size * 0.3
+	repeat 8 [
+		peddle1 :size
+		right 360 / 8
+	]
+	setPenSize :size * 0.06
+	setFillColor "white
+	circle :innerRadius
+end
+
+; Inspired by
+; https://www.pinterest.ca/pin/961026007959457646/
+to flower2 :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "numPeddles 6
+	localmake "size1 :size * 0.37
+	setPenSize 0
+	setFillColor "black
+	repeat :numPeddles [
+		setPos :oldPos
+		forward :size - :size1
+		circle :size1
+		right 360 / :numPeddles
+	]
+	setPos :oldPos
+	setFillColor "white
+	circle :size1
+	setHeading :oldHeading
+end
+
+; Inspired by
+; https://www.pinterest.ca/pin/19914423343741086/
+to flower3 :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "numPeddles 6
+	localmake "size1 :size * 0.34
+	setPenSize 0
+	setFillColor "black
+	repeat :numPeddles [
+		setPos :oldPos
+		forward :size - :size1
+		circle :size1
+		right 360 / :numPeddles
+	]
+	setPos :oldPos
+	circle :size - :size1
+	setFillColor "white
+	circle :size1 * 0.5
+	setHeading :oldHeading
+end
+
+; Inspired by
+; https://www.pinterest.ca/pin/614459942913716470/
+to flower4 :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "numPeddles 8
+	localmake "size1 :size * 0.5
+	setPenSize 0
+	setFillColor "black
+	repeat :numPeddles [
+		setPos :oldPos
+		forward :size - :size1
+		ifelse even? repcount [
+			ellipse :size1 * 0.22 :size1
+		] [
+			ellipse :size1 * 0.3 :size1
+		]
+		right 360 / :numPeddles
+	]
+	setPos :oldPos
+	setFillColor "white
+	circle :size1 * 0.5
+	setHeading :oldHeading
+end
+
+to peddle5 :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angle1 30
+	localmake "angle2 50
+	localmake "angle3 98
+	localmake "arcRadius1 :size
+	localmake "arcRadius2 :size * 0.45
+	localmake "arcradius3 :size * 0.14
+	forward :size
+	right 141
+	setFillColor "black
+	polyStart
+	arcRight :angle1 :arcRadius1
+	arcRight :angle2 :arcRadius2
+	arcRight :angle3 :arcRadius3 ; reflection point in middle of arc
+	arcRight :angle2 :arcRadius2
+	arcRight :angle1 :arcRadius1
+	polyEnd
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+; Inspired by
+; https://www.pinterest.ca/pin/855050679270516484/
+to flower5 :size
+	localmake "numPeddles 6
+	repeat :numPeddles [
+		peddle5 :size
+		right 360 / :numPeddles
+	]
+end
+
+; Inspired partly by
+; https://www.pinterest.ca/pin/724235183828337951/
+to flower6 :size
+	localmake "oldPos pos
+	localmake "size1 :size * 0.3777
+	localmake "size2 :size - :size1
+	localmake "numPeddles 15
+	repeat :numPeddles [
+		setPos :oldPos
+		forward :size1
+		peddle5 :size2
+		right 360 / :numPeddles
+	]
+	setPos :oldPos
+	circle :size1
+end
+
+; Inspired by
+; https://www.pinterest.ca/pin/480337116516610265/
+to flower7 :size
+	localmake "oldPos pos
+	localmake "numAngles 20
+	localmake "linePenSize :size * 0.1
+	localmake "tinyRadius :size * 0.12
+	localmake "size1 :size * 0.3
+	localmake "size2 :size - :size1 - :tinyRadius
+	repeat :numAngles [
+		setPenSize 0
+		setPos :oldPos
+		forward :size1
+		setPenSize :linePenSize
+		forward :size2
+		setPenSize 0
+		circle :tinyRadius
+		right 360 / :numAngles
+	]
+	setPos :oldPos
+end
+
+to leaf :size
+	localmake "oldHeading heading
+	localmake "angle 50
+	localmake "arcRadius :size / 2 / sin :angle
+	left :angle
+	polyStart
+	arcRight :angle * 2 :arcRadius
+	right 180 - :angle * 2
+	arcRight :angle * 2 :arcRadius
+	polyEnd
+	setHeading :oldHeading
+end
+
+to droplet :size
+	localmake "oldHeading heading
+	localmake "angle 53
+	localmake "arcRadius :size / 2 / sin :angle
+	localmake "arcRadius2 :arcRadius * (1 - cos :angle)
+
+	; scale so the drop's height matches size.
+	localmake "scale :size / (:arcRadius2 + :arcRadius * sin :angle)
+	localmake "arcRadius :arcRadius * :scale
+	localmake "arcRadius2 :arcRadius2 * :scale
+
+	left :angle
+	polyStart
+	arcRight :angle :arcRadius
+	arcRight 180 :arcRadius2
+	arcRight :angle :arcRadius
+	polyEnd
+	setHeading :oldHeading
+end
+
+; Inspired by
+; https://www.pinterest.ca/pin/9429480462327390/
+to flower8 :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "leafAngle 46
+	localmake "leafSize :size * 0.6
+	localmake "leafSideStep :size * 0.03
+	localmake "dropSize :size * 0.33
+	localmake "size1 :size * 0.295
+	localmake "size2 :size - :size1 - :dropSize
+	setFillColor "black
+	setPenSize 0
+	circle :size * 0.19
+	repeat 4 [
+		setPos :oldPos
+		forward :size1
+		jumpRight :leafSideStep
+		right :leafAngle
+		leaf :leafSize
+		left :leafAngle
+		jumpRight :leafSideStep * -2
+		left :leafAngle
+		leaf :leafSize
+		right :leafAngle
+		jumpRight :leafSideStep
+		forward :size2
+		droplet :dropSize
+		right 90
+	]
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+make "size 50
+make "sideStepSize :size * 2.2
+jumpLeft :sideStepSize * 3.5
+flower1 :size
+jumpRight :sideStepSize
+flower2 :size
+jumpRight :sideStepSize
+flower3 :size
+jumpRight :sideStepSize
+flower4 :size
+jumpRight :sideStepSize
+flower5 :size
+jumpRight :sideStepSize
+flower6 :size
+jumpRight :sideStepSize
+flower7 :size
+jumpRight :sideStepSize
+flower8 :size
