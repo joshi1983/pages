@@ -1,0 +1,40 @@
+; Inspired by:
+; https://www.pinterest.ca/pin/391883605075755927/
+
+to harmonySingle :size
+	localmake "arcRadius1 :size * 0.15
+	localmake "arcRadius2 :size * 0.6
+	localmake "arcRadius3 :size * 0.48
+	localmake "arcRadius4 :size * 0.05
+	arcRight 100 :arcRadius1
+	arcRight 20 :arcRadius2
+	arcLeft 20 :arcRadius3
+	arcLeft 40 :arcRadius1
+	arcLeft 96 :arcRadius4 ; includes reflection point
+	arcLeft 40 :arcRadius1
+	arcLeft 20 :arcRadius3
+	arcRight 20 :arcRadius2
+	arcRight 100 :arcRadius1
+end
+
+to harmonyCircle :radius
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "innerRadius :radius * 0.3
+	localmake "outerPenSize :radius * 0.033
+	setPenSize :radius * 0.04
+	circle :innerRadius
+	
+	jumpForward :radius - :outerPenSize * 0.5
+	setPenSize :outerPenSize
+	penDown
+	right 90
+	repeat 15 [
+		harmonySingle :radius
+	]
+	penUp
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+harmonyCircle 100

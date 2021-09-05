@@ -1,0 +1,48 @@
+; Inspired by logo at:
+; https://news.ontario.ca/assets/files/20250422/b3fef46c83bf4da5fbf591daca760b7b.pdf
+to protectOntarioLogo :height
+	localmake "oldState turtleState
+	localmake "line1 [
+		[63 0] [-20 1.25] [-20 0.4] [-23 0.1]
+	]
+	localmake "line2 [
+		[57.5 0] [-65 0.51] [37.5909 0]
+	]
+	localmake "height1 :height * 0.96
+	localmake "height2 :height * 0.6
+	localmake "info arcLinesInfo :line1
+	queue2 "line1 [1 - (item 2 :info) * cos last :info]
+	queue2 "line1 [(first :info) - 90 0]
+	localmake "info arcLinesInfo :line1
+	queue2 "line1 [-(item 2 :info) * sin last :info]
+	localmake "line3 (combine :line2 reverse :line2 [[-178 0]])
+	localmake "line3 concat :line3 :line2
+	setPenSize 0
+	setFillColor "white
+	drawArcLineShape [0 0
+		combine :line1 reverse :line1
+	] :height
+	setFillColor "#08143f
+	jumpForward (:height - :height1) / 2
+	drawArcLineShape [0 0
+		:line1
+	] :height1
+	setFillColor "#ed1c24
+	drawArcLineShape [0 0
+		:line1
+	] -:height1
+	jumpForward :height * 0.195
+	setFillColor "#f4f5f9
+	drawArcLineShape [0 0
+		combine :line3 [[0.1]]
+	] :height2
+	setFillColor "white
+	drawArcLineShape [0 0
+		:line3
+	] -:height2
+
+	setTurtleState :oldState
+end
+
+setScreenColor "#ddd
+protectOntarioLogo 100

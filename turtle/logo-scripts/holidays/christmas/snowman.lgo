@@ -1,0 +1,128 @@
+; draws a snowman with a smoking pipe, carot for nose, 
+; and black buttons for nose.
+
+; size is length of the pipe
+to drawPipe :size
+	localmake "oldPos pos
+	setLineCap "butt
+	setPenColor "brown
+	setPenSize :size * 0.03
+	forward :size
+	; draw the thicker end of the pipe.
+	setPenSize :size * 0.33
+	backward :size * 0.15
+	jumpTo :oldPos ; restore original position.
+end
+
+; size represents radius of the mouth's arc
+to drawMouth :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "smileAngle 90
+	localmake "radius :size * 0.1
+	setFillColor "black
+	setPenSize 0
+	left :smileAngle / 2
+	; draw black spots to mark the lips
+	repeat 5 [
+		jumpForward :size
+		circle :radius
+		jumpTo :oldPos
+		right :smileAngle / 5
+	]
+	setHeading :oldHeading - :smileAngle * 0.2
+	jumpForward :size
+	left 60
+	drawPipe :size * 2
+	; restore turtle to original position and heading
+	setHeading :oldHeading
+	jumpTo :oldPos
+end
+
+to drawArmBranch :size
+	localmake "oldState turtleState
+	setPenColor "#620
+	setPenSize :size * 0.04
+	right 6
+	forward :size * 0.3
+	left 8
+	forward :size * 0.64
+	setPenSize :size * 0.03
+	right 60
+	forward :size * 0.09
+	backward :size * 0.09
+	left 90
+	forward :size * 0.07	
+	; restore turtle to original position and heading
+	setTurtleState :oldState
+end
+
+; draws a snowman in the turtle's current direction
+; size is roughly the height of the snowman from bottom to top of the hat
+to drawSnowMan :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "eyeSeparation :size * 0.11
+	localmake "eyeSize :size * 0.017
+
+	setFillColor "white
+	setPenColor "PowderBlue
+	setPenSize :size * 0.003
+	setLineCap "butt
+	jumpForward :size * 0.159
+	circle :size * 0.26
+	jumpForward :size * 0.35
+	circle :size * 0.2
+	jumpForward :size * 0.26
+	circle :size * 0.13
+	setPenSize 0
+
+	; draw an orange carot for a nose.
+	setFillColor "orange
+	setPenColor "brown
+	setPenSize :size * 0.002
+	circle :size * 0.023
+	right 180
+	drawMouth :size * 0.065
+	right 180
+
+	setPenSize 0
+	jumpForward :size * 0.04
+	right 90
+	jumpForward :eyeSeparation / 2
+	; draw the eyes.
+	setFillColor "black
+	circle :eyeSize
+	jumpBackward :eyeSeparation
+	circle :eyeSize
+	jumpForward :eyeSeparation / 2
+	left 90
+	jumpForward :size * 0.06
+
+	; draw the hat.
+	setPenColor "black
+	setPenSize :size * 0.3
+	forward :size * 0.02
+	setPenColor "darkGray
+	forward :size * 0.001
+	setPenColor "black
+	setPenSize :size * 0.15
+	forward :size * 0.11
+
+	; draw arms.
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :size * 0.5
+	right 103
+	jumpForward :size * 0.18
+	drawArmBranch :size * 0.3
+	jumpBackward :size * 0.375
+	right 150
+	drawArmBranch :size * 0.28
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+setScreenColor "SkyBlue
+drawSnowMan 100

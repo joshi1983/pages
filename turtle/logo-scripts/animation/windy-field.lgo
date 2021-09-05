@@ -1,0 +1,190 @@
+to drawSky :width :height
+	localmake "oldState turtleState
+	localmake "gradientRadius1 :height * 0.185
+	localmake "gradientRadius2 :height * 3
+	localmake "colorStops createPList2 [
+		[0 "#D9C1F0] [1 "#ACACD7]
+	]
+	localmake "oldPos pos
+	jumpForward :height
+	setPenGradient createLinearGradient :oldPos pos :colorStops "pad
+	setLineCap "butt
+	setPenSize :width
+	backward :height
+
+	; give subtle impression of some mist or cloud.
+	localmake "colorStops createPList2 [[0 "#fbbb] [0.8 "#bbbb] [1 "#0fff]]
+	jumpRight :width / 2
+	jumpForward :height / 3 + :gradientRadius2
+	setPenGradient createRadialGradient pos :gradientRadius2 :colorStops
+	jumpTo :oldPos
+	forward :height
+
+	jumpTo :oldPos
+	jumpForward :height - :gradientRadius1
+	jumpLeft :height * 0.74
+	setPenSize 0
+	setFillColor "#FBFFDB
+	circle :height * 0.125
+
+	; give impression of some glare
+	localmake "colorStops createPList2 [[0 "#fffe] [1 "#0ffd]]
+	setFillGradient createRadialGradient pos :gradientRadius1 :colorStops
+	circle :gradientRadius1
+
+	setTurtleState :oldState
+end
+
+to drawGrass :width :height :timeRatio
+	localmake "oldState turtleState
+	localmake "bottomGap :height * 0.03
+	localmake "numIterations 30
+	localmake "grassHeight :height * 0.1
+	localmake "grassWidthTotal :width / :numIterations
+	localmake "grassWidth1 :grassWidthTotal * (0.95 - (0.05 * sin 3000 * :timeRatio))
+	localmake "angle1 180 - arcTan :grassWidth1 / :grassHeight
+	localmake "slantedLength1 hypot [:grassHeight :grassWidth1]
+	localmake "grassWidth2 :grassWidthTotal - :grassWidth1
+	localmake "slantedLength2 hypot [:grassHeight :grassWidth2]
+	localmake "angle2 arcTan :grassWidth2 / :grassHeight
+	jumpLeft :width / 2
+	
+	setPenSize 0
+	setFillColor "green
+	polyStart
+	jumpForward :bottomGap
+	right :angle2
+	repeat :numIterations [
+		jumpForward :slantedLength2
+		right :angle1 - :angle2
+		jumpForward :slantedLength1
+		left :angle1 - :angle2
+	]
+	jumpBackward :bottomGap
+	polyEnd
+	setTurtleState :oldState
+end
+
+to drawWindMill :height :timeRatio
+	localmake "oldState turtleState
+	localmake "radius :height * 0.3
+	localmake "supportTowerHeight :height - :radius
+	localmake "towerBaseWidth :height * 0.4
+	localmake "towerTopWidth :height * 0.05
+	localmake "triangleAngle 30
+	localmake "maxTriangleHeight :radius * cos :triangleAngle
+
+	; Draw the light areas and background 
+	; of the support tower.
+	setFillColor "#ddd
+	setPenColor "#bbb
+	setPenSize :height * 0.01
+	jumpForward penSize / 2 ; so the lines don't pop out under the grass.
+	isoTrapezoid :towerBaseWidth :towerTopWidth :supportTowerHeight
+
+	; Draw a shaded part of the tower.
+	jumpRight :towerBaseWidth / 2
+	setFillColor "#666
+	setPenColor "black
+	polyStart
+	jumpLeft :towerBaseWidth / 2
+	jumpForward :supportTowerHeight
+	localmake "towerTopCenter pos
+	jumpRight :towerTopWidth / 2
+	polyEnd
+
+	; Draw the rotating blades.
+	jumpTo :towerTopCenter
+	setPenSize :height * 0.007
+	setPenColor "black
+	setFillColor transparent
+	right 40 + 360 * :timeRatio
+	repeat 4 [
+		repeat 4 [
+			localmake "triHeight mix :maxTriangleHeight 0 repcount / 4
+			localmake "triWidth :triHeight * 2 * tan :triangleAngle
+			jumpForward :triHeight
+			right 180
+			isoTriangle :triWidth :triHeight 
+			jumpTo :towerTopCenter
+			right 180
+		]
+		right 360 / 4
+	]
+
+	setTurtleState :oldState
+end
+
+to drawBird :width :timeRatio
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "angle1 60 + 20 * sin 3600 * :timeRatio
+	localmake "arcs [[20 0.8] [30 0.4]]
+	jumpForward :width * 0.15 * :angle1 / 100
+	localmake "oldPos pos
+	setLineCap "round
+	setLineJoinStyle "round
+	setPenSize :width * 0.05
+	left :angle1
+	arcLines :arcs :width
+	jumpTo :oldPos
+	setHeading :oldHeading + :angle1
+	arcLines :arcs -:width
+	setTurtleState :oldState
+end
+
+to drawBirds :height :timeRatio
+	localmake "oldState turtleState
+	localmake "birdSize :height * (0.12 + :timeRatio * 0.3)
+	localmake "scale1 :timeRatio + 0.3
+	localmake "verticalScale 0.4 + (interpolateRatio easeIn :timeRatio) * 0.5
+
+	jumpForward :height * :verticalScale
+	jumpRight :height * (1.2 - :timeRatio * 0.7)
+	drawBird :birdSize :timeRatio
+	
+	jumpRight :height * 0.5 * :scale1
+	jumpBackward :height * 0.2 * :scale1
+	drawBird :birdSize :timeRatio + 0.3
+
+	setTurtleState :oldState
+end
+
+; Inspired by a little drawing on page 189
+; of a book called The Turtle's Sourcebook.
+; You can see the page at:
+; https://archive.org/details/turtlessourcebook/page/n189/mode/2up
+; Some differences include:
+; - lots of color was added.
+; - animation was added.
+to windyField :height :timeRatio
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "width :height * 3
+	drawSky :width :height
+	jumpLeft :height * 0.04
+	drawWindMill :height * 0.9 :timeRatio
+	jumpTo :oldPos
+	drawBirds :height :timeRatio
+	drawGrass :width :height :timeRatio
+	setTurtleState :oldState
+end
+
+setScreenColor "#888
+windyField 100 animation.clampedTimeRatio
+
+to animation.snapshotstyle
+	output createPList2 [
+		["zoom.scale 3.5]
+		["position.y 50]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 4
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

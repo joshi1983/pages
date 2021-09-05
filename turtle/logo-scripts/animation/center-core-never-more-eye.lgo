@@ -1,0 +1,187 @@
+to drawBricks :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "bottomHeight :height * 0.37
+	localmake "eyeBoxHeight :height * 0.44
+	localmake "eyeBoxWidth :height * 0.87
+	localmake "width :eyeBoxWidth * 2
+	localmake "topHeight :height - :bottomHeight - :eyeBoxHeight
+	localmake "sideWidth (:width - :eyeBoxWidth) / 2
+	localmake "sideSeparation :width - :sideWidth
+	localmake "brickColor "#975037
+
+	setFillColor transparent
+	jumpForward :bottomHeight + :eyeBoxHeight / 2
+	setPenColor "black
+	setPenSize :height * 0.1
+	localmake "offset1 :height * 0.012
+	rect :eyeBoxWidth + :offset1 :eyeBoxHeight + :offset1
+
+	jumpTo :oldPos
+	setLineCap "butt
+	setPenSize :width
+	setPenColor :brickColor
+	forward :bottomHeight
+	jumpForward :eyeBoxHeight
+	forward :topHeight
+	jumpLeft :sideSeparation / 2
+	setPenSize :sideWidth
+	backward :height
+	jumpRight :sideSeparation
+	forward :height
+
+	jumpTo :oldPos
+	jumpForward :eyeBoxHeight / 2 + :bottomHeight
+	localmake "center pos
+	setPenSize :height * 0.08
+	setPenColor "#a86
+	repeat 2 [
+		repeat 2 [
+			setHeading :oldHeading + 180 * repcount
+			localmake "height1 item repcount [:bottomHeight :topHeight]
+			jumpForward :eyeBoxHeight / 2 + :height1
+			backward :height1
+			left 90
+			jumpBackward :width / 2
+			forward :width
+			jumpBackward :sideWidth
+			left 90
+			forward :eyeBoxHeight
+
+			jumpTo :center
+		]
+		setPenSize :height * 0.07
+		setPenColor "#fdc
+		jumpTo :center
+	]
+
+	setTurtleState :oldState
+end
+
+to drawEye :height :timeRatio
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "line1 [
+		[40 0.1] [30 0.5] [20 1.05]
+	]
+	localmake "bottomLine [
+		[40 0.05] [30 0.3] [20 1.332]
+	]
+	localmake "x1 0.39
+	localmake "x2 1 - :x1
+	localmake "y1 0.45
+	localmake "eyeSocketLine [[20 0.2] [40 1] [50 0.8] [20 2] [100 0.2] [30 1] [35 2]]
+	localmake "yellowRadius :height * 0.28
+	localmake "blackOutline (combine :line1 reverse :line1 :bottomLine reverse :bottomLine)
+	localmake "eyeLidWidth 1.18
+	localmake "eyeLidArcAngle mix 95 -70 interpolateRatio easeOut 
+		clamp :timeRatio * 1.5 0 1
+	ifelse (abs :eyeLidArcAngle) < 1 [
+		; Avoid division by 0 or very close to it sine 0 = sin 0.
+		localmake "eyeLidLine [
+			[90 0]
+			[:eyeLidWidth]
+			[-90 0] [0.4] [-90 0] [:eyeLidWidth]
+		]
+	] [
+		localmake "eyeLidArcRadius abs :eyeLidWidth / 2 / sin :eyeLidArcAngle / 2
+		localmake "eyeLidLine [
+			[90 - :eyeLidArcAngle / 2 0]
+			[:eyeLidArcAngle :eyeLidArcRadius]
+			[-90 - :eyeLidArcAngle / 2 0] [0.4] [-90 0] [:eyeLidWidth]
+		]
+	]
+	jumpForward :height / 2
+	setPenSize 0
+
+	; Calculate iris's center.
+	; It moves based on the value of timeRatio.
+	localmake "center vectorScale (mix [-0.04 0.02] [0.14 -0.04] interpolateRatio easeInOut :timeRatio) :height
+	jumpLeft first :center
+	jumpForward last :center
+	setFillColor "#ed0
+	; iris
+	circle :yellowRadius
+	setFillColor "#880
+	isotoxalStar :yellowRadius :yellowRadius * 0.1 8
+	setFillColor "#aa0
+	isotoxalStar :yellowRadius :yellowRadius * 0.15 32
+	setFillColor "black
+	; pupil with dilation based on time
+	circle :height * 0.15 * mixItems2 [0.2 0.5 1 0.8 0.9] :timeRatio
+
+	; draw reflected light.
+	setFillColor "#cfff
+	drawArcLineShape [-0.1 0.05
+		[[-50 0.15] [140 0] [124 0.07]]
+	] :height
+
+	; draw opening eyelid.
+	jumpTo :oldPos
+	setFillColor "tan
+	drawArcLineShape [:x2 :y1
+		:eyeLidLine
+	] :height
+
+	; draw most of the skin
+	jumpTo :oldPos
+	setPenSize 0
+	drawArcLineShape [1 0
+		(combine [[1] [90 0] [2] [90 0] [1] [90 0] [2] [90 0] [:y1] [90 0]
+		[:x1] [90 0]] reverse flipAngles :blackOutline)
+	] :height
+
+	setPenColor "#b97
+	setPenSize :height * 0.02
+	setFillColor transparent
+	drawArcLineShape [:x2 :y1
+		:blackOutline
+	] :height
+	repeat 10 [
+		setPenSize :height * mix 0.01 0.2 repRatio
+		setPenColor mix "#840 "tan interpolateRatio easeInQuart repRatio
+		drawArcLineShape [0.9 0.32
+			:eyeSocketLine
+		] :height
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by part of an animation at:
+; https://youtu.be/rXUb4gdgpbI?list=RDrXUb4gdgpbI&t=72
+;
+; In case that link stops working, it is a video
+; made by Jim Wilson(https://www.youtube.com/@JimW925) 
+; on an Amiga 500 
+; with "friend's music, recorded to VHS tape" 
+to centerCoreNeverMoreEye :height :timeRatio
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	jumpForward :height * 0.32
+	jumpLeft :height * 0.03
+	drawEye :height * 0.5 :timeRatio
+	jumpTo :oldPos
+	drawBricks :height
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+centerCoreNeverMoreEye 100 animation.clampedTimeRatio
+
+to animation.snapshotstyle
+	output createPList2 [
+		["position.y 50]
+		["zoom.scale 5]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 5
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+		["thumbnailTime :seconds * 0.8]
+	]
+end

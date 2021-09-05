@@ -1,0 +1,84 @@
+! DemWin1
+
+! This shows how windows are shown, erased (hidden), or made active.
+
+LIBRARY "TrueCtrl.trc"
+
+DIM menus$(4,0:3), win(3)
+
+MAT READ menus$
+DATA File, Quit, "", ""
+DATA Show, Show 1, Show 2, Show 3
+DATA Hide, Hide 1, Hide 2, Hide 3
+DATA Active, Active 1, Active 2, Active 3
+
+CALL TC_Init
+
+! Make three tiled windows.
+
+CALL TC_Win_Create (win(1), "CLOSE|SIZE|TITLE", .1, .45, .3, .7)
+CALL TC_Win_SetTitle (win(1), "Window #1")
+CALL TC_Win_Create (win(2), "CLOSE|SIZE|TITLE", .3, .7, .1, .4)
+CALL TC_Win_SetTitle (win(2), "Window #2")
+CALL TC_Win_Create (win(3), "CLOSE|SIZE|TITLE", .55, .9, .3, .7)
+CALL TC_Win_SetTitle (win(3), "Window #3")
+
+CALL TC_SetRectUsers (0, .2, .8, .8, .9)   ! ... but make it narrow
+CALL TC_Menu_Set (0, menus$(,))   ! Use window 0 for menus
+CALL TC_Show (0)
+CALL TC_Win_Switch (0)
+PRINT "On the Macintosh,"
+PRINT "Click in this window to restore the menu."
+
+DO
+   CALL TC_Event (0, event$, window, m, i)
+
+   IF event$ = "HIDE" and window = 0 then EXIT DO
+   IF event$ = "MENU" then
+      SELECT CASE m
+      CASE 1
+           SELECT CASE i
+           CASE 1
+                EXIT DO
+           END SELECT
+      CASE 2
+           SELECT CASE i
+           CASE 1
+                CALL TC_Show (win(1))
+           CASE 2
+                CALL TC_Show (win(2))
+           CASE 3
+                CALL TC_Show (win(3))
+           END SELECT
+      CASE 3
+           SELECT CASE i
+           CASE 1
+                CALL TC_Erase (win(1))
+           CASE 2
+                CALL TC_Erase (win(2))
+           CASE 3
+                CALL TC_Erase (win(3))
+           END SELECT
+      CASE 4
+           SELECT CASE i
+           CASE 1
+                CALL TC_Win_Active (win(1))
+           CASE 2
+                CALL TC_Win_Active (win(2))
+           CASE 3
+                CALL TC_Win_Active (win(3))
+           END SELECT
+
+      END SELECT
+
+   END IF
+
+LOOP
+
+CALL TC_Menu_Free (0)
+CALL TC_Free (win(1))
+CALL TC_Free (win(2))
+CALL TC_Free (win(3))
+CALL TC_Cleanup
+
+END

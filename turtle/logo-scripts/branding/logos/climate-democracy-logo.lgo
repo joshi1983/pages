@@ -1,0 +1,30 @@
+; Inspired by logo at:
+; https://climate-diplomacy.org
+; The main difference is:
+; The original logo has a small gap between the pie shape
+; and the outer arc.  This code draws no such gap.
+to climateDemocracyLogo :height
+	localmake "oldState turtleState
+	localmake "angle1 44.5 
+	; 45 would be a more round number but it didn't 
+	; line up as well with the original logo.
+	localmake "outerArcAngle 180 + :angle1 * 2
+	setPenSize :height * 0.195
+	setLineCap "butt
+	setPenColor "#950922
+	localmake "outerArcRadius (:height - penSize) / 2
+	localmake "innerArcRadius :outerArcRadius - penSize / 2
+	jumpForward :height / 2
+	left :angle1
+	arc :outerArcAngle :outerArcRadius
+	setPenSize 0
+	setFillColor "#4B787B
+	polyStart
+	jumpBackward :innerArcRadius
+	right 90
+	arcLeft 360 - :outerArcAngle :innerArcRadius
+	polyEnd
+	setTurtleState :oldState
+end
+
+climateDemocracyLogo 100

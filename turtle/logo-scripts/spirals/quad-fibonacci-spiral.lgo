@@ -1,0 +1,67 @@
+to singleFibonacciSpiral :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "thickness penSize
+	localmake "angle 90 * sign :height
+	localmake "height abs :height
+	localmake "arcRadius :height
+	localmake "numArcs 5
+	repeat :numArcs [
+		arcLeft :angle :arcRadius
+		localmake "arcRadius :arcRadius / goldenRatio
+	]
+	setHeading :oldHeading
+	jumpTo :oldPos
+	setPenSize 0
+	localmake "arcRadius :height
+	repeat :numArcs [
+		arcLeft :angle :arcRadius
+		left :angle
+		stripes :thickness :arcRadius [penColor]
+		right :angle
+		localmake "arcRadius :arcRadius / goldenRatio
+	]
+
+	setTurtleState :oldState
+end
+
+to singleQuadFibonacciSpiral :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	setPenSize :height * 0.01
+	localmake "height :height - penSize
+	localmake "spiralHeight :height / 2
+	rect :height * (1 + 1/goldenRatio) :height 
+	repeat 2 [
+		singleFibonacciSpiral :spiralHeight
+		singleFibonacciSpiral -:spiralHeight
+		right 180
+	]
+	right 90
+	repeat 2 [
+		jumpForward :spiralHeight
+		forward :spiralHeight / goldenRatio
+		jumpTo :oldPos
+		right 180
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by:
+; https://www.facebook.com/share/p/1CWmhwqFjP/
+to quadFibonacciSpiral :height
+	localmake "oldState turtleState
+	jumpForward :height / 2
+	setPenColor "white
+	setLineCap "butt
+	setLineJoinStyle "miter
+	repeat 10 [
+		singleQuadFibonacciSpiral :height
+		localmake "height :height / goldenRatio
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+quadFibonacciSpiral 100

@@ -1,0 +1,72 @@
+; Inspired by logo at:
+; https://www.youtube.com/@AutotopiaLA
+;
+; The main difference in the original logo is
+; that the triangle is not equilateral.
+; The following draws it as equilateral but the original
+; looks isoscelese with a slightly shorter height.
+to autotopiaLALogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "startY :height * 0.31
+	localmake "outerRadius :height / 2
+	localmake "triangleWidth :height * 0.58
+	localmake "gap :height * 0.03
+	localmake "thickness :height * 0.1
+	localmake "innerRadius :outerRadius - :thickness
+	localmake "triangleWidthOffset (:thickness + :gap) / cos 30
+	localmake "triangleInnerWidth :triangleWidth - 2 * :thickness / tan 30
+	jumpForward :height / 2
+	localmake "center pos
+	jumpTo :oldPos
+	jumpForward :startY - :gap
+	localmake "startYUnderGap1 pos
+	jumpLeft 100
+	localmake "startYUnderGap2 pos
+	jumpTo :oldPos
+	jumpForward :startY
+	jumpLeft :triangleWidth / 2
+	localmake "triangleLeftPos1 pos
+	right 30
+	jumpForward 100
+	localmake "triangleLeftPos2 pos
+
+	setPenSize 0
+	setFillColor "#f96618
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :startY
+	jumpRight :triangleWidth / 2
+	polyStart
+	left 90
+	jumpForward :triangleWidth - :triangleWidthOffset
+	right 120
+	jumpForward :thickness / cos 30
+	localmake "upperPos1 pos
+	right 60
+	jumpForward :triangleInnerWidth - :gap / cos 30
+	localmake "upperPos2 pos
+	left 120
+	jumpForward :triangleInnerWidth
+	left 120
+	jumpForward :triangleInnerWidth + :thickness / cos 30
+	right 60
+	jumpForward distanceToCircle :center :outerRadius
+	setHeading (towards :center) - 90
+	arcRight 300 :outerRadius
+	arcRight (getArcRightAngleToLine :outerRadius :startYUnderGap1 :startYUnderGap2) :outerRadius
+	setHeading :oldHeading + 90
+	jumpForward distanceToCircle :center :innerRadius
+	setHeading (towards :center) + 90
+	arcLeft 300 :innerRadius
+	arcLeft (getArcLeftAngleToLine :innerRadius :upperPos1 :upperPos2) :innerRadius
+	setHeading :oldHeading + 90
+	jumpForward distanceToLine :triangleLeftPos1 :triangleLeftPos2
+	left 60
+	jumpForward :triangleWidth - :thickness / cos 30
+	polyEnd
+	setTurtleState :oldState
+end
+
+autotopiaLALogo 100

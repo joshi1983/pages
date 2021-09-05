@@ -1,0 +1,74 @@
+to drawDelta :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angle1 113.8
+	localmake "angle2 :angle1 - 90
+	localmake "rightAngle 22.5
+	localmake "thicknessFactor 0.06
+	localmake "widthFactor 0.88
+	localmake "startBottomOffset 0.3
+	localmake "thicknessMiterFactor :thicknessFactor / 2 / tan (180 - :angle1) / 2 
+	localmake "bottomWidth1 :widthFactor / 2 + :startBottomOffset - :thicknessMiterFactor
+	setLineJoinStyle "miter
+	setPenSize :height * :thicknessFactor
+	jumpForward penSize / 2
+	jumpRight :height * :startBottomOffset
+	arcLines [[90 0] [:bottomWidth1] [-:angle1 0] [1]] :height
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height
+	localmake "top pos
+	
+	jumpTo :oldPos
+	jumpRight :height * :widthFactor / 2
+	localmake "bottomRightPos pos
+	setFillColor penColor
+	setPenSize 0
+	polyStart
+	arcLines [
+		[:rightAngle 0] [1 / cos :rightAngle] ] :height
+	setHeading towards :top
+	jumpTo :top
+	arcLines [
+		[180 - :angle1 0] [0.15] [:angle2 + :rightAngle 0]
+	] :height
+	jumpForward distanceToLine :oldPos :bottomRightPos
+	polyEnd		
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://www.youtube.com/@Diadochoi
+to diadochoiLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "darkGoldColor "#a2825c
+	localmake "numAngles 56
+	setPenSize :height * 0.01
+	localmake "outerRadius (:height - penSize) / 2
+	setPenColor :darkGoldColor
+	setFillColor "white
+	jumpForward :height / 2
+	localmake "center pos
+	circle :outerRadius
+	setLineJoinStyle "miter
+	setLineCap "butt
+	repeat :numAngles [
+		setHeading :oldHeading + repcount * 360 / :numAngles
+		jumpBackward :outerRadius
+		arcLines [[0.042] [-89 0] [0.032] [-90 0] [0.022]
+		[-90 0] [0.015]] :height
+		jumpTo :center
+	]
+	setPenColor "black
+	circle :height * 0.437
+	setHeading :oldHeading
+	jumpBackward :height * 0.303
+	setPenColor :darkGoldColor
+	drawDelta :height * 0.6
+	setTurtleState :oldState
+end
+
+diadochoiLogo 100

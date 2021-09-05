@@ -1,0 +1,70 @@
+; Inspired by
+; https://www.pinterest.ca/pin/212091463681413825/
+
+make "orangeColor "#ffad00
+make "lightYellowColor "#ffff80
+make "veryLightYellow "#ffffc0
+make "brownColor "#684000
+make "darkRedColor "#400000
+
+to flowerOfLifeSolidBackground :radius
+	localmake "colorStops createPList2 [
+		[0 "black] [0.5 :darkRedColor] [0.8 :brownColor]
+		[0.88 :orangeColor] [0.9 :lightYellowColor]
+		[0.92 :orangeColor] [0.98 :brownColor]
+		[0.99 :darkRedColor] [1 "black]
+	]
+	setFillGradient createRadialGradient pos :radius :colorStops
+	setPenSize 0
+	circle :radius
+end
+
+to circleRing :circleRadius :tinyRadius :numCircles
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	repeat :numCircles [
+		jumpTo :oldPos
+		jumpForward :tinyRadius
+		left 90
+		circleRight :circleRadius
+		setHeading :oldHeading + repcount * 360 / :numCircles
+	]
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to outerCircleRing :radius
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "tinyRadius :radius * 0.1
+	localmake "circleRadius (:radius - :tinyRadius) * 0.5
+	localmake "colorStops createPList2 [
+		[0 "black] [0.1 "black] [0.5 :brownColor]
+		[1 :orangeColor]
+	]
+	setPenGradient createRadialGradient pos :radius :colorStops
+	setFillColor transparent
+	setPenSize :radius * 0.01
+	circleRing :circleRadius :tinyRadius 32
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to innerCircleRing :radius
+	localmake "colorStops createPList2 [
+		[0 :orangeColor] [0.6 :veryLightYellow] [1 :lightYellowColor]
+	]
+	setPenGradient createRadialGradient pos :radius :colorStops
+	setFillColor transparent
+	setPenSize :radius * 0.02
+	circleRing :radius * 0.4 :radius * 0.15 20
+end
+
+to flowerOfLife :radius
+	flowerOfLifeSolidBackground :radius
+	outerCircleRing :radius * 0.78
+	innerCircleRing :radius * 0.3
+end
+
+setScreenColor "black
+flowerOfLife 150

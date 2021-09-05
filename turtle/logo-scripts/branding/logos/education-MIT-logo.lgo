@@ -1,0 +1,115 @@
+to drawLowerShape :len :thickness
+	localmake "oldState turtleState
+	localmake "angle 30
+	localmake "len1 :len - :thickness / 2 * tan :angle
+	localmake "thickness1 :thickness / 2 / cos :angle
+	setPenSize 0
+	jumpRight :thickness / 2
+	polyStart
+	jumpLeft :thickness
+	jumpForward :len1
+	right 90 - :angle
+	jumpForward :thickness1
+	right :angle * 2
+	jumpForward :thickness1
+	right 90 - :angle
+	jumpForward :len1
+	polyEnd
+	setTurtleState :oldState
+end
+
+to drawShell :polyRadius
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "topColors ["#3299b2 "#408ead]
+	localmake "midColors [["#28adcb "#209dc8] ["#3299b2 "#27546e]]
+	localmake "bottomColors ["#3299b2 "#2f657d]
+	localmake "size1 :polyRadius * sin 30
+	localmake "size2 :polyRadius * cos 30
+	localmake "size3 :size1 * 2 / cos 30
+	localmake "size4 :polyRadius * 2 * sin 30
+	setPenSize 0
+	setFillColor "#56b4cd
+	regularPolygon :polyRadius 6
+	jumpForward :size1
+	localmake "pos1 pos
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		setFillColor item repcount :topColors
+		jumpRight :sign * :size2
+		polyStart
+		jumpLeft :sign * :size2
+		jumpForward :size1
+		polyEnd
+		jumpTo :pos1
+	]
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		localmake "info item repcount :midColors
+		setFillColor first :info
+		jumpRight :sign * :size2
+		localmake "corner1 pos
+		polyStart
+		jumpLeft :sign * :size2
+		right 60 * :sign
+		jumpRight :sign * :size3
+		polyEnd
+
+		setHeading towards :corner1
+		setFillColor last :info
+		polyStart
+		jumpForward distance :corner1
+		setHeading :oldHeading
+		jumpBackward :size1 * 2
+		polyEnd
+		jumpTo :pos1
+	]
+	jumpBackward :size1 * 2
+	localmake "pos1 pos
+	right 180
+	setFillColor "#26a9e0
+	isoTriangle :size3 :size1
+	jumpForward :size1
+	localmake "pos2 pos
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		setFillColor item repcount :bottomColors
+		jumpTo :pos1
+		setHeading :oldHeading
+		jumpRight :size3 / 2 * :sign
+		setHeading towards :pos2
+		polyStart
+		jumpForward distance :pos2
+		setHeading :oldHeading + :sign * 60
+		jumpForward :size4
+		polyEnd
+	]	
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://education.mit.edu/
+; 
+; MIT Scheller Teacher Education
+to educationMITLogo :height
+	localmake "oldState turtleState
+	localmake "thicknesses1 [0.29 0.2 0.2]
+	localmake "thicknesses (combine :thicknesses1 [0.135] reverse :thicknesses1)
+	localmake "thicknesses vectorScale :thicknesses :height
+	localmake "polyRadius :height * 0.375
+	localmake "cy 0.45
+	localmake "lengths [1 - :cy 0.5 0.5 :cy 0.5 0.5]
+	jumpForward :height * :cy
+	setFillColor "#2e1046
+	repeat 6 [
+		localmake "thickness item repcount :thicknesses
+		localmake "len :height * item repcount :lengths
+		drawLowerShape :len :thickness
+		right 360 / 6
+	]
+	drawShell :polyRadius
+	
+	setTurtleState :oldState
+end
+
+educationMITLogo 100

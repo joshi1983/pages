@@ -1,0 +1,96 @@
+to drawWheel :radius
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "innerRadius :radius * 0.65
+	localmake "gap :radius * 0.07
+	localmake "outerArcAngle arcCos :gap / :radius
+	localmake "innerArcAngle arcCos :gap / :innerRadius
+	setPenSize 0
+	repeat 2 [
+		localmake "heading1 :oldHeading + 45 + repcount * 360 / 2
+		setHeading :heading1 + :innerArcAngle
+		jumpForward :innerRadius
+		left 90
+		polyStart
+		arcLeft :innerArcAngle * 2 :innerRadius
+		setHeading :heading1 - 90
+		jumpForward :radius - :innerRadius
+		right 180 - :outerArcAngle
+		arcRight :outerArcAngle * 2 :radius
+		polyEnd
+		jumpTo :oldPos
+	]
+end
+
+; Inspired by symbol at
+; https://www.mentalfloss.com/article/76189/activists-propose-new-disability-access-symbol
+to accessibleSymbol :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "thickness :height * 0.118
+	localmake "headRadius :height * 0.0985
+	localmake "wheelRadius :height * 0.303
+	localmake "angle1 48
+	localmake "angle2 61
+	setPenSize 0
+
+	; draw head.
+	jumpForward :height - :headRadius
+	jumpRight :height * 0.265
+	circle :headRadius
+
+	; draw torso and arm.
+	jumpLeft :height * 0.476
+	jumpBackward :height * 0.1275
+	right :angle1
+	setPenSize :thickness
+	setLineCap "round
+	setLineJoinStyle "round
+	setPenColor fillColor
+	forward :height * 0.1775
+	right 72.5
+	forward :height * 0.32
+	right 100
+	forward :height * 0.25
+	right :angle2
+	forward :height * 0.125
+	right 180 - :angle2
+	forward :height * 0.28
+
+	; draw leg.
+	setHeading :oldHeading
+	jumpTo :oldPos
+	jumpForward :height * 0.198
+	jumpRight :height * 0.306
+	right 4.6
+	forward :height * 0.307
+	left 98
+	forward :height * 0.23
+
+	; draw wheel.
+	setHeading :oldHeading
+	jumpTo :oldPos
+	jumpForward :wheelRadius
+	jumpLeft :height * 0.088
+	drawWheel :wheelRadius
+	setTurtleState :oldState
+end
+
+to accessibleSign :height
+	localmake "oldState turtleState
+	localmake "innerHeight :height * 0.7
+	stripes :height :height ["#31508f]
+	jumpForward (:height - :innerHeight) / 2
+	setFillColor "white
+	accessibleSymbol :innerHeight
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 3
+jumpLeft :separation * 0.5
+setFillColor "black
+accessibleSymbol :height
+jumpRight :separation
+accessibleSign :height

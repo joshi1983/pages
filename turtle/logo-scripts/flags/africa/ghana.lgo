@@ -1,0 +1,52 @@
+; The following video shows a history of the various flags used by Ghana.
+; https://www.youtube.com/watch?v=mCSHmKTPzyE
+
+to ghanaFlagCustomAspectRatio :width :height
+	localmake "oldState turtleState
+	localmake "starSize :height * (40 - 8 * sqrt 5) / 5 / 12 / 2
+	stripes :width :height ["#006b3f "#fcd116 "#ce1126]
+	jumpForward :height * 2 / 3 - :starSize
+	setPenSize 0
+	setFillColor "black
+	regularStar :starSize 5
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://commons.wikimedia.org/wiki/File:Flag_of_Ghana.svg
+; Follows construction sheet at
+; https://en.wikipedia.org/wiki/Flag_of_Ghana
+to ghanaFlag :height
+	ghanaFlagCustomAspectRatio :height * 3 / 2 :height
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Ghana#/media/File:Naval_Ensign_of_Ghana.svg
+to ghanaNavalEnsignia :height
+	localmake "oldState turtleState
+	localmake "width :height * 3 / 2
+	localmake "lineWidth :height * 2 / 15
+	localmake "innerWidth (:width - :lineWidth) / 2
+	localmake "innerHeight (:height - :lineWidth) / 2
+	stripes :width :height ["white]
+	setPenColor "#ce1126
+	setPenSize :lineWidth
+	setLineCap "butt
+	forward :height
+	jumpBackward :height / 2
+	right 90
+	jumpBackward :width / 2
+	forward :width
+	jumpBackward :width - :innerWidth / 2
+	left 90
+	jumpForward :lineWidth / 2
+	ghanaFlagCustomAspectRatio :innerWidth :innerHeight
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 5
+jumpLeft :separation * 0.5
+ghanaFlag :height
+jumpRight :separation
+ghanaNavalEnsignia :height

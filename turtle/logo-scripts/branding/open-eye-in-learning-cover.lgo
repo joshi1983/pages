@@ -1,0 +1,43 @@
+; Inspired by the cover of a book:
+; The book was published in 1969.
+; The book was titled: The Open Eye in Learning
+; The Role of Art in General Education
+; The book was published by: Cambridge, Mass., MIT Press
+; A digital version of the book is at:
+; https://archive.org/details/openeyeinlearnin0000bass
+to openEyeInLearningCover :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "thickness :height * 0.015
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize :thickness
+	setPenColor "black
+	setFillColor transparent
+	repeat 8 [
+		localmake "radius :height / 4 * repcount / 8 - penSize / 2
+		circle :radius
+	]
+	setLineCap "butt
+	setLineJoinStyle "miter
+	repeat 8 [
+		setHeading :oldHeading
+		localmake "gap :height * (mix 0.28 0.5 repRatio) - penSize / 2
+		localmake "arcRadius :height * 0.772 - penSize * 2.13 * repcount
+		localmake "arcAngle 2 * arcCos (:arcRadius - :gap) / :arcRadius
+		jumpForward :gap
+		right 90
+		penUp
+		arcRight :arcAngle / 2 :arcRadius
+		left 180
+		penDown
+		arcLeft :arcAngle :arcRadius
+		left 180 - :arcAngle
+		arcLeft :arcAngle :arcRadius
+		closePath
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+openEyeInLearningCover 100

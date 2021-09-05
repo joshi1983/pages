@@ -1,0 +1,59 @@
+; This is used for help on
+; the isotoxalStar
+; Exported as SVG to:
+; content/help/commands/images/isotoxalStar.svg
+
+setScreenColor transparent
+make "radius1 20
+make "separation :radius1 * 2
+make "radius2 10
+setFillColor "green
+isotoxalStar :radius1 :radius2 5
+make "center pos
+setPenSize 0
+make "numPointsColor "#808
+setFillColor :numPointsColor
+repeat 5 [
+	jumpForward :radius1
+	circle 2
+	right 360 / 5
+	jumpTo :center
+]
+setFillColor transparent
+setPenSize 1.5
+setPenColor "navy
+circle :radius1
+setPenColor "brown
+circle :radius2
+jumpRight :radius1 * 1.1
+right 90
+setPenSize 0
+setFillColor "black
+setFontSize 9
+make "labelSeparation fontSize * 1.25
+make "pos1 pos
+jumpLeft :labelSeparation - fontSize * 0.3
+setFillColor "navy
+label ["radius1 :radius1]
+jumpRight :labelSeparation
+setFillColor "brown
+label ["radius2 :radius2]
+jumpRight :labelSeparation
+setFillColor :numPointsColor
+label ["numPoints 5]
+jumpLeft :labelSeparation / 2
+jumpTo :pos1
+setHeading 0
+jumpRight :radius2 * 2.5
+
+setFillColor "green
+setPenSize 1
+setPenColor "black
+jumpRight :separation
+isotoxalStar :radius1 :radius2 2
+
+jumpRight :separation
+isotoxalStar :radius1 :radius2 3
+
+jumpRight :separation
+isotoxalStar :radius1 :radius2 8

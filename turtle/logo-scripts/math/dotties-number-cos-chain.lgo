@@ -1,0 +1,41 @@
+to getCosChainValue :startValue :numIterations
+	while :numIterations > 0 [
+		localmake "startValue radCos :startValue
+		localmake "numIterations :numIterations - 1
+	]
+	output :startValue
+end
+
+; Inspired by a video at:
+; https://www.youtube.com/watch?v=qHnXE_h5c2M
+;
+; It converges on Dottie's number as the number of iterations
+; approaches infinity.
+; You can learn about Dottie's number at:
+; https://en.wikipedia.org/wiki/Dottie_number
+to cosChain :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "numPoints 100
+	localmake "colors ["red "blue "lime]
+	localmake "maxIterations 10
+	for ["numIterations 0 :maxIterations] [
+		localmake "points []
+		repeat :numPoints [
+			localmake "input repRatio * 2 * pi
+			localmake "v getCosChainValue :input :numIterations
+			jumpTo :oldPos
+			jumpRight :input * :height
+			jumpForward :v * :height
+			queue2 "points pos
+		]
+		setPenColor mixItems2 :colors :numIterations / :maxIterations
+		jumpTo first :points
+		for ["i 2 count :points] [
+			setPos item :i :points
+		]
+	]
+	setTurtleState :oldState
+end
+
+cosChain 100

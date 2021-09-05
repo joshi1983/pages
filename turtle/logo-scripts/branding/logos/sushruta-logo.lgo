@@ -1,0 +1,21 @@
+; Inspired by logo at:
+; https://www.youtube.com/@Sushruta-q6e
+to sushrutaLogo :height
+	localmake "oldState turtleState
+	localmake "numTriangles 12
+	localmake "triangleHeight :height * 0.215
+	setPenSize 0
+	setFillColor "#ff6002
+	jumpForward :height / 2
+	localmake "center pos
+	circle :height * 0.26
+	repeat :numTriangles [
+		jumpForward :height / 2 - :triangleHeight
+		isoTriangle :height * 0.14 :triangleHeight
+		jumpTo :center
+		right 360 / :numTriangles
+	]
+	setTurtleState :oldState
+end
+
+sushrutaLogo 100

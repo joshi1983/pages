@@ -1,0 +1,24 @@
+; Inspired by logo at:
+; https://lggindustrial.com
+to lggIndustrialLogo :height
+	localmake "oldState turtleState
+	setLineCap "butt
+	setLineJoinStyle "miter
+	setPenSize :height / 13 * cos 45
+	setPenColor "#e20714
+	localmake "size1 penSize * 13
+	localmake "size2 :size1 - penSize / 2
+	jumpForward penSize / 2 / cos 45
+	left 45
+	jumpForward :size2
+	backward :size2
+	right 90
+	forward :size2
+	jumpLeft penSize * 10
+	arcLines [[-8.5] [-90 0] [6] [90 0] [6] [90 0] [2] 
+		[90 0] [4] [-90 0] [2] [-90 0] [6] [-90 0] [6] 
+		[-90 0] [10] [-90 0] [10] [-90 0] [10.5]] penSize
+	setTurtleState :oldState
+end
+
+lggIndustrialLogo 100

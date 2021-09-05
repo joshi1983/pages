@@ -1,0 +1,36 @@
+; Inspired by logo at:
+; https://eggheadforum.com/profile/Richard%20Fl
+to eggheadForumLogo :height
+	localmake "oldState turtleState
+	localmake "mouthRadius 0.095
+	localmake "eyeSeparation :height * 0.37
+	localmake "eyeWidth :height * 0.22
+	localmake "eyeLen1 :eyeWidth / 2 / cos 45
+	jumpForward :height / 2
+	setPenSize :height * 0.102
+	setPenColor "black
+	setFillColor "#fc763c
+	circle (:height - penSize) / 2
+	right 10
+	localmake "faceHeading heading
+	setPenSize 0
+	setFillColor "black
+	drawArcLineShape [:mouthRadius -0.21
+		[[180 0] [-180 :mouthRadius]]
+	] :height
+	setLineCap "butt
+	setLineJoinStyle "miter
+	jumpLeft (:eyeSeparation + :eyeWidth) / 2
+	setPenSize :height * 0.07
+	repeat 2 [
+		localmake "pos1 pos
+		arcLines [[-45 0] [:eyeLen1] [-90 0] [:eyeLen1]] 1		
+		jumpTo :pos1
+		setHeading :faceHeading
+		jumpRight :eyeSeparation
+	]	
+	setTurtleState :oldState
+end
+
+setScreenColor "#1c9adc
+eggheadForumLogo 100

@@ -1,0 +1,83 @@
+; Inspired by logo at:
+; https://aquamarinacanada.ca
+;
+; and
+; https://aquamarina.com
+to aquaMarinaLogo :height :color1
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "angle1 27
+	localmake "thickness1 0.26
+	localmake "slantedHeight 1 / cos :angle1
+	localmake "topThickness 0.23
+	localmake "innerSlantedHeight :slantedHeight - (:thickness1 - :topThickness / 2) / sin :angle1
+	localmake "topLen1 0.3
+	localmake "middleLen 0.55
+	setPenSize 0
+	setFillColor :color1
+	drawArcLineShape [-1.13 0
+		[[-:angle1 0] [:slantedHeight] [:angle1 - 90 0] [:topThickness]
+		[:angle1 - 90 0] [:slantedHeight] [-:angle1 - 90 0] [:thickness1]
+		[:angle1 - 90 0] [:innerSlantedHeight]
+		[180 - :angle1 * 2 0] [:innerSlantedHeight]]
+	] :height
+	jumpRight :height * 0.435
+	localmake "rightPos pos
+	polyStart
+	arcLines [
+		[-90 0] [0.71] [90 + :angle1 0] [:slantedHeight]
+		[90 - :angle1 0] [:topThickness] [90 - :angle1 0]
+		[:topLen1] [:angle1 * 2 - 180 0] [:topLen1] [90 - :angle1 0]
+		[:topThickness] [90 - :angle1 0] [0.23]
+	] :height
+	localmake "leftPos pos
+	localmake "leftHeading heading
+	arcLines [
+		[:angle1 * 2 0] [0.26] [180 - :angle1 * 2 0] [0.2]
+		[:angle1 * 2 - 180 0] [:middleLen] [180 - :angle1 * 2 0]
+		[:middleLen] [:angle1 * 2 - 180 0] [0.57] [-90 - :angle1 0]
+		[0.21]
+	] :height
+	polyEnd
+
+	jumpTo :leftPos
+	setHeading :leftHeading
+	jumpForward :height * 0.47
+	localmake "leftPos pos
+	left :angle1 * 2
+	jumpForward 100
+	localmake "slantedPos2 pos
+
+	jumpTo :leftPos
+	setHeading :leftHeading
+	setFillColor "#e52435
+	polyStart
+	jumpForward distanceToLine :oldPos :rightPos 
+	left :angle1 + 90
+	jumpForward :thickness1 * :height
+	left 90 - :angle1
+	jumpForward distanceToLine :leftPos :slantedPos2
+	polyEnd
+
+	setTurtleState :oldState
+end
+
+to aquaMarinaCanadaLogo :height
+	aquaMarinaLogo :height "#211f20
+end
+
+to aquaMarinaOnBlackBackgroundLogo :height
+	localmake "oldState turtleState
+	localmake "innerHeight :height * 0.7
+	stripes :height * 2 :height ["black]
+	jumpForward (:height - :innerHeight) / 2
+	aquaMarinaLogo :innerHeight "white
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 5
+jumpLeft :separation / 2
+aquaMarinaCanadaLogo :height
+jumpRight :separation
+aquaMarinaOnBlackBackgroundLogo :height

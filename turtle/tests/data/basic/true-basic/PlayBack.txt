@@ -1,0 +1,51 @@
+!
+!  PLAYBACK          Version 2.0
+!
+!  Read "movie" frames from a data file, and display them
+!  on the screen.  The RECORD3 program has created these
+!  frames.
+!
+!  RECORD3 chains to this program,  passing the filename
+!  to display.  If this program is run directly, it
+!  displays the "ImagData.tru" file.
+!
+PROGRAM PlayBack (filename$)
+IF filename$ = "" then INPUT prompt "Image file name: ": filename$
+
+DIM image$(1)
+
+!
+! Open image file,  figure out how many frames it contains, 
+! and read the frames into an array.
+!
+OPEN #2: name filename$, organization record
+
+READ #2: t$                       ! 1st records given misc infor
+LET frames = Num(t$[1:8])         ! Number of frames
+LET x1     = Num(t$[9:16])        ! Screen coordinates
+LET x2     = Num(t$[17:24])
+LET y1     = Num(t$[25:32])
+LET y2     = Num(t$[33:40])
+LET mode$  = t$[41:maxnum]        ! ...and recording screen mode
+SET MODE mode$
+ASK MODE m$
+IF m$ <> mode$ then CAUSE ERROR 1, "Sorry, can't playback in saved mode " & mode$
+
+OPEN #1: screen x1, x2, y1, y2
+
+MAT image$ = Nul$(frames)
+MAT READ #2: image$
+CLOSE #2
+
+!
+!  Loop displaying frames from array.
+!
+DO
+   LET i = i+1
+   IF i > frames then LET i = 1
+   BOX SHOW image$(i) at 0, 0
+   PAUSE .04
+
+LOOP
+
+END

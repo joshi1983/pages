@@ -1,0 +1,49 @@
+PROGRAM DemALine
+
+! This program demonstrates how to construct and show the
+! graphics object Arrowed Lines.
+
+LIBRARY "TrueCtrl.trc"
+
+CALL TC_Init
+
+SET WINDOW -3, 3, -2, 2
+OPTION ANGLE degrees
+
+CALL TC_Show (0)                  ! Use the default output window
+CALL TC_Win_Active (0)            ! Move it to the front
+PRINT "Press Escape to quit."
+
+CALL TC_Show_Default (0)          ! Don't show objects upon creation
+
+! Coordinates are: startx, endx, starty, endy
+LET a = 135
+CALL TC_Graph_Create (aline, "ALINE", -cos(a), cos(a), -sin(a), sin(a))
+LET width = 2                     ! Pen is 2 pixels wide
+LET color = 1                     ! Should be blue
+CALL TC_Graph_SetPen (aline, width, color, "", "")
+CALL TC_Show (aline)
+
+DO
+   DO
+      CALL TC_Event (0, event$, window, x1, x2)
+      IF event$ <> "REFRESH"then EXIT DO
+   LOOP
+
+   IF event$ = "HIDE" then EXIT DO
+   IF event$ = "KEYPRESS" and x1 = 27 then EXIT DO    ! Escape key
+
+   ! Fiddle with the arrow heads
+
+   LET start = int(2*rnd)         ! Random 0 or 1
+   LET end = int(2*rnd)           ! Random 0 or 1
+   LET a = a + 5
+   CALL TC_SetRectUsers (aline, -cos(a), cos(a), -sin(a), sin(a))
+   CALL TC_Graph_SetALine (aline, start, end)
+   PAUSE .2
+
+LOOP
+
+CALL TC_Cleanup
+
+END

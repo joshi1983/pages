@@ -1,0 +1,123 @@
+; Inspired by:
+; https://www.pinterest.ca/pin/480126010285634230/
+
+to calculateSizes :size :repCount :numScales :numSides :angle1
+	localmake "size1 :size * :repCount / :numScales
+	localmake "polyLen :size1 * 2 * sin (180 / :numSides) 
+	localmake "size2 :polyLen * 0.5 / sin (:angle1 / 2)
+	localmake "size3 :size2 * 0.025
+	localmake "angleOffset 35 * power 2 * (1 - :repCount / :numScales) 3	
+	output [:size1 :size2 :size3 :angleOffset]
+end
+
+to setSpiralGradient :size
+	localmake "colorStops createPList2 [
+		[0 "white] [0.3 "lightyellow] [0.7 "red] [1 "brown]
+	]
+	setFillGradient createRadialGradient pos :size :colorStops
+end
+
+to drawSpiral :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "numSides 12
+	localmake "numScales 50
+	localmake "angle1 360 / :numSides
+	setSpiralGradient :size
+	circle :size
+	setFillColor "white
+	setPenSize :size * 0.004
+	repeat :numScales [
+		localmake "sizes calculateSizes :size repcount :numScales :numSides :angle1
+		localmake "size1 item 1 :sizes
+		localmake "size2 item 2 :sizes
+		localmake "angleOffset item 4 :sizes
+		
+		jumpTo :oldPos
+		setHeading :oldHeading + :angleOffset
+		jumpForward :size1
+		right 90 + :angle1
+
+		setPenColor "black
+		repeat :numSides [
+			arcLeft :angle1 :size2
+			right :angle1 * 2
+		]
+	]
+	setPenSize :size * 0.006
+	repeat :numScales [
+		localmake "sizes calculateSizes :size repcount :numScales :numSides :angle1
+		localmake "size1 item 1 :sizes
+		localmake "size3 item 3 :sizes
+		localmake "angleOffset item 4 :sizes
+		repeat :numSides [
+			
+			jumpTo :oldPos
+			setHeading :oldHeading + :angle1 * repcount + :angleOffset
+			jumpForward :size1
+			circle :size3
+		]
+	]
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to triangles :size
+	localmake "oldHeading heading
+	localmake "oldPos pos
+	localmake "size1 :size
+	localmake "angle 60
+	localmake "size2 :size1 * 0.95
+	localmake "size3 :size2 / cos (:angle / 2)
+
+	; white-out most of the background around the triangles.
+	setPenColor "white
+	setPenSize (:size - :size2) * 2
+	right 90
+	backward :size * 1.25
+	forward :size * 2.51
+	setPenSize :size * 1.2
+	left 90 + :angle / 2
+	repeat 2 [
+		forward :size3 + penSize * 1.2
+		left 180 - :angle
+	]
+	right :angle
+	repeat 2 [
+		forward :size3 + penSize * 1.2
+		left 180 - :angle
+	]
+
+	; Draw the triangle borders.
+	setPenSize :size * 0.05
+	
+	jumpTo :oldPos
+	setHeading :oldHeading
+	setPenColor "black
+	jumpBackward :size1
+	right :angle / 2
+	repeat 3 [
+		forward :size3
+		left 180 - :angle
+	]
+	closePath
+	
+	setHeading :oldHeading
+	jumpTo :oldPos
+	jumpForward :size1 - :size2
+	jumpRight :size3 / 2
+	left 90 - :angle
+	repeat 3 [
+		forward :size3
+		left 180 - :angle
+	]
+	closePath
+end
+
+to drawDesign :size
+	drawSpiral :size * 1.15
+	jumpForward :size * 0.15
+	triangles :size
+end
+
+drawDesign 200

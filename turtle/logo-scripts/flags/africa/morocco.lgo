@@ -1,0 +1,63 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/File:Flag_of_Morocco_(large_stroke).svg
+; Mostly follows construction sheet at:
+; https://en.wikipedia.org/wiki/Flag_of_Morocco#/media/File:Flag_of_Morocco_(construction_sheet).svg
+to moroccoFlag :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "width :height * 3 / 2
+	localmake "A :height / 4 * (sqrt 10 + 2 * sqrt 5) / 2
+	localmake "B :A / 20
+	localmake "greenThickness :B * 0.8
+	localmake "angle1 36 / 2
+	localmake "starRadius :A / 2 / cos :angle1
+	localmake "C :starRadius * sin :angle1
+	localmake "starRadius2 :starRadius * (:C - :B) / :C
+	localmake "starRadius3 mix :starRadius :starRadius2 0.5
+	localmake "A2 :starRadius3 * 2 * cos :angle1
+	localmake "slantedBlackEdgeThickness (:B - :greenThickness) / 2 / cos :angle1
+	localmake "size1a :starRadius * (1 - (sin :angle1)) * tan :angle1
+	localmake "size1 :size1a - :slantedBlackEdgeThickness
+	localmake "slantedGreenThickness :greenThickness / cos :angle1
+	localmake "size2 (:size1 - :slantedGreenThickness) / sin :angle1
+
+	; The 0.84 looks about right in the drawing by eye
+	; but this would be nicer calculated exactly.
+	; Leaving the 0.84 instead of calculating just to save time.
+	localmake "size3 :starRadius * 0.84
+	stripes :width :height ["#c1272d]
+	jumpForward :height / 2
+	localmake "center pos
+	setPenColor "black
+	setPenSize :B
+	jumpForward :starRadius3
+	right 180 - 36 / 2
+	repeat 5 [
+		forward :A2
+		right 180 - 36
+	]
+	closePath
+	setFillColor "#006233
+	setPenSize 0
+	jumpTo :center
+	repeat 5 [
+		setHeading :oldHeading + repcount * 360 / 5
+		jumpForward :starRadius * sin :angle1
+		jumpRight :size1
+		polyStart
+		jumpLeft :slantedGreenThickness
+		left :angle1
+		jumpForward :size2
+		left 180 - :angle1 * 2
+		jumpForward :size3
+		right 90 + :angle1
+		jumpForward :slantedGreenThickness
+		right 90 - :angle1
+		jumpForward :size3 + :greenThickness * ((1 / tan :angle1) - (sin :angle1))
+		polyEnd
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+moroccoFlag 100

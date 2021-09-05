@@ -1,0 +1,66 @@
+; Inspired by the Shell V Power logo at
+; https://djr.com.au/blog/2022/02/23/consistency-and-continuity-key-to-success-for-the-shell-v-power-racing-team/
+; https://eshop-stickers.com/race-sponsors/race-sponsors-stickers/shell-logo-1
+to shellVPowerLogo :height :backgroundColor :starColor
+	localmake "oldState turtleState
+	localmake "radius :height / 2
+	localmake "outerRadius :height * 0.425
+	localmake "innerRadius :height * 0.165
+	localmake "numPoints 10
+	localmake "innerPoints []
+	localmake "outerPoints []
+	setFillColor :backgroundColor
+	setPenSize 0
+	jumpForward :radius
+	circle :radius
+	localmake "center pos
+	setFillColor :starColor
+
+	; Calculate all the point positions.
+	repeat :numPoints [
+		jumpForward :outerRadius
+		queue2 "outerPoints pos
+		jumpTo :center
+		right 360 / :numPoints
+	]
+	left 10
+	repeat :numPoints [
+		jumpForward :innerRadius
+		queue2 "innerPoints pos
+		jumpTo :center
+		right 360 / :numPoints
+	]
+
+	; Fill the star-like shape.
+	repeat :numPoints [
+		localmake "point1Index repcount
+		localmake "point2Index repcount
+		localmake "fromPos item :point1Index :outerPoints
+		localmake "toPos item :point2Index :innerPoints
+		ifelse repcount = 1 [
+			jumpTo :fromPos
+			polyStart
+		] [
+			setHeading towards :fromPos
+			jumpForward distance :fromPos
+		]
+		setHeading towards :toPos
+		jumpForward distance :toPos
+	]
+	polyEnd
+	setTurtleState :oldState
+end
+
+make "shellRed "#e30613
+make "height 100
+make "separation :height * 4
+jumpLeft :separation
+shellVPowerLogo :height :shellRed "white
+jumpRight :separation
+stripes :separation :height [:shellRed]
+shellVPowerLogo :height "white :shellRed
+jumpRight :separation
+stripes :separation :height ["black]
+shellVPowerLogo :height "white "black
+jumpRight :separation
+shellVPowerLogo :height "black "white

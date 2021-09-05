@@ -1,0 +1,30 @@
+REM copied from https://www.schoolfreeware.com/assets/files/4CornerSquareSide.bas
+DIM DH AS INTEGER
+DIM DW AS INTEGER
+DIM Col AS INTEGER
+DIM x AS INTEGER
+
+DW = _DESKTOPWIDTH
+DH = _DESKTOPHEIGHT
+
+SCREEN _NEWIMAGE(DW, DH, 256)
+_SCREENMOVE 0, 0
+_MOUSEHIDE
+
+DO
+
+    Col = 255
+    FOR x = 1 TO DW
+        _LIMIT 100
+        LINE (0, 0)-(x, x), Col, B
+        LINE (DW, DH)-(DW - x, DH - x), Col, B
+        LINE (0, DH)-(x, DH - x), Col, B
+        LINE (DW, 0)-(DW - x, x), Col, B
+        Col = Col - 1
+        IF Col = -1 THEN
+            Col = 255
+        END IF
+        _DISPLAY
+    NEXT
+LOOP UNTIL INKEY$ <> ""
+_MOUSESHOW
