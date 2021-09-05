@@ -1,0 +1,451 @@
+; Inspired by:
+; https://en.wikipedia.org/wiki/File:COLECO_VISION_LOGO.svg
+; Referenced from:
+; https://en.wikipedia.org/wiki/ColecoVision
+; ColecoVision is a gaming console.
+; Telly Turtle is a Logo-related educational
+; tool that ran on ColecoVision.
+
+make "letterWidths createPList2 [
+	["c 1.095] ["e 1.098] ["i 0.445] ["l 0.87] ["n 1.28]
+	["o 1.279] ["s 1.15] ["v 1.52]
+]
+make "letterWidths2 createPList2 [
+	["c 0.931] ["e 0.928] ["i 0.337] ["l 0.71] ["n 1.1]
+	["o 1.14] ["s 0.995] ["v 1.305]
+]
+
+make "arcRadiusRatio1 0.35
+make "arcRadiusRatio2 0.1
+
+to letterCBackground :height
+	localmake "arcRadius1 :height * :arcRadiusRatio1
+	localmake "arcRadius2 :height * :arcRadiusRatio2
+	localmake "innerHeight :height - :arcRadius1 * 2
+	localmake "arcLinesInfo [[-90 :arcRadiusRatio1]
+		[(getProperty "letterWidths "c) - :arcRadiusRatio1 - :arcRadiusRatio2]
+		[-90 :arcRadiusRatio2]]
+	jumpForward :arcRadius1
+	polyStart
+	jumpForward :innerHeight
+	arcLines :arcLinesInfo :height
+	jumpForward :height - :arcRadius2 * 2
+	arcLines reverse :arcLinesInfo :height
+	polyEnd
+end
+
+to letterEBackground :height
+	localmake "width :height * getProperty "letterWidths "e
+	localmake "arcRadius1 :height * :arcRadiusRatio1
+	localmake "arcRadius2 :height * :arcRadiusRatio2
+	jumpRight :arcRadius1
+	polyStart
+	jumpRight :width - :arcRadius1
+	jumpForward :height - :arcRadius2
+	arcLeft 90 :arcRadius2
+	jumpForward :width - :arcRadius2
+	left 90
+	jumpForward :height - :arcRadius1
+	arcLeft 90 :arcRadius1
+	polyEnd
+end
+
+to letterIBackground :height
+	localmake "width :height * getProperty "letterWidths "i
+	localmake "arcRadius :height * :arcRadiusRatio2
+	localmake "innerWidth :width - :arcRadius
+	localmake "innerHeight :height - :arcRadius
+	jumpRight :arcRadius
+	polyStart
+	jumpRight :innerWidth
+	jumpForward :innerHeight
+	arcLeft 90 :arcRadius
+	jumpForward :innerWidth
+	left 90
+	jumpForward :innerHeight
+	arcLeft 90 :arcRadius
+	polyEnd
+end
+
+to letterLBackground :height
+	localmake "width :height * getProperty "letterWidths "l
+	localmake "arcRadius1 :height * :arcRadiusRatio1
+	localmake "arcRadius2 :height * :arcRadiusRatio2
+	localmake "size1 :height * 0.3
+	localmake "size2 :height * 0.32
+	jumpRight :arcRadius1
+	polyStart
+	jumpRight :width - :arcRadius1
+	jumpForward :size1
+	arcLeft 90 :arcRadius2
+	jumpForward :size2
+	jumpRight :height - :size1 - :arcRadius2 * 2
+	right 90
+	arcLeft 90 :arcRadius2
+	jumpForward :width - :size2 - :arcRadius2 * 2
+	jumpLeft :height - :arcRadius1
+	left 90
+	arcLeft 90 :arcRadius1
+	polyEnd	
+end
+
+to letterNBackground :height
+	localmake "width :height * getProperty "letterWidths "n
+	localmake "arcRadius1 :height * :arcRadiusRatio1
+	localmake "arcRadius2 :height * :arcRadiusRatio2
+	localmake "size1 :height * 0.35
+	localmake "size2 :height * 0.6
+	jumpRight :arcRadius2
+	polyStart
+	jumpRight :size1
+	jumpForward :size2
+	jumpRight :width - (:size1 + :arcRadius2) * 2
+	jumpBackward :size2 - :arcRadius2
+	right 180
+	arcLeft 90 :arcRadius2
+	jumpForward :size1
+	left 90
+	jumpForward :height - :arcRadius1
+	arcLeft 90 :arcRadius1
+	jumpForward :width - :arcRadius1
+	left 90
+	jumpForward :height - :arcRadius2
+	arcLeft 90 :arcRadius2
+	polyEnd
+end
+
+to letterOBackground :height
+	localmake "width :height * getProperty "letterWidths "o
+	localmake "arcRadius :height * :arcRadiusRatio1
+	jumpForward :height / 2
+	jumpRight :width / 2
+	roundRect :width :height :arcRadius
+end
+
+to letterSBackground :height
+	localmake "width :height * getProperty "letterWidths "s
+	localmake "arcRadius1 :height * :arcRadiusRatio1
+	localmake "arcRadius2 :height * :arcRadiusRatio2
+	localmake "innerHeight :height - :arcRadius1 - :arcRadius2
+	localmake "innerWidth :width - :arcRadius1 - :arcRadius2
+	localmake "arcs [[90 :arcRadius1] [:innerHeight] [90 :arcRadius2]]
+	jumpRight :arcRadius2
+	polyStart
+	jumpRight :innerWidth
+	right 90
+	arcLines :arcs 1
+	jumpForward :innerWidth
+	arcLines :arcs 1
+	polyEnd
+end
+
+to letterVBackground :height
+	localmake "oldHeading heading
+	localmake "width :height * getProperty "letterWidths "v
+	localmake "size1 :height * 0.44
+	localmake "size2 (:width - :size1) / 2
+	localmake "angle1 arcTan :height / :size2
+	localmake "angle2 90 - :angle1
+	localmake "angle3 (90 - :angle1) * 1.04
+	localmake "angle4 90 - :angle3
+	localmake "size3 :height * 0.5
+	localmake "size4 (:width - :size3 * 2) / 2 / cos :angle4
+	jumpRight :size2
+	polyStart
+	jumpRight :size1
+	right :angle2
+	jumpForward :height / cos :angle2
+	setHeading :oldHeading - 90
+	jumpForward :size3
+	left :angle4
+	jumpForward :size4
+	setHeading :oldHeading - :angle3
+	jumpForward :size4
+	left :angle4
+	jumpForward :size3
+	polyEnd
+end
+
+to drawBackgroundString :height :s
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	setPenSize 0
+	setFillColor "black
+	repeat count :s [
+		localmake "letter item repcount :s
+		localmake "procName (word "letter :letter "Background)
+		localmake "pos1 pos
+		(invoke :procName :height)
+		jumpTo :pos1
+		setHeading :oldHeading
+		jumpRight (:height * getProperty "letterWidths2 :letter)
+	]
+	setTurtleState :oldState
+end
+
+to colocoVisionBackground :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "fontHeight :height * 0.5314
+	jumpLeft :height * 1.57
+	jumpForward :height * 0.4686
+	drawBackgroundString :fontHeight "coleco
+	jumpTo :oldPos
+	jumpLeft :height * 1.438
+	drawBackgroundString :fontHeight "visi
+	; A couple letters don't use the same width as before so
+	; we have to position them individually.
+	jumpRight :height * 1.56
+	letterOBackground :fontHeight
+	jumpTo :oldPos
+	jumpRight :height * 0.72
+	letterNBackground :fontHeight
+
+	; Fill in a couple empty spaces.
+	setTurtleState :oldState
+	setPenColor "black
+	jumpForward :height - :fontHeight
+	jumpLeft :height * 0.4
+	setPenSize :height * 2
+	setLineCap "butt
+	forward :height * 0.1
+
+	setTurtleState :oldState
+end
+
+to letterCForeground :height
+	localmake "width :height * 1.114
+	localmake "size1 :height * 0.25
+	localmake "arcRadius1 :height * 0.312
+	localmake "arcRadius2 :height * 0.13
+	localmake "innerWidth1 :width - :arcRadius1
+	localmake "innerWidth2 :height * 0.675
+	jumpRight :arcRadius1
+	polyStart
+	jumpRight :innerWidth1
+	jumpForward :size1
+	left 90
+	jumpForward :innerWidth2
+	arcRight 90 :arcRadius2
+	jumpForward :height - (:size1 + :arcRadius2) * 2
+	arcRight 90 :arcRadius2
+	jumpForward :innerWidth2
+	jumpLeft :size1
+	left 180
+	jumpForward :innerWidth1
+	arcLeft 90 :arcRadius1
+	jumpForward :height - :arcRadius1 * 2
+	arcLeft 90 :arcRadius1
+	polyEnd
+end
+
+to letterEForeground :height
+	localmake "width :height * 1.117
+	localmake "size1 :height * 0.25
+	localmake "size2 :height * 0.734
+	localmake "size3 :height * 0.68
+	localmake "arcRadius1 :height * 0.312
+	localmake "arcRadius2 :height * 0.072
+	localmake "arcs [[:size2] [180 :arcRadius2] [:size3]]
+	jumpRight :arcRadius1
+	left 90
+	polyStart
+	arcRight 90 :arcRadius1
+	jumpForward :height - :arcRadius1
+	jumpRight :width
+	jumpBackward :size1
+	left 90
+	arcLines :arcs 1
+	jumpRight :height - 2 * (:size1 + 2 * :arcRadius2)
+	right 180
+	arcLines reverse :arcs 1
+	jumpRight :size1
+	polyEnd
+end
+
+to letterIForeground :height
+	localmake "width :height * 0.31
+	setPenColor fillColor
+	if fillGradientp [
+		setPenGradient fillGradient
+	]
+	jumpRight :width / 2
+	setLineCap "butt
+	setPenSize :width
+	forward :height
+end
+
+to letterLForeground :height
+	localmake "width :height * 0.853
+	localmake "outerArcRadius :height * 0.312
+	localmake "innerArcRadius :height * 0.126
+	localmake "size1 :height * 0.31
+	localmake "size2 :height * 0.624
+	jumpRight :outerArcRadius
+	polyStart
+	left 90
+	arcRight 90 :outerArcRadius
+	jumpForward :height - :outerArcRadius
+	jumpRight :size1
+	right 180
+	jumpForward :size2
+	arcLeft 90 :innerArcRadius
+	jumpForward :width - :innerArcRadius - :size1
+	jumpRight :height - :size2 - :innerArcRadius
+	polyEnd
+end
+
+to letterNForeground :height
+	localmake "width :height * 1.346
+	localmake "outerArcRadius :height * 0.312
+	localmake "innerArcRadius :height * 0.126
+	localmake "size1 :height * 0.31
+	localmake "size2 :height * 0.625
+	polyStart
+	jumpForward :height
+	jumpRight :width - :outerArcRadius
+	right 90
+	arcRight 90 :outerArcRadius
+	jumpForward :height - :outerArcRadius
+	jumpRight :size1
+	right 180
+	jumpForward :size2
+	arcLeft 90 :innerArcRadius
+	jumpForward :width - (:size1 + :innerArcRadius) * 2
+	arcLeft 90 :innerArcRadius
+	jumpForward :size2
+	polyEnd
+end
+
+to letterOForeground :height
+	localmake "width :height * 1.349
+	localmake "outerArcRadius :height * 0.312
+	localmake "innerArcRadius :height * 0.124
+	localmake "innerWidth1 :width - :outerArcRadius * 2
+	localmake "innerHeight1 :height - :outerArcRadius * 2
+	localmake "innerWidth2 :height * 0.483
+	localmake "innerHeight2 :height * 0.253
+	jumpRight :outerArcRadius
+	right 90
+	polyStart
+	repeat 2 [
+		jumpForward :innerWidth1
+		arcLeft 90 :outerArcRadius
+		jumpForward :innerHeight1
+		arcLeft 90 :outerArcRadius
+	]
+	jumpForward (:width - :innerWidth2) / 2  - :outerArcRadius
+	jumpLeft (:height - :innerHeight2 - 2 * :innerArcRadius) / 2
+	left 180
+	; inner hallow shape
+	repeat 2 [
+		arcRight 90 :innerArcRadius
+		jumpForward :innerHeight2
+		arcRight 90 :innerArcRadius
+		jumpForward :innerWidth2
+	]
+	polyEnd
+end
+
+to letterSForeground :height
+	localmake "width :height * 1.21
+	localmake "outerArcRadius :height * 0.312
+	localmake "innerArcRadius :height * 0.063
+	localmake "size1 :width - :outerArcRadius
+	localmake "size2 :width - 2.14 * :outerArcRadius
+	localmake "size3 :size2 + :outerArcRadius - :height * 0.045
+	localmake "size4 :height * 0.25
+	localmake "size5 :width * 0.975 - :outerArcRadius
+	localmake "arcs [[180 :outerArcRadius] [:size2] [-180 :innerArcRadius]]
+	right 90
+	polyStart
+	jumpForward :size1
+	arcLines :arcs 1
+	jumpForward :size3
+	jumpLeft :size4
+	left 180
+	jumpForward :size5
+	arcLines :arcs 1
+	jumpForward :size1 + :size3 - :size5
+	polyEnd
+end
+
+to letterVForeground :height
+	localmake "oldHeading heading
+	localmake "arcRadius :height * 0.042
+	localmake "width :height * 1.478
+	localmake "size1 :height * 0.4
+	localmake "size2 (:width - :size1) / 2
+	localmake "size3 :height * 0.335
+	localmake "size4 :height * 0.773
+	localmake "angle1 arcTan :height / :size2
+	localmake "angle2 90 - :angle1
+	localmake "angle3 61.7
+	jumpRight :size2
+	polyStart
+	jumpRight :size1
+	right :angle2
+	jumpForward :height / sin :angle1
+	setHeading :oldHeading
+	jumpLeft :size3
+	left 90 + :angle3
+	jumpForward :size4
+	arcRight 2 * :angle3 :arcRadius
+	jumpForward :size4
+	setHeading :oldHeading
+	jumpLeft :size3
+	polyEnd
+end
+
+to drawForegroundString :fontHeight :letterWidths :s
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	repeat count :s [
+		localmake "letter item repcount :s
+		localmake "procName (word "letter :letter "Foreground)
+		localmake "pos1 pos
+		setPenSize 0
+		(invoke :procName :fontHeight)
+		jumpTo :pos1
+		setHeading :oldHeading
+		jumpRight :fontHeight * item repcount :letterWidths
+	]
+	setTurtleState :oldState
+end
+
+to colecoVisionColourfulGradient :height
+	localmake "oldPos pos
+	localmake "colorStops createPList2 [
+		[0 "#ff819c] [0.11 "#f35c3d] [0.23 "#f35c3d] [0.35 "#e99840]
+		[0.4 "#e99840] [0.6 "#efe562] [0.7 "#a7c760] [0.9 "#92c391] [1 "#63bce9]
+	]
+	jumpLeft :height * 1.52
+	localmake "fromPos pos
+	jumpRight :height * 2.8
+	setFillGradient createLinearGradient :fromPos pos :colorStops "pad
+	jumpTo :oldPos
+end
+
+to colecoVisionLogoForeground :height
+	localmake "oldPos pos
+	localmake "letterWidthsTop [1.17 1.41 0.908 1.16 1.145 0.8]
+	localmake "letterWidthsBottom [1.56 0.395 1.265 0.38 1.41 0.8]
+	localmake "fontHeight :height * 0.424
+	colecoVisionColourfulGradient :height
+	jumpForward :height * 0.52
+	jumpLeft :height * 1.513
+	drawForegroundString :fontHeight :letterWidthsTop "coleco
+	jumpTo :oldPos
+	jumpForward :height * 0.053
+	jumpLeft :height * 1.348
+	drawForegroundString :fontHeight :letterWidthsBottom "vision
+end
+
+to colecoVisionLogo :height
+	colocoVisionBackground :height
+	colecoVisionLogoForeground :height
+end
+
+setFillColor "black
+setPenSize 0
+colecoVisionLogo 100
