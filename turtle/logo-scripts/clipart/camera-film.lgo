@@ -1,0 +1,46 @@
+to drawRepeatedStripes :widthTotal :height :stripeWidthTotal :drawnStripeWidth :color
+	localmake "oldPos pos
+	forever [
+		localmake "stripeHeight min :drawnStripeWidth :widthTotal
+		if :stripeHeight <= 0 [
+			break
+		]
+		stripes :height :stripeHeight [:color]
+		jumpForward :stripeWidthTotal
+		localmake "widthTotal :widthTotal - :stripeWidthTotal
+	]
+	jumpTo :oldPos
+end
+
+; Inspired by
+; https://publicdomainvectors.org/en/free-clipart/Filmstrip-vector-image/10148.html
+to film :height :width
+	localmake "oldState turtleState
+	if :width <= 0 [
+		stop
+	]
+	localmake "frameSeparation :height * 0.02
+	localmake "sideThicknessTotal :height * 0.15
+	localmake "sideThickness1 :sideThicknessTotal * 0.28
+	localmake "sideThickness2 :sideThicknessTotal - :sideThickness1
+	localmake "frameWidth2 :height - :sideThicknessTotal * 2
+	localmake "frameWidthTotal :frameWidth2 * 3 / 2
+	localmake "frameWidth1 :frameWidthTotal - :frameSeparation
+	localmake "notchWidthTotal :frameWidthTotal / 6
+	localmake "notchWidth1 :notchWidthTotal * 0.7
+	stripes :width :sideThickness1 ["black]
+	jumpForward :sideThickness2
+	stripes :width :height - :sideThickness2 * 2 ["black]
+	jumpForward :height - :sideThickness2 - :sideThickness1 
+	stripes :width :sideThickness1 ["black]
+	jumpLeft :width / 2
+	jumpBackward :height / 2 - :sideThickness1
+	right 90
+	drawRepeatedStripes :width :height :notchWidthTotal :notchWidth1 "black
+	drawRepeatedStripes :width :frameWidth2 :frameWidthTotal :frameWidth1 "white
+	
+	setTurtleState :oldState
+end
+
+setScreenColor "#ddd
+film 100 1000

@@ -1,0 +1,147 @@
+; copied from: https://resources.terrapinlogo.com/logolib/swing_game.html
+TO MAIN
+    CT DRAW
+    MAKE "SCORE 0
+    PR "|This is the Turtle Rope Swing Game. It was created by John Hayes in 2006.|
+    PR "|The lowest total score wins.|
+    PR "|By playing the game you will learn about angles and how to work out their sizes.|
+    PR "|If you have not played this game before or you want to see the demo, press D.|
+    PR "|If you want to skip the demo and start straight away, press S.|
+    PR "|If you want to find out about the game that inspired this one, press F.|
+    MAKE "WHICH RC
+    IF :WHICH = "D DEMO
+    IF :WHICH = "S ANGLE 1
+    IF :WHICH = "F CT FIND.OUT
+END
+
+TO FIND.OUT
+    PR "|This game was inspired by the Mathematical Merry-Go-Round Game,|
+    PR "|decribed by Ron Tzur and Matthew Clark in "Riding the Mathematical Merry-Go-Round", |
+    PR "|Teaching Children Mathematics, Volume 12, number 2 (April 2006): 388 - 393.|
+    PR "|Press S to start the Turtle Rope Swing Game, or press D to see the demo.|
+    MAKE "WHICH RC
+    IF :WHICH = "D CT DEMO
+    IF :WHICH = "S CT ANGLE 1
+END
+
+TO ANGLE :COUNTER
+    IF :COUNTER = 11 CT PR (SE "|You have had 10 turns. Your total score is| WORD :SCORE ". "|Press the spacebar to quit.|) IGNORE RC CT DRAW STOP
+    CT DRAW
+    SETPC "BLUE HT
+    SETW 6
+    DOT [0 0]
+    SETW 1
+    SETPC "RED
+    FD 140
+    RT 90
+    MAKE "DEGREES 4 + RANDOM 352
+    MAKE "RADIUS.A 75 + RANDOM 65
+    MAKE "RADIUS.B 10 + RANDOM 50
+    MAKE "CIRCUM.A 2 * PI * :RADIUS.A * :DEGREES / 360
+    MAKE "CIRCUM.B 2 * PI * :RADIUS.B * :DEGREES / 360
+    PU ARCR 140 :DEGREES PD
+    SETH TOWARDS [0 0]
+    FD 140
+    SETH 0
+    ASK [1 2] [SETPC "BLACK ST]
+    ASK 1 [PU FD :RADIUS.A RT 90 FD 20 PD TT "A PU BK 20 PD]
+    ASK 2 [PU FD :RADIUS.B RT 90 FD 20 PD TT "B PU BK 20 PD]
+    NEXT
+END
+
+TO DEMO
+    CT DRAW
+    SETPC "BLUE HT
+    SETW 6
+    DOT [0 0]
+    PU FD 6 PD
+    CT
+    PR "|In the centre of the screen is a blue dot.|
+    PR "|Imagine that a person is standing on the blue dot with a long invisible rope.|
+    PR "|The person swings around any turtle holding onto the other end of the rope.|
+    PR "|As the turtle is swung around it draws the path it travels through the air.|
+    PR "|Press the spacebar to see a turtle being swung around.|
+    IGNORE RC
+    CT SETPC "BLACK HT
+    SETW 1 PU FD 100 RT 90 PD ST WAIT 500 SETSPEED 0.8 ARCR 100 270 WAIT 500
+    PR "|Press the spacebar to continue.|
+    IGNORE RC
+    CT
+    PR "|See how good you can become at guessing how much a turtle is swung around.|
+    PR "|To help you learn about angles, the turtle will be swung between two sides of an angle.|
+    PR "|Press the spacebar when you are ready to start.|
+    IGNORE RC
+    SETSPEED 1
+    ANGLE 1
+END
+
+TO NEXT
+    PR "|Here is an angle. The person with the rope is on the blue dot at the corner point.|
+    PR "|Turtle A will be swung around on the invisible rope to the other side of the angle.|
+    PR "|Press the spacebar to continue.|
+    IGNORE RC
+    CT
+    PR "|Watch it be swung around.|
+    WAIT 1000
+    MAKE "TOSS RANDOM 2
+    IF :TOSS = 1 THEN ASK 1 [SETSPEED 0.5 SETH 90 ARCR :RADIUS.A :DEGREES WAIT 1000 HT]
+    IF :TOSS = 2 THEN ASK 1 [SETSPEED 0.5 SETH 270 ARCL :RADIUS.A (360 - :DEGREES) WAIT 1000 HT]
+    WAIT 1000 HT
+    CT
+    IF :TOSS = 2 THEN MAKE "CIRCUM.A 2 * PI * :RADIUS.A * (360 - :DEGREES) / 360 MAKE "CIRCUM.B 2 * PI * :RADIUS.B * (360 - :DEGREES) / 360
+    IF :TOSS = 2 THEN MAKE "DEGREES 360 - :DEGREES
+    PR (SE "|The path Turtle A travelled through the air was| ROUND :CIRCUM.A "|turtle steps long.|)
+    PR "|It was swung around the corner point a certain number of little turns called degrees.|
+    PR (SE "|When turtle B is given the same swing it will travel through the air on a path| ROUND :CIRCUM.B "|turtle steps long.|)
+    PR "|What is the number of degrees that turtle B needs to be turned on its ride through the air?|
+    PR "|(The difference between the number you give turtle B and the exact number it needs will be your score.)|
+    PR "|Enter your number.|
+    MAKE "RESPONSE READ
+    IF :RESPONSE > 360 CT PR "|Your number should not be more than 360. Try again| MAKE "RESPONSE READ
+    MAKE "DIFF ABS :DEGREES - :RESPONSE
+    MAKE "SCORE :SCORE + :DIFF
+    IF :TOSS = 1 ASK 2 [SETSPEED 0.5 SETH 90 ARCR :RADIUS.B :RESPONSE WAIT 1000 HT]
+    IF :TOSS = 2 ASK 2 [SETSPEED 0.5 SETH 270 ARCL :RADIUS.B :RESPONSE WAIT 1000 HT]
+    CT
+    PR (SE "|You gave turtle B| :RESPONSE "|as the number of degrees for its ride through the air.|)
+    PR (SE "|The number of degrees for turtle A's ride was| WORD :DEGREES ". :DEGREES "|is the number turtle B needed.|)
+    PR (SE "|The difference between| :RESPONSE "|and| :DEGREES "|is| WORD :DIFF ", "|so your score is now| WORD :SCORE ".)
+    PR "|Press the spacebar to continue.|
+    IGNORE RC
+    ANGLE :COUNTER + 1
+END
+
+TO ARCL :RADIUS :DEGREES
+        LOCAL "STEP LOCAL "REM
+        MAKE "STEP 2 * :RADIUS * 3.14 / 36
+        MAKE "REM REMAINDER :DEGREES 10
+        REPEAT :DEGREES / 10 [LT 5 FD :STEP LT 5]
+        IF :REM > 0 [FD :STEP * :REM / 10 LT :REM]
+END
+
+TO ARCR :RADIUS :DEGREES
+        LOCAL "STEP LOCAL "REM
+        MAKE "STEP 2 * :RADIUS * 3.14 / 36
+        MAKE "REM REMAINDER :DEGREES 10
+        REPEAT :DEGREES / 10 [RT 5 FD :STEP RT 5]
+        IF :REM > 0 [FD :STEP * :REM / 10 RT :REM]
+END
+
+MAKE "SCORE "15
+MAKE "DEGREES "212
+MAKE "TOSS "1
+MAKE "CIRCUM.A "284.91
+MAKE "CIRCUM.B "214.61
+MAKE "WHICH "S
+MAKE "ARC "45
+MAKE "ARC.2 "330
+MAKE "DIFF "7
+MAKE "RADIUS.A "77
+MAKE "RADIUS.B "58
+MAKE "RAY.1 "148
+MAKE "RAY.2 "84
+MAKE "FACING "149.98
+MAKE "RESPONSE "205
+MAKE "POS.B [0 79]
+
+MAIN
