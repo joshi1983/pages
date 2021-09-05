@@ -1,0 +1,375 @@
+; Inspired by:
+; https://www.pinterest.ca/pin/56154326592190419/
+; This is a reimplementation from scratch of another example
+; drawing the Eiffel Tower.
+; Each works a little differently and looks a little different.
+; Both examples are shared of the same building for
+; anyone wanting to learn from want to learn from the differences.
+
+to drawTopStageArcs :height
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "arcs [
+		[0.105 0.047 [[-20 0.2] [-49.063 0.1140239]]]
+		[0.12 0.353 [[0.04] [30 0.04] [35 0.2]]]
+		[0.09 0.353 [[0.025] [30 0.04] [30 0.2]]]
+	]
+	repeat count :arcs [
+		localmake "arcInfo item repcount :arcs
+		repeat 2 [
+			localmake "scale :height * sign repcount - 1.5
+			jumpRight :scale * first :arcInfo
+			jumpForward :height * item 2 :arcInfo
+			arcLines last :arcInfo :scale
+			jumpTo :oldPos
+			setHeading :oldHeading
+		]
+	]
+end
+
+to drawTopStage :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "height1 :height * 0.72
+	localmake "height2 :height * 0.3
+	localmake "rects [[0.213 0.365 0.06] [0.258 0.35 0.03]
+	[0.313 0.24 0.08] [0.0238 0.21 0.045] [0.595 0.055 0.25]]
+	setLineCap "butt
+	setLineJoinStyle "miter
+	drawTopStageArcs :height
+	setFillColor "gray
+	stripes penSize :height * 0.25 [penColor]
+	jumpForward :height - :height2 / 2
+	rect :height * 0.025 :height2 - penSize
+	jumpTo :oldPos
+	jumpForward :height1 / 2
+	setFillColor "white
+	repeat count :rects [
+		jumpTo :oldPos
+		localmake "rect item repcount :rects
+		localmake "yOffset :height * first :rect
+		localmake "w :height * item 2 :rect
+		localmake "h :height * item 3 :rect
+		jumpForward :yOffset
+		rect :w :h
+	]
+	setTurtleState :oldState
+end
+
+to crossedParallelogram :width :height :numLevels :angle
+	localmake "oldPos pos
+	localmake "stepHeight :height / :numLevels
+	repeat :numLevels [
+		crossedTrapezoid :width :width :stepHeight :angle true
+		jumpForward :stepHeight
+		jumpRight :stepHeight * tan :angle
+	]
+	jumpTo :oldPos
+end
+
+to crossedTrapezoid :baseWidth :topWidth :height :angle :drawMidLine?
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "points []
+	localmake "leftAngle arcTan ((:height * tan :angle) + (:topWidth - :baseWidth) / 2) / :height
+	localmake "rightAngle arcTan ((:height * tan :angle) - (:topWidth - :baseWidth) / 2) / :height
+
+	right :angle
+	stripes penSize :height / cos :angle [penColor]
+	setHeading :oldHeading
+	jumpRight :baseWidth / 2
+	queue2 "points pos
+	right :leftAngle
+	polyStart
+	jumpForward :height / cos :leftAngle
+	queue2 "points pos
+	setHeading :oldHeading
+	jumpLeft :topWidth
+	queue2 "points pos
+	left 180 - :rightAngle
+	jumpForward :height / cos :rightAngle
+	queue2 "points pos
+	polyEnd
+	repeat 2 [
+		localmake "prevPoint item repcount :points
+		localmake "nextPoint item repcount + 2 :points
+		jumpTo :prevPoint
+		setHeading towards :nextPoint
+		forward distance :nextPoint
+	]
+	if :drawMidLine? [
+		jumpTo mix :prevPoint :nextPoint 0.5
+		setHeading :oldHeading
+		jumpBackward penSize / 2
+		stripes (:baseWidth + :topWidth) / 2 penSize [penColor]
+	]
+	setTurtleState :oldState
+end
+
+to drawRail :width :height :numRails
+	localmake "oldPos pos
+	repeat :numRails [
+		jumpLeft (repRatio - 0.5) * :width
+		stripes penSize :height [penColor]
+		jumpTo :oldPos
+	]
+end
+
+to drawBase :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "separation :height * 2.05
+	localmake "feetHeight :height * 0.1
+	localmake "sideAngle 30
+	localmake "crossWidth :height * 0.35
+	localmake "sideLength2 (:height - :feetHeight) / cos :sideAngle
+	localmake "h :height * 0.14
+	localmake "thickness1 :height * 0.04
+	localmake "baseRailingThickness :height * 0.05
+	localmake "baseRailingHeight :height * 0.15
+	localmake "archTop :height - :h - :baseRailingThickness - :thickness1
+	localmake "archTopWidth :separation + :crossWidth - 2 * (:archTop - :feetHeight) * tan :sideAngle
+	localmake "archTopWidth2 :archTopWidth - :h * 2 * tan :sideAngle
+	localmake "archTopWidth3 :archTopWidth2 + :height * 0.06
+	localmake "radiatingRadius :height * 0.12 + :archTop
+	localmake "innerRadius :radiatingRadius * 0.9
+	localmake "innerLines []
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		localmake "angle :sign * -:sideAngle
+		jumpRight :sign * :separation / 2
+		stripes :height * 0.5 :height * 0.1 [penColor]
+		jumpForward :feetHeight
+		crossedParallelogram :crossWidth :height * 0.575 3 :angle
+		jumpRight :sign * :crossWidth / 2
+		right :angle
+		stripes penSize :sideLength2 [penColor]
+		setHeading :oldHeading
+		jumpLeft :sign * :crossWidth
+		right :angle
+		localmake "pos1 pos
+		forward :sideLength2
+		queue2 "innerLines [:pos1 pos]
+		setHeading :oldHeading
+		jumpTo :oldPos
+	]
+	jumpForward :archTop
+	stripes :archTopWidth penSize [penColor]
+	isoTrapezoid :archTopWidth :archTopWidth2 :h
+	localmake "midPos pos
+	jumpLeft :height
+	queue2 "innerLines [:midPos pos]
+	jumpTo :midPos
+	jumpBackward :radiatingRadius - :innerRadius
+	localmake "midPos2 pos
+	jumpTo :midPos
+	drawRail :archTopWidth2 :h 19
+	jumpForward :h + :thickness1 / 2
+	setFillColor "white
+	rect :archTopWidth2 :thickness1
+	jumpForward :thickness1 / 2
+	isoTrapezoid :archTopWidth2 :archTopWidth3 :baseRailingThickness
+	jumpForward :baseRailingThickness + :baseRailingHeight / 2
+	setFillColor transparent
+	rect :archTopWidth2 :baseRailingHeight
+	jumpBackward :baseRailingHeight / 2
+	drawRail :archTopWidth2 :baseRailingHeight 10
+	jumpTo :oldPos
+	jumpBackward :radiatingRadius - :archTop
+	localmake "center pos
+	jumpBackward :height * 0.07
+	localmake "center2 pos
+	repeat 20 [
+		jumpTo :center
+		setHeading :oldHeading + (repRatio - 0.5) * 70
+		localmake "d distanceToLines :innerLines
+		if :d > :radiatingRadius [
+			jumpForward :d
+			backward :d - :radiatingRadius
+		]
+	]
+	jumpTo last first :innerLines
+	setHeading :oldHeading + 180 + :sideAngle
+	jumpForward distanceToCircle :center :radiatingRadius
+	localmake "arcAngle 4 * arcSin (distance :midPos) / 2 / :radiatingRadius
+	setHeading (towards :center) - 90
+	arcRight :arcAngle :radiatingRadius
+	setHeading :oldHeading + 180 - :sideAngle
+	jumpForward distanceToCircle :center2 :radiatingRadius
+	setHeading (towards :center2) + 90
+	localmake "arcAngle 4 * arcSin (distance :midPos2) / 2 / :radiatingRadius
+	arcLeft :arcAngle :radiatingRadius
+	setTurtleState :oldState
+end
+
+to getMiddleWidthRatio :shapeInfo
+	output ((first :shapeInfo) - (item 2 :shapeInfo) / 2) * 2
+end
+
+to drawCrossPieces :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "topShapes [0.3575 0.0328 [0.037 0.037] [0.033 0.035] [0.029 0.035] [0.025 0.035]
+		[0.021 0.033] [0.019 0.03] [0.017 0.03] [0.015 0.03 -1]
+		] 
+	localmake "info [
+		[0.171 0.035 [0.09 0.06] [0.0765 0.053] [0.066 0.05] [0.057 0.043]
+		[0.05 0.041 -1]]
+		:topShapes
+	]
+	jumpForward :height * 0.171
+	repeat count :info [
+		jumpTo :oldPos
+		localmake "shapes item repcount :info
+		localmake "h :height * item 2 :shapes
+		jumpForward :height * first :shapes
+		for ["i 3 count :shapes] [
+			localmake "crossInfo item :i :shapes
+			localmake "width :height * item 2 :crossInfo
+			localmake "topWidth :width
+			localmake "pos1 pos
+			localmake "angle 0
+			if 2 = count :crossInfo [
+				if :i < count :shapes [
+					localmake "nextCrossInfo item :i + 1 :shapes
+					localmake "delta :height * ((first :crossInfo) - first :nextCrossInfo)
+					localmake "angle arcTan :delta / :h
+					localmake "topWidth :height * item 2 :nextCrossInfo
+				]
+				repeat 2 [
+					localmake "sign sign repcount - 1.5
+					jumpRight :sign * :height * item 1 :crossInfo			
+					crossedTrapezoid :width :topWidth :h :sign * -:angle false
+					jumpTo :pos1
+				]
+			]
+			jumpForward :h
+		]
+	]
+	jumpTo :oldPos
+	jumpForward :height * first last :info
+	localmake "h :height * item 2 item 2 :info
+	for ["i 3 7] [
+		localmake "shapeInfo item :i :topShapes
+		localmake "nextShapeInfo item :i + 1 :topShapes
+		localmake "baseWidth :height * (getMiddleWidthRatio :shapeInfo)
+		localmake "topWidth :height * (getMiddleWidthRatio :nextShapeInfo)
+		crossedTrapezoid :baseWidth :topWidth :h 0 false
+		jumpForward :h
+	]
+	localmake "minW :height * 0.018
+	localmake "maxW :height * 0.034
+	repeat 12 [
+		localmake "h :height * mix 0.018 0.033 repRatio
+		localmake "nextRepRatio repcount / 11
+		localmake "baseWidth mix :minW :maxW repRatio
+		localmake "topWidth mix :minW :maxW min 1 :nextRepRatio
+		localmake "angle arcTan abs (:baseWidth - :topWidth ) / 2 / :h
+		localmake "pos2 pos
+		repeat 2 [
+			localmake "sign sign repcount - 1.5
+			jumpRight :sign * :baseWidth / 2
+			crossedTrapezoid :baseWidth :topWidth :h :sign * -:angle false
+			jumpTo :pos2
+		]
+		jumpForward :h
+	]
+	setTurtleState :oldState
+end
+
+to transformMiddlePlatformRatio :ratio :factor
+	localmake "ratio :ratio - 0.5
+	localmake "sign sign :ratio
+	localmake "delta 0.5 - abs :ratio
+	localmake "delta :delta * :factor
+	output :sign * (0.5 - :delta)
+end
+
+to drawMiddlePlatform :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "baseWidth :height * 0.141
+	localmake "topWidth :height * 0.125
+	localmake "mixRatio1 0.7
+	localmake "midWidth mix :baseWidth :topWidth :mixRatio1
+	localmake "middleWidth :height * 0.1447746
+	localmake "trapHeight :height * 0.029
+	localmake "rectHeight :height * 0.005
+	localmake "arcs [[90 0] [:topWidth / 2 / :height] [-110 0] [50 0.01] [30 0.025]]
+	localmake "points []
+	setLineJoinStyle "round
+	jumpForward :height * 0.311
+	localmake "bottomPos pos
+	isoTrapezoid :baseWidth :topWidth :trapHeight
+	jumpForward :trapHeight
+	localmake "topMiddlePos pos
+	repeat 7 [
+		localmake "ratio transformMiddlePlatformRatio repRatio 0.93
+		jumpRight :topWidth * :ratio
+		queue2 "points pos
+		jumpTo :topMiddlePos 
+	]
+	jumpTo :topMiddlePos
+	jumpBackward :trapHeight * :mixRatio1
+	localmake "midMiddlePos pos
+	jumpBackward penSize / 2
+	stripes :midWidth penSize [penColor]
+	jumpTo :midMiddlePos
+	repeat 7 [
+		localmake "ratio transformMiddlePlatformRatio repRatio 0.9
+		jumpRight :midWidth * :ratio
+		queue2 "points pos
+		jumpTo :midMiddlePos 
+	]
+	repeat 7 [
+		localmake "prev item repcount :points
+		localmake "nexts [item 6 + repcount :points]
+		if repcount < 7 [
+			 queue2 "nexts item 8 + repcount :points
+		]
+		if repcount <> 4 [
+			queue2 "nexts item 7 + repcount :points
+		]
+		repeat count :nexts [
+			localmake "next item repcount :nexts
+			jumpTo :prev
+			setHeading towards :next
+			forward distance :next
+		]
+	]
+	jumpTo :bottomPos
+	setHeading :oldHeading
+	jumpForward :trapHeight
+	polyStart
+	arcLines :arcs :height
+	localmake "deltaAngle heading - :oldHeading
+	localmake "topPos pos
+	setHeading :oldHeading
+	jumpRight :middleWidth
+	setHeading :oldHeading - 180 - :deltaAngle
+	arcLines reverse :arcs :height
+	polyEnd
+
+	setHeading :oldHeading
+	jumpTo :topPos
+	jumpRight :middleWidth / 2
+	setFillColor "white
+	jumpForward :rectHeight / 2
+	rect :middleWidth :rectHeight
+	setTurtleState :oldState
+end
+
+to eiffelTower :height
+	localmake "oldState turtleState
+	setPenSize :height * 0.002
+	setPenColor "black
+	drawCrossPieces :height
+	drawBase :height * 0.1715
+	drawMiddlePlatform :height
+	jumpForward :height * 0.8275
+	drawTopStage :height * 0.1725
+	setTurtleState :oldState
+end
+
+eiffelTower 100

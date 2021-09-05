@@ -1,0 +1,53 @@
+to drawYinYangHalfShape :height :colorPair
+	localmake "oldState turtleState
+	localmake "colorStops1 createPList2 [
+		[0.75 first :colorPair] [1 last :colorPair]
+	]
+	localmake "colorStops2 createPList2 [
+		[0.5 last :colorPair] [0.75 first :colorPair]
+	]
+	localmake "colorStops3 createPList2 [
+		[0.5 first :colorPair] [1 last :colorPair]
+	]
+	setPenSize 0
+	; Draw a background shape so it is harder to antialiased artifacts 
+	; between the different gradients.
+	setFillColor first :colorPair
+	drawArcLineShape [0 -0.5
+		[[-90 0] [180 0.5] [180 0.25] [-180 0.25]]
+	] :height
+
+	setFillGradient createRadialGradient pos :height / 2 :colorStops1
+	drawArcLineShape [0 -0.5
+		[[-90 0] [180 0.5] [90 0] [0.25] [90 0] [-180 3 / 8]]
+	] :height
+	jumpBackward :height / 4
+	setFillGradient createRadialGradient pos :height / 2 :colorStops2
+	drawArcLineShape [0 0.25
+		[[-90 0] [-180 0.25] [180 0] [180 3 / 8]]
+	] :height
+	jumpForward :height / 2
+	setFillGradient createRadialGradient pos :height / 4 :colorStops3
+	drawArcLineShape [0 0.25
+		[[90 0] [180 0.25]]
+	] :height
+	setTurtleState :oldState
+end
+
+; Inspired by:
+; https://ca.pinterest.com/pin/35606653299288387
+to yinYangGradient :height
+	localmake "oldState turtleState
+	localmake "colors [
+		["blue "aqua] ["red "yellow]
+	]
+	jumpForward :height / 2
+	repeat 2 [
+		drawYinYangHalfShape :height item repcount :colors
+		right 360 / 2
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+yinYangGradient 100

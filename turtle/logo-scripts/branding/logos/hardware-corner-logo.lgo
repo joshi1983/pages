@@ -1,0 +1,21 @@
+; Inspired by logo at:
+; https://www.hardware-corner.net
+to hardwareCornerLogo :height
+	localmake "oldState turtleState
+	localmake "tinyFactor 0.14
+	localmake "tinySquareSize :height * :tinyFactor
+	localmake "lines1 [
+		[:tinyFactor] [-90 0] [:tinyFactor] [90 0]
+		[1 - :tinyFactor * 2] [90 0] [1] [45 0]
+	]
+	setFillColor "#0057e8
+	jumpRight (:height - :tinySquareSize) / 2
+	stripes :tinySquareSize :tinySquareSize [fillColor]
+	setPenSize 0
+	drawArcLineShape [-:tinyFactor / 2 :tinyFactor
+		combine :lines1 reverse :lines1
+	] :height	
+	setTurtleState :oldState
+end
+
+hardwareCornerLogo 100

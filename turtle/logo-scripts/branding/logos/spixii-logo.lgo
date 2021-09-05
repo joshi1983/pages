@@ -1,0 +1,61 @@
+to offsetToPos :offset :scale
+	localmake "oldPos pos
+	jumpRight :scale * first :offset
+	jumpForward :scale * item 2 :offset
+	localmake "result pos
+	jumpTo :oldPos
+	output :result
+end
+
+; Inspired by logo at:
+; https://www.spixii.com
+;
+; The main differences are:
+; - I removed a subtle semitransparency in the triangles.
+; The logo has a some semitransparency that may be around 10%.
+; - Some triangles were removed that were difficult to see.
+;
+; These changes were done to keep the code simpler since 
+; the visual difference is difficult to notice. 
+to spixiiLogo :height
+	localmake "oldState turtleState
+	localmake "triangles [
+		[[-0.145 0.41] [-0.295 0] "#78acda "#29235c]
+		[[-0.2 0.58] [-0.488 0.225] "#6794cb "#567bb9]
+		[[-0.25 0.85] [-0.654 0.533] "#86bce5]
+		[[-0.03 1] [-0.75 0.82] "#b6e0f8]
+	]
+	localmake "point offsetToPos [0.54 0.52] :height
+	setPenSize 0
+	repeat count :triangles [
+		localmake "triangle item repcount :triangles
+		setFillColor item 3 :triangle
+		localmake "pos1 offsetToPos first :triangle :height
+		localmake "pos2 offsetToPos item 2 :triangle :height
+		polygon [:pos1 :pos2 :point]
+		if (count :triangle) > 3 [
+			setFillGradient createLinearGradient :pos2 :point
+				createPList2 [
+					[0 fillColor] [1 last :triangle]
+				] "pad
+			polygon [:pos1 :pos2 :point]
+		]
+	]
+	setTurtleState :oldState
+end
+
+to spixiiOnDarkBackgroundLogo :height
+	localmake "oldState turtleState
+	localmake "innerHeight :height * 0.8
+	stripes :height * 2 :height ["#1e294d]
+	jumpForward (:height - :innerHeight) / 2
+	spixiiLogo :innerHeight
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 5
+jumpLeft :separation / 2
+spixiiLogo :height
+jumpRight :separation
+spixiiOnDarkBackgroundLogo :height

@@ -1,0 +1,82 @@
+; Inspired by logo at:
+; https://www.youtube.com/@Wendoverproductions/about
+to wendoverLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "colors ["#ee2f36 "#f67a3c "#fa9b3d "#febd3f "white]
+	localmake "radius :height / 2
+	localmake "y :height * 0.556
+	localmake "y2 abs :radius - :y
+	localmake "sizeX sqrt :radius * :radius - :y2 * :y2
+	localmake "angle1 130
+	localmake "angle3 125
+	localmake "angle4 174
+	localmake "size3 :height * 0.188
+	jumpForward :radius
+	localmake "center pos
+	setPenSize 0
+	repeat count :colors [
+		localmake "radius1 mix :height * 0.25 :radius repRatio
+		setFillColor item repcount :colors
+		circle :radius1
+	]
+	left 45
+	jumpLeft :height
+	localmake "pos1 pos
+	
+
+	jumpTo :center
+	setHeading :oldHeading
+	jumpLeft :sizeX
+	jumpForward :y2
+	localmake "leftPos pos
+	setFillColor "black
+	right :angle1
+	localmake "size1 distanceToLine :center :pos1
+	polyStart
+	jumpForward :size1
+	localmake "angle2 heading - towards :center
+	left :angle2
+	localmake "size2 distance :center
+	jumpForward :size2
+	right 90
+	jumpForward :size2
+	left :angle2
+	jumpForward :size1
+	localmake "rightPos pos
+	setHeading (towards :center) - 90
+	arcRight 180 + 2 * arcSin :y2 / :radius :radius
+	polyEnd
+
+	; Draw mountain highlights on the left.
+	setFillColor "white
+	jumpTo :leftPos
+	setHeading :oldHeading + :angle3
+	localmake "size1 distanceToLine :center :pos1
+	polyStart
+	jumpForward :size1
+	localmake "angle2 (towards :center) + 180 - heading
+	localmake "size2 :radius - distance :center
+	right :angle2
+	jumpForward :size2
+	right :angle4
+	jumpForward :size3
+	polyEnd
+
+	; Draw mountain highlights on the right.
+	setHeading :oldHeading
+	jumpTo :rightPos
+	left :angle3
+	polyStart
+	jumpForward :size1
+	left :angle2
+	jumpForward :size2
+	left :angle4
+	jumpForward :size3
+	polyEnd
+
+	setTurtleState :oldState
+end
+
+setScreenColor "#222
+wendoverLogo 100

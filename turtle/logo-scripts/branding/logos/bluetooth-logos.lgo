@@ -1,0 +1,69 @@
+to bluetoothBackground :height
+	localmake "oldState turtleState
+	localmake "arcsInfo1 [
+		[10 0.5]
+		[60 0.31]
+		[10 0.5]
+		[10 1.203]
+	]
+	right 90
+	polyStart
+	repeat 2 [
+		arcsLeft :arcsInfo1 :height
+		arcsLeft reverse :arcsInfo1 :height
+	]
+	polyEnd
+	setTurtleState :oldState
+end
+
+to bluetoothSymbol :height
+	localmake "oldState turtleState
+	localmake "angle 45
+	localmake "size1 :height * 0.28100135
+	localmake "size2 :size1 * 2 * cos :angle
+	localmake "size3 :height * 0.337
+	setPenSize :height * 0.085
+	setLineCap "butt
+	setLineJoinStyle "miter
+	jumpRight :height * 0.004
+	right :angle
+	jumpBackward :size3
+	forward :size1 + :size3
+	left 180 - :angle * 2
+	forward :size1
+	left 180 - :angle
+	forward :size2 * 2
+	left 180 - :angle
+	forward :size1
+	left 180 - :angle * 2
+	forward :size1 + :size3
+	setTurtleState :oldState
+end
+
+; Inspired by logo at
+; https://en.wikipedia.org/wiki/Bluetooth#/media/File:BluetoothLogo.svg
+to blueToothLogo :height
+	localmake "oldState turtleState
+	setPenSize 0
+	setFillColor "#0082fc
+	bluetoothBackground :height
+	jumpForward :height / 2
+	setPenColor "white
+	bluetoothSymbol :height * 0.8565
+	setTurtleState :oldState
+end
+
+to blueToothBlackLogo :height
+	localmake "oldState turtleState
+	jumpForward :height / 2
+	setPenColor "black
+	bluetoothSymbol :height
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 2
+jumpLeft :separation * 0.5
+blueToothLogo :height
+jumpRight :separation
+blueToothBlackLogo :height

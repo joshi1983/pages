@@ -1,0 +1,88 @@
+to drawLegs :height
+	localmake "oldPos pos
+	localmake "width :height * 0.35
+	localmake "separation :height * 0.57
+	jumpRight :separation / 2
+	jumpForward (:height + penSize) / 2
+	rect :width :height
+	jumpLeft :separation
+	rect :width :height
+	jumpTo :oldPos
+end
+
+to drawFace :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "eyeSeparation :height * 0.65
+	localmake "eyeRadius :height * 0.15
+	localmake "angle 45
+	localmake "smileSize :height * 0.38
+	jumpForward :height * 0.45
+	jumpRight :eyeSeparation / 2
+	circle :eyeRadius
+	jumpLeft :eyeSeparation
+	circle :eyeRadius
+	jumpTo :oldPos
+	jumpBackward :height * 0.34
+	setLineCap "round
+	left :angle
+	jumpForward :smileSize
+	backward :smileSize
+	right :angle * 2
+	forward :smileSize
+	setTurtleState :oldState
+end
+
+to drawBowTie :height
+	localmake "oldState turtleState
+	left 90
+	jumpBackward :height * 1.25
+	setFillColor penColor
+	repeat 2 [
+		isoTriangle :height :height * 1.5
+		jumpForward :height * 2.5
+		right 180
+	]
+	setTurtleState :oldState
+end
+
+
+; Inspired by figure 4.11 of a masters thesis paper.
+; The paper was published in 1992-09-01.
+; The paper was published by Monterey, California. Naval Postgraduate School.
+; The paper can be found at:
+; https://archive.org/details/turtlegraphicsim1094523799/page/55/mode/2up
+to bowTieGuy :height
+	localmake "oldState turtleState
+	localmake "legHeight :height * 0.2356
+	localmake "torsoWidth :height * 0.27
+	localmake "torsoHeight :height * 0.38
+	localmake "armLevel :torsoHeight * 0.64
+	localmake "armHeight :height * 0.055
+	localmake "neckWidth :height * 0.09
+	localmake "neckHeight :height * 0.0744
+	localmake "headRadius :height * 0.15
+
+	setFillColor "white
+	drawLegs :legHeight
+
+	jumpForward :legHeight + :armLevel
+	rect :height * 0.55 :armHeight
+	
+	jumpForward (:torsoHeight + penSize) / 2 - :armLevel
+	rect :torsoWidth :torsoHeight
+
+	jumpForward (:torsoHeight + :neckHeight) / 2
+	rect :neckWidth :neckHeight
+
+	jumpForward :neckHeight / 2 + :headRadius
+	circle :headRadius
+	drawFace :headRadius
+
+	jumpBackward :headRadius * 0.95
+	drawBowTie :height * 0.05
+	setTurtleState :oldState
+end
+
+setScreenColor "#eee
+bowTieGuy 100

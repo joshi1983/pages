@@ -1,0 +1,140 @@
+to drawTopLeaf :height
+	localmake "oldState turtleState
+	localmake "arcsInfo [[138 0] [-8 0.6] [0.1] [50 0.55]]
+	jumpForward :height
+	setPenSize 0
+	setFillColor "#29d58d
+	polyStart
+	arcLines :arcsInfo :height
+	jumpLeft :height * 2 * 0.333285588
+	right 180
+	arcLines reverse :arcsInfo :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+to getSideGradient :colors :len
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "colorStops createPList
+	repeat count :colors [
+		setProperty "colorStops repRatio item repcount :colors
+	]
+	jumpForward :len
+	localmake "gradient createLinearGradient :oldPos pos :colorStops "pad
+	setTurtleState :oldState
+	output :gradient
+end
+
+to drawSides :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "colors ["#ccc ["#bc355e "#d36a88]]
+	setPenSize 0
+	repeat 2 [
+		localmake "colorInfo item repcount :colors
+		localmake "sign sign repcount - 1.5
+		ifelse string? :colorInfo [
+			setFillColor :colorInfo
+		] [
+			setHeading :oldHeading + -30 * :sign
+			setFillGradient getSideGradient :colorInfo :height * 0.6
+			setHeading :oldHeading
+		]
+		polyStart
+		arcLines [[0.51] [30 0] [39 0.3] [13 1.1]
+		[82 0] [30 0.665] [28 0.34] [24 0.52] [-24.07963 0.35]
+		] :height * :sign
+		polyEnd
+		jumpTo :oldPos
+		setHeading :oldHeading
+	]
+	setTurtleState :oldState
+end
+
+to drawBlackEtchings :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "oldPos pos
+	localmake "thickness :height * 0.04
+	localmake "thickness2 :height * 0.033
+	localmake "circleRadius1 :height * 0.02
+	localmake "size1 :height * 0.132
+	setPenColor "black
+	setPenSize :thickness
+	setLineJoinStyle "round
+	setLineCap "butt
+	forward :height * 0.882
+	setFillColor "black
+	circle :height * 0.022
+	setLineCap "round
+	jumpBackward :height * 0.37
+	localmake "top pos
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		left :sign * 30
+		setPenSize :thickness
+		arcLeft 27 * :sign :height * 0.3
+		localmake "heading1 heading
+		setHeading :oldHeading
+		localmake "branchPoint pos
+		forward :height * 0.18
+		circle :height * 0.015
+		setHeading :heading1
+		jumpTo :branchPoint
+		arcLines [[32.5 0.57] [72 0] [50 0.56] [36 0.4]
+		[-18 0.3]] :sign * :height
+		jumpRight :sign * -penSize / 2
+		setPenSize 0
+		polyStart
+		arcLeft :sign * -10.9 :height * 0.3
+		setHeading :oldHeading
+		jumpRight :thickness * -1.35 * :sign
+		left :sign * 48
+		jumpForward :height * 0.02
+		polyEnd
+		jumpTo :oldPos
+		setHeading :oldHeading
+		jumpForward :height * 0.085
+		localmake "angle 45 * :sign
+		right :angle
+		setPenSize :thickness2
+		forward :height * 0.325
+		circle :height * 0.02
+		setHeading :oldHeading + 90 * :sign
+		forward :height * 0.15
+		jumpTo :oldPos
+		setHeading :oldHeading
+		jumpForward :height * 0.27
+		right :angle
+		forward :height * 0.25
+		localmake "pos1 pos
+		setHeading :oldHeading
+		forward :height * 0.1724
+		arcLeft :sign * -65 :height * 0.05
+		jumpTo :pos1
+		setHeading :oldHeading + :sign * 90
+		forward :size1
+		circle :circleRadius1
+		left 90 * :sign
+		forward :size1
+		circle :circleRadius1
+		jumpTo :top
+		setHeading :oldHeading
+	]	
+	setTurtleState :oldState
+end
+
+; Inspired by logo at
+; https://www.youtube.com/@HealthyDev
+to thrivingTechnologiesLogo :height
+	localmake "oldState turtleState
+	drawTopLeaf :height
+	drawSides :height
+	drawBlackEtchings :height
+	setTurtleState :oldState
+end
+
+setScreenColor "#222
+thrivingTechnologiesLogo 100

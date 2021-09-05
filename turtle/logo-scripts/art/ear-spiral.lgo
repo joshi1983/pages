@@ -1,0 +1,59 @@
+to drawSpiral :height :penSizeFactor
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "arcAngle 10
+	localmake "arcRadius :height * 0.01
+	repeat 195 [
+		setPenSize :penSizeFactor * (:arcRadius + :height * 0.1)
+		localmake "angle abs (heading - :arcAngle / 2) - :oldHeading
+		localmake "arcRadius1 :arcRadius * mix 1.1 -0.7 (1 + abs cos :angle) * 0.5
+		arcLeft :arcAngle :arcRadius1
+		localmake "arcRadius :arcRadius * 1.02
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://www.facebook.com/photo/?fbid=1397440021749762&set=a.193601432133633
+to earSpiral :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "lines [
+		[0.2 "#FDE6CE]
+		[0.1 "#FAC58F]
+		[0.04 "#DC9B5A]
+		[0.01 "#5E2424]
+	]
+	jumpForward :height / 2
+	setLineCap "round
+	right 20
+	repeat count :lines [
+		localmake "lineInfo item repcount :lines
+		setPenSize :height * first :lineInfo
+		setPenColor last :lineInfo
+		drawSpiral :height - penSize * 0.7 penSize / :height
+	]
+
+	setHeading :oldHeading
+	jumpTo :oldPos
+	jumpLeft :height * 0.26
+	jumpForward :height * 0.09
+	localmake "startPos pos
+	repeat count :lines [
+		jumpTo :startPos
+		setHeading :oldHeading
+		localmake "lineInfo item repcount :lines
+		setPenSize :height * 0.3 * first :lineInfo
+		setPenColor last :lineInfo
+		right 130
+		jumpLeft penSize / 2
+		right 30
+		arcLines [[90 0.12] [20 0.2] [10 1.8] [50 0.5] [40 0.37] 
+			[13 0.3] [60 0.2] [40 0.4]
+		] :height - penSize * 1.1
+	]
+	setTurtleState :oldState
+end
+
+earSpiral 100

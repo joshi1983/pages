@@ -1,0 +1,33 @@
+to drawD :height :stretchFactor
+	localmake "innerGap 0.069
+	localmake "tinyRadius 0.093
+	localmake "innerStretchFactor :stretchFactor - 0.19
+	localmake "innerRadius1 0.217
+	localmake "innerRadius2 :innerRadius1 + :innerGap * 2
+	localmake "lines1 [[:innerGap] [90 0] [:stretchFactor]
+		[-90 0] [0.5 - :innerGap] [-90 0] [:stretchFactor]
+		[-90 0.5]]
+	localmake "innerLines [[-90 :innerRadius1] [:innerStretchFactor] 
+		[90 0] [:innerGap * 2]
+		[90 0] [:innerStretchFactor + 0.013] [90 :innerRadius2]]
+	drawArcLineShape [:stretchFactor + 0.0755 0
+		(combine :lines1 reverse :lines1 [[-180 :tinyRadius]]
+		:innerLines reverse :innerLines)
+	] :height
+end
+
+; Inspired by logo at:
+; https://en.wikipedia.org/wiki/Control_Data_Corporation#/media/File:Control_Data_Corporation_logo.svg
+to controlDataCorporationLogo :height
+	localmake "oldState turtleState
+	jumpForward :height / 2
+	setFillColor "black
+	setPenSize 0
+	repeat 2 [
+		drawD :height 0.41
+		right 180
+	]
+	setTurtleState :oldState
+end
+
+controlDataCorporationLogo 100

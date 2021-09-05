@@ -1,0 +1,29 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Chase_Bank#/media/File:Chase_logo_2007.svg
+to chaseBankLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "gapY :height * 0.217
+	localmake "cornerRadius :height * 0.035
+	localmake "angle 43.5
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	setFillColor "#117aca
+	repeat 4 [
+		setHeading :oldHeading + repcount * 360 / 4
+		jumpForward :gapY
+		jumpLeft :height * 0.1775
+		polyStart
+		jumpForward :height / 2 - :gapY - :cornerRadius
+		arcRight 90 :cornerRadius
+		jumpForward :height * 0.321
+		right :angle
+		jumpForward (:height / 2 - :gapY) / sin :angle
+		polyEnd
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+chaseBankLogo 100

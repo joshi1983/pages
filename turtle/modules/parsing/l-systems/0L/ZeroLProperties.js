@@ -1,0 +1,25 @@
+import { fetchJson } from
+'../../../fetchJson.js';
+
+const data = await fetchJson('./json/logo-migrations/l-systems/0L/properties.json');
+const nameMap = new Map();
+for (const propertyInfo of data) {
+	nameMap.set(propertyInfo.primaryName, propertyInfo);
+	if (propertyInfo.names !== undefined) {
+		for (const name of propertyInfo.names) {
+			nameMap.set(name.toLowerCase(), propertyInfo);
+		}
+	}
+}
+
+export class ZeroLProperties {
+	static getAllData() {
+		return data;
+	}
+
+	static getPropertyInfo(name) {
+		name = name.toLowerCase();
+		const info = nameMap.get(name);
+		return info;
+	}
+};

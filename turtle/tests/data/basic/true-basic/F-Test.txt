@@ -1,0 +1,18 @@
+!
+!  F-TEST.  Show how to use F-test to check
+!  for equality of variance of two normally distributed samples.
+!  Taken from "Statistical Analysis" by Harnett & Murphy, p. 499.
+!
+LIBRARY "Stat1Lib.trc"
+
+DIM a(11), b(16)
+
+MAT READ a, b                     ! Read company P-E ratios
+DATA 22, 14, 32, 20, 10, 7, 12, 14, 8, 25, 16
+DATA 16, 10, 12, 11, 15, 21, 11, 20, 9, 11, 13, 20, 18, 19, 14, 19
+
+CALL Ftest(a, b, f, p)            ! Test variance on two groups of companies
+
+PRINT using "F value: ##.###    Prob(F): #.####": f, p
+
+END

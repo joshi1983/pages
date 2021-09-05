@@ -1,0 +1,66 @@
+make "euromaidanBlue "#04a6e1
+make "euromaidanYellow "#facd01
+
+to drawEuromaidanBird :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	setLineJoinStyle "miter
+	jumpForward :height * 0.288
+	jumpRight :height * 0.218
+	localmake "beakPos pos
+	setPenSize 0
+	setFillColor :euromaidanBlue
+	drawArcLineShape [0 0 [[65 0.013] [0.036] [-32 0.02] [95 0.099]
+		[6 0.4] [0.08] [-132.9 0] [0.73685] [106 0] [24 0.3] [41 0.45]
+		[0.2] [10 0.4] [60 0] [0.06] [-70 0.06] [-15 0.17] [-97 0.092]
+		[176 0] [0.26] [120 0] [0.272] [30 0] [39 0.17] [-73 0.015]
+		[-3 5] [-32 0.35] [-136.3 0] [0.52] [-93 0.014] [0.018]
+		[-55 0.0195] [140 0] [0.28] [110 0] [0.27] [50 0] [0.17]
+		]] :height
+	jumpTo :beakPos
+	setHeading :oldHeading
+	setFillColor :euromaidanYellow
+	drawArcLineShape [0 0
+		[[83 0] [0.078] [51 0.115] [0.13] [-20 0.16] [-45 0.21] [-5 1.5]
+		[0.07] [-45 0.17] [80 0.03] [0.023] [80 0.01] [0.265]
+		[90 0.01] [0.24] [-26 0.12] [40 0.31] [38 0.18] [19 0.5]
+		[-50 0.078]]
+	] :height
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://euromaidanpress.com
+to euromaidanPressLogo :height
+	localmake "oldState turtleState
+	localmake "arcRadii [0.32 0.507]
+	setPenSize :height * 0.08
+	setPenColor :euromaidanBlue
+	jumpForward :height * 0.275
+	jumpRight :height * 0.042
+	setLineCap "butt
+	right 180
+	repeat count :arcRadii [
+		localmake "arcRadius :height * item repcount :arcRadii
+		arc 90 :arcRadius
+	]
+	setTurtleState :oldState
+	drawEuromaidanBird :height
+	setTurtleState :oldState
+end
+
+to euromaidanPressLogoOnBlackBackground :height
+	localmake "oldState turtleState
+	localmake "innerHeight :height * 0.8
+	stripes :height * 1.5 :height ["black]
+	jumpForward (:height - :innerHeight) / 2
+	euromaidanPressLogo :innerHeight
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 5
+jumpLeft :separation / 2
+euromaidanPressLogo :height
+jumpRight :separation
+euromaidanPressLogoOnBlackBackground :height

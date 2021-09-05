@@ -1,0 +1,31 @@
+; Inspired by logo at:
+; https://www.affordablehousing.com
+to affordableHousingLogo :height
+	localmake "oldState turtleState
+	localmake "roofAngle1 119.6
+	localmake "roofAngle2 180 - :roofAngle1
+	localmake "innerRoofAngle 61.6
+	localmake "outerRoofLen 0.596
+	localmake "thickness1 0.0355
+	localmake "thickness2 0.1317
+	localmake "overhangLength 0.124
+	localmake "outerHeight1 1 - :thickness1 + :outerRoofLen * cos :roofAngle1
+	localmake "innerHeight1 :outerHeight1 + :thickness1 
+	localmake "innerWidth :outerRoofLen * (sin :roofAngle1) - :overhangLength - :thickness2
+	localmake "innerRoofLength :innerWidth / sin :innerRoofAngle
+	localmake "lines1 [
+		[:roofAngle1 0] [:outerRoofLen] [:roofAngle2 0]
+		[:thickness1] [90 0] [:overhangLength] [-90 0]
+		[:outerHeight1] [90 0] [:thickness2] [90 0] [:innerHeight1]
+		[-:innerRoofAngle 0] [:innerRoofLength] [(:innerRoofAngle - 90)  0]
+	]
+	localmake "houseShape [0 1
+		combine :lines1 reverse :lines1
+	]
+	setPenSize 0
+	setFillColor "#2E3E48
+	drawArcLineShape :houseShape :height
+	setTurtleState :oldState
+end
+
+affordableHousingLogo 100

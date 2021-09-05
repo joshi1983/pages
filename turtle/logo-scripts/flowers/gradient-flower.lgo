@@ -1,0 +1,75 @@
+; Inspired by
+; https://www.pinterest.ca/pin/11962755251923656/
+
+to petalGradient :size
+	localmake "oldPos pos
+	localmake "colorStops createPList2 [
+		[0 "#fff] [0.05 "#7ff0] [0.2 "#5b00] [0.7 "#7fff] [1 "#ff0f]
+	]
+	jumpForward :size
+	setFillGradient createLinearGradient :oldPos pos :colorStops "pad
+	jumpTo :oldPos
+end
+
+to flowerPetal :size
+	localmake "oldPenSize penSize
+
+	petalGradient :size
+	setPenSize :size * 0.001
+	arcPair :size 120
+	setPenSize :oldPenSize
+end
+
+to stemmedleaf :size
+	localmake "oldState turtleState
+	setPenSize :size * 0.01
+	setFillColor penColor
+	
+	forward :size * 0.1
+	arcPair :size 80
+	forward :size
+	setPenSize :size * 0.001
+	setPenColor "black
+	backward :size
+	setTurtleState :oldState
+end
+
+to stemmedLeafPair :size
+	localmake "oldHeading heading
+	setHeading :oldHeading + 70
+	stemmedleaf :size
+	setHeading :oldHeading - 70
+	stemmedleaf :size
+	setHeading :oldHeading
+end
+
+to stem :size
+	localmake "oldState turtleState
+	localmake "arcRadius :size * 10
+	setPenColor "#080
+	setPenSize :size * 0.08
+	setLineCap "round
+
+	right 170
+	localmake "arcAngles [6 5 9]
+	repeat count :arcAngles [
+		localmake "arcAngle item repcount :arcAngles
+		arcRight :arcAngle :arcRadius
+		if repcount <> count :arcAngles [
+			stemmedLeafPair :size
+		]
+	]
+	setTurtleState :oldState
+end
+
+to flower :size
+	localmake "numPetals 16
+	stem :size
+	repeat :numPetals [
+		flowerPetal :size
+		right 360 / :numPetals
+	]
+end
+
+setScreenColor "#E5E5FF
+flower 100

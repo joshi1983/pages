@@ -1,0 +1,69 @@
+to drawHead :height :gap
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "faceSize (:height) / 2 - :gap
+	localmake "triangleWidth :faceSize * 2 * cos 45
+	localmake "triangleHeight :triangleWidth / 2
+	localmake "triangleOffset :triangleHeight + :gap * cos 45
+	jumpForward :faceSize * cos 45
+	right 45
+	square :faceSize
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height - :triangleWidth / 2
+	localmake "center pos
+	repeat 2 [
+		setHeading :oldHeading + 90 + repcount * 180
+		jumpBackward :triangleOffset
+		isoTriangle :triangleWidth :triangleHeight
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by a drawing at:
+; https://ca.pinterest.com/pin/704954147965775749
+to blackCat :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "headSize :height * 0.36
+	localmake "gap :height * 0.021
+	localmake "largeTriangleWidth :height * 0.446
+	localmake "largeTriangleHeight :largeTriangleWidth / 2
+	localmake "pWidth :height * 0.16
+	localmake "pSlantedHeight :largeTriangleWidth / 2
+	localmake "midTriangleWidth :pSlantedHeight * 2 * cos 45
+	setPenSize 0
+	setFillColor "black
+	jumpForward :height - :headSize
+	drawHead :headSize :gap
+
+	jumpTo :oldPos
+	jumpRight :height * 0.365
+	right 135
+	jumpBackward :largeTriangleHeight
+	isoTriangle :largeTriangleWidth :largeTriangleHeight
+	jumpLeft :largeTriangleWidth / 2
+	left 45
+	jumpLeft :gap / cos 45
+	jumpBackward :largeTriangleHeight
+	isoTriangle :largeTriangleWidth :largeTriangleHeight
+	jumpBackward :gap
+	right 180
+	jumpRight :largeTriangleWidth / 2
+	isoTriangle :midTriangleWidth :pSlantedHeight * cos 45
+	localmake "pos1 pos
+	jumpLeft (:midTriangleWidth  + :pWidth) / 2 + :gap / cos 45
+
+	parallelogram :pWidth :pSlantedHeight 45
+	
+	jumpTo :pos1
+	jumpRight :midTriangleWidth / 2
+
+	setTurtleState :oldState
+end
+
+setScreenColor "#dd9d3b
+blackCat 100

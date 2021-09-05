@@ -1,0 +1,70 @@
+; Inspired by logo at:
+; https://infinite.red
+to infiniteRedLogo :height :color
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "outerRadius :height / 2
+	localmake "separation :height * 0.8
+	setPenSize :height * 0.23
+	localmake "radius :outerRadius - penSize / 2
+	localmake "innerRadius :outerRadius - penSize
+	localmake "radius2 :outerRadius * 1.17
+	setFillColor transparent
+	setPenColor :color
+	jumpForward :height / 2
+	jumpLeft :separation / 2
+	localmake "leftCenter pos
+	circle :radius
+
+	jumpRight :separation
+	setPenSize 0
+	localmake "rightCenter pos
+	jumpRight :outerRadius
+	localmake "angle getArcLeftAngleToCircle :outerRadius :leftCenter :radius2
+	setFillColor penColor
+	polyStart
+	arcLeft :angle :outerRadius
+	setHeading (towards :leftCenter) - 90
+	localmake "angle2 getArcRightAngleToCircle :radius2 :rightCenter :innerRadius
+	arcRight :angle2 :radius2
+	setHeading (towards :rightCenter) - 90
+	localmake "angle3 180 + :oldHeading - heading
+	arcRight :angle3 * 2 :innerRadius
+	setHeading (towards :leftCenter) - 90
+	arcRight :angle2 :radius2
+	setHeading (towards :rightCenter) + 90
+	arcLeft :angle :outerRadius
+	polyEnd
+	setTurtleState :oldState
+end
+
+to redOnBlackLogo :height
+	localmake "oldState turtleState
+	localmake "innerHeight :height * 0.7
+	stripes :height * 2 :height ["black]
+	jumpForward (:height - :innerHeight) / 2
+	infiniteRedLogo :innerHeight :infiniteRed
+
+	setTurtleState :oldState
+end
+
+; Inspired by favicon(browser tab icon) at
+; https://infinite.red
+to infiniteRedFavicon :height
+	localmake "oldState turtleState
+	localmake "innerHeight :height * 0.4
+	stripes :height :height [:infiniteRed]
+	jumpForward (:height - :innerHeight) / 2
+	infiniteRedLogo :innerHeight "white
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 4
+make "infiniteRed "#e73536
+jumpLeft :separation
+infiniteRedLogo :height :infiniteRed
+jumpRight :separation
+redOnBlackLogo :height
+jumpRight :separation
+infiniteRedFavicon :height

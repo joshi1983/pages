@@ -1,0 +1,132 @@
+; Inspired by
+; https://commons.wikimedia.org/wiki/File:Nakshi_kantha_(Flower_motif).JPG
+
+make "angle 70
+make "largeFlowerRatio 0.09
+
+to petal :len
+	localmake "oldState turtleState
+	localmake "angle1 28.4661027
+	localmake "arcAngle1 20
+	localmake "arcAngle2 40
+	localmake "arcAngle3 (180 - 2 * (-:angle1 + :arcAngle1 + :arcAngle2)) / 2
+	localmake "arcs1 [[:angle1 0] [-:arcAngle1 2.003457] [-:arcAngle2 0.365]
+		[-:arcAngle3 0.2]]
+	drawArcLineShape [0 0 combine :arcs1 reverse :arcs1] :len
+	setTurtleState :oldState
+end
+
+to gapPetal :gap :peddleSize
+	localmake "oldPos pos
+	jumpForward :gap
+	petal :peddleSize
+	jumpTo :oldPos
+end
+
+to largeFlower :size
+	localmake "numPetals 8
+	setPenSize 0
+	setFillColor "#a94f34
+	circle :size * 0.15
+	repeat :numPetals [
+		gapPetal :size * 0.2 :size * 0.8
+		right 360 / :numPetals
+	]
+end
+
+to smallFlower :size
+	localmake "oldHeading heading
+	localmake "gap :size * 0.2
+	localmake "petalSize :size - :gap
+	setPenSize 0
+	setFillColor "green
+	left :angle / 2
+	gapPetal :gap :petalSize
+	right :angle
+	gapPetal :gap :petalSize
+	setHeading :oldHeading + 180 - :angle / 2	
+	gapPetal :gap :petalSize
+	right :angle
+	gapPetal :gap :petalSize
+	setHeading :oldHeading
+end
+
+to dottedLine :numDots :len
+	localmake "step :len / :numDots
+	localmake "dotRadius :step * 0.2
+	setPenSize 0
+	setFillColor penColor
+	repeat :numDots [
+		jumpForward :step
+		circle :dotRadius
+	]
+end
+
+to nakshiV :size
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "smallFlowerSize :size * 0.081
+	localmake "smallFlowerSize2 :smallFlowerSize * 1.3
+	localmake "size1 :smallFlowerSize2 * sin :angle / 2
+	localmake "size2 :smallFlowerSize2 * cos :angle / 2
+	localmake "dottedLength :smallFlowerSize2 * 4
+
+	jumpForward :size2 / 2
+	repeat 4 [
+		setHeading :oldHeading
+		localmake "pos1 pos
+		repeat 4 [
+			smallFlower :smallFlowerSize / 2
+			jumpLeft :size1
+			jumpForward :size2
+		]
+		jumpRight :size1 / 2
+		jumpBackward :size2 / 2
+		left :angle / 2
+		dottedLine 20 :dottedLength
+		jumpTo :pos1
+		setHeading :oldHeading
+		jumpRight :size1
+		jumpForward :size2
+	]
+	jumpLeft :size1 / 2
+	jumpBackward :size2 / 2
+	repeat 4 [
+		localmake "pos1 pos
+		setHeading :oldHeading + :angle / 2
+		dottedLine 20 :dottedLength
+		setHeading :oldHeading
+		jumpTo :pos1
+		jumpLeft :size1
+		jumpForward :size2
+	]
+	setTurtleState :oldState
+end
+
+to nakshiKanthaPattern :size
+	localmake "oldState turtleState
+	localmake "size2 :size * 0.245
+	localmake "size3 :size * 0.151
+	nakshiV :size * 0.5
+	jumpForward :size / 2
+	jumpRight :size2
+	jumpBackward :size3
+	nakshiV :size * 0.5
+	jumpLeft :size2 * 2
+	nakshiV :size * 0.5
+	jumpForward :size * 0.348
+	jumpRight :size2
+	nakshiV :size * 0.5
+	setTurtleState :oldState
+end
+
+make "size 100
+make "separation :size * sin :angle / 2
+make "size1 :size / 2
+nakshiKanthaPattern :size
+jumpForward :size1
+jumpLeft :separation * 2
+repeat 5 [
+	largeFlower :size * :largeFlowerRatio
+	jumpRight :separation
+]

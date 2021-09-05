@@ -1,0 +1,92 @@
+to getPoint :startPos :rightCenter :radius :len :t
+	localmake "oldState turtleState
+	localmake "leftAngle 65.8 * (sin :t * 360)
+	localmake "sign item max 1 ceiling :t * 4 [1 -1 -1 1]
+	jumpTo :startPos
+	right 90 - :leftAngle
+	jumpForward :radius
+	localmake "d distance :rightCenter
+	localmake "angle triLengthsToAngle :len :d :radius
+	setHeading (towards :rightCenter) + :sign * :angle
+	localmake "pos1 pos
+	jumpForward :len
+	localmake "midPos mix :pos1 pos 0.5
+
+	setTurtleState :oldState
+	output :midPos
+end
+
+; Inspired by animation at:
+; https://www.facebook.com/share/v/1KRstpFMge/
+;
+; You can learn more about Watt's curve at:
+; https://en.wikipedia.org/wiki/Watt%27s_curve
+to wattCurve :height :t
+	localmake "oldState turtleState
+	localmake "separation :height * 1.2
+	localmake "len :height * 0.6
+	localmake "thickness :height * 0.01
+	localmake "radius (:height - :thickness) / 2
+	localmake "maxAngle triLengthsToAngle :radius :separation :radius + :len
+	localmake "leftAngle :maxAngle * (sin :t * 360)
+	localmake "sign item max 1 ceiling :t * 4 [1 -1 -1 1]
+	jumpLeft :separation / 2
+	jumpForward :height / 2
+	localmake "startPos pos
+	setPenColor "black
+	setPenSize :height * 0.01
+	circle :radius
+	jumpRight :separation
+	circle :radius
+	localmake "rightCenter pos
+
+	localmake "points []
+	repeat 100 [
+		queue2 "points getPoint :startPos :rightCenter :radius :len :t * repRatio
+	]
+
+	setPenColor "#800
+	jumpTo first :points
+	for ["i 2 count :points] [
+		setPos item :i :points
+	]
+
+	setPenColor "blue
+	jumpTo :startPos
+	right 90 - :leftAngle
+	forward :radius
+	circle 2
+	localmake "d distance :rightCenter
+	localmake "angle triLengthsToAngle :len :d :radius
+	setHeading (towards :rightCenter) + :sign * :angle
+	localmake "pos1 pos
+	forward :len
+	localmake "midPos mix :pos1 pos 0.5
+	circle 2
+	setPos :rightCenter
+	setPenColor "red
+	jumpTo :midPos
+	circle 1
+
+	setTurtleState :oldState
+end
+
+make "t animation.clampedTimeRatio
+wattCurve 100 :t
+
+to animation.snapshotstyle
+	output createPList2 [
+		["position.y 50]
+		["zoom.scale 4]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 10
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+		["thumbnailTime :seconds * 0.7]
+	]
+end

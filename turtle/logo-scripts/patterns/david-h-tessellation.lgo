@@ -1,0 +1,59 @@
+; Inspired by an image at:
+; https://www.facebook.com/share/p/1Ap9mr8bkb/
+;
+; It was shared by someone named David Houlton.
+to davidHTessellation :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "colors [
+		"white "navy "red
+	]
+	localmake "line1 [
+		[1] [-60 0] [1]
+	]
+	localmake "line2 [
+		[1] [60 0] [1] [60 0] [1] [120 0] [1] [-60 0] [1]
+	]
+	localmake "largeLine (combine :line1 :line2 flipAngles :line1)
+	localmake "len1 :height / 2 / (5 + cos 60)
+	localmake "offsety :len1 * (3 + cos 60)
+	localmake "offsetx :len1 * cos 30
+	localmake "offset2 hypot [:offsetY :offsetX]
+	localmake "offsetAngle arcTan :offsetX / :offsetY
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+
+	; A few larger shapes in the center are drawn
+	; so there is more overlap.
+	; When shapes touch but don't overlap, background colours can show through.
+	repeat 2 [
+		repeat count :colors [
+			setFillColor item repcount :colors
+			drawArcLineShape [0 0
+				:largeLine
+			] :len1
+			right 360 / 6
+		]
+	]
+	repeat 6 [
+		setHeading :oldHeading + :offsetAngle + repcount * 360 / 6
+		localmake "offset repcount - 2
+		jumpForward :offset2
+		left 60 + :offsetAngle
+		repeat 6 [
+			localmake "index 1 + remainder :offset + repcount 3
+			setFillColor item :index :colors
+			drawArcLineShape [0 0
+				(combine :line1 [[120 0]] [[1] [60 0] [1] [60 0] [1] [60 0]])
+			] :len1
+			right 360 / 6
+		]
+		jumpTo :center
+	]
+	
+	setTurtleState :oldState
+end
+
+setScreenColor "#00a8f3
+davidHTessellation 100

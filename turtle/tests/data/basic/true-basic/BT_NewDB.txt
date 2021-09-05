@@ -1,0 +1,120 @@
+!------------------------------------------------------------------------
+! Program .. Bt-NewDb                                                   |
+! This program will create a new Data Base called NameAdPh.             |
+! The Data Base will be used to store Names, Addresses, & Phone numbers.|
+! The B-Tree subroutines used to create the Data Base are stored in     |
+! the BTREELIB library.                                                 |
+!------------------------------------------------------------------------
+ 
+LIBRARY "BTreeLib.trc"
+
+!------------------------------------------------------------------------ 
+! The following lines of code check to see if file (NameAdPh) already   |
+! exists.  If the file already exists, then the program will set        |
+! variable (DataBaseExists$) to "Yes".                                  |
+!------------------------------------------------------------------------
+
+LET DataBaseExists$ = "Yes"
+
+WHEN ERROR IN
+   OPEN #1: NAME "NameAdPh", ORG byte, CREATE old, ACCESS input
+USE
+   IF EXTYPE = 9003 THEN LET DataBaseExists$ = "No"
+END WHEN
+
+CLOSE #1
+
+!------------------------------------------------------------------------ 
+! If file (NameAdPh) already exists, then the program will display a    |
+! message, and wait for you to respond by pressing a key.  Once a key   |
+! is pressed, the program will stop.                                    |
+!------------------------------------------------------------------------
+ 
+IF DataBaseExists$ = "Yes" THEN
+   CLEAR
+   SET CURSOR 5, 29
+   PRINT "NameAdPh already exists."
+   SET CURSOR 8, 24
+   PRINT "Press any key to end the program .. ";
+   DO WHILE KEY INPUT
+      GET KEY KeyPressed
+      LOOP
+   GET KEY KeyPressed
+   CLEAR
+   STOP
+   END IF
+
+!------------------------------------------------------------------------ 
+! The only way to get to this point is for file (NameAdPh) not to exist.|
+! In the process of finding that out, variable (ExType) was set to 9003.|
+! In order to check for future error conditions, the program needs to   | 
+! reset variable (ExType) to 0.                                         |
+!------------------------------------------------------------------------
+ 
+WHEN ERROR IN
+   CAUSE ERROR 0, "No Error" 
+USE
+END WHEN
+
+!------------------------------------------------------------------------ 
+! The program is now ready to create a new Data Base called (NameAdPh). |
+! This is done by calling the B-Tree subroutine (BtOpen).               |
+! Subroutine (BtOpen) will create a new Data Base called (NameAdPh),    |
+! and store the size of (NameAdPh) in variable (DataBaseSize).          |
+! If (BtOpen) fails to create (NameAdPh), then it will set variable     |
+! (ExType) to 2.                                                        |
+!------------------------------------------------------------------------
+ 
+CALL BtOpen ("NameAdPh", DataBaseSize, #1)
+
+!------------------------------------------------------------------------ 
+! If file (NameAdPh) already exists, then the program will display a    |
+! message, and wait for you to respond by pressing a key.  Once a key   |
+! is pressed, the program will stop.                                    |
+!------------------------------------------------------------------------
+ 
+!------------------------------------------------------------------------ 
+! If variable (ExType) is not 0, meaning (BtOpen) failed to create      |
+! the (NameAdPh) Data Base, then the program will display a message     |
+! and wait for you to respond by pressing a key.  Once a key is         |
+! pressed, the program will stop.  Variable (ExText$) will contain an   |
+! explanation of what caused the error.                                 |
+!------------------------------------------------------------------------
+  
+IF ExType > 0 THEN
+   CLEAR
+   SET CURSOR 5, 12
+   PRINT "Trying to create the data base ";
+   PRINT "caused the following error:"
+   SET CURSOR 7, 11
+   PRINT ExType; ".. "; ExText$
+   SET CURSOR 11, 12
+   PRINT "Press any key to end the program .. ";
+   DO WHILE KEY INPUT
+      GET KEY KeyPressed
+      LOOP
+   GET KEY KeyPressed
+   CLEAR
+   STOP
+   END IF
+
+!------------------------------------------------------------------------ 
+! Getting to this point means that a new Data Base has been created.    |
+! The following lines of code will display the size (number of bytes)   |
+! of the empty Data Base, and wait for you to respond by pressing a key.|
+! Once a key is pressed, the program will close the Data Base and stop. |
+!------------------------------------------------------------------------
+ 
+CLEAR
+SET CURSOR 5, 22
+PRINT "The empty data base takes"; DataBaseSize; "bytes."
+SET CURSOR 8, 22
+PRINT "Press any key to end the program .. ";
+DO WHILE KEY INPUT
+   GET KEY KeyPressed
+   LOOP
+GET KEY KeyPressed
+
+CALL BtClose (#1)
+CLEAR
+END

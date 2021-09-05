@@ -1,0 +1,55 @@
+to tri :height
+	localmake "oldState turtleState
+	localmake "height2 :height * 1.4
+	jumpBackward :height2 * 0.55
+	image :height2 * 600 / 300 :height2 'weblogo://logo-scripts/images/Isle_of_Man.svg'
+	setTurtleState :oldState
+end
+
+to isleOfMann :height :timeRatio
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "height2 :height * 0.95
+	localmake "height1 :height * 0.27
+	localmake "numWidth 10
+	localmake "numHeight 4
+	localmake "separationWidth :height1 * 1.2
+	localmake "separationHeight :height2 / :numHeight
+	jumpLeft :separationWidth * (:numWidth - 1) / 2
+	jumpForward (:separationHeight + :height - :height2) / 2
+	repeat :numHeight [
+		localmake "sign1 ifelse even? repcount 1 -1
+		repeat :numWidth [
+			left :timeRatio * 360 * :sign1
+			if even? repcount [
+				left 60
+			]
+			tri :height1
+			setHeading :oldHeading
+			jumpRight :separationWidth
+		]
+		jumpLeft :separationWidth * :numWidth
+		jumpForward :separationHeight
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "#cf142b
+make "timeRatio animation.timeRatio
+isleOfMann 100 :timeRatio
+
+to animation.snapshotstyle
+	output createPList2 [
+		["position.y 50]
+		["zoom.scale 5]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 3
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

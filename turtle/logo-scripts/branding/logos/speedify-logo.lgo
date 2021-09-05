@@ -1,0 +1,53 @@
+; Inspired by:
+; https://www.youtube.com/@Speedify
+to speedifyLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "arcAngle 122
+	localmake "thickness :height * 0.036
+	localmake "arcRadius1 :height * 0.085
+	localmake "arcRadius2 :height * 0.173
+	setPenSize 0
+	setFillColor "#00adef
+	jumpForward :height / 2
+	circle :height / 2
+	localmake "center pos
+	setFillColor "white
+	setPenColor fillColor
+	setLineCap "round
+	repeat 2 [
+		localmake "heading1 :oldHeading + repcount * 360 / 2
+		setHeading :heading1
+		jumpLeft :height * 0.025
+		jumpForward :height * 0.144
+		setPenSize 0
+		circle :thickness / 2
+		localmake "center1 pos
+		setPenSize :thickness
+		jumpRight :height * 0.075
+		right 90
+		forward :height * 0.15
+		jumpLeft :arcRadius1
+		jumpBackward :height * 0.075
+		backward :height * 0.11
+		jumpLeft :arcRadius2 - :arcRadius1
+		jumpBackward :height * 0.04
+		forward :height * 0.078
+		jumpTo :center1
+		setHeading :heading1 + 91 - :arcAngle / 2
+		arc :arcAngle :arcRadius1
+		arc :arcAngle :arcRadius2
+		jumpTo :center
+	]
+	setHeading :oldHeading
+	jumpForward :height * 0.05
+	jumpLeft :height * 0.008
+	right 109
+	forward :height * 0.05
+	jumpRight :arcRadius2 - :arcRadius1
+	jumpBackward :height * 0.007
+	backward :height * 0.05
+	setTurtleState :oldState
+end
+
+speedifyLogo 100
