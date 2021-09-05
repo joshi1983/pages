@@ -1,0 +1,315 @@
+make "widthRatio 3000 / 1938
+
+to createSunGradient :radius
+	localmake "colorStops createPList2 [
+		[0 "#dabe01] [0.3 "#dabe01] [0.5 "#aaa] [0.7 "#849b8e]
+		[0.8 "#849b8e] [1 "#00849b8e]
+	]
+	output createRadialGradient pos :radius :colorStops
+end
+
+to createSoftGradient :radius
+	localmake "colorStops createPList2 [
+		[0 "#849b8e] [1 "#00849b8e]
+	]
+	output createRadialGradient pos :radius :colorStops
+end
+
+to drawSky :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "width :height * :widthRatio
+	localmake "greenHeight :height * 0.62
+	localmake "softSpots [
+		[-0.69 0.95 0.1] [0.01 0.82 0.1]
+
+		[-0.05 0.85 0.04] [-0.048 0.87 0.04]  [-0.045 0.89 0.05] [-0.02 0.91 0.06]
+		[0.02 0.91 0.07] [0.05 0.91 0.07] [0.08 0.91 0.08]
+		[0.12 0.89 0.1] [0.16 0.88 0.1] [0.19 0.85 0.1]
+		[0.22 0.81 0.1] [0.25 0.78 0.1] [0.28 0.75 0.1] [0.3 0.72 0.1]
+		[0.33 0.7 0.1] [0.35 0.67 0.1]
+
+		[0.68 0.68 0.1] [0.7 0.69 0.1] [0.73 0.7 0.1] [0.75 0.72 0.1]
+
+		[-0.75 0.76 0.11] [-0.7 0.76 0.11] [-0.65 0.76 0.11][-0.6 0.79 0.11]
+		[-0.55 0.82 0.11] [-0.5 0.83 0.11] [-0.45 0.85 0.11] [-0.4 0.88 0.11]
+	 	[-0.35 0.9 0.1] [-0.3 0.89 0.1] [-0.25 0.81 0.1] [-0.2 0.78 0.1]
+		[-0.15 0.74 0.1]  [-0.15 0.7 0.1] [-0.1 0.65 0.1]
+	]
+	stripes :width :height ["#759436 "#47698e]
+	setPenColor "#759436
+	setLineCap "butt
+	setPenSize :width
+	forward :greenHeight
+	jumpTo :oldPos
+	jumpRight :height * 0.48
+	jumpForward :height * 0.91
+	setPenGradient createSunGradient :height * 0.12
+	jumpTo :oldPos
+	forward :height
+	repeat count :softSpots [
+		localmake "softInfo vectorScale (item repcount :softSpots) :height
+		jumpTo :oldPos
+		jumpRight first :softInfo
+		jumpForward item 2 :softInfo
+		setPenGradient createSoftGradient last :softInfo
+		jumpTo :oldPos
+		forward :height
+	]
+	setTurtleState :oldState
+end
+
+to createHillGradient :width
+	localmake "oldState turtleState
+	localmake "colorStops createPList2 [
+		[0 "#48623b] [1 "#879c3f]
+	]
+	right 130
+	localmake "fromPos pos
+	jumpForward :width
+	localmake "result createLinearGradient :fromPos pos :colorStops "pad
+	setTurtleState :oldState
+	output :result
+end
+
+to drawHills :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "width :height * :widthRatio
+	localmake "hills [
+		[-0.773 0.698 0.2 [[-71 0] [-20 0.22] [-20 0.09] [-20 0.7]
+		[-139 0] [0.314]]]
+		[-0.773 0.6 0.4 [[-76 0] [10 1] [0.14] [-37 0.3] [0.6] [-90 0] [0.1]
+			[-80 0] [1.04]]]
+		[-0.123 0.559 0.4 [[-80 0] [13.2 2] [-50 0.14] [-19 0.5]]]
+	]
+	setPenSize :height * 0.002
+	setPenColor "#67b
+	setLineCap "round
+	setLineJoinStyle "round
+	repeat count :hills [
+		localmake "hillInfo item repcount :hills
+		jumpRight :height * first :hillInfo
+		jumpForward :height * item 2 :hillInfo
+		setFillGradient createHillGradient :height * item 3 :hillInfo
+		polyStart
+		arcLines last :hillInfo :height
+		polyEnd
+		jumpTo :oldPos
+		setHeading :oldHeading
+	]
+	localmake "c "#A9C900
+	localmake "cTransparent mix :c transparent 0
+	localmake "colorStops createPList2 [
+		[0 transparent] [0.2 :cTransparent] [0.45 mix :c transparent 0.8]
+		[0.53 :c] [0.65 mix :c transparent 0.1] [0.7 :cTransparent]
+		[1 transparent]
+	]
+	jumpForward :height
+	setLineCap "butt
+	setPenSize :width
+	setPenGradient createLinearGradient :oldPos pos :colorStops "pad
+	backward :height
+	setTurtleState :oldState
+end
+
+to drawTree :width :height
+	localmake "oldState turtleState
+	localmake "baseRadius :width / 2
+	localmake "topRadius :baseRadius * 0.01
+	jumpForward :baseRadius
+	setPenSize 0
+	setFillColor "#295C0F
+	circlePair :baseRadius :topRadius :height - :baseRadius
+	setTurtleState :oldState
+end
+
+to drawTrees :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "trees [
+		[0.41 0.578 0.07 0.247]
+		[0.68 0.595 0.08 0.247]
+		[-0.31 0.27 0.33 0.73]
+	]
+	repeat count :trees [
+		localmake "treeInfo vectorScale (item repcount :trees) :height
+		jumpRight first :treeInfo
+		jumpForward item 2 :treeInfo
+		localmake "treeWidth item 3 :treeInfo 
+		localmake "treeHeight last :treeInfo 
+		drawTree :treeWidth :treeHeight
+		jumpTo :oldPos
+	]
+	setTurtleState :oldState
+end
+
+to drawSunFlowerSimple :radius
+	localmake "oldState turtleState
+	setLineCap "round
+	setPenSize :radius * 0.01
+	setPenColor "#b80
+	setFillColor "#cce8e800
+	circle :radius
+	setPenColor "#660
+	setFillColor "#E37A02
+	setPenSize :radius * 0.08
+	circle :radius * 0.4
+	setTurtleState :oldState
+end
+
+to drawSunFlowerDetailed :radius
+	localmake "oldState turtleState
+	localmake "center pos
+	localmake "numPetals 16
+	setLineCap "round
+	repeat 2 [
+		setPenColor "#880
+		setPenSize :radius * 0.17
+		repeat 2 [
+			repeat :numPetals [
+				forward :radius - penSize / 2
+				jumpTo :center
+				right 360 / :numPetals
+			]
+			setPenColor "#ff0
+			setPenSize :radius * 0.13
+		]
+		right 180 / :numPetals
+	]
+	setPenColor "#660
+	setFillColor "#E37A02
+	setPenSize :radius * 0.08
+	circle :radius * 0.4
+	setTurtleState :oldState
+end
+
+to drawSunFlowers :width :numFlowersTop :numFlowersBottom :height :drawSunFlowerName
+	localmake "oldState turtleState
+	localmake "averageNumFlowers mix :numFlowersTop :numFlowersBottom 0.5
+	localmake "averageSeparation :width / :averageNumFlowers
+	localmake "numLevels max 1 int 2 * :height / :averageSeparation
+	jumpLeft (:width - :averageSeparation) / 2
+	localmake "startPos pos
+	repeat :numLevels [
+		jumpTo :startPos
+		localmake "ratio power (1 - repRatio) 0.7
+		jumpForward :height * :ratio
+		localmake "numFlowers int mix :numFlowersBottom :numFlowersTop  repRatio
+		localmake "separation :width / (:numFlowers + 0.5)
+		if even? repcount [
+			jumpRight :separation / 2
+		]
+		repeat :numFlowers [
+			(invoke :drawSunFlowerName :separation / 2)
+			jumpRight :separation
+		]
+	]
+	setTurtleState :oldState
+end
+
+to drawHouse :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "roofAngle1 38
+	localmake "roofLength1 :height * 0.082
+	localmake "roofLength2 :roofLength1 * 1.15
+	localmake "roofDepth :height * 0.077
+	localmake "baseHeight1 :height * 0.045
+	localmake "baseHeight2 :baseHeight1 - (:roofLength2 - :roofLength1) * cos :roofAngle1
+	localmake "trapWidth1 :height * 0.21
+	localmake "roofHeight :roofLength2 * cos :roofAngle1
+	localmake "trapWidth2 :trapWidth1 - 2 * :roofLength2 * sin :roofAngle1
+	localmake "rects [
+		[0.03 0.0215 0.016 0.037] ; door
+		[0.073 0.034 0.025 0.018] ; nearest window
+		[0.051 0.08 0.014 0.018] ; top little window
+		[0.127 0.02 0.022 0.012] ; side left window
+		[0.165 0.02 0.02 0.012] ; side right window
+	]
+	jumpForward :height * 0.5841
+	jumpRight :height * 0.478
+	localmake "startPos pos
+	setPenColor "black
+	setPenSize :height * 0.003
+	setLineCap "round
+	setLineJoinStyle "round
+
+	; draw roof
+	setFillColor "#854c38
+	jumpForward :baseHeight2
+	jumpRight :height * 0.09
+	isoTrapezoid :trapWidth1 :trapWidth2 :roofHeight
+
+	jumpTo :startPos
+	setPenSize :height * 0.004
+	setFillColor "#b38a44
+	polyStart
+	jumpForward :baseHeight1
+	right :roofAngle1
+	jumpForward :roofLength1
+	right 180 - :roofAngle1 * 2
+	jumpForward :roofLength2
+	left 90 - :roofAngle1
+	jumpForward :roofDepth
+	jumpRight :baseHeight2
+	polyEnd
+	setHeading :oldHeading
+	setFillColor "#970
+	setPenColor "#860
+	setPenSize :height * 0.002
+	repeat count :rects [
+		localmake "rectInfo item repcount :rects
+		localmake "w :height * item 3 :rectInfo
+		localmake "h :height * item 4 :rectInfo
+		jumpTo :startPos
+		jumpRight :height * first :rectInfo
+		jumpForward :height * item 2 :rectInfo
+		rect :w :h
+	]
+	setTurtleState :oldState
+end
+
+to drawMidField :height
+	localmake "oldState turtleState
+	localmake "width :height * :widthRatio
+	localmake "detailedHeight :height * 0.1
+	jumpForward :height * 0.4
+	drawSunFlowers :width 100 40 :height * 0.15 "drawSunFlowerSimple
+	jumpBackward :detailedHeight * 0.99
+	drawSunFlowers :width 40 20 :detailedHeight "drawSunFlowerDetailed
+
+	setTurtleState :oldState
+end
+
+to drawForegroundSunflowers :height
+	localmake "oldPos pos
+	jumpForward :height * 0.15
+	drawSunFlowers :height * :widthRatio 35 10 :height * 0.25 "drawSunFlowerDetailed
+	jumpBackward :height * 0.067
+	drawSunFlowers :height * :widthRatio * 0.95 6 6 :height * 0.03 "drawSunFlowerDetailed
+	jumpTo :oldPos
+end
+
+; Inspired by Van Gogh's painting of a 
+; field full of sunflowers painted in 1888.
+; It is shown at:
+; https://i.etsystatic.com/39443269/r/il/7df356/4980122961/il_fullxfull.4980122961_dgl4.jpg
+; The painting is referenced from:
+; https://artpictures.club/autumn-2023.html
+; Van Gogh is a famous French painter.
+; You can learn more about the artist at:
+; https://en.wikipedia.org/wiki/Vincent_van_Gogh
+to vanGoghSunflowerField :height
+	localmake "oldState turtleState
+	drawSky :height
+	drawHills :height
+	drawMidField :height
+	drawForegroundSunflowers :height
+	drawTrees :height
+	drawHouse :height
+	setTurtleState :oldState
+end
+
+vanGoghSunflowerField 100

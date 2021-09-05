@@ -1,0 +1,69 @@
+make "factor mix 10 0 interpolateRatio easeIn animation.timeRatio
+
+to getCirclesFractalCircles :radius :result
+	if :radius > 1 [
+		localmake "oldState turtleState
+		queue2 "result [pos :radius]
+		localmake "center pos
+		localmake "numAngles 8
+		localmake "smallRadius :radius * 0.4
+		repeat :numAngles [
+			jumpForward :radius * :factor
+			getCirclesFractalCircles :smallRadius :result		
+			jumpTo :center
+			right 360 / :numAngles
+		]
+		setTurtleState :oldState
+	]
+end
+
+to greaterEqualByRadius? :circle1 :circle2
+	output (last :circle1) >= (last :circle2)
+end
+
+; This was made into a video at:
+; https://www.facebook.com/share/v/1EtT72a7cR/
+; I(Josh Greig) created the video.
+; This should be original enough to share and use however you want.
+; I'm releasing this code and animation to the public domain.
+to circlesFractal :radius
+	localmake "oldState turtleState
+	localmake "colorStops createPList2 [
+		[0 "white] [0.5 "#888] [0.85 "#444] [1 "black]
+	]
+	localmake "circles []
+	getCirclesFractalCircles :radius :circles
+	localmake "circles (sort :circles "greaterEqualByRadius?)
+	repeat count :circles [
+		localmake "info item repcount :circles
+		localmake "radius last :info
+		jumpTo first :info
+		setPenSize :radius * 0.05
+		ifelse :radius > 1 [
+			setFillGradient createRadialGradient pos :radius :colorStops
+		] [
+			setFillColor "#ddd
+		]
+		circle :radius
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+setFillColor "white
+circlesFractal 40
+
+to animation.snapshotstyle
+	output createPList2 [
+		["zoom.scale 2.5]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 10
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

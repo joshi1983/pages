@@ -1,0 +1,83 @@
+; Inspired by
+; https://upload.wikimedia.org/wikipedia/en/3/33/PBS_logo.svg
+; Referenced from:
+; https://en.wikipedia.org/wiki/PBS
+
+make "darkColor "#2638c4
+
+to faceProfile :faceHeight
+	jumpForward :faceHeight * 0.2
+	right 90
+	jumpForward :faceHeight * 0.05
+	arcLeft 90 :faceHeight * 0.1075
+	jumpForward :faceHeight * 0.167
+	right 79
+	jumpForward :faceHeight * 0.095
+	arcLeft 106.6869 :faceHeight * 0.03
+	jumpForward :faceHeight * 0.524308
+end
+
+; The reverse of faceProfile.
+; Most of the numbers are copies.
+; Instructions are in reverse order, though.
+to faceProfileDown :faceHeight
+	left 117.7
+	jumpForward :faceHeight * 0.524308
+	arcRight 106.6869 :faceHeight * 0.03
+	jumpForward :faceHeight * 0.095
+	left 79
+	jumpForward :faceHeight * 0.167
+	arcRight 90 :faceHeight * 0.1075
+	jumpForward :faceHeight * 0.05
+	left 90
+	jumpForward :faceHeight * 0.2
+end
+
+to pbsLogo :height
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "radius :height / 2
+	localmake "faceHeight :height * 0.6
+	setFillColor :darkColor
+	setPenSize 0
+	jumpForward :radius
+	circle :radius
+	jumpTo :oldPos
+	jumpForward :height * 0.2
+	jumpRight :height * 0.014
+	setFillColor "white
+	polyStart
+	faceProfile :faceHeight
+	setHeading :oldHeading - 90
+	jumpForward :height * 0.15
+	arcLeft 60 :height * 0.253
+	arcLeft 45 :height * 0.235
+	arcLeft 20 :height * 0.205
+	arcLeft 20 :height * 0.23
+	arcLeft 19.6 :height * 0.212
+	setHeading :oldHeading
+	jumpBackward :height * 0.1436156
+	polyEnd
+	jumpTo :oldPos
+	jumpForward :height * 0.2
+	jumpRight :height * 0.2131
+	polyStart
+	faceProfile :faceHeight
+	setHeading :oldHeading - 90
+	jumpForward :height * 0.091
+	faceProfileDown :faceHeight
+	polyEnd
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.595
+	jumpLeft :height * 0.013
+	setFillColor :darkColor
+	circle :height * 0.057
+
+	; Restore original state.
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+pbsLogo 100

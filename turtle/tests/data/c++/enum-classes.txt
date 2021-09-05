@@ -1,0 +1,22 @@
+// copied from: https://blog.mbedded.ninja/programming/languages/c-plus-plus/cpp-on-embedded-systems/
+
+// C-style enums
+enum EStates { OFF, IDLE, RUNNING };
+enum EColors { RED, BLUE, GREEN };
+
+// C++-style enum classes
+enum class ECStates { OFF, IDLE, RUNNING };
+enum class ECColors { RED, BLUE, GREEN };
+
+int main() {
+    EStates myEState;
+    myEState = IDLE;
+    if (myEState == GREEN) { // Bad idea, but compiles
+      // ...
+    }
+
+    ECStates myECState = ECStates::IDLE;
+    if (myECState == ECColors::GREEN) { // Bad idea, but yay, won't compile!
+        // ...
+    }
+}

@@ -1,0 +1,53 @@
+make "darkColor "#780
+
+; Inspired by:
+; https://ca.pinterest.com/pin/41728734042644537
+; Reported on: April 7, 2021
+; Located at: Woodborough Hill, nr Alton Barnes, Wiltshire 
+to woodboroughHill2021CropCircles :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "lightColor "#ef8
+	localmake "innerThickness :height * 0.01
+	localmake "outerThickness :height * 0.03
+	localmake "innerRadius :height * 0.18
+	localmake "outerRadius (:height - :outerThickness) / 2
+	localmake "littleRadius :height * 0.06
+
+	localmake "littleCircleDistance :height * 0.4
+	jumpForward :height / 2
+	localmake "center pos
+	setFillColor transparent
+	setPenColor :lightColor
+	repeat 7 [
+		localmake "ratio power repRatio 0.7
+		setPenSize mix :innerThickness :outerThickness :ratio
+		localmake "radius mix :innerRadius :outerRadius :ratio
+		circle :radius
+	]
+	setPenSize 0
+	setFillColor :lightColor
+	repeat 8 [
+		localmake "ratio 1
+		if 0 = remainder repcount - 4 4 [
+			localmake "ratio (:littleCircleDistance - :innerRadius) / (:outerRadius - :innerRadius)
+		]
+		localmake "outerThickness1 mix :outerThickness :innerThickness :ratio
+		localmake "outerRadius1 mix :outerRadius :innerRadius :ratio
+		jumpTo :center
+		jumpForward :innerRadius
+		isoTrapezoid :innerThickness :outerThickness1 :outerRadius1 - :innerRadius
+		right 360 / 8
+	]
+	setHeading :oldHeading - 45
+	repeat 2 [
+		jumpTo :center
+		jumpForward :littleCircleDistance
+		circle :littleRadius
+		right 360 / 2
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor :darkColor
+woodboroughHill2021CropCircles 100

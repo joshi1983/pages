@@ -1,0 +1,56 @@
+to drawSpinningTriangles :height :sign :t
+	localmake "oldState turtleState
+	localmake "maxSizes 16
+	localmake "numSizes mix :maxSizes 1 :t
+	localmake "lastCount int :numSizes
+	repeat :numSizes [
+		localmake "radius :height * mix 0.62 0.05 repcount / :maxSizes
+		left :sign * mix 6 4 repcount / :maxSizes
+		if repcount = :lastCount [
+			setPenColor mix penColor transparent (:numSizes - repcount)
+		]		
+		regularPolygon :radius 3
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by an image at:
+; https://www.facebook.com/photo?fbid=10233322360782125
+; In case that becomes unavailable, it was posted by:
+; Tim Rauh Jr.
+to rotatedTriangles :height :t
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	setPenSize :height * 0.002
+	setPenColor "black
+	jumpForward :height / (1 + cos 180 / 6)
+	localmake "center pos
+	setLineJoinStyle "miter
+	repeat 6 [
+		setHeading :oldHeading + 30 + repcount * 360 / 6
+		jumpForward :height * 0.26
+		setHeading :oldHeading
+		drawSpinningTriangles :height / 2 -sign (modulo repcount 2) - 0.5 :t
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+make "t interpolateRatio easeInOut animation.timeRatio
+rotatedTriangles 100 :t
+
+to animation.snapshotstyle
+	output createPList2 [
+		["position.y 50]
+		["zoom.scale 6.7]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 5
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

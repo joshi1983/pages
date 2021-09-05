@@ -1,0 +1,36 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Singapore#/media/File:Flag_of_Singapore.svg
+; Construction sheet at:
+; https://en.wikipedia.org/wiki/Flag_of_Singapore#/media/File:Construction_Sheet_of_the_Flag_of_Singapore.svg
+to singaporeFlag :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "width :height * 3 / 2
+	localmake "radius1 :height * 13.25 / 2 / 36
+	localmake "flagRed "#ed2939
+	stripes :width :height ["white :flagRed]
+	jumpForward :height * 3 / 4
+	jumpLeft :width / 2 - :height * 4.78 / 36 - :radius1
+	setPenSize 0
+	setFillColor "#fff
+	circle :radius1
+	setFillColor :flagRed
+	jumpRight :height * 3 / 36
+	circle :radius1
+	jumpRight :height * 7.25 / 36 - :radius1
+	localmake "center pos
+	setFillColor "white
+	repeat 5 [
+		setHeading :oldHeading + repcount * 360 / 5
+		jumpForward :height * 7.6 / 2 / 36
+		setHeading :oldHeading
+		regularStar :height * 3.45 / 2 / 36 5
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+; for contrast with white in the flag
+setScreenColor "#888
+
+singaporeFlag 100

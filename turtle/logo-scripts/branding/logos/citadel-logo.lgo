@@ -1,0 +1,32 @@
+; Inspired by logo at:
+; https://en.wikipedia.org/wiki/Citadel_Securities#/media/File:Citadel_Securities_logo.jpg
+to citadelLogo :height
+	localmake "oldState turtleState
+	localmake "width :height * 2
+	localmake "height1 :height * 0.29
+	localmake "separation (:height - :height1) / 2
+	localmake "gap :separation - :height1
+	localmake "midWidth (:width - :gap) / 2
+	localmake "separation1 :midWidth + :gap
+	localmake "topWidth :height * 0.4
+	localmake "separation2 (:width - :topWidth) / 2
+	stripes :width :height1 ["white]
+	jumpForward :separation
+	localmake "midPos pos
+	jumpLeft :separation1 / 2
+	repeat 2 [
+		stripes :midWidth :height1 ["white]
+		jumpRight :separation1
+	]
+	jumpTo :midPos
+	jumpForward :separation
+	jumpLeft :separation2
+	repeat 3 [
+		stripes :topWidth :height1 ["white]
+		jumpRight :separation2
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "#171628
+citadelLogo 100

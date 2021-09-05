@@ -1,0 +1,40 @@
+; Inspired by logo on a chip at:
+; https://youtu.be/njGWWg69B4A?t=550
+; The same logo appears at:
+; https://en.wikipedia.org/wiki/Motorola_68000#/media/File:KL_Thomson_TS68000.jpg 
+;
+; The 68000 chip is usually from Motorolla but this isn't the Motorolla logo.
+; This might be a logo for Thomson but I didn't find it anywhere else.
+to thomson68000ChipLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "gapFactor 0.03
+	localmake "height1 :height / (1 - :gapFactor * sin 30)
+	localmake "gap :height1 * :gapFactor
+	localmake "len :height1 / 2 - :gap
+	localmake "arcAngle 60
+	setFillColor "white
+	setPenSize 0
+	jumpForward :height / 2 + (:height1 - :height) / 2
+	localmake "center pos
+	repeat 3 [
+		setHeading :oldHeading + repcount * 360 / 3
+		jumpForward :height1 / 2
+		right 30
+		jumpRight :gap
+		localmake "pos1 pos
+		polyStart
+		jumpRight :len
+		left 30
+		jumpBackward :len
+		setHeading (towards :pos1) - :arcAngle / 2
+		localmake "arcRadius (distance :pos1) / 2 / sin (:arcAngle / 2)
+		arcRight :arcAngle :arcRadius
+		polyEnd
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+thomson68000ChipLogo 100

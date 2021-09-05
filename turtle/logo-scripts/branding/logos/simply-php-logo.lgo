@@ -1,0 +1,56 @@
+make "simplyPHPOrange "#F37944
+
+to simplyPHP :height
+	localmake "oldState turtleState
+	localmake "angle1 45
+	localmake "straightLength1 (:height - penSize * sin :angle1) / (cos :angle1) - penSize / 2
+	localmake "straightLength2 :height * 0.254 - penSize * 0.3
+	localmake "arcRadius :height * 0.442 - penSize / 2
+	setLineCap "butt
+	setLineJoinStyle "miter
+	jumpRight :height * 0.22
+	jumpForward penSize / 2 * cos :angle1
+	left :angle1
+	forward :straightLength1
+	left 90
+	forward :straightLength2
+	arcLeft 180 :arcRadius
+	forward :height * 0.3988 + :straightLength2 * 2 - penSize /2
+	arcRight 180 :arcRadius
+	forward :straightLength2 ; contains point of symmetry.
+	right 90
+	forward :straightLength1
+	setTurtleState :oldState
+end
+
+; Inspired by logo at
+; https://simplyphp.com
+to simplyPHPLogo1 :height
+	localmake "oldState turtleState
+	setPenColor :simplyPHPOrange
+	setPenSize :height * 0.09
+	simplyPHP :height
+	setTurtleState :oldState
+end
+
+to simplyPHPLogo2 :height
+	localmake "oldState turtleState
+	stripes :height * 3 :height [:simplyPHPOrange]
+	setPenSize :height * 0.09
+	setPenColor "white
+	simplyPHP :height
+	setPenSize :height * 0.02
+	setPenColor :simplyPHPOrange
+	jumpForward :height * 0.03
+	jumpRight :height * 0.01
+	simplyPHP :height * 0.92
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+make "height 100
+make "separation :height * 4
+jumpLeft :separation / 2
+simplyPHPLogo1 :height
+jumpRight :separation
+simplyPHPLogo2 :height

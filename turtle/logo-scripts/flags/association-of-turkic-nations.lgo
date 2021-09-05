@@ -1,0 +1,37 @@
+; Inspired by flag at:
+; https://en.wikipedia.org/wiki/Organization_of_Turkic_States#/media/File:Flag_of_the_Organization_of_Turkic_States.svg
+to associationOfTurkikStatesFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 3 / 2
+	localmake "blueColor "#00aac7
+	localmake "radius1 :height * 0.145
+	localmake "radius2 :radius1 * 0.69
+	localmake "rayLargeRadius :height * 0.01
+	localmake "rayTinyRadius :height * 0.0007
+	localmake "numRays 40
+	stripes :width :height [:blueColor]
+	jumpForward :height / 2
+	localmake "center pos
+	setLineJoinStyle "miter
+	setPenColor "white
+	setPenSize :height * 0.02
+	setFillColor transparent
+	isotoxalStar :height * 0.36 :height * 0.275 8
+	circle :radius1 - penSize / 2
+	setPenSize 0
+	setFillColor penColor
+	repeat :numRays [
+		jumpForward :radius1 + :rayLargeRadius
+		circlePair :rayLargeRadius :rayTinyRadius :height * 0.0943
+		right 360 / :numRays
+		jumpTo :center
+	]
+	jumpRight :height * 0.032
+	circle :radius2
+	setFillColor :blueColor
+	isotoxalStar :height * 0.06 :height * 0.03 8
+
+	setTurtleState :oldState
+end
+
+associationOfTurkikStatesFlag 100

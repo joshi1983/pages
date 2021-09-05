@@ -1,0 +1,119 @@
+to drawPlug :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "gap :height * 0.18
+	localmake "size1 :height * 0.4
+	localmake "size2 :height * 0.42
+	localmake "size3 :height * 0.4299192
+	localmake "arcAngle1 58
+	localmake "arcAngle2 90
+	localmake "arcRadius1 :height * 0.5
+	localmake "arcRadius2 :height * 0.05
+	localmake "angle1 :arcAngle1
+	localmake "length1 :height * 0.45
+	right 90
+	setFillColor "white
+	setPenSize 0
+	polyStart
+	jumpForward :size1
+	arcLeft :arcAngle1 :arcRadius1
+	right :angle1
+	jumpForward :size2
+	arcLeft :arcAngle2 :arcRadius2
+	jumpForward :size3 ; point of symmetry
+	arcLeft :arcAngle2 :arcRadius2
+	jumpForward :size2
+	right :angle1
+	arcLeft :arcAngle1 :arcRadius1
+	jumpForward :size1
+	polyEnd
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :gap
+	left 90
+	setPenSize :height * 0.095
+	setPenColor fillColor
+	setLineCap "round
+	repeat 2 [
+		forward :length1
+		jumpBackward :length1
+		jumpRight :height - :gap * 2
+	]	
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://publicdomainvectors.org/en/free-clipart/Electric-car-icon-vector-graphics/6461.html
+to ecoCar :height
+	localmake "height :height * 1.026
+	localmake "oldState turtleState
+	localmake "wheelRadius :height * 0.2
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "arcs [
+		[18 0.55]
+		[40 0.16]
+		[32 0.26]
+		[22 0.8]
+		[-65 0.03]
+		[54 0.5]
+		[30 1.05]
+		[59 0.53]
+		[-50 0.03]
+		[66 0.3]
+		[80 0.06]
+	]
+	; Draw car body
+	setFillColor "#44aa00
+	jumpRight :height * 0.9
+	jumpForward :height * 0.187
+	right 25
+	setPenSize 0
+	polyStart
+	arcsLeft :arcs :height
+	jumpForward :height * 0.3
+	setHeading :oldHeading + 90
+	jumpForward :height * 1.2
+	polyEnd
+
+	; draw plug
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpLeft :height * 0.2243
+	jumpForward :height * 0.38
+	drawPlug :height * 0.403
+
+	; Draw wheels
+	jumpTo :oldPos
+	setHeading :oldHeading
+	setPenColor "white
+	setPenSize :height * 0.01
+	jumpForward :wheelRadius + penSize / 2	
+	jumpLeft :height * 0.66
+	circle :wheelRadius
+	jumpRight :height * 1.345
+	circle :wheelRadius
+	setTurtleState :oldState
+end
+
+to underline :length
+	localmake "oldState turtleState
+	localmake "colorStops createPList2 [
+		[0 "#0fff] [0.4 "#afff] [0.5 "#ffff]
+		[0.6 "#afff] [1 "#0fff]
+	]
+	jumpLeft :length / 2
+	localmake "fromPos pos
+	jumpRight :length
+	setPenGradient createLinearGradient :fromPos pos :colorStops "pad
+	right 90
+	setPenSize :length * 0.01
+	backward :length
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+underline 300
+ecoCar 100

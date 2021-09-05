@@ -1,0 +1,49 @@
+to drawV :angle :size
+	localmake "oldState turtleState
+	localmake "emptyGap penSize * 0.15
+	localmake "gap (penSize / 2 + :emptyGap) / sin :angle / 2
+	localmake "len :size
+	jumpForward :gap
+	left :angle / 2
+	jumpForward :len
+	backward :len
+	right :angle
+	forward :len
+
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://spvm.qc.ca
+to spvmLogo :height
+	localmake "oldState turtleState
+	localmake "smallAngle 180 / 3
+	localmake "largeSize 0.428
+	localmake "smallSize 0.38
+	localmake "vAngles [
+		[90 :largeSize] 
+		[90 :largeSize]
+		[:smallAngle :smallSize]
+		[:smallAngle :smallSize]
+		[:smallAngle :smallSize]
+	]
+	setLineCap "butt
+	setLineJoinStyle "miter
+	setPenSize :height * 0.11
+	setPenColor "#008bcb
+	jumpForward :height / 2
+	left 45
+	for ["i 1 count :vAngles] [
+		localmake "vInfo item :i :vAngles
+		localmake "vAngle first :vInfo
+		drawV :vAngle :height * last :vInfo
+		localmake "nextAngle :vAngle
+		if :i <> count :vAngles [
+			localmake "nextAngle first item 1 + :i :vAngles
+		]
+		right (:vAngle + :nextAngle) / 2
+	]
+	setTurtleState :oldState
+end
+
+spvmLogo 100

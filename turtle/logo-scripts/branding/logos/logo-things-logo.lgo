@@ -1,0 +1,29 @@
+; Inspired by logo at:
+; https://logothings.github.io/logothings/
+to logoThingsLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "colors ["#ef9c60 "#38657d "#e8684e "#599a74]
+	localmake "arcAngle 45
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	repeat 2 [
+		repeat count :colors [
+			setHeading :oldHeading + (repcount - 1) * 360 / 4
+			setFillColor item repcount :colors
+			polyStart
+			jumpForward :height / 2
+			right 90
+			arcRight :arcAngle :height / 2
+			polyEnd
+			jumpTo :center
+		]
+		localmake "colors duplicate "#404038 4
+		localmake "height :height * 0.5
+	]
+
+	setTurtleState :oldState
+end
+
+logoThingsLogo 100

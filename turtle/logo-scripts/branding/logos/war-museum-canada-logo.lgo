@@ -1,0 +1,35 @@
+; Inspired by logo at:
+; https://www.warmuseum.ca/
+to warMuseumCanadaLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "size1 0.155
+	localmake "size2 :size1 * 2
+	localmake "path1 [
+		[-90 0] [:size1] [-90 0] [:size2] [90 0]
+		[:size2] [90 0] [1]
+	]
+	setPenSize 0
+	setFillColor "#00b658
+	jumpForward :height * :size2
+	localmake "startPos pos
+	polyStart
+	arcLines :path1 :height
+	left 120
+	jumpForward :height
+	polyEnd
+
+	setFillColor "black
+	jumpTo :startPos
+	setHeading :oldHeading
+	jumpRight :height * :size1
+	localmake "endPos pos
+	jumpTo :startPos
+	polyStart
+	arcLines :path1 -:height
+	jumpTo :endPos
+	polyEnd
+	setTurtleState :oldState
+end
+
+warMuseumCanadaLogo 100

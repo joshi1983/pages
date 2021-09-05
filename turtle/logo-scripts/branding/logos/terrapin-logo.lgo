@@ -1,0 +1,53 @@
+; Inspired by logo shown at the start of loading
+; Terrapin Logo in an Apple II.
+; You can see the logo at:
+; https://archive.org/details/Terrapin-Logo-PLUS
+to terrapinPlusLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "arcLinesInfo [
+		; tail or deeper rear fin
+		[-1.68 0.374 [[-85 0.03] [30 0.44] [-50 0.1] [16 0.3]
+		[-168 0.032] [7 1.5] [-32.921 0.4] [-77.079 0.0173]]]
+
+		; shell
+		[1.11 0.75 [[40 0.03] [21 0.45] [35 1] [12.5 4.8] [-10 2]
+		[-5 0.8] [20 0.8] [130 0.05] [30 0.55] [-15 1.1] [10 0.3]
+		[-10 2] [30 0.65] [13.5 0.8] [-70 0.43] [100 0.13] [-36 0.4]
+		[4 0.1] [0.09135] [54 0.01]
+		]]
+
+		; head
+		[1.68 0.587 [[45 0.05] [40 0.4] [45 0.6] [140 0.025] [-8 3]
+		[-18 0.45] [58 0.06] [28 0.20] [30 0.053]
+		]]
+
+		; front fin
+		[0.624 0.411 [[55 0.025] [70 0.4] [12 1] [-24 0.3] [13 1]
+		[30 0.2] [110 0.02] [23 1.25] [0.04] [25 0.1] [-20 1.307]
+		[66 0.05]
+		]]
+
+		; rear fin
+		[-0.776 0.368 [[50 0.025] [80 0.25] [7 1] [-20 0.25] [0.2]
+		[143 0.023] [25 0.7] [13 0.2] [10 2.0768] [52 0.03]
+		]]
+	]
+	setPenSize 0
+	setFillColor "#00de00
+	repeat count :arcLinesInfo [
+		localmake "info item repcount :arcLinesInfo
+		jumpRight :height * first :info
+		jumpForward :height * item 2 :info
+		polyStart
+		arcLines item 3 :info :height
+		polyEnd
+		jumpTo :oldPos
+		setHeading :oldHeading
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+terrapinPlusLogo 100

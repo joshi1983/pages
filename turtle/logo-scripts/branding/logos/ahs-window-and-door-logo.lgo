@@ -1,0 +1,121 @@
+to drawHouse :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "baseWidth :height * 1.06
+	localmake "baseHeight :height * 0.655
+	localmake "roofWidth :height * 1.3
+	localmake "roofAngle1 arcTan (:height - :baseHeight) / (:roofWidth / 2)
+	localmake "roofSlantedLength hypot [:roofWidth / 2 :height - :baseHeight] 
+	localmake "outline1 [
+		[90 0] [:baseWidth / 2] [-90 0] [:baseHeight]
+		[90 0] [(:roofWidth - :baseWidth) / 2] [:roofAngle1 - 180 0]
+		[:roofSlantedLength] [-:roofAngle1 0]
+	]
+	localmake "windowHeight :height * 0.19
+	localmake "windowWidth :height * 0.29
+	localmake "frameThickness :height * 0.075
+	localmake "windowSeparationV :windowHeight + :frameThickness
+	localmake "windowSeparationH :windowWidth + :frameThickness
+	setFillColor "black
+	setPenSize 0
+	drawArcLineShape [0 0
+		combine :outline1 reverse :outline1
+	] 1
+
+	; draw chimney
+	jumpRight :height * 0.35
+	stripes :height * 0.08 :height [fillColor]
+
+	jumpTo :oldPos
+	jumpForward :height * 0.147
+	jumpLeft :windowSeparationH / 2
+	repeat 2 [
+		repeat 2 [
+			stripes :windowWidth :windowHeight ["white]
+			jumpRight :windowSeparationH
+		]
+		jumpLeft :windowSeparationH * 2
+		jumpForward :windowSeparationV
+	]
+	setTurtleState :oldState
+end
+
+to drawA :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "angle1 69.3
+	setPenSize 0
+	jumpForward :height * 0.16
+	stripes :height * 0.7 :height * 0.218 [penColor]
+	jumpTo :oldPos
+	setFillColor penColor
+	repeat 2 [
+		drawArcLineShape [0 1
+			[[-90 0] [0.16] [-:angle1 0] [1 / sin :angle1]
+			[:angle1 - 180 0] [0.315] [-73.2 0] [1]
+			]
+		] :height * sign repcount - 1.5
+	]
+	setTurtleState :oldState
+end
+
+to drawH :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "sideThickness :height * 0.3
+	localmake "width :height * 0.95
+	localmake "separation :width - :sideThickness
+	jumpLeft :separation / 2
+	repeat 2 [
+		stripes :sideThickness :height [penColor]
+		jumpRight :separation
+	]
+
+	jumpTo :oldPos
+	jumpForward :height * 0.4
+	stripes :separation :height * 0.24 [penColor]
+	setTurtleState :oldState
+end
+
+to drawS :height
+	localmake "oldState turtleState
+	setFillColor penColor
+	setPenSize 0
+	drawArcLineShape [-0.45 0.32
+		[[-178 0] [80 0.34] [12 1.2] [30 0.45] [80 0.308]
+		[30 0.25] [20 0.5] [5 3] [-70 0.078] [-70 0.06]
+		[-60 0.165] [-60 0.125] [95 0] [0.295] [90 0]
+		[70 0.3] [30 0.75] [40 0.33] [60 0.245] [40 0.3]
+		[12 0.6] [0.15] [-10 0.5] [-155 0.099] [-30 0.29]
+		[-40 0.1] [-17 0.27]]
+	] :height
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://affordablehomeservices.ca
+;
+; One of the main differences between what this code draws and the original
+; is that this exactly centers the black outlne.
+to ahsWindowAndDoorLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "houseHeight :height * 0.58
+	localmake "fontHeight :height * 0.288
+	stripes :height * 0.945 :height * 0.445 ["black]
+	jumpForward :height * 0.095
+	jumpLeft :height * 0.307
+	setPenColor "white
+	drawA :fontHeight
+	jumpRight :height * 0.32
+	drawH :fontHeight
+	jumpRight :height * 0.312
+	drawS :fontHeight
+
+	jumpTo :oldPos
+	jumpForward :height - :houseHeight
+	drawHouse :houseHeight
+	setTurtleState :oldState
+end
+
+ahsWindowAndDoorLogo 100

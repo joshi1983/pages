@@ -1,0 +1,67 @@
+<p>
+We can draw a square like this:
+</p>
+<code class="pastable">forward 100<br>
+right 90<br>
+<br>
+forward 100<br>
+right 90<br>
+<br>
+forward 100<br>
+right 90<br>
+<br>
+forward 100<br>
+right 90</code>
+
+<p>That duplicates a lot of code, though.  
+It is long, repetitive, and that would get worse if you wanted to draw a shape with more sides.
+There is a better way to repeatedly run instructions and below is an example.
+</p>
+<code class="pastable">repeat 4 <mark>[</mark><br>
+&nbsp;&nbsp;forward 100<br>
+&nbsp;&nbsp;right 90<br>
+<mark>]</mark>
+</code>
+<p>You wrap the instructions you want repeated in square brackets <mark>[]</mark> 
+and say how many times you want to repeat them.</p>
+<p>The <span class="command">repeat command</span> enables you to draw much more complex drawings 
+without copy/pasting lots of code.  
+It helps your code stay understandable for you and anyone else reading your code.</p>
+
+<p>Here is a 360-sided regular polygon.  
+This has so many sides that it looks like a circle.</p>
+<code class="pastable">repeat 360 [<br>
+&nbsp;&nbsp;forward 2<br>
+&nbsp;&nbsp;right 1<br>
+]</code>
+<p>The following loop draws a 5-pointed star.</p>
+<code class="pastable">repeat 5 [<br>
+&nbsp;&nbsp;forward 100<br>
+&nbsp;&nbsp;right 72<br>
+&nbsp;&nbsp;forward 100<br>
+&nbsp;&nbsp;left 144<br>
+]</code>
+<p>You may want to change what your repeated instructions do based on how many times the loop has run.
+The repcount command works in a repeat loop to give you the number of repetitions that already completed.</p>
+<p>The following code reads the repetition count to print 1 2 3 4 5.</p>
+<code class="pastable">repeat 5 [<br>
+&nbsp;&nbsp;print repcount<br>
+]</code>
+
+<p>Increasing how far you move forward in relation to turning can lead to a spiral pattern.  
+This idea is applied below to make a spiral pattern using <span class="command">repcount</span>.</p>
+<code class="pastable">repeat 100 [<br>
+&nbsp;&nbsp;forward repcount<br>
+&nbsp;&nbsp;right 20<br>
+]</code>
+
+<h3>Example Printing Random Even/Odd Messages</h3>
+<p>The following example uses <span class="command">repeat</span> to print 10 random numbers along with saying if each is even or odd.</p>
+<code class="pastable">repeat 10 [<br>
+&nbsp;&nbsp;make "randomNumber random 100<br>
+&nbsp;&nbsp;ifelse even? :randomNumber [<br>
+&nbsp;&nbsp;&nbsp;&nbsp;print [:randomNumber 'is even']<br>
+&nbsp;&nbsp;] [<br>
+&nbsp;&nbsp;&nbsp;&nbsp;print [:randomNumber 'is odd']<br>
+&nbsp;&nbsp;]<br>
+]</code>

@@ -1,0 +1,100 @@
+to drawPoles :radius :poleRadius :colors
+	localmake "oldState turtleState
+	localmake "center pos
+	localmake "oldHeading heading
+	jumpBackward :radius
+	repeat 2 [
+		localmake "center1 pos
+		localmake "sign sign repcount - 1.5
+		setFillColor item repcount :colors
+		left 90 * :sign
+		localmake "startAngle getArcLeftAngleToCircle :radius :center1 :poleRadius
+		polyStart
+		arcLeft :startAngle :radius
+		setHeading (towards :center1) + 90
+		arcLeft 5 :poleRadius
+		arcLeft (getArcLeftAngleToCircle :poleRadius :center :radius) :poleRadius
+		setHeading (towards :center) + 90
+		arcLeft :startAngle :radius
+		polyEnd
+		jumpTo :center1
+		setHeading :oldHeading
+		jumpForward :radius * 2
+	]
+	setTurtleState :oldState
+end
+
+to drawMiddleLine :radius :thickness :colors
+	localmake "width1 2 * sqrt :radius * :radius - :thickness * :thickness / 4
+	localmake "arcAngle arcTan :thickness / :width1
+	localmake "cornerAngle 90 - :arcAngle
+	localmake "arcs1 [[:width1 / 2] [-:cornerAngle 0] [-:arcAngle :radius]]
+	localmake "arcs2 combine :arcs1 reverse :arcs1
+	jumpForward :thickness / 2
+	localmake "midColor mix first :colors last :colors 0.5
+	setFillColor :midColor
+	right 90
+	polyStart
+	arcLines combine :arcs2 reverse :arcs2 1
+	polyEnd
+	output :midColor
+end
+
+; Inspired by
+; https://commons.wikimedia.org/wiki/File:HAL_-_Logotype_2021_-_EN_01.svg
+to HALLogo :height
+	localmake "oldState turtleState
+	localmake "thickness :height * 0.11
+	localmake "colors ["#171775 "#FF4600]
+	localmake "radius :height * 0.503
+	localmake "diagonalAngle 44.4
+	localmake "arcOffsets [0.4 0.7]
+	jumpForward :height * 0.5005
+	localmake "center pos
+	setPenSize 0
+	right :diagonalAngle
+	localmake "diagonalHeading heading
+	drawPoles :radius :thickness :colors
+
+	localmake "midColor drawMiddleLine :radius :thickness :colors
+	repeat 2 [
+		localmake "heading1 :diagonalHeading + 180 * repcount
+		setHeading :heading1
+		jumpTo :center
+		jumpBackward :radius
+		localmake "pole pos
+		localmake "poleColor item 3 - repcount :colors
+		repeat 2 [
+			localmake "ratio item repcount :arcOffsets
+			localmake "midArcRadius :radius * item repcount [0.73 2]
+			localmake "smallArcRadius :midArcRadius - :thickness / 2
+			localmake "largeArcRadius :midArcRadius + :thickness / 2
+			localmake "startPos mix :center :pole :ratio
+			jumpTo :startPos
+			setFillColor mix :midColor :poleColor :ratio
+			setHeading :heading1
+			jumpBackward :midArcRadius
+			localmake "center2 pos
+			jumpTo :startPos
+			jumpBackward :thickness / 2
+			left 90
+			localmake "smallArcAngle getArcLeftAngleToCircle :smallArcRadius :center :radius
+			polyStart
+			arcLeft :smallArcAngle :smallArcRadius
+			setHeading (towards :center) - 90
+			localmake "thicknessAngle getArcRightAngleToCircle :radius :center2 :largeArcRadius
+			arcRight :thicknessAngle :radius
+			setHeading (towards :center2) - 90
+			arcRight 4 :largeArcRadius
+			arcRight (getArcRightAngleToCircle :largeArcRadius :center :radius) :largeArcRadius
+			setHeading (towards :center) - 90
+			arcRight :thicknessAngle :radius
+			setHeading (towards :center2) + 90
+			arcLeft :smallArcAngle :smallArcRadius
+			polyEnd
+		]
+	]
+	setTurtleState :oldState
+end
+
+HALLogo 100

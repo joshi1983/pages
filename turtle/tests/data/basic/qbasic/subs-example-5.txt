@@ -1,0 +1,32 @@
+REM copied from http://www.petesqbsite.com/sections/tutorials/tuts/Subsl.html
+'This example shows an object moving from left to right on the screen.
+x = 1
+CLS
+1 LOCATE 5, x
+PRINT "*"
+FOR sd = 0 TO 2500: NEXT sd 'Slow down the program.
+LOCATE 5, x
+PRINT " "
+GOTO 2
+3 GOTO 1
+2 IF x = 80 THEN END
+x = x + 1
+GOTO 3
+'This program uses CALL and DO and LOOP instead of GOTO but does the same
+'as the program above.
+DECLARE SUB Move ()
+COMMON SHARED x
+x = 1
+CLS
+ DO
+  LOCATE 5, x
+  PRINT "*"
+   FOR sd = 0 TO 2500: NEXT sd
+  LOCATE 5, x
+  PRINT " "
+  CALL Move
+ LOOP
+SUB Move
+ IF x = 80 THEN END
+x = x + 1
+END SUB

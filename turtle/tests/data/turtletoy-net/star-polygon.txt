@@ -1,0 +1,22 @@
+// copied from https://turtletoy.net/turtle/71cfd0b01d
+const n  = 5; // min=5 max=80 step=2   // Number of point the star has
+const d  = 2; // min=2 max=50 step=2   // Density of the star
+const size = 90; // min=1 max=100 step=1   // Size of the star
+
+Canvas.setpenopacity(1);
+
+const turtle = new Turtle();
+turtle.penup();
+turtle.goto(Math.cos(0) * size, Math.sin(0) * size);
+turtle.pendown();
+
+// The walk function will be called until it returns false.
+function walk(i) {
+  turtle.penup();
+  angle = (i * (Math.PI * 2) / n) - Math.PI/n;
+  turtle.goto(Math.cos(angle) * size, Math.sin(angle) * size);
+  turtle.pendown();
+  angle = angle + (d * Math.PI * 2) / n;
+  turtle.goto(Math.cos(angle) * size, Math.sin(angle) * size);
+  return i < n;
+}

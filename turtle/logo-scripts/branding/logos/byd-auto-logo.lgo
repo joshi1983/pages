@@ -1,0 +1,69 @@
+make "thicknessFactor 0.195
+
+to drawB :height
+	localmake "oldState turtleState
+	localmake "lenFactor 1.215
+	localmake "arcRadiusRatio (1 - :thicknessFactor) / 4
+	localmake "arcs [
+		[:lenFactor] [180 :arcRadiusRatio] [:lenFactor]
+	]
+	setPenSize :height * :thicknessFactor
+	setLineCap "butt
+	setLineJoinStyle "bevel
+	jumpForward penSize / 2
+	jumpLeft :height * 0.765
+	right 90
+	arcLines :arcs :height
+	right 180
+	arcLines :arcs :height
+	setTurtleState :oldState
+end
+
+to drawY :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "baseHeightFactor 0.465
+	localmake "radiusFactor 0.18
+	localmake "topHeightFactor 1 - :radiusFactor - :baseHeightFactor
+	setLineCap "butt
+	setLineJoinStyle "miter
+	setPenSize :height * :thicknessFactor
+	stripes :height * 0.25 :height * :baseHeightFactor + penSize / 2 [penColor]
+	arcLines [[:baseHeightFactor] [-90 0] [0.5] [90 :radiusFactor] [:topHeightFactor]] :height
+	jumpTo :oldPos
+	jumpForward :baseHeightFactor * :height
+	jumpLeft :height * 0.23
+	left 90
+	arcLines [[0.37] [-90 :radiusFactor] [:topHeightFactor]
+	] :height
+	setTurtleState :oldState
+end
+
+to drawD :height
+	localmake "oldState turtleState
+	localmake "arcRadiusFactor (1 - :thicknessFactor) / 2
+	localmake "lenFactor 1.02
+	setLineCap "butt
+	setPenSize :height * :thicknessFactor
+	jumpLeft :height * 0.77
+	jumpForward penSize / 2
+	right 90
+	arcLines [[:lenFactor] [180 :arcRadiusFactor] [:lenFactor]] :height
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://en.wikipedia.org/wiki/BYD_Auto#/media/File:BYD_Auto_2022_logo.svg
+to bydLogo :height
+	localmake "oldState turtleState
+	setPenColor "#d70c19
+	jumpLeft :height * 1.83
+	drawB :height
+	jumpRight :height * 1.88
+	drawY :height
+	jumpRight :height * 1.79
+	drawD :height
+	setTurtleState :oldState
+end
+
+bydLogo 100

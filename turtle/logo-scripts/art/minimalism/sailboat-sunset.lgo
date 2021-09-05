@@ -1,0 +1,39 @@
+; Inspired by image at:
+; https://ca.pinterest.com/pin/456271006000528015
+to sailBoatSunset :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "thicknessFactor 0.04
+	localmake "thickness :height * :thicknessFactor
+	localmake "thickness2 :height * 0.019
+	localmake "offset1 :height * 0.1
+	localmake "offset2 0.1
+	localmake "width1 1.78
+	localmake "arcAngle 175
+	localmake "boatLen1 0.1
+	setFillColor "#f2c601
+	setPenSize 0
+	repeat 4 [
+		localmake "width :height * mix 1.42 0.35 repRatio
+		stripes :width :thickness [fillColor]
+		jumpForward :height * 0.07
+	]
+	localmake "arcRadius (:height - :thickness - distance :oldPos) / :height / (1 - cos :arcAngle / 2)
+	jumpLeft :offset1
+	localmake "len1 :width1 / 2 - :arcRadius
+	drawArcLineShape [0 0
+		[[90 0] [:width1 / 2 - :offset1 / :height] [-90 0] [:thicknessFactor]
+		[-90 0] [:len1] [:arcAngle / 2 0] [-:arcAngle :arcRadius] [:arcAngle / 2 0] [:len1] [-90 0]
+		[:thicknessFactor] [-90 0] [:width1 / 2 - :offset2] [-129 0] [:boatLen1] [71 0] [0.34] [125 0]
+		[0.3] [-50 0] [0.03]]
+	] :height
+	jumpRight :offset1
+	jumpForward :height * 0.077
+	stripes :height * 0.5 :thickness2 [fillColor]
+	jumpLeft :height * 0.027
+	stripes :thickness2 :height * 0.3 [fillColor]
+	setTurtleState :oldState
+end
+
+setScreenColor "#4a4a4a
+sailBoatSunset 100

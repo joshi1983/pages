@@ -1,0 +1,32 @@
+; Inspired by image at:
+; https://theworkingtools.tumblr.com/post/117551315302/phreemessen-i-desire-to-be-instructed-in-the
+to triSquareCircle :height
+	localmake "oldState turtleState
+	localmake "thickness :height * 0.06
+	localmake "innerSize :height / 2 - :thickness
+	localmake "numSteps 25
+	localmake "separation :innerSize / (:numSteps + 1) * (1 + cos 60)
+	localmake "thickness1 :separation / 2
+	localmake "scale 2 * tan 30
+	jumpForward :height / 2
+	setFillColor transparent
+	setPenColor "#c24738
+	setPenSize :thickness
+	circle (:height - :thickness) / 2
+	setPenSize 0
+	setFillColor penColor
+	square :innerSize / cos 45
+	regularPolygon :innerSize 3
+	right 120
+	jumpForward :innerSize - :thickness1 / cos 30
+	setFillColor "white
+	localmake "width1 0
+	repeat :numSteps [
+		localmake "width1 :width1 + :separation * :scale
+		jumpBackward :separation
+		isoTrapezoid :width1 :width1 - :thickness1 * :scale :thickness1
+	]
+	setTurtleState :oldState
+end
+
+triSquareCircle 100

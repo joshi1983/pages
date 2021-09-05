@@ -1,0 +1,43 @@
+; Inspired by logo at:
+; https://www.youtube.com/@espritdecorpsmagazine
+to espritDeCorpsCanadaLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "outerThickness :height * 0.11
+	localmake "blackRadius (:height - :outerThickness) / 2
+	localmake "eThickness :height * 0.07
+	localmake "crosshairRadius :height / 2 - :outerThickness
+	setPenSize :outerThickness
+	setPenColor "#393a3c
+	setFillColor "white
+	jumpForward :height / 2
+	localmake "center pos
+	circle :blackRadius
+	setPenSize :height * 0.004
+	setFillColor transparent
+	setPenColor "#70615c
+	repeat 3 [
+		localmake "radius (:height - :outerThickness) / 2 * repcount / 4
+		circle :radius
+	]
+	setLineCap "round
+	repeat 2 [
+		jumpBackward :crosshairRadius
+		forward :crosshairRadius * 2
+		jumpTo :center
+		right 90
+	]
+	setPenSize 0
+	setFillColor "#ea1f25
+	setHeading :oldHeading
+	rect :height * 0.4 :eThickness
+	jumpBackward :eThickness / 2
+	drawArcLineShape [0 0
+		[[-90 0] [0.25] [90 0] [0.025] [220 0.25] [30 0.2] [50 0.31]
+		[44 0.2] [106 0] [0.11] [73 0] [-55 0.11] [-40 0.19] [-40 0.12]
+		[-65 0.2] [-3 0.07] [-90 0.135] [-50 0.15]]
+	] :height
+	setTurtleState :oldState
+end
+
+espritDeCorpsCanadaLogo 100

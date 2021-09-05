@@ -1,0 +1,41 @@
+# copied from: https://github.com/peterc/trtl/blob/master/examples/example4.rb
+=begin
+Copyright (c) 2012-2017 Peter Cooper
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+=end
+require_relative '../lib/trtl'
+
+# Example below adapted from Ruby quiz turtle_graphics archive
+# http://www.rubyquiz.com/quiz104.html
+
+# TREE
+
+Trtl.new(:width => 2, :color => 'brown').run do
+   def tree(_size)
+      if _size < 10
+         forward _size; back _size; return
+      end
+      color 'brown'
+      forward _size / 3
+      color %w{green darkgreen darkolivegreen}.sample
+      left 30; tree _size * 2 / 3; right 30
+      forward _size / 6
+      right 25; tree _size / 2; left 25
+      forward _size / 3
+      width rand(2) + 1
+      right 25; tree _size / 2; left 25
+      forward _size / 6
+      back _size
+      ensure_drawn
+   end
+   
+   left 90
+   back 180
+   pen_down
+   tree 300.0
+
+   wait
+end

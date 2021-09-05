@@ -1,0 +1,69 @@
+; Inspired by:
+; https://www.pinterest.ca/pin/562809284689586742/
+
+to gridPattern :size :angle
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "numLines 20
+	localmake "step :size / :numLines
+	localmake "points []
+	; store points along 1 direction.
+	repeat :numLines [
+		queue2 "points pos
+		jumpForward :step
+	]
+	right :angle
+	forward :size 
+	; draw line through one side of end-points.
+
+	jumpBackward :size
+	localmake "rightHeading heading
+	repeat :numLines [
+		localmake "fromPos1 pos
+		localmake "toPos item repcount :points
+
+		; draw line between fromPos1 and 
+		; corresponding point from :points.
+		setHeading towards :toPos
+		forward distance :toPos
+		jumpTo :fromPos1
+		setHeading :rightHeading
+		jumpForward :step
+	]
+	; restore original position and heading.
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to design :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	setPenSize :size * 0.002
+	setPenColor "#f72
+	repeat 3 [
+		jumpForward :size
+		right 180
+		gridPattern :size 60
+		jumpTo :oldPos
+		right 180 + 360 / 3
+	]
+	setPenColor "#2bf
+	repeat 3 [
+		gridPattern :size 120
+		gridPattern :size -120
+		right 360 / 3
+	]
+	setPenColor "#5f2
+	repeat 3 [
+		jumpForward :size
+		right 120
+		gridPattern :size 60
+		jumpTo :oldPos
+		right 360 / 3
+	]
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+setScreenColor "black
+design 150

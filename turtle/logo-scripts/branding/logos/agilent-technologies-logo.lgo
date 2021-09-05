@@ -1,0 +1,30 @@
+; Inspired by logo at:
+; https://www.agilent.com
+to agilentTechnologiesLogo :height
+	localmake "oldState turtleState
+	localmake "minRadius :height * 0.015
+	localmake "maxRadius :height * 0.048
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	setFillColor "white
+	repeat 8 [
+		jumpForward :height / 2 - :minRadius
+		localmake "outerPos pos
+		jumpBackward :height * 0.325
+		localmake "innerPos pos
+		repeat 4 [
+			localmake "radius mix :maxRadius :minRadius repRatio
+			jumpTo mix :innerPos :outerPos power repRatio 1.18
+			circle :radius
+			jumpBackward :height * 0.1
+		]
+		jumpTo :center
+		right 360 / 8
+	]
+
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+agilentTechnologiesLogo 100

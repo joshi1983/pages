@@ -1,0 +1,15 @@
+; This is a very rough translation of Kojo's setBackground command when a gradient is passed to it.
+; There are some significant differences, though.
+; - This will draw over existing shapes which Kojo's setBackground might not do.
+; - This also uses a hardcoded dimensions and position.
+;  Kojo's setBackground likely uses the viewport dimensions and position dynamically.
+to kojoSetBackgroundGradient :gradient
+	localmake "oldState turtleState
+	localmake "width 1000
+	setFillGradient :gradient
+	jumpTo [0 0]
+	setPenSize 0
+	rect :width 300
+	setTurtleState :oldState
+	setScreenColor :rightColor
+end

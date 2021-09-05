@@ -1,0 +1,22 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Square_(financial_services)#/media/File:Square_(Block,_Inc.)_Logo_08.2022.svg
+to squareUpLogo :height
+	localmake "oldState turtleState
+	localmake "squaresInfo [
+		[1 0.16] [0.63 0.06] [0.27 0.032]
+	]
+	setPenSize 0
+	jumpForward :height / 2
+	repeat count :squaresInfo [
+		localmake "squareInfo item repcount :squaresInfo
+		setFillColor ifelse even? repcount
+			"white
+			"black
+		localmake "squareSize :height * first :squareInfo
+		localmake "cornerRadius :height * last :squareInfo
+		roundRect :squareSize :squareSize :cornerRadius
+	]
+	setTurtleState :oldState
+end
+
+squareUpLogo 100

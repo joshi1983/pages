@@ -1,0 +1,120 @@
+to drawTorso :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "baseHeightRatio 0.189
+	localmake "armHeightRatio 0.18
+	localmake "info [[90 0] [0.032] [-90 0] [:baseHeightRatio] [90 0] [0.16]
+	[-97.5 0] [0.293] [97.5 0] [0.18] [-90 0] [:armHeightRatio]]
+	localmake "handOuterGap :height * 0.026
+	localmake "handInnerGap (:armHeightRatio * :height - 2 * :handOuterGap) / 2
+	localmake "handAngle 70
+	localmake "handLength :height * 0.12
+	localmake "slantedHandLength :handLength / sin :handAngle
+	setLineCap "round
+	setLineJoinStyle "round
+	jumpForward penSize / 2
+	localmake "startPos pos
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		arcLines :info :height * :sign
+		jumpBackward :handOuterGap
+		left :handAngle * :sign
+		forward :slantedHandLength
+		jumpBackward :slantedHandLength
+		setHeading :oldHeading
+		jumpBackward :handInnerGap
+		left :sign * 90
+		forward :handLength
+		jumpBackward :handLength
+		setHeading :oldHeading
+		jumpBackward :handInnerGap
+		left 180 - :sign * :handAngle
+		forward :slantedHandLength
+		setHeading :oldHeading
+		jumpTo :startPos
+	]
+	jumpTo :startPos
+	jumpForward :height * :baseHeightRatio - penSize / 2
+	stripes :height * 0.1 penSize  [penColor]
+	jumpForward :height * 0.4855
+	jumpLeft :height * 0.3337
+	right 90
+	forward :height * 0.2
+	jumpForward :height * 0.325
+	forward :height * 0.1424
+	localmake "offset 0.047
+	localmake "x1 -0.01
+	localmake "y1 0.268
+	localmake "lines [
+		[0.061 0.2747 -45 0.145]
+		[:x1 :y1 45 0.08]
+		[:x1 - :offset :y1 + :offset 45 0.195]
+	]
+	repeat count :lines [
+		localmake "line item repcount :lines
+		setHeading :oldHeading
+		jumpTo :oldPos
+		jumpRight :height * first :line
+		jumpForward :height * item 2 :line
+		setHeading :oldHeading + item 3 :line
+		forward :height * last :line
+	]
+	setTurtleState :oldState
+end
+
+to drawHeadAndHat :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "y :height * 0.782
+	localmake "width :height * 0.49
+	localmake "arcAngle 210
+	localmake "arcRadius :width * 0.29
+	localmake "hatAngle 13
+	localmake "hatTopAngle 7
+	localmake "width2 :width * 0.7
+	localmake "hatDashLength1 :height * 0.11
+	localmake "hatGap :height * 0.064
+	localmake "hatSlantedHeight (:height - :y - penSize / 2) / (cos :hatAngle)
+	localmake "slantedWidth (:width2 / 2 - (:hatSlantedHeight * sin :hatAngle)) / cos :hatTopAngle
+	setLineJoinStyle "round
+	jumpForward :y
+	localmake "center pos
+	right 90
+	jumpBackward :width / 2
+	forward :width
+	jumpTo :center
+	jumpBackward :arcRadius * sin :arcAngle / 2
+	right :arcAngle / 2
+	arcLeft :arcAngle :arcRadius
+	jumpTo :center
+	setHeading :oldHeading
+	jumpLeft :width2 / 2
+	right :hatAngle
+	forward :hatDashLength1
+	jumpForward :hatGap
+	forward :hatSlantedHeight - :hatGap - :hatDashLength1
+	jumpTo :center
+	setHeading :oldHeading
+	jumpRight :width2 / 2
+	left :hatAngle
+	forward :hatSlantedHeight
+	setHeading :oldHeading - 90 - :hatTopAngle
+	forward :slantedWidth
+	right :hatTopAngle * 2
+	forward :slantedWidth
+	setTurtleState :oldState
+end
+
+; Inspired by image at
+; https://www.freepik.com/icon/scarecrow_842978
+to scarecrowLogo :height
+	localmake "oldState turtleState
+	setPenSize :height * 0.03
+	setPenColor "black
+	drawTorso :height
+	drawHeadAndHat :height
+	setTurtleState :oldState
+end
+
+scarecrowLogo 100

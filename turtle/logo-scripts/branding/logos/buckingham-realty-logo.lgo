@@ -1,0 +1,27 @@
+; Inspired by logo at:
+; https://www.buckinghamrealty.ca
+to buckinghamRealtyLogo :height
+	localmake "oldState turtleState
+	localmake "outerRadius :height * 0.81
+	localmake "arcAngle 2 * (90 + arcSin (:height - :outerRadius) / :outerRadius)
+	localmake "len1 0.24
+	localmake "len2 0.18
+	localmake "lines1 [
+		[-90 0] [:len1 / 2] [-90 0] [:len2] [90 0] 
+		[:len1] [90 0] [:len2] [-90 0] [0.265] [-90 0]
+		[0.34] [-45 0] [0.15] [62 0] [0.156] [-107 0]
+		[0.5645438]
+	]
+	setPenSize 0
+	setFillColor "black
+	drawArcLineShape [cos (:arcAngle / 2 - 90) 0
+		[[90 - :arcAngle / 2 0] [:arcAngle 1]]
+	] :outerRadius
+	setFillColor "white
+	drawArcLineShape [0 0.612
+		combine :lines1 reverse :lines1
+	] :height
+	setTurtleState :oldState
+end
+
+buckinghamRealtyLogo 100

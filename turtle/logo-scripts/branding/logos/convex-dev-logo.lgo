@@ -1,0 +1,35 @@
+; Inspired by logo at
+; https://www.convex.dev/
+to convexLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "colors ["#EE342F "#F3B01C "#8D2676]
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	repeat count :colors [
+		setFillColor item repcount :colors
+		setHeading :oldHeading + (repcount - 1) * 360 / count :colors
+		jumpForward :height * 0.4613989
+		jumpLeft :height * 0.1878978
+		right 91.5
+		polyStart
+		arcRight 30 :height * 0.445
+		arcRight 30 :height * 0.5
+		arcRight 30 :height * 0.44
+		arcRight 26.5 :height * 0.5
+		left 135
+		arcLeft 45 :height * 0.45
+		arcLeft 38 :height * 0.15
+		arcLeft 20 :height * 0.54
+		arcLeft 18 :height * 0.42
+		arcLeft 40 :height * 0.55
+		arcLeft 27 :height * 0.37
+		polyEnd
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+convexLogo 100

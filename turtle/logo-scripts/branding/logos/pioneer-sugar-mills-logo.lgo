@@ -1,0 +1,59 @@
+to drawP :squareSize
+	localmake "oldState turtleState
+	localmake "w :squareSize * 0.28
+	localmake "h :w / 2
+	localmake "thickness :h * 0.67
+	localmake "pHeight :squareSize * 0.59
+	localmake "len1 0.775
+	jumpBackward :squareSize / 2
+	stripes :squareSize :squareSize ["black]
+	jumpLeft :squareSize * 0.175
+	jumpForward :squareSize * 0.02
+	isoTriangle :w :h
+	stripes :thickness :pHeight [fillColor]
+	jumpForward :pHeight
+	right 180
+	isoTriangle :w :h
+	jumpForward :thickness / 2
+	setPenSize :thickness
+	setPenColor fillColor
+	arcLines [[90 0] [:len1] [-180 0.215] [:len1]] :pHeight
+	arrow :pHeight * 0.55 45 :pHeight * 0.16
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://ca.pinterest.com/pin/3659243438164256/
+to pioneerSugarMills1966Logo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	jumpForward :height / 2
+	localmake "center pos
+	localmake "height1 :height
+	localmake "separation :height * 0.0095
+	localmake "thickness :separation * 0.3
+	setPenSize 0
+	setFillColor "white
+	repeat 4 [
+		jumpBackward :height1 / 2
+		stripes :height1 :height1 ["black]
+		jumpTo :center
+		circle :height1 / 2
+		localmake "numLines int :height1 * (cos 45) / :separation
+		repeat 2 [
+			jumpBackward :separation * int :numLines / 2
+			repeat :numLines [
+				stripes :height1 :thickness ["black]
+				jumpForward :separation
+			]
+			jumpTo :center			
+			right 90
+		]
+		setHeading :oldHeading
+		localmake "height1 :height1 * cos 45
+	]
+	drawP :height1
+	setTurtleState :oldState
+end
+
+pioneerSugarMills1966Logo 100

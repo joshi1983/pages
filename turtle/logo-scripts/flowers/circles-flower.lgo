@@ -1,0 +1,31 @@
+; Inspired by:
+; https://ca.pinterest.com/pin/121456521195596877
+to circlesFlower :height
+	localmake "oldState turtleState
+	localmake "numPedals 20
+	localmake "midRadius :height * 0.08
+	localmake "minRadius :height * 0.03
+	localmake "maxRadius (:midRadius - :minRadius) * 2 + :minRadius
+	localmake "colors ["violet "red "yellow "violet "purple "black]
+	localmake "innerGap :height * 0.05
+	setPenSize :height * 0.0005
+	localmake "amplitude (:height / 2 - :innerGap - :midRadius - :midRadius) / 2 - penSize
+	jumpForward :height / 2
+	localmake "center pos
+	setFillColor transparent
+	repeat :numPedals [
+		localmake "offset repcount
+		repeat 100 [
+			localmake "radius mix :maxRadius :minRadius repRatio
+			jumpForward :innerGap + :radius + :amplitude  * (1 + cos 180 + 360 * repRatio)
+			setPenColor mixItems2 :colors modulo (:offset + repRatio) * 4 / :numPedals 1
+			circle :radius
+			jumpTo :center
+		]
+		jumpTo :center
+		right 360 / :numPedals		
+	]
+	setTurtleState :oldState
+end
+
+circlesFlower 100

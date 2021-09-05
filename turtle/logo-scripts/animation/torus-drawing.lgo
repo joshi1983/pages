@@ -1,0 +1,74 @@
+; Inspired by animation at:
+; https://www.facebook.com/reel/1492446611421363
+to torusDrawing :scale :time
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "lengths [0.1911 0.3045 0.2272]
+	localmake "lengthsScaled vectorScale :lengths :scale * 1.467
+	localmake "speeds [41 53 -41]
+	; There is a tradeoff with increasing or decreasing the numIterations.
+	; The higher numIterations is the smoother the curved lines.
+	; Also, the higher numIterations, the longer it takes to complete the drawing.
+	;
+	; The number of iterations needed to look smooth is proportional to time so
+	; that is part of the calculation.
+	localmake "numIterations int 2 + :time * 5000
+	localmake "t :time * 360
+	localmake "points []
+	jumpForward :scale / 2
+	localmake "center pos
+	setLineCap "round
+	setLineJoinStyle "round
+	setPenSize 0
+	repeat :numIterations [
+		localmake "factor repRatio * :t
+		if repcount = :numIterations [
+			setPenSize :scale * 0.01
+			setPenColor "red
+		]		
+		repeat count :lengths [
+			setHeading :oldHeading + 90 + :factor * item repcount :speeds
+			forward item repcount :lengthsScaled
+			if penSize <> 0 [
+				localmake "oldPenSize penSize
+				setPenSize 0
+				setFillColor "blue
+				circle :scale * 0.02
+				setPenSize :oldPenSize
+			]
+		]
+		queue2 "points pos
+		jumpTo :center
+		setHeading :oldHeading
+	]
+	if not empty? :points [
+		jumpTo first :points
+		setPenColor "black
+		setPenSize :scale * 0.002
+		for ["i 2 count :points] [
+			localmake "p item :i :points
+			setHeading towards :p
+			forward distance :p
+		]
+	]
+	setTurtleState :oldState
+end
+
+make "timeRatio interpolateRatio easeInOut animation.clampedTimeRatio
+torusDrawing 100 :timeRatio
+
+to animation.snapshotstyle
+	output createPList2 [
+		["position.y 50]
+		["zoom.scale 3.5]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 20
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

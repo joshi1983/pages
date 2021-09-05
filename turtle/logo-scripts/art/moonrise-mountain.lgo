@@ -1,0 +1,59 @@
+to drawMoon :radius
+	localmake "oldState turtleState
+	localmake "arcAngle 260	
+	right 180 - (360 - :arcAngle) / 2
+	jumpForward :radius
+	left 90
+	polyStart
+	arcLeft :arcAngle :radius
+	polyEnd
+	setTurtleState :oldState
+end
+
+to drawMountain :width
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "mountainPath [
+		[-90 0] [0.05] [-15 0] [0.05] [10 0] [0.1] [-20 0] [0.03]
+		[40 0.05] [10 0.3] [-20 0.03] [20 0.1] [-30 0.1]
+		[-10 0.53] [50 0] [0.05] [13 0] [0.105] [-90 0] [30 0.04]
+		[60 0] [0.055] [-96 0] [0.1] [-5 0] [0.04] [10 0.02]
+		[7 0.3] [45 0] [0.06] [-30 0] [30 0.1] [-20 0] [33 0.2]
+	]
+	localmake "pathInfo arcLinesInfo :mountainPath
+	localmake "pathHeight (item 2 :pathInfo) * sin last :pathInfo
+	jumpLeft :width / 2
+	localmake "leftPos pos
+	polyStart
+	jumpForward abs :width * 0.13
+	arcLines :mountainPath :width / :pathHeight
+	setHeading :oldHeading + 180
+	jumpForward distanceToLine :oldPos :leftPos
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by drawing at:
+; https://ca.pinterest.com/pin/421016265172919401
+to moonRiseMountain :height
+	localmake "oldState turtleState
+	localmake "width :height * 0.55
+	localmake "lightColor "#f59946
+	stripes :width :height ["#09164d]
+	jumpForward :height * 0.53
+	setPenSize 0
+	setFillColor :lightColor
+	drawMoon :height * 0.23
+	jumpBackward :height * 0.16
+	setFillColor "black
+	drawMountain :width
+	setFillColor :lightColor
+	right 180
+	drawMountain -:width
+
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+moonRiseMountain 100

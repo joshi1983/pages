@@ -1,0 +1,381 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/File:MeshlabLogo.png
+; Which was referenced from:
+; https://en.wikipedia.org/wiki/MeshLab
+
+to meshLabIris :radius
+	localmake "pupilRadiusRatio 0.3
+	localmake "colorStops createPList2 [
+		[0 "#020302]
+		[:pupilRadiusRatio / 2 "#0E180C]
+		[:pupilRadiusRatio "#263e22]
+		[:pupilRadiusRatio + 0.05 "#D0E8CA]
+		[0.7 "#8cc486] [0.85 "#3e693c] [0.92 "#3e693c]
+		[1 "#000]
+	]
+	setFillGradient createRadialGradient pos :radius :colorStops
+	setPenSize 0
+	circle :radius
+	setFillColor "#66263e22
+	isotoxalStar :radius :radius * :pupilRadiusRatio 45
+end
+
+to meshIrisGlare :logoDiameter
+	localmake "oldState turtleState
+	localmake "glareRadius :logoDiameter * 0.038
+	jumpForward :logoDiameter * 0.565
+	jumpLeft :logoDiameter * 0.057
+	localmake "colorStops createPList2 [
+		[0 "#fff] [0.3 "#bfff] [1 "#0fff]
+	]
+	setFillGradient createRadialGradient pos :glareRadius :colorStops
+	circle :glareRadius
+	setTurtleState :oldState
+end
+
+to eyeOutline :logoDiameter
+	localmake "oldState turtleState
+	jumpForward :logoDiameter * 0.45
+	jumpLeft :logoDiameter * 0.23
+	polyStart
+	arcsRight [[35.4 0] [50 0.4] [17.5 0.65] [70 0] 
+		[30 0.32] [45 0.13] [15 0.3] [12.7 0.2] [28.5 0.6]] :logoDiameter
+	polyEnd
+	setTurtleState :oldState
+end
+
+to eyeUpperOuterline :logoDiameter
+	localmake "oldState turtleState
+	jumpForward :logoDiameter * 0.4621
+	jumpLeft :logoDiameter * 0.23
+	right 36.2
+	polyStart
+	arcLines [[-50 0.4] [-37.2 0.7] [124.7 0] [40 0.5] [55 0] [0.8]] :logoDiameter
+	jumpLeft :logoDiameter * 0.2
+	polyEnd
+	setTurtleState :oldState
+end
+
+to eyeLowerRightShadowGradient :logoDiameter
+	localmake "oldPos pos
+	localmake "gradientRadius :logoDiameter * 0.26
+	jumpForward :logoDiameter * 0.56
+	localmake "colorStops createPList2 [
+		[0 "#0000] [0.8 "#0000] [1 "#5000]
+	]
+	localmake "result createRadialGradient pos :gradientRadius :colorStops
+	jumpTo :oldPos
+	output :result
+end
+
+to eyeUpperShadowGradient :logoDiameter
+	localmake "oldPos pos
+	localmake "gradientRadius :logoDiameter * 0.5
+	jumpForward :logoDiameter * 0.12
+	jumpRight :logoDiameter * 0.14
+	localmake "colorStops createPList2 [
+		[0 "#0000] [0.85 "#0000] [1 "#f000]
+	]
+	localmake "result createRadialGradient pos :gradientRadius :colorStops
+	jumpTo :oldPos
+	output :result
+end
+
+to drawCanula :logoDiameter
+	localmake "oldState turtleState
+	jumpForward :logoDiameter * 0.425
+	jumpLeft :logoDiameter * 0.194
+	setPenColor "black
+	setPenSize :logoDiameter * 0.013
+	setFillColor "#777
+	right 15
+	setLineJoinStyle "round
+	polyStart
+	arcLines [[45 0.08] [110 0] [0.045]] :logoDiameter
+	polyEnd
+	setTurtleState :oldState
+end
+
+to upperEyelidGradient :logoDiameter
+	localmake "gradientRadius :logoDiameter * 0.6
+	localmake "oldPos pos
+	jumpRight :logoDiameter * 0.139
+	jumpForward :logoDiameter * 0.132
+	localmake "colorStops createPList2 [
+		[0 "#000] [0.8 "#000] [0.88 "#636363] [0.92 "#9E9E9E]
+		[1 "#bdbdbd]
+	]
+	setFillGradient createRadialGradient pos :gradientRadius :colorStops
+	jumpTo :oldPos
+end
+
+to upperRightEyelidGradient :logoDiameter
+	localmake "gradientRadius :logoDiameter * 0.52
+	localmake "oldPos pos
+	jumpRight :logoDiameter * 0.28
+	jumpForward :logoDiameter * 0.24
+	localmake "colorStops createPList2 [
+		[0 "#5000] [0.85 "#5000] [1 "#0000]
+	]
+	setFillGradient createRadialGradient pos :gradientRadius :colorStops
+	jumpTo :oldPos
+end
+
+to canulaShadow :logoDiameter
+	localmake "oldPos pos
+	localmake "gradientRadius :logoDiameter * 0.11
+	jumpForward :logoDiameter * 0.46
+	jumpLeft :logoDiameter * 0.23
+	localmake "colorStops createPList2 [
+		[0 "#222] [0.42 "#7A7A7A] [0.55 "#9E9E9E] [1 "#009E9E9E]
+	]
+	setFillGradient createRadialGradient pos :gradientRadius :colorStops
+	circle :gradientRadius
+	jumpTo :oldPos
+end
+
+to lowerPoly :logoDiameter
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	jumpForward :logoDiameter * 0.45
+	jumpLeft :logoDiameter * 0.24
+	left 145
+	polyStart
+	jumpForward :logoDiameter * 0.15
+	left 20
+	jumpLeft :logoDiameter * 0.7
+	jumpBackward :logoDiameter * 0.48
+	jumpRight :logoDiameter * 0.2
+	polyEnd
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to lowerShadow :logoDiameter
+	localmake "oldPos pos
+	localmake "gradientRadius :logoDiameter * 0.53
+	jumpForward :logoDiameter * 0.8
+	jumpRight :logoDiameter * 0.02
+	localmake "colorStops createPList2 [
+		[0 "#222] [0.8 "#222] [0.885 "#7A7A7A] [0.908 "#9E9E9E]
+		[1 "#bdbdbd]
+	]
+	setFillGradient createRadialGradient pos :gradientRadius :colorStops
+	jumpTo :oldPos
+	lowerPoly :logoDiameter
+	jumpForward :logoDiameter * 0.65
+	jumpRight :logoDiameter * 0.1
+	localmake "gradientRadius :logoDiameter * 0.4
+	localmake "colorStops createPList2 [
+		[0 "#000] [0.2 "#000] [1 "#0000]
+	]
+	setFillGradient createRadialGradient pos :gradientRadius :colorStops
+	jumpTo :oldPos
+	lowerPoly :logoDiameter
+end
+
+to eye :logoDiameter
+	localmake "oldPos pos
+	localmake "irisRadius :logoDiameter * 0.153
+	setPenSize 0
+	canulaShadow :logoDiameter
+	lowerShadow :logoDiameter
+	jumpTo :oldPos
+	setFillColor "white
+	eyeOutline :logoDiameter
+	drawCanula :logoDiameter
+	jumpForward :logoDiameter * 0.55
+	jumpLeft :logoDiameter * 0.01
+	meshLabIris :irisRadius
+	setPenColor "black
+	jumpTo :oldPos
+	setFillGradient eyeLowerRightShadowGradient :logoDiameter
+	eyeOutline :logoDiameter
+	setFillGradient eyeUpperShadowGradient :logoDiameter
+	eyeOutline :logoDiameter
+	meshIrisGlare :logoDiameter
+	setFillColor transparent
+	setPenSize :logoDiameter * 0.017
+	eyeOutline :logoDiameter
+	; Hide the overlapping iris image.
+	upperEyelidGradient :logoDiameter
+	setPenSize 0
+	eyeUpperOuterline :logoDiameter
+	upperRightEyelidGradient :logoDiameter
+	eyeUpperOuterline :logoDiameter
+end
+
+to darkFaceBackground :logoDiameter
+	localmake "oldState turtleState
+	localmake "angle 49
+	localmake "radius :logoDiameter / 2
+	; Use trigonometry to calculate the exact tangent point
+	jumpForward :radius - :radius * sin :angle
+	jumpRight :radius * cos :angle
+	setFillColor "#303030
+	polyStart
+	arcLines [[-:angle 0] [70.7 1] [125 0] [-15.5 1.45] [70 0] 
+		[-25 1] [-15 1.5]] :radius
+	polyEnd
+	setTurtleState :oldState	
+end
+
+to singleHair :arcAngle :chordLength :thickness
+	if :chordLength < 0 [
+		stop
+	]
+	localmake "oldState turtleState
+	setPenSize :thickness
+	setLineCap "round
+	; if arcAngle is very close to 0, draw a straight line.
+	; We want to avoid dividing by 0 or using an extremely long arc radius.
+	if (abs :arcAngle) < 0.1 [
+		forward :chordLength
+		stop
+	]
+	localmake "arcRadius abs :chordLength / 2 / sin :arcAngle / 2
+	ifelse :arcAngle < 0 [
+		arcLeft -:arcAngle :arcRadius
+	] [
+		arcRight :arcAngle :arcRadius
+	]
+	setTurtleState :oldState	
+end
+
+to eyebrow :logoDiameter
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "eyebrowHeading :oldHeading + 68
+	localmake "radius :logoDiameter / 2
+	localmake "numHairs 80
+	localmake "hairStep :logoDiameter / :numHairs
+	localmake "minLength :logoDiameter * 0.03
+	localmake "maxLength :logoDiameter * 0.1
+	localmake "minThickness :logoDiameter * 0.002
+	localmake "maxThickness :logoDiameter * 0.005
+	jumpForward :radius
+	localmake "center pos
+	jumpForward :logoDiameter * 0.2
+	jumpLeft :logoDiameter * 0.1
+	setPenColor "black
+	repeat :numHairs [
+		localmake "thicknessRatio 0.04  + 0.15 * repRatio
+		localmake "currentThickness :logoDiameter * :thicknessRatio
+		localmake "maxLength1 :maxLength * (0.6 + 0.4 * repRatio)
+		localmake "len mix :minLength :maxLength1 randomRatio
+		localmake "thickness mix :minThickness :maxThickness randomRatio
+		localmake "angle mix -28 28 randomRatio
+		localmake "pos1 pos
+		setHeading :eyebrowHeading
+
+		; Prevent hairs from drawing beyond the logo's circle
+		jumpRight :len * 0.4 + :currentThickness * 0.3 * randomRatio
+		localmake "maxLen :radius - :thickness / 2 - distance :center
+		localmake "len min :len :maxLen
+		setHeading :oldHeading + 32 + 20 * randomRatio
+		singleHair :angle :len :thickness
+		setHeading :eyebrowHeading
+		jumpTo :pos1
+		jumpForward :hairStep * 0.04 / :thicknessRatio
+	]
+	setTurtleState :oldState
+end
+
+to upperLashes :logoDiameter
+	localmake "oldState turtleState
+	localmake "largeArcRadius :logoDiameter * 0.52
+	localmake "largeArcAngle 53
+	localmake "numLashes 30
+	localmake "angleStep :largeArcAngle / :numLashes
+	localmake "shrinkFactor 0.9
+	jumpLeft :logoDiameter * 0.15
+	jumpForward :logoDiameter * 0.54
+
+	setPenSize 0
+	right 59
+	repeat :numLashes [
+		localmake "heading1 heading
+		localmake "length :logoDiameter * (mix 0.2 0.08 repRatio)
+		localmake "arcAngle -5 - 70 * repRatio
+		; alternate length and angle to create a softer looking
+		; edge where the lashes end
+		if even? repcount [
+			localmake "length :length * :shrinkFactor
+			localmake "arcAngle :arcAngle * :shrinkFactor
+		]
+		localmake "thickness :logoDiameter * mix 0.003 0.006 repRatio
+		left 10
+		singleHair :arcAngle :length :thickness
+		setHeading :heading1
+		arcRight :angleStep :largeArcRadius
+	]
+	setTurtleState :oldState
+end
+
+to lowerLashes :logoDiameter
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "largeArcRadius :logoDiameter * 0.22
+	localmake "largeArcAngle 90
+	localmake "numLashes 20
+	localmake "angleStep :largeArcAngle / :numLashes
+	localmake "shrinkFactor 0.85
+	jumpLeft :logoDiameter * 0.08
+	jumpForward :logoDiameter * 0.37
+
+	setPenSize 0
+	right 115
+	repeat :numLashes [
+		localmake "heading1 heading
+		localmake "length :logoDiameter * (mix 0.2 0.06 repRatio)
+		localmake "arcAngle 15 + 80 * repRatio
+		; alternate length and angle to create a softer looking
+		; edge where the lashes end
+		if even? repcount [
+			localmake "length :length * :shrinkFactor
+			localmake "arcAngle :arcAngle * :shrinkFactor
+		]
+		localmake "thickness :logoDiameter * mix 0.003 0.006 repRatio
+		right 10
+		singleHair :arcAngle :length :thickness
+		setHeading :oldHeading
+		jumpRight :logoDiameter * 0.12 * (1 - repRatio) / :numLashes
+		setHeading :heading1
+		arcLeft :angleStep :largeArcRadius
+	]
+	setTurtleState :oldState
+end
+
+to faceHighlights :logoDiameter
+	localmake "oldPos pos
+	localmake "radius :logoDiameter / 2
+	localmake "gradientRadius :logoDiameter * 0.67
+	localmake "colorStops createPList2 [
+		[0 transparent] [0.83 "#0fff] [1 "#7fff]
+	]
+	jumpForward :logoDiameter * 0.22
+	jumpRight :logoDiameter * 0.2
+	setFillGradient createRadialGradient pos :gradientRadius :colorStops
+	jumpTo :oldPos
+	jumpForward :radius
+	circle :radius
+	jumpTo :oldPos
+end
+
+to meshLabLogo :diameter
+	localmake "oldPos pos
+	setFillColor "#bdbdbd
+	setLineJoinStyle "round
+	setPenSize 0
+	jumpForward :diameter / 2
+	circle :diameter / 2
+	jumpTo :oldPos
+	eye :diameter
+	darkFaceBackground :diameter
+	faceHighlights :diameter
+	eyebrow :diameter
+	upperLashes :diameter
+	lowerLashes :diameter
+end
+
+meshLabLogo 100

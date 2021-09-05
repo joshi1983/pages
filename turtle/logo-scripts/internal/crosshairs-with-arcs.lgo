@@ -1,0 +1,36 @@
+to crossHairs :size
+	localmake "r1 :size * 10 / 25
+	localmake "r2 :size * 15 / 25
+	localmake "r3 :size
+	localmake "r4 :size * 19 / 25
+	localmake "thickness1 :size / 50
+	localmake "thickness2 :size / 125
+	setpensize :thickness1
+	repeat 4 [
+		penup
+		fd :r1
+		pendown
+		fd :r3 - :r1
+		penup
+		back :r3 - :r1
+		pendown
+		right 90
+		arcRight 22.5 :r1
+		left 90
+		setpensize :thickness2
+		fd :r2 - :r1
+		penup
+		bk :r2 - :r1
+		pendown
+		right 90
+		setpensize :thickness1
+		arcRight 22.5 :r1
+		left 90
+		fd :r4 - :r1
+		penup
+		back :r4
+		right 45
+	]
+end
+
+crossHairs 100

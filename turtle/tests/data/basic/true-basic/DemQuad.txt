@@ -1,0 +1,31 @@
+! Quadratic equation solver
+!
+! **NOTE:** type 'do complex' in the command window before running
+
+
+DECLARE COMPLEX r1, r2
+
+FOR example = 1 to 3
+    READ a, b, c                  ! Coefficients of equations
+    CALL Quad (a, b, c, r1, r2)   ! Solve
+    PRINT r1, r2
+
+NEXT example
+
+DATA 1, 4, 3
+DATA 1, 4, 4
+DATA 1, 4, 5
+
+END
+
+SUB Quad (a, b, c, r1, r2)
+
+    DECLARE COMPLEX r1, r2, s
+
+    LET discr = b^2 - 4*a*c       ! Discriminant
+    LET s = sqr(discr)            ! Complex square root
+
+    LET r1 = (-b+s)/(2*a)
+    LET r2 = (-b-s)/(2*a)
+
+END SUB

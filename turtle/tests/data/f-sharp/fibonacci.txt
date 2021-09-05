@@ -1,0 +1,25 @@
+// copied from: https://en.wikipedia.org/wiki/F_Sharp_(programming_language)
+/// Fibonacci Number formula
+[<TailCall>]
+let fib n =
+    let rec g n f0 f1 =
+        match n with
+        | 0 -> f0
+        | 1 -> f1
+        | _ -> g (n - 1) f1 (f0 + f1)
+    g n 0 1
+
+/// Another approach - a lazy infinite sequence of Fibonacci numbers
+let fibSeq = Seq.unfold (fun (a,b) -> Some(a+b, (b, a+b))) (0,1)
+
+// Print even fibs
+[1 .. 10]
+|> List.map     fib
+|> List.filter  (fun n -> (n % 2) = 0)
+|> printList
+
+// Same thing, using a list expression
+[ for i in 1..10 do
+    let r = fib i
+    if r % 2 = 0 then yield r ]
+|> printList

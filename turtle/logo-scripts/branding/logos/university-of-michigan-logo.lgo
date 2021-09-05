@@ -1,0 +1,24 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/File:University_of_Michigan_logo.svg
+to universityOfMichiganLogo :height
+	localmake "oldState turtleState
+	localmake "angle 35.9
+	localmake "len1 0.1056
+	localmake "height1 0.281155133155542
+	localmake "linesInfo [
+		[:angle 0] [0.4835] [180 - :angle 0] [0.2835] [90 0] [0.113]
+		[-90 0] [:height1] [-90 0] [0.524] [-90 0] [:height1] [-90 0]
+		[:len1] [90 0] [0.438] [90 0] [:len1] [-90 0] [0.280845] [-90 0]
+		[0.411] [:angle - 90 0] [0.4835] [90 - :angle 0]
+	]
+	jumpForward :height * 0.173
+	setPenSize 0
+	setFillColor "#ffcb05
+	polyStart
+	arcLines :linesInfo :height
+	arcLines reverse :linesInfo :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+universityOfMichiganLogo 100

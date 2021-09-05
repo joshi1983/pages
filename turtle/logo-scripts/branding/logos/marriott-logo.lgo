@@ -1,0 +1,55 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Marriott_Hotels_%26_Resorts#/media/File:Marriott_hotels_logo14.svg
+to marriottLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angle 22.82
+	localmake "bottomGap :height * 0.075
+	localmake "lenRatio2 (:height - :bottomGap) / :height / cos :angle
+	localmake "lengths [0.98 :lenRatio2]
+	localmake "thickness :height * 0.21
+	localmake "size1 :thickness * tan :angle
+	localmake "marriottRed "#A11D2B
+	jumpForward :height * 0.31
+	jumpRight :height * 0.0887
+	right 23
+	setPenSize :height * 0.0585
+	setPenColor :marriottRed
+	forward :height * 0.3
+
+	setPenSize 0
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpRight :height * 0.608
+	jumpForward :bottomGap
+	setFillColor :marriottRed
+	setPenSize 0
+	repeat count :lengths [
+		localmake "pos1 pos
+		setHeading :oldHeading - :angle
+		localmake "length1 :height * item repcount :lengths
+		polyStart
+		jumpForward :length1
+		jumpLeft :thickness
+		jumpBackward :length1 - :size1
+		polyEnd
+		jumpTo :pos1
+		setHeading :oldHeading
+		jumpLeft :height * 0.352
+	]
+
+	jumpTo :oldPos
+	jumpLeft :height * 0.60745
+	jumpForward :height * 0.02825
+	right 120
+	polyStart
+	arcsLeft [[18.5 0.215] [13 0.19] [40 0.215] [19 0.4] [3 1] [8 3]] :height
+	jumpLeft :height * 0.051
+	left 175.5
+	arcsRight [[6 2] [20 0.5] [20 0.25] [14 0.1] [10.15 0.4]] :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+marriottLogo 100

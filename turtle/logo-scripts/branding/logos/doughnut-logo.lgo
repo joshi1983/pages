@@ -1,0 +1,43 @@
+; Inspired by logo at:
+; https://doughnutofficial.us
+to doughnutLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "angle 34
+	localmake "bottomThickness 0.18
+	localmake "outerLen 1 / cos :angle
+	localmake "innerLen :outerLen - :bottomThickness / (tan :angle) / cos :angle
+	localmake "middleLines1 [
+		[180 - :angle 0] [:outerLen]
+		[90 + :angle 0] [:bottomThickness]
+		[90 - :angle 0] [:innerLen] [:angle - 90 0]
+	]
+	localmake "sideOffset :height * 0.52
+	localmake "sideRatio 0.83
+	localmake "sideBottomThickness :bottomThickness / :sideRatio
+	localmake "sideHeight :height * :sideRatio
+	localmake "sideInnerLen :outerLen - :sideBottomThickness / 
+		(tan :angle) / cos :angle
+	localmake "sideLines1 [
+		[180 - :angle 0] [:outerLen]
+		[90 + :angle 0] [:sideBottomThickness]
+		[90 - :angle 0] [:sideInnerLen] [(:angle - 90) * 2 0]
+		[0.4] [180 - 2 * :angle 0] [:sideBottomThickness / 2 / sin :angle]
+	]
+	setPenSize 0
+	setFillColor "black
+	drawArcLineShape [0 1
+		combine :middleLines1 reverse :middleLines1
+	] :height
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		jumpLeft :sign * :sideOffset
+		drawArcLineShape [0 1
+			:sideLines1
+		] :sideHeight * :sign
+		jumpTo :oldPos
+	]
+	setTurtleState :oldState
+end
+
+doughnutLogo 100

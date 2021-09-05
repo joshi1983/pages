@@ -1,0 +1,25 @@
+to getJuliaSetValue :x :y
+	localmake "cRe -0.704029749122184
+	localmake "cIm -0.3383527246917294
+	repeat 25 [
+		localmake "oldRe :x
+		localmake "oldIm :y
+		localmake "x :oldRe * :oldRe - :oldIm * :oldIm + :cRe
+		localmake "y 2 * :oldRe * :oldIm + :cIm
+		if :x*:x + :y*:y > 4 [
+			output repcount
+		]
+	]
+	output 25
+end
+
+setPenSize 1.4
+for [ "x -100 100 1] [
+	jumpTo [:x 0]
+	for [ "y -100 100 1] [
+		make "v 10 * getJuliaSetValue :x * 0.01 :y * 0.01
+		make "c [:v :v :v]
+		setPenColor :c
+		forward 1
+	]
+]

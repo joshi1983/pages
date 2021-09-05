@@ -1,0 +1,34 @@
+; Inspired by logo at:
+; https://www.sidannaretreat.com
+to sidannaRetreatLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "waveLength :height / 4
+	localmake "separation (:height * 0.8712) / 5
+	localmake "arcs1 [[45 0.40531632] [22 1]]
+	setLineCap "round
+	setLineJoinStyle "round
+	setPenColor "#7cb0cc
+	setPenSize :height * 0.02
+	jumpForward penSize / 2
+	repeat 6 [
+		localmake "middle pos
+		localmake "width1 2
+		if or repcount = 1 repcount = 6 [
+			localmake "width1 1
+		]
+		jumpLeft :width1 * :waveLength
+		right 90
+		repeat 2 * :width1 [
+			arcLines :arcs1 :waveLength
+			right 2 * sumOfFirsts :arcs1
+			arcLines reverse :arcs1 :waveLength
+		]
+		jumpTo :middle
+		setHeading :oldHeading
+		jumpForward :separation
+	]
+	setTurtleState :oldState
+end
+
+sidannaRetreatLogo 100

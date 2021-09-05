@@ -1,0 +1,35 @@
+<code>repeat 1 [
+	print repRatio
+]
+; prints 0 on separate lines</code>
+<code>repeat 2 [
+	print repRatio
+]
+; prints 0 1 on separate lines</code>
+<code>setPenSize 0
+; Loop through points in a gradient from red to blue.
+repeat 100 [
+	setFillColor mix "red "blue repRatio
+	circle 2
+	jumpRight 2
+]
+
+; Draw a similar gradient using a linear gradient.
+jumpBackward 4
+make "fromPos pos
+make "colorStops createPList2 [
+	[0 "blue] [1 "red]
+]
+jumpLeft 200
+setPenGradient createLinearGradient pos :fromPos :colorStops "pad
+right 90
+setPenSize 2
+forward 200</code>
+
+<code>; draws 100 circles in a straight,
+; diagonal line from 0,0 to 100,100.
+repeat 100 [
+	setY 100 * repRatio
+	circle 2
+	jumpRight 1
+]</code>

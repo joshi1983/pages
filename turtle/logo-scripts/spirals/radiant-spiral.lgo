@@ -1,0 +1,40 @@
+; Inspired by image at:
+; https://www.pinterest.ca/pin/7740630602666938/
+to radiantSpiral :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "rayThickness :height * 0.0095
+	localmake "numArms 7
+	localmake "numArcsPerArm 10
+	localmake "numRays 18
+	localmake "rayRadius (:height - :rayThickness) / 2
+	localmake "colors ["#73f0ea "#5f48de "#5d3573]
+	localmake "arcAngle 150
+	localmake "arcRadius (:height - :rayThickness) / 4 / sin :arcAngle / 2
+	jumpForward :height / 2
+	localmake "center pos
+	setLineCap "round
+	setPenSize :rayThickness
+	repeat :numArms [
+		localmake "heading1 :oldHeading - 18 + repcount * 360 / :numArms
+		repeat :numArcsPerArm [
+			setHeading :heading1 + repcount * (360 / :numArms / :numArcsPerArm)
+			setPenColor mixItems2 :colors repRatio
+			arcLeft :arcAngle :arcRadius
+			jumpTo :center
+		]
+	]
+
+	setPenColor "black
+	setHeading :oldHeading + 90 / :numRays
+	repeat :numRays [
+		right 180 / :numRays
+		jumpBackward :rayRadius
+		forward :rayRadius * 2
+		jumpTo :center
+	]	
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+radiantSpiral 100

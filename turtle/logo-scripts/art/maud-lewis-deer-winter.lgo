@@ -1,0 +1,520 @@
+make "skyColor "#f1d40e
+make "buildingRed "#cf1232
+make "cloudOrange mix :skyColor :buildingRed 0.5
+make "midBlue "#8dc3ef
+make "deerEarBrown "#541716
+
+to drawSky :width :height
+	localmake "oldState turtleState
+	localmake "skyHeightTotal :height * 0.23
+	localmake "skyHeightInner :skyHeightTotal * 0.8
+	localmake "numCloudLines 20
+	localmake "colorStops createPList
+	repeat :numCloudLines [
+		localmake "index remainder repcount 2
+		ifelse 1 = remainder :numCloudLines 2 [
+			localmake "index 1 + :index
+		] [
+			localmake "index 2 - :index
+		]
+		localmake "color item :index [:cloudOrange :skyColor]
+		localmake "ratio interpolateRatio easeInQuart repRatio
+		setProperty "colorStops :ratio :color
+	]
+	jumpForward :height - :skyHeightTotal
+	stripes :width :skyHeightTotal [:skyColor]
+	localmake "fromPos pos
+	setPenSize :width
+	setLineCap "butt
+	jumpForward :skyHeightInner
+	setPenGradient createLinearGradient :fromPos pos :colorStops "pad
+	backward :skyHeightInner
+	setTurtleState :oldState	
+end
+
+to drawHills :width :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "darkArcsInfo [
+		[4 0] [9 1] [-20 0.1] [20 0.2] [-20 0]
+		[5 0.8] [12 0.05] [14 0.2] [-44 0]
+		[10 0.85] [23 0.15] [11 0.8] [-55 0]
+		[23 0.55] [28 0.2] [3 3] [-19 1] [167 0]
+		[30 1]
+	]
+	localmake "snowHillArcs [
+		[-8 0] [6.8 2] [-25 0.1] [60 0.088] [-54 0.05]
+		[15 0.5] [12 0.1] [20 0.5] [-51 0.05] [15 0.5]
+		[30 0.18] [-17.7 0.8]
+	]
+	setPenSize 0
+	setFillColor "#0d2937
+	jumpLeft :width / 2
+	localmake "bottomLeft pos
+	jumpForward :height * 0.73
+	polyStart
+	jumpRight :width
+	jumpForward :height * 0.1
+	left 90
+	arcsLeft :darkArcsInfo :height
+	polyEnd
+	setFillColor "#f0faef
+	jumpTo :bottomLeft
+	setHeading :oldHeading
+	polyStart
+	jumpRight :width
+	jumpForward :height * 0.74
+	left 90
+	arcsLeft :snowHillArcs :height
+	polyEnd
+	setTurtleState :oldState	
+end
+
+to drawLeaflessTree :size
+	if :size > 2 [
+		localmake "oldPos pos
+		localmake "oldPenSize penSize
+		setPenSize :size * 0.03
+		forward :size * 0.2
+		left 30
+		drawLeaflessTree :size * 0.5
+		right 30
+		setPenSize penSize * 0.9
+		forward :size * 0.1
+		right 35
+		drawLeaflessTree :size * 0.35
+		left 35
+		forward :size * 0.1
+		right 25
+		drawLeaflessTree :size * 0.3
+		left 25
+		drawLeaflessTree :size * 0.6
+		jumpTo :oldPos
+		setPenSize :oldPenSize
+	]
+end
+
+to drawGreenTree :height :numBranches
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "maxAngle 70
+	localmake "minAngle 20
+	localmake "maxLen :height * 0.25
+	localmake "minLen :height * 0.1
+	localmake "branchStep (:height - :minLen) / :numBranches
+	setLineCap "round
+	setPenSize :branchStep * 0.7
+	forward :height
+	jumpBackward :height
+	repeat :numBranches [
+		localmake "pos1 pos
+		localmake "angle mix :minAngle :maxAngle repRatio
+		localmake "branchLength mix :minLen :maxLen repRatio
+		right :angle
+		forward :branchLength
+		jumpTo :pos1
+		left :angle * 2
+		forward :branchLength
+		jumpTo :pos1
+		setHeading :oldHeading
+		jumpForward :branchStep
+	]
+	setTurtleState :oldState	
+end
+
+to drawBackgroundTrees :height
+	localmake "oldState turtleState
+	localmake "numTrees 20
+	localmake "treeSeparation :height * 0.7 / :numTrees
+	localmake "colors ["#418353 "#215333]
+	jumpForward :height * 0.618
+	jumpLeft :height * 0.27
+	repeat :numTrees [
+		localmake "colorIndex 1 + remainder repcount 2
+		setPenColor item :colorIndex :colors
+		drawGreenTree :height * 0.15 8
+		localmake "vOffset :height * 0.02 * sign ((remainder repcount 2) - 0.5)
+		jumpForward :vOffset
+		jumpRight :treeSeparation
+	]
+	setTurtleState :oldState	
+end
+
+to drawForegroundTrees :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "greenTreesInfo [
+		["#41725f -0.55 0.44 0.22 15] ["#2a5754 -0.38 0.42 0.29 20]
+		["#0c2d3e -0.264 0.422 0.22 13] ["#0c2d3e -0.184 0.422 0.17 8]
+		["#0c2d3e -0.10 0.415 0.19 10] ["#0c2d3e -0.05 0.41 0.185 10]
+		["#0c2d3e 0.395 0.41 0.185 10] ["#0c2d3e 0.477 0.42 0.22 10]
+		["#0c2d3e 0.57 0.42 0.3 15]
+		["#5b9751 -0.215 0.415 0.2 15] ["#5b9751 -0.145 0.415 0.18 15]
+		["#5b9751 -0.075 0.415 0.18 10] ["#5b9751 0.54 0.425 0.28 20]
+	]
+	localmake "leaflessTreesInfo [
+		[-0.5 0.24 2 0.8] [-0.34 0.25 5 0.8] [0.43 0.41 0 0.6]
+	]
+	repeat count :greenTreesInfo [
+		localmake "treeInfo item repcount :greenTreesInfo
+		setPenColor first :treeInfo
+		jumpRight :height * item 2 :treeInfo
+		jumpForward :height * item 3 :treeInfo
+		drawGreenTree :height * item 4 :treeInfo last :treeInfo
+		jumpTo :oldPos
+	]
+	setLineCap "round
+	setPenColor "black
+	repeat count :leaflessTreesInfo [
+		localmake "info item repcount :leaflessTreesInfo
+		setHeading :oldHeading
+		jumpRight :height * first :info
+		jumpForward :height * item 2 :info
+		right item 3 :info
+		drawLeaflessTree :height * last :info
+		jumpTo :oldPos
+	]	
+	setTurtleState :oldState	
+end
+
+to drawChurch :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "churchWhite "#e9eef1
+	localmake "churchWidth :height * 0.14
+	localmake "baseHeight :height * 0.03
+	localmake "roofWidth :height * 0.065
+	localmake "roofLowerHeight :height * 0.027
+	localmake "bellTowerWidth :height * 0.035
+	localmake "roofHeight :roofLowerHeight * 1.2
+	localmake "roofAngle 90 - arcTan :roofLowerHeight * 2 / :roofWidth
+	localmake "roofInnerSlantedHeight :roofLowerHeight / cos :roofAngle
+	localmake "roofSlantedHeight :roofHeight / cos :roofAngle
+	localmake "windows [
+		[0.01 0.004] [0.052 0.004]
+		[0.075 0.006] [0.1 0.006] [0.125 0.006]
+	]
+	localmake "windowColor "#000
+	jumpForward :height * 0.597
+	jumpRight :height * 0.278
+	localmake "basePositionLeft pos
+	setLineCap "butt
+	setPenSize :bellTowerWidth
+	setPenColor :buildingRed
+	jumpForward :baseHeight
+	forward :height * 0.065
+	setFillColor :churchWhite
+	setPenSize 0
+	isoTriangle :bellTowerWidth :height * 0.065
+
+	jumpTo :basePositionLeft
+	jumpRight (:churchWidth - :roofWidth) / 2
+	stripes :churchWidth :baseHeight [:churchWhite]
+	localmake "basePositionRight pos
+	jumpForward :baseHeight
+	jumpRight :roofWidth / 2
+	setFillColor :buildingRed
+	parallelogram :churchWidth - :roofWidth :roofSlantedHeight -:roofAngle
+	jumpLeft (:churchWidth + :roofWidth) / 2 
+	parallelogram :height * 0.02 :roofSlantedHeight :roofAngle
+
+	jumpTo :basePositionRight
+	jumpLeft :churchWidth / 2
+	setFillColor :churchWhite
+	setPenSize 0
+	polyStart
+	jumpForward :baseHeight
+	right :roofAngle
+	jumpForward :roofInnerSlantedHeight
+	right 180 - :roofAngle * 2
+	jumpForward :roofInnerSlantedHeight
+	polyEnd
+
+	; door
+	jumpTo :basePositionLeft
+	setHeading :oldHeading
+	stripes :height * 0.008 :height * 0.031 [:buildingRed]
+	jumpLeft :roofWidth / 2
+	jumpForward :height * 0.008
+	localmake "leftPosition pos
+ 	repeat count :windows [
+		localmake "windowInfo item repcount :windows
+		localmake "windowWidth :height * last :windowInfo
+		jumpRight :height * first :windowInfo
+		stripes :windowWidth :height * 0.014 [:windowColor]
+		jumpTo :leftPosition
+	]
+	setTurtleState :oldState	
+end
+
+to drawRedBuilding :size
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "absHeight abs :size
+	localmake "buildingWidth :absHeight * 1.3
+	localmake "baseHeight :absHeight * 0.45
+	localmake "roofHeightTotal :absHeight - :baseHeight
+	localmake "roofInnerHeight :roofHeightTotal * 0.9
+	localmake "roofWidth :absHeight * 0.85
+	localmake "roofAngle arcTan :roofWidth / (:roofInnerHeight * 2)
+	localmake "roofInnerSlantedLength (hypot [:roofInnerHeight * 2 :roofWidth]) / 2
+	localmake "roofTopWidth :buildingWidth - :roofWidth
+	localmake "roofBaseWindowSeparation :roofWidth * 0.4
+	localmake "windowColor "black
+	localmake "windowBaseHeight :absHeight * 0.13
+	localmake "windowWidth :absHeight * 0.07
+	localmake "windowHeight :windowWidth * 1.8
+	jumpForward :baseHeight
+	setPenSize 0
+	setFillColor "#aed8ff
+	isoTrapezoid :buildingWidth * 1.08 :roofTopWidth :roofHeightTotal	
+	jumpTo :oldPos
+	stripes :buildingWidth :baseHeight [:buildingRed]
+	jumpLeft :buildingWidth / 2
+	if :size < 0 [
+		jumpRight :buildingWidth - :roofWidth
+	]
+	setFillColor :buildingRed
+	polyStart
+	jumpForward :baseHeight
+	right :roofAngle
+	jumpForward :roofInnerSlantedLength
+	right 180 - :roofAngle * 2
+	jumpForward :roofInnerSlantedLength
+	polyEnd
+	setHeading :oldHeading
+	jumpLeft :roofWidth / 2
+	jumpForward :windowWidth
+	stripes :windowWidth :windowWidth [:windowColor]
+	jumpBackward :windowWidth + :baseHeight - :windowBaseHeight
+	jumpRight :roofBaseWindowSeparation / 2
+	repeat 2 [
+		stripes :windowWidth :windowHeight [:windowColor]
+		jumpLeft :roofBaseWindowSeparation
+	]
+
+	jumpTo :oldPos
+	jumpForward :windowBaseHeight
+	jumpRight :size * 0.5
+	repeat 2 [
+		stripes :windowWidth :windowHeight [:windowColor]
+		jumpLeft :size * 0.2
+	]
+	
+	setTurtleState :oldState	
+end
+
+to drawRedBuildings :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "buildingsInfo [0.095 -0.092 0.09]
+	setPenSize 0
+	jumpForward :height * 0.59
+	jumpRight :height * 0.16
+	setFillColor :midBlue
+	ellipse :height * 0.22 :height * 0.01
+	jumpTo :oldPos
+	jumpForward :height * 0.61
+	jumpLeft :height * 0.185
+	repeat count :buildingsInfo [
+		localmake "size :height * item repcount :buildingsInfo
+		drawRedBuilding :size
+		jumpRight :height * 0.1675
+		jumpBackward :height * 0.007
+	]
+	setTurtleState :oldState	
+end
+
+to drawWaterAndShadows :width :height
+	localmake "oldState turtleState
+	localmake "shadowRight :height * 0.26
+	localmake "shadowLeft :height * -0.05
+	localmake "waterLevel :height * 0.48
+	localmake "leftTopWidth :width / 2 - :shadowLeft
+	localmake "waterLeftWidth :leftTopWidth - :waterLevel * 0.85
+	localmake "rightTopWidth :width / 2 - :shadowRight
+	localmake "waterRightHeight :waterLevel * 0.85
+	setPenSize 0
+	jumpForward :waterLevel
+	setFillColor :midBlue
+	localmake "pos1 pos
+	jumpLeft :shadowLeft
+	polyStart
+	jumpLeft :leftTopWidth
+	jumpBackward :waterLevel
+	jumpRight :waterLeftWidth
+	polyEnd
+
+	jumpTo :pos1
+	jumpRight :shadowRight
+	polyStart
+	jumpRight :rightTopWidth
+	jumpBackward :waterRightHeight
+	polyEnd
+	
+	jumpTo :pos1
+	ellipse :height * 0.5 :height * 0.04
+	jumpBackward :height * 0.01
+	setFillColor :skyColor
+	ellipse :height :height * 0.04
+	setTurtleState :oldState	
+end
+
+to drawLeg :height
+	localmake "oldState turtleState
+	localmake "width :height * 0.08
+	localmake "hoofRadius :width * 0.6
+	setPenSize :width
+	backward :height
+	setPenSize 0
+	setFillColor "#140721
+	circle :hoofRadius
+	setTurtleState :oldState	
+end
+
+to drawTracks :legLength :trackLength
+	localmake "oldState turtleState
+	localmake "trackSeparation :legLength * 0.15
+	localmake "trackSize :legLength * 0.05
+	localmake "numTracks int :trackLength / (:trackSeparation)
+	jumpBackward :legLength
+	setPenSize 0
+	setFillColor :midBlue
+	repeat :numTracks [
+		ellipse :trackSize * 0.7 :trackSize
+		jumpBackward :trackSeparation
+	]
+	setTurtleState :oldState	
+end
+
+to drawAntlers :size
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	setLineCap "round
+	setPenColor :deerEarBrown
+	setPenSize :size * 0.05
+	repeat 2 [
+		localmake "sign sign (repcount - 1.5)
+		setHeading :oldHeading + :sign * 45
+		arcLeft :sign * 10 :size * 1.5
+		localmake "pos1 pos
+		localmake "heading1 heading
+		right :sign * 15
+		forward :size * 0.5
+		jumpTo :pos1
+		setHeading :heading1
+		arcLeft :sign * 15 :size * 1.5
+		localmake "pos1 pos
+		localmake "heading1 heading
+		right :sign * 15
+		forward :size * 0.2
+		jumpTo :pos1
+		left :sign * 40
+		forward :size * 0.3
+		left :sign * 20
+		forward :size * 0.2
+		jumpTo :oldPos
+	]	
+	setTurtleState :oldState	
+end
+
+to drawDeerBasic :height :yOffset :showAntlers?
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "deerLightBrown "#bd8f37
+	localmake "neckLength :height * 0.13
+	localmake "earAngle 30
+	localmake "legSeparation :height * 0.07
+	localmake "verticalLegSeparation :legSeparation * 0.8
+	localmake "legHeight :height * 0.205
+	jumpForward :height * 0.26 + :yOffset
+	localmake "torsoPosition pos
+	localmake "tailLength :height * 0.04
+	localmake "trackLength :yOffset + :height * 0.3 - :legHeight
+	setPenSize 0
+	jumpForward :neckLength
+	localmake "headPosition pos
+	setFillColor :deerEarBrown
+	circle :height * 0.022
+	if :showAntlers? [
+		drawAntlers :height * 0.13
+	]
+	repeat 2 [
+		localmake "sign sign (repcount - 1.5)
+		localmake "offsetX :sign * :height * 0.03
+		setHeading :oldHeading
+		jumpForward :height * 0.02
+		jumpLeft :offsetX
+		left :earAngle * :sign
+		ellipse :height * 0.014 :height * 0.03
+		jumpTo :headPosition
+	]
+	jumpTo :torsoPosition
+	setHeading :oldHeading
+	setFillColor :deerLightBrown
+	ellipse :height * 0.065 :height * 0.077
+	circlePair :height * 0.03 :height * 0.017 :neckLength
+
+	; draw legs
+	jumpTo :torsoPosition
+	jumpForward :height * 0.03
+	jumpLeft :legSeparation * 3 / 4
+	setPenColor :deerLightBrown
+	repeat 2 [
+		repeat 2 [
+			drawTracks :legHeight :trackLength
+			drawLeg :legHeight
+			jumpRight :legSeparation
+		]
+		jumpLeft :legSeparation * 1.5
+		jumpBackward :verticalLegSeparation
+		localmake "trackLength :trackLength - :verticalLegSeparation
+	]
+	; draw tail
+	jumpTo :torsoPosition
+	setFillColor "white
+	setPenColor :deerEarBrown
+	setPenSize :tailLength * 0.3
+	jumpBackward :tailLength * 0.6
+	ellipse :tailLength * 0.3 :tailLength
+	setTurtleState :oldState	
+end
+
+to drawDeerPair :height
+	localmake "oldState turtleState
+	jumpRight :height * 0.035
+	drawDeerBasic :height :height * 0.03 false
+	jumpRight :height * 0.2
+	drawDeerBasic :height 0 true
+
+	setTurtleState :oldState	
+end
+
+; Inspired by
+; https://improvisedlife.com/wp-content/uploads/2017/06/mldeer-outsider-artist-maude-lewis-lighthouse.ca-.jpg
+; which is referenced from:
+; https://improvisedlife.com/2017/06/26/maud-lewis-expansive-gaze/
+;
+; The original painting was made by a Canadian artist
+; named Maud Lewis.
+;
+; You can learn more about Maud Lewis at:
+; https://en.wikipedia.org/wiki/Maud_Lewis
+to maudLewisDeer :width :height
+	localmake "oldState turtleState
+	stripes :width :height ["white]
+	drawSky :width :height
+	drawHills :width :height
+	drawBackgroundTrees :height
+	drawChurch :height
+	drawRedBuildings :height
+	drawWaterAndShadows :width :height
+	drawForegroundTrees :height
+	drawDeerPair :height
+	setTurtleState :oldState
+end
+
+maudLewisDeer 100 * 768 / 626 100

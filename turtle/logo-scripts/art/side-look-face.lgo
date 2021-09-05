@@ -1,0 +1,57 @@
+to drawEye :radius
+	localmake "oldState turtleState
+	setPenSize 0
+	setFillColor "white
+	circle :radius
+	left 110
+	jumpForward :radius * 0.35
+	setFillColor "black
+	circle :radius * 0.35
+	setTurtleState :oldState
+end
+
+to drawEyes :height
+	localmake "oldState turtleState
+
+	localmake "eyeSeparation :height * 0.5
+	jumpForward :height * 0.75
+	jumpLeft :eyeSeparation * 0.47 ; not exactly 0.5 to be slightly asymmetric
+	repeat 2 [
+		drawEye :height * 0.14
+		jumpRight :eyeSeparation
+	]
+
+	setTurtleState :oldState
+end
+
+; Inspired by drawing at:
+; https://ca.pinterest.com/pin/822188475736558018/
+; In case that pin becomes unavailable, it was uploaded by someone named
+; Ella McCutchen
+to sideLook :height
+	localmake "oldState turtleState
+	stripes :height :height ["#f1552c]
+	drawEyes :height
+
+	; draw lips
+	setPenSize 0
+	setFillColor "black
+	drawArcLineShape [0.208 0.25
+		[[86 0.01] [8 0.5] [-13 0.1] [25 0.05] [-10 0.05] [-20 0.15] [20 0.05]
+		[0.02] [-20 0.05] [14 0.1] [0.1] [10 0.1] [90 0.003] [40 0.01] [30 0.05]
+		[12 0.5] [-30 0.05] [43 0.05] [-25 0.1] [25 0.15] [-20 0.1] [0.015] [30 0.03]
+		[10 0.05] [0.008] [50 0.006]]
+	] :height
+
+	; draw nose
+	setLineCap "round
+	setLineJoinStyle "round
+	setPenSize :height * 0.035
+	setPenColor "black
+	jumpForward :height * 0.7
+	jumpLeft :height * 0.07
+	arcLines [[180 0] [0.15] [10 0.2] [30 0.14] [95 0.06] [45 0.08] [0.215]] :height
+	setTurtleState :oldState
+end
+
+sideLook 100

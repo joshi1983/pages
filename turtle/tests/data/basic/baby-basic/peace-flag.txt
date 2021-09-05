@@ -1,0 +1,108 @@
+' MATHEMATICAL SIMULATION - PEACE FOREVER
+' Procedural cloth flag effect in Baby Basic
+Number cx = 150
+Number cy = 80
+Number size = 16
+Number time = 0
+Number x = 0
+Number y = 0
+Number px = 0
+Number py = 0
+Number up_x = 0
+Number up_y = 0
+Number wave = 0
+Number wave2 = 0
+Number i = 0
+Number j = 0
+Window.SetGameBackground("black")
+Window.SetLineWidth(2)
+Window.SetLineDash(6, 4)
+LOOP
+  Window.SetGameBackground("black")
+  time = time + 0.1
+  ' --- WHITE FLAG - CLOTH SIMULATION ---
+  For j = 0 To 8
+    For i = 0 To 12
+      wave = Math.Sin(i * 0.6 + time + j * 0.2) * 14
+      wave2 = Math.Sin((i-1) * 0.6 + time + j * 0.2) * 14
+      x = cx + i * size
+      y = cy + j * size + wave
+      Window.SetPenColor("white")
+      Window.DrawCircle(x, y, 2)
+      If i > 0 Then
+        px = cx + (i-1) * size
+        py = cy + j * size + wave2
+        Window.DrawLine(px, py, x, y)
+      EndIf
+      If j > 0 Then
+        up_x = cx + i * size
+        up_y = cy + (j-1) * size + Math.Sin(i * 0.6 + time + (j-1) * 0.2) * 14
+        Window.DrawLine(up_x, up_y, x, y)
+      EndIf
+    EndFor
+  EndFor
+  Window.SetPenColor("brown")
+  Window.SetLineDash(0,0)
+  Window.DrawLine(cx, cy, cx, cy+180)
+  Window.SetLineDash(6,4)
+  ' --- TEXT PEACE FOREVER - DASHED LINE STYLE ---
+  Window.SetPenColor("white")
+  Window.SetLineWidth(3)
+  ' P
+  Window.DrawLine(90, 300, 90, 340)
+  Window.DrawLine(90, 300, 110, 300)
+  Window.DrawLine(110, 300, 110, 320)
+  Window.DrawLine(90, 320, 110, 320)
+  ' E
+  Window.DrawLine(125, 300, 125, 340)
+  Window.DrawLine(125, 300, 145, 300)
+  Window.DrawLine(125, 320, 145, 320)
+  Window.DrawLine(125, 340, 145, 340)
+  ' A
+  Window.DrawLine(160, 340, 170, 300)
+  Window.DrawLine(170, 300, 180, 340)
+  Window.DrawLine(165, 320, 175, 320)
+  ' C
+  Window.DrawLine(195, 300, 215, 300)
+  Window.DrawLine(195, 300, 195, 340)
+  Window.DrawLine(195, 340, 215, 340)
+  ' E
+  Window.DrawLine(230, 300, 230, 340)
+  Window.DrawLine(230, 300, 250, 300)
+  Window.DrawLine(230, 320, 250, 320)
+  Window.DrawLine(230, 340, 250, 340)
+  ' F
+  Window.DrawLine(280, 300, 280, 340)
+  Window.DrawLine(280, 300, 300, 300)
+  Window.DrawLine(280, 320, 295, 320)
+  ' O
+  Window.DrawLine(315, 300, 335, 300)
+  Window.DrawLine(335, 300, 335, 340)
+  Window.DrawLine(335, 340, 315, 340)
+  Window.DrawLine(315, 340, 315, 300)
+  ' R
+  Window.DrawLine(350, 300, 350, 340)
+  Window.DrawLine(350, 300, 370, 300)
+  Window.DrawLine(370, 300, 370, 320)
+  Window.DrawLine(350, 320, 370, 320)
+  Window.DrawLine(370, 320, 375, 340)
+  ' E
+  Window.DrawLine(385, 300, 385, 340)
+  Window.DrawLine(385, 300, 405, 300)
+  Window.DrawLine(385, 320, 405, 320)
+  Window.DrawLine(385, 340, 405, 340)
+  ' V
+  Window.DrawLine(415, 300, 425, 340)
+  Window.DrawLine(425, 340, 435, 300)
+  ' E
+  Window.DrawLine(445, 300, 445, 340)
+  Window.DrawLine(445, 300, 465, 300)
+  Window.DrawLine(445, 320, 465, 320)
+  Window.DrawLine(445, 340, 465, 340)
+  ' R
+  Window.DrawLine(475, 300, 475, 340)
+  Window.DrawLine(475, 300, 495, 300)
+  Window.DrawLine(495, 300, 495, 320)
+  Window.DrawLine(475, 320, 495, 320)
+  Window.DrawLine(495, 320, 500, 340)
+END LOOP See less

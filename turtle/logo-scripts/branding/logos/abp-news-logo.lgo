@@ -1,0 +1,69 @@
+; Inspired by logo at:
+; https://logos.fandom.com/wiki/ABP_News
+to abpNews2017Logo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "startAngle 180 - arcTan 0.5
+	localmake "angle2 150
+	localmake "startPath [[:startAngle 0] [1 / abs cos :startAngle] [:angle2 0]]
+	localmake "offsetX tan :startAngle
+	localmake "lowerAngle1 42
+	localmake "lowerTriangle [:offsetX 0
+		[[-:lowerAngle1 0]
+		[abs :offsetX / sin :lowerAngle1] [:lowerAngle1 - 180 0]
+		[0.26]]
+	]
+	setPenSize 0
+	setFillColor "#e12c29
+	drawArcLineShape [0 1
+		combine :startPath [[0.8]]
+	] :height
+	; overlaps darker side to prevent a vertical antialiasing line from 
+	; showing between the 2 triangles
+
+	setFillColor "#bd1424
+	jumpForward :height
+	localmake "top pos
+	polyStart
+	arcLines :startPath -:height
+	jumpForward distanceToLine :oldPos :top
+	polyEnd
+	setFillColor "#97211d
+	jumpTo :oldPos
+	setHeading :oldHeading
+	drawArcLineShape :lowerTriangle :height
+	setFillColor "#3d1b1b
+	drawArcLineShape :lowerTriangle -:height
+
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://en.wikipedia.org/wiki/ABP_News#/media/File:ABP_News_logo.svg
+to abpNews2020Logo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "startAngle 150
+	localmake "angle2 150
+	setPenSize 0
+	setFillColor "#f00000
+	jumpForward :height
+	localmake "top pos
+	polyStart
+	arcLines [[:startAngle 0] [1 / abs cos :startAngle] [:angle2 0]] :height
+	localmake "len1 distanceToLine :oldPos :top
+	jumpForward :len1
+	setHeading :oldHeading + 180 + :startAngle + :angle2
+	jumpForward :len1
+	polyEnd
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 5
+jumpLeft :separation / 2
+abpNews2017Logo :height
+jumpRight :separation
+abpNews2020Logo :height

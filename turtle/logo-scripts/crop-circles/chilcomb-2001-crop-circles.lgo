@@ -1,0 +1,45 @@
+make "darkColor "#680
+
+; Inspired by
+; https://www.pinterest.ca/pin/743375482257933203/
+; Reported on July 15, 2001
+; Chilcomb Down, Hampshire, UK
+to chilcomb2001CropCircles :height
+	localmake "oldState turtleState
+	localmake "lightColor "#efc
+	localmake "thickness :height * 0.015
+	localmake "midCircleRadius :height * 0.11
+	jumpForward :height / 2
+	localmake "center pos
+	setFillColor transparent
+	setPenSize :thickness
+	setPenColor :lightColor
+	circle (:height - penSize) / 2
+	setPenSize 0
+	setFillColor :lightColor
+	circle :height * 0.4
+	setFillColor :darkColor
+	roundRegularStar :height * 0.4 5 :height * 0.015 0
+	right 180 / 5
+	repeat 5 [
+		jumpForward :height * 0.205
+		repeat 5 [
+			circle :height * mix 0.009 0.025 repRatio
+			jumpForward :height * mix 0.025 0.055 repRatio
+		]
+		jumpTo :center
+		jumpForward :midCircleRadius
+		stripes :thickness :height * 0.065 [:lightColor]
+		jumpTo :center		
+		right 360 / 5
+	]
+	setFillColor :lightColor
+	circle :height * 0.047
+	setFillColor transparent
+	setPenSize :thickness
+	circle :midCircleRadius
+	setTurtleState :oldState
+end
+
+setScreenColor :darkColor
+chilcomb2001CropCircles 100

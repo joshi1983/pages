@@ -1,0 +1,152 @@
+; These were inspired by several drawings by
+; Stuart Errol Anderson
+;
+; Stuart's facebook profile is at:
+; https://www.facebook.com/stuart.errol.anderson
+;
+; He shared some of the drawings at:
+; https://www.facebook.com/share/p/1AuwYiCDFz
+;
+; Far more are at:
+; http://www.squaring.net/downloads/heptstars.pdf
+
+; Inspired by page 1 of:
+; http://www.squaring.net/downloads/heptstars.pdf
+to hepstar1 :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "thickness :height * 0.007
+	localmake "height1 :height - :thickness / 2 * (1 + 1 / cos 180 / 7)
+	localmake "radius :height1 / (1 + cos 180 / 7)
+	localmake "sideLength :radius * sin 180 / 7
+	localmake "offset1 :radius - :sideLength * 2 * sin 180 / 7
+	hepstar2 :height
+	setLineJoinStyle "miter
+	setPenSize :thickness
+	setPenColor "black
+	jumpForward penSize / 2 + :radius * cos 180 / 7
+	localmake "center pos
+	repeat 7 [
+		setHeading :oldHeading + repcount * 360 / 7
+		jumpForward :offset1
+		right 180 *  11 / 14
+		repeat 3 [
+			forward :sideLength
+			right 180 / 7
+		]
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by page 2 of:
+; http://www.squaring.net/downloads/heptstars.pdf
+to hepstar2 :height
+	localmake "oldState turtleState
+	localmake "thickness :height * 0.007
+	localmake "height1 :height - :thickness / 2 * (1 + 1 / cos 180 / 7)
+	localmake "radius :height1 / (1 + cos 180 / 7)
+	setLineJoinStyle "miter
+	setPenSize :thickness
+	setPenColor "black
+	jumpForward penSize / 2 + :radius * cos 180 / 7
+	localmake "center pos
+	repeat 7 [
+		jumpForward :radius / 2
+		regularPolygon :radius / 2 7
+		right 360 / 7
+		jumpTo :center
+	]
+
+	setTurtleState :oldState
+end
+
+; Inspired by page 3 of:
+; http://www.squaring.net/downloads/heptstars.pdf
+to hepstar3 :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "thickness :height * 0.007
+	setLineJoinStyle "miter
+	setPenSize :thickness
+	setPenColor "black
+	jumpForward :height * 0.515
+	localmake "center pos
+	circle 1
+	repeat 7 [
+		setHeading :oldHeading + (repcount + 0.5) * 360 / 7
+		jumpForward :height * 0.245
+		right 180 / 14
+		regularPolygon :height * 0.268 14
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by page 6 of:
+; http://www.squaring.net/downloads/heptstars.pdf
+to hepstar6 :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "thickness :height * 0.007
+	localmake "radius1 :height * 0.214
+	localmake "len1 (:height - :thickness) / 2
+	localmake "len2 :height * 0.04
+	localmake "len3 hypot [:len1 :len2]
+	localmake "angle 360 / 14 - arcTan :len2 / :len1
+	localmake "offset :len3 * cos :angle
+	localmake "width1 :height * 0.345 
+	setLineJoinStyle "miter
+	setLineCap "butt
+	setPenSize :thickness
+	setPenColor "black
+	jumpForward :height / 2
+	localmake "center pos
+	right 360 / 28
+	regularPolygon (:height - penSize) / 2 / cos 360 / 28 14
+	repeat 7 [
+		setHeading :oldHeading + repcount * 360 / 7
+		jumpForward :radius1
+		regularPolygon :radius1 7
+		jumpForward :radius1
+		stripes :height * 0.365 penSize [penColor]
+		jumpTo :center
+	]
+	setHeading :oldHeading + 360 / 14
+	repeat 7 [
+		jumpForward :offset
+		stripes :width1 penSize [penColor]
+		right 360 / 7
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+; Similar to page 9 of:
+; http://www.squaring.net/downloads/heptstars.pdf
+to heptagon :height
+	localmake "oldState turtleState
+	localmake "thickness :height * 0.02
+	localmake "height1 :height - :thickness / 2 * (1 + 1 / cos 180 / 7)
+	localmake "radius :height1 / (1 + cos 180 / 7)
+	setLineJoinStyle "miter
+	setLineCap "butt
+	setPenSize :thickness
+	setPenColor "black
+	jumpForward penSize / 2 + :radius * cos 180 / 7
+	regularPolygon :radius 7
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 3
+jumpLeft :separation * 2
+hepstar1 :height
+jumpRight :separation
+hepstar2 :height
+jumpRight :separation
+hepstar3 :height
+jumpRight :separation
+hepstar6 :height
+jumpRight :separation
+heptagon :height

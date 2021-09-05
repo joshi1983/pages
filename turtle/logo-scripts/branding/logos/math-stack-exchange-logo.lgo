@@ -1,0 +1,41 @@
+; Inspired by logo at
+; https://math.stackexchange.com/
+to mathStackExchangeLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "cubeSize1 :height * 0.155314
+	localmake "cubeSize2 :cubeSize1 / cos 30
+	localmake "cubeSize3 :cubeSize2 / 2
+	localmake "lightRadius :height / 2 - :cubeSize2
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	repeat 6 [
+		setHeading :oldHeading + (repcount - 1) * 360 / 6
+		jumpForward :lightRadius
+		setHeading :oldHeading + 60
+		jumpForward :cubeSize3
+		left 90
+		setFillColor "#CB181F
+		parallelogram :cubeSize2 :cubeSize2 -30
+		right 180
+		setFillColor "#B6161C
+		parallelogram :cubeSize2 :cubeSize2 30
+		jumpRight :cubeSize3
+		right 30
+		jumpForward :cubeSize3
+		right 90
+		setFillColor "#911A1D
+		parallelogram :cubeSize2 :cubeSize2 30
+		jumpTo :center
+	]
+
+	setHeading :oldHeading
+	jumpForward :lightRadius - :cubeSize3
+	left 90
+	parallelogram :cubeSize2 :cubeSize2 30
+	
+	setTurtleState :oldState
+end
+
+mathStackExchangeLogo 100

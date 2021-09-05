@@ -1,0 +1,76 @@
+; Inspired by:
+; https://www.pinterest.ca/pin/970385050929856363/
+
+make "dotColor "red
+make "stringColor "#048
+
+to slice :radius :angle
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "numRadialDots 50
+	localmake "numEdgeDots :numRadialDots / 2
+	localmake "step :radius / :numRadialDots
+	localmake "angleStep :angle / :numEdgeDots
+	localmake "dots []
+	setPenSize 0
+	repeat 2 [
+		repeat :numRadialDots [
+			jumpForward :step
+			queue2 "dots pos
+		]
+		if repcount = 1 [
+			repeat :numEdgeDots [
+				jumpTo :oldPos
+				right :angleStep
+				jumpForward :radius
+				queue2 "dots pos
+			]
+			jumpTo :oldPos
+			setHeading :oldHeading + :angle
+			jumpForward :radius
+			right 180
+		]
+	]
+	setFillColor :dotColor
+	repeat count :dots [
+		jumpTo item repcount :dots
+		circle :radius * 0.007
+	]
+	setPenSize :radius * 0.0015
+	jumpTo :oldPos
+	setHeading :oldHeading
+	repeat :numRadialDots [
+		setHeading :oldHeading
+		jumpForward :step
+		localmake "fromPos pos
+		localmake "toPos item repcount + :numRadialDots :dots
+		setHeading towards :toPos
+		forward distance :toPos
+		jumpTo :fromPos
+	]
+	jumpTo :oldPos
+	repeat :numEdgeDots - 1 [
+		setHeading :oldHeading + :angle
+		jumpForward :step
+		localmake "fromPos pos
+		localmake "toPos item :numRadialDots + :numEdgeDots - repcount :dots
+		setHeading towards :toPos
+		forward distance :toPos
+		jumpTo :fromPos
+	]
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to dinyCircleCurve :radius
+	setPenColor :stringColor
+	setPenSize :radius * 0.3
+	circle :radius + penSize * 0.5
+	repeat 8 [
+		slice :radius 45
+		right 45
+	]
+end
+
+dinyCircleCurve 150

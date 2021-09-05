@@ -1,0 +1,45 @@
+to drawStrike :height
+	localmake "oldState turtleState
+	localmake "arcsInfo [[90 0] [0.015] [-90 0.008] [0.71]
+	[23 0.2] [20.5 0.55] [-40 0.03] [0.005] [-114 0.015]
+	[20.5 0.38401166]]
+	setPenSize 0
+	polyStart
+	arcLines :arcsInfo :height
+	arcLines reverse :arcsInfo :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by logo at
+; https://en.wikipedia.org/wiki/GigaMesh_Software_Framework#/media/File:GigaMesh_Logo.png
+to gigaMeshLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "strikeLength :height * 0.62
+	localmake "angle 133
+	localmake "colorStops createPList2 [
+		[0 "#fffdfd] [1 "#ff5b5b]
+	]
+	setPenColor "black
+	setPenSize :height * 0.03
+	jumpForward :height / 2
+	setFillGradient createRadialGradient pos :height / 2 :colorStops
+	circle (:height - penSize) / 2
+	jumpRight :height * 0.291
+	localmake "center pos
+	setFillColor "black
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		setHeading :oldHeading + repcount * 360 / 2
+		jumpForward :height * 0.1342
+		left :angle * :sign
+		drawStrike :strikeLength
+		jumpRight :sign * :height * 0.195
+		drawStrike :strikeLength
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+gigaMeshLogo 100

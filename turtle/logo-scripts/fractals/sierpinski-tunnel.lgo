@@ -1,0 +1,83 @@
+make "colors ["black "white]
+
+to drawSierpinski :points :limit :colorToggle
+	if :limit >= 1 [
+		setFillColor item 1 + :colorToggle :colors
+		localmake "newPoints [
+			mix (first :points) (item 2 :points) 0.5
+			mix (item 2 :points) (last :points) 0.5
+			mix (first :points) (last :points) 0.5
+		]
+		polygon :newPoints
+		repeat 3 [
+			localmake "subpoints [item repcount :points]
+			queue2 "subpoints item repcount :newPoints
+			localmake "index 1 + (remainder 1 + repcount 3)
+			queue2 "subpoints item :index :newPoints
+			drawSierpinski :subpoints :limit - 1 remainder :colorToggle + 1 2
+		]
+	]
+end
+
+; Inspired by image at
+; https://www.facebook.com/photo/?fbid=10161385621716100
+; The image was posted by Alen Fett.
+; https://www.facebook.com/alen.fett
+to sierpinskiTunnel :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "depth 50
+	localmake "numAngles 36
+	localmake "radius :height / 2
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	repeat :depth [
+		localmake "heading1 :oldHeading
+		if even? repcount [
+			localmake "heading1 :heading1 + 180 / :numAngles
+		]
+		localmake "outerRadius :radius
+		localmake "innerRadius :outerRadius * 0.9
+		localmake "baseWidth :innerRadius * 2 * sin 180 / :numAngles
+		setFillColor "black
+		repeat :numAngles [
+			setHeading :heading1 + repcount * 360 / :numAngles
+			jumpForward :innerRadius
+			localmake "pos1 pos
+			jumpRight :baseWidth / 2
+			localmake "points [pos]
+			jumpLeft :baseWidth
+			queue2 "points pos
+			jumpTo :pos1
+			jumpForward :outerRadius - :innerRadius
+			queue2 "points pos
+			drawSierpinski :points 4 0
+			jumpTo :center
+		]
+		localmake "topWidth :outerRadius * 2 * sin 180 / :numAngles
+		setFillColor "white
+		repeat :numAngles [
+			setHeading :heading1 + (repcount + 0.5) * 360 / :numAngles
+			jumpForward :outerRadius
+			localmake "pos1 pos
+			jumpRight :topWidth / 2
+			localmake "points [pos]
+			jumpLeft :topWidth
+			queue2 "points pos
+			jumpTo :pos1
+			jumpBackward :outerRadius - :innerRadius
+			queue2 "points pos
+			drawSierpinski :points 1 1	
+			jumpTo :center
+		]
+		localmake "radius :innerRadius
+	]
+	; Make the vanishing point harder to see.
+	setFillColor mix fillColor transparent 0.5
+	circle :innerRadius
+	setTurtleState :oldState
+end
+
+setScreenColor "#800
+sierpinskiTunnel 100
