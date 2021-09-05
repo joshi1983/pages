@@ -1,0 +1,178 @@
+make "arcsInfo [
+	[37 0.6121766]
+	[12.5 0.8297]
+]
+make "angle2 sum (item 1 item 1 :arcsInfo) (item 1 item 2 :arcsInfo)
+
+to hourGlassInnerJar :scale :arcDirectionSign
+	localmake "oldPos pos
+	localmake "oldPenSize penSize
+	localmake "oldHeading heading
+	localmake "secondHeading :oldHeading + :angle2 * :arcDirectionSign
+	setPenSize 0
+	polyStart
+	ifelse :arcDirectionSign > 0 [
+		arcsLeft :arcsInfo :scale
+		setHeading :secondHeading
+		arcsLeft reverse :arcsInfo :scale
+	] [
+		arcsRight :arcsInfo :scale
+		setHeading :secondHeading
+		arcsRight reverse :arcsInfo :scale
+	]
+	polyEnd
+	jumpTo :oldPos
+	setHeading :oldHeading
+	setPenSize :oldPenSize
+	ifelse :arcDirectionSign > 0 [
+		arcsLeft :arcsInfo :scale
+		setHeading :secondHeading
+		arcsLeft reverse :arcsInfo :scale
+	] [
+		arcsRight :arcsInfo :scale
+		setHeading :secondHeading
+		arcsRight reverse :arcsInfo :scale
+	]
+end
+
+to drawSand :height :timeRatio
+	localmake "bottomSandPileTimeRatio clamp (:timeRatio - 0.1) / 0.8 0 1
+	localmake "bottomWidth :height * 0.5 * power :bottomSandPileTimeRatio 1 / 3
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "width1 :height * 0.5
+	localmake "angle 45
+	localmake "bottomHeight :bottomWidth / 2 * tan :angle
+	setPenSize 0
+	setFillColor "green
+	; draw bottom sand.
+	if :bottomWidth > 0 [
+		isoTriangle :bottomWidth :bottomHeight
+	]
+
+	setPenSize :height * 0.01
+	setPenColor fillColor
+	localmake "startPos :height / 2 * clamp (0.1 - :timeRatio) * 10 0 1
+	jumpForward :startPos
+	forward (:height / 2 - :startPos) * clamp (1 - :timeRatio) * 10 0 1
+
+	; draw top.
+	localmake "timeRatio1 clamp :timeRatio * 1.13 0 1
+	localmake "angle 2 + 25 * :timeRatio1
+	localmake "heightRatio 1 - :timeRatio1
+	localmake "heightRatio sqrt :heightRatio
+	localmake "topHeight :height * 0.25 * :heightRatio + :width1 / 2 * tan :angle
+	localmake "size1 :width1 / 2 / cos :angle
+	jumpTo :oldPos
+	jumpForward :height / 2
+	
+	jumpLeft :width1 / 2
+	polyStart
+	jumpForward :topHeight
+	right 90 + :angle
+	jumpForward :size1
+	setHeading :oldHeading + 90 - :angle
+	jumpForward :size1
+	setHeading :oldHeading
+	jumpBackward :topHeight
+	polyEnd
+end
+
+to hourGlassSidePiece :height
+	localmake "oldPenSize penSize
+	localmake "oldPenColor penColor
+	localmake "circleHeight :oldPenSize * 0.8
+	localmake "radius :oldPenSize / 2
+	localmake "numCircles 3
+	localmake "height1 (:height - :circleHeight * :numCircles) / 2
+	forward :height1
+	setPenSize 0
+	setFillColor :oldPenColor
+	jumpForward :circleHeight / 2
+	repeat :numCircles [
+		circle :radius
+		jumpForward :circleHeight
+	]
+	jumpBackward :circleHeight / 2
+	setPenSize :oldPenSize
+	forward :height1
+end
+
+to hourGlass :height :timeRatio
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "width :height * 0.6
+	localmake "sideThickness :height * 0.12
+	localmake "topBottomThickness :height * 0.03
+	localmake "height1 :height - :topBottomThickness * 2
+	jumpForward :topBottomThickness
+	drawSand :height - :topBottomThickness * 2 :timeRatio
+
+	; draw sides
+	jumpTo :oldPos
+	setPenSize :sideThickness
+	setPenColor "black
+	setLineCap "butt
+	setLineJoinStyle "round
+	jumpRight :width / 2
+	hourGlassSidePiece :height
+	jumpLeft :width
+	right 180
+	hourGlassSidePiece :height
+	jumpLeft :sideThickness / 2
+	jumpBackward :topBottomThickness
+	setPenSize :height * 0.008
+
+	; Draw the curved hourglass shape
+	setFillColor "white
+	right 180
+	hourGlassInnerJar :height1 -1
+	jumpTo :oldPos
+	jumpForward :topBottomThickness
+	setHeading :oldHeading
+	jumpRight (:width - :sideThickness) / 2
+	hourGlassInnerJar :height1 1
+
+	; Draw top and bottom
+	setPenSize :width
+	setPenColor "black
+	setLineCap "butt
+	jumpTo :oldPos
+	setHeading :oldHeading
+	forward :topBottomThickness
+	jumpForward :height1
+	forward :topBottomThickness
+	setTurtleState :oldState
+end
+
+make "timeRatio animation.time / animation.duration
+make "timeRatio clamp :timeRatio 0 1
+make "sandTimeRatio :timeRatio
+
+ifelse :timeRatio > 0.8 [
+	make "timeRatio (:timeRatio - 0.8) / 0.2
+	make "timeRatio interpolateRatio easeInOut :timeRatio
+	right 180 * :timeRatio
+	make "sandTimeRatio 1
+] [
+	make "sandTimeRatio :timeRatio / 0.8
+]
+
+jumpBackward 50
+hourGlass 100 :sandTimeRatio
+
+to animation.snapshotstyle
+	localmake "result createPList
+	setProperty "result "zoom.scale 5.7
+	output :result
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 2
+	; Edit this if you want to change the length of your animation.
+	localmake "result createPList
+	setProperty "result "duration :minutes * 60 + :seconds
+	output :result
+end

@@ -1,0 +1,103 @@
+make "cornerRadiusRatio 0.28
+make "rectWidthFactor 1.36
+
+to drawBackgroundRect :height
+	localmake "oldState turtleState
+	localmake "width :height * :rectWidthFactor
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#ba7bf0
+	setProperty "colorStops 0.45 "#996bec
+	setProperty "colorStops 1 "#5046e4
+	jumpForward :height / 2
+	setFillGradient createRadialGradient pos :height :colorStops
+	setPenSize 0
+	roundRect :width :height :height * :cornerRadiusRatio
+
+	setTurtleState :oldState
+end
+
+to drawHotAirBalloon :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "oldPos pos
+	localmake "arcsInfo1 [[25 0.32] [30 0.24] [66 0.24] [19 1.32720009] [-140 0.07]]
+	localmake "angle 30
+	setFillColor "white
+	setPenSize :height * 0.06
+	setPenColor "black
+	jumpBackward penSize / 2
+	left 90
+	polyStart
+	arcLines :arcsInfo1 :height
+	arcLines reverse :arcsInfo1 :height
+	polyEnd
+	setHeading :oldHeading
+	setPenSize 0
+	jumpTo :oldPos
+	jumpBackward :height * 0.68
+	setFillColor "black
+	right :angle
+	polyStart
+	arcsLeft [[12 1.45] [17 0.49] [50 0.26] [25.476623 0.13]] :height
+	polyEnd
+	setHeading :oldHeading
+	jumpTo :oldPos
+	jumpBackward :height * 0.66
+	left :angle
+	polyStart
+	arcLines [[12 1.4] [12 0.2] [17 0.6] [75.476623 0.155]] -:height
+	left 175
+	arcsLeft [[40 0.35] [80 0.22]] :height
+	polyEnd
+	
+	setTurtleState :oldState
+end
+
+to drawMountains :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "arcRadius :height * :cornerRadiusRatio
+	localmake "topRadiusRatio 0.025
+	localmake "len1 0.205
+	localmake "angle 39.1
+	localmake "arcRadius2 0.05
+	setFillColor "white
+	jumpRight :height * 0.065
+	setPenSize 0
+	isoTriangle :height * 0.5 :height * 0.17
+	setFillColor "black
+	jumpTo :oldPos
+	left 90
+	polyStart
+	jumpForward (:height * :rectWidthFactor / 2) - :arcRadius
+	arcRight 36.5 :arcRadius
+	setHeading :oldHeading + 90
+	arcLines [[0.04] [28 0.07] [13.7 0.3] [0.29] [-81.1 :topRadiusRatio]
+	[0.225] [79 0] [0.08] [-79 :topRadiusRatio] [0.25]
+	[20 0.16] [12.43 0.4] [-171.54 0] [-1.49 :cornerRadiusRatio]
+	[0.13] [-:angle :arcRadius2] [:len1] [:angle * 2 0.018] [:len1] [-:angle :arcRadius2]] :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://fly.io/
+to flyIOLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "rectHeight :height * 0.8628
+	drawBackgroundRect :rectHeight
+	drawMountains :rectHeight
+	jumpForward :height * 0.2541
+	jumpRight :height * 0.28
+	setPenSize 0
+	setFillColor "black
+	circle :height * 0.0485
+	jumpTo :oldPos
+	jumpForward :height
+	drawHotAirBalloon :height * 0.798
+	setTurtleState :oldState
+end
+
+flyIOLogo 100

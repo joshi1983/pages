@@ -1,0 +1,149 @@
+make "darkColor "#680
+make "lightColor "#ffa
+
+to fillIntersectedArc :largeRadius :tinyRadius :thickness
+	localmake "oldState turtleState
+	localmake "innerRadius :tinyRadius - :thickness / 2
+	localmake "outerRadius :tinyRadius + :thickness / 2
+	localmake "innerAngle 2 * arcSin :innerRadius / 2 / :largeRadius
+	localmake "thicknessAngle 2 * arcSin :thickness / 2 / :largeRadius
+	localmake "outerAngle 2 * arcSin :outerRadius / 2 / :largeRadius
+	; Some of the math is unfortunately, incorrect here.
+	; The values are close enough to be difficult to see problems 
+	; in the drawing, though.
+	; It would be nice to fix the thicknessAngle calculation.
+	; You'll see the problems if you zoom in on the drawn shape and
+	; look closely at the corners.
+	; I(Josh Greig) am leaving it as os fpr now to move onto something else
+	; If you fix this, try to share the fixes with me.
+	left 90 + :innerAngle / 2
+	jumpForward :innerRadius
+	left 90
+	polyStart
+	arcLeft 180 - :innerAngle :innerRadius
+	right 90 + :innerAngle / 2
+	arcRight :thicknessAngle :largeRadius
+	right 90
+	arcRight 180 - :outerAngle * 2 :outerRadius
+	right 90 
+	arcRight :thicknessAngle :largeRadius
+	polyEnd
+	setTurtleState :oldState
+end
+
+to drawBackground :outerDistance :largeRadius :thickness
+	localmake "oldState turtleState
+	localmake "center pos
+	localmake "oldHeading heading
+	localmake "outerCircleRadius :outerDistance / 3
+	localmake "outerSmallRadius1 :outerCircleRadius / 2
+	localmake "outerTinyRadius1 :outerSmallRadius1 / 2
+	localmake "outerDistance2 :outerSmallRadius1 + :outerTinyRadius1
+	localmake "tinyAngleOffset 2 * arcSin :outerDistance2 / 2 / :largeRadius
+	localmake "largeThickness :outerSmallRadius1 / 4
+	localmake "outerTinyRadius2 :outerTinyRadius1 - :largeThickness / 2
+	setPenSize 0
+	setFillColor :lightColor
+	circle :largeRadius
+	setPenColor :lightColor
+	repeat 6 [
+		setHeading :oldHeading + repcount * 360 / 6
+		jumpForward :largeRadius
+		setPenSize 0
+		setFillColor :lightColor
+		circle :outerSmallRadius1
+		jumpTo :center
+		left :tinyAngleOffset
+		setPenSize :largeThickness
+		setFillColor transparent
+		repeat 2 [
+			jumpForward :largeRadius
+			circle :outerTinyRadius2
+			jumpTo :center
+			right :tinyAngleOffset * 2
+		]
+		jumpTo :center
+	]
+	setPenSize 0
+	setFillColor :darkColor
+	repeat 6 [
+		setHeading :oldHeading + repcount * 360 / 6 - :tinyAngleOffset
+		repeat 2 [
+			jumpForward :largeRadius
+			fillIntersectedArc :largeRadius :outerTinyRadius2 :largeThickness
+			jumpTo :center
+			right :tinyAngleOffset * 2
+		]
+		jumpTo :center
+	]
+	jumpTo :center
+	setPenSize 0
+	setFillColor :lightColor
+	localmake "outerRadius :outerCircleRadius + :thickness / 2
+	localmake "innerRadius :outerCircleRadius - :thickness / 2
+	localmake "outerArcAngle 2 * arcSin :outerRadius / 2 / :largeRadius
+	localmake "innerArcAngle 2 * arcSin :innerRadius / 2 / :largeRadius
+	localmake "thicknessAngle 2 * arcSin :thickness / 2 / :largeRadius
+	localmake "arcsInfo1 [[90 0] [(90 + :outerArcAngle / 2) 1] [90 + :outerArcAngle / 2 0]
+		[-:thicknessAngle :largeRadius / :outerRadius]]
+	localmake "arcsInfo2 [[90 - :innerArcAngle / 2 0] [-(90 + :innerArcAngle / 2) 1]]
+	repeat 6 [
+		setHeading :oldHeading + repcount * 360 / 6
+		jumpForward :largeRadius + :outerRadius
+		polyStart
+		arcLines :arcsInfo1 :outerRadius
+		arcLines :arcsInfo2 :innerRadius
+		arcLines reverse :arcsInfo2 :innerRadius
+		arcLines reverse :arcsInfo1 :outerRadius
+		polyEnd
+		jumpTo :center
+	]
+
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://www.pinterest.ca/pin/305963368450826150/
+; It is mentioned at:
+; http://www.cropcircleconnector.com/2017/cleyhill/cleyhill2017a.html
+; Drone footage is at:
+; https://www.youtube.com/watch?v=u9o_vJqzec4
+to cleyHill2017cropCircles :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "thickness :height * 0.01
+	localmake "outerDistance (:height - :thickness) / 2
+	localmake "outerCircleRadius :outerDistance / 3
+	localmake "largeRadius :outerDistance - :outerCircleRadius
+	localmake "innerTriangleRadius :largeRadius * sin 30
+	jumpForward :height / 2
+	localmake "center pos
+	drawBackground :outerDistance :largeRadius :thickness
+
+	setFillColor :darkColor
+	setPenColor :lightColor
+	setPenSize :thickness
+	setHeading :oldHeading
+	repeat 2 [
+		regularPolygon :largeRadius 3
+		right 60
+	]
+	setFillColor transparent
+	regularPolygon :innerTriangleRadius 3
+	regularPolygon :innerTriangleRadius 6
+	repeat 3 [
+		stripes penSize :largeRadius [:lightColor]
+		right 360 / 3
+	]
+	setHeading :oldHeading + 60
+	repeat 3 [
+		jumpForward :innerTriangleRadius
+		stripes penSize :innerTriangleRadius [:lightColor]
+		jumpTo :center
+		right 360 / 3
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor :darkColor
+cleyHill2017cropCircles 100

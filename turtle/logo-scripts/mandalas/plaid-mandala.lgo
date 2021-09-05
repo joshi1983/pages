@@ -1,0 +1,208 @@
+; Inspired by
+; https://www.pinterest.ca/pin/130111876711545256/
+; Also found at:
+; https://www.redbubble.com/people/artalchemist/works/14479380-plaid-mandala
+
+to backgroundLeaf :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angle 40
+	localmake "numGradientSections 16
+	localmake "outerColor "#114422
+	localmake "innerColor "#002211
+	repeat :numGradientSections [
+		localmake "ratio (repcount - 1) / :numGradientSections
+		localmake "angle1 :angle * (1 - :ratio)
+		localmake "size1 :size * (1 - 0.3 * :ratio)
+		localmake "size2 :size1 / 2 / sin :angle1
+		setFillColor mix :innerColor :outerColor sqrt :ratio
+		setPenSize 0
+		jumpForward (:size - :size1) * 0.5
+		polyStart
+		left :angle1
+		arcRight :angle1 * 2 :size2
+		right 180 - :angle1 * 2
+		arcRight :angle1 * 2 :size2
+		polyEnd
+		jumpTo :oldPos
+		setHeading :oldHeading
+	]
+	penUp
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to foregroundGreenLeaf :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angle1 15
+	localmake "angle2 50
+	localmake "size1 :size * 0.8
+	localmake "size2 (:size - :size1) / sin :angle1
+	localmake "size3 :size * 0.5 / sin :angle2
+	localmake "numGradientDivisions 16
+	localmake "outerColor "#263
+	localmake "innerColor "#142
+	setPenSize 0
+	repeat :numGradientDivisions [
+		localmake "ratio 1 - (repcount - 1) / :numGradientDivisions
+		setFillColor mix :outerColor :innerColor :ratio
+		localmake "ratio1 sqrt :ratio
+		localmake "size1_ :size1 * :ratio1
+		localmake "size2_ :size2 * :ratio1
+		localmake "size3_ :size3 * :ratio1
+		localmake "size4_ (:size - :size1_) * 0.4
+		localmake "angle3_ :angle2 * 0.4
+		localmake "arcAngle :angle2 * 2
+		localmake "rightAngle 180 - :angle1 - :angle2
+		localmake "strafeSize :size * 0.028
+		jumpLeft :strafeSize
+		right :angle3_
+		forward :size4_
+		left :angle3_
+		polyStart
+		forward :size1_
+		arcRight :angle1 :size2_
+		right :rightAngle
+		arcRight :arcAngle :size3_
+		polyEnd
+		setPos :oldPos
+		setHeading :oldHeading
+		jumpRight :strafeSize
+		left :angle3_
+		forward :size4_
+		right :angle3_
+		polyStart
+		forward :size1_
+		arcLeft :angle1 :size2_
+		left :rightAngle
+		arcLeft :arcAngle :size3_
+		polyEnd
+		setPos :oldPos
+		setHeading :oldHeading
+	]
+end
+
+to backgroundLeafs :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "numAngles 16
+	localmake "radius1 :size * 0.2
+	localmake "leafSize :size - :radius1
+	repeat :numAngles [
+		penUp
+		jumpForward :radius1
+		backgroundLeaf :leafSize
+		setPos :oldPos
+		right 360 / :numAngles
+	]
+	setHeading :oldHeading
+end
+
+to foregroundLeafs :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "numAngles 8
+	localmake "radius1 :size * 0.2
+	localmake "leafSize :size - :radius1
+	repeat :numAngles [
+		penUp
+		jumpForward :radius1
+		foregroundGreenLeaf :leafSize
+		setPos :oldPos
+		right 360 / :numAngles
+	]
+	setHeading :oldHeading
+end
+
+to peddlePath :size :maxPenSize
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angle 360 / 8
+	localmake "leftAngle :angle * 0.5
+	localmake "size1 :size * 0.2
+	localmake "angle1 45.8
+	localmake "arcRadius1 :size * 0.26
+	localmake "angle2 16.4
+	localmake "arcRadius2 :size * 0.7
+	localmake "angle3 7.5
+	localmake "arcRadius3 :size * 3.215
+	localmake "rightAngle 180
+	left :leftAngle
+	setPenSize :maxPenSize
+	polyStart
+	forward :size1
+	arcRight :angle1 :arcRadius1
+	arcLeft :angle2 :arcRadius2
+	arcLeft :angle3 :arcRadius3
+	right :rightAngle
+	arcLeft :angle3 :arcRadius3
+	arcLeft :angle2 :arcRadius2
+	arcRight :angle1 :arcRadius1
+	polyEnd
+	
+	jumpTo :oldPos
+	setHeading :oldHeading
+	penDown
+	setPenSize :maxPenSize * 0.3
+	forward :size
+	penUp
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to getBloomColorStops
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#000
+	setProperty "colorStops 0.7 "#caf
+	setProperty "colorStops 0.8 "#dcf
+	setProperty "colorStops 1 "#fff
+	output :colorStops
+end
+
+to bloom :size :maxPenSize
+	localmake "colorStops getBloomColorStops
+	localmake "gradient1 createRadialGradient pos :size * 0.5 :colorStops
+	localmake "gradient2 createRadialGradient pos :size * 0.2 :colorStops
+	localmake "numAngles 8
+	setLineJoinStyle "round
+	setFillGradient :gradient1
+	setPenGradient :gradient2
+	repeat :numAngles [
+		peddlePath :size :maxPenSize
+		right 360 / :numAngles
+	]
+end
+
+to backgroundBloom :size
+	localmake "oldPos pos
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#000
+	setProperty "colorStops 0.7 "#86b
+	setProperty "colorStops 1 "#134
+	localmake "gradient1 createRadialGradient pos :size * 2 :colorStops
+	localmake "gradient2 createRadialGradient pos :size * 1.6 :colorStops
+	localmake "numAngles 8
+	setLineJoinStyle "round
+	setFillGradient :gradient1
+	setPenGradient :gradient2
+	repeat :numAngles [
+		backward :size * 0.2
+		peddlePath :size * 1.6 :size * 0.008
+		setPos :oldPos
+		right 360 / :numAngles
+	]
+end
+
+to plaidMandala :size
+	backgroundLeafs :size
+	right 90 / 8
+	backgroundBloom :size
+	left 180 / 8
+	foregroundLeafs :size * 0.5
+	right 180 / 8
+	bloom :size * 0.8 :size * 0.008
+end
+
+setScreenColor "black
+plaidMandala 100

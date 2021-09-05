@@ -1,0 +1,419 @@
+to drawBorderedSquare :height :innerColor :outerColor
+	localmake "oldState turtleState
+	setFillColor :innerColor
+	setPenColor :outerColor
+	setPenSize :height / 3
+	setLineJoinStyle "miter
+	localmake "squareSize :height - penSize
+	jumpForward :height / 2
+	rect :squareSize :squareSize
+	setTurtleState :oldState
+end
+
+to drawCheckerboard :scale :numSteps :colors
+	localmake "oldState turtleState
+	localmake "maxX :numSteps - 1
+	localmake "squareSize :scale / :numSteps
+	jumpLeft :scale / 2 - :squareSize / 2
+	for ["x 0 :maxX] [
+		localmake "pos1 pos
+		repeat :numSteps [
+			localmake "index 1 + remainder :x + repcount 2
+			stripes :squareSize :squareSize [item :index :colors]
+			jumpRight :squareSize
+		]
+		jumpTo :pos1
+		jumpForward :squareSize
+	]
+	setTurtleState :oldState
+end
+
+to drawDiagonalCross :height :diagonalColor :backColor
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "thickness :height / 6
+	localmake "diagonalLen1 (:height - :thickness / sqrt 2) / cos 45
+	localmake "diagonalThickness1 :thickness / 2 / cos 45
+	stripes :height :height [:backColor]
+	setFillColor :diagonalColor
+	setPenSize 0
+	jumpForward :height / 2
+	localmake "center pos
+	repeat 2 [
+		setHeading :oldHeading + 45 + repcount * 90
+		jumpLeft :thickness / 2
+		jumpForward :diagonalLen1 / 2
+		right 45
+		polyStart
+		jumpForward :diagonalThickness1
+		jumpRight :diagonalThickness1
+		right 135
+		jumpForward :diagonalLen1
+		right 45
+		jumpForward :diagonalThickness1
+		jumpRight :diagonalThickness1
+		polyEnd
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+; Letter A
+; Inspired by
+; https://en.wikipedia.org/wiki/International_maritime_signal_flags#/media/File:ICS_Alfa.svg
+to icsAlfa :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "oldPos pos
+	localmake "width :height 
+	localmake "angle1 arcTan :width / 2 / :height
+	localmake "slantedLen :height / 2 / cos :angle1
+	jumpLeft :width / 4
+	stripes :width / 2 :height ["white]
+	jumpTo :oldPos
+	setFillColor "blue
+	setPenSize 0
+	polyStart
+	jumpRight :width / 2
+	left :angle1
+	jumpForward :slantedLen
+	right :angle1 * 2
+	jumpForward :slantedLen
+	setHeading :oldHeading - 90
+	jumpForward :width / 2
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Letter B
+; Inspired by
+; https://en.wikipedia.org/wiki/International_maritime_signal_flags#/media/File:ICS_Bravo.svg
+to icsBravo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "angle arcTan 1 / 2
+	localmake "slantedLen :height / 2 / cos :angle
+	setFillColor "red
+	setPenSize 0
+	jumpLeft :height / 2
+	polyStart
+	jumpRight :height
+	left :angle
+	jumpForward :slantedLen
+	right :angle * 2
+	jumpForward :slantedLen
+	setHeading :oldHeading - 90
+	jumpForward :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Letter C
+; Inspired by
+; https://en.wikipedia.org/wiki/International_maritime_signal_flags#/media/File:ICS_Charlie.svg
+to icsCharlie :height
+	stripes :height :height ["blue "white "red "white "blue]
+end
+
+; Letter D
+; Inspired by
+; https://en.wikipedia.org/wiki/International_maritime_signal_flags#/media/File:ICS_Delta.svg
+to icsDelta :height
+	stripes :height :height ["yellow "blue "blue "yellow]
+end
+
+; Letter E
+; Inspired by
+; https://en.wikipedia.org/wiki/International_maritime_signal_flags#/media/File:ICS_Echo.svg
+to icsEcho :height
+	stripes :height :height ["red "blue]
+end
+
+to drawBox :height :innerColor :outerColor
+	localmake "oldState turtleState
+	localmake "squareSize :height * cos 45
+	stripes :height :height [:innerColor]
+	jumpForward :height / 2
+	setPenSize 0
+	setFillColor :outerColor
+	right 45
+	rect :squareSize :squareSize
+	setTurtleState :oldState
+end
+
+; Letter F
+; Inspired by
+; https://en.wikipedia.org/wiki/International_maritime_signal_flags#/media/File:ICS_Foxtrot.svg
+to icsFoxtrot :height
+	localmake "oldState turtleState
+	localmake "squareSize :height * cos 45
+	stripes :height :height ["white]
+	jumpForward :height / 2
+	setPenSize 0
+	setFillColor "red
+	right 45
+	rect :squareSize :squareSize
+	setTurtleState :oldState
+end
+
+; Letter G
+; Inspired by
+; https://en.wikipedia.org/wiki/International_maritime_signal_flags#/media/File:ICS_Golf.svg
+to icsGolf :height
+	localmake "oldState turtleState
+	jumpLeft :height / 2
+	jumpForward :height / 2
+	right 90
+	stripes :height :height ["yellow "blue  "yellow "blue "yellow "blue]
+	setTurtleState :oldState
+end
+
+; Letter H
+; Inspired by
+; https://en.wikipedia.org/wiki/International_maritime_signal_flags#/media/File:ICS_Hotel.svg
+to icsHotel :height
+	localmake "oldState turtleState
+	jumpLeft :height / 2
+	jumpForward :height / 2
+	right 90
+	stripes :height :height ["white "red]
+	setTurtleState :oldState
+end
+
+; Letter I
+; Inspired by
+; https://en.wikipedia.org/wiki/International_maritime_signal_flags#/media/File:ICS_India.svg
+to icsIndia :height
+	localmake "oldState turtleState
+	stripes :height :height ["yellow]
+	jumpForward :height / 2
+	setPenSize 0
+	setFillColor "black
+	circle :height / 4
+	setTurtleState :oldState
+end
+
+; Letter J
+; Inspired by
+; https://en.wikipedia.org/wiki/International_maritime_signal_flags#/media/File:ICS_Juliett.svg
+to icsJuliett :height
+	stripes :height :height ["blue "white "blue]
+end
+
+; Letter K
+; Inspired by
+; https://en.wikipedia.org/wiki/International_maritime_signal_flags#/media/File:ICS_Kilo.svg
+to icsKilo :height
+	localmake "oldState turtleState
+	jumpLeft :height / 2
+	jumpForward :height / 2
+	right 90
+	stripes :height :height ["yellow "blue]
+	setTurtleState :oldState
+end
+
+; Letter L
+; Inspired by
+; https://en.wikipedia.org/wiki/International_maritime_signal_flags#/media/File:ICS_Lima.svg
+to icsLima :height
+	localmake "colors ["yellow "black]
+	drawCheckerboard :height 2 :colors
+end
+
+; Letter M
+; Inspired by
+; https://en.wikipedia.org/wiki/International_maritime_signal_flags#/media/File:ICS_Mike.svg
+to icsMike :height
+	drawDiagonalCross :height "white "blue
+end
+
+; Letter N
+; Inspired by
+; https://en.wikipedia.org/wiki/International_maritime_signal_flags#/media/File:ICS_November.svg
+to icsNovember :height
+	localmake "colors ["blue "white]
+	drawCheckerboard :height 4 :colors
+end
+
+; Letter O
+; Inspired by
+; https://en.wikipedia.org/wiki/International_maritime_signal_flags#/media/File:ICS_Oscar.svg
+to icsOscar :height
+	localmake "oldState turtleState
+	stripes :height :height ["yellow]
+	jumpForward :height / 2
+	right 45
+	setPenSize 0
+	setFillColor "red
+	isoTriangle :height / cos 45 :height / sqrt 2
+	setTurtleState :oldState
+end
+
+; Letter P
+; Inspired by
+; https://en.wikipedia.org/wiki/File:ICS_Papa.svg
+to icsPapa :height
+	drawBorderedSquare :height "white "blue
+end
+
+; Letter Q
+; Inspired by
+; https://en.wikipedia.org/wiki/International_maritime_signal_flags#/media/File:ICS_Quebec.svg
+to icsQuebec :height
+	stripes :height :height ["yellow]
+end
+
+; Letter R
+; Inspired by
+; https://en.wikipedia.org/wiki/International_maritime_signal_flags#/media/File:ICS_Romeo.svg
+to icsRomeo :height
+	localmake "oldState turtleState
+	stripes :height :height ["red]
+	setPenSize 0
+	jumpForward :height / 2
+	setFillColor "yellow
+	repeat 2 [
+		rect :height :height * 0.2
+		right 90
+	]
+	setTurtleState :oldState
+end
+
+; Letter S
+; Inspired by
+; https://en.wikipedia.org/wiki/International_Code_of_Signals#/media/File:ICS_Sierra.svg
+to icsSierra :height
+	drawBorderedSquare :height "blue "white
+end
+
+; Letter T
+; Inspired by
+; https://en.wikipedia.org/wiki/International_maritime_signal_flags#/media/File:ICS_Tango.svg
+to icsTango :height
+	localmake "oldState turtleState
+	jumpLeft :height / 2
+	jumpForward :height / 2
+	right 90
+	stripes :height :height ["red "white "blue]	
+	setTurtleState :oldState
+end
+
+; Letter U
+; Inspired by
+; https://en.wikipedia.org/wiki/International_maritime_signal_flags#/media/File:ICS_Uniform.svg
+to icsUniform :height
+	drawCheckerboard :height 2 ["red "white]
+end
+
+; Letter V
+; Inspired by
+; https://en.wikipedia.org/wiki/International_maritime_signal_flags#/media/File:ICS_Victor.svg
+to icsVictor :height
+	drawDiagonalCross :height "red "white
+end
+
+; Letter W
+; Inspired by
+; https://en.wikipedia.org/wiki/International_maritime_signal_flags#/media/File:ICS_Whiskey.svg
+to icsWhiskey :height
+	localmake "oldState turtleState
+	setLineJoinStyle "miter
+	setPenSize :height / 5
+	setFillColor "white
+	setPenColor "blue
+	localmake "height1 :height - penSize
+	jumpForward :height / 2
+	rect :height1 :height1
+	jumpBackward penSize / 2
+	stripes penSize penSize ["red]
+	setTurtleState :oldState
+end
+
+; Letter X
+; Inspired by
+; https://en.wikipedia.org/wiki/International_maritime_signal_flags#/media/File:ICS_X-ray.svg
+to icsXRay :height
+	localmake "oldState turtleState
+	localmake "thickness :height * 0.2
+	stripes :height :height ["white]
+	jumpForward :height / 2
+	localmake "center pos
+	repeat 2 [
+		jumpBackward :height / 2
+		stripes :thickness :height ["blue]
+		jumpTo :center
+		right 90
+	]
+	setTurtleState :oldState
+end
+
+; Letter Y
+; Inspired by
+; https://en.wikipedia.org/wiki/International_maritime_signal_flags#/media/File:ICS_Yankee.svg
+to icsYankee :height
+	localmake "oldState turtleState
+	localmake "step :height / 5 / cos 45
+	localmake "slantedLen :step / 2
+	stripes :height :height ["yellow]
+	jumpLeft :height / 2
+	jumpForward :height
+	setPenSize 0
+	setFillColor "red
+	right 135
+	localmake "width1 :step
+	jumpForward :step / 2
+	repeat 5 [
+		localmake "sign sign 2.5 - repcount
+		localmake "width2 :width1 + :step * :sign
+		isoTrapezoid :width1 :width2 :slantedLen
+		jumpForward :step
+		localmake "width1 :width1 + :step * 2 * :sign
+	]	
+	setTurtleState :oldState
+end
+
+; Letter Z
+; Inspired by
+; https://en.wikipedia.org/wiki/International_maritime_signal_flags#/media/File:ICS_Zulu.svg
+to icsZulu :height
+	localmake "oldState turtleState
+	localmake "colors ["red "black "yellow "blue]
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	repeat count :colors [
+		jumpBackward :height / 2
+		setFillColor item repcount :colors
+		isoTriangle :height :height / 2
+		jumpTo :center
+		right 90
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "#ddd
+make "height 100
+make "separation :height * 1.3
+make "icsLetters [
+	["A "icsAlfa] ["B "icsBravo] ["C "icsCharlie] ["D "icsDelta] ["E "icsEcho] ["F "icsFoxtrot]
+	["G "icsGolf] ["H "icsHotel] ["I "icsIndia] ["J "icsJuliett] ["K "icsKilo]
+	["L "icsLima] ["M "icsMike] ["N "icsNovember] ["O "icsOscar] ["P "icsPapa]
+	["Q "icsQuebec] ["R "icsRomeo] ["S "icsSierra] ["T "icsTango] ["U "icsUniform]
+	["V "icsVictor] ["W "icsWhiskey] ["X "icsXRay] ["Y "icsYankee] ["Z "icsZulu]
+]
+jumpLeft :separation * ((count :icsLetters) - 1) / 2
+setFontSize :height * 0.4
+setFillColor "black
+setPenSize 0
+repeat count :icsLetters [
+	make "pair item repcount :icsLetters
+	make "pos1 pos
+	(invoke last :pair :height)
+	jumpBackward fontSize
+	right 90
+	jumpBackward fontSize / 2 ; roughly center the text
+	label first :pair
+	setHeading 0
+	jumpTo :pos1
+	jumpRight :separation
+]

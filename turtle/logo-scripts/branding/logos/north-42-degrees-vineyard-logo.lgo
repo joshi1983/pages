@@ -1,0 +1,121 @@
+to crescent :outerRadius :innerRadius
+	assert :outerRadius < :innerRadius
+	localmake "innerArcAngle arcSin :outerRadius / :innerRadius
+	right 90
+	polyStart
+	arcLeft 180 :outerRadius
+	left 90 + :innerArcAngle
+	arcRight :innerArcAngle * 2 :innerRadius
+	polyEnd
+end
+
+to skyArc :logoHeight
+	localmake "oldState turtleState
+	localmake "thickness1 :logoHeight * 0.0493
+	localmake "radius :logoHeight / 2
+	localmake "innerRadius :radius - :thickness1
+	jumpForward :radius
+	localmake "center pos
+	setPenSize 0
+	setFillColor "#0066a4
+	right 88.05
+	jumpForward :radius
+	left 90
+	polyStart
+	arcLeft 173.3 :radius
+	left 99.9
+	jumpForward distanceToCircle :center :innerRadius
+	setHeading (towards :center) - 90
+	arcRight 171.1 :innerRadius
+	polyEnd	
+	setTurtleState :oldState
+end
+
+to drawStars :logoHeight
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "starsInfo [
+		[0.25 0.687 0.06]
+		[0.129 0.804 0.045]
+		[0.095 0.629 0.03]
+	]
+	repeat count :starsInfo [
+		localmake "starInfo item repcount :starsInfo
+		jumpTo :oldPos
+		jumpRight :logoHeight * first :starInfo				
+		jumpForward :logoHeight * item 2 :starInfo
+		localmake "size1 :logoHeight * last :starInfo
+		isotoxalStar :size1 :size1 * 0.18 4
+	]
+
+	setTurtleState :oldState
+end
+
+to drawGround :logoHeight
+	localmake "oldState turtleState
+	localmake "radius :logoHeight / 2
+	localmake "innerRadiusRatio 0.9132366
+	localmake "size1 :logoHeight * 0.0655
+	; This arcs information was created through a mixture of
+	; - tracing to line up with a source image
+	; - calculating some values to make the arcs of radii 
+	; :radius and :radius * :innerRadiusRatio line up almost exactly
+	; with each other at every intersection.
+	localmake "arcsInfo [
+		[96.5 1] [80 0] [19.18 6] [79.99969 0]
+		[7 1] [95 0] [-17.7 6.2] [-85.36912 0]
+		[-3 :innerRadiusRatio] [-85 0] [17.6 5.8]
+		[-85.01323 0] [-14 :innerRadiusRatio] [92.7 0]
+		[0.83560195 5.9] [86.74445 0] [19.5 1] [82.3 0]
+		[-19.037862 5.5] [-99.39502 0] [-4 :innerRadiusRatio]
+		[-69.8 0] [16.2178617 5.7] [-69.8 0]
+		[-12 :innerRadiusRatio] [78 0]
+		[-0.89125347 5.7] [101.7964 0] [18 1] [67 0]
+		[-15.48134275 6] [-116.2954 0]
+		[-4.7 :innerRadiusRatio] [-48.8 0]
+		[11.9 6] [-48.8816 0]
+		[-19 :innerRadiusRatio] [61.2 0]
+		[-0.92514045 6] [117.0334 0]
+		[26 1] [47 0] [-11.13127535 6.1]
+		[-139.6136 0] [-65.5 :innerRadiusRatio]
+	]
+	jumpForward :radius
+	jumpBackward :radius
+	jumpLeft :size1
+	jumpForward :radius - sqrt :radius * :radius - :size1 * :size1
+	right 90 + arcSin :size1 / :radius
+	setPenSize 0
+	setFillColor "white
+	polyStart
+	arcsLeft :arcsInfo :radius
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by logo at
+; https://north42degrees.com/
+to north42DegreesWineryLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	skyArc :height
+	setPenSize 0
+	setFillColor "#cfcfd0
+
+	; Draw the moon.
+	jumpForward :height * 0.645
+	jumpLeft :height * 0.33
+	right 48
+	crescent :height * 0.172 :height * 0.1735
+
+	setHeading :oldHeading
+	jumpTo :oldPos
+	drawStars :height
+
+	drawGround :height
+
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+north42DegreesWineryLogo 100

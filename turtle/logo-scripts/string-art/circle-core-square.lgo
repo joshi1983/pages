@@ -1,0 +1,125 @@
+; Reducing to 3 element lists to 2 is important since some commands
+; need matching lengths.
+to clampVectorTo2Elements :v
+	if (count :v) > 2 [
+		output [
+			item 1 :v
+			item 2 :v
+		]
+	]
+	output :v
+end
+
+to getNearestPointOnLineSegment :p1 :p2
+	localmake "p1 clampVectorTo2Elements :p1	
+	localmake "p2 clampVectorTo2Elements :p2
+	localmake "v1 vectorSubtract :p1 xyCor
+	localmake "directionVector vectorSubtract :p1 :p2
+	localmake "projection vectorProject :directionVector :v1
+	repeat 2 [
+		localmake "num item repcount :projection
+		if :num <> 0 [
+			localmake "lineSegmentNum item repcount :directionVector
+			if :lineSegmentNum = 0 [
+				output :p1 ; avoid division by 0
+			]
+			localmake "num :num / :lineSegmentNum
+			if :num < 0 [
+				output :p1
+			]
+			if :num >= 1 [
+				output :p2 ; correct
+			]
+			output vectorSubtract :p1 :projection
+		]
+	]
+	output :v1
+end
+
+to getNearestPointToSquare :size
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "squareHeading animation.time * 360 / animation.duration
+	localmake "squarePos [0 0]
+	localmake "minDistance 999999999
+	localmake "result pos
+
+	; Loop through all 4 sides to the square.
+	; Look for the nearest side.
+	repeat 4 [
+		setHeading :squareHeading + repcount * 360 / 4
+		; Calculate the 2 end points for the current side.
+		jumpTo :squarePos
+		jumpForward :size
+		localmake "p1 pos
+		jumpTo :squarePos
+		right 90
+		jumpForward :size
+		localmake "p2 pos
+		jumpTo :oldPos
+		
+		localmake "nearest getNearestPointOnLineSegment :p1 :p2
+		localmake "distance distance :nearest
+		if :distance < :minDistance [
+			localmake "minDistance :distance
+			localmake "result :nearest
+		]
+	]
+
+	setTurtleState :oldState
+	output :result
+end
+
+; Inspired by a design from Michael Pinn
+; https://www.pinterest.ca/pin/787285578628708788/
+; Also at:
+; https://openprocessing.org/sketch/374249
+; Also at:
+; https://twitter.com/slambeetle/status/761846335368605696
+to circleCore :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "tinyCircleRadius1 :size * 0.03
+	localmake "tinyCircleRadius2 :tinyCircleRadius1 * 0.3
+	localmake "size1 :size - :tinyCircleRadius1
+	localmake "lineSize :size * 0.015
+	localmake "orangeColor "#ff9600
+	localmake "numPoints 40
+	setPenColor "#00e0e2
+	setPenSize 0
+	repeat :numPoints [
+		setHeading :oldHeading + repcount * 360 / :numPoints
+		jumpForward :size1
+		localmake "outerPos pos
+		localmake "p getNearestPointToSquare :size * 0.7
+		setPenSize :lineSize
+		setPos :p
+		setPenSize 0
+		jumpTo :outerPos
+		setFillColor :orangeColor
+		circle :tinyCircleRadius1
+		setFillColor "white
+		circle :tinyCircleRadius2
+		jumpTo :p
+		setFillColor :orangeColor
+		circle :tinyCircleRadius1
+		jumpTo :oldPos
+	]
+end
+
+setScreenColor "black
+circleCore 250
+
+to animation.snapshotstyle
+	localmake "result createPList
+	output :result
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 10
+	; Edit this if you want to change the length of your animation.
+	localmake "result createPList
+	setProperty "result "duration :minutes * 60 + :seconds
+	output :result
+end

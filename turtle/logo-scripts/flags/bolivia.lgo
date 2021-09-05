@@ -1,0 +1,107 @@
+make "colors ["#007934 "#F9E300 "#D52B1E]
+
+to boliviaFlagCustomWidth :width :height
+	stripes :width :height :colors
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Bolivia#/media/File:Flag_of_Bolivia.svg
+to boliviaFlag :height
+	boliviaFlagCustomWidth :height * 22 / 15 :height
+end
+
+to boliviaNavalJack :height
+	localmake "oldPos pos
+	localmake "sizeChange :height / ( count :colors)
+	for ["index count :colors 1 -1] [
+		stripes :height :height [item :index :colors]
+		jumpForward :sizeChange / 2
+		localmake "height :height - :sizeChange
+	]
+	jumpTo :oldPos
+end
+
+; Inspired by
+; https://commons.wikimedia.org/wiki/File:Banner_of_the_Qulla_Suyu.svg
+to bannerOfTheQullaSuyu :height
+	localmake "oldPos pos
+	localmake "numSquares 7
+	localmake "step :height / :numSquares
+	localmake "colors ["#fcdd09 "#eb7711 "#da121a "#742c64 
+"#0f47af "#078930 "white]
+	jumpLeft (:height - :step) / 2
+	repeat :numSquares [
+		localmake "pos1 pos
+		localmake "color item repcount :colors
+		repeat repcount [
+			stripes :step :step [:color]
+			jumpForward :step
+			jumpLeft :step
+		]
+		jumpTo :pos1
+		jumpRight :step
+	]
+	jumpForward :step
+	jumpLeft :step
+	repeat :numSquares [
+		localmake "pos1 pos
+		localmake "color item repcount :colors
+		repeat :numSquares - repcount [
+			stripes :step :step [:color]
+			jumpForward :step
+			jumpLeft :step
+		]
+		jumpTo :pos1
+		jumpForward :step
+	]
+	jumpTo :oldPos
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Bolivia#/media/File:Naval_Ensign_of_Bolivia.svg
+to navalEnsigniaOfBolivia :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "width :height * 3 / 2
+	localmake "smallStarSize :height * 0.0384
+	localmake "starSeparation :height * 0.146
+	localmake "starSeparation2 :height * 0.1255
+	localmake "smallHeight :height * 0.38
+	stripes :width :height ["#003f82]
+	jumpRight :width * 0.25217
+	jumpForward :height * 0.338875
+	setFillColor "#f7e214
+	setPenSize 0
+	regularStar :height * 0.08195 5
+	jumpTo :oldPos
+	jumpForward :height * 0.5416
+	jumpLeft :width * 0.4270044
+	repeat 6 [
+		regularStar :smallStarSize 5		
+		jumpRight :starSeparation
+	]
+	jumpLeft :starSeparation
+	repeat 3 [
+		jumpForward :starSeparation2
+		regularStar :smallStarSize 5		
+	]
+	jumpTo :oldPos
+	jumpForward :height - :smallHeight
+	jumpLeft (:width - :smallHeight) / 2
+	boliviaFlagCustomWidth :smallHeight :smallHeight
+	jumpRight :smallHeight
+	bannerOfTheQullaSuyu :smallHeight
+	setTurtleState :oldState
+end
+
+setScreenColor "#888
+make "height 100
+make "separation :height * 3
+jumpLeft :separation * 1.5
+boliviaFlag :height
+jumpRight :separation
+boliviaNavalJack :height
+jumpRight :separation
+bannerOfTheQullaSuyu :height
+jumpRight :separation
+navalEnsigniaOfBolivia :height

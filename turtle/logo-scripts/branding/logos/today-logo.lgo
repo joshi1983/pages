@@ -1,0 +1,29 @@
+; Inspired by:
+; https://upload.wikimedia.org/wikipedia/commons/7/76/Today_logo.svg
+; Referenced from:
+; https://en.wikipedia.org/wiki/Today_(American_TV_program)
+to todayLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "penSize1 :height * 0.26
+	localmake "arcRadius1 :height - :penSize1 / 2
+	setPenColor "#ff503c
+	setPenSize :penSize1
+	repeat 2 [
+		jumpLeft :arcRadius1
+		arcRight 180 :arcRadius1
+		jumpTo :oldPos
+		left 180
+		localmake "arcRadius1 :arcRadius1 * 0.62
+	]
+	jumpTo :oldPos
+	jumpLeft :arcRadius1
+	setPenSize 0
+	setFillColor penColor
+	polyStart
+	arcRight 180 :arcRadius1
+	polyEnd
+	setTurtleState :oldState
+end
+
+todayLogo 100

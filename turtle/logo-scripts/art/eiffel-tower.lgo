@@ -1,0 +1,320 @@
+; Inspired by:
+; https://www.pinterest.ca/pin/56154326592190419/
+
+; Parts of the tower are named in reference to
+; a diagram at:
+; https://i.pinimg.com/originals/ed/88/9e/ed889ee452c27f1e551a75f3800dd773.jpg
+
+; draws a line without moving turtle position
+to pole :height
+	localmake "oldPos pos
+	localmake "oldPenSize penSize	
+	localmake "thickHeight :height * 0.5
+	left 90
+	setPenSize :height * 0.04
+	penDown
+	forward :thickHeight
+	setPenSize :height * 0.01
+	forward :height - :thickHeight
+	right 90
+	jumpTo :oldPos
+	setPenSize :oldPenSize
+end
+
+to lineForwardNoMove :len
+	localmake "oldPos pos
+	penDown
+	forward :len
+	jumpTo :oldPos
+end
+
+to arch :width
+	localmake "oldPenSize penSize
+	localmake "archHeight :width * 1.2
+	localmake "poleHeight :archHeight
+	localmake "poleThickness :oldPenSize * 0.4
+	localmake "arcRadius :width * 0.5
+	localmake "archHeightStraight :archHeight - :arcRadius
+	left 90
+	forward :archHeightStraight
+	setPenSize :poleThickness
+	forward :poleHeight
+	jumpBackward :poleHeight
+	setPenSize :oldPenSize
+	penDown
+	arcRight 180 :arcRadius
+	setPenSize :poleThickness
+	backward :poleHeight
+	jumpForward :poleHeight
+	setPenSize :oldPenSize
+	forward :archHeightStraight
+	left 90
+end
+
+to crossedParallelogram :width :height :numLevels :angle
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "sideLength :height / cos :angle
+	localmake "levelHeight :height / :numLevels
+	localmake "levelLength :levelHeight / cos :angle
+	localmake "levelHorizontal :width - :levelLength * sin :angle
+	localmake "diagonalLength1 hypot [:levelHeight :levelHorizontal]
+	localmake "diagonalLength2 hypot [:levelHeight (:width + :levelLength * sin :angle)]
+	localmake "diagonalAngle1 arcSin :levelHeight / :diagonalLength1
+	localmake "diagonalAngle2 arcSin :levelHeight / :diagonalLength2
+	left 90
+	jumpForward :width / 2
+	right 90 + :angle
+	penDown
+	forward :sideLength
+	right 90 - :angle
+	forward :width
+	right 90 + :angle
+	forward :sideLength
+	right 90 - :angle
+	forward :width
+	penUp
+	right 90 + :angle
+	repeat :numLevels [
+		jumpForward :levelLength
+		right 90 - :angle
+		penDown
+		forward :width
+		right 180 - :diagonalAngle2
+		lineForwardNoMove :diagonalLength2
+		setHeading :oldHeading + 90
+		jumpBackward :width
+		right :diagonalAngle1
+		lineForwardNoMove :diagonalLength1
+		
+		setHeading :oldHeading + :angle
+	]
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to topStage :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "width :size * 0.4
+	localmake "width2 :size * 0.5
+	localmake "height1 :size * 0.4
+	localmake "arcRadius :width * 0.5
+	localmake "mainPenSize :size * 0.03
+	setPenSize :width2
+	jumpBackward :mainPenSize * 0.5
+	penDown
+	repeat 2 [
+		forward :mainPenSize
+		jumpForward :mainPenSize
+	]
+	jumpTo :oldPos
+	setPenSize :mainPenSize
+	left 90
+	jumpForward :width / 2
+	penDown
+	right 90
+	forward :height1
+	arcRight 180 :arcRadius
+	forward :height1
+	right 90
+	forward :width
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height1 + :arcRadius
+	penDown
+	forward :size - :height1 - :arcRadius
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to thirdStage :size
+	localmake "oldPos pos
+	localmake "oldPenSize penSize
+	localmake "oldHeading heading
+	localmake "intermediateHeight :size * 264 / 526
+	localmake "intermediateWidth :size * 0.13
+	localmake "mainPenSize :size * 0.003
+	localmake "baseWidth :size * 0.24
+	localmake "sideWidth :intermediateWidth * 0.5
+	localmake "sideAngle arcTan (:baseWidth - :intermediateWidth) * 0.5 / :intermediateHeight
+
+	setPenSize :mainPenSize
+	penDown
+	forward :size
+	
+	jumpTo :oldPos
+	setHeading :oldHeading - 90
+	jumpForward (:baseWidth - :sideWidth) * 0.5
+	right 90
+	penDown
+	crossedParallelogram :sideWidth :intermediateHeight  8 :sideAngle
+	right 90
+	forward :baseWidth - :sideWidth
+	left 90
+	crossedParallelogram :sideWidth :intermediateHeight  8 (-:sideAngle)
+
+	jumpTo :oldPos
+	crossedParallelogram :sideWidth :size  12 0
+	
+	setPenSize :oldPenSize
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to secondPlatform :size
+	localmake "oldPos pos
+	localmake "stepSize :size * 0.04
+	localmake "numPoles 11
+	localmake "poleHeight :size * 0.25
+	setPenSize :size * 0.01
+	penDown
+	forward :size
+	repeat 2 [
+		jumpBackward :size
+		jumpLeft :stepSize
+		forward :size
+	]
+	right 90
+	forward :stepSize * 2
+	
+	right 90
+	jumpForward :size
+	right 90
+	penDown
+	forward :stepSize * 2
+	jumpTo :oldPos
+	right 90
+	repeat :numPoles + 1 [
+		pole :poleHeight
+		jumpForward :size / :numPoles
+	]
+end
+
+to secondStage :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "oldPenSize penSize
+	localmake "crossPenSize1 :oldPenSize * 0.5
+	localmake "height :size
+	localmake "baseWidth :size * 1.2
+	localmake "topWidth :size * 0.65
+	localmake "sideWidth :size * 0.2
+	localmake "sideAngle arcTan (:baseWidth - :topWidth) * 0.5 / :height 
+	localmake "crossHeight1 :height * 0.05
+	localmake "crossWidth1 mix :topWidth :baseWidth  0.8
+	localmake "numArches 9
+	localmake "archSize :baseWidth / :numArches
+	right 90
+	jumpBackward :baseWidth * 0.5
+	penDown
+	repeat :numArches [
+		arch :archSize
+	]
+	setHeading :oldHeading + 90
+	jumpTo :oldPos
+	jumpBackward (:baseWidth - :sideWidth) * 0.5
+	left 90
+	crossedParallelogram :sideWidth :size  5 :sideAngle
+	jumpRight :baseWidth - :sideWidth
+	crossedParallelogram :sideWidth :size  5 (-:sideAngle)
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.8
+	right 90
+	jumpBackward :crossWidth1 * 0.5
+	penDown
+	setPenSize :crossPenSize1
+	crossedParallelogram :crossHeight1 :crossWidth1 15 0
+	setPenSize :oldPenSize	
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.95
+	right 90
+	jumpBackward :topWidth * 0.55
+	secondPlatform :topWidth * 1.1
+	setPenSize :oldPenSize
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to firstStage :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "topWidth :size * 1.25
+	localmake "topCrossHeight :size * 0.15
+	localmake "baseWidth :size * 2.2
+	localmake "sideAngle arcTan 0.5 * (:baseWidth - :topWidth) / :size
+	localmake "sideLength :size / cos :sideAngle
+	localmake "sideWidth :size * 0.21
+	localmake "arcRadius :size * 0.76
+	localmake "arcAngle 190
+	localmake "arcBaseWidth 2 * :arcRadius * cos ((:arcAngle - 180) / 2)
+	localmake "notchLength :size * 0.1
+	localmake "numNotches 32
+	setPenSize :size * 0.01
+	left 90
+	jumpForward :arcBaseWidth / 2
+	lineForwardNoMove (:baseWidth - :arcBaseWidth) / 2
+	right 180 - :arcAngle / 2
+	penDown
+	arcRight :arcAngle :arcRadius
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :arcRadius * sin ((:arcAngle - 180) / 2)
+	localmake "arcCentre pos
+	left 60
+	repeat :numNotches [
+		jumpForward :arcRadius
+		forward :notchLength
+		jumpTo :arcCentre
+		right 120 / :numNotches
+	]
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpLeft :baseWidth / 2 - :sideWidth * 0.5
+	crossedParallelogram :sideWidth :size  5 :sideAngle
+	right :sideAngle
+	jumpForward :sideLength
+	right 180 - :sideAngle
+	jumpForward :topCrossHeight * 0.5
+	left 90
+	jumpBackward :sideWidth * 0.5
+	crossedParallelogram :topCrossHeight :topWidth 10 0
+	left 90
+	forward :topCrossHeight * 0.5
+	right 90
+	jumpForward :topWidth - :sideWidth * 0.5
+	right 90
+	crossedParallelogram :sideWidth :size  5 (-:sideAngle)
+	setHeading :oldHeading + 90
+	jumpTo :oldPos
+	jumpForward :arcBaseWidth * 0.5
+	penDown
+	forward (:baseWidth - :arcBaseWidth) * 0.5 - :sideWidth
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to eiffelTower :size
+	localmake "firstStageSize :size * 186 / 1024 ; 186 feet
+	localmake "secondStageSize :size * 194 / 1024 ; 194 feet
+	localmake "thirdStageSize :size * 526 / 1024 ; 526 feet
+	localmake "topSize :size - :thirdStageSize - :secondStageSize - :firstStageSize ; 118 feet
+	firstStage :firstStageSize
+	jumpForward :firstStageSize
+	secondStage :secondStageSize
+	jumpForward :secondStageSize
+	thirdStage :thirdStageSize
+	jumpForward :thirdStageSize
+	topStage :topSize
+end
+
+setScreenColor "#cdf
+setPenColor "black
+eiffelTower 200
+hideTurtle

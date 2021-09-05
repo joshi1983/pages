@@ -1,0 +1,93 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Beats_Electronics#/media/File:Beats_Electronics_logo.svg
+to beatsElectronicsLogo :height
+	localmake "oldState turtleState
+	localmake "radius :height / 2
+	localmake "innerRadius :height * 0.20192
+	localmake "innerThickness :height * 0.09894
+	localmake "vThickness :height * 0.114111
+	localmake "x1 :innerRadius + :innerThickness / 2
+	localmake "angle1 arcSin :x1 / :radius
+	localmake "angle2 arcSin (:x1 - :vThickness) / :radius
+	localmake "height1 :radius * cos :angle1
+	localmake "height2 :height * 0.35
+	jumpForward :radius
+	setPenSize 0
+	setFillColor "#ed1c24
+	circle :height / 2
+	setPenSize :innerThickness
+	setPenColor "white
+	circle :innerRadius
+	jumpLeft :x1
+	setPenSize 0
+	setFillColor penColor
+	polyStart
+	jumpForward :height1
+	right 90 - :angle1
+	arcRight :angle1 - :angle2 :radius
+	right 90 + :angle2
+	jumpForward :height2
+	polyEnd
+	setTurtleState :oldState
+end
+
+to getMusicGradient :logoHeight
+	localmake "oldState turtleState
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#83008c
+	setProperty "colorStops 1 "#cd0036
+	right 45
+	jumpBackward :logoHeight / 2
+	localmake "fromPos pos
+	jumpForward :logoHeight
+	localmake "result createLinearGradient :fromPos pos :colorStops "pad
+	setTurtleState :oldState
+	output :result
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Beats_Electronics#/media/File:Beats_Music_logo.svg
+to beatsMusicLogo :height
+	localmake "oldState turtleState
+	localmake "radius :height / 2
+	localmake "innerRadius :height * 0.20192
+	localmake "innerThickness :height * 0.09894
+	localmake "vThickness :height * 0.114111
+	localmake "x1 :innerRadius + :innerThickness / 2
+	localmake "angle1 arcSin :x1 / :radius
+	localmake "angle2 arcSin (:x1 - :vThickness) / :radius
+	localmake "height1 :radius * cos :angle1
+	localmake "height2 :height * 0.35
+	localmake "triangleCornerRadius :height * 0.035
+	jumpForward :radius
+	localmake "center pos
+	setPenSize 0
+	localmake "backgroundGradient getMusicGradient :height
+	setFillGradient :backgroundGradient
+	circle :height / 2
+	setFillColor "white
+	circle :innerRadius + :innerThickness / 2
+	jumpLeft :x1
+	polyStart
+	jumpForward :height1
+	right 90 - :angle1
+	arcRight :angle1 - :angle2 :radius
+	right 90 + :angle2
+	jumpForward :height2
+	polyEnd
+	jumpTo :center
+	setFillGradient :backgroundGradient
+	setPenSize 0
+	jumpRight :height * 0.071
+	left 90
+	roundIsoTriangle :height * 0.31 :height * 0.221 :triangleCornerRadius
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+make "height 100
+make "separation :height * 3
+jumpLeft :separation * 0.5
+beatsElectronicsLogo :height
+jumpRight :separation
+beatsMusicLogo :height

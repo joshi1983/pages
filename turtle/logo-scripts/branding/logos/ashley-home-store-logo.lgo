@@ -1,0 +1,30 @@
+; Inspired by logo at
+; https://upload.wikimedia.org/wikipedia/en/4/43/Ashley_Furniture_HomeStores_logo.png
+to ashleyHomeStoreLogo :height
+	localmake "oldState turtleState
+	localmake "width :height * 0.85
+	setPenSize :height * 0.14
+	localmake "height1 :height * 0.43
+	localmake "roofAngle arcTan (:width + penSize) / 2 / (:height - penSize / 2 - :height1)
+	localmake "roofLength :width / 2 / sin :roofAngle
+	localmake "height2 :height1 - penSize / 2 * sin :roofAngle / 2
+	jumpRight :width / 2
+	jumpForward penSize / 2
+	setLineCap "butt
+	setLineJoinStyle "miter
+	setFillColor transparent
+
+	setPenColor "#f68d2d
+	forward :height2
+	left :roofAngle
+	forward :roofLength
+	left 180 - :roofAngle * 2
+	forward :roofLength
+	left :roofAngle
+	forward :height2
+	closePath
+
+	setTurtleState :oldState
+end
+
+ashleyHomeStoreLogo 100

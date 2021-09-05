@@ -1,0 +1,114 @@
+make "fitbitAqua "#00B0B9
+
+; Inspired by logo at:
+; https://commons.wikimedia.org/wiki/File:Fitbit_logo16.svg
+to fitbitLogo :height
+	localmake "oldState turtleState
+	setFillColor :fitbitAqua
+	fitbitCustomColorLogo :height	
+	setTurtleState :oldState
+end
+
+to fitbitInvertedColorLogo :width :height
+	localmake "oldState turtleState
+	stripes :width :height [:fitbitAqua]
+	setFillColor "white
+	fitbitCustomColorLogo :height	
+	setTurtleState :oldState
+end
+
+to fitbitCustomColorLogo :height
+	localmake "oldState turtleState
+	localmake "maxRadius :height * 0.101 ; right-most circle's size
+	localmake "minRadius :height * 0.06 ; left-most circle's size
+	localmake "minVFactor 0.93 ; circles are smaller at the top and bottom.
+	localmake "midRadius (:maxRadius + :minRadius) / 2
+ 	localmake "vSeparation (:height - :midRadius * :minVFactor * 2) / 4
+	localmake "hSeparation :vSeparation * 0.99
+	localmake "hSeparation2 :hSeparation * 0.98 
+	; second-right-most column is a little closer to the middle than :hSeparation
+	localmake "hSeparations [
+		:hSeparation :hSeparation :hSeparation2 :hSeparation * 2 - :hSeparation2 0]
+	setPenSize 0
+	jumpForward :height / 2
+	jumpLeft :hSeparation * 2
+	repeat 5 [
+		localmake "radius mix :maxRadius :minRadius repRatio
+		localmake "numIntervals repcount - 1
+		if :numIntervals > 2 [
+			localmake "numIntervals 4 - :numIntervals
+		]
+		localmake "totalIntervals :numIntervals * 2 + 1
+		localmake "pos1 pos
+		jumpForward :numIntervals * :vSeparation
+		repeat :totalIntervals [
+			ifelse :totalIntervals = 1 [
+				localmake "radius1 :radius
+			] [
+				localmake "ratio 2 * abs (repRatio - 0.5)
+				localmake "vFactor mix :minVFactor 1 :ratio
+				localmake "radius1 :radius * :vFactor
+			]
+			circle :radius1
+			jumpBackward :vSeparation
+		]
+		jumpTo :pos1
+		jumpRight item repcount :hSeparations
+	]
+	setTurtleState :oldState
+end
+
+to fitbitArrowLogo :height
+	localmake "oldState turtleState
+	localmake "maxRadius :height * 0.101 ; right-most circle's size
+	localmake "minRadius :height * 0.06 ; left-most circle's size
+	localmake "minVFactor 0.93 ; circles are smaller at the top and bottom.
+	localmake "midRadius (:maxRadius + :minRadius) / 2
+ 	localmake "vSeparation (:height - :midRadius * :minVFactor * 2) / 4
+	localmake "hSeparation :vSeparation * 0.99
+	localmake "hSeparation2 :hSeparation * 0.98 
+	; second-right-most column is a little closer to the middle than :hSeparation
+	localmake "hSeparations [
+		:hSeparation :hSeparation :hSeparation2 :hSeparation * 2 - :hSeparation2 0]
+	setPenSize 0
+	jumpForward :height / 2
+	jumpLeft :hSeparation * 2
+	for ["column 1 5] [
+		localmake "radius mix :maxRadius :minRadius (:column - 1) / 5
+		localmake "numIntervals :column - 1
+		if :numIntervals > 2 [
+			localmake "numIntervals 4 - :numIntervals
+		]
+		localmake "totalIntervals :numIntervals * 2 + 1
+		localmake "pos1 pos
+		jumpForward :numIntervals * :vSeparation
+		repeat :totalIntervals [
+			ifelse (or repRatio = 0.5 :totalIntervals = 1 :column > 3) [
+				setFillColor "black
+			] [
+				setFillColor :fitbitAqua
+			]
+			ifelse :totalIntervals = 1 [
+				localmake "radius1 :radius
+			] [
+				localmake "ratio 2 * abs (repRatio - 0.5)
+				localmake "vFactor mix :minVFactor 1 :ratio
+				localmake "radius1 :radius * :vFactor
+			]
+			circle :radius1
+			jumpBackward :vSeparation
+		]
+		jumpTo :pos1
+		jumpRight item :column :hSeparations
+	]
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 4
+jumpLeft :separation
+fitbitLogo :height
+jumpRight :separation
+fitbitInvertedColorLogo :separation :height
+jumpRight :separation
+fitbitArrowLogo :height

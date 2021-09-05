@@ -1,0 +1,117 @@
+to polygon :points
+	jumpTo first :points
+	polyStart
+	for ["i 2 count :points] [
+		localmake "p  item :i :points
+		setHeading towards :p
+		jumpForward distance :p
+	]
+	polyEnd
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Seychelles#/media/File:Flag_of_Seychelles.svg
+; Based on construction sheet at:
+; https://en.wikipedia.org/wiki/Flag_of_Seychelles#/media/File:Flag_of_Seychelles_(construction_sheet).svg
+to seychellesFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 2
+	localmake "colors ["#007A3A "white "#D92323 "#FCD955 "#003D88]
+	localmake "points []
+	jumpLeft :width / 2
+	localmake "lowerLeftCorner pos
+	jumpRight :width
+	; points up the right side
+	repeat 3 [
+		queue2 "points pos
+		jumpForward :height / 3
+	]
+	; points across the top
+	repeat 4 [
+		queue2 "points pos
+		jumpLeft :width / 3
+	]
+	setPenSize 0
+	localmake "startIndex 1
+	repeat count :colors [
+		setFillColor item repcount :colors
+
+		; if at corner
+		ifelse repcount = 3 [
+			; corner includes 2 points instead of just 1.
+			localmake "newIndex :startIndex + 2
+		] [
+			localmake "newIndex :startIndex + 1
+		]
+
+		polygon fput :lowerLeftCorner sublist :points :startIndex :newIndex
+		localmake "startIndex :newIndex
+	]
+
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/File:Flag_of_Seychelles_(1977%E2%80%931996).svg
+; Active from 1977 to 1996
+; Unfortunately, the white wave pattern doesn't line up perfectly with the SVG.
+; The following procedure uses circular arcs but the
+; SVG might be using Bezier curves.
+to seychelles1977Flag :height
+	localmake "oldState turtleState
+	localmake "width :height * 2
+	localmake "arcAngle 28
+	localmake "arcRadius :width / 3 / 4 / sin :arcAngle
+	stripes :width :height ["#007b39 "#d62929 "#d62929]
+	setPenSize :height / 6
+	setLineCap "butt
+	jumpLeft :width / 2
+	setPenColor "white
+	jumpForward :height * 5 / 12
+	right 90
+	repeat 3 [
+		arcRight :arcAngle :arcRadius
+		arcLeft :arcAngle * 2 :arcRadius
+		arcRight :arcAngle :arcRadius
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Seychelles#/media/File:Flag_of_Seychelles_(1976%E2%80%931977).svg
+; Active 1976 to 1977
+to seychelles1976Flag :height
+	localmake "oldState turtleState
+	localmake "width :height * 2
+	localmake "width1 :width * 14 / 15
+	localmake "height1 :height * 9 / 10
+	localmake "height2 :height * 13 / 15
+	localmake "width2 :width * 53 / 60
+	stripes :width :height ["white]
+	setPenSize 0
+	setFillColor "#00297b
+	isoTriangle :width1 :height1 / 2
+	jumpForward :height
+	right 180
+	isoTriangle :width1 :height1 / 2
+
+	jumpRight :width / 2
+	jumpForward :height / 2
+	left 90
+	setFillColor "#ce1029
+	isoTriangle :height2 :width2 / 2
+	jumpForward :width
+	right 180
+	isoTriangle :height2 :width2 / 2
+	setTurtleState :oldState
+end
+
+setScreenColor "#888
+make "height 100
+make "separation :height * 4
+jumpLeft :separation
+seychellesFlag :height
+jumpRight :separation
+seychelles1977Flag :height
+jumpRight :separation
+seychelles1976Flag :height

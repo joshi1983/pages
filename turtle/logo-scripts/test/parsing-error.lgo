@@ -1,0 +1,14 @@
+; Steps to reproduce:
+; 1. Load this code into the code editor.
+; 2. Notice that there are error messages starting at the if-statement.
+; It looks like the or expression was parsed wrong.
+
+to letterToMorseCodes :letter
+	localmake "letter uppercase :letter
+	localmake "asciiVal ascii :letter
+	if or :asciiVal < ascii "A :asciiVal > ascii "Z [
+		output ' '
+	]
+	localmake "index :asciiVal - (ascii "A) + 1
+	output item :index :morseCodes
+end
