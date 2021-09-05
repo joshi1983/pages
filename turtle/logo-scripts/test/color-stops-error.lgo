@@ -1,0 +1,17 @@
+; I'm seeing an error
+; The value assigned to colorstops doesn't match any acceptable data type. The types that won't lead to an error were narrowed down to nothing.
+; Also:
+; The color stops parameter to the createLinearGradient command requires at least 2 color stops but you provided only 0
+; There should be no errors since this might fill in the colorStops properties.
+
+to createLinearGradientForTriangle :height :colors
+	localmake "fromPos pos
+	localmake "colorStops createPList
+	repeat count :colors [
+		setProperty :colorStops repRatio item repcount :colors
+	]
+	jumpForward :height
+	localmake "result createLinearGradient :fromPos pos :colorStops "pad
+	jumpTo :fromPos
+	output :result
+end`

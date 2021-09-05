@@ -1,0 +1,81 @@
+to getCentralGradient :radius
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "blue
+	setProperty "colorStops 1 "black
+	output createRadialGradient pos :radius :colorStops
+end
+
+; Inspired by mobile logo at
+; https://www.techspot.com/images/ts3mobile-badge.png
+; which is used by
+; https://www.techspot.com
+to techSpotMobileBadgeLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	jumpForward :height * 0.49
+	setPenSize 0
+	setFillColor "white
+	regularPolygon :height * 0.38 9
+	setPenColor "#dd9866
+	setPenSize :height * 0.02
+	setFillColor "black
+	setFillGradient getCentralGradient :height * 0.23
+	right 180 / 6
+	regularPolygon :height * 0.251 6
+	setFillColor "white
+	setPenSize 0
+	setHeading :oldHeading
+	regularPolygon :height * 0.145 3
+	setTurtleState :oldState
+end
+
+; Inspired by the depiction of the letter O at:
+; https://www.techspot.com
+to techSpotWordLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "outerRadius :height / (1 + cos 180 / 9)
+	jumpForward :height - :outerRadius
+	setPenSize 0
+	setFillColor "white
+	regularPolygon :outerRadius 9
+	setFillColor "black
+	right 180 / 6
+	regularPolygon :height * 0.335 6
+	setFillColor "#ff7f00
+	setHeading :oldHeading
+	regularPolygon :height * 0.195 3
+	setTurtleState :oldState	
+end
+
+; Inspired by favicon at
+; https://www.techspot.com/images/favicon30.ico
+; which is used by
+; https://www.techspot.com
+to techSpotFavicon :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "outerRadius :height / (1 + cos 180 / 9)
+	localmake "outerColor "#0053b8
+	jumpForward :height - :outerRadius
+	setPenSize 0
+	setFillColor :outerColor
+	regularPolygon :outerRadius 9
+	setFillColor "white
+	right 180 / 6
+	regularPolygon :height * 0.335 6
+	setFillColor :outerColor
+	setHeading :oldHeading
+	regularPolygon :height * 0.25 3
+	setTurtleState :oldState	
+end
+
+setScreenColor "#1e64b6
+make "height 100
+make "separation :height * 4
+jumpLeft :separation
+techSpotMobileBadgeLogo :height
+jumpRight :separation
+techSpotWordLogo :height
+jumpRight :separation
+techSpotFavicon :height
