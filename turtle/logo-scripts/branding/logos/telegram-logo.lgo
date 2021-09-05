@@ -1,0 +1,40 @@
+to drawTelegramBackgroundCircle :height
+	localmake "oldPos pos
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#229ED9
+	setProperty "colorStops 1 "#2AABEE
+	jumpForward :height
+	setFillGradient createLinearGradient :oldPos pos :colorStops "pad
+	jumpBackward :height / 2
+	setPenSize 0
+	circle :height / 2
+	jumpTo :oldPos
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Telegram_(software)#/media/File:Telegram_2019_Logo.svg
+to telegramLogo :height
+	localmake "oldState turtleState
+	localmake "arcsInfo [
+		[-120 0.008] [-28.2 0.017] [-2.92 5]
+		[25 0.095] [15 0.05] [9 0.16] [5 1]
+		[15 0.06] [20 0.023] [70 0.013]
+		[20 0.034] [12 0.06] [2.1 13] [5 0.4]
+		[20 0.08] [20 0.03] [45 0.019] [15 0.029]
+		[14.5 0.1] [2.2 6] [1.1 7] [15 0.1]
+		[22 0.04] [55 0.03] [20.3 0.1] [2.1 5]
+		[8 0.1] [22 0.03] [55 0.025] [15 0.04]
+		[2 3] [-2.2 3] [-16.2 0.0312]
+	]
+	drawTelegramBackgroundCircle :height
+	setFillColor "white
+	jumpForward :height * 0.575
+	jumpRight :height * 0.0983
+	right 26
+	polyStart
+	arcsRight :arcsInfo :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+telegramLogo 100
