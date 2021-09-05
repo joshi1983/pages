@@ -1,0 +1,41 @@
+; Inspired by:
+; https://ca.pinterest.com/pin/472244710952106355
+;
+; You can learn more about Swiss Style(design) at:
+; https://en.wikipedia.org/wiki/Swiss_Style_(design)
+to swissDesignOctagon :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "colors ["red "#1556f3 "#009741 "#ffac00]
+	localmake "innerSquareSize :height * 0.4
+	localmake "trapWidth1 :innerSquareSize
+	localmake "trapHeight (:height - :trapWidth1) / 4
+	localmake "trapInnerSize :trapWidth1 + :trapHeight * 2
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	; don't let background pixel colors show through
+	; between inner triangles.  Without this, 
+	; some antialiasing techniques will show white or other colored background colors.
+	jumpBackward :innerSquareSize / 2
+	stripes :innerSquareSize :innerSquareSize [item 2 :colors last :colors]
+
+	repeat count :colors [
+		setHeading :oldHeading + repcount * 360 / count :colors
+		jumpTo :center
+		setFillColor item repcount :colors
+		jumpForward :innerSquareSize / 2
+		right 180
+		isoTriangle :innerSquareSize :innerSquareSize / 2
+	]
+	repeat count :colors [
+		setHeading :oldHeading + repcount * 360 / count :colors
+		jumpTo :center
+		setFillColor item repcount :colors
+		jumpBackward :height / 2
+		isoTrapezoid :trapWidth1 :trapInnerSize :trapHeight
+	]
+	setTurtleState :oldState
+end
+
+swissDesignOctagon 100

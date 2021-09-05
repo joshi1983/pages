@@ -1,0 +1,154 @@
+make "darkRedColor "#800
+
+to drawBottomShapes :height
+	localmake "oldState turtleState
+	localmake "shape [0 0.12
+		[[107 0] [0.25] [-173 0.07] [-40 0.16]]
+	]
+	setFillColor "gold
+	setPenColor "black
+	setPenSize :height * 0.005
+	drawArcLineShape :shape :height
+	drawArcLineShape :shape -:height
+	setTurtleState :oldState
+end
+
+to drawEyes :separation
+	localmake "oldState turtleState
+	jumpLeft :separation / 2
+	repeat 2 [
+		setFillColor transparent
+		setPenSize :separation * 0.1
+		circle :separation * 0.28
+		setFillColor :darkRedColor
+		setPenSize 0
+		circle :separation * 0.11
+		jumpRight :separation
+	]
+
+	setTurtleState :oldState
+end
+
+to drawNose :height
+	localmake "oldState turtleState
+	localmake "topRectHeight :height * 0.06
+	localmake "noseLine [
+		[180 0] [10 0.7] [50 0.16] [20 0.27]
+		[130 0] [0.02] [-95 0] [0.03] [125 0]
+		[-50 0.205] [-28 0.21]
+	]
+	setFillColor "#ddd
+	setPenSize 0
+	jumpBackward :topRectHeight / 2
+	rect :height * 0.1 :topRectHeight
+	jumpLeft :height * 0.05
+	jumpBackward :height * 0.04
+	drawArcLineShape [0 0
+		combine :noseLine
+		[[80 0] [0.1]]
+	] :height
+
+	setLineCap "round
+	setPenColor "black
+	setPenSize :height * 0.005
+	arcLines :noseLine :height
+	setTurtleState :oldState
+end
+
+to drawTusks :height
+	localmake "oldState turtleState
+	localmake "line1 [
+		[120 0] [0.1] [-160 0] [0.1347296]
+		[-50 0]
+	]
+	setLineJoinStyle "miter
+	setPenSize :height * 0.005
+	setPenColor "black
+	setFillColor "white
+	drawArcLineShape [0 0.58
+		combine :line1 reverse :line1
+	] :height
+
+	setTurtleState :oldState
+end
+
+to drawWhiteArc :radius
+	localmake "oldState turtleState
+	localmake "center pos
+	localmake "arcRadius :radius * 1.6
+	right 20
+	jumpForward :radius
+	right 169
+	setPenSize :radius * 0.04
+	setLineCap "round
+	setPenColor "white
+	arcRight 10 :arcRadius
+	arcRight (getArcRightAngleToCircle :arcRadius :center :radius) :arcRadius
+	setTurtleState :oldState
+end
+
+; Inspired by drawing at:
+; https://www.youtube.com/watch?v=tGhksCyWmsI
+to shriGanesh :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "colorStops createPList2 [
+		[0 "yellow] [0.2 "#0ff0] [0.3 "#0ff0] [0.5 "#8000] [0.7 "#0ff0]
+	]
+	localmake "radius :height * 0.2
+	jumpForward :height * 0.61
+	setPenGradient createRadialGradient pos :height :colorStops
+	jumpTo :oldPos
+	setPenSize :height * 1.5
+	setLineCap "butt
+	forward :height
+	jumpTo :oldPos
+	drawTusks :height
+	drawBottomShapes :height
+	setFillColor "#eee
+	jumpForward :height * 0.31
+	setPenSize :height * 0.005
+	setPenColor "black
+	circle :radius
+	drawWhiteArc :radius
+
+	jumpTo :oldPos
+	jumpForward :height * 0.62
+	localmake "startPos pos
+	setLineJoinStyle "miter
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		setHeading :oldHeading + 90 * :sign
+		jumpBackward :height * 0.11
+		setFillColor "#ddd
+		isoTriangle :height * 0.2 :height * 0.1
+		jumpTo :startPos
+		setHeading :oldHeading
+		jumpBackward :height * 0.38
+		jumpLeft :height * 0.26 * :sign
+		setFillColor "gold
+		circle :height * 0.05
+		jumpTo :startPos
+	]
+	setHeading :oldHeading
+	jumpTo :oldPos
+	setFillColor "gold
+	jumpForward :height * 0.655
+	drawNose :height
+	setPenColor :darkRedColor
+	roundRect :height * 0.013 :height * 0.055 :height * 0.007
+	setPenColor "black
+	isoTriangle :height * 0.1 :height * 0.1
+
+	jumpTo :oldPos
+	jumpForward :height * 0.24
+	circle :height * 0.005
+	jumpTo :oldPos
+	jumpForward :height * 0.61
+	drawEyes :height * 0.04
+	setTurtleState :oldState
+end
+
+setScreenColor "#dd0b27
+shriGanesh 100

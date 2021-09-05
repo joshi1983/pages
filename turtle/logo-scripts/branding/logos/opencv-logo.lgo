@@ -1,0 +1,30 @@
+; Inspired by logo at:
+; https://opencv.org
+to openCVLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "arcRadius1 :height * 0.256
+	localmake "offset (:height - :arcRadius1 * 2) / (1 + sin 30)
+	localmake "arcs [
+		["#128eff -150]
+		["#8bda67 -90]
+		["#ff2a44 30]
+	]
+	setLineCap "butt
+	setPenSize :height * 0.152
+	localmake "arcRadius2 :arcRadius1 - penSize / 2
+	jumpForward :height - :arcRadius1 - :offset
+	localmake "center pos
+	repeat count :arcs [
+		localmake "info item repcount :arcs
+		setPenColor first :info
+		setHeading :oldHeading + repcount * 360 / 3
+		jumpForward :offset
+		setHeading :oldHeading + last :info
+		arc 300 :arcRadius2
+		jumpTo :center
+	]	
+	setTurtleState :oldState
+end
+
+openCVLogo 100

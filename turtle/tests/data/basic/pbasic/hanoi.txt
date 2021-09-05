@@ -1,0 +1,179 @@
+//--| Towers of Hanoi — pBasic v0.7.0 |------------------------
+// Tower arrays: t1[], t2[], t3[] — index 0 = bottom.
+// Slot value = disk size (1=smallest, N=largest), 0 = empty.
+// h1, h2, h3 = number of disks currently on each tower.
+// Change N for a bigger puzzle. N=4 → 15 moves, N=3 → 7.
+
+var N       : Int = 5
+var t1[16]   : Int
+var t2[16]   : Int
+var t3[16]   : Int
+var h1      : Int = 0
+var h2      : Int = 0
+var h3      : Int = 0
+var stepNum : Int = 0
+var dummy   : Int = 0
+
+input "Input Number of Discs [3-12]: "; N
+
+//--| Init: load Tower 1 with N disks, largest at bottom |------
+for i = 0 to N - 1
+    t1[i] = N - i
+next i
+h1 = N
+
+//--| Draw initial state then solve |--------------------------
+dummy = drawState(0, 0)
+dummy = hanoi(N, 1, 3, 2)
+print ""
+print "Solved in ";
+print stepNum;
+print " moves."
+
+//--| FUNCTIONS |----------------------------------------------
+
+//--| hanoi(n, fromT, toT, viaT) — recursive solver |----------
+
+func hanoi(n, fromT, toT, viaT) {
+    var r : Int = 0
+    if n > 0 then r = hanoi(n - 1, fromT, viaT, toT)
+    if n > 0 then r = moveDisk(fromT, toT)
+    if n > 0 then r = hanoi(n - 1, viaT, toT, fromT)
+    return 0
+}
+
+//--| moveDisk(fromT, toT) — pop, push, redraw |---------------
+
+func moveDisk(fromT, toT) {
+    var disk : Int = 0
+    var dr   : Int = 0
+
+    if fromT == 1 then disk = t1[h1 - 1]
+    if fromT == 2 then disk = t2[h2 - 1]
+    if fromT == 3 then disk = t3[h3 - 1]
+
+    if fromT == 1 then t1[h1 - 1] = 0
+    if fromT == 2 then t2[h2 - 1] = 0
+    if fromT == 3 then t3[h3 - 1] = 0
+
+    if fromT == 1 then h1 = h1 - 1
+    if fromT == 2 then h2 = h2 - 1
+    if fromT == 3 then h3 = h3 - 1
+
+    if toT == 1 then t1[h1] = disk
+    if toT == 2 then t2[h2] = disk
+    if toT == 3 then t3[h3] = disk
+
+    if toT == 1 then h1 = h1 + 1
+    if toT == 2 then h2 = h2 + 1
+    if toT == 3 then h3 = h3 + 1
+
+    stepNum = stepNum + 1
+    dr = drawState(fromT, toT)
+    return 0
+}
+
+//--| drawState(fromT, toT) — render towers + separator |------
+func drawState(fromT, toT) {
+    var row  : Int = 0
+    var slot : Int = 0
+    var d1   : Int = 0
+    var d2   : Int = 0
+    var d3   : Int = 0
+    var pc   : Int = 0
+
+    for row = 0 to N - 1
+        slot = N - 1 - row
+        d1 = 0
+        d2 = 0
+        d3 = 0
+        if slot < h1 then d1 = t1[slot]
+        if slot < h2 then d2 = t2[slot]
+        if slot < h3 then d3 = t3[slot]
+        pc = printCell(d1)
+        print "   ";
+        pc = printCell(d2)
+        print "   ";
+        pc = printCell(d3)
+        print ""
+    next row
+
+    pc = printSep(fromT, toT)
+    return 0
+}
+
+//--| printPeg() — print a bare peg, width = 2*N+1 |----------
+// Prints (N) spaces, |, (N) spaces  e.g. N=4: "    |    "
+func printPeg() {
+    var k   : Int = 0
+    var pad : Int = 0
+    pad = N
+    for k = 1 to pad
+        print " ";
+    next k
+    print "|";
+    for k = 1 to pad
+        print " ";
+    next k
+    return 0
+}
+
+//--| printDisk(s) — print disk of size s, width = 2*N+1 |----
+// Stars = 2*s-1, centered in colW = 2*N+1
+// lpad = N - s  (spaces on left)
+// rpad = N - s  (spaces on right, same by symmetry)
+func printDisk(s) {
+    var k    : Int = 0
+    var pad  : Int = 0
+    var stars : Int = 0
+    pad   = N - s + 1
+    stars = s * 2 - 1
+    for k = 1 to pad
+        print " ";
+    next k
+    for k = 1 to stars
+        print "*";
+    next k
+    for k = 1 to pad
+        print " ";
+    next k
+    return 0
+}
+
+//--| printCell(diskSize) — dispatch peg or disk |-------------
+func printCell(diskSize) {
+    var pr : Int = 0
+    if diskSize == 0 then pr = printPeg()
+    if diskSize > 0  then pr = printDisk(diskSize)
+    return 0
+}
+
+//--| printSep(fromT, toT) — step separator line |-------------
+func printSep(fromT, toT) {
+    var k2 : Int = 0
+    var s1 : Int = 0
+    var s2 : Int = 0
+    var s3 : Int = 0
+
+    for k2 = 1 to 33
+        print "-";
+    next k2
+
+    print "| Step ";
+
+    s1 = stepNum / 100
+    s2 = (stepNum - s1 * 100) / 10
+    s3 = stepNum - s1 * 100 - s2 * 10
+    print s1;
+    print s2;
+    print s3;
+
+    if fromT > 0 then print " • ";
+    if fromT > 0 then print fromT;
+    if fromT > 0 then print " > ";
+    if fromT > 0 then print toT;
+
+    print " |-----"
+    print ""
+    return 0
+}
