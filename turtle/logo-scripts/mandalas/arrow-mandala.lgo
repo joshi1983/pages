@@ -1,0 +1,84 @@
+; Inspired by a hand drawn mandala from onionnine
+; https://www.youtube.com/watch?v=YBN3c7MII4I
+
+make "darkColor "black
+make "lightColor "white
+
+to arcStripes :radius :numStripes :stripeThicknessRatio
+	localmake "oldState turtleState
+	localmake "angleStep 360 / :numStripes
+	localmake "arcAngle1 :angleStep * :stripeThicknessRatio
+	polyStart
+	repeat :numStripes [
+		localmake "heading1 heading
+		jumpForward :radius
+		right 90
+		arcRight :arcAngle1 :radius
+		right 90
+		jumpForward :radius
+		setHeading :heading1 + :angleStep
+	]	
+	polyEnd
+	setTurtleState :oldState
+end
+
+to outerStripes :size
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "numStripes 24
+	localmake "stripeAngle 360 / :numStripes
+	localmake "stripeThicknessAngle :stripeAngle / 2
+	setPenSize 0
+	setFillColor :darkColor
+	repeat :numStripes [
+		jumpForward :size
+		polyStart
+		jumpBackward :size
+		right :stripeThicknessAngle
+		jumpForward :size
+		polyEnd
+		jumpTo :oldPos
+		right :stripeAngle - :stripeThicknessAngle
+	]
+	setTurtleState :oldState
+end
+
+to middleCircles :radius
+	localmake "oldState turtleState
+	localmake "stripeThicknessRatio1 0.65
+	localmake "stripeThicknessRatio2 1 - :stripeThicknessRatio1
+	setPenSize 0
+	setFillColor :darkColor
+	circle :radius
+	setFillColor :lightColor
+	isotoxalStar :radius * 0.9 :radius * 0.85 64
+	setFillColor :darkColor
+	right 180 / 64
+	isotoxalStar :radius * 0.85 :radius * 0.67 8
+	setFillColor :lightColor
+	right 180 / 8
+	isotoxalStar :radius * 0.67 :radius * 0.5 8
+	setFillColor :darkColor
+	right 180 * :stripeThicknessRatio2 / 8
+	arcStripes :radius * 0.5 8 :stripeThicknessRatio1
+	circle :radius * 0.33
+	setFillColor :lightColor
+	isotoxalStar :radius * 0.32 :radius * 0.28 32
+	setFillColor :darkColor
+	right 360 * :stripeThicknessRatio1 / 8
+	arcStripes :radius * 0.26 8 :stripeThicknessRatio2
+	setTurtleState :oldState
+end
+
+to arrowMandala :size
+	localmake "oldState turtleState
+	outerStripes :size
+	middleCircles :size * 0.7
+	setPenSize :size * 0.02
+	setPenColor :darkColor
+	setFillColor :lightColor
+	circle :size * 0.07
+	setTurtleState :oldState
+end
+
+arrowMandala 100

@@ -1,0 +1,53 @@
+to drawSketchyArc :arcRadius :sign
+	localmake "oldState turtleState
+	localmake "dashLength :arcRadius * 0.47
+	left 90 * :sign
+	jumpForward :arcRadius * 0.09
+	repeat 16 [
+		forward :dashLength
+		jumpBackward :dashLength
+		right 10 * :sign
+		jumpForward :arcRadius * 0.14
+	]
+	setTurtleState :oldState
+end
+
+to drawScaredEye :width
+	localmake "oldState turtleState
+	localmake "numAngles 16
+	localmake "radius :width * 0.13
+	setPenSize :width * 0.018
+	setLineCap "round
+	repeat 2 [
+		drawSketchyArc :width / 2 sign repcount - 1.5
+	]	
+	jumpForward :width * 0.39
+	localmake "center pos
+	repeat :numAngles [
+		jumpBackward :radius
+		forward :radius * 2
+		jumpTo :center
+		right 180 / :numAngles
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by a drawing from a book.
+; Book title: Primarily LOGO
+; Book published in: 1984
+; The drawing is on page 22.
+;
+; A digital version of the book is at:
+; https://archive.org/details/primarilylogo/page/n33/mode/2up
+to scaredEyes :height
+	localmake "oldState turtleState
+	jumpForward :height / 2
+	right 90
+	repeat 2 [
+		drawScaredEye :height
+		right 180
+	]
+	setTurtleState :oldState
+end
+
+scaredEyes 100

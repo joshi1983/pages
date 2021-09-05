@@ -1,0 +1,36 @@
+; Inspired by logo at
+; https://en.wikipedia.org/wiki/SAS_(software)#/media/File:%E0%A6%B8%E0%A7%8D%E0%A6%AF%E0%A6%BE%E0%A6%B8_%E0%A6%B2%E0%A7%8B%E0%A6%97%E0%A7%8B.png
+to sasLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "angle1 68
+	localmake "angle2 115
+	localmake "angle3 82
+	localmake "largeArcRadius :height * 0.36
+	localmake "largeArcRadius2 :height * 0.28
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	setFillColor "#3b7cc0
+	repeat 2 [
+		setHeading :oldHeading + repcount * 360 / 2
+		jumpForward :height / 2
+		right 90
+		arcRight :angle1 :largeArcRadius
+		polyStart
+		right 180
+		arcLeft :angle2 :largeArcRadius
+		arcLeft :angle3 :largeArcRadius2
+		jumpForward :height * 0.3
+		arcLeft 180 :height * 0.067
+		jumpForward :height * 0.22
+		arcRight 60 :height * 0.18
+		arcRight 70 :height * 0.26
+		arcRight 48 :height * 0.3205
+		polyEnd
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+sasLogo 100

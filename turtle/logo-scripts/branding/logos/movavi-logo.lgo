@@ -1,0 +1,67 @@
+; Inspired by logo at:
+; https://www.movavi.com
+to movaviLogo :height :color :gapRatio
+	localmake "oldState turtleState
+	localmake "gap :height * :gapRatio
+	localmake "radius :gap * 5 / 9
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	setFillColor :color
+	repeat 4 [
+		jumpForward :gap
+		circle :radius
+		jumpTo :center
+		right 90
+	]
+	setTurtleState :oldState
+end
+
+to movaviAppleIcon :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "backgroundStops createPList2 [
+		[0 "black] [1 "#505050]
+	]
+	jumpLeft :height / 2
+	localmake "fromPos pos
+	right 45
+	jumpForward :height / cos 45
+	setPenGradient createLinearGradient :fromPos pos :backgroundStops "pad
+
+	jumpTo :oldPos
+	setPenSize :height
+	setHeading :oldHeading
+	setLineCap "butt
+	forward :height
+	jumpBackward :height
+	movaviLogo :height "white 0.18
+	setTurtleState :oldState
+end
+
+to movaviWebLogo :height
+	localmake "oldState turtleState
+	movaviLogo :height "black 0.5 / (1 + 5/9)
+	setTurtleState :oldState
+end
+
+to movaviFavicon :height
+	localmake "oldState turtleState
+	setPenSize 0
+	setFillColor "black
+	jumpForward :height / 2
+	roundRect :height :height :height * 0.25
+	jumpBackward :height / 2
+	movaviLogo :height "white 0.245
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 4
+jumpLeft :separation
+movaviWebLogo :height
+jumpRight :separation
+movaviAppleIcon :height
+jumpRight :separation
+movaviFavicon :height

@@ -1,0 +1,53 @@
+; Inspired by image at:
+; https://ca.pinterest.com/pin/484488872396233566/
+; also very similar to:
+; https://ca.pinterest.com/pin/126734177005718898/
+;
+; and less similar to:
+; https://geometrydaily.tumblr.com/post/34356482087/300-gravity-field-a-new-minimal-geometric
+to arcsBoundedInCircle :height
+	localmake "oldState turtleState
+	localmake "numInnerLines 4
+	localmake "mixedItems [0.5 0.78 1.4 3.4]
+	localmake "maxOffset 0.13
+	localmake "minOffset 0.015
+	setFillColor transparent
+	setPenColor "black
+	setPenSize :height * 0.01
+	jumpForward :height / 2
+	localmake "center pos
+	localmake "radius (:height - penSize) / 2
+	circle :radius
+
+	right 60
+	jumpBackward :height * 0.32
+	localmake "midPos pos
+	localmake "startHeading heading
+	repeat :numInnerLines [
+		localmake "arcRadius :height * mixItems2 :mixedItems repRatio
+		localmake "offset :height * mix :minOffset :maxOffset repRatio
+		jumpLeft :offset
+		localmake "angle getArcLeftAngleToCircle :arcRadius :center :radius
+		arcLeft :angle :arcRadius
+		right 180
+		arcRight 1 :arcRadius
+		arcRight getArcRightAngleToCircle :arcRadius :center :radius :arcRadius
+		jumpTo :midPos
+		setHeading :startHeading
+	]
+	repeat :numInnerLines [
+		localmake "arcRadius :height * mixItems2 :mixedItems repRatio
+		localmake "offset :height * mix :minOffset :maxOffset repRatio
+		jumpRight :offset
+		localmake "angle getArcRightAngleToCircle :arcRadius :center :radius
+		arcRight :angle :arcRadius
+		right 180
+		arcLeft 1 :arcRadius
+		arcLeft getArcLeftAngleToCircle :arcRadius :center :radius :arcRadius
+		jumpTo :midPos
+		setHeading :startHeading
+	]
+	setTurtleState :oldState
+end
+
+arcsBoundedInCircle 100

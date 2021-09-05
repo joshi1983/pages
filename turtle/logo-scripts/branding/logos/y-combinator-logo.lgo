@@ -1,0 +1,27 @@
+; Inspired by logo at
+; https://en.wikipedia.org/wiki/Y_Combinator#/media/File:Y_Combinator_logo.svg
+; The original has lines thinning out slightly near the center but
+; the following code doesn't do that to keep the code shorter and simpler.
+to yCombinatorLogo :height
+	localmake "oldState turtleState
+	localmake "middleHeight :height * 0.5058
+	localmake "backStep :height * 0.12
+	localmake "angle 27
+	localmake "slantedLength (:height - :middleHeight + :backStep) / cos :angle
+	localmake "thickness :height * 0.125
+	setPenSize :thickness
+	setPenColor "white
+	setLineCap "butt
+	setPenColor "white
+	forward :middleHeight
+	jumpBackward :backStep
+	setPenSize 0
+	setFillColor penColor
+	parallelogram :thickness :slantedLength :angle
+	parallelogram :thickness :slantedLength -:angle
+
+	setTurtleState :oldState
+end
+
+setScreenColor "#FB651E
+yCombinatorLogo 100

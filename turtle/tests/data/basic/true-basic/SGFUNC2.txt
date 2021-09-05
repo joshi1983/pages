@@ -1,0 +1,20 @@
+!  SGFunc2  Graph sine and cosine functions.
+
+LIBRARY "SGFunc.trc"
+LIBRARY "SGLib.trc"
+
+PUBLIC flag
+
+CALL SetText ("Sine and Cosine Waves", "X Values", "Y Values")
+
+CALL Fgraph (-2*pi, 2*pi, 1, "red green magenta")
+
+LET flag = 1
+CALL AddFgraph (2, "cyan")
+
+END
+
+DEF F(x)
+    DECLARE PUBLIC flag
+    IF flag = 0 then LET F = Sin(x) else LET F = Cos(x)
+END DEF

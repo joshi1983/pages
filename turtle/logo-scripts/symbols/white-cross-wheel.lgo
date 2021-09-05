@@ -1,0 +1,83 @@
+to drawSquare :size
+	localmake "oldState turtleState
+	localmake "size2 :size * cos 45
+	left 45
+	square :size2
+	setTurtleState :oldState
+end
+
+to squaresForward :squareSize :numSquares
+	repeat :numSquares [
+		jumpForward :squareSize
+		drawSquare :squareSize
+	]
+end
+
+to drawLittleCross :squareSize
+	squaresForward :squareSize 3
+	jumpLeft :squareSize
+	drawSquare :squareSize
+	jumpRight :squareSize * 2
+	drawSquare :squareSize
+	jumpLeft :squareSize
+end
+
+to drawCross :squareSize
+	repeat 2 [
+		drawLittleCross :squareSize
+	]
+	squaresForward :squareSize 3
+	left 90
+	localmake "pos1 pos
+	repeat 3 [
+		drawLittleCross :squareSize
+		jumpForward :squareSize
+		drawSquare :squareSize
+		right 90
+		jumpTo :pos1
+	]
+end
+
+to drawRedBackground :radius
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "numParts 34
+	localmake "arcLinesInfo [[-90 0] [0.005] [90 0] [0.019] [-90 0] [0.032] [90 0]
+	[0.022] [-90 0] [0.03975] [90 0] [0.013] [-90 0] [0.0109]]
+	left 180 / :numParts
+	jumpForward :radius * 0.95
+	setHeading :oldHeading
+	setFillColor "red
+	polyStart
+	repeat :numParts [
+		arcLines :arcLinesInfo :radius
+		arcLines reverse :arcLinesInfo :radius
+		setHeading (towards :oldPos) - 180 + 180 / :numParts
+	]
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://publicdomainvectors.org/en/free-clipart/White-cross/39153.html
+to whiteCrossWheel :height
+	localmake "oldState turtleState
+	localmake "squareSize :height * 0.0306
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	drawRedBackground :height / 2
+	setFillColor "#ffbe00
+	isotoxalStar :height * 0.471 :height * 0.43 80
+	setFillColor "white
+	drawSquare :squareSize
+	repeat 4 [
+		drawCross :squareSize
+		right 90
+		jumpTo :center		
+	]
+	setTurtleState :oldState
+end
+
+whiteCrossWheel 100

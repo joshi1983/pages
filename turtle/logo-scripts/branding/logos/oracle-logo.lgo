@@ -1,0 +1,183 @@
+to drawO :height
+	localmake "oldState turtleState
+	localmake "line1 [
+		[0.33] [90 0.5]
+	]
+	localmake "lines combine :line1 reverse :line1
+	setPenSize :height * 0.17
+	localmake "height1 (:height - penSize) * 0.99
+	jumpForward penSize / 2
+	setPenColor fillColor
+	right 90
+	arcLines combine :lines :lines :height1
+	setTurtleState :oldState
+end
+
+to drawR :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "thickness :height * 0.18
+	localmake "angle 49
+	setPenSize :thickness
+	setPenColor fillColor
+	localmake "height1 :height * 0.99 - penSize / 2
+	jumpLeft :height * 0.488
+	localmake "leftBottomPos pos
+	setLineCap "butt
+	setLineJoinStyle "miter
+	arcLines [[1] [-90 0] [0.81] [-180 0.274] [0.365]] :height1
+	jumpRight penSize / 2
+	jumpForward penSize / 2 / tan :angle
+	left 90
+	setPenSize 0
+	localmake "slantedHeight (distanceToLine :oldPos :leftBottomPos) / cos :angle		
+	parallelogram :thickness / cos :angle :slantedHeight -:angle
+	setTurtleState :oldState
+end
+
+to drawA :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "angle 32.5
+	localmake "width1 :height * 0.61
+	localmake "thickness :height * 0.17
+	localmake "radius :height * 0.13
+	localmake "topJoinGap :radius * (1 - sin :angle)
+	localmake "thickness2 :radius * 2 * cos :angle
+	localmake "slantedHeight :thickness / cos :angle
+	localmake "bottomOffset :height * 0.18
+	localmake "height1 :height - :topJoinGap
+	jumpForward :bottomOffset
+	jumpRight (:height1 - :bottomOffset) * (tan :angle) - :width1 / 2
+	setPenSize 0
+	parallelogram :width1 :slantedHeight -:angle
+	jumpTo :oldPos
+	jumpForward :height1
+	right 180
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		parallelogram :thickness2 :height1 / cos :angle :angle * :sign
+	]
+	localmake "offset :radius - :topJoinGap
+	jumpForward :offset
+	drawArcLineShape [-1 0
+		[[180 0] [180 1]]
+	] :radius
+	setTurtleState :oldState
+end
+
+to drawC :height
+	localmake "oldState turtleState
+	localmake "height1 :height * 0.99
+	localmake "thicknessFactor 0.175
+	localmake "thickness :height * :thicknessFactor
+	localmake "line1 [
+		[0.11] [-90 0.5]
+	]
+	localmake "angle 33
+	localmake "parallelogramWidth :height * 0.6
+	localmake "slantedHeight :thickness / cos :angle
+	setPenSize :thickness
+	localmake "height2 :height1 - penSize
+	jumpForward penSize / 2
+	setPenColor fillColor
+	left 90
+	arcLines combine :line1 reverse :line1 :height2
+	jumpForward :parallelogramWidth / 2
+	jumpLeft :thickness / 2
+	right 90
+	setPenSize 0
+	parallelogram :parallelogramWidth :slantedHeight :angle
+	jumpForward :height2
+	polyStart
+	jumpRight :parallelogramWidth / 2
+	jumpForward :thickness
+	jumpLeft :parallelogramWidth - :thickness * tan :angle
+	left 180 - :angle
+	jumpForward :slantedHeight
+	polyEnd
+	setTurtleState :oldState
+end
+
+to drawL :height
+	localmake "oldState turtleState
+	localmake "width :height * 1.06
+	localmake "height1 :height * 0.99
+	localmake "thickness :height * 0.18
+	localmake "cornerRadius :height * 0.1
+	localmake "angle 33
+	jumpForward :height1
+	jumpLeft :width / 2
+	setPenSize 0
+	polyStart
+	jumpBackward :height1 - :cornerRadius
+	right 180
+	arcLeft 90 :cornerRadius
+	jumpForward :width - :cornerRadius - :thickness * tan :angle
+	left 90 - :angle
+	jumpForward :thickness / cos :angle
+	left 90 + :angle
+	jumpForward :width - :thickness
+	jumpRight :height1 - :thickness
+	polyEnd
+
+	setTurtleState :oldState
+end
+
+to drawE :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "height1 :height * 0.99
+	localmake "thickness :height * 0.175
+	localmake "height2 :height1 - :thickness
+	localmake "angle 33
+	localmake "lengths [0.57 0.9 0.55]
+	jumpForward :thickness / 2
+	jumpLeft :height * 0.08
+	localmake "points [pos]
+	left 90
+	setPenSize :thickness
+	setPenColor fillColor
+	arcRight 90 :height2 / 2
+	queue2 "points pos
+	arcRight 90 :height2 / 2
+	queue2 "points pos
+	setPenSize 0
+	
+	repeat count :points [
+		localmake "point item repcount :points
+		localmake "len :height * item repcount :lengths
+		setHeading :oldHeading + 90
+		jumpTo :point
+		jumpLeft :thickness / 2
+		polyStart
+		jumpRight :thickness
+		jumpForward :len
+		left 90 - :angle
+		jumpForward :thickness / cos :angle
+		polyEnd
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://en.wikipedia.org/wiki/Oracle_Corporation#/media/File:Oracle_logo.svg
+to oracleLogo :height
+	localmake "oldState turtleState
+	setFillColor "#C74634
+	jumpLeft :height * 3.058
+	drawO :height
+	jumpRight :height * 1.46
+	drawR :height
+	jumpRight :height * 1.3075
+	drawA :height
+	jumpRight :height * 1.2
+	drawC :height
+	jumpRight :height * 1.235
+	drawL :height
+	jumpRight :height * 1.093
+	drawE :height
+	setTurtleState :oldState
+end
+
+oracleLogo 100

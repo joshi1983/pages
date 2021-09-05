@@ -1,0 +1,54 @@
+to x :scale :count
+	if :count >= 0 [
+		localmake "count :count - 1
+		drawForward :scale :count
+		left 25
+		localmake "state1 turtleState
+		x :scale :count
+		setTurtleState :state1
+		right 25
+		x :scale :count
+		setTurtleState :state1
+		right 25
+		drawForward :scale :count
+		localmake "state1 turtleState
+		right 25
+		drawForward :scale :count
+		x :scale :count
+		setTurtleState :state1
+		left 25
+		x :scale :count
+	]
+end
+
+to drawForward :scale :count
+	forward :scale * bitShiftLeft 1 (:count + 1)
+end
+
+; Inspired by:
+; https://en.wikipedia.org/wiki/L-system#/media/File:Fractal-plant.svg
+to drawBarnsleyFern :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "padding :height * 0.05
+	localmake "width :height * 1.1
+	localmake "colorStops createPList2 [
+		[0 "#d5dbae] [1 "#f7f8ef]
+	]
+	setPenSize :width
+	setLineCap "butt
+	jumpForward :height
+	setPenGradient createLinearGradient :oldPos pos :colorStops "pad
+	backward :height
+	setPenSize :height * 0.005
+	jumpForward :padding
+	jumpLeft :height * 0.4
+	right 25
+	setPenColor "#96a732
+	setPenSize :height * 0.003
+	x 0.65 5
+	setTurtleState :oldState
+end 
+
+setScreenColor "#aa8
+drawBarnsleyFern 100

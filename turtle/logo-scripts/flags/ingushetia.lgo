@@ -1,0 +1,36 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Ingushetia#/media/File:Flag_of_Ingushetia.svg
+to ingushetiaFlag :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "width :height * 3 / 2
+	localmake "greenHeight :height * 0.165
+	localmake "ingushetiaGreen "#00923F
+	localmake "radius1 :height * 0.1375
+	stripes :width :height ["white]
+	stripes :width :greenHeight [:ingushetiaGreen]
+	jumpForward :height - :greenHeight
+	stripes :width :greenHeight [:ingushetiaGreen]
+
+	jumpTo :oldPos
+	jumpForward :height * 0.45
+	setPenColor "#D81E05
+	setPenSize :height * 0.075
+	setFillColor transparent
+	circle :radius1
+	localmake "center pos
+	setLineCap "round
+	setPenSize :height * 0.05
+	repeat 3 [
+		setHeading :oldHeading + 15 + repcount * 360 / 3
+		jumpForward :radius1 + :height * 0.02
+		right 40
+		arcsLeft [[90 0.06] [90 0.067] [15 0.07]] :height
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "#ddd
+ingushetiaFlag 100

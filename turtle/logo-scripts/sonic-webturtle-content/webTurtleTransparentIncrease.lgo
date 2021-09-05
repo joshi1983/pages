@@ -1,0 +1,14 @@
+; Similar to transparent command documented at
+; http://www.sonic.net/~nbs/webturtle/commands/
+; Assumes the percentage starts with a "+" indicating 
+; this is an increase in transparency percentage.
+to webTurtleTransparentIncrease :percentage
+	assert :percentage > 0
+	localmake "redValue colorToRed penColor
+	localmake "greenValue colorToGreen penColor
+	localmake "blueValue colorToBlue penColor
+	localmake "currentAlpha alphacolorToAlpha penColor
+	localmake "alphaOffset :percentage * 255 / 100
+	localmake "newAlpha clamp :currentAlpha - :alphaOffset 0 255
+	setPenColor [:newAlpha :redValue :greenValue :blueValue]
+end

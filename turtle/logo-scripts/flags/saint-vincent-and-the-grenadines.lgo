@@ -1,0 +1,34 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Saint_Vincent_and_the_Grenadines#/media/File:Flag_of_Saint_Vincent_and_the_Grenadines.svg
+to sauntVincentAndTheGrenadinesFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 3 / 2
+	localmake "flagGreen "#007c2e
+	localmake "gap1 :height * 0.019
+	localmake "angle1 30
+	localmake "gap2 :gap1 / sin :angle1
+	localmake "parallelogramSize :height * 0.187
+	jumpLeft :width / 2
+	jumpForward :height / 2
+	right 90
+	stripes :height :width ["#002674 "#fcd022 "#fcd022 :flagGreen]
+	jumpForward :width / 2 + :gap1
+	setPenSize 0
+	jumpLeft :height * 0.013
+	left :angle1
+	jumpRight :parallelogramSize / 2
+	setFillColor :flagGreen
+	parallelogram :parallelogramSize :parallelogramSize -:angle1
+	jumpLeft :parallelogramSize / 2
+	right :angle1
+	jumpBackward :gap1 * 2
+	left 180 + :angle1
+	jumpRight :parallelogramSize / 2
+	parallelogram :parallelogramSize :parallelogramSize -:angle1
+	jumpLeft :parallelogramSize + :gap2
+	parallelogram :parallelogramSize :parallelogramSize -:angle1
+
+	setTurtleState :oldState
+end
+
+sauntVincentAndTheGrenadinesFlag 100

@@ -1,0 +1,50 @@
+; Inspired by a house picture at:
+; https://www.youtube.com/watch?v=QVjjUFvXXFs
+to tangramHouse :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "baseWidth :height * 0.85
+	localmake "baseHeight :baseWidth / 2
+	localmake "len1 :baseHeight / cos 45
+	localmake "roofOverhangOffset :height * 0.11
+	localmake "roofLen :height * 0.4
+	localmake "squareSize :height - (:roofLen * cos 45) - :baseHeight
+	setPenSize 0
+	setFillColor "navy
+	isoTriangle :baseWidth :baseHeight
+	jumpLeft :baseWidth / 4
+	jumpForward :baseHeight / 2
+	setFillColor "#600
+	left 45
+	isoTriangle :len1 :len1 / 2
+	right 45
+	jumpRight :baseWidth * 3 / 4
+	left 90
+	setFillColor "pink
+	isoTriangle :baseHeight :baseHeight / 2
+	jumpRight :baseHeight / 2
+	jumpForward :baseHeight / 2
+	left 90
+	setFillColor "aqua
+	isoTriangle :baseHeight :baseHeight / 2
+
+	setFillColor "green
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :baseHeight
+	jumpRight :roofOverhangOffset
+	isoTriangle :baseWidth :baseHeight
+	jumpLeft (:baseWidth + :squareSize) / 2
+	setFillColor "#c00
+	parallelogram :squareSize :roofLen 45
+	right 45
+	jumpForward :roofLen
+	left 45
+	jumpForward :squareSize / 2
+	setFillColor "#fd0
+	square :squareSize
+	setTurtleState :oldState
+end
+
+tangramHouse 100

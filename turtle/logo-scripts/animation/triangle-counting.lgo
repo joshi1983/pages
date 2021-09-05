@@ -1,0 +1,117 @@
+; This animation highlights all the triangles within a drawing.
+; 
+
+to triangles :height :timeRatio
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "width :height * 1.58
+	localmake "redColor "#ad0b0b
+	localmake "greenColor "#7a9b4d
+	localmake "darkColor "#2b4b3f
+	localmake "colors [:redColor :greenColor :darkColor "white ]	
+	localmake "shapes [
+		[[1 1] [3 3] [1 4]]
+		[[3 1] [1 2]]
+		[[2 2] [1 3] [2 4]]
+	]
+	jumpForward :height
+	localmake "top pos
+	jumpTo :oldPos
+	setLineCap "round
+	setLineJoinStyle "round
+	setPenSize :height * 0.005
+	setFillColor first :colors
+	isoTriangle :width :height
+	repeat count :shapes [
+		setFillColor item repcount + 1 :colors
+		localmake "pairs item repcount :shapes
+		repeat count :pairs [
+			localmake "pair item repcount :pairs
+			localmake "yRatio (last :pair) / 4
+			localmake "xRatio (-1 + first :pair) / 3
+			localmake "bottomY :height * (1 - :yRatio)
+			localmake "bottomWidth :width * :yRatio
+			localmake "bottomLeftX :bottomWidth * (-:xRatio + 0.5)
+			localmake "topWidth :width / 3 * (:yRatio - 1 / 4)
+			jumpForward :bottomY
+			jumpLeft :bottomLeftX
+			polyStart
+			jumpRight :bottomWidth / 3
+			setHeading towards :top
+			jumpForward (distance :top) / (last :pair)
+			setHeading :oldHeading
+			jumpLeft :topWidth
+			polyEnd
+			jumpTo :oldPos
+		]
+	]
+	localmake "triangles []
+	repeat 4 [
+		jumpForward :height * (repcount - 1) / 4
+		localmake "bottomWidth :width * (5 - repcount) / 4 / 3
+		jumpLeft :bottomWidth * 1.5
+		repeat 3 [
+			localmake "fromPos pos
+			jumpRight :bottomWidth
+			queue2 "triangles [:top :fromPos pos]
+		]
+		jumpTo :oldPos
+	]
+	repeat 4 [
+		jumpForward :height * (repcount - 1) / 4
+		localmake "bottomWidth :width * (5 - repcount) / 4 / 3
+		jumpLeft :bottomWidth * 1.5
+		repeat 2 [
+			localmake "fromPos pos
+			jumpRight :bottomWidth * 2
+			queue2 "triangles [:top :fromPos pos]
+			jumpLeft :bottomWidth
+		]
+		jumpTo :oldPos
+	]
+	repeat 4 [
+		localmake "width1 :width * repcount / 8
+		jumpForward :height * (4 - repcount) / 4
+		jumpLeft :width1
+		localmake "bottomLeft pos
+		jumpRight :width1 * 2
+		queue2 "triangles [:top :bottomLeft pos]
+		jumpTo :oldPos
+	]
+	localmake "maxIndex count :triangles
+	localmake "indexToShow clamp int :timeRatio * :maxIndex * 1.08 1 :maxIndex
+	jumpForward :height / 2
+	jumpLeft :height
+	right 90
+	setFillColor "black
+	setPenSize 0
+	label str :indexToShow
+
+	setPenSize :height * 0.04
+	setPenColor "lime
+	setFillColor transparent
+	localmake "triangle item :indexToShow :triangles
+	polygon :triangle
+
+	setTurtleState :oldState
+end
+
+triangles 100 animation.timeRatio
+
+to animation.snapshotstyle
+	output createPList2 [
+		["zoom.scale 5]
+		["position.y 50]
+		["position.x -9]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 24
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

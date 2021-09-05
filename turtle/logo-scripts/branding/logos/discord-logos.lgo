@@ -1,0 +1,75 @@
+make "discordBlue "#5865f2
+
+to discordLogoCustomColors :height :foregroundColor :eyeColor
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "arcsInfo [
+		[25.59 0.761] [-65 0]
+		[2.843 0.7] [-112.8 0]
+		[-9.87 0.72] [96 0]
+		[9.35 0.83] [70.9 0] [19.81 1.077]
+		[47.17 0] [41.2 1.1] [30 0]
+		[15.067 1.07] [71 0]
+		[5.595 0.808] [-75.4 0]
+		[8.545 0.99571628]
+	]
+	localmake "eyeSeparation :height * 0.435
+	jumpForward :height * 0.1158
+	right 90
+	setPenSize 0
+	setFillColor :foregroundColor
+	polyStart
+	arcsLeft :arcsInfo :height
+	arcsLeft reverse :arcsInfo :height
+	polyEnd
+
+	; Draw eyes.
+	setFillColor :eyeColor
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.4505
+	jumpRight :eyeSeparation / 2
+	repeat 2 [
+		ellipse :height * 0.117 :height * 0.132
+		jumpLeft :eyeSeparation
+	]	
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Discord#/media/File:Discord_logo.svg
+;
+; You may want to see https://discord.com/branding
+; This code doesn't draw the official logo in exactly the same way
+; despite efforts to replicate trace it accurately.
+; As with any other logo example, note that there are some 
+; mostly unintended differences from the official logos.
+to discordBlueLogo :height
+	discordLogoCustomColors :height :discordBlue "white
+end
+
+to discordCircleLogo :height
+	localmake "oldState turtleState
+	localmake "height1 :height * 0.5
+	jumpForward :height / 2
+	setPenSize 0
+	setFillColor :discordBlue
+	circle :height / 2
+	jumpBackward :height1 / 2
+	discordLogoCustomColors :height1 "white :discordBlue
+	setTurtleState :oldState
+end
+
+to discordBlackLogo :height
+	discordLogoCustomColors :height "black "white
+end
+
+make "height 100
+make "separation :height * 3
+jumpLeft :separation
+discordBlueLogo :height
+jumpRight :separation
+discordCircleLogo :height
+jumpRight :separation
+discordBlackLogo :height

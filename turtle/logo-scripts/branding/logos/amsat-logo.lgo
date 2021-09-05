@@ -1,0 +1,54 @@
+; Inspired by:
+; https://en.wikipedia.org/wiki/File:AMSAT_logo.png
+to amsatLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "innerRadius :height * 0.35
+	localmake "thickness :height * 0.058
+	localmake "arrowThickness :height * 0.092
+	localmake "outerArcRadius (:height - :arrowThickness) / 2
+	localmake "innerArcAngle 82
+	localmake "amSatRed "#ea0303
+	jumpForward :height / 2
+	setPenSize 0
+	setFillColor :amSatRed
+	circle :innerRadius
+	setFillColor "white
+	rect :thickness :innerRadius * 2
+	rect :innerRadius * 2 :thickness
+	localmake "center pos
+	setPenSize :thickness
+	setPenColor fillColor
+	repeat 2 [
+		setHeading :oldHeading + repcount * 360 / 2
+		jumpForward :innerRadius * 1.5
+		left :innerArcAngle / 2
+		arc :innerArcAngle :innerRadius
+		jumpTo :center
+	]
+
+	jumpTo :oldPos
+	setHeading :oldHeading + 90
+	jumpLeft :arrowThickness / 2
+	setPenSize :arrowThickness
+	setPenColor :amSatRed
+	setLineCap "butt
+
+	; overlap a little to prevent background colours from 
+	; leaking between the arc and the triangle.
+	arcLeft 258 :outerArcRadius
+
+	; backtrack the overlapped space before drawing the triangle.
+	right 180
+	setPenSize 0
+	arcRight 6.3 :outerArcRadius
+	right 180
+
+	setFillColor :amSatRed
+	isoTriangle :height * 0.175 :height * 0.152
+
+	setTurtleState :oldState
+end
+
+amsatLogo 100

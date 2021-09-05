@@ -1,0 +1,42 @@
+; Inspired by logo at
+; https://www.ogvg.com/about
+to ontarioGreenhouseVegetableGrowersLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "colors ["#009b4f "#ffd504 "#f78320 "#ed1b24]
+	localmake "colorRadius :height * 0.31
+	localmake "whiteRadius :height / 3
+	localmake "gap :height / 6
+	localmake "angle1 90 - abs triLengthsToAngle :colorRadius :gap * 2 :whiteRadius
+	localmake "angle2 arcSin :colorRadius * (cos :angle1) / :whiteRadius
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	setFillColor "white
+	repeat 4 [
+		setHeading :oldHeading + repcount * 360 / 4
+		jumpForward :gap
+		jumpLeft :gap
+		circle :whiteRadius
+		jumpTo :center
+	]
+	repeat 4 [
+		setFillColor item repcount :colors
+		setHeading :oldHeading + repcount * 360 / 4
+		jumpForward :gap
+		jumpLeft :gap
+		left 90 + :angle1
+		jumpForward :colorRadius
+		right 90
+		polyStart
+		arcRight 180 + :angle1 * 2 :colorRadius
+		right 90 - :angle1 + :angle2
+		arcLeft :angle2 * 2 :whiteRadius
+		polyEnd
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "#eee
+ontarioGreenhouseVegetableGrowersLogo 100

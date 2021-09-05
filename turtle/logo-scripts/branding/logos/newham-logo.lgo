@@ -1,0 +1,34 @@
+; Inspired by logo at:
+; https://youtu.be/BtJUbTa8q0M?t=635
+;
+; I could not find a very clear version of the logo
+; so this is likely more different from the original than
+; most of the other logo examples.
+to londonBoroughOfNewhamLogo :height
+	localmake "oldState turtleState
+	localmake "angle1 28.5
+	localmake "thickness1 0.22
+	localmake "thickness2 0.05
+	localmake "len1 0.81
+	setPenSize 0
+	setFillColor "#8f2425
+	drawArcLineShapes [
+			[0.1 0
+			[[-:angle1 0] [:len1] [90 + :angle1 0]
+			[:thickness1] [90 - :angle1 0]
+			[0.3] [:angle1 * 2 - 180 0] [0.41]
+			[180 - :angle1 * 2 0] [0.64]
+			[90 + :angle1 0] [:thickness1] [90 - :angle1 0]
+			[0.16]]
+		]
+		[0.22 :len1 * cos :angle1
+			[[90 0] [:thickness2] [90 - :angle1 0] [0.09]
+			[:angle1 * 2 - 180 0] [0.41] [180 - :angle1 * 2 0]
+			[0.85] [:angle1 + 90 0] [:thickness2]
+			[90 - :angle1 0] [0.75] [:angle1 * 2 - 180 0] [0.405]]
+		]
+	] :height
+	setTurtleState :oldState
+end
+
+londonBoroughOfNewhamLogo 100

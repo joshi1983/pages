@@ -1,0 +1,49 @@
+; Inspired by logo at:
+; https://www.tropigas.com.pa
+to tropigasLogo :height
+	localmake "oldState turtleState
+	localmake "thickness :height * 0.06
+	localmake "ellipseHeight (:height - :thickness) / 2
+	localmake "ellipseWidth :height * 0.86
+	setPenSize :thickness
+	setPenColor "white
+	setFillColor "#c3754a
+	jumpForward :height / 2
+	ellipse :ellipseWidth :ellipseHeight
+	setFillColor "#d92324
+	circle :height * 0.43
+	setPenSize 0
+	setFillColor penColor
+	rect :ellipseWidth * 2 :thickness
+	rect :thickness :ellipseHeight * 2
+	setTurtleState :oldState
+end
+
+; Inspired by a version of the logo shown at:
+; https://www.camaracolon.com/wp-content/uploads/2016/06/tropigas.jpg
+to tropigasLogo2 :height
+	localmake "oldState turtleState
+	localmake "thickness :height * 0.02
+	localmake "ellipseHeight (:height - :thickness) / 2
+	localmake "ellipseWidth :height * 1
+	setPenSize :thickness
+	setPenColor "white
+	setFillColor "#e4a71b
+	jumpForward :height / 2
+	ellipse :ellipseWidth :ellipseHeight
+	setFillColor "#da251e
+	circle :height * 0.48
+	setPenSize 0
+	setFillColor penColor
+	rect :ellipseWidth * 2 :thickness
+	rect :thickness :ellipseHeight * 2
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+make "height 100
+make "separation :height * 5
+jumpLeft :separation / 2
+tropigasLogo :height
+jumpRight :separation
+tropigasLogo2 :height

@@ -1,0 +1,66 @@
+to drawIndividualShape :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angleGradient 30
+	localmake "colorStops createPList2 [
+		[0 "black] [0.5 "aqua] [1 "black]
+	]
+	localmake "baseRadius 0.235
+	localmake "midRadius (1 - :baseRadius) / 2
+	localmake "largeRadius 0.623
+	localmake "topRadius (1 - :largeRadius) / 2
+	localmake "midRadius2 :height * :midRadius
+	localmake "largeRadius2 :height * :largeRadius
+	jumpLeft :height - :midRadius2
+	localmake "leftCenter pos
+
+	jumpTo :oldPos
+	setPenSize 0
+	jumpForward :height
+	left :angleGradient
+	jumpForward :height * 0.15
+	localmake "fromPos pos
+	jumpBackward :height * 0.45
+	setFillGradient createLinearGradient :fromPos pos :colorStops "pad
+	jumpTo :oldPos
+	setHeading :oldHeading
+	drawArcLineShape [0 :baseRadius
+		[[90 0] [-180 :midRadius] [180 0] [180 :topRadius]]
+	] :height
+
+	jumpTo :oldPos
+	setHeading :oldHeading - :angleGradient
+	jumpLeft :height * 0.2
+	localmake "fromPos pos
+	jumpRight :height * 0.9
+	setFillGradient createLinearGradient :fromPos pos :colorStops "pad	
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpLeft :height * :baseRadius
+	localmake "startPos pos
+	polyStart
+	arcLines [[-90 :baseRadius] [180 :midRadius] [180 0] [-180 :topRadius]] :height
+	localmake "arcAngle getArcLeftAngleToCircle :largeRadius2 :leftCenter :midRadius2
+	arcLeft :arcAngle :largeRadius2
+	setHeading (towards :leftCenter) - 90
+	localmake "d distance :startPos
+	localmake "arcAngle 2 * arcSin :d / 2 / :midRadius2
+	arcRight :arcAngle :midRadius2
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by drawing at:
+; https://ca.pinterest.com/pin/285767538869761923
+to shapeGradient :height
+	localmake "oldState turtleState
+	jumpForward :height / 2
+	repeat 4 [
+		drawIndividualShape :height / 2
+		right 360 / 4
+	]
+	setTurtleState :oldState
+end
+
+shapeGradient 100

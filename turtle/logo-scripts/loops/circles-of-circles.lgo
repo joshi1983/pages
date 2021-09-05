@@ -1,0 +1,91 @@
+to getAngleToNearestPointRight :line1Points :line2Points :radius
+	localmake "lines [:line1Points :line2Points]
+	localmake "result -1
+	repeat count :lines [
+		localmake "line item repcount :lines
+		localmake "first first :line
+		localmake "last last :line
+		localmake "angle getArcRightAngleToLine :radius :first :last
+		if and :angle >= 0 (or :result < 0 :result > :angle) [
+			localmake "result :angle
+		]
+	]
+	if :result < 0 [
+		output 180
+	]
+	output :result
+end
+
+to getAngleToNearestPointLeft :line1Points :line2Points :radius
+	localmake "lines [:line1Points :line2Points]
+	localmake "result -1
+	repeat count :lines [
+		localmake "line item repcount :lines
+		localmake "first first :line
+		localmake "last last :line
+		localmake "angle getArcLeftAngleToLine :radius :first :last
+		if and :angle >= 0 (or :result < 0 :result > :angle) [
+			localmake "result :angle
+		]
+	]
+	if :result < 0 [
+		output 180
+	]
+	output :result
+end
+
+; Inspired by:
+; https://ca.pinterest.com/pin/302726406177156439
+to circles :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "radius1 :height * 0.045
+	localmake "numTinyCircles 18
+	localmake "numMediumCircles 36
+	localmake "numOuterCircles 72
+	localmake "mediumCircleRadius :height * 0.134
+	localmake "outerArcRadius :height * 0.48
+	jumpLeft :height
+	localmake "bottomLeft pos
+	jumpForward :height
+	localmake "upperLeft pos
+	jumpRight :height
+	localmake "top pos
+	jumpBackward :height / 2
+	localmake "center pos
+
+	setLineCap "butt
+	setPenColor "white
+	setPenSize :height * 0.002
+	setFillColor transparent
+	circle :radius1
+	repeat :numTinyCircles [
+		circleRight :radius1 / 2
+		right 360 / :numTinyCircles 
+	]
+	repeat :numMediumCircles [
+		jumpRight :radius1
+		circleRight :mediumCircleRadius
+		right 360 / :numMediumCircles
+		jumpTo :center
+	]
+	repeat :numOuterCircles [
+		localmake "heading1 :oldHeading + 30 / :numOuterCircles + repcount * 360 / :numOuterCircles
+		setHeading :heading1
+		jumpRight :radius1 + :mediumCircleRadius * 2
+		localmake "tangent pos
+		localmake "angle getAngleToNearestPointRight [:upperLeft :top] [:bottomLeft :oldPos] :outerArcRadius
+		arcRight :angle :outerArcRadius
+		jumpTo :tangent
+		setHeading :heading1 + 180
+		localmake "angle getAngleToNearestPointLeft [:upperLeft :top] [:bottomLeft :oldPos] :outerArcRadius
+		arcLeft :angle :outerArcRadius
+
+		jumpTo :center
+	]	
+	setTurtleState :oldState
+end
+
+setScreenColor "#1c21a1
+circles 100

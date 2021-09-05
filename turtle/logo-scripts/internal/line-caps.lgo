@@ -1,0 +1,27 @@
+; Exported to help/properties/images/line-caps.svg
+; Used in content/help/properties/lineCap.html
+
+to lineCapExample :capStyle
+	localmake "oldPos pos
+	setPenSize 0
+	jumpLeft 2
+	label :capStyle
+	setLineCap :capStyle
+	setPenSize 2
+	jumpTo :oldPos
+	setPenColor "green
+	forward 4
+	jumpTo :oldPos
+	setPenColor "black
+	setLineCap "butt
+	forward 4
+end
+
+make "caps ["butt "round "square]
+setFontSize 1.5
+setFillColor "black
+right 90
+repeat count :caps [
+	lineCapExample item repcount :caps
+	jumpForward 7
+]

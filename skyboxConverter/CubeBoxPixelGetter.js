@@ -4,14 +4,27 @@ class CubeBoxPixelGetter extends SkyBoxPixelGetter {
 	}
 
 	get(longitude, latitude) {
-		if (latitude < Math.PI * 0.5)
+		var xCategory = Math.floor(longitude * 0.5 / Math.PI);
+		if (latitude > Math.PI * 0.25 || latitude < -Math.PI * 0.25)
 		{
-			
+			var r = Math.tan(Math.PI * 0.5 - Math.abs(latitude));
+			var x = 0.5 + r * Math.sin(longitude);
+			var y = 0.5 + r * Math.cos(longitude);
+			x = x * 0.25 + 0.25;
+			y = y / 3;
+			if (latitude > 0)
+				y += 2/3;
+			return {
+				'x': x,
+				'y': y
+			};
 		}
-		return {
-			'x': longitude / ( 2 * Math.PI ),
-			'y': 0.5 + latitude / Math.PI
-		};
+		else {
+			return {
+				'x': longitude / ( 2 * Math.PI ),
+				'y': 0.5 + latitude / Math.PI
+			};
+		}
 	}
 
 	getDirection(x, y) {

@@ -1,0 +1,35 @@
+make "branchScaleFactor 0.62
+make "minLength 0.4
+make "angle 60
+
+to drawBranch :startLength
+	if :startLength > :minLength [
+		localmake "oldState turtleState
+		localmake "smallerLength :startLength * :branchScaleFactor
+		setPenSize max :minLength / 3 :startLength * 0.04
+		forward :startLength
+		left :angle
+		drawBranch :smallerLength
+		right :angle * 2
+		drawBranch :smallerLength
+		setTurtleState :oldState
+	]
+end
+
+; Inspired by:
+; https://ca.pinterest.com/pin/237142736605031762
+to triTree :startLength
+	localmake "oldState turtleState
+	setPenColor "black
+	setLineCap "butt
+	setLineJoinStyle "miter
+	right 90
+	repeat 3 [
+		drawBranch :startLength
+		right 360 / 3
+	]
+
+	setTurtleState :oldState
+end
+
+triTree 22.2

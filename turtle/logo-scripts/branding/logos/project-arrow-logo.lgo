@@ -1,0 +1,44 @@
+; Inspired by logo at:
+; https://www.projectarrow.ca
+to projectArrowLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "thickness :height * 0.075
+	localmake "aThickness :thickness * 1.7
+	localmake "angle 26.2
+	jumpForward :height / 2
+	setPenSize :thickness
+	setPenColor "#4863a8
+	setFillColor transparent
+	circle (:height - penSize) / 2
+	localmake "center pos
+	jumpBackward :height * 0.09
+	setPenSize 0
+	setFillColor penColor
+	circle :thickness
+
+	jumpTo :center
+	localmake "innerRadius :height / 2 - :thickness
+	jumpForward :innerRadius
+	localmake "top pos
+	right 180 - :angle
+	polyStart
+	jumpForward :height * 0.1 
+	; move enough so distanceToCircle doesn't return 0 or 
+	; risk being within floating point error range.
+
+	jumpForward distanceToCircle :center :innerRadius
+	setHeading :oldHeading - 90
+	jumpForward :aThickness
+	right 90 - :angle
+	localmake "len1 distanceToLine :center :top
+	jumpForward :len1
+	left 180 - :angle * 2
+	jumpForward :len1
+	setHeading :oldHeading - 90
+	jumpForward :aThickness
+	polyEnd
+	setTurtleState :oldState
+end
+
+projectArrowLogo 100

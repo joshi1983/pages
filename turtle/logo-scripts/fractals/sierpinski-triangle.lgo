@@ -1,0 +1,26 @@
+; Some explanation for drawing something similar 
+; is in page 274 and 275 of a book called
+; LOGO: Models and Methods for Problem Solving.
+; The book can be freely borrowed at:
+; https://archive.org/details/logomodelsmethod0000spez/page/274/mode/2up
+
+; You can learn more about Sierpinski's triangle at
+; https://en.wikipedia.org/wiki/Sierpi%C5%84ski_triangle
+
+to sierpinskiTriangle :size
+	if :size > 2 [
+		right 30
+		repeat 3 [
+			forward :size * 0.5
+			right 90
+			sierpinskiTriangle :size * 0.5
+			left 90
+			forward :size * 0.5
+			left 120
+		]
+		left 30
+	]
+end
+
+setLineJoinStyle "round
+sierpinskiTriangle 100

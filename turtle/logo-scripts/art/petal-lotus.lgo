@@ -1,0 +1,47 @@
+; Inspired by:
+; https://www.pinterest.ca/pin/391953973829101266/
+
+to calcStarSettings :largeRadius :smallRadius :numPoints
+	localmake "angle1 180 / :numPoints
+	localmake "len1 :smallRadius * sin :angle1
+	localmake "len2 :smallRadius * cos :angle1
+	localmake "size1 hypot [:len1 (:largeRadius - :len2)]
+	localmake "angle2 90 - arcCos :len1 / :size1
+	localmake "angle3 180 - 2 * (:angle1 + :angle2)
+	output [:angle2 :angle3 :size1]
+end
+
+to pattern :size
+	localmake "numScales 32
+	localmake "numAngles 32
+	localmake "oldHeading heading
+	localmake "oldPos pos
+
+	circle :size
+	setFillColor "black
+	setPenSize 0
+	localmake "largeRadius :size
+	repeat :numScales [
+		localmake "smallRadius :largeRadius * 0.92
+		localmake "settings calcStarSettings :largeRadius :smallRadius :numAngles
+		localmake "size1 item 3 :settings
+		localmake "angle2 item 1 :settings
+		localmake "angle3 item 2 :settings
+		jumpForward :largeRadius
+
+		repeat :numAngles [
+			right 180 - :angle2
+			polyStart
+			forward :size1
+			left :angle3
+			forward :size1
+			polyEnd
+			left :angle2
+		]
+		jumpTo :oldPos
+		setHeading :oldHeading + repcount * 180 / :numAngles
+		localmake "largeRadius :smallRadius
+	]
+end
+
+pattern 150

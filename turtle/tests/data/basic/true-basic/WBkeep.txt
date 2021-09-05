@@ -1,0 +1,102 @@
+MODULE WBKeep                     ! 1993/10/11
+
+    ! SUB WB_Keep (line$(), options$)
+    ! SUB WB_Omit (line$(), options$)
+    ! SUB InterpretKeepOptions (option$(), ignorecase, string$)
+    ! SUB KeepIt (line$(), ignorecase, string$, keepflag)
+
+    LIBRARY "{WB_c}WButilit.trc"
+
+    OPTION TYPO
+
+    PRIVATE InterpretKeepOptions, KeepIt
+
+    SUB WB_Keep (line$(), options$)
+
+        LOCAL option$(0), ignorecase, keepflag, string$
+
+        CALL WB_Decode (options$, option$())
+
+        CALL InterpretKeepOptions (option$(), ignorecase, string$)
+
+        LET keepflag = 1
+        CALL KeepIt (line$(), string$, ignorecase, keepflag)
+
+    END SUB
+
+    SUB WB_Omit (line$(), options$)
+
+        LOCAL option$(0), ignorecase, keepflag, string$
+
+        CALL WB_Decode (options$, option$())
+
+        CALL InterpretKeepOptions (option$(), ignorecase, string$)
+
+        LET keepflag = 0          ! Actually, omit it
+        CALL KeepIt (line$(), string$, ignorecase, keepflag)
+
+    END SUB
+
+    SUB KeepIt (line$(), string$, ignorecase, keepflag)
+
+        LOCAL k, i, l$, matchit
+
+        IF ignorecase = 1 then LET string$ = lcase$(string$)
+
+        LET k = 0
+        FOR i = 1 to ubound(line$)
+
+            LET l$ = line$(i)
+            IF ignorecase = 1 then
+               LET matchit = pos(lcase$(l$), string$)
+            ELSE
+               LET matchit = pos(l$, string$)
+            END IF
+
+            IF matchit = 0 and keepflag = 0 or matchit > 0 and keepflag = 1 then
+               LET k = k+1
+               IF k <> i then LET line$(k) = l$
+            END IF
+
+        NEXT i
+        MAT Redim line$(k)
+
+    END SUB
+
+    SUB InterpretKeepOptions (option$(), ignorecase, string$)
+
+        LOCAL i, com$, number$
+
+        LET ignorecase = 1
+        LET string$ = ""
+        FOR i = 1 to ubound(option$)
+
+            LET com$ = lcase$(option$(i))
+            SELECT CASE com$[1:2]
+            CASE "-c"             ! Ignore case
+                 LET ignorecase = 0
+
+            CASE else
+                 SELECT CASE option$(i)[1:1]
+                 CASE ".", ":"
+                      CALL WB_Error ("Keep/omit error. Cannot name a directory")
+
+                 CASE "-", ">"
+                      CALL WB_Error ("Keep/omit error. Illegal option " & option$(i)[1:2])
+
+                 CASE else        ! Must be a search string
+                      IF string$ = "" then
+                         LET string$ = option$(i)
+                      ELSE
+                         CALL WB_Error ("Keep/omit error. Only one search string allowed")
+                      END IF
+
+                 END SELECT
+
+            END SELECT
+
+        NEXT i
+
+    END SUB
+
+END MODULE

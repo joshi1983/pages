@@ -1,0 +1,43 @@
+to onshapePart :size :size1
+	localmake "oldState turtleState
+	localmake "thickness :size * 0.38
+	jumpForward :size
+	polyStart
+	left 120
+	jumpForward :size
+	left 60
+	jumpForward :size1
+	left 60
+	jumpForward :thickness
+	left 120
+	jumpForward :size1
+	right 60
+	jumpForward :size
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by logo at
+; https://commons.wikimedia.org/wiki/File:Onshape_logo_full.png
+to onshapeLogo :height
+	localmake "oldState turtleState
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	setFillColor "#4f5a5c
+	repeat 3 [
+		onshapePart :height * 0.23 :height * 0.10
+		jumpTo :center
+		right 360 / 3
+	]
+	setFillColor "#63bd50
+	repeat 3 [
+		onshapePart :height * 0.5 :height * 0.23
+		jumpTo :center
+		right 360 / 3
+	]
+
+	setTurtleState :oldState
+end
+
+onshapeLogo 100
