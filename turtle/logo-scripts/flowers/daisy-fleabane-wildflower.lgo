@@ -1,0 +1,76 @@
+to getCenterGradient :radius
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#FFFF50
+	setProperty "colorStops 0.2 "#FFFF00
+	setProperty "colorStops 0.45 "#DDC108
+	setProperty "colorStops 0.53 "#DD7A08
+	setProperty "colorStops 0.6 "#B0C606
+	setProperty "colorStops 0.95 "#639900
+	setProperty "colorStops 1 "#006D9D05
+	output createRadialGradient pos :radius :colorStops
+end
+
+to getPeddleGradient :radius
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#FFF
+	setProperty "colorStops 0.6 "#FFF
+	setProperty "colorStops 0.85 "#BAD6F2
+	setProperty "colorStops 0.92 "#B0E6F2
+	setProperty "colorStops 1 "#C08AE1
+	output createRadialGradient pos :radius :colorStops
+end
+
+to drawCentralPattern :radius
+	localmake "oldState turtleState
+	localmake "numCircles 64
+	localmake "radius1 :radius / 2
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#0800
+	setProperty "colorStops 0.1 "#0800
+	setProperty "colorStops 0.3 "#4800
+	setProperty "colorStops 0.5 "#d800
+	setProperty "colorStops 0.9 "#f350
+	setProperty "colorStops 1 "#0000
+	setPenSize :radius * 0.003
+	setPenGradient createRadialGradient pos :radius :colorStops
+	setFillColor transparent
+	repeat :numCircles [
+		circleRight :radius1
+		right 360 / :numCircles
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by photograph at:
+; https://commons.wikimedia.org/wiki/File:White-wildflower-yellow-center_-_West_Virginia_-_ForestWander.jpg
+; You can learn more about the species at:
+; https://en.wikipedia.org/wiki/Erigeron_annuus
+to daisyFleabaneFlower :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "radius1 :height * 0.25
+	localmake "numPeddles 128
+	localmake "peddleLengths [:height / 2 - :radius1 (:height / 2 - :radius1) * 0.9]
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize :height * 0.013
+	setPenGradient getPeddleGradient :height / 2
+	setLineCap "round
+	
+	repeat :numPeddles [
+		setHeading :oldHeading + repcount * 360 / :numPeddles
+		localmake "peddleLength item 1 + remainder repcount 2 :peddleLengths
+		forward :radius1 + :peddleLength
+		jumpTo :center
+	]
+
+	setPenSize 0
+	setFillGradient getCenterGradient :radius1
+	circle :radius1
+
+	drawCentralPattern :radius1 * 0.97
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+daisyFleabaneFlower 100

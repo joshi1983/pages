@@ -1,0 +1,54 @@
+; Inspired by
+; https://www.pinterest.ca/pin/978758931495257605/
+make "colors ["#ff0 "#f00 "#f0f "#00f "#0ff "#0f0 ]
+
+to ratioToColor :ratio
+	output mixItems :colors :ratio
+end
+
+to coloredLines :radius :timeRatio
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "tinyRadius :radius * 0.02
+	localmake "innerRadius :radius * 0.5
+	localmake "lineThickness :tinyRadius / 2
+	localmake "numLines 40
+	localmake "points []
+	setPenSize :lineThickness
+	repeat :numLines [
+		setHeading :oldHeading + repcount * 360 / :numLines
+		setPenColor ratioToColor repRatio
+		jumpForward :radius
+		queue2 "points pos
+		localmake "pos1 pos
+		jumpTo :oldPos
+		right 360 * sin 90 * :timeRatio 
+		jumpForward :innerRadius
+		queue2 "points pos
+		setPos :pos1
+		jumpTo :oldPos
+	]
+	setPenSize 0
+	repeat count :points [
+		jumpTo item repcount :points
+		setFillColor ratioToColor repRatio
+		circle :tinyRadius
+	]
+end
+
+setScreenColor "black
+coloredLines 300 animation.time / animation.duration
+
+to animation.snapshotstyle
+	localmake "result createPList
+	output :result
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 5
+	; Edit this if you want to change the length of your animation.
+	localmake "result createPList
+	setProperty "result "duration :minutes * 60 + :seconds
+	output :result
+end

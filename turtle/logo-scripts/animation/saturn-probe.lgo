@@ -1,0 +1,149 @@
+to solarPanels :size
+	localmake "oldPos pos
+	localmake "panelDark "#222
+	localmake "panelHighlight "#444
+	localmake "highlightThickness :size * 0.008
+	localmake "thickness :size * 0.2
+	localmake "size1 :size * 0.1
+	localmake "size2 :size - :size1
+	localmake "numSegments 10
+	setPenColor :panelDark
+	setPenSize :size * 0.2
+	
+	jumpForward :size1
+	localmake "basePosition pos
+	forward :size2
+	jumpTo :basePosition
+	setPenColor :panelHighlight
+	repeat :numSegments [
+		forward :highlightThickness
+		jumpForward :size2 / :numSegments - :highlightThickness
+	]
+	jumpTo :basePosition
+	left 90
+	forward :thickness * 0.5
+	right 90
+	setPenSize :highlightThickness
+	repeat 3 [
+		forward :size2
+		jumpBackward :size2
+		jumpRight :thickness / 2
+	]
+	jumpTo :oldPos
+end
+
+to drawDish :radius
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#aaa
+	setProperty "colorStops 1 "#fff
+	forward :radius * 0.3
+	; move the darkest part of gradient
+	; to match the direction of light from the sun
+	localmake "gradient createRadialGradient2 :oldPos pos :radius :colorStops "pad
+	setFillGradient :gradient
+	setPenSize 0
+	jumpTo :oldPos
+	circle :radius
+	setPenColor "gray
+	setPenSize :radius * 0.01
+	; draw supporting pieces for the dish's antenna
+	repeat 4 [
+		forward :radius * 0.15
+		jumpTo :oldPos
+		right 360 / 4
+	]
+	setFillColor "gray
+	setPenColor "#666
+	circle :radius * 0.05 ; the dish antenna
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+; Draws something that resembles a radioactive 
+; power supply
+to drawRTG :size
+	localmake "oldPos pos
+	setPenColor "#111
+	setPenSize :size * 0.05
+	forward :size * 0.1
+	setPenSize :size * 0.15
+	forward :size * 0.8
+	setPenSize :size * 0.2
+	forward :size * 0.1
+	; return to original position
+	jumpTo :oldPos
+end
+
+; illustrates an antenna with a very narrow dark line
+to drawAntenna :size
+	localmake "oldPos pos
+	setPenSize :size * 0.002
+	setPenColor "#111
+	forward :size * 0.95
+	setPenSize :size * 0.004
+	forward :size * 0.05
+	jumpTo :oldPos
+end
+
+; Illustrates a few antenna and power supply
+to drawComponents :size
+	localmake "oldHeading heading
+	right 45
+	drawRTG :size * 0.2
+	right 100
+	; draw antenna at a few assymmetric angles
+	; to look somewhat natural
+	drawAntenna :size * 0.3
+	right 60
+	drawAntenna :size * 0.4
+	right 95
+	drawAntenna :size * 0.2
+	setHeading :oldHeading
+end
+
+to spaceProbe :size
+	drawComponents :size
+
+	; loop through 4 directions of solar panels.
+	repeat 4 [
+		solarPanels :size * 0.5
+		right 360 / 4
+	]
+	right 60
+	drawDish :size * 0.06
+end
+
+setScreenColor "black
+; draw Saturn using an image from wikipedia.
+image 200 100 'https://upload.wikimedia.org/wikipedia/commons/c/c7/Saturn_during_Equinox.jpg'
+
+; move to the probe's initial position
+jumpRight 41
+jumpForward 48
+
+; draw the probe over Saturn
+make "timeRatio animation.time / animation.duration
+make "timeRatio clamp :timeRatio 0 1
+make "timeRatio2 interpolateRatio easeIn :timeRatio
+jumpLeft 250 * :timeRatio2
+right 120 * :timeRatio
+spaceProbe mix 550 1 :timeRatio2
+
+to animation.snapshotstyle
+	localmake "result createPList
+	setProperty "result "position.y 50
+	setProperty "result "zoom.scale 2
+	output :result
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 3
+	; Edit this if you want to change the length of your animation.
+	localmake "result createPList
+	setProperty "result "duration :minutes * 60 + :seconds
+	setProperty "result "thumbnailTime 1.4
+	output :result
+end

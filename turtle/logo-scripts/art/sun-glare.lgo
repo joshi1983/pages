@@ -1,0 +1,40 @@
+to createSunRayGradient :radius
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "white
+	setProperty "colorStops 0.15 "white
+	setProperty "colorStops 0.24 "yellow
+	setProperty "colorStops 0.4 "orange
+	setProperty "colorStops 0.7 "red
+	setProperty "colorStops 1 "#4f00
+	output createRadialGradient pos :radius :colorStops	
+end
+
+; Inspired by
+; https://www.pinterest.ca/pin/211174975622406
+to sun :height
+	localmake "oldState turtleState
+	localmake "numRayGroups 24
+	localmake "numRaysPerGroup 24
+	localmake "maxRadius :height / 2
+	localmake "minRadius :maxRadius * 0.8
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize :height * 0.002
+	repeat :numRaysPerGroup [
+		right 360 / (:numRayGroups * :numRaysPerGroup)
+		localmake "radius mix :minRadius :maxRadius (1 + cos 360 * repRatio) / 2
+		setPenGradient createSunRayGradient :radius
+		repeat :numRayGroups [
+			forward :radius
+			jumpTo :center
+			right 360 / :numRayGroups
+		]
+	]
+	setPenSize 0
+	setFillColor "orange
+	circle :height * 0.08
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+sun 100

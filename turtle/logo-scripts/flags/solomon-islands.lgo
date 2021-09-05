@@ -1,0 +1,54 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Solomon_Islands#/media/File:Flag_of_the_Solomon_Islands.svg
+; Referenced from:
+; https://en.wikipedia.org/wiki/Solomon_Islands
+
+to triangle :height
+	localmake "ratio1 0.899376
+	localmake "ratio2 1 - :ratio1
+	localmake "ratio3 :ratio2 / 2
+	localmake "size1 :height * :ratio1
+	jumpLeft :size1
+	polyStart
+	jumpRight :size1 + :height
+	jumpForward :height * (1 - :ratio3)
+	polyEnd
+	jumpLeft :height
+	jumpForward :height * :ratio3
+end
+
+to solomonIslandsFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 2
+	localmake "starSize1 :height * 0.1
+	localmake "starSize2 :height * 0.0382
+	localmake "starGap1 :height * 0.169
+	localmake "starGap2 :height * 0.1975
+	setPenSize :width
+	setLineCap "butt
+	setPenColor "#fcd116
+	forward :height
+	setPenSize 0
+	setFillColor "#0051ba
+	repeat 2 [
+		right 180
+		triangle :height
+		setFillColor "#215b33
+	]
+	jumpLeft :height * 0.65
+	jumpBackward :height * 0.3
+	setFillColor "white
+	isotoxalStar :starSize1 :starSize2 5
+	jumpForward :starGap1
+	jumpRight :starGap2
+	isotoxalStar :starSize1 :starSize2 5
+	jumpBackward :starGap1 * 2
+	isotoxalStar :starSize1 :starSize2 5
+	jumpLeft :starGap2 * 2
+	isotoxalStar :starSize1 :starSize2 5
+	jumpForward :starGap1 * 2
+	isotoxalStar :starSize1 :starSize2 5
+	setTurtleState :oldState
+end
+
+solomonIslandsFlag 100

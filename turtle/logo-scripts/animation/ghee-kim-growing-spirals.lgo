@@ -1,0 +1,55 @@
+; Inspired by
+; https://www.facebook.com/photo/?fbid=10233323074202907
+; Ghee Beom Kim's profile is at:
+; https://www.facebook.com/ghee.b.kim
+to gheeBeomKimSymol :height :timeRatio
+	localmake "oldState turtleState
+	localmake "numIterations 12
+	; 0.617 is a shrinkRatio that roughly matches Ghee Beom Kim's drawing.
+	; We're animating through different ratios to make an interesting video from it.
+	localmake "shrinkRatio 0.0001 + 0.6634075 * :timeRatio
+	localmake "arcRadius1 :height / 2 * (1 - :shrinkRatio)
+	setPenSize 0
+	setFillColor "black
+	jumpForward :height
+	polyStart
+	repeat 2 [
+		right 180
+		localmake "arcRadius :height / 2
+		repeat :numIterations [
+			arcRight 90 :arcRadius
+			left 180
+			localmake "arcRadius :arcRadius * :shrinkRatio
+		]
+		left 90
+		repeat :numIterations - 2 [
+			localmake "arcRadius :arcRadius / :shrinkRatio
+			arcRight 90 :arcRadius
+		]
+		left 180
+		arcRight 90 :arcRadius1
+	]
+	polyEnd
+
+	setTurtleState :oldState
+end
+
+make "timeRatio clamp animation.time / animation.duration 0 1
+make "timeRatio interpolateRatio easeInOut :timeRatio
+gheeBeomKimSymol 100 :timeRatio
+
+to animation.snapshotstyle
+	localmake "result createPList
+	setProperty "result "position.y 50
+	setProperty "result "zoom.scale 7
+	output :result
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 5
+	; Edit this if you want to change the length of your animation.
+	localmake "result createPList
+	setProperty "result "duration :minutes * 60 + :seconds
+	output :result
+end

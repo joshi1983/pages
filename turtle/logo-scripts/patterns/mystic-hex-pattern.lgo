@@ -1,0 +1,109 @@
+make "thicknessRatio 0.11
+
+to blendedCircleOutline :radius :innerColor :outerColor :jumpLeft? :thicknessRatio
+	localmake "oldState turtleState
+	localmake "colorStops createPList
+	localmake "transparentColor mix :outerColor transparent 0
+	localmake "innerThicknessRatio :thicknessRatio / 8
+	localmake "radius :radius / (1 - :thicknessRatio / 4)
+	if :jumpLeft? [
+		jumpLeft :radius * :thicknessRatio / 2
+	]
+	localmake "offset 0.004
+	localmake "innerRatio1 1 - (:thicknessRatio + :innerThicknessRatio) / 2
+	localmake "innerRatio2 1 - (:thicknessRatio - :innerThicknessRatio) / 2
+	setProperty "colorStops 1 - :thicknessRatio :transparentColor
+	setProperty "colorStops :innerRatio1 :outerColor
+	setProperty "colorStops :innerRatio1 + :offset :innerColor
+	setProperty "colorStops :innerRatio2 - :offset :innerColor
+	setProperty "colorStops :innerRatio2 :outerColor
+	setProperty "colorStops 1 :transparentColor
+	setFillGradient createRadialGradient pos :radius :colorStops
+	setPenSize 0
+	circle :radius
+	setTurtleState :oldState
+end
+
+to drawDots :radius :dotRadius :numDots :dotColors
+	localmake "center pos
+	repeat :numDots [
+		jumpForward :radius
+		localmake "colorIndex remainder repcount - 1 count :dotColors
+		setFillColor item 1 + :colorIndex :dotColors
+		circle :dotRadius
+		jumpTo :center
+		right 360 / :numDots
+	]
+end
+
+; Inspired by
+; https://www.pinterest.ca/pin/29343835052639120
+; One of the main differences from that is that 
+; some of the outer dot colors don't match.
+to mysticHexPattern :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "numCircles 12
+	localmake "radius :height / 4
+	localmake "radius2 :radius / (1 - :thicknessRatio / 4)
+	localmake "radius4 :radius * 1.666
+	localmake "tinyRadius :height * 0.008
+	localmake "navyBlueColor "#2c2c5e
+	localmake "yellowColor "#fef550
+	localmake "lightBlueColor "#05a7e7
+	localmake "darkRedColor "#ca1121
+	localmake "lightRedColor "#e20a00
+	localmake "dotColors [:lightBlueColor "#c65569 :yellowColor]
+	localmake "dotColors2 [:darkRedColor :yellowColor "#f89146]
+	localmake "dotColors3 [:darkRedColor :yellowColor :lightBlueColor]
+	jumpForward :height / 2
+	localmake "center pos
+	repeat :numCircles [
+		jumpRight :radius
+		blendedCircleOutline :radius :navyBlueColor "#553200c6 true :thicknessRatio
+		jumpTo :center
+		right 360 / :numCircles
+	]
+	setFillColor :lightRedColor
+	setPenColor :yellowColor
+	setPenSize :height * 0.005
+	circle :height * 0.015
+	setFillColor transparent
+	setPenColor :darkRedColor
+	circle :height * 0.03
+
+	jumpTo :center
+	blendedCircleOutline :radius2 :navyBlueColor "#55aef550 false :thicknessRatio
+	setPenColor fillColor
+	setFillColor transparent
+	setHeading :oldHeading + 360 / :numCircles
+	repeat 6 [
+		jumpForward :radius
+		blendedCircleOutline :height * 0.035 :lightRedColor "#9930b510 false :thicknessRatio * 5
+		jumpTo :center
+		right 360 * 2 / :numCircles
+	]
+	setHeading :oldHeading
+	repeat 3 [
+		jumpForward :radius4
+		blendedCircleOutline :height * 0.035 :lightRedColor "#9930b510 false :thicknessRatio * 5
+		jumpTo :center
+		right 360 / 3
+	]
+	setFillColor "#05a7e7
+	setPenColor :navyBlueColor
+	setPenSize :height * 0.003
+	setHeading :oldHeading
+	drawDots :radius :tinyRadius :numCircles :dotColors
+	right 180 / :numCircles
+	localmake "radius3 :radius * 1.37
+	drawDots :radius3 :tinyRadius :numCircles :dotColors2
+	left 180 / :numCircles
+	drawDots :radius4 :tinyRadius :numCircles :dotColors3
+	left 180 / :numCircles
+	drawDots :radius * 1.85 :tinyRadius :numCircles :dotColors3
+
+	setTurtleState :oldState
+end
+
+mysticHexPattern 100

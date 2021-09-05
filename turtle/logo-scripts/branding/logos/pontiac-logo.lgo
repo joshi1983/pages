@@ -1,0 +1,49 @@
+to pontiacShape :height
+	localmake "oldState turtleState
+	localmake "angle1 14.7
+	localmake "slantedHeight :height / cos :angle1
+	localmake "width1 :height * tan :angle1
+	localmake "angle2 129.5
+	localmake "angle3 :angle2 - :angle1
+	localmake "slantedWidth1 abs :width1 / sin :angle3
+	left :angle1
+	polyStart
+	jumpForward :slantedHeight
+	right :angle2
+	jumpForward :slantedWidth1
+	setHeading 180 - :angle3
+	jumpForward :slantedWidth1
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by the logo at:
+; https://en.wikipedia.org/wiki/Pontiac_(automobile)#/media/File:Pontiac_logo_and_wordmark_1981.svg
+to pontiacLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	jumpForward :height * 0.012
+	setPenSize :height * 0.02346939
+	setLineJoinStyle "round
+	setPenColor "black
+	setFillColor "white
+	pontiacShape :height * 0.9744898
+
+	jumpTo :oldPos
+	setFillColor "#c72830
+	setPenSize 0
+	jumpForward :height * 0.14
+	pontiacShape :height * 0.79
+
+	jumpTo :oldPos
+	jumpForward :height * 0.72
+	setFillColor "white
+	isotoxalStar :height * 0.08979592 :height * 0.01867347 2
+	right 90
+	isotoxalStar :height * 0.1295918 :height * 0.01734694 2
+	setTurtleState :oldState
+end
+
+; A gray background to make the white look brighter in the logo.
+setScreenColor "#ddd
+pontiacLogo 100

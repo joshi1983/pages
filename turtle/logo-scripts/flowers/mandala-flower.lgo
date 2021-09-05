@@ -1,0 +1,162 @@
+; Inspired by
+; https://br.pinterest.com/pin/349169777369755463/
+
+make "blue1 "#00385f
+make "blue2 "#037482
+make "gold1 "#fae29f
+
+to darkGradient :radius
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#888
+	setProperty "colorStops 1 "#000
+	localmake "gradient createRadialGradient pos :radius :colorStops
+	setFillGradient :gradient
+	setPenSize 0
+	circle :radius
+end
+
+to metalGradient1 :radius :innerRadius
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "black
+	setProperty "colorStops :innerRadius / :radius "black
+	setProperty "colorStops 1 :gold1
+	localmake "gradient createRadialGradient pos :radius :colorStops
+	setFillGradient :gradient
+end
+
+to blueGradient1 :radius
+	localmake "colorStops createPList
+	setProperty "colorStops 0 :blue1
+	setProperty "colorStops 1 :blue2
+	localmake "gradient createRadialGradient pos :radius :colorStops
+	setFillGradient :gradient
+end
+
+to blueGradient2 :radius :innerRadius
+	localmake "colorStops createPList
+	setProperty "colorStops 0 :blue2
+	setProperty "colorStops :innerRadius / :radius :blue2
+	setProperty "colorStops 1 :blue1
+	localmake "gradient createRadialGradient pos :radius :colorStops
+	setFillGradient :gradient
+end
+
+to centerDesign :radius
+	localmake "oldPos pos
+	localmake "penSize1 :radius * 0.08
+	localmake "penSize2 :radius * 0.01
+	localmake "radius1 :radius - :penSize1 * 0.5
+	localmake "ellipseRadius1 :radius * 0.05
+	localmake "ellipseRadius2 :radius * 0.25
+ 	localmake "tinyRadius :radius * 0.3
+	localmake "radius2 :radius * 0.02 + :penSize1 * 0.5 + :ellipseRadius2 + :tinyRadius
+	localmake "numAngles 32
+	setPenSize :penSize1
+	setPenColor "#444
+	blueGradient2 :radius 0
+	circle :radius1
+	setFillColor transparent
+	setPenSize :penSize2
+	setPenColor "black
+	circle :radius - :penSize2 * 0.5
+	circle :radius1 + (:penSize2 - :penSize1) * 0.5
+	blueGradient2 :tinyRadius * 1.3 0
+	setPenSize :penSize1
+	circle :tinyRadius
+	setPenSize :penSize2
+	metalGradient1 :radius * 1.5 0
+	repeat :numAngles [
+		jumpForward :radius2
+		ellipse :ellipseRadius1 :ellipseRadius2
+		right 360 / :numAngles
+		jumpTo :oldPos
+	]
+end
+
+to leaf1 :size :angle
+	localmake "angle :angle * 2
+	localmake "arcRadius :size * 0.5  / sin (:angle * 0.5)
+	setLineJoinStyle "round
+	left :angle * 0.5
+	arcRight :angle :arcRadius
+	right 180 - :angle
+	arcRight :angle :arcRadius
+end
+
+to middleDesign :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "numAngles 16
+	localmake "leafAngle 30
+	localmake "radius2 :size * 0.3
+	localmake "leafSize :size - :radius2
+	localmake "leafSize2 :leafSize * 0.8
+	localmake "leafSize3 :leafSize2 * 0.8
+	metalGradient1 :size :radius2
+	repeat :numAngles [
+		jumpForward :radius2
+		polyStart
+		leaf1 :leafSize :leafAngle
+		polyEnd
+		setHeading :oldHeading + repcount * 360 / :numAngles
+		jumpTo :oldPos
+	]
+	blueGradient2 :size :radius2
+	repeat :numAngles [
+		jumpForward :radius2
+		polyStart
+		leaf1 :leafSize2 :leafAngle
+		polyEnd
+		setHeading :oldHeading + repcount * 360 / :numAngles
+		jumpTo :oldPos
+	]
+	setFillColor "black
+	repeat :numAngles [
+		jumpForward :radius2
+		polyStart
+		leaf1 :leafSize3 :leafAngle
+		polyEnd
+		setHeading :oldHeading + repcount * 360 / :numAngles
+		jumpTo :oldPos
+	]
+	setHeading :oldHeading
+end
+
+to outerDesign :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "radius :size * 0.5
+	localmake "leafSize :size - :radius
+	localmake "leafSize2 :leafSize * 0.3
+	localmake "numAngles 8
+	localmake "leafAngle 60
+	blueGradient2 :size :radius
+	repeat :numAngles [
+		jumpForward :radius
+		polyStart
+		leaf1 :leafSize :leafAngle
+		polyEnd
+		setHeading :oldHeading + repcount * 360 / :numAngles
+		jumpTo :oldPos
+	]
+	blueGradient2 :radius + :leafSize2 :radius
+	repeat :numAngles [
+		setHeading :oldHeading + (repcount + 0.5) * 360 / :numAngles
+		jumpForward :radius
+		polyStart
+		leaf1 :leafSize2 :leafAngle
+		polyEnd
+		jumpTo :oldPos
+	]
+	setHeading :oldHeading
+end
+
+to mandala :size
+	outerDesign :size
+	darkGradient :size * 0.25
+	centerDesign :size * 0.1
+	middleDesign :size * 0.5
+end
+
+setScreenColor "black
+mandala 100

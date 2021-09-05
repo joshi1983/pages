@@ -1,0 +1,129 @@
+; Inspired by logo at
+; https://fr.linkedin.com/company/primecables
+
+make "size1Ratio 0.44
+make "penSizeRatio1 0.21
+make "angle1 135
+make "arcRadiusRatio 0.51
+make "color1 "#ff9934
+
+to primeCablesC :size
+	localmake "oldState turtleState
+	localmake "size1 :size * :size1Ratio
+	localmake "arcRadius :size * :arcRadiusRatio
+	setPenColor "#404042
+	jumpRight :size * 0.185
+	left :angle1
+	jumpBackward :size * 0.22
+	setLineCap "round
+	setPenSize :size * :penSizeRatio1
+	forward :size1
+	arcRight 180 :arcRadius
+	forward :size1
+	setTurtleState :oldState
+end
+
+to primeCablesP :size
+	localmake "oldState turtleState
+	localmake "penSize1 :size * :penSizeRatio1
+	localmake "size1 :size * :size1Ratio
+	localmake "size2 :size1 * 0.77
+	localmake "size3 :size * 0.01
+	localmake "size4 :size * 0.065
+	localmake "size5 :size3 + :size4
+	localmake "arcRadius :size * :arcRadiusRatio
+	localmake "arcRadius2 :penSize1 * 0.65
+	localmake "arcRadius3 :size * 0.03
+	localmake "angle1_ 140
+	localmake "angle2_ :angle1_ - 90
+	localmake "chordeLength :arcRadius3 * 2 * (sin :angle2_ * 0.5)
+	localmake "size6 :penSize1 - :chordeLength * 2 * (cos :angle2_ * 0.5)
+	setPenColor :color1
+	jumpForward :size * 0.267
+	jumpLeft :size * 0.342
+	right 180 - :angle1
+	setPenSize :size * :penSizeRatio1
+	setLineCap "round
+	forward :size1
+	arcRight 180 :arcRadius
+	forward :size2
+	setLineCap "butt
+	arcLeft 90 :arcRadius2
+	jumpLeft penSize * 0.5
+	jumpBackward :size3 ; to overlap the previous part of the cable.
+	setPenSize 0
+	setFillColor penColor
+	polyStart
+	jumpForward :size5
+	right :angle1_
+	arcLeft :angle2_ :arcRadius3
+	jumpForward :size6
+	arcLeft :angle2_ :arcRadius3
+	right 90 + :angle2_
+	jumpForward :size4
+	polyEnd
+	setTurtleState :oldState
+end
+
+to primeCableConnector1 :size
+	localmake "oldState turtleState
+	localmake "size1 :size * 0.209
+	localmake "angle1_ 45
+	localmake "arcRadius :size * 0.04
+	jumpRight :size * 0.434
+	jumpBackward :size * 0.777
+	left :angle1_
+	setPenSize 0
+	setFillColor :color1
+	polyStart
+	arcRight 90 :arcRadius
+	jumpForward :size1
+	arcRight 90 :arcRadius
+	polyEnd
+	setTurtleState :oldState
+end
+
+to primeCableConnector2 :size
+	localmake "oldState turtleState
+	localmake "arcRadius1 :size * 0.038
+	localmake "arcRadius2 :size * 0.007
+	localmake "arcRadius3 :size * 0.027
+	localmake "startAngle 127.5
+	localmake "arcAngle1 82.5
+	localmake "arcAngle2 90
+	localmake "size1 :size * 0.26
+	localmake "size2 :size * 0.037
+	localmake "size3 :size * 0.0885
+	jumpRight :size * 0.46
+	jumpBackward :size * 0.8
+	setPenSize 0
+	right :startAngle
+	setFillColor :color1
+	polyStart
+	jumpForward :size1
+	arcLeft :arcAngle1 :arcRadius1
+	jumpForward :size2
+	arcRight :arcAngle2 :arcRadius2
+	jumpForward :size3
+	arcLeft 180 :arcRadius3 ; reflection point in middle of this arc
+	jumpForward :size3
+	arcRight :arcAngle2 :arcRadius2
+	jumpForward :size2
+	arcLeft :arcAngle1 :arcRadius1
+	jumpForward :size1
+	polyEnd
+	setTurtleState :oldState
+end
+
+to primeCableConnector :size
+	primeCableConnector1 :size
+	primeCableConnector2 :size
+end
+
+to primeCablesLogo :size
+	primeCablesC :size
+	primeCablesP :size
+	primeCableConnector :size
+end
+
+primeCablesLogo 100

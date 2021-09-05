@@ -1,0 +1,48 @@
+; Inspired by an animation shown at
+; https://hackage.haskell.org/package/worldturtle-0.2.0.0/docs/docs/images/parallel_circles_animated_300.gif
+to drawingCircles :height :timeRatio
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "colors ["black "lime "red "blue ]
+	localmake "arrowSize :height * 0.03
+	localmake "arcRadius (:height - :arrowSize) / 4
+	localmake "numCirclesTotal 64
+	localmake "angleStep 360 / :numCirclesTotal
+	localmake "numCycles :timeRatio * :numCirclesTotal / 4
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize :height * 0.004
+	repeat count :colors [
+		setHeading :oldHeading + repcount * 360 / 4
+		setPenColor item repcount :colors
+		repeat int :numCycles [
+			circleLeft :arcRadius
+			right :angleStep
+		]
+		arcLeft (:numCycles - int :numCycles) * 360 :arcRadius
+		isoTriangle :arrowSize :arrowSize
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+make "timeRatio clamp animation.time / animation.duration 0 1
+make "timeRatio interpolateRatio easeInOut :timeRatio
+drawingCircles 100 :timeRatio
+
+to animation.snapshotstyle
+	localmake "result createPList
+	setProperty "result "position.y 50
+	setProperty "result "zoom.scale 5
+	output :result
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 10
+	; Edit this if you want to change the length of your animation.
+	localmake "result createPList
+	setProperty "result "duration :minutes * 60 + :seconds
+	setProperty "result "thumbnailTime 3.1
+	output :result
+end

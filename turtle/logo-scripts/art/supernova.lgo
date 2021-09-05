@@ -1,0 +1,162 @@
+; Inspired by
+; https://www.pinterest.ca/pin/875668721273221216/
+
+; Also, resembles the animation at:
+; https://youtu.be/KWT01fmXht8?t=347
+; which plays for just a couple seconds.
+; 5:47 is the intended timestamp in case
+; the video starts at the wrong time.
+
+; draws a lens flare using radial gradients
+to gradientFlare :size :color1 :color2 :color3
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "glareAngle 1
+	localmake "numScales 4
+	localmake "minSize :size * 0.3
+	localmake "colorStops createPList
+	setProperty "colorStops 0 :color1
+	setProperty "colorStops 0.1 :color2
+	setProperty "colorStops 1 :color3
+	setPenSize 0
+	repeat :numScales [
+		localmake "ratio repRatio
+		localmake "size1 mix :size :minSize :ratio
+		localmake "size2 :size1 / cos :glareAngle
+		localmake "gradient createRadialGradient :oldPos :size1 :colorStops
+		setFillGradient :gradient
+		localmake "numAngles power 2 ( 1 + :numScales - repcount )
+		repeat :numAngles [
+			jumpTo :oldPos
+			setHeading :oldHeading + repcount * 180 / :numAngles
+			jumpForward :size1
+			right 180 - :glareAngle
+			polyStart
+			repeat 2 [
+				jumpForward :size2
+				right :glareAngle * 2
+				jumpForward :size2
+				right 180 - :glareAngle * 2
+			]
+			polyEnd
+		]
+	]
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to randomBrightColor
+	; the 1 + is to ensure at least 1 of the 3 values is not 0.
+	localmake "result [ 1 + random 254 random 255 random 255 ]
+	localmake "max ( max item 1 :result item 2 :result item
+	3 :result )
+	localmake "scale 255 / :max
+	; scale such that at least 1 value is 255.
+	localmake "result [ :scale * item 1 :result :scale *
+	item 2 :result :scale * item 3 :result ]
+	output :result
+end
+
+to randomStar :scaleFactor
+	localmake "ratio 0.05 + ( random 950 ) / 1000
+	localmake "scaleFactor :scaleFactor * ( power :ratio 2 )
+	localmake "size :scaleFactor * 0.02
+	localmake "c mix "white randomBrightColor 0.5
+	localmake "color3 :c
+	localmake "color2 mix "white :c 0.5
+	localmake "color1 mix "white :c 0.9
+	gradientFlare :size :color1 :color2 :color3
+end
+
+to randomizedStars :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "numStars 500
+	localmake "aspectRatio 4
+	localmake "size2 :size * :aspectRatio
+	backward :size * 0.5
+	jumpLeft :size2 * 0.5
+	localmake "pos1 pos
+	repeat :numStars [
+		setPos :pos1
+		forward random :size
+		jumpRight random :size2
+		randomStar :size
+	]
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to streakPoly :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angle 1
+	localmake "arcAngle 180 + :angle * 2
+	localmake "arcRadius :size * sin :angle
+	localmake "size2 :size - :arcRadius
+	localmake "size1 :size2 / cos :angle
+	setPenSize 0
+	left :angle
+	polyStart
+	jumpForward :size1
+	arcRight :arcAngle :arcRadius
+	polyEnd
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to radiatingStreaks :size :c
+	localmake "oldHeading heading
+	localmake "numIntervals 8
+	localmake "numStreaksPerInterval 20
+	localmake "intervalStep :size / ( :numIntervals + 1 )
+	repeat :numIntervals [
+		localmake "minR ( :numIntervals - repcount ) *
+		:intervalStep
+		localmake "maxR :minR + :intervalStep
+		localmake "colorStops createPList
+		setProperty "colorStops 0 mix :c transparent 0.01
+		setProperty "colorStops 0.2 mix ( mix :c "white 0.8 ) transparent 0.2
+		setProperty "colorStops 0.5 mix ( mix :c "white 0.5 ) transparent 0.5
+		setProperty "colorStops 1 "white
+		setFillGradient createRadialGradient pos :maxR :colorStops
+		repeat :numStreaksPerInterval [
+			localmake "r mix :minR :maxR ( repcount - 1 ) /
+			:numStreaksPerInterval
+			setHeading :oldHeading + random 360
+			streakPoly :r
+		]
+	]
+	setHeading :oldHeading
+end
+
+to centralGlow :size
+	localmake "c randomBrightColor
+	localmake "color1 "white
+	localmake "color2 mix "white :c 0.5
+	localmake "color3 :c
+	gradientFlare :size * 0.5 :color1 :color2 :color3
+	localmake "color1 mix ( mix :c "white 0.1 ) transparent 0.8
+	localmake "color2 mix ( mix :c "white 0.5 ) transparent 0.5
+	localmake "almostTransparent mix :c transparent 0.01
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "white
+	setProperty "colorStops 0.1 :color1
+	setProperty "colorStops 0.2 :color2
+	setProperty "colorStops 0.4 :almostTransparent
+	setProperty "colorStops 0.7 :almostTransparent
+	setProperty "colorStops 0.9 mix :c transparent 0.3
+	setProperty "colorStops 1 :almostTransparent
+	setFillGradient createRadialGradient pos :size :colorStops
+	setPenSize 0
+	circle :size
+	radiatingStreaks :size * 0.7 :c
+end
+
+to supernova :size
+	randomizedStars :size
+	centralGlow :size * 0.5
+end
+
+setScreenColor "black
+supernova 100

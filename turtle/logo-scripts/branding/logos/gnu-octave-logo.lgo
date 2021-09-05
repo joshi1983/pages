@@ -1,0 +1,55 @@
+to getGnuOctaveGradient :height
+	localmake "oldPos pos
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#b2ffff
+	setProperty "colorStops 1 "#008cbe
+	jumpForward :height
+	jumpRight :height / 2
+	localmake "result createRadialGradient pos :height * 1.2 :colorStops
+	jumpTo :oldPos
+	output :result
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/GNU_Octave#/media/File:Gnu-octave-logo.svg
+to gnuOctaveLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "squares [
+		[0.3933 0.173 0.185]
+		[0.3055 0.772 0.13]
+		[-0.336 0.5125 0.305]
+	]
+	setPenSize 0
+	setFillGradient getGnuOctaveGradient :height
+	jumpRight :height * 0.1578
+	left 90
+	polyStart
+	arcsRight [
+		[15 0.42] [20 0.57] [30 0.69] [28 0.63] [1 0]
+		[30 0.39] [40 0.307] [30 0.39] [25 0.58] [38 0.705]
+		[29 0.5] [60 0.326] [20 0.35]
+		[181 0.068] [-29 0.292] [-60 0.26] [-40 0.48]
+		[-35 0.52] [-45 0.31] [-50 0.25] [-47 0.42]
+		[-28 0.58] [-25 0.37]
+	] :height
+	polyEnd
+
+	setFillColor "#ff7f2a
+	setPenColor "#d45500
+	setPenSize :height * 0.022
+	setHeading :oldHeading
+	jumpTo :oldPos
+	repeat count :squares [
+		localmake "squareInfo item repcount :squares
+		localmake "size :height * last :squareInfo
+		jumpRight :height * first :squareInfo
+		jumpForward :height * item 2 :squareInfo
+		roundRect :size :size :size * 0.18
+		jumpTo :oldPos
+	]
+	setTurtleState :oldState
+end
+
+gnuOctaveLogo 100
