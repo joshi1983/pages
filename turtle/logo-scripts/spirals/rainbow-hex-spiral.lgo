@@ -1,0 +1,56 @@
+; Inspired by:
+; https://www.pinterest.ca/pin/109071622217138450/
+
+make "colors ["red "yellow "#08f "purple]
+
+to getColor :ratio
+	localmake "index1 1 + (int :ratio * count :colors)
+	localmake "index2 1 + remainder (1 + :index1) count :colors
+	localmake "c1 item 1 + (remainder :index1 count :colors) :colors
+	localmake "c2 item :index2 :colors
+	localmake "ratio (:ratio * count :colors)
+	localmake "ratio :ratio - int :ratio
+	output mix :c2 :c1 :ratio
+end
+
+to hexagonArcs :size :minSize
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "numScales 70
+	setPenSize :size * 0.005
+	repeat :numScales [
+		localmake "scaleRatio repcount / :numScales
+		localmake "scaleAngle :oldHeading + :scaleRatio * 60
+		localmake "size1 mix :size :minSize :scaleRatio
+		setHeading :scaleAngle
+		repeat 6 [
+			jumpForward :size1
+			localmake "p1 pos
+			jumpTo :oldPos
+			localmake "newHeading :scaleAngle + repcount * 360 / 6
+			setHeading :newHeading
+			jumpForward :size1
+			setHeading towards :p1
+			setPenColor getColor (:scaleRatio + repcount - 1) / 6
+			forward distance :p1
+			jumpTo :oldPos
+			setHeading :newHeading
+		]
+	]
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to completeHexSpiral :size
+	localmake "size1 :size
+	repeat 5 [
+		localmake "minSize1 :size1 * 0.4
+		hexagonArcs :size1 :minSize1
+		localmake "size1 :minSize1
+		right 180
+	]
+end
+
+setScreenColor "black
+completeHexSpiral 300

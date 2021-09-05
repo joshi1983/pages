@@ -1,0 +1,43 @@
+PROGRAM DemArc
+
+! This program demonstrates how to construct and show the
+! several arc-shaped graphics objects.
+
+LIBRARY "TrueCtrl.trc"
+
+CALL TC_Init
+
+SET WINDOW -9, 9, -6, 6
+
+CALL TC_Show (0)                  ! Use the default output window
+CALL TC_Win_Active (0)            ! Move it to the front
+
+CALL TC_Show_Default (0)          ! Don't show objects upon creation
+
+! We will now create and several arc segments,
+! with increasing radii.
+
+DIM id(8)
+
+! Increasing sized arcs, with increasing widths, and with
+! colors changing.
+
+FOR i = 1 to 8
+    CALL TC_Graph_Create (id(i), "ARC", -i, i, -i, i)
+    CALL TC_Graph_SetPen (id(i), i, i, "", "")
+    CALL TC_Graph_SetArc (id(i), -45, 45)
+    CALL TC_Show (id(i))
+NEXT i
+
+PRINT "Press Escape to quit."
+DO
+   CALL TC_Event (0, event$, window, x1, x2)
+
+   IF event$ = "HIDE" then EXIT DO
+   IF event$ = "KEYPRESS" and x1 = 27 then EXIT DO    ! Escape key
+
+LOOP
+
+CALL TC_Cleanup
+
+END

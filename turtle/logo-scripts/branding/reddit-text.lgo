@@ -1,0 +1,146 @@
+to redditR :size
+	localmake "oldState turtleState
+	localmake "penSize1 :size * 0.133
+	setPenSize :penSize1
+	setLineCap "round
+	jumpLeft :size * 0.138
+	jumpForward :size * 0.085
+	forward :size * 0.54
+	jumpBackward :size * 0.25
+	jumpRight penSize / 2
+	right 5
+	setPenSize 0
+	setFillColor penColor
+	polyStart
+	arcRight 20 :size * 0.26
+	arcRight 20 :size * 0.2
+	arcRight 53 :size * 0.182
+	arcLeft 180 :penSize1 * 0.5
+	arcLeft 56 :size * 0.27
+	polyEnd
+	setTurtleState :oldState
+end
+
+to redditE :size
+	localmake "oldState turtleState
+	localmake "width1 :size * 0.505
+	localmake "arcRadius1 :size * 0.025
+	setLineCap "round
+	jumpForward :size * 0.3685
+	right 90
+	jumpBackward :width1 * 0.45
+	setPenSize :size * 0.11704
+	forward :width1 * 0.904
+	arcLeft 90 :arcRadius1
+	setPenSize :size * 0.135
+	jumpLeft :size * 0.072
+	setPenSize 0
+	setFillColor penColor
+	left 8
+	polyStart
+	arcLeft 40 :size * 0.23
+	arcLeft 85 :size * 0.16
+	arcLeft 40 :size * 0.23
+	arcLeft 14 :size * 0.3
+	arcLeft 40 :size * 0.23
+	arcLeft 55 :size * 0.16
+	arcLeft 32.5 :size * 0.23
+	arcRight 178 :size * 0.0675
+	arcRight 120 :size * 0.32
+	arcRight 35 :size * 0.42
+	arcRight 60 :size * 0.322
+	arcRight 40 :size * 0.27
+	arcRight 57 :size * 0.3448
+	polyEnd
+	setTurtleState :oldState
+end
+
+to redditD :size
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "arcRadius1 :size * 0.25
+	localmake "arcRadius2 :size * 0.16
+	localmake "straightPenSize :size * 0.133 
+	jumpRight :size * 0.252
+	jumpForward :size * 0.085
+	setLineCap "round
+	setPenSize :straightPenSize
+	forward :size * 0.15
+	jumpRight :size * 0.01
+	setPenSize :straightPenSize - :size * 0.02
+	forward :size * 0.25
+	jumpLeft :size * 0.01
+	setPenSize :straightPenSize
+	forward :size * 0.445
+	jumpTo :oldPos
+	jumpForward :size * 0.355
+	jumpRight :size * 0.2
+	setPenSize 0
+	setFillColor penColor
+	polyStart
+	arcLeft 40 :arcRadius1
+	arcLeft 96 :arcRadius2
+	arcLeft 83 :arcRadius1
+	arcLeft 96.08 :arcRadius2
+	arcLeft 44.3 :arcRadius1
+	arcRight 180 :size * 0.0585
+	arcRight 48 :size * 0.38
+	left 2
+	arcRight 25 :size * 0.26
+	arcRight 30 :size * 0.23
+	arcRight 60 :size * 0.34
+	arcRight 60 :size * 0.38
+	arcRight 40 :size * 0.29
+	arcRight 120 :size * 0.27
+	arcRight 160 :size * 0.0311
+	polyEnd
+	setTurtleState :oldState
+end
+
+to redditI :height
+	localmake "oldState turtleState
+	jumpForward :height * 0.082
+	setPenSize :height * 0.13
+	setLineCap "round
+	forward :height * 0.485
+	jumpForward :height * 0.24
+	setFillColor "#ff4500
+	setPenSize 0
+	circle :height * 0.1175
+	setTurtleState :oldState
+end
+
+to redditT :height
+	localmake "oldState turtleState
+	localmake "width :height * 0.25
+	jumpForward :height * 0.084
+	setPenSize :height * 0.131
+	setLineCap "round
+	forward :height * 0.7
+	jumpBackward :height * 0.153
+	jumpLeft :width / 2
+	right 90
+	setPenSize :height * 0.115
+	forward :width
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Reddit#/media/File:Reddit_logo.svg
+to redditTextLogo :height
+	setPenColor "#222
+	jumpLeft :height * 1.37
+	redditR :height
+	jumpRight :height * 0.528
+	redditE :height
+	jumpRight :height * 0.66
+	redditD :height
+	jumpRight :height * 0.69
+	redditD :height
+	jumpRight :height * 0.545
+	redditI :height
+	jumpRight :height * 0.336
+	redditT :height
+end
+
+redditTextLogo 100

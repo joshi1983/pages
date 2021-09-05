@@ -1,0 +1,73 @@
+make "grcaBlue "#0078A9
+
+to grcaTreeAndLand :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "arcAngle 124
+	localmake "grcaGreen "#7EA52E
+	setLineCap "butt
+	setPenColor :grcaGreen
+	setPenSize :height * 0.028
+	forward :height * 0.756
+	setPenSize 0
+	setFillColor penColor
+	circle :height * 0.193
+
+	jumpTo :oldPos
+	setPenSize 0
+	setFillColor :grcaGreen
+	drawArcLineShape [-0.5 0.5
+		[[180 0] [180 0.5]]
+	] :height
+	setFillColor :grcaBlue
+	jumpForward :height / 2
+	localmake "center pos
+	right 180 - :arcAngle / 2
+	jumpForward :height / 2
+	polyStart
+	right 90
+	arcRight :arcAngle :height / 2
+	polyEnd
+		
+	setHeading :oldHeading
+	jumpTo :center
+	setPenColor :grcaBlue
+	setPenSize :height * 0.023
+	setFillColor transparent
+	circle (:height - penSize) / 2
+	setTurtleState :oldState
+end
+
+to labelArc :arcRadius :angleSpan :s
+	localmake "oldState turtleState
+	localmake "turnAngle 90 + :angleSpan / 2 / count :s
+	localmake "center pos
+	localmake "oldHeading heading
+	repeat count :s [
+		setHeading :oldHeading + :angleSpan * (repRatio - 0.5)
+		jumpForward :arcRadius
+		right :turnAngle
+		label item repcount :s
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://www.grandriver.ca
+to grcaLogo :height
+	localmake "oldState turtleState
+	localmake "innerHeight :height * 0.667
+	jumpForward :height / 2
+	setPenColor :grcaBlue
+	setFillColor "white
+	setPenSize :height * 0.008
+	circle (:height - penSize) / 2
+	jumpBackward :innerHeight / 2
+	grcaTreeAndLand :innerHeight
+
+	setTurtleState :oldState
+end
+
+grcaLogo 100

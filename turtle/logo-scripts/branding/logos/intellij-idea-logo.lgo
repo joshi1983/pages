@@ -1,0 +1,128 @@
+make "iWidthFactor 0.58
+make "thicknessFactor 0.19
+make "ijOrange "#ff8500
+make "ijPink "#ff295c
+make "angle1 8
+
+to drawI :height
+	localmake "oldState turtleState
+	localmake "width :height * :iWidthFactor
+	localmake "thickness :height * :thicknessFactor
+	setPenSize 0
+	stripes :thickness :height [fillColor]
+	stripes :width :thickness [fillColor]
+	jumpForward :height - :thickness
+	stripes :width :thickness [fillColor]
+	setTurtleState :oldState
+end
+
+to drawJ :height
+	localmake "oldState turtleState
+	localmake "thickness :height * :thicknessFactor
+	localmake "width :height * 0.47
+	localmake "arcRadius :height * 0.2
+	localmake "straightWidth :width - :arcRadius - :thickness / 2
+	setLineCap "butt
+	setPenColor fillColor
+	setPenSize :thickness
+	jumpForward :thickness / 2
+	jumpLeft :width / 2
+	right 90
+	forward :straightWidth
+	arcLeft 90 :arcRadius
+	forward :height - :arcRadius - :thickness / 2
+
+	setTurtleState :oldState
+end
+
+to drawForegroundTerminal :height
+	localmake "oldState turtleState
+	localmake "padding :height * 0.125
+	localmake "lowerWidth :height * 0.4
+	localmake "thickness :height * 0.073
+	localmake "fontHeight :height * 0.38
+	stripes :height :height ["black]
+	jumpLeft (:height - :lowerWidth) / 2 - :padding
+	jumpForward :padding
+	stripes :lowerWidth :thickness ["white]
+	jumpLeft :lowerWidth / 2
+	jumpForward :height - :padding * 2 - :fontHeight
+	setFillColor "white
+	jumpRight :fontHeight * :iWidthFactor / 2
+	drawI :fontHeight
+	jumpRight :fontHeight * 0.63
+	drawJ :fontHeight
+	setTurtleState :oldState
+end
+
+to drawOrangeShape :height
+	localmake "oldState turtleState
+	localmake "radius1 0.06
+	localmake "angle1 47
+	localmake "angle2 46.5
+	setFillColor :ijOrange
+	setPenSize 0
+	drawArcLineShape [0.35 0.092
+		[[-90 0] [90 :radius1] [0.16] [:angle1 0] [0.85]
+		[90 - :angle1 :radius1] [0.18] [90 0.065] [0.15]
+		[:angle2 0] [0.849] [90- :angle2 :radius1]]
+	] :height
+
+	setTurtleState :oldState
+end
+
+to drawOrangeToPinkShape :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "colorStops createPList2 [
+		[0 :ijOrange] [0.6 :ijPink]
+	]
+	localmake "height1 0.69286
+	setPenSize 0
+	jumpForward :height * :height1
+	setFillGradient createLinearGradient  pos :oldPos :colorStops "pad
+	jumpTo :oldPos
+	drawArcLineShape [-0.49757 :height1
+		[[180 0] [:angle1 0.5] [0.4] [90 - :angle1 0] [0.5] [90 0]
+		[0.4]]
+	] :height
+	setTurtleState :oldState
+end
+
+to drawPinkToBlueShape :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "colorStops createPList2 [
+		[0 :ijPink] [1 "#007cfd]
+	]
+	localmake "angle2 34
+	right 45
+	jumpForward :height * 0.8
+	setFillGradient createLinearGradient :oldPos pos :colorStops "pad
+	setPenSize 0
+	jumpTo :oldPos
+	setHeading :oldHeading
+	drawArcLineShape [-0.43707 0.22729
+		[[180 + :angle1 0] [0.18] [90 - :angle1 0.05697]
+		[0.29] [:angle2 0.05] [0.6] [90 - :angle2 0.08]
+		[0.533] [90 0.055] [0.52] [67.5 0.085] [0.5]]
+	] :height
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://www.youtube.com/@intellijidea
+to intelliJIdeaLogo :height
+	localmake "oldState turtleState
+	localmake "foregroundHeight :height * 0.621
+	drawOrangeShape :height
+	drawOrangeToPinkShape :height
+	drawPinkToBlueShape :height
+	jumpForward (:height - :foregroundHeight) / 2
+	drawForegroundTerminal :foregroundHeight
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+intelliJIdeaLogo 100

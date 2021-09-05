@@ -1,0 +1,70 @@
+to getGradients :height
+	localmake "oldPos pos
+	localmake "darkColor "#222
+	localmake "redColor "#f38 
+	localmake "redColorStops createPList2 [
+		[0 :redColor] [0.1 :redColor] [1 :darkColor]
+	]
+	localmake "blueColor "#08f 
+	localmake "blueColorStops createPList2 [
+		[0 :blueColor] [0.1 :blueColor] [1 :darkColor]
+	]
+	localmake "blueGradient createRadialGradient pos :height * 0.5 :blueColorStops
+	jumpForward :height * 0.1
+	jumpLeft :height * 0.2
+	localmake "redGradient createRadialGradient pos :height * 0.5 :redColorStops
+	localmake "result [
+		:redGradient
+		:blueGradient	
+		:blueGradient	
+		:blueGradient	
+	]
+	jumpTo :oldPos
+	output :result
+end
+
+; Inspired by logo at:
+; https://www.qnb.com
+to qnbLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "thickness 0.1
+	localmake "lines1 [
+		[-90 0] [:thickness / 2] [-90 0] [0.25]
+		[135 0]
+	]
+	localmake "arcAngle1 12
+	localmake "bottomCornerRadiusFactor 0.06
+	localmake "bottomCornerRadius :height * :bottomCornerRadiusFactor
+	setPenSize 0
+	jumpForward :height / 2
+	localmake "center pos
+	localmake "gradients getGradients :height
+	repeat count :gradients [
+		setHeading :oldHeading + (repcount - 1) * 360 / 4
+		setFillGradient item repcount :gradients
+		jumpForward :height / 2
+		localmake "top pos
+		polyStart
+		arcLines :lines1 :height
+		localmake "len1 distanceToCircle :center :height / 2
+		jumpForward :len1
+		localmake "angle1 (towards :center) - 90 - heading
+		right :angle1
+		arcRight :arcAngle1 :height / 2
+		localmake "angle2 180 - (:angle1 + :arcAngle1)
+		right :angle2
+		localmake "len2 distanceToLine :top :center
+		localmake "len3 :len2 - :bottomCornerRadius
+		arcLines [[:len3 / :height] [-90 :bottomCornerRadiusFactor]
+		[:len3 / :height] [-:angle2 0] [-:arcAngle1 0.5] [-:angle1 0]
+		[:len1 / :height]] :height
+		arcLines reverse :lines1 :height
+		polyEnd
+		jumpTo :center
+	]
+
+	setTurtleState :oldState
+end
+
+qnbLogo 100

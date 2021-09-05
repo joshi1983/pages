@@ -1,0 +1,30 @@
+; Inspired by a drawing and program at:
+; https://www.youtube.com/watch?v=LrTxH0_3VvU
+to soccerBall :height
+	localmake "oldState turtleState
+	localmake "patternRadius :height * 0.36
+	setPenSize :height * 0.02
+	localmake "circleRadius (:height - penSize) / 2
+	localmake "pentagonSize1 (:circleRadius - :patternRadius) * 1.1
+	setFillColor "white
+	setPenColor "black
+	jumpForward :height / 2
+	circle :circleRadius
+	setPenSize penSize / 2
+	circle :patternRadius
+	localmake "center pos
+	setFillColor penColor
+	right 180
+	repeat 5 [
+		forward :patternRadius
+		right 180 / 5
+		regularPolygon :pentagonSize1 5
+		right 180 / 5
+		jumpTo :center
+	]
+	regularPolygon :pentagonSize1 * 1.1 5
+	setTurtleState :oldState
+end
+
+setScreenColor "#fd0
+soccerBall 100

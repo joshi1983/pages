@@ -1,0 +1,31 @@
+; Inspired by logo at:
+; https://en.wikipedia.org/wiki/Polestar#/media/File:Polestar_logo_2020.svg
+to poleStarLogo :height
+	localmake "oldState turtleState
+	localmake "angle1 140.6
+	localmake "len1 0.031
+	localmake "lines1 [[:angle1 0] [:len1] [180 - :angle1 0] [0.4655]]
+	jumpForward :height / 2
+	setPenSize 0
+	setFillColor "#c8c8c6
+	repeat 2 [
+		drawArcLineShape [0.0235 0.5
+			combine :lines1 [[90 0]
+			[0.117]]
+		] :height
+		right 180
+	]
+	setFillColor "white
+	repeat 2 [
+		drawArcLineShape [0.4935 0.03
+			(combine [[-90 0]] flipAngles :lines1 [[-135 0]
+			[0.138]])
+		] :height
+		right 180
+	]
+
+	setTurtleState :oldState
+end
+
+setScreenColor "#081822
+poleStarLogo 100

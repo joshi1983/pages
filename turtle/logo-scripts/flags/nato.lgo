@@ -1,0 +1,136 @@
+make "natoDarkBlue "#004990
+make "natoLightBlue "#0b89c6
+
+to natoCrossHairCenter :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "angle1 57.5
+	localmake "angle2 174.8
+	localmake "angle3 54
+	localmake "size1 :height * 0.067
+	localmake "size2 :height * 0.19
+	localmake "size3 :height * 0.180330032
+	localmake "size4 :height * 0.19452353
+
+	setPenSize 0
+	setFillColor "white
+	repeat 4 [
+		setHeading 45 + 360 * repcount / 4
+		polyStart
+		jumpForward :size1
+		left :angle1
+		jumpForward :size2
+		right :angle2
+		jumpForward :size3
+		left :angle3
+		jumpForward :size4
+		polyEnd
+		jumpTo :oldPos
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/NATO#/media/File:Flag_of_NATO.svg
+to natoFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 4 / 3
+	stripes :width :height [:natoDarkBlue]
+	localmake "crossHairGapSize :height * 0.284
+
+	setPenColor "white
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize :height * 0.0115
+	repeat 2 [
+		jumpForward :crossHairGapSize
+		forward :height * 0.117
+		jumpTo :center
+		right 180
+	]
+	right 90
+	repeat 2 [
+		jumpForward :crossHairGapSize
+		forward :height * 0.2835
+		jumpTo :center
+		right 180
+	]
+	setPenSize :height * 0.014
+	setPenColor "white
+	circle :height * 0.186
+	setPenSize 0
+	setFillColor :natoDarkBlue
+	isotoxalStar :height * 0.28 :height * 0.105 4
+	natoCrossHairCenter :height
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/NATO#/media/File:NATO_OTAN_landscape_logo.svg
+to natoLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "radius1 :height * 0.257
+	localmake "radius2 :radius1 * 1.043
+	localmake "angle1 11.8
+	localmake "angle2 60.5
+	; some extra math would help us calculate these numbers more accurately.
+	; In the interest of getting this done faster, the extra math is 
+	; skipped for now.
+	localmake "angle3 178.5 - :angle2
+	localmake "arcAngle1 90 - :angle1 * 2
+	localmake "arcAngle2 :arcAngle1 * 1.043
+	localmake "size1 (:radius2 - :radius1) / 0.8703557
+	localmake "width :height
+	setLineCap "butt
+	setPenColor :natoDarkBlue
+	setPenSize :width
+	forward :height
+	jumpRight :width / 4
+	setPenSize :width / 2
+	setPenColor :natoLightBlue
+	backward :height / 2
+	jumpLeft :width / 2
+	backward :height / 2
+	jumpForward :height / 2
+	jumpRight :width / 4
+
+	localmake "center pos	
+	natoCrossHairCenter :height * 1.36
+	setPenSize 0
+	setFillColor "white
+	repeat 4 [
+		setHeading :oldHeading + repcount * 360 / 4
+		jumpForward :radius1
+		right 90
+		arcRight :angle1 :radius1
+		polyStart
+		arcRight :arcAngle1 :radius1
+		left :angle2
+		jumpForward :size1
+		left :angle3
+		arcLeft :arcAngle2 :radius2
+		polyEnd	
+		jumpTo :center
+	]
+	jumpTo :center
+	localmake "crossHairGapSize :height * 0.375
+	setPenColor "white
+	setPenSize :height * 1.36 * 0.0115
+	repeat 4 [
+		setHeading :oldHeading + repcount * 360 / 4
+		jumpForward :crossHairGapSize
+		forward :height / 2 - :crossHairGapSize
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+; Make white of the logo and flag look brighter by comparison
+setScreenColor "#eee
+make "height 100
+make "separation :height * 4
+jumpLeft :separation / 2
+natoFlag :height
+jumpRight :separation
+natoLogo :height

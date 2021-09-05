@@ -1,0 +1,19 @@
+; Inspired by flag at:
+; https://en.wikipedia.org/wiki/List_of_Zimbabwean_flags#/media/File:Flag_of_ZANU-PF.svg
+to ZANU_PFFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 2
+	localmake "colors ["#319208 "#ffd200 "#de2010 "black]
+	localmake "step :height / (-0.5 + count :colors)
+	setPenSize 0
+	jumpForward :height / 2
+	repeat count :colors [
+		setFillColor item repcount :colors
+		localmake "width1 :width - (repcount - 1) * :step
+		localmake "height1 :height - (repcount - 1) * :step
+		rect :width1 :height1
+	]
+	setTurtleState :oldState
+end
+
+ZANU_PFFlag 100

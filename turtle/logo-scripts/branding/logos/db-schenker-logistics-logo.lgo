@@ -1,0 +1,95 @@
+make "leftThicknessFactor 0.24
+make "widthFactor 1.428
+
+to drawD :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "width :height * 0.769	
+	localmake "leftThickness :height * :leftThicknessFactor
+	localmake "rightLines1 [
+		[10 1] [10 0.55] [10 0.38] [25 0.35]
+		[20 0.3] [10 0.5] [5 0.7476699] [0.12]
+		[180 0.079] [0.05] [-10 0.45] [-20 0.18]
+		[-15 0.19] [-15 0.15] [-10 0.25] [-10 0.32]
+		[-10 0.9164]
+	]
+	jumpLeft (:width - :leftThickness) / 2
+	stripes :leftThickness :height [penColor]
+	setFillColor penColor
+	setPenSize 0
+	jumpTo :oldPos
+	drawArcLineShape [:width / 2 / :height 0.5
+		combine :rightLines1 reverse :rightLines1
+	] :height
+	setTurtleState :oldState
+end
+
+to drawB :height
+	localmake "oldState turtleState
+	localmake "width :height * 0.75
+	localmake "leftThickness :height * :leftThicknessFactor
+	localmake "rightLines1 [
+		[0.27] [20 0.555] [40 0.25] [20 0.22]
+		[10 0.32] 
+	]
+	localmake "rightLines2 (combine [[-90 0]] :rightLines1 reverse :rightLines1)
+	localmake "rightInnerLines1 [
+		[180 0.0615] [0.23] [-20 0.22] [-20 0.13] [-40 0.1] [-10 0.195]
+	]
+	localmake "rightLines3 (combine :rightLines2 :rightInnerLines1 reverse :rightInnerLines1)
+	jumpLeft (:width - :leftThickness) / 2
+	stripes :leftThickness :height [penColor]
+	setPenSize 0
+	setFillColor penColor
+	drawArcLineShape [0 0
+		:rightLines3
+		] :height
+	jumpForward :height
+	right 180
+	drawArcLineShape [0 0
+		:rightLines3
+		] -:height * 0.94
+
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://www.dbschenker.com
+to dbSchenkerLogisticsLogo :height :color
+	localmake "oldState turtleState
+	localmake "fontHeight :height * 0.655
+	localmake "width :height * :widthFactor
+	setFillColor transparent
+	setPenSize :height * 0.103
+	setPenColor :color
+	jumpForward :height / 2
+	print :height * 1.325 + penSize
+	roundRect :width - penSize :height - penSize :height * 0.09
+	jumpLeft :height * 0.268
+	jumpBackward :fontHeight / 2
+	drawD :fontHeight
+	jumpRight :height * 0.564
+	drawB :fontHeight
+	setTurtleState :oldState
+end
+
+; Inspired by favicon(web browser tab icon)
+; at https://www.dbschenker.com
+to dbSchenkerLogisticsFavicon :height
+	localmake "oldState turtleState
+	localmake "innerHeight :height / :widthFactor
+	jumpForward :height / 2
+	setPenSize 0
+	setFillColor "#167d86
+	roundRect :height :height :height * 0.125
+	jumpBackward :innerHeight / 2
+	dbSchenkerLogisticsLogo :innerHeight "white 
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 5
+jumpLeft :separation / 2
+dbSchenkerLogisticsLogo :height "#ec0016
+jumpRight :separation
+dbSchenkerLogisticsFavicon :height

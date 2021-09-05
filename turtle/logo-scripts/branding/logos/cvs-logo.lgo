@@ -1,0 +1,28 @@
+; Inspired by logo at:
+; https://en.wikipedia.org/wiki/CVS_Pharmacy#/media/File:CVS_Logo_2016.svg
+to cvsLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "len1 0.8
+	localmake "len2 0.29
+	localmake "arcRadius (1 - (:len1 + :len2) * cos 45) / (1 / (cos 45) + 1 - cos 45)
+	localmake "line1 [
+		[45 0] [:len1] [-90 :arcRadius] [:len2] [-90 :arcRadius]
+	]
+	setPenSize 0
+	setFillColor "#c00
+	jumpForward :height
+	localmake "topPos pos
+	jumpTo :oldPos
+	polyStart
+	arcLines :line1 :height
+	localmake "len3 distanceToLine :oldPos :topPos
+	jumpForward :len3
+	left 90
+	jumpForward :len3
+	arcLines reverse :line1 :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+cvsLogo 100

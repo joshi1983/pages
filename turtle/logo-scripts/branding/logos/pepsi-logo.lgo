@@ -1,0 +1,50 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Pepsi#/media/File:Pepsi_logo_2014.svg
+to pepsiLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "radius :height / 2
+	setPenSize 0
+	jumpForward :radius
+	setFillColor "white
+	; white circle in the background
+	circle :radius
+	localmake "center pos
+	localmake "size1 :height * 0.38365
+	jumpLeft :size1
+
+	; This math helps us move to a point exactly on the circumference of the circle.
+	jumpBackward sqrt :radius * :radius - :size1 * :size1
+	setFillColor "#005891
+	right 73
+	setPenSize 0
+	polyStart
+	arcRight 3 :height * 3.2
+	arcRight 2.4 :height * 4.3
+	arcLeft 3.4 :height * 2.4
+	arcLeft 12.7 :height * 0.75
+	arcLeft 79.14492 :height * 0.3524
+	setHeading (towards :center) - 90
+	arcRight 172.96 :radius
+	polyEnd
+
+	jumpTo :center
+	setHeading :oldHeading
+	localmake "size1 :height * 0.40246
+	jumpLeft :size1
+
+	; Similar to previous math,
+	; we want to get exactly on the edge of the circle
+	jumpBackward sqrt :radius * :radius - :size1 * :size1
+	setFillColor "#EB1D39
+	setHeading (towards :center) - 90
+	polyStart
+	arcRight 163.29 :radius
+	right 70
+	arcRight 56.7 :height * 1.04155
+	polyEnd
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+pepsiLogo 100

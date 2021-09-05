@@ -1,0 +1,92 @@
+; objects detected by radar
+; Each object's position is defined by polar angle and radius.
+make "objects [
+	[60 0.5]
+	[130 0.2]
+	[200 0.8]
+	[330 0.65]
+]
+
+to lineWithTrail :radius
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "numRepeats 32
+	setPenSize 0
+	repeat :numRepeats [
+		localmake "arcAngle repcount * 60 / :numRepeats
+		setFillColor mix "#20f0 "#0200ff00 power 1 - repRatio 3
+		polyStart
+		jumpForward :radius
+		left 90
+		arcLeft :arcAngle :radius
+		polyEnd
+		jumpTo :oldPos
+		setHeading :oldHeading
+	]
+end
+
+to radarScreen :radius :timeRatio
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "timeRatio clamp :timeRatio 0 1
+	localmake "outerThickness :radius * 0.08
+	localmake "innerRadius :radius - :outerThickness
+	localmake "minDotSize :radius * 0.02
+	localmake "maxDotSize :radius * 0.03
+	localmake "currentAngle (1 - :timeRatio) * 360
+	setPenSize :outerThickness
+	setPenColor "#555
+	setFillColor "#233423
+	circle :radius - :outerThickness / 2
+	setPenColor "lime
+	setPenSize :radius * 0.005
+	setFillColor transparent
+	repeat 3 [
+		circle :innerRadius * mix 0.15 0.75 repRatio
+	]
+	setPenSize penSize / 2
+	setPenColor "#8dfb
+	repeat 2 [
+		jumpBackward :innerRadius
+		forward :innerRadius * 2
+		jumpTo :oldPos
+		right 90
+	]
+	setHeading :oldHeading + 90 - :currentAngle
+	lineWithTrail :innerRadius
+	setHeading :oldHeading
+	repeat count :objects [
+		localmake "objectInfo item repcount :objects
+		localmake "angle item 1 :objectInfo
+		localmake "distance :innerRadius * item 2 :objectInfo
+		jumpForward :distance * sin :angle
+		jumpRight :distance * cos :angle
+
+		; make dot fainter based on how far the angle of the object is from the arm
+		localmake "angleDifferenceRatio (remainder 360 + :angle - :currentAngle 360) / 100
+		localmake "angleDifferenceRatio clamp :angleDifferenceRatio 0 1
+		setFillColor mix "#40f0 "#fff :angleDifferenceRatio
+
+		; make the dot size bigger shortly after scanning to make it easier to 
+		; see and exagurate brightness.
+		localmake "dotSize1 mix :minDotSize :maxDotSize :angleDifferenceRatio
+		circle :dotSize1
+		jumpTo :oldPos
+	]
+end
+
+setScreenColor "#000
+radarScreen 280 animation.timeRatio
+
+to animation.snapshotstyle
+	output createPList
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 3
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

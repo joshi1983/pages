@@ -1,0 +1,41 @@
+to drawSquare :size :rotationDegrees
+	localmake "oldState turtleState
+	localmake "triangleHeight :size / 2
+	localmake "center pos
+	localmake "colors ["#428fc9 "#77bce5 "#2d366a "#afb0b1]
+	left :rotationDegrees
+	setPenSize 0
+	repeat count :colors [
+		setFillColor item repcount :colors
+		jumpBackward :triangleHeight
+		isoTriangle :size :triangleHeight
+		jumpTo :center
+		right 90
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by favicon(browser tab icon) at:
+; https://www.eternityintlgroup.com
+to eternityInternationalGroupFavicon :height
+	localmake "oldState turtleState
+	localmake "squareSize :height / 6 / cos 45
+	localmake "rotation 0
+	jumpLeft :squareSize * 2.5 * cos 45
+	right 45
+	repeat 3 [
+		jumpForward :squareSize
+		drawSquare :squareSize :rotation
+		localmake "rotation :rotation + 90
+	]
+	localmake "rotation :rotation + 90
+	left 90
+	repeat 2 [
+		jumpForward :squareSize
+		drawSquare :squareSize :rotation
+		localmake "rotation :rotation - 90
+	]
+	setTurtleState :oldState
+end
+
+eternityInternationalGroupFavicon 100

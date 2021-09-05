@@ -1,0 +1,29 @@
+; Inspired by logo in:
+; https://en.wikipedia.org/wiki/Macromedia#/media/File:Macromedia_logo.svg
+to macromediaLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "thickness :height * 0.53
+	localmake "angle 45
+	localmake "len (:height - :thickness) / cos :angle
+	localmake "offset :thickness / sin :angle
+	setLineCap "round
+	setLineJoinStyle "round
+	setPenSize :thickness
+	jumpLeft (:len * 2 * (sin :angle) + :offset) / 2
+	jumpForward penSize / 2
+	right :angle
+	setPenColor "black
+	forward :len
+	setHeading :oldHeading
+	jumpRight :offset
+	setPenColor "#4764AF
+	right :angle
+	jumpBackward :len
+	forward :len 
+	right 180 - :angle * 2
+	forward :len
+	setTurtleState :oldState
+end
+
+macromediaLogo 100

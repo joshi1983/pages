@@ -1,0 +1,89 @@
+; Inspired by logo of the Sphere Corportation shown in lower right corner of:
+; https://upload.wikimedia.org/wikipedia/commons/3/3f/Sphere_Personal_Computer_Ad_January_1976.jpg
+; Also referenced from:
+; https://en.wikipedia.org/wiki/Sphere_1
+; Sphere 1 released in 1975 
+; was considered to be the first true Personal Computer by Byte magazine.
+
+to getArcAngle :circleGap :radius
+	if :circleGap >= :radius * 2 [
+		output 0
+	]
+	output arcCos :circleGap / (2 * :radius)
+end
+
+to halfCircle :radius
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "gap :radius * 0.08
+	setPenSize :radius * 0.025
+	localmake "radius1 :radius - penSize / 2
+	localmake "angle1 arcSin :gap / :radius1
+	localmake "arcAngle 180 - 2 * :angle1
+	localmake "halfChordLength sqrt (:radius1 * :radius1 - :gap * :gap / 4)
+	localmake "numArcs 12
+	localmake "step1 :radius * 2 / :numArcs
+	localmake "step2 :radius * 2 / 12.3
+	jumpForward :gap
+	jumpLeft :halfChordLength
+	localmake "leftBottomCorner pos
+	right :angle1
+	setFillColor transparent
+	polyStart
+	arcRight :arcAngle :radius1
+	polyEnd
+
+	; Draw thin arcs.
+	setHeading :oldHeading
+	setPenSize penSize / 2
+	repeat :numArcs - 1 [
+		jumpLeft :step1
+		localmake "pos1 pos
+		localmake "angle (getArcAngle :step1 * repcount :radius1) - :angle1
+		if :angle > 0 [
+			left :angle1
+			arcLeft :angle :radius1
+		]
+		setHeading :oldHeading
+		jumpTo :pos1
+	]
+
+	; Draw thick arcs.
+	localmake "penSize1 penSize * 3
+	setPenSize 0
+	setFillColor penColor
+	setHeading :oldHeading
+	jumpTo :leftBottomCorner
+	jumpRight :penSize1 * 1.9
+	repeat :numArcs / 2 [
+		localmake "pos1 pos
+		localmake "angle (getArcAngle :step2 * (repcount - 1) :radius1) - :angle1 - 2
+		localmake "angle2 mix 140 157 repRatio
+		; Angles here to prevent the thick lines from reaching past the outer-most arc. 
+		right :angle1
+		polyStart
+		arcRight :angle :radius1
+		left :angle2
+		jumpForward :penSize1
+		left 178.5 - :angle2
+		arcLeft :angle * 1.03 :radius1		
+		polyEnd
+
+		setHeading :oldHeading
+		jumpTo :pos1
+		jumpRight :step2
+	]
+	setTurtleState :oldState
+end
+
+to sphereCorportationLogo :radius
+	localmake "oldState turtleState
+	jumpForward :radius
+	setPenColor "black
+	halfCircle :radius
+	right 180
+	halfCircle :radius
+	setTurtleState :oldState
+end
+
+sphereCorportationLogo 100

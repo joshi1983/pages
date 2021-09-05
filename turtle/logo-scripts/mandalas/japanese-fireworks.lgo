@@ -1,0 +1,55 @@
+to drawWhiteShape :height
+	localmake "oldState turtleState
+	localmake "radius :height * 0.3
+	jumpForward :height - :radius
+	circle :radius
+	right 180
+	isoTriangle :radius * 0.5 :height - :radius	
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://www.pinterest.ca/pin/341851427963058095
+to japanFireworks :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "numOrangeLines 64
+	localmake "whiteShapeLength :height * 0.12
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	setFillColor "orange
+	isotoxalStar :height * 0.16 :height * 0.08 24
+	isotoxalStar :height * 0.2 :height * 0.02 16
+	setPenColor fillColor
+	setLineCap "round
+	setPenSize :height * 0.006
+	repeat :numOrangeLines [
+		setHeading :oldHeading + repcount * 360 / :numOrangeLines
+		jumpForward :height * 0.17 * (1 + randomRatio)
+		forward :height * 0.03 * (1 + randomRatio)
+		jumpTo :center
+	]
+	setFillColor "white
+	setPenSize 0
+	repeat 3 [
+		setHeading :oldHeading
+		localmake "ratio mix 0.5 0.22 repRatio
+		localmake "radius :height * :ratio
+		localmake "innerRadius :radius - :whiteShapeLength
+		localmake "numWhiteShapes int 64 * :ratio
+		if even? repcount [
+			right 180 / :numWhiteShapes
+		]
+		repeat :numWhiteShapes [
+			jumpForward :innerRadius
+			drawWhiteShape :whiteShapeLength			
+			jumpTo :center
+			right 360 / :numWhiteShapes
+		]
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+japanFireworks 100

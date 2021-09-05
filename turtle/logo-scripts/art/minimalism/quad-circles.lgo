@@ -1,0 +1,26 @@
+; Inspired by:
+; https://ca.pinterest.com/pin/140806233689829
+; It is also very similar to:
+; https://ca.pinterest.com/pin/959689001815781588
+to quadCircles :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "circleRadius :height / 4
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	repeat 4 [
+		setHeading :oldHeading + 45 + repcount * 360 / 4
+		jumpForward :circleRadius / cos 45
+		setFillColor "#f80
+		circle :circleRadius
+		setFillColor "#028
+		drawArcLineShape [0 0 
+			[[135 0] [1] [90 0] [90 1]]
+		] :circleRadius
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+quadCircles 100

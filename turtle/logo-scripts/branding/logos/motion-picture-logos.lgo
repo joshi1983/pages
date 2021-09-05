@@ -1,0 +1,96 @@
+to mpaCircle :height :color
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "center pos
+	localmake "thickness :height * 0.06
+	localmake "height1 :height - :thickness
+	localmake "innerRadius1 (:height1 - :thickness) / 2 / (1 + 1 / cos 45)
+	localmake "largeInnerRadius :height1 / 2 - :thickness * 1.6
+	setFillColor transparent
+	setPenColor :color
+	setPenSize :thickness
+	circle :height1 / 2
+	setPenSize 0
+	setFillColor penColor
+	circle :thickness
+	repeat 4 [
+		localmake "heading1 :oldHeading + repcount * 360 / 4
+		setHeading :heading1
+		jumpForward :innerRadius1
+		localmake "pos2 pos
+		localmake "arcAngle1 getArcLeftAngleToCircle :innerRadius1 :center :largeInnerRadius
+		polyStart
+		arcLeft :arcAngle1 :innerRadius1
+		setHeading (towards :center) - 90
+		localmake "arcAngle2 getArcRightAngleToLine :largeInnerRadius :center :pos2
+		arcRight :arcAngle2 * 2 :largeInnerRadius
+		setHeading (towards :pos2) + :arcAngle1 / 2
+		arcLeft :arcAngle1 :innerRadius1
+		polyEnd
+		jumpTo :pos2
+		setHeading :heading1
+		jumpRight :innerRadius1
+		circle :innerRadius1 - :thickness * 1.3
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+to mpaCircleIcon :height
+	localmake "oldState turtleState
+	jumpForward :height / 2
+	mpaCircle :height "#12445f	
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://en.wikipedia.org/wiki/Motion_Picture_Association#/media/File:Motion_Picture_Association_logo_2019.svg
+;
+; It is also shown at:
+; https://www.motionpictures.org
+to mpaLogo :height :color
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "width :height * 2.32
+	localmake "thickness :height * 0.06
+	localmake "height1 :height - :thickness
+	jumpForward :height / 2
+	setPenSize :thickness
+	
+	setFillColor transparent
+	setPenColor :color
+	ellipse :width / 2 :height1 / 2
+	ellipse :width * 0.371 :height1 / 2
+	localmake "center pos
+	repeat 2 [
+		setHeading :oldHeading + 90 + repcount * 180
+		jumpForward :height1 / 2
+		forward (:width - :height1) / 2
+		jumpTo :center
+	]
+	mpaCircle :height :color
+	setTurtleState :oldState
+end
+
+; A white on black version is at:
+; https://www.motionpictures.org
+to mpaWhiteOnBlackLogo :height
+	localmake "oldState turtleState
+	localmake "innerHeight :height * 0.9
+	stripes :height * 3 :height ["black]
+	jumpForward (:height - :innerHeight) / 2
+	mpaLogo :innerHeight "white
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 5
+
+jumpLeft :separation
+mpaLogo :height "black
+
+jumpRight :separation
+mpaCircleIcon :height
+
+jumpRight :separation
+mpaWhiteOnBlackLogo :height

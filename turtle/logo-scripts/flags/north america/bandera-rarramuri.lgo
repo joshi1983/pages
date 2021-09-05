@@ -1,0 +1,67 @@
+; Inspired by:
+; https://en.wikipedia.org/wiki/File:Bandera_raramuri.svg
+to banderaRarramuriFlag :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "width :height * 7 / 4
+	localmake "stripeThickness :height * 0.03125
+	localmake "banderaRed "#cf142b
+	localmake "circleY :height * 0.625
+	localmake "ringRadius :height * 0.236
+	localmake "numNotches 38
+	localmake "crossThickness :height * 0.0375
+	localmake "crossHeight :crossThickness * 8 / 3
+	stripes :width :height ["white]
+	jumpForward :height * 0.09375
+	repeat 3 [
+		stripes :width :stripeThickness [:banderaRed]
+		jumpForward :stripeThickness * 2
+	]
+	jumpTo :oldPos
+	jumpForward :circleY
+	jumpLeft :height * 0.5
+	setPenSize :height * 0.0285
+	setPenColor "#ccc
+	circle :ringRadius
+	localmake "center pos
+	setPenSize 0
+	setFillColor "white
+	repeat :numNotches [
+		jumpForward :ringRadius
+		circle :height * 0.0072
+		right 360 / :numNotches
+		jumpTo :center
+	]
+	setFillColor :banderaRed
+	circle :height * 0.2109
+	setFillColor "white
+	isotoxalStar :height * 0.197 :height * 0.1826 :numNotches
+	jumpLeft :height * 0.09
+	localmake "center pos
+	repeat 2 [
+		jumpBackward :crossThickness / 2
+		stripes :height * 0.11 :crossThickness [:banderaRed]
+		jumpTo :center
+		right 90
+	]
+	setFillColor "white
+	repeat 4 [
+		jumpBackward :height * 0.06
+		isoTriangle :height * 0.06 :height * 0.0255
+		right 90
+		jumpTo :center
+	]
+	circle :crossThickness * cos 45
+	setHeading :oldHeading
+	jumpBackward :crossThickness / 2
+	jumpRight :height * 0.1478
+	stripes :height * 0.166 :crossThickness [:banderaRed]
+	jumpBackward (:crossHeight - :crossThickness) / 2
+	jumpLeft :height * 0.033
+	stripes :crossThickness :crossHeight [:banderaRed]
+	setTurtleState :oldState
+end
+
+setScreenColor "#eee
+banderaRarramuriFlag 100

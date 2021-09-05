@@ -1,0 +1,28 @@
+// copied from: https://codex.kogics.net/codesketch?sketchId=4929
+
+// Borrowed from:
+// http://weblogs.java.net/blog/cayhorstmann/archive/2010/11/12/geometry-problem-scala-0
+// with very small tweaks to make the SPDE code run on Kojo
+
+import Staging._
+import math.Pi
+
+
+val width = 400
+reset()
+def pairs(n : Int) = for (i <- 0 until n; j <- 0 until n; if i < j) yield (i, j)
+
+def point(i : Int, n : Int, width : Int) = 
+  (((cos(i * 2 * Pi / n) + 1) * width / 2).toInt, 
+   ((sin(i * 2 * Pi / n) + 1) * width / 2).toInt)
+
+def draw {
+  val n = 19
+  val points = for (i <- 0 until n) yield point(i, n, width)
+  val lines = for ((i, j) <- pairs(n)) yield (points(i), points(j))
+  for (((x1, y1), (x2, y2)) <- lines) line(x1, y1, x2, y2) 
+}
+
+stroke(yellow)
+background(black)
+draw

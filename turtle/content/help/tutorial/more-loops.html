@@ -1,0 +1,54 @@
+<p>
+The <span class="command">repeat command</span> is very helpful kind of loop but it isn't the only option.
+</p>
+
+<h3>For-Loops</h3>
+<p>The repcount command used with repeat returns a number starting with 1 and increasing 
+by 1 but you might want to start with something other than 1 and increase by something other than 1.
+The <span class="command">for</span> is great for that.</p>
+<p>The following example prints 0 0.5 1 1.5 2 2.5 3</p>
+<code class="pastable">for ["x 0 3 0.5] [<br>
+&nbsp;&nbsp;print :x<br>
+]
+</code>
+<ul>
+	<li>"x is a variable name.  It is given a different value each time the instruction list runs.</li>
+	<li>0 is the value given to variable x in the first run of your repeated instructions.</li>
+	<li>3 is the stop value.  The loop ends when x becomes equal to or beyond the stop value.</li>
+	<li>0.5 is the step value.  The step is added to x each time the repeated instructions run.</li>
+</ul>
+
+<h3>While-Loops</h3>
+<p>Instead of counting how many repetitions you want or adjusting a variable, you might have a more general condition in mind.</p>
+<p>The following example prints random numbers while the random number is not 8.  
+This can't be done as well with for or repeat loop because the number of repetitions is not the point of our loop condition.</p>
+<code class="pastable">make "randomNumber 0<br>
+while :randomNumber &lt;&gt; 8 [<br>
+&nbsp;&nbsp;make "randomNumber random 10<br>
+&nbsp;&nbsp;print :randomNumber<br>
+]</code>
+
+<h3>Until-Loops</h3>
+<p>An <span class="command">until</span> is very similar to <span class="command">while</span> except that the condition means the opposite.  
+<span class="command">Until</span> loops repeat until the condition is true instead of looping while the condition is true.</p>
+<p>The example below behaves the same as the while-loop above except using an <span class="command">until command</span>.</p>
+<code class="pastable">make "randomNumber 0<br>
+until :randomNumber = 8 [<br>
+&nbsp;&nbsp;make "randomNumber random 10<br>
+&nbsp;&nbsp;print :randomNumber<br>
+]</code>
+
+<h3>Do-While Loop</h3>
+<p>A do-while-loop is similar to a while-loop except that the condition is checked after each run of the repeated instructions.</p>
+<p>Since the condition is checked only after a random number is assigned to randomNumber, the <code>make "x 0</code> can be removed as shown below.</p>
+<code class="pastable">do.while [<br>
+&nbsp;&nbsp;make "randomNumber random 10<br>
+&nbsp;&nbsp;print :randomNumber<br>
+] :randomNumber &lt;&gt; 8</code>
+
+<h3>Forever Loops</h3>
+<p>The <span class="command">forever</span> loop is available if you want the loop to never stop.</p>
+<p>The following example will endlessly print random numbers from 0 to 99(inclusive).</p>
+<code class="pastable">forever [<br>
+&nbsp;&nbsp;print random 100<br>
+]</code>

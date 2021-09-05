@@ -1,0 +1,34 @@
+; Inspired by logo at:
+; https://www.redbubble.com
+; It is also at:
+; https://en.wikipedia.org/wiki/Redbubble#/media/File:Redbubble_logo.svg
+to redBubbleLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "arcRadius1 0.01355
+	localmake "angle1 127.4
+	localmake "letterBottom 0.31937
+	jumpForward :height / 2
+	setPenSize 0
+	setFillColor "#e41321
+	circle :height / 2
+	setFillColor "white
+	jumpTo :oldPos
+	drawArcLineShapes [
+		; letter R
+		[-0.0007 :letterBottom [[-90 0] [:angle1 :arcRadius1]
+		[0.1524] [-105.5 0] [50 0.099] [40 0.133] [40 0.095]
+			[23 0.145] [5.1 0.29] [0.1235] [90 :arcRadius1]
+			[0.33375] [90 :arcRadius1]]]
+
+		; letter B
+		[0.0602 :letterBottom [[90 0] [-90 :arcRadius1] [0.33375]
+			[-90 :arcRadius1] [0.13] [-28 0.135] [-40 0.07]
+			[-30 0.133] [-32.1 0.086] [107 0] [-40 0.083] [-20 0.09]
+			[-20 0.16] [-30 0.07] [-35 0.122] [-13 0.25]
+			]]
+	] :height
+	setTurtleState :oldState
+end
+
+redBubbleLogo 100

@@ -1,0 +1,53 @@
+; Inspired by drawing at:
+; https://www.youtube.com/watch?v=LPm3SAI1woo
+to shaGraphicsFlower :height :timeRatio
+	localmake "oldState turtleState
+	localmake "color1 "#b00f
+	localmake "color2 "#bfff
+	localmake "numRepeats 360 * :timeRatio
+	jumpForward :height / 2
+	setPenSize :height * 0.002
+	localmake "radius1 (:height - penSize) / 2
+	right 19
+	jumpForward :radius1
+	right 123
+	repeat :numRepeats [
+		setPenColor :color1
+		arcRight 70 :radius1 * 0.5
+		setPenColor :color2
+		arcLines [[0.4] [-90 0.5] [0.1] [-120 0]] :radius1
+		setPenColor :color1
+		forward :radius1 * 0.08
+		right 100
+		setPenColor :color2
+		arcLines [[-27 0.3] [0.4]] :radius1
+		setPenColor :color1
+		right 180
+		arcLeft 20 :radius1 * 0.6
+		setPenColor :color2
+		arcLeft 55 :radius1 * 0.6
+		right 105
+	]
+	setTurtleState :oldState
+end
+
+make "timeRatio interpolateRatio easeInOut animation.clampedTimeRatio
+setScreenColor "black
+shaGraphicsFlower 100 :timeRatio
+
+to animation.snapshotstyle
+	output createPList2 [
+		["position.y 50]
+		["zoom.scale 7]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 3
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+		["thumbnailTime 2]
+	]
+end

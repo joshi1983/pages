@@ -1,0 +1,19 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Togo#/media/File:Flag_of_Togo.svg
+to togoFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * goldenRatio
+	localmake "redWidth :width * 0.37082038
+	localmake "redHeight :height * 3 / 5
+	stripes :width :height ["#006a4e "#ffce00 "#006a4e "#ffce00 "#006a4e]
+	jumpForward :height * 2 / 5
+	jumpLeft (:width - :redWidth) / 2
+	stripes :redWidth :redHeight ["#d21034]
+	jumpForward :redHeight / 2
+	setFillColor "white
+	setPenSize 0
+	regularStar :height * 0.19 5
+	setTurtleState :oldState
+end
+
+togoFlag 100

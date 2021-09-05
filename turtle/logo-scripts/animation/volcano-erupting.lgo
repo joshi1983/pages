@@ -1,0 +1,141 @@
+to setVolcanoGradient :height
+	localmake "oldPos pos
+	localmake "colorStops createPList2 [
+		[0 "#398] [0.5 "#243] [0.85 "#ddd] [1 "#fff]
+	]
+	jumpForward :height
+	setFillGradient createLinearGradient :oldPos pos :colorStops "pad
+	jumpTo :oldPos
+end
+
+to drawDustCloud :height :timeRatio
+	localmake "oldPos pos
+	localmake "timeRatio clamp :timeRatio * 2 - 0.1 0.05 1
+	localmake "width :timeRatio * :height * 0.8
+	localmake "colorStops createPList2 [
+		[0 "#0000] [0.5 mix "#3000 "#1000 :timeRatio] [1 "#0000]
+	]
+	jumpLeft :width / 2
+	localmake "fromPos pos
+	jumpRight :width
+	setPenGradient createLinearGradient :fromPos pos :colorStops "pad
+	jumpTo :oldPos
+	setPenSize :width
+	setLineCap "butt
+	forward :height
+	jumpTo :oldPos
+end
+
+to drawSky :width :height :timeRatio
+	localmake "oldState turtleState
+	localmake "timeRatio max :timeRatio - 0.1 0
+	localmake "timeRatio 1 - interpolateRatio easeOut :timeRatio
+	localmake "oldPos pos
+	localmake "colorStops createPList2 [
+		[0 mix "#aef "#ace :timeRatio] [1 mix "#8bd "#7ac :timeRatio]
+	]
+	setLineCap "butt
+	jumpForward :height
+	setPenGradient createLinearGradient :oldPos pos :colorStops "pad	
+	setPenSize :width
+	backward :height
+	setTurtleState :oldState
+end
+
+to shockwaveGradient :radius
+	localmake "colorStops createPList2 [
+		[0 "#0000] [0.8 "#0000] [0.9 "#2000] [1 "#0000]
+	]
+	setPenGradient createRadialGradient pos :radius :colorStops
+end
+
+to shockWaves :width :height :centerHeight :timeRatio
+	localmake "oldPos pos
+	localmake "timeRatio max 0 (:timeRatio - 0.08) * 6
+	localmake "radius :timeRatio * :width
+	jumpForward :centerHeight
+	shockwaveGradient :radius
+	jumpTo :oldPos
+	setPenSize :width
+	setLineCap "butt
+	forward :height
+end
+
+to magmaFountain :peakHeight :timeRatio
+	localmake "oldState turtleState
+	localmake "timeRatio (:timeRatio - 0.09) / 0.91
+	if :timeRatio < 0 [
+		stop
+	]
+	localmake "explosionInterval 0.03
+	localmake "maxRadius :peakHeight * (mix 0.05 0.15 :timeRatio)
+	localmake "radius :maxRadius
+	if :timeRatio < :explosionInterval [
+		localmake "radius :maxRadius * :timeRatio / :explosionInterval
+	]
+	localmake "colorStops createPList2 [[0 "#ff8] [1 "#0f80]]
+	jumpForward :peakHeight
+	setFillGradient createRadialGradient pos :radius :colorStops
+	setPenSize 0
+	circle :radius
+	setTurtleState :oldState
+end
+
+to magma :peakHeight :triangleWidthRatio :timeRatio
+	localmake "oldPos pos
+	localmake "fadeBlackTimeRatio clamp (:timeRatio - 0.6) / 0.4 0 1
+	localmake "timeRatio max 0 :timeRatio - 0.1
+	localmake "magmaHeight :timeRatio * :peakHeight * 0.6
+	localmake "magmaWidth :magmaHeight * :triangleWidthRatio
+	if :magmaHeight = 0 [
+		stop ; nothing to draw.
+	]
+	localmake "baseColor mix "#a10 "#f30 :fadeBlackTimeRatio
+	localmake "hottestColor mix "#ff0 "#ff8 :timeRatio
+	localmake "colorStops createPList2 [
+		[0 mix :baseColor "#f84 :timeRatio] [1 mix "#fb0 :hottestColor :timeRatio]
+	]
+	jumpForward :peakHeight
+	localmake "peakPos pos
+	jumpBackward :magmaHeight
+	setPenSize 0
+	setFillGradient createLinearGradient pos :peakPos :colorStops "pad 
+	isoTriangle :magmaWidth :magmaHeight
+	jumpTo :oldPos
+end
+
+to volcanoEruption :width :height :timeRatio
+	localmake "oldState turtleState
+	localmake "height1 :height * 0.5
+	localmake "triangleBaseWidth :height
+	drawSky :width :height :timeRatio
+	drawDustCloud :height :timeRatio
+	magmaFountain :height1 :timeRatio
+	setPenSize 0
+	stripes :width :height * 0.1 ["#2a5f66]
+	setVolcanoGradient :height * 0.5
+	isoTriangle :triangleBaseWidth :height1
+	magma :height1 :triangleBaseWidth / :height1 :timeRatio
+	shockWaves :width :height :height1 :timeRatio
+	setTurtleState :oldState
+end
+
+setScreenColor "#8bd
+volcanoEruption 700 100 animation.clampedTimeRatio
+
+to animation.snapshotstyle
+	output createPList2 [
+		["zoom.scale 5.5]
+		["position.y 50]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 7
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+		["thumbnailTime 0.9]
+	]
+end

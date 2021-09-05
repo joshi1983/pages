@@ -1,0 +1,257 @@
+; Inspired by drawings from
+; a book published in 1984 called
+; "Logo programming : a practical guide for parents and teachers"
+; The book can be borrowed electronically from
+; https://archive.org/details/logoprogrammingp0000moll/mode/2up
+; The book includes code for a Logo interpreter for Apple 2 computers.
+; The following code is different because it was written for WebLogo.
+
+to rectangle :width :height
+	repeat 2 [
+		forward :height
+		right 90
+		forward :width
+		right 90
+	]
+end
+
+to house :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "width :height * 2
+	localmake "height1 :height * 0.6
+	localmake "roofAngle 30
+	localmake "roofAngledHeight (:height - :height1) / cos :roofAngle
+	localmake "roofTopWidth :width - 2 * :roofAngledHeight * sin :roofAngle
+	jumpLeft :width / 2
+	rectangle :width :height1
+	jumpForward :height1
+	right :roofAngle
+	forward :roofAngledHeight
+	localmake "topPos pos
+	right 180 - 2 * :roofAngle
+	forward :roofAngledHeight
+	right :roofAngle
+	forward :height1
+	jumpTo :topPos
+	setHeading :oldHeading + 90
+	forward :roofTopWidth
+	right 90 - :roofAngle
+	forward :roofAngledHeight
+	setTurtleState :oldState
+end
+
+to rocket :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "width :height * 0.3
+	localmake "middleWidth :width * 0.7
+	localmake "bottomSize :height * 0.1
+	localmake "baseHeight :height * 0.12
+	localmake "bottomSideStep :width / 5
+	localmake "coneHeight :height * 0.2
+	localmake "mainHeight :height - :baseHeight - :bottomSize - :coneHeight
+	jumpLeft :bottomSideStep * 1.5
+	repeat 4 [
+		forward :bottomSize
+		jumpBackward :bottomSize
+		jumpRight :bottomSideStep
+	]
+	jumpTo :oldPos
+	jumpLeft :width / 2
+	jumpForward :bottomSize
+	rectangle :width :baseHeight
+	jumpForward :baseHeight
+	jumpRight (:width - :middleWidth) / 2
+	rectangle :middleWidth :mainHeight
+	jumpForward :mainHeight
+	jumpRight :middleWidth / 2
+	isoTriangle :middleWidth :coneHeight
+	setTurtleState :oldState
+end
+
+to windmillFins :height
+	localmake "oldState turtleState
+	jumpForward :height / 2
+	repeat 4 [
+		rectangle -:height * 0.15 :height / 2 
+		right 90
+	]
+	setTurtleState :oldState
+end
+
+to barnWithSilo :height
+	localmake "oldState turtleState
+	localmake "width :height
+	localmake "barnHeight :height * 0.55
+	localmake "barnHeight1 :barnHeight * 0.65
+	localmake "barnWidth :width * 0.7
+	localmake "barnRoofAngle 40
+	localmake "barnRoofSlantLength (:barnHeight - :barnHeight1) / cos :barnRoofAngle
+	localmake "siloWidth :width - :barnWidth
+	localmake "siloMainHeight :height * 0.8
+	localmake "siloDoorWidth :siloWidth * 0.35
+	localmake "siloDoorHeight :siloDoorWidth * 1.5
+	localmake "siloConeHeight :height - :siloMainHeight
+	jumpLeft :width / 2
+	rectangle :barnWidth :barnHeight1
+	jumpForward :barnHeight1
+	right :barnRoofAngle
+	forward :barnRoofSlantLength
+	right 90 - :barnRoofAngle
+	forward :barnWidth - :barnRoofSlantLength * sin :barnRoofAngle
+	jumpRight :barnHeight
+	rectangle -:siloMainHeight :siloWidth
+	localmake "siloBottomLeft pos
+	jumpForward (:siloWidth - :siloDoorWidth) / 2
+	rectangle -:siloDoorHeight :siloDoorWidth
+	jumpTo :siloBottomLeft
+	left 90
+	jumpForward :siloMainHeight
+	jumpRight :siloWidth / 2
+	isoTriangle :siloWidth :siloConeHeight	
+	setTurtleState :oldState
+end
+
+to car :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "width :height
+	localmake "wheelSeparation :width * 0.6
+	localmake "wheelRadius :height * 0.13
+	localmake "cabHeight1 :height * 0.35
+	localmake "cabHeight2 :height - :wheelRadius * 2 - :cabHeight1
+	localmake "cabWidth1 :width * 0.35
+	localmake "cabWidth2 :width - :cabWidth1
+	localmake "windowWidth :cabWidth2 * 0.75
+	localmake "windowHeight :cabHeight2 - (:cabWidth2 - :windowWidth) / 2
+	localmake "bumperHeight :height * 0.08
+
+	; draw wheels.
+	jumpForward :wheelRadius
+	jumpRight :wheelSeparation / 2
+	circle :wheelRadius
+	jumpLeft :wheelSeparation
+	circle :wheelRadius
+	
+	; draw outline of cab
+	jumpTo :oldPos
+	jumpForward :wheelRadius * 2
+	jumpLeft :width / 2
+	forward :cabHeight1
+	right 90
+	forward :cabWidth1
+	localmake "middlePos pos
+	left 90
+	forward :cabHeight2
+	right 90
+	forward :cabWidth2
+	right 90
+	forward :height - 2 * :wheelRadius
+	localmake "bottomRight pos
+	right 90
+	forward :width
+
+	; draw window
+	jumpTo :middlePos
+	right 90
+	jumpRight (:cabWidth2 - :windowWidth) / 2
+	rectangle :windowWidth :windowHeight
+	
+	jumpTo :bottomRight
+	jumpForward :bumperHeight
+	rectangle :bumperHeight :bumperHeight
+
+	setTurtleState :oldState
+end
+
+to hexagonalWeb :height
+	localmake "oldState turtleState
+	localmake "numSizes 4
+	localmake "numSides 6
+	localmake "radius :height / 2
+	setPenSize :height * 0.01
+	repeat :numSizes [
+		localmake "height1 :height * repcount / :numSizes
+		regularPolygon :height1 / 2 :numSides
+	]
+	repeat :numSides [
+		forward :radius
+		jumpBackward :radius
+		right 360 / :numSides
+	]
+	setTurtleState :oldState
+end
+
+to spiderLeg :size :angle
+	localmake "oldState turtleState
+	forward :size
+	right :angle
+	forward :size * 0.7
+	setTurtleState :oldState
+end
+
+to spider :height
+	localmake "oldHeading heading
+	localmake "legSize :height * 0.6
+	localmake "legAngle 80
+	localmake "numLegs 5
+	localmake "legStartAngle 35
+	localmake "legAngleDifference 20
+	right :legStartAngle
+	repeat :numLegs [
+		spiderLeg :legSize :legAngle
+		right :legAngleDifference
+	]
+	setHeading :oldHeading - :legStartAngle
+	repeat :numLegs [
+		spiderLeg :legSize -:legAngle
+		left :legAngleDifference
+	]
+end
+
+to spiderAndWeb :height
+	localmake "oldState turtleState
+	jumpForward :height / 2
+	hexagonalWeb :height
+	spider :height * 0.3
+	setTurtleState :oldState
+end
+
+to diamond :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "angle 60
+	localmake "size1 :height / 2 / tan :angle
+	jumpForward :height / 2
+	repeat 6 [
+		setHeading :oldHeading + repcount * 360 / 6
+		left :angle / 2
+		forward :size1
+		right :angle
+		forward :size1
+		right 180 - :angle
+		forward :size1
+		right :angle
+		forward :size1
+	]
+	setTurtleState :oldState
+end
+
+setPenSize 1.5
+make "height 100
+make "separation :height * 2
+jumpLeft :separation * 3
+house :height
+jumpRight :separation
+rocket :height
+jumpRight :separation
+windmillFins :height
+jumpRight :separation
+barnWithSilo :height
+jumpRight :separation
+car :height
+jumpRight :separation
+spiderAndWeb :height
+jumpRight :separation
+diamond :height

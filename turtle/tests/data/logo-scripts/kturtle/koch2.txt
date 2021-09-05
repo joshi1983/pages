@@ -1,0 +1,26 @@
+kturtle-script-v1.0
+# copied from https://cdn.kde.org/edu/kturtle/logo_scripts/koch.turtle
+# Koch curve
+
+@(reset)
+@(canvassize) 850@(,) 550
+@(go) 125@(,) 350
+@(turnright) 90
+
+@(learn) koch $length@(,) $depth {
+  @(if) $depth > 0 {
+    $depth = $depth-1
+    $length = $length/3
+    koch $length@(,) $depth
+    @(turnleft) 60
+    koch $length@(,) $depth
+    @(turnright) 120
+    koch $length@(,) $depth
+    @(turnleft) 60
+    koch $length@(,) $depth
+  } @(else) {
+  @(forward) 3*$length
+  }
+}
+
+koch 200@(,) 6

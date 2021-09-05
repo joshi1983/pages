@@ -1,0 +1,39 @@
+to bullsEye2 :height
+	localmake "oldState turtleState
+	localmake "innerRadius :height * 0.165
+	localmake "numAngles 6
+	localmake "thickness :height * 0.04
+	localmake "tinyRadius :thickness * 0.7
+	localmake "straightLen (:height / 2 / cos 180 / :numAngles) -
+		:thickness / 2 * (tan 180 / :numAngles) -
+		:innerRadius
+	setPenColor "white
+	jumpForward :height / 2
+	setPenSize :thickness
+	setFillColor transparent
+	circle :innerRadius
+	setFillColor penColor
+	localmake "center pos
+	setLineCap "butt
+	repeat :numAngles [
+		jumpForward :innerRadius
+		forward :height * 0.16
+		jumpForward :height * 0.07
+		setPenSize 0
+		circle :tinyRadius
+		jumpTo :center
+		right 180 / :numAngles
+		setPenSize :thickness
+		jumpForward :innerRadius
+		forward :straightLen
+
+		jumpTo :center
+		right 180 / :numAngles
+	]
+	setPenSize 0
+	circle :tinyRadius
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+bullsEye2 100

@@ -1,0 +1,153 @@
+' copied from https://www.bamsoftware.com/bzr/qbasic/grapher.bas
+DECLARE SUB bmper ()
+
+TYPE wind
+XMin AS SINGLE
+XMax AS SINGLE
+XScl AS SINGLE
+YMin AS SINGLE
+YMax AS SINGLE
+YScl AS SINGLE
+END TYPE
+
+TYPE equation
+equ AS SINGLE
+col AS INTEGER
+use AS INTEGER
+END TYPE
+
+CONST PI = 3.141926
+CONST E = 2.718281828#
+CONST BGCOLOR = 15
+
+DIM yv(1 TO 10) AS equation
+
+DIM windw AS wind
+
+windw.XMin = 0
+windw.XMax = 700
+windw.XScl = 100
+windw.YMin = 0
+windw.YMax = 20000
+windw.YScl = 1000
+
+FOR x = 1 TO 10
+yv(x).col = 0
+yv(x).use = 0
+NEXT
+
+XDist = 320 / (windw.XMax - windw.XMin)
+YDist = 200 / (windw.YMax - windw.YMin)
+XZero = -(windw.XMin + windw.XMax) / 2
+YZero = -(windw.YMin + windw.YMax) / 2
+
+SCREEN 13
+
+LINE (0, 0)-(319, 199), BGCOLOR, BF 'Clear Screen
+
+LINE (XDist * XZero + 159, 0)-(XDist * XZero + 159, 199), 0 'Axes
+LINE (0, ABS(100 - YDist * YZero))-(319, ABS(100 - YDist * YZero)), 0
+
+'Tick marks
+FOR x = 0 TO windw.XMax STEP windw.XScl
+LINE (XDist * x + XDist * XZero + 159, ABS(100 - YDist * YZero))-(XDist * x + XDist * XZero + 159, ABS(100 - YDist * YZero) - 5), 0
+NEXT
+FOR x = 0 TO windw.XMin STEP -windw.XScl
+LINE (XDist * x + XDist * XZero + 159, ABS(100 - YDist * YZero))-(XDist * x + XDist * XZero + 159, ABS(100 - YDist * YZero) - 5), 0
+NEXT
+FOR y = 0 TO windw.YMax STEP windw.YScl
+LINE (XDist * XZero + 159, ABS(100 - (YDist * YZero + YDist * y)))-(XDist * XZero + 164, ABS(100 - (YDist * y + YDist * YZero))), 0
+NEXT
+FOR y = 0 TO windw.YMin STEP -windw.YScl
+LINE (XDist * XZero + 159, ABS(100 - (YDist * YZero + YDist * y)))-(XDist * XZero + 164, ABS(100 - (YDist * y + YDist * YZero))), 0
+NEXT
+
+yv(1).col = 8: yv(1).use = 1
+yv(2).col = 1: yv(2).use = 0
+yv(3).col = 2: yv(3).use = 0
+yv(4).col = 3: yv(4).use = 0
+yv(5).col = 4: yv(5).use = 0
+
+FOR index = 1 TO 10
+
+IF yv(index).use THEN
+XOld = windw.XMin
+YOld = 0
+FOR x = windw.XMin TO windw.XMax STEP 1 / XDist
+'--------------------
+yv(1).equ = 5600 / (.5 + 27.5 * E ^ (-.044 * x))
+yv(2).equ = 37 * SIN((2 * PI / 365) * (x - 101)) + 25
+yv(3).equ = SIN(x) - PI
+yv(4).equ = SIN(x) + 3
+yv(5).equ = SIN(x) - .5
+'--------------------
+LINE (XDist * XZero + XDist * x + 159, (100 - (YDist * YZero + YDist * yv(index).equ)))-(XDist * XZero + XDist * XOld + 159, (100 - (YDist * YZero + YDist * YOld))), yv(index).col
+XOld = x
+YOld = yv(index).equ
+NEXT
+END IF
+
+NEXT
+
+LINE (0, 0)-(1, 199), 0, BF         'Draw bounding box
+LINE (0, 0)-(319, 1), 0, BF
+LINE (318, 0)-(319, 199), 0, BF
+LINE (0, 198)-(319, 199), 0, BF
+
+DO: LOOP WHILE INKEY$ = ""
+
+CALL bmper
+
+SUB bmper
+CHDIR "C:\qbasic"
+filename$ = "screen" + RIGHT$("0" + LTRIM$(STR$(count)), 3) + ".bmp"
+'PRINT filename$
+'RANDOMIZE TIMER
+'FOR x = 1 TO 50
+'CIRCLE (RND * 320, RND * 200), RND * 50, RND * 155
+'NEXT
+
+
+
+OPEN filename$ FOR OUTPUT AS #1
+'---<General Pic Info)---
+PRINT #1, "BM"; 'Tells us is .BMP
+PRINT #1, MKL$(65535);  'Size of file
+PRINT #1, MKI$(0); 'Reserved1
+PRINT #1, MKI$(0); 'Reserved2
+PRINT #1, MKL$(1078); 'Num bytes offset picture data
+'---<Info Header>---
+PRINT #1, MKL$(40); 'Size of info header
+PRINT #1, MKL$(320); 'Pic width
+PRINT #1, MKL$(200); 'Pic height
+PRINT #1, MKI$(1); 'Num planes
+PRINT #1, MKI$(8); 'Bits per pixel
+PRINT #1, MKL$(0); 'Compression
+PRINT #1, MKL$(320 * 200#); 'Image size
+PRINT #1, MKL$(3790); 'Pels per meter
+PRINT #1, MKL$(3800); 'Pels per meter
+PRINT #1, MKL$(0); 'Num colors used (0 means all)
+PRINT #1, MKL$(0); 'Num important colors (0 means all)
+'---<Palette Data>---
+FOR x = 0 TO 255
+OUT &H3C7, x
+R = INP(&H3C9)
+G = INP(&H3C9)
+B = INP(&H3C9)
+'PRINT R; G; B
+PRINT #1, CHR$(B * 4);
+PRINT #1, CHR$(G * 4);
+PRINT #1, CHR$(R * 4);
+PRINT #1, CHR$(0);
+NEXT
+
+'---<Picture Data>---
+FOR y = 199 TO 0 STEP -1
+FOR x = 0 TO 319
+PRINT #1, CHR$(POINT(x, y));
+
+NEXT
+NEXT
+CLOSE 1
+
+END SUB

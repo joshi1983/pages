@@ -1,0 +1,61 @@
+to outerPattern :radius
+	localmake "numContours 40
+	localmake "minRadius :radius * 0.2
+	localmake "maxSize :radius * 0.01
+	localmake "minSize :radius * 0.005
+	localmake "size1 :minRadius
+	localmake "thresholdRatio 0.2
+	setPenColor "#00f
+	setPenSize :minSize
+	circle :minRadius - penSize
+	repeat :numContours [
+		localmake "blendRatio 0
+		if repRatio < :thresholdRatio [
+			localmake "blendRatio (:thresholdRatio - repRatio) / :thresholdRatio
+		]
+		setPenColor mix "violet "white  :blendRatio
+		setPenSize mix :maxSize :minSize repRatio
+		localmake "sizeDifferenceRatio mix 0.95 0.99 repRatio
+		isotoxalStar :size1 :size1 * :sizeDifferenceRatio 36
+		localmake "size1 :size1 * 1.04197134735
+	]
+end
+
+to drawCenter :radius
+	localmake "size1 :radius * 0.4
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angle 3
+	localmake "size2 (:radius - :size1) / cos :angle
+	setPenColor "#28D7AB
+	setPenSize :radius * 0.018
+	circle :radius
+	setLineCap "round
+	setLineJoinStyle "round
+	repeat 36 [
+		setHeading :oldHeading + repcount * 360 / 36
+		jumpForward :size1
+		left :angle
+		jumpForward :size2
+		backward :size2
+		right :angle * 2
+		forward :size2
+		jumpTo :oldPos
+	]
+	setHeading :oldHeading
+	isotoxalStar :size1 :size1 * 0.95 36
+	circle :radius * 0.02
+end
+
+; Inspired by
+; https://www.pinterest.ca/pin/924434260992711311/
+to drawDesign :height
+	localmake "oldState turtleState
+	jumpForward :height / 2
+	outerPattern :height / 2
+	drawCenter :height * 0.085
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+drawDesign 100

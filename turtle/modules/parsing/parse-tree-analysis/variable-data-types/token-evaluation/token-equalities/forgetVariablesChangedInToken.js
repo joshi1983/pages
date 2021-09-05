@@ -1,0 +1,46 @@
+import { Command } from
+'../../../../Command.js';
+import { getDescendentsOfType } from
+'../../../../generic-parsing-utilities/getDescendentsOfType.js';
+import { isMutationCommand } from
+'../../isMutationCommand.js';
+import { mightContainProcedureCall } from
+'./mightContainProcedureCall.js';
+import { ParseTreeTokenType } from
+'../../../../ParseTreeTokenType.js';
+import { commandToVarIndexMap } from
+'../../setLastSingleValueTokens.js';
+
+export function forgetVariablesChangedInToken(token, executionState) {
+	if (mightContainProcedureCall(token))
+		executionState.forgetAllGlobalVariables();
+
+	const descendents = getDescendentsOfType(token, ParseTreeTokenType.PARAMETERIZED_GROUP);
+	for (const d of descendents) {
+		const info = Command.getCommandInfo(d.val);
+		if (info !== undefined) {
+			if (isMutationCommand(info)) {
+				const variableIndex = commandToVarIndexMap.get(info.primaryName);
+				if (d.children.length > variableIndex &&
+				d.children[variableIndex].isStringLiteral()) {
+					const variableName = d.children[variableIndex].val.toLowerCase();
+					const isGlobal = !executionState.localVariableNames.has(variableName) &&
+						info.primaryName !== 'localmake';
+					if (isGlobal) {
+						executionState.globalVariables.delete(variableName);
+					}
+					else {
+						executionState.localVariables.delete(variableName);
+					}
+				}
+			}
+			else if (info.primaryName === 'swap') {
+				for (const child of d.children) {
+					if (child.isStringLiteral()) {
+						executionState.deleteAssociatedValueTokenFor(child.val.toLowerCase());
+					}
+				}
+			}
+		}
+	}
+};

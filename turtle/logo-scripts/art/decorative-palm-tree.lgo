@@ -1,0 +1,110 @@
+to brownShapes :height
+	localmake "oldState turtleState
+	localmake "baseWidth :height * 1.1
+	localmake "topWidth :height * 0.5
+	localmake "height2 :height * 0.8
+	localmake "baseWidth2 :baseWidth * 0.73
+	localmake "topWidth2 :topWidth * 0.63
+	setPenSize 0
+	setFillColor "#bf5b29
+	isoTrapezoid :baseWidth :topWidth :height
+	setFillColor "#a84c23
+	isoTrapezoid :baseWidth2 :topWidth2 :height2
+	setTurtleState :oldState
+end
+
+to darkLeafFan :radius
+	localmake "oldState turtleState
+	localmake "angleRange 300
+	localmake "numLeafs 24
+	localmake "leafAngle :angleRange / :numLeafs
+	setFillColor "green
+	setPenSize 0
+	left (:angleRange - :leafAngle) / 2
+	repeat :numLeafs [
+		arcPair :radius 18
+		right :leafAngle
+	]
+	setTurtleState :oldState
+end
+
+to middleFan :radius
+	localmake "oldState turtleState
+	localmake "angleRange 270
+	localmake "numLeafs 24
+	localmake "leafAngle :angleRange / :numLeafs
+	setPenSize 0
+	left (:angleRange - :leafAngle) / 2
+	repeat :numLeafs [
+		ifelse even? repcount [
+			setFillColor "#045304
+		] [
+			setFillColor "#A8D05D
+		]
+		arcPair :radius 18
+		right :leafAngle
+	]
+	setTurtleState :oldState
+end
+
+to drawPlants :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "size1 :height * 0.01
+	localmake "arcsInfo [
+		[10 0.8]
+		[30 0.5]
+		[10 0.9]
+	]
+	localmake "darkFanSize :height * 0.35
+	localmake "middleFanSize :height * 0.5
+	setPenSize :height * 0.03
+	setPenColor "green
+	jumpLeft :size1
+	arcsLeft :arcsInfo :height
+	darkLeafFan :darkFanSize
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpRight :size1
+	arcsRight :arcsInfo :height
+	darkLeafFan :darkFanSize
+	jumpTo :oldPos
+	setHeading :oldHeading
+	setPenSize :height * 0.03
+	setPenColor "#26991E
+	forward :height - :middleFanSize
+	middleFan :middleFanSize
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://publicdomainvectors.org/en/free-clipart/Decorative-palm-plant/83813.html
+to decorativePalmTree :height
+	localmake "oldState turtleState
+	localmake "shadowSize1 :height * 0.008
+	localmake "potHeight :height * 0.274
+	localmake "brownSize :height * 0.1756
+	localmake "offset1 :height * 0.035
+	setPenSize 0
+	setFillColor "#33583C2D
+	jumpForward :shadowSize1
+	ellipse :height * 0.28 :shadowSize1
+	setLineCap "butt
+	setPenSize :height * 0.27
+	setPenColor "#d6cbc7
+	forward :potHeight
+	jumpLeft :offset1
+	jumpBackward :height * 0.025
+	setPenColor "#c3b2aa
+	setPenSize :height * 0.15
+	backward :height * 0.25
+	jumpRight :offset1
+	jumpForward :potHeight
+	brownShapes :brownSize
+	jumpForward :brownSize
+	drawPlants :height - :brownSize - :potHeight - :shadowSize1
+	setTurtleState :oldState
+end
+
+decorativePalmTree 100

@@ -1,0 +1,47 @@
+; Inspired by logo from:
+; https://en.wikipedia.org/wiki/China_National_Petroleum_Corporation#/media/File:China_National_Petroleum_Corporation_logo.svg
+; It is also shown at:
+; https://www.cnpc.com.cn/en
+to cnpcLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "innerRadius :height * 0.462
+	localmake "whiteRadius :innerRadius + :height * 0.0036
+	localmake "outerRadius :height * 0.537
+	localmake "innerCornerRadiusFactor 0.1
+	localmake "outerCornerRadiusFactor 0.07
+	localmake "outerCornerRadius :height * :outerCornerRadiusFactor
+	localmake "innerCornerRadius :height * :innerCornerRadiusFactor
+	localmake "lines1 [[90 0] [-40 0.01] [-15 0.04] [-15 0.1]
+		[0.336] [-90 0] [14.5 :innerCornerRadiusFactor] [0.095092516]
+		[-34.5 :outerCornerRadiusFactor]]
+	localmake "colorStops createPList2 [
+		[0 "#F6F091] [0.2 "#FEF170] [0.831373 "#E77917] [1 "#E05724]
+	]
+	setFillColor "#DA251D
+	setPenSize 0
+	jumpForward :height / 2
+	localmake "center pos
+	roundIsoStar :innerRadius :outerRadius 10 :outerCornerRadius :innerCornerRadius
+
+	setFillColor "white
+	left 180 / 10
+	polyStart
+	jumpLeft :whiteRadius
+	arcRight 180 + 360 / 10 :whiteRadius
+	polyEnd
+
+	jumpTo :center
+	setFillGradient createRadialGradient pos :height / 2 :colorStops
+	setHeading :oldHeading - 90
+
+	repeat 6 [
+		drawArcLineShape [0 0.095
+			combine :lines1 reverse :lines1
+		] :height
+		right 360 / 10
+	]
+	setTurtleState :oldState
+end
+
+cnpcLogo 100

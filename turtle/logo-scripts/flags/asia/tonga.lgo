@@ -1,0 +1,128 @@
+; All of these flags are found at:
+; https://en.wikipedia.org/wiki/Flag_of_Tonga
+
+make "tongaRed "#C10000
+
+to upTo1866TongaFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 3 / 2
+	localmake "crossSize :width / 4
+	setLineCap "butt
+	setPenSize :width
+	setPenColor "white
+	forward :height
+	jumpBackward :height / 2
+	setPenColor :tongaRed
+	setPenSize :height * 1.5 / 6
+	repeat 2 [
+		jumpBackward :crossSize
+		forward :crossSize * 2
+		jumpBackward :crossSize
+		right 90
+	]
+	setTurtleState :oldState
+end
+
+; The instruction sheet is at:
+; https://en.wikipedia.org/wiki/Flag_of_Tonga#/media/File:Flag_of_Tonga_(construction_sheet).svg
+to tongaFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 2
+	setPenColor :tongaRed
+	setPenSize :width
+	setLineCap "butt
+	forward :height
+	jumpLeft :width * (24 - 10) / 48 
+	setPenSize :width * 20 / 48
+	setPenColor "white
+	backward :height / 2
+	jumpForward :height * 6 / 24
+	localmake "center pos
+	setPenColor :tongaRed
+	setPenSize :height * 3 / 24
+	repeat 2 [
+		jumpBackward :height * 9 / 48
+		forward :height * 9 / 24
+		jumpTo :center
+		right 90
+	]
+	setTurtleState :oldState
+end
+
+to navalInsigniaTrim :width :height
+	localmake "oldState turtleState
+	localmake "size1 :height * 0.085
+	localmake "width :width - :size1
+	localmake "oldPos pos
+	repeat 2 [
+		jumpRight :size1
+		backward :width
+		right 90
+		forward :height / 2 - :size1
+		jumpTo :oldPos
+		left 90
+		localmake "size1 -:size1
+		localmake "height -:height
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Tonga#/media/File:Naval_Ensign_of_Tonga.svg
+to tonganNavalInsignia :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "insigniaRed "#ce1126
+	localmake "width :height * 2
+	localmake "crossOffset :height * 32 / 100
+	localmake "crossOffset2 :height - :crossOffset
+	localmake "crossSize :height * 0.15
+	setLineCap "butt
+	setLineJoinStyle "miter
+	setPenColor "white
+	setPenSize :width
+	forward :height
+	jumpLeft :crossOffset
+	setPenColor :insigniaRed
+	setPenSize :height * 24/100
+	backward :height
+	jumpForward :height / 2
+	right 90
+	jumpBackward :crossOffset2
+	forward :width
+	setPenColor "white
+	setPenSize :height * 0.03
+	navalInsigniaTrim :height + :crossOffset :height
+	jumpBackward :width
+	right 180
+	navalInsigniaTrim :crossOffset2 :height
+
+	; draw upper-left cross
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.81
+	jumpLeft :height - (:crossOffset2 - :height * 12 / 100) / 2
+	localmake "center pos
+	setPenColor :insigniaRed
+	setPenSize :height * 0.1
+	repeat 2 [
+		jumpBackward :crossSize
+		forward :crossSize * 2
+		jumpTo :center
+		right 90
+	]
+	setTurtleState :oldState
+end
+
+make "size 100
+make "separation :size * 3
+setScreenColor "#ddd
+; Not quite white so the edges of the flag are visible even if the edge is white
+
+jumpLeft :separation
+upTo1866TongaFlag :size
+jumpRight :separation
+tongaFlag :size
+jumpRight :separation
+tonganNavalInsignia :size

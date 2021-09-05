@@ -1,0 +1,74 @@
+to drawBackground :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "offsetRatio 0.5
+	localmake "colorStops createPList2 [
+		[0 "#08f] [:offsetRatio "#08f] [1 "#008f]
+	]
+	jumpBackward :height * :offsetRatio
+	setPenGradient createRadialGradient pos :height * (1 + :offsetRatio) :colorStops
+	jumpTo :oldPos
+	setPenSize :height * 3
+	setLineCap "butt
+	forward :height
+	setTurtleState :oldState
+end
+
+to drawCross :height
+	localmake "oldState turtleState
+	localmake "width :height * 0.7
+	jumpForward penSize / 2
+	forward :height - penSize
+	jumpBackward :height * 0.3
+	right 90
+	jumpBackward :width / 2
+	forward :width
+	setTurtleState :oldState
+end
+
+; Inspired by a drawing in a book called:
+; Informática y programación paso a paso
+; It was published in 1987.
+; The drawing is on page 50.
+; You can find a digital version of the book at:
+; https://archive.org/details/informatica-y-programacion-paso-a-paso
+to churchOutline :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "peakLengthRatio 0.2
+	localmake "roofLengthRatio1 0.14
+	localmake "lenRatio 0.56
+	localmake "separation :peakLengthRatio * :height * 2 * cos 45
+	localmake "rightHeightRatio 0.329862915
+	localmake "crossHeight :height * 0.15
+	drawBackground :height
+	jumpLeft :height * 0.16
+	setPenSize :height * 0.01
+	jumpForward penSize / 2
+	setFillColor "white
+	setPenColor "black
+	setLineJoinStyle "round
+	setLineCap "round
+	polyStart
+	arcLines [[90 0] [0.6] [-90 0] [0.295] [-45 0] [0.38] [-90 0]
+	[0.4] [135 0] [0.43] [-45 0] [:peakLengthRatio] [-90 0] [:peakLengthRatio] [-45 0] [0.287]
+	[90 0] [:lenRatio] [-45 0] [:roofLengthRatio1] [-45 0] [:rightHeightRatio]] :height
+	polyEnd
+	localmake "bottomRight pos
+	setHeading :oldHeading
+	jumpLeft :height * (:lenRatio + :roofLengthRatio1 * cos 45)
+	repeat 2 [
+		stripes penSize :height * 0.5 [penColor]
+		jumpLeft :separation
+	]
+	jumpRight :separation * 1.5
+	jumpForward :height - :crossHeight
+	drawCross :crossHeight
+	jumpTo :bottomRight
+	jumpForward :height * :rightHeightRatio
+	right 135
+	forward :height * 0.05
+	setTurtleState :oldState
+end
+
+churchOutline 100

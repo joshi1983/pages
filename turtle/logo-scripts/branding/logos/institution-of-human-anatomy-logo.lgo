@@ -1,0 +1,43 @@
+; Draws the bright shapes in the logo
+to theAnatomyLabLogo :height
+	localmake "oldState turtleState
+	setPenSize 0
+	repeat 2 [
+		localmake "height1 :height * sign repcount - 1.5
+		setFillColor "#d9d5cc
+		drawArcLineShapes [
+			[0.07 1
+				[[90 0] [60 0.04] [25 0.09] [9 0.2] [10 0.47]
+				[-23 0.4] [16 1] [-17.5 0.55] [160 0.008] [0.05]
+				[-13 0.3] [36 0.35] [-30 0.3] [-50 0.18] [0.02]
+				[150 0.008] [28 0.38] [-89 0.14] [29 0.14] [40 0.023]]
+			]
+			[0.375 0.69
+				[[-70 0.01] [-26 0.3] [-35 0.05] [-10 0.65]
+				[-105 0.02] [-30 0.18] [-33 0.04] [-19.5 0.22] [20 0.1]
+				[38.1 0.08] [-90 0.005]]
+			]
+		] :height1
+		setFillColor "#af6e72
+		drawArcLineShape [0.15 0
+			[[-90 0] [50 0.02] [0.07] [36 0.15] [0.06] [-42 0.13]
+			[30 0.2] [0.087] [-67 0.12] [137 0.01] [-8 1] [93 0.033]
+			[20 0.2] [5 0.7] [-25 0.9] [13 0.15] [100 0.02] [-80 0.06]
+			[40 0.06] [0.028] [50 0.02]]
+		] :height1
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://www.youtube.com/@theanatomylab
+to iHumanAnatomyLogo :height
+	localmake "oldState turtleState
+	localmake "innerHeight :height * 0.745
+	stripes :height :height ["black]
+	jumpForward :height * 0.1
+	theAnatomyLabLogo :innerHeight
+	setTurtleState :oldState
+end
+
+iHumanAnatomyLogo 100

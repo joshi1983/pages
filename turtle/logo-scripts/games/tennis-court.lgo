@@ -1,0 +1,43 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Tennis_court#/media/File:Tennis_court_imperial.svg
+to tennisCourt :height
+	localmake "oldState turtleState
+	localmake "lineThickness :height * 0.013
+	localmake "height1 :height - :lineThickness
+	localmake "width :height1 * 39 *2 / 36
+	localmake "notchWidth :height * 0.029
+	stripes :width :height ["green]
+	setPenColor "white
+	setPenSize :lineThickness
+	stripes penSize :height [penColor]
+	setLineJoinStyle "miter
+	jumpForward :height / 2
+	localmake "center pos
+	rect :height1 * 39 * 2 / 36 :height1
+	jumpBackward (:height1 * 27 / 36 + :lineThickness) / 2
+	localmake "lowerPos pos
+	stripes :width penSize [penColor]
+	jumpForward :height1 * 27 / 36
+	stripes :width penSize [penColor]
+	jumpBackward :height1 * 27 / 36 / 2
+	stripes :height1 * 21 * 2 / 36 penSize [penColor]
+	
+	jumpTo :lowerPos
+	jumpLeft :height1 * 21 / 36
+	stripes penSize :height1 * 27 / 36 [penColor]
+	jumpRight :height1 * 21 / 36 * 2
+	stripes penSize :height1 * 27 / 36 [penColor]
+
+	jumpTo :center
+	jumpBackward penSize / 2
+	localmake "notchSeparation :width - :notchWidth
+	jumpLeft :notchSeparation / 2
+	repeat 2 [
+		stripes :notchWidth penSize [penColor]
+		jumpRight :notchSeparation
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+tennisCourt 100

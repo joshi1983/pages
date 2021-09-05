@@ -1,0 +1,104 @@
+; Inspired by a posted image at:
+; https://www.facebook.com/share/p/17rXv1ESUw/
+; from Michael Sterling Helso
+to polygonSpiral :height :numSides
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "numSteps 5
+	localmake "scaleFactor 1.198
+	localmake "colors ["violet "blue "aqua "lime "yellow "orange "red]
+
+	jumpRight :height
+	localmake "rightPos pos
+	jumpForward :height
+	localmake "upperRight pos
+	jumpLeft :height
+	localmake "top pos
+	localmake "lines [[:oldPos :rightPos] [:top :upperRight]]
+
+	jumpTo :oldPos
+	jumpForward :height / 2
+	localmake "center pos
+	localmake "minSize :height * 0.0382
+	localmake "sideLengthFactor 2 * sin 180 / :numSides
+	localmake "stepFactor :sideLengthFactor / :numSteps
+	localmake "innerStep :minSize * :stepFactor
+
+	setPenSize 0
+	localmake "size :minSize
+	repeat 14 [
+		setHeading :oldHeading
+		jumpForward :size
+		right 90 + 180 / :numSides
+		localmake "colorIndex 1+ modulo -repcount + (count :colors) count :colors 
+		repeat :numSides [
+			localmake "sideHeading heading
+			repeat :numSteps [
+				localmake "startPos pos
+				localmake "stepLen :size * :stepFactor
+				setFillColor item :colorIndex :colors
+				setHeading :sideHeading
+				polyStart
+				jumpForward :stepLen
+				setHeading (towards :center) + 180
+				jumpForward (distance :center) * (:scaleFactor - 1)
+				polyEnd
+				jumpTo :startPos
+				setHeading :sideHeading
+				jumpForward :size * :stepFactor
+				localmake "colorIndex 1 + modulo :colorIndex count :colors
+			]
+			right 360 / :numSides
+		]
+		jumpTo :center
+		localmake "size :size * :scaleFactor
+	]
+
+	jumpTo :center
+	setHeading :oldHeading
+	setFillColor transparent
+	localmake "size :minSize
+	setPenSize :height * 0.001
+	setPenColor "white
+	repeat 15 [
+		regularPolygon :size :numSides
+		localmake "size :size * :scaleFactor
+	]
+	repeat :numSides [
+		setHeading :oldHeading + repcount * 360 / :numSides
+		jumpForward :minSize
+		left 90 + 180 / :numSides
+		localmake "sideHeading heading
+		repeat :numSteps [
+			jumpForward :innerStep
+			setHeading (towards :center) + 180
+			localmake "len min :height distanceToLines :lines
+			stripes penSize :len [penColor]
+			setHeading :sideHeading
+		]
+		jumpTo :center
+	]
+
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+make "numSides mix 2 7 * 2 interpolateRatio easeInOut interpolateRatio easePaddedLinear 0.05 animation.clampedTimeRatio
+polygonSpiral 100 :numSides
+
+to animation.snapshotstyle
+	output createPList2 [
+		["position.y 50]
+		["zoom.scale 4]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 10
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

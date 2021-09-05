@@ -1,0 +1,31 @@
+; Inspired by:
+; https://ca.pinterest.com/pin/415316396906880030
+to vladSquarePattern :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "cornerRadius :height * 0.05
+	localmake "angleSpan 72
+	localmake "numSpannedAngles 12
+	localmake "size1 :height * 0.22
+	localmake "size2 :size1 / (cos 45) + :cornerRadius * (1 - cos 45)
+	jumpForward :height / 2
+	setPenColor "#fbf
+	setPenSize :height * 0.003
+	setFillColor transparent
+	localmake "center pos
+	repeat 4 [
+		localmake "offset :oldHeading + 46 - :angleSpan / 2  + repcount * 360 / 4
+		repeat :numSpannedAngles [
+			setHeading :offset + (repcount - 1) * :angleSpan / :numSpannedAngles
+			jumpForward :height / 2 - :size1
+			right 45
+			roundRect :size2 :size2 :cornerRadius
+			right 45
+			jumpTo :center		
+		]
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+vladSquarePattern 100

@@ -1,0 +1,68 @@
+to chechnyaSwirl :height
+	localmake "oldState turtleState
+	localmake "arcs [
+		[90 0.079]
+		[90 0.097]
+		[85 0.125]
+		[45 0.19]
+		[70 0.145]
+		[80 0.21]
+		[22.1 0.64]
+	]
+	jumpForward :height * 0.152
+	jumpLeft :height * 0.007
+	right 74
+	repeat count :arcs [
+		localmake "arcInfo item repcount :arcs
+		arcLeft (item 1 :arcInfo) (:height * item 2 :arcInfo)
+	]
+	repeat count :arcs [
+		localmake "arcInfo item ((count :arcs) + 1 - repcount) :arcs
+		arcRight (item 1 :arcInfo) (:height * item 2 :arcInfo)
+	]
+
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Chechnya#/media/File:Flag_of_the_Chechen_Republic.svg
+; Referenced from:
+; https://en.wikipedia.org/wiki/Flag_of_Chechnya
+to chechnyaFlag :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "width :height * 3 / 2
+	localmake "leftWidth :height * 0.14
+	localmake "numSwirls 4
+	localmake "swirlHeight :height / :numSwirls
+	localmake "colors [
+		["#2b7338 0.59066666]
+		["white 0.09]
+		["#da251d 0.31933333]
+	]
+	setLineCap "butt
+	setPenSize :width
+	setPenColor "white
+	forward :height
+	setPenSize :width - :leftWidth 
+	jumpRight :leftWidth / 2
+	repeat count :colors [
+		localmake "colorInfo item repcount :colors
+		setPenColor item 1 :colorInfo
+		backward :height * item 2 :colorInfo
+	]
+
+	setPenColor "#fc0
+	setLineCap "round
+	setPenSize :swirlHeight * 0.053
+	jumpTo :oldPos
+	jumpLeft (:width - :leftWidth) / 2
+	repeat :numSwirls [
+		chechnyaSwirl :swirlHeight
+		jumpForward :swirlHeight
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "#ddd
+chechnyaFlag 100
