@@ -1,0 +1,33 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/SBS_(Australian_TV_channel)#/media/File:SBS_Australia_Logo_(2019).svg
+to sbsAustraliaLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "angle 23.3
+	localmake "size :height / cos :angle
+	localmake "arcAngle 42
+	jumpForward :height / 2
+	jumpRight :height * 0.11
+	setPenSize 0
+	setFillColor "black
+	repeat 4 [
+		setHeading :oldHeading + :angle
+		localmake "arcRadius :size / 2 / sin :arcAngle / 2
+		localmake "sideStep :arcRadius - :arcRadius * cos :arcAngle / 2
+		localmake "pos1 pos
+		jumpForward :size / 2
+		left 180 - :arcAngle / 2
+		polyStart
+		arcLeft :arcAngle :arcRadius
+		left 180 - :arcAngle
+		arcLeft :arcAngle :arcRadius
+		polyEnd
+		jumpTo :pos1
+		setHeading :oldHeading + :angle
+		jumpLeft :sideStep * (1 + 0.67)
+		localmake "size :size * 0.74
+	]
+	setTurtleState :oldState
+end
+
+sbsAustraliaLogo 100

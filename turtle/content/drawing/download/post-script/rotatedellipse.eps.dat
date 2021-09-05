@@ -1,0 +1,18 @@
+% Creates path for an ellipse
+% The caller must stroke or fill.
+% Copied from: http://www.redgrittybrick.org/ellipse.html
+/rotatedellipse {
+	/rotationdegrees exch def
+	/yrad exch def
+	/xrad exch def
+	/y exch def
+	/x exch def
+	/savematrix matrix currentmatrix def
+	x y translate
+	rotationdegrees rotate
+	xrad yrad scale
+	newpath
+	0 0 1 0 360 arc
+	closepath
+	savematrix setmatrix
+} def

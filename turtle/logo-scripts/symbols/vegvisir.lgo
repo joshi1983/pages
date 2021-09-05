@@ -1,0 +1,184 @@
+to drawFork :len :width
+	localmake "oldState turtleState
+	jumpBackward :len
+	stripes :width + penSize penSize [penColor]
+	jumpLeft :width / 2
+	repeat 2 [
+		stripes penSize :len [penColor]
+		jumpRight :width
+	]
+	setTurtleState :oldState
+end
+
+to drawStripes :numStripes :separation :width
+	localmake "oldState turtleState
+	repeat :numStripes [
+		stripes :width penSize [penColor]
+		jumpBackward :separation
+	]
+	setTurtleState :oldState
+end
+
+to direction1 :scale
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "width :scale * 0.146
+	localmake "len1 :scale * 0.08
+	localmake "oldPenSize penSize
+	localmake "circleSeparation :scale * 0.057
+	drawFork :len1 :width
+	jumpBackward :len1 + :scale * 0.03
+	left 90
+	setPenSize penSize * 0.7
+	ellipseArc 180 :len1 * 0.4 :len1 * 0.5 0
+	setHeading :oldHeading
+	jumpBackward :scale * 0.069
+	stripes :scale * 0.11 penSize [penColor]
+	jumpBackward :scale * 0.078
+	ellipseArc 180 :len1 * 0.9 :len1 * 0.7 90
+	jumpForward :scale * 0.017
+	jumpLeft :circleSeparation / 2
+	setFillColor penColor
+	setPenSize 0
+	repeat 2 [
+		circle :oldPenSize / 2
+		jumpRight :circleSeparation
+	]
+	setTurtleState :oldState
+end
+
+to direction2 :scale
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	drawFork :scale * 0.088 :scale * 0.15
+	jumpBackward :scale * 0.185
+	setPenSize penSize * 0.8
+	localmake "center pos
+	repeat 2 [
+		setHeading :oldHeading + 180 * repcount
+		jumpForward :scale * 0.065
+		ellipseArc 180 :scale * 0.043 :scale * 0.034 -90
+		jumpTo :center
+	]
+	jumpBackward penSize / 2
+	stripes :scale * 0.128 penSize [penColor]
+	setTurtleState :oldState
+end
+
+to direction3 :scale
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "radius1 :scale * 0.048
+	setPenSize :scale * 0.02
+	jumpBackward penSize / 2 + sqrt :radius1 * :radius1 - penSize * penSize / 4
+	right 90
+	arc 180 :radius1
+	setHeading :oldHeading
+	jumpForward :scale * 0.04
+	drawFork :scale * 0.094 :scale * 0.17
+
+	jumpBackward :scale * 0.143
+	drawStripes 3 :scale * 0.0395 :scale * 0.115
+	setTurtleState :oldState
+end
+
+to direction4 :scale
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "outerWidth :scale * 0.415
+	localmake "innerWidth :scale * 0.28
+	localmake "stripeWidth :scale * 0.065
+	localmake "stripeSeparation :scale * 0.031
+	jumpBackward penSize
+	drawStripes 2 :stripeSeparation :stripeWidth
+	jumpForward :scale * 0.02
+	drawFork :scale * 0.104 :scale * 0.155
+	drawFork :scale * 0.161 :outerWidth
+	jumpBackward penSize * 0.9
+	jumpRight :outerWidth / 2
+	repeat 2 [
+		drawStripes 2 :stripeSeparation :stripeWidth
+		jumpLeft :outerWidth
+	]
+	jumpTo :oldPos
+	jumpBackward :scale * 0.045
+	drawFork :scale * 0.118 :innerWidth
+	jumpBackward :scale * 0.05
+	jumpRight :innerWidth / 2
+	repeat 2 [
+		drawStripes 2 :stripeSeparation :stripeWidth
+		jumpLeft :innerWidth
+	]
+	setTurtleState :oldState
+end
+
+to direction5 :scale
+	localmake "oldState turtleState
+	drawFork :scale * 0.11 :scale * 0.15
+	jumpBackward penSize
+	drawStripes 2 :scale * 0.036 :scale * 0.06
+	jumpBackward :scale * 0.125
+	stripes :scale * 0.1 penSize [penColor]
+	jumpBackward :scale * 0.06
+	ellipseArc 180 :scale * 0.045 :scale * 0.037 90
+	setTurtleState :oldState
+end
+
+to direction6 :scale
+	localmake "widthStep :scale * 0.127
+	localmake "len :scale * 0.09
+	drawFork :len :widthStep
+	drawFork :len :widthStep * 2
+end
+
+to direction7 :scale
+	localmake "oldState turtleState
+	localmake "radius :scale * 0.038
+	setFillColor transparent
+	jumpBackward :scale * 0.014
+	circle :radius
+	stripes penSize :radius [penColor]
+	drawFork :scale * 0.105 :scale * 0.174
+	jumpBackward :scale * 0.075
+	stripes :scale * 0.1 penSize [penColor]
+	jumpBackward :scale * 0.08
+	setPenSize penSize * 0.8
+	ellipseArc 180 :scale * 0.045 :scale * 0.035 90
+	setTurtleState :oldState
+end
+
+to direction8 :scale
+	localmake "oldState turtleState
+	drawFork :scale * 0.09 :scale * 0.18	
+	jumpBackward :scale * 0.132
+	setPenSize penSize * 0.9
+	drawStripes 3 :scale * 0.036 :scale * 0.125
+	setTurtleState :oldState
+end
+
+; Inspired by symbol at:
+; https://en.wikipedia.org/wiki/Vegv%C3%ADsir#/media/File:Vegvisir.svg
+to vegvisir :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	setPenSize :height * 0.022
+	setLineCap "butt
+	jumpForward :height / 2
+	localmake "center pos
+	setPenColor "black
+	repeat 8 [
+		setHeading :oldHeading + repcount * 360 / 8
+		localmake "len :height / 2
+		if odd? repcount [
+			localmake "len :len * 1.24
+		]
+		forward :len
+		(invoke word "direction str repcount :height)
+
+		jumpTo :center
+	]
+
+	setTurtleState :oldState
+end
+
+vegvisir 100

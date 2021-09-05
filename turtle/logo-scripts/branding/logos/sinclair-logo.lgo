@@ -1,0 +1,134 @@
+to drawS :height
+	localmake "oldState turtleState
+	localmake "width :height * 1.31
+	setLineJoinStyle "miter
+	setLineCap "butt
+	setPenSize :height * 0.15
+	localmake "pFactor penSize / 2 / :height
+	localmake "wFactor :width / :height - :pFactor
+	localmake "hFactor 0.39 - :pFactor
+	jumpForward penSize / 2
+	jumpLeft :width / 2
+	arcLines [[-90 0] [:wFactor] [90 0] [:hFactor]
+		[90 0] [:wFactor - :pFactor] [-90 0]
+		[:hFactor] [-90 0] [:wFactor]
+	] :height
+	setTurtleState :oldState
+end
+
+to drawI :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "squareSize :height * 0.15
+	setLineCap "butt
+	setPenSize :squareSize
+	forward :height * 0.765
+
+	jumpTo :oldPos
+	jumpForward :height - :squareSize / 2
+	setFillColor penColor
+	setPenSize 0
+	rect :squareSize :squareSize
+	setTurtleState :oldState
+end
+
+to drawN :height
+	localmake "oldState turtleState
+	localmake "width :height * 1.16
+	localmake "h 0.69
+	jumpLeft :width / 2
+	setLineJoinStyle "miter
+	setLineCap "butt
+	setPenSize :height * 0.15
+	arcLines [[:h] [-90 0] [:width / :height] [-90 0] [:h]] :height
+	setTurtleState :oldState
+end
+
+to drawC :height
+	localmake "oldState turtleState
+	localmake "width :height * 1.31
+	setPenSize :height * 0.15
+	localmake "w (:width - penSize / 2) / :height
+	jumpRight :width / 2
+	jumpForward penSize / 2
+	setLineJoinStyle "miter
+	setLineCap "butt
+	arcLines [[90 0] [:w] [-90 0] [0.62] [-90 0] [:w]] :height
+	setTurtleState :oldState
+end
+
+to drawL :height
+	stripes :height * 0.15 :height [penColor]
+end
+
+to drawA :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "width :height * 1.31
+	localmake "h 0.31
+	setLineJoinStyle "miter
+	setLineCap "butt
+	setPenSize :height * 0.15
+	localmake "ps penSize / 2 / :height
+	localmake "w (:width - penSize / 2) / :height
+	jumpForward penSize / 2
+	jumpRight :width / 2
+	arcLines [
+		[90 0] [:w] [-90 0] [:h] [-90 0]
+		[:w - :ps] [90 0] [:h] [90 0] [:w]
+	] :height
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpRight (:width - penSize) / 2
+	stripes penSize :h * :height [penColor]
+	setTurtleState :oldState
+end
+
+to drawR :height
+	localmake "oldState turtleState
+	localmake "width :height * 1.31
+	setLineJoinStyle "miter
+	setLineCap "butt
+	setPenSize :height * 0.15
+	localmake "w (:width - penSize) / 2 / :height
+	jumpLeft :w * :height
+	arcLines [[0.69] [-90 0] [:w * 2 + penSize / 2 / :height]] :height
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://en.wikipedia.org/wiki/Sinclair_Research#/media/File:Sinclair.svg
+;
+; Sinclair was a company in Britain that was largest in the early 1980's.
+; It made low cost personal computers.
+;
+; An emulated version of Sinclair's Logo interpreter is available at:
+; https://archive.org/details/zx_Sinclair_Logo_v1.6_1984_Sinclair_Research
+;
+; You can learn more about the Sinclair company by reading the wikipedia article or
+; watching a movie called Micro Men.
+; Micro Men is at: https://www.youtube.com/watch?v=XXBxV6-zamM
+to sinclairLogo :height
+	localmake "oldState turtleState
+	jumpLeft :height * 3.185
+	drawS :height
+	jumpRight :height * 0.828
+	drawI :height
+	jumpRight :height * 0.82
+	drawN :height
+	jumpRight :height * 1.4
+	drawC :height
+	jumpRight :height * 0.83
+	drawL :height
+	jumpRight :height * 0.82
+	drawA :height
+	jumpRight :height * 0.83
+	drawI :height
+	jumpRight :height * 0.83
+	drawR :height
+	setTurtleState :oldState
+end
+
+sinclairLogo 100

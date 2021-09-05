@@ -1,0 +1,132 @@
+to drawGreenSpinner :height :timeRatio
+	localmake "outerRadius :height * 0.4
+	localmake "spinTimeRatio :timeRatio
+	localmake "thickness :height * 0.18
+	localmake "innerArcRadius :height * 0.02
+	localmake "len :outerRadius - :thickness / 2 
+		- (:thickness / 2 + :innerArcRadius) * (1 / tan 30)
+	if :timeRatio > 0.7 [
+		localmake "offsetTime clamp (:timeRatio - 0.7) / 0.3 0 1
+		localmake "offset interpolateRatio easeOut :offsetTime
+		localmake "spinTimeRatio 0.7 + 0.2 * :offset
+	]
+	jumpForward :height / 2
+	setFillColor "#1F9E5A
+	setPenSize 0
+	left :spinTimeRatio * 5 * 360
+	jumpForward :outerRadius
+	right 90
+	polyStart
+	repeat 6 [
+		arcRight 90 :thickness / 2
+		jumpForward :len
+		if :innerArcRadius > 0 [
+			arcLeft 180 - 360 / 6 :innerArcRadius
+		]
+		jumpForward :len		
+		arcRight 90 :thickness / 2
+	]
+	polyEnd
+end
+
+to timeToValue :data :timeRatio :index
+	repeat count :data [
+		localmake "next item repcount :data
+		if (first :next) >= :timeRatio [
+			ifelse repcount > 1 [
+				localmake "prev item repcount - 1 :data
+			] [
+				localmake "prev [-1 -3 -3]
+			]
+			localmake "prevNum item :index :prev
+			localmake "prevTime first :prev
+			localmake "nextNum item :index :next
+			localmake "nextTime first :next
+			localmake "ratio (:timeRatio - :prevTime) / (:nextTime - :prevTime)
+			output mix :nextNum :prevNum :ratio
+		]
+	]
+	output 1
+end
+
+; Inspired by the branding animation at the start of:
+; https://www.youtube.com/watch?v=o0CnVubtmUQ
+;
+; The following video shows how some of it was made:
+; https://www.youtube.com/watch?v=C7QbaEtbKZ4
+;
+; It looks like Fran Blanch made the animation on cards
+; and she spins through them to play it in her videos.
+; She calls the card flipping machine "the movie machine".
+;
+; That project looks like fun as she did it but the following 
+; procedure draws a similar animation to show how something 
+; similar can be done in WebLogo.
+to franLabMovieMachine :height :timeRatio
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+
+	; offsets for the labels.
+	; Each element is structured like: 
+	; [timeRatio labRatio franRatio]
+	localmake "labelsX [
+		[0 -2 -2]
+		[0.08 -1 -0.49]
+		[0.12 -0.41 -0.49]
+		[0.18 -0.41 -0.49]
+		[0.23 -0.41 0]
+		[0.3 1.5 1.7]
+		[0.3 -2 -2]
+		[0.38 -1 -0.49]
+		[0.44 -0.41 -0.49]
+		[0.5 -0.41 -0.49]
+		[0.55 -0.41 0]
+		[0.6 1.5 1.7]
+		[0.6 -2 -2]
+		[0.7 -1 -0.49]
+		[0.75 -0.41 -0.49]
+		[1 -0.41 -0.49]
+	]
+	drawGreenSpinner :height :timeRatio
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.06
+	jumpRight :height * timeToValue :labelsX :timeRatio 2
+	setFontFamily 'Arial Black'
+	setFontSize :height * 0.38
+	setFillColor "white
+	setPenColor "#0202C5
+	setLineJoinStyle "round
+	setPenSize :height * 0.02
+	right 90
+	label "Lab
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.56
+	jumpRight :height * timeToValue :labelsX :timeRatio 3
+	setPenColor "#C00202
+	right 90
+	label "Fran	
+	setTurtleState :oldState
+end
+
+setScreenColor "#bbb
+franLabMovieMachine 100 animation.timeRatio
+
+to animation.snapshotstyle
+	output createPList2 [
+		["position.y 50]
+		["zoom.scale 5]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 7
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

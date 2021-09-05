@@ -1,0 +1,58 @@
+; Inspired by logo at
+; https://www.facebook.com/
+to facebookLogo :height
+	localmake "oldState turtleState
+	localmake "radius :height / 2
+	localmake "arcAngle1a 9.207
+	localmake "arcAngle1 9.7878
+	localmake "arcRadius1 0.0773
+	localmake "arcRadius2 0.045
+	localmake "arcRadius3 0.26
+	localmake "arcRadius4 0.1417
+	localmake "angle1 90 - :arcAngle1
+	localmake "angle2 9.1302
+	localmake "size1 :height * 0.352722
+	localmake "size2 :height * 0.11
+	localmake "size3 :height * 0.14179657
+	localmake "size4 :size2 + :size3 * sin :angle2
+	localmake "size5 :height * 0.102
+	localmake "size7 :height * 0.125018
+	localmake "colorStops createPList2 [
+		[0 "#0062E0] [1 "#19AFFF]
+	]
+	localmake "oldPos pos
+	jumpForward :height
+	setFillGradient createLinearGradient :oldPos pos :colorStops "pad
+	jumpBackward :height / 2
+	setPenSize 0
+	circle :radius
+	jumpTo :oldPos
+	left 90
+	arcRight :arcAngle1a :radius
+	setFillColor "white
+	left 180
+	polyStart
+	arcLeft :arcAngle1a + :arcAngle1 :radius
+	left :angle1
+	jumpForward :size1
+	jumpRight :size2
+	right :angle2
+	jumpForward :size3
+	left :angle2
+	jumpLeft :size4
+	jumpForward :size5
+
+	; This is not a single 90 degree arc because
+	; we want to approximate the elliptical or bezier 
+	; curve used in the actual facebook logo.
+	arcLines [[-30 :arcRadius1] [-30 :arcRadius2] [-30 :arcRadius1]
+		[0.0745] [90 0] [0.12755] [80.1 0] [8 0.7] [25 :arcRadius3]
+		[41.9 :arcRadius4] [25 :arcRadius3] [0.10403]] :height
+	jumpRight :size7
+	jumpForward :height * 0.14
+	jumpLeft :size7
+	polyEnd
+	setTurtleState :oldState
+end
+
+facebookLogo 100

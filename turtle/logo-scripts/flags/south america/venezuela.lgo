@@ -1,0 +1,89 @@
+make "colors ["#cf142b "#00247d "#ffcc00]
+
+; Inspired by
+; https://commons.wikimedia.org/wiki/File:Flag_of_Venezuela.svg
+to venezuelaFlag :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "width :height * 3 / 2
+	localmake "numStars 8
+	localmake "starStepAngle 90 / 4.5
+	localmake "starDistance :height * 0.3
+	localmake "starSize1 :height * 0.045
+	localmake "starScaleFactor 0.93
+	stripes :width :height :colors
+	jumpForward :height * 0.312
+	localmake "starArcCenter pos
+	setPenSize 0
+	setFillColor "white
+
+	; Unfortunately, these stars don't line up with the original flag perfectly.
+	; This construction sheet omits the most important details regarding star position too:
+	; https://commons.wikimedia.org/wiki/File:Flag_of_Venezuela_(construction_sheet).svg
+	localmake "angle -:starStepAngle * (:numStars - 1) / 2
+	repeat :numStars [
+		jumpForward :starDistance * :starScaleFactor * cos :angle
+		jumpRight :starDistance * sin :angle
+		setHeading :oldHeading + :angle
+		regularStar :starSize1 5
+		jumpTo :starArcCenter
+		setHeading :oldHeading
+		localmake "angle :angle + :starStepAngle
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Venezuela#/media/File:Flag_of_Venezuela_(1817_and_1859).svg
+; 1817 to 1859
+; I'm not sure if the flag should have blue stars or not because 
+; the PNG doesn't.
+; The SVG does.
+to venezuela1859Flag :height
+	localmake "width :height * 3 / 2
+	stripes :width :height :colors
+end
+
+; Inspired by
+; https://upload.wikimedia.org/wikipedia/commons/3/3b/Bandera_de_la_Guerra_a_Muerte.svg
+; 1813 to 1814
+to secondRepublicOfVenezuelaFlag :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "width :height * 3 / 2
+	localmake "angle arcTan :width / :height
+	localmake "whiteSize :height / 4 * hypot [2 3]
+	stripes :width :height ["#e10000]
+	setPenSize 0
+	setFillColor "white
+	left :angle
+	polyStart
+	jumpForward :whiteSize
+	setHeading :oldHeading + :angle
+	jumpForward :whiteSize
+	setHeading :oldHeading + 180 - :angle
+	jumpForward :whiteSize
+	polyEnd
+
+	; Draw black rectangle in center
+	setLineCap "butt
+	setPenColor "black
+	setPenSize :width / 2
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height / 4
+	forward :height / 2
+
+	setTurtleState :oldState
+end
+
+setScreenColor "#eee
+make "height 100
+make "separation :height * 4
+jumpLeft :separation
+venezuelaFlag :height
+jumpRight :separation
+venezuela1859Flag :height
+jumpRight :separation
+secondRepublicOfVenezuelaFlag :height

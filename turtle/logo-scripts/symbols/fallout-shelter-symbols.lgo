@@ -1,0 +1,47 @@
+to drawTriangles :triangleHeight
+	localmake "oldHeading heading
+	localmake "triangleWidth 2 * :triangleHeight * tan 30
+	localmake "center pos
+	repeat 3 [
+		setHeading :oldHeading + repcount * 360 / 3
+		jumpForward :triangleHeight
+		right 180
+		isoTriangle :triangleWidth :triangleHeight
+		jumpTo :center
+	]
+end
+
+; Inspired by:
+; https://commons.wikimedia.org/wiki/File:Fallout_shelter_symbol.svg
+to falloutShelterSymbol :height
+	localmake "oldState turtleState
+	setPenSize 0
+	setFillColor "black
+	jumpForward :height / 2
+	circle :height / 2
+	setFillColor "white
+	drawTriangles :height * 0.37527765
+	setTurtleState :oldState
+end
+
+; Inspired by:
+; https://en.wikipedia.org/wiki/Fallout_shelter#/media/File:Fallout_shelter_sign_(US).jpg
+to falloutShelterSign :height
+	localmake "oldState turtleState
+	localmake "signYellow "#edc83b
+	stripes :height :height [:signYellow]
+	jumpForward :height / 2
+	setPenSize 0
+	setFillColor "black
+	circle :height * 0.425
+	setFillColor:signYellow
+	drawTriangles :height * 0.345
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 4
+jumpLeft :separation / 2
+falloutShelterSymbol :height
+jumpRight :separation
+falloutShelterSign :height

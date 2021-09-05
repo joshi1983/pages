@@ -1,0 +1,94 @@
+; Inspired by sign 5 at:
+; https://www.pinterest.ca/pin/1759287345118411/
+; Also shown at
+; https://www.latvians.com/index.php?en%2FCFBH%2FLatRakstuABC%2FPages%2Fpg-0012.jpg
+to latviaSign5 :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	setPenSize :height * 0.02
+	localmake "len1 (:height + penSize * 2) / 2 * cos 45
+	localmake "innerSquareSize :height * 0.14
+	localmake "innerSquareSize2 :innerSquareSize / 2 / cos 45
+	localmake "len2 :height / 2 - :innerSquareSize2
+	localmake "step (:len1 / cos 45) / 5
+	localmake "len3 :len1 - (:step + penSize) * cos 45 
+	localmake "len4 :len1 - :len3
+	localmake "width1 (:len1 - (:step * 3 + penSize / 2) * cos 45) * 2
+	localmake "step2 :width1 / 4
+	jumpForward :height / 2
+	localmake "center pos
+	setLineCap "butt
+	right 45
+	setFillColor transparent
+	rect :innerSquareSize :innerSquareSize
+	repeat 2 [
+		jumpBackward :len1
+		forward :len1 * 2
+		jumpTo :center
+		right 90
+	]
+	repeat 4 [
+		localmake "heading1 :oldHeading + repcount * 360 / 4
+		setHeading :heading1
+		jumpForward :innerSquareSize2
+		forward :len2
+		repeat 3 [
+			localmake "len (:step * repcount + penSize) * cos 45
+			jumpBackward :step
+			right 45
+			jumpForward :len
+			backward :len
+			left 90
+			forward :len
+			jumpBackward :len
+			setHeading :heading1
+		]
+		jumpTo :center
+		right 45
+		jumpForward :len3
+		stripes :width1 penSize [penColor]
+		jumpLeft :step2
+		repeat 2 [
+			stripes penSize :len4 [penColor]
+			jumpRight :step2 * 2
+		]
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by the sign number 7 at:
+; https://www.pinterest.ca/pin/1759287345118411/
+to latviaSign7 :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	setPenSize :height * 0.04
+	localmake "step (:height / 5 - penSize) / cos 45
+	localmake "step :step * 1.209
+	localmake "lenOffset :step / 2 / cos 45
+	setLineCap "butt
+	jumpLeft :step * 4
+	localmake "len 0
+	localmake "len2 :lenOffset * 8
+	jumpForward penSize * cos 45
+	repeat 7 [
+		setHeading :oldHeading
+		localmake "len :len + :lenOffset
+		localmake "len2 :len2 - :lenOffset
+		jumpRight :step
+		left 45
+		jumpForward :len
+		backward :len
+		right 90
+		forward :len2
+		jumpBackward :len2
+	]
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 4
+jumpLeft :separation / 2
+latviaSign5 :height
+jumpRight :separation
+latviaSign7 :height
