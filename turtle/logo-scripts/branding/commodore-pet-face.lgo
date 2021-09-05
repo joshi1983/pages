@@ -1,0 +1,176 @@
+make "lightColor "#00f479
+
+to drawP :fontHeight
+	localmake "oldState turtleState
+	setPenSize :fontHeight / 4
+	jumpLeft penSize * 1.5
+	arcLines [[7/8] [-90 0] [1/2] [-90 0] [1/2] [-90 0] [1/2]
+	] :fontHeight
+	setTurtleState :oldState
+end
+
+to drawE :fontHeight
+	localmake "oldState turtleState
+	setPenSize :fontHeight / 4
+	jumpLeft penSize * 1
+	stripes penSize :fontHeight [:lightColor]
+	right 90
+	jumpLeft penSize / 2
+	repeat 2 [
+		stripes penSize :fontHeight * 0.5 [:lightColor]
+		jumpLeft :fontHeight - penSize
+	]
+	jumpRight (:fontHeight - penSize) * 1.5
+	stripes penSize :fontHeight * 0.45 [:lightColor]
+	setTurtleState :oldState
+end
+
+to drawT :fontHeight
+	localmake "oldState turtleState
+	localmake "topThickness :fontHeight * 0.25
+	stripes :topThickness :fontHeight [:lightColor]
+	jumpForward :fontHeight - :topThickness
+	stripes :fontHeight * 0.7 :topThickness [:lightColor]
+	setTurtleState :oldState
+end
+
+to drawPET :fontHeight
+	localmake "oldState turtleState
+	localmake "fontWidth :fontHeight * 0.8
+	setLineCap "butt
+	setLineJoinStyle "miter
+	jumpLeft :fontWidth
+	drawP :fontHeight
+	jumpRight :fontWidth
+	drawE :fontHeight
+	jumpRight :fontWidth
+	drawT :fontHeight
+	setTurtleState :oldState
+end
+
+to drawCommodoreLogo :logoHeight
+	localmake "oldState turtleState
+	localmake "thickness 0.25
+	localmake "arcRadius 0.5 - :thickness / 2
+	localmake "logoArcs1 [[0.2] [-90 :arcRadius]]
+	localmake "logoArcs combine :logoArcs1 reverse :logoArcs1
+	setPenSize :logoHeight * :thickness
+	jumpForward penSize / 2
+	setPenColor :lightColor
+	setLineCap "butt
+	left 90
+	arcLines :logoArcs :logoHeight
+	jumpRight :logoHeight * :arcRadius
+	jumpForward :logoHeight * 0.05
+	stripes :logoHeight * :arcRadius :logoHeight * 0.5 [:lightColor]
+	setTurtleState :oldState
+end
+
+to drawPETBranding :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "fontHeight :height * 0.72
+	localmake "logoHeight 0.35
+	stripes :height * 7 :height ["black]
+	jumpForward :height * 0.15
+	drawPET :fontHeight
+
+	jumpTo :oldPos
+	jumpLeft :height * 3.1
+	jumpForward :height * (1 - :logoHeight) / 2
+	drawCommodoreLogo :height * :logoHeight
+
+	jumpTo :oldPos
+	jumpForward :height * 0.33
+	jumpRight :height * 2
+	localmake "modelNumber "4032
+	setFontSize :height * 0.5
+	setFontFamily "arial
+	setFillColor :lightColor
+	setPenSize :height * 0.03
+	right 90
+	label :modelNumber
+
+	setTurtleState :oldState
+end
+
+to drawBackgroundShapes :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "lightColor :lightColor
+	localmake "rects [
+		[0 1.1 0.025]
+		[0.05 1.05 0.215]
+		[0.28 0.55 0.05]
+	]
+	localmake "screenWidth 1.3
+	localmake "screenArcs [[10 :screenWidth] [70 0.05] [20 1.1]
+		[70 0.05] [10 :screenWidth] ]
+	repeat count :rects [
+		localmake "rectInfo item repcount :rects
+		localmake "width :height * item 2 :rectInfo
+		jumpForward :height * first :rectInfo
+		stripes :width :height * last :rectInfo [:lightColor]
+		jumpTo :oldPos
+	]
+	jumpForward :height * 0.3625
+	setFillColor "black
+	setPenColor :lightColor
+	setPenSize :height * 0.015
+	isoTrapezoid :height * 0.75 :height * 0.65 :height * 0.63
+	jumpForward :height * 0.06
+	right 90
+	polyStart
+	repeat 2 [
+		arcLines :screenArcs :height
+	]
+	polyEnd
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.097
+	drawPETBranding :height * 0.133
+	setTurtleState :oldState
+end
+
+to drawFace :height
+	localmake "oldState turtleState
+	localmake "eyeSeparation :height * 0.29
+	localmake "eyeSize :height * 0.11
+	localmake "eyeBrowSeparation :height * 0.35
+	jumpForward :height * 0.18
+	stripes :height * 0.17 :height * 0.105 [:lightColor]
+	jumpForward :height * 0.45
+	jumpLeft :eyeSeparation / 2	
+	setFillColor :lightColor
+	setPenSize 0
+	repeat 2 [
+		rect :eyeSize :eyeSize
+		jumpRight :eyeSeparation
+	]
+	jumpLeft :eyeSeparation * 1.5
+	jumpForward :height * 0.15
+	jumpLeft :eyeBrowSeparation / 2
+	repeat 2 [
+		rect :height * 0.2 :height * 0.05
+		jumpRight :eyeBrowSeparation
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by animation at:
+; https://www.youtube.com/shorts/ugesj9F3h98
+; 
+; The program was written by shiru8bit.
+; shiru8bit's channel is at:
+; https://www.youtube.com/@shiru8bit
+to petComputerFace :height
+	localmake "oldState turtleState
+	drawBackgroundShapes :height
+	jumpForward :height * 0.432
+	drawFace :height * 0.484
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+petComputerFace 100

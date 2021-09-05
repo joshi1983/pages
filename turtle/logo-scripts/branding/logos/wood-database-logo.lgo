@@ -1,0 +1,66 @@
+; Inspired by logo at:
+; https://www.wood-database.com/
+to woodDatabaseLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "colorStops createPList2 [
+		[0 "#886e51] [0.5 "#886e51] [0.6 "#e2c495]
+		[0.8 "#e2c495] [0.85 "#c8a372] [0.9 "#e2c495]
+		[0.97 "#e2c495] [1 "#AE966F]
+	]
+	localmake "barkBumps [0 0 1 0 0.3 1 0 0.2 0.4 0 0.3 0.2 0.7 0.1 1
+	0.5 0 0.4 0 1 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 
+	0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1]
+	localmake "barkThickness :height * 0.02
+	localmake "ringColors ["#D3A150 "#886e51 "#e2c495 "#64503A "#886e51]
+	localmake "numRings 100
+	jumpForward :height / 2
+	localmake "center pos
+	setFillGradient createRadialGradient pos :height * 0.48 :colorStops
+	setPenSize :height * 0.01
+	localmake "innerRadius (:height - penSize) / 2 - :barkThickness
+	localmake "outerPoints []
+	repeat count :barkBumps [
+		jumpForward :innerRadius + :barkThickness * item repcount :barkBumps
+		queue2 "outerPoints pos
+		jumpTo :center
+		right 360 / count :barkBumps
+	]
+	jumpTo first :outerPoints
+	setLineJoinStyle "round
+	setPenColor "#5E503B
+	polyStart
+	for ["i 2 count :outerPoints] [
+		localmake "nextPoint item :i :outerPoints
+		setHeading towards :nextPoint
+		jumpForward distance :nextPoint
+	]
+	polyEnd
+	jumpTo :center
+	setHeading :oldHeading
+	jumpRight :height * 0.333
+	setPenSize :height * 0.02
+	setPenColor "#998e6a47
+	setFillColor "#8e6a47
+	polyStart
+	arcLines [[90 0.33] [90 0.36] [90 0.3] [20 0.15] [20 0.89] [52 0.2]] :height
+	polyEnd
+	jumpTo :center
+	setHeading :oldHeading
+	jumpLeft :height * 0.073
+	jumpForward :height * 0.012
+	localmake "ringCenter pos
+	setFillColor transparent
+	setPenSize :height * 0.001
+	repeat :numRings [
+		localmake "ringColorIndex 1 + remainder repcount count :ringColors
+		localmake "ringColor item :ringColorIndex :ringColors
+		jumpTo mix :center :ringCenter repRatio
+		localmake "radius :height * mix 0.46 0.01 repRatio
+		setPenColor :ringColor
+		circle :radius
+	]
+	setTurtleState :oldState
+end
+
+woodDatabaseLogo 100
