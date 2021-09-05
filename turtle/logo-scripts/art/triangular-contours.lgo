@@ -1,0 +1,60 @@
+; Inspired by
+; https://www.pinterest.ca/pin/281404676706260672/
+
+to getWrappedItem :index :items
+	localmake "index 1 + remainder :index (count :items)
+	output item :index :items
+end
+
+to design :size :numSides
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "points []
+	localmake "size1 :size * sin 90 / :numSides
+	localmake "numLines 26
+	setPenSize :size * 0.005
+	circle :size
+	repeat :numSides [
+		jumpForward :size1
+		queue2 "points pos
+		jumpTo :oldPos
+		right 360 / :numSides
+	]
+	repeat :numLines [
+		localmake "radius1 :size * (repcount - 1) / (:numLines - 1)
+		repeat :numSides [
+			jumpTo :oldPos
+			jumpForward :radius1
+			localmake "midPos pos
+			localmake "fromPos getWrappedItem repcount - 1 :points
+			localmake "toPos getWrappedItem repcount :points
+			jumpTo :fromPos
+			setHeading towards :midPos
+			localmake "d distance :midPos
+			right 180
+			localmake "d2 distanceToCircle :oldPos :size
+			right 180
+			if :d2 >= 0 [
+				localmake "d3 :d + :d2
+				jumpTo :fromPos
+				jumpBackward :d2
+				forward :d3
+				setHeading towards :toPos
+				forward :d3
+			]
+			setHeading :oldHeading + (180 + repcount * 360) / :numSides
+		]
+	]
+	setTurtleState :oldState
+end
+
+make "size 40
+make "separation :size * 2.2
+right 90
+
+jumpBackward :separation * 3.5
+repeat 8 [
+	design :size repcount + 1
+	jumpForward :separation
+]

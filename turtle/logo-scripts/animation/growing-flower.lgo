@@ -1,0 +1,80 @@
+; Inspired by animation at the end of:
+; https://www.youtube.com/watch?v=aQj2FDTt3TY
+;
+; The guy at Coding Adventures uses P5.js but
+; this was written from scratch in WebLogo.
+to growingFlower :height :timeRatio
+	localmake "oldState turtleState
+	localmake "width :height
+	localmake "groundHeight :height * 2 / 3
+	localmake "stemHeight :height * 0.495 * min 1 :timeRatio * 2
+	localmake "stemWidth :height * 0.05
+	localmake "stemColor "#87bf4a
+	localmake "leafMaxWidth :height * 0.104
+	localmake "leafWidth :leafMaxWidth * min 1 (:timeRatio - 0.2) * 3
+	localmake "leafHeight :leafWidth * 0.4
+	localmake "leafOffset :leafMaxWidth + :stemWidth / 2
+	localmake "petalOffset :height * 0.17
+	localmake "petalRadius :height * 0.14 * min 1 (:timeRatio - 0.5) * 2.8
+	localmake "flowerCenterRadius :height * 0.08 * (:timeRatio - 0.8) / 0.2
+	setPenSize :width
+	setPenColor "#548135
+	setLineCap "butt
+	forward :groundHeight
+	setPenColor "#00b0f0
+	forward :height - :groundHeight
+	jumpBackward :height * 0.93
+	localmake "stemBase pos
+	if :stemHeight > 0 [
+		stripes :stemWidth :stemHeight [:stemColor]
+		setPenSize 0
+		setFillColor :stemColor
+		jumpForward :height * 0.07
+		jumpLeft :leafOffset
+		if :leafWidth > 0 [
+			ellipse :leafWidth :leafHeight
+			jumpRight :leafOffset * 2
+			jumpForward :height * 0.127
+			ellipse :leafWidth :leafHeight
+		]
+
+		jumpTo :stemBase
+		jumpForward :stemHeight
+		localmake "flowerCenter pos
+		if :petalRadius > 0 [
+			setFillColor "red
+			repeat 3 [
+				jumpForward :petalOffset
+				circle :petalRadius
+				right 360 / 3
+				jumpTo :flowerCenter
+			]
+		]
+		if :flowerCenterRadius > 0 [
+			setFillColor "yellow
+			circle :flowerCenterRadius
+		]
+	]
+
+	setTurtleState :oldState
+end
+
+make "timeRatio animation.clampedTimeRatio
+growingFlower 100 :timeRatio
+
+to animation.snapshotstyle
+	output createPList2 [
+		["position.y 50]
+		["zoom.scale 7.1]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 5
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+		["thumbnailTime :seconds]
+	]
+end

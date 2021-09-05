@@ -1,0 +1,196 @@
+to aldiNordLogoBackground :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "blueNavy "#001e78
+	localmake "darkThickness :height * 0.0242
+	localmake "lightBlueColor "#00b4dc
+	localmake "gap1 :height * 0.0094
+	localmake "leftAngle 42.5
+	localmake "arcAngle 76
+	localmake "separation :height * 0.3874327
+	localmake "lines []
+	localmake "height1 :height * 0.60919
+	localmake "stripesInfo [
+		[:blueNavy 0.05567 0.08648 0.08648]
+		[:lightBlueColor 0.07 0.08648 0.1]
+		[:blueNavy 0.05567 0.1 0.1]
+	]
+	jumpForward :height / 2
+	setPenColor "#c80000
+	setPenSize :height * 0.038
+	setLineJoinStyle "miter
+	setFillColor "white
+	rect :height * 0.9145 :height - penSize
+	jumpBackward :height * 0.414
+	stripes :height * 0.781 :height * 0.1996 [:blueNavy]
+	jumpForward :height * 0.29942
+	setLineCap "butt
+	setPenColor :blueNavy
+	setPenSize :height * 0.44
+	forward :darkThickness
+	jumpForward :gap1
+	setPenColor :lightBlueColor
+	forward :height * 0.038305
+	jumpForward :gap1
+	setPenColor :blueNavy
+	setPenSize :height * 0.4
+	forward :darkThickness
+	jumpBackward :height * 0.186149
+	localmake "bottomMiddle pos
+
+	jumpLeft :height * 0.057
+	jumpForward :height1
+	localmake "pos1 pos
+	jumpLeft :separation / 2
+	queue2 "lines [:pos1 pos -90]
+	jumpBackward :height1
+	setPenSize 0
+
+	localmake "angle :arcAngle - :leftAngle
+	setHeading :oldHeading + 180 + :angle
+	localmake "pos1 pos
+	jumpForward :height
+	queue2 "lines [:pos1 pos -:angle]
+
+	setFillColor "white
+	jumpTo :bottomMiddle
+	setHeading :oldHeading
+	jumpRight :separation / 2 - :height * 0.019
+	right :leftAngle
+	polyStart
+	arcLeft :arcAngle :height * item 3 first :stripesInfo
+	jumpForward :height * 0.2
+	jumpRight :height * 0.1
+	jumpBackward :height * 0.25
+	polyEnd
+
+	repeat count :lines [
+		localmake "lineInfo item repcount :lines
+		localmake "pos1 item 1 :lineInfo
+		localmake "pos2 item 2 :lineInfo
+		localmake "sign sign repcount - 1.5
+		setHeading :oldHeading
+		jumpTo :bottomMiddle
+		jumpRight :separation / 2 * :sign
+		repeat count :stripesInfo [
+			localmake "stripeInfo item repcount :stripesInfo
+			localmake "radius1 :height * item 3 :stripeInfo
+			localmake "radius2 :height * item 4 :stripeInfo
+			setHeading :oldHeading
+			right :leftAngle * :sign
+			localmake "stripeWidth :height * (item 2 :stripeInfo)
+			if :sign > 0 [
+				localmake "stripeWidth :stripeWidth * 0.9
+			]
+			setFillColor first :stripeInfo
+			polyStart
+			arcLeft :sign * :arcAngle :radius1
+			localmake "straightLength distanceToLine :pos1 :pos2
+			jumpForward :straightLength
+			setHeading :oldHeading - :sign * last :lineInfo
+			jumpForward :stripeWidth
+			setHeading :oldHeading + 180 - (:arcAngle - :leftAngle) * :sign
+			localmake "chordDelta (:radius2 - :radius1) * 2 * sin :arcAngle / 2
+			localmake "slopeAngle :arcAngle - :leftAngle
+			localmake "straightLength2 :straightLength - :chordDelta / cos :slopeAngle
+			if :sign > 0 [
+				localmake "straightLength2 :straightLength2 + :stripeWidth
+			]
+			jumpForward :straightLength2
+			arcLeft -:sign * :arcAngle :radius2
+			polyEnd
+			setHeading :oldHeading
+			jumpRight :height * 0.01 * :sign
+		]
+	]
+	setTurtleState :oldState
+end
+
+to drawA :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "width :height * 1.48
+	localmake "angle 27.1
+	localmake "outerSlantedHeight :height / cos :angle
+	localmake "topWidth :width - :height * 2 * tan :angle
+	localmake "bottomThickness :height * 0.455
+	localmake "innerSlantedHeight (:width - :bottomThickness * 2) / cos :angle
+	jumpLeft :width / 2
+	right :angle
+	polyStart
+	jumpForward :outerSlantedHeight
+	setHeading :oldHeading
+	jumpRight :topWidth
+	setHeading :oldHeading + 180 - :angle
+	jumpForward :outerSlantedHeight
+	setHeading :oldHeading
+	jumpLeft :bottomThickness
+	left :angle
+	jumpForward :innerSlantedHeight
+	setHeading :oldHeading - 180 + :angle
+	jumpForward :innerSlantedHeight
+	polyEnd
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.105
+	stripes :width * 0.5 :height * 0.265 [fillColor]
+	setTurtleState :oldState
+end
+
+to drawL :height
+	localmake "oldState turtleState
+	localmake "baseWidth :height * 0.845
+	localmake "thickness :height * 0.456 
+	stripes :baseWidth :height * 0.29 [fillColor]
+	jumpLeft (:baseWidth - :thickness) / 2
+	stripes :thickness :height [fillColor]
+	setTurtleState :oldState
+end
+
+to drawD :height
+	localmake "oldState turtleState
+	localmake "outerArcsInfo [[0.435] [90 0.5]]
+	localmake "innerArcsInfo [[0.78] [-10 0.3] [-20 0.44] [-20 0.45] [-40 0.544]]
+	localmake "thickness :height * 0.286
+	localmake "innerHeight :height - :thickness * 2
+	jumpLeft :height * 0.363
+	stripes :height * 0.445 :height [fillColor]
+	right 90
+	polyStart
+	arcLines :outerArcsInfo :height
+	arcLines reverse :outerArcsInfo :height
+	jumpLeft :thickness
+	right 180
+	arcLines :innerArcsInfo :innerHeight
+	arcLines reverse :innerArcsInfo :innerHeight
+	polyEnd
+	setTurtleState :oldState
+end
+
+to drawI :height
+	stripes :height * 0.445 :height [fillColor]
+end
+
+; Inspired by logo at
+; https://en.wikipedia.org/wiki/Aldi#/media/File:AldiNord-WorldwideLogo.svg
+to aldiNordLogo :height
+	localmake "oldState turtleState
+	localmake "fontHeight :height * 0.1525
+	aldiNordLogoBackground :height
+	setPenSize 0
+	setFillColor "white
+	jumpForward :height * 0.1095
+	jumpLeft :height * 0.206
+	drawA :fontHeight
+	jumpRight :fontHeight * 1.22
+	drawL :fontHeight
+	jumpRight :fontHeight * 1.1
+	drawD :fontHeight
+	jumpRight :fontHeight * 0.898
+	drawI :fontHeight
+	setTurtleState :oldState
+end
+
+aldiNordLogo 100

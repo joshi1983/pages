@@ -1,0 +1,35 @@
+; Inspired by logo at:
+; https://www.financeofamerica.com
+to financeOfAmericaLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "colors ["white "#00A9E0]
+	localmake "angle 30
+	localmake "width1 :height * 0.238
+	localmake "height1 :height * 0.478
+	localmake "sideWidth :height * 0.205
+	localmake "sideHeight :height - :height1 * sin :angle
+	setPenSize 0
+	repeat count :colors [
+		localmake "sign sign repcount - 1.5
+		setFillColor item repcount :colors
+		jumpForward :height
+		right :sign * 90
+		jumpRight :sign * :width1 / 2
+		parallelogram :width1 :height1 :sign * :angle
+		jumpRight :sign * :height * 0.442
+		parallelogram :width1 :height1 :sign * :angle
+
+		jumpTo :oldPos
+		setHeading :oldHeading
+		jumpLeft :sign * (:sideWidth / 2 - :height1 * cos :angle)
+		stripes :sideWidth :sideHeight [fillColor]
+		setHeading :oldHeading
+		jumpTo :oldPos
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "#003B5C
+financeOfAmericaLogo 100

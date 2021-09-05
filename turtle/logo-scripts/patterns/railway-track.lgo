@@ -1,0 +1,35 @@
+; Inspired by various photos of railway tracks.
+; I(Josh Greig) wrote this code in 2023.
+; Consider this procedure public domain.
+to railwayTrack :width :len
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "plankSeparation :width * 0.15
+	localmake "plankThickness :plankSeparation * 0.4
+	localmake "plankLength :width * 0.6
+	localmake "numPlanks (:len + :plankSeparation - :plankThickness) / :plankSeparation
+	localmake "railSeparation :plankLength * 0.7
+	localmake "railThickness :railSeparation * 0.08
+	stripes :width :len ["#dfdddd]	; indicate gravel.
+
+	; Draw the planks.
+	repeat :numPlanks [
+		stripes :plankLength :plankThickness ["#7B5F37]
+		jumpForward :plankSeparation
+	]
+
+	; Draw the metal rails.
+	jumpTo :oldPos
+	jumpRight :railSeparation / 2
+	stripes :railThickness :len ["black]
+	jumpLeft :railSeparation
+	stripes :railThickness :len ["black]
+
+	setTurtleState :oldState
+end
+
+; Indicate a grassy ground.
+setScreenColor "#5FAB5F
+jumpForward 50
+right 90
+railwayTrack 100 1000

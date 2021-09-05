@@ -1,0 +1,23 @@
+!
+! SIGNRANK. Use Wilcoxon signed-rank test to see if two samples of
+! paper pulp were drawn from the same population. Data is pulp
+! brightness from "Statistical Analysis" by Harnett & Murphy, p. 876.
+! Compare these results with those of the MANNWHIT program.
+!
+LIBRARY "Stat3Lib.trc"
+
+DIM a(11), b(10)
+
+MAT READ a, b
+DATA 75.91, 77.15, 77.36, 77.39, 77.54, 77.55, 78.00, 78.04, 78.36, 78.36, 78.95
+DATA 74.47, 76.15, 76.21, 76.22, 76.39, 77.20, 78.05, 78.06, 82.75, 82.87
+
+CALL Wilcoxon2 (a(), b(), .95, n, w, z, p, med, low, high)
+
+PRINT "Wilcoxon signed-rank statistic: "; w
+PRINT "z value: "; z
+PRINT "Two-tailed probability:"; Using$("#.###",p)
+PRINT
+PRINT "95% confidence interval: "; low; high
+
+END

@@ -1,0 +1,53 @@
+<code>print miterLimit
+; prints 10 because that is the default/initial value
+
+setMiterLimit 0
+print miterLimit
+; prints 0 to Commander
+
+setPenSize 10
+setLineJoinStyle "miter
+setPenColor "red
+forward 100
+right 160; The joint will be a bevel.
+forward 50
+
+setMiterLimit 10
+print miterLimit ; prints 10 to Commander
+setPenColor "green
+forward 50
+left 160 ; the joint here will be miter.
+forward 50</code>
+<code>setMiterLimit 20 * animation.time / animation.duration
+setPenSize 10
+jumpLeft 300
+repeat 20 [
+	make "pos1 pos
+	make "angle 170 - repRatio * 90
+	forward 60
+	right :angle
+	forward 20
+	jumpTo :pos1
+	setHeading 0
+	jumpRight 30
+]
+jumpTo [-60 -35]
+setHeading 90
+setPenSize 0
+setFillColor "blue
+label ['MiterLimit = ' miterLimit]
+
+to animation.snapshotstyle
+	output createPList2 [
+		["position.y 50]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 10
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end</code>

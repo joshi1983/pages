@@ -1,0 +1,125 @@
+to drawFlag :height
+	localmake "oldState turtleState
+	localmake "size1 :height * 0.27
+
+	; draw flag pole.
+	forward :height 
+
+	; Draw the waving flag as 2 squares and a triangle.
+	jumpBackward :size1 / 2
+	left 90
+	jumpForward :size1 / 2
+	setFillColor "red
+	square :size1
+	jumpForward :size1
+	jumpLeft :size1 * 0.4
+	square :size1
+	jumpForward :size1 / 2
+	isoTriangle :size1 :size1
+	setTurtleState :oldState
+end
+
+to drawTower :heightIncludingFlag :width :flagHeight
+	localmake "oldState turtleState
+	localmake "height1 :heightIncludingFlag - :flagHeight - penSize
+	localmake "triangleHeight :width / 2 / sin 39
+	localmake "height2 :height1 - :triangleHeight
+	jumpForward (penSize + :height2) / 2
+	setLineJoinStyle "round
+	; The corners of the triangle and flag look worse using miter.
+
+	rect :width :height2
+	jumpForward :height2 / 2
+	isoTriangle :width :triangleHeight
+	jumpForward :triangleHeight
+	drawFlag :flagHeight
+	setTurtleState :oldState
+end
+
+to castleWallLineForward :toothSize :numTeeth
+	repeat :numTeeth [
+		forward :toothSize
+		right 90
+		forward :toothSize
+		repeat 2 [
+			left 90
+			forward :toothSize
+		]
+		right 90
+	]	
+end
+
+; Inspired by a book called
+; "A Bit of Logo Magic"
+; "Adventures for Intermediate Programmers"
+; By Donna Bearden
+; Published in 1984 by Reston Publishing Company, Inc.
+; The similar castle drawing is on page 6.
+; A PDF of the book is at:
+; https://ia800707.us.archive.org/3/items/RetroGameDesignAndProgrammingBooks/ABitOfLogoMagicForTheTi994a-AdventuresForIntermediateProgrammers1984.pdf
+to castle :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "flagHeight :height * 0.185
+	localmake "oldPos pos
+	localmake "wallToothSize :height * 0.0505
+	localmake "mainLineThickness :height * 0.012
+	setPenSize :mainLineThickness
+	setPenColor "black
+	setLineCap "butt
+	setLineJoinStyle "miter
+	setFillColor "white
+
+	; Draw the 3 towers.
+	jumpLeft :height * 0.099
+	drawTower :height * 0.635 :height * 0.07 :flagHeight
+	jumpRight :height * 0.12
+	drawTower :height * 0.855 :height * 0.15 :flagHeight
+	jumpRight :height * 0.18
+	drawTower :height :height * 0.21 :flagHeight
+
+	; Draw the castle wall in the foreground.
+	setPenSize 0
+	jumpTo :oldPos
+	jumpRight :height * 0.591
+	localmake "bottomRightPos pos
+	polyStart
+	jumpForward :height * 0.3
+	jumpLeft :wallToothSize
+	jumpBackward :wallToothSize
+	left 90
+	castleWallLineForward :wallToothSize 4
+	jumpForward :height * 0.332
+	jumpLeft :height * 0.06
+	castleWallLineForward :wallToothSize 4
+	jumpLeft :height * 0.19
+	polyEnd
+
+	; Draw a very similar path without closing or filling it.
+	setPenSize :mainLineThickness
+	jumpTo :bottomRightPos
+	setHeading :oldHeading
+	forward :height * 0.3
+	left 90
+	forward :wallToothSize
+	left 90
+	forward :wallToothSize
+	right 90
+	castleWallLineForward :wallToothSize 4
+	forward :wallToothSize - :height * 0.004
+	jumpForward :height * 0.138
+	jumpLeft :height * 0.005
+	forward :wallToothSize + :height * 0.097
+	left 90
+	forward :wallToothSize + :height * 0.005
+	right 90
+	castleWallLineForward :wallToothSize 4
+	left 90
+	forward :height * 0.189 - penSize / 2
+	left 90
+	forward distance :bottomRightPos
+	setTurtleState :oldState
+end
+
+setScreenColor "#448
+castle 100

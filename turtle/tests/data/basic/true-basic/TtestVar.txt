@@ -1,0 +1,26 @@
+!
+!  TTESTVAR. Use T-test and Confidence Interval for datasets with
+!  unequal variances. Test whether Alexander Hamilton and James Madison
+!  used short words in different proportions.
+!
+!  Data from "Beginning Statistics with Data Analysis" by F. Mosteller, p. 289.
+!
+LIBRARY "Stat1Lib.trc"
+
+DIM a(8), b(7)
+
+MAT READ a, b
+DATA 24, 21, 23, 24, 33, 28, 28, 37    ! Hamilton's papers
+DATA 20, 27, 19, 30, 11, 17, 27   ! Madison's papers
+
+CALL Ttest2Var (a, b, 0, 0, t, p, mean, se, df)
+PRINT "Difference mean: "; mean
+PRINT "T statistic: "; t
+PRINT "Standard error: "; se
+
+CALL Confint2Var (a, b, .95, left, right, se, df)
+PRINT "95% confidence limits: "; left; right
+
+PRINT "Probability (1-tailed): "; Using$("#.###", p/2)
+
+END

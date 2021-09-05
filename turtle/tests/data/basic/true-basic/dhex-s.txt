@@ -1,0 +1,20 @@
+EXTERNAL
+
+SUB DHex (l$(), options$)
+
+    LIBRARY "{WB_c}WBdhex.trc"
+
+    WHEN EXCEPTION IN
+         CALL WB_DHex (l$(), options$)
+         PRINT "Done with Hex dump (DHex)."
+    USE
+         IF extype = 1 then
+            PRINT extext$
+         ELSE
+            PRINT extype, extext$
+            PRINT exline$
+            PRINT "Error in Dhex."
+         END IF
+    END WHEN
+
+END SUB

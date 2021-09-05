@@ -1,0 +1,50 @@
+to engineArcs :engineSize
+	localmake "arcRadius :engineSize * 0.3
+	localmake "innerDiameter :engineSize - 2 * :arcRadius
+	arcLeft 90 :arcRadius
+	jumpForward :innerDiameter
+	arcLeft 90 :arcRadius
+end
+
+; Inspired by
+; https://publicdomainvectors.org/en/free-clipart/Plane-silhouette-image/59012.html
+to jet :height
+	localmake "oldState turtleState
+	localmake "engineSize :height * 0.034
+	localmake "arcAngle14 41
+	localmake "arcRadius14 :height * 0.0075236
+	localmake "arcLinesInfo [
+		[0.02] [-131 0.007] [0.13] [-49 0.015] [0.1] 
+		[10 0.6] [9 0.4] [30 0.0366755]
+	]
+	localmake "betweenEngineArcLines [
+		[0.028] [-130.5 0.005] [0.125] [-49.5 0] [0.065]
+	]
+	localmake "tailArcLines [
+		[-75 0.01] [0.125] [103 0.008] [0.015] [25 0.017]
+		[25 0.05] [0.138] [-58 0.012] [0.04] [8 0.2] [0.26]
+		[-102 0.01] [-18 0.76] [0.173] [120 0.0055] [0.035]
+		[48.5 0.023] [0.132] [-48.5 0] [0.069]
+	]
+	setPenSize 0
+	setFillColor "black
+	polyStart
+	right 28
+	jumpForward :height * 0.033
+	arcLines :tailArcLines :height
+	engineArcs :engineSize
+	arcLines :betweenEngineArcLines :height
+	engineArcs :engineSize
+	arcLines :arcLinesInfo :height
+	arcLeft :arcAngle14 * 2 :arcRadius14; point of symmetry
+
+	arcLines reverse :arcLinesInfo :height
+	engineArcs :engineSize
+	arcLines reverse :betweenEngineArcLines :height
+	engineArcs :engineSize
+	arcLines reverse :tailArcLines :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+jet 100
