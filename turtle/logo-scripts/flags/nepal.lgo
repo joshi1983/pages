@@ -1,0 +1,136 @@
+; Calculates distance between 2 points
+to getSeparation :point1 :point2
+	localmake "oldPos pos
+	jumpTo :point1
+	localmake "result distance :point2
+	jumpTo :oldPos ; restore old turtle position.
+	; We don't want getSeparation to have the 
+	;side effect of moving the turtle.
+	output :result
+end
+
+; crimsonPiece procedure is a translation of part A 
+; of instruction sheet at:
+; https://www.servat.unibe.ch/icl/np01000_.html
+to crimsonPiece :abLength
+	localmake "oldHeading heading
+	localmake "acLength :abLength * 4 / 3
+	localmake "cdLength :abLength / 3
+	localmake "pointB pos
+	localmake "egLength :abLength / sqrt 2
+	setFillColor "crimson
+	setPenSize 0
+	jumpLeft :abLength
+	localmake "pointA pos
+	jumpForward :acLength
+	localmake "pointC pos
+	jumpBackward :cdLength
+	localmake "pointD pos
+	jumpForward :cdLength
+	polyStart
+	jumpBackward :acLength
+	jumpRight :abLength
+	setHeading towards :pointD
+	jumpForward :abLength
+	localmake "pointE pos
+	setHeading :oldHeading + 90
+	jumpBackward :abLength - :egLength
+	localmake "pointF pos
+	jumpForward :abLength
+	localmake "pointG pos
+	polyEnd
+	output [:pointA :pointB :pointC :pointD :pointE :pointF :pointG]
+end
+
+; moonShape procedure is a translation of part B
+; of instruction sheet at:
+; https://www.servat.unibe.ch/icl/np01000_.html
+; points should be a list of points A, B, C, D, E, F, G.
+to moonPiece :points
+	localmake "pointA item 1 :points
+	localmake "pointB item 2 :points
+	localmake "pointC item 3 :points
+	localmake "pointD item 4 :points
+	localmake "pointF item 6 :points
+	localmake "pointG item 7 :points
+	jumpTo :pointA
+	setHeading towards :pointB
+	localmake "abHeading heading
+	localmake "abLength distance item 2 :points
+	localmake "ahLength :abLength / 4
+	jumpForward :ahLength
+	localmake "pointH pos
+	jumpLeft :abLength * mix (4 / 3) (1 / sqrt 2) 3 / 4
+	localmake "pointI pos
+	localmake "pointJ mix :pointC :pointF 0.5
+	localmake "pointK mix :pointC :pointG 0.5
+	localmake "jkLength getSeparation :pointJ :pointK
+	localmake "pointL mix :pointJ :pointK :ahLength / :jkLength
+	localmake "pointM mix :pointJ :pointG 3 / 4
+	jumpTo :pointB
+	localmake "bdHeading towards :pointD
+	jumpTo :pointM
+	localmake "angle1 abs ((towards :pointD) - :bdHeading)
+	localmake "mdLength getSeparation :pointM :pointD
+	localmake "mCircleRadius abs :mdLength * sin :angle1
+	jumpTo :pointM
+	setPenSize 0.1
+	setHeading :abHeading + 90
+	jumpForward :mCircleRadius
+	localmake "pointN pos
+	jumpTo :pointM
+	setHeading :abHeading
+	jumpBackward :ahLength
+	localmake "pointO pos
+	localmake "lnLength getSeparation :pointL :pointN
+	localmake "lmLength getSeparation :pointL :pointM
+	localmake "pqLength 2 * sqrt (:lnLength * :lnLength - :lmLength * :lmLength)
+	jumpTo :pointM
+	jumpBackward :pqLength / 2
+	localmake "pointP pos
+	jumpForward :pqLength
+	localmake "pointQ pos
+	localmake "nmLength getSeparation :pointN :pointM
+	;localmake "
+	circle 1
+	queue2 "points :pointH
+	queue2 "points :pointI
+	queue2 "points :pointJ
+	queue2 "points :pointK
+	queue2 "points :pointL
+	queue2 "points :pointM
+	queue2 "points :pointN
+	queue2 "points :pointO
+	queue2 "points :pointP
+	queue2 "points :pointQ
+	output :points
+end
+
+to drawSun :points
+	localmake "pointA item 1 :points
+	localmake "pointB item 2 :points
+	localmake "pointE item 5 :points
+	localmake "pointF item 6 :points
+	localmake "pointH item 8 :points
+	localmake "pointL item 12 :points
+	localmake "pointM item 13 :points
+	localmake "pointN item 14 :points
+	localmake "pointU mix :pointA :pointF 0.5
+	localmake "pointV mix :pointB :pointE 0.5
+	localmake "lnLength getSeparation :pointL :pointN
+	localmake "mnLength getSeparation :pointM :pointN
+	localmake "ahLength getSeparation :pointA :pointH
+	localmake "uvLength getSeparation :pointU :pointV
+	localmake "pointW mix :pointV :pointU :ahLength / :uvLength
+	jumpTo :pointN
+	setFillColor transparent
+	setPenSize 0
+	setFillColor "white
+	jumpTo :pointW
+	isotoxalStar :lnLength :mnLength 12
+end
+
+setFontSize 4
+make "points crimsonPiece 100
+moonPiece :points
+drawSun :points

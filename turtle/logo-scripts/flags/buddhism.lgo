@@ -1,0 +1,26 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Buddhist_flag#/media/File:Flag_of_Buddhism.svg
+to buddhismFlag :height
+	localmake "oldState turtleState
+	localmake "colors ["#ff9800 "white "#ED1B24 "#FEDF00 "#0018A8]
+	localmake "width :height * 3 / 2
+	localmake "sideWidth :width / 6
+
+	; A thin that will be almost completely overlapped 
+	; by other stripes.
+	; This is to prevent artifacts from the line between 
+	; the horizontal and vertical stripes.
+	jumpRight :width / 2 - :sideWidth
+	stripes :height * 0.02 :height [first :colors]
+	
+	jumpRight :sideWidth / 2
+	stripes :sideWidth :height :colors
+	jumpLeft :sideWidth / 2
+	jumpForward :height / 2
+	left 90
+	stripes :height :width - :sideWidth :colors
+	setTurtleState :oldState
+end
+
+setScreenColor "#eee
+buddhismFlag 100

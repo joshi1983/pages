@@ -1,0 +1,37 @@
+; Inspired by parametric equations at:
+; https://www.eddaardvark.co.uk/python_patterns/spirograph.html
+
+make "R1 170
+make "R2 80
+make "R3 60
+setPenSize 2
+repeat 1000 [
+	make "n1θ pi * 2 * repRatio
+	make "n2θ pi * 2 * (2 + animation.time) * repRatio
+	make "n3θ pi * 2 * (5 + 2 * animation.time) * repRatio
+	make "x (:R1 * radCos :n1θ) + :R2 * (radCos :n2θ) + :R3 * radCos :n3θ
+	make "y (:R1 * radSin :n1θ) + :R2 * (radSin :n2θ) + :R3 * radSin :n3θ
+	make "p [:x :y]
+	ifelse repcount <> 1 [
+		setHeading towards :p
+		forward distance :p
+	] [
+		jumpTo :p
+	]
+	circle 1
+]
+
+to animation.snapshotstyle
+	localmake "result createPList
+	output :result
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 10
+	; Edit this if you want to change the length of your animation.
+	localmake "result createPList
+	setProperty "result "duration :minutes * 60 + :seconds
+	setProperty "result "thumbnailTime 1
+	output :result
+end
