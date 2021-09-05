@@ -1,0 +1,42 @@
+; Inspired by logo at:
+; https://drfink.ca
+to drFinkLogo :height
+	localmake "oldState turtleState
+	localmake "irisRadius :height * 0.47
+	localmake "innerRadius :height * 0.33
+	localmake "angle1 58
+	localmake "topLine [[90 0] [87 0.43] [142 0] [-82 0.55] [0.1] [57 0.56]
+		[12 1] [171 0] [-73 0.56] [20 0.7] [10 0.48] [16 0.43]]
+	jumpLeft :height * 0.32
+	setPenSize 0
+	setFillColor "black
+	drawArcLineShape [0 1
+		:topLine
+	] :height
+	
+	jumpForward :irisRadius
+	setFillColor "#00acee
+	circle :height * 0.245
+	localmake "center pos
+	right 90
+	jumpForward :irisRadius
+	localmake "startPos pos
+	localmake "startHeading heading + 90
+	left 90 + :angle1
+	jumpForward :height
+	localmake "guidePos pos	
+
+	jumpTo :startPos
+	setHeading :startHeading
+	setFillColor "#b9e4f2
+	polyStart
+	arcRight 180 :irisRadius
+	right :angle1
+	jumpForward distanceToCircle :center :innerRadius
+	setHeading (towards :center) + 90
+	arcLeft (getArcLeftAngleToLine :innerRadius :startPos :guidePos) :innerRadius
+	polyEnd
+	setTurtleState :oldState
+end
+
+drFinkLogo 100

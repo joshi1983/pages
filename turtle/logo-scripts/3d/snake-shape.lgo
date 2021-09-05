@@ -1,0 +1,47 @@
+to spiral3D :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "points []
+	localmake "scale :height / 8
+	repeat 30000 [
+		localmake "v randomRatio * 360 * 4
+		localmake "u randomRatio * 360
+		localmake "x (cos :v)*(1+ (cos :u))*(sin :v / 8)
+		localmake "y (sin :u)*(sin :v/8)+ (cos :v/8)*4
+		localmake "z (sin :v)*(1+ (cos :u))*(sin :v/8)
+		jumpRight :scale * :x
+		jumpForward :scale * :y
+		jumpIn :scale * :z
+		queue2 "points pos
+		jumpTo :oldPos
+	]
+	setFillColor "#2000
+	setPenSize 0
+	setRoll 0
+	setHeading 0
+	setPitch 0
+	repeat count :points [
+		jumpTo item repcount :points
+		circle :scale * 0.02
+	]
+	setTurtleState :oldState
+end
+
+make "t interpolateRatio easeInOut animation.clampedTimeRatio
+pitchUp :t * 180
+spiral3D 200
+
+to animation.snapshotstyle
+	output createPList2 [
+		["zoom.scale 4]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 3
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end
