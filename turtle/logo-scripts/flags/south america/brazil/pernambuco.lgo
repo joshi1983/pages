@@ -1,0 +1,53 @@
+make "pernambucoYellow "#FFB511
+make "pernambucoRed "#C34342
+
+to drawRainbow :height
+	localmake "oldState turtleState
+	localmake "colors ["#00AD4A :pernambucoYellow :pernambucoRed]
+	localmake "radius :height * 0.492
+	setPenSize :height * 0.033
+	setFillColor transparent
+	jumpForward :height * 0.25
+	right 90
+	repeat count :colors [
+		setPenColor item repcount :colors
+		arc 180 :radius
+		localmake "radius :radius + penSize
+	]
+
+	setTurtleState :oldState
+end
+
+to drawCross :height
+	localmake "oldState turtleState
+	localmake "thickness :height / 30
+	jumpForward :height * 0.075
+	stripes :thickness :height / 4 [:pernambucoRed]
+	jumpForward :height * 0.1625 - :thickness / 2
+	stripes :height * 0.15 :thickness [:pernambucoRed]
+	setTurtleState :oldState
+end
+
+; Inspired by flag at:
+; https://en.wikipedia.org/wiki/Flag_of_Pernambuco#/media/File:Bandeira_de_Pernambuco.svg
+to pernambucoFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 3 / 2
+	localmake "whiteHeight :height * 2 / 5
+	stripes :width :height ["#3155A4]
+	drawRainbow :height
+	stripes :width :whiteHeight ["white]
+	drawCross :height
+
+	jumpForward :height * (1 - 0.091459)
+	setPenSize 0
+	setFillColor :pernambucoYellow
+	regularStar :height * 0.041459 5
+	jumpBackward :height * 0.346
+	isotoxalStar :height * 0.0875 :height * 0.0625 24
+
+	setTurtleState :oldState
+end
+
+setScreenColor "gray
+pernambucoFlag 100

@@ -1,0 +1,62 @@
+; Inspired by logo at:
+; https://nextjs.org
+to nextJSLogo :height
+	localmake "oldState turtleState
+	setPenSize 0
+	setFillColor "black
+	isoTriangle :height * 2 * tan 30 :height
+
+	setTurtleState :oldState
+end
+
+; Inspired by favicon(browser tab icon) at:
+; https://nextjs.org
+to nextJSFavicon :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "thickness1 :height * 0.065
+	localmake "radius :height / 2
+	localmake "height1 0.8
+	localmake "angle1 38
+	localmake "height2 :height1 - :thickness1 / :radius / tan :angle1
+	localmake "arcAngle1 2 * arcSin :thickness1 / 2 / :radius
+	setPenSize 0
+	jumpForward :height / 2
+	setFillColor "black
+	circle :radius
+	localmake "center pos
+	left :angle1
+	jumpBackward :radius
+	localmake "bottomRight pos
+	setFillGradient createLinearGradient :bottomRight :center
+		createPList2 [
+			[0 "black] [0.65 "white]
+		] "pad
+	left 90
+	arcRight :arcAngle1 / 2 :radius
+	right 180
+	drawArcLineShape [0 0
+		[[:arcAngle1 1] [90 - :arcAngle1 / 2 0]
+		[1.45] [90 - :angle1 0] [0.17] [90 0] [:height1]
+		[90 0] [:thickness1 / :radius] [90 0] [:height2]]
+	] :radius
+	jumpTo :center
+	setHeading :oldHeading + 180
+	jumpBackward :radius * :height1 / 2
+	jumpLeft :radius * 0.35
+	localmake "topRight pos
+	jumpForward :radius * :height1
+	setFillGradient createLinearGradient :topRight pos createPList2 [
+			[0 "white] [0.75 "#0fff]
+		] "pad
+	jumpBackward :radius * :height1 / 2
+	rect :thickness1 :height1 * :radius
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 5
+jumpLeft :separation / 2
+nextJSLogo :height
+jumpRight :separation
+nextJSFavicon :height

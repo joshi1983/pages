@@ -1,0 +1,27 @@
+; Inspired by logo at:
+; https://www.youtube.com/@InkboxSoftware
+to inkBoxSoftwareLogo :height
+	localmake "oldState turtleState
+	localmake "outerThickness :height * 0.12
+	localmake "len2 :height * 0.25
+	localmake "len1 (:height - :outerThickness) / 2 - :len2 * cos 45
+	jumpForward :height / 2
+	setPenColor "#ffb200
+	setPenSize :height * 0.22
+	setFillColor transparent
+	circle :height * 0.215
+	setPenColor "black
+	setLineJoinStyle "miter
+	setPenSize :outerThickness
+	jumpRight (:height - penSize) / 2
+	repeat 4 [
+		forward :len1
+		left 45
+		forward :len2
+		left 45
+		forward :len1
+	]
+	setTurtleState :oldState
+end
+
+inkBoxSoftwareLogo 100

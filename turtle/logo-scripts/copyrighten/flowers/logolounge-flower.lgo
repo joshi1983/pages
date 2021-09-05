@@ -1,0 +1,72 @@
+
+to droplet :size
+	localmake "oldHeading heading
+	localmake "angle 53
+	localmake "arcRadius :size / 2 / sin :angle
+	localmake "arcRadius2 :arcRadius * (1 - cos :angle)
+
+	; scale so the drop's height matches size.
+	localmake "scale :size / (:arcRadius2 + :arcRadius * sin :angle)
+	localmake "arcRadius :arcRadius * :scale
+	localmake "arcRadius2 :arcRadius2 * :scale
+
+	left :angle
+	polyStart
+	arcRight :angle :arcRadius
+	arcRight 180 :arcRadius2
+	arcRight :angle :arcRadius
+	polyEnd
+	setHeading :oldHeading
+end
+
+to leaf :size
+	localmake "oldHeading heading
+	localmake "angle 50
+	localmake "arcRadius :size / 2 / sin :angle
+	left :angle
+	polyStart
+	arcRight :angle * 2 :arcRadius
+	right 180 - :angle * 2
+	arcRight :angle * 2 :arcRadius
+	polyEnd
+	setHeading :oldHeading
+end
+
+; Inspired by
+; https://www.pinterest.ca/pin/9429480462327390/
+; logolounge grants permission to download a one copy but not "reverse engineer".
+; Translating the logo to WebLogo scripts might be considered "reverse engineering".
+; This was removed from logo-scripts/flowers/various-flowers.lgo after noticing the copyright issue.
+to flower8 :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "leafAngle 46
+	localmake "leafSize :size * 0.6
+	localmake "leafSideStep :size * 0.03
+	localmake "dropSize :size * 0.33
+	localmake "size1 :size * 0.295
+	localmake "size2 :size - :size1 - :dropSize
+	setFillColor "black
+	setPenSize 0
+	circle :size * 0.19
+	repeat 4 [
+		jumpTo :oldPos
+		jumpForward :size1
+		jumpRight :leafSideStep
+		right :leafAngle
+		leaf :leafSize
+		left :leafAngle
+		jumpRight :leafSideStep * -2
+		left :leafAngle
+		leaf :leafSize
+		right :leafAngle
+		jumpRight :leafSideStep
+		jumpForward :size2
+		droplet :dropSize
+		right 90
+	]
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+flower8 100

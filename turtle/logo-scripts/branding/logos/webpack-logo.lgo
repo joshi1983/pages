@@ -1,0 +1,32 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Webpack#/media/File:Webpack.svg
+to webpackLogo :height
+	localmake "oldState turtleState
+	localmake "thickness :height * 0.03
+	localmake "size1 :height * 0.315
+	setPenSize 0
+	setFillColor "#8ed6fb
+	jumpForward :height / 2
+	regularPolygon :height / 2 6
+	setFillColor "#1c78c0
+	setPenSize :thickness
+	setPenColor "white
+	regularPolygon :size1 6
+	localmake "center pos
+	right 180 / 3
+	repeat 3 [
+		forward :height / 2
+		right 360 / 3
+		jumpTo :center
+	]
+	right 180 / 3
+	repeat 3 [
+		jumpForward :size1
+		forward :height / 2 - :size1
+		right 360 / 3
+		jumpTo :center	
+	]
+	setTurtleState :oldState
+end
+
+webpackLogo 100

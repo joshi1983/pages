@@ -1,0 +1,56 @@
+; Inspired by flags found at:
+; https://en.wikipedia.org/wiki/Flag_of_Scotland
+
+to halfShapes :height
+	localmake "oldState turtleState
+	localmake "width :height * 5 / 3
+	setPenSize 0
+	isoTriangle :height * 1.277937 :height * 0.3833809
+	jumpLeft :width / 2
+	jumpForward :height / 2
+	right 90
+	isoTriangle :height * 0.7667616 :height * 0.6389683
+	setTurtleState :oldState
+end
+
+to scotlandShape :height
+	localmake "oldState turtleState
+	localmake "width :height * 5 / 3
+	setLineCap "butt
+	setPenColor "white
+	setPenSize :width
+	forward :height
+	repeat 2 [
+		right 180
+		halfShapes :height
+		jumpForward :height
+	]
+	setTurtleState :oldState
+end
+
+to royalScotsNavyEnsignia :height
+	localmake "oldState turtleState
+	localmake "width :height * 5 / 3
+	setPenColor "#ce1124
+	setPenSize :width
+	setLineCap "butt
+	forward :height
+	jumpBackward :height / 2
+	jumpLeft :width / 4
+	setFillColor "#0065bd
+	scotlandShape :height / 2
+	setTurtleState :oldState
+end
+
+; #eee for a little contrast with white in the flags
+setScreenColor "#eee
+make "size 100
+make "separation :size * 3
+make "colors ["#005EB8 "#2DAEFF "#012169]
+jumpLeft :separation * 1.5
+repeat count :colors [
+	setFillColor item repcount :colors
+	scotlandShape :size
+	jumpRight :separation
+]
+royalScotsNavyEnsignia :size

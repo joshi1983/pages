@@ -1,0 +1,42 @@
+; Inspired by image at:
+; https://www.facebook.com/photo?fbid=2546136932476296
+; It was shared by Dave Wellsted.
+to cornucopia :height :timeRatio
+	localmake "oldState turtleState
+	localmake "numAngles 200
+	jumpForward :height * 0.257
+	jumpRight :height * 0.18
+	setFillColor transparent
+	setPenSize :height * 0.002
+	right 55
+	repeat :numAngles * :timeRatio [
+		localmake "ratio repcount / :numAngles
+		localmake "radius :height * mix 0.21 0.05 :ratio
+		setPenColor mixItems2 ["black "#ff0 "#ff8 ] :ratio
+		circle :radius
+		jumpForward :height * 2.15 / :numAngles
+		left 360 / :numAngles
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "#004
+make "timeRatio interpolateRatio easeInOut animation.clampedTimeRatio
+cornucopia 100 :timeRatio
+
+to animation.snapshotstyle
+	output createPList2 [
+		["position.y 50]
+		["zoom.scale 6.5]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 3
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+		["thumbnailTime :seconds]
+	]
+end

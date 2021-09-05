@@ -1,0 +1,20 @@
+; Inspired by logo at:
+; https://www.metropoles.com
+to metropolesLogo :height
+	localmake "oldState turtleState
+	localmake "width :height * 1.055
+	localmake "thickness :height * 0.21
+	localmake "oldPos pos
+	localmake "color "#c83434
+	jumpLeft (:width - :thickness) / 2
+	repeat 3 [
+		stripes :thickness :height [:color]
+		jumpRight (:width - :thickness) / 2
+	]
+	jumpTo :oldPos
+	jumpForward :height - :thickness
+	stripes :width :thickness [:color]
+	setTurtleState :oldState
+end
+
+metropolesLogo 100

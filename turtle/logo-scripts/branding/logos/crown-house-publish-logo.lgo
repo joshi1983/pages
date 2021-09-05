@@ -1,0 +1,32 @@
+; Inspired by logo at:
+; https://www.crownhouse.co.uk
+to crownHousePublishingLogo :height
+	localmake "oldState turtleState
+	localmake "ellipseRadius :height * 0.072
+	localmake "lines1 [
+		[-90 0] [11 2.4] [65.3 0.01] [0.76]
+		[165 0] [0.43] [-134 0] [0.4] [138 0]
+		[0.425] [-136.5 0] [0.442824] [71.2 0]
+	]
+	setPenSize 0
+	setFillColor "#0864a1
+	drawArcLineShape [0 0
+		combine :lines1 reverse :lines1
+	] :height
+	jumpForward :height - :ellipseRadius
+	ellipse :ellipseRadius * 0.7 :ellipseRadius
+	jumpBackward :height * 0.044
+	localmake "startPos pos
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		localmake "height1 :height * :sign
+		jumpRight :height1 * 0.321
+		ellipse :ellipseRadius * 0.6 :ellipseRadius
+		jumpRight :height1 * 0.332
+		ellipse :ellipseRadius * 0.45 :ellipseRadius
+		jumpTo :startPos
+	]
+	setTurtleState :oldState
+end
+
+crownHousePublishingLogo 100

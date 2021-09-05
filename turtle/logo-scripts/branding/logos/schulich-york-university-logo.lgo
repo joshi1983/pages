@@ -1,0 +1,51 @@
+make "schulichBlue "#0062ac
+
+; Inspired by logo at:
+; https://schulich.yorku.ca
+to schulichYorkUniversityLogo :height
+	localmake "oldState turtleState
+	localmake "colors ["#00a057 :schulichBlue]
+	setPenSize 0
+	jumpForward :height / 2
+	repeat count :colors [
+		setFillColor item repcount :colors
+		drawArcLineShape [0.051 0.5
+			[[90 0] [25 0.26] [27.5 0.15] [85 0]
+			[0.014] [-160 0] [0.018] [20 0] [0.01]
+			[-5 0] [4.44 2] [105 0] [0.035] [79.5 0]
+			[-30 0.88] [-10 0.4] [-15 0.5] [-12 0.32]
+			[-7.5 0.4] [-173 0] [35 0.43] [15 0.8] [6.25 1.3]
+			[88 0] [2.8 1] [65 0.155] [11 0.6] [-10 1.1]
+			[-30 0.375] [-43.5 0.32] [148 0] [32 0.46]
+			[30 0.55] [50 0.46] [19 0.5]]
+		] :height
+		right 180
+	]
+
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://www.linkedin.com/school/schulichschool
+to schulichYorkUniversityLinkedinLogo :height
+	localmake "oldState turtleState
+	localmake "innerHeight :height * 0.645
+	jumpForward :height / 2
+	setFillColor "white
+	setPenSize :height * 0.06
+	localmake "squareSize :height - penSize
+	setPenColor :schulichBlue
+	square :squareSize
+	right 180
+	jumpBackward :innerHeight / 2
+	schulichYorkUniversityLogo :innerHeight
+
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 5
+jumpLeft :separation / 2
+schulichYorkUniversityLogo :height
+jumpRight :separation
+schulichYorkUniversityLinkedinLogo :height

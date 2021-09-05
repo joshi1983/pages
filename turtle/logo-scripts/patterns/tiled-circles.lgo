@@ -1,0 +1,55 @@
+to drawCross :arcRadius
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "arcs1 [[45 1] [-90 0]]
+	localmake "shape [sin 45 1 - cos 45 
+		(combine [[90 0]] :arcs1 reverse :arcs1)]
+	repeat 4 [
+		setHeading :oldHeading + repcount * 90
+		drawArcLineShape :shape :arcRadius
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by a drawing made in:
+; https://www.youtube.com/watch?v=AMKISjZCEkI
+to tiledCircles :height :color
+	localmake "oldState turtleState
+	localmake "numRows 3
+	localmake "numColumns 10
+	localmake "arcRadius :height * 0.5 / (:numRows) / cos 45
+	localmake "separation :arcRadius * 2 * sin 45
+	localmake "width :separation * :numColumns
+	setPenSize :height * 0.01
+	setPenColor :color
+	setLineCap "round
+	setLineJoinStyle "round
+	setFillColor :color
+	jumpLeft :separation * (:numColumns - 1) / 2
+	localmake "startPos pos
+	jumpForward :separation / 2
+	repeat :numRows [
+		localmake "pos1 pos
+		repeat :numColumns [
+			drawCross :arcRadius
+			jumpRight :separation
+		]
+		jumpTo :pos1
+		jumpForward :separation
+	]
+	jumpTo :startPos
+	jumpRight :separation / 2
+	repeat :numColumns - 1 [
+		stripes penSize :height [:color]
+		jumpRight :separation
+	]
+	jumpTo :startPos
+	jumpRight (:width - :separation) / 2
+	repeat :numRows - 1 [
+		jumpForward :separation
+		stripes :width penSize [:color]
+	]
+	setTurtleState :oldState
+end
+
+tiledCircles 100 "red

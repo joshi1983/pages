@@ -1,0 +1,75 @@
+to leaf :len :rotation
+	localmake "oldState turtleState
+	localmake "arcAngle 90
+	localmake "arcRadius :len / 2 / sin :arcAngle / 2
+	setPenSize 0
+	setFillColor "black
+	right :rotation
+	jumpForward :len / 2
+	left 180 - :arcAngle / 2
+	polyStart
+	arcLeft :arcAngle :arcRadius
+	left 180 - :arcAngle
+	arcLeft :arcAngle :arcRadius
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by the logo at
+; https://foxwoodgifts.ca
+to foxwoodGiftsLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "separation :height * 0.21
+	localmake "leafsInfo [
+		[0.29 0.18 58 0.1] [0.27 0.44 -39 0.125]
+		[0.44 0.402 -54 0.095] [0.268 0.795 19 0.1]
+	]
+	setFillColor transparent
+	setPenColor "black
+	setPenSize :height * 0.059
+	jumpForward :height / 2
+	circle (:height - penSize) / 2
+	jumpForward :height * 0.07
+	leaf :height * 0.13 0
+	jumpForward :height * 0.31
+	leaf :height * 0.1 0
+	jumpTo :oldPos
+	jumpForward :height * 0.05
+	jumpLeft :separation / 2
+	setPenSize :height * 0.05
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		localmake "pos1 pos
+		left :sign * 1.5
+		arcLines [[30 0.66] [11 3]] :sign * :height
+		jumpTo :pos1
+		setHeading :oldHeading
+		jumpForward :height * 0.18
+		jumpLeft :height * :sign * 0.025
+		right :sign * 25
+		arcLeft :sign * -23 :height * 0.5
+		jumpTo :pos1
+		setHeading :oldHeading
+		jumpForward :height * 0.55
+		jumpRight :sign * :height * 0.04
+		left :sign * 7
+		arcLeft :sign * 14 :height * 0.9
+		repeat count :leafsInfo [
+			localmake "leafInfo item repcount :leafsInfo
+			localmake "leafSize :height * last :leafInfo
+			jumpTo :pos1
+			setHeading :oldHeading
+			jumpLeft :height * :sign * first :leafInfo
+			jumpForward :height * item 2 :leafInfo
+			leaf :leafSize :sign * item 3 :leafInfo
+		]
+		jumpTo :pos1
+		setHeading :oldHeading
+		jumpRight :separation
+	]
+	setTurtleState :oldState
+end
+
+foxwoodGiftsLogo 100

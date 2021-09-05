@@ -1,0 +1,36 @@
+; Inspired by logo at:
+; https://www.paqle.dk/
+to paqleLogo :height
+	localmake "oldState turtleState
+	localmake "thickness :height * 0.12
+	localmake "notchPath [[-90 1] [1]]
+	setPenSize 0
+	setFillColor "#16aae2
+	jumpForward :height / 2
+	localmake "center pos
+	circle :thickness / 2
+	right 135
+	localmake "notchHeading heading
+	setLineCap "round
+	setPenColor fillColor
+	jumpForward :height / 2
+	localmake "pos1 pos	
+	setPenSize :thickness
+	forward :height / 2 * ((1 / cos 45) - 1) - :thickness * cos 45
+
+	setPenSize 0
+	jumpTo :pos1
+	polyStart
+	arcLines [[90 0] [360 0.5] [180 0.065]] :height
+	arcLines :notchPath :thickness / 2
+	localmake "innerRadius distance :center
+	localmake "thicknessAngle 2 * arcSin :thickness / 2 / :innerRadius
+	setHeading (towards :center) - 90
+	arcRight 360 - :thicknessAngle :innerRadius
+	setHeading :notchHeading
+	arcLines reverse :notchPath :thickness / 2
+	polyEnd
+	setTurtleState :oldState
+end
+
+paqleLogo 100

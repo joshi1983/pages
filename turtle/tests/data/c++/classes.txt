@@ -1,0 +1,19 @@
+// copied from: https://blog.mbedded.ninja/programming/languages/c-plus-plus/cpp-on-embedded-systems/
+#include <cstdint>
+
+class TempSensor {
+public:
+  TempSensor(uint8_t i2cAddress) {
+    // Validate I2C address
+    if (i2cAddress > 127) {
+      // Argh, error! What do we do in firmware when we can't throw an exception?
+    }
+    this->i2cAddress = i2cAddress;
+  }
+private:
+    uint8_t i2cAddress;
+};
+
+int main() {
+  TempSensor tempSensor(10); // We don't know if this is ok or not!
+}

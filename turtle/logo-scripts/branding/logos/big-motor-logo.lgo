@@ -1,0 +1,30 @@
+; Inspired by logo at:
+; https://en.wikipedia.org/wiki/Big_Motor#/media/File:Bigmotor_logo.svg
+to bigMotorLogo :height
+	localmake "oldState turtleState
+	localmake "gap 0.06
+	localmake "arcAngle 58
+	localmake "straightLength 1 - :gap * cos 180 / 6
+	localmake "arcRadius :straightLength / 2 / sin :arcAngle / 2
+	jumpForward :height / 2
+	localmake "goldGradient createRadialGradient pos :height * 0.4		createPList2 [
+		[0 "#f39a00] [1 "#ffe500]
+	]
+	setPenSize 0
+	right 180 / 6
+	repeat 6 [
+		ifelse or repcount = 1 repcount = 3 [
+			setFillGradient :goldGradient
+		] [
+			setFillColor "#043178
+		]
+		drawArcLineShape [0 :gap
+			[[180 / 6 0] [:straightLength] [-90 - 180 / 6 - :arcAngle / 2 0]
+			[:arcAngle :arcRadius]]
+		] :height / 2
+		right 360 / 6
+	]
+	setTurtleState :oldState
+end
+
+bigMotorLogo 100

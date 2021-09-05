@@ -1,0 +1,55 @@
+; Inspired by drawing at:
+; https://ca.pinterest.com/pin/116249234119965673
+to eyeCircles :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "centerOffset :height * 0.105
+	localmake "minRadius :height * 0.173
+	localmake "eyeWidth :height * 0.252
+	localmake "eyeWhite "#fffbbc
+	jumpForward :height / 2
+	localmake "center pos
+	setPenColor "black
+	setPenSize :height * 0.01
+	localmake "maxRadius (:height - penSize) / 2 - :centerOffset
+	repeat 2 [
+		jumpForward :centerOffset
+		repeat 6 [
+			localmake "radius mix :minRadius :maxRadius power repRatio 0.95
+			circle :radius
+		]
+		jumpTo :center
+		right 180
+	]
+	jumpLeft :eyeWidth / 2
+	right 90
+	setLineJoinStyle "round
+	setFillColor :eyeWhite
+	arcPair :eyeWidth 128
+	setFillColor transparent
+	arcPair :eyeWidth 115
+	setFillColor "white
+	jumpTo :center
+	setPenSize :height * 0.02
+	setHeading :oldHeading
+	circle :height * 0.07
+
+	setPenSize 0
+	setFillColor "black
+	circle :height * 0.055
+
+	left 50
+	jumpForward :height * 0.023
+	setFillColor :eyeWhite
+	circle :height * 0.015
+
+	setPenColor "#187bb4
+	setPenSize :height * 0.017
+	setFillColor transparent
+	jumpTo :center
+	circle :height * 0.0455
+	setTurtleState :oldState
+end
+
+setScreenColor "red
+eyeCircles 100

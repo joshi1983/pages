@@ -1,0 +1,40 @@
+; Inspired by:
+; https://www.pinterest.ca/pin/343610646580322944/
+
+; This is also very similar to an image on page 296
+; of a book called Apple Logo: Programming and Problem Solving.
+; You can borrow the book for free and look at page 296 at
+; https://archive.org/details/applelogoprogram0000bill/page/296/mode/2up
+
+to drawStripedPentagonSpiral :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "numSides 5
+	localmake "numSizes :size * 0.6
+	localmake "size1 :size
+
+	repeat :numSizes [
+		localmake "size1 :size1 * 0.93
+		localmake "size2 :size1 * 1.105
+		localmake "size3 :size2 * 0.06385
+		localmake "sizeHeading :oldHeading + repcount * 390 / :numSides
+		setHeading :sizeHeading
+		repeat :numSides [
+			jumpTo :oldPos
+			jumpForward :size1
+			right 90 + 180 / :numSides
+			jumpForward :size3
+			polyStart
+			jumpForward :size2
+			right 360 / :numSides
+			jumpForward :size3
+			polyEnd
+			setHeading :sizeHeading + 360 * repcount / :numSides
+		]
+	]
+end
+
+setFillColor "black
+setPenSize 0
+drawStripedPentagonSpiral 100
+hideTurtle

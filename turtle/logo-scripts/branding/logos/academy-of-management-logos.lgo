@@ -1,0 +1,58 @@
+make "aomBlue "#0070AF
+
+; Inspired by logo at:
+; https://aom.org
+to academyOfManagementLogo :height :backgroundColor :letterColor
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "mThickness :height * 0.09
+	localmake "angle 19.4
+	localmake "outerLen :height * 0.78
+	localmake "innerLen :outerLen - (:mThickness / sin :angle)
+	stripes :height :height [:backgroundColor]
+	jumpForward :height * 0.108
+	setFillColor transparent
+	setPenSize :height * 0.02
+	setPenColor :letterColor
+	setLineJoinStyle "miter
+	isoTriangle :height * 0.55 :height * 0.8
+	localmake "center pos
+	setPenSize 0
+	setFillColor penColor
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		localmake "angle1 :angle * :sign
+		localmake "angle2 (180 - :angle * 2) * :sign
+		setHeading :oldHeading
+		jumpRight :height * 0.03 * :sign
+		left :angle1
+		polyStart
+		jumpForward :outerLen
+		left :angle2 
+		jumpForward :outerLen
+		setHeading :oldHeading
+		jumpRight :mThickness * :sign
+		right :angle1
+		jumpForward :innerLen
+		right :angle2
+		jumpForward :innerLen
+		polyEnd
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+to academyOfManagementWhiteLogo :height
+	academyOfManagementLogo :height "white :aomBlue	
+end
+
+to academyOfManagementWhiteLetterLogo :height
+	academyOfManagementLogo :height :aomBlue "white 
+end
+
+make "height 100
+make "separation :height * 5
+jumpLeft :separation / 2
+academyOfManagementWhiteLogo :height
+jumpRight :separation
+academyOfManagementWhiteLetterLogo :height

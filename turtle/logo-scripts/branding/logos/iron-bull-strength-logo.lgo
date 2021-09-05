@@ -1,0 +1,41 @@
+; Inspired by logo at:
+; https://ironbullstrength.com
+to ironBullStrengthLogo :height :foregroundColor
+	localmake "oldState turtleState
+	localmake "bottomLines1 [[90 0] [-30 0.01] [0.479] [-60 0.01] [0.341]
+		[-114 0] [0.01] [-14 0.03] [0.0615] [-52 0.012] [0.243] [60 0.013]
+		[0.398196455] [30 0.01]]
+	localmake "topLines1 [[90 0] [30 0.01] [0.377] [68 0.003] [53.3 0.07]
+		[58.7 0.008] [0.325530259] [-30 0.015]]
+	localmake "bullLines1 [[90 0] [-5.15 0.6] [-80 0.058] [-15.5 0.08]
+		[20 0.11] [17 0.19] [0.08] [-22.6 0.22] [-155 0] [0.022] [25.1 0.15]
+		[58 0.036] [100 0] [9.5 0.05] [0.12] [49 0.015] [-25 0.34]
+		[-45 0.215] [-55 0.192] [-8.8 1.1] [-166.2 0.0015] [15 0.5]
+		[18 0.25] [60 0.107] [39 0.18] [-12.35 0.893996]
+		]
+	localmake "shapes [
+		[0 0 combine :bottomLines1 reverse :bottomLines1]
+		[0 0.979 combine :topLines1 reverse :topLines1]
+		[0 0.181 combine :bullLines1 reverse :bullLines1]
+	]
+	setPenSize 0
+	setFillColor :foregroundColor
+	drawArcLineShapes :shapes :height	
+	setTurtleState :oldState
+end
+
+to ironBullOnBlackBackground :height
+	localmake "oldState turtleState
+	localmake "innerHeight :height * 0.9
+	stripes :height :height ["black]
+	jumpForward (:height - :innerHeight) / 2
+	ironBullStrengthLogo :innerHeight "white
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 5
+jumpLeft :separation / 2
+ironBullStrengthLogo :height "black
+jumpRight :separation
+ironBullOnBlackBackground :height

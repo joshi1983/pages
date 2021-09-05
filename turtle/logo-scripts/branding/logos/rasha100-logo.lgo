@@ -1,0 +1,36 @@
+; Inspired by logo at:
+; https://www.youtube.com/@Rapsha100
+to rapsha100Logo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "eyeAngles [-55 50]
+	jumpForward :height / 2
+	localmake "center pos
+	setPenColor "black
+	setPenSize :height * 0.02
+	setFillColor "#fdd94d
+	circle (:height - penSize) / 2
+	jumpForward :height * 0.054
+	jumpLeft :height * 0.08
+	setLineCap "round
+	setPenSize :height * 0.05
+	setPenColor "black
+	right 86
+	forward :height * 0.255
+	jumpForward :height * 0.21
+	jumpLeft :height * 0.082
+	left 179
+	forward :height * 0.75
+
+	setPenSize 0
+	setFillColor penColor
+	repeat count :eyeAngles [
+		jumpTo :center
+		setHeading :oldHeading + item repcount :eyeAngles
+		jumpForward :height * 0.42
+		circle :height * 0.04
+	]
+	setTurtleState :oldState
+end
+
+rapsha100Logo 100

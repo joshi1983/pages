@@ -1,0 +1,56 @@
+; Inspired by the logo at:
+; https://www.d4logistics.com/
+; more specifically at:
+; https://www.d4logistics.com/wp-content/uploads/2019/05/logo-final.png
+
+to d4LogisticsCore :size
+	localmake "oldState turtleState
+	localmake "angle1 10
+	localmake "arcRadius :size / sin (:angle1 / 2)
+	setPenSize 0
+	setFillColor "#f58026
+	jumpForward :size * 0.9
+	left 90
+	arcRight :angle1 / 2 :arcRadius
+	right 180
+	polyStart
+	repeat 4 [
+		arcLeft :angle1 :arcRadius
+		right 90 + :angle1
+	]
+	polyEnd
+	setTurtleState :oldState
+end
+
+to d4LogisticsLogo :size
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	setFillColor "white
+	setPenSize 0
+	; White out the central area.
+	circle :size * 0.3
+	d4LogisticsCore :size * 0.055
+	setFillColor "#fcbb88
+	setPenColor "#1c3f95
+	setLineJoinStyle "round
+	setPenSize :size * 0.05
+	repeat 4 [
+		setHeading :oldHeading + repcount * 360 / 4
+		jumpForward :size * 0.32
+		jumpLeft :size * 0.214
+		right 104
+		polyStart
+		arcLeft 33.2 :size * 0.9
+		right 50
+		arcLeft 16.6 :size * 0.6
+		right 137
+		arcRight 50.3 :size * 0.77
+		polyEnd
+		jumpTo :oldPos
+	]
+	setTurtleState :oldState
+end
+
+jumpTo [0 0]
+d4LogisticsLogo 200

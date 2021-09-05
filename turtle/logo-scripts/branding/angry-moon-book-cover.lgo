@@ -1,0 +1,157 @@
+make "moonRed "#d00
+
+to drawEyes :height
+	localmake "oldState turtleState
+	localmake "line1 [
+		[-50 0.04] [50 0.17]
+	]
+	localmake "line2 combine :line1 reverse :line1
+	localmake "eyeShape [0.16 0
+		(combine [[90 0]] :line2 [[180 0]] :line2)
+	]
+	localmake "separation :height * 0.48
+	jumpLeft :separation / 2
+	jumpForward :height * 0.115
+	setLineJoinStyle "round
+	repeat 2 [
+		localmake "eyeCenter pos
+		setPenSize 0
+		setFillColor "white
+		drawArcLineShape :eyeShape :height
+		setPenSize 0
+		setFillColor "black
+		drawArcLineShape [0.1 -0.04
+			[[218 0.06] [50 0] [38 0.17]]
+		] :height
+
+		jumpTo :eyeCenter		
+		setPenSize :height * 0.01
+		setFillColor transparent
+		drawArcLineShape :eyeShape :height
+		jumpRight :separation
+	]
+	setTurtleState :oldState
+end
+
+to drawGreenShapes :height
+	localmake "oldState turtleState
+	localmake "greenShapes [
+		; eyebrows
+		[0.01 0.692
+			[[-20 0.13] [-60 0.02] [0.15] [-30 0.17] [0.14] [-50 0.03] [-20 0.08]
+			[-110 0.01] [0.12] [36 0.2] [0.12] [-10 0.15] [-90 0.02]]
+		]
+		; nostrils
+		[0.05 0.46
+			[[-40 0.02] [0.04] [-110 0.05] [-25 0.17] [-100 0.03] [0.07] [-150 0.015]
+			[0.04] [190 0.02] [0.0415] [-90 0.006]]
+		]
+		; circles on top of forehead
+		[0.145 0.91
+			[[-360 0.03]]
+		]
+	]
+	localmake "noseLine1 [
+		[88 0.03] [-30 0.17] [50 0.02] [8 0.2] [-40 0.05] [104 0.04508192]
+	]
+	localmake "mouthLine1 [
+		[13.7 1.4] [72 0.025] [4.3 0.3]
+	]
+	localmake "mouthLine2 combine :mouthLine1 reverse :mouthLine1
+	drawArcLineShapes :greenShapes :height
+	drawArcLineShapes :greenShapes -:height
+	drawArcLineShapes [
+		[0 0.4045
+			(combine [[-90 0]] :noseLine1 reverse :noseLine1)
+		]
+		[0 0.175
+			(combine [[-90 0]] :mouthLine2 :mouthLine2)
+		]
+	] :height
+
+	setTurtleState :oldState
+end
+
+to drawMouth :height
+	localmake "oldState turtleState
+	localmake "mouthLine1 [
+		[7.5 2.4] [78.2 0.015] [4.3 0.17]
+	]
+	localmake "numTeeth 16
+	localmake "width1 :height * 0.62
+	localmake "toothSeparation :width1 / (:numTeeth)
+	localmake "mouthLine2 combine :mouthLine1 reverse :mouthLine1
+	setFillColor :moonRed
+	setPenColor "black
+	setPenSize :height * 0.007
+	drawArcLineShape [0 0.21
+		(combine [[-90 0]] :mouthLine2 :mouthLine2)
+	] :height
+	jumpForward :height * 0.26
+	setPenSize 0
+	setFillColor "white
+	roundRect :width1 :height * 0.01 :height * 0.005
+	jumpLeft :toothSeparation * (:numTeeth - 1) / 2
+	repeat :numTeeth [
+		localmake "toothHeight :height * mixItems [0.03 0.07] repRatio
+		roundRect :height * 0.02 :toothHeight :height * 0.008
+		jumpRight :toothSeparation
+	]
+	setTurtleState :oldState
+end
+
+to drawRedShapes :height
+	localmake "oldState turtleState
+	localmake "redShapes [
+		; forehead shapes
+		[0.02 0.86
+			[[-10 0.35] [-160 0.05] [70 0.07] [0.1] [-50 0.1] [-140 0.01]
+			[34 0.3] [0.08] [-12 0.2] [-90 0.02]]
+		]
+		; cheek bones
+		[0.2 0.42
+			[[-80 0.08] [40 0.18] [-135 0.04] [-15 0.5] [-80 0.05] [0.1]
+			[-17.5 0.2] [-75 0.04]]
+		]
+		[0.12 0.11
+			[[-360 0.04]]
+		]
+	]
+	setPenSize 0
+	setFillColor :moonRed
+	drawArcLineShapes :redShapes :height
+	drawArcLineShapes :redShapes -:height
+	jumpForward :height * 0.1
+	circle :height * 0.06
+	setTurtleState :oldState
+end
+
+; Inspired by an image at:
+; https://archive.org/details/angrymoon0000unse
+;
+; It is a cover to a book called:
+; The Angry Moon
+; The book was published in 1970.
+; It looks like the original artist is Blair Lent.
+; The book is about a legendary story from the Tlingit peoples
+; from Alaska in British Columbia, Canada.
+to angryMoon :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	setPenSize :height * 0.01
+	setPenColor "green
+	setFillColor "#FECB01
+	jumpForward :height / 2
+	circle (:height - penSize) / 2
+	drawEyes :height
+	setFillColor "green
+	setPenSize 0
+	jumpTo :oldPos
+	drawGreenShapes :height
+	drawMouth :height
+	drawRedShapes :height
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+angryMoon 100

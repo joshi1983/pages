@@ -1,0 +1,29 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Stellantis#/media/File:Stellantis.svg
+to stellantisLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "numArms 18
+	setPenSize 0
+	setFillColor "#243882
+	jumpForward :height / 2
+	localmake "center pos
+	repeat :numArms [
+		setHeading :oldHeading + repcount * 360 / :numArms
+		jumpForward :height * 0.33
+		circle :height * 0.028
+		right 53
+		jumpForward :height * 0.095
+		circle :height * 0.02
+		right 23
+		jumpForward :height * 0.105
+		circle :height * 0.013
+		right 10
+		jumpForward :height * 0.09
+		circle :height * 0.008
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+stellantisLogo 100

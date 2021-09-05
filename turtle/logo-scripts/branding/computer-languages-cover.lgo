@@ -1,0 +1,89 @@
+to drawComputer :height
+	localmake "oldState turtleState
+	setFillColor "green	
+	setPenSize :height * 0.002
+	setPenColor "black
+	jumpForward penSize / 2
+	localmake "angle1 73
+	drawArcLineShape [0 0
+		[[0.925] [-90 0] [0.44] [-90 0] [0.5] [-90 0]
+		[0.11] [90 0] [0.13] [:angle1 0] [0.44] [-:angle1 0] [0.165]]
+	] :height
+	setFillColor "black
+	setPenSize 0
+	drawArcLineShape [0.336 0.877
+		[[-90 0.03] [-90 0.06] [0.36] [-70 0.03] [-20 0.1] [0.034]]
+	] :height
+	setFillColor "white
+	drawArcLineShape [0.336 0.877
+		[[-90 0.03] [-4 0.06] [-65 0] [-45 0.13] [41 0] [0.143] [-106 0.01]
+		[0.019] [96 0] [0.04] [-59 0] [0.03] [87 0] [0.028] [-65 0]
+		[0.038] [35 0] [0.038] [-65 0.05]]
+	] :height
+
+	jumpRight :height * 0.692
+	jumpForward :height * 0.176
+	left :angle1
+	setFillColor "white
+	repeat 7 [
+		square :height * 0.03
+		jumpForward :height * 0.041
+	]
+
+	setTurtleState :oldState
+end
+
+to drawHuman :height
+	localmake "oldState turtleState
+	setPenSize 0
+	setFillColor "white
+	drawArcLineShape [-0.024 0.29
+		[[12 0] [0.175] [90 0] [-17 0.3] [-22 0.1] [-70 0.035]
+		[0.03] [55 0.02] [-25 0.06] [-45 0.01] [0.026] [85 0]
+		[0.025] [-80 0] [0.04] [98 0] [0.036] [-96 0] [0.14] [30 0.05]
+		[0.02] [-100 0] [0.3] [-88 0] [0.6]]
+	] :height
+	setFillColor "black
+	drawArcLineShapes [
+		[0.22 0
+		[[5 0] [11 2.3] [86 0] [20 0.5] [20 0.4] [25.1 0.7]]
+		]
+
+		[0.145 0.52
+		[[-33 0] [10 0.4] [25 0.5] [60 0.2] [30 0.3] [40 0.24]
+		[30 0.15] [14 0.26] [90 0] [0.08] [-20 0.2] [-50 0.1]
+		[-90 0.058] [-20 0.1] [90 0] [60 0.1] [30 0.21]]
+		]
+	] :height
+	setTurtleState :oldState
+end
+
+; Inspired by a drawing on the cover of a book
+; called Computer Languages
+; The book was published in 1983.
+;
+; A scanned version of the book is at:
+; https://archive.org/details/computerlanguage00lamp
+to computerLanguagesCover :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+
+	; give impression of lines of code.
+	jumpForward :height * 0.47
+	repeat 7 [
+		stripes :height * 0.4 :height * 0.02 ["#4080]
+		jumpForward :height * 0.055
+	]
+
+	jumpTo :oldPos
+	jumpLeft :height * 0.63
+	drawComputer :height
+
+	jumpTo :oldPos
+	jumpRight :height * 0.4
+	drawHuman :height
+	setTurtleState :oldState
+end
+
+setScreenColor "#88f
+computerLanguagesCover 100

@@ -1,0 +1,25 @@
+!
+!  SORTSTAT.  Show what SortPoints does.
+!
+LIBRARY "Stat2Lib.trc"
+
+DIM x(10),y(10)
+
+FOR i = 1 to 10
+    LET x(i) = Rnd
+    LET y(i) = Rnd
+NEXT i
+
+CALL SetAxes(0)
+
+OPEN #1: screen 0, .49, 0, 1
+CALL SetTitle ("Unsorted")
+CALL PlotScat (x, y, 6, 1, "black")
+
+CALL SortPoints (x, y)
+
+OPEN #2: screen .5, 1, 0, 1
+CALL SetTitle ("Sorted")
+CALL PlotScat (x, y, 6, 1, "black")
+
+END

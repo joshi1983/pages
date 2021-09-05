@@ -1,0 +1,23 @@
+; Inspired by logo at
+; https://en.wikipedia.org/wiki/Chanel#/media/File:Chanel_logo_interlocking_cs.svg
+to chanelLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "arcAngle 300
+	setPenSize :height * 0.159
+	localmake "arcRadius (:height - penSize) / 2
+	setPenColor "black
+	setLineCap "butt
+	jumpForward :height / 2
+	localmake "center pos
+	repeat 2 [
+		setHeading :oldHeading + repcount * 180
+		jumpLeft :height * 0.245
+		right -90 - :arcAngle / 2
+		arc :arcAngle :arcRadius
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+chanelLogo 100

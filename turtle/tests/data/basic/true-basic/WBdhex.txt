@@ -1,0 +1,139 @@
+MODULE WBdhex                     ! 1992/12/05
+
+    ! SUB WB_DHex (l$(), options$)
+    ! SUB Open (fname$)
+    ! SUB GetFromTo
+    ! DEF Hex$(n,p)
+    ! DEF Done
+    ! SUB InterpretDhexOptions (option$(), fname$)
+
+    LIBRARY "{WB_c}WButilit.trc"
+
+    OPTION TYPO
+
+    PRIVATE Open, GetFromTo, Hex$, Done, InterpretDhexOptions
+
+    DECLARE DEF hex$, done
+
+    SHARE #1, bufsize, linesize, filesize, option$(0)
+
+    LET bufsize = 512
+    LET linesize = 16
+
+    SUB WB_DHex (l$(), options$)
+
+        LOCAL fname$
+
+        CALL WB_Decode (options$, option$())
+        CALL InterpretDhexOptions (option$(), fname$)
+
+        CALL Open (fname$)
+        DO
+           CALL GetFromTo
+        LOOP until done=1
+
+    END SUB
+
+    SUB Open (fname$)
+
+        WHEN EXCEPTION IN
+             OPEN #1: name fname$, org byte, create old
+             ASK #1: FILESIZE filesize
+        USE
+             CAUSE EXCEPTION 1, "Bad file name: " & fname$
+        END WHEN
+
+    END SUB
+
+    SUB GetFromTo
+
+        LOCAL from, to, startline, startchar
+        LOCAL endline, endchar, add, char
+        LOCAL line, c9, buffer$, outline$
+
+        INPUT prompt "Enter from, to: ": from, to
+        LET from = max(0, min(from, filesize-1))
+        LET to   = max(0, min(to,   filesize-1))
+        IF to < from then EXIT SUB
+        LET bufsize = to - from + 1
+
+        RESET #1: RECORD from+1
+        READ #1, Bytes bufsize: buffer$
+        LET startline = int(from/linesize)
+        LET startchar = mod(from,linesize)
+        LET endline = int(to/linesize)
+        LET endchar = mod(to,linesize)
+        LET add = startline*linesize
+        LET char = startchar
+        FOR line = startline to endline
+            LET outline$ = hex$(add,6) &  ":"
+            IF char > 0 then LET outline$[100:99] = repeat$("   ",char)
+            IF line = endline then
+               LET c9 = endchar
+            ELSE
+               LET c9 = linesize-1
+            END IF
+            FOR char = char to c9
+                LET outline$[100:99] = " " & hex$(unpackb(buffer$,8*(add+char-from)+1,8),2)
+            NEXT char
+            FOR char = c9+1 to 16
+                LET outline$[100:99] = "   "
+            NEXT char
+            LET outline$[100:99] = "  " & buffer$[add+1-from:add+c9+1-from]
+            CALL WB_More (outline$)
+
+            LET add = add + linesize
+            LET char = 0
+        NEXT line
+
+    END SUB
+
+    DEF Hex$(n,p)
+
+        LOCAL i, h$, d(0:20)
+
+        FOR i = 0 to p-1
+            LET d(i) = mod(n,16)
+            LET n = int(n/16)
+        NEXT i
+        LET h$ = ""
+        FOR i = p-1 to 0 step -1
+            SELECT CASE d(i)
+            CASE 0 to 9
+                 LET h$ = h$ & chr$(48+d(i))
+            CASE else
+                 LET h$ = h$ & chr$(65+d(i)-10)
+            END SELECT
+        NEXT i
+        LET hex$ = h$
+
+    END DEF
+
+    DEF Done
+
+        LOCAL xxxxx
+
+        PRINT "Enter q or ESC to quit, anything else to continue."
+        GET KEY xxxxx
+        IF xxxxx = ord("q") or xxxxx = ord("Q") or xxxxx = ord("ESC") then
+           LET Done = 1
+        ELSE
+           LET Done = 0
+        END IF
+
+    END DEF
+
+    SUB InterpretDhexOptions (option$(), fname$)
+
+        LOCAL nopts
+
+        LET nopts = ubound(option$())
+        IF nopts <> 1 then
+           CALL WB_Error ("Dhex error. USAGE: do dhex, filename")
+        END IF
+
+        LET fname$ = option$(1)
+
+    END SUB
+
+END MODULE

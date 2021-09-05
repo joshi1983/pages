@@ -1,0 +1,63 @@
+! DemWin2
+
+! Demonstrates the difference between a window
+! being targeted (for output), shown, erased (hidden)
+! or made active (moved to the front.)
+
+LIBRARY "TrueCtrl.trc"
+
+DIM menus$(5,0:2), win(2)
+MAT READ menus$
+DATA File, Quit, ""
+DATA Show, 1, 2
+DATA Hide, 1, 2
+DATA Target, 1, 2
+DATA Active, 1, 2
+
+CALL TC_Init
+
+LET options$ = "CLOSE|SIZE|TITLE"
+CALL TC_Win_Create (win(1), options$, .1, .6, .2, .6)
+CALL TC_Win_SetTitle (win(1), "Window #1")
+CALL TC_Win_Create (win(2), options$, .4, .9, .3, .7)
+CALL TC_Win_SetTitle (win(2), "Window #2")
+
+CALL TC_SetRectUsers (0, .1, .9, .8, .9)      ! Slim down the default window
+CALL TC_Menu_Set (0, menus$)
+CALL TC_Show (0)
+CALL TC_Win_Switch (0)
+PRINT "On the Macintosh, click here to restore the menu."
+
+LET n = 0
+DO
+   CALL TC_Event (0, event$, window, x1, x2)
+
+   IF event$ = "HIDE" and window = 0 then EXIT DO
+   IF event$ = "MENU" then
+      SELECT CASE x1
+      CASE 1
+           SELECT CASE x2
+           CASE 1
+                EXIT DO
+           END SELECT
+      CASE 2
+           CALL TC_Show (win(x2))
+      CASE 3
+           CALL TC_Erase (win(x2))
+      CASE 4
+           CALL TC_Win_Target (win(x2))
+           LET n = n + 1
+           PRINT "Output event number"; n
+      CASE 5
+           CALL TC_Win_Active (win(x2))
+      END SELECT
+   END IF
+
+LOOP
+
+CALL TC_Menu_Free (0)
+CALL TC_Free (win(1))
+CALL TC_Free (win(2))
+CALL TC_Cleanup
+
+END

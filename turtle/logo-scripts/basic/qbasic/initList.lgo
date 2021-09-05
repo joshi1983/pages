@@ -1,0 +1,9 @@
+; Used for initializing a list where each element is
+; created by calling initProc
+to initializeList :count :initProc
+	localmake "result []
+	repeat :count [
+		queue2 "result (invoke :initProc)
+	]
+	output :result
+end

@@ -1,0 +1,50 @@
+to drawCrescent :height
+	localmake "oldState turtleState
+	localmake "outerAngle 165
+	localmake "outerRadius 0.5
+	localmake "innerRadius 0.388
+	localmake "innerAngle 180 - arcSin (abs sin :outerAngle) * :outerRadius / :innerRadius
+	localmake "crescentPath [
+		[-:outerAngle :outerRadius] [180 + :outerAngle - :innerAngle 0]
+		[:innerAngle :innerRadius]
+	]
+	setPenSize 0
+	jumpLeft :height * 0.49
+	jumpForward :height / 2
+	drawArcLineShape [0 0
+		combine :crescentPath reverse :crescentPath
+	] :height
+
+	setTurtleState :oldState
+end
+
+; Inspired by image at:
+; https://ca.pinterest.com/pin/3588874697887010
+to crescentFlower :height
+	localmake "oldState turtleState
+	localmake "bloomRadius :height * 0.05
+	setFillColor "white
+	setPenSize 0
+	drawCrescent :height
+	jumpForward :height * 0.558
+	jumpRight :height * 0.132
+	localmake "flowerCenter pos
+	circle :bloomRadius
+	repeat 6 [
+		jumpForward :height * 0.12
+		circle :bloomRadius
+		jumpTo :flowerCenter
+		right 360 / 6
+	]
+	setFillColor "black
+	right 180
+	drawArcLineShape [0 0.31
+		pathMirror [[60 0.16] [0.05] [-20 0.3] [-20 0.15] [170 0] [0.08]
+			[60 0.2] [-30 0.15] [-40 0.1]]
+	] :height
+
+	setTurtleState :oldState
+end
+
+setScreenColor "#0570c4
+crescentFlower 100

@@ -1,0 +1,153 @@
+to drawSlice1 :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "yellowRadius1 :height * 0.008
+	localmake "purpleColorStops createPList2 [
+		[0 "white] [0.3 "blue] [0.5 "aqua] [1 "violet]
+	]
+	localmake "triangleColorStops createPList2 [
+		[0 transparent] [0.5 "blue] [1 "aqua]
+	]
+	localmake "len1 :height * 0.07
+	setPenSize 0
+	jumpForward :height * 0.82
+	localmake "fromPos pos
+	jumpForward :len1 * 2
+	localmake "toPos pos
+	jumpBackward :len1
+	localmake "ellipseCenter pos
+	localmake "gradient1 createLinearGradient :fromPos :toPos :purpleColorStops "pad
+	jumpTo :oldPos
+	setHeading :oldHeading
+
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		localmake "height1 :height * :sign
+		setFillGradient :gradient1
+		drawArcLineShape [0 0.84
+			[[0.05] [138 0] [40 0.12] [170 0] [-30 0.15]]
+		] :height1
+
+		jumpForward :height - :yellowRadius1
+		jumpRight :height1 * 0.02
+		setFillColor "#ff0
+		left 170 * :sign
+		circlePair :yellowRadius1 0 :height * 0.07
+
+		setFillColor "#eef
+		jumpTo :oldPos
+		setHeading :oldHeading
+		jumpForward :height * 0.525
+		left :sign * 50
+		ellipse :height * 0.02 :height * 0.003		
+
+		jumpTo :oldPos
+		setHeading :oldHeading
+	]
+	setFillGradient :gradient1
+	jumpTo :ellipseCenter
+	ellipse :height * 0.003 :len1
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	setFillColor "blue
+	setFillBlendMode "lighter
+	isoTriangle :height * 0.01 :height * 0.04
+	setPenColor "white
+	setLineCap "round
+	setPenSize :height * 0.002
+	forward :height * 0.04
+	jumpForward :height * 0.01
+
+	setFillColor "aqua
+	setLineJoinStyle "miter
+	setPenSize :height * 0.0005
+	regularPolygon :height * 0.005 4
+	jumpForward :height * 0.01
+	setFillColor "navy
+	regularStar :height * 0.006 5
+
+	jumpTo :oldPos
+	jumpForward :height * 0.21
+	localmake "fromPos pos
+	localmake "triangleHeight :height * 0.11
+	jumpForward :triangleHeight
+	setFillGradient createLinearGradient :fromPos pos :triangleColorStops "pad
+	jumpTo :fromPos
+	setPenSize 0
+	isoTriangle :height * 0.02 :triangleHeight
+
+	setTurtleState :oldState
+end
+
+to drawSlice2 :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "radialColorStops createPList2 [
+		[0 "white] [0.1 "#88f] [0.3 "blue] [1 transparent]
+	]
+	setPenSize 0
+	setFillBlendMode "lighter
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		localmake "height1 :height * :sign
+		setFillColor "white
+		drawArcLineShape [0 0.215 
+			[[0.013] [140 0] [23 0.1]]
+		] :height1
+		jumpTo :oldPos
+		jumpForward :height * 0.165
+		setHeading :oldHeading + :sign * 70
+		setFillColor "blue
+		ellipse :height * 0.03 :height * 0.002
+
+		jumpTo :oldPos
+		setHeading :oldHeading
+		jumpForward :height * 0.7
+		left :sign * 71
+		ellipse :height * 0.11 :height * 0.003
+
+		jumpTo :oldPos
+		setHeading :oldHeading
+		setFillColor "yellow
+		drawArcLineShape [0 0.35
+			[[40 0] [0.04] [-40 0] [0.3] [-178 0] [0.295]]
+		] :height1
+		jumpForward :height * 0.11
+		left :sign * 80
+		ellipse :height * 0.03 :height * 0.002
+
+		jumpTo :oldPos
+		setHeading :oldHeading
+		jumpForward :height * 0.36
+		left :sign * 75
+		setFillGradient createRadialGradient pos :height * 0.1 :radialColorStops
+		ellipse :height * 0.1 :height * 0.002		
+
+		jumpTo :oldPos
+		setHeading :oldHeading
+	]
+
+	setTurtleState :oldState
+end
+
+; Inspired by image at:
+; https://ca.pinterest.com/pin/781656079118175166/
+to kaleidoscopeBlue :height
+	localmake "oldState turtleState
+	localmake "numAngles 30
+	jumpForward :height / 2
+	repeat :numAngles [
+		drawSlice1 :height / 2
+		right 180 / :numAngles
+		drawSlice2 :height / 2
+		right 180 / :numAngles
+	]
+
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+kaleidoscopeBlue 100

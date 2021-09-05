@@ -1,0 +1,47 @@
+; Copied from https://turtlespaces.org/news/desert-mountain-lake-an-introduction-to-fill/
+TO desertmountainlake
+  reset hideturtle penup
+  setbackgroundcolor blue
+  definecolor red [100 0 0]
+  definecolor brown [50 31 15]
+  ;redefine the colors
+
+  setx pick [-71 0 71]
+  make "sun 80 + random 40
+  setfillcolor yellow pie 180 :sun
+  definecolor 13 [50 50 20]
+  right 180 pie 180 :sun right 180
+  lower 1/10
+  ;draw the sun
+
+  make "points []
+  setx -250
+  setfc red quad 500 150
+  ;create the red sky quad
+
+  raise 2 / 10 setfc orange
+  beginfill
+  ;start drawing the mountains
+  dountil xpos > 220 [
+    queue position "points
+    right 30 + random 30
+    forward 50 + random 100 - ypos
+    queue position "points
+    rt 70 + random 40
+    ;rt is short for right, lt left etc
+    fd ypos setheading 0
+    ;fd is short for forward
+  ]
+  sety 0 queue position "points
+  ;we need to queue the final position
+  endfill
+  ;close the fill
+
+  ;the reflection:
+  setfc brown setfs 5 beginfill
+  foreach "i :points [
+    setposition (list first :i negative second :i third :i)
+  ]
+  endfill
+
+END

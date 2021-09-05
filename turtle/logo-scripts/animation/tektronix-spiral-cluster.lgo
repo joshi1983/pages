@@ -1,0 +1,60 @@
+; Inspired by a Tektronix 4051 BASIC program at:
+; https://www.facebook.com/share/p/1EUCWhxvtw
+;
+; Brad Srebnik shared that facebook post.
+; Brad also made a simulator of
+; the Tektronix computer demonstrated at:
+; https://www.youtube.com/watch?v=a94uJjTOjTY
+to tektronixSpiral :height :timeRatio
+	localmake "oldState turtleState
+	localmake "numIterations 5000 * :timeRatio
+	setPenSize :height * mixItems2 [0.001 0.0015 0.002 0.005 
+		0.01 0.02 0.05 0.1 0.15 0.2 0.25 0.3 0.35 0.4 0.45 0.5] :timeRatio 
+	setPenColor "lime
+	setLineJoinStyle "miter
+	setLineCap "butt
+	repeat :numIterations [
+		forward repcount / 2.5
+		setHeading -repcount *  (88 + 4 * repcount * repcount / 10000)
+	]
+	setPenSize 0
+	setFillColor "red
+	if :timeRatio > 0.9 [
+		setFillColor mix fillColor transparent clamp (1 - :timeRatio) / 0.1 0 1
+	]
+	circle :height * mix 0.01 0.003 :timeRatio 
+
+	setTurtleState :oldState
+end
+
+to getTimeRatio
+	output interpolateRatio easeInOut animation.timeRatio
+end
+
+setScreenColor "black
+tektronixSpiral 100 getTimeRatio
+
+to animation.snapshotstyle
+	localmake "timeRatio getTimeRatio
+	localmake "px mixItems2 [0 0 0 0 0 -100 -500 -1000 -20000 -30000] :timeRatio
+	localmake "py mixItems2 [0 0 0 0 0 -100 -500 
+		-1000 20000 30000 40000 50000] :timeRatio
+	localmake "scale2 mixItems2 [40 8 1 0.5 0.35 0.1 0.03 0.02 0.015 
+		0.01 0.009 0.008 
+		0.005 0.00475 0.0045 0.00425 0.004 0.0035] :timeRatio
+	output createPList2 [
+		["position.x :px]
+		["position.y :py]
+		["zoom.scale :scale2]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 20
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+		["thumbnailTime 5]
+	]
+end

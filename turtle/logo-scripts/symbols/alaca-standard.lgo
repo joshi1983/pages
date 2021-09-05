@@ -1,0 +1,153 @@
+to drawGrid :radius
+	localmake "oldState turtleState
+	localmake "center pos
+	localmake "oldHeading heading
+	localmake "bottomWidth :radius * 1.3
+	localmake "bottomAngle 2 * arcSin :bottomWidth / 2 / :radius
+	localmake "radius1 :radius - penSize / 2
+	localmake "separation :radius1 / 2
+	localmake "separation2 :separation / 2 / cos 45
+	localmake "offset :radius1 * cos :bottomAngle / 2
+	setFillColor transparent
+	right 180 - :bottomAngle / 2
+	jumpForward :radius1
+	localmake "bottomRight pos
+	left 90
+	arcLeft 360 - :bottomAngle :radius1
+	localmake "bottomLeft pos
+	jumpTo :center
+	setHeading :oldHeading
+	jumpBackward :offset
+	jumpRight :separation
+	setPenSize penSize * 0.7
+	repeat 3 [
+		localmake "startPos pos
+		forward distanceToCircle :center :radius1
+		jumpTo :startPos
+		jumpLeft :separation
+	]
+	jumpTo :center
+	right 90
+	jumpRight :separation
+	repeat 3 [
+		localmake "d distanceToCircle :center :radius1
+		jumpBackward :d
+		forward :d * 2
+		jumpBackward :d
+		jumpLeft :separation	
+	]
+	setHeading :oldHeading + 45
+	repeat 2 [
+		localmake "heading1 heading
+		jumpTo :center
+		jumpRight :separation2 * 2
+		repeat 5 [
+			localmake "startPos pos
+			jumpForward distanceToCircle :center :radius1
+			right 180
+			jumpForward :radius1 * 0.01 ; so distanceToCircle doesn't return 0.
+			localmake "d distanceToCircle :center :radius1
+			localmake "bottomD distanceToLine :bottomRight :bottomLeft
+			forward min :bottomD :d
+			jumpTo :startPos
+			setHeading :heading1
+			jumpLeft :separation2
+		]
+		left 90
+	]
+	setTurtleState :oldState
+end
+
+to drawInnerCircles :topOffset
+	localmake "oldState turtleState
+	localmake "outerRadius :topOffset * 0.33
+	localmake "radius :outerRadius - penSize / 2
+	localmake "offset :topOffset * 1.15
+	localmake "separationAngle 38
+	jumpBackward :offset + :outerRadius - :topOffset
+	localmake "center pos
+	left :separationAngle
+	repeat 3 [
+		jumpForward :offset
+		circle :radius
+		jumpTo :center
+		right :separationAngle
+	]
+	setTurtleState :oldState
+end
+
+to drawOuterSymbol :height
+	localmake "oldState turtleState
+	localmake "width :height * 0.55
+	setLineCap "round
+	jumpForward penSize / 2
+	forward :height - penSize
+	jumpBackward :height / 2
+	right 90
+	jumpBackward :width / 2
+	forward :width
+	setTurtleState :oldState
+end
+
+to drawOuterSymbols :radius
+	localmake "oldState turtleState
+	localmake "center pos
+	localmake "oldHeading heading
+	localmake "upperAngleStep 20
+	localmake "radius1 :radius - penSize / 2
+	localmake "symbolHeight :radius * 0.45
+	jumpBackward :radius * 0.5
+	localmake "guidePos1 pos
+	jumpTo :center
+	left :upperAngleStep * 4
+	repeat 9 [
+		localmake "startHeading heading
+		jumpForward :radius1
+		setHeading (towards :guidePos1) + 180		
+		drawOuterSymbol :symbolHeight
+		setHeading :startHeading
+		right :upperAngleStep
+		jumpTo :center
+	]
+	repeat 2 [
+		setHeading :oldHeading + 102 * sign repcount - 1.5
+		jumpForward :radius1
+		drawOuterSymbol :symbolHeight
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+to drawBase :height
+	localmake "oldState turtleState
+	setFillColor penColor
+	setPenSize 0
+	repeat 2 [
+		drawArcLineShape [0.1 0.4
+			[[90 0] [0.45] [-60 0.1] [101 0.2] [-32 0.4]
+			[-40 0.33] [-20 0.2] [-20 0.4] [-20 1] [180 0.03]
+			[20 1.1] [60 0.45] [10 2] [-51 0.398] [-30 0.12]
+			[82 0.05] [0.28] [180 0.02] [0.115] [-60 0.1] [-25 0.2]
+			[-70 0.03] [-25 0.5]]
+		] :height * sign repcount - 1.5
+	]
+
+	setTurtleState :oldState
+end
+
+; Inspired by an object at:
+; https://en.wikipedia.org/wiki/Hittites#/media/File:AlacaStandarte.jpg
+to alacaStandard :height
+	localmake "oldState turtleState
+	localmake "radius :height * 0.38
+	setPenColor "black
+	drawBase :height * 0.31
+	jumpForward :height * 0.4
+	setPenSize :height * 0.03
+	drawGrid :radius
+	drawInnerCircles :height * 0.242
+	drawOuterSymbols :radius
+	setTurtleState :oldState
+end
+
+alacaStandard 100

@@ -1,0 +1,84 @@
+to drawEye :height
+	localmake "oldState turtleState
+	localmake "cornerSize :height / 2
+	localmake "offset (:height - :cornerSize) / 2
+	square :height
+	jumpBackward :offset
+	jumpRight :offset
+	square :cornerSize
+	setTurtleState :oldState
+end
+
+to drawFace :faceSize
+	localmake "oldState turtleState
+	localmake "eyeSeparation :faceSize * 0.4
+	jumpForward (:faceSize + penSize) / 2
+	square :faceSize
+	jumpBackward :faceSize * 0.19
+	square :faceSize * 0.13
+	jumpForward :faceSize * 0.32
+	jumpLeft :eyeSeparation / 2
+	repeat 2 [
+		drawEye :faceSize * 0.25
+		jumpRight :eyeSeparation
+	]
+	setTurtleState :oldState
+end
+
+to drawHead :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "faceSize :height * 0.7
+	localmake "antennaSeparation :height * 0.16
+	localmake "antennaHeight :height - :faceSize - penSize / 2
+	drawFace :faceSize
+	jumpForward :faceSize
+	jumpLeft :antennaSeparation / 2
+	repeat 2 [
+		localmake "antennaStartPos pos
+		forward :antennaHeight
+		right 90 * sign repcount - 1.5
+		forward :height * 0.1
+		setHeading :oldHeading
+		jumpTo :antennaStartPos
+		jumpRight :antennaSeparation
+	]
+	setTurtleState :oldState
+	output :faceSize
+end
+
+; Inspired by a drawing from a slide at:
+; https://www.slideshare.net/slideshow/logo-programming-language/83874736
+; The slide was titled "Examples (cont..)"
+to squareWorm :height
+	localmake "oldState turtleState
+	localmake "tailSquareSize :height * 0.08
+	localmake "squareSizes [
+		0.54 0.36 0.18 0.18 0.09 0.09
+	]
+	setPenColor "black
+	setPenSize :height * 0.02
+	setLineJoinStyle "miter
+	setLineCap "butt
+	setFillColor "white
+	jumpLeft :height * 0.84
+	localmake "prevSize drawHead :height
+	jumpForward penSize / 2
+	repeat count :squareSizes [
+		localmake "nextSize :height * item repcount :squareSizes		
+		jumpRight (:prevSize + :nextSize) / 2
+		localmake "bottom pos
+		jumpForward :nextSize / 2
+		square :nextSize
+		localmake "prevSize :nextSize
+		jumpTo :bottom
+	]
+	arcLines [[-90 0] [0.3] [90 0] [0.53] [90 0] [0.25] [90 0] [0.175]] :height
+	jumpLeft :tailSquareSize / 2
+	jumpBackward :tailSquareSize / 2
+	square :tailSquareSize
+	setTurtleState :oldState
+end
+
+setScreenColor "#ccc
+squareWorm 100

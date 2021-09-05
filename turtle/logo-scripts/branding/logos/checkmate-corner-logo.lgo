@@ -1,0 +1,57 @@
+; Inspired by logo at:
+; https://www.youtube.com/@TheCheckmateCorner
+to checkMateCornerLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "hairs [
+		[0.07 0.672 72 0.28]
+		[0.195 0.62 90 0.23]
+		[0.25 0.54 98 0.175]
+		[0.24 0.49 117 0.16]
+		[0.26 0.4 132 0.13]
+	]
+	setPenSize 0
+	setFillColor "black
+	setPenColor fillColor
+	drawArcLineShape [0.21 0
+		[[-65 0] [22 0.3] [110 0.04] [21 0.1] [14 1.9] [20 0.2] [95.59 0.05]
+		[52.4 0] [0.06] [158 0] [-55 0.04] [-83 0.01] [-17 0.8] [-3.1 5] [-135 0.003]
+		[-27 0.28] [56.4 0.03]]
+	] :height
+	repeat count :hairs [
+		localmake "hair item repcount :hairs
+		jumpRight :height * first :hair
+		jumpForward :height * item 2 :hair
+		right item 3 :hair
+		circlePair :height * 0.02 :height * 0.005 :height * last :hair
+		jumpTo :oldPos
+		setHeading :oldHeading
+	]
+	setLineJoinStyle "round
+	setLineCap "round
+	setPenSize :height * 0.035
+	jumpRight :height * 0.21
+	jumpForward :height * 0.12
+	arcLines [[-25 0] [25 0.6] [25 0.2] [50 0.5] [0.05] [-25 0.1] [25 0.3] [125 0]
+		[0.12] [-95 0.02] [0.06] [95 0.04] [0.06] [-65 0.08] [-10 1]] :height
+	jumpBackward :height * 0.03
+	arcLines [[90 0] [0.1] [40 0.1] [84 0.04] [0.09] [-45 0] [32 0.3] [-120 0.01]
+		[-29.5 0.1] [0.34]] :height
+
+	; draw lip.
+	jumpTo :oldPos
+	setHeading :oldHeading
+	setPenSize 0
+	drawArcLineShape [-0.3909 0.3152
+		[[-90 0] [45 0.13] [-154 0.004] [-50 0.1]]
+	] :height	
+
+	; draw eye
+	jumpForward :height * 0.6
+	jumpLeft :height * 0.246
+	circle :height * 0.022
+	setTurtleState :oldState
+end
+
+checkMateCornerLogo 100

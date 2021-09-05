@@ -1,0 +1,171 @@
+make "generalWidthFactor 1.06
+make "thicknessFactor 0.06
+
+to drawRoof :height
+	localmake "roofAngle 106.6
+	localmake "innerLen1 0.333
+	localmake "innerThickness 0.13
+	localmake "innerLen2 :innerLen1 + :innerThickness * 
+		((sin :roofAngle) - (cos :roofAngle) * sin :roofAngle - 90) 
+	localmake "innerArcs [
+		[:roofAngle 0] [:innerLen1] [90 - :roofAngle 0]
+		[:innerThickness] [:roofAngle - 270 0] [:innerLen2]
+		[90 - :roofAngle 0]
+	]
+	localmake "outerLen :generalWidthFactor / 2 / sin :roofAngle
+	localmake "outerArcs [
+		[:roofAngle 0] [:outerLen] [180 - :roofAngle 0] [0.05]
+		[:roofAngle 0] [:outerLen] [90 - :roofAngle 0]
+	]
+	localmake "shapes [
+		[0 0.883 combine :innerArcs reverse :innerArcs]
+		[0 1 combine :outerArcs reverse :outerArcs]
+	]
+	drawArcLineShapes :shapes :height
+end
+
+to drawU :height
+	localmake "oldState turtleState
+	localmake "arcRadiusFactor 0.05
+	localmake "arcLinesInfo [
+		[1 - :arcRadiusFactor - :thicknessFactor / 2] [90 :arcRadiusFactor]
+	]
+	setLineCap "butt
+	setPenSize :height * :thicknessFactor
+	setPenColor fillColor
+	jumpLeft :height * :arcRadiusFactor
+	jumpForward :height
+	right 180
+	arcLines :arcLinesInfo :height
+	arcLines reverse :arcLinesInfo :height
+	setTurtleState :oldState
+end
+
+to drawN :height
+	localmake "shape [0 0.33
+		[[5.65 0] [0.275] [174.4 0] [0.603] 
+		[-90 0] [0.048] [-90.05 0]
+		[1] [-90 0] [0.048] [-83.7 0] [0.54] [173.7 0] 
+		[0.536] [-90 0] [0.05] [-90 0] [1] [-90 0] [0.049]
+	]
+	]
+	drawArcLineShape :shape :height
+end
+
+to drawE :height
+	localmake "oldState turtleState
+	localmake "thickness :height * :thicknessFactor
+	localmake "thickness2 :height * 0.05
+	localmake "widthFactors [0.12 0.1 0.1]
+	jumpLeft :height * 0.035
+	stripes :thickness :height [fillColor]
+	localmake "bottomLeft pos
+	repeat 3 [
+		localmake "width :height * item repcount :widthFactors
+		jumpForward (repcount - 1) * (:height - :thickness2) / 2
+		jumpRight :width / 2
+		stripes :width :thickness2 [fillColor]
+		jumpTo :bottomLeft
+	]
+	setTurtleState :oldState
+end
+
+to drawS :height
+	localmake "oldState turtleState
+	localmake "arcRadiusFactor 0.048
+	localmake "len1 0.24
+	localmake "arcLines [
+		[:len1] [180 :arcRadiusFactor] [0.2] [15 0.3] [0.15]
+	]
+	setLineCap "butt
+	setPenColor fillColor
+	setPenSize :height * :thicknessFactor
+	jumpForward :height * (:arcRadiusFactor + :len1 + :thicknessFactor / 2)
+	jumpLeft :height * 0.057
+	right 180
+	arcLines :arcLines :height
+	dequeue2 "arcLines
+	arcLines reverse :arcLines -:height
+	forward :height * 0.22 ; The top-right line is shorter than len1.
+	setTurtleState :oldState
+end
+
+to drawC :height
+	localmake "oldState turtleState
+	localmake "arcRadiusFactor 0.048
+	localmake "len1 0.22
+	localmake "arcLines [
+		[:len1] [180 :arcRadiusFactor] [0.5 - :arcRadiusFactor - :thicknessFactor / 2]
+	]
+	setLineCap "butt
+	setPenColor fillColor
+	setPenSize :height * :thicknessFactor
+	jumpForward :height * (1 - :len1 - :arcRadiusFactor - :thicknessFactor / 2)
+	jumpRight :height * 0.04
+	arcLines :arcLines :height
+	dequeue2 "arcLines
+	arcLines reverse :arcLines :height
+	forward :height * 0.24
+	setTurtleState :oldState
+end
+
+to drawO :height
+	localmake "oldState turtleState
+	setPenColor fillColor
+	setFillColor transparent
+	jumpForward :height / 2
+	setPenSize :height * :thicknessFactor
+	roundRect :height * 0.1 :height - penSize :height * 0.05
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://www.unesco.org
+to unescoLogo :height :color
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "fontHeight :height * 0.4665
+	localmake "separation :height * 0.1733
+	localmake "horizontalLines [[0 1.285] [0.076 1.18] 
+	[0.154 :generalWidthFactor] [0.716 :generalWidthFactor]]
+	repeat count :horizontalLines [
+		localmake "lineInfo item repcount :horizontalLines
+		localmake "lineWidth :height * last :lineInfo
+		jumpForward :height * first :lineInfo
+		stripes :lineWidth :height * 0.045 [:color]
+		jumpTo :oldPos
+	]
+	setPenSize 0
+	setFillColor :color
+	drawRoof :height
+	jumpForward :height * 0.2205
+	jumpLeft :separation * 2.5
+	drawU :fontHeight
+	jumpRight :separation
+	drawN :fontHeight
+	jumpRight :separation
+	drawE :fontHeight
+	jumpRight :separation
+	drawS :fontHeight
+	jumpRight :separation
+	drawC :fontHeight
+	jumpRight :separation
+	drawO :fontHeight
+	setTurtleState :oldState
+end
+
+to unescoWhiteLogo :height
+	localmake "oldState turtleState
+	localmake "innerHeight :height * 0.8
+	stripes :height * 3 :height ["black]
+	jumpForward (:height - :innerHeight) / 2
+	unescoLogo :innerHeight "white
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 5
+jumpLeft :separation / 2
+unescoLogo :height "black
+jumpRight :separation
+unescoWhiteLogo :height

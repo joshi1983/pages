@@ -1,0 +1,42 @@
+make "econoRed "#ed2525
+
+; Inspired by logo at:
+; https://www.econopetro.com
+; Also shown at:
+; https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/1c24c524343381.596264fa6d6b1.jpg
+to econoPetroLogo :height :color
+	localmake "oldState turtleState
+	localmake "thickness :height * 0.093
+	localmake "separation :height * 0.185
+	setPenSize :thickness
+	setPenColor :color
+	setFillColor transparent
+	jumpForward :height / 2
+	circle (:height - penSize) / 2
+	right 45
+	jumpLeft :separation
+	setPenSize 0
+	setFillColor penColor
+	repeat 3 [
+		roundRect :thickness :height * 0.48 :thickness / 2
+		jumpRight :separation
+	]
+	setTurtleState :oldState
+end
+
+to econoPetroRedOnWhiteLogo :height
+	localmake "oldState turtleState
+	localmake "innerHeight :height * 0.8
+	stripes :height :height ["white]
+	jumpForward (:height - :innerHeight) / 2
+	econoPetroLogo :innerHeight :econoRed
+	setTurtleState :oldState
+end
+
+setScreenColor :econoRed
+make "height 100
+make "separation :height * 5
+jumpLeft :separation / 2
+econoPetroLogo :height "white
+jumpRight :separation
+econoPetroRedOnWhiteLogo :height

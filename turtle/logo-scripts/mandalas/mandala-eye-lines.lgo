@@ -1,0 +1,39 @@
+; Inspired by drawing at:
+; https://ca.pinterest.com/pin/809733208002792390/
+to mandalaEyeLines :height
+	localmake "oldState turtleState
+	localmake "numOuterAngles 90
+	localmake "outerDashLength :height * 0.135
+	localmake "outerOffset :height / 2 - :outerDashLength
+	localmake "numMidAngles 18
+	localmake "midOffset :height * 0.215
+	localmake "midRadius :midOffset * tan 180 / :numMidAngles
+	localmake "eyeAngle 70
+	localmake "eyeLength :midRadius / (1 - cos :eyeAngle / 2)
+	jumpForward :height / 2
+	localmake "center pos
+	setLineCap "butt
+	setLineJoinStyle "miter
+	setPenSize 2 * :outerOffset * tan 180 / :numOuterAngles
+	setPenColor "black
+	setFillColor transparent
+	repeat :numOuterAngles [
+		jumpForward :outerOffset
+		forward :outerDashLength
+		jumpTo :center
+		right 360 / :numOuterAngles
+	]
+	right 180 / :numMidAngles
+	repeat :numMidAngles [
+		jumpForward :midOffset
+		circle :midRadius
+		jumpBackward :eyeLength / 2
+		arcPair :eyeLength :eyeAngle
+		jumpTo :center
+		right 360 / :numMidAngles
+	]
+
+	setTurtleState :oldState
+end
+
+mandalaEyeLines 100

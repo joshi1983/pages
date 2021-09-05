@@ -1,0 +1,61 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Malaysia
+; A lot of the code is based on numbers in:
+; https://upload.wikimedia.org/wikipedia/commons/0/03/Flag_of_Malaysia_%28construction_sheet%29.svg
+
+make "malaysianFlagBlue "#006
+make "malaysianFlagRed "#c00
+make "malaysianFlagYellow "#fc0
+
+
+; Also known as Bintang Persekutuan
+to federalStar :outerRadius
+	localmake "innerRadius :outerRadius * 2 / 5
+	localmake "numPoints 14
+	setFillColor :malaysianFlagYellow
+	isotoxalStar :outerRadius :innerRadius :numPoints
+end
+
+to malaysiaFlag :height
+	localmake "width :height * 2
+	localmake "blueHeight :height * 8 / 14
+	localmake "numStripes 7
+	localmake "stripeWidth :height / :numStripes / 2
+	setLineCap "butt
+
+	; white background
+	jumpForward :height / 2
+	setPenColor "white
+	right 90
+	jumpBackward :width / 2
+	setPenSize :height
+	forward :width
+
+	; red stripes
+	jumpLeft :height / 2 - :stripeWidth / 2
+	jumpBackward :width
+	setPenColor :malaysianFlagRed
+	setPenSize :stripeWidth
+	repeat :numStripes [
+		forward :width
+		jumpBackward :width
+		jumpRight :stripeWidth * 2
+	]
+
+	jumpLeft :height + (:stripeWidth - :blueHeight) / 2
+	setPenSize :blueHeight
+	setPenColor :malaysianFlagBlue
+	forward :width / 2
+	jumpBackward :height * 8.25 / 14
+	setPenSize 0
+	setFillColor :malaysianFlagYellow
+	circle :height * 3 / 14
+	jumpForward :height * 2 / 3 / 14
+	setFillColor :malaysianFlagBlue
+	circle :height * (5 + 1/3) / 2 / 14
+	jumpForward :height * (3 - 2 / 3) / 14
+	left 90
+	federalStar :height * 5 / 2 / 14
+end
+
+malaysiaFlag 100

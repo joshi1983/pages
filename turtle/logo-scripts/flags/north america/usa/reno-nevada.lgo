@@ -1,0 +1,75 @@
+; Inspired by flag at:
+; https://en.wikipedia.org/wiki/Reno,_Nevada#/media/File:Flag_of_Reno,_Nevada.svg
+;
+; One main difference between source and what this procedure draws is:
+; - The procedure draws the circle in the exact center.
+; The source SVG had the circle off to the left a little.
+; I drew it in the exact centre thinking the assymetry in the source was a mistake.
+to renoNevadaFlag :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "width :height * 5 / 3
+	localmake "starColor "#b8b8b8
+	localmake "radius :height * 0.3333
+	localmake "bottomArcAngle 78
+	localmake "blueArcAngle 11.7
+	localmake "mountainPath [
+		[140 0] [0.8] [-100 0] [0.3] [100 0]
+	]
+	stripes :width :height ["#0c2340]
+	jumpLeft :height * 0.6615
+	jumpForward :height * 0.8282
+	setPenSize 0
+	setFillColor :starColor
+	isotoxalStar :height * 0.095 :height * 0.033 8
+
+	jumpTo :oldPos
+	jumpForward :height / 2
+	localmake "center pos
+	right 180 - :bottomArcAngle / 2
+	jumpForward :radius
+	right 90
+	polyStart
+	arcRight :bottomArcAngle :radius
+	polyEnd
+
+	jumpTo :center
+	setHeading :oldHeading + 115
+	setFillColor "#78b3e0
+	jumpForward :radius
+	right 90
+	polyStart
+	arcRight :blueArcAngle :radius
+	setHeading :oldHeading - 90
+	jumpForward :radius * 0.01
+	jumpForward distanceToCircle :center :radius
+	setHeading (towards :center) - 90
+	arcRight :blueArcAngle :radius
+	polyEnd
+
+	jumpTo :center
+	setHeading :oldHeading
+	jumpForward :radius
+	localmake "circleTop pos
+	jumpBackward :radius * 0.54
+	setFillColor "#ffb81c
+	polyStart
+	arcLines :mountainPath :radius
+	localmake "len distanceToCircle :center :radius
+	jumpForward :len
+	localmake "newHeading (towards :center) - 90
+	localmake "turnAngle heading - :newHeading
+	setHeading :newHeading
+	localmake "chordLength distance :circleTop
+	localmake "topArcAngle 4 * arcSin :chordLength / 2 / :radius
+	arcRight :topArcAngle :radius
+	left :turnAngle
+	jumpForward :len
+	arcLines reverse :mountainPath :radius
+	polyEnd
+	
+	setTurtleState :oldState
+end
+
+renoNevadaFlag 100

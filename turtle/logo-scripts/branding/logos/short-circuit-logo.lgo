@@ -1,0 +1,43 @@
+make "angle 30
+
+to drawDiamond :height
+	localmake "oldState turtleState
+	localmake "width1 :height / 2 / cos :angle
+	left 90 - :angle
+	jumpRight :width1 / 2
+	parallelogram :width1 :width1 :angle
+
+	setTurtleState :oldState
+end
+
+; Inspired by logo at
+; https://www.youtube.com/@ShortCircuit
+to shortCircuitLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "height1 :height * 0.365
+	localmake "shortCircuitAqua "#64e2de
+	localmake "colors ["white "#ff5a28 "#cc0098 "white :shortCircuitAqua "#1626c1]
+	stripes :height :height ["#670099]
+	setPenSize 0
+	jumpForward :height / 2
+	localmake "center pos
+	repeat count :colors [
+		setFillColor item repcount :colors
+		drawDiamond :height1
+		right :angle * 2
+	]
+	jumpForward :height1
+	left :angle * 4
+	setFillColor :shortCircuitAqua
+	drawDiamond :height1
+	jumpTo :center
+	setHeading :oldHeading + :angle * 2
+	jumpForward :height1
+	right :angle * 4
+	setFillColor "white
+	drawDiamond :height1
+	setTurtleState :oldState
+end
+
+shortCircuitLogo 100

@@ -1,0 +1,88 @@
+make "darkColor "#77622e
+make "lightColor "#e5d6b9
+
+to drawArcs :gap :smallRadius :largeRadius 
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "smallRadius :smallRadius + penSize / 2
+	localmake "largeRadius :largeRadius + penSize / 2
+	setLineCap "butt
+	setPenColor :lightColor
+	repeat 4 [
+		localmake "heading1 :oldHeading + repcount * 360 / 4
+		setHeading :heading1
+		jumpForward :largeRadius
+		right 90
+		arcRight 30 :largeRadius
+		jumpTo :oldPos
+		setHeading :heading1
+		jumpForward :gap
+		arc 70 :smallRadius
+		jumpTo :oldPos
+	]	
+	setTurtleState :oldState
+end
+
+; This draws a crop circle pattern discovered
+; in Battlesbury Hill, Nr Warminster, Wiltshire.
+; It was reported July 5, 2017.
+; The pattern is shown at 
+; https://www.pinterest.ca/pin/196751077461223085/
+; Several photos of it are shown at:
+; http://www.cropcircleconnector.com/2017/battleburyhill/battleburyhill2017a.html
+; and in a youtube video at:
+; https://www.youtube.com/watch?v=KuU6UQ3Tba8
+to battlesburyHillCropCircles2017 :height
+	localmake "oldState turtleState
+	localmake "thinGap :height * 0.018
+	localmake "mediumRadius :height * 0.218
+	localmake "gap (:height / 2 - :mediumRadius) / cos 45
+	localmake "largeThickness :height * 0.1
+	localmake "mediumRadius2 :mediumRadius - :thinGap - :largeThickness / 2
+	localmake "largeRadius1 :gap - :mediumRadius2
+	localmake "tinyCircleSeparation :height * 0.1
+	localmake "tinyCircleRadius :height * 0.02
+	localmake "tinyCircleOffset sqrt (:mediumRadius2 * :mediumRadius2 -  :tinyCircleSeparation * :tinyCircleSeparation / 4)
+	jumpForward :height / 2
+	localmake "center pos
+	setFillColor :lightColor
+	setPenSize 0
+	circle :gap
+	right 45
+	repeat 4 [
+		jumpForward :gap
+		circle :mediumRadius
+		right 90
+		jumpTo :center
+	]
+	setPenColor :darkColor
+	setPenSize :largeThickness
+	circle :largeRadius1
+	repeat 4 [
+		jumpForward :gap
+		setPenSize :largeThickness
+		circle :mediumRadius2
+		jumpBackward :tinyCircleOffset
+		jumpLeft :tinyCircleSeparation / 2
+		setPenSize 0
+		repeat 2 [
+			circle :tinyCircleRadius
+			jumpRight :tinyCircleSeparation
+		]
+		right 90
+		jumpTo :center
+	]
+	repeat 2 [
+		jumpBackward :gap
+		stripes :thinGap :gap * 2 [fillColor]
+		jumpTo :center
+		right 90
+	]
+	setPenSize :thinGap
+	drawArcs :gap :mediumRadius2 + :largeThickness / 2 :largeRadius1 + :largeThickness / 2
+	setTurtleState :oldState
+end
+
+setScreenColor :darkColor
+battlesburyHillCropCircles2017 100

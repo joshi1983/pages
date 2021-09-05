@@ -1,0 +1,53 @@
+; Inspired by logo at:
+; https://www.dadavidson.com/
+to daDavidsonLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "rightLine [
+		[-30 0] [35 0.2] [0.1] [-25 0.2] [70 0] [-40 0.2] [-18.5 0.5]
+		[70 0.06] [15 0.2] [-18 1] [0.202632] 
+	]
+	localmake "rightLineInfo arcLinesInfo :rightLine
+	localmake "rightVerticalGap 1 - ((item 2 :rightLineInfo) * cos last :rightLineInfo)
+	setPenSize 0
+	jumpRight :height * 0.73
+	localmake "rightPos pos
+	setFillColor "#006a64
+	polyStart
+	arcLines :rightLine :height
+
+	; Calculate an arc to reach the top line at a 90 degree angle.
+	localmake "arcAngle abs (:oldHeading - 90 - heading)
+	localmake "arcRadius :rightVerticalGap * :height / (1 - cos :arcAngle)
+	arcLeft :arcAngle abs :arcRadius
+	localmake "humpTop pos
+
+	arcLines [[56 0.36] [-80 0] [90 0.2] [26 0.22] [20 0.4] [-15 0.5] [80 0.03]
+	[-53 0.08] [0.13] [140 0.005] [-42 0.2] [-130 0.07] [-20 0.2]] :height
+	localmake "arcRadius :height * 0.48
+	localmake "arcAngle getArcRightAngleToLine :arcRadius :oldPos :rightPos
+	arcRight :arcAngle :arcRadius
+	setHeading :oldHeading + 90
+	arcLines [[0.12] [50 0] [0.08] [-40 0.15] [45 0.04] [-12.5 0.7] [-90 0]] :height
+	localmake "arcRadius :height * 0.17
+	localmake "arcAngle getArcRightAngleToLine :arcRadius :oldPos :rightPos
+	arcRight :arcAngle :arcRadius
+	setHeading :oldHeading + 90
+	arcLines [[0.13] [80 0] [-55 0.21] [100 0] [-32 0.38] [-71 0]
+	[-40 0.66] [-30 0.4] [-15 0.3]] :height
+	localmake "arcRadius :height * 0.2
+	localmake "arcAngle getArcRightAngleToLine :arcRadius :oldPos :rightPos
+	arcRight :arcAngle :arcRadius
+	polyEnd
+
+	jumpTo :humpTop
+	setHeading :oldHeading
+	jumpBackward :height * 0.375
+	setFillColor "#d9c69d
+	circle :height * 0.11
+	isotoxalStar :height * 0.32 :height * 0.06 8
+	setTurtleState :oldState
+end
+
+daDavidsonLogo 100

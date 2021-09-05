@@ -1,0 +1,42 @@
+; Inspired by logo at:
+; https://en.wikipedia.org/wiki/305th_Tactical_Fighter_Squadron_(JASDF)#/media/File:Plum_blossom_tail_marking_of_a_305th_Tactical_Fighter_Squadron_Japan_Air_Self-Defense_Force_F-15J.jpg
+to jasdfLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "numCircles 5
+	localmake "littleRadius :height * 0.18
+	localmake "innerThickness :height * 0.01
+	localmake "centralGap :innerThickness / 2
+	localmake "arcAngle 360 - 1.5 * 360 / 5
+	localmake "jasdfRed "#d00
+	setPenSize :height * 0.042
+	setPenColor "white
+	setFillColor "black
+	jumpForward :height / 2
+	circle (:height - penSize) / 2
+	setPenSize 0
+	setFillColor :jasdfRed
+	circle :height * 0.44
+	localmake "center pos
+	setPenSize 0
+	setFillColor "white
+	repeat :numCircles [
+		jumpForward :littleRadius + :centralGap
+		circle :littleRadius
+		jumpTo :center
+		right 360 / :numCircles
+	]
+	setPenColor :jasdfRed
+	setPenSize :innerThickness
+	repeat :numCircles [
+		setHeading :oldHeading + repcount * 360 / :numCircles
+		jumpForward :centralGap
+		right 90
+		arcLeft :arcAngle :littleRadius
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "#999
+jasdfLogo 100

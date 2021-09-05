@@ -1,0 +1,45 @@
+; You can learn more about John Stephan at
+; https://en.wikipedia.org/wiki/John_Stephan
+
+to drawCircles :circlesInfo :height
+	localmake "oldState turtleState
+	localmake "maxRadius :height / 2
+	setPenSize 0
+	jumpForward :height / 2
+	repeat count :circlesInfo [
+		localmake "circleInfo item repcount :circlesInfo
+		setFillColor first :circleInfo
+		circle :maxRadius * last :circleInfo
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://www.pinterest.ca/pin/62065301089075072/
+to johnStephanRedDisc :height
+	localmake "circlesInfo [
+		["#0e1c25 1] ["#49553f 0.97] ["#fffad4 0.937]
+		["#dd621f 0.918] ["#b7120c 0.895] ["#960c0a 0.865]
+	]
+	drawCircles :circlesInfo :height
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/File:John_stephan_circle_number_5_1982.jpg
+to johnStephanCircleNumber5 :height
+	localmake "circlesInfo [
+		["#a5804c 1] ["#49553F 0.975] ["#943725 0.965]
+		["#356595 0.928] ["#34551c 0.9] ["#95753a 0.885]
+		["#a0611e 0.873] ["#ad923b 0.86] ["#dd901a 0.845]
+	]
+	stripes :height * 2 :height ["#bb9d7b]
+	drawCircles :circlesInfo :height
+end
+
+setScreenColor "black
+make "height 100
+make "separation :height * 5
+jumpLeft :separation / 2
+johnStephanRedDisc :height
+jumpRight :separation
+johnStephanCircleNumber5 :height

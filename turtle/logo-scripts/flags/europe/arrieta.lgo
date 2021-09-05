@@ -1,0 +1,40 @@
+to drawLauburu :diameter
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	setPenSize :diameter * 0.0525
+	setPenColor "#fd0
+	setFillColor transparent
+	circle (:diameter - penSize) / 2
+	localmake "center pos
+	repeat 4 [
+		setHeading :oldHeading + repcount * 360 / 4
+		arcRight 180 (:diameter - penSize) / 4
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by:
+; https://en.wikipedia.org/wiki/Arrieta#/media/File:Arrieta_bandera.svg
+; I tried to make this as similar as possible to the original.
+to arrietaFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 3 / 2
+	localmake "whiteThickness :height * 0.2
+	localmake "littleWidth (:width - :whiteThickness) / 2
+	localmake "littleHeight (:height - :whiteThickness) / 2
+	stripes :width :height ["#080]
+	stripes :whiteThickness :height ["white]
+	jumpForward (:height - :whiteThickness) / 2
+	stripes :width :whiteThickness ["white]
+
+	jumpLeft (:littleWidth + :whiteThickness) / 2
+	jumpForward :littleHeight / 2 + :whiteThickness
+	drawLauburu :littleHeight * 0.95
+	
+	setTurtleState :oldState
+end
+
+; Darken the screen color enough for some contrast with white in the flag.
+setScreenColor "#ddd
+arrietaFlag 100

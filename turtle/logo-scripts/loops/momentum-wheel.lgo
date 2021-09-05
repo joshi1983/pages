@@ -1,0 +1,30 @@
+; Inspired by
+; https://www.pinterest.ca/pin/231231762109239000/
+
+to momentumWheel :size
+	; remember the original position and heading so we can restore it later.
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "color1 "#f40 ; red/orange mix
+	localmake "color2 "#0ff ; light bluish color
+	localmake "innerRadius :size * 0.2
+	localmake "outerRadius :size - :innerRadius * 0.5
+	localmake "numRepeats 128
+	setPenSize :size * 0.005
+	repeat :numRepeats [
+		jumpTo :oldPos
+		; calculate heading off repeat count.
+		setHeading :oldHeading + repcount * 360 / :numRepeats - 90
+		jumpForward :innerRadius
+		right 90
+		; blend the colors together by repeat count.
+		setPenColor mix :color1 :color2 (repcount - 1) / (:numRepeats - 1)
+		circleRight :outerRadius
+	]
+	; restore the original heading and position.
+	setHeading :oldHeading
+	jumpTo :oldPos
+end
+
+setScreenColor "black
+momentumWheel 150

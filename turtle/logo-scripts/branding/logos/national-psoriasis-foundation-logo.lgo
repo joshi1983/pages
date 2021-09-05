@@ -1,0 +1,29 @@
+; Inspired by logo at:
+; https://www.psoriasis.org
+to nationalPsoriasisFoundationLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "colors ["#52B9E9 "#F58220]
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	repeat 4 [
+		setHeading :oldHeading + repcount * 360 / 4
+		localmake "colorIndex 1 + remainder repcount 2
+		setFillColor item :colorIndex :colors
+		drawArcLineShape [0.05 0.054
+			[[15 0.06] [11 0.15] [4.5 0.4] [0.06] [-13 0.35] [-10 0.32]
+			[-10 0.13] [-20 0.23] [-18 0.34] [65 0] [0.0066] [105 0]
+			[25 0.4] [48.5 0.203] [-120 0] [40 0.177] [12 0.4] [0.07]
+			[-20 0.22] [100 0] [0.005] [67 0] [25 0.3] [0.03] [-55 0.208]
+			[-33 0.18] [-10 0.1] [160 0.005]]
+		] :height
+		jumpLeft :height * 0.19
+		jumpForward :height * 0.269
+		circle :height * 0.05
+		jumpTo :center		
+	]
+	setTurtleState :oldState
+end
+
+nationalPsoriasisFoundationLogo 100

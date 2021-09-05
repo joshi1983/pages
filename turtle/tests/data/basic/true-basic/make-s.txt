@@ -1,0 +1,22 @@
+EXTERNAL
+
+SUB Make (l$(), options$)
+
+    !  Imitates the Unix make command
+
+    LIBRARY "{WB_c}WBmake.trc"
+
+    WHEN exception in
+         CALL WB_Make (l$(), options$)
+         PRINT "Done with Make."
+    USE
+         IF extype = 1 then
+            PRINT extext$
+         ELSE
+            PRINT extype, extext$
+            PRINT "Error in Make."
+            PRINT exline$
+         END IF
+    END WHEN
+
+END SUB

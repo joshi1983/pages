@@ -1,0 +1,36 @@
+; Inspired by:
+; https://en.wikipedia.org/wiki/File:Flag_of_the_Republic_of_Yucatan.svg
+to yucatanFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 2
+	localmake "sideWidth :width / 3
+	localmake "yucatanRed "#ce1126
+	localmake "starSize :height * 27.5 / 300
+	localmake "vSeparation :height * 2 / 3
+	localmake "hSeparation :sideWidth * 3 / 5
+	stripes :width :height [:yucatanRed "white :yucatanRed]
+	jumpLeft (:width - :sideWidth) / 2
+	stripes :sideWidth :height ["#006847]
+
+
+	; draw all the stars.
+	jumpForward :height / 2
+	setPenSize 0
+	setFillColor "white
+	regularStar :starSize 5
+	jumpBackward :vSeparation / 2
+	repeat 2 [
+		localmake "middle pos
+		jumpLeft :hSeparation / 2
+		repeat 2 [
+			regularStar :starSize 5
+			jumpRight :hSeparation
+		]
+		jumpTo :middle
+		jumpForward :vSeparation
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "#eee
+yucatanFlag 100

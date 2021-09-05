@@ -1,0 +1,53 @@
+; Inspired by: 
+; https://publicdomainvectors.org/en/free-clipart/Black-and-white-computer-diskette-icon-vector-graphics/13477.html
+; This would be a 3 1/2-inch, high-density floppy.
+; You can learn more about floppy disks at:
+; https://en.wikipedia.org/wiki/Floppy_disk
+
+to diskette :size
+	localmake "oldState turtleState
+
+	setLineCap "butt ; We don't want line caps.
+	setPenColor "black
+	setPenSize :size
+	; black square background.
+	forward :size
+
+	; Give impression of metal
+	setPenColor "#ddd
+	setPenSize :size * 0.54
+	jumpBackward :size * 0.06
+	jumpLeft :size * 0.01
+	backward :size * 0.36
+
+	; white label background
+	jumpBackward :size * 0.09
+	setPenSize :size * 0.81
+	setPenColor "white
+	jumpRight :size * 0.005
+	backward :size * 0.39
+
+	; Give impression of printed text.
+	jumpForward :size * 0.184
+	setPenColor "black
+	setPenSize :size * 0.53
+	jumpLeft :size * 0.027
+	repeat 2 [
+		forward :size * 0.024
+		jumpForward :size * 0.04
+	]
+	
+	jumpRight :size * 0.135
+	jumpForward :size * 0.2
+	setPenColor "black
+	setPenSize :size * 0.13
+	forward :size * 0.285
+
+	; Restore original state of turtle.
+	; This makes the procedure easier to reuse since
+	; the calling code doesn't have to worry about the turtle ending 
+	; up in a different position, heading, pen color...
+	setTurtleState :oldState
+end
+
+diskette 100
