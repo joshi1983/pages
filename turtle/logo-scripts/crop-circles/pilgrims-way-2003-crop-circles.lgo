@@ -1,0 +1,29 @@
+make "darkColor "#880
+
+; Inspired by
+; https://galactic2.net/c45d8621k/corn644.jpg
+; which was mentioned at:
+; https://galactic2.net/c45d8621k/2003.html
+; These were reported July 12, 2003.
+; The location was The Pilgrims Way, nr Burham, Kent. England.
+to pilgrimsWay2003CropCircles :height
+	localmake "oldState turtleState
+	localmake "lightColor "#ffd
+	setLineJoinStyle "miter
+	jumpForward :height / 2
+	setPenSize :height * 0.01
+	setPenColor :lightColor
+	setFillColor :darkColor
+	isotoxalStar :height * 0.48141 :height * 0.33 24
+	setPenSize :height * 0.02
+	isotoxalStar :height * 0.47423 :height * 0.3 12
+	setPenSize :height * 0.04
+	regularPolygon :height / 2 - penSize / 2 / cos 60 3
+	setPenSize :height * 0.1
+	right 60
+	regularPolygon :height / 2 - penSize / 2 / cos 60 3
+	setTurtleState :oldState
+end
+
+setScreenColor :darkColor
+pilgrimsWay2003CropCircles 100

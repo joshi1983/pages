@@ -1,0 +1,15 @@
+to pHexDigitToBinary :hexDigit
+	localmake "a ascii :hexDigit
+	if and :a <= ascii '9' :a >= ascii '0' [
+		output pBinary2 :a - ascii '0' 4
+	]
+	if and :a <= ascii 'f' :a >= ascii 'a' [
+		output pBinary2 :a + 10 - ascii 'a' 4
+	]
+	if and :a <= ascii 'F' :a >= ascii 'A' [
+		output pBinary2 :a + 10 - ascii 'A' 4
+	]
+	; At this point,
+	; :hexDigit is not a hex digit at all.
+	output :hexDigit
+end
