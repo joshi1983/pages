@@ -1,0 +1,52 @@
+import { testArgInfoToCheckFunction } from './testArgInfoToCheckFunction.js';
+import { testAvoidValueStackPush } from './testAvoidValueStackPush.js';
+import { testBinaryOperatorToJavaScript } from './testBinaryOperatorToJavaScript.js';
+import { testCallCommandInstructionToJavaScript } from './testCallCommandInstructionToJavaScript.js';
+import { testConvertInstructionsToJavaScript } from './testConvertInstructionsToJavaScript.js';
+import { testConvertInstructionsToJavaScriptForMandelbrot } from './testConvertInstructionsToJavaScriptForMandelbrot.js';
+import { testConvertInstructionsToJavaScriptForTransparent } from './testConvertInstructionsToJavaScriptForTransparent.js';
+import { testGetInstructionParamArgInfo } from './testGetInstructionParamArgInfo.js';
+import { testGetJumpToIndexes } from './testGetJumpToIndexes.js';
+import { testGetStartIndexForInstructionCluster } from './testGetStartIndexForInstructionCluster.js';
+import { testInstructionToJavaScriptInstruction } from './testInstructionToJavaScriptInstruction.js';
+import { testIsLocalVariable } from './testIsLocalVariable.js';
+import { testMergeIntoIfElseStatements } from './testMergeIntoIfElseStatements.js';
+import { testMergeIntoIfStatements } from './testMergeIntoIfStatements.js';
+import { testMergeJavaScriptInstructions } from './testMergeJavaScriptInstructions.js';
+import { testMergeJavaScriptInstructionsWithInvoke } from './testMergeJavaScriptInstructionsWithInvoke.js';
+import { testOptimizeJSDirectory } from './optimize-js/testOptimizeJSDirectory.js';
+import { testPushInstructionToJavaScript } from './testPushInstructionToJavaScript.js';
+import { testUnaryOperatorToJavaScript } from './testUnaryOperatorToJavaScript.js';
+import { testWrapWithArgInfoChecks } from './testWrapWithArgInfoChecks.js';
+import { testWrapWithTypeConverter } from './testWrapWithTypeConverter.js';
+import { testVariableReadToJavaScript } from './testVariableReadToJavaScript.js';
+import { wrapAndCall } from '../../../../helpers/wrapAndCall.js';
+
+const tests = [
+testArgInfoToCheckFunction,
+testAvoidValueStackPush,
+testBinaryOperatorToJavaScript,
+testCallCommandInstructionToJavaScript,
+testConvertInstructionsToJavaScript,
+testConvertInstructionsToJavaScriptForMandelbrot,
+testConvertInstructionsToJavaScriptForTransparent,
+testGetInstructionParamArgInfo,
+testGetJumpToIndexes,
+testGetStartIndexForInstructionCluster,
+testInstructionToJavaScriptInstruction,
+testIsLocalVariable,
+testMergeIntoIfElseStatements,
+testMergeIntoIfStatements,
+testMergeJavaScriptInstructions,
+testMergeJavaScriptInstructionsWithInvoke,
+testOptimizeJSDirectory,
+testPushInstructionToJavaScript,
+testUnaryOperatorToJavaScript,
+testWrapWithArgInfoChecks,
+testWrapWithTypeConverter,
+testVariableReadToJavaScript
+];
+
+export function testInstructionsToJavaScript(logger) {
+	wrapAndCall(tests, logger);
+};
