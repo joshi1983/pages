@@ -1,0 +1,144 @@
+to drawGround :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "colorStops createPList2 [
+		[0 "#888] [0.7 "#888] [1 "#0888]
+	]
+	jumpForward :height
+	setFillGradient createLinearGradient :oldPos pos :colorStops "pad
+	setPenSize 0
+	jumpBackward :height / 2
+	rect :height * 20 :height
+	setTurtleState :oldState
+end
+
+to drawLunarLander :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "triangleHeight :height * 0.25
+	setPenSize 0
+	setFillColor "#888
+	setHeading :oldHeading
+	jumpTo :oldPos
+	jumpForward :height * 0.1
+	isoTriangle :height * 0.34 :height * 0.9
+
+	jumpTo :oldPos
+	jumpForward :height * 0.72
+	localmake "center pos
+	setPenSize :height * 0.01
+	setPenColor "#666
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		setHeading :oldHeading + :sign * 154
+		forward :height * 0.79
+		jumpForward penSize
+		setHeading :oldHeading
+		stripes :height * 0.13 penSize [penColor]
+		jumpTo :center
+	]
+
+	setLineJoinStyle "miter
+	jumpTo :oldPos
+	setFillColor "#ddd
+	jumpForward :height - :triangleHeight
+	setPenSize 0
+	isoTriangle :triangleHeight * 2 :triangleHeight
+	jumpBackward :height * 0.165
+	localmake "center pos
+	setPenSize :height * 0.01
+	setPenColor "white
+	setFillColor transparent
+	repeat 2 [
+		setHeading :oldHeading + 90 + 180 * repcount
+		jumpForward :height * 0.36
+		right 180
+		isoTriangle :height * 0.13 :height * 0.2		
+		jumpTo :center
+	]
+	setPenSize 0
+	setFillColor "#aaa
+	setHeading :oldHeading
+	jumpBackward :height * 0.03
+	rect :height * 0.6 :height * 0.46
+
+	setTurtleState :oldState
+end
+
+to drawPlasma :width :height :intensity
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "radius :width / 2
+	localmake "colorStopValues [
+			[0 "#fff] [0.1 "#dfff] [0.3 "#bff0] [1 "#0f00]
+		]
+	repeat count :colorStopValues [
+		localmake "pair item repcount :colorStopValues
+		setItem 2 "pair mix last :pair transparent :intensity
+	]
+	jumpBackward :height / 2
+	setPenSize 0
+	setFillColor mix "#ffd transparent 0.03 * :intensity
+	repeat 20 [
+		localmake "scale mix 1 0.1 repRatio
+		ellipse :width * :scale :height / 2
+	]
+	jumpTo :oldPos
+	setFillGradient createRadialGradient pos :radius 
+		createPList2 :colorStopValues
+	circle :radius
+	setTurtleState :oldState
+end
+
+to timeRatioToElevation :timeRatio
+	localmake "timeRatio (:timeRatio - 0.5) * 1.2 + 0.5
+	localmake "timeRatio clamp :timeRatio 0 1
+	output (1 - cos 360 * :timeRatio)
+end
+
+; Inspired by screenshot and program in:
+; BEEBUG volume 4 issue 1
+; Published in May 1985
+; page 46
+;
+; A digital version of the book is at:
+; https://archive.org/details/beebugv0401/page/46/mode/2up?view=theater
+to lunarBugHop :height :timeRatio
+	localmake "oldState turtleState
+	localmake "landerHeight :height * 0.88
+	localmake "elevation :height * timeRatioToElevation :timeRatio
+	localmake "plasmaOffset :height * 0.1
+	drawGround :height * 0.07
+	jumpForward :height * 0.06 + :elevation + :plasmaOffset
+
+	localmake "intensity mixItems2 [0 0.9 0.8 0.6 0.6 0.8 1 1 0] :timeRatio
+	drawPlasma :height * 0.25 :elevation + :plasmaOffset :intensity
+
+	jumpBackward :plasmaOffset
+	drawLunarLander :landerHeight
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+lunarBugHop 100 animation.clampedTimeRatio
+
+to animation.snapshotstyle
+	localmake "box drawing.box
+	localmake "minY getProperty "box "minY
+	localmake "maxY getProperty "box "maxY
+
+	output createPList2 [
+		["position.y mix :minY :maxY 0.5]
+		["zoom.scale 500 / (:maxY - :minY)]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 10
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

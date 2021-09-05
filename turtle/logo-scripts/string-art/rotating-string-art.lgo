@@ -1,0 +1,109 @@
+to drawStringsInSquare :size :angle
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "numStrings 8
+	localmake "angle2 abs :angle
+	if :angle2 > 90 [
+		localmake "angle2 :angle2 - 90 * int :angle2 / 90
+	]
+	if :angle2 > 45 [
+		localmake "angle2 90 - :angle2
+	]
+	localmake "edgeDistance :size / 2 / cos abs :angle2
+	localmake "r min :edgeDistance :size * 0.5
+	setPenSize 0
+	right :angle
+	jumpForward :r
+	localmake "p pos
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpLeft :size / 2
+	jumpBackward :size / 2
+	setPenSize :size * 0.04
+	setPenColor "#a0f
+	setLineJoinStyle "round
+	
+	repeat 2 [
+		repeat :numStrings + 1 [
+			localmake "p2 pos
+			setHeading towards :p
+			forward distance :p
+			jumpTo :p2
+			setHeading :oldHeading
+			jumpForward :size / :numStrings
+		]
+		jumpTo :oldPos
+		jumpBackward :size / 2
+		jumpRight :size / 2
+		setPenColor "#ff0
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by:
+; https://ca.pinterest.com/pin/353462270753188400
+to stringArtRotation :height :timeRatio
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "lightColor "white
+	localmake "thickness :height * 0.007
+	localmake "largeSize1 :height * (cos 45)
+	localmake "largeSize2 :largeSize1 - :thickness
+	localmake "numSquares 7
+	localmake "tinySize :largeSize2 / :numSquares
+	localmake "numLines :numSquares + 1
+	right 45
+	jumpLeft (:tinySize + :thickness) / 2
+	jumpForward (:tinySize + :thickness) / 2
+	repeat :numSquares [
+		localmake "rowStartPos pos
+		localmake "angleScale 360 * (0.5 - repRatio)
+		localmake "startAngle 180 * repRatio + :timeRatio * 360
+		repeat :numSquares [
+			localmake "angle :startAngle + :angleScale * repRatio
+			drawStringsInSquare :tinySize :angle
+			jumpForward :tinySize
+		]
+		jumpTo :rowStartPos
+		jumpLeft :tinySize
+	]
+
+	jumpTo :oldPos
+	setHeading :oldHeading - 45
+	setLineCap "butt
+	jumpRight :thickness / 2
+	repeat :numLines [
+		stripes :thickness :largeSize1 [:lightColor]
+		jumpRight :tinySize
+	]
+	jumpTo :oldPos
+	right 90
+	jumpLeft :thickness / 2
+	repeat :numLines [
+		stripes :thickness :largeSize1 [:lightColor]
+		jumpLeft :tinySize
+	]
+	setTurtleState :oldState
+end
+
+make "timeRatio animation.clampedTimeRatio
+setScreenColor "black
+stringArtRotation 100 :timeRatio
+
+to animation.snapshotstyle
+	output createPList2 [
+		["position.y 50]
+		["zoom.scale 6]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 5
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

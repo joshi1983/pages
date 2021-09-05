@@ -1,0 +1,103 @@
+make "icelandRed "#DC1E35
+make "icelandBlue "#02529C
+
+to icelandFlagCustomWidth :width :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	stripes :width :height [:icelandBlue]
+	setPenSize :height * 4 / 18
+	setLineCap "butt
+	setPenColor "white
+	jumpLeft :width / 2 - :height * 8 / 18
+	localmake "pos1 pos
+	repeat 2 [
+		forward :height
+		jumpBackward :height / 2
+		right 90
+		jumpBackward :height * 8 / 18
+		forward :width
+		jumpTo :pos1
+		setHeading :oldHeading
+		setPenSize :height * 2 / 18
+		setPenColor :icelandRed
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Iceland#/media/File:Flag_of_Iceland.svg
+; Based mostly on construction sheet at
+; https://en.wikipedia.org/wiki/Flag_of_Iceland#/media/File:Flag_of_Iceland_(construction_sheet).svg
+to icelandFlag :height
+	localmake "width :height * 25 / 18
+	icelandFlagCustomWidth :width :height
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Iceland#/media/File:Flag_of_Iceland_(state).svg
+; Based mostly on construction sheet at
+; https://en.wikipedia.org/wiki/Flag_of_Iceland#/media/File:Flag_of_Iceland_-_state_and_war_(construction_sheet).svg
+to icelandWarFlag :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "width :height * 32 / 18
+	localmake "size1 :height / 18 * 7 / 8 * hypot [8 12]
+	localmake "size2 :height * 2 / 18
+	localmake "size3 :size1 / 7
+	localmake "angle1 arcTan 12 / 8
+	jumpLeft :height * 12 / 36
+	icelandFlagCustomWidth :height * 20 / 18 :height
+
+	jumpTo :oldPos
+	setPenSize 0
+	setFillColor :icelandBlue
+	polyStart
+	jumpRight :width / 2
+	left :angle1
+	jumpForward :size1
+	setHeading :oldHeading
+	jumpLeft :size2
+	polyEnd
+	localmake "pos1 pos
+
+	setHeading :oldHeading
+	jumpForward :height * 4 / 18
+	polyStart
+	jumpRight :size2
+	right :angle1
+	jumpForward :size1
+	setHeading :oldHeading
+	jumpLeft :width / 2
+	polyEnd
+
+	; white parts
+	setFillColor "white
+	jumpTo :pos1
+	setHeading :oldHeading
+	polyStart
+	jumpRight :size2
+	left :angle1
+	jumpForward :size3
+	polyEnd
+
+	jumpTo :pos1
+	setHeading :oldHeading
+	jumpForward :height * 4 / 18
+	polyStart
+	jumpRight :size2
+	left 180 - :angle1
+	jumpForward :size3	
+	polyEnd
+
+	setTurtleState :oldState
+end
+
+; #eee for subtle contrast to white in the flag.
+setScreenColor "#888
+make "height 100
+make "separation :height * 4
+jumpLeft :separation * 0.5
+icelandFlag :height
+jumpRight :separation
+icelandWarFlag :height

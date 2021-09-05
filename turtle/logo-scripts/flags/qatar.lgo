@@ -1,0 +1,101 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/List_of_Qatari_flags#/media/File:Flag_of_Qatar.svg
+to qatarFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 140 / 55
+	localmake "numRepeats 9
+	localmake "size1 :height * 0.2036365
+	localmake "size2 :height / :numRepeats / 2
+	localmake "angle1 arcTan :size2 / :size1
+	localmake "diagonalSize hypot [:size1 :size2]
+	setPenColor "white
+	setPenSize :width
+	setLineCap "butt
+	forward :height
+	jumpRight :width / 2
+	polyStart
+	jumpBackward :height
+	jumpLeft :width / 2 + :height * 0.5260606
+	setPenColor "black
+	setPenSize 0
+	setFillColor "#8a1538
+	left 90 - :angle1
+	repeat :numRepeats [
+		right 180 - 2 * :angle1
+		jumpForward :diagonalSize
+		left 180 - 2 * :angle1
+		jumpForward :diagonalSize
+	]
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://commons.wikimedia.org/wiki/File:Flag_of_Qatar_(1860%E2%80%931916,_1916%E2%80%931932).svg
+to qatarFlag1860 :height
+	localmake "oldState turtleState
+	localmake "width :height * 2
+	localmake "numRepeats 10
+	localmake "size1 :height * 0.096
+	localmake "size2 :height / :numRepeats / 2
+	localmake "angle1 arcTan :size2 / :size1
+	localmake "diagonalSize hypot [:size1 :size2]
+	setPenColor "white
+	setPenSize :width
+	setLineCap "butt
+	forward :height
+	jumpRight :width / 2
+	polyStart
+	jumpBackward :height
+	jumpLeft :width / 2 + :height * 0.696
+	setPenColor "black
+	setPenSize 0
+	setFillColor "#ce1126
+	left 90 - :angle1
+	repeat :numRepeats [
+		right 180 - 2 * :angle1
+		jumpForward :diagonalSize
+		left 180 - 2 * :angle1
+		jumpForward :diagonalSize
+	]
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/List_of_Qatari_flags#/media/File:Air_Force_Ensign_of_Qatar.svg
+to airForceQatarFlag :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "width :height * 140 / 55
+	localmake "circleColors ["#8a1538 "#ffb432 "white]
+	localmake "radius :height * 135 / 550
+	localmake "radiusStep :radius / count :circleColors
+	setPenColor "#39f
+	setPenSize :width
+	setLineCap "butt
+	forward :height
+	jumpBackward :height / 2
+	jumpLeft :width / 4
+	qatarFlag :height / 2
+	jumpTo :oldPos
+	jumpRight :width / 4
+	jumpForward :height * 245 / 550
+	setPenSize 0
+	repeat count :circleColors [
+		setFillColor item repcount :circleColors
+		circle :radius
+		localmake "radius :radius - :radiusStep
+	]
+	setTurtleState :oldState
+end
+
+make "size 100
+make "separation :size * 4
+setScreenColor "#ddd
+jumpLeft :separation
+qatarFlag :size
+jumpRight :separation
+qatarFlag1860 :size
+jumpRight :separation
+airForceQatarFlag :size

@@ -1,0 +1,121 @@
+to drawDiamondPattern :width :height
+	localmake "oldHeading heading
+	localmake "oldPos pos
+	jumpForward :height
+	localmake "topPos pos
+	jumpBackward :height / 2
+	jumpLeft :width / 2
+	repeat 9 [
+		localmake "pos1 pos
+		jumpTo :oldPos
+		setHeading towards :pos1
+		forward distance :pos1
+		setHeading towards :topPos
+		forward distance :topPos
+		jumpTo :pos1
+		setHeading :oldHeading
+		jumpRight :width / 8
+	]
+	jumpTo :oldPos
+end
+
+to drawDiagonalPattern :width1 :len
+	localmake "oldHeading heading
+	localmake "oldPos pos
+	forward :len
+	localmake "topPos pos
+	jumpBackward :len / 2
+	left 45
+	jumpLeft :width1
+	repeat 6 [
+		localmake "pos1 pos
+		jumpTo :topPos
+		setHeading towards :pos1
+		forward distance :pos1
+		setHeading towards :oldPos
+		forward distance :oldPos
+
+		jumpTo :pos1
+		setHeading :oldHeading - 45
+		jumpRight :width1 / 6
+	]
+	setHeading :oldHeading - 45
+	jumpBackward :width1
+	repeat 6 [
+		localmake "pos1 pos
+		jumpTo :topPos
+		setHeading towards :pos1
+		forward distance :pos1
+		setHeading towards :oldPos
+		forward distance :oldPos
+
+		jumpTo :pos1
+		setHeading :oldHeading - 45
+		jumpForward :width1 / 6
+	]
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+; Inspired by
+; https://www.pinterest.ca/pin/360921357652785212/
+to emmaKunzStrings :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "radius1 :height * 0.13
+	localmake "radius2 :height * 0.108
+	localmake "diamondHeight :height / 2 - :radius2 * cos 45
+	localmake "diamondWidth :radius2 * 2 * cos 45
+	localmake "diagonalLength (:height / 2 / cos 45) - :radius2
+	jumpForward :height / 2
+	localmake "center pos
+	localmake "radius :radius1
+	localmake "pointIndexes [1 6 4 5 3 8 2 7 1]
+	localmake "points []
+	setFontSize 5
+	setPenSize :height * 0.003
+	setLineCap "round
+	setLineJoinStyle "round
+	repeat 2 [
+		repeat 4 [
+			jumpForward :radius
+			queue2 "points pos
+			right 90
+			jumpTo :center
+		]
+		right 45
+		localmake "radius :radius2
+	]
+	setPenSize 0.1
+	setPenColor "black
+	repeat count :pointIndexes [
+		localmake "nextPointIndex item repcount :pointIndexes
+		localmake "nextPoint item :nextPointIndex :points
+		ifelse repcount = 1 [
+			jumpTo :nextPoint
+		] [
+			setHeading towards :nextPoint
+			forward distance :nextPoint
+		]
+	]
+	repeat 4 [
+		jumpTo :center
+		setHeading :oldHeading + repcount * 90 + 45
+		jumpForward :radius2
+		left 45
+		drawDiamondPattern :diamondWidth :diamondHeight
+		right 45
+		drawDiagonalPattern :diamondWidth * 3 / 4 :diagonalLength
+		right 45
+		drawDiamondPattern :diamondWidth :diamondHeight
+	]
+	repeat 4 [
+		jumpTo :center
+		jumpBackward :radius1
+		forward :radius1 * 2
+		right 45
+	]
+	setTurtleState :oldState
+end
+
+emmaKunzStrings 100

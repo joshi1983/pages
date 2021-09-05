@@ -1,0 +1,31 @@
+; Inspired by:
+; https://upload.wikimedia.org/wikipedia/commons/0/02/Bandeira_do_Par%C3%A1.svg
+to brazilParaFlag :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "width :height * 3 / 2
+	stripes :width :height ["white]
+	jumpForward :height / 2
+	setPenSize 0
+	setFillColor "#0071ce
+	regularStar :height * 2 / 15 5
+	setFillColor "#EB2939
+	localmake "center pos
+	repeat 2 [
+		setHeading :oldHeading + repcount * 360 / 2
+		jumpForward :height / 2
+		localmake "pos1 pos
+		jumpRight :width / 2
+		localmake "corner pos
+		polyStart
+		jumpBackward :height * 0.84
+		left 55
+		jumpForward distanceToLine :pos1 :corner
+		polyEnd
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "#eee
+brazilParaFlag 100

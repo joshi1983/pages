@@ -1,0 +1,53 @@
+make "tupleBlue "#6a5ed9
+
+; Inspired by logo at:
+; https://tuple.app
+to tupleAppLogo :height :mainColor
+	localmake "oldState turtleState
+	localmake "radius1 0.05
+	localmake "radius2 0.056
+	localmake "angle1 12.5
+	localmake "angle2 77.5
+	localmake "angle3 102.6
+	localmake "angle4 -103
+	localmake "angle5 77.4
+	localmake "mainShape [0.096 1
+		[[90 0] [:angle1 :radius1] [0.427]
+		[90 - :angle1 :radius1] [0.474]
+		[:angle2 :radius1] [0.428]
+		[180 - :angle2 :radius1] [0.659]
+		[90 + :angle1 :radius1]]
+	]
+	localmake "shadowShape [0.315 0
+		[[-90 0] [90 :radius2] [0.67]
+		[:angle3 :radius2] [0.086]
+		[180 - :angle3 0] [0.47]
+		[:angle4 0.115] [0.237] [-:angle4 0]
+		[0.09] [:angle5 :radius1]
+		[0.4263] [90 - :angle5 :radius2]]
+	]
+	setPenSize 0
+	setFillColor :mainColor
+	drawArcLineShape :mainShape :height
+	setFillColor "#d2cff4
+	drawArcLineShape :shadowShape :height
+	setTurtleState :oldState
+end
+
+to tupleAppFavicon :height
+	localmake "oldState turtleState
+	setPenSize 0
+	jumpForward :height / 2
+	setFillColor :tupleBlue
+	roundRect :height :height :height * 0.13
+	jumpBackward :height * 0.37
+	tupleAppLogo :height * 0.73 "white	
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 4
+jumpLeft :separation / 2
+tupleAppLogo :height :tupleBlue
+jumpRight :separation
+tupleAppFavicon :height

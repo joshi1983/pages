@@ -1,0 +1,62 @@
+make "backColors [ "#009e49 "#ef2b2d]
+make "flagYellow "#fcd116
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Burkina_Faso#/media/File:Flag_of_Burkina_Faso.svg
+to burkinaFasoFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 3 / 2
+	stripes :width :height :backColors
+	jumpForward :height / 2
+	setPenSize 0
+	setFillColor :flagYellow
+	regularStar :height / 6 5
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Burkina_Faso#/media/File:Roundel_of_Burkina_Faso.svg
+to burkinaFasoRoundel :height
+	localmake "oldState turtleState
+	localmake "radius :height / 2
+	jumpForward :radius
+	setPenSize 0
+	setFillColor first :backColors
+	circle :radius
+	jumpLeft :radius
+	setFillColor last :backColors
+	polyStart
+	arcRight 180 :radius
+	polyEnd
+	jumpRight :radius
+	right 180
+	setFillColor :flagYellow
+	; The 0.1427454 was found by overlapping this drawing with the SVG.
+	; It is close to 1/7 but not close enough for me to 
+	; think the SVG scaled the star wrong.
+	; I didn't find a construction sheet.
+	regularStar :height * 0.1427454 5
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Burkina_Faso#/media/File:Presidential_Standard_of_Burkina_Faso.svg
+to burkinaFasoPresidentialStandard :height
+	localmake "oldState turtleState
+	localmake "width :height
+	stripes :width :height :backColors
+	jumpForward :height / 2
+	setPenSize 0
+	setFillColor :flagYellow
+	regularStar :height / 6 5
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 4
+jumpLeft :separation
+burkinaFasoFlag :height
+jumpRight :separation
+burkinaFasoRoundel :height
+jumpRight :separation
+burkinaFasoPresidentialStandard :height

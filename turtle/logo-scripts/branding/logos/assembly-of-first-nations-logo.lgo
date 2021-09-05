@@ -1,0 +1,250 @@
+make "firstNationRed "#B3202F
+
+to drawWaveyShape :width
+	localmake "oldState turtleState
+	localmake "line [
+		[-90 0] [0.095] [90 0] [0.345]
+		[50 0.08] [3.3 0.3] [-100 0.038] [-15 0.1]
+		[0.06] [90 0.05] [20 0.4] [-11.5 0.2] [-50 0.03]
+		[-30 0.055] [-20 0.12] [0.02] [10 0.21] [55 0.045]
+		[15 0.2] [-35 0.065] [-27 0.04] [-32 0.1] [171 0]
+		[10 0.25] [60 0.05] [20 0.1] [0.04] [-5 0.1] [-60 0.035]
+		[-10 0.25] [0.03] [5 0.5] [30 0.05] [60 0.06] [16 0.2]
+		[0.05] [-20 0.12] [-40 0.04] [-50 0.02] [12 0.5] [20 0.15]
+		[80 0.058] [0.01] [-90 0.05]
+	]
+	left 90
+	repeat 2 [
+		drawArcLineShape [0 0
+			:line
+		] :width / 2 * sign repcount - 1.5
+		right 180
+	]
+	setTurtleState :oldState
+end
+
+to drawRedDreamCatcher :radius
+	localmake "oldState turtleState
+	localmake "center pos
+	localmake "innerRadius :radius * 0.18
+	localmake "triangleHeight :radius * 0.22
+	repeat 4 [
+		jumpForward :innerRadius
+		isoTrapezoid :radius * 0.05 :radius * 0.16 :radius * 0.48
+		jumpTo :center
+		right 360 / 4
+	]
+	setPenSize :radius * 0.06
+	setPenColor fillColor
+	setFillColor transparent
+	circle :innerRadius
+	setPenSize :radius * 0.14
+	circle :radius * 0.67
+	setPenSize 0
+	setFillColor "black
+	repeat 4 [
+		jumpForward :radius - :triangleHeight
+		isoTriangle :radius * 0.16 :triangleHeight
+		jumpTo :center
+		right 360 / 4
+	]
+
+	setTurtleState :oldState
+end
+
+to drawArc :len
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "radius :len * 0.14
+	localmake "arcRadius :len * 1.15
+	setPenSize 0
+	circle :radius
+	jumpLeft :radius
+	localmake "endPos pos
+	polyStart
+	jumpRight :radius * 2
+	localmake "arcAngle getArcLeftAngleToCircle :arcRadius :oldPos :len
+	arcLeft :arcAngle :arcRadius
+	localmake "d distance :endPos
+	localmake "arcAngle2 2 * arcSin :d / 2 / :arcRadius
+	setHeading (towards :endPos) - :arcAngle2 / 2
+	arcRight :arcAngle2 :arcRadius
+	polyEnd
+
+	setTurtleState :oldState
+end
+
+to drawFeatherArcs :size
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "feathers [
+		[-0.03 -0.389 0.2 140]
+		[-0.07 -0.475 0.25 130]
+		[-0.14 -0.53 0.29 127]
+		[-0.24 -0.56 0.25 132]
+	]
+	repeat count :feathers [
+		localmake "info item repcount :feathers
+		jumpRight :size * first :info
+		jumpForward :size * item 2 :info
+		right last :info
+		drawArc :size * item 3 :info
+		jumpTo :oldPos
+		setHeading :oldHeading
+	]
+
+	setTurtleState :oldState
+end
+
+to drawBird :size
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "blackBirdLine [[-30 1.04] [-20 0.6] [-30 0.5] [-20 0.27] [-40 0.5]
+		[-6 1] [175 0] [20 0.75] [50 0.55] [23 0] [58 1.0199503]]
+
+	drawArcLineShape [0 -0.9
+		pathMirror reverse :blackBirdLine
+	] :size
+
+	setFillColor :firstNationRed
+	drawArcLineShape [0 -0.7
+		[[90 0] [-25 1.1] [-50 0.5] [-50 0.36] [-30 0.69] [-20 0.6] [-2 0.8] [-85 0.048]
+		[88 0] [-10 0.35] [-30 0.09] [-50 0.03] [-38 0.11] [-120 0] [75 0.03] [20 0.3]
+		[30 0.1] [20 0.35] [1.8 1.5] [-70 0.045] [-2 0.5] [18 0.445] [25 0.25] [7.95 0.8]
+		[178 0] [-35 0.4] [-50 0.26] [-30 0.37] [0.17] [33 0.37] [34 0] [30 0.73] [45 0.35]
+		[20 0.2] [20 0.45] [21 0.4] [15 1] [-171 0] [-40 0.64] [-90 0.4] [-30 0.8] [-10 1.25]
+		]
+	] :size
+
+	jumpTo :oldPos
+	setFillColor "white
+	drawArcLineShape [-0.63 -0.31
+		[[15 0] [-50.4 0.34] [65 0] [-40 0.1] [-11 0.6] [-172 0] [20 0.3] [40 0.1]
+		[40 0.07] [10 0.65] [-13 0.3] [-50 0.045] [-20 0.045] [-160 0] [60 0.055]
+		[5 0.07] [3 0.5] [0.1] [-20 0.2] [-20 0.06] [72 0] [50 0.3]]
+	] :size
+	jumpForward :size * 0.2675
+	jumpLeft :size * 0.19
+	left 5
+	ellipse :size * 0.026 :size * 0.012
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	drawFeatherArcs :size
+	jumpLeft :size * 0.4955
+	jumpForward :size * 0.0281
+	circle :size * 0.033
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpBackward :size * 0.34
+	jumpLeft :size * 0.26
+	setFillColor "black
+	setPenColor "white
+	setPenSize :size * 0.03
+	ellipse :size * 0.175 :size * 0.15
+
+	setTurtleState :oldState
+end
+
+to drawFeather :height
+	localmake "oldState turtleState
+	localmake "radius :height * 0.05
+	localmake "line [
+		[55 0.2] [20 1.67] [20 0.3] [35 0.2]
+	]
+	setPenSize :height * 0.02
+	setPenColor "black
+	setFillColor "white
+	jumpForward penSize / 2 + :radius
+	circle :radius
+	setLineCap "round
+	setLineJoinStyle "round
+	forward :radius * 0.5
+	drawArcLineShape [0 0
+		pathMirror :line
+	] :height
+	jumpForward :height * 0.1
+	setPenSize penSize * 0.5
+	forward :height * 0.6
+	setFillColor "#b000
+	setPenSize 0
+	drawArcLineShape [0 -0.17
+		pathMirror [[-50 0.25] [-5 0] [-70 0.21]]
+	] :height
+
+	setTurtleState :oldState
+end
+
+to drawFeathers :featherHeight :arcRadius
+	localmake "oldState turtleState
+	localmake "numFeathers 7
+	localmake "separation :arcRadius * 1.57 / (:numFeathers - 1)
+	jumpForward :featherHeight + :arcRadius
+	localmake "center pos
+	jumpLeft :separation * (:numFeathers - 1) / 2
+	right 180
+	repeat :numFeathers [
+		localmake "pos1 pos
+		jumpForward distanceToCircle :center :arcRadius
+		drawFeather :featherHeight
+		jumpTo :pos1
+		jumpLeft :separation
+	]
+	
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://afn.ca
+to assemblyOfFirstNationsLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "topRadius :height * 0.375
+	localmake "outerAngle 153
+	localmake "innerRadius 0.915
+	localmake "innerAngle 150.71433
+	localmake "uTurnAngle -177.5
+	localmake "crescentLine [
+		[180 0] [-:outerAngle 1] [:uTurnAngle 0]
+		[:innerAngle :innerRadius]
+	]
+	localmake "pointLine [
+		 [174 0] [-15 0.9] [-50 0.5] [161 0] [0.3588539]
+	]
+	jumpForward :height - :topRadius
+	setPenSize 0
+	setFillColor "white
+	circle :topRadius
+	setFillColor "black
+	drawArcLineShape [0 -1
+		pathMirror :crescentLine
+	] :topRadius
+	drawBird :topRadius
+	
+	jumpForward :height * 0.244
+	drawWaveyShape :height * 0.55
+	circle :height * 0.095
+	setFillColor "white
+	repeat 4 [
+		drawArcLineShape [0 1
+			combine :pointLine reverse :pointLine
+		] :height * 0.09
+		right 90
+	]
+	circle :height * 0.061
+	setFillColor :firstNationRed
+	circle :height * 0.0474
+
+	jumpTo :oldPos
+	drawFeathers (:height - 2 * :topRadius) * 1.2 :topRadius * 0.95
+	jumpForward :height * 0.629
+	jumpRight :height * 0.103
+	drawRedDreamCatcher :height * 0.144
+
+	setTurtleState :oldState
+end
+
+assemblyOfFirstNationsLogo 100

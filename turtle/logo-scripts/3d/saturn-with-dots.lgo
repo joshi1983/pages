@@ -1,0 +1,53 @@
+; Based on numbers at:
+; https://en.wikipedia.org/wiki/Saturn
+; The rings are based on numbers at:
+; https://en.wikipedia.org/wiki/Rings_of_Saturn
+
+to kmToLogoUnits :num
+	output :num * 100 / 58232
+end
+
+to dotSphere :radius :numPoints
+	localmake "oldPos pos
+	setPenSize 0
+	repeat :numPoints [
+		localmake "randomPoint [randomRatio - 0.5 randomRatio - 0.5 randomRatio - 0.5]
+		localmake "magnitude hypot :randomPoint
+		if :magnitude < 0.5 [
+			localmake "dotPos vectorAdd :oldPos vectorScale :randomPoint :radius / :magnitude
+			jumpTo :dotPos
+			circle 2
+		]
+	]
+	jumpTo :oldPos
+end
+
+to drawRings
+	localmake "ringIntervals [
+		["#F5E1D0 3000 122170  136775] ; A ring
+		["#F5E1D0 4000 92000  117580] ; B ring
+		["#F5E1D0 1000 74658  92000] ; C ring
+		["#E8E8E8 200 66900 74510] ; D ring
+	]
+	repeat count :ringIntervals [
+		localmake "ringInfo item repcount :ringIntervals
+		setFillColor item 1 :ringInfo
+		localmake "numDots item 2 :ringInfo
+		localmake "minRadius kmToLogoUnits item 3 :ringInfo
+		localmake "maxRadius kmToLogoUnits item 4 :ringInfo
+		repeat :numDots [
+			localmake "radius mix :minRadius :maxRadius repRatio
+			localmake "angle 360 * randomRatio
+			localmake "x :radius * cos :angle
+			localmake "z :radius * sin :angle
+			jumpTo [:x 0 :z]
+			circle 2
+		]
+	]
+end
+
+make "saturnMeanRadius 58232
+setScreenColor "black
+setFillColor "#ee8
+dotSphere kmToLogoUnits :saturnMeanRadius 5000
+drawRings

@@ -1,0 +1,38 @@
+to checkerBoard :squareSize :colCount :rowCount :color1 :color2
+	localmake "oldState turtleState
+	stripes :squareSize * :colCount :squareSize * :rowCount [:color1]
+	jumpLeft :squareSize * (:colCount - 1) / 2
+	repeat :rowCount [
+		localmake "pos1 pos
+		if even? repcount [
+			jumpRight :squareSize
+		]
+		repeat :colCount / 2 [
+			stripes :squareSize :squareSize [:color2]
+			jumpRight :squareSize * 2			
+		]
+		jumpTo :pos1
+		jumpForward :squareSize
+	]
+	setTurtleState :oldState
+end
+
+to squareBoard :gridCount
+	localmake "squareSize :height / :gridCount
+	checkerBoard :squareSize :gridCount :gridCount "white "black
+end
+
+; off white to make the white in the board stand out
+setScreenColor "#ddd
+
+make "height 100
+make "separation :height * 3
+jumpLeft :separation
+
+; There are different versions of checker boards mentioned at:
+; https://en.wikipedia.org/wiki/Checkers
+squareBoard 12 ; used in Canadian checkers
+jumpRight :separation
+squareBoard 10 ; used in Ghanaian, Polish, Frisian, and International draughts 
+jumpRight :separation
+squareBoard 8 ; used in Brazilian, Pool, Jamaican, Russian...  draughts

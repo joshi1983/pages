@@ -1,0 +1,57 @@
+; Inspired by graphic in video at:
+; https://youtu.be/zokKqP0plrM?t=14
+; It is behind the "IBM Confidential" text.
+to ibmConfidentialGraphic :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "innerRadius :height * 0.165
+	localmake "numPoints 8
+	localmake "arcAngle 360 / :numPoints
+	localmake "outerPointRadius :height * 0.42
+	jumpForward :height / 2
+	localmake "center pos
+	setFillColor transparent
+	setPenSize :height * 0.03
+	setPenColor "white
+	circle (:height - penSize) / 2
+	setPenSize 0
+	setFillColor penColor
+	circle :height * 0.09
+	repeat :numPoints [
+		localmake "heading1 :oldHeading + repcount * 360 / :numPoints
+		setHeading :heading1
+		jumpForward :outerPointRadius
+		localmake "outerPos pos
+		jumpTo :center
+		right :arcAngle / 2
+		jumpForward :outerPointRadius
+		localmake "outerPos2 pos
+
+		setHeading :heading1
+		jumpTo :center
+		left :arcAngle / 2
+		jumpForward :innerRadius
+		right 90
+		polyStart
+		arcRight :arcAngle :innerRadius
+		localmake "rightPos pos
+		localmake "midPos mix pos :outerPos 0.6
+		jumpTo :outerPos
+		polyEnd
+		jumpTo :midPos
+		localmake "len1 distance :rightPos
+		setHeading (towards :center) - 90
+		localmake "midRadius distance :center
+		localmake "midArcAngle 2 * triLengthsToAngle :midRadius :innerRadius :len1
+		polyStart
+		arcRight :midArcAngle :midRadius
+		jumpTo :outerPos2
+		polyEnd
+		jumpTo :center
+	]
+	
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+ibmConfidentialGraphic 100

@@ -1,0 +1,41 @@
+; Inspired by logo at:
+; https://www.turtle.ox.ac.uk
+to theTurtleSystemLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "headRadius :height * 0.12
+	setFillColor "#159d6b
+	setPenSize 0
+	jumpForward :height - :headRadius
+	circle :headRadius
+
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		jumpTo :oldPos
+		jumpRight :height * 0.19 * :sign
+		jumpForward :height * 0.1357
+		right :sign * 50
+		ellipse :height * 0.153 :height * 0.105
+		setHeading :oldHeading
+		jumpTo :oldPos
+		jumpRight :height * 0.3 * :sign
+		jumpForward :height * 0.555
+		right :sign * 50
+		ellipse :height * 0.18 :height * 0.11
+		
+		setHeading :oldHeading
+	]
+
+	; draw the shell.
+	jumpTo :oldPos
+	setFillColor "#a86765
+	setPenColor "white
+	setPenSize :height * 0.02
+	jumpForward :height * 0.46
+	ellipse :height * 0.3 :height * 0.34
+
+	setTurtleState :oldState
+end
+
+theTurtleSystemLogo 100

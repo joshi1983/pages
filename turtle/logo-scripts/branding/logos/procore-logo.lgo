@@ -1,0 +1,29 @@
+; Inspired by logo at:
+; https://network.procore.com/
+to procoreLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "width :height * 1.05
+	setPenSize 0
+	setFillColor "black
+	jumpForward :height / 2
+	roundRect :width :height :height * 0.2
+	setLineJoinStyle "miter
+	setPenSize :height * 0.15
+	setPenColor "white
+	setFillColor "#ff5200
+	right 180 / 6
+	regularPolygon :height * 0.275 6
+
+	setHeading :oldHeading
+	jumpRight :width * 0.51
+	; Notice that is 0.51 instead of 0.5.
+	; That difference is for a small overlap to prevent 
+	; a faint vertical line from appearing 
+	; on the right side.
+	left 90
+	stripes :height * 0.27 :height * 0.3 ["white]
+	setTurtleState :oldState
+end
+
+procoreLogo 100

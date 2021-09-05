@@ -1,0 +1,44 @@
+; Inspired by logo at:
+; https://viridianplace.ca
+to viridianPlaceLogo :height
+	localmake "oldState turtleState
+	localmake "angle1 -63.7
+	localmake "angle2 180 - :angle1
+	localmake "angle3 61.4
+	localmake "angle4 -56
+	localmake "angle5 67
+	localmake "widthFactor 0.753
+	localmake "thicknessFactor 0.019
+	localmake "len1 0.331
+	localmake "topLen 0.338
+	localmake "len2 0.43
+	localmake "width1 0.105
+	localmake "len3 0.37
+	localmake "len4 0.325
+
+	localmake "height1 1 - :thicknessFactor * (0.5 + 0.5 / tan :angle3 / 2)
+	localmake "height2 0.511
+	localmake "height3 0.485
+	localmake "verticalLen :len1 * (cos :angle1) - :thicknessFactor / 2
+	setLineJoinStyle "miter
+	setPenColor "#58585a
+	setLineCap "butt
+	setPenSize :height * :thicknessFactor
+	jumpLeft :height * :widthFactor / 2
+	arcLines [
+		[:len2] [:angle1 0] [:len1]
+		[:angle2 0] [:len2 + :verticalLen]
+		[-90 0] [:width1] [-90 0] [:height1]
+		[180 + :angle3 0] [:topLen] [-:angle3 0]
+		[:height1 - :topLen * cos :angle3]
+		[-90 0] [:width1] [-90 0] [:height2]
+		[:angle4 0] [:len3] [-:angle4 - 180 0]
+		[:height2 + :len3 * cos :angle4]
+		[-90 0] [:width1] [-90 0]
+		[:height3] [:angle5 - 180 0] [:len4]
+		[-:angle5 0] [:height3 - :len4 * (cos :angle5) + :thicknessFactor / 2]
+	] :height
+	setTurtleState :oldState
+end
+
+viridianPlaceLogo 100

@@ -1,0 +1,69 @@
+; Inspired by logo at:
+; https://zenbivy.com
+to zenbivyLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "startAngle 10.5
+	localmake "angle1 70
+	localmake "outerRadius :height / (1 + cos :startAngle)
+	localmake "thickness :height * 0.083
+	localmake "innerRadius :outerRadius - :thickness
+	localmake "outerArcAngle 360 - 2 * :startAngle
+	localmake "innerArcAngle :outerArcAngle - 8
+	jumpForward :height * 0.307
+	localmake "midPos pos
+	jumpRight :height
+	localmake "horizontalPos1 pos
+	jumpForward :thickness
+	localmake "horizontalUpperPos pos
+	jumpLeft :height
+	localmake "upperMidPos pos
+
+	jumpTo :oldPos
+	jumpForward :outerRadius
+	localmake "center pos
+	right :startAngle
+	jumpForward :outerRadius
+	localmake "topRight pos
+	right 90
+	setPenSize 0
+	setFillColor "#006698
+	polyStart
+	arcRight :outerArcAngle :outerRadius
+	localmake "topLeft pos
+	right :angle1
+	jumpForward :height * 0.27
+	localmake "upperPos1 pos
+	jumpRight :thickness
+	right 180
+	localmake "upperPos2 pos
+	jumpForward distanceToCircle :center :innerRadius
+	localmake "upperPos3 pos
+	setHeading (towards :center) + 90
+	arcLeft :innerArcAngle :innerRadius
+	polyEnd
+
+	jumpTo :topRight
+	setHeading (towards :center) - :angle1 + 90
+	localmake "heading1 heading
+	polyStart
+	jumpForward distanceToLine :midPos :horizontalPos1
+	localmake "leftPos pos
+	setHeading towards :midPos
+	jumpForward distanceToLine :topLeft :upperPos1
+	setHeading towards :topLeft
+	jumpForward :height * 0.485
+	setHeading :heading1
+	jumpForward distanceToLine :upperPos2 :upperPos3
+	setHeading (towards :upperPos2) + 180
+	jumpForward distanceToLine :upperMidPos :horizontalUpperPos
+	setHeading :oldHeading - 90
+	jumpForward (distanceToLine :topRight :leftPos) - :thickness / abs cos (:heading1 - :oldHeading)
+	setHeading :heading1 + 180
+	jumpForward distanceToCircle :center :outerRadius
+	polyEnd
+	setTurtleState :oldState
+end
+
+zenbivyLogo 100

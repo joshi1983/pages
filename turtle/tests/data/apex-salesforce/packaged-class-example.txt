@@ -1,0 +1,107 @@
+/**
+ * copied from:
+https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_doc_examples.htm
+
+ * Provides services for geolocation and address conversion.
+ * @author Dennis Smith
+ * @version 0.3.0
+ * @since 0.1.0
+ */
+global with sharing class GeolocationService {
+  /**
+   * Represents geographic coordinates (latitude and longitude).
+   */
+  global class Coordinates {
+    @AuraEnabled
+    public Decimal latitude;
+    @AuraEnabled
+    public Decimal longitude;
+
+    global Coordinates(Decimal lat, Decimal lon) {
+      this.latitude = lat;
+      this.longitude = lon;
+    }
+  }
+
+  /**
+   * Converts a full address string to approximate latitude
+   * and longitude coordinates. This method is deprecated and should no
+   * longer be used due to its reliance on an older, less accurate geocoding 
+   * service and simpler parsing logic. It may not handle all address formats
+   * correctly and has a lower success rate.
+   * @param fullAddress The complete address string
+   * (e.g., "123 Main St, Anytown, CA 90210, USA").
+   * @return A `Coordinates` object representing the approximate latitude and longitude.
+   * @throws DeprecatedMethodCalledException If this method is invoked,
+   * informing the user to migrate to the newer, more robust `geocodeAddress` method.
+   * @deprecated in 0.2.0. Use {@link #geocodeAddress(
+   * String street,
+   * String city,
+   * String state,
+   * String postalCode,
+   * String country)} instead.
+   * @since 0.1.0
+   */
+  @Deprecated
+  global static Coordinates convertAddressToCoordinates(String fullAddress) {
+    throw new DeprecatedMethodCalledException(
+      'The method `GeolocationService.convertAddressToCoordinates(String fullAddress)` is deprecated. ' +
+        'Please use `GeolocationService.geocodeAddress(String street, String city, String state, String postalCode, String country)` ' +
+        'for all new and existing address-to-coordinate conversions to ensure better accuracy and reliability.'
+    );
+  }
+
+  /**
+   * Geocodes a structured address into precise latitude and longitude coordinates
+   * using a robust external geocoding service.
+   * This method provides higher accuracy and better handling of diverse address formats.
+   * @param street The street address (e.g., "123 Main St").
+   * @param city The city (e.g., "Anytown").
+   * @param state The state or province abbreviation (e.g., "CA").
+   * @param postalCode The postal or ZIP code (e.g., "90210").
+   * @param country The country name or code (e.g., "USA").
+   * @return A Coordinates object containing the latitude and longitude.
+   * @throws GeocodingException If the address cannot be geocoded, 
+   * if the external service is unavailable, or if required address
+   * components are missing.
+   * @example
+   * {@code
+   * try {
+   *   GeolocationService.Coordinates coords = GeolocationService.geocodeAddress(
+   *     '415 Mission St',
+   *     'San Francisco',
+   *     'CA',
+   *     '94105',
+   *     'USA'
+   *   );
+   * } catch (GeolocationService.GeocodingException e) {
+   *   // handle failure
+   * }
+   * }
+   * @since 0.2.0
+   */
+  global static Coordinates geocodeAddress(
+    String street,
+    String city,
+    String state,
+    String postalCode,
+    String country
+  ) {
+    // Implement actual geocoding logic
+    return new Coordinates(0, 0);
+  }
+
+  /**
+   * Exception thrown when a deprecated method is called.
+   * This indicates that the caller should migrate to the recommended alternative.
+   */
+  global class DeprecatedMethodCalledException extends Exception {
+  }
+
+  /**
+   * Exception thrown when a geocoding operation fails.
+   * This provides specific context for issues during address-to-coordinate conversion.
+   */
+  global class GeocodingException extends Exception {
+  }
+}

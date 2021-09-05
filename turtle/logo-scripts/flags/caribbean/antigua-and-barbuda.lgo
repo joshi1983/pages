@@ -1,0 +1,102 @@
+make "flagRed "#ce1126 
+
+to antiguaAndBarbudaFlagCustomWidth :width :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	stripes :width :height ["black]
+	jumpForward :height * 28 / 46
+	setFillColor "#fcd116
+	setPenSize 0
+	isotoxalStar :height * 30 / 46 / 2 :height * 15 / 46 / 2 16
+	jumpTo :oldPos
+	setLineCap "butt
+	setPenColor "white
+	setPenSize :width
+	forward :height * 18 / 46
+	setPenColor "#0072c6
+	forward :height * 10 / 46
+	setPenSize 0
+	jumpTo :oldPos
+	setFillColor :flagRed
+	polyStart
+	jumpLeft :width / 2
+	jumpForward :height
+	polyEnd
+
+	jumpTo :oldPos
+	polyStart
+	jumpRight :width / 2
+	jumpForward :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Antigua_and_Barbuda#/media/File:Flag_of_Antigua_and_Barbuda.svg
+; Based on construction sheet:
+; https://en.wikipedia.org/wiki/Flag_of_Antigua_and_Barbuda#/media/File:Flag_of_Antigua_and_Barbuda_(construction_sheet).svg
+to antiguaAndBarbudaFlag :height
+	antiguaAndBarbudaFlagCustomWidth :height * 3 / 2 :height
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Antigua_and_Barbuda#/media/File:Coastguard_Ensign_of_Antigua_and_Barbuda.svg
+to antiguaAndBarbudaCoastGuardEnsignia :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "width :height * 3 / 2
+	localmake "smallFlagWidth :width / 2 - :height / 15
+	localmake "smallFlagHeight :height / 2 - :height / 15
+	stripes :width :height ["white]
+
+	jumpTo :oldPos
+	setLineCap "butt
+	setPenSize :height * 2 / 15
+	setPenColor :flagRed
+	forward :height
+	jumpBackward :height / 2
+	right 90
+	jumpBackward :width / 2
+	forward :width
+	jumpBackward :width - :smallFlagWidth / 2
+	jumpLeft penSize / 2
+	left 90
+	antiguaAndBarbudaFlagCustomWidth :smallFlagWidth :smallFlagHeight
+
+	; Prevent artifacts on the fringe between
+	; the left side of the flag.
+	jumpTo :oldPos
+	jumpForward :height / 2
+	setPenSize 0
+	setFillColor :flagRed
+	polyStart
+	jumpForward :height / 2
+	jumpLeft :height / 15
+	left 90 + arcTan :smallFlagHeight / (:smallFlagWidth / 2)
+	jumpForward hypot [:height / 2 :width / 4]
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/File:Barbuda_People%27s_Movement_Flag.svg
+to barbudaMovementFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 3 / 2
+	stripes :width :height ["black]
+	jumpForward :height / 2
+	setFillColor "#fdd21a
+	setPenSize 0
+	isotoxalStar :height * 0.3363453 :height * 0.16816695 16
+	setTurtleState :oldState
+end
+
+setScreenColor "#eee
+make "height 100
+make "separation :height * 4
+jumpLeft :separation
+antiguaAndBarbudaFlag :height
+jumpRight :separation
+antiguaAndBarbudaCoastGuardEnsignia :height
+jumpRight :separation
+barbudaMovementFlag :height

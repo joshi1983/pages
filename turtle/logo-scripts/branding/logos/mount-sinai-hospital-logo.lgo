@@ -1,0 +1,34 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Mount_Sinai_Hospital_(Toronto)#/media/File:Mount_Sinai_Hospital_Logo.svg
+to mountSinaiHospitalLogo :height
+	localmake "oldState turtleState
+	localmake "shapes [
+		["#63cae7 [[0.0965] [-74 0] [0.256] [-120 0] [0.173]]
+		]
+
+		["#fcb61a [[30 0] [0.1632] [-76 0] [0.1298] [-120 0] [0.19]]]
+
+		["#ef4b54 [[30 0] [0.0955] [-104 0] [0.094] [-92 0] [0.112]]]
+	]
+	setPenSize 0
+	jumpForward :height / 2
+	localmake "center pos
+	repeat 6 [
+		localmake "heading1 heading
+		repeat count :shapes [
+			localmake "shapeInfo item repcount :shapes
+			jumpRight :height * 0.1151
+			jumpForward :height * 0.214
+			setFillColor first :shapeInfo
+			polyStart
+			arcLines last :shapeInfo :height
+			polyEnd
+			jumpTo :center
+			setHeading :heading1
+		]
+		right 360 / 6
+	]
+	setTurtleState :oldState
+end
+
+mountSinaiHospitalLogo 100

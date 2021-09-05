@@ -1,0 +1,89 @@
+to drawKurdishStripes :height
+	localmake "width :height * 3 / 2
+	stripes :width :height ["#278e43 "white "#ed2024]
+end
+
+; Inspired by logo at:
+; https://en.wikipedia.org/wiki/Flag_of_Kurdistan#/media/File:Flag_of_Kurdistan.svg
+to kurdistanFlag :height
+	localmake "oldState turtleState
+	drawKurdishStripes :height
+	jumpForward :height / 2
+	setPenSize 0
+	setFillColor "#febd11
+	isotoxalStar :height / 4 :height / 8 21
+	setTurtleState :oldState
+end
+
+to kingdomOfKurdistanFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 3 / 2
+	stripes :width :height ["#008000]
+	setPenSize 0
+	jumpForward :height / 2
+	setFillColor "red
+	circle :height * 11 / 30
+	setFillColor "white
+	jumpRight :height * 0.014
+	circle :height * 0.25
+	jumpRight :height * 0.073
+	setFillColor "red
+	circle :height * 0.22
+	setTurtleState :oldState
+end
+
+; Inspired by flag at:
+; https://en.wikipedia.org/wiki/Flag_of_Kurdistan#/media/File:Kurdish_flag_(Khoiboun).png
+; It looks like the Kurdish region was named the Republic of Ararat in 1927–1930
+; and this was the official flag of the time.
+;
+; The main difference from the png is that the
+; waves in the rays are repeated with this code.
+; The waves are unique from each other in the PNG.
+to republicOfAraratFlag :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "araratOrange "#ebb115
+	localmake "numRays 30
+	localmake "rayLength :height * 0.284
+	localmake "sunRadius :height * 0.137
+	localmake "arcAngle 50
+	localmake "numWaves 3
+	localmake "waveScale (:rayLength - :sunRadius) / :numWaves / 4 / sin :arcAngle / 2
+	drawKurdishStripes :height
+	setFillColor :araratOrange
+	setPenSize 0
+	jumpForward :height / 2
+	circle :sunRadius
+	setLineCap "round
+	setLineJoinStyle "round
+	localmake "center pos
+	setPenSize :height * 0.005
+	setPenColor :araratOrange
+	right 180 / :numRays
+	repeat :numRays [
+		forward :rayLength
+		jumpTo :center
+		right 360 / :numRays
+	]
+	repeat :numRays [
+		setHeading :oldHeading + repcount * 360 / :numRays
+		jumpForward :sunRadius
+		left :arcAngle / 2
+		repeat :numWaves [
+			arcLines [[-:arcAngle 1] [:arcAngle 1]] :waveScale
+		]
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "#eee
+make "height 100
+make "separation :height * 4
+jumpLeft :separation
+kurdistanFlag :height
+jumpRight :separation
+kingdomOfKurdistanFlag :height
+jumpRight :separation
+republicOfAraratFlag :height

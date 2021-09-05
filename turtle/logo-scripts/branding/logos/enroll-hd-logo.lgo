@@ -1,0 +1,41 @@
+to drawColoredCircle :radius :colorRatio
+	setFillColor mix "#FF7700 "#FFCC00 clamp :colorRatio 0 1
+	circle :radius
+end
+
+; Inspired by logo at:
+; https://enroll-hd.org
+to enrollHDLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "numAngles 32
+	localmake "offsetAngle 2
+	localmake "separation :height * 0.07
+	localmake "radius :height * 0.0175
+	localmake "maxGap (:height / 2 - :radius) / cos :offsetAngle
+	jumpForward :height * 0.5
+	setFillColor "#9aca3c
+	setPenSize 0
+	circle :height * 0.168
+	localmake "center pos
+	repeat :numAngles [
+		setHeading :oldHeading + :offsetAngle + repcount * 360 / :numAngles
+		jumpForward :maxGap
+		repeat 4 [
+			drawColoredCircle :radius (distance :center) / :maxGap
+			jumpBackward :separation
+		]
+		jumpTo :center
+		right 180 / :numAngles
+		jumpForward :maxGap - :separation / 2
+		repeat 4 [
+			drawColoredCircle :radius (distance :center) / :maxGap
+			jumpBackward :separation
+		]
+
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+enrollHDLogo 100

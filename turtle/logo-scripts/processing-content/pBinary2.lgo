@@ -1,0 +1,20 @@
+; Implemented to be similar to:
+; https://processing.org/reference/binary_.html
+; where 2 arguments are specified
+to pBinary2 :value :numBits
+	localmake "result pBinary :value
+	localmake "padChar "0
+	if integer? :value [
+		if :value < 0 [
+			localmake "padChar "1
+		]
+	]
+	if :numBits < count :result [
+		localmake "startIndex (count :result) + 1 - :numBits
+		localmake "result substring :result :startIndex count :result
+	]
+	while :numBits > count :result [
+		localmake "result word :padChar :result
+	]
+	output :result
+end

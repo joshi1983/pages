@@ -1,0 +1,166 @@
+; Inspired by:
+; https://fineartamerica.com/featured/central-sun-soul-structures.html?epik=dj0yJnU9VjQ3N1pNbDJsQXp5bjh6T0ZpRlFTa09LZTNkTmVZV3omcD0wJm49X3oyU2U3aFFBVGNSNFlWNlZ6Nng1ZyZ0PUFBQUFBR0kyQWNz
+
+make "redColor "red
+make "orangeColor "orange
+make "yellowColor "yellow
+
+to spikePoly :size
+	localmake "outerAngle 30
+	localmake "arcs1 [[:outerAngle 1.3464] [45 - :outerAngle 0.4]]
+	localmake "arcs combine :arcs1 reverse :arcs1
+	jumpBackward :size
+	polyStart
+	repeat 4 [
+		arcsLeft :arcs :size
+		right 180
+	]
+	polyEnd
+end
+
+to getSpikeSmallSize :size
+	output :size * 0.5
+end
+
+to spike :size :color1 :color2 :color3
+	localmake "oldPos pos
+	localmake "smallSize getSpikeSmallSize :size
+	setPenSize 0
+	localmake "colorStops createPList2 [
+		[0 :color1] [0.5 :color2] [1 :color3]
+	]
+	localmake "gradient createRadialGradient :oldPos :size * 0.7 :colorStops
+	setFillGradient :gradient
+	spikePoly :size
+	setFillColor :color1
+	jumpTo :oldPos
+	spikePoly :smallSize
+	jumpTo :oldPos
+end
+
+to radientCore :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "numScales 3
+	localmake "maxSize :size * 0.9
+	localmake "minSize :size * 0.5
+	localmake "colorStops createPList2 [
+		[0 :yellowColor] [0.6 :orangeColor] [1 :redColor]
+	]
+	localmake "gradient createRadialGradient pos :size :colorStops
+	setFillGradient :gradient
+	circle :size
+	repeat :numScales [
+		localmake "ratio (:numScales - repcount) / (:numScales - 1)
+		setFillColor mix :yellowColor "white :ratio
+		localmake "starRadius mix :maxSize :minSize :ratio
+		isotoxalStar :starRadius :starRadius * 0.5 32
+		jumpTo :oldPos
+	]
+	setHeading :oldHeading
+end
+
+to tinyCore :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "colorStops createPList2 [
+		[0 :yellowColor] [0.5 :orangeColor] [1 :redColor]
+	]
+	localmake "gradient createRadialGradient pos :size :colorStops
+	setFillGradient :gradient
+	circle :size
+	setFillColor :yellowColor
+	spikePoly :size
+	jumpTo :oldPos
+	setFillColor :redColor
+	spikePoly getSpikeSmallSize :size
+	setHeading :oldHeading
+	jumpTo :oldPos
+end
+
+to tinyCores :size
+	localmake "oldPos pos
+	localmake "numCores 22
+	localmake "coreRadius :size * 0.1
+	repeat :numCores [
+		jumpForward :size
+		setFillColor "black
+		circle :coreRadius * 1.15
+		tinyCore :coreRadius
+		jumpTo :oldPos
+		right 360 / :numCores
+	]
+end
+
+to darkStar :size
+	localmake "numPoints 66
+	setFillColor "black
+	right 180 / :numPoints
+	isotoxalStar :size :size * 0.4 :numPoints
+end
+
+to drawCore :size
+	radientCore :size
+	spike :size	:yellowColor :orangeColor :redColor
+end
+
+to radiatingArcPath :size :pointSpreadAngle
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "returnAngle 180 - :pointSpreadAngle
+	localmake "midSize :size * 0.55
+	localmake "numPoints 128
+	localmake "arcsInfo [
+		[-30 0.43] [30 0.43]
+	]
+	repeat :numPoints [
+		left :pointSpreadAngle * 0.5
+		forward :midSize
+		left 10 - :pointSpreadAngle * 1.2
+		arcLines :arcsInfo :size
+		right :returnAngle
+		arcsRight reverse :arcsInfo :size
+		jumpTo :oldPos
+		setHeading :oldHeading + repcount * 360 / :numPoints
+	]
+	setHeading :oldHeading
+end
+
+to centralSun :size
+	localmake "oldHeading heading
+	localmake "midSize1 :size * 0.55
+	localmake "midSize2 :midSize1 * 0.95
+	localmake "smallSize :midSize2 * 0.4
+	localmake "colorStops createPList2 [
+		[0 "white] [1 screenColor]
+	]
+	localmake "gradient createRadialGradient pos :size :colorStops
+	setFillGradient :gradient
+	circle :size
+
+	setFillColor "white
+	polyStart
+	radiatingArcPath :size 4.5
+	polyEnd
+
+	setFillColor :orangeColor
+	polyStart
+	radiatingArcPath :size 3.5
+	polyEnd
+
+	localmake "colorStops createPList2 [
+		[0 :yellowColor] [1 :orangeColor]
+	]
+	localmake "gradient createRadialGradient pos :midSize1 :colorStops
+	setFillGradient :gradient
+	circle :midSize1
+	darkStar :midSize2
+	setHeading :oldHeading
+	tinyCores :midSize2 * 0.82
+	setHeading :oldHeading
+	drawCore :smallSize
+end
+
+setScreenColor "#005
+setPenSize 0
+centralSun 150

@@ -1,0 +1,460 @@
+to drawGrass :height :travelDistance
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "numBlades 100
+	localmake "separation :height * 0.25
+	setPenSize :height * 0.1
+	setPenColor "green
+
+	jumpLeft :height * 12
+	repeat :numBlades [
+		localmake "startPos pos
+		localmake "offset :height * repRatio
+		localmake "d :offset * :height + :travelDistance / :height
+		localmake "arcAngle mix 20 -20 clamp (1 + sin :d * 50) / 2 0 1
+		ifelse (abs :arcAngle) < 1 [
+			forward :height
+		] [
+			localmake "arcRadius abs :height / sin :arcAngle
+			arcLeft :arcAngle :arcRadius
+		]
+		setHeading :oldHeading
+		jumpTo :startPos
+		jumpRight :separation
+	]
+
+	setTurtleState :oldState
+end
+
+to drawEngine :height
+	localmake "oldState turtleState
+	setFillColor "black
+	setPenSize 0
+	drawArcLineShape [-0.45 0.505
+		[[-90 0] [0.375] [90 0] [-180 0.015] [90 0] [45 0.02]
+		[0.05] [45 0.02] [0.15] [-90 0] [0.65] [-90 0] [0.42] [-90 0]
+		[0.35] [-30 0.02] [60 0.06] [-30 0.05] [0.09] [20 0.04] [-20 0.04]
+		[-20 0.3] [20 0.3] [0.35]]
+	] :height
+	setFillColor transparent
+	setPenSize :height * 0.001
+	setPenColor "white
+	drawArcLineShapes [
+		[0.13 0.366
+			[[-40 0] [-280 0.016] [48 0] [0.11] [-48 0.088] [0.01] [-130 0.006] [0.012]
+			[-160 0.006] [100 0] [45 0.04] [8 0.15]]
+		]
+		[0.066 0.404
+			[[50 0] [270 0.015] [-53.5 0] [0.58] [90 0] [0.045]]
+		]
+		[0.558 0.433
+			[[-160 0] [249 0.015] [0.51] [-90 0.006] [-43.4 0.12] [-50 0]
+			[280 0.012] [-54 0] [40 0.1] [0.035] [-50 0] [200 0.012]]
+		]
+	] :height
+	setTurtleState :oldState
+end
+
+to drawControls :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "ballPositions [
+		[-0.115 0.666 0.2]
+		[-0.055 0.575 0.1]
+	]
+	setFillColor "black
+	setPenColor fillColor
+	setPenSize :height * 0.008
+	repeat count :ballPositions [
+		localmake "info item repcount :ballPositions
+		jumpForward :height * item 2 :info
+		jumpRight :height * first :info
+		circle :height * 0.007
+		right 137
+		forward :height * last :info
+		jumpTo :oldPos
+		setHeading :oldHeading
+	]
+
+	jumpForward :height * 0.77
+	jumpLeft :height * 0.02
+	right 158
+	setLineJoinStyle "round
+	setPenSize :height * 0.007
+	setFillColor transparent
+	isoTriangle :height * 0.22 :height * 0.02
+	forward :height * 0.1
+	setTurtleState :oldState
+end
+
+to drawCover :height :color
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "colorStops createPList2 [
+		[0.5 mix :color "black 0.6]
+		[0.9 :color]
+		[1 mix :color "white 0.2]
+	]
+	jumpForward :height * 0.76
+	setFillGradient createLinearGradient :oldPos pos :colorStops "pad
+	jumpTo :oldPos
+	setPenColor "black
+	setLineJoinStyle "round
+	setPenSize :height * 0.005
+	drawArcLineShape [0.632 0.321
+		[[9 0] [0.27] [81 0.055] [0.455] [90 0] [-86 0.006]
+		[0.07] [-80 0.01] [0.06] [-78 0.015] [0.1] [-20 0.02]
+		[0.06] [-6 0.02] [0.5] [-93 0.07] [-11 2]]
+	] :height
+	jumpRight :height * 0.65
+	jumpForward :height * 0.33
+	setPenSize :height * 0.002
+	arcLines [[9 0] [0.25] [81 0.085] [0.28] [50 0.05]] :height
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.635
+	jumpRight :height * 0.0875
+	forward :height * 0.115
+
+	; not sure what it is but there is a dark circular shape
+	; under the light in the source figure.
+	; I'm copying it blindly as a couple circles.
+	; It might be a part for holding the light but I'm drawing it in drawCover assuming
+	; it is a part of the painted front cover.
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.598
+	jumpRight :height * 0.66
+	setPenSize :height * 0.003
+	circle :height * 0.018
+	setFillColor "black
+	setPenSize 0
+	circle :height * 0.01
+	setTurtleState :oldState
+end
+
+to drawFrontLights :height
+	localmake "oldState turtleState
+	localmake "lightHeight :height * 0.085
+	setFillColor "black
+	setPenSize 0
+	jumpForward :height * 0.665
+	jumpRight :height * 0.685
+	ellipse :lightHeight * 0.3 :lightHeight / 2
+	drawArcLineShape [0 0.5
+		[[90 0] [180 0.5]]
+	] :lightHeight
+	setTurtleState :oldState
+end
+
+to drawExhaustPipe :height :paintColor
+	localmake "oldState turtleState
+	localmake "thinRadius :height * 0.015
+	localmake "colorStops createPList2 [
+		[0.8 :paintColor] [1 mix :paintColor "black 0.6]
+	]
+	jumpForward :height * 0.74
+	localmake "base pos
+	jumpForward :height * 0.2
+	setFillGradient createLinearGradient :base pos :colorStops "pad
+	jumpTo :base
+	setPenColor "black
+	setPenSize :height * 0.005
+	jumpRight :height * 0.16
+	circlePair :thinRadius :thinRadius :height * 0.24
+	jumpBackward :height * 0.02
+	setLineJoinStyle "round
+	setFillColor :paintColor
+	drawArcLineShape [-0.5 0
+		[[-180 0.5]]
+	] :height * 0.08
+	setTurtleState :oldState
+end
+
+to drawRearWheelArch :wheelHeight :paintColor
+	localmake "oldState turtleState
+	localmake "darkColor mix :paintColor "black 0.5
+	localmake "colorStops createPList2 [
+		[0 :darkColor]
+		[0.7 :darkColor]
+		[0.9 mix :paintColor "black 0.4]
+		[0.95 :paintColor]
+		[1 mix :paintColor "white 0.3]
+	]
+	jumpForward :wheelHeight / 2
+	setFillGradient createRadialGradient pos :wheelHeight * 0.57 :colorStops
+	setPenColor "black
+	setPenSize :wheelHeight * 0.01
+	drawArcLineShape [0 0
+		[[57 0] [0.45] [-98 0.09] [-97 0.55] [-90 0.09]]
+	] :wheelHeight
+
+	setTurtleState :oldState
+end
+
+to drawWheelHighlight :radius
+	localmake "oldState turtleState
+	localmake "center pos
+	localmake "highlightColorStops createPList2 [
+		[0 transparent]
+		[0.8 transparent]
+		[1 "#7fff]
+	]
+	setPenSize 0
+	jumpBackward :radius * 0.2
+	setFillGradient createRadialGradient pos :radius * 1.2 :highlightColorStops
+	jumpTo :center
+	circle :radius
+	setTurtleState :oldState
+end
+
+to drawRearWheel :height :angle :paintColor
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "colorStops createPList2 [
+		[0 :paintColor]
+		[0.4 :paintColor]
+		[1 mix :paintColor "black 0.3]
+	]
+	localmake "angle :angle - 360 * floor :angle / 360
+	localmake "numTreadNotches 24
+	setPenSize 0
+	jumpForward :height / 2
+	localmake "center pos
+	setFillGradient createRadialGradient pos :height * 0.3 :colorStops
+	right :angle
+	setPenSize :height * 0.004
+	setPenColor "black
+	roundIsoStar :height * 0.2 :height * 0.33 6 0 :height * 0.3
+	setPenSize :height * 0.21
+	setFillColor transparent
+	setPenColor "#222
+	circle (:height - penSize) / 2
+
+	setPenSize 0
+	setPenColor "white
+	setPenSize :height * 0.01
+	setFillColor transparent
+	circle :height * 0.29
+	circle :height * 0.1
+	circle :height * 0.055
+	setPenColor :paintColor
+	circle :height * 0.28
+
+	setPenSize :height * 0.002
+	setPenColor "black
+	circle :height * 0.276
+	setPenSize :height * 0.02
+	setLineCap "round
+	repeat :numTreadNotches [
+		localmake "heading1 :angle + repcount * 360 / :numTreadNotches
+		setHeading :oldHeading + :heading1
+		jumpForward :height * 0.46
+		right 60
+		setPenColor "black
+		forward :height * 0.06
+		jumpRight :height * 0.02
+		jumpForward :height * 0.02
+		setPenColor mix "#aaa "#222 clamp (1 + cos :oldHeading - :heading1) / 2 0 1
+		backward :height * 0.06
+		jumpTo :center
+	]
+
+	setHeading :oldHeading
+	drawWheelHighlight :height / 2
+	setTurtleState :oldState
+end
+
+to drawRearLights :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	setFillColor "black
+	setPenSize 0
+	drawArcLineShapes [
+		[-0.663 0.722
+			[[-10 0] [0.03] [-35 0] [160 0.043] [44 0.015] [50 0.07]
+			[22 0.04] [40 0.01] [20 0.05] [-100 0] [0.024]]
+		]
+		[-0.683 0.718
+			[[45 0] [29 0.05] [65 0.01] [40 0.05] [90 0.013] [12 0.1]]
+		]
+	] :height
+
+	jumpForward :height * 0.721
+	jumpLeft :height * 0.47
+	setPenSize :height * 0.004
+	arcLines [[90 0] [0.203] [80 0.015] [0.1]] :height
+
+	setPenSize :height * 0.006
+	setPenColor "white
+	setLineCap "round
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.695
+	jumpLeft :height * 0.717
+	right 10
+	arcRight 14 :height * 0.1
+	setTurtleState :oldState
+end
+
+to drawFrontWheel :height :angle :paintColor
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "darkColor mix "black :paintColor 0.7
+	localmake "colorStops createPList2 [
+		[0 :paintColor]
+		[0.3 :paintColor]
+		[0.47 :darkColor]
+		[0.52 :paintColor]
+	]
+	setPenSize :height * 0.22
+	setPenColor "#222
+	jumpForward :height / 2
+	setFillGradient createRadialGradient pos :height / 2 :colorStops
+	circle (:height - penSize) / 2
+	setFillColor transparent
+	setPenSize :height * 0.015
+	setPenColor "white
+	circle :height * 0.27
+	circle :height * 0.12
+	circle :height * 0.08
+	setLineCap "round
+	right :angle
+	repeat 4 [
+		arc 40 :height * 0.22
+		right 360 / 4
+	]
+
+	setHeading :oldHeading
+	drawWheelHighlight :height / 2
+
+	setTurtleState :oldState
+end
+
+to drawSeat :height
+	localmake "oldState turtleState
+	jumpLeft :height * 0.325
+	jumpForward :height * 0.61
+	left 20
+	setPenSize :height * 0.04
+	setPenColor "black
+	forward :height * 0.175
+
+	setTurtleState :oldState
+end
+
+to drawPerson :height
+	localmake "oldState turtleState
+	jumpLeft :height * 0.26
+	jumpForward :height * 0.6
+	left 10
+	localmake "hipPos pos
+	localmake "torsoHeading heading
+	setLineCap "round
+	setLineJoinStyle "round
+	setPenColor "#58d
+	setPenSize :height * 0.05
+	right 100
+	forward :height * 0.12
+	right 70
+	forward :height * 0.13
+
+	jumpTo :hipPos
+	setHeading :torsoHeading
+	setPenSize :height * 0.09
+	forward :height * 0.2
+	localmake "torsoTop pos
+	right 120
+	setPenSize :height * 0.035
+	forward :height * 0.18
+	
+	jumpTo :torsoTop
+	setHeading :torsoHeading
+	jumpForward :height * 0.08
+	setPenSize 0
+	setFillColor "#fb9
+	circle :height * 0.06
+	jumpForward :height * 0.02
+	setFillColor "#da4
+	left 20
+	ellipse :height * 0.14 :height * 0.012
+	drawArcLineShape [-1 0
+		[[-180 1]]
+	] :height * 0.06
+	setTurtleState :oldState
+end
+
+; Inspired by a figure in a tractor manual.
+; The manual title is Traktor IMT 539.
+; The manual was published by IMT(Industry of Machinery and Tractors).
+;
+; I couldn't find this written in the manual but
+; the tractor resembles a small farm tractor from 1950 to 1960.
+; Massey-Ferguson made some tractors that look similar. 
+
+; A digital version of the manual is at:
+; https://archive.org/details/tractors-RukovanjeiodrzavanjeIMT539
+;
+; The figure is on page 6.
+; The following link will go directly to a digital version of the page:
+; https://archive.org/details/tractors-RukovanjeiodrzavanjeIMT539/page/n5/mode/2up
+to tractor :height :wheelRotationDistance
+	localmake "oldState turtleState
+	localmake "rearWheelHeight :height * 0.7
+	localmake "frontWheelHeight :height * 0.43
+	localmake "paintColor "red
+	localmake "frontWheelAngle :wheelRotationDistance / :frontWheelHeight * 180 / pi
+	localmake "rearWheelAngle :wheelRotationDistance / :rearWheelHeight * 180 / pi
+	drawEngine :height
+	drawControls :height
+	drawSeat :height
+	drawRearLights :height
+	drawCover :height :paintColor
+	drawFrontLights :height
+	drawExhaustPipe :height :paintColor
+	drawPerson :height
+	jumpLeft :height * 0.456
+	drawRearWheelArch :rearWheelHeight :paintColor
+	drawRearWheel :rearWheelHeight :rearWheelAngle :paintColor
+	jumpRight :height * 1.05
+	drawFrontWheel :frontWheelHeight :frontWheelAngle :paintColor
+	setTurtleState :oldState
+end
+
+to drawSky :width :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "skyColorStops createPList2 [
+		[0 "white] [1 "#ddf]
+	]
+	jumpForward :height
+	setFillGradient createLinearGradient :oldPos pos :skyColorStops "pad
+	jumpBackward :height / 2
+	setPenSize 0
+	rect :width :height
+	setTurtleState :oldState
+end
+
+make "travelDistance 2000 * interpolateRatio easeInOut animation.timeRatio
+drawSky 270 150
+drawGrass 10 :travelDistance
+tractor 100 :travelDistance
+
+to animation.snapshotstyle
+	output createPList2 [
+		["position.y 50]
+		["zoom.scale 4]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 10
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

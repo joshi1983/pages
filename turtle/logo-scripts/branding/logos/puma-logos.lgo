@@ -1,0 +1,78 @@
+to drawPuma :height
+	drawArcLineShape [0.44428 0
+		[[-90 0] [14 0.025] [65 0.0091] [10 0.02]
+		[4 0.04] [0.029] [-30 0.072] [50 0.0201]
+		[10 0.07] [0.01] [-13 0.13] [-20 0.07] [0.01]
+		[55 0.04] [0.025] [-24 0.051] [0.019] [-9 0.1]
+		[-23.5 0.05] [7 0.82] [19.2 0.4] [17 0.04] [0.018]
+		[-10 0.02] [-87 0.007] [5 0.6] [20 0.16] [6 0.25]
+		[0.1] [-14 0.3] [-20 0.2] [-8 0.5] [16 0.14]
+		[50 0.073] [50 0.045] [30 0.02] [40 0.07] [12 0.4]
+		[17 0.23] [10.6 0.8] [-30 0.3] [-30 0.12] [-30 0.22]
+		[-20 0.55] [0.1] [17 1] [23 0.22] [-62 0] [0.03]
+		[15 0.06] [75 0.006] [20 0.03] [0.02] [-20 0.025]
+		[-80 0.005] [0.025] [30 0.015] [70 0.005] [15 0.05]
+		[0.025] [-30 0.045] [-5 0.04] [0.013] [23 0.04]
+		[33 0.02] [0.01] [-45 0.024] [0.019] [90 0.021]
+		[16 0.033] [0.022] [-15 0.1] [30 0.04] [30 0.02]
+		[8 0.15] [-31 0.04] [0.01] [-27 0.045] [-30 0.015]
+		[-45 0.04] [-60 0.013] [-21 0.03] [10 0.1] [10 0.23]
+		[20 0.16] [55 0.06] [35 0.033] [30 0.05] [30 0.06]
+		[45 0.025] [35 0.012] [10 0.1] [-20 0.02] [-30 0.015]
+		[-50 0.01] [-7 0.03] [0.1] [40 0.15] [30 0.09]
+		[0.01] [-60 0.005] [-30 0.03] [-2 0.06] [0.03] 
+		[47 0.4] [-70 0.15] [20 0.65] [17.8 0.34] [-60 0.012]
+		[0.04] [20 0.19] [44 0.08] [20 0.04]
+		]
+	] :height
+end
+
+; Inspired by logo at:
+; https://ca.puma.com/
+to pumaLogo :height :color
+	localmake "oldState turtleState
+	setPenSize 0
+	setFillColor :color
+	drawPuma :height
+	setTurtleState :oldState
+end
+
+to pumaWhiteOnBlackLogo :height
+	localmake "oldState turtleState
+	localmake "innerHeight :height * 0.8
+	stripes :height * 2 :height ["black]
+	jumpForward (:height - :innerHeight) / 2
+	pumaLogo :innerHeight "white	
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://www.facebook.com/photo/?fbid=914778164011145&set=a.669049988583965
+to pumaGradientLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "innerHeight :height * 0.8
+	localmake "colorStops createPList2 [
+		[0 "#ff1154] [1 "#ffa205]
+	]
+	stripes :height * 2 :height ["black]
+	jumpForward :height * 0.7
+	jumpRight :innerHeight * 0.6
+	localmake "fromPos pos
+	jumpLeft :innerHeight * 1.2
+	setFillGradient createLinearGradient :fromPos pos :colorStops "pad
+	jumpTo :oldPos
+	jumpForward (:height - :innerHeight) / 2
+	setPenSize 0
+	drawPuma :innerHeight
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 4
+jumpLeft :separation
+pumaLogo :height "black
+jumpRight :separation
+pumaWhiteOnBlackLogo :height
+jumpRight :separation
+pumaGradientLogo :height

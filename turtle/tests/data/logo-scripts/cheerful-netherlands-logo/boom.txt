@@ -1,0 +1,37 @@
+ZETTURTLE 0 -150 0
+ACHTERGROND CYAAN
+
+LEER tekenTak $grootte
+	ALS $grootte>3
+		$draaiL=RND(55)+10
+		$hoek=0
+
+		' Stel kleur en dikte in
+		ALS $grootte>5
+			PEN BRUIN $grootte/8
+		ANDERS
+			PENDIKTE $grootte
+			PENKLEUR 64 RND(128)+128 64
+		EINDALS
+
+		' Teken de tak
+		VOORUIT $grootte
+		LINKS $draaiL
+
+		' Teken zij takken
+		ZOLANG $hoek<90
+			tekenTak $grootte*(RND(0.2)+0.6)
+			$draai=RND(30)+30
+			RECHTS $draai
+			$hoek=$hoek+$draai
+		DOE
+
+		' Terug naar het begin van de tak
+		LINKS $hoek-$draaiL
+		PENOP
+		ACHTERUIT $grootte
+		PENNEER
+	EINDALS
+EIND
+
+tekenTak 100

@@ -1,0 +1,61 @@
+to drawN :height
+	localmake "oldState turtleState
+	localmake "line [
+		[0.725] [-165 0.153] [0.2965]
+	]
+	jumpLeft :height * 0.38
+	setLineCap "butt
+	jumpForward :height * 0.021
+	arcLines combine :line reverse flipAngles :line :height
+	setTurtleState :oldState
+end
+
+to drawA :height
+	localmake "oldState turtleState
+	localmake "thickness penSize
+	localmake "angle1 72.5
+	localmake "outline [[90 0] [:angle1 0.24] [0.85] [180 - :angle1 0]
+		[:thickness / :height / sin :angle1] [:angle1 0]
+		[0.785] [-:angle1 0.0406117]]
+	setPenSize 0
+	setFillColor penColor
+	drawArcLineShape [0 1
+		combine :outline reverse :outline
+	] :height
+	setTurtleState :oldState
+end
+
+to drawS :height
+	localmake "oldState turtleState
+	localmake "height1 :height * 0.957
+	localmake "line [
+		[0.54] [180 (:height1 - penSize) / 4 / :height1] [0.13]
+	]
+	setLineCap "butt
+	jumpForward (penSize + :height - :height1) / 2
+	jumpLeft :height * 0.378
+	right 90
+	arcLines :line :height1
+	setItem 1 "line [0.52]
+	arcLines reverse :line -:height1
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://en.wikipedia.org/wiki/NASA#/media/File:NASA_Worm_logo.svg
+to nasaWormLogo :height
+	localmake "oldState turtleState
+	setPenSize :height * 0.2
+	setPenColor "#DB362D
+	jumpLeft :height * 1.306
+	drawN :height
+	jumpRight :height * 0.94
+	drawA :height
+	jumpRight :height * 0.8
+	drawS :height
+	jumpRight :height * 0.87
+	drawA :height
+	setTurtleState :oldState
+end
+
+nasaWormLogo 100

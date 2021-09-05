@@ -1,0 +1,23 @@
+to randomPoint :width :height
+	output [randomRatio * :width randomRatio * :height]
+end
+
+; Inspired by drawing at beginning of this video:
+; https://www.youtube.com/watch?v=ROR1NQE-2DY
+to visionBasicRandomLines :width :height
+	localmake "numLines 600
+	localmake "colors ["yellow "#08f "#0b0 "black]
+	setPenSize (min :width :height) * 0.01
+	repeat :numLines [
+		localmake "startPoint randomPoint :width :height
+		setItem 1 "startPoint (first :startPoint) - :width / 2 
+		localmake "endPoint randomPoint :width :height
+		jumpTo :startPoint
+		setHeading towards :endPoint
+		setPenColor pick :colors
+		forward distance :endPoint
+	]
+end
+
+setScreenColor "black
+visionBasicRandomLines 250 100

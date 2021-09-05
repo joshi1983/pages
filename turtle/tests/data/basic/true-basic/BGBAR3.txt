@@ -1,0 +1,19 @@
+!  BGBar3  Show a simple balanced bar chart of products,
+!          with income/expense for last year and this year.
+
+LIBRARY "BGLib.trc"
+
+DIM income(4,2), expense(4,2), units$(4), legend$(2)
+
+MAT READ income, expense, units$, legend$
+DATA 43,34, 54,63, 33,12, 62,92   ! Incomes
+DATA 39,24, 49,52, 17,13, 43,57   ! Expenses
+DATA Faucets, Swings, Hoses, Flamingos      ! Units
+DATA Last Year, This Year         ! Legend
+
+CALL SetBarType ("over")
+CALL SetText ("Income/Expense: Last 2 Years", "", "Thousands")
+LET colors$ = "blue blue red green"
+CALL BalanceBars (income, expense, units$, legend$, colors$)
+
+END

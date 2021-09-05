@@ -1,0 +1,34 @@
+; Inspired by image at:
+; https://ca.pinterest.com/pin/96897829478802670
+to orangeShapes :height
+	localmake "oldState turtleState
+	localmake "width :height * 2 / 3
+	localmake "lowerLeftWidth :height * 0.436
+	localmake "lowerRightWidth :width - :lowerLeftWidth
+	localmake "lowerHeight :height * 0.4636
+	localmake "darkColor "brown
+	localmake "squareSize :height * 0.41
+	localmake "squareColors ["#fbb700 "#f28d00 "#ed5200 "#eb4f00]
+	stripes :width :height ["#f38e00]
+	jumpLeft (:width - :lowerLeftWidth) / 2
+	stripes :lowerLeftWidth :lowerHeight [:darkColor]
+	jumpRight :width / 2
+	stripes :lowerRightWidth :lowerHeight ["#ed5200]
+	jumpLeft :lowerRightWidth / 2
+	jumpForward :lowerHeight
+	setFillColor :darkColor
+	setPenSize 0
+	circle :squareSize / 2
+	localmake "center pos
+	repeat count :squareColors [
+		setFillColor item repcount :squareColors
+		drawArcLineShape [1 1
+			[[90 0] [1] [90 0] [90 1]]
+		] :squareSize / 2
+		jumpTo :center
+		right 90
+	]
+	setTurtleState :oldState
+end
+
+orangeShapes 100

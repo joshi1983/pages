@@ -1,0 +1,25 @@
+' copied from https://basicfusion.org/tutorial.html
+SCREEN 12
+CONST SPD = 4
+PX = 320 : PY = 400
+GX = INT(RND() * 600) + 20
+GY = INT(RND() * 400) + 20
+SCORE = 0
+
+GL:
+  PAINT "#0a0010"
+  IF KEY("ARROWLEFT")  THEN PX = PX - SPD
+  IF KEY("ARROWRIGHT") THEN PX = PX + SPD
+  IF KEY("ARROWUP")    THEN PY = PY - SPD
+  IF KEY("ARROWDOWN")  THEN PY = PY + SPD
+  IF ABS(PX-GX) < 20 AND ABS(PY-GY) < 20 THEN
+    SCORE = SCORE + 10
+    GX = INT(RND() * 600) + 20
+    GY = INT(RND() * 400) + 20
+  END IF
+  BOX (PX-12,PY-12)-(PX+12,PY+12), "lime"
+  CIRCLE (GX,GY), 10, "gold"
+  FONTSIZE 18
+  TEXT (10,22), "SCORE: " + STR$(SCORE), "white"
+  SYNC
+GOTO GL

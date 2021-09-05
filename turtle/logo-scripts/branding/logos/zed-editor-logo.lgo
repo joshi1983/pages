@@ -1,0 +1,46 @@
+; Inspired by logo at:
+; https://zed.dev
+to zedLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "startOffset :height * 0.17
+	localmake "outerCornerRadiusFactor 0.07
+	setPenSize :height * 0.065
+	localmake "maxSize :height - penSize
+	localmake "minSize :maxSize / 4
+	setPenColor "#1348dc
+	jumpForward :height / 2
+	localmake "center pos
+	setLineCap "butt
+	setLineJoinStyle "round
+	repeat 2 [
+		localmake "heading1 :oldHeading + repcount * 360 / 2
+		setHeading :heading1
+		repeat 3 [
+			localmake "size mix :minSize :maxSize repRatio
+			localmake "cornerRadiusFactor mix 0.01 :outerCornerRadiusFactor repRatio
+			setHeading :heading1
+			jumpLeft :size / 2
+			jumpBackward :size / 2 - :startOffset
+			arcLines [[(:size - :startOffset) / :size - :cornerRadiusFactor]
+				[-90 :cornerRadiusFactor]
+				[0.82 + item repcount [0 0.15 0.15]]
+			] :size
+			jumpTo :center
+		]
+	]
+	jumpTo :oldPos
+	setHeading :oldHeading
+	localmake "diagonalLine1 [
+		[90 0] [0.5 - :outerCornerRadiusFactor]
+		[-45 :outerCornerRadiusFactor] [-90 0]
+		[(0.5 - :outerCornerRadiusFactor * (1 - cos 45)) / cos 45]
+	]
+	jumpForward penSize / 2
+	arcLines :diagonalLine1 :maxSize
+	arcLines reverse :diagonalLine1 -:maxSize
+	setTurtleState :oldState
+end
+
+zedLogo 100

@@ -1,0 +1,35 @@
+; Inspired by logo at:
+; https://www.northernflatroofing.com
+to northernFlatRoofingLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "width :height * 0.272
+	localmake "angle1 150
+	localmake "angle2 120
+	localmake "len1 :width
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	setFillColor "#792121
+	repeat 2 [
+		localmake "heading1 :oldHeading + repcount * 180
+		setHeading :heading1
+		jumpForward :height / 2
+		jumpRight :height * 0.065
+		polyStart
+		jumpRight :width
+		left :angle1
+		jumpForward :height * 0.537
+		right :angle2
+		jumpForward :len1
+		polyEnd
+		setHeading :heading1
+		jumpLeft :width / 2
+		right 180
+		parallelogram :width :height * 0.535 180 - :angle1		
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+northernFlatRoofingLogo 100

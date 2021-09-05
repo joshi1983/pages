@@ -1,0 +1,29 @@
+; Inspired by logo at:
+; https://ca.pinterest.com/pin/141370875799433525
+to whiteExplosion :height
+	localmake "oldState turtleState
+	localmake "numAngles 18
+	localmake "colorStops createPList2 [
+		 [0.7 "#0fff] [1 "white]
+	]
+	jumpForward :height / 2
+	localmake "center pos
+	localmake "radius :height / 2
+	repeat 26 [
+		localmake "dashLength :radius * 0.3
+		setPenSize :radius * 0.06
+		setPenGradient createRadialGradient pos :radius :colorStops
+		repeat :numAngles [
+			jumpForward :radius - penSize / 2
+			backward :dashLength
+			jumpTo :center
+			right 360 / :numAngles
+		]
+		right 180 / :numAngles
+		localmake "radius :radius * 0.8
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+whiteExplosion 100

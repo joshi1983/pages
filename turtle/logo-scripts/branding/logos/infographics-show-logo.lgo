@@ -1,0 +1,68 @@
+to createBackgroundGradient1 :height
+	localmake "oldPos pos
+	localmake "colorStops createPList2 [
+		[0 "#3057c0] [0.07 "#402ba4] [0.214 "#3749b9]
+		[0.215 "#365cc7] [0.354 "#1e8feb] [0.355 "#295dc3]
+		[0.499 "#2482e6] [0.5 "#29b4f9] [0.649 "#1e82e2]
+		[0.65 "#22b0f0] [0.799 "#2089e4] [0.8 "#29b2f6]
+		[1 "#24b2f4]
+	]
+	jumpRight :height / 2
+	localmake "fromPos pos
+	jumpLeft :height
+	jumpForward :height
+	localmake "result createLinearGradient :fromPos pos :colorStops "pad
+	jumpTo :oldPos
+	output :result
+end
+
+to createPenGradient2 :height
+	localmake "oldPos pos
+	localmake "colorStops createPList2 [
+		[0 "#0fff] [1 "#3fff]
+	]
+	jumpLeft :height / 2
+	localmake "fromPos pos
+	jumpForward :height / 2
+	jumpRight :height / 2
+	localmake "result createLinearGradient :fromPos pos :colorStops "pad
+	jumpTo :oldPos
+	output :result
+end
+
+to drawBackground :height
+	localmake "oldState turtleState
+	setPenSize :height
+	setLineCap "butt
+	setPenGradient createBackgroundGradient1 :height
+	forward :height
+	jumpBackward :height
+	setFillGradient createPenGradient2 :height
+	setPenSize 0
+	jumpForward :height / 2
+	left 135
+	isoTriangle :height / cos 45 :height / 2 / cos 45
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://www.youtube.com/@TheInfographicsShow
+to infoGraphicsShowLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading	
+	drawBackground :height
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.2
+	setLineCap "butt
+	setPenColor "white
+	setPenSize :height * 0.15
+	forward :height * 0.416
+	jumpForward :height * 0.075
+	forward :height * 0.111
+	setTurtleState :oldState
+end
+
+infoGraphicsShowLogo 100

@@ -1,0 +1,47 @@
+; Inspired by:
+; https://www.facebook.com/photo/?fbid=10162417208361350
+to hopAnimation :height :timeRatio
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "timeScaled :timeRatio * 4
+	localmake "timeQuad int :timeScaled
+	localmake "timeOffset1 (interpolateRatio easeInOut interpolateRatio easeInOut :timeScaled - :timeQuad)
+	localmake "timeRatio (:timeQuad / 4) + :timeOffset1 / 4
+	localmake "yOffset mixItems [0.45 0.4 0.45 0.4] :timeRatio
+	localmake "headOffset mixItems [0.5 0.53 0.53] :timeRatio
+	localmake "hopFactor (0.5 - abs 0.5 - :timeOffset1)
+	localmake "hopFactor (sin :hopFactor * 180) * 0.15
+	localmake "angle :timeRatio * 360
+	localmake "spinHeight :height * 758 / 1055
+	localmake "headHeight :height * 115 / 1055
+	image :height * 755 / 1055 :height 'weblogo://logo-scripts/images/hop-background.jpg'
+	jumpForward :height * (:yOffset + :hopFactor)
+	right :angle
+	jumpBackward :spinHeight / 2
+	image :spinHeight * 652 / 758 :spinHeight 'weblogo://logo-scripts/images/hop-spin-layer.png'
+	jumpForward :spinHeight * :headOffset
+	jumpRight :spinHeight * 0.02
+	setHeading :oldHeading
+	image :headHeight * 66 / 115 :headHeight 'weblogo://logo-scripts/images/hop-head-layer.png'
+	setTurtleState :oldState
+end
+
+make "timeRatio animation.clampedTimeRatio
+setScreenColor "#d8d0d4
+hopAnimation 100 :timeRatio
+
+to animation.snapshotstyle
+	output createPList2 [
+		["zoom.scale 7]
+		["position.y 50]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 4
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

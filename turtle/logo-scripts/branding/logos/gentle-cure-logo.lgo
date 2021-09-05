@@ -1,0 +1,24 @@
+; Inspired by logo at:
+; https://www.gentlecure.com/
+to gentleCureLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "colorStops createPList2 [
+		[0 "#303382] [0.7 "#87bf89]
+	]
+	localmake "radius1 0.28
+	localmake "offset1 :radius1
+	jumpForward :height
+	setPenGradient createLinearGradient :oldPos pos :colorStops "pad
+	setPenSize :height * 0.06
+	jumpBackward penSize / 2
+	localmake "height1 :height - penSize
+	jumpRight :height * :offset1
+	setLineCap "round
+	setLineJoinStyle "round
+	arcLines [[90 0] [:offset1] [505 :radius1] [-135 0] [168 0.1] [0.34] [-150 0.125]
+		[-28 0.383] [0.15] [-50 0.23] [-65 0.14]] :height1
+	setTurtleState :oldState
+end
+
+gentleCureLogo 100

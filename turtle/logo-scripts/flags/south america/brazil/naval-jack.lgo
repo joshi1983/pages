@@ -1,0 +1,33 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/List_of_active_Brazilian_Navy_ships#/media/File:Naval_Jack_of_Brazil.svg
+; The original SVG is a little different from what is drawn by this procedure.
+; The main difference is the stars in the original SVG from Wikipedia are 
+; pinched by a few percent in the horizontal direction.  
+; In other words, the SVG doesn't have regular stars.
+; This procedure uses regular stars because the SVG might have done that by mistake.
+to navalJackOfBrazil :height
+	localmake "oldState turtleState
+	localmake "width :height * 1.5
+	localmake "starRadius :height * 0.0275
+	localmake "starSeparation :height / 10
+	localmake "starSeparationX :width * 3 / 40
+	stripes :width :height ["#003070]
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	setFillColor "white
+	jumpLeft :starSeparationX * 6
+	repeat 13 [
+		regularStar :starRadius 5
+		jumpRight :starSeparationX
+	]
+	jumpTo :center
+	jumpBackward :starSeparation * 4
+	repeat 9 [
+		regularStar :starRadius 5
+		jumpForward :starSeparation
+	]	
+	setTurtleState :oldState
+end
+
+navalJackOfBrazil 100

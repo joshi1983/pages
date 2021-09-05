@@ -1,0 +1,98 @@
+make "angle 39.5
+make "circleRadiusRatio 0.075
+make "thicknessRatio 0.33
+make "size1Ratio 0.868
+
+; Inspired by logo at:
+; https://vention.io/
+to ventionFilledLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "circleRadius :height * :circleRadiusRatio
+	localmake "thickness :height * :thicknessRatio
+	localmake "size1 :height * :size1Ratio
+	setLineCap "round
+	setLineJoinStyle "round
+	jumpForward :thickness / 2
+	setFillColor "white
+	left :angle
+	jumpForward :size1
+	setPenSize :thickness
+	backward :size1
+	right :angle * 2
+	forward :size1
+	setPenSize 0
+	circle :circleRadius
+	jumpBackward :size1
+	localmake "pos1 pos
+	left :angle * 2
+	jumpForward :size1
+	circle :circleRadius
+	jumpTo :pos1
+	setHeading :oldHeading
+	jumpForward :height * 0.05
+	circle :circleRadius
+	setTurtleState :oldState
+end
+
+to ventionLogo2 :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "tinyThickness :height * 0.02
+	localmake "circleRadius :height * :circleRadiusRatio
+	localmake "circleRadius2 :circleRadius + :tinyThickness / 2
+	localmake "thickness :height * :thicknessRatio
+	localmake "size1 :height * :size1Ratio
+	localmake "arcRadius (:thickness - :tinyThickness) / 2
+	localmake "size2 :size1 - :arcRadius / tan :angle
+	setFillColor transparent
+	setLineCap "round
+	setLineJoinStyle "round
+	setPenSize :tinyThickness
+
+	; Draw the lower middle circle
+	jumpForward :thickness / 2 + :height * 0.05
+	circle :circleRadius2
+
+	; Draw the upper left circle
+	jumpTo :oldPos
+	jumpForward :thickness / 2
+	localmake "pos1 pos
+	left :angle
+	jumpForward :size1
+	circle :circleRadius2
+
+	; Draw the upper right circle
+	jumpTo :pos1
+	right :angle * 2
+	jumpForward :size1
+	circle :circleRadius2
+
+	; Draw outline
+	jumpTo :oldPos
+	setHeading :oldHeading + 90
+	jumpLeft :tinyThickness / 2
+	penUp
+	arcLeft 90 - :angle :arcRadius
+	penDown
+	polyStart
+	jumpForward :size1
+	arcLeft 180 :arcRadius
+	jumpForward :size2
+	right 180 - :angle * 2
+	jumpForward :size2
+	arcLeft 180 :arcRadius
+	jumpForward :size1
+	arcLeft 180 - :angle * 2 :arcRadius
+	polyEnd
+
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 5
+jumpLeft :separation / 2
+ventionFilledLogo :height
+jumpRight :separation
+ventionLogo2 :height

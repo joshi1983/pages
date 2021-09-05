@@ -1,0 +1,47 @@
+to drawBottomArc :height
+	localmake "oldState turtleState
+	localmake "line1 [
+		[-45.9 1.8] [-92 0.1] [0.42] [-86.5 0.1]
+		[44.4 1.1994605]
+	]
+	setPenSize 0
+	drawArcLineShape [0 0
+		(combine [[90 0]] :line1 reverse :line1)
+	] :height
+
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://www.carbravo.com
+to carBravoLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "thickness :height * 0.082
+	localmake "wheelRadius :height * 0.13
+	setFillColor "#6BC24A
+	setPenSize 0
+	drawBottomArc :height * 0.1515
+	jumpForward :height * 0.386
+	localmake "carBottom pos
+	rect :height * 0.4 :thickness
+	jumpLeft :height * 0.4
+	setPenColor fillColor
+	setPenSize :thickness
+	setLineCap "butt
+	left 90
+	arcLines [[0.075] [-135 0.142] [-20 0.35] [-5 2] [11 1.5] [-45 0.5] [-40 0.37]
+		[-27 0.5] [-100 0.18]] :height
+
+	jumpTo :carBottom
+	setHeading :oldHeading
+	jumpForward :height * 0.01
+	setFillColor transparent
+	jumpLeft :height * 0.308
+	circle :wheelRadius
+	jumpRight :height * 0.615
+	circle :wheelRadius
+	setTurtleState :oldState
+end
+
+carBravoLogo 100

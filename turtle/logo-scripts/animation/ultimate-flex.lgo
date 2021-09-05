@@ -1,0 +1,317 @@
+; Some people think of a "good flex" as a way of showing off.
+; 
+; This animation takes a "good flex" to the ultimate psychadelic extreme.
+; 6 bicep curls on a headless, hexagonal body is quite the ultimate flex.
+
+make "skinColor1 "#CFB096
+make "skinColor2 mix "black :skinColor1 0.4
+make "shirtColor "white
+
+to bicep :size :angle :elbowPos :oldPos :oldHeading
+	localmake "oldPenColor penColor
+	localmake "size1 :size * 0.07 * (1.6 + cos :angle)
+	localmake "size2 :size * 0.04 * (0.8 + :angle / 180)
+	setPenSize 0
+	jumpTo mix :oldPos :elbowPos 0.5 + :angle / 800
+	setHeading :oldHeading + 90
+	jumpForward :size * 0.05
+	ellipse :size1 :size2
+	setPenSize :size * (max 0.001 0.002 * (0.5 + :angle / 100))
+	setPenColor :skinColor2
+	ellipseArc 90 :size1 :size2 0
+	setPenColor :oldPenColor
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to upperRearMuscle :size :angle
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "arcAngle 30 - :angle * 0.07
+	setPenSize 0
+	left 50
+	polyStart
+	jumpForward :size * 0.07
+	right 50 - :arcAngle * 0.5
+	arcRight :arcAngle :size * (max 0.1 0.45 * ( 0.8 + :angle / 90))
+	polyEnd
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to hand :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	setPenSize 0
+	jumpBackward :size * 1.5
+	localmake "pos1 pos
+	left 90
+	polyStart
+	; draw fingers
+	arcLines [[0.2] [-70 0.1] [-15 8] [-75 0.14] [-10 5] [-75 0.12]
+		[-10 3] [-70 0.1] [-10 3]] :size
+	polyEnd
+	jumpTo :pos1
+	setHeading :oldHeading + 90
+	jumpForward :size * 0.2
+	left 60
+	polyStart
+	; draw thumb
+	arcLines [[8 12] [90 0.12] [-35 0.5] [160 0.07] [23 0.8] [-60 0]
+		[-8 2.2] [-75 0] [-30 2.2]] :size
+	polyEnd
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to foreArm :size :angle
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angle1 169.3 / 2
+	localmake "tinyArcRadius :size * 0.02
+	setPenSize :size * 0.05
+	setLineJoinStyle "round
+	setLineCap "round
+	polyStart
+	forward :size
+	arcRight :angle1 :tinyArcRadius
+	localmake "handPos pos
+	arcRight :angle1 :tinyArcRadius
+	arcRight 7 - :angle / 80 :size * 8
+	if :angle < 90 [
+		arcRight 8 - :angle / 12 :size * 0.5
+	]
+	polyEnd
+	jumpTo :handPos
+	setHeading :oldHeading
+	hand :size * 0.17
+	jumpTo :oldPos
+end
+
+to armSettings :size
+	localmake "angle 110 * sin (animation.time * 60)
+	localmake "size1 :size * 0.45
+	localmake "size2 :size * 0.55
+	localmake "size3 :size * 0.045
+	output [:angle :size1 :size2 :size3]
+end
+
+to muscleArm :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "sizes armSettings :size
+	localmake "angle item 1 :sizes
+	localmake "size1 item 2 :sizes
+	localmake "size2 item 3 :sizes
+	localmake "size1_ :size1 * (1 - :angle / 800)
+	setLineJoinStyle "miter
+	setLineCap "butt
+	setFillColor :skinColor1
+	setPenSize 0
+	circle :size * 0.1 ; shoulder
+	setPenColor :skinColor1
+	setPenSize :size * 0.115
+	forward :size1_
+	setPenSize 0
+	localmake "pos1 pos
+	jumpForward :size1 - :size1_
+	localmake "elbowPos pos
+	setPenSize 0
+	left 90
+	jumpForward item 4 :sizes
+	right :angle + 90
+	localmake "realElbowPos pos
+	foreArm :size2 :angle
+	bicep :size :angle :elbowPos :oldPos :oldHeading
+	upperRearMuscle :size :angle
+	setPenSize 0
+	jumpTo :realElbowPos
+	setHeading :oldHeading - 90
+	jumpForward :size * 0.014
+	setHeading towards :pos1
+	polyStart
+	jumpForward distance :pos1
+	setHeading :oldHeading
+	jumpBackward :size * 0.1
+	setHeading :oldHeading - 90
+	jumpForward :size * 0.0575
+	polyEnd
+	setHeading :oldHeading
+	jumpTo :oldPos
+end
+
+to workoutShirtCircle :radius :numSides
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angle 360 / :numSides
+	localmake "polySideRatio  2 * sin 180 / :numSides
+	localmake "shoulderRadius :radius * 0.175
+	localmake "size1 :shoulderRadius + :radius
+	setPenSize 0
+	setPenColor "black
+	jumpForward :radius
+	localmake "pos1 pos
+	right 90 + 180 / :numSides
+	localmake "heading1 heading
+	setFillColor mix :shirtColor transparent 0.9
+	jumpBackward :shoulderRadius / :polySideRatio
+	left :angle
+	jumpForward :shoulderRadius / :polySideRatio
+	right :angle
+	polyStart
+	repeat :numSides [
+		jumpForward :size1 * :polySideRatio
+		right :angle
+	]
+	polyEnd
+	jumpTo :pos1
+	setFillColor "black
+	repeat :numSides [
+		jumpForward :radius * :polySideRatio
+		circle :shoulderRadius
+		right :angle
+	]
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :size1
+	setHeading :heading1
+	setPenSize :radius * 0.012
+	repeat :numSides [
+		forward :size1 * :polySideRatio
+		right :angle
+	]
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to getHandlePosition :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "settings armSettings :size
+	jumpForward item 2 :settings
+	left 90
+	jumpForward item 4 :settings
+	right 92 + item 1 :settings
+	jumpForward item 3 :settings
+	localmake "result pos
+	jumpTo :oldPos
+	setHeading :oldHeading
+	output :result
+end
+
+to weights :size :shoulderRadius :numSides
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "jointRadius :size * 0.04	
+	setFillColor "white
+	setPenColor "black
+	setPenSize :size * 0.01
+	repeat :numSides [
+		jumpTo :oldPos
+		jumpForward :shoulderRadius
+		localmake "pos1 getHandlePosition :size
+		jumpTo :oldPos
+		
+		forward :size * 2
+		setHeading towards :pos1
+		localmake "result distance :pos1
+		forward :result
+		setHeading :oldHeading + repcount * 360 / :numSides
+	]
+	setPenSize 0
+	setHeading :oldHeading
+	repeat :numSides [
+		jumpTo :oldPos
+		forward :size * 2
+		circle :jointRadius
+		setHeading :oldHeading + repcount * 360 / :numSides
+	]
+	jumpTo :oldPos
+	setHeading :oldHeading - 180 / :numSides
+	setPenSize :size * 0.02
+	weightsBelow :size * 2 :size - :result
+	setPenSize 0
+	setHeading :oldHeading
+end
+
+to weightsOverlay :size :shoulderRadius :numSides
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "jointRadius :size * 0.03	
+	setPenSize 0
+	setFillColor "black
+	repeat :numSides [
+		jumpTo :oldPos
+		jumpForward :shoulderRadius
+		jumpTo getHandlePosition :size
+		circle :jointRadius
+		setHeading :oldHeading + repcount * 360 / :numSides
+	]
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to weightsBelow :size :extraSlack
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "size1 :size * 0.2
+	localmake "numWeights 3
+	backward :size + :extraSlack
+	setPenSize :size * 0.04
+	repeat :numWeights [
+		setHeading :oldHeading + 90
+		jumpBackward :size1
+		forward :size1 * 2
+		jumpBackward :size1
+		setHeading :oldHeading
+		jumpForward penSize * 1.2
+	]
+	setTurtleState :oldState
+end
+
+to backgroundGradient :size
+	localmake "colorStops createPList2 [
+		[0 "#4000] [1 transparent]
+	]
+	setFillGradient createRadialGradient pos :size :colorStops
+	setPenSize 0
+	circle :size
+end
+
+to ultimateFlex :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "numSides 6
+	localmake "size1 :size * 0.6
+	backgroundGradient :size * 2
+	right 180 / :numSides
+	weights :size :size1 :numSides
+	workoutShirtCircle :size1 :numSides
+	setPenSize 0
+	repeat :numSides [
+		jumpTo :oldPos
+		jumpForward :size1
+		muscleArm :size
+		right 360 / :numSides
+	]
+	jumpTo :oldPos
+	weightsOverlay :size :size1 :numSides
+	setHeading :oldHeading
+end
+
+jumpForward 40
+setScreenColor "#007180
+ultimateFlex 110
+
+to animation.snapshotstyle
+	output createPList2 []
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 3
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

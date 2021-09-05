@@ -1,0 +1,45 @@
+; Inspired by logo at:
+; https://limewire.com/
+to limewireLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "outerLine [
+		[90 0] [12.4 0.5] [20 0.06] [60 0.05] [19 0.06] [0.15]
+		[68.6 0] [0.0909825]
+	]
+	localmake "innerLine [
+		[-50 0.02] [-18.5 0] [0.22] [-111.5 0] [0.095951]
+	]
+	localmake "middleLine [
+		[19 0.21] [-87.55 0] [0.134] [-91 0] [-20.45 0.335933]
+	]
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	setFillColor "#00934b
+	repeat 8 [
+		drawArcLineShape [0 0.5
+			combine :outerLine reverse :outerLine
+		] :height
+		right 360 / 8
+	]
+	setFillColor "#bef000
+	repeat 8 [
+		drawArcLineShape [0 0.078
+			pathMirror :innerLine
+		] :height
+		right 360 / 8
+	]
+	setFillColor "#22d511
+	repeat 8 [
+		setHeading :oldHeading + 360 * repcount / 8
+		drawArcLineShape [0 0.2318
+			pathMirror :middleLine
+		] :height
+		jumpTo :center
+	]
+	
+	setTurtleState :oldState
+end
+
+limewireLogo 100

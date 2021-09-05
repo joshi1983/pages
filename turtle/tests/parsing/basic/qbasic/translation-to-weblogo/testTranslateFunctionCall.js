@@ -1,0 +1,42 @@
+import { testInOutPairs } from
+'../../../../helpers/testInOutPairs.js';
+import { translateQBASICToWebLogo } from
+'../../../../../modules/parsing/basic/qbasic/translation-to-weblogo/translateQBASICToWebLogo.js';
+
+export function testTranslateFunctionCall(logger) {
+	const cases = [
+		{
+			'in': 'print "hi"',
+			'out': 'print "hi'
+		},
+		{
+			'in': '?"hi"',
+			'out': 'print "hi'
+		},
+		{
+			'in': 'F(T)',
+			'out': 'f :T'
+		},
+		{
+			'in': 'IF F(T)<3 THEN print "hi"',
+			'out': 'if ( f :T ) < 3 [\n\tprint "hi\n]'
+		},
+		{
+			'in': `p(0) = 1
+print p(0)`,
+			'out': `setItem 1 "p 1
+print item 1 :p`
+			// p isn't a function in this QBASIC code
+			// so it shouldn't be translated as one.
+		},
+		{
+			'in': 'Line -(x, y), _HSB32(hue, 100, 100)',
+			'outContains': `qbLineFromHere [ :x :y ] qb_HSB32_toList :hue 100 100`
+		},
+		{
+			'in': 'print _HYPOT(x, y)',
+			'out': 'print hypot [ :x :y ]'
+		}
+	];
+	testInOutPairs(cases, translateQBASICToWebLogo, logger);
+};

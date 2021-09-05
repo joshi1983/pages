@@ -1,0 +1,96 @@
+; Inspired by the logo at:
+; https://upload.wikimedia.org/wikipedia/commons/2/21/Flag_of_Vietnam.svg
+; Referenced from:
+; https://en.wikipedia.org/wiki/Vietnam
+to vietnamFlag :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "width :height * 3/2
+	jumpForward :height / 2
+	right 90
+	setPenSize :height
+	setPenColor "#da251d
+	jumpBackward :width / 2
+	setLineCap "butt
+	forward :width
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height / 2
+	setFillColor "yellow
+	setPenSize 0
+	regularStar :height * 0.3 5
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_South_Vietnam#/media/File:Flag_of_North_Vietnam_(1945%E2%80%931955).svg
+to northVietnamFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 3 / 2
+	stripes :width :height ["#da251d]
+	jumpForward :height / 2
+	setPenSize 0
+	setFillColor "yellow
+	isotoxalStar :height * 0.3 :height * 0.15 5
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_South_Vietnam#/media/File:Flag_of_South_Vietnam.svg
+to southVietnamFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 3 / 2
+	localmake "redStripeThickness :height * 2 / 30
+	stripes :width :height ["yellow]
+	jumpForward :height / 2 - 2.5 * :redStripeThickness
+	setLineCap "butt
+	setPenSize :width
+	setPenColor "#da251d
+	repeat 3 [
+		forward :redStripeThickness
+		jumpForward :redStripeThickness
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_South_Vietnam#/media/File:Flag_of_the_Empire_of_Vietnam_(1945).svg
+to empireOfVietnamFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 3 / 2
+	localmake "redStripeThickness :height / 8
+	localmake "redStripeWidth :height
+	localmake "separation :redStripeThickness + :height / 16
+	stripes :width :height ["yellow]
+	jumpForward (:height - :separation) / 2 - :redStripeThickness * 5 / 4
+	repeat 3 [
+		stripes :redStripeWidth :redStripeThickness ["#d20a0a]
+		jumpForward :separation
+	]
+	jumpBackward :separation * 2.25
+	stripes :redStripeThickness :redStripeThickness * 1.5 ["yellow]
+
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_South_Vietnam#/media/File:Long_tinh_flag.svg
+to longTinhFlag :height
+	localmake "width :height * 3 / 2
+	stripes :width :height ["yellow "#dc1e1e "#dc1e1e "yellow]
+end
+
+setScreenColor "black
+make "height 100
+make "separation :height * 3
+jumpLeft :separation * 2
+vietnamFlag :height
+jumpRight :separation
+northVietnamFlag :height
+jumpRight :separation
+southVietnamFlag :height
+jumpRight :separation
+empireOfVietnamFlag :height
+jumpRight :separation
+longTinhFlag :height

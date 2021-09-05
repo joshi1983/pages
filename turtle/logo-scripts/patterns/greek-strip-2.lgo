@@ -1,0 +1,34 @@
+; Draws a very common pattern used in Greek-themed material
+; I think it is reasonable to consider the pattern to be public domain.
+; I'm not adding anymore copyright restrictions to this code so
+; this code is released to the public domain too.
+to drawPieces :size :numPieces
+	localmake "oldState turtleState
+	localmake "unitSize :size / 5
+	setPenSize :unitSize
+	setLineCap "butt
+	setLineJoinStyle "miter
+	forward :unitSize / 2
+	repeat :numPieces [
+		repeat 2 [
+			forward 4 * :unitSize
+			right 90
+		]
+		forward 2 * :unitSize
+		right 90
+		repeat 2 [
+			forward 2 * :unitSize
+			left 90
+		]
+		ifelse repcount = :numPieces [
+			forward 2.5 * :unitSize
+		] [
+			forward 4 * :unitSize
+		]
+		left 90
+	]
+	setTurtleState :oldState
+end
+
+jumpLeft 700
+drawPieces 100 12

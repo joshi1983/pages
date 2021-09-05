@@ -1,0 +1,32 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Peace_symbols#/media/File:Peace_symbol_(bold).svg
+to peaceSymbol :height
+	localmake "oldState turtleState
+
+	; height is the outer diameter so radius is :height / 2.
+	localmake "radius :height / 2
+
+	; Set thickness of the lines.
+	setPenSize :radius * 0.2
+	localmake "radius1 :radius - penSize / 2
+	jumpForward :radius
+	localmake "center pos
+	circle :radius1
+	jumpBackward :radius1
+	forward :radius1 * 2
+	jumpTo :center
+	right 135
+	forward :radius1
+	jumpTo :center
+	right 90
+	forward :radius1
+
+	; Restore original state of the turtle
+	; Move turtle back to where it was,
+	; its original heading, pen size...
+	; because we wanted to draw the peace symbol.
+	; We didn't want these changes to be side effects of drawing the symbol.
+	setTurtleState :oldState
+end
+
+peaceSymbol 100

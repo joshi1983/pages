@@ -1,0 +1,37 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/People%27s_Liberation_Army#/media/File:China_Emblem_PLA.svg
+to chinaPLAEmblem :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "thickness :height * 0.0418
+	localmake "outerRadius :height / (1 + cos 36)
+	localmake "starRadius :outerRadius - :thickness / 2 / sin 36 / 2
+	localmake "shapes [
+		[0.106 0.3577 [[43 0] [0.0355] [89.3 0] [0.033] [-42.3 0] [0.16]
+		[108 0] [0.015] [32 0.03] [40 0] [0.1614]]]
+
+		[0.0887 0.4064 [
+			[-42.1 0] [0.0465] [86 0] [3.5 0.4] [0.022] [-48 0.055]
+			[0.006] [-47 0] [0.0193] [95 0] [0.047] [80 0] [0.0354] [-37.4 0]
+			[0.11] [96 0] [16 0.1155] [68 0] [0.117] [-86 0] [29.5 0.14] [4 0.3]
+		]]
+
+		[-0.026 0.494 [
+			[90 0] [0.0445] [82.4 0] [-22 0.14] [-5 0.5] [132 0] [43 0.1] [20 0.08]
+			[10 0.15]
+		]]
+	]
+	setFillColor "#EE1C25
+	setPenColor "yellow
+	setLineJoinStyle "miter
+	setPenSize :thickness
+	jumpForward :height - :outerRadius
+	regularStar :starRadius 5
+	setPenSize 0
+	setFillColor penColor
+	jumpTo :oldPos
+	drawArcLineShapes :shapes :height
+	setTurtleState :oldState
+end
+
+chinaPLAEmblem 100

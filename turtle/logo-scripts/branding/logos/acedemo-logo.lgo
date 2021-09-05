@@ -1,0 +1,62 @@
+; Inspired by logo at:
+; https://academo.org
+to acedemoLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "arcRadiusRatio 0.147
+	localmake "len1Ratio 0.38006227
+	localmake "angle 21.1
+	localmake "bottomArcs [
+		[90 0] [-:angle :arcRadiusRatio] [:len1Ratio] [-90 0]
+		[0.6435] [-129 0] [0.6076] [-119.9 :arcRadiusRatio]
+	]
+	localmake "colorStops createPList2 [
+		[0 "#0c47d0] [1 "#0933b5]
+	]
+	localmake "separation :height * 0.815
+	localmake "colors ["#00ffa5 "#0f5be4]
+	localmake "len :height * :arcRadiusRatio * 2 * sin :angle / 2
+	localmake "midBottomGap (:len1Ratio * :height * sin :angle) +
+		:len * sin :angle / 2
+	localmake "arcs [[90 0] [59.824 :arcRadiusRatio] [0.23] [70 0.37]
+		[25.4898223 0.590799] [24.68617775 0]]
+	jumpLeft :separation / 2
+	setPenSize 0
+	repeat 2 [
+		setFillColor item repcount :colors
+		localmake "sign sign repcount - 1.5
+		localmake "pos1 pos
+		polyStart
+		arcLines :bottomArcs :sign * :height
+		polyEnd
+		setHeading :oldHeading
+		jumpTo :pos1
+		jumpRight :separation
+	]
+	jumpTo :oldPos
+	jumpForward :midBottomGap
+	localmake "startPos pos
+	right 60
+	jumpForward :height * 0.6
+	setFillGradient createLinearGradient :startPos pos :colorStops "pad
+	jumpTo :startPos
+	setHeading :oldHeading + :angle
+	polyStart
+	jumpRight :height * 0.17
+	arcLines [[-24 0] [25 0.58] [25 0.4] [22 0.7]
+	] :height
+	polyEnd
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height
+	setFillColor "#07b3c2
+	polyStart
+	arcLines :arcs :height
+	arcLines reverse :arcs :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+acedemoLogo 100

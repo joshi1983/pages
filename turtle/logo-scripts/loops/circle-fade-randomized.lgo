@@ -1,0 +1,53 @@
+; Inspired by
+; https://www.pinterest.ca/pin/3729612228703169/
+make "dotColor "#ff3f86
+
+to circleFadeWithDots :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "radius :height / 4
+	localmake "diameter :radius * 2
+	localmake "yRange :height - :diameter
+	localmake "numDots 15000
+	setPenSize 0
+	setFillColor :dotColor
+	repeat :numDots [
+		forever [
+			localmake "x (randomRatio - 0.5) * :diameter
+			localmake "y (randomRatio - 0.5) * :diameter
+			if :radius >= hypot [:x :y] [
+				break
+			]
+		]
+		jumpRight :x
+		jumpForward :y + :radius + (1 - power randomRatio 2) * :yRange
+		circle 0.3
+		jumpTo :oldPos
+	]
+	setTurtleState :oldState	
+end
+
+to circleFade :height
+	localmake "oldState turtleState
+	localmake "radius :height / 4
+	localmake "diameter :radius * 2
+	localmake "yRange :height - :diameter
+	localmake "numCircles 50
+	localmake "step :yRange / :numCircles
+	jumpForward :radius
+	setPenSize 0
+	repeat :numCircles [
+		setFillColor mix :dotColor transparent 0.08 * repcount / :numCircles
+		circle :radius
+		jumpForward :step
+	]
+	setTurtleState :oldState	
+end
+
+setScreenColor "black
+make "height 100
+make "separation :height * 5
+jumpLeft :separation / 2
+circleFadeWithDots :height
+jumpRight :separation
+circleFade :height

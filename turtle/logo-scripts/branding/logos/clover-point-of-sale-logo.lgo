@@ -1,0 +1,27 @@
+; Inspired by logo at:
+; https://www.clover.com
+to cloverPointOfSaleLogo :height
+	localmake "oldState turtleState
+	localmake "startOffset1 0.064
+	localmake "thicknessFactor 0.065
+	localmake "leafScale :height *
+		(0.5 - :startOffset1 - :thicknessFactor / 2) / 2
+	localmake "startOffset2 :startOffset1 * :height / :leafScale
+	localmake "leafShape [-:startOffset2 :startOffset2
+		[[1] [270 1]]
+	]
+	setLineJoinStyle "miter
+	setPenColor "#228800
+	setPenSize :height * :thicknessFactor
+	jumpForward :height / 2
+	setFillColor penColor
+	repeat 3 [
+		drawArcLineShape :leafShape :leafScale
+		right 90
+	]
+	setFillColor transparent
+	drawArcLineShape :leafShape :leafScale
+	setTurtleState :oldState
+end
+
+cloverPointOfSaleLogo 100

@@ -1,0 +1,47 @@
+; Inspired by logo at:
+; https://campark.com
+to camparkLogo :height
+	localmake "oldState turtleState
+	localmake "yellowPath [
+		[-46 0] [0.29] [119 0] [0.28] [-93 0]
+		[0.31] [116 0] [0.265] [-95 0] [0.32]
+		[130 0] [0.28] [-107 0] [0.33] [133 0]
+		[0.33] [-109 0] [0.29] [132 0] [0.875]
+	]
+	localmake "barnRoofLine1 [
+		[90 0] [0.73] [-116.5 0] [0.65] [-31 0] [0.521669]
+		[-32.5 0]
+	]
+	localmake "windowSeparation :height * 0.073
+	localmake "barnRoofLine2 combine :barnRoofLine1 reverse :barnRoofLine1
+	localmake "borderColor "#ffffc8
+	setFillColor "#fbde06
+	setPenColor :borderColor
+	setPenSize :height * 0.015
+	jumpForward penSize / 2
+	drawArcLineShape [0.928 0
+		:yellowPath
+	] :height
+	setFillColor "#d82027
+	jumpLeft :height * 0.41
+	drawArcLineShape [0 0
+		:barnRoofLine2
+	] :height
+	jumpForward :height * 0.488
+	localmake "windowCenter pos
+	setPenSize 0
+	setFillColor "white
+	repeat 2 [
+		jumpForward :height * 0.059
+		jumpLeft :windowSeparation / 2
+		repeat 2 [
+			rect :height * 0.058 :height * 0.085
+			jumpRight :windowSeparation
+		]
+		jumpTo :windowCenter
+		right 180
+	]
+	setTurtleState :oldState
+end
+
+camparkLogo 100

@@ -1,0 +1,39 @@
+// Copied from
+// https://www.f-lohmueller.de/pov_tut/x_sam/sam_110e.htm
+
+// the dimensions of the house:
+#declare Hx = 2.00; // half width in x
+#declare Hy = 3.50; // total height
+#declare Hz = 4.00; // length in z
+#declare Roof_Angle = 38; // Dachwinkel
+#declare Wall_D = 0.20; // thickness
+//-------------------------------------
+
+// The house shape
+// with the gable cut out
+
+difference{ //-------------------------
+box{ <-Hx,0,0>,< Hx,Hy,Hz>
+     texture{ pigment{color rgb<1,1,1>}
+              finish {diffuse 0.9}
+            } // end of texture
+   } // end of box --------------------
+
+plane{<0,-1,0>,0
+     texture{ pigment{color rgb<1,1,1>}
+              finish {diffuse 0.9}
+            } // end of texture
+     rotate<0,0,Roof_Angle>
+     translate<0,Hy,0>
+    }// end of plane ------------------
+
+plane{<0,-1,0>,0
+     texture{ pigment{color rgb<1,1,1>}
+              finish {diffuse 0.9}
+            } // end of texture
+     rotate<0,0,-Roof_Angle>
+     translate<0,Hy,0>
+    }// end of plane ------------------
+
+}// end of difference -----------------
+//--------------------------------- end

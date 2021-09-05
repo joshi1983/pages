@@ -1,0 +1,38 @@
+; Inspired by:
+; https://en.wikipedia.org/wiki/WebGPU#/media/File:WebGPU_logo.svg
+to webGPULogo :height
+	localmake "oldState turtleState
+	localmake "size1 :height / cos 30
+	localmake "size2 :height * 3 / 4 / cos 30
+	localmake "size3 :size2 * 2 / 3
+	jumpRight :size1 / 4
+	left 60
+	jumpRight :size2 / 2
+	setPenSize 0
+	setFillColor "#0093ff
+	; This whole drawing would look almost right with 
+	; triangles instead of parallelograms.
+	; Parallelograms are used to overlap shapes, though.
+	; We don't want subtle artifacts where background pixels come through
+	; on the fringes between shapes.
+
+	parallelogram :size2 :size2 / 3 30
+	setFillColor "#0086e8
+	isoTriangle :size2 :size2 * sin 60
+	setFillColor "#0076cc
+	jumpLeft (:size2 - :size3) / 2
+	isoTriangle :size3 :size3 * sin 60
+	jumpRight :size3 / 2
+	right 60
+	jumpLeft :size3 / 2
+	setFillColor "#0066b0
+	jumpForward :size3 * sin 60
+	left 180
+	jumpRight :size1 / 2
+	parallelogram :size1 :size3 -30
+	setFillColor "#005a9c
+	isoTriangle :size1 :height	
+	setTurtleState :oldState
+end
+
+webGPULogo 100

@@ -1,0 +1,58 @@
+; Inspired by logo at:
+; https://www.mysmartprice.com
+to mySmartPriceLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "eyebrowArcs [[-35 0] [-35 0.47] [-9 0.2] [0.275] [-95 0]
+			[-30 0.05] [-30 0.18] [-20 0.05] [0.19] [57 0.3] [0.14]
+			[-73 0.019216325]]
+	localmake "eyebrowShape [0 0.1
+		combine :eyebrowArcs reverse :eyebrowArcs
+	]
+	localmake "eyeShape [0.15 -0.05 
+		[[-90 0.11] [0.04] [-68 0] [-85 0.1] [-32.55 0.05] [-20 0.22]]
+	]
+	localmake "angle 120
+	localmake "angle1 45
+	localmake "angle2 122
+	jumpForward :height / 2
+	localmake "center pos
+	setPenColor "#0075bd
+	setPenSize :height * 0.105
+	localmake "innerRadius :height / 2 - penSize
+	setFillColor transparent
+	left :angle
+	localmake "arcRadius (:height - penSize) / 2
+	arc :angle * 2 :arcRadius
+	setHeading :oldHeading
+	jumpForward :height / 2
+	setPenSize 0
+	setFillColor penColor
+	right 90
+	polyStart
+	arcRight :angle1 :height / 2
+	right :angle2
+	localmake "len1 distanceToCircle :center :innerRadius
+	jumpForward :len1
+	localmake "newHeading (towards :center) + 90
+	localmake "angle3 heading - :newHeading
+	setHeading :newHeading
+	localmake "innerArcAngle getArcLeftAngleToLine :innerRadius :oldPos :center
+	arcLeft  :innerArcAngle * 2 :innerRadius
+	left :angle3
+	jumpForward :len1
+	right :angle2
+	arcRight :angle1 :height / 2
+	polyEnd
+
+	setFillColor "#0d426c
+	jumpTo :center
+	setHeading :oldHeading
+	drawArcLineShape :eyebrowShape :height
+	drawArcLineShape :eyeShape :height
+	drawArcLineShape :eyeShape -:height
+	setTurtleState :oldState
+end
+
+mySmartPriceLogo 100

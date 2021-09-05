@@ -1,0 +1,96 @@
+make "flagRed "#ee1c25
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_China#/media/File:Flag_of_the_People's_Republic_of_China.svg
+to chinaFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 3 / 2
+	localmake "bigStarSize :height * 0.15
+	localmake "smallStarSize :bigStarSize / 3
+	localmake "smallStarArcRadius :width * 0.126
+	stripes :width :height [:flagRed]
+	jumpForward :height * 0.75
+	jumpLeft :width / 3
+	setPenSize 0
+	localmake "bigStarPosition pos
+	setFillColor "#FF0
+	regularStar :bigStarSize 5
+	right 180 + 18
+	jumpLeft :width * 0.12
+	jumpBackward :width * 0.022
+	left 177
+	repeat 4 [
+		jumpForward :smallStarArcRadius
+		localmake "tempHeading heading
+		setHeading towards :bigStarPosition
+		regularStar :smallStarSize 5
+		setHeading :tempHeading
+		jumpBackward :smallStarArcRadius
+		right 45.7
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/File:Flag_of_the_People%27s_Liberation_Army.svg
+to chinaWarFlag :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "width :height * 5 / 4
+	localmake "dashAngle 36.87
+	localmake "dashLen1 0.09375
+	localmake "dashesInfo [
+		[:dashLen1 :dashAngle 0.09675]
+		[:dashLen1 -:dashAngle 0.1188]
+		[0.125 90 0]
+	]
+	stripes :width :height [:flagRed]
+	jumpForward :height * 3 / 4
+	jumpLeft :height * 7 / 16
+	setFillColor "yellow
+	setPenSize 0
+	regularStar :height / 8 5
+	jumpRight :height * 0.159508
+	jumpBackward :height * 0.078125
+	setLineCap "butt
+	setPenColor fillColor
+	setPenSize :height / 32
+	repeat count :dashesInfo [
+		localmake "dashInfo item repcount :dashesInfo
+		localmake "len :height * first :dashInfo
+		setHeading :oldHeading + item 2 :dashInfo
+		jumpBackward :len / 2
+		forward :len
+		jumpBackward :len / 2 ; restore original position.
+		setHeading :oldHeading
+		jumpRight :height * last :dashInfo
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/List_of_Chinese_flags#/media/File:Flag_of_the_Communist_Youth_League_of_China.svg
+to communistYouthLeagueOfChinaFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 3 / 2
+	stripes :width :height [:flagRed]
+	jumpForward :height * 3 / 4
+	jumpLeft :height * 3 / 8
+	setPenSize :height / 24
+	setPenColor "yellow
+	circle :height * 7 / 48
+	setPenSize 0
+	setFillColor penColor
+	regularStar :height / 8 5
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+make "height 100
+make "separation :height * 4
+jumpLeft :separation
+chinaFlag :height
+jumpRight :separation
+chinaWarFlag :height
+jumpRight :separation
+communistYouthLeagueOfChinaFlag :height

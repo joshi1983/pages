@@ -1,0 +1,131 @@
+make "angle1 151.72438
+make "angle2 :angle1 - 90
+
+to drawSticks :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "offsetX :height * 0.3244
+	localmake "arcRadius1 :height * 0.12
+	localmake "arcRadius2 :height * 0.056
+	localmake "arcRadius3 :height * 0.064
+	localmake "chordLength1 :arcRadius1 * 2 * sin :angle2 / 2
+	localmake "chordLength2 :arcRadius2 * 2 * sin :angle2 / 2
+	localmake "chordLength3 :arcRadius3 * 2 * sin :angle2 / 2
+	localmake "arc1Len :chordLength1 / :height * (sin :angle2 / 2) / (sin :angle2)
+	localmake "arc2Len :chordLength2 / :height * (sin :angle2 / 2) / (sin :angle2)
+	localmake "arc3Len :chordLength3 / :height * (sin :angle2 / 2) / (sin :angle2)
+	localmake "stickLen1Ratio 1 / (sin :angle2) - :arc1Len
+	localmake "stickLen2Ratio 0.14581
+	localmake "stickLen3Ratio :stickLen1Ratio - :stickLen2Ratio + :arc1Len - :arc3Len - :arc2Len
+	localmake "stickLen4Ratio 0.504
+	localmake "stickLen5Ratio 0.2132
+	localmake "stickLen6Ratio 0.285
+	localmake "gap1 :height * 0.755
+	jumpForward :height
+	localmake "top pos
+	jumpLeft :offsetX
+	localmake "startPos pos
+	right :angle1
+	polyStart
+	jumpForward :height * :stickLen1Ratio
+	arcLeft :angle2 :arcRadius1
+	jumpForward :stickLen5Ratio * :height
+	left :angle2
+	jumpForward :stickLen2Ratio * :height
+	left 180 - :angle2
+	jumpForward :stickLen6Ratio * :height
+	arcRight :angle2 :arcRadius2
+	jumpForward :stickLen3Ratio * :height
+	arcLeft :angle2 :arcRadius3
+	localmake "size1 distance :startPos
+	localmake "len1 :size1 + :chordLength3 * (sin :angle2 / 2)
+	localmake "stickLen7 :len1 / (2 * cos :angle2)
+	polyEnd
+	jumpTo :top
+	setHeading :oldHeading
+	jumpRight :offsetX
+	localmake "startPos pos
+	left :angle1
+	polyStart
+	jumpForward :height * :stickLen4Ratio
+	right 180 + :angle1 * 2
+	jumpForward :stickLen7
+	right 180 - (180 + :angle1 * 2)
+	localmake "size2 (distanceToLine :top :startPos) - :arc3Len * :height
+	jumpForward :size2
+	arcRight :angle2 :arcRadius3
+	polyEnd
+
+	jumpTo :startPos
+	setHeading :oldHeading - :angle1
+	jumpForward :gap1
+	localmake "pos1 pos
+	right :angle2 * 2
+	jumpForward 5
+	localmake "pos2 pos
+	jumpTo :pos1
+	setHeading :oldHeading - :angle1
+	polyStart
+	jumpForward :height * :stickLen1Ratio - :gap1
+	arcRight :angle2 :arcRadius1
+	jumpForward :stickLen5Ratio * :height
+	right :angle2
+	jumpForward :stickLen2Ratio * :height
+	right 180 - :angle2
+	jumpForward :stickLen6Ratio * :height
+	arcLeft :angle2 :arcRadius2
+	jumpForward distanceToLine :pos1 :pos2
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by logo at
+; https://www.thepwhl.com
+to pwhlLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "oldPos pos
+	localmake "angle3 360 - :angle1 * 2
+	localmake "arcRadius1 :height * 0.033
+	localmake "arcRadius2 :height * 0.0785
+	localmake "size1 :height * 0.8147815
+	localmake "size2 :height * 0.9197
+	localmake "size3 :height * 0.0621
+	localmake "size4 :height * 0.20226
+	localmake "puckWidth :height * 0.1683
+	localmake "puckHeight :height * 0.081
+	localmake "puckCornerRadius :height * 0.017
+	localmake "chordLength :arcRadius2 * 2 * sin :angle2 / 2
+	localmake "cornerGap1 :chordLength * sin (:angle2 / 2)
+	localmake "cornerGap2 -:cornerGap1 / cos :angle1
+	setFillColor "white
+	setPenSize 0
+	drawSticks :height
+	jumpForward :puckHeight / 2
+	roundRect :puckWidth :puckHeight :puckCornerRadius
+	jumpTo :oldPos
+	jumpForward :height
+	localmake "topMiddle pos
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		setHeading :oldHeading + (repcount + 0.5) * 180
+		jumpForward :size1
+		localmake "topRight pos
+		left (90 + :angle1) * :sign
+		polyStart
+		jumpForward :size2
+		right :angle2 * :sign
+		jumpForward :size3
+		arcLeft :angle2 * -:sign :arcRadius1
+		jumpForward :size4
+		right :angle3 * :sign
+		jumpForward (distanceToLine :topRight :topMiddle) - :cornerGap2
+		arcLeft :angle2 * -:sign :arcRadius2
+		polyEnd
+		jumpTo :topMiddle
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+pwhlLogo 100

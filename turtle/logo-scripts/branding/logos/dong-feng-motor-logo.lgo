@@ -1,0 +1,43 @@
+; Inspired by logo at:
+; https://en.wikipedia.org/wiki/Dongfeng_Motor_Corporation#/media/File:Dongfeng_Motor_logo.svg
+to dongFengLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "startY 0.3415
+	localmake "startAngle 47.1
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize :height * 0.06
+	localmake "height1 :height - penSize * 2
+	localmake "innerRadius :height1 / 2
+	localmake "arcRadius :height1 * abs :startY / sin :startAngle
+	localmake "arcRadius2 :height1 * 0.47
+	setPenColor "#e60021
+	setFillColor transparent
+	circle (:height - penSize) / 2
+	setPenSize 0
+	setFillColor penColor
+	repeat 2 [
+		setHeading :oldHeading + (repcount - 1) * 180
+		jumpBackward :height1 * :startY
+		localmake "startPos pos
+		right :startAngle
+		localmake "arcAngle1 getArcLeftAngleToCircle :arcRadius :center :innerRadius
+		polyStart
+		arcLeft :arcAngle1 :arcRadius
+		arcLines [[-158.8 0]
+			[-98.8 0.458] [132.5 0]] :height1
+		localmake "arcAngle1 getArcLeftAngleToCircle :arcRadius2 :center :innerRadius
+		arcLeft :arcAngle1 :arcRadius2
+		localmake "d distance :startPos
+		localmake "arcAngle 102
+		setHeading (towards :startPos) - :arcAngle / 2
+		localmake "lastArcRadius :d / 2 / sin :arcAngle / 2
+		arcRight :arcAngle :lastArcRadius
+		polyEnd
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+dongFengLogo 100

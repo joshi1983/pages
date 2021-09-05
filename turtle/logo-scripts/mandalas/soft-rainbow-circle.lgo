@@ -1,0 +1,30 @@
+; Inspired by image at:
+; https://ca.pinterest.com/pin/211174960663335
+to softRainbowCircle :height
+	localmake "oldState turtleState
+	localmake "colors1 ["red "yellow "green "blue]
+	localmake "colors []
+	localmake "offset :height * 0.02
+	localmake "numAngles 4 * 17.5
+	repeat 4 [
+		localmake "colors combine :colors :colors1
+	]
+
+	setPenSize 0
+	jumpForward :height / 2
+	localmake "center pos
+	setFillBlendMode "darken
+	right 180 / :numAngles
+	repeat :numAngles [
+		setFillColor mix mixItems :colors repRatio transparent 0.15
+		jumpForward :offset
+		arcPair :height / 2 - :offset 90
+		jumpTo :center
+		right 360 / :numAngles
+	]
+
+	setTurtleState :oldState
+end
+
+setScreenColor "#f4e5ce
+softRainbowCircle 100

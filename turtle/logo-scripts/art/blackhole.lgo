@@ -1,0 +1,104 @@
+; Simulations of how light behaves around blackholes can
+; produce more accurate images of blackholes but
+; this code draws it based on a simpler approach to roughly resemble what
+; someone's drawing or painting looks like.
+;
+; If you want to learn more about how real black hole observations have been done,
+; check the Event Horizon Telescope:
+; https://en.wikipedia.org/wiki/Event_Horizon_Telescope
+; They used lots more computation too but based on data collected from telescopes
+; aimed at real blackholes.
+
+to drawOuterLines :height :lowerBrightRadius2 :innerColors
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "center pos
+	jumpForward :height
+	localmake "middlePos2 pos
+	jumpTo :center
+	localmake "outerColors combine :innerColors :innerColors
+	localmake "maxRadius :height - :lowerBrightRadius2
+	setPenSize (:maxRadius - :lowerBrightRadius2) / 2 / count :outerColors
+	localmake "maxRadius :maxRadius - penSize / 3
+	repeat count :outerColors [
+		setHeading :oldHeading
+		localmake "scale mix :lowerBrightRadius2 :maxRadius repRatio
+		setPenColor item repcount :outerColors
+		localmake "angle2 10
+		localmake "radius1 :scale * mix 0.17 0.3 repRatio
+		localmake "angle3 (mix 78.380826 74.13 repRatio)
+		localmake "extraAngle mix 2 3 repRatio
+		localmake "angle1 58 + :extraAngle
+		localmake "remainingAngle 90 + :angle1 + :angle2 - :angle3
+		localmake "arcAngle 90 - :remainingAngle
+		localmake "tinyArcRadius :scale *0.04
+		localmake "arcInfo1 [[:angle3 1] [-:angle1 :radius1 / :scale]
+			[-:angle2 0.5] [0.1] [:remainingAngle :tinyArcRadius / :scale]
+		]
+	
+		jumpForward :scale
+		left 90
+		polyStart
+		arcLines :arcInfo1 :scale
+		localmake "distance (distance :center) - :tinyArcRadius * (1 - cos :remainingAngle)
+		localmake "arcRadius :distance / 2 / sin :arcAngle / 2
+		localmake "largeArcAngle :arcAngle * 0.9
+		localmake "arcsInfo [[:remainingAngle 1]
+			[:largeArcAngle :arcRadius / :tinyArcRadius]
+			]
+		arcLines :arcsInfo :tinyArcRadius
+
+		; correct for the little errors that could happen above.
+		localmake "newHeading :oldHeading + 90
+		localmake "delta heading - :newHeading
+		setHeading :newHeading
+		localmake "d distanceToLine :center :middlePos2
+		forward :d * 2
+		left :delta
+
+		; Draw the symmetrical opposite side.
+		arcLines reverse :arcsInfo :tinyArcRadius
+		arcLines reverse :arcInfo1 :scale
+		polyEnd
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://www.pinterest.ca/pin/875457615056229902/
+to drawBlackhole :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "radius :height * 0.2
+	localmake "lowerBrightRadius :height * 0.355
+	localmake "innerColors ["#f80 "red "#ff0 "#f86 "#fe0 "white
+	"#f80 "#ff0 "#f86 "#fe0 "white]
+	localmake "blackEllipseRadiusX :radius * 1.35
+	localmake "blackEllipseRadiusY :radius * 0.15
+	setPenSize (:lowerBrightRadius - :radius) / 1.7 / count :innerColors
+	jumpForward :lowerBrightRadius + penSize / 2
+	localmake "lowerBrightRadius2 :lowerBrightRadius + penSize
+	localmake "maxRadius :height - :lowerBrightRadius2
+	setFillColor transparent
+	repeat count :innerColors [
+		localmake "radius1 mix :lowerBrightRadius :radius repRatio
+		setPenColor item repcount :innerColors
+		circle :radius1
+	]
+	setFillColor "black
+	setPenSize 0
+	circle :radius
+	ellipse :blackEllipseRadiusX :blackEllipseRadiusY
+	setFillColor "#8000
+	ellipse :blackEllipseRadiusX * 1.5 :blackEllipseRadiusY * 1.5
+	setHeading :oldHeading
+	drawOuterLines :height :lowerBrightRadius2 :innerColors
+	localmake "scaleFactor :lowerBrightRadius / :maxRadius
+	drawOuterLines :height * :scaleFactor :lowerBrightRadius2 * :scaleFactor :innerColors
+
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+drawBlackhole 100

@@ -1,0 +1,24 @@
+; Inspired by logo at:
+;https://www.matteralpha.com
+to matterAlphaLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "lines1 [
+		[90 0] [-52 0.35] [-98 0] [-18 0.55]
+		[-99 0] [-7 0.7] [71 0] [23 0.296626]
+	]
+	jumpForward :height / 2
+	setFillColor "white
+	setPenSize 0
+	circle :height * 0.2
+	repeat 4 [
+		setHeading :oldHeading + 45 + repcount * 360 / 4
+		drawArcLineShape [0 0.3
+			combine :lines1 reverse :lines1
+		] :height
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "#046c4e
+matterAlphaLogo 100

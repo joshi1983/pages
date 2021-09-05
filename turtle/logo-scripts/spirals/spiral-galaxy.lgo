@@ -1,0 +1,35 @@
+; Inspired by a drawing and code at:
+; https://www.facebook.com/share/p/1Ft6qDEPfX/
+;
+; This code was translated from the original QBASIC code in the facebook post.
+; Edit -> Autofix handled most of the translation automatically but some
+; adjustments were done manually to turn it into an animation.
+to drawGalaxy :height
+	localmake "oldState turtleState
+	setPenSize 0
+	setFillBlendMode "lighter
+	localmake "colors [ "red "white "yellow ]
+	; copied from:
+	; https://www.facebook.com/share/p/19DnySsaQY/
+	repeat 100000 [
+		localmake "s ln randomRatio
+		localmake "t 300 * randomRatio
+		localmake "u 60 * :s * radSin :t
+		localmake "v 50 * :s * radCos :t
+		localmake "p 3 * :s
+		localmake "c radCos :p
+		localmake "s2 radSin :p
+		localmake "x :u * :c + :v * :s2
+		localmake "y -:u * :s2 + :v * :c
+		localmake "y :y  + ( randomRatio * 40 ) + 1
+		localmake "xx 2 * ( :x * 0.7 + :y * 0.3 )
+		localmake "yy 2 * ( :x * 0.1 + :y * 0.4 )
+		jumpTo [ -:xx :yy ]
+		setFillColor pick :colors
+		circle :height * 0.005
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+drawGalaxy 100

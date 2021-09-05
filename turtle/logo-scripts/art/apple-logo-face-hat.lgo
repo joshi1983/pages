@@ -1,0 +1,147 @@
+make "faceHeightRatio 0.548
+
+to drawHat :height
+	localmake "oldState turtleState
+	localmake "faceHeight :height * :faceHeightRatio
+	localmake "hatHeight (:height - :faceHeight) * 0.9
+	localmake "hatWidth :hatHeight * 0.87
+	localmake "circleRadius :height * 0.029
+	jumpForward :faceHeight + penSize / 2 + :hatHeight / 2
+	rect :hatWidth :hatHeight
+	jumpBackward (:hatHeight + penSize) / 2
+	stripes :height * 0.67 penSize [penColor]
+	arcRight 45 :height * 0.45
+	arcRight 44 :height * 0.32
+	left 90
+	setPenSize penSize * 2.2
+	circleRight :circleRadius
+	setTurtleState :oldState
+end
+
+to drawChinHair :faceHeight
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "numWiskers 15
+	localmake "wiskerGap :faceHeight * 0.777
+	localmake "wiskerLength :faceHeight * 0.1
+	localmake "wiskerAngleRange 26
+	jumpForward :faceHeight * 0.4
+	localmake "wiskerCenter pos
+	repeat :numWiskers [
+		setHeading :oldHeading + 180 + (repRatio - 0.5) * :wiskerAngleRange
+		jumpForward :wiskerGap
+		forward :wiskerLength
+		jumpTo :wiskerCenter
+	]
+	setTurtleState :oldState
+end
+
+to drawTopHair :faceHeight :faceWidth
+	localmake "oldState turtleState
+	localmake "numHairs 25
+	localmake "hairLength :faceHeight * 0.1
+	jumpForward :faceHeight / 2
+	jumpLeft :faceWidth / 2
+	repeat :numHairs [
+		jumpBackward :hairLength
+		forward :hairLength
+		jumpRight :faceWidth / :numHairs
+	]
+	setTurtleState :oldState
+end
+
+to drawFace :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "faceHeight :height * :faceHeightRatio
+	localmake "faceWidth :height * 0.48
+	localmake "earLevel :height * 0.09
+	localmake "earWidth :height * 0.05
+	localmake "earHeight :height * 0.055
+	localmake "earSeparation :faceWidth + :earWidth
+	localmake "eyeLevel :height * 0.08
+	localmake "eyeSeparation :height * 0.19
+	localmake "eyeRadius :height * 0.05
+	localmake "noseLevel :height * 0.03
+	localmake "noseHeight :height * 0.067
+	localmake "noseWidth :height * 0.07
+	localmake "noseAngle arcTan :noseWidth / 2 / :noseHeight
+	localmake "smileArcAngle 93
+	localmake "smileArcRadius :height * 0.19
+	localmake "smileWidth :smileArcRadius * 2 * sin :smileArcAngle / 2
+	setPenSize :height * 0.01
+	setLineJoinStyle "miter
+	setLineCap "butt
+	jumpForward (:faceHeight + penSize) / 2
+	localmake "faceCenter pos
+	rect :faceWidth :faceHeight
+
+	; Draw ears.
+	jumpForward :earLevel
+	jumpLeft :earSeparation / 2
+	repeat 2 [
+		rect :earWidth :earHeight
+		jumpRight :earSeparation
+	]
+
+	; Draw eyes.
+	jumpTo :faceCenter
+	jumpForward :eyeLevel
+	jumpLeft :eyeSeparation / 2
+	repeat 2 [
+		circle :eyeRadius
+		jumpRight :eyeSeparation
+	]
+
+	; Draw nose.
+	jumpTo :faceCenter
+	jumpBackward :noseLevel
+	setLineCap "round
+	setLineJoinStyle "round
+	left 180 - :noseAngle
+	forward hypot [:noseWidth / 2 :noseHeight]
+	left 90 + :noseAngle
+	forward :noseWidth
+
+	; Draw lips and smile.
+	jumpTo :faceCenter
+	setHeading :oldHeading
+	jumpBackward :height * 0.1
+	jumpLeft :smileWidth / 2
+	right 90 + :smileArcAngle / 2
+	arcLeft :smileArcAngle :smileArcRadius
+
+	jumpTo :faceCenter
+	setHeading :oldHeading
+	drawChinHair :faceHeight
+
+	drawTopHair :faceHeight :faceWidth
+	setTurtleState :oldState
+end
+
+; Inspired by an image from a book called
+; Apple Logo
+; Published in 1982
+; The image is on page 65 in the bottom left.
+;
+; You can see the image on a digital version of the book at:
+; https://archive.org/details/applelogo0000abel/page/n77/mode/2up
+; You may need to sign into an account and borrow the 
+; book to view the digital version.
+;
+; A very similar image is in a book called
+; Texas Instruments Home Computer - TI Logo
+; Published in 1984
+; The very similar figure is on page 49.
+; A digital version of that figure can be found at:
+; https://archive.org/details/TI_LOGO_1984_McGraw_Hill/page/n59/mode/2up
+to appleLogoFaceHat :height
+	localmake "oldState turtleState
+	setPenColor "black
+	jumpLeft :height * 0.04
+	drawFace :height
+	drawHat :height
+	setTurtleState :oldState
+end
+
+appleLogoFaceHat 100

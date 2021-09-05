@@ -1,0 +1,72 @@
+to drawDimple :radius
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "oldPos pos
+	repeat 2 [
+		setHeading :oldHeading + 180 + repcount * 180
+		jumpRight :radius
+		polyStart
+		arcLeft 180 :radius
+		polyEnd
+		setFillColor "white
+		jumpTo :oldPos
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://www.par24.ca
+to par24Logo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "ballRadius :height * 0.278
+	localmake "color "#67bd48
+	localmake "ballThickness :height * 0.03
+	localmake "teeArcs1 [[-90 0] [40 0.01] [35 0.03]
+		[12 0.32] [3 1.3] [0.1] [-31.2 0.22] [139 0.016]
+		[-17.8 0.13612155]]
+	localmake "ballShadowAngle1 76
+	localmake "ballShadowAngle2 147
+	localmake "ballShadowAngle3 180 - :ballShadowAngle2 - :ballShadowAngle1
+	localmake "ballShadowRadius1 abs (sin :ballShadowAngle1) / sin :ballShadowAngle3
+	localmake "ballShadowArcs1 [[-90 0] [:ballShadowAngle1 1]
+		[:ballShadowAngle2 0] [:ballShadowAngle3 :ballShadowRadius1]]
+	localmake "dimples [
+		[-0.81 -0.3 -45 0.12]
+		[-0.66 -0.5 -20 0.13]
+		[-0.41 -0.5 -12 0.12]
+		[-0.25 -0.68 -12 0.145]
+		[-0.015 -0.56 10 0.12]
+		[0.22 -0.66 0 0.137]
+		[0.405 -0.485 23 0.12]
+		[0.645 -0.525 0 0.13]
+		[0.78 -0.325 20 0.11]
+	]
+	setPenSize 0
+	setFillColor :color
+	drawArcLineShape [0 0
+		combine :teeArcs1 reverse :teeArcs1
+	] :height
+	jumpForward :height - :ballRadius - :ballThickness / 2
+	drawArcLineShape [0 -1 
+		combine :ballShadowArcs1 reverse :ballShadowArcs1
+	] :ballRadius
+	localmake "center pos
+	repeat count :dimples [
+		localmake "dimple item repcount :dimples
+		setHeading :oldHeading
+		jumpRight :ballRadius * first :dimple 
+		jumpForward :ballRadius * item 2 :dimple
+		left item 3 :dimple
+		drawDimple :ballRadius * last :dimple
+		jumpTo :center		
+	]
+
+	setPenSize :ballThickness
+	setPenColor :color
+	setFillColor transparent
+	circle :ballRadius
+	setTurtleState :oldState
+end
+
+par24Logo 100

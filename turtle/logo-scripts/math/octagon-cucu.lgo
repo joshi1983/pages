@@ -1,0 +1,42 @@
+; Inspired by an image from:
+; http://cucuruxita.blogspot.com/2008/08/op-art.html
+; More specifically,
+; https://3.bp.blogspot.com/_Ny_NF-2ZsF0/SKyQz7jZsaI/AAAAAAAAAQg/wL76K2mZ3XQ/s1600-h/OpArt2.jpg
+; The image is also at:
+; https://www.pinterest.ca/pin/801359327463527301/
+
+to octagonCucu :size
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "c1 "#FF5900
+	localmake "c2 "red
+	localmake "c3 "darkRed
+	localmake "numScales 12
+	localmake "scaleRatio cos 45
+	localmake "colorStops createPList2 [
+		[0 :c3] [0.7 :c2] [1 :c1]
+	]
+
+	setPenSize 0
+	repeat :numScales [
+		localmake "size1 :size * :scaleRatio
+		localmake "triangleHeight :size - :size1
+		localmake "triangleWidth :triangleHeight * 2
+		repeat 8 [
+			setHeading :oldHeading + repcount * 360 / 8
+			jumpForward :size
+			localmake "fromPos pos
+			jumpBackward :triangleHeight
+			setFillGradient createLinearGradient :fromPos pos :colorStops "pad
+			isoTriangle :triangleWidth :triangleHeight
+			jumpTo :oldPos
+		]
+		localmake "size :size * :scaleRatio
+	]
+
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+octagonCucu 100

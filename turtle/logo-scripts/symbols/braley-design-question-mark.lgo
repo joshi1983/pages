@@ -1,0 +1,26 @@
+; Inspired by logo at:
+; https://ca.pinterest.com/pin/447052700530314888
+to braleyDesignQuestionMark :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "width :height * 0.67
+	localmake "squareSize :width / 3
+	stripes :width :height ["white]
+	setFillColor "#fe2b00
+	jumpForward :height * 0.17
+	jumpRight :height * 0.013
+	setPenSize 0
+	circle :height * 0.138
+
+	jumpTo :oldPos
+	jumpForward :height - :squareSize * 2
+	jumpLeft (:width - :squareSize) / 2
+	setLineCap "butt
+	setPenColor fillColor
+	setPenSize :squareSize
+	arcLines [[1.5] [-90 0] [2] [-90 0] [2] [-90 0] [1.5]] :squareSize
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+braleyDesignQuestionMark 100

@@ -1,0 +1,225 @@
+to drawWhiteChestPatch :height
+	localmake "oldState turtleState
+	jumpForward :height * 0.225
+	left 50
+	setFillColor "white
+	polyStart
+	arcsRight [[5 1] [60 0.04] [40 0.02] [6 0.3]
+		[30 0.03] [48 0.085] [59 0.04]] :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+to drawWhiteAreas :height
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	jumpForward :height * 0.3
+	jumpLeft :height * 0.373
+	left 26
+	setFillColor "white
+	setPenSize 0
+	circlePair :height * 0.06 :height * 0.04 :height * 0.095
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.57
+	jumpRight :height * 0.09
+	ellipse :height * 0.3 :height * 0.17
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to drawBrownAreas :height
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	setFillColor "#f8a21f
+	jumpLeft :height * 0.397
+	jumpForward :height * 0.248
+	left 10
+	polyStart
+	arcsRight [[18 0.13] [75 0.033] [30 0.12]
+	[15 0] [-20 0.18] [-140 0] [20 0.18] [73 0.03]
+	[-15 0.4] [40 0.05] [-144 0] [40 0.24] [37 0.19]
+	[20 0.3] [-46 0] [5.5 2] [123 0] [4.5 2] [-50 0]
+	[20 0.5] [-50 0] [3.5 2] [120 0] [3.5 2] [-50 0]
+	[50 0.25] [-55 0] [28 0.2] [170 0] [-30 0.22] [40 0]
+	[-25 0.25] [-110 0] [23 0.35] [60 0] [25 0.3] [5 0.2]
+	[-90 0] [-10 0.23] [65 0] [-15 0.3] [-110 0.07]
+	[-25 0.25] [-10 0.6] [20 0] [19 0.25] [-95 0.02]
+	[20 0.2] [150 0.041] [40 0.2] [45 0.02] [3 2] [-115 0]
+	[2.5 2] [-65 0] [2.4 4] [-58 0] [30 0.2] [90 0.065]
+	[63 0] [24 0.5] [27 0] [4.2 3] [-80 0] [20 0.5] [-110 0]
+	[15 0.2] [130 0.04] [65 0.16] [130 0.04] [-55 0]
+	[5 0.6] [-160 0] [20 0.3]
+	] :height
+	polyEnd
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to drawEyes :height
+	localmake "oldState turtleState
+	localmake "thickness :height * 0.008
+	jumpForward :height * 0.716
+	jumpLeft :height * 0.039
+	left 30
+	setPenSize :thickness
+	setPenColor "black
+	setFillColor "white
+	ellipse :height * 0.07 :height * 0.095
+	jumpBackward :height * 0.032
+	setPenSize 0
+	setFillColor "black
+	circle :height * 0.0145
+	setTurtleState :oldState
+	jumpForward :height * 0.745
+	jumpRight :height * 0.205
+	setPenSize :thickness
+	setPenColor "black
+	setFillColor "white
+	left 30
+	ellipse :height * 0.06 :height * 0.092
+	jumpBackward :height * 0.039
+	setPenSize 0
+	setFillColor "black
+	circle :height * 0.014
+	setTurtleState :oldState
+end
+
+to drawMouth :height
+	localmake "oldState turtleState
+	jumpForward :height * 0.5266
+	jumpRight :height * 0.245
+	setFillColor transparent
+	setPenSize :height * 0.007
+	setPenColor "black
+	setLineCap "round
+	setLineJoinStyle "round
+	left 140
+	polyStart
+	arcsRight [[30 0.21] [40 0.14] [50 0.1]
+	[30 0.08] [15 0.1] [85 0] [-10 1.3]] :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+to drawNose :height
+	localmake "oldState turtleState
+	jumpForward :height * 0.6111
+	jumpRight :height * 0.1335
+	left 75
+	setPenSize 0
+	setFillColor "#5f4b42
+	polyStart
+	arcsRight [[42 0.07] [90 0.012] [42 0.016] [-10 0.35]
+	[120 0.01] [13 0.148] [60 0.016]] :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+to drawArcs :arcs :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	repeat count :arcs [
+		localmake "arcInfo item repcount :arcs
+		jumpRight :height * first :arcInfo
+		jumpForward :height * item 2 :arcInfo 
+		left item 3 :arcInfo
+		arcLeft item 4 :arcInfo :height * last :arcInfo
+		jumpTo :oldPos
+		setHeading :oldHeading
+	]
+	setTurtleState :oldState
+end
+
+to drawWiskers :height
+	localmake "oldState turtleState
+	localmake "arcs [
+		[-0.2328 0.6307 50 25 0.3] [-0.2355 0.594 100 -21 0.3]
+		[0.345 0.623 -90 34 0.2] [0.3474 0.5645 -115 29 0.2]
+	]
+	setLineCap "butt
+	setPenColor "black
+	setPenSize :height * 0.007
+	drawArcs :arcs :height
+	setTurtleState :oldState
+end
+
+to drawArmOutline :height
+	localmake "oldState turtleState
+	jumpForward :height * 0.439
+	jumpLeft :height * 0.141
+	right 90
+	setPenColor "black
+	setPenSize :height * 0.008
+	setLineCap "round
+	setLineJoinStyle "round
+	setFillColor transparent
+	arcsRight [[30 0.09] [60 0.025] [30 0.03] [20 0.09] [10 0.43]] :height
+	left 102
+	jumpBackward :height * 0.015
+	arcsRight [[2 1.5] [30 0.075] [50 0.02] [110 0.06] [10 0.5]] :height
+	setTurtleState :oldState
+end
+
+to drawThinArcs :height
+	localmake "oldState turtleState
+	localmake "arcs [
+		[-0.255 0.204 -70 10 0.3] [-0.09 0.1855 47 -6 0.7]
+		[0.045 0.2938 -25 10 0.2] [0.065 0.401 89.5 -25 0.5]
+		[0.0421 0.8944 -90 -20 0.2] [-0.0754 0.8788 -128 -0.5 2]
+	]
+	setPenSize :height * 0.003
+	drawArcs :arcs :height
+	setTurtleState :oldState
+end
+
+to drawOutline :height
+	localmake "oldState turtleState
+	jumpRight :height * 0.071
+	jumpForward :height * 0.023
+	setPenSize :height * 0.014
+	setPenColor "black
+	left 50
+	setFillColor transparent
+	setLineCap "round
+	setLineJoinStyle "round
+	polyStart
+	arcsRight [[7.7 1.7] [-80 0] [17 0.6] [-120 0]
+	[30 0.1] [110 0.04] [42 0.08] [20 0.3] [40 0.06] [116 0.038]
+	[-60 0] [-2 2] [-162 0] [30 0.25] [30 0.12] [35 0.17] [60 0.055]
+	[87 0.027] [-6 0.85] [-40 0.15] [-132 0] [19 0.2] [68 0.024]
+	[-13 0.4] [45 0.07] [-150 0] [20 0.3] [45 0.19] [34 0.25] [-46 0]
+	[2 5.6] [127 0] [2 4.8] [-55 0] [25 0.3] [-20 0] [10 0.2] [-37 0]
+	[2 3.4] [118 0] [2 3.5] [-53 0] [64 0.2] [-82 0] [90 0.1] [40 0.13]
+	[46 0.38] [-150 0] [21 0.2] [-100 0.03] [25 0.1] [70 0.05] [82 0.04]
+	[30 0.22] [55 0.045] [5 0.92] [-104 0] [16 0.3] [-90 0] [-3.3 3]
+	[-52 0] [30 0.21] [30 0.073] [70 0.045] [54 0.025] [14 0.67] [20 0.025]
+	]
+	:height
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by a cat that is often shown in Scratch.
+; You can learn more about Scratch at:
+; https://en.wikipedia.org/wiki/Scratch_(programming_language)
+to scratchCat :height
+	localmake "oldState turtleState
+	drawWhiteAreas :height
+	drawBrownAreas :height
+	drawWhiteChestPatch :height
+	drawEyes :height
+	drawMouth :height
+	drawNose :height
+	drawWiskers :height
+	drawArmOutline :height
+	drawThinArcs :height
+	drawOutline :height
+	setTurtleState :oldState
+end
+
+setScreenColor "#ddd
+scratchCat 100

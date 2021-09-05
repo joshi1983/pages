@@ -1,0 +1,369 @@
+; Inspired by
+; https://www.pinterest.ca/pin/705657835334722264/
+
+to centerPoly :size
+	localmake "oldState turtleState
+	localmake "size1 :size * 0.074
+	localmake "arcRadius :size * 0.31703521
+	localmake "angle1 9.5
+	setPenSize 0
+	jumpForward :size1
+	right 135 + :angle1
+	polyStart
+	repeat 4 [
+		arcLeft :angle1 * 2 :arcRadius
+		right 90 + :angle1 * 2
+	]
+	polyEnd
+	setTurtleState :oldState
+end
+
+to heart :size
+	localmake "oldState turtleState
+	localmake "size1 :size * 0.09
+	localmake "size2 :size * 0.011050903
+	localmake "angle1 20
+	localmake "angle2 85
+	localmake "angle3 90
+	forward :size * 0.144
+	right 20
+	polyStart
+	arcRight :angle1 :size1
+	left :angle2
+
+	arcLeft :angle3 :size2
+	right :angle3
+	arcLeft :angle3 :size2
+	left :angle2
+	arcRight :angle1 :size1
+	polyEnd
+
+	setTurtleState :oldState
+end
+
+to cornerShape1 :size
+	localmake "oldState turtleState
+	localmake "size1 :size * 0.45
+	localmake "size2 :size * 0.093
+
+	jumpForward :size * 0.195
+	polyStart
+	arcRight 15 :size1
+	arcLeft 56 :size2
+
+	left 100.4499 ; reflection point
+
+	arcLeft 56 :size2
+	arcRight 14.9 :size1
+	polyEnd
+
+	setTurtleState :oldState
+end
+
+to cornerShape2 :size
+	localmake "oldState turtleState
+	right 1.5
+	jumpForward :size * 0.193
+
+	polyStart
+	arcRight 22 :size * 0.27
+	arcRight 25 :size * 0.06
+	arcRight 40 :size * 0.015
+	arcRight 80 :size * 0.009
+	arcRight 40 :size * 0.04
+	arcRight 12 :size * 0.15
+	arcLeft 25.4 :size * 0.167
+	polyEnd
+
+	setTurtleState :oldState
+end
+
+; a reflection of cornerShape2
+to cornerShape3 :size
+	localmake "oldState turtleState
+	left 1.5
+	jumpForward :size * 0.193
+
+	polyStart
+	arcLeft 22 :size * 0.27
+	arcLeft 25 :size * 0.06
+	arcLeft 40 :size * 0.015
+	arcLeft 80 :size * 0.009
+	arcLeft 40 :size * 0.04
+	arcLeft 12 :size * 0.15
+	arcRight 25.4 :size * 0.167
+	polyEnd
+
+	setTurtleState :oldState
+end
+
+to cornerShape4 :size
+	localmake "oldState turtleState
+	right 3
+	jumpForward :size * 0.19
+
+	right 15
+	polyStart
+	arcRight 25.5 :size * 0.22
+	arcRight 40 :size * 0.03
+	arcRight 120 :size * 0.009
+	arcRight 22 :size * 0.03
+	arcRight 8 :size * 0.2
+	arcLeft 20.2 :size * 0.205
+	polyEnd
+
+	setTurtleState :oldState
+end
+
+; cornerShape5 is a reflection of cornerShape4.
+to cornerShape5 :size
+	localmake "oldState turtleState
+	left 3
+	jumpForward :size * 0.19
+
+	left 15
+	polyStart
+	arcLeft 25.5 :size * 0.22
+	arcLeft 40 :size * 0.03
+	arcLeft 120 :size * 0.009
+	arcLeft 22 :size * 0.03
+	arcLeft 8 :size * 0.2
+	arcRight 20.2 :size * 0.205
+	polyEnd
+
+	setTurtleState :oldState
+end
+
+to cornerShape6 :size
+	localmake "oldState turtleState
+
+	right 5
+	jumpForward :size * 0.19
+	
+	right 30
+	polyStart
+	arcRight 23 :size * 0.2
+	arcRight 25 :size * 0.03
+	arcRight 140 :size * 0.007
+	arcRight 29 :size * 0.08
+	arcLeft 27 :size * 0.1055
+	polyEnd
+
+	setTurtleState :oldState
+end
+
+; cornerShape7 is a reflection of cornerShape6
+to cornerShape7 :size
+	localmake "oldState turtleState
+
+	left 5
+	jumpForward :size * 0.19
+
+	left 30
+	polyStart
+	arcLeft 23 :size * 0.2
+	arcLeft 25 :size * 0.03
+	arcLeft 140 :size * 0.007
+	arcLeft 29 :size * 0.08
+	arcRight 27 :size * 0.1055
+	polyEnd
+
+	setTurtleState :oldState
+end
+
+to cornerShape8 :size
+	localmake "oldState turtleState
+
+	right 6
+	jumpForward :size * 0.182
+
+	right 35
+	polyStart
+	arcRight 43 :size * 0.105
+	arcRight 150 :size * 0.007
+	arcRight 40 :size * 0.05
+	arcLeft 44 :size * 0.0554
+	polyEnd
+
+	setTurtleState :oldState
+end
+
+to cornerShape9 :size
+	localmake "oldState turtleState
+
+	left 6
+	jumpForward :size * 0.182
+
+	left 35
+	polyStart
+	arcLeft 43 :size * 0.105
+	arcLeft 150 :size * 0.007
+	arcLeft 40 :size * 0.05
+	arcRight 44 :size * 0.0554
+	polyEnd
+
+	setTurtleState :oldState
+end
+
+to cornerShapes :size
+	cornerShape1 :size
+	cornerShape2 :size
+	cornerShape3 :size
+	cornerShape4 :size
+	cornerShape5 :size
+	cornerShape6 :size
+	cornerShape7 :size
+	cornerShape8 :size
+	cornerShape9 :size
+end
+
+to bloom1 :size
+	localmake "oldState turtleState
+	localmake "arcRadius1 :size * 0.004
+	localmake "arcRadius2 :size * 0.35
+	localmake "arcRadius3 :size * 0.095
+	localmake "angle1 32.924385
+	localmake "size1 :size * 0.06
+	jumpForward :size * 0.096
+	left 90
+	setPenSize 0
+	polyStart
+	arcRight 80 :arcRadius1
+	jumpForward :size1
+	arcRight 14 :arcRadius2
+	arcRight :angle1 :arcRadius3
+
+	right 106.1512295 ; reflection point
+
+	arcRight :angle1 :arcRadius3
+	arcRight 14 :arcRadius2
+	jumpForward :size1
+	arcRight 79 :arcRadius1
+	polyEnd
+
+	setTurtleState :oldState
+end
+
+to bloom2 :size
+	localmake "oldState turtleState
+
+	right 5
+	jumpForward :size * 0.097
+	polyStart
+	arcRight 15 :size * 0.5
+	arcRight 21 :size * 0.1
+	arcRight 90 :size * 0.019
+	arcRight 8 :size * 0.1
+	right 170
+	arcLeft 90 :size * 0.02
+	arcLeft 20 :size * 0.15
+	arcLeft 11.6 :size * 0.5
+	arcRight 102 :size * 0.005
+	polyEnd
+
+	setTurtleState :oldState
+end
+
+; bloom3 is a reflection of bloom2
+to bloom3 :size
+	localmake "oldState turtleState
+
+	left 5
+	jumpForward :size * 0.097
+	polyStart
+	arcLeft 15 :size * 0.5
+	arcLeft 21 :size * 0.1
+	arcLeft 90 :size * 0.019
+	arcLeft 8 :size * 0.1
+	left 170
+	arcRight 90 :size * 0.02
+	arcRight 20 :size * 0.15
+	arcRight 11.6 :size * 0.5
+	arcLeft 102 :size * 0.005
+	polyEnd
+
+	setTurtleState :oldState
+end
+
+to bloom :size
+	bloom1 :size
+	bloom2 :size
+	bloom3 :size
+end
+
+to spirals :size
+	localmake "oldState turtleState
+
+	localmake "arcRadius1 :size * 0.05
+	localmake "arcRadius2 :size * 0.035
+	localmake "arcRadius3 :size * 0.02
+	localmake "arcRadius4 :size * 0.025
+	localmake "arcRadius5 :size * 0.015
+	localmake "arcRadius6 :size * 0.013
+	localmake "arcRadius7 :size * 0.004
+	localmake "arcRadius8 :size * 0.028
+	localmake "arcRadius9 :size * 0.24351062
+	localmake "arcRadius10 :size * 0.24124355
+	localmake "angle1 60
+	localmake "angle2 170
+	localmake "angle3 90
+	localmake "angle4 150
+	localmake "angle5 15
+	localmake "angle6 30
+	setPenSize 0
+	right 45
+	jumpForward :size * 0.12
+
+	polyStart
+	arcLeft :angle1 :arcRadius1
+	arcLeft :angle2 :arcRadius2
+	arcLeft :angle1 :arcRadius3
+	arcLeft :angle3 :arcRadius4
+	arcLeft :angle1 :arcRadius5
+	arcLeft :angle4 :arcRadius6
+	arcLeft :angle2 :arcRadius7
+	arcRight :angle2 :arcRadius7
+	arcRight :angle2 :arcRadius6
+	arcRight :angle3 :arcRadius3
+	arcRight :angle3 :arcRadius8
+	arcRight :angle3 :arcRadius2
+	arcRight :angle5 :arcRadius9
+	; reflection point
+	arcRight :angle5 :arcRadius9
+	arcRight :angle3 :arcRadius2
+	arcRight :angle3 :arcRadius8
+	arcRight :angle3 :arcRadius3
+	arcRight :angle2 :arcRadius6
+	arcRight :angle2 :arcRadius7
+	arcLeft :angle2 :arcRadius7
+	arcLeft :angle4 :arcRadius6
+	arcLeft :angle1 :arcRadius5
+	arcLeft :angle3 :arcRadius4
+	arcLeft :angle1 :arcRadius3
+	arcLeft :angle2 :arcRadius2
+	arcLeft :angle1 :arcRadius1
+
+	; closing off the bottom
+	arcLeft :angle6 :arcRadius1
+	arcLeft :angle5 * 2 :arcRadius10 ; another reflection point
+	arcLeft :angle6 :arcRadius1
+	polyEnd
+
+	setTurtleState :oldState
+end
+
+to design :size
+	setPenSize 0
+	centerPoly :size
+	repeat 4 [
+		heart :size
+		cornerShapes :size
+		right 45
+		bloom :size
+		spirals :size
+		right 45
+	]
+end
+
+setFillColor "black
+design 100

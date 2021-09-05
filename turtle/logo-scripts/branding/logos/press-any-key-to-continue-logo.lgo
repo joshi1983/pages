@@ -1,0 +1,80 @@
+to drawHeart :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "colors ["red "lime "blue transparent]
+	localmake "topRadius :height * 0.3
+	localmake "topX :height * 0.26
+	localmake "lowerSeparation :height * 1
+	localmake "bottomRadius hypot [:lowerSeparation / 2 :height]
+	jumpForward :height - :topRadius
+	localmake "mid pos
+	localmake "topPoints []
+	setPenSize :height * 0.005
+	setPenColor "lime
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		jumpRight :sign * :topX
+		queue2 "topPoints pos
+		jumpTo :mid
+	]
+	jumpTo :oldPos
+	jumpForward :height
+	localmake "lowerPoints []
+	jumpRight :lowerSeparation / 2
+	repeat 2 [
+		queue2 "lowerPoints pos
+		jumpLeft :lowerSeparation
+	]
+	jumpTo :mid
+	jumpLeft :height * 0.49
+	localmake "topPoint first :topPoints
+	localmake "lowerPoint first :lowerPoints
+	setPenSize :height * 0.0275
+	localmake "step penSize * 1.2
+	setLineCap "butt
+	repeat 32 [
+		localmake "index 1 + modulo repcount - 1 count :colors
+		localmake "c item :index :colors
+		if :c <> transparent [
+			setPenColor :c
+			setHeading :oldHeading
+			localmake "startPos pos
+			jumpForward distanceToCircle :topPoint :topRadius
+			right 180
+			forward distanceToCircle :lowerPoint :bottomRadius
+			jumpTo :startPos
+			setHeading :oldHeading
+		]
+		jumpRight :step
+		if repcount = 15 [
+			localmake "topPoint last :topPoints
+			localmake "lowerPoint last :lowerPoints
+		]
+	]
+
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://www.youtube.com/@PressAnyKeyToContinue
+to pressAnyKeyToContinueLogo :height
+	localmake "oldState turtleState
+	localmake "numRows 8
+	localmake "blackThickness :height * 0.01
+	localmake "blackJumpDistance (:height * 0.915) / :numRows - :blackThickness
+	drawHeart :height
+
+	setPenColor "black
+	setPenSize :height * 1.02
+	setLineCap "butt
+	jumpForward :height * 0.076
+	repeat :numRows [
+		forward :blackThickness
+		jumpForward :blackJumpDistance
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+pressAnyKeyToContinueLogo 100

@@ -1,0 +1,29 @@
+; Inspired by
+; https://www.pinterest.ca/pin/422986590016405279/
+to blueGradients :height
+	localmake "topRadius :height * 0.35
+	localmake "gap :height * 0.05
+	localmake "bottomRadius (:height - :topRadius * 2) / 2
+	localmake "colorStops createPList2 [
+		[0 "#000] [0.07 "#e004] [0.18 "#d006] [0.32 "#a009]
+		[0.4 "#880000cc] [0.55 "#400d] [1 "#000f]
+	]
+	jumpForward :bottomRadius
+	localmake "pos1 pos
+	jumpForward :bottomRadius - :gap / 2
+	setPenSize :height
+	setPenGradient createRadialGradient2 :pos1 pos :bottomRadius :colorStops "pad
+	setLineCap "butt
+	jumpForward :gap / 2
+	localmake "middlePos pos
+	backward :bottomRadius * 2
+	jumpTo :middlePos
+	jumpForward :topRadius
+	localmake "pos1 pos
+	jumpBackward :topRadius - :gap / 2
+	setPenGradient createRadialGradient2 :pos1 pos :topRadius :colorStops "pad
+	jumpTo :middlePos
+	forward :height - :bottomRadius * 2
+end
+
+blueGradients 100

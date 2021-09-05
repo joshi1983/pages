@@ -1,0 +1,43 @@
+; Inspired by logo at:
+; https://en.wikipedia.org/wiki/Nippon_Life#/media/File:Nippon_Life_Insurance_Company_logo.svg
+; Referenced from:
+; https://en.wikipedia.org/wiki/Nippon_Life
+to nissayLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "size1 :height / 2
+	localmake "size2 :size1 / 2 / cos 45
+	jumpForward :height / 2
+	right 90
+	localmake "center pos
+	setPenSize 0
+	setFillColor "#ED1C24
+	repeat 2 [
+		setHeading :oldHeading + (repcount + 0.5) * 360 / 2
+		jumpForward :size1
+		left 135
+		polyStart
+		jumpForward :size2
+		left 135
+		jumpForward :size1
+		polyEnd
+		jumpTo :center
+	]
+	repeat 2 [
+		setHeading :oldHeading + (repcount - 1) * 360 / 2
+		jumpLeft :size1 / 2
+		jumpForward :size1 / 2
+		polyStart
+		right 45
+		jumpForward :size2
+		right 90
+		jumpForward :size2
+		right 90
+		jumpForward :height * 0.21
+		polyEnd
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+nissayLogo 100

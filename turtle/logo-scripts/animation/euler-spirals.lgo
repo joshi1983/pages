@@ -1,0 +1,85 @@
+; Inspired by image at:
+; https://ca.pinterest.com/pin/221661612905568821
+;
+; You can learn more about the Euler Spiral at:
+; https://www.youtube.com/watch?v=XfNijLrIcTs
+;
+to spiralAnimation :height :timeRatio
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "numAngles 10
+	localmake "maxIterations 270
+	localmake "colors ["lime "violet "aqua "yellow]
+	localmake "tinyCircleColor mixItems :colors clamp :timeRatio 0 1
+	localmake "step :height * 0.0069
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	setFillColor "white
+	circle :height * 0.06
+	setLineJoinStyle "round
+	setFillColor transparent
+	localmake "redPoints []
+	localmake "tinyPoints []
+	repeat :numAngles [
+		setHeading :oldHeading - 23 + 360 * repcount / :numAngles
+		jumpRight :height * 0.06
+		localmake "closestDistance 10
+		setPenSize :height * 0.005
+		setPenColor "white
+		setFillColor :tinyCircleColor
+		localmake "prevDistance 10
+		repeat :maxIterations [
+			forward :step
+			right (repcount / 10 - 5)
+			localmake "d abs repRatio - :timeRatio
+			if :closestDistance > :d [
+				localmake "closestDistance :d
+				localmake "circlePos pos
+			]
+			localmake "r :timeRatio * 4 - int :timeRatio * 4
+			localmake "d repRatio - :r
+			if xor :prevDistance < 0 :d < 0 [
+				queue2 "tinyPoints pos
+			]
+			localmake "prevDistance :d 
+		]
+		queue2 "redPoints :circlePos
+
+		jumpTo :center
+	]
+	setPenSize 0
+	setFillColor :tinyCircleColor
+	repeat count :tinyPoints [
+		jumpTo item repcount :tinyPoints
+		circle :height * 0.01
+	]
+	repeat count :redPoints [
+		jumpTo item repcount :redPoints
+		setFillColor "red
+		setPenSize 0
+		circle :height * 0.02
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+make "timeRatio animation.timeRatio
+spiralAnimation 100 :timeRatio
+
+to animation.snapshotstyle
+	output createPList2 [
+		["position.y 50]
+		["zoom.scale 6.5]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 10
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+		["thumbnailTime 2]
+	]
+end

@@ -1,0 +1,63 @@
+; Inspired by:
+; https://ca.pinterest.com/pin/755830750002555543
+to hexagramFlower :height
+	localmake "oldState turtleState
+	localmake "funnelLines1 [
+		[90 0] [90 0.006] [-168 0] [25 0.2047357]
+		[-147 0] [20 1/8]
+	]
+	localmake "largeColorStops createPList2 [
+		[0 transparent] [1 ["indigo easeInCirc]]
+	]
+	localmake "numAngles 13
+	localmake "numInnerAngles 13
+	setLineJoinStyle "round
+	setPenSize :height * 0.001
+	localmake "height1 :height - penSize
+	localmake "height1_ :height1
+	setPenColor "white
+	setFillColor transparent
+	jumpForward :height / 2
+	localmake "center pos
+	repeat 2 [
+		repeat 2 [
+			regularPolygon :height1_ / 2 3
+			right 180
+		]
+		localmake "height1_ :height1_ / 2
+	]
+	setPenBlendMode "lighter
+	setFillBlendMode "lighter
+	setPenSize :height * 0.005
+	setPenColor "violet
+	repeat :numAngles [
+		jumpForward :height1 / 4
+		localmake "radius :height1 / 8
+		setFillGradient createRadialGradient pos :radius :largeColorStops
+		circle :radius
+		jumpTo :center
+		right 360 / :numAngles
+	]
+	setFillColor transparent
+	setPenSize :height * 0.002
+	repeat :numInnerAngles [
+		jumpForward :height1 / 26
+		circle :height1 / 64
+		jumpTo :center
+		right 360 / :numInnerAngles
+	]
+	setPenColor "yellow
+	setPenSize :height * 0.001
+	setFillColor "#3ff0
+	repeat :numAngles [
+		drawArcLineShape [0 0.06
+			combine :funnelLines1 reverse :funnelLines1
+		] :height1
+		right 360 / :numAngles
+	]
+
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+hexagramFlower 100

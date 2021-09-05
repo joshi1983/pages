@@ -1,0 +1,106 @@
+make "angle1 24
+make "width1Ratio 0.17
+make "height1Ratio 0.239
+
+to drawShape :logoHeight
+	localmake "oldHeading heading
+	localmake "width1 :logoHeight * :width1Ratio
+	localmake "height1 :logoHeight * :height1Ratio
+	localmake "size1 :width1 / cos :angle1
+	localmake "arcRadius :logoHeight * 0.05
+	localmake "size2 :size1 - :arcRadius * tan :angle1
+	jumpForward :logoHeight / 2
+	jumpLeft :width1
+	right 90 + :angle1
+	polyStart
+	jumpForward :size1
+	left :angle1 * 2
+	jumpForward :size1
+	setHeading :oldHeading + 180
+	jumpForward :height1
+	right 90 - :angle1
+	jumpForward :size2
+	arcRight :angle1 * 2 :arcRadius
+	jumpForward :size2
+	polyEnd
+	setHeading :oldHeading
+end
+
+to drawOverlappingShapes :logoHeight
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "width1 :logoHeight * :width1Ratio
+	localmake "width2 :logoHeight / 2 * tan 360 / 16
+	localmake "height1 :logoHeight * :height1Ratio
+	localmake "angle2 45 + :angle1 * 2
+	localmake "gap (:width2 - :width1) / tan 360 / 16
+	localmake "size1 :height1 - :gap 
+	jumpLeft :width1
+	jumpForward :logoHeight / 2 - :gap
+	localmake "point1 pos
+	right 135
+	jumpForward :size1
+	localmake "point2 pos
+	right 90 - :angle1
+	jumpForward 2
+	localmake "point3 pos
+
+	jumpTo :point1
+	setHeading :oldHeading
+	polyStart
+	jumpBackward :size1
+	right 90 + :angle1
+	localmake "size2 distanceToLine :point2 :point3
+	jumpForward :size2
+	left :angle2
+	localmake "size3 distance :point2
+	jumpForward :size3
+	polyEnd
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpRight :width1
+	jumpForward :logoHeight / 2 - :gap
+	polyStart
+	jumpBackward :size1
+	left 90 + :angle1
+	jumpForward :size2
+	right :angle2
+	jumpForward :size3
+	polyEnd
+
+	setHeading :oldHeading
+end
+
+; Inspired by logo at
+; https://www.nbta.ca
+to nbtaLogo :height
+	localmake "oldState turtleState
+	setFillColor "#43469d
+	setPenSize 0
+	jumpForward :height / 2
+	localmake "center pos
+	repeat 4 [
+		drawShape :height
+		right 360 / 4
+		jumpTo :center
+	]
+	setFillColor "#3b63ae
+	right 180 / 4
+	repeat 4 [
+		drawShape :height
+		right 360 / 4
+		jumpTo :center
+	]
+	; Draw the dark overlapping shapes.
+	setFillColor "#192b4b
+	repeat 4 [
+		drawOverlappingShapes :height
+		right 360 / 4
+		jumpTo :center
+	]
+
+	setTurtleState :oldState
+end
+
+nbtaLogo 100

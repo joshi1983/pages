@@ -1,0 +1,86 @@
+to drawGreenParts :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "width1 :height * 1.13
+	localmake "height1 :height * 0.52
+	localmake "height2 :height * 0.04
+	localmake "width2 :height * 0.03
+	localmake "turretArcRadius :height * 0.07
+	localmake "oldHeading heading
+	localmake "turretLength :height * 0.46
+	localmake "turretHeight :height * 0.06
+	localmake "cornerRadius :height * 0.05
+	localmake "angle1 60
+	setFillColor "#32620e
+	jumpForward :height * 0.1
+	; Prevent the blue background leaking between the track and main tank
+	stripes :width1 - 2 * :cornerRadius :height * 0.4 [fillColor]
+	jumpTo :oldPos
+	setPenSize 0
+	jumpForward :height1
+	roundRect :width1 :height * 0.36 :cornerRadius
+	jumpLeft :width1 / 2
+	polyStart
+	jumpForward :height - :height1 - :height2
+	jumpRight :height * 0.19
+	jumpForward :height2
+	jumpRight :height * 0.26
+	jumpBackward :height2
+	jumpRight :height * 0.21
+	jumpBackward :height * 0.08
+	jumpRight :width2
+	right 90
+	arcRight :angle1 :turretArcRadius
+	setHeading :oldHeading + 90
+	jumpForward :turretLength
+	jumpRight :turretHeight
+	jumpBackward :turretLength
+	right 180 - :angle1
+	arcRight :angle1 :turretArcRadius
+	jumpForward :width2
+	jumpLeft :height * 0.2
+	polyEnd
+	setTurtleState :oldState
+end
+
+to drawTracks :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	setPenSize :height * 0.222
+	localmake "trackHeight :height - penSize
+	localmake "wheelSeparation :height * 0.68
+	setPenColor "#333
+	setLineCap "round
+	jumpForward penSize / 2
+	; Prevent artifacts from showing between the lines.
+	stripes penSize * 16 :trackHeight [penColor]
+	jumpLeft penSize * 7.5
+	repeat 16 [
+		forward :trackHeight
+		jumpBackward :trackHeight
+		jumpRight penSize
+	]
+	jumpTo :oldPos
+	jumpForward :height / 2
+	setPenSize :height * 0.2
+	setPenColor "#c3cbd4
+	setFillColor "#404040
+	jumpLeft :wheelSeparation * 2
+	repeat 5 [
+		circle :height * 0.2
+		jumpRight :wheelSeparation
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://www.youtube.com/@TheUntoldPast
+to untoldPastLogo :height
+	localmake "oldState turtleState
+	drawGreenParts :height
+	drawTracks :height * 0.36
+	setTurtleState :oldState
+end
+
+setScreenColor "#9bd4e5
+untoldPastLogo 100

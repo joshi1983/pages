@@ -1,0 +1,17 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Myanmar#/media/File:Flag_of_Myanmar.svg
+to myanmarFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 3 / 2
+	localmake "Da (80 - 16 * sqrt 5) / 5
+	localmake "D :height / 12 * :Da
+	stripes :width :height ["#EA2839 "#34B233 "#FECB00]
+	jumpForward :height * 10 / 12 - :D / 2
+	setPenSize 0
+	setFillColor "white
+	regularStar :D / 2 5
+	setTurtleState :oldState
+end
+
+setScreenColor "#888
+myanmarFlag 100

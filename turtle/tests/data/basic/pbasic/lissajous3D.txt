@@ -1,0 +1,270 @@
+// lissajous3D.bas — Animated 3D Lissajous Curves
+// Ported from QB65 by Kurt Moerman to pBASIC
+// Perspective-projected, HSB-coloured, double-buffered
+
+// ── Constants ──────────────────────────────────────────────────────────────
+var npoints   : Float = 1000.0
+var xmax      : Float = 1260.0
+var ymax      : Float = 1000.0
+var margin    : Float = 10.0
+var yzangle   : Float = 0.4363    // 25 degrees in radians
+var dscr      : Float = 12.0
+var dxyz      : Float = 15.0
+var nframes   : Float = 30.0      // frames per fx/fy/fz combination
+var markstep  : Float = 10.0
+var twopi     : Float = 6.2831853
+var dxyangle  : Float = 0.0314159  // 2*pi/200
+
+// ── Curve coordinate arrays ────────────────────────────────────────────────
+var ax[1000]   : Float
+var ay[1000]   : Float
+var az[1000]   : Float
+
+// ── Global animation state ─────────────────────────────────────────────────
+var fx        : Float = 1.0
+var fy        : Float = 3.0
+var fz        : Float = 3.0
+var py        : Float = -1.0472    // -pi/3
+var pz        : Float = -1.5708    // -pi/2
+var xyangle   : Float = 0.0
+var cos_xy    : Float = 0.0
+var sin_xy    : Float = 0.0
+var cos_yz    : Float = 0.0
+var sin_yz    : Float = 0.0
+var xscrscale : Float = 0.0
+var yscrscale : Float = 0.0
+var xscrmin   : Float = -1.25
+var xscrmax   : Float = 1.25
+var yscrmin   : Float = -1.25
+var yscrmax   : Float = 1.25
+var offset    : Float = 0.0
+
+// ── HSB working globals ────────────────────────────────────────────────────
+var hsbH      : Float = 0.0
+var hsbV      : Float = 0.0
+var hsbRR     : Float = 0.0
+var hsbGG     : Float = 0.0
+var hsbBB     : Float = 0.0
+var hsbSector : Float = 0.0
+var hsbF      : Float = 0.0
+var hsbQ      : Float = 0.0
+var hsbT      : Float = 0.0
+
+// ── Per-point drawing globals ──────────────────────────────────────────────
+var xr        : Float = 0.0
+var yr        : Float = 0.0
+var yr2       : Float = 0.0
+var zr        : Float = 0.0
+var xscr      : Float = 0.0
+var yscr      : Float = 0.0
+var fproject  : Float = 0.0
+var hue       : Float = 0.0
+var bri       : Float = 0.0
+var ismark    : Float = 0.0
+var counter   : Float = 0.0
+var animation : Float = 0.0
+var modval    : Float = 0.0
+
+// ── Precompute constants ───────────────────────────────────────────────────
+cos_yz    = cos(yzangle)
+sin_yz    = sin(yzangle)
+xscrscale = (xmax - 2.0 * margin) / (xscrmax - xscrmin)
+yscrscale = (ymax - 2.0 * margin) / (yscrmax - yscrmin)
+
+cls
+clr
+
+// ── Outer loop: cycle through fx/fy/fz combinations ───────────────────────
+for fy = 3.0 to 9.0 step 2.0
+    for fz = 3.0 to 9.0 step 2.0
+        for fx = 1.0 to 9.0 step 2.0
+            if fy <> fz then checkFxFy()
+        next fx
+    next fz
+next fy
+clr
+end
+
+// ── checkFxFy: second AND condition (fy<>fz already true here) ─────────────
+func checkFxFy() {
+    if fx <> fy then checkFxFz()
+    return 0
+}
+
+func checkFxFz() {
+    if fx <> fz then runCombo()
+    return 0
+}
+
+// ── runCombo: calculate points then animate ────────────────────────────────
+func runCombo() {
+    calcPoints()
+    animateFrames()
+    return 0
+}
+
+// ── calcPoints: fill ax/ay/az arrays ──────────────────────────────────────
+func calcPoints() {
+    var angle : Float = 0.0
+    var ci    : Float = 0.0
+    for ci = 0.0 to npoints - 1.0 step 1.0
+        angle   = ci / (npoints - 1.0) * twopi
+        ax[ci]  = sin(fx * angle)
+        ay[ci]  = sin(fy * angle + py)
+        az[ci]  = sin(fz * angle + pz)
+    next ci
+    return 0
+}
+
+// ── animateFrames: render nframes rotation frames ─────────────────────────
+func animateFrames() {
+    var anim  : Float = 0.0
+    for anim = 1.0 to nframes step 1.0
+        cos_xy  = cos(xyangle)
+        sin_xy  = sin(xyangle)
+        buffer:1
+        clr
+        for counter = 0.0 to npoints - 1.0 step 1.0
+            drawPoint()
+        next counter
+        buffer
+        // advance rotation angle
+        if xyangle < twopi - dxyangle then advanceAngle()
+        if xyangle >= twopi - dxyangle then resetAngle()
+        // advance travelling marker offset
+        if offset < npoints - 1.0 then advanceOffset()
+        if offset >= npoints - 1.0 then resetOffset()
+    next anim
+    return 0
+}
+
+func advanceAngle() {
+    xyangle = xyangle + dxyangle
+    return 0
+}
+
+func resetAngle() {
+    xyangle = 0.0
+    return 0
+}
+
+func advanceOffset() {
+    offset = offset + 1.0
+    return 0
+}
+
+func resetOffset() {
+    offset = 0.0
+    return 0
+}
+
+// ── drawPoint: project and plot one point ─────────────────────────────────
+func drawPoint() {
+    // rotate around Z axis
+    xr   = ax[counter] * cos_xy - ay[counter] * sin_xy
+    yr   = ax[counter] * sin_xy + ay[counter] * cos_xy
+    // rotate around X axis
+    yr2  = yr * cos_yz - az[counter] * sin_yz
+    zr   = yr * sin_yz + az[counter] * cos_yz
+    // perspective projection
+    fproject = dscr / (dxyz + yr2)
+    xscr = xr * fproject
+    yscr = zr * fproject
+    // scale to canvas
+    xscr = margin + (xscr - xscrmin) * xscrscale
+    yscr = margin + (yscrmax - yscr) * yscrscale
+    // is this a marker point?
+    modval = (counter + offset) - int((counter + offset) / markstep) * markstep
+    if modval == 0.0 then setMarker()
+    if modval <> 0.0 then clearMarker()
+    // hue from position, brightness from depth + marker boost
+    hue  = counter / npoints * 360.0
+    bri  = 10.0 + (1.0 - yr2) / 2.0 * 50.0 + ismark * 50.0
+    // convert HSB to RGB and plot
+    hsbH = hue
+    hsbV = bri / 100.0
+    calcHSB()
+    pen 4.0
+    if ismark == 1.0 then pen 8.0
+    point(xscr, yscr, hsbRR, hsbGG, hsbBB, 1.0)
+    return 0
+}
+
+func setMarker() {
+    ismark = 1.0
+    return 0
+}
+
+func clearMarker() {
+    ismark = 0.0
+    return 0
+}
+
+// ── calcHSB: convert hsbH (0-360), saturation=1.0, hsbV (0-1) → RGB ───────
+// Standard HSB→RGB with 6 sectors.
+// Result stored in hsbRR, hsbGG, hsbBB (0.0-1.0).
+func calcHSB() {
+    if hsbV <= 0.0 then setBlack()
+    if hsbV <= 0.0 then return 0
+    var hn : Float = hsbH / 60.0
+    hsbSector = int(hn)
+    hsbF  = hn - hsbSector
+    hsbQ  = hsbV * (1.0 - hsbF)
+    hsbT  = hsbV * hsbF
+    if hsbSector == 0.0 then setSector0()
+    if hsbSector == 1.0 then setSector1()
+    if hsbSector == 2.0 then setSector2()
+    if hsbSector == 3.0 then setSector3()
+    if hsbSector == 4.0 then setSector4()
+    if hsbSector == 5.0 then setSector5()
+    return 0
+}
+
+func setBlack() {
+    hsbRR = 0.0
+    hsbGG = 0.0
+    hsbBB = 0.0
+    return 0
+}
+
+func setSector0() {
+    hsbRR = hsbV
+    hsbGG = hsbT
+    hsbBB = 0.0
+    return 0
+}
+
+func setSector1() {
+    hsbRR = hsbQ
+    hsbGG = hsbV
+    hsbBB = 0.0
+    return 0
+}
+
+func setSector2() {
+    hsbRR = 0.0
+    hsbGG = hsbV
+    hsbBB = hsbT
+    return 0
+}
+
+func setSector3() {
+    hsbRR = 0.0
+    hsbGG = hsbQ
+    hsbBB = hsbV
+    return 0
+}
+
+func setSector4() {
+    hsbRR = hsbT
+    hsbGG = 0.0
+    hsbBB = hsbV
+    return 0
+}
+
+func setSector5() {
+    hsbRR = hsbV
+    hsbGG = 0.0
+    hsbBB = hsbQ
+    return 0
+}

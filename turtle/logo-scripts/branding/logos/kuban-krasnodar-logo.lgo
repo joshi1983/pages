@@ -1,0 +1,35 @@
+; Inspired by logo at:
+; https://www.footballkitarchive.com/static/logos/5EQ0BcYKceuKlfW/kuban-krasnodar-2020-2021-logo.jpg
+to kubanKrasnodarLogo :height
+	localmake "oldState turtleState
+	localmake "color1 "black
+	localmake "color2 "#fad500
+	localmake "lines1 [
+			[89.3 0.004] [0.02] [-13.6 0.1] [0.088]
+			[-82.9 0.003]
+		]
+	localmake "numPoints 25
+	setPenColor :color1
+	setFillColor :color2
+	jumpForward :height / 2
+	repeat 5 [
+		localmake "radius :height * mix 0.345 0.5 repRatio
+		setPenSize :height * mix 0.023 0.01 repRatio
+		circle :radius - penSize / 2
+	]
+	setPenSize 0
+	setFillColor :color1
+	circle :height * 0.293
+	setFillColor "white
+	jumpForward :height * 0.119
+	right 90
+	polyStart
+	repeat :numPoints [
+		arcLines :lines1 :height
+		arcLines reverse :lines1 :height
+	]
+	polyEnd
+	setTurtleState :oldState
+end
+
+kubanKrasnodarLogo 100

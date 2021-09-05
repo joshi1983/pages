@@ -1,0 +1,85 @@
+to drawYinYangSymbol :height :colors
+	localmake "oldState turtleState
+	jumpForward :height / 2
+	setFillColor first :colors
+	circle :height / 2
+	setFillColor last :colors
+	polyStart
+	arcLines [[90 0] [180 0.25] [180 0.5] [180 0] [-180 0.25]] :height
+	polyEnd
+	setFillColor "white
+	jumpLeft :height / 4
+	repeat 2 [
+		circle :height * 0.05
+		jumpRight :height / 2
+	]
+	setTurtleState :oldState
+end
+
+to drawSwastika :height
+	localmake "oldState turtleState
+	localmake "startOffsetRatio 0.086
+	jumpForward :height * (1 / 2 + :startOffsetRatio)
+	jumpLeft :height * :startOffsetRatio
+	polyStart
+	repeat 4 [
+		arcLines [[0.15] [65 0.065] [30 0.18] [33.2 0.45] [-157 0] 
+		[-38 0.49] [-38 0.275] [-60 0.17] [-15.2 0.15] [0.2] [90 0]] :height
+	]
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://en.wikipedia.org/wiki/Falun_Gong#/media/File:Falun_Gong_Logo.svg
+to falunGongLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "innerRadius :height * 0.268
+	localmake "yinYangSize :height * 0.495 - :innerRadius
+	localmake "falunGongRed "#e70000
+	localmake "yinYangColors [
+		[:falunGongRed "#004893]
+		[:falunGongRed "black]
+		["#004893 :falunGongRed]
+		["black :falunGongRed]
+	]
+	localmake "swastikaSize :yinYangSize
+	localmake "swastikaGap :innerRadius + (:height / 2 - :innerRadius - :swastikaSize) / 2
+	jumpForward :height / 2
+	setFillColor "#ffb200
+	setPenSize 0
+	circle :height / 2
+	setFillColor :falunGongRed
+	circle :innerRadius
+	localmake "center pos
+	right 45
+	repeat count :yinYangColors [
+		jumpForward :innerRadius
+		localmake "colors item repcount :yinYangColors
+		drawYinYangSymbol :yinYangSize :colors
+		right 360 / 4
+		jumpTo :center
+	]
+	setHeading :oldHeading
+	setFillColor "#a97e00
+	repeat 4 [
+		jumpForward :swastikaGap
+		drawSwastika :swastikaSize
+		jumpTo :center
+		right 360 / 4
+	]
+	jumpTo :center
+	jumpLeft :height * 0.055
+	jumpForward :height * 0.0473
+	right 90
+	polyStart
+	repeat 4 [
+		arcLines [[90 0.0078] [0.0305] [90 0.0078] [0.1095] [-90 0.023]
+		[0.0485] [-90 0.023] [0.189] [-90 0.023] [0.11]] :height
+	]
+	polyEnd
+	setTurtleState :oldState
+end
+
+falunGongLogo 100

@@ -1,0 +1,86 @@
+
+to paintSpillPath :numPoints :spreadStep :maxPenSize :maxArcAngle
+	localmake "arcAngle randomRatio * :maxArcAngle
+	localmake "arcRadius :spreadStep / (2 * pi * :arcAngle / 360)
+	setPenColor fillColor
+	localmake "minPenSize :spreadStep * 0.1
+	setLineJoinStyle "round
+	setLineCap "round
+	setPenSize :spreadStep * 0.1
+	repeat :numPoints [
+		if randomRatio < 0.1 [
+			localmake "radius mix :maxPenSize penSize randomRatio * randomRatio
+			circle :radius
+			setPenSize mix penSize :radius 0.6
+		]
+		ifelse randomRatio < 0.5 [
+			arcLeft :arcAngle :arcRadius
+		] [
+			arcLeft :arcAngle :arcRadius
+		]
+		setPenSize mix :minPenSize penSize 0.4
+	]
+end
+
+; Inspired by paintings from the 20th century American painter, Jackson Pollock.
+; Here is one example:
+; https://www.flickr.com/photos/83995756@N05/7889459540/in/photostream/
+; Here is a video of Jackson Pollock painting:
+; https://www.youtube.com/watch?v=X3Uj_HAAvbk
+to jacksonPollock :width :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "oldPos pos
+	localmake "oldX xCor
+	localmake "oldY yCor
+	localmake "size (:width + :height) / 2
+	localmake "edgeGap (min :width :height) * 0.05
+	localmake "oldX1 :oldX + :edgeGap
+	localmake "oldY1 :oldY + :edgeGap
+	localmake "width1 :width - :edgeGap * 2
+	localmake "height1 :height - :edgeGap * 2
+	localmake "spreadStep :size * 0.003
+	localmake "maxPenSize :size * 0.01
+	localmake "maxArcAngle 10
+	localmake "minArcAngle 3
+	localmake "colors ["black "white "green "red "blue "brown "yellow]
+	localmake "numColors count :colors
+	shuffle "colors
+	repeat :numColors [
+		setFillColor item repcount :colors
+		localmake "numSpills 300 + 400 * randomRatio + 100 * (:numColors - repcount) / :numColors
+		repeat :numSpills [
+			jumpTo [:oldX1 + randomRatio * :width1 :oldY1 + randomRatio * :height1]
+			localmake "arcAngle mix :minArcAngle :maxArcAngle randomRatio
+			paintSpillPath 30 :spreadStep :maxPenSize :arcAngle
+		]
+
+		; a few bigger arcs to stand out more at a distance.
+		repeat 10 [
+			jumpTo [:oldX1 + randomRatio * :width1 :oldY1 + randomRatio * :height1]
+			localmake "arcAngle mix :minArcAngle :maxArcAngle randomRatio
+			paintSpillPath 60 :spreadStep * 3 :maxPenSize * 3 :arcAngle
+		]
+	]
+	; cut off the edges.
+	setFillColor transparent
+	setPenColor screenColor
+	setLineJoinStyle "miter
+	setLineCap "butt
+	jumpTo :oldPos
+	setHeading :oldHeading
+	setPenSize :size * 0.5
+	jumpLeft penSize * 0.5
+	jumpBackward penSize * 0.5
+	repeat 2 [
+		forward :height + penSize
+		right 90
+		forward :width + penSize
+		right 90
+	]
+	closePath
+	setTurtleState :oldState
+end
+
+setScreenColor "white
+jacksonPollock 500 200

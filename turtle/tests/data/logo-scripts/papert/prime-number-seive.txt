@@ -1,0 +1,58 @@
+to grid 
+repeat 5 [fw :w *10 rt 90 fw :w rt 90 fw :w*10 lt 90 fw :w lt 90]
+fw :w*10 lt 90
+repeat 5 [fw :w*10 lt 90 fw :w lt 90 
+fw :w *10 rt 90 fw :w rt 90 ]
+fw :w * 10 rt 90
+end
+
+to mark :n
+make "n :n - 1
+make "x (:n % 10)
+make "y int :n / 10
+make "x :ox + :w / 2 + :w * :x
+make "y :oy - :w / 2 - (:w *:y)
+setxy :x :y
+penwidth :w /2
+circle 1
+end
+
+to factor :n 
+color [100+:n  0 255-:n]
+mark :n
+color [0 0 0]
+count :n :n 100
+end
+
+to count :n :a :l
+global "factors
+make "a :a + :n
+if :a > :l [stop]
+mark :a
+make "factors lput :a :factors
+count :n :a :l
+end
+
+to member :i :l
+while not empty? :l [
+if :i = first :l [output true]
+make "l butfirst :l
+]
+output false
+end
+
+
+reset
+make "ox 50
+make "oy 450
+make "w 40
+make "factors []
+make "c 1
+setxy :ox :oy
+grid
+color [50 0 254]
+mark 1
+while :c < 100 [
+make "c :c + 1
+if not member :c :factors [factor :c]
+]

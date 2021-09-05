@@ -1,0 +1,24 @@
+!
+!  MANYCONF.  Plot stacked confidence intervals.
+!
+LIBRARY "Stat2Lib.trc"
+
+DIM d(20,3),x(20),names$(3)
+
+MAT READ names$
+DATA Test 1, Test 2, Test 3
+
+FOR j = 1 to 3
+    CALL SimNormal(20,0,1,x)      ! Get normal distribution
+    FOR i = 1 to 20
+        LET d(i,j) = x(i)         ! Copy into column of d(,)
+    NEXT i
+
+NEXT j
+
+CALL SetDataStyle (3)
+CALL SetErrorBeam (2)
+CALL SetTitle ("95% Confidence Intervals")
+CALL ManyConfPlot (d, names$, .95, "")
+
+END

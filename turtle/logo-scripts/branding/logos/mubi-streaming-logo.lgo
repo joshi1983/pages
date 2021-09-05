@@ -1,0 +1,25 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Mubi_(streaming_service)#/media/File:Mubi_logo.svg
+to mubiLogo :height
+	localmake "oldState turtleState
+	localmake "radius :height * 0.1403
+	localmake "step :height / 2 - :radius
+	setPenSize 0
+	setFillColor "black
+	jumpLeft :step
+	jumpForward :radius
+	repeat 2 [
+		localmake "bottomPos pos
+		repeat 3 [
+			circle :radius
+			jumpForward :step
+		]
+		jumpTo :bottomPos
+		jumpRight :step
+	]
+	jumpForward :step
+	circle :radius
+	setTurtleState :oldState
+end
+
+mubiLogo 100

@@ -1,0 +1,121 @@
+; Logo for NeXT
+; More details are at:
+; https://en.wikipedia.org/wiki/NeXT
+
+to NeXTBackground :size
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "gap :size * 0.055
+	localmake "size1 :size * 1.11
+	localmake "angle1 15.55
+	localmake "angle2 136.3
+	localmake "angle3 127.6
+	localmake "angle4 137.7
+	
+	right :angle1
+	jumpForward :size * 1.037994
+	right :angle2
+	setPenSize 0
+	setFillColor "black
+	polyStart
+	repeat 3 [
+		forward :size1
+		right 90
+		if repcount = 1 [
+			localmake "pos1 pos
+		]
+	]
+	polyEnd
+	right :angle3
+	jumpForward :gap
+	polyStart
+	jumpForward :size * 0.54
+	left :angle3 - 90
+	jumpForward :size * 0.99
+	left :angle4
+	jumpForward :size * 0.48
+	polyEnd
+	jumpTo :pos1
+	setHeading :oldHeading - 160
+	jumpForward :gap
+	polyStart
+	jumpForward :size * 0.51
+	right 42
+	jumpForward :size * 1.02
+	right 133
+	jumpForward :size * 0.47
+	polyEnd
+	setTurtleState :oldState
+end
+
+to NeXTN :size
+	localmake "oldState turtleState
+	setPenColor "#fa1516
+	setLineJoinStyle "miter
+	left 28.5
+	jumpForward :size * 0.55
+	jumpLeft :size * 0.75
+	forward :size
+	right 131
+	forward :size * 1.26
+	left 131
+	forward :size
+	setTurtleState :oldState
+end
+
+to NeXTe :size
+	localmake "oldState turtleState
+	left 28.5
+	jumpForward :size * 1.07
+	jumpRight :size * 0.44
+	setPenColor "#fcfc17
+	right 90
+	forward :size
+	left 96
+	arcLeft 328 :size * 0.495
+	setTurtleState :oldState
+end
+
+to NeXTX :size
+	localmake "oldState turtleState
+	localmake "size1 :size * 0.5
+	setLineCap "butt
+	setPenColor "#16d41a
+	right 16.5
+	jumpLeft :size * 0.039
+	jumpBackward :size * 0.224
+	localmake "pos1 pos
+	repeat 2 [
+		jumpForward :size1
+		backward :size1 * 2
+		jumpTo :pos1
+		right 90
+	]
+	setTurtleState :oldState
+end
+
+to NeXTT :size
+	localmake "oldState turtleState
+	localmake "size1 :size * 0.505
+	left 28.5
+	jumpRight :size * 0.905
+	jumpForward :size * 0.325
+	setPenColor "#fb16bb
+	backward :size
+	jumpForward :size - penSize * 0.5
+	right 90
+	jumpForward :size1
+	backward :size1 * 2
+	setTurtleState :oldState
+end
+
+to NeXTLogo :size
+	NeXTBackground :size
+	setPenSize :size * 0.0585
+	NeXTN :size * 0.4
+	NeXTe :size * 0.445
+	NeXTX :size * 0.61
+	NeXTT :size * 0.46
+end
+
+NeXTLogo 100

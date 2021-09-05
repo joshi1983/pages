@@ -1,0 +1,53 @@
+; Inspired by logo at
+; https://en.wikipedia.org/wiki/Firebase#/media/File:Firebase_Logo.svg
+; The original Firebase logo uses a gradient but it is so subtle that 
+; it didn't seem worth the extra code to replicate.
+; The original logo also uses a very thin and subtle outline around the shapes.
+; The outline is so subtle that I didn't think it worth the 
+; extra code to replicate either.
+to firebaseLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "angle1 8.88
+	localmake "angle2 27.71965
+	localmake "arcAngle1 142.955
+	jumpLeft :height * 0.36387
+	jumpForward :height * 0.193
+	localmake "leftPos pos
+	setPenSize 0
+	right :angle1
+	setFillColor "#ffa611
+	polyStart
+	jumpForward :height * 0.7971
+	arcRight :arcAngle1 :height * 0.023
+	jumpForward :height * 0.26903
+	left 124.125
+	jumpForward :height * 0.1088
+	arcRight 124.6 :height * 0.0230
+	jumpForward :height * 0.5
+	polyEnd
+
+	setFillColor "#f5830d
+	jumpTo :leftPos
+	setHeading :oldHeading + :angle2
+	polyStart
+	jumpForward :height * 0.629977
+	right :angle1 + :arcAngle1 - :angle2
+	jumpForward :height * 0.5
+	polyEnd
+
+	jumpTo :leftPos
+	setHeading :oldHeading + 44.95
+	setFillColor "#ffcb2c
+	polyStart
+	jumpForward :height * 0.8423
+	arcRight 125.85 :height * 0.0225
+	jumpForward :height * 0.5915
+	right 70.15
+	jumpForward :height * 0.3788
+	arcRight 58.29393524 :height * 0.07
+	polyEnd
+	setTurtleState :oldState
+end
+
+firebaseLogo 100

@@ -1,0 +1,22 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Nauru#/media/File:Flag_of_Nauru.svg
+; Construction sheet is at:
+; https://en.wikipedia.org/wiki/Flag_of_Nauru#/media/File:Flag_of_Nauru_(construction_sheet).svg
+to nauruFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 2
+	localmake "thickness :height * 2 / 24
+	localmake "outerRadius :height * 4 / 24
+	localmake "innerRadius :height * 2 / 24
+	stripes :width :height ["#002b7f]
+	jumpForward (:height - :thickness) / 2
+	stripes :width :thickness ["#ffc61e]
+	jumpBackward :outerRadius
+	jumpLeft :width / 4
+	setPenSize 0
+	setFillColor "white
+	isotoxalStar :outerRadius :innerRadius 12
+	setTurtleState :oldState
+end
+
+nauruFlag 100

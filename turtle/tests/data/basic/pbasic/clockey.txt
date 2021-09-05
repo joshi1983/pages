@@ -1,0 +1,40 @@
+print "pBasic Digital Clock"
+TIMER 0.25 showClock
+TIMERON
+
+var running : Int = 1
+var meep : Int = 0
+var k$ : String = ""
+
+while (running == 1) {
+	meep = meep + 1
+	if meep > 100 then meep = 0
+}
+
+print ""
+print "meep beep "; 
+print meep
+
+//input "type Enter to quit "; A$
+//print "Thank you ";
+//print A$
+
+end
+
+func showClock() {
+	locate 9,35
+	print time
+	
+    k$ = INKEY$
+    locate 11, 35
+    if k$ == "^U" then print "Up Arrow    "
+    if k$ == "^D" then print "Down Arrow  "
+    if k$ == "^L" then print "Left Arrow  "
+    if k$ == "^R" then print "Right Arrow "
+    if k$ == "RET" then print "Return key "
+    if k$ == "DEL" then print "Delete key "
+    if k$ == " " then print   "Space key  "
+    if k$ == "ESC" then running = 0
+
+return 0
+}

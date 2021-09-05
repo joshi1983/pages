@@ -1,0 +1,42 @@
+to drawSeed :len
+	localmake "oldState turtleState
+	localmake "oldOrientation orientation
+	localmake "len1 :len * 0.5
+	localmake "len2 :len - :len1
+	localmake "numHairs 20
+	forward :len1
+	localmake "pos1 pos
+	repeat :numHairs [
+		rollRight repcount * 360 / :numHairs
+		right 60
+		forward :len2		
+		setOrientation :oldOrientation
+		jumpTo :pos1
+	]
+	setTurtleState :oldState
+end
+
+to drawDandilion :radius
+	localmake "oldState turtleState
+	localmake "oldOrientation orientation
+	localmake "len1 :radius * 0.3
+	localmake "len2 :radius - :len1
+	setPenColor "green
+	forward :radius
+	localmake "center pos
+	setFillColor "#ddd
+	setPenColor "white
+	sphere :len1
+	repeat 50 [
+		setOrientation :oldOrientation
+		rollRight repcount * 360 / 5
+		pitchUp repcount * 180 / 50 - 90
+		jumpForward :len1
+		drawSeed :len2
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "#8c8
+drawDandilion 100

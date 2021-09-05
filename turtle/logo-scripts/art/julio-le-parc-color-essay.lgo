@@ -1,0 +1,45 @@
+; Inspired by:
+; https://ca.pinterest.com/pin/486036984804089736
+;
+; It was inspired by a 1979 painting by artist 
+; Julio Le Parc
+; The source of inspiration was painted with acrylic on canvas.
+to julioLeParcColorEssay :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "colorStops1 createPList2 [
+		[0 "#0b53a5] [0.18 "#009568] [0.27 "#c3a83d] [0.45 "#e3140a]
+		[0.58 "#3a1332] [0.67 "#333e8d] [0.85 "#009568] [1 "#b8b448]
+	]
+	localmake "colorStops2 createPList2 [
+		[0.05 "#e0260f] [0.15 "#cc141e] [0.3 "#313e84] [0.5 "#026052]
+		[0.6 "#998f30] [0.75 "#cd1608] [0.95 "#742441]
+	]
+	localmake "thickness :height / 24
+	jumpForward :height / 2
+	localmake "center pos
+	jumpLeft :height / 2
+	localmake "leftPos pos
+	jumpRight :height
+	setPenSize 0
+	setFillGradient createLinearGradient :leftPos pos :colorStops1 "pad
+	jumpTo :center
+	circle :height / 2
+	jumpForward :height / 2
+	setPenGradient createLinearGradient :oldPos pos :colorStops2 "pad
+	setPenSize :thickness
+	setFillColor transparent
+	jumpTo :center
+	repeat 5 [
+		localmake "radius :thickness * 2 * (repcount + 0.25)
+		if :radius > 0 [
+			circle :radius
+		]
+	]
+	setPenSize 0
+	setFillGradient penGradient
+	circle :thickness
+	setTurtleState :oldState
+end
+
+julioLeParcColorEssay 100

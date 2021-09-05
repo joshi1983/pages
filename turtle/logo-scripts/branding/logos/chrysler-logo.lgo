@@ -1,0 +1,24 @@
+; Inspired by logo shown at
+; http://car-logos.50webs.com/chrysler-car-logo.html
+to chryslerLogo :height
+	localmake "oldState turtleState
+	localmake "outlineThickness :height * 0.04
+	localmake "halfOutlineGap (:outlineThickness + :outlineThickness / cos 180 / 5) / 2
+	localmake "height1 :height - :halfOutlineGap * 2
+	localmake "height2 :height - :halfOutlineGap
+	localmake "factor (1 + cos 180 / 5)
+	localmake "radius1 :height1 / :factor
+	localmake "radius2 :height2 / :factor
+	jumpForward :outlineThickness / 2 + :radius2 * (cos 180 / 5)
+	setPenSize :outlineThickness
+	setLineJoinStyle "miter
+	setFillColor "white
+	regularPolygon :radius2 5
+	setPenSize 0
+	setFillColor "black
+	isotoxalStar :radius1 :radius2 * 0.12 5
+	setTurtleState :oldState
+end
+
+setScreenColor "#ddd
+chryslerLogo 100

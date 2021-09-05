@@ -1,0 +1,45 @@
+to drawLockSolid :height :keyColor
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "baseWidth :height * 0.75
+	localmake "baseHeight :height * 0.5
+	localmake "thicknessRatio 0.08
+	localmake "thickness :height * :thicknessRatio
+	localmake "armWidthRatio 0.5
+	localmake "armWidth :height * :armWidthRatio
+	localmake "arcRadius :armWidth / 2
+	localmake "arcInfo1 [
+		[(:height - (:baseHeight + :thickness) / 2 - :arcRadius) / :height]
+		[-90 :arcRadius / :height]		
+	]
+	localmake "arcInfo combine :arcInfo1 reverse :arcInfo1
+	jumpForward :baseHeight / 2
+	setPenSize 0
+	setFillColor "black
+	roundRect :baseWidth :baseHeight :height * 0.1
+	jumpLeft :armWidth / 2
+	setPenSize :thickness
+	setPenColor "black
+	arcLines :arcInfo :height
+
+	; Draw key
+	setFillColor :keyColor
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.1
+	setLineCap "butt
+	setPenColor :keyColor
+	setPenSize :height * 0.04
+	forward :height * 0.15
+	setPenSize 0
+	circle :height * 0.06
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 4
+jumpLeft :separation / 2
+drawLockSolid :height "black
+jumpRight :separation
+drawLockSolid :height "white

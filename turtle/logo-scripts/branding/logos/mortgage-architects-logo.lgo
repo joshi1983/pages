@@ -1,0 +1,49 @@
+to drawHouse :height
+	localmake "oldState turtleState
+	setPenSize :height * 0.89
+	arrow :height 52 :height * 0.13
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://www.mortgagearchitects.ca
+to mortgageArchitectsLogo :height :color1 :color2
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "startOffset 0.48
+	localmake "angle1 19
+	localmake "angle2 21.5
+	localmake "len1 (1 - :startOffset) / cos :angle1
+	localmake "topThickness 0.26
+	localmake "bottomThickness 0.27
+	localmake "leftLen 0.6
+	localmake "aLen1 0.19
+	localmake "aInnerWidth :topThickness + 2 * (tan :angle2) 
+		- :bottomThickness * 2 - 2 * :aLen1 * sin :angle2
+	print :aInnerWidth
+	localmake "lines1 [
+		[:angle1 0] [:len1] [90 - :angle1 0] [:topThickness]
+		[90 - :angle2 0] [1 / cos :angle2] [90 + :angle2 0]
+		[:bottomThickness] [90 - :angle2 0]
+	]
+	setPenSize 0
+	setFillColor :color1
+	jumpForward :height * :startOffset
+	drawArcLineShape [0 0
+		combine :lines1 [[:leftLen] [:angle2 * 2 - 180 0] [0.6]
+		[90 - :angle2 0] [0.15]]
+	] :height
+	drawArcLineShape [0 0
+		combine :lines1 [[:aLen1] [:angle2 - 90  0] [:aInnerWidth] [:angle2 - 90 0]
+		[:aLen1] [90 - :angle2 0] [0.1]]
+	] -:height
+
+	jumpTo :oldPos
+	jumpRight :height * (:len1 * (sin :angle1) + :topThickness / 2)
+	jumpForward :height * 0.383
+	setPenColor :color2
+	drawHouse :height * 0.285
+	setTurtleState :oldState
+end
+
+mortgageArchitectsLogo 100 "#008dbf "white

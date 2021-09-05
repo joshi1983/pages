@@ -1,0 +1,48 @@
+; Inspired by logo at:
+; https://archive.org/details/1983-spring-summer-catalog-creative-computing-press/page/n31/mode/2up
+to creativeComputingPressLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "widthFactor 0.78
+	localmake "width :height * :widthFactor
+	localmake "thicknessFactor 0.165
+	localmake "outline [
+		[:widthFactor - :thicknessFactor / 2] [-90 0]
+		[(1 - :thicknessFactor) / 2]
+	]
+	localmake "separationFactor 0.205
+	localmake "midLine [
+		[(first first :outline) - :separationFactor]
+		[90 0]
+		[(first last :outline) - :separationFactor]
+	]
+	localmake "len1 0.1
+	localmake "pWidth 0.36
+	setPenSize :height * :thicknessFactor
+	setPenColor "#377fb9
+	setLineCap "butt
+	setLineJoinStyle "miter
+	jumpRight :width / 2
+	jumpForward penSize / 2
+	left 90
+	arcLines combine :outline reverse :outline :height
+	jumpRight :height * :separationFactor
+	right 180
+	arcLines combine :midLine reverse :midLine :height
+
+	setPenSize :height * 0.022
+	jumpTo :oldPos
+	jumpForward (:width - penSize)  / 2
+	setFillColor transparent
+	drawArcLineShape [-0.58 0
+		[[-:pWidth] [-90 0] [0.175] [90 0] [:len1] [90 0] [0.06] [-90 0]
+		[:pWidth - :len1]
+		]
+	] :height
+	jumpLeft :height * 0.523
+	jumpBackward penSize * 1.5
+	backward :height * (:pWidth - :len1) - penSize
+	setTurtleState :oldState
+end
+
+creativeComputingPressLogo 100

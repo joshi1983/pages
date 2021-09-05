@@ -1,0 +1,52 @@
+; Inspired by final drawing from:
+; https://www.youtube.com/watch?v=YkoH_BzIHnM
+to hugeEekSmiley :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "colorStops createPList2 [
+		[0 "#a3faff] [0.8 "#a3faff] [1 "#5283e6]
+	]
+	localmake "eyeHeightRadius :height * 0.22
+	localmake "mouthHeightRadius :height * 0.218
+	localmake "eyeSeparation :height * 0.512
+	localmake "radius :height * 0.455
+	localmake "tongueBrown "#9f4907
+	localmake "tongueOrange "#f47701
+	jumpForward :height * 0.5
+	setPenSize :height * 0.015
+	setPenColor "#111840
+	setFillGradient createRadialGradient pos :radius :colorStops
+	circle :radius
+
+	jumpTo :oldPos
+	jumpForward :height - :eyeHeightRadius - penSize / 2
+	jumpLeft :eyeSeparation / 2
+	repeat 2 [
+		setFillColor "white
+		ellipse :height * 0.172 :eyeHeightRadius
+		setFillColor "black
+		ellipse :height * 0.05 :height * 0.06
+		jumpRight :eyeSeparation
+	]
+	jumpTo :oldPos
+	jumpForward :height * 0.14
+	localmake "colorStops createPList2 [
+		[0 :tongueBrown] [0.6 :tongueBrown] [1 "black]
+	]
+	localmake "mouthGradients [createRadialGradient pos :height * 0.2 :colorStops]
+	jumpForward :height * 0.1
+	localmake "mouthForegroundColorStops createPList2 [
+		[0 :tongueOrange] [0.4 :tongueOrange] [1 mix :tongueOrange transparent 0]
+	]
+	queue2 "mouthGradients createLinearGradient :oldPos pos :mouthForegroundColorStops "pad
+	jumpTo :oldPos
+	jumpForward penSize / 2 + :mouthHeightRadius
+	repeat count :mouthGradients [	
+		setFillGradient item repcount :mouthGradients
+		ellipse :height * 0.167 :mouthHeightRadius
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor transparent
+hugeEekSmiley 100

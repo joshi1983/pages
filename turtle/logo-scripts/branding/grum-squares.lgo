@@ -1,0 +1,74 @@
+to drawSquare :height
+	localmake "oldState turtleState
+	localmake "center pos
+	localmake "oldHeading heading
+	localmake "numStripes1 13
+	localmake "stripeSeparation :height / 2 / (:numStripes1 - 0.25)
+	localmake "stripeThickness :stripeSeparation * 0.5
+	localmake "numTrapezoids 7
+	localmake "numParallelograms :numStripes1 - :numTrapezoids
+	setPenSize 0
+	repeat 2 [
+		setHeading :oldHeading + repcount * 180
+		jumpForward :height / 2 + :stripeSeparation - :stripeThickness
+		localmake "baseWidth :stripeThickness * 2
+		repeat :numTrapezoids [
+			jumpBackward :stripeSeparation
+			isoTrapezoid :baseWidth :baseWidth - :stripeThickness * 2 :stripeThickness
+			localmake "baseWidth :baseWidth + :stripeSeparation * 2
+		]
+		localmake "parallelogramWidth (:baseWidth - :stripeSeparation) / 2
+		repeat :numParallelograms [
+			jumpBackward :stripeSeparation
+			localmake "startPos pos
+			localmake "separation :baseWidth - :parallelogramWidth
+			jumpRight :separation / 2
+			parallelogram :parallelogramWidth :stripeThickness / cos 45 -45
+			jumpLeft :separation
+			parallelogram :parallelogramWidth :stripeThickness / cos 45 45
+
+			jumpTo :startPos
+			localmake "baseWidth :baseWidth + :stripeSeparation * 2
+		]
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by an image at:
+; https://intlhouseofsound.com/grum-bbc-radio-1-essential-mix
+; In case that link is broken as you read this,
+; the article shows a similar image and indicates that Grum is
+; a musician from Glasgow, Scotland.
+; It also links to:
+; https://soundcloud.com/grum
+to grumSquares :height
+	localmake "oldState turtleState
+	localmake "bottom pos
+	localmake "backgroundColorStops createPList2 [
+		[0 "#300] [0.3 "#c00] [0.7 "#c00] [0.95 "#308] [1 "#006]
+	]
+	localmake "separation :height * 0.125
+	jumpForward :height / 2
+	jumpRight :separation * 1
+	setFillColor "#100f
+	repeat 10 [
+		drawSquare :height
+		jumpRight :separation / 5
+	]
+
+	jumpTo :bottom
+	jumpForward :height
+	setFillGradient createLinearGradient :bottom pos :backgroundColorStops "pad
+	jumpBackward :height / 2
+	jumpLeft :separation / 2
+	drawSquare :height
+
+	setFillColor "white
+	jumpRight :separation
+	drawSquare :height
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+grumSquares 100

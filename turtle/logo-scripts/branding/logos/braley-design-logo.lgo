@@ -1,0 +1,40 @@
+to drawB :height
+	localmake "oldState turtleState
+	localmake "width :height * 0.778
+	localmake "thickness :height * 0.133
+	localmake "arcRadius (:height - :thickness) / 4 / :height
+	localmake "width1 (:width - :thickness) / :height - :arcRadius
+	jumpLeft (:width - :thickness) / 2
+	stripes :thickness :height [penColor]
+	jumpForward :thickness / 2
+	setPenSize :thickness
+	setLineCap "butt
+	right 90
+	repeat 2 [
+		arcLines [[:width1]
+			[180 :arcRadius]
+			[:width1] [180 0]] :height
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://www.braleydesign.com
+to braleyDesignLogo :height
+	localmake "oldState turtleState
+	localmake "fontHeight :height * 0.515
+	setFillColor "#fe0000
+	setPenSize 0
+	jumpForward :height / 2
+	localmake "center pos
+	circle :height / 2
+	jumpBackward :fontHeight / 2
+	setPenColor "white
+	jumpRight :height * 0.019
+	drawB :fontHeight
+	jumpTo :center
+	stripes :height * 0.31 :height * 0.23 [penColor]
+	setTurtleState :oldState
+end
+
+braleyDesignLogo 100

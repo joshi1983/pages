@@ -1,0 +1,45 @@
+; Inspired by a drawing shown in a manual for Win-logo
+; The manual was published in 1991.
+; The hot air balloon drawing is first shown on page 63
+; You can borrow an electronic version of the manual at:
+; https://archive.org/details/winlogouserguide0000unse/page/62/mode/2up 
+; Color was added here to make things look more exciting.
+; The manual had lots of code for drawing this and animating 
+; but the following procedure keeps things shorter and simpler.
+to hotAirBalloon :height
+	localmake "oldState turtleState
+	localmake "radius :height * 0.3
+	localmake "penSize1 :height * 0.007
+	localmake "penSize2 :height * 0.002
+	localmake "height1 :height - (:penSize1 + :penSize2) / 2
+	localmake "basketHeight :height1 * 0.12
+	localmake "basketWidth :height1 * 0.12
+	localmake "basketDepth :height1 - :radius - :basketHeight
+	jumpForward :height - :radius - :penSize1 / 2
+	setPenSize :penSize1
+	setFillColor "#00E600
+	setPenColor "black
+	circle :radius
+	setFillColor transparent
+	ellipse :radius * 0.76 :radius
+	ellipse :radius * 0.33 :radius
+
+	setPenSize :height * 0.003
+	right 180
+	isoTrapezoid :radius * 2 :basketWidth :basketDepth
+	localmake "scale 0.6
+	isoTrapezoid :radius * 2 * :scale :basketWidth * :scale :basketDepth
+	forward :basketDepth
+	setFillColor "#C2B4A8
+	setPenSize :penSize2
+	jumpForward :basketHeight / 2
+	rect :basketWidth :basketHeight
+	rect :basketWidth * 0.7 :basketHeight
+	rect :basketWidth * 0.4 :basketHeight
+	jumpBackward :basketHeight / 2
+	forward :basketHeight
+	setTurtleState :oldState
+end
+
+setScreenColor "#EBEBFF
+hotAirBalloon 100

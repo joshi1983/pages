@@ -1,0 +1,90 @@
+; Inspired by
+; https://upload.wikimedia.org/wikipedia/commons/3/33/HolyC_Logo.svg
+; HolyC is a programming language used in TempleOS.
+; TempleOS is a public domain operating system written almost completely by 
+; Terry Davis.
+; You can learn more about TempleOS at:
+; https://en.wikipedia.org/wiki/TempleOS
+
+make "arcRadiusRatio 0.09
+
+to holyCLogoBackground :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angle1 30
+	localmake "arcRadius1 :height * :arcRadiusRatio
+	localmake "result []
+	setPenSize 0
+	jumpForward :height
+	right 90
+	setFillColor "#d6af46
+	polyStart
+	arcRight :angle1 :arcRadius1
+	jumpForward :height * 0.413
+	arcRight 31.7 :height * 0.08
+	queue2 "result pos
+	queue2 "result heading
+	arcLines [[-88.28 0] [1] [-91 0] [-28.9975 :arcRadiusRatio]
+	[0.411] [-60 :arcRadiusRatio] [0.411] [-28 :arcRadiusRatio]] :height
+	polyEnd
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.2500124
+	jumpRight :height * 0.433
+	setHeading :oldHeading + 210.5
+	setFillColor "#ab5921
+	polyStart
+	arcLines [[-29.55 :arcRadiusRatio] [0.415] 
+	[-:angle1 * 2 0.0815] [0.419] [-30 0.08]
+	[-89.895 0] [0.5]] :height
+	polyEnd
+	setTurtleState :oldState
+	output :result
+end
+
+to drawLeftSide :leftSideData :height
+	localmake "oldState turtleState
+	jumpTo item 1 :leftSideData
+	setHeading item 2 :leftSideData
+	setFillColor "#c37c2e
+	setPenSize 0
+	polyStart
+	arcRight 28.3 :height * :arcRadiusRatio
+	jumpForward :height * 0.42
+	circle 0.05
+	arcRight 32.3 :height * 0.07
+	right 87.7
+	jumpForward :height * 0.5
+	polyEnd
+	setTurtleState :oldState
+end
+
+to drawCross :height
+	localmake "width :height * 0.0985
+	jumpForward :height * 0.4216
+	jumpRight :height * 0.2468
+	setPenSize :height * 0.0325
+	forward :height * 0.157
+	jumpBackward :height * 0.0495
+	jumpLeft :width / 2
+	right 90
+	setPenSize :height * 0.0327
+	forward :width
+end
+
+to holyCLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "leftSideData holyCLogoBackground :height
+	setPenSize :height * 0.148
+	setPenColor "white
+	jumpForward :height * 0.5
+	circle :height * 0.222
+	drawLeftSide :leftSideData :height
+	jumpTo :oldPos
+	drawCross :height
+	setTurtleState :oldState
+end
+
+holyCLogo 100

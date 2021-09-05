@@ -1,0 +1,68 @@
+; Inspired by logo at:
+; https://mathworld.wolfram.com
+to mathWorldLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "angle 25
+	localmake "arcs [
+		[42 82 0.55 0.765 8]
+		[137 80 0.55 0.765 90]
+	]
+	localmake "circleArcs [
+		[-110 0.65 72]
+		[-90 0.5 80]
+		[-70 0.5 31]
+		[-50 0.5 17]
+		[-20 0.5 13]
+	]
+	localmake "ellipses [
+		[0.03 0.16 0.075]
+		[0.09 0.295 0.155]
+	]
+	jumpForward :height / 2
+	localmake "center pos
+	localmake "radius1 (:height - penSize) / 2
+	setPenSize :height * 0.033
+	circle :radius1
+	right :angle
+	jumpForward :height * 0.39
+	localmake "pole pos
+	right 180
+	forward distanceToCircle :center :radius1
+	jumpTo :pole
+	repeat count :arcs [
+		localmake "arcInfo item repcount :arcs
+		localmake "angle1 item 2 :arcInfo
+		localmake "startAngle last :arcInfo
+		localmake "radius1 :height * item 3 :arcInfo
+		localmake "radius2 :height * item 4 :arcInfo
+		jumpTo :pole
+		setHeading :oldHeading + :angle + first :arcInfo
+		jumpRight :radius1
+		ellipseArc :angle1 :radius1 :radius2 :startAngle
+	]
+	repeat count :circleArcs [
+		localmake "arcInfo item repcount :circleArcs
+		jumpTo :pole
+		setHeading :oldHeading + :angle + first :arcInfo
+		arcLeft last :arcInfo :height * item 2 :arcInfo		
+		jumpTo :pole
+		setHeading :oldHeading + :angle - first :arcInfo
+		arcLeft -last :arcInfo :height * item 2 :arcInfo		
+	]
+	repeat count :ellipses [
+		localmake "info item repcount :ellipses
+		jumpTo :pole
+		setHeading :oldHeading + :angle
+		jumpBackward :height * first :info
+		ellipse :height * item 2 :info :height * item 3 :info
+	]
+	setTurtleState :oldState
+end
+
+mathWorldLogo 100
+
+make "height 142.7
+jumpLeft :height * 0.075
+jumpBackward :height * 0.023
+imageAlpha :height * 490 / 30 :height 'local://math-world-logo.svg' 0.5

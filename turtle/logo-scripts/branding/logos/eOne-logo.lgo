@@ -1,0 +1,122 @@
+; The inner circle of this e doesn't line up exactly 
+; with the actual logo.
+to drawE :textHeight
+	localmake "oldState turtleState
+	localmake "arcRadius :textHeight * 0.39
+	localmake "tinyArcRadius :textHeight * 0.03
+	localmake "innerCircleRadius :textHeight * 0.225
+	jumpForward :arcRadius
+	setPenSize 0
+	setFillColor penColor
+	localmake "center pos
+	setPenSize 0
+	right 95.5
+	jumpForward :arcRadius
+	left 90
+	localmake "startPos pos
+	polyStart
+	arcLeft 323.5 :arcRadius
+	arcLeft 96 :tinyArcRadius
+	jumpForward :textHeight * 0.106
+	arcLeft 81.5079105 :tinyArcRadius
+	arcRight 330 :innerCircleRadius
+	polyEnd
+
+	jumpTo :startPos
+	setHeading (towards :center) - 90
+	polyStart
+	arcRight 84.5 :tinyArcRadius
+	jumpForward :textHeight * 0.7
+	jumpRight :textHeight * 0.148
+	jumpBackward :textHeight * 0.6
+	polyEnd
+	setTurtleState :oldState
+end
+
+to drawO :textHeight
+	localmake "oldPos pos
+	jumpForward :textHeight / 2
+	circle (:textHeight - penSize) / 2
+	jumpTo :oldPos
+end
+
+to drawN :textHeight
+	localmake "oldState turtleState
+	localmake "oldPenColor penColor
+	localmake "thickness penSize
+	localmake "tinyArcRadius :thickness * 0.16
+	localmake "arcRadius1 :textHeight * 0.165
+	localmake "height1 :textHeight * 0.747
+	localmake "bottomArcsInfo [
+		[10 0.15] [30 0.2] [35 0.158] [30 0.19]
+		[45 0.12] [30 0.2]
+	]
+	localmake "topArcsInfo [
+		[20 0.47] [35 0.26] [30 0.24] [20 0.5]
+		[50 0.19]
+	]
+	jumpForward :textHeight * 0.016
+	setFillColor :oldPenColor
+	setPenSize 0
+	jumpForward :height1 / 2
+	jumpLeft :arcRadius1 + :thickness / 2
+	roundRect :thickness :height1 :tinyArcRadius
+	jumpRight :thickness / 2
+	jumpForward :textHeight * 0.04
+	polyStart
+	arcsRight :bottomArcsInfo :textHeight
+	jumpForward :textHeight * 0.3981199
+	arcLeft 90 :tinyArcRadius
+	jumpForward :thickness - :tinyArcRadius * 2
+	arcLeft 90 :tinyArcRadius
+	jumpForward :textHeight * 0.4
+	arcsLeft :topArcsInfo :textHeight
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Entertainment_One#/media/File:EOne_2015_logo.svg
+to eOneLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "size1 :height * 0.6
+	localmake "size2 :height * 1.3795
+	localmake "arcRadius1 :height * 0.0177
+	localmake "arcRadius2 :height - :size1 - :arcRadius1
+	localmake "arcRadius3 :height * 0.0165
+	localmake "size3 :height - :arcRadius3 - :arcRadius2
+	localmake "textHeight :height * 0.563
+	setPenSize 0
+	setFillColor "#309cdd
+	jumpRight :height * 1.11
+	right 90
+	polyStart
+	arcLeft 90 :height * 0.0177
+	jumpForward :size1
+	arcLeft 90 :arcRadius2
+	jumpForward :size2
+	arcLeft 90 :arcRadius3
+	jumpForward :size3
+	arcLeft 90 :arcRadius2
+	polyEnd
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.106
+	jumpLeft :height * 0.261
+	setPenColor "white
+	setPenSize :textHeight * 0.19
+	drawO :textHeight
+	jumpRight :height * 0.515
+	drawN :textHeight
+	jumpRight :height * 0.445
+	drawE :textHeight
+	jumpLeft :height * 1.61
+	setPenColor fillColor
+	drawE :textHeight
+	setTurtleState :oldState
+end
+
+eOneLogo 100

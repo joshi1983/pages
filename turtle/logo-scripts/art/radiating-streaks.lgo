@@ -1,0 +1,52 @@
+to streak :len :thickness
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "len1 :len - :thickness
+	localmake "len2 sqrt (:len1 * :len1 - :thickness * :thickness)
+	localmake "angle arcSin :thickness / :len2
+	setPenSize 0
+	left :angle
+	polyStart
+	jumpForward :len2
+	arcRight 180 + :angle * 2 :thickness
+	polyEnd
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to radiatingStreaks :maxRadius :innerRadius :period :streakThicknessRatio
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "numAngles 32
+	localmake "maxStreakLength :maxRadius - :innerRadius
+	repeat :numAngles [
+		localmake "periodRatio (1 + (remainder repcount :period)) / :period
+		localmake "streakLength :maxStreakLength * :periodRatio
+		localmake "thickness :streakLength * :streakThicknessRatio
+		jumpForward :innerRadius
+		
+		streak :streakLength :thickness
+		jumpTo :oldPos
+		right 360 / :numAngles
+	]
+	setHeading :oldHeading
+end
+
+make "size 50
+make "maxInnerSize :size * 0.5
+make "separation :size * 2.2
+setFillColor "black
+right 90
+setPenSize 0
+jumpBackward :separation * 2.5
+radiatingStreaks :size :maxInnerSize 1 0.1
+forward :separation
+radiatingStreaks :size :maxInnerSize 2 0.1
+forward :separation
+radiatingStreaks :size :maxInnerSize 3 0.1
+forward :separation
+radiatingStreaks :size :maxInnerSize * 0.5 3 0.07
+forward :separation
+radiatingStreaks :size :maxInnerSize * 0.2 3 0.05
+forward :separation
+radiatingStreaks :size 0 3 0.03

@@ -1,0 +1,20 @@
+; copied from https://leonisx.itch.io/nextbasic-examples
+; Andy C Spencer.zip
+10 LAYER 1,0: BORDER 1: PAPER 1: INK 6: RUN AT 2
+20 SPRITE CLEAR : CLS : LET b=0
+30 LOAD "ChristineSprites.spr" BANK 12
+40 SPRITE BORDER 0: SPRITE BANK 12: SPRITE PRINT 1
+50 SPRITE 0,64,160,0,1
+60 FOR a=1 TO 7: SPRITE -a,16*a,0,a,1: NEXT a
+70 FOR a=1 TO 8: SPRITE -a-7,16*(a-1),16,a+15,1: NEXT a
+80 FOR q=17 TO 49 STEP 32
+90 SPRITE -9,16,16,q,1: SPRITE -10,32,16,q+1,1
+100 PAUSE 1
+110 SPRITE -13,80,16,q+4,1: SPRITE -14,96,16,q+5,1
+120 PAUSE 1
+130 NEXT q
+140 PRINT AT 10,0; PAPER 0;"-   -   -   -   "
+150 LAYER AT b,0: LET b=b+4
+160 IF b>=256 THEN LET b=0
+170 GO TO %80
+180 SAVE "Christine.bas" LINE %10

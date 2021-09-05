@@ -1,0 +1,78 @@
+REM copied from:
+REM https://nyteowldave.work/greystoke/demo/snail.html
+REM ~ snail.bas
+REM ~ Original was PHP
+REM ~ Ported first to JavaScript
+REM ~ Then ported to QB64
+
+iw = 800
+ih = 600
+
+sa = 400
+sb = 230
+
+Screen _NewImage(800, 600, 32)
+
+lit = _RGB32(248, 248, 248)
+drk = _RGB32(50, 0, 50)
+
+Rem Color lit
+Cls
+
+Paint (0, 0), lit
+
+c1 = 10: c2 = 10: c3 = 10
+a3 = 76: a4 = 90
+s = a3: t = a4
+
+For d = 2 To 18 Step 1
+    a1 = a3
+    a2 = a4
+    srd = Sqr(d)
+    srdp1 = Sqr(d + 1)
+    srdm1 = Sqr(d - 1)
+    t = t + rad2deg(Atn(1 / srdm1))
+    If (t <= 90) Then
+        da = deg2rad(90 - t)
+        a3 = (Sin(da) * srd * s)
+        a4 = (Cos(da) * srd * s)
+    ElseIf (t <= 180) Then
+        da = deg2rad(t - 90)
+        a3 = (Sin(da) * srd * -s)
+        a4 = (Cos(da) * srd * s)
+    Else
+        da = deg2rad(t - 270)
+        a3 = (Sin(da) * srdp1 * s)
+        a4 = (Cos(da) * srdp1 * -s)
+    End If
+    If (c1 < 200) Then
+        c1 = c1 + 50
+    ElseIf (c2 <= 200) Then
+        c1 = 100
+        c2 = c2 + 50
+    Else
+        c2 = 100
+        c3 = c3 + 50
+    End If
+    xpar = _RGB32(c1, c2, c3)
+
+    Line (sa, ih - sb)-(sa + a2, ih - (sb + a1)), xpar
+    Line (sa + a2, ih - (sb + a1))-(sa + a4, ih - (sb + a3)), xpar
+    Line (sa + a4, ih - (sb + a3))-(sa, ih - sb), xpar
+
+    px = (3 * sa + a2 + a4) \ 3
+    py = ih - (3 * sb + a1 + a3) \ 3
+
+    Paint (px, py), xpar
+Next
+
+Sleep
+
+Function deg2rad (n)
+    deg2rad = n / 180 * _Pi
+End Function
+
+Function rad2deg (n)
+    rad2deg = n / _Pi * 180
+End Function
+

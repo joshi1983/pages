@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	button.addEventListener('click', function() {
 		var animation = new Animation();
 		var objects = [];
-		var blurFrameCount = 20;
+		var blurFrameCount = 30;
 		var keys = new Set();
 		for (var i = 0; i < animation.getMaxTime(); i++) {
 			for (var j = 0; j < blurFrameCount; j++) {

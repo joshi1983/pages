@@ -1,0 +1,33 @@
+; Inspired by:
+; https://www.pinterest.ca/pin/366973069640537626/
+; Animation closes the central opening of the shape
+
+to swirl :size :openRatio
+	localmake "numArms 12
+	localmake "shape [0 0.85 [
+		[25 - :openRatio * 60 0] [0.15] [-120 0] [-70 1]
+		[-171.85 0] [60.875 1]
+	]]
+	repeat :numArms [
+		drawArcLineShape :shape :size * 1.045
+		right 360 / :numArms
+	]
+end
+
+setFillColor "black
+setPenSize 0
+swirl 250 animation.timeRatio
+
+to animation.snapshotstyle
+	output createPList
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 3
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+		["thumbnailTime 1.6]
+	]
+end

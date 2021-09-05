@@ -1,0 +1,77 @@
+to sourceForgeBracket :logoHeight
+	localmake "oldState turtleState
+	localmake "angle1 135
+	localmake "cornerRadius1 :logoHeight * 0.016
+	localmake "cornerRadius2 :logoHeight * 0.019
+	jumpLeft :logoHeight * 0.035
+	left 90
+	setPenSize 0
+	polyStart
+	arcRight :angle1 :cornerRadius1
+	jumpForward :logoHeight * 0.61
+	circle 0.1
+	arcLeft 90 :cornerRadius2
+	jumpForward :logoHeight * 0.485
+	arcRight 90 :cornerRadius1
+	jumpForward :logoHeight * 0.096
+	arcRight 90 :cornerRadius1
+	jumpForward :logoHeight * 0.613
+	arcRight 90 :cornerRadius1
+	jumpForward :logoHeight * 0.648
+	arcRight 45 :cornerRadius1
+	polyEnd
+	setTurtleState :oldState
+end
+
+to flame :logoHeight
+	localmake "arcsInfo [
+		[50 0.167]
+		[38 0.192]
+		[10 0.3]
+		[15 0.2]
+		[12 0.3]
+		[1.5 2]
+		[-15 0.21]
+		[-29.5 0.104]
+		[140 0.01005]
+		[30 0.3]
+		[7 0.8]
+		[10 0.3]
+		[-11 0.25]
+		[-20 0.05]
+		[-90 0.01]
+		[-30 0.04]
+		[-20 0.105]
+		[-23.2 0.295]
+		[162 0.006]
+		[25 0.27]
+		[65 0.185]
+		[33 0.15]
+	]
+	jumpForward :logoHeight * 0.2849
+	setPenSize 0
+	left 87.1
+	polyStart
+	arcsRight :arcsInfo :logoHeight
+	polyEnd
+end
+
+; Inspired by logo at
+; https://en.wikipedia.org/wiki/SourceForge#/media/File:SourceForge_logo_transparent.svg
+to sourceForgeLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	setFillColor "#FF6600
+	sourceForgeBracket :height
+	jumpForward :height
+	right 180
+	sourceForgeBracket :height
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	flame :height
+	setTurtleState :oldState
+end
+
+sourceForgeLogo 100

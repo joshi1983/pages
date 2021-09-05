@@ -1,0 +1,48 @@
+; Inspired by logo at:
+; https://chipsandcheese.com
+to chipsAndCheeseLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "thickness :height * 0.02
+	localmake "step :height * 0.21
+	localmake "separation :step * cos 30
+	localmake "size :height * 0.064
+	localmake "cheeseYellow "#f1bf15
+	setPenSize 0
+	setFillColor :cheeseYellow
+	jumpForward :height / 2
+	localmake "center pos
+	regularPolygon :height / 2 6
+	left 30
+	jumpForward :separation
+	setFillColor "#363678
+	setLineJoinStyle "miter
+	repeat 3 [
+		localmake "midPos pos
+		localmake "numEdges (2 - abs 2 - repcount)
+		localmake "len :step * :numEdges
+		setPenSize 0
+		rect :len :thickness
+		setPenSize :size * 0.15
+		jumpLeft :len / 2
+		repeat :numEdges + 1 [
+			right 30
+			regularPolygon :size 6
+			left 30
+			jumpRight :step
+		]
+		jumpTo :midPos
+		jumpBackward :separation
+	]
+	setFillColor "white
+	setPenSize 0
+	repeat 3 [
+		setHeading :oldHeading + repcount * 360 / 3
+		jumpTo :center
+		jumpForward :step
+		regularPolygon :size * 0.4 6
+	]
+	setTurtleState :oldState
+end
+
+chipsAndCheeseLogo 100

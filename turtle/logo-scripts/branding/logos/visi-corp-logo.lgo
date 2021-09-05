@@ -1,0 +1,62 @@
+; Inspired by:
+; VisiCorp Logo at
+; https://en.wikipedia.org/wiki/VisiCorp
+; https://en.wikipedia.org/wiki/File:VisiCorp_logo.svg
+to v :size
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "angle1 120
+	localmake "angle2 180 - :angle1
+	localmake "angle4 :angle1
+	localmake "size1 :size * 0.927
+	localmake "size2 :size * 1.857
+	localmake "size3 :size * 1.509
+	localmake "size4 :size * 0.03
+	localmake "size5 :size * 1.385
+	localmake "size6 :size * 1.825
+	localmake "step2 :size * 0.078
+	localmake "step3 :size * 0.13
+	localmake "step4 :size * 0.119
+	localmake "step5 :size * 0.268
+	localmake "step6 :size * 0.255
+	localmake "step7 :size * 0.118
+	jumpForward :size * 0.8 + :step3
+	jumpLeft :size1 - :step2
+	right 90
+	setFillColor "#000
+	setPenSize 0
+	localmake "oldPos1 pos
+	repeat 3 [
+		jumpTo :oldPos1
+		jumpBackward repcount * :step2
+		jumpRight repcount * :step3
+
+		polyStart
+		jumpForward :size2
+		right :angle1
+		jumpForward :size3
+		right :angle1
+		jumpForward :size4
+		right :angle2
+		jumpForward :size5
+		left :angle4
+		jumpForward :size6
+		polyEnd
+		setHeading :oldHeading + 90
+
+		localmake "size2 :size2 - :step4
+		localmake "size3 :size3 - :step5
+		localmake "size5 :size5 - :step6
+		localmake "size6 :size6 - :step7
+	]
+	setTurtleState :oldState
+end
+
+to visiCorpLogo :size
+	repeat 3 [
+		v :size
+		right 120
+	]
+end
+
+visiCorpLogo 100

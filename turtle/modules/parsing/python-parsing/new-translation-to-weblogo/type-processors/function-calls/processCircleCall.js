@@ -1,0 +1,40 @@
+import { filterBracketsAndCommas } from '../helpers/filterBracketsAndCommas.js';
+import { processToken } from '../processToken.js';
+import { shouldBeTranslatedToPyCircle } from '../../../parse-tree-analysis/procedure-dependencies/shouldBeTranslatedToPyCircle.js';
+
+function handleWithPyCircle(token, result, cachedParseTree, settings) {
+	const argList = token.children[0];
+	const parameterValueTokens = filterBracketsAndCommas(argList.children);
+	result.append('\npyCircle ');
+	if (parameterValueTokens.length === 1) {
+		processToken(parameterValueTokens[0], result, cachedParseTree, settings);
+		result.append(' 360');
+	}
+	else if (parameterValueTokens.length >= 2) {
+		processToken(parameterValueTokens[0], result, cachedParseTree, settings);
+		result.append(' ');
+		processToken(parameterValueTokens[1], result, cachedParseTree, settings);
+	}
+	// If steps is specified, ignore it.
+	// We don't care how many polygon sides are given.
+	//  We'll translate as if it were infinity.
+	result.append('\n');
+}
+
+export function processCircleCall(token, result, cachedParseTree, settings) {
+	result.processCommentsUpToToken(token);
+	const argList = token.children[0];
+	if (argList === undefined)
+		return false; // indicate not processed.
+	if (shouldBeTranslatedToPyCircle(cachedParseTree, token)) {
+		handleWithPyCircle(token, result, cachedParseTree, settings);
+		return;
+	}
+	const parameterValueTokens = filterBracketsAndCommas(argList.children);
+	if (parameterValueTokens.length === 1) {
+		result.append('\ncircleLeft ');
+		processToken(parameterValueTokens[0], result, cachedParseTree, settings);
+	}
+	else
+		return false; // indicate not processed.
+};

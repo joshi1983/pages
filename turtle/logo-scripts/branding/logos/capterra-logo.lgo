@@ -1,0 +1,47 @@
+; Inspired by a logo at:
+; https://www.capterra.ca
+to capterraLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "rightSlope 17.47
+	localmake "len1 :height / cos :rightSlope
+	jumpRight :height * 0.02
+	localmake "bottomPos pos
+	jumpForward :height
+	localmake "verticalPos pos
+	jumpTo :bottomPos
+	right :rightSlope
+	jumpForward :len1
+	localmake "topPos pos
+	left 128.2
+	jumpForward :len1
+	localmake "leftPos pos
+	setHeading :oldHeading + 90
+	localmake "len2 distanceToLine :bottomPos :verticalPos
+	setPenSize 0
+	setFillColor "#FF9D28
+	polyStart
+	jumpForward :len2
+	localmake "centerPos pos
+	setHeading :oldHeading
+	jumpForward distanceToLine :topPos :leftPos
+	localmake "topMidPos pos
+	polyEnd
+	setFillColor "#044D80
+	jumpTo :centerPos
+	polyStart
+	jumpTo :bottomPos
+	setHeading :oldHeading - 22
+	jumpForward distanceToLine :leftPos :centerPos
+	polyEnd
+	setFillColor "#E54747
+	polyStart
+	jumpBackward :height * 0.17
+	jumpTo :leftPos
+	polyEnd
+	setFillColor "#68C5ED
+	polygon [:bottomPos :topPos :topMidPos]
+	setTurtleState :oldState
+end
+
+capterraLogo 100

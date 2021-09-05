@@ -1,0 +1,48 @@
+!
+!  REGPRESS. Show use of PRESS residuals and statistic
+!  in evaluating a multiple regression model. This is
+!  an advanced topic so don't worry if you don't
+!  recognize any of this!
+!
+!  Reference: "Classical and Modern Regression with Analysis"
+!  by R. Myers, pp. 108-111.
+!
+LIBRARY "Stat4Lib.trc"
+
+DECLARE DEF ra_press
+
+DIM d(15,3), corr(0,0), beta(0), se(0), t(0), p(0)
+DIM ey(0), res(0), sres(0), stres(0), press(0), hat(0,0), ra(0)
+
+MAT READ d
+CALL MultiLSFit (d(,), 3, corr(,), int, beta(), se(), t(), p(), ey(), res(), sres(), stres(), press(), hat(,), ra())
+
+LET t$ = "##  ####.##  ####.###    ---#.###   ---.###"
+
+PRINT "PRESS Residual Analysis of Shingle Sales"
+PRINT
+PRINT using t$: "", "y", "Est.y", "Resid", "PRESS"
+
+FOR i = 1 to Size(d,1)
+    PRINT using t$: i, d(i,3), ey(i), res(i), press(i)
+NEXT i
+PRINT
+PRINT using "PRESS Statistic: ------.####": ra(ra_press)
+
+DATA 31, 10,  79.3                ! Sales data for asphalt shingles
+DATA 55,  8, 200.1                ! 3rd column is 'y'
+DATA 67, 12, 163.2
+DATA 50,  7, 200.1
+DATA 38,  8, 146.0
+DATA 71, 12, 177.7
+DATA 30, 12,  30.9
+DATA 56,  5, 291.9
+DATA 42,  8, 160.0
+DATA 73,  5, 339.4
+DATA 60, 11, 159.6
+DATA 44, 12,  86.3
+DATA 50,  6, 237.5
+DATA 39, 10, 107.2
+DATA 55, 10, 155.0
+
+END

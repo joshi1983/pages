@@ -1,0 +1,35 @@
+; Inspired by logo at:
+; https://www.viator.com
+to viatorLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "radius :height * 0.182
+	localmake "angle1 23.89
+
+	setPenSize 0
+	setFillColor "#186b6d
+	jumpLeft :height * 0.092
+	localmake "bottomPos2 pos
+	left :angle1
+	polyStart
+	jumpForward :height * 1.043
+	setHeading :oldHeading + 90
+	jumpForward :height * 0.319
+	right 90 - :angle1
+	jumpForward :height * 0.808
+	right :angle1 * 2
+	jumpForward distanceToLine :oldPos :bottomPos2
+	polyEnd
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpRight :height * 0.239
+	jumpForward :height - :radius
+	setPenSize 0
+	circle :radius
+	
+	setTurtleState :oldState
+end
+
+viatorLogo 100

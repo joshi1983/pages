@@ -1,12 +1,13 @@
 class Renderer {
 	constructor() {
+		this.mazeGenerator = new MazeGenerator3D();
 		this.rotation = [0, 0, 0];
 		this.canvas = document.querySelector('canvas');
 		this.viewpoint = [0, -0.003, -0.05];
 		this._initWebGLContext();
 		this._animatedObjects = [];
 		this.scaleFactor = 0.0005;
-		this.setTriangles(new MazeGenerator3D().getTriangles(15, 10));
+		this.setTriangles(this.mazeGenerator.getTriangles(15, 10));
 		var outer = this;
 
 		function resized() {
@@ -142,9 +143,11 @@ class Renderer {
 	changeViewpointRotated(delta) {
 		var x = delta * Math.sin(this.rotation[1]);
 		var y = delta * Math.cos(this.rotation[1]);
-		this.viewpoint[0] += x;
-		this.viewpoint[2] += y;
-		this.setViewpoint();
+		var newViewpoint = this.getViewpoint();
+		newViewpoint[0] += x;
+		newViewpoint[2] += y;
+		newViewpoint = this.mazeGenerator.physics.sanitizeTo(this.viewpoint, newViewpoint);
+		this.setViewpoint(newViewpoint);
 		this.needsRedraw = true;
 	}
 

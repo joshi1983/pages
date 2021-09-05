@@ -1,0 +1,51 @@
+make "shopifyLightGreen "#95BF47
+
+to drawHandStraps :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	setPenSize :height * 0.032
+	setPenColor :shopifyLightGreen
+	setLineJoinStyle "round
+	jumpForward :height * 0.78
+	jumpLeft :height * 0.11
+	arcLines [[-5 0] [-30 0.24] [-30 0.15] [-85 0.072]
+		[-12 0.4]] :height
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.75
+	jumpLeft :height * 0.225
+	arcLines [[-5 0] [-30 0.28] [-15 0.35] [-30 0.12] [-50 0.065]
+		[-33 0.08] [-30 0.22]] :height
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://en.wikipedia.org/wiki/Shopify#/media/File:Shopify_logo_2018.svg
+to shopifyLogo :height
+	localmake "oldState turtleState
+	localmake "bottomX 0.125
+	drawHandStraps :height
+	setPenSize 0
+	setFillColor :shopifyLightGreen
+	drawArcLineShape [:bottomX 0
+		[[-50 0] [0.1] [52 0] [0.817] [70 0] [35 0.02]
+		[0.534] [65.5 0.02] [0.605]]
+	] :height
+	setFillColor "#5E8E3E
+	drawArcLineShape [:bottomX 0
+		[[-77.7 0] [0.3178] [86 0] [0.739] [77.5 0.017]
+		[0.0755] [-41 0] [0.08] [35 0.02]]
+	] :height
+	setFillColor "white
+	drawArcLineShape [-0.308 0.213
+		[[-135 0] [50 0.21] [40 0.12] [90 0.16]
+		[7 0.3] [0.05] [-50 0.05] [-50 0.03] [-40 0.07]
+		[-27 0.18] [96 0] [0.12] [87 0] [30 0.2] [15 0.3] [40 0.16]
+		[30 0.18] [50 0.14] [-10 0.3] [-60 0.05] [-90 0.04] [-22 0.24]]
+	] :height
+	setTurtleState :oldState
+end
+
+shopifyLogo 100

@@ -1,0 +1,129 @@
+; These drawings are inspired by figures in a book called
+; Atari Logo Introduction to Programming Through Turtle Graphics.
+; The book was published in 1983.
+; These are inspired by figures on page 68.
+;
+; A digital version of the book is available at:
+; https://www.atarimania.com/documents/Atari_LOGO_Introduction_to_Programming_Through_Turtle_Graphics.pdf
+
+
+to spider :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize :height * 0.03
+	setLineCap "butt
+	setLineJoinStyle "miter
+	setPenColor "white
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		localmake "startHeading :oldHeading + :sign * 90
+		localmake "step -19.7 * :sign
+		repeat 4 [
+			setHeading :startHeading + (repcount - 1) * :step
+			arcLines [
+				[0.56] [-90 0] [0.5]
+			] :height * :sign
+			preventPathJoin
+			jumpTo :center
+		]
+	]
+	setTurtleState :oldState
+end
+
+to stickMan :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "legLen :height * 0.2
+	localmake "headHeight :height * 0.34
+	localmake "thickness :height * 0.03
+	localmake "legLines [[-90 0] [1] [90 0] [1] [-90 0]
+		[1] [-90 0] [1 + :thickness / 2 / :legLen]]
+	setLineCap "butt
+	setLineJoinStyle "miter
+	setPenColor "white
+	setPenSize :thickness
+	localmake "headSize :headHeight / 2 / (cos 45) - penSize
+	jumpLeft :legLen + :height * 0.063
+	localmake "startPos pos
+	jumpForward penSize / 2
+	arcLines :legLines :legLen
+	setHeading :oldHeading
+	jumpTo :startPos
+	jumpRight :legLen
+	localmake "overlap penSize / cos 45
+	forward :height - :headHeight + :overlap
+	jumpForward :headHeight / 2 - :overlap
+	left 45
+	square :headSize
+
+	setHeading :oldHeading
+	jumpBackward :height * 0.235
+	left 45
+	jumpRight :legLen
+	jumpBackward :legLen
+
+	; Make it so the hand doesn't protrude beyond 
+	; the vertical line of the torso.
+	setItem (count :legLines) "legLines [1]
+	arcLines :legLines -:legLen
+	setTurtleState :oldState
+end
+
+to swirl :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "numAngles 12
+	localmake "len :height * 0.35965
+	jumpForward :height / 2
+	localmake "center pos
+	setPenColor "white
+	setPenSize :height * 0.02
+	setLineCap "butt
+	repeat :numAngles [
+		setHeading :oldHeading + repcount * 360 / :numAngles
+		forward :len
+		left 90
+		forward :len
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+to spinStar :height
+	localmake "oldState turtleState
+	localmake "numAngles 6
+	localmake "squareSize :height * 0.712
+	localmake "thickness :height * 0.02
+	jumpForward :height / 2
+	setPenSize :thickness
+	setPenColor "white
+	setFillColor transparent
+	setLineJoinStyle "miter
+	setPenSize :thickness
+	repeat :numAngles [
+		square :squareSize
+		right 180 / :numAngles
+	]
+	setPenSize 0
+	setFillColor penColor
+	repeat :numAngles [
+		rect :thickness :squareSize
+		right 180 / :numAngles
+	]
+	
+	setTurtleState :oldState
+end
+
+setScreenColor "green
+make "height 100
+make "separation :height * 3
+jumpLeft :separation * 1.5
+spider :height
+jumpRight :separation
+stickMan :height
+jumpRight :separation
+swirl :height
+jumpRight :separation
+spinStar :height

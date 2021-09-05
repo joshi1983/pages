@@ -1,0 +1,102 @@
+to drawE :fontHeight
+	localmake "oldState turtleState
+	jumpForward :fontHeight * 0.602
+	jumpRight :fontHeight * 0.207
+	polyStart
+	arcLines [
+		[-2 0] [20 0.185] [70 0.2] [27 0.235] [30 0.17]
+		[20 0.3] [12 0.4] [15 0.6] [30 0.26] [20 0.19]
+		[20 0.28] [50 0.197] [37.7 0.17] [-79.7 0] [0.245]
+		[-100 0] [-68 0.415] [-50 0.505] [-35 0.45]
+		[-30 0.58] [-40 0.5] [-60 0.42] [-35 0.45] [-29 0.64]
+		[-11.6 0.29] [-81.4 0] [0.597] [-90 0] [0.173]
+	] :fontHeight
+	polyEnd	
+	setTurtleState :oldState
+end
+
+to drawS :fontHeight
+	localmake "oldState turtleState
+	left 90
+	polyStart
+	arcLines [
+	[-30 0.5] [-30 0.25] [-25 0.44] [-95 0] [0.214] [-80 0]
+	[15 0.3] [50 0.16] [38 0.275] [50 0.12] [96 0.09] [0.2]
+	[-15 0.7] [-40 0.21] [-40 0.3] [-30 0.24] [-30 0.36]
+	[-30 0.54] [-22 0.4] [-40 0.27] [-11.5 0.4] [-90.5 0]
+	[0.202] [-85 0] [20 0.23] [50 0.13] [27 0.3]
+	[30 0.15] [80 0.09] [32 0.05] [18 0.4] [-6 2] [-18 0.4]
+	[-40 0.2] [-30 0.34] [-50 0.28] [-15 0.43] [-13 0.7105]
+	] :fontHeight
+	polyEnd
+	setTurtleState :oldState
+end
+
+to drawA :fontHeight
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	jumpLeft :fontHeight * 0.165
+	jumpForward :fontHeight * 0.675
+	polyStart
+	arcLines [
+		[90 0] [0.217] [-90 0] [-20 0.4] [-30 0.24] [-30 0.34]
+		[-17 0.9] [-40 0.33] [-30 0.22] [-13 0.8] [0.43] [23 0.39]
+		[-113 0] [0.23] [-63 0] [-19 0.27] [-8 1] [0.42] [70 0.15]
+		[50 0.21] [60 0.135]
+	] :fontHeight
+	polyEnd
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :fontHeight * 0.74
+	jumpRight :fontHeight * 0.165
+	polyStart
+	arcLines [[-165 0] [-39 0.105] [-34 0.08] [-20 0.2] [-7 1.5]
+	[30 0.45] [30 0.22] [30 0.31] [40 0.25] [42 0.34] [50 0.48]
+	[56 0] [0.247] [170 0] [-20 0.3] [-30 0.1] [-40 0.23] [-20 0.35]
+	[-40 0.08] [-50 0.12] [-60 0.13] [0.2] [150 0.2]
+	] :fontHeight
+	polyEnd
+	setTurtleState :oldState
+end
+
+to drawECircle :radius
+	localmake "oldState turtleState
+	right 130
+	jumpForward :radius
+	right 90
+	polyStart
+	arcLines [
+		[-323 1] [-80 0.4] [-50 0.48] [-40 0.28] [-33 0.6] [-7 0.15] [-100 0.23]
+		[-42 0.27] [-95 0] [0.41] [90 0] [0.2] [90 0] [0.7] [90 0]
+		[18 0.97] [140 0.518] [40 0.64] [-212.2 0.2] [0.193]
+		[360 0.114] [-160 0.155] [50 0.67] [49.4 0.7]
+	] :radius
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://en.wikipedia.org/wiki/European_Space_Agency#/media/File:European_Space_Agency_logo.svg
+to esaLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "fontSize :height * 0.5795
+	jumpForward :height * 0.195
+	jumpRight :height * 0.015
+	setPenSize 0
+	setFillColor "#003247
+	drawE :fontSize
+	jumpRight :height * 0.56
+	drawS :fontSize
+	jumpRight :height * 0.555
+	drawA :fontSize
+
+	jumpTo :oldPos
+	jumpLeft :height * 0.89
+	jumpForward :height / 2
+	drawECircle :height / 2
+	setTurtleState :oldState
+end
+
+esaLogo 100
