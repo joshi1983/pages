@@ -1,0 +1,89 @@
+make "darkColor "#780
+make "lightColor "#ff8
+make "littleCircleDisplacementFactor 1.4
+
+to drawHexagon :radius
+	localmake "oldHeading heading
+	right 180 / 6
+	regularPolygon :radius 6
+	setHeading :oldHeading
+end
+
+to drawTriple :circleRadius
+	localmake "center pos
+	right 180
+	repeat 3 [
+		jumpForward :circleRadius * :littleCircleDisplacementFactor / cos 30
+		circle :circleRadius
+		jumpTo :center
+		right 360 / 3
+	]
+	right 180
+end
+
+to drawTriangleCircles :len
+	localmake "oldState turtleState
+	localmake "center pos
+	localmake "separation :len * 0.2
+	localmake "paddedRadius :separation / 4
+	localmake "circleRadius :paddedRadius / :littleCircleDisplacementFactor
+	localmake "gap :len / 2 * (tan 30) - :paddedRadius * ( tan 30)
+	setPenSize 0
+	setFillColor :lightColor
+	repeat 3 [
+		jumpForward :gap
+		jumpRight :separation / 2
+		drawTriple :circleRadius
+		jumpLeft :separation
+		drawTriple :circleRadius
+		jumpTo :center
+		right 360 / 3
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by:
+; https://www.pinterest.co.uk/pin/41587996548038885/
+; Reported in June 23, 1999
+; West Overton, near Avebury, Wiltshire
+to westOverton1999CropCircles :height
+	localmake "oldState turtleState
+	localmake "hexHeight :height * 0.13
+	localmake "hexRadius :hexHeight / 2 / cos 180 / 6
+	localmake "height1 :height - :hexHeight
+	localmake "width1 :height1 / 3 / cos 30
+	jumpForward :height / 2
+	localmake "center pos
+	setFillColor :lightColor
+	setPenSize 0
+	repeat 2 [
+		jumpForward :height1 / 6
+		jumpLeft :width1 * 1.25
+		repeat 4 [
+			drawHexagon :hexRadius
+			jumpRight :width1
+		]
+		jumpLeft :width1 * 2.5
+		jumpForward :height1 / 3
+		drawHexagon :hexRadius
+		jumpTo :center
+		right 180
+	]
+	repeat 2 [
+		jumpLeft :width1 * 0.75
+		jumpForward :height1 / 6 - :width1 / 4 / cos 30
+		repeat 3 [
+			drawTriangleCircles :width1
+			jumpRight :width1
+		]
+		jumpLeft :width1 * 2
+		jumpForward :height1 / 6 + :width1 / 8 / cos 30
+		right 180
+		drawTriangleCircles :width1
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor :darkColor
+westOverton1999CropCircles 100

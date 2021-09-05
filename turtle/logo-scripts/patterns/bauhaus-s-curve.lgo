@@ -1,0 +1,28 @@
+; Inspired by image at:
+; https://ca.pinterest.com/pin/368028600773944693
+to bauhausSCurve :height
+	localmake "oldState turtleState
+	localmake "numAngles 32
+	localmake "sign 1
+	setPenSize :height * 0.0015
+	setPenColor "black
+	setFillColor transparent
+	localmake "radius (:height - penSize) / 6
+	jumpForward :radius * 2 + penSize / 2
+	localmake "center pos
+	left 90
+	repeat 2 [
+		repeat :numAngles [
+			jumpLeft :radius * :sign
+			circle :radius
+			jumpTo :center
+			right 180 / :numAngles * :sign
+		]
+		jumpLeft :radius * 2
+		localmake "center pos
+		localmake "sign -1
+	]
+	setTurtleState :oldState
+end
+
+bauhausSCurve 100

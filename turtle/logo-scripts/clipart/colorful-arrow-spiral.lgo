@@ -1,0 +1,23 @@
+; Inspired by image at:
+; https://ca.pinterest.com/pin/13299761389589283
+to colorfulArrowSpiral :height
+	localmake "oldState turtleState
+	localmake "colors ["yellow "#cf0 "lime
+	"aqua "blue "#d0f "violet "red "#f60 "orange]
+	setPenSize 0
+	jumpForward :height / 2
+	repeat count :colors [
+		setFillColor item repcount :colors
+		drawArcLineShape [0 0
+			[[-23 0] [43 0.175] [20 0.22] [29 0.3] [86 0] [0.06]
+			[-120 0] [0.21] [-120 0] [0.202] [-120 0] [0.05] [90 0]
+			[-40 0.3] [-50 0.22]]
+		] :height
+		right 360 / count :colors		
+	]
+
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+colorfulArrowSpiral 100

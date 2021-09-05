@@ -1,0 +1,69 @@
+; Inspired by flag at:
+; https://commons.wikimedia.org/wiki/File:Flag_of_the_Iroquois_Confederacy.svg
+;
+; It looks like "The Hiawatha Belt" is another name for the flag of the Iroquois Confederacy.
+; Some information about the Hiawatha Belt is at:
+; https://www.kanhiote.ca/cultural.html
+to iroquoisConfederacyFlag :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "width :height * 5 / 3
+	localmake "gapWidth :width * 0.3
+	localmake "thickness :height * 5 / 108
+	localmake "backgroundColor "#593eb6
+	localmake "foregroundColor "white
+	localmake "angle1 90
+	localmake "angle2 74
+	localmake "angle3 36.5
+	localmake "angle4 180 - :angle2 - :angle3
+	localmake "stemThickness1 0.017
+	localmake "onondagaWidth1 0.0465
+	localmake "onondagaDiagonal1 0.15
+	localmake "onondagaDiagonal2 0.28
+	localmake "topOnondagaLen :stemThickness1 + :onondagaWidth1 + (:onondagaDiagonal1 * cos :angle2)
+		+ (:onondagaDiagonal2 * cos :angle2 + :angle3)
+	localmake "onondagaLines1 [
+		[-90 0] [:stemThickness1] [:angle1 0] [0.090458] [-:angle1 0]
+		[:onondagaWidth1] [:angle2 0] [0.15] [:angle3 0] [:onondagaDiagonal2]
+		[:angle4 0] [:topOnondagaLen]
+	]
+	stripes :width :height [:backgroundColor]
+	jumpForward :height / 2
+	localmake "center pos
+	jumpBackward :thickness / 2
+	stripes :width :thickness [:foregroundColor]
+	jumpBackward :height / 12
+	stripes :gapWidth :height * 0.2 [:backgroundColor]
+	stripes :width * 0.3 :thickness [:foregroundColor]
+	setPenSize 0
+	setFillColor :foregroundColor
+
+	; Represent the Onondaga nation
+	drawArcLineShape [0 -0.19952666666
+		combine :onondagaLines1 reverse :onondagaLines1
+	] :height
+
+	setFillColor :backgroundColor
+	setPenColor :foregroundColor
+	setPenSize :thickness
+	setLineJoinStyle "miter
+	repeat 2 [
+		jumpTo :center
+		setHeading :oldHeading + 90 + 180 * repcount
+		jumpForward :height * 0.2775
+
+		; Represent the Cayuga and the Oneida nations
+		rect :height * 0.259 :height * 0.185
+
+		jumpForward :height * 0.352
+
+		; Represent the Seneca and Mohawk nations
+		rect :height * 0.208 :height * 0.185
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "#ddd
+; make white from the flag stand out better than a white screen.
+
+iroquoisConfederacyFlag 100

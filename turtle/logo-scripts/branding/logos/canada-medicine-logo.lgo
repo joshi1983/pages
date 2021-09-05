@@ -1,0 +1,32 @@
+; Inspired by logo at
+; https://canada-medicine.com
+to canadaMedicineLogo :height
+	localmake "oldState turtleState
+	localmake "centralGap :height * 0.075
+	localmake "penSize :height * 0.04
+	localmake "size1 (:height - :penSize) / 2 - :centralGap
+	localmake "size2 :height * 0.2
+	localmake "size3 :size1 - :size2
+	jumpForward :height / 2
+	localmake "center pos
+	setFillColor transparent
+	setPenSize :penSize
+	setPenColor "#09ab9a
+	setLineJoinStyle "miter
+	repeat 4 [
+		jumpRight :centralGap
+		jumpForward :centralGap
+		polyStart
+		jumpForward :size1
+		jumpRight :size2
+		jumpBackward :size3
+		jumpRight :size3
+		jumpBackward :size2
+		polyEnd
+		jumpTo :center
+		right 90
+	]
+	setTurtleState :oldState
+end
+
+canadaMedicineLogo 100

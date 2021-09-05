@@ -1,0 +1,34 @@
+; Inspired by:
+; https://en.wikipedia.org/wiki/Republic_of_the_Rio_Grande#/media/File:Flag_of_the_Republic_of_the_Rio_Grande_(historical).svg
+;
+; Some differences from the SVG include:
+; - made the stars regular.
+; The original SVG had isotoxal stars but quite regular.
+; I made these stars regular because the original was similar enough that 
+; the difference was likely a mistake.
+to republicOfRioGrandeFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 3 / 2
+	localmake "leftWidth :width / 3
+	localmake "starSeparation :height * 0.295
+	localmake "starRadius :height * 0.135
+
+	; Overlap the left side so no background colors can leak through
+	; with antialiasing
+	jumpRight :leftWidth / 4
+	stripes :width - :leftWidth / 2 :height ["black "#c60c30 "white]
+
+	jumpLeft :width / 2 - :leftWidth / 4
+	stripes :leftWidth :height ["#002664]
+	jumpForward :height / 2 - :starSeparation - :starRadius * (1 - cos 180 / 5) / 2
+	setPenSize 0
+	setFillColor "white
+	repeat 3 [
+		regularStar :starRadius 5
+		jumpForward :starSeparation
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "#eee
+republicOfRioGrandeFlag 100

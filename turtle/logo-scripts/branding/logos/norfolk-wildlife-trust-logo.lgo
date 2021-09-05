@@ -1,0 +1,38 @@
+; Inspired by logo at:
+; https://www.norfolkwildlifetrust.org.uk
+to norfolkWildlifeTrustLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "topShape [2.495 0.815
+		[[89.8 0.01] [3.03] [-3.9 4] [-13 0.5]
+			[0.35] [45 0.7] [20 0.35] [131.85 0.052]
+			[4.3386] [90 0.01]]
+	]
+	localmake "beakShape [-1.895 0.72
+		[[40 0] [50 0.09] [13 0.4] [0.2] [14 1] [157 0.02]
+		[0.56] [20 0.08] [85 0.03] [0.03] [22 0.094]]
+	]
+	setPenSize 0
+	setFillColor "black
+	drawArcLineShape :topShape :height
+
+	setPenSize :height * 0.1
+	setPenColor "black
+	setLineCap "round
+	jumpForward :height * 0.545
+	jumpLeft :height * 1.73
+	right 99
+	arcLines [[-25 0.57] [0.35] [35 1.18] [20 0.8]
+		[8 5] [-26 1.7]
+	] :height
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	setFillColor "#ed1e24
+	setPenSize 0
+	drawArcLineShape :beakShape :height
+	setTurtleState :oldState
+end
+
+norfolkWildlifeTrustLogo 100

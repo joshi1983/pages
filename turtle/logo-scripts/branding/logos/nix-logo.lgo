@@ -1,0 +1,38 @@
+; Inspired by logo at:
+; https://nixos.org
+to nixLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "thickness :height * 0.111
+	localmake "offset1 :height * 0.235
+	localmake "gap :height * 0.017
+	localmake "len1 (:height / 2 / cos 30) - :gap
+	localmake "trapWidth2 :len1 - :thickness * 2 * tan 30
+	localmake "lines1 [
+		[-90 0] [1 / 2 / cos 30] [60 0]
+		[2] [90 0] [1 / 2]
+	]
+	localmake "colors ["#7ebae4 "#5277c3]
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	repeat 6 [
+		setHeading :oldHeading + repcount * 360 / 6
+		localmake "colorIndex 1 + remainder repcount 2
+		setFillColor item :colorIndex :colors
+		jumpRight :offset1
+		right 60
+		jumpLeft :gap + :len1 / 2
+		isoTrapezoid :len1 :trapWidth2 :thickness		
+		jumpLeft :len1 / 2
+		right 120
+		jumpLeft :height * 0.345
+		drawArcLineShape [0 0
+			combine :lines1 reverse :lines1
+		] :thickness
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+nixLogo 100

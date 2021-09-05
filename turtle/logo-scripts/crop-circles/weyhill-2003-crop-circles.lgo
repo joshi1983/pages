@@ -1,0 +1,59 @@
+make "darkColor "#880
+
+; Inspired by
+; https://galactic2.net/c45d8621k/corn639.jpg
+; which was mentioned at:
+; https://galactic2.net/c45d8621k/2003.html
+; These were reported July 18, 2003.
+; The location was Weyhill, nr Andover, Hampshire. England 
+to weyhill2003CropCircles :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "largeRadius :height * 0.315
+	localmake "thickness :height * 0.03
+	localmake "thinThickness :height * 0.01
+	localmake "lightColor "#ffb
+	localmake "littleRadius (:height / 2 - :largeRadius - :thickness) / 2
+	localmake "gap (:height - :thickness) / 2 - :littleRadius
+	localmake "largeHexSideLength :largeRadius * 2 * sin 180 / 6
+	localmake "arcAngle 135
+	localmake "angle1 :arcAngle / 2 + 180 / 6
+	localmake "arcRadius (:largeHexSideLength - :thinThickness) / 2 / sin :arcAngle / 2
+	jumpForward :height / 2
+	setFillColor transparent
+	setPenColor :lightColor
+	setPenSize :thickness
+	circle :largeRadius
+	localmake "center pos
+	repeat 6 [
+		setHeading :oldHeading + repcount * 360 / 6
+		jumpForward :gap
+		setPenSize :thickness
+		setFillColor transparent
+		circle :littleRadius
+		setPenSize 0
+		setFillColor :lightColor
+		circle :height * 0.02
+		setPenSize :thinThickness
+		left 135
+		forward :littleRadius
+		jumpTo :center
+	]
+	setPenSize 0
+	setHeading :oldHeading + 13
+	jumpForward :largeRadius
+	jumpRight :thinThickness / 2
+	right 90 + :angle1
+	polyStart
+	repeat 6 [
+		arcLeft :arcAngle :arcRadius
+		right :angle1
+		jumpForward :thinThickness
+		right :angle1
+	]
+	polyEnd
+	setTurtleState :oldState
+end
+
+setScreenColor :darkColor
+weyhill2003CropCircles 100

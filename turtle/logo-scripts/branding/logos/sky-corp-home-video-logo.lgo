@@ -1,0 +1,87 @@
+to drawS :height
+	localmake "oldState turtleState
+	drawArcLineShape [-0.32 0
+		[[-90 0] [0.41] [23 0] [125 0.335] [0.14]
+		[-148 0] [0.5] [90 0] [0.3333] [90 0] [0.615]
+		[23 0] [142 0.365] [-165 0.015] [0.27]]
+	] :height
+	setTurtleState :oldState
+end
+
+to drawH :height
+	localmake "oldState turtleState
+	localmake "width :height * 0.82
+	localmake "sideThickness :height * 0.333
+	localmake "separation :width - :sideThickness
+	jumpForward :height / 2
+	rect :width :height * 0.35
+	jumpLeft :separation / 2
+	rect :sideThickness :height
+	jumpRight :separation
+	rect :sideThickness :height
+	setTurtleState :oldState
+end
+
+to drawV :height
+	localmake "oldState turtleState
+	localmake "angle1 21
+	localmake "len1 0.73
+	localmake "len2 0.54
+	localmake "height1 :len1 * cos :angle1
+	localmake "angle2 17.5
+	drawArcLineShape [-0.2 0
+		[[:angle1 0] [:len1] [90 - :angle1 0] [0.2]
+		[-90 0] [1 - :height1] [-90 0] [0.43]
+		[:angle1 - 90 0] [:len2]
+		[180 - :angle1 * 2 0] [:len2]
+		[:angle1 - 90 0] [0.32] [-90 - :angle2 0] [1 / cos :angle2]]
+	] :height
+
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://www.youtube.com/@skycorphomevideo
+;
+; It has a lot of comedic videos parodying some
+; educational videos from the 1990's.
+to skyCorpHomeVideoLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "backgroundStops createPList2 [
+		[0 "#000654] [0.4 "black]
+	]
+	localmake "fontColorStops createPList2 [
+		[0 "#76fc8d] [0.5 "#76fc8d] [0.6 "black] [1 "black]
+	]
+	localmake "fontHeight :height * 0.234
+	setLineCap "butt
+	jumpForward :height
+	setPenGradient createLinearGradient :oldPos pos :backgroundStops "pad
+	setPenSize :height
+	backward :height
+	setFillColor transparent
+	setPenSize :height * 0.01
+	setPenColor "#006ffc
+	setLineJoinStyle "miter
+	jumpForward :height / 2
+	rect :height * 0.75 :height * 0.4
+	jumpLeft :height * 0.21
+	jumpBackward :fontHeight / 2
+	setPenSize 0
+	localmake "textStartPos pos
+
+	jumpForward :height * 0.02
+	setFillGradient createLinearGradient :textStartPos pos :fontColorStops "repeat
+
+	jumpTo :textStartPos
+	drawS :fontHeight
+	jumpRight :height * 0.188
+	drawH :fontHeight
+	jumpRight :height * 0.23
+	drawV :fontHeight
+	setTurtleState :oldState
+end
+
+jumpBackward 100
+skyCorpHomeVideoLogo 200

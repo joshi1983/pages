@@ -1,0 +1,58 @@
+to wave :size :timeRatio
+	localmake "numPieces 100
+	localmake "step :size / :numPieces
+	localmake "points []
+	jumpForward :size / 2
+	localmake "center pos
+	jumpLeft :size / 2
+	jumpBackward :size / 2
+	setPenSize :size * 0.002
+	repeat :numPieces [
+		localmake "row []
+		repeat :numPieces [
+			localmake "r (distance :center) / :size
+			localmake "val :size * 0.1 * sin (:r * 3 + :timeRatio * 2) * 360
+			jumpIn :val
+			queue2 "row pos
+			jumpOut :val
+			jumpRight :step
+		]
+		jumpLeft :size
+		jumpForward :step
+		queue2 "points :row
+	]
+	repeat :numPieces [
+		localmake "row item repcount :points
+		jumpTo first :row
+		for ["i 2 :numPieces] [
+			setPos item :i :row
+		]
+	]
+	for ["x 1 :numPieces] [
+		jumpTo item :x first :points
+		for ["y 2 :numPieces] [
+			setPos item :x item :y :points
+		]
+	]
+end
+
+pitchUp 30
+right 30
+wave 100 interpolateRatio easeInOut animation.clampedTimeRatio
+
+to animation.snapshotstyle
+	output createPList2 [
+		["position.x 23]
+		["position.y 35]
+		["zoom.scale 5]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 3
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

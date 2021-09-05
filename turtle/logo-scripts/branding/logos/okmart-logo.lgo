@@ -1,0 +1,54 @@
+; Inspired by
+; https://zh.wikipedia.org/wiki/OK%E8%B6%85%E5%95%86#/media/File:OK_LOGO-%E6%96%B9%E5%BD%A2-01.png
+to okMartLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "okRed "#e60012
+	localmake "kLines [
+		[0.118 0.366 -15 0.298]
+		[0.09 0.49 38 0.275]
+		[0.352 0.43 -50.8 0.22]
+	]
+	localmake "redSize :height * 0.4445
+	localmake "cornerRadiusRatio 0.175
+	localmake "tinyCornerRatio 0.024
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	setFillColor "white
+	roundRect :height :height :height * 0.096
+	setFillColor transparent
+	setPenColor :okRed
+	setPenSize :height * 0.1165
+	jumpLeft :height * 0.214
+	jumpBackward :height * 0.0666
+	circle :height * 0.151
+	setPenSize :height * 0.143
+	setLineCap "round
+	repeat count :kLines [
+		localmake "lineInfo item repcount :kLines
+		jumpTo :oldPos
+		jumpRight :height * first :lineInfo
+		jumpForward :height * item 2 :lineInfo
+		setHeading :oldHeading + item 3 :lineInfo
+		forward :height * last :lineInfo
+		setHeading :oldHeading
+	]
+	setFillColor :okRed
+	setPenSize 0
+	repeat 2 [
+		setHeading :oldHeading + 180 * repcount
+		jumpTo :center
+		jumpForward :redSize
+		polyStart
+		arcLines [[90 0] [1 - :cornerRadiusRatio] [90 :cornerRadiusRatio]
+		[0.387] [122.5 :tinyCornerRatio] [-38 2.29] [-10 2.05] [-10 0.78]
+		[115.5 :tinyCornerRatio] [0.150223475] [90 :cornerRadiusRatio]
+		] :redSize
+		polyEnd
+	]
+	setTurtleState :oldState
+end
+
+okMartLogo 100

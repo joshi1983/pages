@@ -1,0 +1,321 @@
+; Copied from: https://resources.terrapinlogo.com/logolib/fractals.html
+
+TO MINKOWSKI :LENGTH :LEVEL
+    IF (:LEVEL = 0) [FD :LENGTH STOP]
+    MINKOWSKI :LENGTH * (1 / 4) (:LEVEL - 1) ; draws first segment
+    LT 90
+    MINKOWSKI :LENGTH * (1 / 4) (:LEVEL - 1) ; draws second segment
+    RT 90
+    MINKOWSKI :LENGTH * (1 / 4) (:LEVEL - 1) ; draws third segment
+    RT 90
+    MINKOWSKI :LENGTH * (1 / 4) (:LEVEL - 1) ; draws fourth segment
+    MINKOWSKI :LENGTH * (1 / 4) (:LEVEL - 1) ; draws fifth segment
+    LT 90
+    MINKOWSKI :LENGTH * (1 / 4) (:LEVEL - 1) ; draws sixth segment
+    LT 90
+    MINKOWSKI :LENGTH * (1 / 4) (:LEVEL - 1) ; draws seventh segment
+    RT 90
+    MINKOWSKI :LENGTH * (1 / 4) (:LEVEL - 1) ; draws eighth segment
+END
+
+TO C :LENGTH :LEVEL
+    ; from Advanced Logo by Michael Friendly, page 248
+    IF :LEVEL = 0 [FD :LENGTH STOP]
+    LT 45
+    C :LENGTH * (1 / (SQRT 2)) :LEVEL - 1
+    RT 90
+    C :LENGTH * (1 / (SQRT 2)) :LEVEL - 1
+    LT 45
+END
+
+TO TREEP :SIDE :LEVEL
+    ; this creates a Pythagorean Tree with the turtle starting
+    ; and ending at the lower left corner
+    IF :LEVEL < 0 [STOP]
+    FD :SIDE LT 45
+    TREEP :SIDE * (1 / SQRT 2) (:LEVEL - 1)
+    RT 135 FD :SIDE
+    PU BK :SIDE LT 45 FD :SIDE * (1 / SQRT 2) PD
+    TREEP :SIDE * (1 / SQRT 2) (:LEVEL - 1)
+    PU RT 90 FD :SIDE * (1 / SQRT 2) RT 45 PD
+    REPEAT 2 [FD :SIDE RT 90]
+END
+
+TO HAT :LENGTH :LEVEL
+    IF (:LEVEL = 0) [FD :LENGTH STOP]
+    HAT :LENGTH * (1 / 3) (:LEVEL - 1)
+    LT 90
+    HAT :LENGTH * (1 / 3) (:LEVEL - 1)
+    RT 90
+    HAT :LENGTH * (1 / 3) (:LEVEL - 1)
+    RT 90
+    HAT :LENGTH * (1 / 3) (:LEVEL - 1)
+    LT 90
+    HAT :LENGTH * (1 / 3) (:LEVEL - 1)
+END
+
+TO DRAGON :LENGTH :LEVEL :ANGLE
+    ;this procedure creates the standard dragon if you use
+    ;90 for the angle when you call it
+    ;a modification of Michael Friendly's procedure from
+        ;Advanced Logo, page 632
+    IF :LEVEL = 0 [FD :LENGTH STOP]
+    DRAGON :LENGTH * (1 / (SQRT 2)) (:LEVEL - 1) (ABS :ANGLE)
+    LT :ANGLE
+    DRAGON :LENGTH * (1 / (SQRT 2)) (:LEVEL - 1) (-1 * (ABS :ANGLE))
+END
+
+TO KEEGAN
+    ; created by Keegan Phelps-Franco for
+    ; Math 409 Summer 2003
+    CS FS HT SETBG [247 113 239] SETWIDTH 8
+    PU FD 100 PD HT
+    REPEAT 3 [LT 135 SETPC 12 CANTOR 99 0 PU RT 45 FD 50 SETPC 11 CANTOR 99 1 PU LT 135 FD 50 SETPC 10 CANTOR 99 2 PU RT 45 FD 50 SETPC 9 CANTOR 99 3 PU LT 135 FD 50 SETPC 8 CANTOR 99 4 PU RT 45 FD 50 SETPC 8 CANTOR 99 4 PU LT 135 FD 50 SETPC 9 CANTOR 99 3 PU RT 45 FD 50 SETPC 10 CANTOR 99 2 PU LT 135 FD 50 SETPC 11 CANTOR 99 1 PU RT 45 FD 50 SETPC 12 CANTOR 99 0]
+END
+
+TO JESSICA
+    ;created by Jessica Lessard for
+    ;Math 409 Summer 2003
+    CS FS SETW 3 SETPC 90 HT
+    PU RT 90 BK 100 LT 90 PD
+    REPEAT 18 [MINK1]
+END
+
+TO DANA
+    ; created by Dana Gagne for
+    ;Math 409 Summer 2003
+    CS FS SETW 1 SETPC 4
+    PU FD 50 RT 90 BK 150 PD
+    HAT 300 2 RT 90
+    REPEAT 3 [HAT 300 0 RT 90]
+    PU RT 90 FD 70 LT 90 FD 200 RT 180 PD
+    HAT 100 1
+    PU FD 100 LT 90 FD 130 LT 90 FD 50 PD
+    SETPC 12 SETW 3
+    HAT 200 1 RT 180
+    HAT 200 1
+    PU RT 180 FD 200 * 2 / 3 LT 90 FD 200 * 1 / 3 LT 90 PD
+    SETPC 14
+    REPEAT 2 [HAT 200 * 1 / 6 3] LT 90
+    PU FD 200 * 2 / 3 LT 90 PD
+    REPEAT 2 [HAT 200 * 1 / 6 3]
+    PU FD 200 * 1 / 3 + 50 LT 90 FD 335 LT 90 FD 300 RT 180 PD
+    SETPC 0 SETW 5 HAT 300 1
+    PU SETPOS [67 67] LT 90 BK 200 * 1 / 16 PD
+    SETW 1 SETPC 1 HAT 200 * 1 / 8 3 RT 180
+    HAT 200 * 1 / 8 3
+    PU SETPOS [-67 67] BK 200 * 1 / 16 PD
+    HAT 200 * 1 / 8 3 RT 180
+    HAT 200 * 1 / 8 3 HT
+END
+
+TO ELISA
+    ;created by Elisa Samolyk for
+    ; Math 409 Summer 2003
+    CS FS HT
+    SETPC [255 0 0]
+    C 50 8
+    LT 90
+    PU SETPOS [-91 51] PD
+    LT 90
+    C 50 8
+    PU
+    SETPOS [-292 71]
+    RT 115
+    PD
+    SETPC [255 255 8]
+    C 40 8
+    LT 90
+    PU
+    SETPOS [-365 24]
+    LT 90
+    PD
+    C 40 8
+    PU
+    SETPC [0 255 0]
+    SETPOS [230 -85]
+    LT 65
+    PD
+    C 45 8
+    PU
+    RT 180
+    SETPOS [209 5]
+    PD
+    C 45 8
+    PU SETPOS [-251 -64]
+    SETPC [0 0 255]
+    PD C 35 8
+    PU SETPOS [-238 -133]
+    RT 180
+    PD
+    C 35 8
+    PU
+    SETPOS [128 84]
+    SETPC [255 32 247]
+    PD
+    C 25 8
+    PU
+    SETPOS [118 135]
+    RT 180
+    PD
+    C 25 8
+    PU SETPOS [-89 -93] PD
+    SETPC [0 0 0]
+    TT [BUTTERFLIES IN FLIGHT]
+END
+
+TO DONNA
+    ;created by Donna Lybarger for
+    ; Math 409 Summer 2003
+    CS FS SETW 1 HT
+    REPEAT 6 [SETPC RANDOM 255 SIERPINSKI 200 4 RT 60]
+
+END
+
+TO JEN_TREE
+    SETPC [231 0 107]
+    TREEP 90 2 RT 180
+    TREEP 90 2 LT 90
+    TREEP 90 2 RT 180
+    TREEP 90 2
+    SETPC [231 0 90]
+    REPEAT 4 [LT 90 TREEP 45 2]
+    SETPC [173 56 255]
+    REPEAT 4 [LT 90 TREEP 23 2]
+    SETPC [173 0 81]
+    REPEAT 4 [LT 90 TREEP 15 2]
+    SETPC [8 182 132]
+    REPEAT 4 [LT 90 TREEP 8 2]
+END
+
+TO JENNIFER
+    ;created by Jennifer Schaefer for
+    ;Math 409 Summer 2003
+    CS FS HT SETBG 0 SETWIDTH 3
+    PU SETPOS [215 0] RT 90 PD
+    JEN_TREE
+    PU SETPOS [-215 0] RT 90 PD
+    JEN_TREE
+END
+
+TO MELISSA
+    ;created by Melissa Aston for
+    ; Math 409 Summer 2003
+    CS FS SETW 3 SETBG [0 0 0]
+    SETPC [45 45 200] HFRACTAL 100 3
+    PU RT 90 FD 128 PD
+    SETPC [200 45 45] HFRACTAL 100 4
+    PU RT 180 FD 128 FD 128 PD
+    SETPC [45 200 45] HFRACTAL 100 4
+    PU RT 180 FD 128 LT 90 FD 100 PD
+    SETPC [175 150 0] HFRACTAL 100 5
+    PU BK 200 PD
+    SETPC [120 45 120] HFRACTAL 100 5
+    PU FD 200 LT 90 FD 128 RT 45 FD 64 PD
+    SETW 4
+    SETPC [30 75 120] HFRACTAL 150 4
+    PU BK 64 LT 45 BK 256 RT 135 FD 64 PD
+    SETPC [200 45 120] HFRACTAL 150 4
+    PU BK 64 RT 45 BK 128 LT 90
+    BK 200 RT 90 FD 128 RT 45 FD 64 PD
+    SETPC [175 200 50] HFRACTAL 150 4
+    PU BK 64 LT 45 BK 256 RT 135 FD 64 PD
+    SETPC [255 255 255] HFRACTAL 150 4
+    HT
+END
+
+TO DRAGON1
+    REPEAT 4 [DRAGON 100 2 60 RT 150]
+END
+
+TO DRAGON2
+    REPEAT 4 [DRAGON 50 2 60 RT 150]
+    RT 120 FD 75 LT 120
+    REPEAT 4 [DRAGON 50 2 60 RT 150]
+END
+
+TO MAIN
+    PR "|Try one of the following procedures:|
+    PR [COLLEEN DANA DAPHNE DONNA ELISA JENNIFER JESSICA KEEGAN MELISSA]
+END
+
+TO COLLEEN
+    ;created by Colleen Downey for
+    ;Math 409 Project 4 Summer 2003
+    CS FS SETW 1 HT SETBG [0 0 0]
+    REPEAT 6 [SETPC 9 PEANO 225 3 PU BK 50 PD SETPC 14 PEANO 50 4 PU BK 250 RT 30 PD SETPC 12 PEANO 225 3 PU BK 50 PD SETPC 14 PEANO 50 4 PU BK 250 PD RT 30]
+END
+
+TO MINK1
+    MINKOWSKI 150 2
+    RT 90 SETPC 40
+    MINKOWSKI 150 2
+    RT 90 SETPC 200
+    MINKOWSKI 150 2
+    RT 90 SETPC 90
+    MINKOWSKI 150 2
+    RT 90
+    PU FD 10 LT 20 PD
+END
+
+TO PEANO :LENGTH :LEVEL
+    IF (:LEVEL = 0) [FD :LENGTH STOP]
+    PEANO :LENGTH * (1 / 3) :LEVEL - 1
+    LT 90
+    PEANO :LENGTH * (1 / 3) :LEVEL - 1
+    RT 90
+    PEANO :LENGTH * (1 / 3) :LEVEL - 1
+    RT 90
+    PEANO :LENGTH * (1 / 3) :LEVEL - 1
+    RT 90
+    PEANO :LENGTH * (1 / 3) :LEVEL - 1
+    LT 90
+    PEANO :LENGTH * (1 / 3) :LEVEL - 1
+    LT 90
+    PEANO :LENGTH * (1 / 3) :LEVEL - 1
+    LT 90
+    PEANO :LENGTH * (1 / 3) :LEVEL - 1
+    RT 90
+    PEANO :LENGTH * (1 / 3) :LEVEL - 1
+END
+
+TO DAPHNE
+    ;created by Daphne Miller for
+    ; Math 409 summer 2003
+    CS FS HT SETBG [245 215 203] SETPC 6 SETW 2
+    PU SETPOS [-200 -75] PD
+    REPEAT 8 [FD 150 RT 45]
+    REPEAT 4 [FD 150 RT 150 DRAGON1 LT 105 FD 150 RT 45]
+    SETPC [198 2 76]
+    REPEAT 4 [FD 150 RT 45 FD 75 LT 120 DRAGON2 RT 165]
+    PU SETPOS [-253 128] PD
+    SETPC 6
+    REPEAT 4 [RT 45 FD 150 RT 45 FD 255]
+END
+
+TO SIERPINSKI :LENGTH :LEVEL
+    ; this creates the "filled" version; to display the outline, make the
+    ; last two lines of  this procedure into comments - by placing
+    ; a semi-colon at the beginning of the lines
+    IF (:LEVEL < 0) [STOP]
+    REPEAT 3 [SIERPINSKI :LENGTH * (1 / 2) (:LEVEL - 1) FD :LENGTH RT 120]
+    PU RT 30 FD 3 PD FILL
+    PU BK 3 LT 30 PD
+END
+
+TO CANTOR :LENGTH :LEVEL
+    IF (:LEVEL = 0) [PD FD :LENGTH STOP]
+    CANTOR :LENGTH * (1 / 3) (:LEVEL - 1)
+    PU FD :LENGTH * (1 / 3) PD
+    CANTOR :LENGTH * (1 / 3) (:LEVEL - 1)
+END
+
+TO HFRACTAL :LENGTH :LEVEL
+    IF (:LEVEL < 0) [STOP]
+    RT 90 FD :LENGTH * (1 / 2)
+    HFRACTAL :LENGTH * (1 / SQRT 2) (:LEVEL - 1)
+    PU BK :LENGTH * (1 / 2) LT 180 PD
+    FD :LENGTH * (1 / 2)
+    HFRACTAL :LENGTH * (1 / SQRT 2) (:LEVEL - 1)
+    PU BK :LENGTH * (1 / 2) PD RT 90
+END

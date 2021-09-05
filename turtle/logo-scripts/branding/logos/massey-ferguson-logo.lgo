@@ -1,0 +1,65 @@
+to cap :angle
+	localmake "oldState turtleState
+	localmake "oldPenSize penSize
+	localmake "oldHeading heading
+	jumpRight :oldPenSize / 2 * sign :angle
+	localmake "angle2 90 - :angle
+	localmake "gap1 :oldPenSize / 2
+	setFillColor penColor
+	setPenSize 0
+	polyStart
+	jumpForward :gap1
+	left :angle2
+	jumpForward :oldPenSize / abs sin :angle2
+	setHeading :oldHeading + 180
+	jumpForward :gap1 + abs :oldPenSize * tan :angle2
+	polyEnd
+	setHeading :oldHeading
+	setPenSize :oldPenSize
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Massey_Ferguson#/media/File:MF_Logo_2022.png
+to masseyFergusonLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "size1 :height * 0.235
+	localmake "thickness :height * 0.06
+	localmake "angle 36.4
+	localmake "height1 :height - :thickness
+	localmake "size2 :height1 / cos :angle
+	localmake "size3 :height * 0.9160556
+	localmake "size4 :height * 0.766
+	localmake "size5a :height * 0.335
+	localmake "size5b :height * 0.277
+	localmake "size5 :height * 1.379118
+	setPenSize :thickness
+	setLineJoinStyle "round
+	setLineCap "round
+	setPenColor "#bd3131
+	jumpLeft :size1
+	jumpForward (:height - :height1) / 2
+	right :angle
+	forward :size2
+	setHeading :oldHeading - 90
+	forward :size3
+	left 90 + :angle
+	forward :size2
+	setHeading :oldHeading + :angle
+	forward :size4
+	setHeading :oldHeading - 90
+	forward :size5a
+	cap :angle
+	jumpForward :size5b
+	localmake "pos1 pos
+	forward :size5 - :size5a - :size5b
+	setHeading :oldHeading + 180 - :angle
+	forward :size4
+	jumpTo :pos1
+	setHeading :oldHeading + 90
+	cap :angle
+	setTurtleState :oldState
+end
+
+masseyFergusonLogo 100

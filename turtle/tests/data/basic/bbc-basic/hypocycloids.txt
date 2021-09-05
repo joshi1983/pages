@@ -1,0 +1,31 @@
+REM copied from https://www.facebook.com/share/v/1DjhNiwR9F/
+REM in case that link becomes unavailable, it was posted by Richard Russell.
+REM The poster's profile is at: https://www.facebook.com/richard.russell.7355/   
+10 MODE 9 : OFF : ORIGIN 640,512
+   20 COLOUR 4,128,128,255
+   30 DIM x(4,5), y(4,5)
+   40 R = 500 : r = R / 2
+   50 A% = 0 : CIRCLE 0,0,R
+   60 REPEAT
+   70   C% = A% DIV 360 MOD 5 + 1 : c = C% / 5
+   80   ox = (R-r)*COSRAD(A%) : oy = (R-r)*SINRAD(A%)
+   90   GCOL 3,7
+  100   FOR B% = 0 TO 4 : b = A% * (R - r) / r + B% * 72
+  110     x = r*COSRAD(b) : y = r*SINRAD(b)
+  120     LINE ox,oy,ox+x,oy-y : CIRCLE FILL ox+x*c,oy-y*c,6
+  130   NEXT
+  140   CIRCLE ox,oy,r
+  150   D% = INKEY(2) : *FX 19
+  160   FOR B% = 0 TO 4 : b = A% * (R - r) / r + B% * 72
+  170     x = r*COSRAD(b) : y = r*SINRAD(b)
+  180     LINE ox,oy,ox+x,oy-y : CIRCLE FILL ox+x*c,oy-y*c,6
+  190   NEXT
+  200   CIRCLE ox,oy,r
+  210   GCOL C%
+  220   FOR B% = 0 TO 4 : b = A% * (R - r) / r + B% * 72
+  230     x = ox + c*r*COSRAD(b) : y = oy - c*r*SINRAD(b)
+  240     IF A% MOD 360 LINE x(B%,C%), y(B%,C%), x, y
+  250     x(B%,C%) = x : y(B%,C%) = y
+  260   NEXT
+  270   A% += 1
+  280 UNTIL FALSE

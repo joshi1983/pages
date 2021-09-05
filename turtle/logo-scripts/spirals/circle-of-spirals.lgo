@@ -1,0 +1,43 @@
+to drawSpiral :width
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "minRadius :width * 0.01
+	localmake "arcAngle 10
+	localmake "radius :width / 2
+	setPenSize 0
+	setFillColor penColor
+	circle :minRadius
+	left 18
+	jumpLeft :width * 0.53
+	
+	while :radius > :minRadius [
+		setPenSize max :width * 0.004 :radius * 0.05
+		arcRight :arcAngle :radius
+		localmake "radius (distance :oldPos) * 0.93
+		setHeading (towards :oldPos) - 87
+	]
+
+	setTurtleState :oldState
+end
+
+; Inspired by an image at:
+; https://ca.pinterest.com/pin/551691023127443018
+to circleOfSpirals :height
+	localmake "oldState turtleState
+	localmake "jumpDistance :height * 0.391
+	localmake "numSpirals 11
+	localmake "spiralWidth 2 * :jumpDistance * tan 360 / :numSpirals / 2
+	jumpForward :height * 0.503
+	localmake "center pos
+	setPenColor "black
+	right 22
+	repeat :numSpirals [
+		jumpForward :jumpDistance
+		drawSpiral :spiralWidth
+		jumpTo :center
+		right 360 / :numSpirals
+	]
+	setTurtleState :oldState
+end
+
+circleOfSpirals 100

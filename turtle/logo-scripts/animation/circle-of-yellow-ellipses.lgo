@@ -1,0 +1,49 @@
+; Inspired by animation at:
+; https://ca.pinterest.com/pin/5136987066846044
+to drawCircleOfYellowEllipses :height :time
+	localmake "oldState turtleState
+	localmake "ellipseRadius1 :height * 0.205
+	localmake "ellipseRatio 0.25
+	setPenSize :height * 0.003
+	localmake "offset (:height - penSize) / 2 - :ellipseRadius1
+	localmake "numAngles 28
+	localmake "numEllipsesPerAngle 6
+	setFillColor transparent
+	setPenColor "yellow
+	jumpForward :height / 2
+	localmake "center pos
+	right 360 * :time
+
+	repeat :numAngles [
+		jumpForward :offset
+		repeat :numEllipsesPerAngle [
+			localmake "radius1 :ellipseRadius1 * repcount / :numEllipsesPerAngle
+			localmake "radius2 :radius1 * :ellipseRatio
+			ellipse :radius2 :radius1
+		]
+		jumpTo :center
+		right 360 / :numAngles
+	]
+
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+make "time animation.clampedTimeRatio
+drawCircleOfYellowEllipses 100 :time
+
+to animation.snapshotstyle
+	output createPList2 [
+		["position.y 50]
+		["zoom.scale 5]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 10
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

@@ -1,0 +1,31 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Greece#/media/File:Flag_of_Greece.svg
+to greeceFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 3 / 2
+	localmake "greeceBlue "#0D5EAF
+	localmake "stripeWidth1 :height / 9
+	localmake "crossWidth :stripeWidth1 * 5
+	localmake "crossHeight :crossWidth
+	stripes :width :height [:greeceBlue]
+	setLineCap "butt
+	setPenSize :width
+	setPenColor "white
+	repeat 4 [
+		jumpForward :stripeWidth1
+		forward :stripeWidth1
+	]
+	jumpBackward :stripeWidth1 * 4
+	jumpLeft (:width - :crossWidth) / 2
+	stripes :crossWidth :crossHeight [:greeceBlue]
+	setPenColor "white
+	setPenSize :stripeWidth1
+	forward :crossHeight
+	jumpBackward (:crossHeight + :stripeWidth1) / 2
+	setPenSize :crossWidth
+	forward :stripeWidth1
+	setTurtleState :oldState
+end
+
+setScreenColor "#eee
+greeceFlag 100

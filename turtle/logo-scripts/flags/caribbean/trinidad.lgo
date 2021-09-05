@@ -1,0 +1,83 @@
+make "trinidadRed "#da1a35
+
+to parallelogram3 :width :height :angle
+	localmake "oldState turtleState
+	jumpLeft :width / 2
+	parallelogram :width :height / cos :angle -:angle
+	setTurtleState :oldState
+end
+
+; heightUnitCount represents the number of units that correspond with :height.
+; Following the construction sheet, height corresponds with 18 units, for example.
+to trinidadFlagCustomWidth :width :height :heightUnitCount
+	localmake "oldState turtleState
+	localmake "diagonalsInfo [
+		["white 1]
+		["black 4]
+		["white 1]
+	]
+	; The construction sheet mentions an expression 
+	; that works for the standard 5:3 aspect ratio flag.
+	; len1 and angle are calculated here from arbitrary width, height, and heightUnitCount.
+	localmake "len1 :height * 6 / :heightUnitCount
+	localmake "angle (arcTan :width / :height) - arcSin :len1 / hypot [:width :height]
+	stripes :width :height [:trinidadRed]
+	jumpRight :width / 2
+	setPenSize 0
+	repeat count :diagonalsInfo [
+		localmake "diagonalInfo item repcount :diagonalsInfo
+		localmake "dWidth :height / :heightUnitCount * (1 / cos :angle) * item 2 :diagonalInfo
+		setFillColor item 1 :diagonalInfo
+		parallelogram3 :dWidth :height :angle
+		jumpLeft :dWidth
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Trinidad_and_Tobago#/media/File:Flag_of_Trinidad_and_Tobago.svg
+; Mostly based on construction sheet at
+; https://en.wikipedia.org/wiki/Flag_of_Trinidad_and_Tobago#/media/File:Flag_of_Trinidad_and_Tobago_(construction_sheet).svg
+to trinidadFlag :height
+	localmake "width :height * 5 / 3
+	trinidadFlagCustomWidth :width :height 18
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Trinidad_and_Tobago#/media/File:Civil_Ensign_of_Trinidad_and_Tobago.svg
+to trinidadCivilEnsignia :height
+	localmake "width :height * 2
+	trinidadFlagCustomWidth :width :height 15
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Trinidad_and_Tobago#/media/File:Naval_Ensign_of_Trinidad_and_Tobago.svg
+to trinidadNavalEnsignia :height
+	localmake "oldState turtleState
+	localmake "width :height * 2
+	localmake "smallerFlagHeight :height * 0.42333333
+	localmake "smallerFlagWidth :width * 0.4616668
+	stripes :width :height ["white]
+	setPenColor :trinidadRed
+	setPenSize :height * 2 / 15
+	forward :height
+	jumpBackward :height / 2
+	right 90
+	jumpBackward :width / 2
+	forward :width
+	jumpBackward :width - :smallerFlagWidth / 2
+	jumpLeft :height / 2 - :smallerFlagHeight
+	left 90
+	trinidadFlagCustomWidth :smallerFlagWidth :smallerFlagHeight 15
+	setTurtleState :oldState
+end
+
+setScreenColor "#eee
+make "height 100
+make "separation :height * 4
+jumpLeft :separation
+trinidadFlag :height
+jumpRight :separation
+trinidadCivilEnsignia :height
+jumpRight :separation
+trinidadNavalEnsignia :height

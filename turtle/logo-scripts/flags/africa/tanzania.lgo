@@ -1,0 +1,60 @@
+; Draws a diagonal line confined to a rectangle
+to drawDiagonal :width :height :thickness :color
+	localmake "oldState turtleState
+	localmake "center pos
+	localmake "oldHeading heading
+	localmake "angle arcTan :height / :width
+	localmake "len1 :thickness / 2 / cos :angle
+	jumpForward :height / 2
+	localmake "top pos
+	jumpRight :width / 2
+	localmake "topRightPos pos
+	jumpBackward :height
+	localmake "bottom pos
+	jumpLeft :width
+	localmake "bottomLeftPos pos
+	jumpTo :center
+	right 90 - :angle
+	jumpLeft :thickness / 2
+	jumpForward distanceToLine :top :topRightPos
+	right :angle
+	setFillColor :color
+	polyStart
+	setPos :topRightPos
+	setHeading :oldHeading + 180
+	jumpForward :len1
+	right 90 - :angle
+	jumpForward distanceToLine :bottom :bottomLeftPos
+	setPos :bottomLeftPos
+	setHeading :oldHeading
+	jumpForward :len1
+	polyEnd	
+	setTurtleState :oldState
+end
+
+; Inspired by flag at:
+; https://en.wikipedia.org/wiki/Flag_of_Tanzania#/media/File:Flag_of_Tanzania.svg
+to tanzaniaFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 3 / 2
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	setFillColor "#1eb53a
+	repeat 2 [
+		jumpRight :width / 2
+		jumpForward :height / 2
+		polyStart
+		jumpLeft :width
+		jumpBackward :height
+		polyEnd
+		jumpTo :center
+		setFillColor "#00a3dd
+		right 180
+	]
+	drawDiagonal :width :height :height * 0.395 "#fcd116
+	drawDiagonal :width :height :height * 0.272 "black
+	setTurtleState :oldState
+end
+
+tanzaniaFlag 100

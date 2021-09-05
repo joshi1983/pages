@@ -1,0 +1,56 @@
+; Inspired by logo at:
+; https://www.gadventures.com/
+to gAdventuresLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "arrowHeadSize :height * 0.24
+	localmake "outerThickness :height * 0.1116
+	setPenSize :outerThickness
+	localmake "outerRadius (:height - penSize) / 2
+	jumpForward penSize / 2
+	left 90
+	setPenColor "#513394
+	setLineCap "round
+	localmake "startPos pos
+	arcRight 298 :outerRadius
+	setPenSize 0
+	setFillColor penColor
+	isoTriangle :arrowHeadSize :arrowHeadSize / 2
+	jumpTo :startPos
+	setHeading :oldHeading + 90
+	setPenSize :outerThickness
+	arcLines [[15 0.3] [30 0.19] [134 0.132] [9 0.8]
+	[-25 0.2] [-150 0.082]
+	] :height
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.42825
+	right 90
+	setPenSize 0
+	polyStart
+	localmake "arcsInfo [[15 0.3] [31 0.24] [44 0.144]]
+	localmake "arcsInfo2 combine :arcsInfo reverse :arcsInfo
+	arcLines :arcsInfo2 :height
+	arcLines :arcsInfo2 :height
+	arcLeft 180 :height * 0.0436
+	arcRight 360 :height * 0.0883
+	polyEnd
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.7635
+	jumpRight :height * 0.09
+	right 102.5
+	polyStart
+	arcsLeft [[22 0.17] [30 0.092] [30 0.12]] :height
+	right 19
+	jumpRight :height * 0.124
+	right 177
+	arcsRight [[50 0.13] [20 0.32]] :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+gAdventuresLogo 100

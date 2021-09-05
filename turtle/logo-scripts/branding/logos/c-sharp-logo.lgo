@@ -1,0 +1,70 @@
+to drawPoundSign :size
+	localmake "oldState turtleState
+	localmake "center pos
+	localmake "width :size
+	localmake "thickness :size * 0.12
+	localmake "separation :size * 0.37
+	repeat 2 [
+		jumpBackward (:separation + :thickness) / 2
+		repeat 2 [
+			stripes :width :thickness ["white]
+			jumpForward :separation
+		]
+		jumpTo :center
+		right 90
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by:
+; https://commons.wikimedia.org/wiki/File:Logo_C_sharp.svg
+to cSharpLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "cornerRadiusRatio 0.085
+	localmake "cornerRadius :height * :cornerRadiusRatio
+	localmake "polySizeRatio 0.5 + :cornerRadiusRatio * (1 / (cos 180 / 6) - 1)
+	localmake "polySize :height * :polySizeRatio
+	localmake "sideLengthRatio :polySizeRatio - :cornerRadiusRatio * 2 * tan 180 / 6
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	setFillColor "#A179DC
+	roundRegularPolygon :polySize 6 :cornerRadius
+	setFillColor "#280068
+	right 360 / 6
+	jumpForward :height / 2
+	right 90
+	polyStart
+	arcRight 180 / 6 :cornerRadius
+	repeat 2 [
+		arcLines [[:sideLengthRatio] [-360 / 6 :cornerRadiusRatio]] :height
+	]
+	jumpForward :sideLengthRatio * :height
+	arcRight 180 / 6 :cornerRadius
+	polyEnd
+
+	jumpTo :center
+	setFillColor transparent
+	setPenColor "white
+	setPenSize :height * 0.165
+	circle :height * 0.247
+	setFillColor "#390091
+	setPenSize 0
+	setHeading :oldHeading + 360 / 6
+	polyStart
+	jumpForward :height / 2
+	right 90
+	arcRight 180 / 6 :cornerRadius
+	jumpForward :sideLengthRatio * :height
+	arcRight 180 / 6 :cornerRadius
+	polyEnd
+
+	jumpTo :center
+	setHeading :oldHeading
+	jumpRight :height * 0.28
+	drawPoundSign :height * 0.187
+	setTurtleState :oldState
+end
+
+cSharpLogo 100

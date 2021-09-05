@@ -1,0 +1,24 @@
+# Copied from: https://userbase.kde.org/KTurtle/Examples
+# Koch curve
+
+reset
+canvassize 850, 550
+go 125, 350
+turnright 90
+
+learn koch $x, $t {
+  if $t>0  {
+    $t=$t-1
+    $x=$x/3
+    koch $x, $t
+    turnleft 60
+    koch $x, $t
+    turnright 120
+    koch $x, $t
+    turnleft 60
+    koch $x, $t
+  } else {
+  forward 3*$x 
+  }
+}
+koch 200, 6

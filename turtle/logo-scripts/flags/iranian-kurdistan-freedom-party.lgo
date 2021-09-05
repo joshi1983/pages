@@ -1,0 +1,27 @@
+; Inspired by flag at:
+; https://en.wikipedia.org/wiki/List_of_Iranian_flags#/media/File:Flag_of_the_Kurdistan_Freedom_Party_(Iran).svg
+to iranianKurdistanFreedomPartyFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 3 / 2
+	localmake "len1 0.073
+	localmake "len2 :len1 / cos 45
+	stripes :width :height ["#ff6600]
+	stripes :height * 2 / 3 :height ["white]
+	jumpForward :height / 2
+	setPenSize 0
+	setFillColor "black	
+	repeat 8 [
+		drawArcLineShape [0 0.226
+			[[-90 0] [:len1] [135 0]
+			[:len2] [90 0] [0.2] [45 0]
+			[:len1]]
+		] :height
+		right 360 / 8
+	]
+	setFillColor "#fcbc1f
+	circle :height * 0.1
+	setTurtleState :oldState
+end
+
+setScreenColor "#eee ; contrast a little with white in the flag.
+iranianKurdistanFreedomPartyFlag 100

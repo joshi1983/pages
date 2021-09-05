@@ -1,0 +1,43 @@
+; Inspired by flag at:
+; https://upload.wikimedia.org/wikipedia/commons/7/72/Early_Intersex_Flag.svg?utm_source=en.wikipedia.org&utm_campaign=imageinfo&utm_content=original
+to earlyIntersexFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 4 / 3
+	localmake "eiPurple "#f1a7fe
+	localmake "gradientHeight :height / 3
+	localmake "solidRatio 0.4
+	localmake "colorStops createPList2 [
+		[:solidRatio "#f4b8de] [1 - :solidRatio "#a0ceef]
+	]
+	stripes :width :height [:eiPurple "white "white "white "white :eiPurple]
+	jumpForward (:height - :gradientHeight) / 2
+	localmake "fromPos pos
+	jumpForward :gradientHeight
+	setFillGradient createLinearGradient :fromPos pos :colorStops "pad
+	setPenSize 0
+	jumpBackward :gradientHeight / 2
+	rect :width :gradientHeight
+	setTurtleState :oldState
+end
+
+; Inspired by flag at:
+; https://en.wikipedia.org/wiki/Intersex_flag#/media/File:Intersex_Pride_Flag.svg/2
+to intersexFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 1.5
+	stripes :width :height ["#FFD800]
+	jumpForward :height / 2
+	setPenColor "#7902aa
+	setPenSize :height * 0.08
+	setFillColor transparent
+	circle :height * 0.245
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+make "height 100
+make "separation :height * 4
+jumpLeft :separation / 2
+intersexFlag :height
+jumpRight :separation
+earlyIntersexFlag :height

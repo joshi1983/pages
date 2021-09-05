@@ -1,0 +1,151 @@
+make "kembleRed "#e20
+
+; Inspired by some branding images at:
+; https://archive.org/details/lfamatter0016/
+to kembleLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "innerWidth :height * 0.19
+	localmake "len :height / 2 / cos 45
+	localmake "width2 :height * 0.275
+	setPenSize 0
+	setFillColor "black
+	jumpForward :height / 2
+	rect :innerWidth :height
+	localmake "center pos
+	right 90
+	repeat 2 [
+		jumpForward :innerWidth / 2
+		polyStart
+		left 45
+		jumpForward :len
+		right 45
+		jumpForward :width2
+		right 135
+		jumpForward :len
+		left 90
+		jumpForward :len
+		right 135
+		jumpForward :width2
+		polyEnd
+		jumpTo :center
+	]
+	setPenColor :kembleRed
+	repeat 2 [
+		setHeading :oldHeading + 90 + repcount * 180
+		jumpForward :width2 + :innerWidth / 2 + :height / 2
+		setPenSize 0
+		setFillColor penColor
+		circle :height * 0.25
+		right 45
+		setPenSize :height * 0.003
+		setFillColor transparent
+		square :len - penSize
+		jumpTo :center
+	]
+
+	setTurtleState :oldState
+end
+
+; Inspired by an image at:
+; https://archive.org/details/lfamatter0016/LFA_Matter_0016_004.jpg
+to kembleHexagon :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "triangleHeight :height * 0.14
+	localmake "triangleWidth :triangleHeight * 2 * tan 60
+	localmake "len (:height / 2 / cos 30) - (hypot [:triangleHeight :triangleWidth / 2])
+	localmake "len2 :height * 0.34
+	localmake "sideLength :height * tan 30
+	localmake "offset1 :height * 0.105
+	localmake "offset2 :sideLength - :offset1 - :len2
+	setPenSize 0
+	jumpForward :height / 2
+	localmake "center pos
+	setFillColor "black
+	repeat 3 [
+		setHeading :oldHeading + repcount * 360 / 3
+		right 30
+		jumpForward :offset1
+		left 120
+		jumpBackward :triangleHeight
+		isoTriangle :triangleWidth :triangleHeight
+		jumpLeft :triangleWidth / 2
+		left 120
+		polyStart
+		jumpForward :len
+		left 120
+		jumpForward :len2
+		polyEnd
+		jumpForward :offset2
+		left 60
+		polyStart
+		jumpForward :sideLength
+		left 150
+		jumpForward :height * 0.55
+		polyEnd
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by the left figure in:
+; https://archive.org/details/lfamatter0016/LFA_Matter_0016_005.jpg
+to kembleHexagon2 :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "sideLength :height / 2
+	jumpForward :height / 2
+	setPenSize 0
+	setFillColor "black
+	localmake "center pos
+	repeat 3 [
+		localmake "startHeading :oldHeading + repcount * 360 / 3
+		setHeading :startHeading
+		jumpForward :height / 2
+		localmake "top pos
+		jumpRight :height / 2 * cos 30
+		localmake "upperRightPos pos
+
+		jumpBackward :height / 2
+		localmake "rightPos pos
+
+		jumpTo :center
+		polyStart
+		jumpForward :height * 0.14
+		localmake "pos1 pos
+		left 80
+		jumpForward :height * 0.17
+		right 117
+		jumpForward distanceToLine :center :pos1
+		localmake "topGap distance :top
+		setHeading :startHeading + 120
+		jumpForward :height * 0.26
+		polyEnd
+		polyStart
+		jumpForward distanceToLine :rightPos :upperRightPos
+		setHeading 180 + :startHeading
+		jumpForward :sideLength - :topGap
+		polyEnd
+		jumpTo :center
+	]
+	jumpTo :center
+	setPenColor :kembleRed
+	setPenSize :height * 0.003
+	setFillColor transparent
+	setLineJoinStyle "miter
+	setPenBlendMode "darken
+	regularPolygon (:height - penSize / cos 30) / 2 6
+
+	setTurtleState :oldState
+end
+
+setScreenColor "#fec
+make "height 100
+make "separation :height * 5
+jumpLeft :separation
+kembleHexagon :height
+jumpRight :separation
+kembleLogo :height
+jumpRight :separation
+kembleHexagon2 :height

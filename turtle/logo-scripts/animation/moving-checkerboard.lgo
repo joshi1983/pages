@@ -1,0 +1,160 @@
+to minPositive :lens
+	localmake "result -1
+	repeat count :lens [
+		localmake "len item repcount :lens
+		if or :result < 0 (and :len >= 0
+		:len < :result) [
+			localmake "result :len
+		] 
+	]
+	output :result
+end
+
+to drawSun :height :width
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "numAngles 32
+	localmake "sunColorStops createPList2 [
+		[0 "white] [0.3 "white] [0.8 "#ffd] [1 "#ff0]
+	]
+	localmake "rayColorStops createPList2 [
+		[0 "#cfff] [0.5 "#8ff0] [0.8 "#4f20] [1 "#0f00]
+	]
+	localmake "rayColorStops2 createPList2 [
+		[0 "#cfff] [0.2 "#8ff0] [0.6 "#8f20] [1 "#1f00]
+	]
+	localmake "innerRadius :height * 0.15
+	jumpForward :height
+	localmake "top pos
+	jumpLeft :width / 2
+	localmake "topLeft pos
+	jumpBackward :height / 2
+	localmake "left pos
+	jumpRight :width
+	localmake "right pos
+	jumpForward :height / 2
+	localmake "topRight pos
+
+	jumpTo :top
+	jumpBackward :height / 2
+	localmake "center pos
+	setPenSize :height * 0.005
+	localmake "gradients [
+		createRadialGradient pos :height * 0.5 :rayColorStops
+		createLinearGradient :center :top :rayColorStops2 "pad
+	]
+	repeat count :gradients [
+		setPenGradient item repcount :gradients
+		repeat :numAngles [
+			setHeading :oldHeading + mix -90 90 repRatio
+			forward distanceToLines [[:top :topLeft]
+				[:left :topLeft] [:right :topRight]]
+			jumpTo :center
+		]
+	]
+	setPenSize 0
+	setFillGradient createRadialGradient pos :innerRadius :sunColorStops
+	circle :innerRadius
+	setTurtleState :oldState
+end
+
+; Inspired by a drawing in a magazine article.
+; The magazine is named BEEBUG.
+; It was in Volume 2 Issue 7.
+; It was published in December 1983.
+; The drawing is on page 29.
+; 
+; A digital version is at:
+; https://archive.org/details/beebugv0207/page/28/mode/2up?view=theater
+to movingCheckerBoard :height :timeRatio
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "numLevels 32
+	localmake "width :height * 4
+	localmake "widthScaleFactor 0.9
+	localmake "heightScaleFactor 0.85
+	localmake "timeRatio 2 * (1 - cos 360 * :timeRatio)
+	drawSun :height :width
+	jumpForward :height
+
+	jumpTo :oldPos
+	setPenSize 0
+	localmake "heightStart :height * 0.07 * ( 1 + :timeRatio * :heightScaleFactor)
+	localmake "widthStart :height * 0.15 * ( 1 + :timeRatio * :widthScaleFactor)
+	localmake "fixedCheckerHeight :height * 0.48
+	localmake "checkerHeight 0
+	localmake "height1 :heightStart
+	repeat :numLevels [
+		localmake "checkerHeight :checkerHeight + :height1
+		localmake "height1 :height1 * :heightScaleFactor
+	]
+	jumpForward :fixedCheckerHeight
+	setPenGradient createLinearGradient :oldPos pos createPList2 [
+		[0 "black] [0.9 "black] [1 "#0000]
+	] "pad
+	setLineCap "butt
+	setPenSize :width
+	backward :checkerHeight
+
+	setPenSize 0
+	jumpTo :oldPos
+	jumpBackward :checkerHeight - :fixedCheckerHeight
+	localmake "startPos1 pos
+	setFillColor "white
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		repeat 20 [
+			jumpTo :startPos1
+			localmake "height1 :heightStart
+			localmake "width1 :widthStart
+			localmake "xStart (repcount - 0.5) * 2 * :sign
+
+			repeat :numLevels [
+				localmake "x (:xStart + repcount - 1)
+				localmake "startPos pos
+				localmake "width2 :width1 * :widthScaleFactor
+				localmake "height2 :height1 * :heightScaleFactor
+
+				jumpLeft :width1 * (:x + 1 / 2)
+				localmake "pos1 pos
+				jumpRight :width1
+				localmake "pos2 pos
+
+				jumpTo :startPos
+				jumpForward :height1
+				jumpLeft :width2 * (:x - 1/2)
+				localmake "pos3 pos
+				jumpLeft :width2
+				localmake "pos4 pos
+				
+				polygon [:pos1 :pos2 :pos3 :pos4]
+
+				jumpTo :startPos
+				jumpForward :height1
+				localmake "width1 :width2
+				localmake "height1 :height2
+			]
+		]
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+make "timeRatio animation.clampedTimeRatio
+movingCheckerBoard 100 interpolateRatio easeInOut :timeRatio
+
+to animation.snapshotstyle
+	output createPList2 [
+		["position.y 50]
+		["zoom.scale 6]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 10
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

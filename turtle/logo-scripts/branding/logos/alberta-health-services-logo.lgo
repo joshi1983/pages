@@ -1,0 +1,37 @@
+; Inspired by logo at
+; https://commons.wikimedia.org/wiki/File:Alberta_Health_Services_Logo.svg
+; The logo is also used at:
+; https://www.albertahealthservices.ca
+to albertaHealthServicesLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "centerOffset :height * 0.515
+	localmake "gap :height * 0.198
+	localmake "size :centerOffset - :gap
+	localmake "width1 :size * 1.06
+	localmake "angle 39
+	jumpForward :centerOffset
+	right 90
+	localmake "center pos
+	repeat 3 [
+		jumpForward :gap
+		stripes :width1 :size ["#007ac3]
+		jumpTo :center
+		right 90
+	]
+	jumpTo :oldPos
+	jumpForward :height
+	jumpLeft :width1 / 2
+	setPenSize 0
+	setFillColor "#1ab374
+	polyStart
+	jumpRight :width1
+	jumpBackward :height * 0.65
+	jumpLeft :width1 / 2
+	left :angle
+	jumpForward :width1 / 2 / sin :angle
+	polyEnd
+	setTurtleState :oldState	
+end
+
+albertaHealthServicesLogo 100

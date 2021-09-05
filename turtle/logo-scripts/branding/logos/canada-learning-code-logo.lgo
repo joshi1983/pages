@@ -1,0 +1,43 @@
+to canadalearningcode.caTicTacToePattern :len
+	localmake "oldHeading heading
+	setLineCap "round
+	localmake "center pos
+	setPenSize :len * 0.1055556
+	repeat 4 [
+		setHeading :oldHeading + (repcount - 0.5) * 360 / 4
+		jumpRight :len * 0.1851852
+		jumpBackward :len / 2
+		forward :len
+		jumpTo :center
+	]
+end
+
+; Inspired by logo at
+; https://www.canadalearningcode.ca/
+to canadalearningcode.caRedWhiteLogo :height
+	localmake "oldState turtleState
+	localmake "len :height * 0.54
+	setPenSize 0
+	setFillColor "#ed1b24
+	jumpForward :height / 2
+	circle :height / 2
+	setPenColor "white
+	canadalearningcode.caTicTacToePattern :len
+	setTurtleState :oldState
+end
+
+to canadalearningcode.caBlackLogo :height
+	localmake "oldState turtleState
+	localmake "len :height * 0.8533
+	setPenColor "black
+	jumpForward :height / 2
+	canadalearningcode.caTicTacToePattern :len
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 3
+jumpLeft :separation / 2
+canadalearningcode.caRedWhiteLogo :height
+jumpRight :separation
+canadalearningcode.caBlackLogo :height

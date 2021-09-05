@@ -1,0 +1,50 @@
+REM copied from https://www.bamsoftware.com/bzr/qbasic/ant2.bas
+SCREEN 12
+RANDOMIZE TIMER
+
+TYPE Ant
+x AS INTEGER
+y AS INTEGER
+dir AS INTEGER
+END TYPE
+
+NumAnts = 30
+
+DIM Ants(1 TO NumAnts) AS Ant
+
+FOR x = 1 TO NumAnts
+Ants(x).x = INT(RND * 640)
+Ants(x).y = INT(RND * 480)
+Ants(x).dir = INT(RND * 4)
+NEXT
+
+WHILE INKEY$ = ""
+FOR x = 1 TO NumAnts
+IF POINT(Ants(x).x, Ants(x).y) THEN
+Ants(x).dir = Ants(x).dir - 1
+PRESET (Ants(x).x, Ants(x).y)
+ELSE
+Ants(x).dir = Ants(x).dir + 1
+PSET (Ants(x).x, Ants(x).y)
+END IF
+IF Ants(x).dir > 3 THEN Ants(x).dir = 0
+IF Ants(x).dir < 0 THEN Ants(x).dir = 3
+SELECT CASE Ants(x).dir
+CASE 0: Ants(x).x = Ants(x).x + 1
+CASE 1: Ants(x).y = Ants(x).y - 1
+CASE 2: Ants(x).x = Ants(x).x - 1
+CASE 3: Ants(x).y = Ants(x).y + 1
+END SELECT
+
+IF Ants(x).x > 639 THEN Ants(x).x = 0
+IF Ants(x).x < 0 THEN Ants(x).x = 639
+IF Ants(x).y > 479 THEN Ants(x).y = 0
+IF Ants(x).y < 0 THEN Ants(x).y = 479
+
+
+
+NEXT
+
+
+
+WEND

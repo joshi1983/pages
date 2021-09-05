@@ -1,0 +1,42 @@
+; Inspired by logo at:
+; https://residentevil.fandom.com/wiki/Umbrella_Corporation?file=Umbrella-logo-bd.jpg
+;
+; It is a logo for a fictional corporation from the Resident Evil movie and game.
+to umbrellaCorporationLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "numSides 8
+	localmake "gap :height * 0.08
+	localmake "len1 (:height * 0.5 - :gap) / cos 180 / :numSides
+	localmake "arcAngle 60
+	localmake "arcRadius :len1 * (sin 180 / :numSides) / sin :arcAngle / 2
+	localmake "thickness :gap * 2 * sin 180 / :numSides
+	localmake "len2 :len1 + :gap * cos 180 / :numSides
+	setPenSize 0
+	jumpForward :height / 2
+	localmake "center pos
+	repeat :numSides / 2 [
+		setHeading :oldHeading + 180 / :numSides + repcount * 360 / :numSides
+		jumpBackward :len2
+		stripes :thickness :len2 * 2 ["black]
+		jumpTo :center
+	]
+
+	repeat :numSides [
+		setHeading :oldHeading + repcount * 360 / :numSides
+		setFillColor ifelse even? repcount "#e70011 "white
+		jumpForward :gap
+		left 180 / :numSides
+		polyStart
+		jumpForward :len1
+		right 90 + 180 / :numSides + :arcAngle / 2
+		arcLeft :arcAngle :arcRadius
+		polyEnd
+		jumpTo :center
+	]
+
+	setTurtleState :oldState
+end
+
+setScreenColor "#222
+umbrellaCorporationLogo 100

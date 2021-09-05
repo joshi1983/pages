@@ -1,0 +1,30 @@
+; Inspired by logo at:
+; https://www.facebook.com/soverybritish
+to veryBritishProblemsLogo :height
+	localmake "oldState turtleState
+	localmake "topLinesLowerRadius 0.19704
+	localmake "topLines [
+		[90 0] [25 0.6] [10 0.55] [52 0.4]
+		[133 0] [-80 :topLinesLowerRadius] 
+		[80 0] [-80 :topLinesLowerRadius]
+		[40 0]
+	]
+	localmake "bottomArcRadius 0.1
+	setPenSize 0
+	setFillColor "white
+	drawArcLineShape [0 1
+		combine :topLines reverse :topLines
+	] :height
+	setPenColor fillColor
+	setPenSize :height * 0.09
+	jumpForward :height - penSize / 2
+	setLineCap "round
+	arcLines [[180 0]
+		[1 - penSize / :height - :bottomArcRadius]
+		[-180 :bottomArcRadius]] :height
+
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+veryBritishProblemsLogo 100

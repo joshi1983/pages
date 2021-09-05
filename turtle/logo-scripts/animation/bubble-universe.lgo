@@ -1,0 +1,130 @@
+; Inspired by an animation and program at:
+; https://www.facebook.com/share/v/1AtSqENNZu/
+
+make "t1 clamp 0.01 + animation.timeRatio * 1.05 0 1
+make "nPointsEndTime 0.25
+make "nPointsTimeRatio interpolateRatio easeInOut clamp :t1 / 
+	:nPointsEndTime 0 1
+make "nShapesEndTime 0.5
+make "nShapesTimeRatio interpolateRatio easeOut interpolateRatio easeInOut 
+	clamp :t1 / :nShapesEndTime 0 1
+make "tTimeEndTime 0.85
+make "tTimeRatio interpolateRatio easeInOut 
+	clamp (:t1 - :nPointsEndTime) / (:tTimeEndTime - :nPointsEndTime) 0 1
+
+if :t1 > :tTimeEndTime [
+	make "nPointsTimeRatio interpolateRatio easeInOut clamp (1 - :t1) /
+		(1 - :tTimeEndTime) 0 1
+]
+
+make "Nshapes 10 + 10 * :nShapesTimeRatio
+make "Npoints 1 + 500 * :nPointsTimeRatio
+make "DT 2 * (exp 1) - 3
+make "R 2 * pi / :Nshapes
+make "Fhue 360 / :Nshapes
+
+; coordinates automatically mapped
+make "t :tTimeRatio * 36
+make "x 0
+make "y 0
+setScreenColor "black
+setPenSize 0
+setFillBlendMode "lighter
+make "info getAnimationInfo
+make "dotSize mix 0.2 0.4 clamp ((getProperty "info "zoom.scale) - 2.5) / 3 0 1
+
+; pace animation, release remaining CPU
+for [ "shape 0 :Nshapes - 1 ]
+; outer loop draws 1 frame containing (Nshapes) shapes
+[
+	make "shape_t :R * :shape + :t
+	repeat :Npoints 
+	; inner loop draws 1 spiral or other shape made from (Npoints) points
+	[
+		make "ang_y :shape + :y
+		make "ang_x :shape_t + :x
+		make "x ( radSin :ang_y ) + radSin :ang_x
+		make "y ( radCos :ang_y ) + radCos :ang_x
+		setFillColor hsvToRGB
+		clamp (:shape * :Fhue) / :Npoints 0 1
+		0.8
+		clamp (repcount + 150) / :Npoints 0 1
+		jumpTo vectorScale [:x :y] 50
+		circle :dotSize
+	]
+]
+make "t :t + :DT
+
+to getAnimationInfo
+	localmake "zoom 2.5
+	localmake "zoomStartTime 0.07
+	localmake "zoomEndTime 0.4
+	localmake "t animation.timeRatio
+	localmake "p [0 0]
+	if between? :t :zoomStartTime :zoomEndTime [
+		localmake "ratio interpolateRatio easeInOut (:t - :zoomStartTime) / (:zoomEndTime - :zoomStartTime)
+		localmake "ratio2 interpolateRatio easeInOut mixItems [0 1 0] :ratio
+		localmake "zoom :zoom + 20 * :ratio2
+		; These positions are of the center for a few spirals.
+		; This is part of zooming in and following some spirals.
+		localmake "timedPositions [
+			[0 0 0]
+			[-39.1 -38.4 0.0669]
+			[-23 -55.2 0.11736]
+			[-6.8 -65.8 0.165]
+			[3.2 -70.2 0.2]
+			[2.9 -70 0.21628]
+			[1.8 -69.98 0.25]
+			[-2.72 -67.96 0.26]
+			[-7.53 -65.51 0.2682]
+			[-20.26 -57.55 0.2846]
+			[-36.39 -42.1 0.30219]
+			[-43.78 -31.45 0.31]
+			[-52.34 -10.77 0.32041]
+			[-53.69 -4.63 0.3226]
+			[0 0 0.5]
+		]
+		localmake "p2 getMixedPos :timedPositions animation.timeRatio
+
+		localmake "p mix :p2 [0 0] interpolateRatio easeOutCirc :ratio2
+	]
+	output createPList2 [
+		["position.x first :p]
+		["position.y last :p]
+		["zoom.scale :zoom]
+	]
+end
+
+to getMixedPos :items :ratio
+	localmake "min first :items
+	localmake "max last :items
+	if :ratio <= last :min [
+		output [first :min item 2 :min]
+	]
+	if :ratio >= last :max [
+		output [first :max item 2 :max]
+	]
+	for ["i 2 count :items] [
+		localmake "e item :i :items
+		if :ratio < last :e [
+			localmake "prev item :i - 1 :items
+			localmake "ratio2 (:ratio - last :prev) / ((last :e) - (last :prev))
+			output mix [first :prev item 2 :prev] [first :e item 2 :e]
+				1 - :ratio2
+		]
+	]
+end
+
+to animation.snapshotstyle
+	output getAnimationInfo
+end
+
+to animation.setup
+	localmake "minutes 1
+	localmake "seconds 0
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+		["thumbnailTime 21]
+	]
+end

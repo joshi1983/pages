@@ -1,0 +1,28 @@
+PROGRAM DemYNC
+
+! This program demonstrates how to use the YNC dialog box.
+
+! Note that the default output window is not shown until the
+! first output is directed to it.
+
+LIBRARY "TrueDial.trc"
+
+DO
+
+   CALL TD_YNC ("Do you want to quit?", 1, result)
+   SELECT CASE result
+   CASE 1                         ! Yes
+        PRINT "Quitting"
+        PAUSE 1
+        EXIT DO
+   CASE 2                         ! No
+        PRINT "Continuing"
+        PAUSE 3
+   CASE 3                         ! Cancel
+        PRINT "Canceling"
+        PAUSE 1
+   END SELECT
+
+LOOP
+
+END

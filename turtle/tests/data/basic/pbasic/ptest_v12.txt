@@ -1,0 +1,557 @@
+// ptest_v12.bas
+// pBasic v0.8.22 — Complete Validation Suite
+// Tests all keywords, functions, and language features
+// March 2026
+
+print "============================================"
+print "  pBasic v0.8.0 — Complete Validation Suite"
+print "============================================"
+print ""
+
+// ─────────────────────────────────────────────
+// Section 1: Variables & Types
+// ─────────────────────────────────────────────
+print "--- Section 1: Variables & Types ---"
+var i : Int = 42
+var f : Float = 3.14
+var b : Bool = 1
+var s$ : String = "hello"
+print i
+print f
+print b
+print s$
+print ""
+
+// ─────────────────────────────────────────────
+// Section 2: Arithmetic
+// ─────────────────────────────────────────────
+print "--- Section 2: Arithmetic ---"
+var a : Int = 10
+var c : Int = 3
+print a + c
+print a - c
+print a * c
+print a / c
+print a ^ 2
+print ""
+
+// ─────────────────────────────────────────────
+// Section 3: Float Arithmetic
+// ─────────────────────────────────────────────
+print "--- Section 3: Float Arithmetic ---"
+var x : Float = 10.5
+var y : Float = 3.2
+print x + y
+print x - y
+print x * y
+print x / y
+print ""
+
+// ─────────────────────────────────────────────
+// Section 4: Math Functions
+// ─────────────────────────────────────────────
+print "--- Section 4: Math Functions ---"
+print SIN(0)
+print COS(0)
+print TAN(0)
+print ATAN(1)
+print SQRT(16)
+print SQR(4)
+print ABS(-7)
+print INT(3.9)
+print EXP(1)
+print LOG(1)
+print LOG10(100)
+print ""
+
+// ─────────────────────────────────────────────
+// Section 5: Constants
+// ─────────────────────────────────────────────
+print "--- Section 5: Constants ---"
+print PI
+print DATE
+print TIME
+print ""
+
+// ─────────────────────────────────────────────
+// Section 6: String Operations
+// ─────────────────────────────────────────────
+print "--- Section 6: String Operations ---"
+var s1$ : String = "Hello"
+var s2$ : String = " World"
+var s3$ : String = s1$ + s2$
+print s3$
+print LEN(s3$)
+print MID$(s3$, 0, 5)
+print MID$(s3$, 6, 5)
+print ""
+
+// ─────────────────────────────────────────────
+// Section 7: Comparison Operators
+// ─────────────────────────────────────────────
+print "--- Section 7: Comparison Operators ---"
+print 5 == 5
+print 5 <> 6
+print 5 > 3
+print 5 < 3
+print 5 >= 5
+print 5 <= 4
+print ""
+
+// ─────────────────────────────────────────────
+// Section 8: String Comparisons
+// ─────────────────────────────────────────────
+print "--- Section 8: String Comparisons ---"
+var p$ : String = "apple"
+var q$ : String = "apple"
+var r$ : String = "banana"
+print p$ == q$
+print p$ == r$
+print p$ <> r$
+print ""
+
+// ─────────────────────────────────────────────
+// Section 9: IF THEN
+// ─────────────────────────────────────────────
+print "--- Section 9: IF THEN ---"
+var n : Int = 7
+if n > 5 then print "n greater than 5"
+if n == 7 then print "n equals 7"
+if n < 3 then print "ERROR: should not print"
+if n <> 3 then print "n not equal to 3"
+var chk$ : String = "yes"
+if chk$ == "yes" then print "string IF passed"
+print ""
+
+// ─────────────────────────────────────────────
+// Section 10: IF THEN assignment
+// ─────────────────────────────────────────────
+print "--- Section 10: IF THEN assignment ---"
+var q2 : Int = 0
+if n == 7 then q2 = 99
+print q2
+var t$ : String = ""
+if chk$ == "yes" then t$ = "assigned"
+print t$
+print ""
+
+// ─────────────────────────────────────────────
+// Section 11: IF THEN func call
+// ─────────────────────────────────────────────
+print "--- Section 11: IF THEN func call ---"
+if n == 7 then sayHello()
+if n == 3 then sayHello()
+print ""
+
+// ─────────────────────────────────────────────
+// Section 12: FOR NEXT
+// ─────────────────────────────────────────────
+print "--- Section 12: FOR NEXT ---"
+var total : Int = 0
+for j = 1 to 5
+    total = total + j
+next j
+print total
+print ""
+
+// ─────────────────────────────────────────────
+// Section 13: FOR NEXT with STEP
+// ─────────────────────────────────────────────
+print "--- Section 13: FOR NEXT STEP ---"
+var countdown : Int = 0
+for k = 10 to 1 step -1
+    countdown = countdown + k
+next k
+print countdown
+var fsum : Float = 0
+for fv = 0.0 to 1.0 step 0.25
+    fsum = fsum + fv
+next fv
+print fsum
+print ""
+
+// ─────────────────────────────────────────────
+// Section 14: WHILE
+// ─────────────────────────────────────────────
+print "--- Section 14: WHILE ---"
+var w : Int = 1
+var wsum : Int = 0
+while (w <= 5) {
+    wsum = wsum + w
+    w = w + 1
+}
+print wsum
+print ""
+
+// ─────────────────────────────────────────────
+// Section 15: Nested WHILE
+// ─────────────────────────────────────────────
+print "--- Section 15: Nested WHILE ---"
+var outer : Int = 1
+var pairs : Int = 0
+while (outer <= 3) {
+    var inner : Int = 1
+    while (inner <= 3) {
+        pairs = pairs + 1
+        inner = inner + 1
+    }
+    outer = outer + 1
+}
+print pairs
+print ""
+
+// ─────────────────────────────────────────────
+// Section 16: Arrays
+// ─────────────────────────────────────────────
+print "--- Section 16: Arrays ---"
+var arr[5] : Int
+arr[0] = 10
+arr[1] = 20
+arr[2] = 30
+arr[3] = 40
+arr[4] = 50
+print arr[0]
+print arr[2]
+print arr[4]
+var asum : Int = 0
+for ai = 0 to 4
+    asum = asum + arr[ai]
+next ai
+print asum
+print ""
+
+// ─────────────────────────────────────────────
+// Section 17: String Arrays
+// ─────────────────────────────────────────────
+print "--- Section 17: String Arrays ---"
+var names[3] : String
+names[0] = "Alice"
+names[1] = "Bob"
+names[2] = "Carol"
+print names[0]
+print names[1]
+print names[2]
+print ""
+
+// ─────────────────────────────────────────────
+// Section 18: Functions — basic
+// ─────────────────────────────────────────────
+print "--- Section 18: Functions basic ---"
+print double(6)
+print square(5)
+print add(3, 4)
+print ""
+
+// ─────────────────────────────────────────────
+// Section 19: Functions — string return
+// ─────────────────────────────────────────────
+print "--- Section 19: Functions string return ---"
+print greet("pBasic")
+print shout("hello")
+print ""
+
+// ─────────────────────────────────────────────
+// Section 20: Recursion
+// ─────────────────────────────────────────────
+print "--- Section 20: Recursion ---"
+print factorial(5)
+print factorial(10)
+print fib(7)
+print fib(11)
+print ""
+
+// ─────────────────────────────────────────────
+// Section 21: Local Scope
+// ─────────────────────────────────────────────
+print "--- Section 21: Local Scope ---"
+var gscope : Int = 100
+print scopeTest(555)
+print gscope
+print ""
+
+// ─────────────────────────────────────────────
+// Section 22: Functions in expressions
+// ─────────────────────────────────────────────
+print "--- Section 22: Functions in expressions ---"
+print double(3) + square(2)
+print add(double(2), square(3))
+print ""
+
+// ─────────────────────────────────────────────
+// Section 23: Functions in control flow
+// ─────────────────────────────────────────────
+print "--- Section 23: Functions in control flow ---"
+var fctotal : Int = 0
+for fi = 1 to 5
+    fctotal = fctotal + double(fi)
+next fi
+print fctotal
+var fw : Int = 1
+var fwsum : Int = 0
+while (fw <= 4) {
+    fwsum = fwsum + square(fw)
+    fw = fw + 1
+}
+print fwsum
+print ""
+
+// ─────────────────────────────────────────────
+// Section 24: TAB
+// ─────────────────────────────────────────────
+print "--- Section 24: TAB ---"
+print "A";
+TAB(5)
+print "B";
+TAB(5)
+print "C"
+print ""
+
+// ─────────────────────────────────────────────
+// Section 25: PRINT formatting
+// ─────────────────────────────────────────────
+print "--- Section 25: PRINT formatting ---"
+print "no newline ";
+print "same line"
+print "Value: ";
+print 42
+print ""
+
+// ─────────────────────────────────────────────
+// Section 26: RND
+// ─────────────────────────────────────────────
+print "--- Section 26: RND ---"
+var r1 : Float = RND(0)
+var r2 : Float = RND(0)
+// Just verify they are in range 0-1 (not equal is not guaranteed but almost certain)
+if r1 >= 0 then print "RND in range"
+if r1 <= 1 then print "RND bounded"
+print ""
+
+// ─────────────────────────────────────────────
+// Section 27: CLS
+// ─────────────────────────────────────────────
+print "--- Section 27: CLS ---"
+print "CLS test (screen will clear briefly)"
+CLS
+print "CLS executed"
+print ""
+
+// ─────────────────────────────────────────────
+// Section 28: LOCATE
+// ─────────────────────────────────────────────
+print "--- Section 28: LOCATE ---"
+LOCATE 12, 30
+print "LOCATE test"
+LOCATE 13, 1
+print ""
+
+// ─────────────────────────────────────────────
+// Section 29: TIMER
+// ─────────────────────────────────────────────
+print "--- Section 29: TIMER ---"
+var ticks : Int = 0
+TIMER 0.1 tickFunc
+TIMERON
+var tw : Int = 0
+while (tw < 5000) {
+    tw = tw + 1
+}
+TIMEROFF
+print ticks
+print ""
+
+// ─────────────────────────────────────────────
+// Section 30: INKEY$ (non-blocking — returns empty in non-interactive)
+// ─────────────────────────────────────────────
+print "--- Section 30: INKEY$ ---"
+var k$ : String = INKEY$
+print "INKEY$ returned (empty expected in batch): '";
+print k$;
+print "'"
+print ""
+
+// ─────────────────────────────────────────────
+// Section 31: Sine Wave Visualizer
+// ─────────────────────────────────────────────
+print "--- Section 32: Sine Wave Visualizer ---"
+print ""
+var freq : Float = 0.3
+var amp : Float = 10.0
+var offset : Float = 15.0
+var value : Float = 0.0
+var spaces : Int = 0
+for n = 0 to 20
+    value = SIN(n * freq) * amp + offset
+    TAB(value)
+    print "*"
+next n
+print ""
+print "Wave complete!"
+print ""
+
+// ─────────────────────────────────────────────
+// Section 32: Multi-Dimensional Arrays
+// ─────────────────────────────────────────────
+print "--- Section 33: Multi-Dim Arrays ---"
+var myArray[200,3] : Float
+var fzed : Float = 3.7
+myArray[37,2] = fzed
+var fZoo : Float = myArray[37,2] * 2.3
+print fZoo
+// expected: 8.51
+
+var grid[4,4] : Int
+grid[0,0] = 1
+grid[1,1] = 5
+grid[2,2] = 9
+grid[3,3] = 16
+print grid[0,0]    // 1
+print grid[1,1]    // 5
+print grid[2,2]    // 9
+print grid[3,3]    // 16
+
+var names2[3,2] : String
+names2[0,0] = "Alice"
+names2[1,0] = "Bob"
+names2[2,0] = "Carol"
+print names2[0,0]
+print names2[1,0]
+print names2[2,0]
+print ""
+
+
+// ─────────────────────────────────────────────
+// Section 33: Logical AND / OR / XOR / NOT
+// ─────────────────────────────────────────────
+print "--- Section 34: AND OR XOR NOT ---"
+var p : Int = 6
+var q : Int = 3
+var z : Int = 0
+
+// Logical (non-integer operands via comparison results)
+if p > 0 && q > 0 then print "AND true"
+if p > 0 && z > 0 then print "ERROR: AND should be false"
+if p > 0 || z > 0 then print "OR true"
+if z > 0 || z > 0 then print "ERROR: OR should be false"
+if p > 0 ^^ z > 0 then print "XOR true"
+if p > 0 ^^ q > 0 then print "ERROR: XOR should be false"
+
+// Bitwise (integer operands)
+var band : Int = 6 && 3
+var bor  : Int = 6 || 3
+var bxor : Int = 6 ^^ 3
+print band
+print bor
+print bxor
+
+// NOT
+var t : Int = 1
+var f2 : Int = 0
+print !t
+print !f2
+var bnot : Int = !6
+print bnot
+print ""
+
+
+// ─────────────────────────────────────────────
+// Section 34: VAL() CHR$() ASC()
+// ─────────────────────────────────────────────
+print "--- Section 35: VAL() CHR$() ASC() ---"
+print VAL("3.14")          // 3.14
+print VAL("  42  ")        // 42
+print VAL("12abc")         // 12
+print VAL("abc")           // 0
+print CHR$(65)             // A
+print CHR$(66)             // B
+print CHR$(32)             // (space)
+print CHR$(128512)         // 😀
+print ASC("A")             // 65
+print ASC("B")             // 66
+print ASC("😀")            // 128512
+var s$ : String = "Hello"
+print VAL("99") + 1        // 100
+print CHR$(ASC("A") + 1)   // B  (round-trip test)
+print asc("🐐")
+print chr$(128016)
+print ""
+print "ASCII [33-127]: "
+for n = 33 to 90
+print chr$(n); 
+next n
+print ""
+for n = 91 to 127 
+print chr$(n);
+next n
+print "" 
+print ""
+
+
+print "============================================"
+print "  pBasic v0.8.25 Validation Complete"
+print "============================================"
+
+end
+
+
+// ─────────────────────────────────────────────
+// Function definitions
+// ─────────────────────────────────────────────
+
+func sayHello() {
+    print "Hello from sayHello"
+    return 0
+}
+
+func double(n) {
+    return n * 2
+}
+
+func square(n) {
+    return n * n
+}
+
+func add(a, b) {
+    return a + b
+}
+
+func greet(name$) {
+    var result$ : String = "Hello, "
+    result$ = result$ + name$
+    return result$
+}
+
+func shout(s$) {
+    var upper$ : String = ""
+    var slen : Int = 0
+    slen = LEN(s$)
+    var si : Int = 0
+    while (si < slen) {
+        upper$ = upper$ + MID$(s$, si, 1)
+        si = si + 1
+    }
+    upper$ = upper$ + "!!!"
+    return upper$
+}
+
+func factorial(n) {
+    if n <= 1 then return 1
+    return n * factorial(n - 1)
+}
+
+func fib(n) {
+    if n <= 0 then return 0
+    if n == 1 then return 1
+    return fib(n - 1) + fib(n - 2)
+}
+
+func scopeTest(val) {
+    var gscope : Int = 0
+    gscope = val
+    return gscope
+}
+
+func tickFunc() {
+    ticks = ticks + 1
+    return 0
+}

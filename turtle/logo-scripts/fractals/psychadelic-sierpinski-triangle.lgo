@@ -1,0 +1,72 @@
+make "spectrum ["red "orange "yellow "lime "blue]
+make "colors [
+	(combine ["red "orange "yellow "lime "aqua "black] :spectrum ["black] :spectrum)
+	(combine :spectrum ["black] :spectrum ["black] :spectrum)
+	(combine :spectrum :spectrum)
+	:spectrum
+	["red "orange "yellow]
+	["aqua]
+]
+
+to createLinearGradientForTriangle :height :colors
+	localmake "fromPos pos
+	localmake "colorStops createPList
+	repeat count :colors [
+		setProperty "colorStops repRatio item repcount :colors
+	]
+	jumpForward :height
+	localmake "result createLinearGradient :fromPos pos :colorStops "pad
+	jumpTo :fromPos
+	output :result
+end
+
+to fillTriangle :depth :height
+	localmake "oldState turtleState
+	localmake "center pos
+	localmake "colors combine ["black] item :depth :colors
+	localmake "triWidth :height * 2 * tan 30
+	localmake "triHeight :triWidth / 2 * tan 30
+	repeat 3 [
+		jumpForward :triHeight
+		right 180
+		setFillGradient createLinearGradientForTriangle :triHeight :colors
+		isoTriangle :triWidth :triHeight
+		right 180
+		jumpTo :center
+		right 360 / 3
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by:
+; https://www.pinterest.ca/pin/21462535718540485/
+to psychSierpinskiTriangle :height :depth
+	localmake "oldState turtleState
+	if :depth >= count :colors [
+		jumpForward :height / (cos 30) / 2 * tan 30
+		right 180
+		fillTriangle :depth :height
+		setTurtleState :oldState
+		stop
+	]
+	localmake "oldPos pos
+	localmake "innerTriHeight :height / 2
+	localmake "triWidth :height * 2 * tan 30
+	localmake "triHeight2 :triWidth / 2 * tan 30
+	localmake "innerTriWidth :triWidth / 2
+	setPenSize 0
+	jumpForward :triHeight2 
+	fillTriangle :depth :innerTriHeight
+	jumpTo :oldPos
+	jumpForward :innerTriHeight
+	psychSierpinskiTriangle :innerTriHeight :depth + 1
+	jumpTo :oldPos
+	jumpLeft :innerTriWidth / 2
+	repeat 2 [
+		psychSierpinskiTriangle :innerTriHeight :depth + 1
+		jumpRight :innerTriWidth
+	]
+	setTurtleState :oldState
+end
+
+psychSierpinskiTriangle 100 1

@@ -1,0 +1,19 @@
+; Approximates 1 / pi
+; The math is explained more at:
+; https://en.wikipedia.org/wiki/Ramanujan%E2%80%93Sato_series
+to ramanujanSatoSeries :maxK
+	localmake "sum 0
+	localmake "scale (2 * sqrt 2) / (99 * 99)
+	for ["k 0 :maxK] [
+		localmake "part1 (factorial 4 * :k) / power (factorial :k) 4
+		localmake "part2 (26390 * :k + 1103) / power 396 4 * :k
+		localmake "sum :sum + :part1 * :part2
+	]
+	output :scale * :sum
+end
+
+print word 'The value of pi is ' str pi
+
+repeat 7 [
+	print (word 'max k = ' str repcount ', pi approximation = ' str 1 / ramanujanSatoSeries repcount)
+]

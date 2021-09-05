@@ -1,0 +1,290 @@
+make "xDelta 0.25
+make "yDelta 0.17
+make "angle arcTan :xDelta / :yDelta
+
+to drawE :height
+	localmake "oldState turtleState
+	localmake "width :height * 0.5
+	jumpLeft :width / 2
+	stripes penSize :height [penColor]
+	right 90
+	jumpLeft penSize / 2
+	localmake "startPos pos
+	repeat 2 [
+		stripes penSize :width [penColor]
+		jumpLeft :height - penSize
+	]
+	jumpTo :startPos
+	jumpLeft (:height - penSize) / 2
+	stripes penSize :width * 0.7 [penColor]
+	setTurtleState :oldState
+end
+
+to drawH :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "separation :height * 0.5
+	jumpLeft :separation / 2
+	repeat 2 [
+		stripes penSize :height [penColor]
+		jumpRight :separation
+	]
+	jumpTo :oldPos
+	jumpForward (:height - penSize) / 2
+	stripes :separation penSize [penColor]
+	setTurtleState :oldState
+end
+
+to drawM :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "separation :height * 0.5
+	localmake "vHeight :height * 0.5
+	localmake "angle 27.4
+	localmake "len :vHeight * 0.935 / cos :angle
+	jumpLeft :separation / 2
+	repeat 2 [
+		stripes penSize :height [penColor]
+		jumpRight :separation
+	]
+	jumpTo :oldPos
+	jumpForward :height - :vHeight
+	left :angle
+	stripes penSize :len [penColor]
+	right :angle * 2
+	stripes penSize :len [penColor]
+	setTurtleState :oldState
+end
+
+to drawO :height
+	localmake "oldState turtleState
+	setFillColor transparent
+	jumpForward :height / 2
+	ellipse :height * 0.3 (:height - penSize) / 2
+	setTurtleState :oldState
+end
+
+to drawS :height
+	localmake "oldState turtleState
+	localmake "arcs [
+		[-153 0] [240 0.215]
+	]
+	jumpForward :height * 0.19
+	jumpLeft :height * 0.2
+	setLineCap "butt
+	arcLines :arcs :height
+	arcLines reverse :arcs -:height
+	setTurtleState :oldState
+end
+
+to drawT :height
+	localmake "oldState turtleState
+	stripes penSize :height [penColor]
+	jumpForward :height - penSize
+	stripes :height * 0.6 penSize [penColor]
+	setTurtleState :oldState
+end
+
+to drawW :height
+	localmake "oldState turtleState
+	jumpForward :height
+	right 180
+	drawM :height
+	setTurtleState :oldState
+end
+
+to drawString :fontHeight :msg
+	localmake "oldState turtleState
+	localmake "charWidth :fontHeight * 0.9
+	localmake "width :charWidth * count :msg
+	jumpLeft :width / 2
+	repeat count :msg [
+		localmake "char item repcount :msg
+		localmake "procName combine "draw :char
+		(invoke :procName :fontHeight)
+		jumpRight :charWidth
+	]	
+	setTurtleState :oldState
+end
+
+to drawRoomBackground :width :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "signHeight :height * 0.17
+	localmake "separation :height * 0.075
+	localmake "vSeparation :height * 0.045
+	localmake "fontHeight :vSeparation * 0.8
+	localmake "angle 60
+	localmake "messages [
+		"HOME "SWEET "HOME
+	]
+	setLineJoinStyle "miter
+	jumpLeft :width / 2
+	localmake "bottomLeft pos
+	jumpForward :height
+	localmake "topLeft pos
+	jumpRight :width
+	localmake "topRight pos
+	jumpBackward :height * 0.7
+	left :angle
+	forward :height * 0.2
+	setHeading :oldHeading
+	localmake "pos1 pos
+	forward distanceToLine :topLeft :topRight
+	jumpTo :pos1
+	setHeading :oldHeading - 90
+	forward distanceToLine :bottomLeft :topLeft
+	jumpTo :pos1
+	setHeading :oldHeading
+	jumpForward :height * 0.4
+	jumpLeft :height * 0.21
+	rect :height * 0.32 :signHeight
+	jumpForward :signHeight / 2
+	isoTriangle :height * 0.08 :height * 0.03
+	jumpBackward :height * 0.052
+	jumpLeft :separation - :height * 0.006
+	repeat count :messages [
+		drawString :fontHeight item repcount :messages
+		jumpRight :separation
+		jumpBackward :vSeparation
+	]
+	setTurtleState :oldState
+end
+
+to drawTable :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "legHeightRatio 0.35
+	localmake "widthRatio 1.05 - :xDelta
+	localmake "pWidth :height * :widthRatio
+	localmake "pWidth2 :pWidth * 1.1
+	localmake "pHeight :height * :yDelta
+	localmake "tableThickness :height * 0.02
+	localmake "slantedHeight :pHeight / cos :angle
+	localmake "legStarts [
+		[:xDelta 0] [1.05 0]
+		[0 :yDelta] [1.05 - :xDelta :yDelta]
+	]
+	repeat count :legStarts [
+		localmake "legStart item repcount :legStarts
+		jumpRight :height * first :legStart
+		jumpForward :height * last :legStart
+		stripes penSize :height * :legHeightRatio [penColor]
+		jumpTo :oldPos
+	]
+	jumpRight :xDelta * :height + (:pWidth / 2)
+	jumpForward :height * :legHeightRatio
+	setFillColor "black
+	setLineJoinStyle "round
+	jumpForward :tableThickness / 2
+	rect :pWidth2 :tableThickness
+	jumpForward :tableThickness / 2
+	parallelogram :pWidth2 :slantedHeight -:angle
+	jumpForward (:pHeight) / 2
+	jumpLeft :pWidth2 / 2 + :pHeight / 2 * tan :angle
+	right 270 - :angle
+	parallelogram :slantedHeight :tableThickness :angle - 90
+	setTurtleState :oldState
+end
+
+to drawTVInputPanel :height
+	localmake "oldState turtleState
+	localmake "separation :height * 0.12
+	jumpForward :height * 0.9
+	jumpLeft :separation / 2
+	localmake "topLeft pos
+	repeat 2 [
+		circle :height * 0.04
+		jumpRight :separation
+	]
+	jumpTo :topLeft
+	jumpBackward :height * 0.6
+	setFillColor penColor
+	setPenSize 0
+	repeat 2 [
+		localmake "pos1 pos
+		repeat 2 [
+			circle :height * 0.02
+			jumpRight :separation
+		]
+		jumpTo :pos1
+		jumpBackward :height * 0.24
+	]
+	setTurtleState :oldState
+end
+
+to drawTV :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "antennaAngle 60
+	localmake "antennaLength :height * 0.46
+	localmake "boxHeight :height * 0.7
+	localmake "boxWidth :height * 0.9
+	localmake "slantedHeight :height * 0.1
+	jumpForward (:boxHeight + penSize) / 2
+	jumpRight :height * 0.05
+	setFillColor "black
+	localmake "rectCenter pos
+	rect :boxWidth :boxHeight
+	setLineJoinStyle "round
+	jumpLeft :boxWidth / 2
+	left 90
+	parallelogram :boxHeight :slantedHeight 90 - :angle
+	jumpRight :boxHeight / 2
+	jumpBackward :boxWidth / 2
+	right 90
+	parallelogram :boxWidth :slantedHeight -:angle
+
+	jumpLeft :height * 0.11
+	jumpForward -:height * 0.32
+	setLineJoinStyle "miter
+	rect :height * 0.63 :height * 0.6
+	jumpTo :oldPos
+	jumpForward :height * 0.76
+	left :antennaAngle
+	jumpForward :antennaLength
+	setLineJoinStyle "round
+	setLineCap "round
+	backward :antennaLength
+	right :antennaAngle * 2
+	forward :antennaLength
+
+	jumpTo :rectCenter
+	setHeading :oldHeading
+	jumpRight :boxWidth * 0.37
+	jumpBackward :boxHeight * 0.4
+	drawTVInputPanel :boxHeight * 0.85
+	setTurtleState :oldState
+end
+
+to drawTVOnTable :height
+	localmake "oldState turtleState
+	drawTable :height * 0.89
+	jumpForward :height * 0.4
+	jumpRight :height * 0.41
+	drawTV :height * 0.6
+	setTurtleState :oldState
+end
+
+; Inspired by an animation by
+; Bob Bishop at:
+; https://www.youtube.com/shorts/w-FfHZOhoYU
+to appleVisionRoom :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "width :height * 1.2
+	setPenColor "#0fa
+	setLineJoinStyle "miter
+	jumpForward :height / 2
+	setPenSize :height * 0.005
+	rect :width :height - penSize / 2
+	jumpTo :oldPos
+	drawRoomBackground :width :height
+	jumpLeft :height * 0.5
+	drawTVOnTable :height * 0.73
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+appleVisionRoom 100

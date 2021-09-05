@@ -1,0 +1,50 @@
+; Inspired by
+; https://www.pinterest.jp/pin/553590979212246864/
+; The central curve is a full cycle of a sin wave.
+; Each line corresponds with a different amplitude.
+to sinWaveContours :width :height 
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "thickness :height * 0.3
+	localmake "waveWidth :height
+	localmake "straightLength (:width - :waveWidth) / 2
+	localmake "numAmplitudes 10
+	localmake "thickness2 :thickness / :numAmplitudes
+	localmake "maxAmplitude (:height - :thickness) / 2
+	jumpLeft :width / 2
+	jumpForward :thickness / 2
+	setPenSize :thickness
+	setPenColor "black
+	setLineCap "butt
+	right 90
+	forward :straightLength
+	localmake "startPos pos
+	jumpForward :waveWidth
+	forward :straightLength
+	setPenSize :thickness2
+	setLineCap "round
+	jumpTo :startPos
+	repeat :numAmplitudes [
+		setHeading :oldHeading
+		jumpBackward (:thickness - penSize) * mix -0.5 0.5 repRatio
+		localmake "startPos2 pos
+		localmake "amplitude :maxAmplitude * repRatio
+		localmake "curvePoints []
+		right 90
+		repeat 64 [
+			jumpForward repRatio * :waveWidth
+			jumpLeft :amplitude * (1 + sin 360 * repRatio - 90)
+			queue2 "curvePoints pos
+			jumpTo :startPos2
+		]
+		repeat count :curvePoints [
+			localmake "nextPosition item repcount :curvePoints
+			setHeading towards :nextPosition
+			forward distance :nextPosition
+		]
+		jumpTo :startPos
+	]
+	setTurtleState :oldState
+end
+
+sinWaveContours 1000 100

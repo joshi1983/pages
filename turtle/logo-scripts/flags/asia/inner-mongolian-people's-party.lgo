@@ -1,0 +1,59 @@
+to drawCrescent :flagHeight
+	localmake "oldState turtleState
+	localmake "outerArcAngle 91.18
+	localmake "outerRadius :flagHeight * 0.22913
+	localmake "chordLength :outerRadius * 2 * sin :outerArcAngle
+	localmake "innerArcAngle 133.23
+	localmake "innerRadius :chordLength / 2 / sin :innerArcAngle / 2
+	setPenSize 0
+	setFillColor "white
+	jumpForward :flagHeight * 0.08335
+	right 90
+	arcLeft :outerArcAngle :outerRadius
+	right 180
+	polyStart
+	arcRight 2 * :outerArcAngle :outerRadius
+	right 180 - (:outerArcAngle * 2 - :innerArcAngle) / 2
+	arcLeft :innerArcAngle :innerRadius
+	polyEnd
+	setTurtleState :oldState
+end
+
+to drawFlames :height
+	localmake "oldState turtleState
+	localmake "sideArcs [[84 0.313] [30 0.19] [17 0.26] [-40 0.12]
+	[30 0.205] [36.5 0.135] [150 0] [-50 0.137] [-16.5 0.2] [87 0.06]
+	[-110 0.064] [-120 0.062] [-8 0.19]]
+	setPenSize 0
+	setFillColor "#DA2032
+	right 90
+	polyStart
+	arcLines :sideArcs :height
+	arcLines [[-22 0.19] [0.07] [30 0.174] [24 0.24] [0.1]
+	[-78.9 0.1626] [160.201744 0] [77 0.14772] [0.08] [-48 0.11] [0.015]
+	[35 0.2] [26 0.09] [-23.02 0.29852605]] :height
+	arcLines reverse :sideArcs :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by:
+; https://en.wikipedia.org/wiki/File:Flag_of_the_Inner_Mongolian_People%27s_Party.svg
+to innerMongolianPeoplesPartyFlag :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "width :height * 3 / 2
+	stripes :width :height ["#0066B3]
+	drawCrescent :height
+	jumpForward :height * 0.375
+	setPenSize 0
+	setFillColor "#FFD400
+	circle :height / 6
+
+	jumpTo :oldPos
+	jumpForward :height * 0.5836
+	drawFlames :height * 0.33295
+	setTurtleState :oldState
+end
+
+innerMongolianPeoplesPartyFlag 100

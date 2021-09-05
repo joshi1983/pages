@@ -1,0 +1,44 @@
+! DemCheck
+
+! This program checks the CHeck Box part of True Controls
+
+LIBRARY "TrueCtrl.trc"
+
+DIM box(4), text$(4), status$(0 to 1)
+MAT READ status$
+DATA is not checked, is checked
+
+MAT READ text$
+DATA Economics, Statistics, Physics, Sociology
+
+CALL TC_Init
+
+CALL TC_Win_SetBrush (0, 3, -1, "")
+CLEAR
+CALL TC_Show (0)                  ! Show the default output window.
+CALL TC_Win_Active (0)            ! Move it to the front
+PRINT "Press ESC to quit."
+
+FOR i = 1 to 4
+    CALL TC_Checkbox_Create (box(i), text$(i), .5, .7, .2+.1*i, -99999)
+NEXT i
+
+DO
+   CALL TC_Event (0, event$, window, x1, x2)
+   IF event$ = "CONTROL DESELECTED" then
+      FOR i = 1 to 4
+          CALL TC_CheckBox_Get (box(i), status)
+          PRINT text$(i); " "; status$(status)
+      NEXT i
+      PRINT
+
+   END IF
+
+   IF event$ = "HIDE" then EXIT DO
+   IF event$ = "KEYPRESS" and x1 = 27 then EXIT DO
+
+LOOP
+
+CALL TC_Cleanup
+
+END

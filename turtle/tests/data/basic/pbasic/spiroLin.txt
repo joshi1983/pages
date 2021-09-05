@@ -1,0 +1,49 @@
+// spirograph.bas • draws HyperCycloids
+
+var cx : Float = 630.0
+var cy : Float = 500.0
+var R  : Float = 200.0
+var r  : Float = 75.0
+var d  : Float = 120.0
+var t  : Float = 0.0
+var x  : Float = 0.0
+var y  : Float = 0.0
+var prevX : Float = 0.0
+var prevY : Float = 0.0
+
+spiro()
+
+for n2 = 1 to 20
+    R = rnd(1) * 300 + 150
+    spiro()
+    r = rnd(1) * 300 + 20 
+    spiro()
+    d = rnd(1) * 300 + 110
+    spiro()
+    t = rnd(1) * 300 + 10
+    spiro()
+next n2
+end
+
+func spiro() {
+    var RR : Float = RND(1)
+    var GG : Float = RND(1)
+    var BB : Float = RND(1)
+    
+    prevX = X
+    prevY = Y
+    
+    FOR t = 0 TO 128 STEP 0.50
+    //FOR t = 0 TO 628 STEP 0.05
+        x = (R - r) * COS(t) + d * COS((R - r) * t / r) + cx
+        y = (R - r) * SIN(t) - d * SIN((R - r) * t / r) + cy
+        var AA : Float = 1.0 - (RND(1) * 0.4)
+        //POINT(x, y)
+        //point(x,y, RR, GG, BB, AA)
+        line(prevX, prevY, x, y, RR, GG, BB, AA)
+        //prevX = X
+        //prevY = Y
+    NEXT t
+        
+    RETURN 0
+}

@@ -1,0 +1,36 @@
+; Inspired by flag at:
+; https://en.wikipedia.org/wiki/List_of_Malaysian_flags#/media/File:Flag_of_the_Malaysian_Chinese_Association.svg
+to malaysiaChineseAssociationFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 5 / 3
+	stripes :width :height ["#102a7e]
+	jumpForward :height / 2
+	setPenSize 0
+	setFillColor "#fad209
+	isotoxalStar :height / 3 :height * 0.153 14
+	setTurtleState :oldState
+end
+
+; Inspired by flag at:
+; https://en.wikipedia.org/wiki/List_of_Malaysian_flags#/media/File:Parti_Keadilan_Rakyat_logo.svg
+to partiKeadilanRakyatFlag :height
+	localmake "oldState turtleState
+	localmake "rakyatBlue "#00adef
+	localmake "ellipseVRadius :height * 0.31
+	stripes :height * 2 :height ["#ed1c24]
+	stripes :height * 4 / 3 :height [:rakyatBlue]
+	jumpForward :height / 2
+	setPenSize 0
+	setFillColor "white
+	ellipse :height * 0.572 :ellipseVRadius
+	setFillColor :rakyatBlue
+	circle :ellipseVRadius
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 4
+jumpLeft :separation / 2
+malaysiaChineseAssociationFlag :height
+jumpRight :separation
+partiKeadilanRakyatFlag :height

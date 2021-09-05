@@ -1,0 +1,20 @@
+!
+!  SPIRAL3       Version 2.0
+!
+!  Simple 3-D line drawing of a spiral on a sphere's surface.
+!
+LIBRARY "3DLib.trc"
+
+CALL PersWindow (-1, 1, -1, 1, -1, 1)
+
+FOR k = -1 to 1 step .001
+    LET theta = theta + .03
+    LET x = cos(theta)
+    LET y = sin(theta)
+    LET z = sin(pi*k/2)
+    LET r = sqr(1-z*z)
+    CALL PlotOn3 (r*x, r*y, z)
+
+NEXT k
+
+END

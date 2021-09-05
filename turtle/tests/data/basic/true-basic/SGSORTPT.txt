@@ -1,0 +1,44 @@
+!  SGSortPt   Display unsorted vs. sorted data points.
+
+LIBRARY "SGLib.trc"
+LIBRARY "TrueCtrl.trc"
+
+CALL TC_Init
+
+DIM x(10), y(10)
+
+FOR i = 1 to 10                   ! Get some unsorted data points
+    LET x(i) = rnd
+    LET y(i) = rnd
+NEXT i
+
+! Here, we use the default window
+
+CALL TC_Show (0)
+CALL TC_Win_Active (0)
+
+! If you prefer to use another window, see SGGRAIN.TRU
+
+! In Version 5, in order to work with multiple windows, such as:
+!      OPEN #1: screen 0, .49, 0, 1
+! You must open, and show, a child window instead.
+
+CALL TC_Win_ChildCreate (winc1, "border none|show", win, 0, .49, 0, 1)
+CALL SetTitle ("Unsorted")
+CALL DataGraph (x, y, 10, 3, "red green magenta")
+
+! OPEN #2: screen .51, 1, 0, 1       ! Right: sorted points
+CALL TC_Win_ChildCreate (winc2, "border none|show", win, .51, 1, 0, 1)
+CALL SetTitle ("Sorted")
+CALL SortPoints (x, y)
+CALL DataGraph (x, y, 10, 3, "red green magenta")
+
+CALL TC_Win_Active (winc2)
+GET KEY key
+CALL TC_Free (winc2)
+CALL TC_Free (winc1)
+CALL TC_Win_Switch (0)
+
+CALL TC_Cleanup
+
+END

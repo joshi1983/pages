@@ -1,0 +1,62 @@
+; Inspired by a logo at:
+; https://en.wikipedia.org/wiki/Alberta_New_Democratic_Party#/media/File:Alberta_New_Democratic_Party_Logo_(2022).svg
+to albertaNDPLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "topArcAngle 27
+	localmake "widthFactor 0.88
+	localmake "topArcRadius :widthFactor / 2 / sin :topArcAngle / 2
+	localmake "midArcRadius :height * 1.92
+	localmake "arcAngle1 45
+	localmake "arcRadiusFactor1 0.25
+	setPenSize 0
+
+	setFillColor "white
+	drawArcLineShape [0 0
+		pathMirror [[54.8 0] [0.39] [-10 0.345] [-44.8 0.26] [0.5]
+		[-90 0] [0.4401305]]
+		] :height
+	setFillColor "#2cccd3
+	jumpRight :height * :widthFactor / 2
+	localmake "bottomRightPos pos
+
+	jumpForward :height * (1 - :topArcRadius * (1 - cos :topArcAngle / 2))
+	localmake "startPos pos
+	polyStart
+	arcLines [[90 - :topArcAngle / 2 0] [:topArcAngle :topArcRadius]
+		[90 - :topArcAngle / 2 0]] :height
+	localmake "leftPos1 pos
+	jumpForward :height * 0.368
+	localmake "leftPos2 pos
+	arcLines [[134.5 0] [0.306] [-90 0.023] [0.103] [90.2 0.023] [0.267] [-89.7 0.023]] :height
+	jumpForward distanceToLine :startPos :bottomRightPos
+	polyEnd
+
+	jumpTo mix :startPos :bottomRightPos 0.558
+	setHeading :oldHeading - 79
+	setFillColor "#ff9e1b
+	polyStart
+	arcLeft (getArcLeftAngleToLine :midArcRadius :leftPos1 :leftPos2) :midArcRadius
+	setHeading :oldHeading + 180
+	arcLines [[0.05] [:arcAngle1 :arcRadiusFactor1] [4 0.4] [65.2 0]] :height
+	localmake "arcRadius :height * 1.95
+	arcRight (getArcRightAngleToLine :arcRadius :bottomRightPos :startPos) :arcRadius
+	polyEnd
+
+	setHeading :oldHeading - 180
+	arcRight 17 :height * 0.11
+	localmake "startPos pos
+	setFillColor "#ff6900
+	polyStart
+	arcLines [[-38 0.31] [0.39] [-70.7 0] [0.34]] :height
+	localmake "arcAngle 23.5
+	localmake "arcRadius (distance :startPos) / 2 / sin :arcAngle / 2
+	setHeading (towards :startPos)	- :arcAngle / 2
+	arcRight :arcAngle :arcRadius
+	polyEnd
+
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+albertaNDPLogo 100

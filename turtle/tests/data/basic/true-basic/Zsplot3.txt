@@ -1,0 +1,77 @@
+!
+!  ZSPLOT3        version 2.0
+!
+!  Show how to handle two "tricky" functions with Splot
+!  and Zplot.
+!
+!  The functions are a half-sphere,  which is not defined
+!  for every point in the domain rectangle; and a quadratic
+!  equation.  We want to clip both of them to the viewing
+!  volume.
+!
+!  Splot handles missing points,  and clips,  automatically.
+!  To use Zplot on such functions,  we must add code to
+!  the function F to specially handle these bad cases.
+!  Look at F to see how missing points and clipping are
+!  handled.
+!
+LIBRARY "3DCont.trc"
+
+DECLARE PUBLIC fn                 ! Tells function F what to compute
+
+CALL SetZlines3 (20)              ! Use 20 contour lines
+CALL SetScale3 (1.5, 1.5)         ! Make pictures big
+
+OPEN #1: screen 0, .5, .5, 1
+CALL PersWindow (-2, 2, -2, 2, 0, 1)
+LET fn = 1                        ! Draw function #1
+CALL Zplot
+
+OPEN #2: screen .5, 1, .5, 1
+CALL PersWindow (-2, 2, -2, 2, 0, 1)
+LET fn = 2                        ! Draw function #2
+CALL Splot
+
+OPEN #3: screen 0, .5, 0, .5
+PLOT TEXT, AT .43, 1.05: "Zplot"
+CALL PersWindow (-2, 2, -2, 2, 0, 4)
+LET fn = 3                        ! Draw function #3
+CALL Zplot
+
+OPEN #4: screen .5, 1, 0, .5
+PLOT TEXT, AT .43, 1.05: "Splot"
+CALL PersWindow (-2, 2, -2, 2, 0, 4)
+LET fn = 4                        ! Draw function #4
+CALL Splot
+
+END
+
+MODULE MyFunc
+
+    PUBLIC fn                     ! Controls which function we compute
+
+    DEF F (x, y)
+        SELECT CASE fn
+        CASE 1
+             WHEN error in
+                  LET r = Sqr(3-(x*x+y*y))
+                  LET F = Min(r,1)
+             USE
+                  LET F = 0
+             END WHEN
+
+        CASE 2
+             LET F = Sqr(3-(x*x+y*y))
+
+        CASE 3
+             LET r = x*x + y*y
+             LET F = Min(r,4)
+
+        CASE 4
+             LET F = x*x + y*y
+
+        END SELECT
+
+    END DEF
+
+END MODULE

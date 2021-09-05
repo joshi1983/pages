@@ -1,0 +1,172 @@
+; This was inspired by an animation that
+; Sam Caudill made with Adobe After Effects around 2004.
+; An animated GIF from it is shown here:
+; https://www.facebook.com/crowpickle/videos/1230378327927335
+
+to drawFilledArc :c :radius :angle :drawLine
+	localmake "oldState turtleState
+	localmake "oldPenSize penSize
+	localmake "sign sign :angle
+	if :angle = 0 [
+		stop
+	]
+	setFillColor mix :c transparent 0.25
+	setLineCap "butt
+	setPenSize 0
+	polyStart
+	jumpForward :radius
+	right 90 * :sign
+	arcLeft -:angle :radius
+	polyEnd
+	if :drawLine [
+		setPenColor :c
+		setPenSize :oldPenSize
+		right 90 * :sign
+		forward :radius
+	]
+	setTurtleState :oldState
+end
+
+to drawPentagonConstruction :height :timeRatio
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "radius :height / 4
+	localmake "maxFactor 2500
+	localmake "timeFactor :timeRatio * :maxFactor
+	localmake "angle1 min 90 :timeFactor
+	localmake "angle2 clamp :timeFactor - 130 0 180
+	localmake "angle3 clamp :timeFactor - 350 0 90
+	localmake "angle4 clamp :timeFactor - 520 0 180
+	localmake "angle5 clamp :timeFactor - 750 0 360
+	localmake "pinkRadius :radius * sqrt 5 
+	localmake "pinkLen :pinkRadius * (clamp :timeFactor - 1150 0 100) / 100
+	localmake "angle6 clamp :timeFactor - 1300 0 90 - arcTan 1 / 2
+	localmake "yellowRadius :radius * 4 * sin 360 / 10
+	localmake "yellowLen (clamp :timeFactor - 1500 0 100) / 100 * :yellowRadius
+	localmake "yellowAngleRatio clamp (:timeFactor - 1650) / 100 0 1
+	localmake "offset 1750
+	localmake "finalRatio clamp (:timeFactor - :offset) / (:maxFactor - :offset) 0 1
+	localmake "thickness :height * 0.01
+	localmake "c1 "#0f0
+	localmake "c2 "#0ff
+	localmake "pinkColor "#FF2448
+	localmake "yellowColor "yellow
+	setPenSize :thickness
+	if :angle1 > 0 [
+		drawFilledArc :c1 :radius :angle1 :angle2 = 0
+	]
+	if :angle2 > 0 [
+		jumpTo :oldPos
+		setHeading :oldHeading
+		jumpRight :radius
+		left 90
+		drawFilledArc :c1 :radius :angle2 true
+	]
+	if :angle3 > 0 [
+		jumpTo :oldPos
+		setHeading :oldHeading
+		jumpRight :radius * 2
+		left 90
+		drawFilledArc :c2 :radius :angle3 :angle2 = 180
+	]
+	if :angle4 > 0 [
+		setHeading :oldHeading
+		jumpForward :radius
+		right 180
+		drawFilledArc :c2 :radius -:angle4 :angle5 = 0
+	]
+	if :pinkLen > 0 [
+		setHeading :oldHeading
+		jumpTo :oldPos
+		jumpRight :radius * 2
+		jumpForward :radius * 2
+		setHeading :oldHeading - 180 + arcTan 1 / 2
+		setLineCap "butt
+		setPenColor :pinkColor
+		forward :pinkLen
+		setHeading :oldHeading
+		jumpTo :oldPos
+	]
+	if :angle6 > 0 [
+		setHeading :oldHeading
+		jumpTo :oldPos
+		jumpRight :radius
+		right arcTan 1 / 2
+		drawFilledArc :pinkColor :pinkRadius :angle6 true
+	]
+	if :angle5 > 0 [
+		setHeading :oldHeading
+		jumpTo :oldPos
+		jumpRight :radius * 2
+		drawFilledArc :c2 :radius * 2 -:angle5 :angle5 > 0
+	]
+	if :yellowLen > 0 [
+		setHeading :oldHeading
+		jumpTo :oldPos
+		jumpRight :radius * 2
+		jumpForward :radius * 2
+		setPenColor :yellowColor
+		localmake "startAngle  180 - arcCos :radius * 2 / :yellowRadius
+		localmake "endAngle 90 + 180 / 5
+		setHeading :oldHeading + mix :endAngle :startAngle :yellowAngleRatio
+		if :finalRatio = 0 [
+			forward :yellowLen
+		]
+	]
+	if :finalRatio > 0 [
+		localmake "finalFactor 1 + :finalRatio * 5
+		setHeading :oldHeading
+		jumpTo :oldPos
+		setLineJoinStyle "miter
+		jumpRight :radius * 2
+		localmake "center pos
+		localmake "angle 180 - 360 / 5
+		repeat floor :finalFactor - 1 [
+			setHeading :oldHeading + repcount * 360 / 5
+			jumpForward :radius * 2
+			right 90 + 180 / 5
+			drawFilledArc :yellowColor :yellowRadius :angle false
+			jumpTo :center
+		]
+		localmake "angle :angle * (:finalFactor - int :finalFactor)
+		setHeading :oldHeading + (floor :finalFactor) * 360 / 5
+		jumpForward :radius * 2
+		left 90 + 180 / 5
+		drawFilledArc :yellowColor :yellowRadius -:angle true
+		jumpTo :oldPos
+		setHeading :oldHeading
+		jumpRight :radius * 2
+		jumpForward :radius * 2
+		right 90 + 180 / 5
+		repeat floor :finalFactor [
+			forward :yellowRadius
+			right 360 / 5
+		]
+		if 6 = floor :finalFactor [
+			closePath
+		]
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+make "timeRatio animation.clampedTimeRatio * 1.07
+drawPentagonConstruction 100 :timeRatio
+
+to animation.snapshotstyle
+	output createPList2 [
+		["position.x 50]
+		["zoom.scale 5]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 13
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+		["thumbnailTime 10]
+	]
+end

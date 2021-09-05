@@ -1,0 +1,50 @@
+; Inspired by logo at:
+; https://www.sbimf.com
+to sbiMutualFundLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "bottomArcRadius :height * 0.45
+	jumpRight 100
+	localmake "bottomRight pos
+	localmake "outerCRadius 0.202
+	localmake "innerCRadius 0.05
+	localmake "cGap 0.04
+	localmake "cArcAngle 180 - arcSin :cGap / 2 / :outerCRadius
+	localmake "len1 (sqrt :outerCRadius * :outerCRadius - :cGap * :cGap / 4) -
+		(sqrt :innerCRadius * :innerCRadius - :cGap * :cGap / 4)
+	localmake "innerArcAngle 180 - arcSin :cGap / 2 / :innerCRadius
+	localmake "cLines1 [
+		[90 0] [:cArcAngle :outerCRadius] [270 - :cArcAngle 0]
+		[:len1] [:innerArcAngle - 90 0] [-:innerArcAngle :innerCRadius]
+	]
+	localmake "cLines combine :cLines1 reverse :cLines1
+	jumpTo :oldPos
+	jumpForward :height * 0.33
+	right 180
+	localmake "angle2 getArcLeftAngleToLine :bottomArcRadius :oldPos :bottomRight
+	localmake "lines1 [
+		[-:angle2 1] [90 + :angle2 0]
+		[1 - sin 90 - :angle2]
+	]
+	setPenSize 0
+	setFillColor "#008AC4
+	drawArcLineShape [0 0
+		combine :lines1 reverse :lines1
+	] :bottomArcRadius
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	drawArcLineShape [0 1
+		:cLines
+	] :height
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		drawArcLineShape [:sign * 0.237 0.614
+			:cLines
+		] :height
+	]
+	setTurtleState :oldState
+end
+
+sbiMutualFundLogo 100

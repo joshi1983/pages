@@ -1,0 +1,53 @@
+; Inspired by orange graphic at
+; https://www.nationaltrust.org.au/marmaladefestivalwinners2018/
+to australianMarmalade :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "radius1 :height * 0.47
+	localmake "numStripes 15
+	localmake "angle1 180 / 5
+	jumpForward :height / 2
+	setPenColor "#f37d25
+	setPenSize :height * 0.01
+	setFillColor "white
+	circle (:height - penSize) / 2
+	setFillColor penColor
+	setPenSize 0
+	circle :radius1
+	localmake "center pos
+	setPenColor "white
+	repeat 5 [
+		localmake "heading1 :oldHeading + repcount * 360 / 5
+		setHeading :heading1
+		setPenSize :height * 0.015
+		forward :radius1
+		jumpTo :center
+		left :angle1
+		setPenSize :height * 0.008
+		forward :radius1
+		jumpTo :center
+		setPenSize :height * 0.003
+		repeat :numStripes - 1 [
+			setHeading :heading1 - :angle1
+			jumpForward :radius1 / :numStripes
+			localmake "pos1 pos
+			right :angle1
+			forward distanceToCircle :center :radius1
+			jumpTo :pos1
+		]
+		jumpTo :center
+		repeat :numStripes - 1 [
+			setHeading :heading1 + :angle1
+			jumpForward :radius1 / :numStripes
+			localmake "pos1 pos
+			left :angle1
+			forward distanceToCircle :center :radius1
+			jumpTo :pos1
+		]
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "#fef200
+australianMarmalade 100

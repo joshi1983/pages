@@ -1,0 +1,81 @@
+; Made to look like the South Korean flag described at:
+; https://en.wikipedia.org/wiki/Flag_of_South_Korea
+; The numbers and colors are all from the construction instructions.
+
+to dashedStroke :len
+	localmake "oldPos pos
+	localmake "gapLen :len / 12
+	localmake "len1 (:len - :gapLen) / 2
+	forward :len1
+	jumpForward :gapLen
+	forward :len1
+	jumpTo :oldPos
+end
+
+to southKoreaFlag :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "width :height * 72 / 48
+	localmake "radius :height * 12 / 48
+	localmake "theta arcTan :height / :width
+	localmake "gap1 :height * (6 + 2/2) / 48
+
+	; 1 and 0 used to indicate if the line contains a gap.
+	localmake "trigrams ["111 "010 "000 "101]
+	localmake "dashSeparation :height * 3 / 48
+	localmake "dashLength :height * 12 / 48
+	jumpForward :height / 2
+	localmake "center pos
+	jumpLeft :width / 2
+	right 90
+	setPenSize :height
+	setPenColor "#fff
+	setLineCap "butt
+	; Fill the background with white.
+	forward :width
+
+	; balance of the world symbol
+	jumpTo :center
+	setPenSize 0
+	setFillColor "#0047A0
+	circle :radius
+	setHeading :oldHeading + :theta
+	jumpRight :radius
+	setFillColor "#CD2E3A
+
+	polyStart
+	arcLeft 180 :radius / 2
+	arcRight 180 :radius / 2
+	arcRight 180 :radius
+	polyEnd
+
+	; Draw Trigrams representing the classical elements.
+	jumpLeft :gap1
+	setPenSize :height * 2 / 48
+	setPenColor "#000
+	repeat count :trigrams [
+		localmake "trigram item repcount :trigrams
+		jumpBackward :dashLength / 2
+		repeat count :trigram [
+			localmake "lineType item repcount :trigram
+			ifelse :lineType = "1 [
+				dashedStroke :dashLength
+			] [
+				forward :dashLength
+				jumpBackward :dashLength
+			]
+			jumpLeft :dashSeparation
+		]
+		jumpTo :center
+		ifelse odd? repcount [
+			right 180 - :theta * 2
+		] [
+			right :theta * 2
+		]
+		jumpLeft :radius + :gap1
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "gray
+southKoreaFlag 100

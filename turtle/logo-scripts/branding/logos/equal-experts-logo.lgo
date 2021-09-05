@@ -1,0 +1,48 @@
+make "equalExpertsBlue "#0596d4
+
+; Inspired by logo and favicon at:
+; https://www.equalexperts.com
+to equalExpertsLogo :height :color
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "thickness :height * 0.1451
+	localmake "sideLen1 :height * 0.37
+	jumpForward :height / 2
+	localmake "center pos
+	setLineJoinStyle "miter
+	setLineCap "butt
+	setPenSize :thickness
+	setPenColor :color
+	repeat 2 [
+		setHeading :oldHeading + repcount * 360 / 2
+		jumpForward :height * 0.071
+		stripes :height * 0.484 :thickness [:color]
+		jumpTo :center
+		right 90
+		jumpLeft (:height - :thickness) / 2
+		jumpForward :height * 0.11
+		forward :sideLen1
+		right 90
+		forward :height - :thickness
+		right 90
+		forward :sideLen1
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+to equalExportsWhiteOnBlueLogo :height
+	localmake "oldState turtleState
+	localmake "innerHeight :height * 0.7
+	stripes :height :height [:equalExpertsBlue]
+	jumpForward (:height - :innerHeight) / 2
+	equalExpertsLogo :innerHeight "white	
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 5
+jumpLeft :separation / 2
+equalExpertsLogo :height :equalExpertsBlue
+jumpRight :separation
+equalExportsWhiteOnBlueLogo :height

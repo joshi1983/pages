@@ -1,0 +1,46 @@
+; Inspired by logo at:
+; https://astra.com
+to astraSpaceLogo :height :color1 :color2
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "len1 1 / cos 36 / 2
+	localmake "len2 :len1 / 4 / (cos 36) / (cos 36)
+	localmake "middleLines [[36 / 2  0]
+		[:len1] [36 - 180 0] [:len2]
+		[72 / 2 0]
+	]
+	setPenSize 0
+	jumpForward :height * (1 - :len2 * cos 36 / 2)
+	setFillColor :color2
+	right 180
+	isoTriangle :len1 * :height (:len2) * :height
+	jumpTo :oldPos
+	jumpBackward :height
+	setFillColor :color1
+	polyStart
+	arcLines :middleLines :height
+	arcLines reverse :middleLines :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+to astraSpaceLogoOnBlack :height
+	astraSpaceLogo :height "white "#b8b8ba
+end
+
+to astraSpaceLogoOnWhite :height
+	localmake "oldState turtleState
+	localmake "innerHeight :height * 0.8
+	stripes :height * 2 :height ["white]
+	jumpForward (:height - :innerHeight) / 2
+	astraSpaceLogo :innerHeight "black "#b8b8ba
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+make "height 100
+make "separation :height * 6
+jumpLeft :separation / 2
+astraSpaceLogoOnBlack :height
+jumpRight :separation
+astraSpaceLogoOnWhite :height

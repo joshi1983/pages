@@ -28,7 +28,7 @@ class Animation
 					{'x': this.maxT * 0.9, 'y': 0},
 					{'x': this.maxT, 'y': 0},
 				], t),
-				'camera-z': getCurveValue([
+				'camera-z': -3 + getCurveValue([
 					{'x': 0, 'y': 0},
 					{'x': this.maxT * 0.1, 'y': 0},
 					{'x': this.maxT * 0.2, 'y': -0.5},
@@ -63,8 +63,8 @@ class Animation
 					{'x': this.maxT * 0.1, 'y': maxBladeAngle * 0.05},
 					{'x': this.maxT * 0.2, 'y': maxBladeAngle * 0.19},
 					{'x': this.maxT * 0.5, 'y': maxBladeAngle * 0.6},
-					{'x': this.maxT * 0.8, 'y': maxBladeAngle * 0.85},
-					{'x': this.maxT * 0.9, 'y': maxBladeAngle * 0.94},
+					{'x': this.maxT * 0.8, 'y': maxBladeAngle * 0.86},
+					{'x': this.maxT * 0.9, 'y': maxBladeAngle * 0.95},
 					{'x': this.maxT, 'y': maxBladeAngle},
 				], t)
 			}

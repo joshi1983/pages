@@ -1,0 +1,41 @@
+; Inspired by
+; https://www.pinterest.ca/pin/746542075736470444
+; It is also shown at
+; https://geometrydaily.tumblr.com/post/31121882191/252-twine-a-new-minimal-geometric-composition
+; The original designer's website is at:
+; https://tilman.me/
+; This WebLogo code that draws something looking very similar 
+; was written by Josh Greig in July 2024.
+to squareTwine :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "colors ["black "#486c8e]
+	localmake "thickness :height * 0.10355
+	localmake "slantedThickness :thickness / cos 45
+	localmake "squareSize ((:height / 2) / cos 45) - :thickness
+	localmake "innerGap (:squareSize - :thickness) / 2
+	localmake "startX :innerGap * tan 180 / 8
+	localmake "len1 :startX * 2 + :slantedThickness
+	jumpForward :height / 2
+	setPenSize 0
+	localmake "center pos
+	repeat 8 [
+		localmake "colorIndex 1 + remainder repcount 2
+		setHeading :oldHeading + repcount * 360 / 8
+		jumpForward :innerGap
+		jumpRight :startX
+		setFillColor item :colorIndex :colors
+		polyStart
+		jumpLeft :len1
+		left 135
+		jumpForward :slantedThickness
+		right 135
+		jumpForward :thickness * 2
+		jumpRight :len1
+		polyEnd
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+squareTwine 100

@@ -1,0 +1,78 @@
+; Inspired by:
+; https://www.pinterest.ca/pin/664351382545932757/
+to volkswagenLogo :d
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "k :d * 0.085
+	localmake "b :d * 0.1
+	localmake "a :d * 0.025
+	localmake "angle 24
+	localmake "a1 :a * 0.5
+	localmake "b1 :b * 0.5
+	localmake "r1 (:d - :k) * 0.5
+	localmake "r2 :r1 - :b1 * (tan :angle) - :a1 / cos :angle
+	localmake "r3 :r1 - :b1 / (tan :angle)
+
+	; r4 could be calculated exactly from numbers in the technical drawing.
+	; The 0.196 is a temporary estimate.
+	localmake "r4 :d * 0.196
+	; The following expression for size1 is very close but not exactly right.
+	; The error shows more as a increases.
+	localmake "size1 :b / (cos :angle) + :a * (tan :angle)
+
+	; size2, and size3 could be calculated exactly from the technical drawing.
+	; Temporary estimates are used for now below.
+	localmake "size2 :d * 0.72
+	localmake "size3 :d * 0.345
+	setPenSize :k
+	setFillColor transparent
+	circle :r1
+	right :angle
+	jumpForward :r1
+	setPenSize 0
+	jumpRight :b1
+	setFillColor penColor
+
+	; upper V
+	polyStart
+	jumpBackward :r2
+	left :angle + 90
+	jumpForward :size1
+	right 90 - :angle
+	jumpForward :r2
+	jumpRight :b
+	jumpBackward :r3
+	right :angle * 2
+	jumpForward :r3
+	polyEnd
+
+	; lower W
+	jumpTo :oldPos
+	setHeading :oldHeading + 90
+	jumpRight :a1
+	jumpBackward :size1 * 0.5
+	setPenSize 0.05
+	setPenColor "red
+	polyStart
+	jumpForward :size1
+	right 90 - :angle
+	jumpForward :r4
+	setHeading :oldHeading + :angle
+	jumpForward :d * 0.5
+	jumpRight :b
+	jumpBackward :size2
+	left :angle * 2
+	jumpForward :size3
+	left 180 - :angle * 2 ; reflection point
+	jumpForward :size3
+	right 180 - :angle * 2
+	jumpForward :size2
+	jumpRight :b
+	jumpBackward :d * 0.5
+	polyEnd
+
+	setTurtleState :oldState
+end
+
+volkswagenLogo 200

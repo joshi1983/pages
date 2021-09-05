@@ -1,0 +1,50 @@
+; Inspired by logo at
+; https://www.naturefresh.ca
+to natureFreshLogo :height
+	localmake "oldState turtleState
+	localmake "doorWidth :height * 0.215
+	localmake "doorArcRadius :height * 0.045
+	localmake "doorHeight1 :height * 0.38525
+	localmake "doorStraightHeight :doorHeight1 - :doorArcRadius
+	localmake "baseWidth1 :height * 0.7195
+	localmake "lowerArcRadius :height * 0.49
+	localmake "roofAngle1 67.7
+	localmake "roofTopAngle 180 - 2 * :roofAngle1
+	localmake "roofTopArcRadius :height * 0.31
+	localmake "roofStraightDistance
+		(:doorWidth / 2 + :doorArcRadius + :baseWidth1 -
+		:lowerArcRadius * (1 - cos :roofAngle1) -
+		:roofTopArcRadius * sin :roofTopAngle / 2) /
+		sin :roofAngle1
+	localmake "lowerHeight :height -
+		:lowerArcRadius * (sin :roofAngle1) -
+		:roofTopArcRadius * (1 - cos :roofTopAngle / 2) -
+		:roofStraightDistance * cos :roofAngle1
+	jumpForward :doorHeight1
+	jumpRight :doorWidth / 2
+	right 90
+	setPenSize 0
+	setFillColor "#ee2737
+	polyStart
+	arcRight 90 :doorArcRadius
+	jumpForward :doorStraightHeight
+	jumpLeft :baseWidth1
+	left 180
+	jumpForward :lowerHeight
+	arcLeft :roofAngle1 :lowerArcRadius
+	jumpForward :roofStraightDistance
+	arcLeft :roofTopAngle :roofTopArcRadius
+	; point of symmetry
+	jumpForward :roofStraightDistance
+	arcLeft :roofAngle1 :lowerArcRadius
+	jumpForward :lowerHeight
+	jumpLeft :baseWidth1
+	left 180
+	jumpForward :doorStraightHeight
+	arcRight 90 :doorArcRadius
+
+	polyEnd
+	setTurtleState :oldState
+end
+
+natureFreshLogo 100

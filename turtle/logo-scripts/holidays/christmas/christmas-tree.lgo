@@ -1,0 +1,131 @@
+to drawBluePresent :height
+	localmake "oldState turtleState
+	stripes :height :height * 2 / 3 ["#00d]
+	stripes :height / 3 :height * 2 / 3 ["gray]
+	setPenSize 0
+	setFillColor "red
+	jumpForward :height * 0.7
+	right 90
+	jumpBackward :height * 0.13
+	setFontSize :height * 0.45
+	label "&
+	setTurtleState :oldState
+end
+
+to drawWhitePresent :height
+	localmake "oldState turtleState
+	localmake "presentPurple "purple
+	localmake "width :height * 1.6
+	localmake "thickness :height / 3
+	localmake "heartLine1 [
+		[45 0] [0.5] [-180 0.25] [45 0]
+	]
+	stripes :width :height ["#ffd]
+	stripes :thickness :height [:presentPurple]
+	jumpForward (:height - :thickness) / 2
+	stripes :width :thickness [:presentPurple]
+	stripes :thickness :thickness ["black]
+	setPenSize 0
+	setFillColor "red
+	drawArcLineShape [0 0.1
+		combine :heartLine1 reverse :heartLine1
+	] :thickness
+
+	setTurtleState :oldState
+end
+
+to drawRightPresent :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "stripeColor "black
+	localmake "stripeSeparation :height / 3
+	localmake "stripeThickness :height * 0.1
+	localmake "width :height * 2.6 
+	stripes :width :height ["navy]
+	jumpLeft :height + :stripeSeparation / 2
+	repeat 8 [
+		stripes :stripeThickness :height [:stripeColor]
+		jumpRight :stripeSeparation
+	]
+	jumpTo :oldPos
+	jumpForward (:stripeSeparation - :stripeThickness) / 2
+	repeat 3 [
+		stripes :width :stripeThickness [:stripeColor]
+		jumpForward :stripeSeparation
+	]
+	jumpTo :oldPos
+	jumpForward :height / 2
+	jumpRight :stripeSeparation	* 1.5
+	setPenSize 0
+	setFillColor "black
+	square :stripeSeparation
+	setFontSize :stripeSeparation * 0.8
+	jumpBackward fontSize * 0.2
+	setFillColor "lime
+	right 90
+	jumpBackward fontSize * 0.5
+	label "@
+	setTurtleState :oldState
+end
+
+to drawPresents :height
+	localmake "oldState turtleState
+	jumpLeft :height * 3.3
+	drawBluePresent :height
+	jumpRight :height * 1.65
+	drawWhitePresent :height
+	jumpRight :height * 4.1
+	drawRightPresent :height
+	setTurtleState :oldState
+end
+
+; Inspired by a video of someone retyping
+; a BASIC program that draws a Christmas tree
+; The video is at:
+; https://www.youtube.com/watch?v=izoWxq9L8xY
+;
+; The video description mentions that the copied code is from
+; “Christmas Tree” from Family Computing magazine (Issue 4, Dec 1983.
+to christmasTree :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "starRadius :height * 0.05
+	localmake "triangleHeight :height * 0.78
+	localmake "triangleWidth :height * 1.23
+	localmake "numDecorationLevels 10
+	localmake "decorationLevelHeight :triangleHeight / :numDecorationLevels
+	localmake "decorationSeparation :triangleWidth / (:numDecorationLevels + 1)
+
+	drawPresents :height * 0.12
+
+	; draw tree trunk.
+	stripes :height * 0.12 :height * 0.2 ["brown]
+	jumpForward :height * 0.16
+	setPenSize 0
+	setFillColor "green
+	isoTriangle :triangleWidth :triangleHeight
+
+	jumpForward :decorationLevelHeight * (:numDecorationLevels - 0.5)
+	; add decorations on various levels.
+	repeat :numDecorationLevels [
+		localmake "middle pos
+		localmake "numDecorations repcount
+		jumpLeft :decorationSeparation * (:numDecorations - 1) / 2
+		repeat :numDecorations [
+			setFillColor hsvToRGB randomRatio 1 1
+			circle :decorationSeparation * 0.12
+			jumpRight :decorationSeparation
+		]
+		jumpTo :middle
+		jumpBackward :decorationLevelHeight
+	]
+
+	jumpTo :oldPos
+	jumpForward :height - :starRadius
+	setFillColor "white
+	isotoxalStar :starRadius :starRadius * 0.3 5	
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+christmasTree 100

@@ -1,0 +1,56 @@
+make "jordanFlagRed "#ce1126
+
+to drawBackgroundStripes :width :height
+	localmake "colors ["#007a3d "white "black]
+	stripes :width :height :colors
+	setPenSize 0
+end
+
+; Flag of Hejaz
+; https://en.wikipedia.org/wiki/Flag_of_Jordan#/media/File:Flag_of_Hejaz_1920.svg
+to jordanFlagBefore1928 :height
+	localmake "oldState turtleState
+	localmake "width :height * 12 / 8
+	drawBackgroundStripes :width :height
+	jumpLeft :width / 2
+	setFillColor :jordanFlagRed
+	polyStart
+	jumpForward :height
+	right 135
+	jumpForward :height / sqrt 2
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Jordan#/media/File:Flag_of_Jordan_(construction_sheet).svg
+; Referenced from:
+; https://en.wikipedia.org/wiki/Flag_of_Jordan
+
+; This drawing was particularly straightforward because
+; the construction sheet gave every detail very clearly including some square roots for A.
+to jordanFlag :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "A :height * (21 * (sqrt 5) - 21) / 2 / 42
+	drawBackgroundStripes :height * 2 :height
+	jumpLeft :height
+	setFillColor :jordanFlagRed
+	polyStart
+	jumpForward :height
+	right 90 + arcTan 0.5
+	jumpForward hypot [:height :height / 2]
+	polyEnd
+	setHeading :oldHeading
+	jumpLeft :height - :A
+	setFillColor "white
+	isotoxalStar :height * 3 / 42 :height * 1.5 / 42 7
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 3
+jumpLeft :separation / 2
+jordanFlagBefore1928 :height
+jumpRight :separation
+jordanFlag :height

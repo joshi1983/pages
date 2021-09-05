@@ -1,0 +1,41 @@
+; Inspired by logo at
+; https://www.youtube.com/@DovydasMusic
+to dovydasLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "thickness :height * 0.107
+	localmake "innerSquareSize :height * 0.31
+	localmake "tinyInnerSquareSize :innerSquareSize - :thickness * 2
+	localmake "radius :height * 0.41
+	localmake "colorStops createPList2 [
+		[0 "#3822cf] [1 "#1d1292]
+	]
+	jumpForward :height / 2
+	localmake "center pos
+	localmake "backgroundGradient createRadialGradient pos :height / 2 :colorStops
+	setFillGradient :backgroundGradient
+	setPenSize 0
+	square :height
+	right 45
+	setFillColor "white
+	roundRect :innerSquareSize :innerSquareSize :height * 0.01
+	setFillGradient :backgroundGradient
+	roundRect :tinyInnerSquareSize :tinyInnerSquareSize :height * 0.01
+	left 45
+	setFillColor "white
+	repeat 2 [
+		setHeading :oldHeading + repcount * 360 / 2
+		jumpForward :innerSquareSize / 2
+		jumpLeft :thickness / 2
+		polyStart
+		arcLines [[0.596] [-83.5 0.02] [-144.7 1] [-87 0.02]
+		[0.215] [-92.5 0.03] [127 0.74] [102 0] [0.33]
+		] :radius
+		polyEnd
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "#1d1292
+dovydasLogo 100

@@ -1,0 +1,37 @@
+make "darkColor "#780
+
+; Inspired by
+; https://au.pinterest.com/pin/263531015675488022/
+; This is shown in drone footage at:
+; https://www.youtube.com/watch?v=JzCKGlBacEw
+; Reported on July 30, 2016
+; Located at Cley Hill, Warminster, Wiltshire
+to cleyHill2016CropCircles :height
+	localmake "oldState turtleState
+	localmake "lightColor "#ef8
+	localmake "numShapes 20
+	localmake "oldHeading heading
+	localmake "arcsInfo [[25 0] [0.14] [-50 0] [0.04] [-65 0] [0.0422618262]]
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	setPenColor :lightColor
+	setPenSize :height * 0.22
+	setFillColor transparent
+	circle (:height - penSize) / 2
+	setFillColor :darkColor
+	setPenSize 0
+	repeat :numShapes [
+		setHeading :oldHeading + (repcount + 0.5) * 360 / :numShapes
+		jumpForward :height * 0.31
+		polyStart
+		arcLines :arcsInfo :height
+		arcLines reverse :arcsInfo :height
+		polyEnd
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor :darkColor
+cleyHill2016CropCircles 100

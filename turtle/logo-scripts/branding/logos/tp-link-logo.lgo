@@ -1,0 +1,42 @@
+; Inspired by logo at:
+; https://en.wikipedia.org/wiki/TP-Link#/media/File:TPLINK_Logo_2.svg
+to tpLinkLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "thickness 0.205
+	localmake "largeArcRadius 0.267
+	localmake "outerRadius :largeArcRadius + :thickness / 2
+	localmake "startY 0.55
+	localmake "straightLen 1 - :startY - :outerRadius
+	localmake "lines1 [
+		[-45 0] [1] [90 0] [0.345]
+		[90 0.12] [0.415] [-45 0]
+	]
+	setPenColor "#4acbd6
+	setPenSize :height * :thickness
+	jumpLeft :height * 0.136
+	jumpForward :height * :startY
+	localmake "startPos pos
+	jumpRight :height * :largeArcRadius
+	jumpForward :height * :straightLen
+	localmake "center pos
+
+	jumpTo :startPos
+	setLineCap "butt
+	arcLines [[:straightLen] [-270 :largeArcRadius]
+		[:straightLen]] :height
+
+	jumpTo mix :startPos pos 0.5
+	setHeading :oldHeading - 135
+	jumpBackward :height * 0.025
+	localmake "scale :height * (1 - :outerRadius) - (distance :center) * cos 45
+	print :scale
+	setPenSize 0
+	setFillColor penColor
+	drawArcLineShape [0 0
+		combine :lines1 reverse :lines1
+	] :scale
+	setTurtleState :oldState
+end
+
+tpLinkLogo 100

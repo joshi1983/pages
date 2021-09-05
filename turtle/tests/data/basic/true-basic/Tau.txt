@@ -1,0 +1,20 @@
+!  TAU. Demonstrate Kendall's tau.
+!  Check correlation between tuna-fish lightness and consumer preference.
+!  Example from "Nonparametric Statistical Methods" by Hollander, p. 188.
+!
+LIBRARY "Stat3Lib.trc"
+
+DIM a(9), b(9)
+
+MAT READ a, b
+DATA 44.4, 45.9, 41.9, 53.3, 44.7, 44.1, 50.7, 45.2, 60.1  ! Lightness
+DATA 2.6, 3.1, 2.5, 5.0, 3.6, 4.0, 5.2, 2.8, 3.8      ! Panel Score
+
+CALL KendallTau (a(), b(), n, tau, z, p)
+
+PRINT "Tau: "; tau
+PRINT "Z:"; z
+PRINT using "2 tail probability: #.####": p
+IF p < .1 then PRINT "Positive correlation at 90% level of significance."
+
+END

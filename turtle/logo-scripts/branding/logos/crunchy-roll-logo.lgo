@@ -1,0 +1,43 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Crunchyroll#/media/File:Crunchyroll.svg
+to crunchyRollLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "arcAngle1 275
+	localmake "arcRadius1 :height * 0.4385
+	localmake "outerSize1 :height / 2 * sin (360 - :arcAngle1) / 2
+	localmake "arcAngle2 360 - 2 * arcSin :outerSize1 / :arcRadius1
+	localmake "arcAngle3 308.1
+	localmake "arcRadius2 :height * 0.35
+	localmake "arcRadius3 :height * 0.16
+	localmake "innerSize :arcRadius2 * sin (360 - :arcAngle3) / 2
+	localmake "arcAngle4 360 - 2 * arcSin :innerSize / :arcRadius3
+	localmake "x :height * 0.036
+	localmake "angle1 arcTan :x / (:height / 2)
+	jumpRight :x
+	jumpForward (:height / 2 * ( 1 - cos :angle1))
+	left 90 + :angle1
+	setPenSize 0
+	setFillColor "#F47521
+	polyStart
+	arcRight :arcAngle1 :height / 2
+	right 180 + (:arcAngle2 - :arcAngle1) / 2	
+	arcLeft :arcAngle2 :arcRadius1
+	polyEnd
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpRight :height * 0.431
+	jumpForward :height * 0.483
+	setHeading :oldHeading + 169
+	polyStart
+	arcRight :arcAngle3 :arcRadius2
+	right 180 + (:arcAngle4 - :arcAngle3) / 2
+	arcLeft :arcAngle4 :arcRadius3
+
+	polyEnd	
+	setTurtleState :oldState
+end
+
+crunchyRollLogo 100

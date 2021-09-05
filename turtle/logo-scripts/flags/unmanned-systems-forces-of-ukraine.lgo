@@ -1,0 +1,78 @@
+; The B is an English letter.
+; B might not have the same ASCII code as the depicted Ukrainian character
+; but B looks similar.
+to drawB :fontHeight
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "line1 [
+		[-90 0] [0.67] [90 0.2] 
+	]
+	jumpLeft :fontHeight * 0.43
+	localmake "startPos pos
+	arcLines [[1] [-90 0] [1]] :fontHeight - penSize / 2
+
+	jumpTo :startPos
+	setHeading :oldHeading
+	jumpForward penSize / 2
+	arcLines combine :line1 reverse :line1 :fontHeight
+	setTurtleState :oldState
+end
+
+to drawC :fontHeight
+	localmake "oldState turtleState
+	localmake "line1 [
+		[90 0] [0.85] [-90 0.3] [0.2]
+	]
+	jumpRight :fontHeight * 0.53
+	jumpForward penSize / 2
+	arcLines combine :line1 reverse :line1 :fontHeight - penSize
+	setTurtleState :oldState
+end
+
+to drawText :fontHeight
+	localmake "oldState turtleState
+	setPenColor fillColor
+	setLineCap "butt
+	setPenSize :fontHeight * 0.15
+	jumpLeft :fontHeight * 1.22
+	drawC :fontHeight
+	jumpRight :fontHeight * 1.23
+	drawB :fontHeight
+	jumpRight :fontHeight * 1.23
+	drawC :fontHeight
+
+	setTurtleState :oldState
+end
+
+; Inspired by flag at:
+; https://en.wikipedia.org/wiki/List_of_Ukrainian_flags#/media/File:Flag_of_the_Unmanned_Systems_Forces_of_Ukraine.png
+to unmannedSystemsForcesOfUkraineFlag :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "midSeparation :height * 0.14
+	stripes :height * 3 / 2 :height ["black]
+	setPenSize 0
+	setFillColor "white
+	jumpForward :height * 0.345
+	localmake "bottom1 pos
+	jumpForward :height * 0.58
+	localmake "top pos
+	jumpBackward :height * 0.505
+	jumpLeft :midSeparation / 2
+	localmake "left pos
+	jumpRight :midSeparation
+	polygon [:bottom1 :left :top pos]
+	
+	jumpTo :oldPos
+	repeat 2 [
+		drawArcLineShape [0.22 0.54
+			[[0.28] [159 0] [0.37]]
+		] :height * sign repcount - 1.5
+	]
+
+	jumpForward :height * 0.152
+	drawText :height * 0.126
+	setTurtleState :oldState
+end
+
+unmannedSystemsForcesOfUkraineFlag 100

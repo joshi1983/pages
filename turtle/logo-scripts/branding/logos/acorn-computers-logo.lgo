@@ -1,0 +1,32 @@
+; Inspired by logo of Acorn Computers
+; https://acorncomputers.uk
+to acornComputersLogo :height
+	localmake "oldState turtleState
+	localmake "topLines1 [
+		[90 0] [50 0.18] [20 0.4] [15 1.2]
+		[95 0] [0.279]
+	]
+	localmake "angle 173
+	localmake "radiusFactor 0.287
+	setFillColor "#1c6ec1
+	setPenSize 0
+	drawArcLineShapes [
+		[0 1
+		combine :topLines1 reverse :topLines1
+		]
+
+		[-:radiusFactor * (sin :angle / 2) 0.473
+			[[-90 - :angle / 2 0] [:angle :radiusFactor]
+		]]
+
+		[0.269 0
+			[[60.3 0] [17.3 2] [-80 0]
+			[0.023] [-98 0] [-15.7 2.4]]
+		]
+	] :height
+	jumpForward :height * 0.15
+	isoTrapezoid :height * 0.055 :height * 0.04 :height * 0.1
+	setTurtleState :oldState
+end
+
+acornComputersLogo 100

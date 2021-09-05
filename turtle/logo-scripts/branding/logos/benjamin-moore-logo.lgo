@@ -1,0 +1,39 @@
+; Inspired by logo at
+; https://commons.wikimedia.org/wiki/File:Benjamin_Moore_logo.svg
+to benjaminMooreLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "angle 31.55
+	localmake "angle2 180 - :angle * 2
+	localmake "angle3 90 + :angle
+	localmake "width :height * 2 * tan :angle
+	localmake "tiny 0.009
+	localmake "width1 :height * 0.42705119
+	setFillColor "#ba0c2f
+	setPenSize 0
+	isoTriangle :width :height
+	jumpForward :height * 0.0942647
+	localmake "pos1 pos
+	jumpLeft :width1
+	setFillColor "white
+	polyStart
+	arcLines [[-:angle 0] [0.592] [-:angle2 :tiny] [0.5754]
+	[-:angle3 :tiny] [0.381] [-:angle3 :tiny] [0.2185] [-:angle2 0]
+	[0.1207] [-:angle * 2 0] [0.057] [:angle3 :tiny] [0.086]
+	[:angle3 :tiny] [0.293] [:angle2 :tiny] [0.3504]
+	] :height
+	polyEnd
+	jumpTo :pos1
+	setHeading :oldHeading
+	jumpRight :width1
+	polyStart
+	arcLines [[:angle 0] [0.592] [:angle2 :tiny] [0.154]
+	[:angle * 2 0] [0.1215] [:angle2 0] [0.0348] [-:angle2 :tiny]
+	[0.3512]
+	] :height
+
+	polyEnd
+	setTurtleState :oldState
+end
+
+benjaminMooreLogo 100

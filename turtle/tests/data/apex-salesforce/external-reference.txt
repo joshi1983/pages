@@ -1,0 +1,74 @@
+/**
+ * copied from:
+ * https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_doc_examples.htm
+ *
+ * Provides a service to retrieve current weather conditions from an external API.
+ * It utilizes Salesforce Named Credentials for secure endpoint and
+ * authentication management.
+ * @author John Doe
+ * @since 1.0.3
+ */
+public with sharing class WeatherService {
+  /**
+   * Retrieves the current weather conditions for a specified city and country.
+   * This method makes an HTTP GET callout to an external weather API using a
+   * Named Credential.
+   * @param city The name of the city (e.g., "London").
+   * @param country The name or code of the country (e.g., "UK" or "United Kingdom").
+   * @return A JSON string representing the current weather conditions.
+   * @throws WeatherServiceException If the HTTP callout fails, returns a non-200 status,
+   * or if there's an issue parsing the response.
+   * @see <a href="https://example.com/weather-api-docs/current-conditions.html">External 
+   * Weather API</a>
+   */
+  public static String getCurrentWeather(
+    String city,
+    String country
+  ) {
+    if (String.isBlank(city) || String.isBlank(country)) {
+      throw new WeatherServiceException(
+        'City and country cannot be blank for weather lookup.'
+      );
+    }
+
+    String namedCredentialUrl = 'callout:WeatherAPI/current'; 
+    String requestParams =
+      '?city=' +
+      EncodingUtil.urlEncode(city, 'UTF-8') +
+      '&country=' +
+      EncodingUtil.urlEncode(country, 'UTF-8');
+
+    HttpRequest req = new HttpRequest();
+    req.setEndpoint(namedCredentialUrl + requestParams);
+    req.setMethod('GET');
+    req.setTimeout(60000);
+
+    Http http = new Http();
+    HttpResponse res;
+
+    try {
+      res = http.send(req);
+    } catch (System.CalloutException e) {
+      throw new WeatherServiceException(
+        'HTTP Callout Failed: ' + e.getMessage()
+      );
+    }
+
+    if (res.getStatusCode() == 200) {
+      return res.getBody();
+    } else {
+      throw new WeatherServiceException(
+        'Failed to retrieve weather data. Status: ' +
+          res.getStatusCode() +
+          '. Details: ' +
+          res.getBody()
+      );
+    }
+  }
+
+  /**
+   * Custom exception for errors during weather data retrieval.
+   */
+  public class WeatherServiceException extends Exception {
+  }
+}

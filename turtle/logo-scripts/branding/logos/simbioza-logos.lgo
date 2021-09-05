@@ -1,0 +1,50 @@
+; Inspired by logo at:
+; https://www.facebook.com/casopis.simbioza
+to simbiozaLogo :height :color
+	localmake "oldState turtleState
+	setFillColor transparent
+	setPenColor :color
+	setPenSize :height * 0.11
+	localmake "largeSize (:height - penSize) / 2 / cos 180 / 6
+	jumpForward :height / 2
+	right 180 / 6
+	roundRegularPolygon :largeSize 6 :height * 0.13
+	setPenSize :height * 0.05
+	localmake "mediumSize :height * 0.262
+	roundRegularPolygon :mediumSize 6 :height * 0.07
+	left 360 * 2.5 / 6
+	localmake "mediumSize2 :mediumSize * cos 180 / 6
+	jumpForward :mediumSize2
+	stripes :height * 0.07 :largeSize * (cos 180 / 6) - :mediumSize2 [penColor]
+	setTurtleState :oldState
+end
+
+to simbiozaOnBackgroundLogo :height :foregroundColor :backgroundColor
+	localmake "oldState turtleState
+	localmake "innerHeight :height * 0.75
+	stripes :height :height [:backgroundColor]
+	jumpForward (:height - :innerHeight) / 2
+	simbiozaLogo :innerHeight :foregroundColor
+	setTurtleState :oldState
+end
+
+to simbiozaOnRegularBackgroundLogo :height
+	simbiozaOnBackgroundLogo :height "#ffe691 "#f68e52
+end
+
+to simbiozaWhiteOnBlackLogo :height
+	simbiozaOnBackgroundLogo :height "#fff "#000
+end
+
+to simbiozaBlackLogo :height
+	simbiozaLogo :height "#000
+end
+
+make "height 100
+make "separation :height * 5
+jumpLeft :separation
+simbiozaOnRegularBackgroundLogo :height
+jumpRight :separation
+simbiozaWhiteOnBlackLogo :height
+jumpRight :separation
+simbiozaBlackLogo :height

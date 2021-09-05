@@ -1,0 +1,45 @@
+to drawI :fontHeight
+	localmake "oldState turtleState
+	localmake "thickness :fontHeight * 0.195
+	localmake "radius :fontHeight * 0.122
+	stripes :thickness :fontHeight * 0.65 [fillColor]
+	jumpForward :fontHeight - :radius
+	circle :radius
+	setTurtleState :oldState
+end
+
+to drawN :fontHeight
+	localmake "oldState turtleState
+	localmake "width :fontHeight * 0.65
+	localmake "innerArcs [[20 0.29] [50 0.105] [20 0.1] [20 0.18]
+	[20 0.1] [10 0.15] [20 0.12] [20 0.25] [0.319666385]]
+	jumpLeft :width / 2
+	polyStart
+	arcLines [[0.65] [-90 0] [0.1836] [-90 0] [0.092] [150 0.0015]
+	[-15 0.14] [-20 0.21] [-9 0.4] [-10 0.13] [-15 0.5] [-50 0.19]
+	[-15 0.15] [-16 0.57] [0.368138822] [-90 0] [0.195] [-90 0] [0.32]
+	] :fontHeight
+	arcLines :innerArcs :fontHeight
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/LinkedIn#/media/File:LinkedIn_2021.svg
+to linkedInLogo :height
+	localmake "oldState turtleState
+	localmake "fontHeight :height * 0.732
+	setFillColor "#0a66c2
+	setPenSize 0
+	jumpForward :height / 2
+	roundRect :height :height :height * 0.07
+	jumpLeft :height * 0.2855
+	jumpBackward :height * 0.357
+	setFillColor "white
+	drawI :fontHeight
+	jumpRight :height * 0.405
+	drawN :fontHeight
+	setTurtleState :oldState
+end
+
+linkedInLogo 100

@@ -1,0 +1,78 @@
+; Inspired by a graphic at:
+; https://archive.org/details/101basiccomputer0000davi/page/122/mode/2up
+;
+; That is a digital version of a book called 
+; 101 BASIC Computer Games 
+; by David H. Ahl
+; The graphic is near the bottom of page 122 of the book.
+to hexFlake :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "lines1 [
+		[8 0.75] [20 0.22] [30 0.1] [-111 0]
+		[31.8876 0.2] [-68.888 0]
+	]
+	localmake "outerRadius :height * 0.295
+	localmake "innerThickness :height * 0.02
+	localmake "offset :height * 0.05
+	localmake "circleOffset :height / 3
+	localmake "circleRadius :height * 0.04
+	localmake "radiusFactor 0.72
+	localmake "len1 0.15
+	jumpForward :height / 2
+	localmake "center pos
+
+	; Use the turtle to calculate :angle1.
+	right 180 / 8
+	jumpForward :outerRadius
+	localmake "pos1 pos
+	jumpTo :center
+	setHeading :oldHeading
+	jumpForward :outerRadius * :radiusFactor
+	localmake "angle1 (towards :pos1) - heading
+
+	localmake "lines2 [
+		[180 / 8 0] [:len1] [-:angle1 0]
+	]
+	jumpTo :center
+	setHeading :oldHeading + 180 / 8
+	jumpForward :offset
+	setPenSize 0
+	arcLines :lines2 :height
+	localmake "len2 distanceToLine :pos1 :center	
+	queue2 "lines2 [:len2 / :height]
+	queue2 "lines2 [(:angle1 - 180 / 8) - 90  0]
+	print 180 - (180 - :angle1) - 180 / 8
+	jumpTo :center
+	setHeading :oldHeading
+	setPenSize 0
+	setFillColor "black
+	repeat 8 [
+		drawArcLineShape [0 0.19741
+			combine :lines1 reverse :lines1
+		] :height
+		right 360 / 8
+	]
+	isotoxalStar :outerRadius * :radiusFactor :outerRadius  8
+
+	right 180 / 8
+	repeat 8 [
+		jumpForward :circleOffset
+		circle :circleRadius
+		jumpTo :center
+		right 360 / 8
+	]
+	setLineJoinStyle "miter
+	setPenSize :innerThickness
+	setPenColor "white
+	repeat 8 [
+		drawArcLineShape [0 :offset / :height
+			combine :lines2 reverse :lines2
+		] :height
+		right 360 / 8
+	]	
+
+	setTurtleState :oldState
+end
+
+hexFlake 100

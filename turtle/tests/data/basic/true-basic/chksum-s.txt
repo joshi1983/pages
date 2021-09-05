@@ -1,0 +1,20 @@
+EXTERNAL
+
+SUB CheckSum (l$(), options$)
+
+    LIBRARY "{WB_c}WBsccs.trc"
+
+    WHEN EXCEPTION IN
+         CALL WB_CheckSum (l$(), options$)
+         PRINT "Done with CheckSum."
+    USE
+         IF extype = 1 then
+            PRINT extext$
+         ELSE
+            PRINT extype, extext$
+            PRINT exline$
+            PRINT "Error in Checksum."
+         END IF
+    END WHEN
+
+END SUB

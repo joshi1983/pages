@@ -1,0 +1,99 @@
+// dhrystone.bas
+// pBasic Dhrystone-style benchmark for comparison with Dave Plummer's runs
+// 100,000 iterations + automatic Dhrystones/sec calculation
+// Strictly compatible with current pBasic syntax
+
+CLS
+print "pBasic Dhrystone-Style Benchmark"
+print "================================"
+
+var Loops     : Int = 100000
+var i         : Int = 0
+var dotCount  : Int = 0
+
+// Globals for hot-loop simulation
+var Arr1      : Int = 0
+var Arr2      : Int = 0
+var Sum       : Int = 0
+var Temp      : Int = 0
+var Flag      : Int = 0
+
+// Timing strings
+var startTime$ : String = ""
+var endTime$   : String = ""
+
+print "Starting benchmark... (100,000 loops)"
+print "Time Start"
+startTime$ = TIME
+print startTime$
+
+for i = 1 to Loops
+    Arr1 = i
+    Arr2 = i * 2
+    Sum = dhryProc1(Arr1, Arr2)
+    Sum = Sum + dhryProc2(Arr1)
+
+    if Sum > 100000 then Flag = 1
+
+    // Print a dot every 10,000 iterations
+    //dotCount = dotCount + 1
+    //if dotCount == 10000 then print ".";
+    //if dotCount == 10000 then dotCount = 0
+next i
+
+print ""
+print "Time End"
+endTime$ = TIME
+print endTime$
+
+// === Automatic calculation of elapsed time and Dhrystones/sec ===
+var startSec   : Float = timeToSeconds(startTime$)
+var endSec     : Float = timeToSeconds(endTime$)
+var elapsed    : Float = endSec - startSec
+if elapsed < 0 then elapsed = elapsed + 86400.0
+
+var dhryPerSec : Float = 0.0
+dhryPerSec = Loops / elapsed
+
+print ""
+print "Loops performed   = "; 
+print Loops
+print "Elapsed seconds   = "; 
+print elapsed
+print "Dhrystones / sec  = "; 
+print dhryPerSec
+
+print ""
+print "Press any key to exit..."
+
+var k$ : String = ""
+while (k$ == "") {
+    k$ = INKEY$
+}
+end
+
+// ===================================================================
+// Time string "HH:mm:ss" → seconds since midnight
+// ===================================================================
+func timeToSeconds(t$) {
+    var h : Float = VAL(MID$(t$, 0, 2))
+    var m : Float = VAL(MID$(t$, 3, 2))
+    var s : Float = VAL(MID$(t$, 6, 2))
+    return h*3600.0 + m*60.0 + s
+}
+
+// ===================================================================
+// Dhrystone-style helper procedures
+// ===================================================================
+func dhryProc1(a, b) {
+    var x : Int = a + b
+    var y : Int = a * 3
+    var z : Int = b - a
+    return x + y + z
+}
+
+func dhryProc2(a) {
+    var temp : Int = a * 5
+    if temp > 1000 then temp = temp - 500
+    return temp
+}

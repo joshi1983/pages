@@ -1,0 +1,82 @@
+; PROJECT : Morphing Shape Tunnel
+; AUTHOR  : Learn To Code PlayBASIC - http://PlayBASIC.com
+; CREATED : 11/05/2022
+; EDITED  : 13/05/2022
+; ---------------------------------------------------------------------
+
+    openscreen 1280,960,32,1
+    
+positionscreen getscreenxpos(),10
+
+Count=360*3
+
+  RingShape = NewShape(Count, Count)
+  
+  //  Set the edge links for this shape.
+  For lp =0 to Count-2
+      SetShapeEdge  RingShape,lp, lp,lp+1
+  next 
+  ; // link the last one back to the first  
+  SetShapeEdge RingShape,lp,lp,0
+
+
+    Screen=NewFxImage(GetSurfaceWidth(),GetSurfaceHeight())
+    
+        Scaler#=2
+
+      Rings=10
+        Ringcolour=$505050
+        ColourCountDown=200
+
+  do
+
+        rendertoimage Screen
+      
+      inkmode 1+2048
+        boxc 0,0,getsurfacewidth(),getsurfaceheight(),true,$f0e0d0
+      
+      mx#=getsurfacewidth()/2
+      my#=GetSurfaceheight()/2
+      
+            Scaler#=wrapvalue(scaler#+0.25,1,100)
+
+      
+      for lp =0 to Count-1
+            ; randomly init the vertex as polar coordinates        
+            Angle#=(360.0/Count)*lp
+;            Radius# =120+cosRadius(WobbleAngle2#+lp*1.23,34)+ Cos(WobbleAngle#+(Angle#*Scaler#))*50
+            Radius# =90+cos(WobbleAngle#+(Angle#*Scaler#))*50
+            setshapevertex RingShape,lp,Cosradius(Angle#,Radius#)  ,Sinradius(Angle#,Radius#)      
+      next
+    ;    WobbleAngle2#+=0.43
+      WobbleAngle#-=(2.25)*4
+      
+      lockbuffer
+      Scale#=0.5
+      
+      
+      inkmode 1+64
+      for lp=0 to Rings
+          ink RgbFade( Ringcolour, Float(lp)/Rings *50) 
+            rotateshape ringShape,SpinAngle#+lp*10,Scale#
+          drawshape RingShape,mx#,my#,1
+            Scale#+=0.33
+          next
+      unlockbuffer
+      
+      SpinAngle#+=0.2
+
+      
+      rendertoscreen
+      drawimage Screen,0,0,false
+      
+      
+      ColourCountDown--
+      if ColourCountDown<0
+              ColourCountDown=30
+              Ringcolour= rgbalphaadd( (rndrgb() and $3f3f3f), $080808)
+      endif
+
+
+      sync      
+  loop spacekey()

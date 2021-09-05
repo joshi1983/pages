@@ -1,0 +1,40 @@
+to drawGrid :dotSize :numDots
+	localmake "oldPos pos
+	localmake "separation :dotSize * 20
+	localmake "offset :separation * (:numDots - 1) / 2
+	jumpLeft :offset
+	jumpForward :offset
+	repeat :numDots [
+		repeat :numDots [
+			circle :dotSize
+			jumpRight :separation
+		]
+		jumpLeft :separation * :numDots
+		jumpBackward :separation
+	]
+	jumpTo :oldPos
+end
+
+; Inspired by
+; https://www.pinterest.ca/pin/577657089735188682/
+; After writing this code and sharing the drawing,
+; I found this more similar image:
+; https://imgur.com/6E1Yc2l
+to dotFieldSquare :height
+	localmake "oldState turtleState
+	localmake "numLevels 60
+	localmake "colors ["red "yellow "blue]
+	jumpForward :height / 2
+	setPenSize 0
+	repeat :numLevels [
+		localmake "gridDepthFactor :numLevels + 1 - :numLevels * repRatio
+		localmake "dotRadius :height * 0.1 / :gridDepthFactor
+		localmake "numDots 1 + int :height / :dotRadius / 10
+		setFillColor mixItems2 :colors remainder :gridDepthFactor / :numLevels 1
+		drawGrid :dotRadius :numDots
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+dotFieldSquare 100

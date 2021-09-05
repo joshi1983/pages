@@ -1,0 +1,25 @@
+; Inspired by logo at:
+; https://www.dallascowboys.com
+;
+; It is also shown in this video:
+; https://www.youtube.com/watch?v=qrBt0Sap13U
+to dallasCowboysLogo :height
+	localmake "oldState turtleState
+	localmake "cowboysBlue "#024
+	setLineJoinStyle "miter
+	setFillColor "white
+	setPenColor :cowboysBlue
+	setPenSize :height * 0.031
+	localmake "topThickness1 penSize / 2 / sin 18
+	localmake "bottomThickness penSize / 2 * ((cos 180 / 5) / sin 18)
+	localmake "innerHeight :height - :topThickness1 - :bottomThickness
+	localmake "radius1 :innerHeight / (1 + cos 180 / 5)
+	jumpForward :height - :radius1 - :topThickness1
+	regularStar :radius1 5
+	setPenSize 0
+	setFillColor penColor
+	regularStar :height * 0.35 5
+	setTurtleState :oldState
+end
+
+dallasCowboysLogo 100

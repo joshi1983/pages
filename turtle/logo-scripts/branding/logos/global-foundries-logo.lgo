@@ -1,0 +1,35 @@
+; Inspired by logo at:
+; https://gf.com
+to globalFoundriesLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "sizeFactor1 0.285
+	localmake "squareSize :height * :sizeFactor1
+	localmake "leftOffset -0.26
+	jumpRight :height * 0.31
+	jumpForward :height - :squareSize / 2
+	setPenSize 0
+	setFillColor "#ff6012
+	square :squareSize
+	jumpBackward :height * 0.357
+	square :squareSize
+
+	jumpTo :oldPos
+	drawArcLineShapes [
+		[-0.187 0
+			[[-90 0] [90 :sizeFactor1]
+			[1 - :sizeFactor1] [90 0]
+			[90 :sizeFactor1]]
+		]
+		[:leftOffset 0
+			[[90 0] [-90 :sizeFactor1] [-90 0]
+			[:sizeFactor1]]
+		]
+		[:leftOffset 1
+			[[90 0] [180 0.321]]
+		]
+	] :height
+	setTurtleState :oldState
+end
+
+globalFoundriesLogo 100

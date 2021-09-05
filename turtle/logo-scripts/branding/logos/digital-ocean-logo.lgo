@@ -1,0 +1,37 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/DigitalOcean#/media/File:DigitalOcean_logo.svg
+; The logo is also at:
+; https://www.digitalocean.com
+;
+; Digital Ocean is a good web hosting provider for virtual private servers.
+; It lets you run programs on their "droplets" which are virtual machines
+; running in a good networking configuration for web servers and database servers.
+; The operating system for the virtual machines is Linux.
+to digitalOceanLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "oldPos pos
+	localmake "thickness :height * 0.194
+	localmake "squareSizes [0.76 0.83 0]
+	jumpForward :thickness / 2
+	right 90
+	setLineCap "butt
+	setPenSize :thickness
+	setPenColor "#0069ff
+	arcLeft 270 (:height - :thickness) / 2
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :thickness * 1.5
+	left 90
+	repeat count :squareSizes [
+		localmake "sign sign (-0.5 + remainder repcount 2)
+		stripes :thickness :thickness [penColor]
+		localmake "newThickness :thickness * item repcount :squareSizes
+		jumpLeft (:thickness + :newThickness) / 2 * :sign
+		jumpForward :thickness
+		localmake "thickness :newThickness
+	]
+	setTurtleState :oldState
+end
+
+digitalOceanLogo 100

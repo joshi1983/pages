@@ -1,0 +1,94 @@
+make "startColor "#ee75d2
+make "toColor "#75cbff
+make "limit 12
+make "penSizeRatios []
+repeat :limit [
+	queue2 "penSizeRatios (mix 0.01 0.15 repcount / :limit)
+]
+
+to drawTree :scale :iterationCount :angle
+	if :iterationCount < :limit [
+		localmake "oldState turtleState
+		setPenColor mix :toColor :startColor :iterationCount / :limit
+		setPenSize :scale * item 1 + :iterationCount :penSizeRatios
+		forward :scale
+		left :angle
+		drawTree :scale :iterationCount + 1 :angle
+		right :angle * 2
+		drawTree :scale :iterationCount + 1 :angle
+		setTurtleState :oldState
+	]
+end
+
+to getDistanceAt :heading1 :pos1
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	setHeading :heading1
+	jumpForward 1
+	localmake "result distance :pos1
+	jumpTo :oldPos
+	setHeading :oldHeading
+	output :result
+end
+
+to getBranchScaleRatio :angle
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "result 0
+	repeat :limit [
+		jumpForward 1
+		localmake "tempResult distance :oldPos
+		if :tempResult > :result [
+			localmake "result :tempResult + (item repcount :penSizeRatios) / 2
+		]
+		localmake "choice1Distance getDistanceAt heading + :angle :oldPos
+		localmake "choice2Distance getDistanceAt heading - :angle :oldPos
+		ifelse :choice1Distance > :choice2Distance [
+			right :angle
+		] [
+			left :angle
+		]
+	]
+	jumpTo :oldPos
+	setHeading :oldHeading
+	output :result
+end
+
+; Inspired by this animation:
+; https://codepen.io/konstantindenerz/pen/rNgNBKY
+to trees :height :angle
+	localmake "oldState turtleState
+	localmake "scaleRatio getBranchScaleRatio :angle
+	localmake "stepSize :height / 2 / :scaleRatio
+	jumpForward :height / 2
+	setLineCap "round
+	repeat 4 [
+		drawTree :stepSize 0 :angle
+		right 90
+	]	
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+make "timeRatio animation.clampedTimeRatio
+make "previousKeyTimeRatio (floor :timeRatio * 4) / 4
+make "fraction (:timeRatio - :previousKeyTimeRatio) * 4
+make "fraction interpolateRatio easeInOut :fraction
+make "timeRatio :previousKeyTimeRatio + :fraction / 4
+trees 100 360 * :timeRatio
+
+to animation.snapshotstyle
+	output createPList2 [
+		["position.y 50]
+		["zoom.scale 6]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 20
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

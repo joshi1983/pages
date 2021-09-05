@@ -1,0 +1,31 @@
+; Inspired by logo at:
+; https://www.fontspace.com
+to fontSpaceLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "width :height * 1.63
+	localmake "colorStops createPList2 [
+		[0 "#23dbf9] [1 "#ff64bd]
+	]
+	localmake "radius1 0.5
+	jumpLeft :width / 2
+	localmake "fromPos pos
+	jumpRight :width
+	setFillGradient createLinearGradient :fromPos pos :colorStops "pad
+	setPenSize 0
+	jumpTo :oldPos
+	drawArcLineShape [0 0
+		[[-90 0] [84.1 :radius1] [-57 0.018] [10 1.4]
+		[15 0.6] [40 0.08] [30 0.03] [50 0.07] [15 0.65]
+		[2.4 2] [37.5 0.02] [-20 1.2] [-16.95 1.46] [-17.9 0.493]
+		[-167.5 0.0153] [12 0.9] [5 1.8] [14 1.4] [17 0.42]
+		[27 0.08] [40 0.02] [14 0.21] [100 0.48] [43.5 0.53]
+		[-70 0.02] [15 1.2] [22 0.2] [70 0.05] [20 0.1] [22 0.2]
+		[12 0.7] [5 2.5] [7 4] [6.1 2] [-139 0] [-55 0.44]
+		[-24.5 0.6] [164 0.007] [25 0.53]]
+	] :height
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+fontSpaceLogo 100

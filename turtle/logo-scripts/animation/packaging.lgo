@@ -1,0 +1,74 @@
+; Inspired by animation at:
+; https://www.facebook.com/share/v/1AJbUHj6ip
+;
+; In case that post becomes unavailable, it was posted
+; by Wlodzimierz Struktor.
+to drawPackaging :height :time
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "squareSize :height * 0.372
+	localmake "circleRadius :squareSize * 0.366
+	; There should be a way to calculate a more exact value
+	; but I'm using 0.366 for now.
+
+	localmake "firstArcAngle arcCos 1 - :squareSize / 2 / :circleRadius
+	localmake "secondArcAngle 360 - 2 * :firstArcAngle
+	localmake "cutOffset :squareSize / 2 - :circleRadius * sin :firstArcAngle
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	setFillColor "blue
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		arcLeft :sign * :firstArcAngle :circleRadius
+		right 180
+		polyStart
+		arcLeft -:sign * :firstArcAngle * 2 :circleRadius
+		polyEnd
+		jumpTo :center
+		setHeading :oldHeading
+	]
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		jumpBackward :sign * :squareSize / 2
+		jumpLeft :sign * :squareSize / 2
+
+		left :time * 270
+		jumpForward :sign * :cutOffset
+		ifelse :sign = 1 [
+			left (180 - :firstArcAngle)
+		] [
+			left -:firstArcAngle
+		]
+		polyStart
+		arcLeft -:secondArcAngle :circleRadius
+		polyEnd
+		jumpTo :center
+		setHeading :oldHeading
+	]
+
+	setPenColor "black
+	setPenSize :height * 0.005
+	setFillColor transparent
+	square :squareSize
+	setTurtleState :oldState
+end
+
+make "t interpolateRatio easeInOut animation.timeRatio
+drawPackaging 100 :t
+
+to animation.snapshotstyle
+	output createPList2 [
+		["position.y 50]
+		["zoom.scale 5]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 5
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

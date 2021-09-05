@@ -1,0 +1,37 @@
+; Inspired by
+; https://www.pinterest.ca/pin/15199717480229205
+; The source of inspiration is also at:
+; https://cubiclerefugee.tumblr.com/post/55729602785
+to cubicleRefugee :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "step :height / 8 / (cos 45) / (1 + 1 / 4)
+	localmake "triHeight :step * cos 45
+	localmake "triWidth :triHeight * 2 * tan 45
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	setFillColor "black
+	repeat 4 [
+		localmake "heading1 :oldHeading + (repcount + 0.5) * 360 / 4
+		setHeading :heading1
+		jumpForward :step / 2
+		repeat 3 [
+			jumpForward :step
+			localmake "pos1 pos
+			jumpLeft :step / 2
+			left 135
+			isoTriangle :triWidth :triHeight
+			left 45
+			jumpLeft :step
+			left 45
+			isoTriangle :triWidth :triHeight
+			jumpTo :pos1
+			setHeading :heading1
+		]
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+cubicleRefugee 100

@@ -1,0 +1,30 @@
+; Inspired by logo at
+; https://nodesource.com
+to nodeSourceLogo :height
+	localmake "oldState turtleState
+	localmake "size1 :height * 0.305
+	setPenSize :height * 0.037
+	localmake "size2 :height / 2 - :size1 - penSize / 2
+	setPenColor "black
+	setFillColor transparent
+	jumpForward :height / 2
+	localmake "center pos
+	circle :height * 0.206
+	roundRegularPolygon :height * 0.495 6 :height * 0.09
+	setLineCap "round
+	repeat 3 [
+		jumpForward :size1
+		forward :size2
+		jumpTo :center
+		right 360 / 3
+	]
+	right 180 / 3
+	repeat 3 [
+		forward :height / 2 - penSize / 2
+		jumpTo :center
+		right 360 / 3
+	]
+	setTurtleState :oldState
+end
+
+nodeSourceLogo 100

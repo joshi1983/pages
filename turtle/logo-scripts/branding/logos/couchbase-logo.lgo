@@ -1,0 +1,50 @@
+; Inspired by logo at
+; https://en.wikipedia.org/wiki/Couchbase_Server#/media/File:CouchbaseLogo.svg
+to couchbaseLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "radius :height / 2
+	localmake "size1 :height * 0.17681827
+	localmake "size2 :height * 0.14
+	localmake "size3 :height * 0.08
+	localmake "size4 :height * 0.2
+	localmake "arcRadius1 :height * 5
+	localmake "arcRadius2 :height * 0.02
+	localmake "arcRadius3 :height * 0.064
+	localmake "arcRadius4 :height * 0.06
+	localmake "arcRadius5 :height * 2.725
+	localmake "arcAngle1 arcSin :size1 / :arcRadius1
+	localmake "arcAngle2 92
+	localmake "arcAngle3 88
+	localmake "arcAngle4 84
+	localmake "arcAngle5 2 * (90 - :arcAngle4)
+	setPenSize 0
+	jumpForward :radius
+	setFillColor "#cc2a2e
+	circle :radius
+	jumpRight :size1
+	jumpForward :height * 0.0142117
+	left 90 - :arcAngle1
+	setFillColor "white
+	polyStart
+	arcLeft :arcAngle1 * 2 :arcRadius1
+	setHeading :oldHeading
+	jumpForward :size2
+	arcLeft :arcAngle2 :arcRadius2
+	jumpForward :size3
+	arcLeft :arcAngle3 :arcRadius3
+	jumpForward :size4
+	arcLeft :arcAngle4 :arcRadius4
+
+	arcLeft :arcAngle5 :arcRadius5 ; symmetry
+
+	arcLeft :arcAngle4 :arcRadius4
+	jumpForward :size4
+	arcLeft :arcAngle3 :arcRadius3
+	jumpForward :size3
+	arcLeft :arcAngle2 :arcRadius2
+	polyEnd
+	setTurtleState :oldState
+end
+
+couchbaseLogo 100

@@ -1,0 +1,49 @@
+make "sonocoBlue "#002169
+
+to drawCurvedShape :height
+	localmake "oldState turtleState
+	localmake "center pos
+	localmake "angle1 13.3
+	localmake "angle2 60.8
+	jumpLeft :height * 0.275
+	jumpBackward :height * 0.0635
+	polyStart
+	setHeading (towards :center) - 90
+	arcRight 90 + :angle1 distance :center
+	arcLines [[0.31]
+	[:angle2 0] [0.252] [180 - :angle2 0] [0.46]
+	[40 0.45] [80 0.27] [15 0.55]] :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://www.sonoco.com/
+to sonocoLogo :height :color
+	localmake "oldState turtleState
+	jumpForward :height / 2
+	setPenSize 0
+	setFillColor :color
+	circle :height * 0.21
+	repeat 2 [
+		drawCurvedShape :height
+		right 180
+	]
+	setTurtleState :oldState
+end
+
+to sonocoWhiteOnBlueLogo :height
+	localmake "oldState turtleState
+	localmake "innerHeight :height * 0.9
+	stripes :height * 3 :height [:sonocoBlue]
+	jumpForward (:height - :innerHeight) / 2
+	sonocoLogo :innerHeight "white
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 5
+jumpLeft :separation / 2
+sonocoWhiteOnBlueLogo :height
+jumpRight :separation
+sonocoLogo :height :sonocoBlue

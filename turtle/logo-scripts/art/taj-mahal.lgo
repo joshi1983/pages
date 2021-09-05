@@ -1,0 +1,300 @@
+to drawLedge :width :height
+	localmake "oldState turtleState
+	localmake "height1 :height * 0.4
+	localmake "height2 :height - :height1
+	setLineJoinStyle "round
+	isoTrapezoid :width * 0.85 :width :height1
+	jumpForward :height1 + :height2 / 2
+	rect :width :height2
+	setTurtleState :oldState
+end
+
+to drawSideTower :height
+	localmake "oldState turtleState
+	localmake "lowerHeight :height * 0.8
+	localmake "ledgeHeight :height * 0.037
+	localmake "arcRadiusFactor 0.04
+	localmake "arcs [[0.035] [90 :arcRadiusFactor]]
+	jumpForward penSize / 2
+	isoTrapezoid :height * 0.15 :height * 0.088 :height * 0.87
+	jumpBackward :ledgeHeight
+	repeat 3 [
+		localmake "width1 :height * mix 0.13 0.2 repcount / 3
+		jumpForward :lowerHeight / 3
+		drawLedge :width1 :ledgeHeight
+	]
+	jumpForward :ledgeHeight
+	stripes :height * 0.01 :height * 0.07 ["black]
+	stripes :height * 0.005 :height - :lowerHeight ["black]
+	jumpForward :height * 0.066
+	setLineJoinStyle "round
+	drawArcLineShape [:arcRadiusFactor 0
+		combine :arcs reverse :arcs] :height
+	isoTrapezoid :height * 0.14 :height * 0.06 :height * 0.02
+	setTurtleState :oldState
+end
+
+to drawSideTowers :height
+	localmake "oldPos pos
+	localmake "separation :height * 1.5
+	jumpLeft :separation / 2
+	repeat 2 [
+		drawSideTower :height
+		jumpRight :separation
+	]
+	jumpTo :oldPos
+end
+
+to drawThinTower :height
+	localmake "oldPos pos
+	localmake "lowerHeight :height * 0.94
+	stripes :height * 0.008 :height ["black]
+	isoTrapezoid :height * 0.03 :height * 0.02 :lowerHeight
+	jumpForward :lowerHeight
+	circle :height * 0.03
+	jumpTo :oldPos
+end
+
+to drawTopDome :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "circlesHeight :height * 0.28
+	localmake "circleRadius :circlesHeight / 10
+	localmake "topArcs [[-90 0] [90 1]]
+	localmake "largeArcs [[130 0] [0.4] [47 0.52] [30 0.3] [63 0] [0.4591687]]
+
+	jumpForward :height - :circlesHeight
+	localmake "circleBase pos
+	drawArcLineShape [0 0 
+		combine :largeArcs reverse :largeArcs
+		] :height
+
+	jumpTo :oldPos
+	stripes :height :height * 0.01 ["black]
+
+	jumpTo :circleBase
+	repeat 4 [
+		circle :circleRadius
+		jumpForward :circleRadius * 2
+	]
+	localmake "almostTop pos
+	jumpBackward :circleRadius
+	stripes :height * 0.01 :circleRadius * 3 ["black]
+	jumpTo :almostTop
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		arcLines :topArcs :circleRadius * :sign
+		jumpTo :almostTop
+		setHeading :oldHeading
+	]
+	jumpTo :circleBase
+	jumpBackward :circleRadius
+	setLineJoinStyle "round
+	repeat 6 [
+		localmake "angle 90 * (repRatio - 0.5)
+		setHeading :oldHeading + 180 + :angle
+		stripes :height * 0.01 :height * 0.15 / cos :angle ["black]
+	]
+	setTurtleState :oldState
+end
+
+to drawThinTowers :height :thinTowersInfo
+	jumpForward penSize / 2
+	localmake "startPos pos
+	repeat 2 [
+		localmake "height1 :height
+		if even? repcount [
+			localmake "height1 -:height1
+		]
+		repeat count :thinTowersInfo [
+			localmake "thinTowerInfo item repcount :thinTowersInfo
+			jumpRight :height1 * first :thinTowerInfo
+			drawThinTower :height * item 2 :thinTowerInfo
+			jumpTo :startPos
+		]
+	]
+end
+
+to drawArch :width :height :curveFactor
+	localmake "oldState turtleState
+	localmake "angle1 120
+	localmake "angle2 (180 - :angle1) / 2
+	localmake "widthFactor :width / :height
+	localmake "len1 :widthFactor / 2 / abs sin :angle1
+	localmake "sideHeight 1 - :len1 * abs cos :angle1
+	localmake "minStraightLen min :len1 :sideHeight
+	localmake "minStraightLen :minStraightLen * :curveFactor
+	localmake "maxRadiusFactor :minStraightLen / tan :angle2
+	localmake "arcRadius :maxRadiusFactor
+	localmake "lenOffset :minStraightLen ;/ cos 45
+	localmake "len2 :len1 - :lenOffset
+	localmake "sideHeightStraight :sideHeight - :lenOffset
+	localmake "arcs [[-:angle1 0] [:len2] [:angle1 - 180 :arcRadius]
+		[:sideHeightStraight] [-90 0] [:widthFactor / 2]]
+	jumpForward :height / 2
+	setLineJoinStyle "round
+	polyStart
+	arcLines :arcs :height
+	arcLines reverse :arcs :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+to drawArchInRectangle :width :height
+	localmake "oldState turtleState
+	rect :width :height
+	drawArch :width * 0.65 :height * 0.8 0.6
+	setTurtleState :oldState
+end
+
+to drawMainFloors :height
+	localmake "oldPos pos
+	localmake "width :height * 2.4
+	localmake "rectHeight :height * 0.39
+	localmake "rectVSeparation :height * 0.89 / 2
+	localmake "rects [
+		[1.06 0.18] [0.68 0.3]
+	]
+	jumpForward :height / 2
+	rect :width :height
+	jumpForward :height * 0.45
+	stripes :width penSize [penColor]
+	jumpTo :oldPos
+	repeat 2 [
+		localmake "xScale :height * sign repcount - 1.5
+		repeat count :rects [
+			localmake "rectInfo item repcount :rects
+			localmake "rectWidth :height * last :rectInfo
+			jumpTo :oldPos
+			jumpRight :xScale * first :rectInfo
+			jumpBackward :rectVSeparation / 2
+			repeat 2 [
+				jumpForward :rectVSeparation
+				drawArchInRectangle :rectWidth :rectHeight
+			]
+		]
+	]
+	jumpTo :oldPos
+end
+
+to drawMainBuilding :height
+	localmake "oldPos pos
+	localmake "backgroundThinTowers [
+		[0.195 0.59] [0.48 0.48]
+	]
+	localmake "foregroundThinTowers [[0.368 0.51]]
+	localmake "domeHeight :height * 0.42
+	jumpForward :height - :domeHeight
+	drawTopDome :domeHeight
+	jumpTo :oldPos
+	drawThinTowers :height :backgroundThinTowers
+	drawMainFloors :height * 0.403
+	drawThinTowers :height :foregroundThinTowers
+	jumpTo :oldPos
+end
+
+to drawCentralBase :height
+	localmake "oldPos pos
+	localmake "mainArchHeight :height * 0.76
+	localmake "mainArchWidth :height * 0.5
+	localmake "archRectHeight :mainArchHeight * 1.04
+	localmake "littleArchWidth :height * 0.13
+	localmake "littleArchHeight :height * 0.2
+	localmake "littleArchHeight2 :height * 0.17
+	localmake "decorationLines [
+		[90 0] [0.3] [90 0] [0.74] [-90 0] [0.06]
+		[-90 0] [0.81] [-90 0] [0.36]
+		]
+	jumpForward :height / 2
+	rect :height * 0.85 :height 
+	jumpForward (:archRectHeight - :height) / 2
+	rect :mainArchWidth :archRectHeight
+	jumpForward (:mainArchHeight - :archRectHeight) / 2
+	drawArch :mainArchWidth :mainArchHeight 0.4
+	jumpTo :oldPos
+	jumpForward :littleArchHeight / 2
+	drawArch :littleArchWidth :littleArchHeight 0.5
+	jumpForward :height * 0.22
+	stripes :mainArchWidth penSize [penColor]
+	jumpForward :height * 0.03
+	stripes :mainArchWidth penSize [penColor]
+	jumpForward (:littleArchHeight2 + penSize) / 2
+	drawArch :littleArchWidth :littleArchHeight2 0.5
+	
+	jumpTo :oldPos
+	drawArcLineShape [0 0.84
+		combine :decorationLines reverse :decorationLines
+		] :height
+	jumpTo :oldPos
+end
+
+; Inspired by drawing at:
+; https://www.youtube.com/watch?v=lz25lmQUHuI
+to drawTajMahal :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "centralRectHeight :height * 0.6
+	setPenColor "black
+	setPenSize :height * 0.007
+	setFillColor "#FFFFFF
+	jumpForward :centralRectHeight / 2
+	rect :height * 0.4 :centralRectHeight
+	jumpTo :oldPos
+	drawSideTowers :height * 0.857
+	drawMainBuilding :height
+	drawCentralBase :height * 0.48
+	stripes :height * 1.35 :height * 0.005 ["black]
+	setTurtleState :oldState
+end
+
+to createHorizontalSkyGradient :height
+	localmake "colorStops createPList2 [
+		[0 "#BFDBF8] [1 "#7CBAF4]
+	]
+	localmake "oldPos pos
+	jumpForward :height
+	localmake "result createLinearGradient :oldPos pos :colorStops "pad
+	jumpTo :oldPos
+	output :result
+end
+
+to drawLandscape :height
+	localmake "colorStops createPList2 [
+		[0 "#459801] [1 "#69B62B]
+	]
+	localmake "oldPos pos
+	jumpForward :height
+	setPenGradient createLinearGradient :oldPos pos :colorStops "pad
+	backward :height
+	setPenSize 0
+	setFillColor "#E69775
+	isoTrapezoid :height * 4 :height * 0.5 :height
+	setFillColor "#8EC1D7
+	isoTrapezoid :height * 2.5 :height * 0.3 :height
+	jumpTo :oldPos
+end
+
+; Some extra scenery inspired by
+; https://upload.wikimedia.org/wikipedia/commons/1/1d/Taj_Mahal_%28Edited%29.jpeg
+to drawTajMahalScene :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "skyHeight :height * 0.7
+	localmake "landscapeHeight :height - :skyHeight
+	jumpForward :height - :skyHeight
+	localmake "horizonCenter pos
+	setLineCap "butt
+	setPenSize :height * 5
+	setPenGradient createHorizontalSkyGradient :skyHeight
+	forward :skyHeight
+	jumpTo :oldPos
+	drawLandscape :landscapeHeight
+
+	jumpTo :horizonCenter
+	drawTajMahal :skyHeight * 0.8
+
+	setTurtleState :oldState
+end
+
+drawTajMahalScene 100

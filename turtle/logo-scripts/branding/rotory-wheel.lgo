@@ -1,0 +1,47 @@
+; Inspired by logo at:
+; https://www.stickpng.com/img/icons-logos-emojis/iconic-brands/rotary-wheel
+;
+; This is the wheel from Rotory logo.
+; The logo contains some text which this code doesn't draw. 
+to rotoryWheel :height
+	localmake "oldState turtleState
+	localmake "toothArcAngle -23.57816
+	localmake "toothStartWidth 0.035
+	localmake "toothArcRadius 0.2
+	localmake "toothTopWidth :toothStartWidth - :toothArcRadius * (1 - cos :toothArcAngle)
+	localmake "toothLines1 [
+		[90 0] [:toothStartWidth] [-90 0] [0.02]
+		[:toothArcAngle :toothArcRadius]
+		[-:toothArcAngle - 90 0] [:toothTopWidth]
+	]
+	localmake "centralArcAngle 290
+	localmake "numTeeth 24
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	setFillColor "black
+	repeat 6 [
+		isoTrapezoid :height * 0.11 :height * 0.065 :height * 0.3
+		right 360 / 6
+	]
+	repeat :numTeeth [
+		drawArcLineShape [0 0.4
+			combine :toothLines1 reverse :toothLines1
+		] :height
+		jumpTo :center
+		right 360 / :numTeeth
+	]
+	setPenSize :height * 0.045
+	setPenColor fillColor
+	setFillColor transparent
+	circle :height * 0.3
+	circle :height * 0.4
+	setPenColor "white
+	setPenSize :height * 0.03
+	right 180 + (360 - :centralArcAngle) / 2
+	setLineCap "round
+	arc :centralArcAngle :height * 0.07
+	setTurtleState :oldState
+end
+
+rotoryWheel 100

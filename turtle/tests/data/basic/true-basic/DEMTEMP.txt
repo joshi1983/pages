@@ -1,0 +1,51 @@
+PROGRAM TB_Program (cmd_line$)
+
+! A starter program for True BASIC Interface Routine use.
+
+OPTION TYPO                       ! Requires all variables to be "declared"      
+
+LIBRARY "TrueCtrl.trc"
+LIBRARY "TrueDial.trc"
+
+LOCAL timer, event$, window, x1, x2    ! Usual way to "declare" variables
+LOCAL new_wid, result
+
+CALL TC_Init                      ! Initialize TrueControls
+
+! Your initialization and interface creation code here.
+
+LET timer = 0                     ! Return immediately if no event pending
+
+! Create a window. Don't forget to add any variables to the LOCAL statement if OPTION TYPO is set.
+
+CALL TC_Win_Create (new_wid, "BORDER FULL | TITLE | SIZE | CLOSE", .15, .50, .30, .80)
+CALL TC_Win_SetTitle (new_wid, "New Window")
+CALL TC_Show (new_wid)
+
+! Show a warning dialog. Don't forget to add any variables to the LOCAL statement if OPTION TYPO is set.
+
+CALL TD_Warn ("Small window should now be showing.", "Ok", 1, result)
+
+PRINT "To quit, press ESC, or"
+PRINT "click the Close Box."
+
+! Loop looking for events, dispatch on event type
+
+DO
+   CALL TC_Event (timer, event$, window, x1, x2)
+
+   ! You may want to have a "Quit" button, but this will
+   ! allow you to also exit with the Escape key.
+
+   IF event$ = "HIDE" then EXIT DO
+   IF event$ = "KEYPRESS" and x1 = 27 then EXIT DO
+
+   SELECT CASE event$             ! Must have a CASE statement for each event
+   CASE ELSE
+   END SELECT
+
+LOOP
+
+CALL TC_Cleanup
+
+END                               ! Main Program

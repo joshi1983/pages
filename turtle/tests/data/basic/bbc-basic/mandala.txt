@@ -1,0 +1,65 @@
+REM These comments at the top might look redundant or verbose
+REM but I'm trying to capture extra detail in case the post and 
+REM comment become unavailable later.
+REM I'm trying to make this source information sufficient for years to come and 
+REM facebook posts, comments can easily get deleted over that kind of time.
+
+REM the following code was copied from a post at:
+REM https://www.facebook.com/share/p/18CHfnsmv9/
+
+REM The code was in a comment from Richard Russell
+REM Richard Russell's facebook profile is at: 
+REM https://www.facebook.com/richard.russell.7355/
+
+REM A direct link to the comment is at:
+REM https://www.facebook.com/groups/2057165187928233/posts/4362623880715674/?comment_id=4362864624024933
+
+ 10 REM Mandala for QB64 K Moerman 2026
+20 REM BBC BASIC version by R Russell 2026
+30 REM The figure is made of colored disks drawn in each sector of the mandala
+40
+50 W% = 800 : H% = 800 : REM size of mandala
+60 THIRD360 = 2 * PI / 3 : TWOTHIRD360 = 2 * THIRD360
+70
+80 REM initialize screen
+90 VDU 23,22,W%;H%;8,16,16,0
+100 ORIGIN W%, H% : GCOL 1 : OFF : *ESC OFF
+110
+120 REM main loop
+130 REPEAT
+140 ndisks% = 100 + RND(300) : REM number of disks per sector
+150 nsectors% = 10 + RND(20) : REM number of sectors
+160 Vdu$ = FN_GenerateVDUFigure$(ndisks%, nsectors%) : REM generate the VDU code of new mandala
+170 PRINT Vdu$; : REM draw VDU code to screen
+180 UNTIL INKEY$(200) = CHR$(27) : REM exit program when ESCAPE is pressed
+190 END
+200
+210 REM generate string containing VDU code with rgb() function
+220 DEF FN_ColorVDU$(anglecol) : LOCAL red%, green%, blue%
+230 red% = 128 + 127 * SIN(3 * anglecol) : REM RGB components in range 0..255
+240 blue% = 128 + 127 * SIN(2 * anglecol + THIRD360)
+250 green% = 128 + 127 * SIN(anglecol + TWOTHIRD360)
+260 = CHR$19 + CHR$1 + CHR$16 + CHR$red% + CHR$green% + CHR$blue%
+270
+280 REM Generating VDU code of complete mandala figure
+290 DEF FN_GenerateVDUFigure$(ndisks%, nsectors%) : LOCAL Vdu$ : Vdu$ = CHR$12
+300 anglesector = 2 * PI / nsectors%
+310 cosangle = COS(anglesector): sinangle = SIN(anglesector)
+320 r = W% * sinangle : REM start value for radius of disks
+330 a = (2 / r) ^ (1 / ndisks%) : REM multiplier <1 to reduce radius r during loop
+340 FOR disk% = 0 TO ndisks% - 1
+350 x = RND(1) * (W% - r) : REM random value of center coord. x so disk still fits on screen
+360 y = 0 : REM first sector y is zero
+370 anglecol = 2 * PI * RND(1) : REM random value from 0..2PI
+380 Vdu$ += FN_ColorVDU$(anglecol) : REM start group of disks with same color
+390 FOR sector% = 0 TO nsectors% - 1 : REM draw same disk for each sector
+400 shapeVdu$ = CHR$25 + CHR$4 + CHR$(x) + CHR$(x >> 8 ) + CHR$(y) + CHR$(y >> 8 ) + \
+410 \ CHR$25 + CHR$153 + CHR$(r) + CHR$(r >> 8 ) + CHR$0 + CHR$0
+420 Vdu$ += shapeVdu$
+430 xnew = cosangle * x - sinangle * y : REM rotation of x and y coord.
+440 y = sinangle * x + cosangle * y
+450 x = xnew
+460 NEXT sector%
+470 IF r > 2 THEN r = r * a : REM reduce radius of disks as loop continues
+480 NEXT disk%
+490 = Vdu$ : REM close the VDU code
