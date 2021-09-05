@@ -1,0 +1,72 @@
+to portlandTrailBlazersGenericLogo :height :colors
+	assert 2 = count :colors
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "thickness :height * 0.033
+	localmake "innerRadius1 :height * 0.05
+	localmake "innerRadius2 :innerRadius1 + :thickness / 2
+	localmake "len1 (:height - :thickness) / 2 / (cos 45) - :innerRadius1
+	localmake "width1 :height * 0.49
+	localmake "outerRadius :width1 * (cos 45) + :innerRadius1
+	localmake "outerArcAngle 90 + arcSin :innerRadius1 / :outerRadius
+	localmake "len2 :len1 - :outerRadius + :innerRadius1
+	localmake "radiusSeparation (:outerRadius - :innerRadius1) / 5
+	localmake "outlines [
+		[:len1] [135 0] [:width1] [45 0] [:len2] [:outerArcAngle :outerRadius]
+		[180 - :outerArcAngle 0]
+		[:outerRadius - :innerRadius2 * (1 - cos :outerArcAngle - 90)]
+	]
+	jumpForward :height / 2
+	localmake "center pos
+	setPenColor "black
+	setLineJoinStyle "miter
+	setLineCap "butt
+	repeat count :colors [
+		setHeading :oldHeading + repcount * 360 / count :colors
+		setFillColor item repcount :colors
+		setPenSize 0
+		right 45
+		localmake "startHeading heading
+		jumpLeft :innerRadius1
+		drawArcLineShape [0 0
+			:outlines] 1
+		setPenSize :thickness
+		arcLines :outlines 1
+
+		repeat 4 [
+			jumpTo :center
+			setHeading :startHeading
+			localmake "r :innerRadius1 + :radiusSeparation * repcount			
+			jumpBackward :r
+			left 90
+			arcRight 90 :r
+			forward (:height - :thickness) / 2 / (cos 45) - :r			
+		]
+		jumpTo :center
+	]
+	setFillColor "black
+	setPenSize 0
+	circle :innerRadius2
+	setTurtleState :oldState
+end
+
+; Inspired by:
+; https://en.wikipedia.org/wiki/File:Portland_Trail_Blazers_logo.svg
+;
+; More information about the logo is at:
+; https://logos-world.net/portland-trail-blazers-logo/
+to portlandTrailBlazersLogo :height
+	portlandTrailBlazersGenericLogo :height ["white "#cf0a2c]
+end
+
+to portlandTrailBlazersWhiteOnBlackLogo :height
+	stripes :height * 2 :height ["black]
+	portlandTrailBlazersGenericLogo :height ["white "white]	
+end
+
+make "height 100
+make "separation :height * 5
+jumpLeft :separation / 2
+portlandTrailBlazersLogo :height
+jumpRight :separation
+portlandTrailBlazersWhiteOnBlackLogo :height
