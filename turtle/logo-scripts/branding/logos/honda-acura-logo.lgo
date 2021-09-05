@@ -1,0 +1,32 @@
+; Inspired by logo at:
+; https://en.wikipedia.org/wiki/Acura#/media/File:Acura_logo.svg
+to acuraLogo :height
+	localmake "oldState turtleState
+	localmake "innerShape [0.03 0.99
+		[[-0.435] [-154 0] [-3.9 8] [160 0]
+		[5 4] [14 1]]
+	]
+	localmake "outline [
+		[10 0.95] [25 0.48] [3 0.3] [10 0.15]
+		[10 0.35] [10 0.42] [10 0.6] [12 0.793154]
+	]
+	localmake "outlineInner [
+		[-20 0.7] [-30 0.25] [-30 0.38] [-10 0.95]
+	]
+	localmake "outlineInner2 combine :outlineInner reverse :outlineInner
+	localmake "outline2 combine :outline reverse :outline
+	setPenSize 0
+	setFillColor "black
+	drawArcLineShape :innerShape :height
+	drawArcLineShape :innerShape -:height
+	drawArcLineShape [0 0
+		(combine [[-90 0]] :outline2 :outline2 [[180 0.019]]
+		:outlineInner2 :outlineInner2)
+	] :height
+
+	jumpForward :height * 0.5668
+	rect :height * 0.2 :height * 0.054
+	setTurtleState :oldState
+end
+
+acuraLogo 100

@@ -1,0 +1,138 @@
+make "skyAzureColor "#0099b5
+make "uzbekRed "#ce1126
+make "uzbekGreen "#1eb53a
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Uzbekistan#/media/File:Flag_of_Uzbekistan.svg
+; based mostly on construction sheet at:
+; https://en.wikipedia.org/wiki/Flag_of_Uzbekistan#/media/File:Flag_of_Uzbekistan_(construction_sheet).svg
+to uzbekistanFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 2
+	localmake "moonRadius :height * 15 / 125
+	localmake "starSize1 :height * 3 / 125
+	localmake "stripesInfo [
+		[:uzbekGreen 40 / 125]
+		[:uzbekRed 2.5 / 125]
+		["white 40 / 125]
+		[:uzbekRed 2.5 / 125]
+		[:skyAzureColor 40 / 125]
+	]
+	setLineCap "butt
+	setPenSize :width
+	repeat count :stripesInfo [
+		localmake "stripeInfo item repcount :stripesInfo
+		setPenColor item 1 :stripeInfo
+		forward :height * item 2 :stripeInfo 
+	]
+	jumpLeft (:width) / 2 - :height * 35 / 125
+	jumpBackward :height * 20 / 125
+	setPenSize 0
+	setFillColor "white
+	circle :moonRadius
+	setFillColor :skyAzureColor
+	jumpRight :height * 5 / 125
+	circle :moonRadius
+	jumpBackward :height * 12 / 125
+	jumpRight :height * 4 / 125
+	setFillColor "white
+	repeat 3 [
+		localmake "numStars 6 - repcount
+		repeat :numStars [
+			regularStar :starSize1 5
+			jumpRight :height * 12 / 125
+		]
+		jumpForward :height * 12 / 125
+		jumpLeft (:numStars - 1) * :height * 12 / 125
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://commons.wikimedia.org/wiki/File:Uz_Air_Force.png
+; The PNG has a horizontally stretched Airforce Roundel.
+; I assumed that was a mistake and used a perfectly circular one instead at roughly the same average scale.
+to uzbekistanAirforceFlag :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "width :height * 3 / 2
+	localmake "roundelHeight :height * 0.35
+	localmake "angle1 arcTan :width / :height
+	localmake "angle2 arcTan :width / (:height / 3)
+	localmake "size1 (hypot [:width :height]) / 2
+	localmake "size2 :width / 3
+	localmake "size3 hypot [:height :width / 3]
+	localmake "size4 hypot [:height / 6 :width / 2]
+	stripes :width :height [:skyAzureColor]
+	jumpForward :height / 2
+	localmake "center pos
+	setFillColor "#f0ff00
+	setPenSize 0
+	right :angle1
+	jumpForward :size1
+	polyStart
+	jumpBackward :size1 * 2
+	setHeading :oldHeading
+	jumpRight :size2
+	setHeading towards :center
+	jumpForward :size3
+	polyEnd
+	jumpTo :center
+	setHeading :oldHeading - :angle1
+	jumpForward :size1
+	polyStart
+	jumpBackward :size1 * 2
+	setHeading :oldHeading
+	jumpLeft :size2
+	setHeading towards :center
+	jumpForward :size3
+	polyEnd
+
+	jumpTo :center
+	setHeading :oldHeading - :angle2
+	jumpForward :size4
+	polyStart
+	jumpBackward :size4 * 2
+	setHeading :oldHeading
+	jumpForward :height / 3
+	setHeading towards :center
+	jumpForward :size4 * 2
+	polyEnd
+
+	jumpTo :center
+	setHeading :oldHeading
+	jumpBackward :roundelHeight / 2
+	uzbekistanAirforceRoundel :roundelHeight
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Uzbekistan_Air_and_Air_Defence_Forces#/media/File:Roundel_of_Uzbekistan.svg
+to uzbekistanAirforceRoundel :height
+	localmake "oldState turtleState
+	localmake "circlesInfo [
+		[:skyAzureColor 300 / 600]
+		[:uzbekRed 210 / 600]
+		["white 195 / 600]
+		[:uzbekRed 105 / 600]
+		[:uzbekGreen 90 / 600]
+	]
+	setPenSize 0
+	jumpForward :height / 2
+	repeat count :circlesInfo [
+		localmake "circleInfo item repcount :circlesInfo
+		setFillColor item 1 :circleInfo
+		circle :height * item 2 :circleInfo
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "#888
+make "height 100
+make "separation :height * 4
+jumpLeft :separation
+uzbekistanFlag :height
+jumpRight :separation
+uzbekistanAirforceFlag :height
+jumpRight :separation
+uzbekistanAirforceRoundel :height

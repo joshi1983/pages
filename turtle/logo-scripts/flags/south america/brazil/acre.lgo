@@ -1,0 +1,24 @@
+; Inspired by:
+; https://en.wikipedia.org/wiki/File:Bandeira_do_Acre.svg
+to brazilAcreFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 5 / 3.5
+	localmake "starOffset :height * 0.215
+	stripes :width :height ["#FDEA02]
+
+	setPenSize 0
+	setFillColor "#008F4C
+	jumpLeft :width / 2
+	polyStart
+	jumpRight :width
+	jumpForward :height
+	polyEnd
+
+	jumpLeft :width - :starOffset
+	jumpBackward :starOffset
+	setFillColor "#ED1C24
+	regularStar :height * 0.143 5
+	setTurtleState :oldState
+end
+
+brazilAcreFlag 100

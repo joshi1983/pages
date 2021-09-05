@@ -1,0 +1,123 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Logo_(programming_language)#/media/File:Tartapelago_Bicicardio_01.gif
+; Referenced from:
+; https://en.wikipedia.org/wiki/Logo_(programming_language)
+
+; The Cardioid is explained in more detail at:
+; https://en.wikipedia.org/wiki/Cardioid
+
+to cardioidCurve :size :timeRatio
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "radius :size / 3
+	localmake "numPoints 100
+	; higher points = smoother and more accurate curve 
+	; but also slower to draw.
+	; This is a bit like approximating a circle 
+	; using a many-sided regular polygon
+
+	localmake "angleStep :timeRatio * 360 / :numPoints
+	localmake "points []
+
+	; Calculate the points.
+	repeat :numPoints [
+		localmake "angle repcount * :angleStep
+		setHeading :oldHeading + :angle
+		jumpForward :radius * 2
+		right :angle
+		jumpForward :radius
+		queue2 "points pos
+		jumpTo :oldPos
+	]
+
+	; Prepare the turtle to draw the curve.
+	setHeading :oldHeading
+	jumpTo :oldPos
+	jumpForward :radius * 3
+	setPenColor "red
+	setPenSize :size * 0.01
+	setLineCap "round
+	setLineJoinStyle "round
+
+	; Draw lines between the calculated points.
+	for ["i 2 :numPoints] [
+		localmake "newPoint item :i :points
+		setPos :newPoint
+	]
+
+	setTurtleState :oldState
+end
+
+to drawSpokes :radius
+	localmake "oldPos pos
+	localmake "originalMinLineSize penSize / 2
+	localmake "numLines 32
+	localmake "colors ["white "aqua "red "yellow]
+	localmake "minLineSize :originalMinLineSize
+	; Draw with a few different colors and pen sizes
+	; to help people visually track the rotation 
+	; of the outer circle.
+	repeat count :colors [
+		setPenColor item repcount :colors
+		repeat :numLines [
+			setPenSize :minLineSize
+			forward :radius - :originalMinLineSize
+			jumpTo :oldPos
+			right 360 / :numLines
+		]
+		localmake "numLines int :numLines / 2
+		localmake "minLineSize :minLineSize * 1.8
+	]
+end
+
+to cardioid :size :timeRatio
+	localmake "oldState turtleState
+	localmake "radius :size / 3
+	localmake "angle :timeRatio * 360
+	localmake "circlePenSize :size * 0.01
+	localmake "radius2 :radius - :circlePenSize
+	cardioidCurve :size :timeRatio
+	setPenColor "white
+	setPenSize :circlePenSize
+	circle :radius
+	right :angle
+	jumpForward :radius * 2
+	setPenColor "aqua
+	circle :radius2
+	right :angle
+	drawSpokes :radius2
+	jumpForward :radius
+
+	; Draw a few circles to emphasize the point
+	; that the cardioid is traced from.
+	setPenColor "aqua
+	setPenSize :size * 0.005
+	setFillColor transparent
+	circle :size * 0.1
+	setPenSize :size * 0.008
+	circle :size * 0.04
+	setFillColor "white
+	setPenColor "red
+	circle :size * 0.025
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+cardioid 300 interpolateRatio easeInOut animation.clampedTimeRatio
+
+to animation.snapshotstyle
+	output createPList2 [
+		; offset the camera to center the cardioid better for exported animations.
+		["position.y 80]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 3
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

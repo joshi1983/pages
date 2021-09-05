@@ -1,0 +1,38 @@
+<div class="svg-container">
+	<img src="content/help/commands/images/isoTriangle.svg" alt="IsoTriangle diagram and examples">
+<code>isoTriangle 100 200
+; Draws a triangle that is 100 wide at the base and a height of 200.
+
+setFillColor "red
+isoTriangle 50 100
+; Draws a red triangle</code>
+
+<code>; Behaves exactly like isoTriangle command.
+; The isoTriangle command is available so you don't need to implement it yourself.
+; Reviewing this implementation could help you implement something similar using procedures, though.
+to myIsoTriangle :width :height
+	localmake "oldState turtleState
+	localmake "angle arcTan :height / (:width / 2)
+	jumpRight :width / 2
+	polyStart
+	jumpLeft :width
+	right 90 - :angle
+	jumpForward :height / sin :angle
+	polyEnd
+	setTurtleState :oldState
+end
+
+; The following will look similar to the other example because
+; myIsoTriangle works the same way as the isoTriangle command.
+myIsoTriangle 100 200
+
+setFillColor "red
+myIsoTriangle 50 100
+
+; Move and draw using the isoTriangle so you can visually compare.
+jumpRight 110
+setFillColor transparent ; transparent is the initial fill color.
+isoTriangle 100 200
+setFillColor "red
+isoTriangle 50 100</code>
+</div>

@@ -1,0 +1,21 @@
+; Inspired by
+; https://www.pinterest.ca/pin/110338259615952035
+to fourPointCircles :height
+	localmake "oldState turtleState
+	localmake "numCircles 20
+	setPenColor "white
+	setPenSize :height * 0.002
+	repeat 4 [
+		penUp
+		arcLeft 90 :height / 2
+		penDown
+		repeat :numCircles [
+			localmake "radius :height / 2 * repcount / :numCircles
+			circleLeft :radius
+		]
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+fourPointCircles 100

@@ -1,0 +1,75 @@
+; Inspired by logo at:
+; https://www.youtube.com/@ClearCode
+to clearCodeLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "backgroundColorStops createPList2 [
+		[0 "#e9e9e9] [1 "white]
+	]
+	localmake "darkBlueStops createPList2 [
+		[0.25 "#005194] [0.47 "#0089ce]
+	]
+	localmake "lightBlueStops createPList2 [
+		[0.25 "#00abe7] [0.6 "#41c7e2]
+	]
+	localmake "thicknessFactor 0.31
+	localmake "arcRadius :height * :thicknessFactor / 2
+	localmake "largeRadius 0.22
+	localmake "len1 0.29
+	localmake "offset 0.1
+	localmake "startAngle 7
+	localmake "startOffset :thicknessFactor / 2 * (1 - cos :startAngle)
+	localmake "lineStart [[-:startAngle 0]
+		[:startAngle - 90 :thicknessFactor / 2]]
+	jumpLeft :height / 2
+	localmake "bottomLeft pos
+	jumpForward :height
+	localmake "topLeft pos
+	jumpRight :height
+	localmake "topRight pos
+	jumpBackward :height
+	localmake "bottomRight pos
+
+	setFillGradient createLinearGradient :bottomRight :topLeft :backgroundColorStops "pad
+	jumpTo mix :topLeft :bottomRight 0.5
+	setHeading :oldHeading
+	setPenSize 0
+	square :height
+	jumpLeft :height * 0.15
+	setPenGradient createLinearGradient :bottomRight :topLeft :darkBlueStops "pad
+	left 45
+	setPenSize :height * :thicknessFactor
+	jumpBackward :height * :offset
+	backward :height * (:len1 - :offset)
+	localmake "center pos
+	jumpLeft penSize / 2
+	setFillGradient createLinearGradient :bottomLeft :topRight :lightBlueStops "pad
+	setPenSize 0
+	drawArcLineShape [0 0
+		combine :lineStart [
+		[:len1 + :startOffset]
+		[180 :thicknessFactor / 2]
+		[:len1 + :thicknessFactor / 2 - :largeRadius]
+		[90 :largeRadius]]
+	] :height
+	setFillColor "#44344b7c
+	localmake "startPos pos
+	jumpRight :height * :thicknessFactor
+	localmake "rightPos1 pos
+	jumpForward :height
+	localmake "rightPos2 pos
+	jumpTo :startPos
+	polyStart
+	arcLines :lineStart :height
+	localmake "len2 distanceToLine :rightPos1 :rightPos2
+	jumpForward :len2
+	jumpRight :height * 0.01
+	jumpBackward :len2
+	right 180
+	localmake "arcAngle getArcLeftAngleToCircle :arcRadius :center :arcRadius
+	arcLeft :arcAngle :arcRadius
+	polyEnd
+	setTurtleState :oldState
+end
+
+clearCodeLogo 100

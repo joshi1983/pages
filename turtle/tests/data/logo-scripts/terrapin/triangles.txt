@@ -1,0 +1,82 @@
+; copied from: https://resources.terrapinlogo.com/logolib/triangles.html
+TO TRICOUNT :LINES
+	OP :LINES * (:LINES - 1) * (:LINES - 2) / 6
+END
+
+TO TRIANGLES? :LINES
+(If :Lines > 7 PR [For illustration purposes the number of lines allowed in this procedure is limited to 7.  Try again.] Stop)
+	IF :LINES < 1 [HT STOP]
+	PU (RUN ITEM :LINES [ 
+    ( (SETXY [-300 200]) PD RT 120 FD 700 PU HOME)
+    ( (SETXY [-300 -200]) PD RT 60 FD 700 PU HOME) 
+    ( (SETXY [300 180]) PD LT 140 FD 550 PU HOME) 
+    ( (SETXY [300 -200]) PD LT 45 FD 600 PU HOME) 
+    ( (SETXY [300 -100]) PD LT 95 FD 600 PU HOME) 
+    ( (SETXY [10 -200]) PD RT 5 FD 450 PU HOME) 
+    ( (SETXY [-500 20]) PD RT 85 FD 850 PU HOME)
+  ])
+	TRIANGLES? :LINES - 1
+END
+
+To TriangleCount :lines
+  (Pr "with :lines "non-parallel "lines "you "will "find)
+  (Pr TriCount :lines "triangles)
+end
+
+To ColorTriangles5
+  cs
+  wait 1000
+  Setpc "black
+  Triangles? 5
+  Pr [According to the analysis there should be 10 triangles with 5 non-parallel lines. Keep count as each of the 10 triangles appears]
+  wait 1000
+  PR [Here is the first triangle]
+  wait 1000
+  play "typekey
+  pu setxy [130 -40] setpc "red pd fill pu
+  wait 6000
+  pr [Here is the second triangle]
+  wait 1000
+  play "typekey
+  setxy [75 0] pd setpc "red fill pu
+  wait 6000
+  pr [Here is the third triangle]
+  wait 1000
+  play "typekey
+  setxy [210 -100] pd setpc "red fill pu
+  wait 6000
+  pr [Here is the fourth triangle]
+  wait 1000
+  play "typekey
+  setxy [120 0 ] pd setpc "green fill pu
+  wait 6000
+  pr [Here is the fifth triangle]
+  wait 1000
+  play "typekey
+  setxy [85 0 ] pd setpc "green fill pu
+  wait 6000
+  pr [Here is the sixth triangle]
+  wait 1000
+  play "typekey
+  setxy [85 -45] pd setpc "green fill pu
+  wait 6000
+  pr [Here is the seventh triangle]
+  wait 1000
+  play "typekey
+  setxy [85 -105] pd setpc "green fill pu setxy [210 -100] pd fill pu
+  wait 6000
+  pr [Here is the eighth triangle]
+  wait 1000
+  play "typekey
+  setxy [85 -105] pd setpc "blue fill pu setxy [210 -105] pd fill pu
+  wait 6000
+  pr [Here is the nineth triangle]
+  wait 1000
+  play "typekey
+  setxy [85 -105] pd setpc "yellow fill pu setxy [135 -45] pd fill pu
+  wait 6000
+  pr [Here is the tenth triangle]
+  wait 1000
+  play "typekey
+  setxy [85 -45] pd setpc "yellow fill pu setxy [60 -2] pd fill pu
+end

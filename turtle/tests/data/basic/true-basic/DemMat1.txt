@@ -1,0 +1,34 @@
+! Complex matrix add, subtract, multiply
+!
+! **NOTE:** type 'do complex' in the command window before running
+
+DECLARE COMPLEX A, B
+
+DIM R(3,3), II(3,3), A(3,3), B(1,1)
+
+MAT READ R, II                    ! Read real, imaginary parts
+DATA 1,2,3
+DATA 1,0,-1
+DATA 2,1,0
+
+DATA 2,1,0
+DATA 1,0,-1
+DATA 1,2,3
+
+CALL c_MatComp (R, II, A)            ! Composition
+PRINT "A"
+MAT PRINT a
+
+MAT a = a*a
+PRINT "A = A*A"
+MAT PRINT a
+
+MAT b = a + a
+PRINT "B = A+A"
+MAT PRINT b
+
+MAT b = b - a
+PRINT "B = B-A"
+MAT PRINT b
+
+END

@@ -1,0 +1,88 @@
+to drawV :height
+	localmake "oldState turtleState
+	localmake "width 1.28
+	localmake "angle1 61
+	localmake "baseWidth :width - 2 * tan 90 - :angle1
+	localmake "innerLen 0.83
+	setPenSize 0
+	setFillColor penColor
+	drawArcLineShape [-:width / 2 1
+		[[-90 - :angle1 0] [1 / sin :angle1] [:angle1 0]
+		[:baseWidth] [:angle1 0] [1 / sin :angle1]
+		[180 - :angle1 0] [0.2] [:angle1 0] [:innerLen]
+		[-:angle1 * 2 0] [:innerLen]]
+	] :height
+	
+
+	setTurtleState :oldState
+end
+
+to drawC :height
+	localmake "oldState turtleState
+	localmake "cornerRadius 0.17
+	localmake "width 1.08
+	localmake "lines1 [
+		[0.5 - :cornerRadius] [-90 :cornerRadius] [:width - :cornerRadius * 2]
+		[-90 :cornerRadius] [0.16] [-80 0] [0.23] [-100 0] [0.18] [90 0]
+		[0.63] [90 0] [0.31]
+	]
+	setFillColor penColor
+	setPenSize 0
+	drawArcLineShape [-:width / 2 0.5
+		combine :lines1 reverse :lines1
+	] :height
+
+	setTurtleState :oldState
+end
+
+to drawF :height
+	localmake "oldState turtleState
+	localmake "thickness :height * 0.22	
+	localmake "thickness2 :height * 0.19
+	jumpLeft (:height - :thickness) / 2	
+	stripes :thickness :height [penColor]
+	jumpForward :height - :thickness2 / 2
+	right 90
+	jumpBackward :thickness / 2
+	stripes :thickness2 :height [penColor]
+	jumpRight :height * 0.44
+	stripes :thickness2 :height * 0.65 [penColor]
+	setTurtleState :oldState
+end
+
+to drawParallelograms :height
+	localmake "oldState turtleState
+	localmake "colors ["#ff3334 "#009865 "#343399]
+	localmake "parallelogramWidth :height * 0.5
+	localmake "parallelogramAngle 27.2
+	localmake "parallelogramSlantedHeight :height / cos :parallelogramAngle
+	localmake "parallelogramSeparation :height * 0.65
+	setPenSize 0
+	jumpRight :height * 0.222
+	repeat count :colors [
+		setFillColor item repcount :colors
+		parallelogram :parallelogramWidth :parallelogramSlantedHeight :parallelogramAngle
+		jumpRight :parallelogramSeparation
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://www.youtube.com/@VCFSW
+to vcfSouthWestLogo :height
+	localmake "oldState turtleState
+	localmake "fontHeight :height * 0.78
+	drawParallelograms :height
+	jumpForward (:height - :fontHeight) / 2
+	setPenColor "white
+	jumpLeft :height * 2.765
+	drawV :fontHeight
+	jumpRight :height * 1.12
+	drawC :fontHeight
+	jumpRight :height * 1.19
+	drawF :fontHeight
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+vcfSouthWestLogo 100

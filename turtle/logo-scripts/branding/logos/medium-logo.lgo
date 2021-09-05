@@ -1,0 +1,47 @@
+to mediumLogo :height
+	localmake "oldState turtleState
+	setPenSize 0
+	jumpForward :height / 2
+	jumpLeft :height * 0.383
+	circle :height / 2
+	jumpRight :height * 0.795
+	ellipse :height * 0.248 :height * 0.47
+	jumpRight :height * 0.383
+	ellipse :height * 0.0872 :height * 0.42
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/File:Medium_(website)_logo.svg
+to mediumBlackLogo :height
+	setFillColor "black
+	mediumLogo :height
+end
+
+; Inspired by logo version shown at:
+; https://medium.com/about
+to mediumWhiteLogo :height
+	stripes :height * 3 :height ["black]
+	setFillColor "white
+	mediumLogo :height
+end
+
+; Inspired by the favicon(browser tab icon) at:
+; https://medium.com/
+to mediumFavicon :height
+	localmake "oldState turtleState
+	localmake "logoHeight :height * 0.5
+	stripes :height :height ["black]
+	jumpForward (:height - :logoHeight) / 2
+	mediumLogo :logoHeight
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 4
+jumpLeft :separation
+mediumBlackLogo :height
+jumpRight :separation
+mediumWhiteLogo :height
+jumpRight :separation
+mediumFavicon :height

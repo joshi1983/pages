@@ -1,0 +1,90 @@
+make "averageGreen "green
+
+to drawLeaf :length
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "leafArcLength :length * 0.84
+	jumpForward :length - :leafArcLength
+	setFillColor :averageGreen
+	setPenColor "black
+	setPenSize :length * 0.01
+	arcPair :leafArcLength 90
+	jumpTo :oldPos
+	forward :length - :leafArcLength / 2
+	setTurtleState :oldState
+end
+
+to drawStemAndLeafs :length
+	localmake "oldState turtleState
+	localmake "leafLength :length * 0.37
+	setPenSize :length * 0.02
+	setLineCap "butt
+	setPenColor "black
+	forward :length	
+	setPenColor :averageGreen
+	setPenSize penSize * 0.7
+	backward :length	
+	jumpForward :length * 0.41
+	left 50
+	drawLeaf :leafLength
+	right 50
+	jumpForward :length * 0.23
+	right 90
+	drawLeaf :leafLength
+	setTurtleState :oldState
+end
+
+to drawBloom :height :color
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	setPenSize :height * 0.01
+	setFillColor :color
+	polyStart
+	arcLines [[60 0] [-50 0.65] [-20 1] [-20 0.1] [-87 0.32] [40 0.05] [-140 0.11]] :height
+	localmake "upperRightPos pos
+	arcLines [[47 0] [-50 0.9]] :height
+	polyEnd
+	jumpTo :oldPos
+	setHeading :oldHeading
+	
+	repeat 2 [
+		drawArcLineShape [0 0
+			[[-50 0] [120 0.25] [-45 0.5] [140 0] [80 0.57]]
+		] :height * sign repcount - 1.5
+	]
+	jumpTo :upperRightPos
+	left 135
+	arcLines [[-50 0.4] [-90 0.16] [-70 0.11] [-40 0.3] [-140 0.08] [-25 0.3] [-60 0.05]
+		[-90 0.08] [-90 0.06] [-180 0.03]] :height	
+	setTurtleState :oldState
+end
+
+; Inspired by a drawing at:
+; https://www.youtube.com/watch?v=myglOOEFn1I
+to redRose :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "stemLength :height * 0.7
+	localmake "bloomHeight :height * 0.49
+	localmake "angle 8
+	jumpForward :height
+	localmake "top1 pos
+	jumpRight :height
+	localmake "top2 pos
+	jumpTo :oldPos
+	jumpForward :height * 0.003
+	left :angle
+	drawStemAndLeafs :stemLength
+	jumpForward :stemLength
+	setHeading :oldHeading
+	left :angle
+	jumpBackward (:bloomHeight - distanceToLine :top1 :top2) / cos :angle
+	setHeading :oldHeading
+	drawBloom :bloomHeight "red
+
+	setTurtleState :oldState
+end
+
+redRose 100

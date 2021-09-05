@@ -1,0 +1,115 @@
+to createMiddleGradient :radius
+	localmake "colorStops createPList2 [
+		[0 "#9adb20] [0.5 "#4bb641] [0.9 "#007470] [1 "#007470]
+	]
+	output createRadialGradient pos :radius :colorStops
+end
+
+to createCenterGradient :radius
+	localmake "colorStops createPList2 [
+		[0 "#9adb20] [1 "#007470]
+	]
+	output createRadialGradient pos :radius :colorStops
+end
+
+to drawPetal :baseWidth :height
+	localmake "oldState turtleState
+	localmake "outerArcRadius :baseWidth + :height * 0.15
+	localmake "dx :outerArcRadius - :baseWidth / 2
+	localmake "dy :height - :outerArcRadius
+	localmake "midArcAngle 2 * arcTan :dx / :dy
+	localmake "midChordLength hypot [:dx :dy]
+	localmake "midArcRadius :midChordLength / 2 / sin :midArcAngle / 2
+
+	jumpRight :baseWidth / 2
+	polyStart
+	right :midArcAngle
+	arcLeft :midArcAngle :midArcRadius
+	arcLeft 180 :outerArcRadius
+	arcLeft :midArcAngle :midArcRadius
+	polyEnd
+	setTurtleState :oldState
+end
+
+to drawPetals :maxRadius :colors
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "center pos
+	localmake "numAngles 6
+	localmake "minRadius :maxRadius * 1.8 / count :colors
+	localmake "baseWidth :maxRadius * 0.2 * sin 180 / :numAngles
+	setPenSize 0
+	repeat count :colors [
+		setHeading :oldHeading + 180 / :numAngles
+		setFillColor item repcount :colors
+		localmake "radius mix :minRadius :maxRadius repRatio
+		repeat :numAngles [
+			drawPetal :baseWidth :radius
+			right 360 / :numAngles
+			jumpTo :center
+		]
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+to drawSemitransparentCircles :radius
+	localmake "oldState turtleState
+	localmake "center pos
+	localmake "numAngles 24
+	localmake "radius1 :radius * 0.07
+	setPenSize 0
+	setFillColor "#40f0
+	repeat :numAngles [
+		localmake "gap :radius * ifelse even? repcount 0.85 0.6
+		jumpForward :gap
+		circle :radius1
+		jumpTo :center
+		right 360 / :numAngles
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://publicdomainvectors.org/en/free-clipart/Orange-decorative-flower/41193.html
+to decorativeFlower :height
+	localmake "oldState turtleState
+	localmake "petalColors ["#ff2a43 "#ff6200]
+	localmake "numAngles 24
+	setPenSize 0
+	setFillColor "blue
+	jumpForward :height / 2
+	localmake "center pos
+	localmake "scale :height
+	repeat count :petalColors [
+		setFillColor item repcount :petalColors
+		roundIsoStar :scale * 0.58 :scale * 0.435 :numAngles :scale * 0.045 0
+		localmake "scale :scale * 0.95
+	]
+	repeat :numAngles [
+		jumpForward :height * 0.36
+		setFillColor "orange
+		ellipse :height * 0.04 :height * 0.08
+		jumpForward :height * 0.04
+		setFillColor "yellow
+		circle :height * 0.021
+		right 360 / :numAngles
+		jumpTo :center
+	]
+	setPenColor "#c2f33f
+	setFillGradient createMiddleGradient :height * 0.34
+	setPenSize :height * 0.01
+	setLineJoinStyle "miter
+	isotoxalStar :height * 0.339 :height * 0.305 :numAngles * 2
+	drawSemitransparentCircles :height * 0.3
+
+	drawPetals :height * 0.219 ["#ff7d1a "#ffa200 "#ffdb00 "yellow]
+
+	localmake "radius :height * 0.035
+	setPenSize 0
+	setFillGradient createCenterGradient :radius
+	circle :radius
+	setTurtleState :oldState
+end
+
+decorativeFlower 100

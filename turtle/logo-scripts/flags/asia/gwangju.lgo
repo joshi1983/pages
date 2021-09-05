@@ -1,0 +1,48 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/File:Former_flag_of_Gwangju.svg
+to gwangjuFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 4 / 3
+	localmake "radius :height * 0.33
+	localmake "innerGap :height * 0.0621
+	localmake "separation1 :height * 0.008
+	localmake "arcAngle 13.2
+	localmake "sideLength :height * 0.11
+	stripes :width :height ["white]
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	setFillColor "#4A21DE
+	repeat 8 [
+		localmake "heading1 heading
+		jumpForward :innerGap
+		localmake "bottomPos pos
+		jumpRight :separation1
+		polyStart
+		jumpForward distanceToCircle :center :radius
+		setHeading (towards :center) - 90
+		arcRight :arcAngle :radius
+		setHeading :heading1
+		jumpBackward :sideLength
+		polyEnd
+
+		jumpTo :bottomPos
+		setHeading :heading1
+		jumpLeft :separation1
+		polyStart
+		jumpForward distanceToCircle :center :radius
+		setHeading (towards :center) + 90
+		arcLeft :arcAngle :radius
+		setHeading :heading1
+		jumpBackward :sideLength
+		polyEnd
+
+		jumpTo :center
+		setHeading :heading1
+		right 360 / 8
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+gwangjuFlag 100

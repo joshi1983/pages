@@ -1,0 +1,86 @@
+make "colors ["#0DB02B "white "#e05206]
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Niger#/media/File:Flag_of_Niger.svg
+; Some official standardization of the flag's construction is
+; on page 5 of Niger's constitution at:
+; https://www.constituteproject.org/constitution/Niger_2010.pdf
+; The constitution leaves out important details, though.
+; I used the 6:7 size ratio, exact colors and circle radius
+; from the SVG but the constitution doesn't indicate those details.
+to nigerFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 7 / 6
+	stripes :width :height :colors
+	jumpForward :height / 2
+	setFillColor "#e05206
+	setPenSize 0
+	circle :height * 85 / 600
+	setTurtleState :oldState
+end
+
+; Inspired by:
+; https://en.wikipedia.org/wiki/Flag_of_Niger#/media/File:Roundel_of_Niger.svg
+to nigerAirForceRoundel :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "radius :height / 2
+	localmake "stripeHeight :height / count :colors
+	localmake "size1 sqrt (:radius * :radius - (:stripeHeight * :stripeHeight / 4))
+	localmake "angle1 arcCos :stripeHeight / 2 / :radius
+	localmake "arcAngle :angle1 * 2
+	jumpForward :radius
+	setFillColor "white
+	setPenSize 0
+	circle :radius
+	setFillColor "#e05206
+	circle :height * 85 / 600
+	jumpForward :stripeHeight / 2
+	jumpRight :size1
+	left 90 - :angle1
+	polyStart
+	arcLeft :arcAngle :radius
+	polyEnd
+
+	setHeading :oldHeading
+	jumpBackward :stripeHeight
+	setFillColor item 1 :colors
+	right 90 + :angle1
+	polyStart
+	arcLeft :arcAngle :radius
+	polyEnd
+	
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Niger#/media/File:Roundel_of_Niger_(1961%E2%80%931980).svg
+to nigerAirForceRoundel1980 :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "radius :height / 2
+	jumpForward :radius
+	localmake "center pos
+	setPenSize 0
+	repeat count :colors [
+		setHeading :oldHeading + (repcount - 1) * 360 / count :colors
+		setFillColor item repcount :colors
+		polyStart
+		jumpForward :radius
+		right 90
+		arcRight 360 / 3 :radius
+		polyEnd
+		jumpTo :center
+	]
+	circle :radius * 0.28
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 4
+jumpLeft :separation
+nigerFlag :height
+jumpRight :separation
+nigerAirForceRoundel :height
+jumpRight :separation
+nigerAirForceRoundel1980 :height

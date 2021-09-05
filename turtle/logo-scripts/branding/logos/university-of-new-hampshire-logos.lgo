@@ -1,0 +1,101 @@
+make "newHampshireBlue "#003591
+
+
+to drawN :fontHeight
+	localmake "oldState turtleState
+	localmake "width :fontHeight * 0.58
+	localmake "thickness :width * 0.35
+	localmake "innerShift :fontHeight * 0.015
+	localmake "angle arcTan (:width - :thickness - :innerShift * 2) / :fontHeight
+	jumpLeft (:width - :thickness) / 2
+	stripes :thickness :fontHeight [fillColor]
+	jumpRight :width - :thickness
+	stripes :thickness :fontHeight [fillColor]
+	jumpLeft :innerShift
+	parallelogram :thickness :fontHeight / cos :angle -:angle
+	setTurtleState :oldState
+end
+
+to drawH :fontHeight
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "width :fontHeight * 0.58
+	localmake "thickness :width * 0.35
+	jumpLeft (:width - :thickness) / 2
+	stripes :thickness :fontHeight [fillColor]
+	jumpRight :width - :thickness
+	stripes :thickness :fontHeight [fillColor]
+	jumpTo :oldPos
+	jumpForward (:fontHeight - :thickness) / 2
+	stripes :width :thickness [fillColor]
+	setTurtleState :oldState
+end
+
+; Inspired by logo at
+; https://www.unh.edu
+to universityOfNewHampshireLogo :height :shieldFillColor :color1 :color2
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "outlineArcs [[90 0] [0.4] [90 0] [0.5095] [40 0.42]
+	[35.24875408718 0.59] [14.75120 0]]
+	localmake "innerArcs [[90 0] [0.4] [90 0] [0.53] [40 0.46] [32.3811 0.631]
+	]
+	localmake "fontHeight :height * 0.38914
+	localmake "fontSeparation :height * 0.2257
+	setFillColor :shieldFillColor
+	setPenSize :height * 0.02863
+	setPenColor :color1
+	jumpForward :height - penSize / 2
+	polyStart
+	arcLines :outlineArcs :height
+	arcLines reverse :outlineArcs :height
+	polyEnd
+
+	setFillColor penColor
+	setPenSize 0
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.8828
+	polyStart
+	arcLines :innerArcs :height * 0.745
+	polyEnd
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.3798
+	jumpLeft :fontSeparation / 2
+	setFillColor :color2
+	drawN :fontHeight
+	jumpRight :fontSeparation
+	setFillColor :color1
+	drawH :fontHeight
+	setTurtleState :oldState
+end
+
+to universityOfNewHampshireBlueShieldLogo :height
+	localmake "shieldBlue "#001d52
+	universityOfNewHampshireLogo :height :shieldBlue "white :shieldBlue
+end
+
+to universityOfNewHampshireWhiteLogo :height
+	localmake "oldState turtleState
+	localmake "innerHeight :height * 0.9
+	stripes :height * 2 :height [:newHampshireBlue]
+	jumpForward (:height - :innerHeight) / 2
+	universityOfNewHampshireLogo :innerHeight transparent "white :newHampshireBlue
+	setTurtleState :oldState
+end
+
+to universityOfNewHampshireBlackLogo :height
+	universityOfNewHampshireLogo :height transparent "black "white
+end
+
+make "height 100
+make "separation :height * 5
+jumpLeft :separation
+universityOfNewHampshireBlueShieldLogo :height
+jumpRight :separation
+universityOfNewHampshireWhiteLogo :height
+jumpRight :separation
+universityOfNewHampshireBlackLogo :height

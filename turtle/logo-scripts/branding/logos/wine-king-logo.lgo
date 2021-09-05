@@ -1,0 +1,48 @@
+; Inspired by logo at:
+; https://www.youtube.com/@wineking
+to wineKingLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "arcs [
+		[90 0] [0.19] [-170 0.012] [0.19504698] [-10 0]
+	]
+	localmake "grapeRadius :height * 0.091
+	localmake "grapeSeparationX :height * 0.205
+	localmake "grapeSeparationY :grapeSeparationX * 0.792
+	localmake "rowGrapeCounts [2 3 2 1]
+	setPenSize 0
+	setFillColor "#ac1f28
+	polyStart
+	arcLines :arcs :height
+	arcLines reverse :arcs :height
+	polyEnd
+
+	setHeading :oldHeading
+	jumpForward :height * 0.61
+	circle :height * 0.15 ; fill background between grapes.
+
+	setPenSize :height * 0.07
+	setPenColor fillColor
+	jumpTo :oldPos
+	jumpForward penSize / 2
+	forward :height - penSize
+	jumpTo :oldPos
+	jumpForward :height * 0.792
+	setPenSize :height * 0.03
+	setFillColor "white
+	repeat count :rowGrapeCounts [
+		localmake "pos1 pos
+		localmake "numGrapes item repcount :rowGrapeCounts
+		jumpLeft (:numGrapes - 1) * :grapeSeparationX / 2
+		repeat :numGrapes [
+			circle :grapeRadius
+			jumpRight :grapeSeparationX
+		]
+		jumpTo :pos1
+		jumpBackward :grapeSeparationY
+	]
+	setTurtleState :oldState
+end
+
+wineKingLogo 100

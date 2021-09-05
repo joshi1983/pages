@@ -1,0 +1,48 @@
+; Inspired by Crocheted shapes at:
+; https://www.facebook.com/share/p/19M2wbnryT/
+to waveyShape :scale :waveMaxAngle
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldOrientation orientation
+	localmake "numLines 128 * 4
+	localmake "fullCycle 360
+	localmake "points []
+	setPenSize :scale * 0.001
+	repeat :numLines [
+		localmake "ratio repcount / :numLines
+		right 360 * :ratio
+		pitchUp :waveMaxAngle * sin :fullCycle * 8 * :ratio
+		forward :scale
+		queue2 "points pos
+		jumpTo :oldPos
+		setOrientation :oldOrientation
+	]
+	setPenSize :scale * 0.01
+	setPenColor "red
+	setPenBlendMode "darken
+	jumpTo first :points
+	for ["i 2 count :points] [
+		setPos item :i :points
+	]
+
+	setTurtleState :oldState
+end
+
+rollRight 10
+pitchUp 50
+waveyShape 100 15 * sin animation.clampedTimeRatio * 360
+
+to animation.snapshotstyle
+	output createPList2 [
+		["zoom.scale 3]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 10
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

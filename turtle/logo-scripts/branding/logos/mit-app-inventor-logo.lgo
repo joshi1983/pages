@@ -1,0 +1,69 @@
+to drawHexagons :radius
+	localmake "sideLength 2 * sin 180 / 6
+	localmake "lines1 [[:sideLength]]
+	repeat 3 [
+		queue2 "lines1 [360 / 6 0]
+		queue2 "lines1 [:sideLength]
+	]
+	localmake "hexagonShape [0 -:sideLength / 2
+		combine :lines1 [[70 0] [:sideLength]]
+	]
+	localmake "colors ["#a4cf46 "#92257b]
+	repeat count :colors [
+		localmake "sign sign repcount - 1.5
+		setFillColor item repcount :colors
+		drawArcLineShape :hexagonShape :radius * :sign
+	]
+end
+
+; Inspired by logo at:
+; https://appinventor.mit.edu
+to appInventorLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "hexagonRadiusFactor 0.297
+	localmake "hexagonRadius :height * :hexagonRadiusFactor
+	localmake "orangeArcs1 [
+		[-80 0] [150 0.186] [31.8 0.44] [-69 0] [0.05] [-108 0]
+		[-30 0.48] [-30 0.3] [-90 0.22] [-27 0.3]
+	]
+	localmake "bodyWidth :hexagonRadiusFactor * cos 30
+	localmake "orangeBodyLines1 [[60 0] [:hexagonRadiusFactor] [-60 0]
+		[:hexagonRadiusFactor] [-90 0] [:bodyWidth]]
+	localmake "orangeShapes [
+		[-0.384 0.12 :orangeArcs1]
+		[0.384 0.12 flipAngles :orangeArcs1]
+		[0 0 combine :orangeBodyLines1 reverse :orangeBodyLines1]
+	]
+	localmake "headLines1 [[65 0.17] [25 0.3763554]]
+	localmake "antennaLines [[-34 0] [0.105] [-56 0] [0.063] [60 0]
+		[0.04] [120 0] [0.1] [57 0] [0.12]]
+	localmake "headShapes [
+		[:bodyWidth 0.4 
+			combine :headLines1 reverse :headLines1
+		]
+		[0.084 0.55 :antennaLines]
+		[-0.084 0.55 flipAngles :antennaLines]
+	]
+	localmake "eyeSeparation :height * 0.13
+	setPenSize 0
+	jumpForward :height - :hexagonRadius
+	drawHexagons :hexagonRadius
+	jumpTo :oldPos
+	setFillColor "#f88d34
+	drawArcLineShapes :orangeShapes :height
+	setFillColor "white
+	drawArcLineShapes :headShapes :height
+	jumpForward :height * 0.2
+	stripes :height * :bodyWidth * 2 :height * 0.155 ["black transparent "black]
+	jumpForward :height * 0.28
+	jumpLeft :eyeSeparation / 2
+	setFillColor "black
+	repeat 2 [
+		circle :height * 0.02
+		jumpRight :eyeSeparation
+	]
+	setTurtleState :oldState
+end
+
+appInventorLogo 100

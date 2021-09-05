@@ -1,0 +1,15 @@
+# copied from https://verselang.github.io/book/12_access/
+Physics := module:
+    # Internal types and constants
+    gravity_constant:float = 9.81
+
+    collision_detector := class<abstract>:
+        DetectCollision<internal>(A:game_entity, B:game_entity):?collision_info
+
+    physics_world := class:
+        var Entities<internal>:[]game_entity = array{}
+
+        SimulateStep<internal>(DeltaTime:float):void =
+            for (Entity : Entities):
+                ApplyGravity(Entity, DeltaTime)
+                CheckCollisions(Entity)

@@ -1,0 +1,20 @@
+EXTERNAL
+
+SUB Delta (l$(), options$)
+
+    LIBRARY "{WB_c}WBsccs.trc"
+
+    WHEN EXCEPTION IN
+         CALL WB_Delta (l$(), options$)
+         PRINT "Done with Delta."
+    USE
+         IF extype = 1 then
+            PRINT extext$
+         ELSE
+            PRINT extype, extext$
+            PRINT exline$
+            PRINT "Error in Delta."
+         END IF
+    END WHEN
+
+END SUB

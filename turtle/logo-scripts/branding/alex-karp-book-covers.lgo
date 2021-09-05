@@ -1,0 +1,54 @@
+; Inspired by a book cover from:
+; https://www.amazon.ca/Technological-Republic-Sunday-bestseller-Palantir/dp/1847928536/
+to alexKarpBookCover1 :height
+	localmake "oldState turtleState
+	localmake "innerRadius :height * 0.15
+	localmake "numAngles 90
+	jumpForward :height / 2
+	localmake "center pos
+	setLineCap "butt
+	right 180 + 180 / :numAngles
+	setPenColor "black
+	setPenBlendMode "darken
+	repeat 2 [
+		repeat :numAngles [
+			setPenSize :height * mix 0.002 0.008 repRatio
+			jumpForward :innerRadius
+			forward (:height / 2 - :innerRadius) * repcount / :numAngles
+			jumpTo :center
+			right 360 / :numAngles
+		]
+		setPenColor "#f24213
+		right 180
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by a book cover at:
+; https://www.thriftbooks.com/w/the-technological-republic-hard-power-soft-belief-and-the-future-of-the-west_nicholas-w-zamiska_alexander-c-karp/53030135
+to alexKarpBookCover2 :height
+	localmake "oldState turtleState
+	localmake "numAngles 11
+	localmake "angleStep 7
+	jumpForward :height / 2
+	setPenSize 0
+	setFillColor "#cee9f0
+	rect :height * 2 / 3 :height
+	setPenColor "#0e9ed1
+	setFillColor transparent
+	setPenSize :height * 0.001
+	jumpForward :height * 0.03
+	left :angleStep * (:numAngles - 1) / 2
+	repeat :numAngles [
+		ellipse :height * 0.23 :height * 0.36
+		right :angleStep
+	]
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 3
+jumpLeft :separation / 2
+alexKarpBookCover1 :height
+jumpRight :separation
+alexKarpBookCover2 :height

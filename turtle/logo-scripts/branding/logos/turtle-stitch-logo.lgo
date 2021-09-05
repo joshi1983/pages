@@ -1,0 +1,80 @@
+to drawFin :len :arcAngle
+	localmake "oldState turtleState
+	polyStart
+	arcLines [[1] [-100 0] [-:arcAngle 0.35] [0.8]] :len
+	polyEnd
+	setTurtleState :oldState
+end
+
+to drawFinPair :angle :arcAngle :finSize
+	localmake "oldState turtleState
+	left :angle
+	drawFin :finSize :arcAngle
+	right :angle * 2
+	drawFin -:finSize :arcAngle
+	setTurtleState :oldState
+end
+
+to drawShellShape :len
+	localmake "oldState turtleState
+	localmake "info [
+	[40 0.2] [18 0.533] [20 1.0285] [45 0.52]
+	[45 0.2] [12 0.8325]
+	]
+	right 90
+	polyStart
+	arcLines :info :len
+	arcLines reverse :info :len
+	polyEnd
+	setTurtleState :oldState
+end
+
+to drawTrail :height
+	localmake "oldState turtleState
+	localmake "rects [9 15 -20]
+	localmake "step :height * 0.08
+	left 160
+	repeat count :rects [
+		localmake "angle item repcount :rects
+		jumpForward :step
+		right :angle / 2
+		rect :height * 0.03 :height * 0.06
+		right :angle / 2
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by logo at
+; https://en.wikipedia.org/wiki/File:Turtlestitch_Logo.png
+to turtleStitchLogo :height
+	localmake "oldState turtleState
+	localmake "finSize :height * 0.285
+	localmake "darkColor "black
+	localmake "lightColor "white
+	jumpForward :height / 2
+	setPenSize 0
+	setFillColor :darkColor
+	circle :height / 2
+	setFillColor :lightColor
+	jumpForward :height * 0.202
+	jumpRight :height * 0.202
+	left 135
+	circlePair :height * 0.065 0 :height * 0.33
+	right 180
+	jumpBackward :height * 0.1
+	drawFinPair 120 68 :finSize
+	jumpForward :height * 0.2
+	drawFinPair 90 90 :finSize * 1.11
+	jumpBackward :height * 0.35
+	setFillColor :lightColor
+	drawShellShape :height * 0.48
+	setFillColor :darkColor
+	jumpForward :height * 0.047
+	drawShellShape :height * 0.383
+	jumpBackward :height * 0.025
+	setFillColor :lightColor
+	drawTrail :height
+	setTurtleState :oldState
+end
+
+turtleStitchLogo 100

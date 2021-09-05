@@ -1,0 +1,79 @@
+make "netherlandsRed "#ae1c28
+make "netherlandsBlue "#21468b
+make "colors [:netherlandsRed "#fff :netherlandsBlue]
+
+; Made to look like:
+; https://en.wikipedia.org/wiki/Flag_of_the_Netherlands#/media/File:Flag_of_the_Netherlands.svg
+to netherlandsFlag :height
+	localmake "width :height * 3 / 2
+	stripes :width :height :colors
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_the_Netherlands#/media/File:Naval_Jack_of_the_Netherlands.svg
+to netherlandsNavalJackFlag :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "width :height * 3 / 2
+	localmake "size1 :height * hypot [1 1 / 2]
+	localmake "size2 :width / 3
+	localmake "size3 hypot [:width :height]
+	localmake "size4 :height / 3
+	localmake "size5 hypot [:width :height / 3]
+	localmake "angle1 arcTan 1 / 2
+	localmake "angle2 arcTan :height / :width
+	localmake "angle3 arcTan :height / 3 / :width
+	stripes :width :height ["white]
+	jumpForward :height / 2
+	localmake "center pos
+	setFillColor :netherlandsRed
+	setPenSize 0
+	right :angle1
+	jumpBackward :size1 / 2
+	polyStart
+	jumpForward :size1
+	setHeading :oldHeading
+	jumpRight :size2
+	setHeading :oldHeading - 90 - :angle2
+	jumpForward :size3
+	polyEnd
+	localmake "lowerLeft pos
+	jumpTo :center
+	setHeading :oldHeading + 90 + :angle2
+	jumpForward :size3 / 2
+	localmake "lowerRight pos
+	polyStart
+	jumpBackward :size3
+	setHeading :oldHeading
+	jumpBackward :size4
+	setHeading :oldHeading + 90 + :angle3
+	jumpForward :size5
+	polyEnd
+	setFillColor :netherlandsBlue
+	jumpTo :lowerRight
+	setHeading :oldHeading
+	polyStart
+	jumpLeft :size2
+	left :angle1
+	jumpForward :size1
+	setHeading :oldHeading
+	jumpLeft :size2
+	polyEnd
+	jumpTo :lowerLeft
+	polyStart
+	jumpForward :size4
+	right 90 - :angle3
+	jumpForward :size5
+	setHeading :oldHeading
+	jumpForward :size4
+	polyEnd
+	setTurtleState :oldState
+end
+
+setScreenColor "#888
+make "height 100
+make "separation :height * 4
+jumpLeft :separation * 0.5
+netherlandsFlag :height
+jumpRight :separation
+netherlandsNavalJackFlag :height

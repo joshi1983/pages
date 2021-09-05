@@ -1,0 +1,62 @@
+make "darkColor "#680
+
+; Inspired by
+; https://www.pinterest.ca/pin/140806225071587/
+; Reported on July 15, 2001
+; located in Whiltshire
+to whiltshire2012CropCircles :height
+	localmake "oldState turtleState
+	localmake "lightColor "#efc
+	localmake "width :height
+	localmake "smallRadius :height * 0.0455
+	localmake "height1 :height - 2 * :smallRadius
+	localmake "numSteps 10
+	localmake "step :height1 / :numSteps
+	localmake "innerRadius :height * 0.125
+	localmake "numCircleOverlaps ceiling :innerRadius * 2 / :step
+	localmake "tinyThickness :height * 0.007
+	localmake "overlapThickness :tinyThickness * 3
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	setFillColor :lightColor
+	jumpForward :height1 / 2
+	circle :smallRadius
+	jumpBackward :height1
+	circle :smallRadius
+	jumpTo :center
+	circle :innerRadius
+	jumpForward (:step * int :numCircleOverlaps / 2) - :overlapThickness / 2
+	repeat :numCircleOverlaps [
+		stripes :innerRadius * 2 :overlapThickness [:darkColor]
+		jumpBackward :step
+	]
+	stripes :overlapThickness :innerRadius * 2 + :step [:darkColor]
+	jumpTo :center
+	repeat 4 [
+		jumpForward :step * 3
+		circle :smallRadius
+		right 360 / 4
+		jumpTo :center
+	]
+	jumpForward (:step * ceiling :numSteps / 2) - :tinyThickness / 2
+	repeat :numSteps + 1 [
+		localmake "width1 (:width - 2 * :smallRadius) * (1 - abs (0.5 - repRatio) * 2)
+		if :width1 > 0 [
+			stripes :width1 :tinyThickness [:lightColor]
+			jumpLeft :width1 / 2
+			circle :smallRadius
+			jumpRight :width1
+			circle :smallRadius
+			jumpLeft :width1 / 2
+		]
+		jumpBackward :step
+	]
+	jumpTo :center
+	jumpBackward :height1 / 2
+	stripes :tinyThickness :height1 [:lightColor]
+	setTurtleState :oldState
+end
+
+setScreenColor :darkColor
+whiltshire2012CropCircles 100

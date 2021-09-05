@@ -1,0 +1,145 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Ansible_(software)#/media/File:Ansible_logo.svg
+to ansibleLogo :height
+	localmake "oldState turtleState
+	localmake "radius :height / 2
+	localmake "oldHeading heading
+	localmake "angle1 22.2
+	localmake "strokeThickness :radius * 0.135
+	localmake "strokeThickness2 :strokeThickness / cos :angle1
+	localmake "size1 :radius * 0.1
+	setFillColor "black
+	setPenSize 0
+	jumpForward :radius
+	circle :radius
+	jumpBackward :radius * 0.4855
+	jumpLeft :radius * 0.3312
+	setFillColor "white
+	setLineJoinStyle "round
+	polyStart
+	jumpLeft :strokeThickness2
+	right :angle1
+	jumpForward :strokeThickness2
+	setHeading :oldHeading
+	jumpRight :strokeThickness2
+	left 180 - :angle1
+	jumpForward :size1
+	polyEnd
+	setHeading :oldHeading
+	jumpLeft :strokeThickness2 / 2
+	right :angle1
+	jumpForward :size1 / 2
+
+	setPenSize :strokeThickness
+	setPenColor fillColor
+	forward :radius * 1.015
+	right 135
+	forward :radius * 1.04
+	arcRight 151.5 :radius * 0.01
+	forward :radius * 0.75
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Red_Hat#/media/File:Red_Hat_Logo_2019-en.svg
+; RedHat logo is included because RedHat is the owner of Ansible.
+to redHatLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	jumpForward :height * 0.72
+	jumpLeft :height * 0.36
+	localmake "startPos pos
+	setFillColor "black
+	setPenSize 0
+	polyStart
+	left 158.1
+	jumpForward :height * 0.4
+	left 105
+	jumpForward :height * 1.026
+	left 110.01
+	jumpForward :height * 0.37
+	polyEnd
+	setFillColor "#e00
+
+	; top part of hat
+	jumpTo :startPos
+	setHeading :oldHeading + 19.1
+	polyStart
+	jumpForward :height * 0.19
+	arcRight 15 :height * 0.2
+	arcRight 20 :height * 0.1
+	arcRight 20 :height * 0.06
+	arcRight 30 :height * 0.08
+	arcRight 15 :height * 0.15
+	arcLeft 10 :height * 0.23
+	arcLeft 20 :height * 0.1
+	arcLeft 41 :height * 0.055
+	jumpForward :height * 0.03
+	arcRight 10 :height * 0.1
+	arcRight 40 :height * 0.048
+	arcRight 10 :height * 0.3
+	arcRight 7 :height * 1.7
+	arcRight 9.5 :height * 0.4
+	arcRight 7.2 :height * 0.2
+	arcRight 30 :height * 0.1
+	arcRight 5 :height * 0.2
+	jumpForward :height * 0.235
+	arcRight 30 :height * 0.11
+	arcRight 30 :height * 0.09
+	arcRight 20 :height * 0.14
+	arcRight 15 :height * 0.25
+	arcRight 5 :height * 0.4
+	arcRight 40 :height * 0.83
+	arcRight 15 :height * 0.37
+	arcRight 18 :height * 0.1
+	arcRight 40 :height * 0.039
+	polyEnd
+
+	; bottom part of hat
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.64715
+	jumpLeft :height * 0.38928
+	left 159
+	polyStart
+	arcLeft 10 :height * 0.18
+	arcLeft 30 :height * 0.1
+	arcLeft 10 :height * 0.15
+	arcLeft 20 :height * 0.27
+	arcLeft 20 :height * 0.7
+	arcLeft 20 :height * 0.92
+	arcLeft 15 :height * 0.5
+	arcLeft 25 :height * 0.22
+	arcLeft 15 :height * 0.13
+	arcLeft 25 :height * 0.11
+	arcLeft 23.3 :height * 0.13
+	jumpForward :height * 0.0435
+	setHeading :oldHeading + 114
+	arcRight 10 :height * 0.57
+	arcRight 25 :height * 0.33
+	arcRight 25 :height * 0.2
+	arcRight 23 :height * 0.18
+	arcRight 25 :height * 0.23
+	arcRight 25 :height * 0.26
+	arcRight 20 :height * 0.5
+	arcRight 20 :height * 1.25
+	arcRight 15 :height * 1.5
+	arcRight 15 :height * 0.65
+	arcRight 13 :height * 0.4
+	arcRight 15 :height * 0.2
+	arcRight 30 :height * 0.145
+	arcRight 30 :height * 0.12
+	arcRight 25 :height * 0.16
+	arcRight 14.5 :height * 0.46
+	arcRight 1.5 :height * 2
+	polyEnd
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 5
+jumpLeft :separation * 0.5
+ansibleLogo 100
+jumpRight :separation
+redHatLogo 100

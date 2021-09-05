@@ -1,0 +1,44 @@
+REM copied from: https://www.bamsoftware.com/bzr/qbasic/stars.bas
+DECLARE SUB delay (seconds!)
+SCREEN 13
+
+CONST NUM = 50
+CONST INC = 40
+CONST ICANSEE = 50
+
+DIM x(1 TO NUM)
+DIM y(1 TO NUM)
+DIM z(1 TO NUM)
+
+FOR i = 1 TO NUM
+x(i) = RND * 320 - 160
+y(i) = RND * 200 - 100
+z(i) = RND * ICANSEE
+NEXT
+
+DO
+FOR i = 1 TO NUM
+PSET (INC * (x(i) / z(i)) + 160, INC * (y(i) / z(i)) + 100), 0
+IF z(i) <= 1 THEN
+z(i) = ICANSEE
+x(i) = RND * 320 - 160
+y(i) = RND * 200 - 100
+ELSE
+z(i) = z(i) - 1
+END IF
+PSET (INC * (x(i) / z(i)) + 160, INC * (y(i) / z(i)) + 100), z(i) MOD 17 + 15
+NEXT
+delay 0.04
+LOOP UNTIL INKEY$ = CHR$(13)
+
+' CHAIN "bmper.bas"
+DECLARE SUB bmper
+bmper
+
+
+
+SUB delay (seconds!)
+start# = TIMER
+DO WHILE TIMER - start# < seconds!
+LOOP
+END SUB

@@ -1,0 +1,10 @@
+to filter :shouldIncludeProc :listValue
+	localmake "result []
+	repeat count :listValue [
+		localmake "element item repcount :listValue
+		if (invoke :shouldIncludeProc :element) [
+			queue2 "result :element
+		]
+	]
+	output :result
+end

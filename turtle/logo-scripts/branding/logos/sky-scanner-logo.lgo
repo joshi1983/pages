@@ -1,0 +1,72 @@
+make "skyScannerBlue "#0770e3
+
+to skyScannerLogoCustomColor :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "offset1 :height * 0.21
+	localmake "gap1 :height * 0.447
+	localmake "angleStep 30.4
+	localmake "thickness1 :height * 0.135
+	localmake "ellipseRadius1 :thickness1 * 0.2
+	localmake "len1 (:height - :offset1) - :gap1 - :ellipseRadius1
+	localmake "arcsInfo1 [
+		[-37 0.19] [-7.8 3] [65 0.022] [44.4 0.13] [70.5 0.022]
+	]
+	localmake "arcsInfo (combine :arcsInfo1 [[29.8 3.01223238]] reverse :arcsInfo1)
+	localmake "angle1 30
+	localmake "size1 :height * 0.2
+	localmake "arcRadius1 :height * 0.093
+	jumpForward :offset1
+	localmake "center pos
+	setFillColor penColor
+	setLineCap "butt
+	repeat 5 [
+		setHeading :oldHeading + (repcount - 3) * :angleStep
+		jumpForward :gap1
+		setPenSize 0
+		circle :thickness1 / 2
+		setPenSize :thickness1
+		forward :len1
+		setPenSize 0
+		ellipse :thickness1 / 2 :ellipseRadius1 
+		jumpTo :center		
+	]
+	jumpTo :oldPos
+	setHeading :oldHeading + 90
+	polyStart
+	arcLeft :angle1 :arcRadius1
+	jumpForward :size1
+	arcsLeft :arcsInfo :height
+	jumpForward :size1
+	arcLeft :angle1 :arcRadius1
+	polyEnd
+	setTurtleState :oldState
+end
+
+to skyScannerBlackForegroundLogo :height
+	setPenColor "black
+	skyScannerLogoCustomColor :height
+end
+
+; Inspired by logo at
+; https://en.wikipedia.org/wiki/Skyscanner#/media/File:Skyscanner_Logo_LockupHorizontal_SkyBlue_RGB.svg
+to skyScannerBlueForegroundLogo :height
+	setPenColor :skyScannerBlue
+	skyScannerLogoCustomColor :height
+end
+
+to skyScannerBlueBackgroundLogo :height
+	stripes :height * 3 :height [:skyScannerBlue]
+	setPenColor "white
+	skyScannerLogoCustomColor :height
+end
+
+make "height 100
+make "separation :height * 4
+jumpLeft :separation
+skyScannerBlackForegroundLogo :height
+jumpRight :separation
+skyScannerBlueForegroundLogo :height
+jumpRight :separation
+skyScannerBlueBackgroundLogo :height

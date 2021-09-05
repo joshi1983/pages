@@ -1,0 +1,67 @@
+make "redColor "#CC0D0D
+make "blueColor "#002590
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Cuba#/media/File:Flag_of_Cuba_(construction_sheet).svg
+; Referenced from:
+; https://en.wikipedia.org/wiki/Flag_of_Cuba
+to cubaFlag :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "width :height * 2
+	localmake "stripeThickness :height / 5
+	localmake "angle 120
+	setLineCap "butt
+	setPenColor :blueColor
+	setPenSize :width
+	forward :height
+	setPenColor "white
+	repeat 2 [
+		jumpBackward :stripeThickness
+		backward :stripeThickness
+	]
+	jumpTo :oldPos
+	jumpLeft :width / 2
+	setPenSize 0
+	setFillColor :redColor
+	polyStart
+	jumpForward :height
+	right :angle
+	jumpForward :height / 2 / -cos :angle
+	polyEnd
+	setHeading :oldHeading
+	setFillColor "white
+	jumpLeft :height * (0.5 / cos 30)
+	regularStar :height * 2.5/15 5
+	setTurtleState :oldState
+end
+
+to cubaNavalJack :height
+	localmake "oldState turtleState
+	localmake "width :height * 1.5
+	setLineCap "butt
+	setPenSize :width
+	setPenColor :blueColor
+	forward :height * 0.5
+	setPenColor "white
+	jumpRight :width / 4
+	setPenSize :width / 2
+	forward :height * 0.5
+	jumpLeft :width / 2
+	setPenColor :redColor
+	backward :height / 2
+	jumpForward :height / 4
+	setFillColor "white
+	setPenSize 0
+	regularStar :height * 0.15 5
+	setTurtleState :oldState
+end
+
+setScreenColor "#eee
+make "height 100
+make "separation :height * 4
+jumpLeft :separation * 0.5
+cubaFlag :height
+jumpRight :separation
+cubaNavalJack :height

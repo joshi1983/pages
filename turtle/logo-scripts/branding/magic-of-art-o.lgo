@@ -1,0 +1,36 @@
+; Inspired by:
+; https://scontent-yyz1-1.xx.fbcdn.net/v/t39.30808-6/532419688_10101099530446033_7124885602297111045_n.jpg?_nc_cat=1&ccb=1-7&_nc_sid=aa7b47&_nc_ohc=GrvvvuawIPYQ7kNvwE8k3RK&_nc_oc=AdmVkg6ubsL8Ru16AggR6VTGNXAVYdJ6fsAfaDQLxeUoAtG4QMOIboI-6AoJaCaCj4Y&_nc_zt=23&_nc_ht=scontent-yyz1-1.xx&_nc_gid=aeZWwNOlBPDB1LaZIphLmA&oh=00_AfWSYgPyrz9CnrccDrw-LwnG8xz3VYE55ie8PnkdzjYa0Q&oe=68A6BB62
+to magicOfArtO :height
+	localmake "oldState turtleState
+	localmake "innerRadius1 0.105
+	localmake "radiusGap :height * 0.05
+	localmake "lines1 [
+		[90 0] [0.05] [-90 0] [18 0.9] [24 0.5]
+		[-81 0] [32 0.4] [10 2] [-93 0] [0.1]
+	]
+	setPenSize :height * 0.02
+	setPenColor "black
+	setFillColor transparent
+	jumpForward :height / 2
+	repeat 3 [
+		localmake "outerRadius :height / 2 - (repcount - 1) * :radiusGap
+		circle :outerRadius - penSize / 2
+	]
+	repeat 2 [
+		localmake "radius :height * :innerRadius1 - (repcount - 1) * :radiusGap
+		circle :radius - penSize / 2
+	]
+	localmake "height1 :outerRadius - :height * :innerRadius1
+	setPenSize 0
+	setFillColor penColor
+
+	repeat 6 [
+		drawArcLineShape [0 (:innerRadius1 - 0.01) * :height / :height1
+			combine :lines1 reverse :lines1
+		] :height1
+		right 360 / 6
+	]
+	setTurtleState :oldState
+end
+
+magicOfArtO 100

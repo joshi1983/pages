@@ -1,0 +1,52 @@
+; Inspired by a mask at.
+; https://ca.pinterest.com/pin/ATbNnvRY5_77DLxENU5UhK_9gE9n5mGcmyXhuNItlc7ye_LQNUtDY65Ulms8jV0OHtDbmhQjm8tfb_SLP0r96Rw/
+; The source of inspiration was made by Kristofir Dean.
+;
+; This WebLogo variation was made by Josh Greig.
+to refractedLimonata :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "width :height
+	localmake "colors [
+		"#63dfbd "#6ac8d4 "#2fbfca "#a3cbe4
+		"#277fc9 "#1a63c2 "#092d81 "#5380db
+		"#b8c8e1 "#5956c9 "#271d7d "#6240ae
+		"#241663 "#43257b "#b03da4 "#e37bc6
+		"#ff7bc4 "#fe2b5e "#f077aa "#e26295
+		"#e34031 "#e81b0a "#f34f07 "#e74013
+		"#f78513 "#fe4e1f "#fc891e "#e0e159
+		"#f0c20a "#dff169 "#ead518 "#e9ef29
+	]
+	jumpForward :height
+	localmake "midPoints [pos]
+	localmake "midStep :height / count :colors
+	repeat count :colors [
+		jumpBackward :midStep
+		queue2 "midPoints pos
+	]
+	jumpTo :oldPos
+	jumpForward :height / 2
+	jumpLeft :width / 2
+	localmake "vanishingPoints [pos]
+	jumpRight :width
+	queue2 "vanishingPoints pos
+	setPenSize 0
+	repeat count :vanishingPoints [
+		localmake "vanishingPoint item repcount :vanishingPoints
+		localmake "tintColors? repcount = 1
+		repeat count :colors [
+			localmake "p1 item repcount :midPoints
+			localmake "p2 item repcount + 1 :midPoints
+			localmake "c item repcount :colors
+			if :tintColors? [
+				localmake "c mix :c "white 0.7
+			]
+			setFillColor :c
+			polygon [:vanishingPoint :p1 :p2]
+		]
+	]
+
+	setTurtleState :oldState
+end
+
+refractedLimonata 100

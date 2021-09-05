@@ -1,0 +1,40 @@
+; Inspired by logo at
+; https://www.cncf.io
+; You can learn more about the
+; Cloud Native Computing Foundation at
+; https://en.wikipedia.org/wiki/Cloud_Native_Computing_Foundation
+to cncfLogo :height
+	localmake "oldState turtleState
+	localmake "innerHeight :height * 0.713
+	localmake "thickness (:height - :innerHeight) / 2
+	localmake "triWidth (:height / 3 - :thickness) * 2 / cos 45
+	localmake "triHeight :triWidth / 2
+	localmake "rectWidth 2 * ((:height / 6 / cos 45) +
+		(:height / 3 - :thickness) * cos 45)
+	localmake "rectHeight 2 * (:height / 3 - :thickness) * cos 45
+	stripes :height :height ["#0086FF]
+	jumpForward :thickness
+	stripes :innerHeight :innerHeight ["white]
+	jumpBackward :thickness
+	repeat 4 [
+		stripes :height / 3 :height / 3 ["#93EAFF]
+		jumpLeft :height / 2
+		right 90
+		jumpLeft :height / 2
+	]
+	jumpForward :height / 2
+	right 45
+	localmake "center pos
+	setPenSize 0
+	setFillColor "white
+	repeat 2 [
+		jumpForward :height / 6 / cos 45
+		isoTriangle :triWidth :triHeight
+		jumpTo :center
+		right 180
+	]
+	rect :rectWidth :rectHeight
+	setTurtleState :oldState
+end
+
+cncfLogo 100

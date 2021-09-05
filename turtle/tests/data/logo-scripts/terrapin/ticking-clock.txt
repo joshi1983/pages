@@ -1,0 +1,188 @@
+; copied from: https://resources.terrapinlogo.com/logolib/ticking_clock.html
+TO SECHAND :ERASE :ANGLE
+    ; --
+    ; Set the angle for the hand and erase if TRUE, otherwise
+    ; draw the second hand at the specified angle.
+    ; --
+    SETHEADING :ANGLE
+    SETPC "DARKRED
+    IF :ERASE THEN SETPC "WHITE
+    SETWIDTH 3
+    PD
+    FD 120
+    BK 120
+END
+
+TO RUNCLOCK
+    ; --
+    ; Initialize clock variables, draw the clock, and update it every
+        ; second.  If the user presses "Q" then quit.
+    ; --
+
+    ; Initialize vars
+    MAKE "LASTTIME TIME
+    MAKE "HOURANGLE 0
+    MAKE "MINANGLE 0
+    MAKE "SECANGLE 0
+
+    ; Draw clock without hands & instruct the user how to quit
+    CLEARTEXT
+    CLOCKFACE
+    CLOCKNUMBERS
+    HIDETURTLE
+    PRINT "|To quit the Ticking Clock, press 'Q'...|
+
+    ; *** Main loop  ***
+    LABEL "CLOCKTICK
+
+    ; See if the user wants to quit
+    MAKE "NEXTKEY KEY
+    IF NEXTKEY < 0 THEN GO "SKIPQUITCHECK
+    IF (CHAR NEXTKEY) = "Q THEN GO "QUITNOW
+    IF (CHAR NEXTKEY) = "|q| THEN GO "QUITNOW
+
+    ; Update clock if a second has passed
+    LABEL "SKIPQUITCHECK
+    MAKE "NEWTIME TIME
+    IF (NEWTIME <> LASTTIME) THEN CLOCK
+    IF (NEWTIME <> LASTTIME) THEN MAKE "LASTTIME TIME
+    WAIT 50
+    GO "CLOCKTICK
+    ; *** End of Main Loop ***
+
+    LABEL "QUITNOW
+    PRINT "|Thanks for stopping bye!|
+END
+
+TO CLOCK
+    ; --
+    ; Draw the hands of the clock in the correct location
+    ; based on the current hour, minute, and second of the
+    ; system time.
+    ; --
+
+    ; Erase all the old hands first
+    BIGHAND TRUE MINANGLE ; erase old hand
+    SECHAND TRUE SECANGLE
+    SMALLHAND TRUE HOURANGLE
+
+    ; Update angles for each hand
+    MAKE "MINANGLE (360 / 60) * (ITEM 2 TIME)
+    MAKE "HOURANGLE (360 / 12) * ((REMAINDER FIRST TIME 12) + ((ITEM 2 TIME) / 60))
+    MAKE "SECANGLE (360 / 60) * (ITEM 3 TIME)
+
+    ; Draw each hand at the calculated angle
+    BIGHAND FALSE MINANGLE ; Draw hour hand 1st in case small hand overlaps
+    SMALLHAND FALSE HOURANGLE ; Draw minute hand next
+    SECHAND FALSE SECANGLE ; Draw second hand last
+
+    ; Make a clock tick sound
+        PLAY [V50 I37 O4 64E]
+END
+
+TO CLOCKFACE
+    ; --
+    ; Draw the circle and minute/hour markers
+    ; --
+    DRAW
+    SETWIDTH 10
+    STAMPOVAL 180 180
+    SETWIDTH 5
+    REPEAT 60 [PU FD 180 PD BK 10 PU BK 170 RT 360 / 60]
+    SETWIDTH 10
+    REPEAT 12 [PU FD 180 PD BK 20 PU BK 180 - 20 RT 360 / 12]
+END
+
+TO SMALLHAND :ERASE :ANGLE
+    ; --
+    ; Draw the hour hand (small hand), and erase if TRUE.
+    ; --
+    SETHEADING :ANGLE
+    SETPC "DARKGREEN
+    IF :ERASE THEN SETPC "WHITE
+    SETWIDTH 10
+    PD
+    FD 75
+    FOR "W 10 1 [SETWIDTH :W FD 2]
+    PU
+    BK 95
+END
+
+TO CLOCKNUMBERS
+    ; --
+    ; Evenly space the numbers 1 thru 12 around the clock face
+    ; --
+    PU
+    HOME
+    FOR "CLOCKNUM 1 12 [PU RT (360 / 12) FD 140 CENTERTT :CLOCKNUM PU BK 140]
+END
+
+TO CENTERTT :MSG
+    ; --
+    ; For Arial Baltic, the ratio of the font
+    ; is 2:1 for height:width. Then 50% more
+    ; must be added to account for the spacing
+    ; added around each letter. This is does
+    ; not work for all letters, but is consistent
+    ; for digits.
+    ; --
+    SETFONT [ARIAL BALTIC] 20 1
+    MAKE "FONTSIZE FIRST BUTFIRST FONT
+    MAKE "HSTEPS FONTSIZE * 1.5
+    MAKE "WSTEPS (FONTSIZE / 2) * 1.5
+
+    ; Get original coordinates
+    MAKE "ORIGXY GETXY
+
+    ; Adjust upper-left of text by half the
+    ; calculated height and width of the text
+    PU
+    SETX XCOR - (WSTEPS * (COUNT :MSG)) / 2
+    SETY YCOR + (HSTEPS / 2)
+
+    ; Write message and return turtle to the
+        ; origina xy location.
+    PD
+    TT MSG
+    PU
+    SETXY ORIGXY
+    PD
+END
+
+TO BIGHAND :ERASE :ANGLE
+    ; --
+    ; Draw the minute hand (big hand) for the clock and
+    ; erase if TRUE.  The hand is drawn at the specified
+    ; angle.
+    ; --
+    SETHEADING :ANGLE
+    SETPC "DARKBLUE
+    IF :ERASE THEN SETPC "WHITE
+    SETWIDTH 10
+    PD
+    FD 100
+    FOR "W 10 1 [SETWIDTH :W FD 2]
+    PU
+    BK 120
+END
+
+TO AUTHORINFO
+        CT
+    PRINT "|Written by : Bill Russell for my son Brady |
+    PRINT "|Purpose    : To illustrate how simple concepts build|
+    PRINT "|             on top of each other to build something|
+    PRINT "|             useful, such as a clock. |
+    PRINT "|Date       : 11/28/06 |
+    PRINT "|Email      : russellwc@mountaireygroup.net |
+END
+
+
+TO INTRO
+    DRAW
+    CT
+    PRINT "|Welcome to the Ticking Clock demonstration! |
+    PRINT "|Type 'RUNCLOCK' to start or 'AUTHORINFO' to |
+    PRINT "|learn about the author. |
+END
+
+INTRO

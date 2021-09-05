@@ -1,0 +1,107 @@
+to bigSoundCloud :height
+	localmake "oldState turtleState
+	localmake "arcsInfo [
+		[193.5 0.29] [-98 0] [80 0.4737] [38.35 0.36]
+		[56.15 0.05]
+	]
+	jumpRight :height * 0.78
+	right 90
+	polyStart
+	arcsLeft :arcsInfo :height
+	jumpForward :height * 0.847389239750692
+	arcLeft 90 :height * 0.05
+	polyEnd
+	setTurtleState :oldState
+end
+
+to soundStripe :stripeInfo :height
+	localmake "oldState turtleState
+	localmake "cornerRadius :height * 0.022
+	localmake "stripeHeight1 :height * last :stripeInfo
+	localmake "bigArcAngle 10
+	localmake "cornerAngle 90 - :bigArcAngle / 2
+	localmake "stripeHeight2 :stripeHeight1 - :cornerRadius * 2 * (1 - cos :cornerAngle)
+	localmake "arcRadius :stripeHeight2 / 2 / sin :bigArcAngle / 2
+	localmake "arcsInfo1 [
+		[:bigArcAngle :arcRadius] [:cornerAngle * 2 :cornerRadius]
+	]
+	jumpForward :height * first :stripeInfo
+	setPenSize 0
+	right 90
+	arcLeft :cornerAngle :cornerRadius
+	polyStart
+	arcsLeft :arcsInfo1 1
+	arcsLeft :arcsInfo1 1
+	polyEnd
+	setTurtleState :oldState
+end
+
+to soundCloudStripes :logoHeight
+	localmake "oldState turtleState
+	localmake "stripesInfo [
+		[0 0.88] [0 0.757] [0 0.757]
+		[0 0.769] [0 0.727] [0 0.612]
+		[0 0.491] [0.025 0.48] [0.113 0.29]
+	]
+	localmake "stripeSeparation :logoHeight * 0.123
+	jumpLeft :stripeSeparation * 0.47
+	repeat count :stripesInfo [
+		localmake "stripeInfo item repcount :stripesInfo
+		soundStripe :stripeInfo :logoHeight
+		jumpLeft :stripeSeparation
+	]
+	setTurtleState :oldState
+end
+
+; This WebLogo drawing has some differences that kept the code a bit simpler and
+; looks a little more polished, in my opinion.
+; These differences include:
+; - curved upper left corner in the bigSoundCloud shape.  
+; The original logo has a sharp corner there.
+; - the stripes in WebLogo have a smoother and more symmetrical outline.
+; The original logo has some arcs at the tops that appear to arc 20 degrees or so 
+; beyond their tangents with the larger vertical arcs.
+; - The original logo has stripes wider near the bottom.
+; This might be to make the cloud look flatter at the bottom.
+; This WebLogo drawing has stripes widest in the middle to keep the code simpler.
+to soundCloudLogo :height
+	localmake "oldState turtleState
+	setPenSize 0
+	bigSoundCloud :height
+	soundCloudStripes :height
+	setTurtleState :oldState
+end
+
+; Inspired by logo at
+; https://soundcouch.soundcloud.com/
+to soundCloudWhiteLogo :height
+	setFillColor "white
+	soundCloudLogo :height
+end
+
+to backgroundGradients :width :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "colorStops createPList2 [
+		[0 "#0000] [0.2 "#f000] [0.35 "#f000]
+		[0.65 "#ff50] [0.8 "#ff50] [1 "#0f50]
+	]
+	jumpLeft :width / 2
+	localmake "fromPos pos
+	jumpRight :width
+	setPenGradient createLinearGradient :fromPos pos :colorStops "pad
+	jumpTo :oldPos
+	setLineCap "butt
+	setPenSize :width
+	forward :height
+	setTurtleState :oldState
+end
+
+setScreenColor "#820
+make "height 100
+make "separation :height * 5
+backgroundGradients :separation / 0.5 :height
+jumpLeft :separation / 2
+soundCloudWhiteLogo :height
+jumpRight :separation
+soundCloudWhiteLogo :height

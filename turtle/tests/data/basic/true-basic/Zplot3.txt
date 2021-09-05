@@ -1,0 +1,36 @@
+!
+!  ZPLOT3     version 2.0
+!
+!  Show the 3-dimensional plot of a rather peculiar
+!  function F (x, y).  Choose a nice camera position at
+!  the start,  then loop letting the user pick a new
+!  camera position.
+!
+!  This is a perspective view.  Change "PersWindow" to
+!  "ParaWindow" to get a parallel view.
+!
+LIBRARY "3DCont.trc"
+
+CALL PersWindow (-pi, pi, -pi, pi, -1.5, 1.2)
+LET x = -3
+LET y = -5
+LET z = 4
+DO
+   PRINT "Eye: "; x; y; z
+   CALL SetCamera3 (x, y, z)
+   CALL Zplot
+   GET KEY xxx
+   CLEAR
+   INPUT prompt "eye: ": x, y, z
+   CLEAR
+
+LOOP
+
+END
+
+DEF F(x,y)
+
+    LET a = x*x + y*y
+    LET F = 3.5*cos (1.75*a)*exp (-.8*a)
+
+END DEF

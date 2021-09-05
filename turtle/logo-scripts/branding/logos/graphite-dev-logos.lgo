@@ -1,0 +1,34 @@
+to graphiteDevLogoCustomColors :height :foregroundColor :backgroundColor
+	localmake "oldState turtleState
+	localmake "startAngle 15
+	localmake "radius :height / 2 / cos :startAngle
+	localmake "radiusScaleFactors [0.86 0.77 1]
+	jumpForward :height / 2
+	right :startAngle
+	setPenSize 0
+	repeat 3 [
+		setFillColor ifelse 2=repcount :backgroundColor :foregroundColor
+		regularPolygon :radius 6
+		right 15
+		localmake "radius :radius * item repcount :radiusScaleFactors
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by logo at
+; https://graphite.dev
+to graphiteDevWhiteForeground :height
+	stripes :height * 3 :height ["black]
+	graphiteDevLogoCustomColors :height "white "black
+end
+
+to graphiteDevBlackForeground :height
+	graphiteDevLogoCustomColors :height "black "white
+end
+
+make "height 100
+make "separation :height * 5
+jumpLeft :separation * 0.5
+graphiteDevWhiteForeground :height
+jumpRight :separation
+graphiteDevBlackForeground :height

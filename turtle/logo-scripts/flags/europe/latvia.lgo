@@ -1,0 +1,46 @@
+make "latviaRed "#9D2235
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Latvia#/media/File:Flag_of_Latvia.svg
+; Construction sheet at
+; https://en.wikipedia.org/wiki/Flag_of_Latvia#/media/File:Flag_of_Latvia_(construction_sheet).svg
+to latviaFlag :height
+	localmake "width :height * 2
+	localmake "colors [:latviaRed :latviaRed "white :latviaRed :latviaRed]
+	stripes :width :height :colors
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Latvia#/media/File:Naval_Ensign_of_Latvia.svg
+to navalEnsigniaOfLatvia :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "width :height * 3 / 2
+	localmake "crossesInfo [
+		[:latviaRed 0.2]
+		["white 0.04]
+	]
+	stripes :width :height ["white]
+	setLineCap "butt
+	repeat count :crossesInfo [
+		localmake "crossInfo item repcount :crossesInfo
+		setPenSize :height * item 2 :crossInfo
+		setPenColor item 1 :crossInfo
+		forward :height
+		jumpBackward :height / 2
+		right 90
+		jumpBackward :width / 2
+		forward :width
+		left 90
+		jumpTo :oldPos
+	]	
+	setTurtleState :oldState
+end
+
+setScreenColor "#eee
+make "height 100
+make "separation :height * 5
+jumpLeft :separation * 0.5
+latviaFlag :height
+jumpRight :separation
+navalEnsigniaOfLatvia :height

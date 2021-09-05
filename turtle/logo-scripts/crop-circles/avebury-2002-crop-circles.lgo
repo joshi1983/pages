@@ -1,0 +1,56 @@
+make "darkColor "#780
+
+to drawSpiral :diameter
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "radius :diameter * 0.52
+	localmake "numArcs 50
+	localmake "arcAngle 360 * 2.6 / :numArcs
+	left 90
+	repeat :numArcs [
+		localmake "arcRadius (1 - repRatio) * :radius
+		if :arcRadius > 0 [
+			arcRight :arcAngle :arcRadius
+		]
+	]
+	localmake "stopPos pos
+	setPenSize 0
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :diameter / 2
+	setFillColor penColor
+	jumpTo mix :stopPos pos 0.5
+	circle :diameter * 0.05
+	setTurtleState :oldState
+end
+
+; Inspired by crop circles
+; reported on August 18, 2002
+; The location was: Avebury Sanctuary, Wiltshire
+; The crop circles are shown at:
+; https://www.pinterest.ca/pin/572801646376287000/
+; Also mentioned at:
+; https://temporarytemples.co.uk/crop-circles/2002-crop-circles
+to avebury2002CropCircles :height
+	localmake "oldState turtleState
+	localmake "lightColor "#ff8
+	localmake "littleRadius :height * 0.03
+	jumpForward :height / 2
+	setPenSize 0
+	setFillColor :lightColor
+	circle :littleRadius
+	setFillColor transparent	
+	setPenSize :height * 0.015
+	setPenColor :lightColor
+	circle (:height - penSize) / 2
+	right 9
+	repeat 2 [
+		drawSpiral :height / 2
+		right 180
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor :darkColor
+avebury2002CropCircles 100

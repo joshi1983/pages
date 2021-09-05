@@ -1,0 +1,44 @@
+; Inspired by an image at:
+; https://en.wikipedia.org/wiki/Folgers#/media/File:FolgersLogo.png
+to folgersMountains :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "folgersRed "#c21034
+	localmake "mountainColorStops createPList2 [
+		[0 "black] [0.5 "#004] [1 :folgersRed]
+	]
+	localmake "numRays 64
+	stripes :height * 2 :height [:folgersRed]
+
+	jumpForward :height * 0.1
+	setPenSize 0
+	setFillColor "yellow
+	localmake "center pos
+	repeat :numRays [
+		localmake "angle (repRatio - 0.5) * 145
+		setHeading :oldHeading + :angle
+		localmake "radius :height * 0.85
+		isoTriangle :height * 0.017 :radius
+		jumpTo :center
+	]
+
+	setFillColor "#ffd
+	setHeading :oldHeading
+	jumpForward :height * 0.2
+	circle :height * 0.1
+
+	jumpForward :height * 0.5
+	setFillGradient createRadialGradient pos :height :mountainColorStops
+	jumpTo :oldPos
+	drawArcLineShape [-1 0
+		[[0.3] [-80 0] [26 0.8] [-58 0] [0.16] [60 0] [0.03] [-70 0] [0.14]
+		[65 0] [0.16] [-61 0.03] [0.21] [60 0] [0.26] [-50 0.01] [0.07] [55 0]
+		[0.07] [-64 0] [0.25] [60 0] [0.08] [-55 0] [0.11] [20 0.24] [5.825 2] [-93.8 0]
+		[0.349]]
+	] :height
+
+	setTurtleState :oldState
+end
+
+folgersMountains 100
