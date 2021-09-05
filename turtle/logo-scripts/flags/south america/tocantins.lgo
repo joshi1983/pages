@@ -1,0 +1,40 @@
+; Inspired by:
+; https://en.wikipedia.org/wiki/File:Bandeira_do_Tocantins.svg
+to tocantinsFlag :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "width :height * 107 / 75
+	localmake "tocantinsYellow "#FFD700
+	localmake "colors [:tocantinsYellow "#1946b4]
+	stripes :width :height ["white]
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	repeat 2 [
+		setHeading :oldHeading + repcount * 360 / 2
+		setFillColor item repcount :colors
+		jumpForward :height / 2
+		localmake "pos1 pos
+		jumpLeft :width / 2
+		localmake "corner pos
+		polyStart
+		jumpBackward :height * 0.645
+		right arcTan :width / :height
+		jumpForward distanceToLine :pos1 :corner
+		polyEnd
+		jumpTo :center
+	]
+	setHeading :oldHeading
+	setFillColor :tocantinsYellow
+	isotoxalStar :height * 0.285 :height * 0.067 8
+	localmake "angleStep 12.65
+	right (360 / 8 - :angleStep) / 2
+	repeat 2 [
+		isotoxalStar :height * 0.164 :height * 0.067 8
+		right :angleStep
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "#eee
+tocantinsFlag 100
