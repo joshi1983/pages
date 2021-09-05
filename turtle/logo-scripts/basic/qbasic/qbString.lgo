@@ -1,0 +1,15 @@
+; Similar to QBASIC's string$ function documented at:
+; https://qbasic.net/en/qb-manual/Function/STRING%24.htm
+to qbString :length :character
+	ifelse integer? :character [
+		localmake "character char :character
+	] [
+		; We want nothing more than the first character of the string.
+		localmake "character first :character
+	]
+	localmake "result ""
+	repeat :length [
+		localmake "result word :result :character
+	]
+	output :result
+end

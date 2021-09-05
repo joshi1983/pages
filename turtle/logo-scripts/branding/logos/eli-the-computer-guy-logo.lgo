@@ -1,0 +1,87 @@
+to getLinesInfo :cornerRadius :height1 :topArcRadius :topArcAngle
+	localmake "lines1 [
+		[:height1] [90 - :topArcAngle :cornerRadius] [:topArcAngle :topArcRadius]
+	]
+	localmake "lines2 combine :lines1 reverse :lines1
+	localmake "lines3 combine :lines2 :lines2
+	output :lines3
+end
+
+to drawWhiteBackground :width
+	localmake "oldState turtleState
+	setPenSize 0
+	setFillColor "white
+	drawArcLineShape [0.5 -0.01
+		getLinesInfo 0.052 0.29 2.5103 10.5
+	] :width	
+	setFillColor transparent
+	setPenSize :width * 0.01
+	setPenColor "#de5600
+	drawArcLineShape [0.5 -0.01
+		getLinesInfo 0.095 0.233 2.44 10
+	] :width * 0.93
+	setTurtleState :oldState
+end
+
+to drawFace :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	setLineCap "butt
+	setLineJoinStyle "round
+	setPenSize :height * 0.06
+	setPenColor "black
+	jumpBackward :height * 0.18
+	jumpLeft :height * 0.78
+	arcLines [
+		[-160 0] [50 0.33] [20 1.6] [5 4]
+		[40 0.5] [45 0.17] [0.035]
+	] :height
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	setFillColor penColor
+	setPenSize 0
+	drawArcLineShapes [
+		; nose
+		[-0.09 -0.115
+			[[-90 0] [25 0.25] [60 0.06] [147 0.013] [-30 0.1]
+			[-20 0.2] [-15 0.38] [165 0.012] [18 0.2]]
+		]
+		; left eye
+		[-0.53 0.33
+			[[-90 0] [-21 0.33] [0.18] [175 0.009] [0.18] [50 0.27]
+			[23 0.55] [180 0.015] [-30 0.45]]
+		]
+		; right eye
+		[0.44 0.35
+			[[-90 0] [-25 0.3] [0.24] [172 0.014] [10 1.5]
+			[60 0.25] [0.12] [180 0.011] [-13 0.75] [-12 0.23]]
+		]
+	] :height
+	setTurtleState :oldState
+end
+
+; Inspired by a logo at:
+; https://www.youtube.com/@sprouts
+to eliTheComputerGuyLogo :height
+	localmake "oldState turtleState
+	localmake "color "black
+	localmake "colorStops createPList2 [
+		[0 transparent]
+		[0.8 mix :color transparent 0]
+		[0.9 mix :color transparent 0.45]
+		[1 mix :color transparent 0]
+	]
+	stripes :height :height ["#273039]
+	jumpForward :height / 2
+	drawWhiteBackground :height
+	drawFace :height * 0.4
+
+	setFillGradient createRadialGradient pos :height * 0.6 :colorStops
+	setPenSize 0
+	square :height
+	setTurtleState :oldState
+end
+
+eliTheComputerGuyLogo 100

@@ -1,0 +1,29 @@
+; Inspired by 
+; https://ca.pinterest.com/pin/32580797302672667
+to roundedHexagonSpiral :height
+	localmake "oldState turtleState
+	localmake "radius :height * 0.509
+	localmake "colorStops createPList2 [
+		[0 "#fceb3b] [0.5 "#A400D1] [1 "#E02E24]
+	]
+	localmake "numPolygons 36
+	setFillColor transparent
+	setPenSize :height * 0.005
+	jumpForward :height * 0.5
+	localmake "center pos
+	repeat :numPolygons [
+		jumpLeft :radius
+		localmake "left pos
+		jumpRight :radius * 2
+		setPenGradient createLinearGradient :left pos :colorStops "pad
+		jumpTo :center
+		roundRegularPolygon :radius 6 :radius * 0.15
+		left 360 / 6 / (:numPolygons - 1)
+		localmake "radius :radius * 0.972
+	]
+
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+roundedHexagonSpiral 100
