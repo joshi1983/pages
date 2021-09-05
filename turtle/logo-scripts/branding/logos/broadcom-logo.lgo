@@ -1,0 +1,27 @@
+; Inspired by logo at:
+; https://en.wikipedia.org/wiki/Broadcom#/media/File:Broadcom_logo_(2016-present).svg
+to broadcomLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	jumpForward :height / 2
+	setPenSize 0
+	setFillColor "#cc092f
+	circle :height / 2
+	jumpForward :height * 0.24
+	localmake "startPos pos
+	setPenSize :height * 0.08
+	setPenColor "white
+	setLineCap "round
+	setLineJoinStyle "round
+	repeat 2 [
+		setHeading :oldHeading
+		jumpTo :startPos
+		arcLines [
+			[130 0] [39 0.05] [0.38] [-110 0.095] [0.08]
+			[64 0.15]
+		] :height * sign repcount - 1.5
+	]
+	setTurtleState :oldState
+end
+
+broadcomLogo 100

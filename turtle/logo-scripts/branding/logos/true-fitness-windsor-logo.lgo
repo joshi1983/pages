@@ -1,0 +1,63 @@
+make "trueFitnessBlue "#096ed0
+
+; Inspired by logo at:
+; https://truefitnesswindsor.com
+to trueFitnessWindsorLogo :height :color
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angle 30
+	localmake "topWidth :height * 1.22
+	localmake "topThickness :height * 0.175
+	localmake "topWidth2 :topWidth - 2 * :topThickness * tan :angle
+	localmake "innerOffset :topWidth / 2 - :height * tan :angle
+	setPenSize 0
+	setFillColor :color
+	jumpForward :height
+	right 180
+	isoTrapezoid :topWidth :topWidth2 :topThickness
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		setHeading :oldHeading
+		jumpTo :oldPos
+		jumpForward :height
+		jumpRight :sign * :topWidth / 2
+		localmake "topSidePos pos
+
+		jumpTo :oldPos
+		jumpRight :sign * :innerOffset
+		localmake "startPos pos
+		polyStart
+		jumpForward :height
+		jumpRight :sign * :topThickness
+		right 180
+		jumpForward distanceToLine :startPos :topSidePos
+		polyEnd
+	]
+	jumpBackward :height * 0.283
+	polyStart
+	left 90
+	jumpForward distanceToLine :startPos :topSidePos
+	setHeading towards :topSidePos
+	jumpForward :topThickness / cos :angle
+	setHeading :oldHeading - 90
+	jumpForward :height * 0.3
+	polyEnd
+	setTurtleState :oldState
+end
+
+to trueFitnessWindsorFavicon :height
+	localmake "oldState turtleState
+	localmake "innerHeight :height * 0.6
+	stripes :height :height [:trueFitnessBlue]	
+	jumpForward (:height - :innerHeight) / 2
+	trueFitnessWindsorLogo :innerHeight "white 
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 4
+jumpLeft :separation / 2
+trueFitnessWindsorLogo :height :trueFitnessBlue
+jumpRight :separation
+trueFitnessWindsorFavicon :height

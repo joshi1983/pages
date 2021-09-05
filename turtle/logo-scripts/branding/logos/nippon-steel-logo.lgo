@@ -1,0 +1,37 @@
+; Inspired by logo at:
+; https://en.wikipedia.org/wiki/Nippon_Steel#/media/File:Nippon_Steel_-_Logo.svg
+to nipponSteelLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "pointY :height * 0.7
+	localmake "topOffset :height - :pointY
+	stripes :height :height ["#65BBE9]
+	setPenSize 0
+	setFillColor "#0B6EAA
+	isoTriangle :height :pointY
+	jumpForward :height
+	right 180
+	setFillColor "#9ED2F1
+	isoTriangle :height :topOffset
+	setFillColor "#C7EAFB
+	isoTriangle :topOffset * :height / :pointY :topOffset
+	setFillColor "#00A7E1
+
+	setHeading :oldHeading
+	jumpTo :oldPos
+	jumpForward :pointY
+	localmake "point pos
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		jumpTo :oldPos
+		jumpLeft :sign * :height / 2
+		polyStart
+		jumpForward :height * 0.4
+		setPos :point
+		polyEnd
+	]
+	setTurtleState :oldState
+end
+
+nipponSteelLogo 100
