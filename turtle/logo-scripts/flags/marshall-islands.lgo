@@ -1,0 +1,40 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_the_Marshall_Islands#/media/File:Flag_of_the_Marshall_Islands.svg
+to marshallIslandsFlag :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "width :height * 19 / 10
+	localmake "colors ["white "#dd7500]
+	localmake "step1 :height / 64
+	localmake "step2 :height * 0.196
+	stripes :width :height ["#003893]
+	jumpLeft :width / 2
+	setPenSize 0
+	localmake "rightOffset :height - :step1 * 3 - :step2
+	repeat count :colors [
+		setFillColor item repcount :colors
+		jumpForward :step1
+		localmake "pos1 pos
+		polyStart
+		jumpForward :step1
+		right arcTan :width / :rightOffset
+		jumpForward hypot [:width :rightOffset]
+		setHeading :oldHeading
+		jumpBackward :step2
+		polyEnd
+		jumpTo :pos1
+		localmake "rightOffset :rightOffset + :step2 - :step1
+	]
+	jumpTo :oldPos
+	jumpLeft :height * 0.58488
+	jumpForward :height * 0.63488
+	setFillColor "white
+	isotoxalStar :height * 0.222 :height * 0.098 24
+	isotoxalStar :height * 0.31 :height * 0.025 4
+	
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+marshallIslandsFlag 100

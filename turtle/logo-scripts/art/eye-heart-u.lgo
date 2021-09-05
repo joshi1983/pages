@@ -1,0 +1,66 @@
+make "blueColor "#8840B6DD
+
+to drawTearDrop :height
+	localmake "oldState turtleState
+	localmake "arcs [[-90 0] [118 0.37] [15 2.1550381]]
+	polyStart
+	arcLines :arcs :height
+	left 180 - 2 * (133 - 90)
+	arcLines reverse :arcs :height
+	polyEnd	
+	setTurtleState :oldState
+end
+
+to drawHeart :height
+	localmake "oldState turtleState
+	localmake "arcs [[45 0] [0.46] [-182 0.22612308] [47 0]]
+	setLineJoinStyle "miter
+	polyStart
+	arcLines :arcs :height
+	arcLines reverse :arcs :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by an image from Brian Hurst
+; The image is shown at:
+; https://ca.pinterest.com/pin/294282156896665021
+; and
+; https://dribbble.com/shots/2155484-Eye-Heart-U
+to eyeHeartU :height
+	localmake "oldState turtleState
+	localmake "width :height * 1.05
+	localmake "angle1 52
+	localmake "arcAngle 90 - :angle1
+	localmake "outlineLen 0.32
+	localmake "arcRadius (0.5 - :outlineLen * sin :angle1) / sin :arcAngle
+	localmake "eyeOutlines1 [[-:angle1 0] [:outlineLen] [-:arcAngle :arcRadius]]
+	localmake "eyeOutlines combine :eyeOutlines1 reverse :eyeOutlines1
+	localmake "eyeOutlines (combine :eyeOutlines :eyeOutlines)
+	localmake "blueColor "#8840B6DD
+	jumpForward :height * 0.5
+	localmake "center pos
+	jumpLeft :width / 2
+	setFillColor "white
+	setPenSize 0
+	polyStart
+	arcLines :eyeOutlines :width
+	polyEnd
+
+	jumpTo :center
+	setFillColor :blueColor
+	circle :height * 0.206
+	jumpBackward :height * 0.406
+	drawTearDrop :height * 0.161
+
+	jumpTo :center
+	jumpBackward :height * 0.07
+	setFillColor "#46555c
+	setPenColor "#3B484E
+	setPenSize :height * 0.01
+	drawHeart :height * 0.18
+	setTurtleState :oldState
+end
+
+setScreenColor "#f37248
+eyeHeartU 100

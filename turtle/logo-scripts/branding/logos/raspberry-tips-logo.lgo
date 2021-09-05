@@ -1,0 +1,51 @@
+; Inspired by logo at:
+; https://raspberrytips.com
+to raspberryTipsLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "squareSize :height * 0.72
+	localmake "pinSeparation :height * 0.0821
+	localmake "pinLength :height * 0.95
+	localmake "thickness1 :height * 0.038
+	localmake "innerSize :height * 0.138
+	localmake "backgroundColor "black
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	setFillColor :backgroundColor
+	right 45
+	roundRect :squareSize :squareSize :height * 0.1
+	setPenSize :thickness1
+	setPenColor fillColor
+	setLineCap "round
+	repeat 2 [
+		jumpLeft :pinSeparation * 2.5
+		repeat 6 [
+			jumpBackward :pinLength / 2
+			forward :pinLength
+			jumpBackward :pinLength / 2
+			jumpRight :pinSeparation
+		]
+		jumpTo :center
+		right 90
+	]
+	setPenSize 0
+	setFillColor "#c41949
+	setHeading :oldHeading + 180 / 6
+	regularPolygon :height * 0.29 6
+	setFillColor transparent
+	setPenSize :thickness1
+	setPenColor :backgroundColor
+	setLineJoinStyle "miter
+	regularPolygon :innerSize 6
+	setLineCap "butt
+	repeat 6 [
+		jumpForward :innerSize
+		forward :height * 0.16
+		jumpTo :center
+		right 360 / 6
+	]
+	setTurtleState :oldState
+end
+
+raspberryTipsLogo 100
