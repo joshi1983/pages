@@ -1,0 +1,61 @@
+make "darkColor "#001b38
+make "lightColor "#007fb5
+make "size1Ratio 0.69
+
+to drawSplitShape :height :size1
+	localmake "oldState turtleState
+	localmake "slantedHeight (:height - :size1) / cos 45
+	jumpForward :size1 / 2
+	right 90
+	setPenSize 0
+	setFillColor :lightColor
+	parallelogram :size1 :slantedHeight -45
+	right 180
+	setFillColor :darkColor
+	parallelogram :size1 :slantedHeight 45
+
+	setTurtleState :oldState
+end
+
+; Inspired by favicon(browser tab icon) at
+; https://www.mtroyal.ca/
+to mountRoyalFaviconLogo :height
+	drawSplitShape :height :height * :size1Ratio
+end
+
+; Inspired by logo at
+; https://www.mtroyal.ca/
+to mountRoyalLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "oldPos pos
+	localmake "bottomGap :height * 0.132
+	localmake "faviconHeight :height - :bottomGap
+	localmake "sideGap :faviconHeight * (1 - :size1Ratio)
+	localmake "diagonalShapeHeight :sideGap * 2 / cos 45
+	localmake "diagonalSlantHeight :bottomGap + :sideGap
+	localmake "diagonalSize1 :diagonalShapeHeight - :diagonalSlantHeight * cos 45
+	jumpForward :bottomGap
+	mountRoyalFaviconLogo :faviconHeight
+
+	; Draw right diagonal shape.
+	jumpTo :oldPos
+	jumpRight :sideGap
+	right 45
+	drawSplitShape :diagonalShapeHeight :diagonalSize1
+
+	; Draw left diagonal shape.
+	setHeading :oldHeading
+	jumpLeft :sideGap * 2
+	left 45
+	drawSplitShape :diagonalShapeHeight :diagonalSize1
+
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 5
+jumpLeft :separation * 0.5
+mountRoyalLogo :height
+jumpRight :separation
+mountRoyalFaviconLogo :height

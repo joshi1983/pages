@@ -1,0 +1,48 @@
+; Inspired by logo at
+; https://www.datarealminc.com
+to dataRealmLogo :height
+	localmake "oldState turtleState
+	localmake "largeRadius :height * 0.1
+	localmake "smallRadius :height * 0.08
+	localmake "darkBlueColor "#0937a6
+	localmake "separation :height * 0.23
+	localmake "thickness :height * 0.025
+	localmake "len 2 * (:height / 2 - (:separation + :thickness / 2) * cos 45) / (cos 45)
+	jumpForward :height / 2
+	localmake "center pos
+
+	jumpTo :center
+	setPenSize 0
+	setFillColor :darkBlueColor
+	repeat 4 [
+		jumpForward :separation / cos 45
+		circle :smallRadius
+		right 90
+		jumpTo :center
+	]
+	right 45
+	jumpLeft :separation
+	jumpBackward :len / 2
+	setPenColor :darkBlueColor
+	setPenSize :thickness
+	setLineCap "butt
+	repeat 3 [
+		forward :len
+		jumpBackward :len
+		jumpRight :separation
+	]
+	jumpTo :center
+	setPenSize 0
+	setFillColor :darkBlueColor
+	circle :largeRadius	
+	setFillColor "#00c5d2
+	repeat 4 [
+		jumpForward :height * 0.46
+		circle :largeRadius
+		jumpTo :center
+		right 90
+	]
+	setTurtleState :oldState
+end
+
+dataRealmLogo 100

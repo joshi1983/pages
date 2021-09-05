@@ -1,0 +1,197 @@
+to drawSky :width :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "gradientRadius :height * 3
+	localmake "radialGradientColorStops createPList2 [
+		[0.88 "white] [0.895 "#fd7] [0.91 "#d33] [0.93 "#822]
+		[0.98 "#314]
+	]
+	localmake "linearColorStops createPList2 [
+		[0.625 "black] [0.68 "#0f00] [0.71 "#3502] [0.74 "#2000] [0.75 "#3000]
+	]
+	jumpForward :height
+	localmake "linearGradient createLinearGradient :oldPos pos :linearColorStops "pad
+
+	jumpTo :oldPos
+	jumpBackward :gradientRadius - :height	
+	localmake "gradients [ 
+		createRadialGradient pos :gradientRadius :radialGradientColorStops
+		:linearGradient
+	]
+	setLineCap "butt
+	setPenSize :width
+	repeat count :gradients [
+		setPenGradient item repcount :gradients
+		jumpTo :oldPos
+		forward :height
+	]
+	setTurtleState :oldState
+end
+
+to drawRunwayLights :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	jumpForward :height
+	localmake "top pos
+	setPenSize 0
+	setFillColor "white
+	repeat 30 [
+		localmake "z repcount / 2 + 1
+		localmake "width :height * 3.5 / :z
+		localmake "lightRadius1 :width * 0.007
+		localmake "lightRadius2 :lightRadius1 * (0.2 + 0.5 / :z)
+		jumpBackward :height / 2 / :z
+		jumpLeft :width * 1.5 / 4
+		repeat 4 [
+			ellipse :lightRadius1 :lightRadius2
+			jumpRight :width / 4
+		]
+		jumpTo :top
+	]
+
+	jumpTo :top
+	setHeading :oldHeading
+	jumpBackward :height * 0.05
+	localmake "top1 pos
+	repeat 2 [
+		setHeading :oldHeading + 90 + repcount * 180
+		jumpTo :top1
+		jumpForward :height * 0.14
+		repeat 12 [
+			circle :height * 0.002
+			jumpForward :height * 0.02
+		]
+	]
+	setTurtleState :oldState
+end
+
+to drawRunway :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "gradientRadius :height
+	localmake "radialColorStops createPList2 [
+		[0.41 "#f83] [0.55 "#8f20] [1 transparent]
+	]
+	jumpForward :gradientRadius
+	setFillGradient createRadialGradient pos :gradientRadius :radialColorStops
+	jumpTo :oldPos
+	setPenSize 0
+	isoTrapezoid :height * 3 :height * 0.04 :height * 0.62
+
+	setFillBlendMode "lighter
+	repeat 30 [
+		localmake "size :height * 0.3 * (1.01 - repRatio)
+		setFillColor mix "red transparent 0.02 * (0.1 + repRatio)
+		jumpTo :oldPos
+		jumpForward :height * 0.62 - :size
+		ellipse :height * mix 0.01 0.12 repRatio :size
+	]
+
+	repeat 30 [
+		localmake "size :height * 0.3 * (1.01 - repRatio)
+		setFillColor mix "white transparent 0.1 * (0.1 + repRatio)
+		jumpTo :oldPos
+		jumpForward :height * 0.62 - :size
+		ellipse :height * mix 0.001 0.005 repRatio :size
+	]
+
+	jumpTo :oldPos
+	drawRunwayLights :height * 0.64
+	setTurtleState :oldState
+end
+
+to drawJet :height :timeRatio
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "rigidLines1 [
+		[90 0] [-35 0.25] [0.08] [36 0.3] [160 0] [-320 0.09]
+		[155 0.012] [0.06] [90 0] [0.01] [-180 0.02] [0.01]
+		[90 0] [0.08] [90 0] [0.02] [-180 0.02] [0.025] [85 0]
+		[0.233] [91 0] [0.03] [-180 0.015] [0.03] [90 0] [0.61]
+		[-50 0.05] [-20 0.2] [0.2] [-176 0] [0.2] [20 0.18]
+		[46.3 0.02] [3.1 25] [100 0] [-19 0.3] [96 0] [0.41] [-175 0.008]
+		[-2 0.2] [0.415] [60 0] [-44 0.24] [76.5 0] [0.462] [-87.9 0.00683003]
+	]
+	localmake "rigidShape [0 0.103
+		combine :rigidLines1 reverse :rigidLines1
+	]
+	localmake "landingGearAngle 90 * (1 - clamp 4 * :timeRatio 0 1) 
+	localmake "wheelSeparation :height * 0.08
+	setPenSize 0
+	setFillColor "black
+	drawArcLineShape :rigidShape :height
+
+	jumpForward :height * 0.24
+	localmake "center pos
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		setHeading :oldHeading
+		jumpRight :sign * :height * 0.285
+		right :sign * :landingGearAngle
+		setPenSize :height * 0.02
+		backward :height * 0.19
+		setPenSize 0
+		rect :wheelSeparation :height * 0.02
+		jumpLeft :wheelSeparation / 2
+		repeat 2 [
+			roundRect :height * 0.02 :height * 0.07 :height * 0.01
+			jumpRight :wheelSeparation
+		]
+		jumpTo :center
+	]
+
+	; Draw blinking lights
+	localmake "lightTime :timeRatio * 3
+	localmake "lightTime :lightTime - int :lightTime
+	if :lightTime < 0.1 [
+		jumpTo :oldPos
+		setHeading :oldHeading
+		jumpForward :height * 0.95
+		setFillColor "white
+		circle :height * 0.02
+		jumpBackward :height * 0.51
+		localmake "center pos
+		repeat 2 [
+			localmake "sign sign repcount - 1.5
+			setHeading :oldHeading
+			jumpRight :sign * :height * 1.55
+			circle :height * 0.02
+			jumpTo :center
+		]
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by image at:
+; https://ca.pinterest.com/pin/855261785531351513
+to sunriseLanding :height :timeRatio
+	localmake "oldState turtleState
+	localmake "width :height * 5
+	drawSky :width :height
+	drawRunway :height
+	jumpForward :height * mix 0.55 0.7 :timeRatio
+	drawJet :height * mix 0.3 0.1 interpolateRatio easeIn :timeRatio :timeRatio
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+make "timeRatio animation.timeRatio
+sunriseLanding 100 :timeRatio
+
+to animation.snapshotstyle
+	output createPList2 [
+		["position.y 50]
+		["zoom.scale 5.5]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 5
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+		["thumbnailTime 2]
+	]
+end
