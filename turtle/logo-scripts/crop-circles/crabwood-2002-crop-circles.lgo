@@ -1,0 +1,81 @@
+make "darkColor "#680
+
+to drawSpiral :center :radius :step
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "sign sign :radius
+	localmake "oldHeading heading
+	localmake "oldRadius abs :radius
+	localmake "y :step * 1.5
+	localmake "numLoops int (abs :radius / 2 / :step) - 1
+	setHeading :oldHeading + 45 * :sign
+	localmake "step1 :step / cos 45
+	localmake "pairs []
+	repeat :numLoops [
+		jumpForward :step1
+		localmake "pair [pos]
+		left :sign * 45
+		jumpForward 1
+		queue2 "pair pos
+		queue2 "pairs :pair
+		right :sign * 45
+	]
+	jumpTo :oldPos
+	setHeading :oldHeading
+	repeat :numLoops [
+		forward distanceToCircle :center :oldRadius - :y
+		setHeading (towards :center) - 90 * :sign
+		localmake "radius1 distance :center
+		localmake "arcAngle 90 - 2 * (arcSin (:y - :step) / :radius1)
+		arcLeft :sign * -:arcAngle :radius1
+		setHeading :oldHeading - 90 * :sign
+		localmake "y :y + :step
+		localmake "pair item repcount :pairs
+		forward distanceToLine item 1 :pair item 2 :pair
+		right :sign * 90
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://www.pinterest.ca/pin/420242208964296183/
+; The location was Crabwood.
+; It was reported in 2002.
+; I couldn't find other references to these crop circles.
+to spiralCropCircles :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "lightColor "#efa
+	localmake "radius (:height / 2) * cos 45
+	localmake "step :height * 0.02
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	setFillColor :lightColor
+	regularStar :height / 2 8
+	setFillColor :darkColor
+	circle :radius
+	setPenSize :step / 2
+	setPenColor :lightColor
+	circle :radius - :step
+	setLineJoinStyle "miter
+	setLineCap "butt
+	repeat 2 [
+		setHeading :oldHeading + 90 + repcount * 180
+		jumpForward :step
+		left 90
+		drawSpiral :center :radius :step
+		right 180
+		drawSpiral :center -:radius :step
+		jumpTo :center
+		right 180
+	]
+	jumpTo :center
+	localmake "innerRadius :radius - :step
+	jumpBackward :innerRadius
+	stripes penSize :innerRadius * 2 [:lightColor]
+	setTurtleState :oldState
+end
+
+setScreenColor :darkColor
+spiralCropCircles 100

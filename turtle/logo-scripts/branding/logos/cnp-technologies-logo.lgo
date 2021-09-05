@@ -1,0 +1,47 @@
+; Inspired by logo at:
+; https://www.cnp.net
+to cnpLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "colors [
+		"#f47e3a "#040707 "#02528a
+	]
+	localmake "innerRadiusFactor 0.325
+	localmake "innerRadius :height * :innerRadiusFactor
+	localmake "outerRadiusFactor 0.42
+	localmake "outerRadius :height * :outerRadiusFactor
+	localmake "innerArcAngle 53
+	localmake "cornerAngle1 -:innerArcAngle - 30
+	localmake "len1 0.175
+	localmake "thickness1Factor :outerRadiusFactor - :innerRadiusFactor
+	localmake "lines1 [
+		[90 0] [:innerArcAngle :innerRadiusFactor] [:cornerAngle1 0]
+		[:len1] [-90 0] [:thickness1Factor] [-90 0]
+	]
+	jumpForward :height / 2
+	localmake "center pos
+	right 90
+	setPenSize 0
+	repeat count :colors [
+		setFillColor item repcount :colors
+		setHeading :oldHeading - 30 + repcount * 360 / count :colors
+		jumpForward :innerRadius
+		localmake "pos1 pos
+		polyStart
+		arcLines :lines1 :height
+		localmake "d distanceToCircle :center :outerRadius
+		jumpForward :d
+		localmake "a heading - ((towards :center) - 90)
+		left :a
+		localmake "arcAngle1 getArcRightAngleToLine :outerRadius :center :pos1
+		arcRight :arcAngle1 * 2 :outerRadius
+		arcLines [[:a 0] [:d]] 1			
+		arcLines reverse :lines1 :height
+		polyEnd
+		jumpTo :center
+	]
+
+	setTurtleState :oldState
+end
+
+cnpLogo 100

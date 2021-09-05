@@ -1,0 +1,31 @@
+make "height 100
+image :height * 475 / 1080 :height 'weblogo://logo-scripts/images/recursive-tattoo-2.jpg'
+jumpForward :height * 0.47
+jumpLeft :height * 0.055
+make "height 26.3
+image :height * 605 / 1080 :height 'weblogo://logo-scripts/images/recursive-tattoo-2.png'
+repeat 12 [
+	jumpForward :height * 0.2
+	jumpRight :height * 0.123
+	make "height :height * 0.06
+	image :height * 605 / 1080 :height 'weblogo://logo-scripts/images/recursive-tattoo-2.png'
+]
+
+to animation.snapshotstyle
+	localmake "timeRatio interpolateRatio easeInOutCubic animation.clampedTimeRatio
+	localmake "scale 6 + power 7 12 * :timeRatio
+	output createPList2 [
+		["position.x -2.05861703]
+		["position.y 52.5957447]
+		["zoom.scale :scale]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 10
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end
