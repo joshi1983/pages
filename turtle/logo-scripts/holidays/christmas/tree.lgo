@@ -1,0 +1,69 @@
+to drawBranch1 :branchsize
+	fd :branchsize
+	penup
+	back :branchsize
+	pendown
+end
+
+to snowflake1 :size :c
+	setpencolor :c
+	setfillcolor :c
+	setpensize :size * 0.1
+	circle :size * 0.05
+	setfillcolor transparent
+	circle :size * 0.2
+	setpensize :size * 0.05
+	for ["a 0 300 60] [
+		penup
+		fd :size * 0.2
+		pendown
+		localmake "s :size * 0.4
+		repeat 4 [
+			fd :size * 0.2
+			right 60
+			drawBranch1 :s
+			left 120
+			drawBranch1 :s
+			right 60
+			localmake "s :s - :size * 0.1
+		]
+		penup
+		back :size
+		pendown
+		right 60
+	]
+end
+
+to drawsidebranch :size :angleOffset
+	if :size > 20 [
+		setpensize :size * 0.03
+		localmake "step :size * 0.1
+		fd 10
+		right :angleOffset
+		drawBranch1 :size * 0.2
+		left :angleOffset
+		drawsidebranch :size - 10
+		back :step
+	]
+end
+
+to drawtree :height
+	if :height > 10 [
+		setpencolor "green
+		setheading 120
+		drawsidebranch :height * 0.3 45
+		setheading -120
+		drawsidebranch :height * 0.3 -45
+		setpencolor "brown
+		setheading 0
+		setpensize :height * 0.05
+		forward :height * 0.2
+		drawtree :height * 0.8
+	]
+end
+
+; snowflake1 30 "#fff
+back 200
+drawtree 200
+
+setscreencolor "#20174F

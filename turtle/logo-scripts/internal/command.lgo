@@ -1,0 +1,20 @@
+; inspired by
+; https://www.onlinewebfonts.com/icon/243566
+
+to command :size
+	localmake "mainPenSize :size * 0.1
+	localmake "size1 :size * 1.2
+	localmake "size2 :size * 0.35
+	setPenSize :mainPenSize
+	penUp
+	back (:size1 * 0.5 + :mainPenSize * 1.5) - :size
+	right 90
+	back :size1 * 0.5
+	penDown
+	repeat 4 [
+		forward :size1
+		arcLeft 270 :size2
+	]
+end
+
+command 16

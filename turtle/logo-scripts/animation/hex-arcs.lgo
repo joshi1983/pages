@@ -1,0 +1,105 @@
+; Inspired by:
+; https://www.pinterest.ca/pin/524810162839854158/
+make "colors ["blue "aqua "lime "yellow "red "violet]
+make "numSides 6
+make "angle1 360 / :numSides
+make "numColors count :colors
+
+to hexBackground :height
+	localmake "oldState turtleState
+	localmake "innerAngle 180 - :angle1
+	localmake "size1 :height * tan :angle1 / 2
+	jumpForward :height / 2
+	jumpRight :size1 / 2
+	setPenSize :height * 0.005
+	setPenColor "#333
+	right 90 + :angle1
+	repeat :numSides [
+		forward :size1
+		right :angle1
+	]
+	closePath
+	repeat :numSides [
+		jumpForward :size1
+		localmake "heading1 heading
+		left :innerAngle
+		repeat :numColors [
+			localmake "arcRadius :size1 * repcount / :numColors
+			arc :innerAngle :arcRadius
+		]
+		setHeading :heading1 + :angle1
+	]
+	setTurtleState :oldState
+end
+
+to arcPenGradientToTransparent :len :angle
+	localmake "oldPos pos
+	localmake "colorStops createPList2 [
+		[0 mix penColor transparent 0] [0.5 penColor]
+		[1 mix penColor transparent 0]
+	]
+	right :angle
+	jumpLeft :len / 2
+	localmake "fromPos pos
+	jumpRight :len
+	setPenGradient createLinearGradient :fromPos pos :colorStops "pad
+	jumpTo :oldPos
+	left :angle
+end
+
+to arcs :height :timeRatio
+	localmake "oldState turtleState
+	localmake "size1 :height * tan :angle1 / 2
+	localmake "innerAngleRange 180 - :angle1
+	localmake "timeRatio2 :timeRatio * :numSides - int :timeRatio * :numSides
+	localmake "timeRatio2 interpolateRatio easeInOutQuad :timeRatio2
+	localmake "angle2 :timeRatio2 * :innerAngleRange
+	localmake "step :size1 / :numColors
+	localmake "speedRatio 3 * (0.6 - (abs :timeRatio2 - 0.5))
+	left 360 * (int :timeRatio * :numSides) / :numSides
+	jumpForward :height / 2
+	jumpRight :size1 / 2
+	setPenColor "white
+	right 90 + :angle1 + :angle2
+	setFillColor "white
+	localmake "arcRadius 0
+	localmake "pos1 pos
+	localmake "heading1 heading
+	repeat :numColors + 1 [
+		if repcount > 1 [
+			setPenColor item repcount - 1 :colors
+			setPenSize :height * 0.01
+			right :innerAngleRange - :angle2 + :angle1
+			arcPenGradientToTransparent :arcRadius * :speedRatio :angle2
+			arc :angle2 :arcRadius
+		]
+		setHeading :heading1
+		jumpForward :arcRadius
+		setPenSize 0
+		circle :height * 0.015
+		jumpTo :pos1
+		localmake "arcRadius :arcRadius + :step
+	]
+	setTurtleState :oldState
+end
+
+to hexDrawing :height :timeRatio
+	hexBackground :height
+	arcs :height :timeRatio
+end
+
+setScreenColor "black
+hexDrawing 480 animation.timeRatio
+
+to animation.snapshotstyle
+	output createPList
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 5
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

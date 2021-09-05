@@ -1,0 +1,36 @@
+; Inspired by logo at:
+; https://www.policygenius.com
+to policyGeniusLogo :height
+	localmake "oldState turtleState
+	localmake "circleRadius :height * 0.12
+	localmake "line1 [
+		[90 0] [-45 0.275] [0.253]
+	]
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	setFillColor "#EB6424
+	repeat 4 [
+		jumpForward :height / 2 - :circleRadius
+		circle :circleRadius
+		jumpTo :center
+		right 90
+	]
+	setPenSize :height * 0.147
+	setPenColor fillColor
+	setLineCap "butt
+	repeat 2 [
+		localmake "heading1 heading
+		jumpForward :height * 0.112
+		localmake "pos1 pos
+		arcLines :line1 :height
+		jumpTo :pos1
+		setHeading :heading1
+		arcLines :line1 -:height
+		jumpTo :center
+		setHeading :heading1 + 180
+	]
+	setTurtleState :oldState
+end
+
+policyGeniusLogo 100

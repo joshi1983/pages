@@ -1,0 +1,31 @@
+EXTERNAL
+
+SUB Cut (l$(), options$)
+
+    OPTION TYPO
+
+    LOCAL opts$, p, from$, to$, from, to, i
+
+    LET opts$ = lcase$(trim$(options$))
+
+    LET p = pos(opts$, " ")
+    IF p = 0 then EXIT SUB
+
+    LET from$ = opts$[1:p-1]
+    LET to$ = ltrim$(opts$[p+1:1000])
+
+    WHEN EXCEPTION IN
+         LET from = val(from$)
+         LET to = val(to$)
+    USE
+         PRINT "Bad options: " & options$
+         EXIT SUB
+
+    END WHEN
+
+    FOR i = 1 to ubound(l$())
+        LET l$(i)[from:to] = ""
+    NEXT i
+
+END SUB
+

@@ -1,0 +1,27 @@
+; Inspired by flag at:
+; https://en.wikipedia.org/wiki/File:Flag_of_the_Russian_Ministry_of_Extraordinary_Situations_(departmental).svg
+to emergencySituationsFlag :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "width :height * 3 / 2
+	localmake "backgroundBlue "#39f
+	stripes :width :height [:backgroundBlue]
+	jumpForward :height / 2
+	setFillColor "white
+	setPenSize 0
+	isotoxalStar :height * 0.045 :height * 0.14 4
+	repeat 4 [
+		localmake "heightIndex 1 + remainder repcount 2
+		localmake "triangleHeight :height * item :heightIndex [0.29 0.23]
+		setHeading :oldHeading + repcount * 360 / 4
+		isoTriangle :height * 0.083 :triangleHeight
+	]
+	setFillColor "#f77f00
+	circle :height * 0.0666
+	setFillColor :backgroundBlue
+	jumpBackward :height * 0.0023
+	regularPolygon :height * 0.049 3
+	setTurtleState :oldState
+end
+
+emergencySituationsFlag 100

@@ -1,0 +1,44 @@
+; Made following instructions at:
+; https://en.wikipedia.org/wiki/Flag_of_North_Korea#/media/File:Flag_of_North_Korea_(construction_sheet).svg
+; and
+; https://en.wikipedia.org/wiki/Flag_of_North_Korea
+to northKoreaFlag :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "width :height * 72 / 36
+	localmake "d :height * 16 / 36
+	localmake "blueColor "#024FA2
+	localmake "redColor "#ED1C27
+
+
+	setLineCap "butt
+	setPenSize :width
+	setPenColor "white
+	forward :height
+	jumpBackward :height
+
+	; Draw background colors
+	setPenColor :blueColor
+	forward :height * 6 / 36
+	jumpForward :height / 36
+	setPenColor :redColor
+	forward :height * 22 / 36
+	jumpForward :height / 36
+	setPenColor :blueColor
+	forward :height * 6 / 36
+
+	jumpTo :oldPos
+	jumpForward :height / 2
+	jumpLeft :width * (72 / 2 - 24) / 72
+	setFillColor "white
+	setPenSize 0
+	circle :d / 2
+	setFillColor :redColor
+	
+	regularStar :d / 2 5
+
+	setTurtleState :oldState
+end
+
+setScreenColor "gray
+northKoreaFlag 100

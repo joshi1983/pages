@@ -1,0 +1,37 @@
+; Inspired by lgoo at:
+; https://graphicdesign.stackexchange.com
+to graphicDesignExchangeLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "penSize1 :height * 0.018868
+	localmake "height1 :height - :penSize1
+	localmake "radius :height1 / 2
+	localmake "size1 :radius / cos 45
+	localmake "angle 26.8
+	localmake "size2 2 * :radius * cos :angle
+	setPenColor "#EA4A5A
+	setLineJoinStyle "round
+	setPenSize :penSize1
+	jumpForward :height / 2
+	circle :radius
+	jumpTo :oldPos
+	jumpForward :penSize1 / 2
+	right 45
+	repeat 4 [
+		forward :size1
+		left 90
+	]
+	setHeading :oldHeading
+	jumpForward :radius * 2
+	localmake "top pos
+	left 180 - :angle
+	repeat 2 [
+		forward :size2
+		left :angle * 2
+		jumpTo :top
+	]	
+	setTurtleState :oldState
+end
+
+graphicDesignExchangeLogo 100

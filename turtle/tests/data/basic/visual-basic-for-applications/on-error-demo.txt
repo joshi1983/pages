@@ -1,0 +1,17 @@
+' Copied from https://www.tutorialspoint.com/vba/vba_error_handling.htm
+Public Sub OnErrorDemo()
+   On Error GoTo ErrorHandler   ' Enable error-handling routine.
+   Dim x, y, z As Integer
+   x = 50
+   y = 0
+   z = x / y   ' Divide by ZERO Error Raises
+  
+   ErrorHandler:    ' Error-handling routine.
+   Select Case Err.Number   ' Evaluate error number.
+      Case 10   ' Divide by zero error
+         MsgBox ("You attempted to divide by zero!")
+      Case Else
+         MsgBox "UNKNOWN ERROR  - Error# " & Err.Number & " : " & Err.Description
+   End Select
+   Resume Next
+End Sub

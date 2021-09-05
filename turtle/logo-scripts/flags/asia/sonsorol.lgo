@@ -1,0 +1,71 @@
+; Inspired by
+; https://commons.wikimedia.org/wiki/File:Flag_of_Sonsorol.svg
+to sonsorolFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 5 / 3
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "stars [
+		[0.457 0.6878]
+		[0.6465 0.7285]
+		[0.5482 0.879]
+		[0.6877 0.9084]
+	]
+	localmake "arcRadius1 2.5
+	localmake "arcRadius2 0.12
+	localmake "arcRadius3 0.074
+	localmake "arcRadius4 0.23
+	localmake "arcRadius5 0.4
+	localmake "arcAngle1 -10
+	localmake "arcAngle2 -50
+	localmake "arcAngle3 -20
+	localmake "arcAngle4 -15
+	stripes :width :height ["#05257C]
+	setPenSize 0
+	jumpForward :height * 0.3354121
+	jumpLeft :height * 0.36440905
+	right 37.772177
+	setFillColor "white
+	polyStart
+	jumpForward :height * 0.7575
+	right 147
+	arcsLeft [
+		[10 0.7] [20 1] [18 0.4] [11.5 0.13]] :height
+	polyEnd
+	jumpTo :oldPos
+	setHeading :oldHeading
+	repeat count :stars [
+		localmake "star item repcount :stars
+		jumpLeft :height * first :star
+		jumpForward :height * last :star
+		regularStar :height * 0.0385 5
+		jumpTo :oldPos
+	]	
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.298571
+	jumpLeft :height * 0.41854
+	right 96.68
+	setFillColor "#970051
+	polyStart
+	arcsLeft [
+		[7 :arcRadius1]
+		[2 6.12]
+		[7 :arcRadius1]
+		[-88 0]
+		[:arcAngle1 :arcRadius2]
+		[:arcAngle2 :arcRadius3]
+		[:arcAngle3 :arcRadius4]
+		[:arcAngle4 :arcRadius5]
+		[-9.882 2.5]
+		[:arcAngle4 :arcRadius5]
+		[:arcAngle3 :arcRadius4]
+		[:arcAngle2 :arcRadius3]
+		[:arcAngle1 :arcRadius2]
+	] :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+setScreenColor "#ddd
+sonsorolFlag 100

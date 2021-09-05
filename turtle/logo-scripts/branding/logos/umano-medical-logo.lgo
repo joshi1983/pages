@@ -1,0 +1,53 @@
+; Inspired by logo at:
+; https://www.umanomedical.com
+to umanoMedicalLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "radius :height * 0.265
+	localmake "darkColor "#003963 
+	localmake "lightColor "#2eb5b2
+	localmake "colorStops1 createPList2 [
+		[0 :darkColor]  [0.5 :lightColor] [1 :lightColor]
+	]
+	localmake "shapes [
+		[0 0
+			[[-90 0] [90 0.735] [0.23] [116 0] [0.17] [64 0] [0.154]
+			[-90 0.582]]
+		]
+		[0 0.2377
+			[[-90 0] [90 0.5] [0.12] [107 0] [0.162] [73 0] [0.073]
+			[-90 0.345]]
+		]
+	]
+	setPenSize 0
+	jumpForward :height - :radius
+	localmake "center pos
+	right 45
+	jumpBackward :radius
+	localmake "lowerLeft pos
+	jumpForward :radius * 2
+	setFillGradient createLinearGradient :lowerLeft pos :colorStops1 "pad
+	jumpTo :center
+	circle :radius
+	setFillGradient createRadialGradient pos :radius createPList2 [
+		[0 "#dfff] [0.2 "#8fff] [0.5 "#3fff] [1 "#0fff]
+	]
+	circle :radius
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	setFillColor :darkColor
+	drawArcLineShapes :shapes :height
+	left 30
+	jumpForward :height
+	setFillGradient createLinearGradient :oldPos pos createPList2 [
+		[0 :lightColor] [0.3 :lightColor]  [1 :darkColor]
+	] "pad
+	jumpTo :oldPos
+	setHeading :oldHeading
+	drawArcLineShapes :shapes -:height
+	setTurtleState :oldState
+end
+
+umanoMedicalLogo 100

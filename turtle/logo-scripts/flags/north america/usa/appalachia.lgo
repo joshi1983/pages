@@ -1,0 +1,78 @@
+; Inspired by flag at:
+; https://commons.wikimedia.org/wiki/File:Appalachian_Flag.svg
+to appalachianProposedFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 5 / 3
+	localmake "starPath1 [[2.5] [-135 0] [1 / cos 45] [45 0]]
+	localmake "starPath combine :starPath1 reverse :starPath1
+	localmake "mountainColors ["#57994a "#ffce00]
+	localmake "lenFactor :width / :height / 10 / cos 45
+	localmake "mountainPath1 [
+		[-45 0] [:lenFactor] [-90 0] [:lenFactor] [135 0]
+	]
+	localmake "mountainPath2 (combine [[0.083]] :mountainPath1 :mountainPath1
+		[[-45 0] [:lenFactor]])
+	jumpForward :height / 2
+	setPenSize 0
+	setFillColor "#102050
+	rect :width :height * 0.95
+	repeat 2 [
+		setFillColor item repcount :mountainColors
+		drawArcLineShape [-:width / :height / 2 -0.5
+				(combine :mountainPath2 [[-90 0]] reverse :mountainPath2)
+			] :height
+		right 180
+	]
+
+	setFillColor "#ece8d4
+	repeat 2 [
+		drawArcLineShape [0 -1
+				(combine [[90 0]] :starPath :starPath)
+			] :height * 0.1
+		right 90
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by flag at:
+; https://commons.wikimedia.org/wiki/File:Unofficial_flag_of_Appalachia.svg
+to unofficialAppalachianFlag :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "width :height * 5 / 3
+	localmake "angle 51.9
+	stripes :width :height ["#73adef]
+	setPenSize 0
+	setFillColor "green
+	jumpLeft :width / 2
+	localmake "bottomLeft pos
+	jumpForward :height
+	localmake "topLeft pos
+
+	jumpTo :oldPos
+	jumpRight :height * 0.58
+	left :angle
+	polyStart
+	jumpForward :height / cos :angle 
+	jumpTo :topLeft
+	jumpTo :bottomLeft
+	polyEnd
+
+	jumpTo :oldPos
+	setHeading :oldHeading	
+	stripes :width :height * 45 / 216 ["#842908]
+
+	setFillColor "white
+	jumpForward :height * 0.605
+	jumpLeft :height * 0.245
+	regularStar :height * 0.275 5
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 5
+jumpLeft :separation / 2
+appalachianProposedFlag :height
+jumpRight :separation
+unofficialAppalachianFlag :height

@@ -1,0 +1,38 @@
+; Inspired by logo at:
+; https://normerica.com
+to normicaLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "thicknessFactor 0.068
+	localmake "width 1
+	localmake "roofAngle 58.2
+	localmake "roofHeight1 :width / 2 / tan :roofAngle
+	localmake "roofLength1 hypot [:roofHeight1 :width / 2]
+	localmake "height1 1 - :thicknessFactor / 2 * (1 + 1 / sin :roofAngle)
+	localmake "baseHeight :height1 - :roofHeight1
+	localmake "outline1 [
+		[90 0] [:width / 2] [-90 0] [:baseHeight] [-:roofAngle 0]
+		[:roofLength1] [:roofAngle - 90 0]
+	]
+	localmake "angle1 44.1
+	setPenSize :height * :thicknessFactor
+	setPenColor "black
+	setLineJoinStyle "miter
+	drawArcLineShape [0 :thicknessFactor / 2
+		combine :outline1 reverse :outline1
+	] :height
+	setHeading :oldHeading
+	jumpForward :height * 0.412
+	stripes :height * :width penSize [penColor]
+	stripes penSize :height * 0.55 [penColor]
+	jumpForward :height * 0.033
+	setLineJoinStyle "round
+	left :angle1
+	repeat 2 [
+		stripes penSize :height * 0.45 [penColor]
+		right :angle1 * 2
+	]
+	setTurtleState :oldState
+end
+
+normicaLogo 100

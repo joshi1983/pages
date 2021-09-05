@@ -1,0 +1,47 @@
+; Inspired by flag at:
+; https://commons.wikimedia.org/wiki/File:Flag_of_Gilbert_West_Virginia.svg
+;
+; The same flag is shown at:
+; https://ca.pinterest.com/pin/671669731959158191/
+to gilbertWestVirginiaFlag :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "width :height * 5 / 3
+	localmake "thickness :height / 4
+	localmake "diagonalLengthFactor (:height / (cos 45) - :thickness) 
+		/ 2 / :thickness
+	localmake "starColors ["white "#F2A900]
+	localmake "parallelogramAngle 360 / 8 - 90
+	localmake "parallelogramSize :thickness / 2 / cos :parallelogramAngle
+	stripes :width :height ["#330072]
+	jumpForward :height / 2
+	jumpRight :width / 2
+	setLineCap "butt
+	setPenColor "#9176b5
+	setPenSize :thickness
+	left 90
+	forward :width / 2 + :height / 3
+	localmake "starCenter pos
+	setPenSize 0
+	setFillColor penColor
+	left 45
+	repeat 2 [
+		drawArcLineShape [0 0
+			pathMirror [[0.5] [-90 0] [:diagonalLengthFactor]
+			[-45 0] [1 / 2 / cos 45]]
+		] :thickness
+		jumpTo :starCenter
+		right 90
+	]
+	setHeading :oldHeading
+	repeat 8 [
+		setFillColor item 1 + bitAnd repcount 1 :starColors
+		jumpLeft :parallelogramSize / 2
+		parallelogram :parallelogramSize :parallelogramSize :parallelogramAngle		
+		jumpTo :starCenter
+		right 360 / 8
+	]	
+	setTurtleState :oldState
+end
+
+gilbertWestVirginiaFlag 100

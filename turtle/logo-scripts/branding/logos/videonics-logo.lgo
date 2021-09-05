@@ -1,0 +1,41 @@
+; Inspired by a logo for a company that produced
+; electronics for video processing in the 1980's.
+; A Videonics device and its logo are shown at:
+; https://youtu.be/4MVEqA6jz1s?t=183
+to videonicsLogo :height :color
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "ratio 1.32
+	localmake "angle1 arcTan :ratio / 2
+	localmake "triangleHeight1 :height * 0.45
+	localmake "triangleWidth1 :triangleHeight1 * :ratio
+	localmake "baseWidth :height / cos :angle1
+	localmake "len1 :triangleHeight1 / cos :angle1
+	localmake "midWidth :baseWidth - :len1
+	setPenSize 0
+	setFillColor :color
+	jumpForward :height
+	jumpLeft (:height - :triangleHeight1) * :ratio / 2
+	right 180
+	isoTriangle :triangleWidth1 :triangleHeight1
+
+	jumpTo :oldPos
+	setHeading :oldHeading - :angle1
+	polyStart
+	jumpForward :len1
+	right :angle1 * 2
+	jumpForward :midWidth
+	right 90 - :angle1
+	jumpForward :height * tan :angle1
+	polyEnd
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+make "height 100
+make "separation :height * 5
+jumpLeft :separation / 2
+videonicsLogo :height "white
+jumpRight :separation
+videonicsLogo :height "#d10

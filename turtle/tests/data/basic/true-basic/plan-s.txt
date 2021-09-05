@@ -1,0 +1,30 @@
+EXTERNAL
+
+SUB Plan (l$(), codes$)
+
+    LIBRARY "{WB_c}WBfinds.trc"
+
+    ! This subroutine a plan of a file or module.
+    ! It identifies all declare, sub, def, call, etc.,
+    ! statements, and for each procedure locates the following:
+    !      The name of the procedure
+    !      Its type
+    !      The line number of its declare statement, if any
+    !      The ln of its definition, if any
+    !      The ln of its last use, if any
+    !      The ln of is private statement, if any
+
+    WHEN exception in
+         CALL WB_Plan (l$(), codes$)
+         PRINT "Done with Plan."
+    USE
+         IF extype = 1 then
+            PRINT extext$
+         ELSE
+            PRINT extype, extext$
+            PRINT exline$
+            PRINT "Error in Plan."
+         END IF
+    END WHEN
+
+END SUB

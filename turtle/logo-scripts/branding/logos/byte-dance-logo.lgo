@@ -1,0 +1,37 @@
+; Inspired by
+; https://commons.wikimedia.org/wiki/File:ByteDance_logo_English.svg
+; The main difference with the code below:
+; 1. The text was removed to focus on the more symbolic part of the logo.
+; 2. The polygons in the official logo are likely 
+; all trapezoids but some are not quite isometric.  
+; The code below approximates them to isometric trapezoids anyway.
+; This doesn't replicate the original logo precisely but it seemed close enough to be worth
+; simplifying the code with it.
+to byteDanceLogo :height
+	localmake "oldState turtleState
+	localmake "trapezoids [
+		[0.376 0.5 "#78e6dd 1 0.195 0.6]
+		[0.074 0.42 "#00c8d2 0.42 0.179 -0.6]
+		[-0.26 0.29 "#3c8cff 0.52 0.2 0.45]
+		[-0.57 0.5 "#3259b4 0.9 0.2 0.5]
+	]
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	setPenSize 0
+	repeat count :trapezoids [
+		localmake "trapInfo item repcount :trapezoids
+		localmake "baseWidth :height * item 4 :trapInfo
+		localmake "trapHeight :height * item 5 :trapInfo
+		localmake "topWidth :baseWidth - :trapHeight * item 6 :trapInfo
+		jumpRight :height * first :trapInfo
+		jumpForward :height * item 2 :trapInfo
+		setFillColor item 3 :trapInfo
+		right 90
+		isoTrapezoid :baseWidth :topWidth :trapHeight
+		jumpTo :oldPos
+		setHeading :oldHeading
+	]
+	setTurtleState :oldState
+end
+
+byteDanceLogo 100

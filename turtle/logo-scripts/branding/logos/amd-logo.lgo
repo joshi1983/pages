@@ -1,0 +1,38 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/AMD#/media/File:AMD_Logo.svg
+to amdLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "frameThickness :height * 0.27
+	localmake "diagonalLength :frameThickness / cos 45
+	localmake "innerSize :height - :frameThickness * 2
+	localmake "innerGap :height * 0.06
+	localmake "lowerLeftSize :innerSize - :innerGap
+	jumpRight :height / 2
+	setPenSize 0
+	setFillColor "white
+	polyStart
+	jumpForward :height
+	jumpLeft :height
+	right 135
+	jumpForward :diagonalLength
+	setHeading :oldHeading + 90
+	jumpForward :innerSize
+	jumpRight :innerSize
+	polyEnd
+
+	jumpBackward :innerGap
+	polyStart
+	jumpBackward :lowerLeftSize
+	jumpLeft :lowerLeftSize
+	right 135
+	jumpForward :diagonalLength
+	setHeading :oldHeading + 180
+	jumpForward :lowerLeftSize
+	jumpLeft :lowerLeftSize
+	polyEnd
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+amdLogo 100

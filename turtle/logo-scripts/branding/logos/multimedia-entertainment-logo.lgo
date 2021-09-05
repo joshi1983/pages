@@ -1,0 +1,161 @@
+to drawM :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "width :height * 1.175
+	localmake "height1 :height - penSize / 2
+	localmake "arcRadius (:width - penSize) / 4
+	localmake "arcRadiusFactor :arcRadius / :height1
+	localmake "len1 1 - :arcRadiusFactor
+	setLineCap "butt
+	repeat 2 [
+		localmake "pos1 pos
+		arcLines [[:len1] [180 :arcRadiusFactor] [:len1]] :height1
+
+		setHeading :oldHeading
+		jumpTo :pos1
+		jumpRight :arcRadius * 2
+	]
+	
+	setTurtleState :oldState
+end
+
+to curvedEdgeShape :center :radius :arcAngle
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "thickness penSize
+	localmake "innerRadius :radius - :thickness
+	setFillColor penColor
+	left :arcAngle
+	jumpForward :radius
+	localmake "pos1 pos
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpLeft :thickness
+	localmake "innerPos1 pos
+	jumpForward :radius
+	localmake "innerPos2 pos
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	setPenSize 0
+	polyStart
+	jumpForward distanceToCircle :center :radius
+	setHeading (towards :center) + 90
+	arcLeft 2 * arcSin (distance :pos1) / 2 / :radius :radius
+	localmake "arcAngle2 (:oldHeading + 180) - (towards :oldPos)
+	localmake "arcAngle2 modulo :arcAngle2 360
+	jumpTo :oldPos
+	setHeading :oldHeading - :arcAngle2 / 2
+	jumpForward :thickness / tan :arcAngle2 / 2
+	localmake "pos2 pos
+	setHeading :oldHeading - :arcAngle2
+	jumpForward distanceToCircle :center :innerRadius
+	setHeading (towards :center) - 90
+	arcRight (getArcRightAngleToLine :innerRadius :innerPos1 :innerPos2) :innerRadius
+	jumpTo :pos2
+	polyEnd
+
+	setTurtleState :oldState
+	output :arcAngle2
+end
+
+to drawCircularShapes :radius
+	localmake "oldState turtleState
+	localmake "center pos
+	localmake "oldHeading heading
+	localmake "radius :radius
+	localmake "y1 0.37
+	jumpForward :y1 * :radius
+	jumpLeft :radius * 0.16
+	setFillColor "red
+	right 90
+	setPenSize penSize * 1.1
+	localmake "thickness penSize
+	localmake "innerRadius :radius - :thickness
+	localmake "angle1 curvedEdgeShape :center :radius 38
+
+	setHeading :oldHeading
+	jumpLeft :thickness / sin :angle1
+	right 90 - :angle1
+	curvedEdgeShape :center :radius 43
+
+	setHeading :oldHeading
+	jumpLeft :thickness
+	jumpBackward :radius * 0.39
+	localmake "angle1 curvedEdgeShape :center :radius 44.5
+
+	setPenSize 0
+	setFillColor penColor
+	jumpBackward :thickness / sin :angle1
+	localmake "startPos pos
+	jumpBackward :radius * 0.14
+	localmake "bottomPos1 pos
+	jumpLeft :radius
+	localmake "bottomPos2 pos
+
+	jumpTo :startPos
+	left :angle1
+	jumpLeft :thickness
+	localmake "innerPos1 pos
+	jumpForward :radius
+	localmake "innerPos2 pos
+
+	setFillColor "white
+	setHeading :oldHeading
+	jumpTo :startPos
+	left :angle1
+	polyStart
+	jumpForward distanceToCircle :center :radius
+	setHeading (towards :center) + 90
+	arcLeft (getArcLeftAngleToLine :radius :bottomPos1 :bottomPos2) :radius
+	jumpTo :bottomPos1
+	setHeading :oldHeading
+	jumpForward :thickness
+	localmake "bottomInnerPos1 pos
+	left 90
+	jumpForward distanceToCircle :center :innerRadius
+	localmake "bottomInnerPos2 pos
+	setHeading (towards :center) - 90
+	arcRight (getArcRightAngleToLine :innerRadius :innerPos1 :innerPos2) :innerRadius
+	setHeading :oldHeading + 180 - :angle1
+	jumpForward distanceToLine :bottomInnerPos1 :bottomInnerPos2
+	jumpTo :bottomPos1
+	polyEnd
+
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://www.avid.wiki/Multimedia_Entertainment
+; It might be for the same company mentioned at:
+; https://en.wikipedia.org/wiki/Multimedia_Entertainment
+to multimediaEntertainmentLogo :height
+	localmake "oldState turtleState
+	localmake "fontHeight :height * 0.265
+	localmake "backgroundColorStops createPList2 [
+		[0 "black] [0.5 "#004]  [0.8 "#006] [1 "black]
+	]
+	jumpForward :height / 2
+	setFillGradient createRadialGradient pos :height / 2 :backgroundColorStops
+	setPenSize 0
+	circle :height / 2
+
+	localmake "center pos
+	jumpBackward :fontHeight / 2
+	setPenColor "white
+	setPenSize :height * 0.045
+	drawM :fontHeight
+
+	jumpTo :center
+	repeat 2 [
+		drawCircularShapes :height / 2
+		right 180
+	]
+
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+multimediaEntertainmentLogo 100

@@ -1,0 +1,42 @@
+; Exported to:
+; content/help/properties/images/line-join-style.svg
+; Used in content/help/properties/lineJoinStyle.html
+
+to joinStyleIllustration :style
+	localmake "oldState turtleState
+	setFontSize 3
+	setPenSize 0
+	setFillColor "black
+	label :style
+	setLineCap "butt
+	setPenSize 2
+	setPenColor "green
+	setLineJoinStyle :style
+	jumpRight 2
+	localmake "pos1 pos
+	localmake "heading1 heading
+	forward 6
+	right 90
+	forward 3
+	right 90
+	forward 6
+	jumpTo :pos1
+	setHeading :heading1
+	setPenColor "black
+	forward 6
+	right 90
+	jumpForward 0.001
+	forward 2.998
+	jumpForward 0.001
+	right 90
+	forward 6
+
+	setTurtleState :oldState
+end
+
+make "styles ["miter "round "bevel]
+right 90
+repeat count :styles [
+	joinStyleIllustration item repcount :styles
+	jumpForward 20
+]

@@ -1,0 +1,129 @@
+to filledRect :width :height
+	polyStart
+	repeat 2 [
+		jumpForward :height
+		right 90
+		jumpForward :width
+		right 90
+	]
+	polyEnd
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Madagascar#/media/File:Flag_of_Madagascar.svg
+to madagascarFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 3 / 2
+	localmake "colors ["#007E3A "#FC3D32]
+	localmake "whiteStripeWidth :height / 2
+	stripes :width :height :colors
+	setPenColor "white
+	setPenSize :whiteStripeWidth
+	jumpLeft :width / 2 - :whiteStripeWidth / 2
+	setLineCap "butt
+	forward :height
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Madagascar#/media/File:Merina_Kingdom_flag.svg
+to merinaKingdomFlag :height
+	localmake "width :height * 3 / 2
+	stripes :width :height ["#ef4135 "white]
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Madagascar#/media/File:Flag_of_the_Sakalava_of_Antalaotra.gif
+to sakalavaAntalaotraFlag :height
+	localmake "width :height * 3 / 2
+	stripes :width :height ["black "white "#ef4135]
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Merina_people#/media/File:Flag_of_the_Merina_people.svg
+to merinaPeopleFlag :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "width :height * 3 / 2
+	localmake "houseBaseWidth :height * 0.1715
+	localmake "houseBaseHeight :height * 0.014
+	localmake "houseMainFloorWidth :height * 0.1435
+	localmake "houseMainFloorHeight :height * 0.097
+	localmake "triangleBaseWidth :height * 0.18
+	localmake "triangleHeight :triangleBaseWidth * 2 / 3
+	localmake "roofAngle 90 - arcTan :triangleHeight * 2 / :triangleBaseWidth
+	localmake "roofSize1 :height * 0.043
+	localmake "roofSize2 :height * 0.213
+	localmake "merinaRed "#fc3d32
+	stripes :width :height [:merinaRed]
+	jumpLeft :width / 2
+	jumpForward :height / 2
+	setFillColor "white
+	setPenSize 0
+	right 90
+	isoTriangle :height :width
+	jumpForward :height * 0.319
+	setFillColor "#ec9a4c
+	setPenColor "black
+	setPenSize :height * 0.005
+	circle :height * 0.172
+	setHeading :oldHeading
+	jumpBackward :height * 0.1188
+	jumpLeft :houseBaseWidth / 2
+	setFillColor :merinaRed
+	filledRect :houseBaseWidth :houseBaseHeight
+	jumpForward :houseBaseHeight
+	jumpRight (:houseBaseWidth - :houseMainFloorWidth) / 2
+	filledRect :houseMainFloorWidth :houseMainFloorHeight
+	jumpForward :houseMainFloorHeight
+	jumpRight :houseMainFloorWidth / 2
+	isoTriangle :triangleBaseWidth :triangleHeight
+	jumpForward :triangleHeight
+	left :roofAngle
+	localmake "roofTop pos
+	repeat 2 [
+		jumpForward :roofSize1
+		backward :roofSize2
+		jumpTo :roofTop
+		right :roofAngle * 2
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Madagascar#/media/File:Flag_of_the_Boina_Kingdom.svg
+to boinaKingdomFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 3 / 2
+	localmake "crossSize :width * 0.32
+	jumpLeft :width / 2
+	jumpForward :height / 2
+	right 90
+	stripes :height :width ["red "white "red]
+	jumpForward :width / 2
+	setPenSize :height * 66.53968 / 480
+	setPenColor "red
+	setLineCap "butt
+	localmake "center pos
+	repeat 2 [
+		jumpBackward :crossSize / 2
+		forward :crossSize
+		jumpTo :center
+		right 90
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "#eee
+make "height 100
+make "separation :height * 3
+jumpLeft :separation * 2
+madagascarFlag :height
+jumpRight :separation
+sakalavaAntalaotraFlag :height
+jumpRight :separation
+merinaKingdomFlag :height
+jumpRight :separation
+merinaPeopleFlag :height
+jumpRight :separation
+boinaKingdomFlag :height

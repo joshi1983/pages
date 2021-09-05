@@ -1,0 +1,71 @@
+make "penSizeRatio 0.05
+make "fillColors ["#ccc "white "#b8f "#0c0 "#000]
+
+to henFractalBranch :radius :skipSide2 :fillColorIndex
+	if :radius > 0.4 [
+		localmake "oldSize penSize
+		localmake "oldHeading heading
+		localmake "smallDiagonalLength :radius * (cos 30) * 2 / 3
+		localmake "smallRadius1 :radius / 3
+		localmake "smallRadius3 (:smallDiagonalLength / 2) * tan 30
+		localmake "smallRadius2 :radius - (:smallDiagonalLength / 2 * cos 30)
+		localmake "sideStep (:radius - :smallRadius2 ) * tan 30
+		localmake "smallRadius2b :radius - (:smallDiagonalLength * 7 / 6 * cos 30)
+		localmake "sideStepb (:radius - :smallRadius2b) * tan 30
+		localmake "smallRadius3b :smallRadius3 / 3
+		localmake "smallRadius1b :smallRadius1 / 3
+		localmake "angle 120
+		localmake "oldPos pos
+		repeat 2 [
+			repeat 3 [
+				if or not :skipSide2 1 <> repcount [
+					setHeading :oldHeading + (repcount ) * :angle
+					localmake "heading1 heading
+					jumpForward :smallRadius2b
+					jumpRight :sideStepb
+					right :angle / 2
+					jumpForward :smallRadius3b
+					henFractalBranch :smallRadius1b true :fillColorIndex + 2
+					localmake "pos1 pos
+
+					setHeading :heading1
+					jumpTo :oldPos
+					jumpForward :smallRadius2
+					jumpRight :sideStep
+					right :angle / 2
+					jumpForward :smallRadius3
+					henFractalBranch :smallRadius1 true :fillColorIndex + 1
+
+					jumpTo :pos1
+					setPenSize :smallRadius1b * :penSizeRatio
+					setFillColor item (1 + remainder :fillColorIndex + 2 count :fillColors) :fillColors
+					regularPolygon :smallRadius1b 3
+					jumpTo :oldPos
+				]
+			]
+			localmake "angle -120
+			localmake "sideStep -:sideStep
+			localmake "sideStepb -:sideStepb
+		]
+		setPenSize :radius * :penSizeRatio
+		setHeading :oldHeading
+		setFillColor item (1 + remainder :fillColorIndex count :fillColors) :fillColors
+		regularPolygon :radius 3	
+		setPenSize :oldSize
+		setHeading :oldHeading
+	]
+end
+
+; Inspired by
+; https://www.pinterest.ca/pin/115264071696601098
+to henFractalRoot :height
+	localmake "oldState turtleState
+	localmake "radius :height * 0.445
+	jumpForward :height * 0.473
+	setFillColor "#fff
+	setPenColor "#000
+	henFractalBranch :radius false 0
+	setTurtleState :oldState
+end
+
+henFractalRoot 100

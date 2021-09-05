@@ -1,0 +1,37 @@
+TO sierpinski :size :level
+  if :level > 0 [
+
+    pu setz 0 lower 0.1 * :level
+    ;add above line to avoid z-fighting
+
+    rt 30
+    repeat [
+      fd :size
+      rt 120
+    ]
+
+    setfc :level
+    ;set the fill color to the current 'level'
+    frag
+    ;create a filled triangle from the last three points (triangle)
+
+    left 30
+    sierpinski :size / 2 :level - 1
+    rt 30
+    fd :size / 2
+    left 30
+    sierpinski :size / 2 :level - 1
+    rt 30
+    back :size / 2
+    left 30
+    rt 90
+    fd :size / 2
+    left 90
+    sierpinski :size / 2 :level - 1
+    left 90
+    fd :size / 2
+    rt 90
+  ]
+END
+
+sierpinskiexample

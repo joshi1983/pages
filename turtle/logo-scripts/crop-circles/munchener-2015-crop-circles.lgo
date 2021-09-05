@@ -1,0 +1,106 @@
+make "darkColor "#690
+
+; Inspired by
+; https://www.pinterest.ca/pin/239957486374532794/
+; This is from Munchener, Bavaria, Germany.
+; This was reported on July 16, 2015.
+to munchener2015CropCircles :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "lightColor "#ffa
+	localmake "gap :height * 0.008
+	localmake "width1 :height * 0.04
+	localmake "leftStart :height * 0.069
+	localmake "thickness1 :height * 0.03
+	localmake "trapezoidWidth1 :height * 0.33
+	localmake "trapezoidWidth2 :trapezoidWidth1 - :thickness1 * 2
+	localmake "upStart (:trapezoidWidth1 * cos 45) - :leftStart + :gap * (1 + 1 / cos 45)
+	localmake "width2 :trapezoidWidth1 - :width1 / cos 45
+	localmake "width3 :trapezoidWidth1 * (cos 45)  - :width1 + :gap - (:width1 + :gap) / cos 45
+	localmake "width4 :height * 0.425
+	localmake "height1 :trapezoidWidth1 * cos 45
+	localmake "height2 :height1 - :width1 * (1 + 1 / cos 45)
+	localmake "height3 :height * 0.154
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	setFillColor :lightColor
+	circle :height / 2
+	setFillColor :darkColor
+	repeat 4 [
+		localmake "heading1 :oldHeading + repcount * 360 / 4
+		setHeading :heading1
+		jumpLeft :leftStart
+		localmake "leftPos pos
+		jumpForward :upStart
+		localmake "startPos pos
+		localmake "pos1 pos
+		left 45
+		jumpRight :trapezoidWidth1 / 2
+		isoTrapezoid :trapezoidWidth1 :trapezoidWidth2 :thickness1
+		jumpTo :pos1
+		jumpBackward :gap
+		jumpLeft :gap
+		polyStart
+		jumpRight :trapezoidWidth1
+		left 135
+		jumpForward :height1
+		jumpRight :width1
+		localmake "pos1 pos
+		jumpBackward :height2
+		right 45
+		jumpForward :width2
+		polyEnd
+
+		jumpTo :pos1
+		setHeading :heading1 - 90
+		jumpForward :gap
+		polyStart
+		jumpForward :width1
+		jumpRight :height1 - :width1 / (cos 45) - (:width1 * 2 + :gap * (1 + 1 / cos 45))
+		right 135
+		jumpForward :width1 / cos 45
+		polyEnd
+
+		jumpTo :pos1
+		setHeading :heading1
+		jumpBackward :gap
+		jumpLeft :width3
+		polyStart
+		jumpRight :width4
+		jumpBackward :width1
+		jumpLeft :width4 + :width1
+		polyEnd
+
+		localmake "pos2 pos
+		jumpBackward :gap
+		jumpLeft :gap
+		localmake "pos3 pos
+		polyStart
+		jumpRight :width4 + :width1
+		right 45
+		jumpBackward :height3
+		jumpLeft :width1
+		localmake "pos1 pos
+		jumpForward :height3 - :width1 * (1 + 1 / cos 45)
+		left 135
+		jumpForward distanceToLine :leftPos :startPos
+		right 90
+		jumpForward distanceToLine :pos2 :pos3
+		polyEnd
+
+		jumpTo :pos1
+		setHeading :heading1 + 45
+		jumpLeft :gap
+		polyStart
+		jumpLeft :width1
+		left 45
+		jumpRight :width1 / cos 45
+		polyEnd
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor :darkColor
+munchener2015CropCircles 100

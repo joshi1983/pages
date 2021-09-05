@@ -1,0 +1,52 @@
+to drawDownwardStick :thickness :height
+	localmake "thicknessFactor :thickness / :height
+	localmake "sideHeightFactor 1 - :thicknessFactor / 2
+	localmake "angle1 135
+	localmake "angle2 :angle1 - 90
+	localmake "len1 abs :thicknessFactor / 2 / cos :angle1
+	drawArcLineShape [:thicknessFactor / 2 0
+		[[-:sideHeightFactor] [:angle1 0] [:len1] [-90 0] [:len1] [-:angle2 0]
+		[:sideHeightFactor]]
+	] :height
+end
+
+to drawDownwardSticks :thickness :maxHeight
+	localmake "oldState turtleState
+	localmake "separation :maxHeight * 0.363
+	localmake "minHeight :maxHeight * 0.818
+	setPenSize 0
+	drawDownwardStick :thickness :maxHeight
+	jumpLeft :separation
+	repeat 2 [
+		drawDownwardStick :thickness :minHeight
+		jumpRight :separation * 2
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by flag for Tulsa, Oklahoma at:
+; https://en.wikipedia.org/wiki/Tulsa,_Oklahoma#/media/File:Flag_of_Tulsa,_Oklahoma_(2018).svg
+to tulsaCityFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 3 / 2
+	localmake "thickness :height * 0.075
+	localmake "radius :height * 0.225
+	stripes :width :height ["#f8f1e0 "#162b49]
+	jumpForward :height / 2
+	setPenSize 0
+	setFillColor "#ebad21
+	rect :width :thickness
+	jumpLeft :height / 4
+	drawDownwardSticks :thickness :height * 0.41257
+
+	setPenColor fillColor
+	setPenSize :thickness
+	setFillColor "#c6202e
+	circle :radius
+	setFillColor "#f8f1e0
+	setPenSize 0
+	isotoxalStar :height * 0.054 :height * 0.109 6
+	setTurtleState :oldState
+end
+
+tulsaCityFlag 100

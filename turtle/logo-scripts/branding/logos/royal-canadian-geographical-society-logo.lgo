@@ -1,0 +1,107 @@
+to mapleLeaf :height
+	localmake "oldState turtleState
+	localmake "lines1 [
+		[-90 0] [0.03] [92 0] [0.27]
+		[-104 0] [0.3] [132 0] [0.13]
+		[-83 0] [0.31] [120 0] [0.1]
+		[-87 0] [0.15] [113 0] [0.13]
+		[-78 0] [0.067] [119 0] [0.2]
+		[-140 0] [0.275] [135 0] [0.11]
+		[-102 0] [0.238066] [63 0]
+	]
+	setFillColor "#AC1F2D
+	setPenSize 0
+	drawArcLineShape [0 -0.525
+		combine :lines1 reverse :lines1
+	] :height
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://rcgs.org
+to rcgsLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "lightBlueColor "#8FB7E1
+	localmake "smallRadius2 :height * 0.14
+	localmake "bigRadius :height * 0.4
+	localmake "thickness :height * 0.005
+	localmake "bigRadius2 (:height - :thickness) / 2
+	localmake "offset :height * 0.14
+	localmake "angle 180 / 8
+	jumpForward :height / 2
+	setPenColor "#CA982C
+	setFillColor "#00263D
+	setPenSize :height * 0.068
+	circle :height * 0.3
+	setFillColor "white
+	setPenSize :thickness
+	setLineJoinStyle "round
+	setLineCap "round
+	setPenColor :lightBlueColor
+	isotoxalStar :bigRadius :height * 0.14 8
+	localmake "center pos
+	setFillColor:lightBlueColor
+	localmake "sign 1
+	setPenSize 0
+	for ["i 1 7] [
+		ifelse :i <> 4 [
+			setHeading :oldHeading + :i * 360 / 8
+			jumpForward :bigRadius
+			localmake "points [:center pos]
+			jumpTo :center
+			right 180 / 8 * :sign
+			jumpForward :smallRadius2
+			queue2 "points pos
+			polygon :points
+		] [
+			localmake "sign -1
+		]
+		jumpTo :center
+	]
+	setHeading :oldHeading
+	setFillColor :lightBlueColor
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		repeat 2 [
+			setHeading :oldHeading + repcount * 360 / 2
+			jumpForward :bigRadius2
+			localmake "points [:center pos]
+			jumpTo :center
+			left 180 / 8 * :sign * sign repcount - 1.5
+			jumpForward :offset
+			queue2 "points pos
+			polygon :points
+
+			jumpTo :center
+		]
+		setFillColor "white
+	]
+	setPenSize :thickness
+	jumpTo :center
+	repeat 2 [
+		setHeading :oldHeading + repcount * 360 / 2
+		jumpForward :bigRadius2
+		localmake "top pos
+		jumpTo :center
+		left :angle
+		jumpForward :offset
+		localmake "points [pos :top]
+		jumpTo :center
+		right :angle * 2
+		jumpForward :offset
+		queue2 "points pos
+		jumpTo first :points
+		repeat 2 [
+			setPos item 1 + repcount :points
+		]				
+		jumpTo :center
+	]
+
+	jumpTo :center
+	setHeading :oldHeading
+	mapleLeaf :height * 0.187
+	setTurtleState :oldState
+end
+
+rcgsLogo 100

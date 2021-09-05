@@ -1,0 +1,97 @@
+; Made to look like Japan's flag at
+; https://upload.wikimedia.org/wikipedia/en/thumb/9/9e/Flag_of_Japan.svg/1200px-Flag_of_Japan.svg.png
+; Construction instructions are at:
+; https://en.wikipedia.org/wiki/File:Construction_sheet_of_the_Japanese_flag_EN.svg
+to japanFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 3 / 2
+	stripes :width :height ["white]
+	jumpForward :height / 2
+	setPenSize 0
+	setFillColor "#bc002d
+	circle :height * 0.3
+	setTurtleState :oldState
+end
+
+to getEdgeIntersection :size1 :size2 :angle
+	localmake "result1 abs :size1 / 2 / sin :angle
+	localmake "result2 abs :size2 / 2 / cos :angle
+	output min :result1 :result2
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Japan#/media/File:War_flag_of_the_Imperial_Japanese_Army_(1868%E2%80%931945).svg
+to japanFlagBeforeWW2 :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "width :height * 3 / 2
+	localmake "radius :height / 4
+	localmake "numAngles 16
+	localmake "angleStep 360 / :numAngles
+	stripes :width :height ["white]
+	jumpForward :height / 2
+	setPenSize 0
+	setFillColor "#b0313f
+	circle :radius
+	localmake "center pos
+	localmake "angle -:angleStep / 4
+	repeat :numAngles [
+		setHeading :oldHeading + :angle
+		localmake "radius getEdgeIntersection :width :height :angle
+		jumpForward :radius
+		polyStart
+		jumpBackward :radius
+		right :angleStep / 2
+		jumpForward getEdgeIntersection :width :height :angle + :angleStep / 2
+		polyEnd
+		jumpTo :center
+		localmake "angle :angle + :angleStep
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/List_of_Japanese_flags#/media/File:Flag_of_the_Japanese_Emperor.svg
+to japaneseEmperorFlag :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "numArcs 16
+	localmake "radius1 :height * 0.2815
+	localmake "radius2 :radius1 * sin 180 / :numArcs
+	localmake "width :height * 3 / 2
+	localmake "redFlagColor "#bd0029
+	localmake "thickness :height * 0.006
+	stripes :width :height [:redFlagColor]
+	jumpForward :height / 2
+	setPenSize :height * 0.006
+	setPenColor :redFlagColor
+	setFillColor "#dca600
+	localmake "center pos
+	setPenSize 0
+	right 180 / :numArcs
+	repeat :numArcs [
+		jumpForward :radius1 - :thickness / 2
+		circle :radius2
+		jumpTo :center
+		right 360 / :numArcs
+	]
+	setHeading :oldHeading
+	setPenSize :thickness
+	repeat :numArcs [
+		circlePair 0 :radius2 :radius1
+		jumpTo :center
+		right 360 / :numArcs
+	]
+	circle :height * 0.0295
+	setTurtleState :oldState
+end
+
+setScreenColor "grey
+make "height 100
+make "separation :height * 4
+jumpLeft :separation
+japanFlag :height
+jumpRight :separation
+japanFlagBeforeWW2 :height
+jumpRight :separation
+japaneseEmperorFlag :height

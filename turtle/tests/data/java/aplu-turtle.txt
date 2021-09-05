@@ -1,0 +1,62 @@
+// copied from: https://mathorama.com/wiki/doku.php?id=turtle_graphics
+import ch.aplu.turtle.*;
+import java.awt.Color;
+ 
+public class Example
+{
+  public static void main (String[] args) {
+    Turtle joe = new Turtle(Color.green); // Create a green turtle in her 
+                                          //own window.
+    joe.setPos(-100,100);                 // Place joe to the Point(-100,100).
+    for (int i=0; i < 4; i++) {
+      joe.right(90);
+      joe.forward(200);                    // turn 90 degrees to the right, then 
+                                          // move forward 200 pixels.
+    }
+    joe.setPenColor(Color.red);           // set the pen color to red.
+    joe.penUp();                             // lifts the pen off the canvas pu() - pen up
+    joe.back(50);
+    joe.left(90);
+    joe.back(50);
+    joe.right(90);
+    joe.penDown(); // back 50, left 90.... pen down
+    for (int i=0; i < 4; i++) {
+      joe.right(90);
+      joe.forward(100);
+    }
+    Turtle anne = new Turtle(joe);        // Create a new Turtle (named anne)
+                                          // in the same window as joe
+    anne.speed(1000);// sets the speed to 1000 pixels/sec,
+    anne.forward(150);
+    anne.left(90);      
+                                          // then do some moves.
+    anne.hideTurtle();// ht(): hide the turtle
+    anne.forward(150);
+    anne.left(90);
+    anne.stampTurtle(); 
+    anne.forward(300);
+    anne.showTurtle();                    // lets the turtle reappear on the  st(): show turtle
+                                          // screen
+    anne.wrap();                          // Tells anne to wrap around the edges
+    anne.setPos(200,200);
+    for (int i=0; i < 4; i++) {
+      anne.right(90);
+      anne.forward(400);
+    }
+    anne.reinit();                        // Resets anne to her standard settings,
+                                          // e.g. home position,facing north 
+    Turtle filly = new Turtle(joe, Color.yellow); // yellow Turtle in joe's
+                                          // Playground.
+    filly.setPos(75,75);
+    filly.setFillColor(Color.black);      // Sets the fill color to black.
+    filly.fill();                         // fills the region bounded by any 
+                                          // non-background colored pixel, 
+					  // containing filly's position.
+    filly.setPos(175,175);
+    filly.setFillColor(Color.orange);
+    filly.fill();
+ 
+    Turtle texter = new Turtle(joe, Color.magenta);
+    texter.hideTurtle().label("Hello Turtle");
+  } 
+}

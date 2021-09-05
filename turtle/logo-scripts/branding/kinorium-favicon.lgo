@@ -1,0 +1,65 @@
+to getBackgroundGradient :height
+	localmake "oldPos pos
+	localmake "backgroundColorStops createPList2 [
+		[0 "#2e4ed1] [1 "#00e4d6]
+	]
+	jumpRight :height / 2
+	localmake "fromPos pos
+	jumpForward :height
+	jumpLeft :height
+	localmake "backgroundGradient createLinearGradient :fromPos pos :backgroundColorStops "pad
+	jumpTo :oldPos
+	output :backgroundGradient
+end
+
+to kinoriumFilmWheel :height :backgroundGradient
+	localmake "oldState turtleState
+	jumpForward :height / 2
+	setPenSize 0
+	localmake "center pos
+	setFillColor "white
+	circle :height * 0.375
+	setFillGradient :backgroundGradient
+	circle :height * 0.052
+	right 12
+	repeat 5 [
+		jumpForward :height * 0.211
+		circle :height * 0.097
+		jumpTo :center
+		right 360 / 5
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by favicon at:
+; https://en.kinorium.com
+to kinoriumFaviconSquare :height
+	localmake "oldState turtleState
+	localmake "backgroundGradient getBackgroundGradient :height
+	setLineCap "butt
+	setPenGradient :backgroundGradient
+	setPenSize :height
+	forward :height
+	jumpBackward :height
+	kinoriumFilmWheel :height :backgroundGradient
+	setTurtleState :oldState
+end
+
+to kinoriumFaviconCircle :height
+	localmake "oldState turtleState
+	localmake "backgroundGradient getBackgroundGradient :height
+	setFillGradient :backgroundGradient
+	jumpForward :height / 2
+	setPenSize 0
+	circle :height / 2
+	jumpBackward :height / 2
+	kinoriumFilmWheel :height :backgroundGradient
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 4
+jumpLeft :separation / 2
+kinoriumFaviconSquare :height
+jumpRight :separation
+kinoriumFaviconCircle :height

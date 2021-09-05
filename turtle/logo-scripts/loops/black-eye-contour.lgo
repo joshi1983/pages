@@ -1,0 +1,38 @@
+; Inspired by:
+; https://ca.pinterest.com/pin/192247477812855796
+to blackEyeContour :height
+	localmake "oldState turtleState
+	localmake "whiteVerticalRadius :height * 0.135
+	localmake "innerRadius :height * 0.31
+	setPenSize 0
+	jumpForward :height / 2
+	localmake "center pos
+	setFillColor "white
+	ellipse :innerRadius :whiteVerticalRadius
+	setFillColor screenColor
+	circle :whiteVerticalRadius
+	jumpForward :height * 0.012
+	jumpRight :height * 0.012
+	setFillColor "white
+	circle :height * 0.014
+	jumpTo :center
+	setPenSize :height * 0.0005
+	setPenColor "white
+	setFillColor transparent
+	repeat 20 [
+		localmake "vRadius mix :whiteVerticalRadius :innerRadius repRatio
+		ellipse :innerRadius :vRadius
+	]
+	repeat 32 [
+		localmake "radius mix (:height - penSize) / 2 :innerRadius repRatio
+		circle :radius
+	]
+	repeat 20 [
+		localmake "radius :whiteVerticalRadius * mix 0.33 1  repRatio
+		circle :radius
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+blackEyeContour 100

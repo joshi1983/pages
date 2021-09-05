@@ -1,0 +1,84 @@
+// spirotoo.bas • draws Hypotrochoids
+// pBASIC Demo by John Roland Penner ©2026
+
+cls
+clr
+
+var cx : Float = 630.0
+var cy : Float = 500.0
+var R  : Float = 200.0
+var r  : Float = 75.0
+var d  : Float = 120.0
+var t  : Float = 0.0
+var x  : Float = 0.0
+var y  : Float = 0.0
+
+for n1 = 0 to 2048
+	//clr
+	for n2 = 0 to 10
+		locate 1,65
+		print "n1: "; 
+		print n1; 
+		print " n2: ";
+		print n2;
+		print "  ";
+		
+	    R = rnd(1) * 300 + 150
+	    locate 2,65
+	    print "R: "; 
+	    print R;
+	    spiro()
+	
+	    r = rnd(1) * 300 + 20 
+	    locate 2,65
+	    print "r: "; 
+	    print r;
+	    spiro()
+	
+	    d = rnd(1) * 300 + 110
+	    locate 2,65
+	    print "d: "; 
+	    print d;
+	    spiro()
+	    
+	    t = rnd(1) * 300 + 10
+	    locate 2,65
+	    print "t: "; 
+	    print t;
+	    spiro()
+	next n2
+next n1
+end
+
+func spiro() {
+    var RR : Float = RND(1)
+    var GG : Float = RND(1)
+    var BB : Float = RND(1)
+	    
+    var pRnd : Float = RND(1) * 18.0
+    var Steps : Float = RND(1) * 512 + 500
+	
+	// colour dimming with every second pass
+	if int(n2/2) <> (n2/2) then RR = RR/10
+	if int(n2/2) <> (n2/2) then GG = GG/10
+	if int(n2/2) <> (n2/2) then BB = BB/10
+	if int(n2/2) <> (n2/2) then pRnd = RND(1) * 24.0
+	
+	// CLR with black circles
+    if n2 == 0 then RR = 0.05
+    if n2 == 0 then GG = 0.05
+    if n2 == 0 then BB = 0.05
+    if n2 == 0 then pRnd = 28.0
+    if n2 == 0 then Steps = 1024
+	
+    PEN pRnd
+    
+    FOR t = 0 TO Steps STEP 0.75
+        x = (R - r) * COS(t) + d * COS((R - r) * t / r) + cx
+        y = (R - r) * SIN(t) - d * SIN((R - r) * t / r) + cy
+        var AA : Float = 1.0 - (RND(1) * 0.75)
+        point(x,y, RR, GG, BB, AA)
+    NEXT t
+	
+    RETURN 0
+}

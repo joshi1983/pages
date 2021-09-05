@@ -1,0 +1,28 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Alabama#/media/File:Flag_of_Alabama.svg
+to alabamaFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 3 / 2
+	localmake "widthRatio 0.79568525
+	localmake "heightRatio 0.3978427
+	stripes :width :height ["#b10021]
+	setPenSize 0
+	setFillColor "white
+	repeat 2 [
+		isoTriangle :width * :widthRatio :height * :heightRatio
+		jumpForward :height
+		right 180
+	]
+	jumpLeft :width / 2
+	jumpForward :height / 2
+	right 90
+	repeat 2 [
+		isoTriangle :height * :widthRatio :width * :heightRatio
+		jumpForward :width
+		right 180
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+alabamaFlag 100

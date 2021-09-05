@@ -1,0 +1,49 @@
+; Inspired by image at:
+; https://www.facebook.com/photo?fbid=10237864753382048&set=a.10218858602720160
+; which was made by Ghee Beom Kim
+to rotationIllusion :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "numSides 12
+	localmake "radius :height / 2 / cos 180 / :numSides
+	localmake "shrinkFactor 1 - 2 * (tan 180 / :numSides) * (sin 360 / :numSides)
+	; The shrinkFactor is calculated such that
+	; some other lines are exactly parallel with the shape's outline.
+
+	jumpForward :height / 2
+	setPenSize 0
+	setFillColor "black
+	right 180 / :numSides
+	regularPolygon :radius :numSides
+	localmake "center pos
+	repeat 20 [
+		localmake "sideLength :radius * 2 * sin 180 / :numSides
+		localmake "newRadius :radius * :shrinkFactor
+		localmake "newSideLength :sideLength * :shrinkFactor
+		repeat :numSides [
+			setHeading :oldHeading + 180 / :numSides + repcount * 360 / :numSides
+			jumpForward :newRadius
+			localmake "pos1 pos
+			jumpForward :radius - :newRadius
+			localmake "pos2 pos
+			right 180 / :numSides
+			jumpRight :sideLength
+			setFillColor "white
+			polyStart
+			setHeading (towards :pos1)
+			jumpForward (distance :pos1) + :newSideLength
+			localmake "pos3 pos
+			right 167.5
+			jumpForward :radius * 0.45
+			polyEnd
+			setFillColor "#888
+			polygon [pos :pos3 :pos2]
+			jumpTo :center
+		]
+		localmake "radius :newRadius
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "#ddd
+rotationIllusion 100

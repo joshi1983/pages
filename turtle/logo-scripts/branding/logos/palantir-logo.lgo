@@ -1,0 +1,24 @@
+; Inspired by logo at:
+; https://en.wikipedia.org/wiki/Palantir_Technologies#/media/File:Palantir_Technologies_logo.svg
+to palantirLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "radius :height * 0.319
+	localmake "angle 66
+	setFillColor transparent
+	setPenSize :height * 0.115
+	setPenColor "black
+	jumpForward :height - :radius - penSize / 2
+	circle :radius
+
+	jumpTo :oldPos
+	jumpForward penSize / 2 / sin :angle
+	repeat 2 [
+		setHeading :oldHeading + :angle * sign repcount - 1.5
+		stripes penSize :height * 0.39 [penColor]
+	]
+	setTurtleState :oldState
+end
+
+palantirLogo 100

@@ -1,0 +1,33 @@
+; Inspired by flag at:
+; https://en.wikipedia.org/wiki/Flag_of_Austin,_Texas#/media/File:Proposed_Austin_Flag_redesign.svg
+to proposedAustinTexasFlag2015 :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "width :height * 1.71
+	stripes :width :height ["white]
+	setPenSize 0
+	setFillColor "#2166b1
+	drawArcLineShape [-:width / :height / 2 0
+		[[1] [-90 0] [:width / :height]]
+	] :height
+	jumpRight :width / 2
+	localmake "bottomRight pos
+	setFillColor "#ae2124
+	polyStart
+	jumpForward :height * 0.911
+	left 90 + arcTan :height / :width
+	jumpForward distanceToLine :oldPos :bottomRight
+	polyEnd
+
+	setHeading :oldHeading
+	jumpTo :oldPos
+	jumpLeft :height * 0.588888
+	jumpForward :height * 0.7855
+	setFillColor "white
+	regularStar :height * 0.171 5
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+proposedAustinTexasFlag2015 100

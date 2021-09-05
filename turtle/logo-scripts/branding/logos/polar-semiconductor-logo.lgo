@@ -1,0 +1,29 @@
+; Inspired by logo at:
+; https://polarsemi.com
+to polarSemiconductorLogo :height
+	localmake "oldState turtleState
+	localmake "numLines 7
+	localmake "lineThickness :height * 0.02
+	localmake "step :height / (:numLines + 2)
+	stripes :height :height ["white]
+	jumpForward :height / 2
+	setPenSize 0
+	setFillColor "#d91830
+	circle :height / 2
+	localmake "center pos
+	setPenSize :height
+	setPenColor "white
+	setLineCap "butt
+	repeat 2 [
+		jumpBackward (:step * :numLines + :lineThickness) / 2
+		repeat :numLines [
+			forward :lineThickness			
+			jumpForward :step
+		]
+		jumpTo :center
+		right 90
+	]
+	setTurtleState :oldState
+end
+
+polarSemiconductorLogo 100

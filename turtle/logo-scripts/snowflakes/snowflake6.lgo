@@ -1,0 +1,74 @@
+to drawBranch :size :angle
+	localmake "originalPenSize pensize
+	localmake "size1 :size * 0.2 - 1
+	localmake "size2 :size * 0.3
+	localmake "originalPosition pos
+	localmake "originalHeading heading
+	right :angle
+	forward :size
+	setpensize 0
+	setfillcolor pencolor
+	circle :originalPenSize * 0.5
+	setpensize :originalPenSize
+	penup
+	setpos :originalPosition
+	left :angle
+	back :size1
+	pendown
+	if (abs :angle) < 90 [
+		; curve corners
+		ifelse :angle > 0 [
+			arcRight :angle :size2
+		] [
+			arcleft -:angle :size2
+		]
+	]
+	setpos :originalPosition
+	setheading :originalHeading
+end
+
+to drawBranches :size :angle
+	drawBranch :size :angle
+	drawBranch :size (-:angle)
+end
+
+to snowflake6 :size
+	localmake "mainLineThickness :size * 0.04
+	localmake "minorLineThickness :size * 0.03						 
+	localmake "size2 :size * 0.1
+	localmake "size3 :size * 0.2
+	localmake "size4 :size * 0.5
+	localmake "size5 :size * 0.2
+	localmake "size6 :size * 0.05
+	localmake "backSize1 :size4 + :size5 * 2
+	localmake "backSize2 :size4 + :size2
+	setfillcolor pencolor
+
+	repeat 6 [
+		pendown
+		setpensize :mainLineThickness
+		forward :size4
+		drawBranches :size3 60
+		forward :size5
+		drawBranches :size3 60
+		forward :size5
+		setpensize 0
+		circle :size2
+		back :backSize1
+		right 30
+		setpensize :minorLineThickness
+		forward :size4
+		drawBranches :size2 140
+		drawBranches :size2 60
+		forward :size2
+		setpensize 0
+		circle :size6
+		penup
+		back :backSize2
+		pendown
+		right 30
+	]
+end
+
+setpencolor "midnightblue
+snowflake6 200

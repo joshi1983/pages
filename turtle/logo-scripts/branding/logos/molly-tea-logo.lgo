@@ -1,0 +1,21 @@
+; Inspired by logo at:
+; https://en.wikipedia.org/wiki/Molly_Tea#/media/File:Molly_Tea_logo.svg
+to mollyTeaLogo :height
+	localmake "oldState turtleState
+	localmake "arcPairHeight :height * 0.53
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	setFillColor "black
+	repeat 4 [
+		jumpBackward :arcPairHeight - :height / 2
+		arcPair :arcPairHeight 90
+		jumpTo :center
+		right 90
+	]
+	setFillColor "white
+	roundIsoStar :height * 0.105 :height * 0.01 4 0 :height * 0.075
+	setTurtleState :oldState
+end
+
+mollyTeaLogo 100

@@ -1,0 +1,132 @@
+ 
+
+; PROJECT : Vector Library
+; AUTHOR  : Kevin Picone - PlayBASIC Tutor - https://PlayBASIC.com
+; CREATED : 12/05/2022
+; EDITED  : 28/05/2022
+; ---------------------------------------------------------------------
+
+
+
+        //  Use a typed array to hold all the vectors we'll be using
+        Dim vectors(100) as vector2d
+        for lp =0 to getArrayElements(vectors())
+            vectors(lp)= new vector2D
+        next
+        
+    
+        //  declare some pointers of type vector for use in the examples        
+        Dim N as vector2d pointer
+        Dim V1 as vector2d pointer
+        Dim V2 as vector2d pointer
+        Dim OldPoint as vector2D pointer
+
+        //  Get pointers to some pre--allocated vectors in our cache array        
+        n = Vectors(0).vector2d        
+        V1 = Vectors(1).vector2d        
+        V2 = Vectors(2).vector2d        
+
+
+        Dim CurrentPoint as vector2D pointer
+        CurrentPOint = Vectors(3).vector2d        
+        
+        Dim OldPoint as vector2D pointer
+        OldPOint = Vectors(4).vector2d        
+
+        Dim Lerp1 as vector2D pointer
+        Lerp1 = Vectors(10).vector2d        
+        
+        Dim Lerp2 as vector2D pointer
+        Lerp2 = Vectors(11).vector2d        
+        
+        
+        SetVector2d lerp1, 500,100
+        SetPolar2d lerp2, Rnd(36),rndrange(10,100)
+        Addvectors2d Lerp2, Lerp2, Lerp1
+        
+        
+        
+        // Set up this vector
+        Setvector2d OldPOint,Mousex(),MouseY()    
+        Flushmouse
+        
+        // -----------------------------------------------------------
+        // -----------------------------------------------------------
+        // -----------------------------------------------------------
+        Do
+        // -----------------------------------------------------------
+        // -----------------------------------------------------------
+        // -----------------------------------------------------------
+                
+                CLS
+                
+                                
+                // Set up this vecor
+                Setvector2d CurrentPoint,Mousex(),MouseY()    
+                
+                
+                circlec OldPoint.X,OldPoint.Y, 50,true, $00ff00 
+                
+                circle CurrentPoint.X,CurrentPOint.Y, 50,true 
+            
+            
+                // Subtract target from current  N = Old - Current
+                Subvectors2d(N , oldPoint,CurrentPoint)
+
+                ypos= 50
+
+                text 10,Ypos, "Delta:"+StrVector2d$(N)
+
+                //  Get the length of this delta vector
+                Dist#=GetVectorLenght2D(N)
+                
+                // normalize N = and store it back in N  
+                GetVectorNormal2D(N , N) 
+
+                text 10,Ypos+30, "Normalized:"+StrVector2d$(N)
+
+            
+                //  Scale Normal by Dist# 
+                Multvector2d(N , N, Dist#)
+
+                text 10,Ypos+60, "Scaled Normalized:"+StrVector2d$(N)
+
+                //  Add origin (current point) back on. 
+                Addvectors2d(N , N, CurrentPoint)
+                
+                text 10,Ypos+90, "Result:"+StrVector2d$(N)
+
+                
+                //  Scale it  so we can draw line between them
+                line CurrentPOint.x,CurrentPOint.y,n.x,n.y
+            
+                if Mousebutton()=1
+                        CopyVector2d OldPoint,CurrentPOint
+                endif    
+            
+            
+                //  test lerp
+                Linec Lerp1.x,Lerp1.y,Lerp2.x,Lerp2.y, $ff00ff
+                
+                //  
+                LerpFrame        =mod(LerpFrame+1,100)                    
+                LerpScale#        =LerpFrame/100.0    
+            
+                LerpVector2d N,Lerp1,Lerp2,LerpScale#
+                
+                Circlec n.x , n.y, 5, true ,$ff00ff
+    
+            
+                //  Curve Lerp vector to the one between
+                LerpVector2d V1,Lerp1,Lerp2,LerpScale#
+                LerpVector2d V2,CurrentPoint,OldPoint,LerpScale#
+                LerpVector2d V1,V2,V1,LerpScale#
+                Circlec v1.x , v1.y, 5, true ,$ff00ff
+            
+                LerpVector2d V1,Lerp1,Oldpoint,LerpScale#
+                LerpVector2d V2,lerp2,CurrentPoint,LerpScale#
+                LerpVector2d V1,V2,V1,LerpScale#
+                Circlec v1.x , v1.y, 5, true ,$ff00ff
+            
+                Sync
+    loop  Spacekey()

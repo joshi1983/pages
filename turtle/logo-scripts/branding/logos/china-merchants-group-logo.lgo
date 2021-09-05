@@ -1,0 +1,56 @@
+; Inspired by logo at:
+; https://en.wikipedia.org/wiki/China_Merchants_Group#/media/File:China_Merchants_Group.svg
+to chinaMerchantsGroupLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "outerArcAngle 341
+	localmake "outerArcRadius :height / 2
+	localmake "innerArcRadius :outerArcRadius * 0.85
+	localmake "triangleWidth :height * 0.19
+	localmake "triangleHeight :height * 0.163
+	localmake "triangleSeparation :height * 0.25
+	localmake "mAngle arcTan :triangleWidth / 2 / :triangleHeight
+	localmake "mAngle2 :mAngle * 2 - 180
+	localmake "mLen1 0.234
+	setPenSize 0
+	jumpForward :height / 2
+	localmake "center pos
+	right 90 + (:outerArcAngle - 360) / 2
+	jumpForward :outerArcRadius
+	left 90
+	setFillColor "#a18774
+	polyStart
+	arcLeft :outerArcAngle :outerArcRadius
+	setHeading :oldHeading - 90
+	jumpForward distanceToCircle :center :innerArcRadius
+	localmake "angle1 heading - ((towards :center) - 90)
+	left :angle1
+	localmake "angle1 :angle1 - 90
+	arcRight 360 + :angle1 * 2 :innerArcRadius
+	polyEnd
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.372
+	jumpLeft :height * 0.257
+	localmake "mLowerLeft pos
+	right 180
+	repeat 2 [
+		isoTriangle :triangleWidth :triangleHeight
+		jumpLeft :triangleSeparation
+	]
+	jumpTo :mLowerLeft
+	setHeading :oldHeading 
+	drawArcLineShape [-:triangleWidth / 2 / :height 0
+		[[-:mAngle 0] [0.484] [:mAngle2 0]
+		[:mLen1] [-:mAngle2 0] [:mLen1] [:mAngle2 0]
+		[0.44] [-:mAngle * 2 0] [:mLen1] [:mAngle2 0]
+		[0.365] [-:mAngle2 0] [0.236] [:mAngle2 0]
+		[0.238] [-:mAngle2 0] [0.2]]
+	] :height
+
+	setTurtleState :oldState
+end
+
+chinaMerchantsGroupLogo 100

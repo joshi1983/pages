@@ -1,0 +1,157 @@
+// modcycle.bas
+// Modular Multiplication Circle with HSB colour cycling
+// Converted from Kurt Moerman's PC-Basic version. 
+
+CLS
+var m : Int = 0
+var p : Int = 0
+
+for nn = 1 to 999
+
+	m = rnd(1) * 360
+	p = rnd(1) * 360
+
+	locate 1,1
+	print "Modular Multiplication"
+	print "M: "; 
+	print m; 
+	print "   "
+	print "P: "; 
+	print p; 
+	print "   "
+	
+	// Graphics setup
+	BUFFER:1
+	CLR
+	PEN 2.0
+	
+	var pi     : Float = 3.1415926535
+	var radius : Float = 420.0
+	var cx     : Float = 630.0
+	var cy     : Float = 500.0
+	
+	// HSB globals (reused from lissajous3D)
+	var hsbH   : Float = 0.0
+	var hsbV   : Float = 0.0
+	var hsbRR  : Float = 0.0
+	var hsbGG  : Float = 0.0
+	var hsbBB  : Float = 0.0
+	var hsbSector : Float = 0.0
+	var hsbF   : Float = 0.0
+	var hsbQ   : Float = 0.0
+	var hsbT   : Float = 0.0
+	
+	
+	// Draw the modular lines with cycling colours
+	var n : Int = 0
+	while (n < m) {
+	    var np : Float = n * p
+	    var q  : Float = np / m
+	    var k  : Int   = INT((q - INT(q)) * m)   // manual MOD
+		
+	    // Point N
+	    var alphaN : Float = pi * (2.0 * n / m + 0.5)
+	    var xn : Float = cx - radius * COS(alphaN)
+	    var yn : Float = cy - radius * SIN(alphaN)
+	
+	    // Point K
+	    var alphaK : Float = pi * (2.0 * k / m + 0.5)
+	    var xk : Float = cx - radius * COS(alphaK)
+	    var yk : Float = cy - radius * SIN(alphaK)
+	
+	    // Colour cycling: hue based on line index n (0–360)
+	    hsbH = (n * 360.0 / m)
+	    hsbV = 1.0                     // full brightness
+	    calcHSB()                      // converts to hsbRR, hsbGG, hsbBB
+	
+	    LINE(xn, yn, xk, yk, hsbRR, hsbGG, hsbBB, 1.0)
+		
+	    n = n + 1
+	}
+	
+	BUFFER   // show final image
+
+next nn
+
+print ""
+print "Done." 
+
+var k$ : String = ""
+while (k$ == "") {
+    k$ = INKEY$
+}
+end
+
+// ===================================================================
+// HSB → RGB conversion (extracted & adapted from lissajous3D.bas)
+// Saturation fixed at 1.0, Value = hsbV (0.0–1.0)
+// Stores result in hsbRR, hsbGG, hsbBB
+// ===================================================================
+func calcHSB() {
+    if hsbV <= 0.0 then setBlack()
+    if hsbV <= 0.0 then return 0
+
+    var hn : Float = hsbH / 60.0
+    hsbSector = INT(hn)
+    hsbF = hn - hsbSector
+    hsbQ = hsbV * (1.0 - hsbF)
+    hsbT = hsbV * hsbF
+
+    if hsbSector == 0.0 then setSector0()
+    if hsbSector == 1.0 then setSector1()
+    if hsbSector == 2.0 then setSector2()
+    if hsbSector == 3.0 then setSector3()
+    if hsbSector == 4.0 then setSector4()
+    if hsbSector == 5.0 then setSector5()
+
+    return 0
+}
+
+func setBlack() {
+    hsbRR = 0.0
+    hsbGG = 0.0
+    hsbBB = 0.0
+    return 0
+}
+
+func setSector0() {
+    hsbRR = hsbV
+    hsbGG = hsbT
+    hsbBB = 0.0
+    return 0
+}
+
+func setSector1() {
+    hsbRR = hsbQ
+    hsbGG = hsbV
+    hsbBB = 0.0
+    return 0
+}
+
+func setSector2() {
+    hsbRR = 0.0
+    hsbGG = hsbV
+    hsbBB = hsbT
+    return 0
+}
+
+func setSector3() {
+    hsbRR = 0.0
+    hsbGG = hsbQ
+    hsbBB = hsbV
+    return 0
+}
+
+func setSector4() {
+    hsbRR = hsbT
+    hsbGG = 0.0
+    hsbBB = hsbV
+    return 0
+}
+
+func setSector5() {
+    hsbRR = hsbV
+    hsbGG = 0.0
+    hsbBB = hsbQ
+    return 0
+}

@@ -1,0 +1,53 @@
+; Inspired by logo at:
+; https://en.wikipedia.org/wiki/Delta_Air_Lines#/media/File:Delta_logo.svg
+to deltaAirlinesLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "bottomWidth :height * 1.253
+	localmake "bottomHeight :height * 0.2645
+	localmake "topAngle 57.05
+	localmake "topMiddleHeight :height * 0.615
+	localmake "topTriangleWidth :height * 1.065
+	jumpForward :height
+	localmake "top pos
+	left :topAngle 
+	jumpLeft :topTriangleWidth
+	localmake "leftPos pos
+
+	setHeading :oldHeading
+	jumpTo :top
+	jumpBackward :topMiddleHeight
+	localmake "middlePos pos
+
+	jumpTo :oldPos
+	setPenSize 0
+	setFillColor "#98002E
+	isoTriangle :bottomWidth :bottomHeight
+	jumpTo :top
+	right :topAngle
+	polyStart
+	jumpRight :topTriangleWidth
+	setHeading towards :middlePos
+	jumpForward distanceToLine :top :leftPos
+	polyEnd
+	setFillColor "#E31837
+	jumpTo :middlePos
+	setHeading :oldHeading
+	polyStart
+	jumpForward :topMiddleHeight
+	left :topAngle
+	jumpLeft :topTriangleWidth
+	polyEnd
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :bottomHeight
+	polyStart
+	jumpBackward :bottomHeight
+	jumpLeft :bottomWidth / 2
+	polyEnd
+	setTurtleState :oldState
+end
+
+deltaAirlinesLogo 100

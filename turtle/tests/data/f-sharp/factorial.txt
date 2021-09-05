@@ -1,0 +1,14 @@
+// copied from: https://en.wikipedia.org/wiki/F_Sharp_(programming_language)
+/// Using pattern matching expression
+let rec factorial n =
+    match n with
+    | 0 -> 1
+    | _ -> n * factorial (n - 1)
+
+/// For a single-argument functions there is syntactic sugar (pattern matching function):
+let rec factorial = function 
+    | 0 -> 1 
+    | n -> n * factorial (n - 1)
+    
+/// Using fold and range operator
+let factorial n = [1..n] |> Seq.fold (*) 1

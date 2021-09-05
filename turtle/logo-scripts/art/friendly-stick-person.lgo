@@ -1,0 +1,60 @@
+to drawHead :height
+	localmake "oldState turtleState
+	localmake "oldPenSize penSize
+	localmake "eyeSeparation :height * 0.5
+	jumpForward :height / 2
+	rect :height * 1.05 :height - penSize		
+	localmake "center pos
+	jumpForward :height * 0.15
+	jumpLeft :eyeSeparation / 2
+	setPenSize 0
+	setFillColor penColor
+	repeat 2 [
+		circle :oldPenSize / 2
+		jumpRight :eyeSeparation
+	]
+
+	jumpTo :center
+	jumpBackward :height * 0.25
+	stripes :height * 0.5 :oldPenSize [penColor]
+	setTurtleState :oldState
+end
+
+; Inspired by a figure in a book.
+; The book is called Picture this! Pilot turtle geometry
+; The book was published in 1982.
+; The figure is on page 55.
+;
+; A digital version of the book can be borrowed at:
+; https://archive.org/details/picturethispilot0000thor/page/54/mode/2up
+to friendlyStickPerson :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "headHeight :height * 0.33
+	setPenSize :height * 0.03
+	jumpForward penSize / 2 * cos 45
+	localmake "bottomPos pos
+	jumpRight :height
+	localmake "rightPos pos
+
+	jumpTo :oldPos
+	setFillColor "white
+	setPenColor "black
+	setLineCap "butt
+	setLineJoinStyle "miter
+	jumpForward :height - :headHeight
+	drawHead :headHeight
+	backward :height * 0.13
+	stripes :height * 0.7 penSize [penColor]
+	backward :height * 0.25
+	localmake "hipsPosition pos
+	left 135
+	repeat 2 [
+		forward distanceToLine :bottomPos :rightPos
+		jumpTo :hipsPosition
+		left 90
+	]
+	setTurtleState :oldState
+end
+
+friendlyStickPerson 100
