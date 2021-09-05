@@ -1,0 +1,217 @@
+make "widthRatio 1894 / 1013
+make "middleCourtDistanceRatio1 0.2 * :widthRatio
+make "laneLengthRatio 0.377
+
+to drawMiddleCourtMarkers :height :lineThickness
+	localmake "oldState turtleState
+	localmake "middleCourtDistance :height * :middleCourtDistanceRatio1
+	localmake "middleCourtLineLength :height * 0.064
+	setLineCap "butt
+	setLineJoinStyle "miter
+	setPenSize :lineThickness
+	jumpLeft :middleCourtDistance
+	repeat 2 [
+		forward :middleCourtLineLength						
+		jumpForward :height - :middleCourtLineLength * 2
+		forward :middleCourtLineLength						
+
+		jumpBackward :height
+		jumpRight :middleCourtDistance * 2
+	]
+	setTurtleState :oldState
+end
+
+to draw3PointLineArcs :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "middleCourtDistance2 :height * :middleCourtDistanceRatio1 * 0.957
+	localmake "width :height * :widthRatio
+	localmake "arcAngle 136
+	localmake "arcRadius :height * 0.467
+	localmake "straightLength :width / 2 - :middleCourtDistance2 - :arcRadius * (1 - cos :arcAngle / 2)
+	localmake "center pos
+	setLineCap "butt
+	repeat 2 [
+		localmake "heading1 :oldHeading + 90 + repcount * 180
+		setHeading :heading1
+		jumpForward :middleCourtDistance2
+		right 90
+		penUp
+		arcLeft :arcAngle / 2 :arcRadius
+		penDown
+		setHeading :heading1
+		jumpForward :straightLength
+		backward :straightLength
+		left 90 + :arcAngle / 2
+		arcRight :arcAngle :arcRadius
+		setHeading :heading1
+		forward :straightLength
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+to drawLanes :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "width :height * :widthRatio
+	localmake "laneLength :height * :laneLengthRatio
+	localmake "laneLen2 :height * 0.315
+	localmake "notchWidth :laneLen2 * 1.085
+	localmake "notchLength :height * 0.011
+	localmake "sideNotchSeparation :height * 0.438
+	localmake "laneSeparation :width - :laneLength - penSize
+	localmake "notches [
+		0.4207 0.4085 0.375 0.3414
+	]
+	setFillColor "#ff9955
+	setLineJoinStyle "miter
+	localmake "center pos
+	repeat 2 [
+		setHeading :oldHeading + 90 + 180 * repcount
+		repeat count :notches [
+			jumpForward :width * item repcount :notches	
+			stripes :notchWidth penSize [penColor]
+			jumpTo :center
+		]
+		jumpForward (:width - penSize) / 2 - :notchLength
+		jumpLeft :sideNotchSeparation / 2
+		repeat 2 [
+			stripes penSize :notchLength [penColor]
+			jumpRight :sideNotchSeparation
+		]
+		jumpTo :center
+	]
+	setHeading :oldHeading
+	jumpTo :center
+	jumpLeft :laneSeparation / 2
+	repeat 2 [
+		rect :laneLength :laneLen2
+		jumpRight :laneSeparation 
+	]
+	setTurtleState :oldState
+end
+
+to drawFreeThrowCircles :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "width :height * :widthRatio
+	localmake "laneLength :height * :laneLengthRatio
+	localmake "freeThrowRadius :height * 0.117
+	localmake "startGap (:width - penSize) / 2 - :laneLength
+	localmake "dashCount 7.03
+	localmake "dashArcAngle 180 / :dashCount / 2
+	localmake "dashSeparation :height * 0.181
+	localmake "dashOffsetAngles [2 10.4]
+	localmake "center pos
+	setFillColor transparent
+	setLineCap "butt
+	repeat 2 [
+		localmake "heading1 :oldHeading + 90 + 180 * repcount
+		setHeading :heading1
+		localmake "dashOffsetAngle item repcount :dashOffsetAngles
+		jumpForward :startGap
+		localmake "pos1 pos
+		jumpLeft :freeThrowRadius
+		repeat 2 [
+			stripes penSize :laneLength [penColor]
+			jumpRight :freeThrowRadius * 2
+		]
+		jumpLeft :freeThrowRadius * 2
+		right 180
+		arcRight 180 :freeThrowRadius
+		repeat :dashCount [
+			localmake "offsetAngle 0
+			if repcount = 1 [
+				localmake "offsetAngle :dashOffsetAngle
+			]
+			penUp
+			arcRight :dashArcAngle - :offsetAngle :freeThrowRadius
+			penDown
+			arcRight :dashArcAngle :freeThrowRadius
+		]
+		jumpTo :pos1
+		setHeading :heading1
+		jumpForward :freeThrowRadius - :height * 0.0035
+		jumpLeft :dashSeparation / 2
+		repeat 2 [
+			stripes penSize * 1.43 penSize [penColor]
+			jumpRight :dashSeparation
+		]
+		jumpTo :center
+	]	
+	setTurtleState :oldState
+end
+
+to drawNoChargeSemicircles :height
+	localmake "oldState turtleState
+	localmake "width :height * :widthRatio
+	localmake "oldPenSize penSize
+	localmake "backBoardDistance :width / 2 - :height * 0.0827
+	localmake "backboardThickness :height * 0.0125
+	localmake "hoopRadius :height * 0.014
+	localmake "arcRadius :height * 0.0775
+	localmake "center pos
+	localmake "oldHeading heading
+
+	; The free throw arc is elliptical.
+	; We'll approximate it with a few circular arcs.
+	localmake "arcsInfo1 [[30 0.8680385] [30 0.98] [30 1.05]]
+	localmake "arcsInfo combine :arcsInfo1 reverse :arcsInfo1
+	localmake "straightLength :height * 0.034
+	setFillColor transparent
+	setPenSize :height * 0.003
+	setLineCap "butt
+	repeat 2 [
+		setHeading :oldHeading + 90 + repcount * 180
+		jumpForward :backBoardDistance
+		localmake "backboardCenter pos
+		stripes :height * 0.12 :backboardThickness [penColor]
+		jumpBackward :height * 0.009
+		stripes :height * 0.008 :height * 0.02 [penColor]
+		jumpBackward :hoopRadius
+		circle :hoopRadius
+
+		setPenSize :oldPenSize
+		jumpTo :backboardCenter
+		jumpLeft :arcRadius
+		right 180
+		forward :straightLength
+		arcsLeft :arcsInfo :arcRadius
+		forward :straightLength
+		jumpTo :center
+	]
+	setPenSize :oldPenSize
+
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Basketball#/media/File:Basketball_terms.png
+to basketballCourt :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "lineThickness :height * 0.0068
+	localmake "width :height * :widthRatio
+	stripes :width :height ["#A6622B]
+	stripes :lineThickness :height ["white]
+	jumpForward :height / 2
+	setFillColor transparent
+	setPenSize :lineThickness
+	setPenColor "white
+	circle :height * 0.041
+	circle :height * 0.117
+	setLineJoinStyle "miter
+	rect :width - :lineThickness :height - :lineThickness
+	jumpTo :oldPos
+	drawMiddleCourtMarkers :height :lineThickness
+	jumpForward :height / 2
+	draw3PointLineArcs :height
+	drawLanes :height
+	drawFreeThrowCircles :height
+	drawNoChargeSemicircles :height
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+basketballCourt 100

@@ -1,0 +1,187 @@
+make "angle1 3.3
+
+to circlePoints :radius :numPoints
+	localmake "oldPos pos
+	localmake "points []
+	localmake "angleStep 360 / :numPoints
+	repeat :numPoints [
+		jumpForward :radius
+		queue2 "points pos
+		jumpTo :oldPos
+		right :angleStep
+	]
+	output :points
+end
+
+to findNearestPointIndex :points
+	localmake "min distance item 1 :points
+	localmake "result 1
+	for ["index 2 count :points] [
+		localmake "d distance item :index :points
+		if :min > :d [
+			localmake "min :d
+			localmake "result :index
+		]
+	]
+	output :result
+end
+
+to lineWith :points :index
+	localmake "oldPos pos
+	if :index < 1 [
+		localmake "index :index + count :points
+	]
+	if :index > count :points [
+		localmake "index :index - (count :points)
+	]
+	setPos item :index :points
+	jumpTo :oldPos
+end
+
+to stringPoints :points
+	localmake "nearestPointIndex findNearestPointIndex :points
+	localmake "numStringPairs 6
+	localmake "offset 3
+	repeat :numStringPairs [
+		lineWith :points :nearestPointIndex - :offset
+		lineWith :points :nearestPointIndex + :offset
+		localmake "offset :offset + 1
+	]
+end
+
+to clockHandPath :length
+	localmake "angle2 25
+	localmake "arcRadius1 :length * 0.4868986
+	localmake "arcRadius2 :length * 0.02
+	localmake "size2 :length * 0.6
+	localmake "size3 :length * 0.202117
+	forward :size2
+	right :angle2
+	arcLeft :angle2 - :angle1 :arcRadius1
+	forward :size3
+	arcRight 180 :arcRadius2 ; point of symmetry
+	forward :size3
+	arcLeft :angle2 - :angle1 :arcRadius1
+	right :angle2
+	forward :size2
+end
+
+to clockHand :length
+	localmake "size1 :length * 0.02
+	setFillColor "white
+	left :angle1
+	localmake "heading1 heading
+	jumpLeft :size1
+	localmake "pos1 pos
+	clockHandPath :length
+	setPenSize 0
+	jumpTo :pos1
+	setHeading :heading1
+	polyStart
+	clockHandPath :length
+	polyEnd
+end
+
+to clockHandOnRing :length
+	localmake "oldState turtleState
+	localmake "gap :length * 0.0645
+	jumpForward :gap
+	clockHand :length - :gap
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://www.facebook.com/photo/?fbid=129335666864846
+; The original design is by Ken Hoffman.
+; Ken's artist page is The Thread Dimension at:
+; https://www.facebook.com/profile.php?id=100093652402506
+to wingsOfTime :size :hours :minutes
+	localmake "oldState turtleState
+	localmake "numArms 12
+	localmake "angleStep 360 / 60
+	localmake "numPointsPerArm 8
+	localmake "minSize1 :size * 0.2
+	localmake "size1Step (:size * 0.48 - :minSize1) / (:numPointsPerArm - 1)
+	localmake "nailSize :size * 0.003
+	jumpForward :size / 2
+	localmake "center pos
+	localmake "size1 :minSize1
+	localmake "centerPoints circlePoints :minSize1 * 0.7 64
+	setFillColor transparent
+	setPenColor "#08f
+	localmake "stringColors ["#08f "#4cf "#8ff "white]
+	localmake "numStringColors count :stringColors
+	setPenSize :size * 0.002
+	localmake "stringThickness :size * 0.001
+	circle :size / 2
+	repeat :numArms [
+		setHeading 360 * repcount / :numArms + :angleStep * :numPointsPerArm
+		setFillColor "#888
+		repeat :numPointsPerArm [
+			if repcount = :numPointsPerArm [
+				setFillColor "white
+			]
+			jumpForward :size1
+			setPenSize :stringThickness
+			localmake "stringColorIndex :numStringColors - int (repRatio * (-1 + :numStringColors))
+			setPenColor item :stringColorIndex :stringColors
+			stringPoints :centerPoints
+			setPenSize 0
+			circle :nailSize
+			jumpTo :center
+			right :angleStep
+			localmake "size1 :size1 + :size1Step
+		]
+		localmake "size1 :minSize1
+	]
+
+	setPenSize :stringThickness
+	repeat :numStringColors [
+		localmake "offset 10 + (:numStringColors - repcount) * 5
+		setPenColor item repcount :stringColors
+		for ["index 1 count :centerPoints] [
+			jumpTo item :index :centerPoints
+			lineWith :centerPoints :index + :offset
+		]
+	]
+
+	setFillColor "white
+	repeat count :centerPoints [
+		jumpTo item repcount :centerPoints
+		circle :nailSize
+	]
+	setPenColor "white
+	setPenSize :size * 0.02
+	setFillColor transparent
+	jumpTo :center
+	circle :size * 0.02
+	setPenSize :size * 0.001
+	setPenColor "#008
+	setHeading :minutes * 360 / 60
+	clockHandOnRing :size * 0.45
+	setHeading :hours * 360 / 12
+	clockHandOnRing :size * 0.3
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+make "time animation.timeRatio * 12 * 60
+make "hours int :time / 60
+make "minutes remainder :time 60
+jumpBackward 50
+wingsOfTime 100 :hours :minutes
+
+to animation.snapshotstyle
+	output createPList2 [
+		["zoom.scale 7]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 10
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

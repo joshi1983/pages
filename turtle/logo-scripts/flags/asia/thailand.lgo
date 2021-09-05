@@ -1,0 +1,326 @@
+make "redColor "#A51931
+
+to drawStripes :width :stripeScale :stripesInfo
+	setLineCap "butt
+	setPenSize :width
+	repeat count :stripesInfo [
+		localmake "stripeInfo item repcount :stripesInfo
+		setPenColor item 1 :stripeInfo
+		forward :stripeScale * item 2 :stripeInfo
+	]
+end
+
+; Made from instruction sheet at:
+; https://en.wikipedia.org/wiki/Flag_of_Thailand
+to thailandFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 9 / 6
+	localmake "whiteColor "#F4F5F8
+	localmake "purpleColor "#2D2A4A
+	localmake "stripeScale :height / 6
+	localmake "stripesInfo [
+		[:redColor 1]
+		[:whiteColor 1]
+		[:purpleColor 2]
+		[:whiteColor 1]
+		[:redColor 1]
+	]
+	drawStripes :width :stripeScale :stripesInfo
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Thailand#/media/File:Flag_of_Siam_(1916).svg
+to thailandCivilEnsigniaFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 9 / 6
+	localmake "stripeScale :height / 6
+	localmake "stripesInfo [
+		[:redColor 1]
+		["white 1]
+		[:redColor 2]
+		["white 1]
+		[:redColor 1]
+	]
+	drawStripes :width :stripeScale :stripesInfo
+	setTurtleState :oldState
+end
+
+to chakraOutline1 :size
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	setLineJoinStyle "round
+	jumpTo :oldPos
+	jumpRight :size * 0.56
+	left 10
+	arcLeft 48 :size * 1.3
+	left 93
+	arcLeft 20.5 :size * 0.8
+	right 104
+	arcLeft 53 :size * 1.4
+	left 141
+	arcRight 41 :size * 1.5
+	setTurtleState :oldState
+end
+
+to chakraOutline2 :size
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	setLineJoinStyle "round
+	jumpTo :oldPos
+	jumpRight :size * 0.58
+	left 11
+	arcLeft 39.2 :size * 1.58
+	left 114
+	arcLeft 16 :size * 1.3
+	right 115
+	arcLeft 35 :size * 2.2
+	left 153.5
+	arcRight 43 :size * 1.5
+	setTurtleState :oldState
+end
+
+to peddle1 :height
+	localmake "oldState turtleState
+	localmake "angle1 31.831159
+	localmake "arcAngle1 20
+	localmake "arcAngle2 30
+	localmake "arcAngle3 180 - (:arcAngle1 + :arcAngle2 - :angle1) * 2
+	localmake "arcRadius1 :height * 1.56
+	localmake "arcRadius2 :height * 0.4
+	localmake "arcRadius3 :height * 0.2
+	jumpForward :height * 0.15
+	left :angle1
+	polyStart
+	arcRight :arcAngle1 :arcRadius1
+	arcRight :arcAngle2 :arcRadius2
+	arcRight :arcAngle3 :arcRadius3
+	arcRight :arcAngle2 :arcRadius2
+	arcRight :arcAngle1 :arcRadius1
+	polyEnd
+	setTurtleState :oldState
+end
+
+to peddle2 :height
+	localmake "oldState turtleState
+	localmake "angle1 19.7604092
+	localmake "arcAngle1 10
+	localmake "arcAngle2 30
+	localmake "arcAngle3 180 - (:arcAngle1 + :arcAngle2 - :angle1) * 2
+	localmake "arcRadius1 :height * 2.432
+	localmake "arcRadius2 :height * 0.3
+	localmake "arcRadius3 :height * 0.1
+	jumpForward :height * 0.37
+	left :angle1
+	polyStart
+	arcRight :arcAngle1 :arcRadius1
+	arcRight :arcAngle2 :arcRadius2
+	arcRight :arcAngle3 :arcRadius3
+	arcRight :arcAngle2 :arcRadius2
+	arcRight :arcAngle1 :arcRadius1
+	polyEnd
+	setTurtleState :oldState
+end
+
+to peddle3 :height
+	localmake "oldState turtleState
+	jumpForward :height * 0.52
+	peddle1 :height * 0.48
+	setTurtleState :oldState
+end
+
+to chakraPeddles :height
+	localmake "oldState turtleState
+	localmake "angle1 35
+	localmake "angle2 27
+	localmake "peddle2Height :height * 1.2
+	localmake "peddle3Height :height * 1.18
+	setPenSize 0
+	setFillColor penColor
+	peddle1 :height
+	jumpBackward :height * 0.3
+	right :angle1
+	peddle2 :peddle2Height
+	left :angle1 * 2
+	peddle2 :peddle2Height
+	left :angle2
+	peddle3 :peddle3Height
+	right 2 * (:angle1 + :angle2)
+	peddle3 :peddle3Height
+	setTurtleState :oldState
+end
+
+to snake :height
+	localmake "oldState turtleState
+	jumpForward :height * 0.24689
+	right 58
+	polyStart
+	arcRight 9 :height * 0.29
+	arcRight 20 :height * 0.18
+	arcRight 35 :height * 0.095
+	arcRight 13 :height * 0.15
+	arcRight 9 :height
+	arcLeft 6 :height
+	arcLeft 15 :height * 0.2
+	arcLeft 10 :height * 0.09
+	arcLeft 50 :height * 0.059
+	arcLeft 9 :height * 0.09
+	arcLeft 40 :height * 0.15
+	arcLeft 15 :height * 0.6
+	arcLeft 35 :height * 0.23
+	arcLeft 24 :height * 0.45
+	jumpForward :height * 0.11
+	arcRight 23 :height * 0.08
+	right 105
+	arcRight 13 :height * 0.1
+	arcLeft 40 :height * 0.13
+	arcLeft 40 :height * 0.08
+	arcLeft 36 :height * 0.12
+	jumpForward :height * 0.1
+	arcRight 11 :height * 0.4
+	arcRight 80 :height * 0.038
+	arcRight 10 :height * 0.1
+	arcRight 5 :height * 0.2
+	arcLeft 10 :height * 0.2
+	arcLeft 25 :height * 0.038
+	left 114
+	arcLeft 10 :height * 0.3
+	arcLeft 14 :height * 0.2
+	arcLeft 50 :height * 0.085
+	arcLeft 40 :height * 0.06
+	arcLeft 21 :height * 0.22
+	jumpForward :height * 0.09
+	arcRight 22 :height * 0.1
+	arcRight 108 :height * 0.0252
+	jumpForward :height * 0.045
+	arcLeft 80 :height * 0.081
+	arcLeft 85 :height * 0.172
+	jumpForward :height * 0.1
+	arcRight 40 :height * 0.21
+	arcRight 35 :height * 0.14
+	arcRight 110 :height * 0.041
+	arcRight 24 :height * 0.1
+	arcLeft 8 :height * 0.8
+	arcLeft 55 :height * 0.185
+	arcLeft 40 :height * 0.085
+	arcLeft 18.9 :height * 0.22
+	polyEnd
+	setTurtleState :oldState
+end
+
+to crescent :radius
+	localmake "angle 40
+	localmake "arcRadius2 :radius / sin :angle
+	polyStart
+	arcRight 180 :radius
+	right 90 + :angle
+	arcLeft :angle * 2 :arcRadius2
+	polyEnd
+end
+
+to chakra :diameter
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "backgroundColor fillColor
+	localmake "radius :diameter / 2
+	localmake "penSize1 :radius * 0.018
+	localmake "radii [0.497 0.535 0.663 0.696]
+	localmake "innerCircleMiddle :radius * mix (item 2 :radii) (item 3 :radii) 0.5
+	localmake "numInnerCircleRepeats 12
+	localmake "numOuterRepeats 9
+	setPenSize :penSize1
+	setFillColor transparent
+	repeat count :radii [
+		circle :radius * item repcount :radii
+	]
+	localmake "size1 :radius * 0.15
+	localmake "size2 :radius * 0.045
+	localmake "separation :radius * 0.055
+	localmake "ellipseRadius1 :radius * 0.032
+	localmake "ellipseRadius2 :radius * 0.022
+	setLineCap "round
+	setFillColor :backgroundColor
+	repeat :numInnerCircleRepeats [
+		localmake "heading1 heading
+		jumpForward :innerCircleMiddle
+		jumpLeft :size1 / 2
+		right 90
+		forward :size1
+		jumpBackward :size1 / 2
+		ellipse :ellipseRadius1 :ellipseRadius2
+		jumpTo :oldPos
+		setHeading :heading1 + 180 / :numInnerCircleRepeats
+		jumpForward :innerCircleMiddle + :separation / 2
+		jumpLeft :size2 / 2
+		right 90
+		forward :size2
+		jumpRight :separation
+		backward :size2		
+		jumpTo :oldPos
+		setHeading :heading1 + 360 / :numInnerCircleRepeats
+	]
+	localmake "outerSize :radius * 0.68
+	setHeading :oldHeading + 26
+	repeat :numOuterRepeats [
+		localmake "heading1 heading
+		jumpForward :outerSize
+		localmake "pos1 pos
+		setPenSize :penSize1
+		chakraOutline1 :radius * 0.35
+		chakraOutline2 :radius * 0.26
+		jumpForward :radius * 0.028
+		jumpLeft :radius * 0.012
+		chakraPeddles :radius * 0.1
+		jumpTo :pos1
+		jumpForward :radius * 0.082
+		jumpLeft :radius * 0.1135
+		left 66.5
+		setPenSize 0
+		setFillColor penColor
+		snake :radius * 0.135
+		jumpTo :pos1
+		setHeading :heading1
+		jumpForward :radius * 0.13
+		jumpRight :radius * 0.025
+		left 45
+		crescent :radius * 0.02
+		jumpTo :oldPos
+		setHeading :heading1 + 360 / :numOuterRepeats
+	]
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Thailand#/media/File:Flag_of_Thailand_(1782).svg
+to thailandNavalEnsignia1782Flag :height
+	localmake "oldState turtleState
+	localmake "width :height * 9 / 6
+	drawStripes :width 1 [[:redColor :height]]
+	setPenColor "white
+	setFillColor :redColor
+	jumpBackward :height / 2
+	chakra :height * 0.67143
+	setTurtleState :oldState
+end
+
+; To look like:
+; https://en.wikipedia.org/wiki/Flag_of_Thailand#/media/File:Flag_of_Thailand_(Ayutthaya_period).svg
+to thailand1680Flag :height
+	localmake "oldState turtleState
+	localmake "width :height * 9 / 6
+	setLineCap "butt
+	setPenSize :width
+	setPenColor :redColor
+	forward :height
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 3
+jumpLeft :separation * 1.5
+thailandFlag :height
+jumpRight :separation
+thailandCivilEnsigniaFlag :height
+jumpRight :separation
+thailandNavalEnsignia1782Flag :height
+jumpRight :separation
+thailand1680Flag :height

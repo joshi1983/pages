@@ -1,0 +1,219 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Christian_cross_variants#/media/File:Latin_cross_(bold).svg
+to latinCross :height
+	localmake "oldPos pos
+	localmake "width :height * 2 / 3
+	localmake "thickness :height * 0.1
+	stripes :thickness :height ["black]
+	jumpForward :height - (:width + :thickness) / 2
+	stripes :width :thickness ["black]
+	jumpTo :oldPos
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Christian_cross_variants#/media/File:Greek_cross_(bold).svg
+to greekCross :height
+	localmake "oldPos pos
+	localmake "thickness :height * 0.1
+	stripes :thickness :height ["black]
+	jumpForward (:height - :thickness) / 2
+	stripes :height :thickness ["black]
+	jumpTo :oldPos
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Christian_cross_variants#/media/File:ByzantineCross.svg
+to byzantineCross :height
+	localmake "oldState turtleState
+	localmake "coreThickness :height * 0.027
+	localmake "outerThickness :height * 0.056
+	localmake "width :height * 421 / 581
+	localmake "baseHeight :height - :width / 2
+	setFillColor "black
+	setPenSize 0
+	isoTrapezoid :outerThickness :coreThickness :baseHeight
+	jumpForward :baseHeight
+	left 90
+	repeat 3 [
+		isoTrapezoid :coreThickness :outerThickness :width / 2
+		right 90		
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Christian_cross_variants#/media/File:Patriarchal_cross_(bold).svg
+to patriarchalCross :height
+	localmake "oldPos pos
+	localmake "width :height * 2 / 3
+	localmake "thickness :height * 0.1
+	localmake "step :thickness * 5 / 3
+	stripes :thickness :height ["black]
+	jumpForward :height - (:width + :thickness) / 2
+	stripes :width :thickness ["black]
+	jumpForward :step
+	stripes :width - :step * 2 :thickness ["black]
+	jumpTo :oldPos
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Christian_cross_variants#/media/File:Double_cross_(bold).svg
+to doubleCross :height
+	localmake "oldState turtleState	
+	localmake "thickness :height * 0.1
+	jumpForward :height / 2
+	localmake "center pos
+	repeat 4 [
+		jumpBackward :thickness / 2
+		stripes :height :thickness ["black]
+		jumpTo :center
+		right 45
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Christian_cross_variants#/media/File:Cross_of_Lorraine_(bold).svg
+to crossOfLorraine :height
+	localmake "oldPos pos
+	localmake "thickness :height * 0.1
+	localmake "width :height * 2 / 3
+	localmake "separation :width / 2
+	stripes :thickness :height ["black]
+	jumpForward (:height - (:thickness + :separation)) / 2
+	repeat 2 [
+		stripes :width :thickness ["black]
+		jumpForward :separation
+	]
+	jumpTo :oldPos
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Christian_cross_variants#/media/File:Papal_cross_(bold).svg
+to papalCross :height
+	localmake "oldPos pos
+	localmake "width :height * 2 / 3
+	localmake "thickness :height * 0.1
+	localmake "step :thickness * 1.5
+	stripes :thickness :height ["black]
+	jumpForward :height / 2
+	repeat 3 [
+		stripes :width :thickness ["black]
+		jumpForward :step
+		localmake "width :width - :step * 1.25
+	]
+	jumpTo :oldPos
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Christian_cross_variants#/media/File:Cross_of_Salem_(bold).svg
+to crossOfSalem :height
+	localmake "oldPos pos
+	localmake "width :height * 2 / 3
+	localmake "thickness :height * 0.1
+	localmake "separation :height / 2
+	stripes :thickness :height ["black]
+	jumpForward (:height - :thickness) / 2	
+	stripes :width :thickness ["black]
+	jumpBackward :separation / 2
+	repeat 2 [
+		stripes :width / 2 :thickness ["black]
+		jumpForward :separation
+	]
+	jumpTo :oldPos
+end
+
+to drawPShape :height
+	localmake "oldState turtleState
+	localmake "thickness :height * 0.1
+	jumpForward :height - :thickness / 2
+	right 90
+	setPenSize :thickness
+	setLineCap "butt
+	setLineJoinStyle "round
+	localmake "len1 :height * 0.125
+	localmake "arcRadius :height * 0.117
+	forward :len1
+	arcRight 180 :arcRadius
+	forward :len1
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Christian_cross_variants#/media/File:Staurogram_(bold).svg
+to staurogramCross :height
+	localmake "oldPos pos
+	localmake "width :height * 0.6325
+	localmake "thickness :height * 0.1
+	stripes :thickness :height ["black]
+	jumpForward :height / 2
+	stripes :width :thickness * 0.95 ["black]
+	jumpTo :oldPos
+	drawPShape :height
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Christian_cross_variants#/media/File:Chi_Rho_(bold).svg
+to chiRhoCross :height
+	localmake "oldState turtleState
+	localmake "thickness :height * 0.1
+	localmake "thickness2 :thickness * 0.97
+	localmake "width :height * 0.95
+	localmake "angleStep 30
+	stripes :thickness :height ["black]
+	drawPShape :height
+	jumpForward :height * 0.475
+	localmake "center pos
+	left :angleStep
+	repeat 2 [
+		jumpBackward :thickness2 / 2
+		stripes :width :thickness2 ["black]
+		jumpTo :center
+		right :angleStep * 2
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Christian_cross_variants#/media/File:Calvary_cross_(bold).svg
+to calvaryCross :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "thickness :height * 0.095
+	localmake "width :height * 0.635
+	stripes :thickness :height ["black]
+	jumpForward :height - (:width + :thickness) / 2
+	stripes :width :thickness ["black]
+	jumpTo :oldPos
+	repeat 3 [
+		localmake "w :height * mix 0.285 0.63 repRatio
+		localmake "h :height * 0.426 - :w / 2
+		stripes :w :h ["black]
+	]
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 2
+jumpLeft :separation * 5
+latinCross :height
+jumpRight :separation
+greekCross :height
+jumpRight :separation
+byzantineCross :height
+jumpRight :separation
+patriarchalCross :height
+jumpRight :separation
+doubleCross :height
+jumpRight :separation
+crossOfLorraine :height
+jumpRight :separation
+papalCross :height
+jumpRight :separation
+crossOfSalem :height
+jumpRight :separation
+staurogramCross :height
+jumpRight :separation
+chiRhoCross :height
+jumpRight :separation
+calvaryCross :height

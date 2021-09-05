@@ -1,0 +1,109 @@
+to peddleShape :height
+	localmake "oldState turtleState
+	localmake "arcsInfo [
+		[10 4.2015]
+		[20 0.6811]
+		[55 0.15]
+	]
+	jumpRight :height * 0.35
+	setPenSize 0
+	left 5
+	polyStart
+	arcsLeft :arcsInfo :height
+	arcsLeft reverse :arcsInfo :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+to peddle :height :color
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "gradientRadius :height * 0.7
+	localmake "colorStops createPList2 [
+		[0 transparent] [0.5 transparent] [1 mix :color transparent 0.5]
+	]
+	setFillGradient createRadialGradient pos :gradientRadius * 0.7 :colorStops
+	peddleShape :height
+	localmake "colorStops createPList2 [
+	[0 transparent] [0.3 transparent] [1 :color]
+	]
+	setFillGradient createRadialGradient pos :gradientRadius :colorStops
+	peddleShape :height
+	localmake "colorStops createPList2 [
+		[0 transparent] [1 :color]
+	]
+	jumpForward :height * 0.7
+	setFillGradient createLinearGradient :oldPos pos :colorStops "pad
+	jumpTo :oldPos
+	peddleShape :height
+	setTurtleState :oldState
+end
+
+to flower :size :color
+	localmake "oldPos pos
+	localmake "size1 :size * 0.33
+	localmake "peddleSize :size - :size1
+	localmake "numPeddles 5
+	repeat :numPeddles [
+		jumpForward :size1
+		peddle :peddleSize :color	
+		right 360 / :numPeddles
+		jumpTo :oldPos
+	]
+end
+
+to arcCircle :angle :arcRadius :dotSize
+	localmake "oldState turtleState
+	arcLeft :angle :arcRadius
+	circle :dotSize
+	setTurtleState :oldState
+end
+
+to multiColorFlower :size
+	localmake "dotSize :size * 0.05
+	localmake "colorStops createPList2 [
+		[0 "black] [1 transparent]
+	]
+	setFillGradient createRadialGradient pos :size * 0.5 :colorStops
+	setPenSize 0
+	circle :size * 0.5
+	flower :size "#F759D5
+	flower :size * 0.2 "orange
+	setPenColor "white
+	setFillColor penColor
+	setPenSize :size * 0.01
+	arcCircle 50 :size * 1.1 :dotSize
+	arcCircle 70 :size * 0.6 :dotSize
+	arcCircle 100 :size * 0.3 :dotSize
+end
+
+; Inspired by the final image in this
+; Photoshop tutorial:
+; https://www.youtube.com/watch?v=-pLE_UXYJ-4
+to flowers :height
+	localmake "oldState turtleState
+	jumpRight :height * 0.14
+	localmake "oldPos pos
+	localmake "arcRadius1 :height * 0.8
+	setPenColor "white
+	setLineCap "round
+	right 30
+	localmake "heading1 heading
+	setPenSize :height * 0.01
+	arcLeft 30 :arcRadius1
+	arcLeft 20 :arcRadius1 * 0.5
+	arcLeft 50 :arcRadius1 * 0.3
+	multiColorFlower :height * 0.22
+	jumpTo :oldPos
+	setHeading :heading1
+	setPenSize 0
+	arcLeft 15 :arcRadius1
+	setPenSize :height * 0.005
+	arcLeft 30 :arcRadius1 * 0.3
+	arcLeft 60 :arcRadius1 * 0.2
+	multiColorFlower :height * 0.12
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+flowers 100

@@ -1,0 +1,59 @@
+; Inspired by favicon at:
+; https://swoheritage.ca/
+; 2 white spots on either side were drawn as squares
+; here but I thought they could be a mistake by
+; the designer of the original logo.
+to southWesternOntarioHeritageLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "radius :height / 2
+	localmake "arcRadius :height * 0.53
+	localmake "smallAngle 82
+	localmake "angles [180 - :smallAngle :smallAngle]
+	localmake "arcsInfo1 [
+		[40 0.117] [50 0.09]
+	]
+	localmake "arcsInfo combine :arcsInfo1 reverse :arcsInfo1
+	localmake "arcsInfoFull combine :arcsInfo :arcsInfo
+	localmake "squareSize :height * 0.02
+	localmake "separation :height - :squareSize
+	stripes :height :height ["#398ec0]
+	jumpForward :height / 2
+	localmake "center pos
+	setFillColor "white
+	setPenSize 0
+	repeat 4 [
+		localmake "index 1 + remainder repcount 2
+		localmake "angle item :index :angles
+		localmake "chordLength :radius * 2 * sin :angle / 2
+		localmake "arcAngle 2 * arcSin :chordLength / 2 / :arcRadius
+		setHeading :oldHeading - :angle / 2 + repcount * 360 / 4
+		jumpForward :radius
+		right 90
+		polyStart
+		arcRight :angle :radius
+		right 180 - :angle / 2 - :arcAngle / 2
+		arcRight :arcAngle :arcRadius
+		polyEnd
+		jumpTo :center
+	]
+	setHeading :oldHeading
+	jumpBackward :height * 0.01
+	setFillColor transparent
+	setPenColor "white
+	setPenSize :height * 0.045
+	jumpRight :height * 0.094
+	arcLines :arcsInfoFull :height
+
+	setHeading :oldHeading
+	jumpTo :center
+	jumpLeft (:height - :squareSize) / 2
+	jumpForward :height * 0.257
+	repeat 2 [
+		stripes :squareSize :squareSize ["white]
+		jumpRight :separation
+	]	
+	setTurtleState :oldState
+end
+
+southWesternOntarioHeritageLogo 100

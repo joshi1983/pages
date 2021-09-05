@@ -1,0 +1,188 @@
+; Inspired by
+; https://www.pinterest.ca/pin/211174970104334/
+
+to backgroundGradient :radius :sunRatio
+	localmake "colorStops createPList2 [
+		[0 "white] [:sunRatio * 0.8 "yellow] [:sunRatio "orange]
+		[:sunRatio * 1.01 "red] [1 "#505]
+	]
+	setFillGradient createRadialGradient pos :radius :colorStops
+	setPenSize 0
+	circle :radius
+	backgroundVerticalGradient :radius
+end
+
+to backgroundVerticalGradient :radius
+	localmake "oldPos pos
+	setPenSize 0
+	jumpForward :radius
+	localmake "fromPos pos
+	jumpBackward :radius * 2
+	localmake "colorStops createPList2 [
+		[0 "#0ff8] [0.4 "#1ff8] [0.5 "#5ffb] [0.6 "#1ff8]
+		[1 "#0ff8]
+	]
+	setFillGradient createLinearGradient :fromPos pos :colorStops "pad
+	jumpTo :oldPos
+	circle :radius
+end
+
+to setSkyPenGradient :radius :sunRatio
+	localmake "colorStops createPList2 [
+		[0 "white] [mix :sunRatio 1 0.5 "yellow] [1 "red]
+	]
+	setPenGradient createRadialGradient pos :radius :colorStops
+end
+
+to halfSun :radius
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "sunRatio 0.15
+	localmake "sunRadius :radius * :sunRatio
+	localmake "numAngles 32
+	backgroundGradient :radius :sunRatio
+	setSkyPenGradient :radius :sunRatio
+	setPenSize :radius * 0.005
+	repeat :numAngles + 1 [
+		
+		jumpTo :oldPos
+		setHeading :oldHeading - 90 + 180 * (repcount - 1) / :numAngles 
+		jumpForward :sunRadius
+		penDown
+		forward :radius	- :sunRadius
+	]
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to dashedLine :lengths :len
+	while :len > 0 [
+		repeat count :lengths [
+			if :len <= 0 [
+				stop
+			]
+			ifelse even? repcount [
+				penUp
+			] [
+				penDown
+			]
+			localmake "len1 min :len (item repcount :lengths)
+			forward :len1
+			localmake "len :len - :len1
+		]
+	]
+end
+
+to getLengthsFrom :len
+	localmake "result []
+	repeat 5 [
+		queue "result :len * 0.05 + :len * 0.01 * random 10
+		queue "result :len * 0.03 + :len * 0.005 * random 10
+	]
+	output :result
+end
+
+to drawWater :radius
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "numLines 24
+	localmake "step :radius / :numLines
+	repeat :numLines [
+		localmake "ratio power (repcount - 1) / :numLines 1.9
+		localmake "len :radius * sqrt (1 - :ratio * :ratio)
+		localmake "lengths1 getLengthsFrom :radius * 0.2 * repcount
+		localmake "midGap :len * (0.1 + 0.02 * random 10)
+		
+		jumpTo :oldPos
+		setHeading :oldHeading
+		jumpBackward :ratio * :numLines * :step
+		right 90
+		jumpBackward :len
+		dashedLine :lengths1 :len - :midGap / 2
+		
+		jumpForward :midGap
+		dashedLine :lengths1 :len - :midGap / 2
+	]
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to drawSunReflection :radius
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "numLines 32
+	localmake "colorStops createPList2 [
+		[0 "purple] [0.3 "purple] [0.44 "yellow] [0.5 "white]
+		[0.56 "yellow] [0.7 "purple] [1 "purple]
+	]
+	setPenSize 0
+	right 90
+	jumpBackward :radius
+	localmake "fromPos pos
+	jumpForward :radius * 2
+	setFillGradient createLinearGradient :fromPos pos :colorStops "pad
+	repeat :numLines [
+		localmake "ratio power (repcount - 1) / :numLines 3
+		setHeading :oldHeading
+		jumpTo :oldPos
+		jumpBackward :radius * 0.95 * :ratio
+		right 90
+		jumpBackward :radius * ((0.008 * random 10) - 0.04)
+		ellipse :radius * (0.007 - 0.004 * (1 - :ratio)) :radius * (0.2 - 0.18 * :ratio)
+	]
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to drawMan :size
+	setPenSize :size * 0.004
+	drawArcLineShape [0 0
+		[[-5 0] [0.15] [-170 0] [0.15] [85 0]
+		[0.08] [125 0]
+	; foot
+	[0.05] [-31 0] [0.18] [-6 0] [0.18] [-23 0]
+
+	; right arm
+	[35 0.62]
+
+	; right shoulder
+	[45 0.06] [5 0.5] [-40 0.02] [-70 0.06]
+
+	; head
+	[30 0.08] [80 0.04] [20 0.05] [-80 0] [0.005]
+		[70 0.004] [30 0.1] [70 0.01] [-70 0.01] [70 0.03] [30 0.04]
+		[-20 0.25] [-60 0.02] [5 0.3] [-10 0.1]
+
+	; left shoulder
+	[50 0.05] [12 1] [15 0.1] [0.15] [45 0.05] [-55 0] [0.2]
+		[-5 0] [4 2.6]
+	]] :size
+end
+
+to drawBeach :radius
+	localmake "oldPos pos
+	localmake "backRatio 0.9
+	localmake "lenFactor sqrt 1 - :backRatio * :backRatio
+	localmake "angle arcCos :backRatio
+	setPenSize 0
+	jumpBackward :radius * :backRatio
+	setFillColor "black
+	drawArcLineShape [:lenFactor 0
+		[[:angle - 270 0] [-:angle * 1.9 1]]
+		] :radius
+	jumpBackward :radius * 0.01
+	drawMan :radius * 0.3
+	jumpTo :oldPos
+end
+
+to drawPicture :radius
+	halfSun :radius
+	drawWater :radius
+	localmake "gradient penGradient
+	drawSunReflection :radius
+	setPenGradient :gradient
+	drawBeach :radius
+end
+
+setScreenColor "black
+drawPicture 150

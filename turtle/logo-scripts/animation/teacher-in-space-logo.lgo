@@ -1,0 +1,194 @@
+to drawStar :starSize
+	localmake "oldState turtleState
+	localmake "len1 0.34
+	localmake "len2 0.1
+	localmake "len3 0.21
+	localmake "arcRadius1 0.033
+	localmake "arcRadius2 0.02
+	localmake "arcs1 [
+		[-90 0] [-90 :arcRadius1] [:len1] [135 :arcRadius2] [:len2]
+		[-180 :arcRadius1] [:len2] [135 :arcRadius2] [:len3] [-90 :arcRadius1]
+	]
+	localmake "arcs2 (combine :arcs1 reverse :arcs1 [[180 0]])
+	localmake "starShape [0 0 combine :arcs2 :arcs2]
+	localmake "startY :len1 + :arcRadius1 + (:arcRadius1 + :arcRadius2) / tan 45 / 2
+	jumpForward :startY * :starSize
+	drawArcLineShape :starShape :starSize
+	setTurtleState :oldState
+end
+
+to drawStars :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "stars [
+		["blue [[-0.1927 0.77] [0.195 0.61] [0.262 0.66]
+			[0.227 0.8416] [0.354 0.441]]]
+		["white [[-0.132 0.8557] [0.098 0.645] [0.2015 0.71] [0.403 0.346]]]
+	]
+	localmake "starSize :height * 0.053
+	setPenSize 0
+	repeat count :stars [
+		localmake "starsOfColor item repcount :stars
+		localmake "starPoints last :starsOfColor
+		setFillColor first :starsOfColor
+		repeat count :starPoints [
+			localmake "point item repcount :starPoints
+			jumpRight :height * first :point
+			jumpForward :height * last :point
+			drawStar :starSize
+			jumpTo :oldPos
+		]
+	]
+	setTurtleState :oldState
+end
+
+to drawEarth :height :cornerRadius
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	setFillColor "white
+	localmake "startY :cornerRadius * 0.43
+	localmake "startY2 :cornerRadius - :startY
+	jumpRight :height / 2 - :cornerRadius
+	localmake "bottomRight pos
+	jumpForward :cornerRadius
+	localmake "rightCenter pos
+	
+	jumpTo :oldPos
+	jumpForward :startY
+	jumpLeft :height / 2 - :cornerRadius + sqrt :cornerRadius * :cornerRadius - :startY2 * :startY2
+	setFillColor "white
+	localmake "startPos pos
+	polyStart
+	right 15
+	localmake "arcRadius :height * 0.5085
+	arcRight 148 :arcRadius ; enough to get in the corner circle.
+	localmake "arcAngle getArcRightAngleToCircle :arcRadius :rightCenter :cornerRadius
+	arcRight :arcAngle :arcRadius
+	setHeading (towards :rightCenter) - 90
+	localmake "arcAngle 2 * arcSin (distance :bottomRight) / 2 / :cornerRadius
+	arcRight :arcAngle :cornerRadius
+	jumpForward :height - :cornerRadius * 2
+	localmake "arcAngle 2 * arcSin (distance :startPos) / 2 / :cornerRadius
+	localmake "bottomLeft pos
+	arcRight :arcAngle :cornerRadius
+	polyEnd
+
+	setFillColor "#0227a9
+	right 180
+	arcLeft 9 :cornerRadius
+	left 120.5
+	polyStart
+	localmake "startPos pos
+	localmake "arcRadius :height * 0.4717
+	arcRight 145 :arcRadius ; get into the corner circle.
+	localmake "arcAngle getArcRightAngleToCircle :arcRadius :rightCenter :cornerRadius
+	arcRight :arcAngle :arcRadius
+	localmake "arcAngle 2 * arcSin (distance :bottomRight) / 2 / :cornerRadius
+	setHeading (towards :rightCenter) - 90
+	arcRight :arcAngle :cornerRadius
+	setHeading towards :oldPos
+	jumpForward distance :bottomLeft
+	localmake "arcAngle 2 * arcSin (distance :startPos) / 2 / :cornerRadius
+	arcRight :arcAngle :cornerRadius
+	polyEnd
+	setTurtleState :oldState
+end
+
+to drawTorch :height
+	localmake "oldState turtleState
+	localmake "flameShapes [
+		["#d669d1 [[32 0] [37 0.1] [13 0.4] [0.14] [-33 0.31] [-20 0.21] [-6 0.8]
+			[-148 0] [24 0.2] [0.13] [-40 0.5]]]
+		["#f4af13 [[20 0] [36.7 0.863] [-18 0] [-25 0.21] [-132 0] [17 0.21] [0.14]
+			[-40 0.28]]]
+		["#dd4a07 [[26 0] [25 0.38] [10 0.2] [0.2] [-19 0.67] [-15 0.3] [-126 0] [7 2.3]
+			[-5.6 1.6] [-115 0.218] [-16 0.32]]]
+	]
+	setPenSize 0
+	setFillColor "black
+	jumpRight :height * 0.04
+	isoTrapezoid :height * 0.05 :height * 0.08 10
+	jumpForward :height * 0.215
+	right 180
+	isoTriangle :height * 0.32 :height * 0.16
+	right 180
+	repeat count :flameShapes [
+		localmake "shape item repcount :flameShapes
+		localmake "arcs last :shape
+		setFillColor first :shape
+		drawArcLineShape [0 0.01 :arcs] :height
+	]
+	setTurtleState :oldState
+end
+
+to drawShuttle :height
+	localmake "arcs [[-90 0] [78.7 0.007] [0.096] [-78.7 0.0135] [0.0335] [90 0.0085]
+		[0.024] [-90 0.007] [0.012] [88 0.008] [0.0321] [-80 0.008] [0.184]
+		[89 0.0085] [0.082] [39 0.078] [0.158] [-38 0.1] [0.3] [10 0.5] [30 0.2] [42 0.01671645]]
+	drawArcLineShape [0 0 combine :arcs reverse :arcs] :height
+end
+
+to drawShuttleAndTrail :height :timeRatio
+	localmake "oldState turtleState
+	localmake "angle1 40 * min 1 3 * :timeRatio
+	localmake "angle2 15 * clamp 3 * (:timeRatio - 1 / 3) 0 1
+	localmake "arcs1 [[-55 0] [:angle1 0.35]]
+	if :angle2 > 0 [
+		queue2 "arcs1 [:angle2 1.3]
+	]
+	if :timeRatio > 2 / 3 [
+		queue2 "arcs1 [0.4 * (:timeRatio - 2 / 3)]
+	]
+	localmake "angle3 145 - :angle1 - :angle2
+	localmake "arcs (combine :arcs1 [[:angle3 0] [0.023] [180 - :angle3 0]] 
+		reverse flipAngles :arcs1)
+	setFillColor "#f4af13
+	jumpLeft :height * 0.17
+	drawArcLineShape [0 0 :arcs] :height
+
+	arcLines :arcs1 :height
+	jumpLeft :height * 0.0115
+	jumpBackward :height * 0.0306
+	setFillColor "white
+	drawShuttle :height * 0.26964
+	setTurtleState :oldState
+end
+
+; Inspired by:
+; https://en.wikipedia.org/wiki/Teacher_in_Space_Project#/media/File:Teacher_in_Space_logo.svg
+to teacherInSpaceLogo :height :timeRatio
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "cornerRadius :height * 0.08
+	setPenSize 0
+	jumpForward :height / 2
+	setFillColor "black
+	roundRect :height :height :cornerRadius
+	jumpTo :oldPos
+	drawStars :height
+	drawEarth :height :cornerRadius
+	drawTorch :height
+	drawShuttleAndTrail :height :timeRatio
+	setTurtleState :oldState
+end
+
+make "timeRatio interpolateRatio easeIn animation.clampedTimeRatio
+make "timeRatio min 1 :timeRatio * 1.5
+teacherInSpaceLogo 100 :timeRatio
+
+to animation.snapshotstyle
+	output createPList2 [
+		["position.y 50]
+		["zoom.scale 6]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 2
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+		["thumbnailTime 2]
+	]
+end

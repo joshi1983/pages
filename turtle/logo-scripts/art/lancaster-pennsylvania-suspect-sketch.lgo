@@ -1,0 +1,173 @@
+to drawHat :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	jumpForward :height * 0.6
+	jumpLeft :height * 0.65
+	arcLines [[-66 0] [-33 2] [-22 0.2] [-12 0.5] [95 0.01] [22 0.3]
+		[87 0] [26 1.65] [0.4] [17 0.5] [29 0.05] [20 0.3] [45 0.04]
+	] :height
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.73
+	jumpLeft :height * 0.624
+	arcLines [[-61.5 0] [0.3] [-23 0.9] [0.18] [-19 0.3] [0.15] [-45 0.14]
+		[0.09]] :height
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.888
+	jumpLeft :height * 0.213
+	arcLines [[95 0] [49.5 0.19]] :height
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.94
+	jumpLeft :height * 0.013
+	arcLines [[95 0] [48 0.31]] :height
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.96
+	jumpRight :height * 0.169
+	arcLines [[90 0] [48 0.25]] :height
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.955
+	jumpRight :height * 0.322
+	arcLines [[106 0] [0.115]] :height
+
+	setTurtleState :oldState	
+end
+
+to drawEyes :height
+	localmake "oldState turtleState
+	localmake "separation1 :height * 0.34
+	localmake "separation2 :height * 0.6
+	localmake "dashLength :height * 0.05
+	jumpForward :height * 0.51
+	jumpLeft :separation1 / 2
+	setPenSize 0
+	setFillColor "black
+	repeat 2 [
+		ellipse :height * 0.03 :height * 0.02
+		jumpRight :separation1
+	]
+	jumpLeft :separation1 * 1.5 + :separation2 / 2 + :dashLength
+	right 90
+	setPenSize :height * 0.012
+	repeat 2 [
+		forward :dashLength
+		jumpForward :separation2
+	]
+	setTurtleState :oldState	
+end
+
+to drawNose :height
+	localmake "oldState turtleState
+	jumpForward :height * 0.495
+	jumpRight :height * 0.01
+	arcLines [[150 0] [0.15] [120 0.02] [0.045]] :height
+	setTurtleState :oldState	
+end
+
+to drawMouth :height
+	localmake "oldState turtleState
+	jumpForward :height * 0.165
+	jumpRight :height * 0.02
+	arcLines [[95 0] [0.067]] :height
+	setTurtleState :oldState	
+end
+
+to drawJaw :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "angle1 52
+	localmake "arcs1 [
+		[90 - :angle1 0.3]  [0.4] [:angle1 * 2 0.2]
+	]
+	jumpForward penSize / 2
+	localmake "startPos pos
+	left 90
+	arcLines :arcs1 -:height
+	jumpTo :startPos
+	setHeading :oldHeading + 90
+	arcLines :arcs1 :height
+	setTurtleState :oldState	
+end
+
+to drawCheeks :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	jumpForward :height * 0.339
+	jumpLeft :height * 0.222
+	left 134
+	forward :height * 0.07
+	
+	setHeading :oldHeading
+	jumpTo :oldPos
+	jumpForward :height * 0.315
+	jumpRight :height * 0.252
+	left 72
+	arcRight 40 :height * 0.1	
+	setTurtleState :oldState	
+end
+
+to drawHair :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "width :height * 1.18
+	jumpForward :height * 0.36
+	localmake "numIterations 500
+	localmake "points []
+	; Drawing is slightly asymmetrical.
+	jumpRight :height * 0.02
+	localmake "startPos pos
+	setLineJoinStyle "round
+	repeat 2 [
+		repeat :numIterations [
+			localmake "ratio1 1 - repRatio
+			localmake "ratio interpolateRatio easeOutQuart :ratio1
+			localmake "ratio2 interpolateRatio easeOut :ratio1
+			localmake "angle 360 * 15 * repRatio
+			localmake "x repRatio * :width / 2
+			localmake "yMin :ratio * :height * 0.3
+			localmake "yMax (:ratio2 * 0.12 + 0.27) * :height
+			localmake "y :yMin + (:yMax - :yMin) * (1 + cos :angle) / 2
+			jumpLeft :x
+			jumpForward :y
+			queue2 "points pos
+			jumpTo :startPos
+		]
+		jumpTo first :points
+		for ["i 2 count :points] [
+			setPos item :i :points
+		]
+		setHeading :oldHeading
+		jumpTo :startPos
+		localmake "points []
+		localmake "width -:width
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by sketch in:
+; https://www.youtube.com/watch?v=WRFmVxpiICc
+to lancasterSuspectSketch :height
+	localmake "oldState turtleState
+	setPenColor "black
+	setPenSize :height * 0.01
+	setLineCap "round
+	drawJaw :height
+	drawEyes :height
+	drawHat :height
+	drawNose :height
+	drawMouth :height
+	drawCheeks :height
+	drawHair :height
+	setTurtleState :oldState
+end
+
+lancasterSuspectSketch 100
