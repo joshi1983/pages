@@ -1,0 +1,152 @@
+; Made to look like:
+; https://en.wikipedia.org/wiki/Union_Jack#/media/File:Flag_of_the_United_Kingdom.svg
+
+make "blueColor "#012169
+make "redColor "#C8102E
+make "crossAngle arcTan 0.5
+
+to drawNarrowStrip :width :angle
+	localmake "width :width * 0.5 * (1 - 5 / 30 / tan :angle)
+	localmake "sizePrime :width * 3 / 30
+	localmake "oldPos pos
+	localmake "oldHeading heading
+
+	localmake "size2 :sizePrime / sin :angle
+	localmake "size3 (:width - :size2) / cos :angle
+	localmake "size4 :sizePrime / cos :angle
+	setPenSize 0
+	setFillColor :redColor
+	polyStart
+	jumpForward :size2
+	right :angle
+	jumpForward :size3
+	right 90 - :angle
+	jumpForward :size4
+	right 90 + :angle
+	
+	jumpForward distance :oldPos
+	polyEnd
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to drawNarrowStrip2 :width :angle
+	localmake "oldState turtleState
+	localmake "width :width * 0.5 * (1 - 5 / 30 / tan :angle)
+	localmake "sizePrime :width * 3 / 30
+
+	localmake "size2 :sizePrime / sin :angle
+	localmake "size3 :width / cos :angle
+	setPenSize 0
+	setFillColor :redColor
+	polyStart
+	right 180 - :angle
+	jumpForward :size3
+	left 180 - :angle
+
+	jumpForward :size2
+	left :angle
+	jumpForward :size3
+	polyEnd
+	setTurtleState :oldState
+end
+
+to unionJack :width
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "height :width * 0.5 
+	localmake "size1 :height * 10 / 30
+	localmake "size2 :height * 6 / 30
+	setPenColor :blueColor
+	setLineCap "butt
+	right 90
+	jumpBackward :width / 2
+	stripes :height :width [:blueColor]
+	stripes :size1 :width ["white]
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpBackward :height / 2
+	stripes :size1 :height ["white]
+	
+	jumpTo :oldPos
+	setPenSize :size2
+	whiteCross :width
+	left 90
+	jumpBackward :width / 2
+	
+	setPenColor :redColor
+	setPenSize :size2
+	forward :width
+	jumpBackward :width / 2
+	right 90
+	jumpForward :height / 2
+	
+	backward :height
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :size1 * 0.5
+	left 90
+	jumpForward :size1
+	drawNarrowStrip :width :crossAngle
+
+	setHeading :oldHeading
+	jumpBackward :size1
+	right 90
+	drawNarrowStrip2 :width :crossAngle
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpBackward :size1 * 0.5
+	right 90
+	jumpForward :size1
+	drawNarrowStrip :width :crossAngle
+
+	left 90
+	jumpForward :size1
+	left 90
+	drawNarrowStrip2 :width :crossAngle
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to whiteCross :width
+	localmake "oldState turtleState
+	localmake "height :width * 0.5
+	localmake "s :width * 4 / 30
+	localmake "w :s * cos :crossAngle
+	localmake "h :s * sin :crossAngle
+	localmake "size1 (:width * 0.5 - :w) / cos :crossAngle
+	setPenColor "black
+	jumpForward :height / 2
+	right 90
+	jumpForward :width / 2 - :w
+	setFillColor "white
+	setPenSize 0
+	polyStart
+
+	repeat 2 [
+		jumpForward :w
+		right 90
+		jumpForward :h
+		right 90 - :crossAngle
+		jumpForward :size1
+		left 180 - (:crossAngle * 2)
+		jumpForward :size1
+		right 90 - :crossAngle
+		jumpForward :h
+		right 90
+		jumpForward :w
+		right :crossAngle
+		jumpForward :size1
+		left :crossAngle * 2
+		jumpForward :size1
+		right :crossAngle
+	]
+
+	polyEnd
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+unionJack 300
