@@ -1,0 +1,26 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Denmark#/media/File:Flag_of_Greenland.svg
+to greenlandFlag :height
+	localmake "oldState turtleState
+	localmake "radius :height * 4 / 12
+	localmake "width :height * 3 / 2
+	localmake "greenlandRed "#C8102E
+	stripes :width :height [:greenlandRed "white]
+	jumpForward :height / 2
+	jumpRight :height / 6
+	left 180
+	setPenSize 0
+	setFillColor "white
+	polyStart
+	arcRight 180 :radius
+	polyEnd
+	setFillColor :greenlandRed
+	polyStart
+	arcRight 180 :radius
+	polyEnd
+	setTurtleState :oldState
+end
+
+; #eee is for a subtle contrast with the white parts of the flag
+setScreenColor "#eee
+greenlandFlag 100
