@@ -1,0 +1,27 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Sudan#/media/File:Flag_of_Sudan.svg
+; Referenced from:
+; https://en.wikipedia.org/wiki/Sudan
+to sudanFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 2
+	localmake "colors ["black "white "#d21034]
+	localmake "angle arcTan 2 / 1.5
+	setPenSize :width
+	setLineCap "butt
+	repeat count :colors [
+		setPenColor item repcount :colors
+		forward :height / count :colors
+	]
+	jumpLeft :width / 2
+	setFillColor "#007229
+	setPenSize 0
+	polyStart
+	jumpBackward :height
+	right :angle
+	jumpForward :height / 2 / cos :angle
+	polyEnd
+	setTurtleState :oldState
+end
+
+sudanFlag 100

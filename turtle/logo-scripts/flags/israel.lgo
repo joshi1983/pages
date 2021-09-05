@@ -1,0 +1,49 @@
+; This is made to look like the flag at
+; https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1280px-Flag_of_Israel.svg.png
+
+make "israelblue "#0038b8
+make "width 350
+make "height 255
+make "stripeOffset :height * 0.5 - :width / 8
+make "starSize 80
+
+to triangle :size
+	repeat 3 [
+		forward :size
+		right 120
+	]
+	closePath
+end
+
+setScreenColor "gray
+
+; draw white background for just the flag
+setPenColor "white
+setPenSize :height
+jumpTo [-0.5 * :width 0]
+
+setHeading 90
+forward :width
+
+; draw blue strips.
+setPenColor :israelblue
+setPenSize 40
+jumpTo [-0.5 * :width -:stripeOffset]
+
+setHeading 90
+forward :width
+jumpTo [-0.5 * :width :stripeOffset]
+forward :width
+
+; draw the star
+setPenSize 9
+setHeading 0
+jumpTo [-0.5 * :starSize -0.5 * :starSize / sqrt 3]
+
+right 30
+triangle :starSize
+forward :starSize / 3
+left 60
+jumpForward :starSize / 3
+right 120
+triangle :starSize

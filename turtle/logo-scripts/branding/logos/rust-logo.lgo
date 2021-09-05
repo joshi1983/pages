@@ -1,0 +1,117 @@
+to letterR :logoHeight
+	localmake "tinyArcRadius :logoHeight * 0.0048
+	jumpLeft :logoHeight * 0.36
+	jumpForward :logoHeight * 0.28095
+	setPenSize 0
+	setFillColor penColor
+	polyStart
+	jumpRight :logoHeight * 0.36472
+	right 90
+	arcLeft 90 :tinyArcRadius
+	jumpForward :logoHeight * 0.1047
+	arcLeft 90 :tinyArcRadius
+	jumpForward :logoHeight * 0.08091
+	jumpRight :logoHeight * 0.066655
+	right 180
+	jumpForward :logoHeight * 0.09
+	arcRight 10 :logoHeight * 0.08
+	arcRight 45 :logoHeight * 0.0511
+	arcRight 20 :logoHeight * 0.1
+	arcRight 4 :logoHeight * 0.8
+	arcLeft 10 :logoHeight * 0.2
+	arcLeft 10 :logoHeight * 0.09
+	arcLeft 25 :logoHeight * 0.058
+	arcLeft 20 :logoHeight * 0.036
+	arcLeft 5 :logoHeight * 0.055
+	arcLeft 9 :logoHeight * 0.08
+	jumpForward :logoHeight * 0.24
+	jumpLeft :logoHeight * 0.1905
+	jumpBackward :logoHeight * 0.0617
+	right 180
+	arcLeft 90 :tinyArcRadius
+	jumpForward :logoHeight * 0.0235
+	arcRight 30 :logoHeight * 0.055
+	circle 0.1
+	arcRight 138 :logoHeight * 0.042
+	arcLeft 39 :logoHeight * 0.153
+	right 115
+	arcLeft 30 :logoHeight * 0.13
+	circle 0.1
+	arcLeft 65 :logoHeight * 0.11
+	circle 0.1
+	arcLeft 30 :logoHeight * 0.15
+	circle 0.1
+	arcLeft 29 :logoHeight * 0.13
+	jumpForward :logoHeight * 0.458
+	jumpLeft :logoHeight * 0.114219
+	jumpBackward :logoHeight * 0.38
+	right 180
+	arcRight 15 :logoHeight * 0.1
+	arcRight 39 :logoHeight * 0.0405
+	arcRight 72 :logoHeight * 0.025
+	arcRight 39 :logoHeight * 0.0405
+	arcRight 15 :logoHeight * 0.1
+	jumpForward :logoHeight * 0.1188
+	jumpRight :logoHeight * 0.08
+	jumpForward :logoHeight * 0.161935
+	jumpLeft :logoHeight * 0.25126
+	jumpForward :logoHeight * 0.15
+	polyEnd
+end
+
+to rustGears :logoHeight
+	localmake "oldHeading heading
+	localmake "innerRadius :logoHeight * 0.367
+	localmake "numInnerHoles 5
+	localmake "gapArcAngle 21.3
+	localmake "chordLength :innerRadius * 2 * sin :gapArcAngle / 2
+	localmake "arcAngle1 360 / :numInnerHoles - :gapArcAngle 
+	localmake "cornerRadius :logoHeight * 0.03
+	localmake "size1 (:chordLength * cos 45) - :cornerRadius
+	localmake "angle1 45 + :gapArcAngle / 2
+	setPenSize :logoHeight * 0.027
+	setFillColor penColor
+	setLineJoinStyle "round
+	jumpForward :logoHeight / 2
+	localmake "center pos
+	isotoxalStar (:logoHeight - penSize) / 2 :logoHeight * 0.4225 32
+	setFillColor transparent
+	circle :logoHeight * 0.439
+	setPenSize 0
+	jumpBackward :innerRadius
+	left 90
+	arcRight :arcAngle1 / 2 :innerRadius
+	setFillColor "white
+	polyStart
+	repeat :numInnerHoles [
+		right :angle1
+		jumpForward :size1
+		arcLeft 90 :cornerRadius
+		jumpForward :size1
+		right :angle1
+		arcRight :arcAngle1 :innerRadius
+	]
+	polyEnd
+	jumpTo :center
+	setHeading :oldHeading
+	repeat :numInnerHoles [
+		jumpForward :logoHeight * 0.38
+		circle :logoHeight * 0.03
+		jumpTo :center
+		right 360 / :numInnerHoles
+	]
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Rust_(programming_language)#/media/File:Rust_programming_language_black_logo.svg
+; The color is determined by penColor.
+to rustLogo :height
+	localmake "oldState turtleState
+	rustGears :height
+	setTurtleState :oldState
+	letterR :height
+	setTurtleState :oldState
+end
+
+setPenColor "black
+rustLogo 100

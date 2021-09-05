@@ -1,0 +1,173 @@
+make "cornerRadiusRatio 0.11
+make "aspectRatio 586 / 300
+
+to whiteBackground :height
+	localmake "oldState turtleState
+	localmake "width :height * :aspectRatio
+	localmake "cornerRadius :height * :cornerRadiusRatio
+	localmake "innerWidth :width - :cornerRadius * 2
+	localmake "innerHeight :height - :cornerRadius * 2
+	jumpRight :innerWidth / 2
+	left 90
+	setPenSize 0
+	setFillColor "white
+	polyStart
+	repeat 2 [
+		jumpForward :innerWidth
+		arcRight 90 :cornerRadius
+		jumpForward :innerHeight
+		arcRight 90 :cornerRadius
+	]
+	polyEnd
+	setTurtleState :oldState
+end
+
+to blueShape :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "width :height * :aspectRatio
+	localmake "cornerRadius :height * :cornerRadiusRatio
+	localmake "innerWidth :width - :cornerRadius * 2
+	localmake "innerHeight :height - :cornerRadius * 2
+	jumpLeft :height * 0.1625
+	setPenSize 0
+	setFillColor "#041e42
+	left 31
+	polyStart
+	jumpForward :height * 0.087
+	setHeading :oldHeading - 90
+	jumpForward :height * 0.081
+	right 90
+	arcRight 10 :height * 0.8
+	arcRight 15 :height * 0.4
+	arcRight 20 :height * 0.26
+	arcRight 31.2 :height * 0.125
+	arcLeft 50 :height * 0.0055
+	arcLeft 20 :height * 0.02
+	arcLeft 29 :height * 0.115
+	arcLeft 16 :height * 0.04
+	setHeading :oldHeading - 90
+	jumpForward :height * 0.049
+	arcRight 75 :height * 0.0037
+	arcRight 20 :height * 0.018
+	arcRight 20.12 :height * 0.019
+	jumpForward :height * 0.09175
+	left 38.226
+	jumpForward :height * 0.023567
+	setHeading :oldHeading - 90
+	jumpForward :height * 0.14535
+	right 145.04
+	jumpForward :height * 0.14576
+	left 53.3
+	arcRight 13 :height * 0.3
+	arcRight 50 :height * 0.17
+	arcRight 35 :height * 0.225
+	arcRight 21 :height * 0.37
+	arcRight 45 :height * 0.165
+	arcRight 19.44 :height * 0.402
+	arcRight 50 :height * 0.002
+	arcRight 13 :height * 0.004
+	arcRight 10 :height * 0.01
+	arcRight 10 :height * 0.02
+	arcRight 5 :height * 0.07
+	arcRight 5.9 :height * 0.08
+	left 90
+	arcLeft 14 :height * 0.2
+	arcLeft 20 :height * 0.055
+	arcLeft 15 :height * 0.035
+	arcLeft 50.08 :height * 0.017
+	jumpForward :height * 0.16
+	arcRight 36.25 :height * 0.215
+	setHeading :oldHeading + 15.3
+	jumpForward :height * 0.058
+	left 52.83
+	jumpForward :height * 0.57321
+	setHeading :oldHeading - 90
+	jumpForward :innerWidth / 2 + :height * 0.2152641
+	arcLeft 90 :cornerRadius
+	jumpForward :innerHeight
+	arcLeft 90 :cornerRadius
+	polyEnd
+	setTurtleState :oldState
+end
+
+to redShape :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "width :height * :aspectRatio
+	localmake "cornerRadius :height * :cornerRadiusRatio
+	localmake "innerWidth :width - :cornerRadius * 2
+	localmake "innerHeight :height - :cornerRadius * 2
+	jumpRight :height * 0.65
+	setPenSize 0
+	setFillColor "#bf0d3e
+	polyStart
+	jumpForward :height * 0.076
+	setHeading :oldHeading + 90
+	jumpForward :height * 0.1685
+	arcLeft 25 :height * 0.04
+	arcLeft 20 :height * 0.1
+	arcLeft 15 :height * 0.22
+	arcLeft 12 :height * 0.29
+	arcLeft 53 :height * 0.0175
+	arcLeft 8 :height * 0.15
+	arcRight 7.5 :height * 0.25
+	arcRight 15 :height * 0.09
+	jumpForward :height * 0.02
+	arcLeft 15 :height * 0.1
+	arcLeft 15 :height * 0.03
+	arcLeft 15 :height * 0.03
+	arcRight 17.736 :height * 0.29
+	setHeading :oldHeading
+
+	; fingers
+	jumpForward :height * 0.04413
+	left 42.6
+	jumpForward :height * 0.02698
+	left 37.2
+	jumpForward :height * 0.0185
+	right 80
+	jumpForward :height * 0.0191
+	left 36.5
+	jumpForward :height * 0.0273
+	left 42.2
+	jumpForward :height * 0.01787
+	right 78.5
+	jumpForward :height * 0.01975
+	left 37.35
+	jumpForward :height * 0.0267
+	left 45.5
+	jumpForward :height * 0.02575
+	
+	; bat
+	right 51.95
+	jumpForward :height * 0.54155
+	setHeading :oldHeading + 90
+	jumpForward :innerWidth / 2 - :height * 0.3804280
+	arcRight 90 :cornerRadius
+	jumpForward :innerHeight
+	arcRight 90 :cornerRadius
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://commons.wikimedia.org/wiki/File:Major_League_Baseball_logo.svg
+to majorLeagueBaseballLogo :height
+	localmake "oldState turtleState
+	whiteBackground :height
+	blueShape :height
+	redShape :height
+
+	; Draw baseball
+	jumpForward :height * 0.2385
+	jumpLeft :height * 0.7435
+	setPenSize 0
+	setFillColor "white
+	circle :height * 0.0765
+
+	setTurtleState :oldState
+end
+
+setScreenColor "#ddd
+majorLeagueBaseballLogo 100

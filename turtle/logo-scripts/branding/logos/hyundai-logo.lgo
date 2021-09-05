@@ -1,0 +1,51 @@
+to drawH :height
+	localmake "oldState turtleState
+	localmake "arcPair1 [-5.2 3]
+	localmake "arcsInfo [
+		[45 0.025] [54 0.018] :arcPair1 [-4 2.5] :arcPair1
+		[120 0.0095] [20 0.113] [-174.9 0]
+
+		[-23.3 1] [-176 0] [10 0.3] [10 0.12]
+		[19.5 0.15] [15 0.28] [25 0.4] [10 0.18]
+		[28 0.095] [30 0.06] [30 0.1] [20 0.35]
+		[8 2.3] [14 1] [2 0.4] [20 0.04] [87 0.014]
+		[12.1 0.05] [4 0.1] [-172.5 0]
+		[-27.2 0.5] [-175.2 0]
+	]
+	jumpLeft :height * 0.718
+	jumpForward :height * 0.2497
+	setFillColor penColor
+	setPenSize 0
+	right 123
+	polyStart
+	arcsLeft :arcsInfo :height
+	arcsLeft :arcsInfo :height
+	circle 0.001
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://commons.wikimedia.org/wiki/File:Hyundai_Motor_Company_logo.svg
+to hyundaiLogoCustomized :height :color
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "thickness :height * 0.08
+	localmake "ellipseVRadius (:height - :thickness) / 2
+	localmake "ellipseHRadius :height * 0.94
+	setPenColor :color
+	setFillColor transparent
+	setPenSize :thickness
+	jumpForward :height / 2
+	ellipse :ellipseHRadius :ellipseVRadius
+	jumpTo :oldPos
+	drawH :height
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 5
+jumpLeft :separation / 2
+hyundaiLogoCustomized 100 "#003984
+jumpRight :separation
+hyundaiLogoCustomized 100 "#000

@@ -1,0 +1,105 @@
+; Inspired by photo at:
+; https://crosscut.com/2017/11/bill-nye-the-science-guy-new-documentary-climate-science
+
+; Used for a crosshatching pattern
+to straightJaggedEdgePath :len :width :numPoints
+	localmake "step :len / :numPoints
+	localmake "angle arcTan :width / (:step * 0.5)
+	localmake "sideStepLength :step * 0.5 / cos :angle
+	repeat :numPoints [
+		right :angle
+		forward :sideStepLength
+		left :angle * 2
+		forward :sideStepLength
+		right :angle
+	]
+end
+
+to arc2JaggedEdgePath :angle :radius :jaggedWidth :numPoints
+	localmake "stepAngle :angle / :numPoints
+	localmake "step 2 * :radius * sin (:stepAngle * 0.5)
+	repeat :numPoints [
+		straightJaggedEdgePath :step :jaggedWidth 1
+		right :stepAngle
+	]
+end 
+
+to arcLeftJaggedEdgePath :angle :radius :jaggedWidth :numPoints
+	localmake "stepAngle :angle / :numPoints
+	localmake "step 2 * :radius * sin (:stepAngle * 0.5)
+	repeat :numPoints [
+		straightJaggedEdgePath :step :jaggedWidth 1
+		left :stepAngle
+	]
+end
+
+to drawHairBackgroundGradient1 :nyeSize
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	left 21.15
+	forward :nyeSize * 0.4065
+	localmake "fromPos pos
+	right 90
+	forward :nyeSize * 0.29
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#463e39
+	setProperty "colorStops 0.4 "#2f2120
+	setProperty "colorStops 0.5 "#3d231e
+	setProperty "colorStops 0.6 "#3c221b
+	setProperty "colorStops 0.7 "#381f17
+	setProperty "colorStops 1 "#12090a
+	localmake "gradient createLinearGradient :fromPos pos :colorStops "pad
+	setFillGradient :gradient
+	setPos :fromPos
+	setHeading :oldHeading + 60
+	polyStart
+	arcRight 50 :nyeSize * 0.023
+	arcRight 35 :nyeSize * 0.05
+	left 60
+	forward :nyeSize * 0.02
+	left 85
+	arcRight 35 :nyeSize * 0.1
+	arcLeft 60 :nyeSize * 0.04
+	arcRight 150 :nyeSize * 0.016
+	arcLeft 55 :nyeSize * 0.014
+	arcRight 2 :nyeSize * 0.2
+	arcRight 60 :nyeSize * 0.085
+	arcRight 5 :nyeSize * 0.1
+	arcLeft 22 :nyeSize * 0.11
+	right 31
+	arcRight 45 :nyeSize * 0.1
+	left 30
+	forward :nyeSize * 0.003
+	left 130 ; turning by right eyebrow
+	arcLeft 38 :nyeSize * 0.03
+	right 90
+	arcLeft 90 :nyesize * 0.017
+	arcLeft 8 :nyeSize * 0.2
+	arcRight 30 :nyeSize * 0.06
+	arcLeft 40 :nyeSize * 0.01
+	arcLeft 17 :nyeSize * 0.05
+	arcRight 40 :nyeSize * 0.015
+	arcLeft 45 :nyeSize * 0.01
+	arcLeft 30 :nyeSize * 0.05
+	repeat 4 [
+		right 25
+		arcLeft 30 :nyeSize * 0.05
+	]
+	arcLeft 25 :nyeSize * 0.11
+	right 55
+	arcLeft 50 :nyeSize * 0.055
+	arcLeft 60 :nyeSize * 0.1
+	arcLeft 13 :nyeSize * 0.2
+	polyEnd
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to drawBillNyeTopHair :nyeSize
+	;drawHairBackgroundGradient1 :nyeSize
+end
+
+image 888 600 'http://localhost:9001/turtle/images/bill-nye-extended.jpg'
+setPenSize 0.1
+drawBillNyeTopHair 888
+;drawHairBackgroundGradient1 888

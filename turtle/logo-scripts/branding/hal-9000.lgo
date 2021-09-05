@@ -1,0 +1,128 @@
+; Inspired by
+; https://www.pinterest.ca/pin/7881368091110838/
+; HAL 9000 is a fictional computer from the 1968 sci fi movie, 
+; 2001 - A Space Odyssey.
+; An astronaut entrusts HAL 9000 with his life but HAL 9000 
+; was apparently programmed and tested by people who weren't 
+; quite conscientious enough.
+
+to getHal9000Gradient :radius
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#fff
+	setProperty "colorStops 0.01 "#ff8
+	setProperty "colorStops 0.03 "#ff0
+	setProperty "colorStops 0.07 "#fb0
+	setProperty "colorStops 0.15 "#f40
+	setProperty "colorStops 0.2 "#f00
+	setProperty "colorStops 0.35 "#d00
+	setProperty "colorStops 0.45 "#800
+	setProperty "colorStops 0.6 "#300
+	setProperty "colorStops 1 "black
+	output createRadialGradient pos :radius :colorStops
+end
+
+to reflections1 :radius
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angle1 70
+	localmake "angle2 172
+	localmake "angle3 50
+	localmake "arcAngle1 30
+	localmake "arcAngle3 20
+	setPenSize 0
+	repeat 3 [
+		setFillColor mix "#6fff "#9fff repRatio
+		localmake "heading1 :oldHeading - :angle1
+		setHeading :heading1
+		localmake "step1 :radius * 0.08
+		localmake "radius1 :radius * 0.7
+		localmake "radius2 :radius1 + :step1
+
+		jumpForward :radius1
+		right 90
+		polyStart
+		arcRight :arcAngle1 :radius1
+		jumpLeft :step1
+		right :angle2
+		arcLeft :arcAngle1 :radius2
+		polyEnd
+
+		jumpTo :oldPos
+		setHeading :heading1 + :angle1 * 2
+		jumpForward :radius1
+		left 90
+		polyStart
+		arcLeft :arcAngle1 :radius1
+		jumpRight :step1
+		left :angle2
+		arcRight :arcAngle1 :radius2
+		polyEnd
+
+
+		jumpTo :oldPos
+		setHeading :heading1 + :angle3
+		jumpForward :radius1
+		right 90
+		polyStart
+		arcRight :arcAngle3 * 2 :radius1
+		jumpLeft :step1
+		left 180
+		arcLeft :arcAngle3 * 2 :radius2
+		polyEnd
+
+		jumpTo :oldPos
+		if repcount = 2 [
+			localmake "radius :radius * 0.7
+		]
+		localmake "radius :radius * 0.75
+	]
+	setHeading :oldHeading
+end
+
+to reflection2 :radius
+	localmake "oldPos pos
+	localmake "radius1 :radius * 0.98
+	localmake "angle1 50
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#cfff
+	setProperty "colorStops 1 "#0fff
+	localmake "glowRadius :radius * 0.3
+	setPenSize 2 * (:radius - :radius1)
+	left :angle1
+	setFillColor transparent
+	setPenColor "#555
+	circle :radius1
+	repeat 3 [
+		jumpForward :radius
+		setPenGradient createRadialGradient pos :glowRadius :colorStops
+		jumpTo :oldPos
+		circle :radius1
+		right :angle1
+	]
+end
+
+to getHal9000OuterGradient :radius
+	localmake "oldPos pos
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#ccc
+	setProperty "colorStops 1 "#888
+	localmake "glowRadius :radius * 0.5
+	jumpBackward :radius
+	localmake "result createRadialGradient pos :glowRadius :colorStops
+	jumpTo :oldPos
+	output :result
+end
+
+to hal9000 :radius
+	localmake "oldState turtleState
+	setPenSize :radius * 0.12
+	setFillGradient getHal9000Gradient :radius
+	setPenGradient getHal9000OuterGradient :radius
+	circle :radius - penSize / 2
+	reflections1 :radius - penSize
+	reflection2 :radius
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+hal9000 100

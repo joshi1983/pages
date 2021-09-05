@@ -1,0 +1,87 @@
+make "navalJackBlue "#002868
+make "stripeRed "#bf0a30
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Liberia#/media/File:Star_in_Blue_Box_-_Flag_of_Liberia.svg
+to navalJack :height
+	localmake "oldState turtleState
+	localmake "size1 :height * 0.3
+	setPenColor :navalJackBlue
+	setPenSize :height
+	forward :height
+	jumpBackward :height / 2
+	setPenSize 0
+	setFillColor "white
+	regularStar :size1 5
+	setTurtleState :oldState
+end
+
+to redStripes :width :height :numRedStripes
+	localmake "oldState turtleState
+	localmake "stripeThickness :height / (:numRedStripes * 2 - 1)
+	setLineCap "butt
+	setPenColor "white
+	setPenSize :width
+	forward :height
+	setPenColor :stripeRed
+	repeat :numRedStripes [
+		backward :stripeThickness
+		jumpBackward :stripeThickness
+	]
+	setTurtleState :oldState
+end
+
+to liberiaFlagStripes :width :height
+	redStripes :width :height 6
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Liberia#/media/File:Flag_of_Liberia.svg
+to liberiaFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 1140 / 600
+	localmake "navalJackSize :height * 5 / 11
+	liberiaFlagStripes :width :height
+	jumpLeft (:width - :navalJackSize) / 2
+	jumpForward :height - :navalJackSize
+	navalJack :navalJackSize
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Liberia#/media/File:Flag_of_Liberian_Customs.svg
+to liberianCustomsServiceFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 3 / 2
+	localmake "navalSize :width * 6 / 13
+	localmake "navalHeight :navalSize * 2 / 3
+	setPenColor "white
+	setLineCap "butt
+	forward :height
+	jumpLeft :width / 2
+	jumpBackward :height / 2
+	right 90
+	redStripes :height :width 7
+	jumpForward :navalSize / 2
+	setPenSize :navalSize
+	setPenColor "white
+	left 90
+	jumpForward :height / 2 - :navalHeight
+	forward :navalHeight
+	jumpBackward :navalHeight / 2
+	setFillColor :navalJackBlue
+	setPenSize 0
+	localmake "size1 :navalHeight * 0.3
+	regularStar :size1 5
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 4
+setScreenColor "black
+jumpLeft :separation
+liberiaFlag :height
+jumpRight :separation
+navalJack :height
+jumpRight :separation
+liberianCustomsServiceFlag :height

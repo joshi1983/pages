@@ -1,0 +1,98 @@
+to verticalGradient :color1 :color2 :height
+	localmake "oldPos pos
+	localmake "colorStops createPList
+	setProperty "colorStops 0 :color1
+	setProperty "colorStops 1 :color2
+	jumpBackward :height / 2
+	localmake "fromPos pos
+	jumpForward :height
+	setFillGradient createLinearGradient :fromPos pos :colorStops "pad
+	jumpTo :oldPos
+end
+
+to wechatBackgroundGradient :height
+	verticalGradient "#82c348 "#a7d168 :height
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/WeChat#/media/File:WeChat_logo.svg
+to wechatLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "ellipseY :height * 0.625
+	localmake "ellipseHeight1 :height - :ellipseY
+	localmake "backgroundEyeSeparation :height * 0.3
+	localmake "backgroundEyeRadius :height * 0.06
+	localmake "foregroundEyeRadius :height * 0.05
+	localmake "foregroundEyeSeparation :height * 0.251
+	setPenSize 0
+
+	; draw background bubble.
+	jumpForward :ellipseY
+	jumpLeft :height * 0.1735
+	wechatBackgroundGradient :ellipseHeight1 * 2
+	ellipse :height * 0.448 :ellipseHeight1
+	localmake "pos1 pos
+
+	; Draw lower left corner of background bubble.
+	jumpBackward :height * 0.3548
+	jumpLeft :height * 0.145
+	left 71
+	polyStart
+	arcLeft 49 :height * 0.047
+	jumpForward :height * 0.1155
+	arcRight 135.2 :height * 0.0153
+	jumpForward :height * 0.088
+	arcLeft 65 :height * 0.02935
+	polyEnd
+
+	; draw background bubble eyes.
+	jumpTo :pos1
+	setHeading :oldHeading
+	jumpForward :height * 0.1212
+	jumpRight :backgroundEyeSeparation / 2
+	setFillColor "#227b3d
+	circle :backgroundEyeRadius
+	jumpLeft :backgroundEyeSeparation
+	circle :backgroundEyeRadius
+	
+	; draw foreground bubble.
+	jumpTo :oldPos
+	jumpRight :height * 0.243
+	jumpForward :height * 0.3477
+	verticalGradient "#e4e7e8 "#f8f8f8 :height * 0.6
+	ellipse :height * 0.374 :height * 0.3115
+	localmake "pos1 pos
+	
+	; draw lower right corner of foreground bubble.
+	jumpBackward :height * 0.295
+	jumpRight :height * 0.12
+	right 75
+	polyStart
+	arcRight 45 :height * 0.046
+	jumpForward :height * 0.09294
+	arcLeft 135 :height * 0.0122
+	jumpForward :height * 0.073953
+	arcRight 70 :height * 0.0223
+	polyEnd
+
+	; draw foreground eyes.
+	jumpTo :pos1
+	setHeading :oldHeading
+	jumpForward :height * 0.095
+
+	; Aside from the half added here, we're moving right a little extra.
+	;
+	; Foreground eyes are not perfectly centered in the WeChat logo.
+	; Shifting extra to match this asymmetry.
+	jumpRight :foregroundEyeSeparation / 2 + :height * 0.0035 
+	setFillColor "#8c8c8c
+	circle :foregroundEyeRadius
+	jumpLeft :foregroundEyeSeparation
+	circle :foregroundEyeRadius
+
+	setTurtleState :oldState
+end
+
+wechatLogo 100

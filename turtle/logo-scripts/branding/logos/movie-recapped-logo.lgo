@@ -1,0 +1,96 @@
+to setBackgroundGradient :height
+	localmake "oldPos pos
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#fc5b3e
+	setProperty "colorStops 1 "#fd974d
+	jumpRight :height / 2
+	localmake "fromPos pos
+	left 45
+	jumpForward :height / cos 45
+	setFillGradient createLinearGradient :fromPos pos :colorStops "pad
+	jumpTo :oldPos
+	right 45
+end
+
+to filmWheel :radius
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "numHoles 6
+	setPenColor "white
+	setPenSize :radius * 0.11
+	setFillColor "black
+	circle :radius - penSize / 2
+	setPenSize 0
+	setFillColor "white
+	circle :radius * 0.1
+
+	repeat :numHoles [
+		jumpForward :radius * 0.55
+		circle :radius * 0.18
+		jumpTo :oldPos
+		right 360 / :numHoles
+	]	
+	setTurtleState :oldState
+end
+
+to drawCamera :width :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "cornerRadius :height * 0.1
+	localmake "width1 :width - :cornerRadius * 2
+	localmake "height1 :height - :cornerRadius
+	localmake "triangleSize :height * 0.45
+	setFillColor "black
+	right 90
+	jumpForward :width * 0.54
+	jumpLeft :height / 2
+	isoTrapezoid :height * 0.45 :height * 0.8 :height * 0.33
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpRight :width1 / 2
+	setPenSize 0
+	polyStart
+	right 90
+	arcLeft 90 :cornerRadius
+	jumpForward :height1
+	jumpLeft :width
+	jumpBackward :height1
+	right 180
+	arcLeft 90 :cornerRadius
+	polyEnd
+	jumpForward :width1 * 0.41
+	jumpLeft :height / 2
+	setFillColor "white
+	isoTriangle :triangleSize :triangleSize
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpRight :width * 0.29
+	jumpForward :height * 1.36
+	filmWheel :height * 0.56
+	jumpLeft :width * 0.595
+	jumpBackward :height * 0.09
+	filmWheel :height * 0.46
+	
+	setTurtleState :oldState
+end
+
+; Inspired by logo at
+; https://www.youtube.com/@movierecappedofficial/about
+to movieRecappedLogo :height
+	localmake "oldState turtleState
+	setBackgroundGradient :height
+	jumpForward :height / 2
+	setPenSize 0
+	circle :height / 2
+	setFillColor "white
+	circle :height * 0.395
+	jumpBackward :height * 0.21
+	jumpLeft :height * 0.034
+	drawCamera :height * 0.41 :height * 0.255
+	setTurtleState :oldState
+end
+
+movieRecappedLogo 100

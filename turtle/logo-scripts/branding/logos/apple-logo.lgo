@@ -1,0 +1,118 @@
+; Inspired by
+; https://upload.wikimedia.org/wikipedia/commons/8/84/Apple_Computer_Logo_rainbow.svg
+; Referenced from: https://en.wikipedia.org/wiki/Apple_Inc.
+
+; This drawing is of Apple's corporate logo but 
+; the company also had an associated 
+; Logo programming language interpreter.
+; Apple Logo(the same type of language used by WebLogo) ran on Apple II.
+; Apple Logo is simulated at:
+; https://archive.org/details/Apple_Logo_II
+
+to applePoly :height
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "arcsInfo1 [
+		[-26 0.12] [-20 0.195] [-10 0.53]
+	]
+	localmake "arcsInfo2 [
+		[-10 0.32] [-40 0.207] [-4.5 0.8] [10 0.28]
+	]
+	localmake "arcAngle13 21
+	localmake "arcRadius4 :height * 0.7
+	localmake "arcRadius8 :height * 0.27
+	localmake "arcRadius13 :height * 0.13
+	jumpLeft :height * 0.152
+	setPenSize 0
+	left 90
+	polyStart
+	arcsLeft :arcsInfo1 :size
+	arcsRight [[15 0.7] [15 0.54] [14 0.48] [18 0.28] [28 0.27]] :size
+	arcsLeft :arcsInfo2 :size
+	arcLeft :arcAngle13 :arcRadius13 ; point of symmetry
+	arcsLeft reverse :arcsInfo2 :size
+	arcRight 18.65 :arcRadius8
+	right 100
+	arcLeft 134.3 :height * 0.213
+	right 93
+	arcRight 14.1152202 :arcRadius4
+	arcsLeft reverse :arcsInfo1 :size
+	arcsLeft [[-25 0.12] [7 0.4] [13 0.18]
+		[20 0.225] [13 0.2] [-12 0.22] [-14.5348 0.13345895]] :size
+	polyEnd
+
+	; Top leaf
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.7552
+	jumpLeft :height * 0.0169
+	localmake "leafArcAngle 94
+	localmake "leafArcRadius :height * 0.2185
+	right 40 + :leafArcAngle / 2
+	polyStart
+	arcLeft :leafArcAngle :leafArcRadius
+	left 180 - :leafArcAngle
+	arcLeft :leafArcAngle :leafArcRadius
+	polyEnd
+
+end
+
+to appleRainbowLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "colorIntervals [
+		["#009ddc 0.1738]
+		["#963d97 0.3379]
+		["#e03a3e 0.50338]
+		["#f5821f 0.6689]
+		["#fdb827 0.83235]
+		["#61bb46 1]
+	]
+	localmake "colorStops createPList
+	localmake "prevRatio 0
+	repeat count :colorIntervals [
+		localmake "intervalInfo item repcount :colorIntervals
+		localmake "color item 1 :intervalInfo
+		localmake "ratio item 2 :intervalInfo
+		setProperty "colorStops :prevRatio + 0.001 :color
+		setProperty "colorStops :ratio :color
+		localmake "prevRatio :ratio
+	]
+	jumpForward :height * 0.767
+	setFillGradient createLinearGradient :oldPos pos :colorStops "pad
+	jumpTo :oldPos
+	applePoly :height
+	setTurtleState :oldState
+end
+
+to appleBlackLogo :height
+	localmake "oldState turtleState
+	setFillColor "black
+	setPenSize 0
+	applePoly :height
+	setTurtleState :oldState
+end
+
+to appleWhiteLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "backgroundHeight :height * 1.2
+	setPenColor "black
+	setPenSize :height * 3
+	jumpBackward (:backgroundHeight - :height) / 2
+	forward :backgroundHeight
+	jumpTo :oldPos
+	setFillColor "white
+	setPenSize 0
+	applePoly :height
+	setTurtleState :oldState
+end
+
+make "size 100
+make "separation :size * 4
+jumpLeft :separation
+appleWhiteLogo :size
+jumpRight :separation
+appleRainbowLogo :size
+jumpRight :separation
+appleBlackLogo :size

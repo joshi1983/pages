@@ -1,0 +1,299 @@
+; Inspired by photo at:
+; https://crosscut.com/2017/11/bill-nye-the-science-guy-new-documentary-climate-science
+
+; Used for a crosshatching pattern
+to straightJaggedEdgePath :len :width :numPoints
+	localmake "step :len / :numPoints
+	localmake "angle arcTan :width / (:step * 0.5)
+	localmake "sideStepLength :step * 0.5 / cos :angle
+	repeat :numPoints [
+		right :angle
+		forward :sideStepLength
+		left :angle * 2
+		forward :sideStepLength
+		right :angle
+	]
+end
+
+to arc2JaggedEdgePath :angle :radius :jaggedWidth :numPoints
+	localmake "stepAngle :angle / :numPoints
+	localmake "step 2 * :radius * sin (:stepAngle * 0.5)
+	repeat :numPoints [
+		straightJaggedEdgePath :step :jaggedWidth 1
+		right :stepAngle
+	]
+end 
+
+to arcLeftJaggedEdgePath :angle :radius :jaggedWidth :numPoints
+	localmake "stepAngle :angle / :numPoints
+	localmake "step 2 * :radius * sin (:stepAngle * 0.5)
+	repeat :numPoints [
+		straightJaggedEdgePath :step :jaggedWidth 1
+		left :stepAngle
+	]
+end
+
+to upperLipGradient1 :nyeSize
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	left 5
+	forward :nyeSize * 0.249
+	localmake "fromPos pos
+	setHeading :oldHeading + 100
+	forward :nyeSize * 0.1
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#cfa88e
+	setProperty "colorStops 0.1 "#cfa88e
+	setProperty "colorStops 0.3 "#ebbba9
+	setProperty "colorStops 0.5 "#ebcab4
+	setProperty "colorStops 0.72 "#e0b39d
+	setProperty "colorStops 0.8 "#b8866f
+	setProperty "colorStops 1 "#8d6050
+	localmake "gradient createLinearGradient :fromPos pos :colorStops "pad
+	setFillGradient :gradient
+	setPos :fromPos
+	setHeading :oldHeading
+	polyStart
+	arcRight 80 :nyeSize * 0.005
+	arcRight 14 :nyeSize * 0.2
+	arcRight 25 :nyeSize * 0.01
+	arcLeft 30 :nyeSize * 0.025
+	arcRight 25 :nyeSize * 0.01
+	arcLeft 68 :nyeSize * 0.02
+	right 30
+	arcRight 90 :nyeSize * 0.0008
+	arcRight 33 :nyeSize * 0.052
+	right 90
+	forward :nyeSize * 0.08
+	polyEnd
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+; the darkest part of upper lip shadow
+to lipShadow1 :nyeSize
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	setPenSize 0
+	left 4
+	forward :nyeSize * 0.248
+	localmake "fromPos pos
+	right 110
+	forward :nyeSize * 0.085
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#6c2f1c
+	setProperty "colorStops 0.2 "#772e27
+	setProperty "colorStops 0.4 "#a36058
+	setProperty "colorStops 0.55 "#bd6e61
+	setProperty "colorStops 0.65 "#641f1a
+	setProperty "colorStops 0.75 "#622c2a
+	setProperty "colorStops 0.95 "#1d0400
+	setProperty "colorStops 0.98 "#351611
+	setProperty "colorStops 1 "#5a3429
+	localmake "gradient createLinearGradient :fromPos pos :colorStops "pad
+	setFillGradient :gradient
+	setPos :fromPos
+	setHeading :oldHeading + 20
+	polyStart
+	arcRight 70 :nyeSize * 0.003
+	arcRight 1.5 :nyeSize * 0.2
+	arcLeft 20 :nyeSize * 0.02
+	right 36
+	arcLeft 12 :nyeSize * 0.08
+	forward :nyeSize * 0.018
+	right 60
+	arcLeft 80 :nyeSize * 0.009
+	arcLeft 3 :nyeSize * 0.05
+	arcRight 24 :nyeSize * 0.02
+	arcRight 28 :nyeSize * 0.0045
+	arcRight 7 :nyeSize * 0.1
+	arcRight 188 :nyeSize * 0.0043
+	arcLeft 6 :nyeSize * 0.1
+	arcLeft 20 :nyeSize * 0.01
+	arcLeft 22 :nyeSize * 0.02
+	arcRight 30 :nyeSize * 0.02
+	arcLeft 10 :nyeSize * 0.004
+	arcLeft 15 :nyeSize * 0.05
+	arcLeft 6.5 :nyeSize * 0.3
+	polyEnd
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to lipShadow2 :nyeSize
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	left 0.8
+	forward :nyeSize * 0.2501
+	localmake "fromPos pos
+	right 100
+	forward :nyeSize * 0.071
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#8c483b
+	setProperty "colorStops 0.3 "#c37c6d
+	setProperty "colorStops 0.52 "#c5766f
+	setProperty "colorStops 0.58 "#a05655
+	setProperty "colorStops 0.7 "#a46b58
+	setProperty "colorStops 0.75 "#824e43
+	setProperty "colorStops 0.85 "#5c3a31
+	setProperty "colorStops 1 "#543220
+	localmake "gradient createLinearGradient :fromPos pos :colorStops "pad
+	setFillGradient :gradient
+	setPos :fromPos
+	setHeading :oldHeading + 80
+	polyStart
+	arcRight 12 :nyeSize * 0.04
+	arcRight 7.5 :nyeSize * 0.2
+	arcRight 40 :nyeSize * 0.005
+	arcLeft 70 :nyeSize * 0.01
+	arcRight 60 :nyeSize * 0.011
+	arcLeft 7 :nyeSize * 0.1
+	arcRight 149 :nyeSize * 0.004
+	right 165
+	arcLeft 130 :nyeSize * 0.0035
+	forward :nyeSize * 0.0095
+	arcLeft 40 :nyeSize * 0.012
+	arcLeft 15 :nyeSize * 0.02
+	arcRight 75 :nyeSize * 0.011
+	left 55
+	arcRight 10 :nyeSize * 0.16
+	polyEnd
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to lipShadow3 :nyeSize
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	left 6
+	forward :nyeSize * 0.245
+	localmake "fromPos pos
+	right 100
+	forward :nyeSize * 0.102
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#d9ab93 ; left corner of mouth
+	setProperty "colorStops 0.07 "#c8947c
+	setProperty "colorStops 0.1 "#ab775f
+	setProperty "colorStops 0.3 "#e4ac9d
+	setProperty "colorStops 0.6 "#cd9280
+	setProperty "colorStops 0.63 "#d59289
+	setProperty "colorStops 0.8 "#6a4942
+	setProperty "colorStops 0.9 "#6a4942
+	setProperty "colorStops 0.92 "#6e4a3e
+	setProperty "colorStops 1 "#7d5343 ; right side of mouth
+	localmake "gradient createLinearGradient :fromPos pos :colorStops "pad
+	setFillGradient :gradient
+	setPos :fromPos
+	setHeading :oldHeading - 20
+	polyStart
+	arcRight 80 :nyeSize * 0.003
+	arcRight 4 :nyeSize * 0.1
+	arcRight 20 :nyeSize * 0.01
+	arcRight 12.5 :nyeSize * 0.2
+	arcRight 31 :nyeSize * 0.01
+	arcLeft 40 :nyeSize * 0.02
+	arc2 45 :nyeSize * 0.015
+	arcLeft 90 :nyeSize * 0.005
+	arcLeft 5 :nyeSize * 0.1
+	right 160
+	arcLeft 4 :nyeSize * 0.1
+	arcLeft 150 :nyeSize * 0.004
+	right 130
+	arcRight 30 :nyeSize * 0.025
+	right 60
+	arcRight 13 :nyeSize * 0.05
+	arcRight 110 :nyeSize * 0.005
+	left 82
+	arcLeft 53.7 :nyeSize * 0.093
+	polyEnd
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to lowerLipGradient1 :nyeSize
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	left 3
+	forward :nyeSize * 0.248
+	localmake "fromPos pos
+	right 105
+	forward :nyeSize * 0.08
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#d5978a ; left corner of mouth
+	setProperty "colorStops 0.55 "#e69894
+	setProperty "colorStops 0.7 "#9c6463
+	setProperty "colorStops 1 "#78534a ; right side of mouth
+	localmake "gradient createLinearGradient :fromPos pos :colorStops "pad
+	setFillGradient :gradient
+	setPos :fromPos
+	setHeading :oldHeading + 85
+	polyStart
+	arcRight 35 :nyeSize * 0.13
+	arcRight 210 :nyeSize * 0.0035
+	arcLeft 55 :nyeSize * 0.025
+	arcRight 20 :nyeSize * 0.025
+	arcLeft 18 :nyeSize * 0.04
+	arcLeft 1.2 :nyeSize * 0.5
+	arcLeft 20 :nyeSize * 0.01
+	arcRight 28 :nyeSize * 0.01
+	polyEnd
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to lowerLipGradient2 :nyeSize
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	left 8
+	forward :nyeSize * 0.238
+	localmake "fromPos pos
+	setHeading :oldHeading + 90
+	forward :nyeSize * 0.106
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#dba88d ; left corner of mouth
+	setProperty "colorStops 0.18 "#ecb8a2
+	setProperty "colorStops 0.25 "#eabda6
+	setProperty "colorStops 0.5 "#f2c8bc
+	setProperty "colorStops 0.6 "#e8b3a3
+	setProperty "colorStops 0.65 "#d59b90
+	setProperty "colorStops 0.75 "#c48f89
+	setProperty "colorStops 0.85 "#896155
+	setProperty "colorStops 0.9 "#895c49
+	setProperty "colorStops 1 "#9f7056 ; right side of mouth
+	localmake "gradient createLinearGradient :fromPos pos :colorStops "pad
+	setFillGradient :gradient
+	setPos :fromPos
+	setHeading :oldHeading + 45
+	polyStart
+	arcRight 14 :nyeSize * 0.1
+	right 30
+	arcRight 26.3 :nyeSize * 0.2
+	right 77
+	arcRight 8 :nyeSize * 0.05
+	arcRight 76 :nyeSize * 0.004
+	arcRight 5 :nyeSize * 0.1
+	arcRight 25 :nyeSize * 0.01
+	arcLeft 15 :nyeSize * 0.08
+	arcLeft 20 :nyeSize * 0.01
+	arcRight 18 :nyeSize * 0.08
+	arcLeft 10 :nyeSize * 0.1
+	arcLeft 20 :nyeSize * 0.02
+	arcLeft 87 :nyeSize * 0.01
+	arcRight 210 :nyeSize * 0.006
+	polyEnd
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to billNyeLips :nyeSize
+	upperLipGradient1 :nyeSize
+	lowerLipGradient2 :nyeSize
+	lowerLipGradient1 :nyeSize
+	lipShadow3 :nyeSize
+	lipShadow2 :nyeSize
+	lipShadow1 :nyeSize
+end
+
+image 888 600 'http://localhost:9001/turtle/images/bill-nye-extended.jpg'
+setPenSize 0
+billNyeLips 888
