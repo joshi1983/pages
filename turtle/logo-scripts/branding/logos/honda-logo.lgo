@@ -1,0 +1,98 @@
+to drawHondaLogoOutline :height
+	localmake "oldState turtleState
+	localmake "outlineThickness :height * 0.05
+	localmake "bottomWidth :height * 0.5
+	localmake "topWidth :height * 0.54354017
+	localmake "outlineArcLinesInfo [
+		[12 0.5] [60 0.24] [12 0.5] [0.3266]
+		[18 0.52] [60 0.22] [18 0.52]
+	]
+	setPenSize :outlineThickness
+	jumpForward :outlineThickness / 2
+	setFillColor transparent
+	right 90
+	jumpForward :bottomWidth / 2
+	polyStart
+	arcLines :outlineArcLinesInfo :height
+	jumpForward :topWidth
+	arcLines reverse :outlineArcLinesInfo :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+to drawHondaLogoH :height
+	localmake "oldState turtleState
+	localmake "angle1 74.4
+	localmake "angle2 84.3
+	localmake "angle3 89.5
+	localmake "angle4 81
+	localmake "size1 :height * 0.121
+	localmake "size2 :height * 0.175
+	localmake "size3 :height * 0.073557055
+	localmake "size4 :height * 0.83
+	localmake "size5 :height * 0.085
+	localmake "size6 :height * 0.419
+	localmake "size7 :height * 0.117623406
+	localmake "bottomArcsInfo [
+		[28 0.08] [10 0.075] [34.4 0.12]
+	]
+	localmake "topArcsInfo [
+		 [38 0.2] [28.5 0.08] [10.3 0.1]
+	]
+	jumpForward :height * 0.085
+	jumpLeft :height * 0.3088
+	right 92
+	setPenSize 0
+	setFillColor penColor
+	polyStart
+	jumpForward :size1
+	left :angle1
+	jumpForward :size2
+	arcsRight :bottomArcsInfo :height
+	jumpForward :size3 ; symmetry
+	arcsRight reverse :bottomArcsInfo :height
+	jumpForward :size2
+	left :angle1
+	jumpForward :size1
+	left :angle2
+	jumpForward :size4
+	left :angle3
+	jumpForward :size5
+	left :angle4
+	jumpForward :size6
+	arcsRight :topArcsInfo :height
+	jumpForward :size7 ; symmetry
+	arcsRight reverse :topArcsInfo :height
+	jumpForward :size6
+	left :angle4
+	jumpForward :size5
+	left :angle3
+	jumpForward :size4
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://clipart-library.com/img1/1409092.png
+;
+; Like most company logos, this one is most definitely a registered trademark of 
+; the company and they hold the copyrights.
+; I'm sharing this code purely for educational purposes so
+; don't share exported copies or work derived from this without being sure that
+; you're within your legal rights to do so.
+to hondaLogoCustomColor :height :color
+	localmake "oldState turtleState
+	setPenColor :color
+	drawHondaLogoOutline :height
+	drawHondaLogoH :height
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 5
+make "colors ["black "#d50a17]
+jumpLeft :separation * ((count :colors) - 1) / 2
+repeat count :colors [
+	hondaLogoCustomColor :height item repcount :colors
+	jumpRight :separation
+]

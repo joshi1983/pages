@@ -1,0 +1,263 @@
+to triangle :size
+	if :size <= 0 [
+		stop ; no need to draw negative-sized triangles.
+	]
+	localmake "size1 :size * sqrt 2
+	right 90
+	polyStart
+	forward :size
+	left 135
+	forward :size1
+	left 90
+	forward :size1
+	left 135
+	forward :size
+	left 90
+	polyEnd
+end
+
+to staticLogo :size :opacity
+	if :size <= 0 [
+		stop ; No need to draw anything so small it doesn't exist.
+	]
+	localmake "oldPos pos
+	setPenColor mix "black transparent :opacity
+	localmake "size :size * 0.82738
+	localmake "greenTriangleSize :size * 0.8
+	localmake "greenPenSize :size * 0.159
+	localmake "whiteTriangleSize :greenTriangleSize - :greenPenSize * 0.5 * (1 + sqrt 2)
+	setFillColor transparent
+	setPenSize :size * 0.09
+	jumpForward penSize * 0.5
+
+	triangle :size * 1.1
+	setPenColor mix "green transparent :opacity
+	jumpForward :size * 0.1245
+
+	setPenSize :greenPenSize
+	triangle :greenTriangleSize
+	setFillColor mix "white transparent :opacity
+	setPenSize 0
+	jumpForward :greenPenSize * 0.5
+	triangle :whiteTriangleSize
+	jumpTo :oldPos
+end
+
+to staticLogo2 :size
+	localmake "oldState turtleState
+	forward :size
+	right 180
+	staticLogo :size 1
+	setTurtleState :oldState
+end
+
+to turtleSquare :size
+	localmake "oldHeading heading
+	staticLogo :size 1
+	left 180
+	staticLogo :size 1
+	setHeading :oldHeading
+end
+
+to drawTurtleHead :size
+	turtleSquare :size
+end
+
+to drawTurtleNeck :neckThickness :neckLength
+	localmake "oldState turtleState
+	localmake "triangleSize :neckLength / 2 + :neckThickness * 0.429
+	localmake "neckGap :neckThickness - :triangleSize
+	backward :neckGap
+	right 90
+	forward :neckGap
+	staticLogo2 :triangleSize
+	right 180
+	forward :neckGap * 2
+	staticLogo2 :triangleSize
+	right 90
+	setTurtleState :oldState
+end
+
+to drawTurtleLeg :thickness
+	localmake "oldPos pos
+	repeat 2 [
+		left 45
+		turtleSquare :thickness
+		right 45
+		jumpForward :thickness
+	]
+	jumpTo :oldPos
+end
+
+to drawTurtleInShell :size :animationTimeRatio
+	localmake "oldHeading heading
+	localmake "oldPos pos
+	localmake "legsInStartTime 0.3
+	localmake "headInStartTime 0.5
+	localmake "shellOnlyStartTime 0.6
+	localmake "finalStartTime 0.9
+	setPenSize 0
+	ifelse :animationTimeRatio < :headInStartTime [
+		localmake "headSize :size * 0.35
+		localmake "headForwardDistance :headSize * 2
+		localmake "legsOutRatio 1
+		if :animationTimeRatio < :legsInStartTime [
+			if :animationTimeRatio < :legsInStartTime [
+				localmake "legsOutRatio :animationTimeRatio / :legsInStartTime
+				localmake "legsOutRatio 1 - power :legsOutRatio 2
+			]
+			localmake "legThickness :size * 0.3
+			right 45
+			repeat 4 [
+				jumpTo :oldPos
+				localmake "legExtensionFactor 0.19 + 0.42 * :legsOutRatio
+				forward :size * :legExtensionFactor
+				drawTurtleLeg :legThickness
+				right 90
+			]
+			setHeading :oldHeading
+		]
+		if :animationTimeRatio > :legsInStartTime [
+			localmake "ratio (:animationTimeRatio - :legsInStartTime) / (:headInStartTime - :legsInStartTime)
+			localmake "ratio power :ratio 2
+			localmake "ratio2 1 - :ratio
+			localmake "headForwardDistance :headSize * 2 * :ratio2
+		]
+		jumpTo :oldPos
+		setHeading :oldHeading + 180
+		staticLogo :size 1
+		setHeading :oldHeading
+		forward :size
+		localmake "neckThickness :headSize * 0.5
+		drawTurtleNeck :neckThickness :headForwardDistance - :size * 0.5
+		forward :headForwardDistance - :headSize
+		drawTurtleHead :headSize
+	] [
+		if :animationTimeRatio < 0.9 [
+			localmake "ratio2 1
+			if :animationTimeRatio > :shellOnlyStartTime [
+				localmake "ratio (:animationTimeRatio - :shellOnlyStartTime) / (:finalStartTime - :shellOnlyStartTime)
+				localmake "ratio2 1 - :ratio
+			]
+			setHeading :oldHeading - 180
+			staticLogo :size * :ratio2 :ratio2
+		]
+	]
+	setHeading :oldHeading
+	jumpTo :oldPos
+	staticLogo :size 1
+end
+
+to getScaleAtTime :animationTimeRatio
+	localmake "scaleFactor 1
+	localmake "maxScaleFactor 4
+	localmake "initialScaleFactor 2.5
+	ifelse :animationTimeRatio > 0.6 [
+		localmake "scaleFactor :maxScaleFactor
+	] [
+		if :animationTimeRatio < 0.1 [
+			localmake "scaleFactor mix :scaleFactor :initialScaleFactor :animationTimeRatio * 10
+		]
+		if :animationTimeRatio > 0.4 [
+			localmake "scaleFactor mix :scaleFactor :maxScaleFactor (0.6 - :animationTimeRatio) / 0.2
+		]
+	]
+	output :scaleFactor
+end
+
+to smoothRatio :ratio
+	output interpolateRatio easeInOut :ratio
+end
+
+to getCurveSettings :size :animationTimeRatio
+	localmake "size1 :size
+	localmake "size2 :size1 * 0.5
+	localmake "arcAngle1 90
+	localmake "arcAngle2 0
+	localmake "arcAngle3 0
+	; draw nothing at the beginning of the animation.
+	localmake "animationTimeRatio max 0 (:animationTimeRatio - 0.15) / 0.85
+	localmake "animationTimeRatio smoothRatio :animationTimeRatio
+	if :animationTimeRatio < 0.5 [
+		localmake "arcAngle1 :animationTimeRatio * 2 * 90
+	]
+	if :animationTimeRatio > 0.5 [
+		localmake "arcAngle2 90
+		if :animationTimeRatio < 0.75 [
+			localmake "arcAngle2 (:animationTimeRatio - 0.5) * 4 * 90
+		]
+		if :animationTimeRatio > 0.75 [
+			localmake "arcAngle3 (:animationTimeRatio - 0.75) * 4 * 90
+		]
+	]
+	output [:size1 :size2 :arcAngle1 :arcAngle2 :arcAngle3]
+end
+
+to drawCurve :size :animationTimeRatio
+	localmake "opacity clamp 8 - :animationTimeRatio * 9 0 1
+	localmake "animationTimeRatio min 1 :animationTimeRatio * 2
+	localmake "settings getCurveSettings :size :animationTimeRatio
+	localmake "size1 item 1 :settings
+	localmake "size2 item 2 :settings
+	localmake "arcAngle1 item 3 :settings
+	localmake "arcAngle2 item 4 :settings
+	localmake "arcAngle3 item 5 :settings
+	setPenColor mix "green transparent :opacity
+	setPenSize :size1 * 0.02
+	arcRight :arcAngle1 :size1
+	arcRight :arcAngle2 :size2
+	arcLeft :arcAngle3 :size2
+end
+
+to getCurvePosition :size :animationTimeRatio
+	localmake "settings getCurveSettings :size :animationTimeRatio
+	localmake "size1 item 1 :settings
+	localmake "size2 item 2 :settings
+	localmake "arcAngle1 item 3 :settings
+	localmake "arcAngle2 item 4 :settings
+	localmake "arcAngle3 item 5 :settings
+	localmake "x :size1 * (1 - cos :arcAngle1) 
+	localmake "y :size1 * sin :arcAngle1
+	localmake "x :x + :size2 * sin :arcAngle2
+	localmake "y :y + :size2 * (-1 + cos :arcAngle2)
+
+	localmake "x :x + :size2 * (1 - cos :arcAngle3)
+	localmake "y :y - :size2 * sin :arcAngle3
+	output [:x :y]
+end
+
+to animatedLogo :size :animationTimeRatio
+	localmake "settings getCurveSettings :size :animationTimeRatio
+	localmake "size1 item 1 :settings
+	localmake "turtleSize :size1 * 0.05
+	drawCurve :size :animationTimeRatio
+
+	drawTurtleInShell :turtleSize max 0 (:animationTimeRatio - 0.5) * 2
+end
+
+animatedLogo 100 animation.clampedTimeRatio
+
+to animation.snapshotstyle
+	localmake "animationTimeRatio animation.clampedTimeRatio
+	localmake "scaleFactor getScaleAtTime :animationTimeRatio
+; 1.95 instead of 2 so the camera trails just a little behind theturtle.
+	localmake "startFactor 1.95
+	localmake "finalFactor 2
+	localmake "curveFactorMixRatio clamp :animationTimeRatio * 2 0 1
+	localmake "curveFactor mix :finalFactor :startFactor :curveFactorMixRatio
+	localmake "pos1 getCurvePosition 100 min 1 :animationTimeRatio * :curveFactor
+	output createPList2 [
+		["zoom.scale :scaleFactor * 10]
+		["position.x first :pos1]
+		["position.y item 2 :pos1]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 12
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

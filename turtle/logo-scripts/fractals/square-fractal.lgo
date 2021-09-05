@@ -1,0 +1,24 @@
+to squareFractal :size
+	localmake "oldHeading heading
+	localmake "numSquares 3
+	jumpForward :size / 2
+	localmake "size :size / 6
+	repeat 8 [
+		setHeading :oldHeading
+		jumpBackward :size * 1.5
+		jumpRight :size * 1.5
+		setPenSize :size * 0.2
+		repeat 4 [
+			repeat :numSquares [
+				rect :size :size
+				jumpForward :size
+			]
+			left 90
+		]
+		localmake "size :size / 2
+		localmake "numSquares 3 + :numSquares * 2
+	]
+end
+
+setPenSize 0.3
+squareFractal 100
