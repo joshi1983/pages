@@ -1,0 +1,49 @@
+; Inspired by logo at
+; https://www.youtube.com/@VisualPolitikEN
+to visualPolitikLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "oldPos pos
+	localmake "width1 :height * 1.17
+	localmake "width2 :height * 1.05
+	localmake "height1 :height * 0.083
+	localmake "roofHeight :height * 0.2
+	localmake "height3 :height * 0.66
+	localmake "height4 :height - :height3 - :roofHeight
+	localmake "roofAngle 90 - arcTan :roofHeight / (:width2 / 2)
+	localmake "roofSlantedLength hypot [:roofHeight :width2 / 2]
+	localmake "barWidth :height * 0.195
+	localmake "step :barWidth * 1.12
+	setFillColor "white
+	; draw base
+	stripes :width1 :height1 [fillColor]
+	stripes :width2 :height1 * 1.7 [fillColor]
+	jumpForward :height3
+
+	; draw roof
+	setPenSize 0
+	jumpLeft :width2 / 2
+	polyStart
+	jumpForward :height4
+	right :roofAngle
+	jumpForward :roofSlantedLength
+	right 2 * (90 - :roofAngle)
+	jumpForward :roofSlantedLength
+	setHeading :oldHeading
+	jumpBackward :height4
+	polyEnd
+
+	; draw vertical bars
+	jumpTo :oldPos
+	jumpForward :height * 0.163
+	jumpRight :step * 1.5
+	repeat 4 [
+		localmake "barHeight :height * 0.44 * (1.32 - repcount / 4)
+		stripes :barWidth :barHeight [fillColor]
+		jumpLeft :step
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "#ff0060
+visualPolitikLogo 100

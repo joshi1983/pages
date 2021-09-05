@@ -1,0 +1,206 @@
+; inspired by logo at
+; httpshackf.org
+
+to spark size
+	localmake oldState turtleState
+	setFillColor white
+	setPenSize 0
+	polyStart
+	jumpForward size
+	right 90
+	arcRight 3 size
+	polyEnd
+	setTurtleState oldState
+end
+
+to sparks size
+	localmake oldHeading heading
+	localmake numTrails 4
+	localmake angleChange 60  numTrails
+	repeat numTrails [
+		spark size
+		right angleChange
+	]
+	setHeading oldHeading
+end
+
+to hammerArm size direction
+	localmake oldState turtleState
+	localmake armLength size
+	localmake armLength2 size  0.91
+	localmake handleThickness size  0.12
+	localmake tinySize1 size  0.05
+	localmake tinySize2 tinySize1  0.7
+	setPenSize size  0.009
+	setPenColor white
+	setFillColor black
+	polyStart
+	jumpForward armLength
+	left 90  direction
+	jumpForward handleThickness
+	left 90  direction
+	jumpForward tinySize1
+	left 55  direction
+	jumpForward tinySize2
+	right 58  direction
+	jumpForward armLength2
+	polyEnd
+	setTurtleState oldState
+end
+
+to hammerHead size direction
+	localmake oldState turtleState
+	setPenSize 0
+	right 90  direction
+	jumpForward size  0.1
+	setFillColor white
+	polyStart
+	left 178  direction
+	jumpForward size  1.3
+	right 75  direction
+	jumpForward size  0.65
+	right 60  direction
+	jumpForward size  0.32
+	right 43  direction
+	jumpForward size  0.6
+	left 90  direction
+	jumpForward size  0.08
+	right 90  direction
+	jumpForward size  0.5
+	right 30  direction
+	jumpForward size  0.2
+	left 30  direction
+	jumpForward size  0.3
+	right 30  direction
+	jumpForward size  0.15
+	right 60  direction
+	jumpForward size  0.65
+	right 60  direction
+	jumpForward size  0.15
+	right 30  direction
+	jumpForward size  0.3
+	polyEnd
+	setTurtleState oldState
+end
+
+to hammer size direction
+	localmake oldState turtleState
+	localmake armSize size  0.82
+	localmake headSize size - armSize
+	hammerArm armSize direction
+	jumpforward armSize
+	hammerHead headSize direction
+	setTurtleState oldState
+end
+
+to hackforgeStationary size timeRatio
+	localmake oldState turtleState
+	localmake cornerRadius size  0.06
+	localmake textBorderWidth size  0.018
+	localmake textLength size - cornerRadius  2 - textBorderWidth
+	localmake fontSize size  0.135
+	localmake textPadding cornerRadius  0.9
+	localmake centerPadding 0
+	localmake textHeight size  0.08
+	localmake text HACKFORGE
+	if timeRatio  0.7 [
+		localmake text WELCOME
+		localmake centerPadding size  0.09
+	]
+
+	jumpForward cornerRadius + textBorderWidth  0.5
+	localmake pos1 pos
+	jumpForward textLength
+	setPenSize textBorderWidth
+	setPenColor white
+	setFillColor black
+	jumpRight textPadding
+	polyStart
+	repeat 2 [
+		arcLeft 90 cornerRadius
+		forward textHeight
+		arcLeft 90 cornerRadius
+		if repcount = 1 [
+			forward textLength
+		]
+	]
+	polyEnd
+
+	setPenColor white
+	setFillColor white
+	setFontFamily Arial
+	setPenSize size  0.0065
+	setFontSize fontSize
+	jumpTo pos1
+	jumpForward centerPadding
+	label text
+	setTurtleState oldState
+end
+
+to drawHammerSparks size sparkSize
+	localmake oldState turtleState
+	localmake oldPos pos
+	localmake oldHeading heading
+	localmake angle 7.4
+	localmake hammerToSparkLength size  0.4
+	right angle
+	jumpForward hammerToSparkLength
+	left 180
+	sparks sparkSize
+	jumpTo oldPos
+	setHeading oldHeading
+	jumpForward size
+	right 180 - angle
+	jumpForward hammerToSparkLength
+	right 132
+	sparks sparkSize
+
+	setTurtleState oldState
+end
+
+to hackforgeLogo size animationRatio
+	localmake oldState turtleState
+	localmake oldHeading heading
+	localmake hammerLevel size  0.21
+	localmake hammerPadding size  0.03
+	localmake hammerSize size  0.45
+	localmake angle 0
+	right 90
+	hackforgeStationary size animationRatio
+	left 90
+	jumpForward hammerLevel
+	right 90
+	jumpForward hammerPadding
+	ifelse animationRatio  0.7 [
+		localmake sparkSizeRatio clamp (animationRatio - 0.7)  0.3 0 1
+		localmake sparkSizeRatio interpolateRatio easeOut sparkSizeRatio
+		drawHammerSparks size - hammerPadding  2 size  0.36  sparkSizeRatio
+	] [
+		localmake angle 140  (0.49 - power animationRatio 2)
+		left angle
+	]
+	hammer hammerSize 1
+	setHeading oldHeading - 90
+	jumpBackward size - hammerPadding  2
+	right angle
+	hammer hammerSize -1
+	setTurtleState oldState
+end
+
+to animation.snapshotstyle
+	localmake result createPList
+	setProperty result position.x 50
+	setProperty result position.y 31
+	setProperty result zoom.scale 8
+	output result
+end
+
+to animation.setup
+	localmake minutes 0
+	localmake seconds 1.5
+	; Edit this if you want to change the length of your animation.
+	output minutes  60 + seconds
+end
+
+setScreenColor #444
+hackforgeLogo 100 interpolateRatio easeInOut animation.time  animation.duration

@@ -1,0 +1,20 @@
+; Implemented to be similar to:
+; https://processing.org/reference/binary_.html
+to pBinary :value
+	if integer? :value [
+		localmake "signPrefix ''
+		if :value < 0 [
+			localmake "signPrefix '-'
+			localmake "value -:value
+		]
+		localmake "digits ''
+		while :value <> 0 [
+			localmake "digit str remainder :value 2
+			localmake "digits word :digit :digits
+			localmake "value int :value / 2
+		]
+		output word :signPrefix :digits
+	]
+	; FIXME: convert colors to binary.
+	output str :value
+end

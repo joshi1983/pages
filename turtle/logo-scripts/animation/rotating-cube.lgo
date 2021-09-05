@@ -1,0 +1,41 @@
+to drawCube :size
+	localmake "oldState turtleState
+	setLineJoinStyle "round
+	setLineCap "round
+	jumpOut :size / 2
+	rect :size :size
+	jumpIn :size
+	rect :size :size
+	jumpOut :size
+	jumpForward :size / 2
+	jumpLeft :size / 2
+	repeat 4 [
+		pitchUp 90
+		forward :size
+		jumpBackward :size
+		pitchDown 90
+		right 90
+		jumpForward :size
+	]
+	setTurtleState :oldState
+end
+
+pitchUp 30
+rollRight 360 * animation.time / animation.duration
+drawCube 100
+
+to animation.snapshotstyle
+	localmake "result createPList
+	setProperty "result "zoom.scale 3.2
+	output :result
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 3
+	; Edit this if you want to change the length of your animation.
+	localmake "result createPList
+	setProperty "result "duration :minutes * 60 + :seconds
+	setProperty "result "thumbnailTime 0.4
+	output :result
+end
