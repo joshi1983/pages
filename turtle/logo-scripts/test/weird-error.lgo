@@ -1,0 +1,466 @@
+; Getting a weird error.
+; The message is:
+; The minimum length is 2 but you are inputting a value with length 0
+; It looks like the error is on a line that says:
+; "jumpForward distanceToLine :oldPos :pos1"
+; at line 391
+
+to leafBranches :size
+	localmake "oldHeading heading
+	localmake "oldPos pos
+	localmake "branchesInfo [
+		[0 0 37 47.5 0.885]
+		[0.1 0.155 -28 3.6 2]
+		[0.17 0.43 60 3.1 2]
+	]
+	setLineCap "butt
+	setPenSize :size * 0.035
+	setPenColor "black
+
+	repeat count :branchesInfo [
+		jumpTo :oldPos
+		setHeading :oldHeading
+		localmake "branchInfo item repcount :branchesInfo
+		localmake "angle item 4 :branchInfo
+		localmake "arcRadius :size * last :branchInfo
+		jumpRight :size * first :branchInfo
+		jumpForward :size * item 2 :branchInfo
+		right item 3 :branchInfo
+		arcLeft :angle :arcRadius
+	]
+end
+
+to drawLeaf1 :size
+	localmake "oldHeading heading
+	localmake "oldPos pos
+	localmake "arcsInfo [
+		[-97 0] [30 0.18] [22 0.25] [20 0.5]
+		[20 1.03] [20 0.7] [26 0.35] [28 0.23]
+		[96 0] [-7 2.5] [-26.7 0.4] [51 0.05]
+		[5 2] [19 0.3] [-40 0.25]
+	]
+	setPenSize 0
+	setFillColor "#187741
+	polyStart
+	arcsLeft :arcsInfo :size
+	polyEnd
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :size * 0.235
+	jumpRight :size * 0.04
+	leafBranches :size
+end
+
+to drawLeaf2 :size
+	localmake "oldHeading heading
+	localmake "oldPos pos
+	localmake "arcsInfo [
+		[-89 0] [25 0.285] [28 0.47] [20 0.7]
+		[20 0.45] [30 0.52] [13 0.7] [30 0.26]
+		[89 0] [-7 2] [-11 0.61] [53 0.35] [11 0.6]
+		[-10 0.5] [-50 0.13] [-19 0.18]
+	]
+	setPenSize 0
+	setFillColor "#187741
+	polyStart
+	arcsLeft :arcsInfo :size
+	polyEnd
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :size * 0.15
+	jumpRight :size * 0.09
+	left 11
+	leafBranches :size
+end
+
+to drawLeaf3 :size
+	localmake "oldHeading heading
+	localmake "oldPos pos
+	localmake "arcsInfo [
+		[-89 0] [9 0.5] [20 0.2] [42 0.29] [20 0.96]
+		[20 0.65] [18 0.82] [122 0] [-11.5 3.2] [66 0.16]
+		[5 1] [-30 0.15]
+	]
+	setPenSize 0
+	setFillColor "#187741
+	polyStart
+	arcsLeft :arcsInfo :size
+	polyEnd
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :size * 0.14
+	jumpRight :size * 0.01
+	left 1
+	leafBranches :size
+end
+
+to drawLeafs :leafSize
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "oldPos pos
+	localmake "leafsInfo [
+		["drawLeaf1 0.195 0.46]
+		["drawLeaf2 0.32 0.52]
+		["drawLeaf3 0.205 0.475]
+	]
+	repeat 3 [
+		localmake "leafInfo item repcount :leafsInfo
+		localmake "name first :leafInfo
+		setHeading :oldHeading + 240 - repcount * 360 / 3
+		jumpRight :leafSize * item 2 :leafInfo
+		jumpForward :leafSize * item 3 :leafInfo
+		left 120
+		(invoke :name :leafSize)
+		jumpTo :oldPos
+	]
+	setTurtleState :oldState
+end
+
+to drawM :fontSize
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "height1 :fontSize * 0.72
+	localmake "size1 :fontSize * 0.2
+	localmake "size2 :fontSize * 0.62
+	localmake "size3 :fontSize * 0.13
+	localmake "angle 75
+	localmake "arcAngle 10.92
+	localmake "arcRadius :fontSize * 1.5
+	localmake "gap :fontSize * 0.004444824
+	localmake "arcAngle1 6.17
+	setPenSize 0
+	jumpLeft :fontSize * 0.41
+	localmake "pos1 pos
+	polyStart
+	jumpForward :fontSize
+	jumpRight :size1
+	right 90 + :angle
+	jumpForward :size2
+	arcRight :arcAngle :arcRadius
+	setHeading :oldHeading
+	jumpRight :gap
+	setHeading :oldHeading + 90 - :angle - :arcAngle
+	arcRight :arcAngle :arcRadius
+	jumpForward :size2
+	setHeading :oldHeading
+	jumpRight :size1
+	jumpBackward :fontSize
+	jumpLeft :size3
+	jumpForward :height1
+	arcRight :arcAngle1 :arcRadius
+	setHeading :oldHeading
+	jumpLeft :gap
+	setHeading :oldHeading - 90 - :angle
+	localmake "size4 distanceToLine :oldPos :pos1
+	jumpForward :size4
+	setHeading :oldHeading
+	jumpLeft :fontSize * 0.11
+	left 90 - :angle
+	jumpForward :size4
+	setHeading :oldHeading
+	jumpLeft :gap
+	setHeading :oldHeading + 180 - :arcAngle1
+	arcRight :arcAngle1 :arcRadius	
+	jumpForward :height1
+	polyEnd
+	setTurtleState :oldState
+end
+
+to drawN :fontSize
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "width1 :fontSize * 0.114
+	localmake "angle1 59.3
+	localmake "size1 :fontSize * 0.68
+	localmake "arcAngle 9.4
+	localmake "arcRadius :fontSize * 1.2
+	localmake "gap :fontSize * 0.003
+	setPenSize 0
+	jumpLeft :fontSize * 0.34
+	polyStart
+	jumpForward :fontSize
+	localmake "pos1 pos
+	jumpRight :width1
+	localmake "pos2 pos
+	right 90 + :angle1
+	jumpForward :size1
+	arcRight :arcAngle :arcRadius
+	jumpLeft :gap
+	setHeading :oldHeading
+	localmake "size2 distanceToLine :pos1 :pos2
+	jumpForward :size2
+	jumpRight :width1
+	jumpBackward :fontSize
+	jumpLeft :width1
+	left 90 - :angle1
+	jumpForward :size1
+	arcRight :arcAngle :arcRadius
+	jumpLeft :gap
+	setHeading :oldHeading
+	jumpBackward :size2
+	polyEnd
+	setTurtleState :oldState
+end
+
+to drawT :fontSize
+	localmake "oldState turtleState
+	localmake "width :fontSize * 0.68
+	setPenSize :fontSize * 0.12
+	setLineCap "butt
+	setPenColor fillColor
+	forward :fontSize - penSize / 2
+	jumpLeft :width / 2
+	right 90
+	forward :width
+	setTurtleState :oldState
+end
+
+to drawA :fontSize
+	localmake "oldState turtleState
+	localmake "oldpos pos
+	localmake "oldHeading heading
+	localmake "width1 :fontSize * 0.16
+	localmake "angle1 17.5
+	localmake "size1 :fontSize / cos :angle1
+	localmake "width2 :width1 + :fontSize * 2 * sin :angle1
+	localmake "width3 :fontSize * 0.13
+	localmake "size2 :fontSize * 0.75
+	localmake "gap :fontSize * 0.005
+	localmake "arcAngle 8.9
+	localmake "arcRadius :fontSize * 1.2
+	jumpLeft :width2 / 2
+	right :angle1
+	setPenSize 0
+	polyStart
+	jumpForward :size1
+	setHeading :oldHeading
+	jumpRight :width1
+	setHeading :oldHeading + 180 - :angle1
+	jumpForward :size1
+	setHeading :oldHeading
+	jumpLeft :width3
+	left :angle1
+	jumpForward :size2
+	arcRight :arcAngle :arcRadius
+	setHeading :oldHeading
+	jumpLeft :gap
+	setHeading :oldHeading + 180 + :angle1 - :arcAngle
+	arcRight :arcAngle :arcRadius
+	jumpForward :size2
+	polyEnd
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :fontSize * 0.223
+	stripes :fontSize * 0.5 :fontSize * 0.116 [fillColor]
+	setTurtleState :oldState
+end
+
+to drawX :fontSize
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "angle 31.3
+	localmake "width1 :fontSize * 0.15
+	localmake "width2 :width1 * 2 + :fontSize * tan :angle
+	localmake "ratio1 0.52
+	localmake "size1 :fontSize / (cos :angle) * :ratio1
+	localmake "size2 :fontSize / (cos :angle) * (1 - :ratio1)
+	localmake "size3 :size2 - :width1 / 2 / sin :angle
+	localmake "size4 :size1 - :width1 / 2 / sin :angle
+	jumpLeft :width2 / 2
+	setPenSize 0
+	right :angle
+	polyStart
+	jumpForward :size1
+	left :angle * 2
+	jumpForward :size2
+	setHeading :oldHeading
+	jumpRight :width1
+	right 180 - :angle
+	jumpForward :size3
+	setHeading :oldHeading + :angle
+	jumpForward :size3
+	setHeading :oldHeading
+	jumpRight :width1
+	left 180 - :angle
+	jumpForward :size2
+	left :angle * 2
+	jumpForward :size1
+	setHeading :oldHeading
+	jumpLeft :width1
+	left :angle
+	jumpForward :size4
+	left 180 - :angle * 2
+	jumpForward :size4
+	polyEnd	
+	setTurtleState :oldState
+end
+
+to drawC :fontSize
+	localmake "oldState turtleState
+	localmake "arcsInfo1 [
+		[20 0.45] [48 0.21] [45 0.342] [45 0.26] [18 0.54]
+		[4 1.55]
+	]
+	jumpForward :fontSize * 0.36
+	jumpRight :fontSize * 0.299
+	setPenSize :fontSize * 0.12
+	setPenColor fillColor
+	right 180
+	setLineCap "butt
+	arcsRight :arcsInfo1 :fontSize
+	arcsRight reverse :arcsInfo1 :fontSize
+	setTurtleState :oldState
+end
+
+to drawO :fontSize
+	localmake "oldState turtleState
+	localmake "arcsInfo1 [
+		[30 0.33] [38 0.23] [22 0.77]
+	]
+	setPenSize :fontSize * 0.11
+	jumpForward penSize / 2
+	setPenColor fillColor
+	right 90
+	repeat 2 [
+		arcsLeft :arcsInfo1 :fontSize
+		arcsLeft reverse :arcsInfo1 :fontSize
+	]
+	setTurtleState :oldState
+end
+
+to drawU :fontSize
+	localmake "oldState turtleState
+	localmake "arcsInfo1 [
+		[30 0.28] [60 0.23]
+	]
+	localmake "size1 :fontSize * 0.68
+	jumpForward :fontSize * 0.98
+	jumpRight :fontSize * 0.25
+	setPenSize :fontSize * 0.12
+	setLineCap "butt
+	setPenColor fillColor
+	right 180
+	forward :size1
+	arcsRight reverse :arcsInfo1 :fontSize
+	arcsRight :arcsInfo1 :fontSize
+	forward :size1
+	setTurtleState :oldState
+end
+
+to drawI :fontSize
+	stripes :fontSize * 0.12 :fontSize [fillColor]	
+end
+
+to drawG :fontSize
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "width1 :fontSize * 0.373
+	localmake "thickness1 :fontSize * 0.108
+	localmake "thickness2 :fontSize * 0.12
+	localmake "arcsInfo1 [
+		[5 1.55] [54 0.2] [25 0.255]
+	]
+	localmake "arcsInfo2 [
+		[2 1.7] [50 0.29] [25 0.3] [12 0.52]
+	]
+	localmake "arcsInfo3 [
+		[10 1.17] [44 0.36] [25 0.33] [12 0.52]
+	]
+	localmake "angle1 0
+	repeat count :arcsInfo1 [
+		localmake "angle1 :angle1 + first item repcount :arcsInfo1
+	]
+	setFillColor "red
+	jumpRight :width1
+	localmake "pos1 pos
+	setPenSize 0
+	polyStart
+	jumpForward :fontSize * 0.52
+	jumpLeft :width1
+	jumpBackward :thickness1
+	jumpRight :width1 - :thickness2
+	left 90 + :angle1
+	arcsRight :arcsInfo1 :fontSize
+	arcsRight reverse :arcsInfo1 :fontSize
+	arcRight (90 - :angle1) * 2 :fontSize * 0.85
+	arcsRight :arcsInfo1 :fontSize
+	setItem 3 "arcsInfo1 [25 0.28]
+	setItem 1 "arcsInfo1 [12 0.33]
+	arcsRight reverse :arcsInfo1 :fontSize
+	setHeading :oldHeading
+	jumpRight :thickness2
+	arcsLeft :arcsInfo2 :fontSize
+	arcsLeft reverse :arcsInfo3 :fontSize
+	arcsLeft :arcsInfo3 :fontSize
+	arcLeft 53 :fontSize * 0.3
+	right 130
+	jumpForward distanceToLine :oldPos :pos1
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://montax.ca
+to montaxLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "height1 :height * 0.58
+	localmake "fontSize1 :height * 0.363
+	setLineJoinStyle "miter
+	setPenSize :height * 0.055
+	setPenColor "#187741
+	setFillColor transparent
+	jumpForward :height - (:height1 + penSize) / 2
+	rect :height * 5.19 :height1
+
+	setFillColor "black
+	jumpTo :oldPos
+	jumpLeft :height * 2.3015
+	jumpForward :height * 0.5005
+	drawM :fontSize1
+	jumpRight :height * 0.73
+	drawN :fontSize1
+	jumpRight :height * 0.292
+	drawT :fontSize1
+	jumpRight :height * 0.2515
+	drawA :fontSize1
+	jumpRight :height * 0.338
+	drawX :fontSize1
+	jumpRight :height * 0.492
+	drawA :fontSize1
+	jumpRight :height * 0.3
+	drawC :fontSize1
+	jumpRight :height * 0.31
+	drawC :fontSize1
+	jumpRight :height * 0.315
+	drawO :fontSize1
+	jumpRight :height * 0.315
+	drawU :fontSize1
+	jumpRight :height * 0.288
+	drawN :fontSize1
+	jumpRight :height * 0.286
+	drawT :fontSize1
+	jumpRight :height * 0.186
+	drawI :fontSize1
+	jumpRight :height * 0.217
+	drawN :fontSize1
+	jumpRight :height * 0.3
+	drawG :fontSize1
+
+	jumpTo :oldPos
+	jumpLeft :height * 1.935
+	jumpForward :height * 0.68
+	drawLeafs :height * 0.26395
+	setTurtleState :oldState
+end
+
+montaxLogo 100
+make "height 100.3
+jumpBackward :height * 0.003
+imageAlpha :height * 1063 / 203 :height 'local://montax.svg' 0.3
+
+make "height2 101
+
+;imageAlpha :height2 * 552 / 107 :height2 'local://Montax-Front.png' 0.3

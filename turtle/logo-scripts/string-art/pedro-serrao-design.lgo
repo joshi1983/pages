@@ -1,0 +1,203 @@
+; Inspired by
+; https://scontent-yyz1-1.xx.fbcdn.net/v/t39.30808-6/309592891_10223670034993672_7532762349515487001_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=8bfeb9&_nc_ohc=M0Vd18zpVfoAX-AVs5K&_nc_ht=scontent-yyz1-1.xx&oh=00_AfAiFQlnGzp-0qKEIJjrBkZNY9VaixKxAroYjfbfAV-ERg&oe=63FD0C21
+; From Pedro Serrão
+; Pedra's facebook profile is at:
+; https://www.facebook.com/pedro.serrao.31
+make "redColor "maroon
+make "lightColor "white
+
+to addPointsArcRight :result :numPoints :arcAngle :arcRadius 
+	localmake "angleStep :arcAngle / :numPoints
+	penUp
+	repeat :numPoints [
+		arcRight :angleStep :arcRadius
+		queue2 "result pos
+	]
+	penDown
+end
+
+to stripedCircle :color1 :color2 :radius
+	localmake "oldState turtleState
+	localmake "numStripes 4
+	setPenSize 0
+	repeat :numStripes [
+		localmake "circleRadius :radius * (:numStripes + 1 - repcount) / :numStripes
+		ifelse even? repcount [
+			setFillColor :color1
+		] [
+			setFillColor :color2
+		]
+		circle :circleRadius
+	]
+	setTurtleState :oldState
+end
+
+to addPointsForward :result :numPoints :len
+	localmake "step :len / :numPoints
+	repeat :numPoints [
+		jumpForward :step
+		queue2 "result pos
+	]
+end
+
+to connectPoints :points
+	localmake "oldState turtleState
+	localmake "numPoints count :points
+	localmake "offset int (:numPoints / 2)
+	repeat count :points [
+		localmake "from item repcount :points
+		localmake "toIndex 1 + remainder repcount + :offset :numPoints
+		localmake "to item :toIndex :points
+		jumpTo :from
+		setPos :to
+	]
+	setTurtleState :oldState
+end
+
+to vCurve :angle :size :nailSize
+	localmake "oldState turtleState
+	localmake "points []
+	localmake "numPoints 20
+	localmake "step :size / :numPoints
+	jumpForward :size
+	right 180
+	addPointsForward :points :numPoints :size
+	left 180 - :angle
+	jumpBackward :step
+	addPointsForward :points :numPoints :size
+	connectPoints :points
+	setFillColor "black
+	setPenSize 0
+	repeat count :points [
+		jumpTo item repcount :points
+		circle :nailSize
+	]
+	setTurtleState :oldState
+end
+
+to hexCircle :radius
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "numPoints 20
+	localmake "numAngles 6
+	localmake "arcAngle 360 / :numAngles
+	localmake "radius2 :radius * 2 / 3
+	localmake "nailSize :radius * 0.012
+	setPenColor :lightColor
+	setFillColor "black
+	repeat :numAngles [
+		setHeading :oldHeading + repcount * 360 / :numAngles
+		localmake "points []
+		addPointsForward :points :numPoints :radius
+		right 90
+		addPointsArcRight :points :numPoints :arcAngle :radius
+		right 90
+		addPointsForward :points :numPoints :radius
+		setPenSize :radius * 0.01
+		connectPoints :points
+		setPenSize 0
+		repeat :numPoints [
+			jumpTo item repcount :points
+			circle :nailSize
+		]
+		jumpTo :oldPos
+	]
+	setPenColor :redColor
+	setPenSize :radius * 0.01
+	repeat :numAngles [
+		setHeading :oldHeading + repcount * 360 / :numAngles
+		localmake "points []
+		jumpForward :radius2
+		right 180
+		addPointsForward :points :numPoints :radius2
+		right 180 - :arcAngle
+		addPointsForward :points :numPoints :radius2
+		connectPoints :points
+		jumpTo :oldPos
+	]
+	setPenSize :radius * 0.05
+	setPenColor :redColor
+	setFillColor transparent
+	circle :radius - penSize / 2
+	setTurtleState :oldState
+end
+
+to smallCircleDesign :circleRadius :nailSize
+	localmake "oldState turtleState
+	localmake "angle1 35
+	localmake "size1 :circleRadius * 2.5
+	localmake "size2 :size1 / cos :angle1
+	stripedCircle :lightColor :redColor :circleRadius
+	jumpBackward :size1
+	setPenColor :redColor
+	left :angle1
+	vCurve :angle1 * 2 :size2 :nailSize
+	right :angle1
+	jumpForward :size1 * 2
+	right 180 - :angle1
+	vCurve :angle1 * 2 :size2 :nailSize
+	setTurtleState :oldState
+end
+
+to drawing :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "circleRadius :size * 0.2
+	localmake "largeStripedCircleRadius :circleRadius * 0.4
+	localmake "largeStripedCircleSeparation :circleRadius * 7
+	localmake "smallStripedCircleRadius :circleRadius * 0.25
+	localmake "smallStripedCircleSeparation :circleRadius * 3.8
+	localmake "smallVSeparation :circleRadius * 2.1
+	localmake "smallVAngle 60
+	localmake "smallVSize :circleRadius * 0.8
+	localmake "vSizes [2 1.5 1 1.5 2 1.5 1 1.5]
+	localmake "angle1 78
+	localmake "angle2 2 * (90 - :angle1)
+	localmake "nailSize :size * 0.002
+	hexCircle :circleRadius
+	setPenSize :size * 0.001
+	setPenColor :lightColor
+	repeat count :vSizes [
+		localmake "heading1 heading
+		localmake "vSize1 :circleRadius * item repcount :vSizes
+		localmake "vSize2 :vSize1 / (cos :angle2 / 2)
+		jumpLeft :circleRadius + :vSize1
+		right :angle1
+		vCurve :angle2 :vSize2 :nailSize
+		jumpTo :oldPos
+		setHeading :heading1 + 45
+	]
+	setHeading :oldHeading
+	jumpLeft :largeStripedCircleSeparation / 2
+	stripedCircle :redColor :lightColor :largeStripedCircleRadius
+	jumpRight :largeStripedCircleSeparation 
+	stripedCircle :redColor :lightColor :largeStripedCircleRadius
+	jumpTo :oldPos
+	setHeading :oldHeading - 90 + 45 / 2
+	repeat 2 [
+		jumpForward :smallStripedCircleSeparation / 2
+		smallCircleDesign :smallStripedCircleRadius :nailSize
+		jumpBackward :smallStripedCircleSeparation
+		smallCircleDesign :smallStripedCircleRadius :nailSize
+		jumpTo :oldPos
+		left 45
+	]
+	setHeading :oldHeading - 45 / 2
+	setPenColor :redColor
+	repeat 2 [
+		jumpForward :smallVSeparation / 2
+		localmake "heading1 heading
+		left :smallVAngle / 2
+		vCurve :smallVAngle :smallVSize :nailSize
+		setHeading :heading1
+		jumpBackward :smallVSeparation
+		right 180 - :smallVAngle / 2
+		vCurve :smallVAngle :smallVSize :nailSize
+		jumpTo :oldPos
+		setHeading :heading1 + 45
+	]
+end
+
+setScreenColor "#3889A8
+drawing 100

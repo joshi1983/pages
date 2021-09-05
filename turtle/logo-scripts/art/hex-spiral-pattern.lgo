@@ -1,0 +1,47 @@
+; Inspired by
+; https://www.pinterest.ca/pin/379146862391843817/
+
+to hexStripe :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "arcRadius1 :size * 0.55
+	localmake "arcRadius2 :arcRadius1 * 0.954188895
+	setPenSize 0
+	left 2
+	polyStart
+	arcRight 140 :arcRadius1
+	left 150
+	arcLeft 200 :arcRadius2
+	polyEnd
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to hexStripeSpiral :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	repeat 6 [
+		hexStripe :size
+		right 60
+	]	
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to tiledSpiralPattern :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "size1 :size / 3
+	hexStripeSpiral :size1
+	repeat 6 [
+		setHeading :oldHeading + repcount * 360 / 6
+		forward :size1 * 2
+		left 57.13
+		hexStripeSpiral :size1
+		setPos :oldPos
+	]
+end
+
+setFillColor "BLACK
+tiledSpiralPattern 100

@@ -1,0 +1,83 @@
+to lithuaniaFlag :width :height
+	localmake "colors ["#C1272D "#006A44 "#FDB913]
+	stripes :width :height :colors
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Lithuania#/media/File:Flag_of_Lithuania.svg
+; Lithuania's flag from 2004 to present(2023 as I type this comment)
+to lithuaniaFlagCurrent :height
+	lithuaniaFlag :height * 5 / 3 :height
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Lithuania#/media/File:Flag_of_Lithuania_(1988%E2%80%932004).svg
+; Lithuania's flag from 1980 to 2004
+to lithuaniaFlag2004 :height
+	lithuaniaFlag :height * 2 :height
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Lithuania#/media/File:Naval_Ensign_of_Lithuania.svg
+to lithuaniaNavalEnsignia :height
+	localmake "oldState turtleState
+	localmake "width :height * 2
+	stripes :width :height ["white]
+	setPenColor "#003c96
+	setPenSize :height / 7
+	forward :height
+	jumpBackward :height / 2
+	right 90
+	jumpBackward :width / 2
+	forward :width
+	jumpBackward :width * 43 / 56
+	left 90
+	jumpForward :height / 14
+	lithuaniaFlag :width * 13 / 28 :height * 6 / 14
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Lithuania#/media/File:Flag_of_the_Lithuanian_Army.svg
+to lithuaniaArmy :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "width :height * 5 / 3
+	localmake "sideHeight :height * 39 / 60
+	stripes :width :height ["#C1272D]
+	setPenColor "#f9cf00
+	setPenSize :height * 0.1
+	jumpForward :height * 13 / 15
+	backward :height * 4 / 15
+	jumpLeft :height * 0.1
+	jumpBackward :height * 0.45
+	forward :height * 0.5
+	right 90
+	forward :height * 0.2
+	right 90
+	forward :height * 0.5
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 5 / 6
+	jumpLeft :height * 0.3
+	right 180
+	forward :sideHeight
+	left 90
+	forward :height * 3 / 5
+	left 90
+	forward :sideHeight
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 4
+jumpLeft :separation * 1.5
+lithuaniaFlagCurrent :height
+jumpRight :separation
+lithuaniaFlag2004 :height
+jumpRight :separation
+lithuaniaNavalEnsignia :height
+jumpRight :separation
+lithuaniaArmy :height

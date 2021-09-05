@@ -1,0 +1,264 @@
+to no :radius
+	localmake "oldState turtleState
+
+	setPenSize :radius * 0.2
+	localmake "radius1 :radius - penSize * 0.5
+
+	setPenColor "red
+	circle :radius1
+	right 45
+	jumpBackward :radius1
+	forward :radius1 * 2
+
+	setTurtleState :oldState
+end
+
+to whiteBackgroundNo :radius
+	localmake "oldState turtleState
+
+	setFillColor "white
+	setPenSize 0
+	circle :radius
+	no :radius
+
+	setTurtleState :oldState
+end
+
+to oneWay :radius
+	localmake "oldState turtleState
+	localmake "lineWidth :radius * 0.3
+	localmake "radius1 :radius - :lineWidth * 0.5
+
+	setPenSize 0
+	setFillColor "red
+	circle :radius
+	setPenColor "white
+	right 90
+	jumpBackward :radius1
+	setPenSize :lineWidth
+	setLineJoinStyle "miter
+	forward :radius1 * 2
+
+	left 90
+	setTurtleState :oldState
+end
+
+to fillEquilateralTriangle :straightLength :arcRadius
+	localmake "oldState turtleState
+	localmake "height1 :straightLength * (sin 30)
+
+	jumpForward :height1 * 2 / 3
+	jumpLeft :straightLength * 0.5
+	right 90
+	polyStart
+	repeat 3 [
+		jumpForward :straightLength
+		arcRight 120 :arcRadius
+	]
+	polyEnd
+
+	setTurtleState :oldState
+end
+
+to blankYield :size
+	localmake "oldState turtleState
+	localmake "height :size * 2
+	localmake "outerPenSize :size * 0.005
+	localmake "height1 :height - :outerPenSize
+	localmake "outerSideLength :height1 * 0.94 / (cos 30) - :outerPenSize
+	localmake "outerArcRadius :size * 0.1
+	localmake "outerSideStraightLength :outerSideLength - :outerArcRadius
+
+	jumpForward :size * 0.31
+	setFillColor "white
+	setPenColor "black
+	setPenSize :outerPenSize
+	fillEquilateralTriangle :outerSideStraightLength :outerArcRadius
+	setPenSize 0
+	setFillColor "red
+	fillEquilateralTriangle :outerSideStraightLength * 0.9 :outerArcRadius
+	setFillColor "white
+	fillEquilateralTriangle :outerSideStraightLength * 0.5 :outerArcRadius
+
+
+	setTurtleState :oldState
+end
+
+
+to arrow2 :size :arrowWidth :headSize :angle1
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "headSideLength :headSize
+	localmake "arcAngle 140
+	localmake "arcRadius :headSize * 0.08
+	localmake "size1 :size - :arrowWidth
+	localmake "chordLength :arcRadius * 2 * sin :arcAngle * 0.5
+	localmake "calcAngle 90 - :angle1 + 180 - :arcAngle
+	localmake "calcAngle2 :angle1 + :arcAngle * 0.5 - 90
+	localmake "perpendicularLength1 :headSideLength * cos :angle1
+	localmake "perpendicularLength2 :chordLength * sin :calcAngle2
+	localmake "perpendicularLength :perpendicularLength1 - :perpendicularLength2
+	localmake "size2 :perpendicularLength / sin :calcAngle
+
+	setPenSize :arrowWidth
+	setPenColor "black
+	forward :size1
+	jumpForward :size - :size1
+	left :angle1 + 90
+	setPenSize 0
+	setFillColor "black
+	polyStart
+	jumpForward :headSideLength
+	arcLeft :arcAngle :arcRadius
+	localmake "delta heading - :oldHeading
+	jumpForward :size2
+	setHeading :oldHeading + 180 - :delta
+	jumpForward :size2
+	arcLeft :arcAngle :arcRadius
+	polyEnd
+
+	setTurtleState :oldState
+end
+
+to arrow1 :size
+	arrow2 :size :size * 0.2 :size * 0.5 50
+end
+
+to diagonalBlackBorder :size
+	localmake "oldState turtleState
+
+	setPenSize :size * 0.05
+	localmake "blackBorderLength :size - penSize
+
+	jumpBackward :blackBorderLength / cos 45
+	setPenColor "black
+	setFillColor transparent
+	right 45
+	polyStart
+	repeat 3 [
+		forward :blackBorderLength * 2
+		left 90
+	]
+	polyEnd
+
+	setTurtleState :oldState
+end
+
+to diagonalOrangeSignBackground :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "oldState turtleState
+
+	setLineJoinStyle "miter
+	setPenColor "#FFC800
+	setPenSize :size * 2
+	right 45
+	jumpBackward :size
+	forward :size * 2
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	diagonalBlackBorder :size * 0.95
+
+	setTurtleState :oldState
+end
+
+; Made to look like this sign:
+; https://navjoyinc.com/wp-content/uploads/2020/09/AdobeStock_180579667-scaled.jpeg
+to twoWay :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "oldState turtleState
+	localmake "size1 :size * cos 45
+	localmake "arrowSize :size1 * 1.2
+	localmake "arrowSeparation :size1 * 0.4
+
+	diagonalOrangeSignBackground :size1
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpLeft :arrowSeparation
+	jumpBackward :arrowSize * 0.5
+	arrow1 :arrowSize
+	jumpTo :oldPos
+	setHeading :oldHeading + 180
+	jumpLeft :arrowSeparation
+	jumpBackward :arrowSize * 0.5
+	arrow1 :arrowSize
+	jumpTo :oldPos
+	setHeading :oldHeading
+
+	setTurtleState :oldState
+end
+
+to turnRight :size
+	localmake "oldState turtleState
+	localmake "size1 :size * cos 45
+	localmake "arcRadius :size * 0.2
+	localmake "arrowWidth :size * 0.25
+	localmake "arrowLength :size * 0.5
+	localmake "arrowHeadSize :size * 0.4
+
+	diagonalOrangeSignBackground :size1
+	jumpLeft :size * 0.2
+	jumpBackward :size * 0.4
+	setPenSize :arrowWidth
+	forward :size * 0.5
+	arcRight 90 :arcRadius
+	arrow2 :arrowLength :arrowWidth :arrowHeadSize 50
+
+	setTurtleState :oldState
+end
+
+to turnLeft :size
+	localmake "oldState turtleState
+	localmake "size1 :size * cos 45
+	localmake "arcRadius :size * 0.2
+	localmake "arrowWidth :size * 0.25
+	localmake "arrowLength :size * 0.5
+	localmake "arrowHeadSize :size * 0.4
+
+	diagonalOrangeSignBackground :size1
+	jumpRight :size * 0.2
+	jumpBackward :size * 0.4
+	setPenSize :arrowWidth
+	forward :size * 0.5
+	arcLeft 90 :arcRadius
+	arrow2 :arrowLength :arrowWidth :arrowHeadSize 50
+
+	setTurtleState :oldState
+end
+
+to yieldAhead :size
+	localmake "oldState turtleState
+	localmake "size1 :size * cos 45
+	localmake "yieldSize :size1 * 0.7
+	localmake "arrowWidth :size * 0.25
+	localmake "arrowLength :size * 0.5
+	localmake "arrowHeadSize :size * 0.4
+
+	diagonalOrangeSignBackground :size1
+	jumpBackward :size1 * 0.45
+	blankYield :yieldSize
+	jumpForward :size * 0.6
+	arrow2 :arrowLength :arrowWidth :arrowHeadSize 45
+
+	setTurtleState :oldState
+end
+
+setScreenColor "#ddd
+make "size 100
+make "separation :size * 3.2
+jumpLeft :separation * 3
+whiteBackgroundNo :size
+jumpRight :separation
+blankYield :size
+jumpRight :separation
+oneWay :size
+jumpRight :separation
+twoWay :size
+jumpRight :separation
+turnRight :size
+jumpRight :separation
+turnLeft :size
+jumpRight :separation
+yieldAhead :size
