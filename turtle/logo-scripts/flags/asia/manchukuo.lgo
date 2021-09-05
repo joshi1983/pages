@@ -1,0 +1,89 @@
+make "manchukuoOrange "#ffc500
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Manchukuo#/media/File:Flag_of_Manchukuo.svg
+to manchukuoFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 3 / 2
+	stripes :width :height [:manchukuoOrange]
+	jumpLeft :width / 4
+	jumpForward :height / 2
+	stripes :width / 2 :height / 2 ["black "white "#08639c "#de2119]
+	setTurtleState :oldState
+end
+
+to manchukuoEmblemStick :len :bigRadius :tinyRadius
+	localmake "oldState turtleState
+	forward :len - :tinyRadius
+	setPenSize 0
+	circle :tinyRadius
+	jumpBackward :bigRadius
+	circle :bigRadius
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Manchukuo#/media/File:Flag_of_the_Emperor_of_Manchukuo.svg
+to manchukuoEmblemFlag :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "width :height * 3 / 2
+	localmake "tinyRadius :height * 0.01
+	localmake "sticksInfo [
+		[0.138 0.098 0.02 0.007] [0.205 0.124 0.026 0.008]
+	]
+	localmake "arcsInfo [
+		[20 0.2] [30 0.135] [10 0.3] [-10 0.45] [-8.99238651 0.6] [-52 0]
+	]
+	localmake "angle1 51
+	localmake "angle2 137
+	localmake "angle3 :angle2 * 2 - 180
+	stripes :width :height [:manchukuoOrange]
+	jumpForward :height / 2
+	localmake "center pos
+	setLineCap "round
+	setPenSize :height * 0.01
+	setPenColor "#b77300
+	setFillColor penColor
+	right 180 / 5
+	repeat 5 [
+		localmake "heading1 heading
+		manchukuoEmblemStick :height * 0.342 :height * 0.03 :tinyRadius
+		repeat 2 [
+			localmake "stickInfo item repcount :sticksInfo
+			localmake "len :height * item 2 :stickInfo
+			localmake "stickTinyRadius :height * last :stickInfo
+			localmake "bigRadius :height * item 3 :stickInfo
+			jumpForward :height * first :stickInfo
+			setHeading :heading1 + :angle1
+			manchukuoEmblemStick :len :bigRadius :stickTinyRadius
+			setHeading :heading1 - :angle1
+			manchukuoEmblemStick :len :bigRadius :stickTinyRadius
+			setHeading :heading1
+			jumpTo :center
+		]
+		jumpTo :center
+		setHeading :heading1 + 360 / 5
+	]
+	setHeading :oldHeading
+	setPenSize 0
+	circle :height * 0.0505
+	jumpForward :height * 0.3717
+	right :angle2
+	polyStart
+	repeat 5 [
+		arcsRight :arcsInfo :height
+		arcsRight reverse :arcsInfo :height
+		right :angle3
+	]
+	polyEnd
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 5
+setScreenColor "black
+jumpLeft :separation * 0.5
+manchukuoFlag :height
+jumpRight :separation
+manchukuoEmblemFlag :height

@@ -1,0 +1,12 @@
+REM copied from https://qb64.com/wiki/_SNDRAW
+FREQ = 400                             'any frequency desired from 36 to 10,000
+Pi2 = 8 * ATN(1)                       '2 * pi 
+Amplitude = .3                         'amplitude of the signal from -1.0 to 1.0
+SampleRate = _SNDRATE                  'sets the sample rate
+FRate = FREQ / SampleRate'
+FOR Duration = 0 TO 5 * SampleRate     'play 5 seconds
+        _SNDRAW Amplitude * SIN(Pi2 * Duration * FRate)            'sine wave
+       '_SNDRAW Amplitude * SGN(SIN(Pi2 * Duration * FRate))       'square wave
+NEXT
+DO: LOOP WHILE _SNDRAWLEN
+END 
