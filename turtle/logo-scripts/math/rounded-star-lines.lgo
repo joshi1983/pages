@@ -1,0 +1,26 @@
+to roundRegularStarPattern :height
+	localmake "numPoints 5
+	localmake "cornerRadius1 :height * 0.03
+	localmake "cornerRadius2 :height * 0.05
+	localmake "numLines 10
+	setLineJoinStyle "round
+	jumpForward :height / 2
+	localmake "radii []
+	repeat :numLines [
+		queue2 "radii :height / 2 * repRatio
+	]
+	setPenColor "black
+	repeat count :radii [
+		localmake "radius item repcount :radii
+		setPenSize :radius * 0.01
+		regularStar :radius :numPoints
+	]
+	repeat count :radii [
+		setPenColor mix "#8f00 "#800f repRatio
+		localmake "radius item repcount :radii
+		setPenSize :radius * 0.01 + :height * 0.001
+		roundRegularStar :radius :numPoints :cornerRadius1 :cornerRadius2
+	]
+end
+
+roundRegularStarPattern 100

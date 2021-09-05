@@ -1,0 +1,107 @@
+; Inspired by:
+; https://www.pinterest.ca/pin/17732992273331837/
+
+to forwardToList :len
+	localmake "lineSegment [xCor yCor]
+	jumpForward :len
+	queue "lineSegment xCor
+	queue "lineSegment yCor
+	queue "lineSegment penColor
+	output :lineSegment
+end
+
+to drawV :deltaX :deltaY
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angle arcTan :deltaX / :deltaY
+	localmake "len hypot [:deltaX :deltaY]
+	left :angle
+	localmake "segment1 forwardToList :len
+	jumpTo :oldPos
+	right :angle * 2
+	localmake "segment2 forwardToList :len
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	output [:segment1 :segment2]
+end
+
+to ratioItem :ratio :list1
+	localmake "index 1 + int (:ratio * count :list1) 
+	localmake "index min (count :list1) (max 1 :index)
+	output item :index :list1
+end
+
+to squareStarStringDrawing :size
+	localmake "oldPos pos
+	localmake "innerSize :size * 0.5
+	localmake "colors ["#d05 "#f8b "white]
+	localmake "numStrings 20
+	localmake "innerDelta :innerSize / :numStrings
+	localmake "outerDelta :size * 0.5 / :numStrings
+	setPenSize :size * 0.012
+	localmake "lineSegments []
+
+	repeat 4 [
+		jumpTo :oldPos
+		localmake "deltaY :size
+		localmake "deltaX :size * 0.5
+		right 90
+		repeat 1 + :numStrings [
+			setPenColor ratioItem ((repcount - 1) / (:numStrings - 1)) :colors
+			queue "lineSegments (drawV :deltaX :deltaY)
+			localmake "deltaX :deltaX + :outerDelta
+			localmake "deltaY :deltaY - :innerDelta
+			jumpForward :innerDelta
+		]
+	]
+	right 45
+	repeat 4 [
+		right 90
+		jumpTo :oldPos
+		localmake "mainHeading heading
+		jumpForward :size * sqrt 2
+		right 135
+		jumpForward :size * 0.5 - :outerDelta
+		localmake "testHeading heading
+		localmake "testPos pos
+		setHeading :mainHeading
+		jumpTo :oldPos
+		repeat 2 + :numStrings [
+			setPenColor ratioItem ((repcount - 1) / (:numStrings - 1)) :colors
+			if repcount <> 1 [
+				queue "lineSegments (drawV :deltaX :deltaY) 
+			]
+			jumpForward :innerDelta
+			localmake "mainPos pos
+			jumpTo :testPos
+			setHeading :testHeading
+			jumpForward :outerDelta
+			localmake "testPos pos
+			jumpTo :mainPos
+			setHeading :mainHeading
+			localmake "r distance :testPos
+			localmake "angle (towards :testPos) - :mainHeading + 90
+			localmake "deltaX :r * cos :angle
+			localmake "deltaY :r * sin :angle
+		]
+	]
+	; draw all the line segments.
+	localmake "midOffset (count :lineSegments) / 2
+	repeat count :lineSegments [
+		ifelse 0 = remainder repcount 2 [
+			localmake "pair (item repcount / 2 :lineSegments)
+		] [
+			localmake "pair (item :midOffset + int repcount / 2  :lineSegments)
+		]
+		repeat 2 [
+			localmake "lineSegment item repcount :pair
+			jumpTo [(item 1 :lineSegment) (item 2 :lineSegment)]
+			setPenColor item 5 :lineSegment
+			setXY (item 3 :lineSegment) (item 4 :lineSegment)
+		]
+	]
+end
+
+setScreenColor "black
+squareStarStringDrawing 200
