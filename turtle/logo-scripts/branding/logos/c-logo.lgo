@@ -1,0 +1,135 @@
+to drawCLetterShadows :arcRadius :arcThickness :startAngle
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "outerRadius :arcRadius + :arcThickness / 2
+	localmake "outerRadiusRatio :outerRadius / :arcRadius
+	localmake "innerRadius :arcRadius - :arcThickness / 2
+	localmake "innerRadiusRatio :innerRadius / :arcRadius
+	localmake "shapes [
+		[107 :innerRadius 0.5 [[-96 0] [-140 :innerRadiusRatio * 0.98] [70 0.1]
+			[52 0.6] [100 0] [1.81]]]
+
+		[180 + :startAngle :outerRadius 0.5 [[-65 0] [-27.5 0.3]
+		[-170 :outerRadiusRatio * 1.005] [-130 0] [1.6]]]
+
+		[180 + :startAngle :outerRadius 0.3 [[-60 0] [-18 0.4]
+		[-130 1]]]
+	]
+	repeat count :shapes [
+		localmake "shapeInfo item repcount :shapes
+		setHeading :oldHeading - first :shapeInfo
+		jumpForward item 2 :shapeInfo
+		setFillColor mix "black transparent item 3 :shapeInfo
+		polyStart
+		arcLines last :shapeInfo :arcRadius
+		polyEnd
+		jumpTo :oldPos
+	]
+	setTurtleState :oldState
+end
+
+to drawC :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "arcRadius :height * 0.215
+	localmake "arcThickness :height * 0.11
+	localmake "shadowArcAngle 120
+	localmake "shadowArcAngle2 :shadowArcAngle
+	localmake "startAngle 44.8
+	drawCLetterShadows :arcRadius :arcThickness :startAngle
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	setPenColor "white
+	setLineCap "butt
+	setPenSize :arcThickness
+	left :startAngle
+	arc 270 :arcRadius
+	jumpBackward :arcRadius - :arcThickness / 2
+	setPenSize 0
+	setFillColor "#f7e6cf
+	localmake "shadowStartPos pos
+	polyStart
+	jumpBackward :arcThickness
+	left 90
+	arcRight :shadowArcAngle :arcRadius + :arcThickness / 2
+	setHeading (towards :shadowStartPos) + :shadowArcAngle2 / 2
+	localmake "chordLength distance :shadowStartPos
+	localmake "shadowArcRadius2 :chordLength / 2 / sin :shadowArcAngle2 / 2
+	arcLeft :shadowArcAngle2 :shadowArcRadius2
+	polyEnd
+	setTurtleState :oldState
+end
+
+to drawTriangles :height :cornerRadius
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "colorRows [
+		[60 ["#79c15f "#bedfb9 "#84b8a2 "#84b8a2 "#da3661]]
+		[60 ["#42948e "#42948e "#ad1d34 "#ad1d34 "#bd1e47 "#bd1e47 "#91192d]]
+		[0 [transparent "#cd2b78 "#b91e5e "#b91e5e "#961b4c "#961b4c "#ef3f60 "#ef3f60]]
+		[0 [transparent "#921948 "#e4336b "#e4336b "#f37c7a "#f7997b]]
+	]
+	localmake "cornerOffset :cornerRadius * tan 30
+	localmake "gap :cornerRadius * (1 - sin 360 / 6)
+	localmake "triangleSize (:height + 2 * :gap) / 4
+	localmake "triangleHeight :triangleSize * sin 60
+	jumpBackward :height / 2 + :gap
+	repeat count :colorRows [
+		localmake "rowInfo item repcount :colorRows
+		localmake "pos1 pos
+		localmake "colors item 2 :rowInfo
+		for ["i 1 count :colors 2] [
+			localmake "pos2 pos
+			setHeading :oldHeading
+			jumpForward :triangleSize / 2
+			right 90
+			setFillColor item :i :colors
+			isoTriangle :triangleSize :triangleHeight
+			if :i < count :colors [
+				left 90
+				jumpTo :pos2
+				setHeading :oldHeading + 30
+				jumpLeft :triangleSize / 2
+				setFillColor item :i + 1 :colors
+				isoTriangle :triangleSize :triangleHeight
+				jumpLeft :triangleSize / 2
+			]
+		]
+		jumpTo :pos1
+		setHeading :oldHeading + first :rowInfo
+		jumpForward :triangleSize
+	]
+	setFillColor "white
+	repeat 6 [
+		setHeading :oldHeading + 360 / 6 * repcount 
+		jumpTo :oldPos
+		jumpForward :height / 2 + :gap
+		right 30
+		polyStart
+		jumpRight :cornerOffset
+		left 90
+		arcLeft 60 :cornerRadius
+		polyEnd
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by image at
+; https://cstdspace.quora.com/
+to cProgrammingLogo :height
+	localmake "oldState turtleState
+	localmake "cornerRadius :height * 0.07
+	jumpForward :height / 2
+	setFillColor "#a76c6b
+	setPenSize 0
+	regularPolygon :height / 2 6
+	drawTriangles :height :cornerRadius
+	drawC :height
+	setTurtleState :oldState
+end
+
+cProgrammingLogo 100

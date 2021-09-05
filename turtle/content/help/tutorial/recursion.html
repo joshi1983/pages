@@ -1,0 +1,47 @@
+<p>The <span class=\"command\">forward</span> command draws a solid line if it draws one at all.  No command draws a dashed line but you can make your own that does.
+"forwardDashed" sounds like a good name for our new command.</p>
+<p>How would you draw a dashed line?</p>
+<p>The <span class=\"command\">forward</span>, and 
+<span class=\"command\">jumpForward</span> commands let you intermittently draw short solid lines like this:</p>
+<code class="pastable">forward 5
+jumpForward 5
+forward 5
+jumpForward 5
+</code>
+<p>You could reduce some of the code duplication with a loop like this:</p>
+<code class="pastable">repeat 2 [
+&nbsp;&nbsp;forward 5<br>
+&nbsp;&nbsp;jumpForward 5<br>
+]</code>
+<p>You might have other drawings that currently use the forward command and you want to replace those solid lines with dashed lines.</p>
+<p>If you call forward in more than one place, you may be tempted to paste the above code into multiple places.</p>
+<code class="pastable">forward 100<br>
+right 45<br>
+repeat 4 [<br>
+&nbsp;&nbsp;forward 100<br>
+&nbsp;&nbsp;left 90<br>
+]</code>
+
+<p>The following code could make a similar drawing using dashed lines if we teach WebLogo how to do "forwardDashed".</p>
+<code class="wide">forwardDashed 100<br>
+right 45<br>
+repeat 4 [<br>
+&nbsp;&nbsp;forwardDashed 100<br>
+&nbsp;&nbsp;left 90<br>
+]</code>
+
+<p>The following is how we can define the forwardDashed command:</p>
+<code class="pastable">to forwardDashed :len<br>
+&nbsp;&nbsp;if :len > 0 [<br>
+&nbsp;&nbsp;&nbsp;&nbsp;forward 5<br>
+&nbsp;&nbsp;&nbsp;&nbsp;jumpForward 5<br>
+&nbsp;&nbsp;&nbsp;&nbsp;forwardDashed :len - 10<br>
+&nbsp;&nbsp;]<br>
+end<br>
+<br>
+forwardDashed 100<br>
+right 45<br>
+repeat 4 [<br>
+&nbsp;&nbsp;forwardDashed 100<br>
+&nbsp;&nbsp;left 90<br>
+]</code>
