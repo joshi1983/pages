@@ -1,0 +1,137 @@
+// copied from 
+// https://www.f-lohmueller.de/pov_tut/x_sam/geo/star0.txt
+
+// POV-Ray 3.7 Scene File "star0.pov"
+// author: Friedrich A. Lohmueller, Aug-2005/Jan-2011
+// homepage: www.f-lohmueller.de
+
+//--------------------------------------------------------------------------
+#version 3.6; // 3.7;
+global_settings{ assumed_gamma 1.0 }
+#default{ finish{ ambient 0.1 diffuse 0.9 }} 
+//--------------------------------------------------------------------------
+#include "colors.inc"
+#include "textures.inc"
+//--------------------------------------------------------------------------
+// camera ------------------------------------------------------------------
+#declare Camera0 = camera { angle 35                           // front view
+                        location  <0.0 , 1.0 ,-10.0>
+                        right     x*image_width/image_height
+                        look_at   <0.0 , 1.0 , 0.0>}
+#declare Camera1 = camera { angle 50                       // diagonal view
+                        location  <5.0 , 5.0  ,-5 >
+                        right     x*image_width/image_height
+                        look_at   <0.0 , 0.5  , 0.0 >}
+#declare Camera2 = camera { angle 35                      // right side view
+                        location  <10.0 , 1.0 , 0.0>
+                        right     x*image_width/image_height
+                        look_at   <0.0 , 1.0 , 0.0>}
+#declare Camera3 = camera {angle 10                              // top view
+                        location  <0.0 , 30.0 ,-0.01>
+                        right     x*image_width/image_height
+                        look_at   <0.0 , 1.0 , 0.0>}
+camera{Camera1}
+// sun ---------------------------------------------------------------------
+light_source{<   1000,2500,-1500> color White}
+// sky ---------------------------------------------------------------------
+sphere{<0,0,0>,1 hollow 
+              texture{pigment{gradient <0,1,0> scale 2
+                              color_map{[0.0 color rgb<1,1,0.9>  ]
+                                        [0.5 color rgb<1,0.8,0>]
+                                        [1.0 color rgb<1,1,0.9>  ]}
+                              quick_color White }
+                      finish {ambient 1 diffuse 0}
+                     } 
+           scale 10000}
+//--------------------------------------------------------------------------
+//--------------------------------------------------------------------------
+#declare FloorTex = //half transparent checkered ground
+  texture { pigment{ checker color rgbf<1,1,1,0.8>*1.1
+                             color rgbf<1.0,1.0,1,0.05>*1.2    }
+            finish { reflection 0.0}
+          }
+
+ plane{<0,1,0>, 0  texture{FloorTex scale 1}}
+//--------------------------------------------------------------------------
+#macro Axis_( AxisLen, RedTexture,WhiteTexture) 
+union{
+    cylinder {<0,-3*AxisLen,0>,<0,AxisLen,0>,0.05
+              texture{checker texture{RedTexture} 
+                              texture{WhiteTexture}
+                      translate<0.1,0,0.1>}}
+    cone{<0,AxisLen,0>,0.2,<0,AxisLen+0.7,0>,0
+         texture{RedTexture}}
+     } // end of union                   
+#end // of macro "Axis( )"
+//--------------------------------------------------------------------------
+#macro AxisXYZ( AxisLenX, AxisLenY, AxisLenZ, TexRed, TexWhite)
+//-------------------------- drawing 3 axes --------------------------------
+union{
+   object{Axis_(AxisLenX, TexRed, TexWhite)   rotate< 0,0,-90>}   // x axis
+   object{Axis_(AxisLenY, TexRed, TexWhite)   rotate< 0,0,  0>}   // y axis 
+   object{Axis_(AxisLenZ, TexRed, TexWhite)   rotate<90,0,  0>}   // z axis
+//---------------------- names of the axes ---------------------------------
+   text{ ttf"arial.ttf",  "x",  0.15,  0  texture{TexRed} 
+         scale 0.5 translate <AxisLenX+0.35,0.3,-0.00>}
+   text{ ttf"arial.ttf",  "y",  0.15,  0  texture{TexRed} 
+         scale 0.5 translate <-0.75,AxisLenY+0.10,-0.00>}
+   text{ ttf"arial.ttf",  "z",  0.15,  0  texture{TexRed} 
+         scale 0.5 translate <-0.25,0.3,AxisLenZ+0.40>}
+} // end of union
+#end// of macro
+//-------------------------------------------------------------------------- 
+object{AxisXYZ (2.5,2.5,4.7, 
+                texture{ pigment{rgb<1,0.45,0>} finish{ phong 1}}, 
+                texture{ pigment{rgb<1, 1, 1 >} finish{ phong 1}})
+      
+       scale 1
+       } // end of axes
+//-------------------------------------------------------------------------- 
+//---------------------------- objects in scene ----------------------------
+//--------------------------------------------------------------------------
+
+
+#declare Ray_Profile = 
+box { <-1,-1,-1>,< 1,1,1> 
+       scale <1,1,1>*sqrt(2) 
+
+      texture { pigment{ color rgb<0.5,1.0,0.0>*1.0}  
+                finish { phong 1}
+              } // end of texture
+       rotate<0,0,45>
+       scale <1,0.36,1> 
+       rotate< 45,0,0>
+    } // end of box ---------------------------------------
+ 
+
+#declare Ray =
+intersection{
+object{ Ray_Profile }  
+object{ Ray_Profile scale<1,1,-1>}  
+box{ <-2,-1,-1>,<0,1,1> 
+     texture { pigment{ color rgb<1,0.0,0.3>}  
+               finish { phong  1}
+             } // end of texture
+    inverse   
+   }// end of box
+scale<1,0.5,0.5>
+}
+
+//----------------------------------------------------------
+
+
+
+union{
+ #local Nr = 0;     // start
+ #local EndNr = 5;  // end
+ #while (Nr< EndNr) 
+   object{Ray  rotate<0,Nr * 360/EndNr,0>} 
+
+ #local Nr = Nr + 1;// next Nr
+ #end // ------------- end of loop 
+rotate<0,0,0>
+translate<0,0,0>} // end of union
+
+//------------------------------------------------------- end
+
+  
