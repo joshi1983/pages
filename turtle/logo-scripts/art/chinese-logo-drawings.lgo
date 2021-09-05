@@ -1,0 +1,282 @@
+; These are inspired by drawings from a book.
+; The book was titled:
+; 电子工业出版社 - 中华学习机实用大全 (1) BASIC与LOGO语言
+; which Google translates to:
+; Practical Encyclopedia of Chinese Learning Machines (1) BASIC and LOGO language
+; The book was published in May of 1991
+; The book was published by 电子工业出版社
+; which Google translates to:
+; Publishing House of Electronics Industry.
+; An electronic version of the book can be found at:
+; https://archive.org/details/zhonghua-xuexi-ji-shiyong-daquan
+
+to drawL :height
+	localmake "oldState turtleState
+	jumpForward :height * 0.04
+	jumpRight :height * 0.3
+	left 90
+	forward :height * 0.62
+	right 90
+	forward :height * 0.93 - penSize / 2
+	setTurtleState :oldState
+end
+
+to drawO :height
+	localmake "oldState turtleState
+	jumpForward :height * 0.53
+	setFillColor transparent
+	circle :height * 0.44
+	setTurtleState :oldState
+end
+
+to drawG :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "lowerRightHeight :height * 0.432
+	localmake "rightHeight :height * 0.41
+	localmake "width1 :height * 0.4
+	localmake "rightHeight1 min :lowerRightHeight - penSize / 2 :rightHeight
+	jumpRight :height * 0.3
+	jumpForward :lowerRightHeight
+	right 90
+	jumpBackward :width1 / 2
+	forward :width1
+	jumpBackward :width1 / 2
+	setHeading :oldHeading
+	backward :rightHeight1
+	jumpForward :height * 0.11 - :rightHeight + :rightHeight1
+	left 120
+	arcsRight [[90 0.4] [35 0.55] [80 0.39] [32 0.6]] :height
+	setTurtleState :oldState
+end
+
+; Inspired by figure 12.16 on page 268.
+; You can see a digital version of the page at:
+; https://archive.org/details/zhonghua-xuexi-ji-shiyong-daquan/page/n281/mode/2up
+to logoWord :height
+	localmake "oldState turtleState
+	setPenSize :height * 0.05
+	setLineCap "round
+	setLineJoinStyle "round
+	jumpLeft :height * 1.638
+	drawL :height
+	jumpRight :height * 0.98
+	drawO :height
+	jumpRight :height * 0.99
+	drawG :height
+	jumpRight :height * 1.185
+	drawO :height
+	setTurtleState :oldState
+end
+
+; Inspired by figure 12.19 on page 273.
+; You can see a digital version of the page at:
+; https://archive.org/details/zhonghua-xuexi-ji-shiyong-daquan/page/n285/mode/2up?view=theater
+to triangleStar :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "numTriangles 5
+	localmake "triangleWidth :height * 0.25
+	localmake "angle1 30
+	localmake "triangleHeight :triangleWidth / 2 / tan :angle1
+	localmake "triangleLen1 hypot [:triangleHeight :triangleWidth / 2]
+	localmake "thickness :height * 0.03
+	localmake "height2 :height - :thickness - :triangleHeight - :triangleLen1 * cos (180 / :numTriangles - :angle1)
+	localmake "gap :height2 / (1 + cos 180 / :numTriangles)
+	jumpForward :height - :thickness / 2 - :gap - :triangleHeight
+	localmake "center pos
+	setFillColor transparent
+	setPenSize :thickness
+	setLineJoinStyle "round
+	setFillColor "red
+	repeat :numTriangles [
+		setHeading :oldHeading + (repcount - 1) * 360 / :numTriangles
+		forward :gap
+		jumpForward :triangleHeight
+		right 180
+		isoTriangle :triangleWidth :triangleHeight
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by figure 12.20 on page 274.
+; You can see a digital version of the page at:
+; https://archive.org/details/zhonghua-xuexi-ji-shiyong-daquan/page/n287/mode/2up?view=theater
+to drawBug :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "thickness :height * 0.03
+	localmake "wingWidthFactor 1.13
+	localmake "numWingLines 4
+	localmake "wingHeightStep (:height - :thickness) / :numWingLines / :wingWidthFactor
+	setFillColor transparent
+	setPenSize :thickness
+	setLineJoinStyle "round
+	jumpForward :height / 2
+	localmake "center pos
+	right 90
+	repeat 2 [
+		repeat :numWingLines [
+			localmake "triangleHeight repcount * :wingHeightStep
+			jumpBackward :triangleHeight
+			isoTriangle :triangleHeight * :wingWidthFactor :triangleHeight
+			jumpTo :center
+		]
+		right 180
+	]
+	setHeading :oldHeading
+	localmake "triangleHeight :height * 0.43
+	jumpBackward :triangleHeight
+	isoTriangle :triangleHeight / cos 30 :triangleHeight
+	jumpTo :center
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		right :sign * 15
+		forward :height * 0.49
+		right :sign * 120
+		forward :height * 0.2
+		jumpTo :center
+		setHeading :oldHeading
+	]
+	setTurtleState :oldState
+end
+
+to drawFlower :scale
+	localmake "oldState turtleState
+	localmake "angleSpan 220
+	localmake "numPetals 5
+	setPenColor "purple
+	setFillColor "#4f0f
+	left :angleSpan / 2 * (:numPetals - 1) / :numPetals
+	repeat :numPetals [
+		arcPair :scale 70
+		right :angleSpan / :numPetals
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by figure 12.21 from page 275
+; You can see a digital version of the page at:
+; https://archive.org/details/zhonghua-xuexi-ji-shiyong-daquan/page/n287/mode/2up?view=theater
+to drawFlowers :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "width :height * 3.6
+	localmake "numArcs 19
+	localmake "arcAngle 120
+	localmake "arcRadius :width / :numArcs / 2 / sin :arcAngle / 2
+	jumpForward :height * 0.16
+	jumpLeft :width / 2
+	setLineJoinStyle "round
+	setPenSize :height * 0.03
+	setPenColor "green
+	right 90 + :arcAngle / 2
+	repeat :numArcs [
+		arcLeft :arcAngle :arcRadius
+		right :arcAngle
+	]
+	jumpTo :oldPos
+	setHeading :oldHeading
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		localmake "arcAngle :sign * 50
+		jumpRight :sign * :width * 0.365
+		jumpForward penSize / 2
+		right :arcAngle / 2
+		arcLeft :arcAngle :height * 0.5		
+		drawFlower :height * 0.4
+		jumpTo :oldPos
+		setHeading :oldHeading
+	]
+	jumpForward penSize / 2
+	forward :height * 0.4
+	drawFlower :height * 0.57
+	setTurtleState :oldState
+end
+
+to drawPentagramStar :starRadius
+	localmake "oldState turtleState
+	localmake "center pos
+	localmake "backStep :starRadius * (sin 18) / cos 180 / 5
+	regularStar :starRadius 5
+	setLineJoinStyle "miter
+	repeat 5 [
+		jumpBackward :backStep
+		forward :backStep + :starRadius
+		jumpTo :center
+		right 360 / 5
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by figure 12.23 on page 278
+; You can see a digital version of the page at:
+; https://archive.org/details/zhonghua-xuexi-ji-shiyong-daquan/page/n291/mode/2up?view=theater
+to drawPentagram :height
+	localmake "oldState turtleState
+	localmake "numRadiatingLines 30
+	localmake "thickness :height * 0.02
+	localmake "dashLength :height * 0.125
+	localmake "gap (:height - :thickness) / 2 - :dashLength 
+	setLineCap "round
+	setPenSize :thickness
+	jumpForward :height / 2
+	localmake "center pos
+	repeat :numRadiatingLines [
+		jumpForward :gap
+		forward :dashLength
+		jumpTo :center
+		right 360 / :numRadiatingLines
+	]
+	setPenSize :height * 0.01
+	drawPentagramStar :height * 0.3
+	setTurtleState :oldState
+end
+
+; Inspired by figure 12.24 on page 279
+; You can see a digital version of the page at:
+; https://archive.org/details/zhonghua-xuexi-ji-shiyong-daquan/page/n291/mode/2up?view=theater
+; The book was written in China so I replaced the colors with those of China's flag:
+; https://en.wikipedia.org/wiki/Flag_of_China#/media/File:Flag_of_the_People's_Republic_of_China.svg
+to drawFlag :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "width :height * 1.87
+	localmake "starPositions [[0.315 0.85] [0.26 0.645] [0.39 0.465] [0.62 0.427]]
+	jumpForward :height / 2
+	setFillColor "red
+	setPenSize :height * 0.01
+	setLineJoinStyle "miter
+	rect :width - penSize :height - penSize
+	jumpForward :height * 0.23
+	jumpLeft :width / 3
+	setPenSize :height * 0.007
+	setFillColor "yellow
+	drawPentagramStar :height * 0.2
+	setPenSize :height * 0.003
+	repeat count :starPositions [
+		localmake "position item repcount :starPositions
+		jumpTo :oldPos
+		jumpLeft :height * first :position
+		jumpForward :height * last :position
+		drawPentagramStar :height * 0.085
+	]
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 3.5
+jumpLeft :separation * 2.5
+logoWord :height
+jumpRight :separation
+triangleStar :height
+jumpRight :separation
+drawBug :height
+jumpRight :separation
+drawFlowers :height
+jumpRight :separation
+drawPentagram :height
+jumpRight :separation
+drawFlag :height

@@ -1,0 +1,71 @@
+import { processTranslateExecuteCases } from './processTranslateExecuteCases.js';
+
+export function testTranslateExecuteOperators(logger) {
+	// Any test case changes should be verified with an actual Go programming tool such as 
+	// https://go.dev/play/
+	// If you add a case, make sure it matches the output from running the same code at https://go.dev/play/.
+	const cases = [
+		{'code': '^-1', 'messages': ['0']},
+		{'code': '^0', 'messages': ['-1']},
+		{'code': '^1', 'messages': ['-2']},
+		{'code': '^2', 'messages': ['-3']},
+		{'code': '^3', 'messages': ['-4']},
+		{'code': '1^2', 'messages': ['3']},
+		{'code': '1+1^2', 'messages': ['0']},
+		{'code': '2*1^2', 'messages': ['0']},
+		{'code': '1&^2', 'messages': ['1']},
+		{'code': '2&^2', 'messages': ['0']},
+		{'code': '3&^2', 'messages': ['1']},
+		{'code': '4&^2', 'messages': ['4']},
+		{'code': '5&^2', 'messages': ['5']},
+		{'code': '6&^2', 'messages': ['4']},
+		{'code': '7&^2', 'messages': ['5']},
+		{'code': '1 + ^-1', 'messages': ['1']},
+		{'code': '1 + ^0', 'messages': ['0']},
+		{'code': '1 + ^1', 'messages': ['-1']},
+		{'code': '1+2', 'messages': ['3']},
+		{'code': '2*3', 'messages': ['6']},
+		{'code': '2<3', 'messages': ['true']},
+		{'code': '2<2', 'messages': ['false']},
+		{'code': '2==3', 'messages': ['false']},
+		{'code': '2==2', 'messages': ['true']},
+		{'code': '3>2', 'messages': ['true']},
+		{'code': '3>3', 'messages': ['false']},
+		{'code': '4>=3', 'messages': ['true']},
+		{'code': '3>=3', 'messages': ['true']},
+		{'code': '2>=3', 'messages': ['false']},
+		{'code': '2<=3', 'messages': ['true']},
+		{'code': '3<=3', 'messages': ['true']},
+		{'code': '4<=3', 'messages': ['false']},
+		{'code': '1 >= 1 + 1', 'messages': ['false']},
+		{'code': '1 >= 1 + 0', 'messages': ['true']},
+		{'code': '1 >= 1 + -1', 'messages': ['true']},
+		{'code': '1 + 2*3', 'messages': ['7']},
+		{'code': '1*2 + 3', 'messages': ['5']},
+		{'code': '1.0/2 + 3', 'messages': ['3.5']},
+		{'code': '1/2 + 3', 'messages': ['3']},
+		{'code': '1 << 1', 'messages': ['2']},
+		{'code': '3 << 1', 'messages': ['6']},
+		{'code': '1 + 3 << 1', 'messages': ['7']},
+		{'code': '2 * 3 << 1', 'messages': ['12']},
+		{'code': '3 << 2 * 2', 'messages': ['24']},
+		{'code': '1 >> 1', 'messages': ['0']},
+		{'code': '1 >> 1 + 1', 'messages': ['1']},
+		{'code': '1 >> 1 * 2', 'messages': ['0']},
+		{'code': '2 * 1 >> 1 + 1', 'messages': ['2']},
+		{'code': '1&2', 'messages': ['0']},
+		{'code': '1&3', 'messages': ['1']},
+		{'code': '1&3 + 1', 'messages': ['2']},
+		{'code': '1&3 * 2', 'messages': ['2']},
+		{'code': '1 + 1&3', 'messages': ['2']},
+		{'code': '5 + 1&3', 'messages': ['6']},
+		{'code': '1|2', 'messages': ['3']},
+		{'code': '1|2+5', 'messages': ['8']},
+		{'code': '1|2*5', 'messages': ['11']},
+		//{'code': '5*1 | 2', 'messages': ['7']},
+	];
+	cases.forEach(function(caseInfo) {
+		caseInfo.code = `import "fmt"\nfmt.Println(${caseInfo.code})`;
+	});
+	processTranslateExecuteCases(cases, logger);
+};

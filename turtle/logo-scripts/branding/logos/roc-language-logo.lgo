@@ -1,0 +1,65 @@
+; Inspired by logo at:
+; https://www.roc-lang.org
+;
+; One of the contributors to Roc has a good youtube channel for discussion
+; of new programming languages, their design, and development of programming tools.
+; This channel is at: https://www.youtube.com/@SoftwareUnscripted
+to rocLanguageLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading	
+
+	jumpLeft :height
+	localmake "bottomLeft pos
+	jumpForward :height
+	localmake "topLeft pos
+	jumpRight :height
+	localmake "top pos
+
+	jumpTo :oldPos
+	jumpForward :height * 0.247
+	setFillColor "#8257e5
+	setPenSize 0
+	right 54
+	polyStart
+	jumpForward :height * 0.43
+	localmake "wingNeckPos pos
+	left 42
+	jumpForward :height * 0.19
+	localmake "headTop pos
+	left 117
+	jumpForward :height * 0.436
+	localmake "midLeft pos
+	polyEnd
+	polyStart
+	right 59
+	jumpForward distanceToLine :top :topLeft
+	right 144
+	jumpForward :height * 0.45
+	localmake "upperRight pos
+	jumpTo :wingNeckPos
+	polyEnd
+
+	setFillColor "#612bde
+	polygon [:wingNeckPos :upperRight :midLeft]
+
+	jumpTo :headTop
+	setHeading towards :wingNeckPos
+	polyStart
+	jumpForward :height * 0.103
+	left 102
+	jumpForward :height * 0.105
+	polyEnd
+
+	jumpTo :midLeft
+	setHeading :oldHeading - 168.7
+	polyStart
+	jumpForward distanceToLine :oldPos :bottomLeft
+	left 140
+	jumpForward :height * 0.235
+	polyEnd
+
+	setTurtleState :oldState
+end
+
+rocLanguageLogo 100
