@@ -1,0 +1,27 @@
+!
+!  BARS3         version 2.0
+!
+!  A 3-D barchart using perspective,  shaded boxes, 
+!  and a grid.
+!
+!  This program adjusts the reference point and two-d
+!  windows to get a more dramatic image.
+!
+LIBRARY "3DLib.trc"
+
+CALL PersWindow (0, 10, 0, 1, 0, 4)
+CALL SetRefPt3 (6.5, 0, 1)
+CALL SetCamera3 (7.5, -5, 3)
+
+ASK window x1, x2, y1, y2
+SET window x1/2, x2/2, y1/3, y2/3
+
+CALL GridZ3 (0, .5, 11.5, -3, 20, 1, 1)
+
+FOR x = 1 to 11
+    READ z
+    CALL Block3 (x-.15, x+.15, 0, 1, 0, z, "red", "yellow", "green", 1)
+NEXT x
+DATA 1, 1.4, 2.2, 2.4, 1.7, 2.6, 1.8, 1.1, .5, .3, 1
+
+END

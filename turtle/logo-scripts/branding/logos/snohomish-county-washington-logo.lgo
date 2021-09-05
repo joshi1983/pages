@@ -1,0 +1,33 @@
+to drawLine :height
+	localmake "oldState turtleState
+	localmake "angle1 30
+	localmake "height1 :height - penSize / 2 / sin :angle1
+	localmake "width1 0.32
+	localmake "startLen 1 - :width1 / tan :angle1
+	localmake "len1 :width1 / sin :angle1
+	arcLines [[:startLen] [90 0] [
+	:width1] [-90 - :angle1 0] [:len1] [:angle1 * 2 - 180 0] [:len1]
+	[-90 - :angle1 0] [0.2]] :height1
+
+	setTurtleState :oldState
+end
+
+; Inspired by logo at
+; https://snohomishcountywa.gov
+to snohomishCountyLogo :height
+	localmake "oldState turtleState
+	localmake "separation :height * 0.5
+	localmake "colors ["#df3226 "#2e4f6a "#6e9d42]
+	setPenSize :height * 0.14
+	setLineJoinStyle "miter
+	setLineCap "butt
+	jumpLeft :separation
+	repeat count :colors [
+		setPenColor item repcount :colors
+		drawLine :height
+		jumpRight :separation
+	]
+	setTurtleState :oldState
+end
+
+snohomishCountyLogo 100

@@ -1,0 +1,26 @@
+; Inspired by logo at
+; https://en.wikipedia.org/wiki/Blinkist#/media/File:Blinklist_logo.svg
+to blinklistLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "greenArcsInfo [
+		[50 0.51] [50 0.5445] [20 0.49] [33 0.545] [72.43 0]
+		[0.32351573] [-45.43 0]
+	]
+	setFillColor "#2cde80
+	setPenSize 0
+	right 90
+	polyStart
+	arcLines :greenArcsInfo :height
+	localmake "pointOfSymmetry pos
+	arcLines reverse :greenArcsInfo :height
+	polyEnd
+
+	jumpTo :pointOfSymmetry
+	setFillColor "#002f54
+	setHeading :oldHeading + 180
+	circlePair 0 :height * 0.196 :height * 0.28
+	setTurtleState :oldState
+end
+
+blinklistLogo 100

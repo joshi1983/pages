@@ -1,0 +1,126 @@
+to drawFace :pumpkinRadius :timeRatio
+	localmake "oldState turtleState
+	localmake "center pos
+	localmake "oldHeading heading
+	localmake "eyeSeparation :pumpkinRadius * 0.55
+	localmake "cutAngle 33
+	setPenSize 0
+	setFillColor mixItems ["#ff5 "#bb0 "white "#ff0 "white "#fb0 
+		"white "#ff5 "#bb0 "white "#ff5 "#bb0 "white "#ff0 "white "#fb0 
+		"white "#ff5 "#bb0 "white ] :timeRatio 
+	repeat 2 [
+		drawArcLineShapes [
+			; eye
+			[0.1 0.34
+				[[-90 0] [35 0.6] [-100 0] [-90 0.25]]
+			]
+
+			; eye brow
+			[0.11 0.48
+				[[0.095] [-70 0] [0.23] [-20 0] [0.11] [-110 0] [0.11]
+				[-70 0] [20 0.5]]
+			]
+		] :pumpkinRadius * sign repcount - 1.5
+	]
+	; nose
+	drawArcLineShape [0 -0.12
+		pathMirror [[0.13] [-60 0] [0.06] [-20 0] [0.22] [-60 0] [0.04]]
+	] :pumpkinRadius
+
+	; mouth
+	drawArcLineShape [0 -0.67
+		pathMirror [[0.21] [-20 0] [0.25] [-45 0] [0.24] [-40 0] [0.26] [-70 0] [0.05] 
+			[-79 0] [0.33] [140 0] [0.22] [-60 0] [0.06] [-79 0] [0.25] [143 0] [0.26]
+			[-60 0] [0.03]]
+	] :pumpkinRadius
+
+	right :cutAngle
+	jumpForward :pumpkinRadius
+	left 90 + :cutAngle
+	setPenColor fillColor
+	setPenSize :pumpkinRadius * 0.015
+	jumpForward penSize / 2
+	while (distance :center) < :pumpkinRadius [
+		localmake "dToCircle distanceToCircle :center :pumpkinRadius
+		localmake "dashLength min :dToCircle :pumpkinRadius * 0.22
+		forward :dashLength
+		jumpForward :dashLength * 0.5
+	]
+
+	jumpTo :center
+	setHeading :oldHeading
+	jumpForward :pumpkinRadius * 0.27
+	jumpLeft :eyeSeparation / 2
+	setFillColor "white
+	setPenColor "#5000
+	setPenSize :pumpkinRadius * mix 0 0.008 clamp (1 + sin 360 * :timeRatio) / 2 0 1
+	repeat 2 [
+		circle :pumpkinRadius * 0.05
+		jumpRight :eyeSeparation
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by a Commodore Basic program posted at:
+; https://www.facebook.com/share/p/1QyoMSdTfK/
+;
+; That links to the code running in a Commodore 64 emulator:
+; https://tinyurl.com/3pbbpbf9 
+to jackOLantern :height :timeRatio
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "radius :height * 0.456
+	jumpForward :height
+	right 20
+	setLineCap "butt
+	setPenSize :height * 0.1
+	jumpRight penSize / 2
+	setPenColor "green
+	backward :height * 0.2
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :radius
+	setPenSize 0
+	setFillColor mixItems ["#AA3014 "#A52A2A] :timeRatio 
+	circle :radius
+	setPenSize :radius * 0.03
+	setPenColor "#2520
+	setFillColor transparent
+	repeat 3 [
+		localmake "radius1 :radius * mix 0.9 0.2 repRatio
+		ellipse :radius1 :radius
+	]
+	drawFace :radius :timeRatio
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+make "timeRatio animation.clampedTimeRatio
+jackOLantern 100 :timeRatio
+
+setPenSize 0
+setFillColor "yellow
+jumpBackward 13
+jumpLeft 39.5
+right 90
+setFontSize 10
+setFontFamily "arial
+label 'Happy Halloween'
+
+to animation.snapshotstyle
+	output createPList2 [
+		["position.y 40]
+		["zoom.scale 5]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 3
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

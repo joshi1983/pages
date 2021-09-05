@@ -1,0 +1,48 @@
+; Inspired by logo at:
+; http://ggsoman.com
+;
+; In case that becomes unavailable,
+; here are a few more places showing the logo.
+;
+; Also at:
+; https://www.gasworld.com/story/gold-sponsor-global-gas-services
+;
+; and:
+; https://www.linkedin.com/company/global-gas-services-l-l-c
+to globalGasServicesLogo :height
+	localmake "oldState turtleState
+	localmake "numAngles 36
+	localmake "innerRatio 0.655
+	localmake "lines1 [
+		[-90 0] [50 0.05] [20 0.07] [18 0.2] [14.1 1.000586068]
+		[77.9 0] [0.04077698206157322]
+	]
+	localmake "circleArc1 [
+		[180 0] [0.015] [90 0] [-180 0.042]
+	]
+	localmake "circleArc combine :circleArc1 reverse :circleArc1
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	repeat 4 [
+		localmake "radius :height * mix 0.5 0.23 repRatio
+		localmake "innerRadius :radius * :innerRatio
+		print [:radius :innerRadius]
+		localmake "color mix "#0057A3 "#6EB4F2 repRatio
+		localmake "colorStops createPList2 [
+			[0 :color] [:innerRatio :color] [1 mix :color transparent 0]
+		]
+		setFillGradient createRadialGradient pos :radius :colorStops
+		repeat :numAngles [
+			jumpForward :innerRadius
+			drawArcLineShape [0 0
+				(combine :lines1 reverse :lines1 :circleArc)
+			] :radius
+			jumpTo :center
+			right 360 / :numAngles
+		]
+	]
+	setTurtleState :oldState
+end
+
+globalGasServicesLogo 100

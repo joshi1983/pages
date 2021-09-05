@@ -1,0 +1,45 @@
+; Inspired by logo at
+; https://commons.wikimedia.org/wiki/File:Bell_Laboratories_logo.svg
+to bellLabsLogo :height
+	localmake "oldState turtleState
+	localmake "outerPathElementsInfo [
+		[0.057] [90 0] [0.068] [-90 0] [0.258]
+		[90 0] [0.13] [80 0.003] [-15 0.14] [-45 0.07]
+		[-13.5 0.14] [-2 3] [1 3] [25 0.09] [30 0.05] [25.3 0.14]
+		[4.2 1] [-90 0] [0.0607] [90 0] [0.0569035331029]
+	]
+	localmake "innerPathElementsInfo [
+		[0.1997] [-90 0] [0.0235] [-90 0] [30 0.05] [30 0.06]
+		[23 0.09] [4 1] [-2 2] [-60 0.051] [-20 0.06] [-3 0.45] [-2 1.6476768]
+	]
+	localmake "overlap :height * 0.03 
+	; a little overlap prevents artifacts from appearing on the fringe.
+
+	; Draw the big circle.
+	setPenSize :height * 0.0889
+	setPenColor "black
+	setFillColor "white
+	jumpForward :height / 2
+	circle (:height - penSize) / 2
+	jumpBackward :height * 0.2595
+	setPenSize 0.1
+	circle 0.1
+	right 90
+
+	; Draw the bell.
+	setFillColor penColor
+	setPenSize 0
+	polyStart
+	arcLines :outerPathElementsInfo :height
+	arcLines reverse :outerPathElementsInfo :height
+	jumpForward :overlap
+	jumpLeft :height * 0.1561
+	jumpBackward :overlap
+	right 180
+	arcLines :innerPathElementsInfo :height
+	arcLines reverse :innerPathElementsInfo :height
+	polyEnd	
+	setTurtleState :oldState
+end
+
+bellLabsLogo 100

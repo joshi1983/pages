@@ -1,0 +1,66 @@
+; Inspired by logo at:
+; https://archive.org/details/LogicAPPLEIIAPPS
+to logicAppleAppsLogo :height
+	localmake "oldState turtleState
+	localmake "mapleLeafShape [0 0
+		[[-90 0] [0.02] [90 0] [0.14] [-100 0] [0.22]
+		[128 0] [0.03] [-73 0.08] [-10 1] [0.103] [120 0]
+		[0.05] [-77 0.02] [0.17] [110 0] [0.116] [-96 0.04]
+		[0.045] [137 0] [0.188] [-142.3 0] [-10 1.9] [140 0]
+		[0.1] [-74.4 0] [-45 0.304]
+		]
+	]
+	localmake "largeAppleShapeLines [
+		[-0.2] [-90 0] [-40 0.02] [90 0.051] [45 0.3] [90 0.093]
+		[20 0.07] [-25 0.069843875]
+	]
+	localmake "y1 0.405
+	localmake "thickness :height * 0.005
+	localmake "color1 "lime
+	setPenSize :thickness
+	setPenColor :color1
+	setLineJoinStyle "round
+	setFillColor "black
+	jumpForward penSize / 2
+	drawArcLineShape :mapleLeafShape :height - penSize
+	setFillColor penColor
+	jumpBackward penSize / 2
+	setPenSize 0
+	drawArcLineShape :mapleLeafShape -:height
+
+	setFillColor "black
+	drawArcLineShape [0 0.36
+		:largeAppleShapeLines
+	] -:height * 1.14
+
+	drawArcLineShape [0.012 0.61
+		[[95 0] [-25 0.25] [-25 0.1] [143 0] [9 1] [0.326] [70 0]
+		[0.01]]
+	] :height
+
+	setFillColor :color1
+	drawArcLineShape [0 :y1
+		:largeAppleShapeLines
+	] :height
+
+	drawArcLineShape [0 0.5205
+		[[-90 0] [90 0.037] [90 0.0398]]
+	] :height
+
+	setPenSize :thickness
+	setFillColor "black
+	drawArcLineShape [0 :y1 + 0.005
+		:largeAppleShapeLines
+	] -:height * 0.985
+
+	drawArcLineShape [0 0.553
+		[
+			[-0.03] [90 0] [-41 0.12] [-50 0.08] [-115 0] [31.3 0.2]
+		]
+	] :height
+
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+logicAppleAppsLogo 100

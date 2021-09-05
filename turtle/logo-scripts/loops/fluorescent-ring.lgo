@@ -1,0 +1,55 @@
+; Inspired by image at:
+; https://ca.pinterest.com/pin/7881368094642657
+to fluorescentRing :height
+	localmake "oldState turtleState
+	localmake "radius :height / 2
+	localmake "innerRadius 0.54
+	localmake "outerRadius 0.715
+	localmake "highlightRadii vectorScale [:innerRadius :outerRadius] :radius
+	
+	localmake "numAngles 80
+	jumpForward :height / 2
+	setFillGradient createRadialGradient pos :radius createPList2 [
+		[0 "#0000] [0.22 "#0000] [:innerRadius - 0.01 "#8f0f] 
+		[:innerRadius "#f0f] [:innerRadius + 0.01 "#df08]
+		[0.62 "#6f8f] [:outerRadius - 0.01 "#908f] 
+		[:outerRadius "#abf] [:outerRadius + 0.01 "#d48f] 
+		[0.8 "#904f] [1 "#0000]
+	]
+	localmake "center pos
+	setPenSize 0
+	circle :radius
+	repeat 10 [
+		localmake "color mix "#f8f "#8ff mixItems2 [0 0 1 1] repRatio
+		localmake "radius1 :radius * mix :innerRadius + 0.025 mix :outerRadius 1 0.4 repRatio
+		setFillColor mix :color transparent mixItems2 [0.03 0.08 0.15 0.4] repRatio
+		localmake "dotRadius :radius * mix 0.007 0.012 repRatio
+		repeat :numAngles [
+			jumpForward :radius1
+			circle :dotRadius
+			jumpTo :center
+			right 360 / :numAngles
+		]
+	]
+	setPenSize :height * 0.002
+	setPenColor "white
+	setFillColor transparent
+	repeat count :highlightRadii [
+		circle item repcount :highlightRadii
+	]
+	setPenSize :radius * 0.002
+	repeat 12 [
+		setPenColor mix "#2fff "#afff  repRatio
+		localmake "radius1 :radius * mix 0.98 :outerRadius + 0.01 repRatio
+		circle :radius1
+	]
+	setPenColor "#6fff
+	repeat 12 [
+		localmake "radius1 :radius * mix :innerRadius + 0.01 :outerRadius - 0.01 interpolateRatio easeInOut repRatio
+		circle :radius1
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+fluorescentRing 100

@@ -1,0 +1,37 @@
+<div class="svg-container">
+	<img src="content/help/commands/images/pathMirror.svg" alt="pathMirror examples">
+	<code>; The following program draws 
+; the above image using pathMirror.
+; The image above shows in green the inputted path.
+; In black are the pathMirror results.
+
+make "paths [
+	[[1]]
+	[[-90 1]]
+	[[-90 1] [-90 2]]
+	[[-90 1] [40 1] [-90 2]]
+]
+setLineJoinStyle "round
+setScreenColor transparent
+make "scale 100
+make "separation :scale * 3
+jumpLeft :separation * (-1 + count :paths) / 2
+repeat count :paths [
+	make "path item repcount :paths
+	setPenColor "lime
+	setPenSize 30
+	make "pos1 pos
+	left last (arcLinesInfo :path)
+	arcLines :path :scale
+
+	jumpTo :pos1
+	setHeading 0
+	setPenSize 10
+	setPenColor "black
+	drawArcLineShape [0 0
+		pathMirror :path
+	] :scale
+	jumpRight :separation
+]</code>
+<code>print pathMirror [[-90 1]]
+; prints [[45 0] [-90 1] [-90 0] [-90 1]]</code>

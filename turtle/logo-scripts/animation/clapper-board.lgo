@@ -1,0 +1,125 @@
+; Inspired by
+; https://www.pinterest.ca/pin/566961040599551476/
+
+make "angle 30
+
+to whiteStrips :width :height :angle
+	localmake "numStripes 4
+	localmake "size1 :height / cos :angle
+	localmake "size2 :width * 0.5 / :numStripes
+	setPenSize 0
+	setFillColor "white
+	left 90
+	repeat :numStripes [
+		jumpLeft :size1 / 2
+		parallelogram :size1 :size1 -:angle
+
+		jumpLeft :size2
+	]
+end
+
+to narrowStrip :width :height
+	localmake "oldState turtleState
+	setPenColor "black
+	setPenSize :height
+	setLineCap "butt
+	forward :width
+	jumpRight :height * 0.5
+	whiteStrips :width :height :angle
+
+	setTurtleState :oldState
+end
+
+to blackCorner :height
+	localmake "oldState turtleState
+	localmake "size1 :height / cos 45
+	setFillColor "black
+	setPenSize 0
+	polyStart
+	right 135
+	jumpForward :size1
+	jumpRight :size1
+	polyEnd
+	setFillColor "gray
+	right 135 + 90
+	jumpForward :height
+	jumpRight :height * 0.5
+	circle :height * 0.3
+	setTurtleState :oldState
+end
+
+to clapperboardCut :size :openRatio
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "maxAngle 35
+	localmake "openAngle :maxAngle * :openRatio
+	localmake "arcRadius :size * 0.08
+	localmake "size1 :size * 0.12
+	localmake "height1 :size * 0.6
+	localmake "width :size
+	localmake "lineStep :height1 * 0.2
+	localmake "lineThickness :lineStep * 0.05
+	jumpForward :height1
+	left :openAngle
+	localmake "hingePos pos
+	jumpForward :size1 * 0.5
+	right 90
+	narrowStrip :size :size1
+	setHeading :oldHeading
+	jumpTo :hingePos
+	setFillColor "black
+	setPenSize 0
+	right 90
+	polyStart
+	jumpForward :width
+	right 90
+	jumpForward :height1 - :arcRadius
+	arcRight 90 :arcRadius
+	jumpForward :width - :arcRadius * 2
+	arcRight 90 :arcRadius
+	polyEnd
+	setHeading :oldHeading
+	jumpForward :height1 - :arcRadius - :size1
+	right 90
+	jumpForward :width - :size1 * tan :angle
+	whiteStrips :size :size1 -:angle
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height1 - :size1
+	jumpRight :width / 2
+	setPenColor "white
+	setPenSize :width * 0.9
+	setLineCap "butt
+	repeat 3 [
+		jumpBackward :lineStep
+		backward :lineThickness
+	]
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height1 + :size1
+	blackCorner :size1
+	setTurtleState :oldState
+end
+
+setScreenColor "lightgray
+make "timeRatio animation.timeRatio
+left 6 * sin 180 * :timeRatio
+clapperboardCut 100 sin 180 * :timeRatio
+
+to animation.snapshotstyle
+	output createPList2 [
+		["zoom.scale 4]
+		["position.x 50]
+		["position.y 62]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 2
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

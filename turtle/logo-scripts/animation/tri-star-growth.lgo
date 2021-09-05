@@ -1,0 +1,48 @@
+to star :scale
+	roundIsoStar :scale :scale * 0.3 3 :scale * 0.04 :scale * 0.5
+end
+
+; Inspired by:
+; https://www.vecteezy.com/video/35389693-white-abstract-moving-background
+to triStarGrowth :height :timeRatio
+	localmake "oldState turtleState
+	localmake "numStars :timeRatio * 40
+	localmake "numStarsInt int :numStars
+	localmake "step :height * 0.1
+	localmake "offset :step * (:numStars - :numStarsInt)
+	localmake "angleStep 5
+	setPenSize :height * 0.01
+	setFillColor transparent
+	setPenColor mix "white transparent :numStars - :numStarsInt
+	if :offset > 0 [
+		star :offset
+		right :angleStep * (:numStars - :numStarsInt)
+	]
+	setPenColor "white
+	repeat :numStarsInt [
+		localmake "scale :offset + :step * repcount
+		star :scale
+		right :angleStep
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+make "timeRatio interpolateRatio easeInOut animation.clampedTimeRatio
+triStarGrowth 100 :timeRatio
+
+to animation.snapshotstyle
+	output createPList2 [
+		["zoom.scale 3]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 10
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+		["thumbnailTime 2]
+	]
+end

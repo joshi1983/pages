@@ -1,0 +1,254 @@
+to drawCross :crossLength
+	jumpForward penSize / 2
+	forward :crossLength
+	jumpBackward :crossLength / 2
+	right 90
+	jumpBackward :crossLength / 2
+	forward :crossLength
+	jumpLeft :crossLength / 2
+	jumpBackward :crossLength / 2
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Planet_symbols#/media/File:Moon_decrescent_symbol_(fixed_width).svg
+to moon :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "thickness :height * 0.0555
+	localmake "arcAngle1 120
+	localmake "arcRadius1 (:height - :thickness) / 2 / sin :arcAngle1 / 2
+	localmake "arcAngle2 180
+	localmake "arcRadius2 (:height - :thickness) / 2 / sin :arcAngle2 / 2
+	setLineJoinStyle "round
+	setLineCap "butt
+	setPenSize :thickness
+	setPenColor "black
+	jumpForward penSize / 2
+	jumpRight :height * 0.235
+	left :arcAngle1 / 2
+	arcRight :arcAngle1 :arcRadius1
+	setHeading :oldHeading + 180 + :arcAngle2 / 2
+	arcLeft :arcAngle2 :arcRadius2
+	closePath
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://commons.wikimedia.org/wiki/File:Sun_symbol_(fixed_width).svg
+to sun :height
+	localmake "oldState turtleState
+	jumpForward :height / 2
+	setFillColor transparent
+	setPenSize :height * 0.055
+	setPenColor "black
+	circle :height / 2 - penSize / 2
+	setPenSize 0
+	setFillColor "black
+	circle :height * 0.0849056
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Planet_symbols#/media/File:Mercury_symbol_(fixed_width).svg
+to mercury :height
+	localmake "oldState turtleState
+	localmake "crossLength :height * 0.378
+	localmake "radius :crossLength / 2
+	localmake "arcAngle 180
+	setLineCap "round
+	setPenSize :height * 0.055
+	setPenColor "black
+	drawCross :crossLength
+	circleLeft :radius
+	jumpLeft :radius * 2
+	penUp
+	arcLeft :arcAngle / 2 :radius
+	right 180
+	penDown
+	arcRight :arcAngle :radius
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Planet_symbols#/media/File:Venus_symbol_(fixed_width).svg
+to venus :height
+	localmake "oldState turtleState
+	localmake "crossLength :height * 0.473
+	setPenColor "black
+	setPenSize :height * 0.055
+	setLineCap "round
+	drawCross :crossLength
+	circleLeft :crossLength / 2	
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Planet_symbols#/media/File:Earth_symbol_(fixed_width).svg
+to earth :height
+	localmake "oldState turtleState
+	setPenSize :height * 0.055
+	localmake "radius (:height - penSize) / 2
+	setPenColor "black
+	setFillColor transparent
+	drawCross :radius * 2
+	circleRight :radius
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Planet_symbols#/media/File:Mars_symbol_(fixed_width).svg
+to mars :height
+	localmake "oldState turtleState
+	setPenSize :height * 0.055
+	localmake "radius :height * 4 / 9.9 - penSize / 2
+	localmake "len1 ((:height - :radius - penSize) / cos 45) - :radius
+	localmake "arrowHeadLength :height * 0.17
+	setPenColor "black
+	setLineCap "round
+	setLineJoinStyle "round
+	jumpForward :radius + penSize / 2
+	jumpLeft :height * 0.095
+	circle :radius
+	right 45
+	jumpForward :radius
+	forward :len1
+	left 45
+	jumpLeft :arrowHeadLength
+	right 90
+	forward :arrowHeadLength
+	right 90
+	forward :arrowHeadLength
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Planet_symbols#/media/File:Jupiter_symbol_(fixed_width).svg
+to jupiter :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "angle 122
+	localmake "crossLength1 :height * 0.475
+	setPenSize :height * 0.055
+	localmake "arcRadius (:height - :crossLength1 / 2 - penSize) / 2 / (sin :angle / 2)  
+	setPenColor "black
+	setLineCap "round
+	setLineJoinStyle "round
+	jumpLeft :crossLength1 * 3 / 2 / 2
+	jumpForward :height - penSize / 2
+	right 180 - :angle / 2
+	arcRight :angle :arcRadius
+	setHeading :oldHeading + 90
+	forward :crossLength1 * 3 / 2
+	jumpBackward :crossLength1 / 2
+	left 90
+	jumpBackward :crossLength1 / 2
+	forward :crossLength1
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Planet_symbols#/media/File:Saturn_symbol_(fixed_width).svg
+to saturn :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "crossLength1 :height * 0.377
+	setPenSize :height * 0.055
+	setLineCap "round
+	setLineJoinStyle "round
+	setPenColor "black
+	jumpLeft :height * 0.094
+	jumpForward :height - penSize / 2
+	localmake "topPos pos
+	backward :height * 0.4725
+	arcRight 224 :height * 0.1885
+	arcLeft 44.549054 :height * 0.485
+
+	jumpTo :topPos
+	setHeading :oldHeading
+	jumpBackward :crossLength1 / 2
+	jumpLeft :crossLength1 / 2
+	right 90
+	forward :crossLength1
+	
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Planet_symbols#/media/File:Uranus_symbol_(fixed_width).svg
+to uranus :height
+	localmake "oldState turtleState
+	localmake "thickness :height * 0.055
+	localmake "radius1 :height * 0.2365
+	localmake "arrowHeadAngle 45
+	localmake "arrowHeadSize :height * 0.335
+	setLineCap "round
+	setLineJoinStyle "round
+	jumpForward :thickness / 2 + :radius1
+	setPenColor "black
+	setFillColor "black
+	setPenSize 0
+	circle :height * 0.085
+	setFillColor transparent
+	setPenSize :thickness
+	circle :radius1
+	jumpForward :radius1
+	forward :height - :radius1 * 2 - :thickness
+	right :arrowHeadAngle
+	jumpBackward :arrowHeadSize
+	forward :arrowHeadSize
+	right 180 - :arrowHeadAngle * 2
+	forward :arrowHeadSize
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Planet_symbols#/media/File:Neptune_symbol_(fixed_width).svg
+to neptune :height
+	localmake "oldState turtleState
+	localmake "thickness :height * 0.055
+	localmake "oldHeading heading
+	localmake "arcAngle 180
+	localmake "arcRadius :height * 0.353
+	localmake "crossWidth :height * 0.47
+	setLineCap "round
+	setLineJoinStyle "round
+	setPenColor "black
+	setFillColor "black
+	setPenSize :thickness
+	jumpForward penSize / 2
+	forward :height - penSize
+	localmake "topPos pos
+	jumpBackward :height * 0.59
+	right 90
+	jumpBackward :crossWidth / 2
+	forward :crossWidth
+	jumpTo :topPos
+	setHeading :oldHeading
+	jumpLeft :arcRadius * sin :arcAngle / 2
+	right 90 + :arcAngle / 2
+	arcLeft :arcAngle :arcRadius
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 1.25
+jumpLeft :separation * 4.5
+moon :height
+jumpRight :separation
+sun :height
+jumpRight :separation
+mercury :height
+jumpRight :separation
+venus :height
+jumpRight :separation
+earth :height
+jumpRight :separation
+mars :height
+jumpRight :separation
+jupiter :height
+jumpRight :separation
+saturn :height
+jumpRight :separation
+uranus :height
+jumpRight :separation
+neptune :height

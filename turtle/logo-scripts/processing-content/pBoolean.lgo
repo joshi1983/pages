@@ -1,0 +1,17 @@
+; Implemented to be similar to:
+; https://processing.org/reference/booleanconvert_.html
+to pBoolean :value
+	if or 'T' = :value 'true' = :value [
+		output true
+	]
+	if (or 'F' = :value 'false' = :value 0 = :value) [
+		output false
+	]
+	if number? :value [
+		output true
+	]
+	if boolean? :value [
+		output :value
+	]
+	output false
+end

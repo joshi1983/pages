@@ -1,0 +1,579 @@
+; copied from: https://resources.terrapinlogo.com/logolib/tictactoe.html
+TO CLICK1
+    PU
+    SETXY MOUSE
+    IF (AND (AND 50 <= XCOR XCOR <= 150) (AND -50 <= YCOR YCOR <= 50)) [DRAW.X]
+    IF (AND (AND -50 <= XCOR XCOR <= 50) (AND 50 <= YCOR YCOR <= 150)) [DRAW.X11]
+    IF (AND (AND 50 <= XCOR XCOR <= 150) (AND 50 <= YCOR YCOR <= 150)) [DRAW.X12]
+    IF (AND (AND 150 <= XCOR XCOR <= 250) (AND 50 <= YCOR YCOR <= 150)) [DRAW.X13]
+    IF (AND (AND -50 <= XCOR XCOR <= 50) (AND -50 <= YCOR YCOR <= 50)) [DRAW.X01]
+    IF (AND (AND 150 <= XCOR XCOR <= 250) (AND -50 <= YCOR YCOR <= 50)) [DRAW.X03]
+    IF (AND (AND -50 <= XCOR XCOR <= 50) (AND -150 <= YCOR YCOR <= -50)) [DRAW.XB1]
+    IF (AND (AND 50 <= XCOR XCOR <= 150) (AND -150 <= YCOR YCOR <= -50)) [DRAW.XB2]
+    IF (AND (AND 150 <= XCOR XCOR <= 250) (AND -150 <= YCOR YCOR <= -50)) [DRAW.XB3]
+END
+
+TO POINT
+    IF BUTTON? [PU SETXY MOUSE PD STOP]
+    POINT
+END
+
+TO GETTIME
+    PU SETXY [300 100] HT PD SETPC 0
+    MAKE "T TIME
+    SETFONT "TIME 14 1
+    TT :T WAIT 1000
+    SETPC 15 (STAMPOVAL 100 30 "TRUE)
+    GETTIME
+END
+
+TO O11
+    MAKE "A1 "2
+    MAKE "CM "0
+    PU
+    SETPOS [-50 100]
+    PD
+    STAMPOVAL 50 50
+END
+
+TO O12
+    MAKE "A2 "2
+    MAKE "CM "0
+    PU
+    SETPOS [50 100]
+    PD
+    STAMPOVAL 50 50
+END
+
+TO O21
+    MAKE "A4 "2
+    MAKE "CM "0
+    PU
+    SETPOS [-50 0]
+    PD
+    STAMPOVAL 50 50
+END
+
+TO O13
+    MAKE "A3 "2
+    MAKE "CM "0
+    PU
+    SETPOS [150 100]
+    PD
+    STAMPOVAL 50 50
+    PD
+END
+
+TO O23
+    MAKE "A6 "2
+    MAKE "CM "0
+    PU
+    SETPOS [150 0]
+    PD
+    STAMPOVAL 50 50
+END
+
+TO O31
+    MAKE "A7 "2
+    MAKE "CM "0
+    PU
+    SETPOS [-50 -100]
+    PD
+    STAMPOVAL 50 50
+END
+
+TO O32
+    MAKE "A8 "2
+    MAKE "CM "0
+    PU
+    SETPOS [50 -100]
+    PD
+    STAMPOVAL 50 50
+END
+
+TO O33
+    MAKE "A9 "2
+    MAKE "CM "0
+    PU
+    SETPOS [150 -100]
+    PD
+    STAMPOVAL 50 50
+END
+
+TO CHECKSQUARE
+    CLEARTEXT
+    IF :A1 = 1 THEN PR [SQUARE 1]
+    IF :A2 = 1 THEN PR [SQUARE 2]
+    IF :A3 = 1 THEN PR [SQUARE 3]
+    IF :A4 = 1 THEN PR [SQUARE 4]
+    IF :A5 = 1 THEN PR [SQUARE 5]
+    IF :A6 = 1 THEN PR [SQUARE 6]
+    IF :A7 = 1 THEN PR [SQUARE 7]
+    IF :A8 = 1 THEN PR [SQUARE 8]
+    IF :A9 = 1 THEN PR [SQUARE 9]
+
+END
+
+TO DRAW.O
+    PU
+    SETPOS [51 0]
+    PD
+    STAMPOVAL 50 50
+END
+
+TO DRAW.X
+    PU
+    SETPOS [50 0]
+    PD
+    SETHEADING 45 FD 70 BK 140 SETPOS [51 0] LT 90 FD 70 BK 140
+    MAKE "A5 "1
+
+
+END
+
+TO RESETBOARD
+    MAKE "A1 "0
+    MAKE "A2 "0
+    MAKE "A3 "0
+    MAKE "A4 "0
+    MAKE "A5 "0
+    MAKE "A6 "0
+    MAKE "A7 "0
+    MAKE "A8 "0
+    MAKE "A9 "0
+END
+
+TO SHOWRESULT
+    PR [WHAT IS GOING ON?? ! YOU HAVE BEEN BEATEN ME ! !]
+    TOPLEVEL
+END
+
+TO BOARD
+    HT
+    CS
+    SETBG "YELLOW
+    PU
+    SETORIGIN [50 0]
+    HOME
+    PD
+    FD 150
+    BK 150
+    BK 150
+    FD 150
+    BK 50
+    LT 90
+    FD 100
+    BK 100
+    RT 90
+    FD 100
+    RT 90
+    RT 180
+    FD 100
+    BK 200
+    RT 90
+    FD 100
+    BK 300
+    FD 100
+    LT 90
+    RT 180
+    FD 100
+    BK 200
+    FD 100
+    BK 100
+    LT 90
+    FD 100 RT 90 FD 200
+    PU
+    SETPOS [-540 150]
+    PD
+    SETFONT "TIMES 14 1
+    SETPC "BLACK
+    TT [YOU ARE NOW FACING THE IMPOSSIBLE]
+    PU
+
+
+    HOME
+    CLEARTEXT
+    RESETBOARD
+    MAKEMOVE
+    WAIT 200
+    COMPUTERSMOVE
+    MAKEMOVE
+    WAIT 200
+    COMPUTERSMOVE
+    MAKEMOVE
+    WAIT 200
+    COMPUTERSMOVE
+    MAKEMOVE
+    WAIT 200
+    COMPUTERSMOVE
+    MAKEMOVE
+    WAIT 200
+    COMPUTERSMOVE
+    MAKEMOVE
+END
+
+TO CLICK
+    PU
+    SETXY MOUSE
+    IF (AND (AND 50 <= XCOR XCOR <= 150) (AND -50 <= YCOR YCOR <= 50)) [DRAW.X]
+    IF (AND (AND -50 <= XCOR XCOR <= 50) (AND 50 <= YCOR YCOR <= 150)) [DRAW.X11]
+    IF (AND (AND 50 <= XCOR XCOR <= 150) (AND 50 <= YCOR YCOR <= 150)) [DRAW.X12]
+    IF (AND (AND 150 <= XCOR XCOR <= 250) (AND 50 <= YCOR YCOR <= 150)) [DRAW.X13]
+    IF (AND (AND -50 <= XCOR XCOR <= 50) (AND -50 <= YCOR YCOR <= 50)) [DRAW.X01]
+    IF (AND (AND 150 <= XCOR XCOR <= 250) (AND -50 <= YCOR YCOR <= 50)) [DRAW.X03]
+    IF (AND (AND -50 <= XCOR XCOR <= 50) (AND -150 <= YCOR YCOR <= -50)) [DRAW.XB1]
+    IF (AND (AND 50 <= XCOR XCOR <= 150) (AND -150 <= YCOR YCOR <= -50)) [DRAW.XB2]
+    IF (AND (AND 150 <= XCOR XCOR <= 250) (AND -150 <= YCOR YCOR <= -50)) [DRAW.XB3]
+END
+
+TO COMPUTERSMOVE
+    MAKE "CM "1
+
+    IF (AND (AND :A1 = 2 :A2 = 2) (AND :A3 = 0 :CM = 1)) [O13]
+    IF (AND (AND :A1 = 2 :A2 = 0) (AND :A3 = 2 :CM = 1)) [O12]
+    IF (AND (AND :A1 = 0 :A2 = 2) (AND :A3 = 2 :CM = 1)) [O11]
+
+    IF (AND (AND :A4 = 2 :A5 = 2) (AND :A6 = 0 :CM = 1)) [O23]
+    IF (AND (AND :A4 = 2 :A5 = 0) (AND :A6 = 2 :CM = 1)) [OCENTRE]
+    IF (AND (AND :A4 = 0 :A5 = 1) (AND :A6 = 2) :CM = 1) [O21]
+
+    IF (AND (AND :A7 = 2 :A8 = 2) (AND :A9 = 0 :CM = 1)) [O33]
+    IF (AND (AND :A7 = 2 :A7 = 0) (AND :A9 = 2 :CM = 1)) [O32]
+    IF (AND (AND :A7 = 0 :A8 = 2) (AND :A9 = 2 :CM = 1)) [O31]
+
+    IF (AND (AND :A1 = 0 :A4 = 2) (AND :A7 = 2 :CM = 1)) [O11]
+    IF (AND (AND :A1 = 2 :A4 = 2) (AND :A7 = 0 :CM = 1)) [O31]
+    IF (AND (AND :A1 = 2 :A4 = 2) (AND :A7 = 0 :CM = 1)) [O21]
+
+    IF (AND (AND :A2 = 0 :A5 = 2) (AND :A8 = 2 :CM = 1)) [O12]
+    IF (AND (AND :A2 = 2 :A5 = 0) (AND :A8 = 2 :CM = 1)) [OCENTRE]
+    IF (AND (AND :A2 = 2 :A5 = 2) (AND :A8 = 0 :CM = 1)) [O32]
+
+    IF (AND (AND :A3 = 0 :A6 = 2) (AND :A9 = 2 :CM = 1)) [O13]
+    IF (AND (AND :A3 = 2 :A6 = 0) (AND :A9 = 2 :CM = 1)) [O23]
+    IF (AND (AND :A3 = 2 :A6 = 2) (AND :A9 = 0 :CM = 1)) [O33]
+
+
+    IF (AND (AND :A1 = 0 :A5 = 2) (AND :A9 = 2 :CM = 1)) [O11]
+    IF (AND (AND :A1 = 2 :A5 = 0) (AND :A9 = 2 :CM = 1)) [OCENTRE]
+    IF (AND (AND :A1 = 2 :A5 = 2) (AND :A9 = 0 :CM = 1)) [O33]
+
+    IF (AND (AND :A3 = 0 :A5 = 2) (AND :A7 = 2 :CM = 1)) [O13]
+    IF (AND (AND :A3 = 2 :A5 = 0) (AND :A7 = 2 :CM = 1)) [OCENTRE]
+    IF (AND (AND :A3 = 2 :A5 = 2) (AND :A7 = 0 :CM = 1)) [O31]
+
+
+
+
+
+
+
+
+
+
+
+    IF (AND (AND :A1 = 1 :A2 = 1) (AND :A3 = 0 :CM = 1)) [O13]
+    IF (AND (AND :A1 = 1 :A2 = 0) (AND :A3 = 1 :CM = 1)) [O12]
+    IF (AND (AND :A1 = 0 :A2 = 1) (AND :A3 = 1 :CM = 1)) [O11]
+
+    IF (AND (AND :A4 = 1 :A5 = 1) (AND :A6 = 0 :CM = 1)) [O23]
+    IF (AND (AND :A4 = 1 :A5 = 0) (AND :A6 = 1 :CM = 1)) [OCENTRE]
+    IF (AND (AND :A4 = 0 :A5 = 1) (AND :A6 = 1) :CM = 1) [O21]
+
+    IF (AND (AND :A7 = 1 :A8 = 1) (AND :A9 = 0 :CM = 1)) [O33]
+    IF (AND (AND :A7 = 1 :A7 = 0) (AND :A9 = 1 :CM = 1)) [O32]
+    IF (AND (AND :A7 = 0 :A8 = 1) (AND :A9 = 1 :CM = 1)) [O31]
+
+    IF (AND (AND :A1 = 0 :A4 = 1) (AND :A7 = 1 :CM = 1)) [O11]
+    IF (AND (AND :A1 = 1 :A4 = 0) (AND :A7 = 1 :CM = 1)) [O21]
+    IF (AND (AND :A1 = 1 :A4 = 1) (AND :A7 = 0 :CM = 1)) [O31]
+
+    IF (AND (AND :A2 = 0 :A5 = 1) (AND :A8 = 1 :CM = 1)) [O12]
+    IF (AND (AND :A2 = 1 :A5 = 0) (AND :A8 = 1 :CM = 1)) [OCENTRE]
+    IF (AND (AND :A2 = 1 :A5 = 1) (AND :A8 = 0 :CM = 1)) [O32]
+
+    IF (AND (AND :A3 = 0 :A6 = 1) (AND :A9 = 1 :CM = 1)) [O13]
+    IF (AND (AND :A3 = 1 :A6 = 0) (AND :A9 = 1 :CM = 1)) [O23]
+    IF (AND (AND :A3 = 1 :A6 = 1) (AND :A9 = 0 :CM = 1)) [O33]
+
+
+    IF (AND (AND :A1 = 0 :A5 = 1) (AND :A9 = 1 :CM = 1)) [O11]
+    IF (AND (AND :A1 = 1 :A5 = 0) (AND :A9 = 1 :CM = 1)) [OCENTRE]
+    IF (AND (AND :A5 = 1 :A5 = 1) (AND :A9 = 0 :CM = 1)) [O33]
+
+    IF (AND (AND :A3 = 0 :A5 = 1) (AND :A7 = 1 :CM = 1)) [O13]
+    IF (AND (AND :A3 = 1 :A5 = 0) (AND :A7 = 1 :CM = 1)) [OCENTRE]
+    IF (AND (AND :A3 = 1 :A5 = 1) (AND :A7 = 0 :CM = 1)) [O31]
+
+
+
+
+
+
+
+    IF (AND :A5 = 0 :CM = 1) [OCENTRE]
+    IF (AND (AND :A1 = 1 :A9 = 1) (AND :A2 = 0 :CM = 1)) [O12]
+    IF (AND (AND :A1 = 1 :A9 = 1) (AND :A4 = 0 :CM = 1)) [O21]
+    IF (AND (AND :A1 = 1 :A9 = 1) (AND :A6 = 0 :CM = 1)) [O23]
+    IF (AND (AND :A1 = 1 :A9 = 1) (AND :A8 = 0 :CM = 1)) [O32]
+
+    IF (AND (AND :A3 = 1 :A7 = 1) (AND :A2 = 0 :CM = 1)) [O12]
+    IF (AND (AND :A3 = 1 :A7 = 1) (AND :A4 = 0 :CM = 1)) [O21]
+    IF (AND (AND :A3 = 1 :A7 = 1) (AND :A6 = 0 :CM = 1)) [O23]
+    IF (AND (AND :A3 = 1 :A7 = 1) (AND :A8 = 0 :CM = 1)) [O32]
+
+
+    IF (AND :A1 = 0 :CM = 1) [O11]
+    IF (AND :A3 = 0 :CM = 1) [O13]
+    IF (AND :A7 = 0 :CM = 1) [O31]
+    IF (AND :A9 = 0 :CM = 1) [O33]
+    IF (AND :A2 = 0 :CM = 1) [O12]
+    IF (AND :A4 = 0 :CM = 1) [O21]
+    IF (AND :A6 = 0 :CM = 1) [O24]
+    IF (AND :A8 = 0 :CM = 1) [O32]
+    IF (:CM = 1) [RESULTDRAW]
+
+END
+
+TO SELECT.ICON
+    POINT
+    WAIT 50
+    CLICK
+END
+
+TO TC
+    CS
+    PU
+    FD 100 SETPC 12 PD
+    (STAMPOVAL 20 20 "TRUE)
+    PU HOME
+    MOVECONTROL
+
+END
+
+TO DRAW.X01
+    PU
+    SETPOS [0 50]
+    PD
+    SETHEADING 225
+    FD 140 BK 70
+    RT 90
+    FD 70 BK 140
+    MAKE "A4 "1
+
+END
+
+TO MOVECONTROL
+    MAKE "K RC
+    IF :K = CHAR 193 FD 5
+    IF :K = CHAR 194 BK 5
+    IF :K = "Q [PR [OVER] WAIT CS STOP]
+    IF :K = CHAR 196 RT 10
+    IF :K = CHAR 195 LT 10
+    MAKE "C BASECOLOR (DOTCOLOR)
+    IF :C = 12 [PR [COLLISION] HOME SETPC "BLACK STOP]
+
+    MOVECONTROL
+END
+
+TO DRAW.X03
+    MAKE "A6 "1
+    PU
+    SETPOS [100 50]
+    PD
+    SETHEADING 135
+    FD 140
+    BK 70
+    LT 90
+    FD 70 BK 140
+END
+
+TO DRAW.X11
+    MAKE "A1 "1
+    PU SETPOS [0 50]
+    SETHEADING 0
+    PD
+    LT 45
+    FD 140
+    BK 70
+    RT 90
+    FD 70 BK 140
+END
+
+TO DRAW.X12
+    MAKE "A2 "1
+    PU SETPOS [0 50]
+    SETHEADING 90
+    PD
+    LT 45
+    FD 140
+    BK 70
+    RT 90
+    FD 70 BK 140
+END
+
+TO MAKEMOVE
+    CHECKRESULT
+    SELECT.ICON
+    CHECKSQUARE
+
+END
+
+TO DRAW.X13
+    MAKE "A3 "1
+    PU
+    SETPOS [100 50]
+    PD
+    SETHEADING 45
+    FD 140
+    BK 70
+    RT 90 FD 70 BK 140
+END
+
+TO OCENTRE
+    MAKE "A5 "2
+    MAKE "CM "0
+    PU
+    SETPOS [50 0]
+    PD
+    STAMPOVAL 50 50
+END
+
+TO DRAW.XB1
+
+    PU
+    MAKE "A7 "1
+    SETPOS [0 -50]
+    PD
+    SETHEADING 225
+    FD 140
+    BK 70
+    RT 90
+    FD 70 BK 140
+END
+
+TO DRAW.XB2
+    MAKE "A8 "1
+    PU
+    SETPOS [0 -50]
+    SETHEADING 135
+    PD
+    FD 140 BK 70
+    LT 90
+    FD 70 BK 140
+END
+
+TO DRAW.XB3
+    MAKE "A9 "1
+    PU
+    SETPOS [100 -50]
+    SETHEADING 135
+    PD
+    FD 140
+    BK 70
+    LT 90
+    FD 70
+    BK 140
+END
+
+TO CHECKRESULT
+    IF (AND (AND :A1 = 1 :A2 = 1) (:A3 = 1)) [SHOWRESULT]
+    IF (AND (AND :A4 = 1 :A5 = 1) (:A6 = 1)) [SHOWRESULT]
+    IF (AND (AND :A7 = 1 :A8 = 1) (:A9 = 1)) [SHOWRESULT]
+    IF (AND (AND :A1 = 1 :A4 = 1) (:A7 = 1)) [SHOWRESULT]
+    IF (AND (AND :A2 = 1 :A5 = 1) (:A8 = 1)) [SHOWRESULT]
+    IF (AND (AND :A3 = 1 :A6 = 1) (:A9 = 1)) [SHOWRESULT]
+    IF (AND (AND :A1 = 1 :A5 = 1) (:A9 = 1)) [SHOWRESULT]
+    IF (AND (AND :A3 = 1 :A5 = 1) (:A7 = 1)) [SHOWRESULT]
+
+
+
+
+    IF (AND (AND :A1 = 2 :A2 = 2) (:A3 = 2)) [SHOWLIKELYRESULT]
+    IF (AND (AND :A4 = 2 :A5 = 2) (:A6 = 2)) [SHOWLIKELYRESULT]
+    IF (AND (AND :A7 = 2 :A8 = 2) (:A9 = 2)) [SHOWLIKELYRESULT]
+    IF (AND (AND :A1 = 2 :A4 = 2) (:A7 = 2)) [SHOWLIKELYRESULT]
+    IF (AND (AND :A2 = 2 :A5 = 2) (:A8 = 2)) [SHOWLIKELYRESULT]
+    IF (AND (AND :A3 = 2 :A6 = 2) (:A9 = 2)) [SHOWLIKELYRESULT]
+    IF (AND (AND :A1 = 2 :A5 = 2) (:A9 = 2)) [SHOWLIKELYRESULT]
+    IF (AND (AND :A3 = 2 :A5 = 2) (:A7 = 2)) [SHOWLIKELYRESULT]
+
+
+
+
+END
+
+TO TICTACTOE
+    CS
+
+    SETBG "GREEN
+    PU
+    SETPOS [-100 100]
+    PD
+    SETFONT "TIMES 32 1
+    SETPC "WHITE
+    TT [TIC TAC TOE]
+    PU
+    SETPOS [-175 50]
+    SETPC "BLACK
+    PD
+    TT [BY MANIT BHARANY]
+    PU SETPOS [-350 0]
+    PD
+    SETFONT "TIMES 14 1
+    SETPC "AQUA
+    TT [1. IT IS A ONE PLAYER GAME 2. PLACE YOUR BET AT THE START GAME]
+    PU SETPOS [-530 -25]
+    PD
+    SETFONT "TIMES 13 1
+    TT [3. IF YOU WIN YOU DOUBLE YOUR MONEY, IF YOU LOSE YOU LOSE YOUR MONEY AND IF YOU DRAW YOU GET YOUR MONEY BACK]
+    PU SETPOS [-560 -50]
+    PD
+    TT [4.THE PLAYER ALWAYS STARTS FIRST,THEN THE COMPUTER,THEN THE PLAYER AND SO ON.IN OTHER WORDS TAKE TURNS ALTERNATELY]
+    PU SETPOS [-425 -75]
+    PD
+    TT [5. YOU CAN PLACE YOUR SHAPE ANYWHERE ON THE GRID AS LONG AS THE SQUARE IS NOT OCCUPIED]
+    PU SETPOS [-375 -100]
+    PD
+    TT [6. THE GAME IS WON IF EITHER THE COMPUTER OR THE PLAYER FORMS A STRAIGHT LINE]
+    PU SETPOS [-275 -125]
+    PD
+    TT [IF NONE MANAGE TO DO SO THE GAME IS DEEMED TO BE A DRAW.]
+    PU SETPOS [-125 -175]
+    PD
+    SETFONT "TIMES 26 1
+    SETPC "BLACK
+    TT [HIT X TO BEGIN]
+    LABEL "START
+    MAKE "BEGIN RC
+    IF :BEGIN = "X BOARD
+    GO "START
+END
+
+TO SHOWLIKELYRESULT
+    PR [HEH HEH HEH WHAT IS GOING ON?? ! YOU HAVE BEEN BEATEN ! !]
+    TOPLEVEL
+END
+
+TO RESULTDRAW
+    PR [THIS MATCH ENDS IN A DRAW]
+    TOPLEVEL
+
+
+END
+
+MAKE "C "0
+MAKE "K "Q
+MAKE "T [13 44 14]
+MAKE "BEGIN "X
+MAKE "A1 "1
+MAKE "A2 "1
+MAKE "A3 "2
+MAKE "A4 "2
+MAKE "A5 "1
+MAKE "A6 "1
+MAKE "A7 "1
+MAKE "A8 "2
+MAKE "A9 "2
+MAKE "CM "1
+MAKE "|A1"| "0

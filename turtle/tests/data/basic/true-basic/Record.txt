@@ -1,0 +1,93 @@
+!
+!  RECORD     version 2.0
+!
+!  Record a series of perspective images of the house.
+!  Save them in a file,  then chain to the PLAYBACK program
+!  to display the images as a movie.
+!
+LIBRARY "3DLib.trc"
+
+LET filename$ = "ImagData.tru"    ! Data file name
+
+OPEN #1: screen .25, .7, .25, .7
+CALL PersWindow (0, 1, 0, 1, 0, 1)
+
+LET frames = 30
+
+FOR i = 1 to frames
+    CLEAR
+    LET u = 2*pi*i/frames
+    LET x = 2*sin(u) + .5
+    LET y = 2*cos(u) + .5
+    LET z = 2*sin(u) + .5
+    CALL SetCamera3 (x, y, z)
+    CALL DrawHouse
+    ASK WINDOW x1, x2, y1, y2
+    BOX KEEP x1, x2, y1, y2 in image$
+
+    IF i = 1 then
+       OPEN #2: name filename$, organization record, create newold
+       ERASE #2
+       SET #2: RECSIZE LEN(IMAGE$)
+       
+       ASK SCREEN x1, x2, y1, y2         ! Save screen coordinates
+       ASK MODE mode$                    ! ...and current mode
+       WRITE #2: Num$(frames) & Num$(x1) & Num$(x2) & Num$(y1) & Num$(y2) & mode$
+
+    END IF
+    WRITE #2: image$
+
+NEXT i
+CLOSE #2
+
+CHAIN "PlayBack" with (filename$)
+
+END
+
+!
+!  DrawHouse
+!
+!  A slightly complicated 'house' picture, which draws
+!  an opaque floor.  If we're looking at the house from
+!  above, we must draw the floor first.  From below, we
+!  we must draw the floor last.
+!
+SUB DrawHouse
+
+    DIM house (12, 3)
+
+    CALL AskCamera3 (x, y, z)
+    IF z > 0 then CALL Floor
+
+    MAT READ house
+    DATA 0, 0, 0,  0, 0, .5,  0, .5, 1,  0, 1, .5,  0, 1, 0,  0, 0, 0
+    DATA 1, 0, 0,  1, 0, .5,  1, .5, 1,  1, 1, .5,  1, 1, 0,  1, 0, 0
+
+    PLOT
+    CALL MatLines3 (house)
+
+    CALL LineOff3 (1, 0, .5,  0, 0, .5)     ! Parts of roofline
+    CALL LineOff3 (1, 1, .5,  0, 1, .5)
+    CALL LineOff3 (1, 1, 0,   0, 1,  0)
+    CALL LineOff3 (1, .5, 1,  0, .5, 1)
+
+
+    CALL RectX3 (0, .2, .4, .2, .4)    ! Windows
+    CALL RectX3 (0, .6, .8, .2, .4)
+
+    CALL RectY3 (0, .45, .55, 0, .4)   ! Front door
+
+    CALL RectX3 (1, .3, .7, .15, .4)   ! Big picture window
+
+    CALL CircleY3 (1, .3, .4, .1, .4)  ! Weird circular windows
+    CALL CircleY3 (1, .6, .7, .1, .4)
+
+    IF z < 0 then CALL Floor
+
+END SUB
+
+SUB Floor
+    SET COLOR "red"
+    CALL FillRectZ3 (0, 0, 1, 0, 1)
+    SET COLOR "black"
+END SUB

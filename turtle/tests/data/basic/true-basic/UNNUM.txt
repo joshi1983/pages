@@ -1,0 +1,30 @@
+EXTERNAL
+
+SUB Unnum (line$(), arg$)
+
+    ! Unnum
+    !
+    ! a True BASIC(tm), Inc. product
+    !
+    ! ABSTRACT
+    !    Removes the line numbers, if any, from a True BASIC program.
+    !    Removes the first set, if more than one.
+    !
+    !    arg$ is ignored
+    !
+    ! Copyright (c) 1985, 1997 by True BASIC, Incorporated
+
+    IF Size(line$) = 0 THEN CAUSE ERROR 613, "No program in editor."
+    LET c$ = line$(1)[1:1]        ! First character
+    IF c$ < "0" or "9" < c$ then EXIT SUB   ! Not numbered
+
+    FOR i = 1 to ubound(line$)
+
+        LET p = ncpos(line$(i), "0123456789")
+        LET line$(i) = line$(i)[p:1000]
+        LET c$ = line$(i)[1:1]
+        IF c$ = " " then LET line$(i)[1:1] = ""
+
+    NEXT i
+
+END SUB

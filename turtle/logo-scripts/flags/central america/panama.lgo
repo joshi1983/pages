@@ -1,0 +1,31 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Panama#/media/File:Flag_of_Panama.svg
+; Construction sheet at:
+; https://en.wikipedia.org/wiki/Flag_of_Panama#/media/File:Flag_of_Panama_(construction_sheet).svg
+to panamaFlag :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "width :height * 4 / 3
+	localmake "colors ["#072357 "#da121a]
+	localmake "D (20 - 4 * sqrt 5) / 5 * :height / 8
+	localmake "starRadius :D / 2
+	stripes :width :height ["white]
+	setPenSize 0
+	repeat 2 [
+		setFillColor item repcount :colors
+		localmake "pos1 pos
+		jumpLeft :width / 4
+		stripes :width / 2 :height / 2 [fillColor]
+		jumpForward :height * 3 / 4
+		setHeading :oldHeading
+		regularStar :starRadius 5
+		jumpTo :pos1
+		jumpForward :height
+		right 180
+	]
+	setTurtleState :oldState
+end
+
+; for a little contrast with white in the flag
+setScreenColor "#eee
+panamaFlag 100

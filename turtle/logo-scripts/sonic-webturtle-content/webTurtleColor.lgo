@@ -1,0 +1,25 @@
+; Similar to color command documented at
+; http://www.sonic.net/~nbs/webturtle/commands/
+; assuming the input is not prefixed with +.
+to webTurtleColor :color
+	localmake "colorPalette $$$COLOR_PALETTE_PAIRS$$$
+	localmake "numColors count :colorPalette
+	ifElse number? :color [
+		ifElse :color < 0 [
+			webTurtleOffsetColor :color
+		] [
+			localmake "color min :numColors - 1 :color
+			setPenColor item :color + 1 :colorPalette
+		]
+	] [
+		localmake "color lowerCase :color
+		repeat :numColors [
+			localmake "colorInfo item repcount :colorPalette
+			localmake "name first :colorInfo
+			if :name = :color [
+				setPenColor last :colorInfo
+				stop
+			]
+		]
+	]
+end

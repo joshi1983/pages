@@ -1,0 +1,103 @@
+// Copied from
+// https://www.f-lohmueller.de/pov_tut/x_sam/geo/povlens2.txt
+
+// POV-Ray 3.6 / 3.7 scene file  "povlens2.pov"
+// author: Friedrich A. Lohmueller 2003/Aug-2009/Jan-2011
+// homepage: www.f-lohmueller.de
+//
+// biconvex optical lens
+#version 3.6; // 3.7;
+global_settings{ assumed_gamma 1.0 }
+#default{ finish{ ambient 0.1 diffuse 0.9 }} 
+
+#include "colors.inc"
+#include "textures.inc"
+#include "glass.inc"      //  !!!! ---> T_Glass3 
+// camera -------------------------------------------------------
+camera {ultra_wide_angle angle 35
+        location  < 0.0 , 1.0,-6.5>
+        right x*image_width/image_height
+        look_at   <-0.3 , 1.0 , 0.0>}
+// sun ----------------------------------------------------------
+light_source{<1000,2500,-2500> color White}
+// sky ----------------------------------------------------------
+object{sphere {<0,0,0>,1 hollow }
+          texture{pigment{gradient <0,1,0>
+                          color_map{[0.00 color CadetBlue]
+                                    [0.35 color CadetBlue]
+                                    [0.50 color White]
+                                    [0.65 color CadetBlue]
+                                    [1.00 color CadetBlue] }
+                          quick_color White 
+                          scale 2 translate<0,-1,0>}
+                  finish {ambient 1 diffuse 0}}
+       scale 10000} // end of sphere
+
+//---------------------------------------------------------------
+//---------------------------------------------------------------
+#declare Ball =
+ sphere{<0,0,0>,0.35 
+        texture{pigment{ color rgb<1,0.65,0>}
+                finish { phong 1}}}
+//---------------------------------------------------------------
+union{ // --- nur zur Demonstration der Linsenwirkung!
+       // --- just for demonstration of the lens effect! 
+
+#declare Nr = 0;     // start
+#declare EndNr = 14; // end
+#while (Nr< EndNr) 
+   object{Ball translate<0,0,Nr*0.65>} 
+
+ #declare Nr = Nr + 1;  // next Nr
+
+#end // --------------- end of loop 
+ scale 0.5
+ rotate <0, 90, 0> translate <-1.85,0.7,1.35>}  
+//----------------------------------------------------------------
+// --- nur zur Demonstration der Linsenwirkung!
+// --- just for demonstration of the lens effect!
+ box {<-1,-1,-1>,< 1,1,1>
+     scale <1.85,0.25,0.55>
+     
+     texture{pigment{ Candy_Cane 
+                      rotate<0,0,-45>
+                      scale 0.375  
+                      quick_color Orange}
+             finish { phong 1}}
+    rotate <0,0, 0> 
+        translate <-0.25,1.35,1.35>}
+
+//----------------------------------------------------------------
+//------------------------------------------------------  lens ---
+#declare R    = 3.50;   //sphere radius
+#declare Over = 0.15;   //sphere overlapping
+#declare R_border = sqrt( R*R - (R-Over)*(R-Over)) ; //border radius
+#declare D_border = 0.05;
+#declare HalfW_border = 0.05;
+union{
+ cylinder{<-2,0,0>,<0,0,0>,3*D_border  translate<-R_border,0,0> rotate<0,0,40>
+          texture{ pigment{ color DarkWood*0.5}
+                   finish { phong 1}}}
+intersection{
+ cylinder{<0,0,-HalfW_border      >,<0,0,HalfW_border      >, R_border+D_border }
+ cylinder{<0,0,-HalfW_border-0.001>,<0,0,HalfW_border+0.001>, R_border inverse}
+ texture{ pigment{ color DarkWood*0.5}
+          finish { phong 1}}}
+intersection{
+ sphere{<0,0,0>,R  translate <0,0,-R+Over>}
+ sphere{<0,0,0>,R  translate <0,0, R-Over>}
+ texture{T_Glass3 }interior{I_Glass}}
+rotate <10,0,0>
+translate < 0,1.1,0>}
+//------------------------------------------------------- end ----
+
+
+   
+
+
+
+
+  
+
+
+

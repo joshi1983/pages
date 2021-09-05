@@ -1,0 +1,68 @@
+make "thicknessFactor 0.104
+
+to drawSShape :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "thickness :height * :thicknessFactor
+	localmake "thickness2 :thickness * 2
+	localmake "thicknessAngle arcSin :thicknessFactor
+	localmake "outerRadius :height / 2
+	localmake "innerRadiusFactor 0.5 - :thicknessFactor
+	localmake "innerThicknessAngle arcSin :thicknessFactor * 0.5 / :innerRadiusFactor
+	localmake "angle1 18.5
+	localmake "innerStartAngle arcSin (0.5 * sin :angle1) / :innerRadiusFactor
+	localmake "outerArcAngle 180 - :angle1 + :thicknessAngle
+	localmake "innerRadius :height / 2 - :thickness
+	localmake "innerArcAngle 180 - :innerThicknessAngle - :innerStartAngle
+	setPenSize 0
+	jumpForward :height / 2
+	localmake "center pos
+	right 90 - :angle1
+	jumpForward :height / 2
+	left 90
+	polyStart
+	arcLeft :outerArcAngle :outerRadius
+	setHeading :oldHeading + 90
+	jumpForward :thickness2
+	localmake "horizontalLen :thickness2 + distanceToCircle :center :innerRadius
+	jumpForward :horizontalLen - :thickness2
+	setHeading (towards :center) - 90
+	arcRight :innerArcAngle :innerRadius
+	setHeading :oldHeading - 90
+	jumpForward distanceToCircle :center :outerRadius
+	setHeading (towards :center) + 90
+	arcLeft :outerArcAngle :outerRadius
+	setHeading :oldHeading - 90
+	jumpForward :horizontalLen
+	setHeading (towards :center) - 90
+	arcRight :innerArcAngle :innerRadius
+	polyEnd	
+
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://www.combatvetnews.com
+to combatVetNewsLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	setFillColor "white
+	setPenSize 0
+	drawSShape :height
+	jumpForward :height / 2
+	repeat 2 [
+		localmake "heading1 :oldHeading + repcount * 180
+		repeat 2 [
+			setHeading :heading1
+			localmake "height1 :height * sign repcount - 1.5
+			drawArcLineShape [0 0.35
+				[[90 0] [55 0.015] [10 0.2] [15.6 0.6] [-80.4 0]
+				[0.103] [-96 0] [-30 0.56] [-50 0] [0.2]]
+			] :height1
+		]
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "#2b6ca3
+combatVetNewsLogo 100

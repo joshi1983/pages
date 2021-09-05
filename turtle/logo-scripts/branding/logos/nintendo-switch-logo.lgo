@@ -1,0 +1,55 @@
+; Inspired by logo at:
+; https://en.wikipedia.org/wiki/Nintendo_Switch#/media/File:Nintendo_Switch_logo.svg
+to nintendoSwitchLogo :height
+	localmake "oldState turtleState
+	localmake "tinyCornerRadius 0.007
+	localmake "largeCornerRadius 0.258
+	localmake "height1 0.5 - :tinyCornerRadius
+	localmake "width1 0.153
+	localmake "widthList [:width1]
+	localmake "outline1 [
+		[-90 0] [:height1] [90 :tinyCornerRadius] :widthList [90 :largeCornerRadius]
+		[:height1 + :tinyCornerRadius - :largeCornerRadius]
+	]
+	localmake "outline combine :outline1 reverse :outline1
+	localmake "separation :height * 0.1
+	localmake "thickness1 0.078
+	localmake "leftOuterWidth 0.215
+	localmake "innerHeight1 0.5 - :thickness1
+	localmake "innerLargeRadius :largeCornerRadius - :thickness1
+	localmake "innerWidth 0.143
+	localmake "leftWidth :height * (:leftOuterWidth + :largeCornerRadius)
+	localmake "innerLine1 [
+		[-90 0] [:innerHeight1] [-90 0] [:innerWidth] [-90 :innerLargeRadius]
+		[:innerHeight1 - :innerLargeRadius]
+	]
+	localmake "innerLine combine :innerLine1 reverse :innerLine1
+	localmake "circleRadius :height * 0.1
+	setPenSize 0
+	setFillColor "white
+	jumpForward :height / 2
+	localmake "center pos
+	jumpRight :separation / 2
+	right 90
+	drawArcLineShape [0 0
+		:outline
+	] :height
+	jumpBackward :separation
+	right 180
+	setItem 1 "widthList :leftOuterWidth
+	drawArcLineShape [0 0
+		(combine :outline [[-:thickness1]] :innerLine)
+	] :height
+	jumpForward :leftWidth / 2
+	jumpRight :height * 0.2
+	circle :circleRadius
+	jumpTo :center
+	jumpBackward (:height * (:width1 + :largeCornerRadius) + :separation) / 2
+	setFillColor screenColor
+	jumpLeft :height * 0.05
+	circle :circleRadius
+	setTurtleState :oldState
+end
+
+setScreenColor "#e60012
+nintendoSwitchLogo 100

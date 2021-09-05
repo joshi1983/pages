@@ -1,0 +1,67 @@
+; Inspired by 
+; https://www.pinterest.ca/pin/422281200140453/
+; That might have been drawn by an illustrator named
+; Rafael Araujo.
+; It might be the same person described at:
+; https://www.rafael-araujo.com/about-me
+to hexCircles :size
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "radii [0.053 0.075 0.102 0.135 0.183 0.25]
+	localmake "offset 0.01
+	localmake "ratio 1 / 2 * cos 30
+	localmake "ratios [:ratio - :offset :ratio + :offset]
+	localmake "r :size / 2
+	for ["i 1 4] [
+		queue2 "ratios 0.5 - 2 * item :i :radii
+	]
+	setFillColor transparent
+	setPenSize :size * 0.002
+	localmake "size1 (:size - penSize) / 2
+	setPenColor "black
+	jumpForward :size / 2
+	localmake "center pos
+	circle :size1
+	setLineJoinStyle "round
+	right 180 / 6
+	repeat 6 [
+		repeat count :radii [
+			setPenSize :size * mix 0.002 0.005 repRatio
+			localmake "radius :size * item repcount :radii
+			jumpForward :r - :radius - penSize / 2
+			circle :radius
+			jumpTo :center
+		]
+		right 360 / 6
+	]
+	setHeading :oldHeading
+	right 180 / 6
+	repeat count :ratios [
+		localmake "size1 (item repcount :ratios) * :size
+		setPenColor ifelse even? repcount "red "navy
+		regularPolygon :size1 6
+	]
+	setHeading :oldHeading
+	setPenSize :size * 0.01
+	setPenColor "#8008
+	regularPolygon (:size - penSize) / 2 6
+	setPenSize 0
+	localmake "colorStops createPList2 [
+		[0 "#060f] [0.5 "#460f] [1 "#000]
+	]
+	setFillGradient createRadialGradient pos :size / 4 :colorStops
+	localmake "arcRadius :size * last :radii
+	localmake "arcAngle 30 * 2
+	repeat 6 [
+		setHeading :oldHeading + repcount * 360 / 6
+		polyStart
+		arcRight :arcAngle :arcRadius
+		right 180 - :arcAngle
+		arcRight :arcAngle :arcRadius
+		polyEnd
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+hexCircles 100

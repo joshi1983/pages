@@ -1,0 +1,37 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Electron_(software_framework)#/media/File:Electron_Software_Framework_Logo.svg
+to electronFrameworkLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "electronBlue "#9FEAF9
+	setFillColor "black
+	setPenSize 0
+	jumpForward :height / 2
+	circle :height / 2
+	jumpBackward :height * 0.0213
+	localmake "center pos
+	setFillColor :electronBlue
+	circle :height * 0.036
+	setFillColor transparent
+	setPenColor :electronBlue
+	setPenSize :height * 0.02
+	setLineCap "round
+	repeat 3 [
+		setHeading :oldHeading - 0.2 + repcount * 360 / 3
+		jumpForward :height * 0.358
+		circle :height * 0.039
+		jumpRight :height * 0.04
+		jumpBackward :height * 0.005
+		arcLines [[-126 0] [-30 0.29] [-17 0.45] [-5 1.1] [-10 0.65] [-10.1 0.55]
+		] :height
+		penUp
+		arcRight 9.5 :height * 0.52
+		penDown
+		arcLines [[-25 0.195] [-70 0.1] [-30 0.18] [-5.5 0.75]
+		] :height
+		jumpTo :center
+	]	
+	setTurtleState :oldState
+end
+
+electronFrameworkLogo 100

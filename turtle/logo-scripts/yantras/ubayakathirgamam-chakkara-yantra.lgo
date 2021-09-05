@@ -1,0 +1,41 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Ubayakathirgamam#/media/File:Ubayakathirgamam_chakkara_yantra.JPG
+to ubayakathirgamamChakkaraYantra :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	setPenSize :height * 0.005
+	localmake "height1 :height - penSize
+	localmake "pieceLength :height1 * sin 180 / 8
+	localmake "arcAngle 40
+	localmake "arcRadius :pieceLength / 2 / sin :arcAngle / 2
+	jumpForward :height / 2
+	setLineJoinStyle "round
+	circle (:height - penSize) / 2
+	localmake "center pos
+	right 180 / 8
+	jumpForward :height1 / 2
+	right 90 + 180 / 8 + :arcAngle / 2
+	repeat 8 [
+		arcLeft :arcAngle :arcRadius
+		right :arcAngle + 360 / 8		
+	]
+	jumpTo :center
+	setHeading :oldHeading
+	jumpLeft :height * 0.221
+	jumpBackward :height * 0.15
+	setLineCap "butt
+	setPenSize :height * 0.01
+	setPenColor "black
+	arcLines [[0.24] [-180 0.085] [0.18] [180 0.0725] [0.245] [-0.245] [180 0]
+	[180 0.074] [0.245]] :height1
+	jumpTo :center
+	setHeading :oldHeading
+	jumpRight :height * 0.1723
+	jumpForward :height * 0.0916
+	setPenSize 0
+	setFillColor "black
+	circle :height * 0.017
+	setTurtleState :oldState
+end
+
+ubayakathirgamamChakkaraYantra 100

@@ -1,0 +1,43 @@
+! PushBtn
+
+! This program checks the Push Button part of true Controls
+
+LIBRARY "TrueCtrl.trc"
+
+DIM button(4), text$(4)
+
+MAT READ text$
+DATA "North", "East", "South", "West"
+
+LET win = 0
+CALL TC_Init
+CALL TC_Win_SetBrush (win, 3, -3, "")  ! Background to cyan
+CLEAR                             ! To initiate the new background color
+CALL TC_Show (win)                ! Show the default output window.
+CALL TC_Win_Active (win)          ! Move it to the front
+PRINT "Press the ESC key to exit."
+
+FOR i = 1 to 4
+    CALL TC_PushBtn_Create (button(i), text$(i), .54, .80, 1-0.14*i, -99999)
+NEXT i
+
+DO
+   CALL TC_Event (0, event$, window, x1, x2)
+   IF event$ = "CONTROL DESELECTED" then
+      FOR i = 1 to 4
+          IF x2 = button(i) then
+             PRINT "Button "; text$(i); " just pushed."
+             EXIT FOR
+          END IF
+      NEXT i
+
+   END IF
+
+   IF event$ = "HIDE" then EXIT DO
+   IF event$ = "KEYPRESS" and x1 = 27 then EXIT DO
+
+LOOP
+
+CALL TC_Cleanup
+
+END

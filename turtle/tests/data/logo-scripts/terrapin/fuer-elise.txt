@@ -1,0 +1,80 @@
+; copied from: https://resources.terrapinlogo.com/logolib/fuer_elise.html
+TO SET.TEMPO :TEMPO
+    PLAY (LIST WORD "T :TEMPO)
+END
+
+TO PLAY.RIT :LIST :TEMPO :DIM
+    MAKE "T :TEMPO
+    WHILE [NOT EMPTY? :LIST] [SET.TEMPO :T PLAY (LIST FIRST :LIST) MAKE "LIST BF :LIST MAKE "T :T - :DIM]
+    SET.TEMPO :TEMPO
+END
+
+TO THEME
+    PLAY [O4 E D# E O3 B O4 D C O3 A O1 E A O3 C E A B O1 E G# O3 E G# B O4 C O1 E A O3 E.]
+    PLAY [O4 E D# E D# E O3 B O4 D C O3 A O1 E A O3 C E A B O1 E G# O3 E O4 C O3 B A O1 E A.]
+    PLAY [O3 B O4 C D E O1 G O2 C O3 G O4 F E D O1 G B O3 F O4 E D C O1 E A O3 E]
+    PLAY.RIT [O4 D C O3 B O1 E O2 E O3 E O4 E O3 E O4 E E O5 E O4 D# E D# E D# E] :TEMPO 1
+    PLAY [O4 D# E D# E D# E O3 B O4 D C O3 A O1 E A O3 C E A B O1 E G# O3 E G# B O4 C O1 E A O3 E.]
+    PLAY [O4 E D# E D# E O3 B O4 D C O3 A O1 E A O3 C E A B O1 E G# O3 E O4 C O3 B A.]
+END
+
+TO INTERLUDE.1
+    PLAY [O1 E A S5]
+    PLAY [O3 E F G O3 [F A O4 4C] F. L32 E L8 E D L16 Bb. 32A A G F E D C O3 8Bb 8A L32 A G A BB]
+    PLAY [L16 O4 C O1 G O2 C O1 G O4 D D# E O1 G O2 C O4 E F O3 A O4 C O2 E O1 G O2 E O4 D. O3 32B]
+    REPEAT 2 [PLAY [L32 O4 C G O3 G O4 G O3 A O4 G O3 B O4 G C G D G E G O5 C O4 B A G F E D G F D]]
+    PLAY [E F E D# E O3 B O4 E D# E O3 B O4 E D# L8 E.]
+    PLAY.RIT [L16 O3 B O4 E D# L8 E. L16 O3 B O4 E D# E D# E D# E D#] :TEMPO 1
+END
+
+TO CRESCENDO
+    PLAY [L16 A S10 O1 A A A A A]
+    PLAY [[O3 E G Bb O4 C#] O1 A A A A A]
+    PLAY [[O3 F A O4 D] O1 A A A O4 E F]
+    PLAY [[O3 G# O4 D F] O1 A A A [O3 G# O4 D F] O1 A]
+    PLAY [[O3 A O4 C E] O1 A A A A A]
+    PLAY [[O3 F O4 D] O1 D D D O4 C O3 B]
+    PLAY [[C F# A] O1 D# D# D# O3 [C A] O1 D#]
+    PLAY [[O3 C A] O1 E [O3 E O4 C] O1 E [O3 D B] O1 G#]
+    PLAY [[O3 C A] O1 A A A A A]
+    PLAY [[O3 E G Bb O4 C#] O1 A A A A A]
+    PLAY [[O3 F A O4 D] O1 A A A O4 E F]
+    PLAY [[O3 G# O4 D F] O1 A A A [O3 G# O4 D F] O1 A]
+    PLAY [[O4 D F] O1 Bb Bb Bb Bb Bb]
+    PLAY [[O3 G O4 Eb] O1 Bb Bb Bb O4 D C]
+    PLAY [[O3 D F Bb] O1 Bb Bb Bb [O3 D F A] O1 Bb]
+    PLAY [[O3 D F G#] O1 B B B [O3 D F G#] O1 B]
+    PLAY [[O2 C O3 C E 4A] 8P]
+    PLAY [[O2 E G O3 D E 8B] 4P]
+END
+
+TO INTERLUDE.2
+    PLAY [S0 O2 A O3 C E A O4 C E D C O3 B A O4 C E A O5 C E D C O4 B]
+    PLAY [A O5 C E A O6 C E D C O5 B Bb A G# G F# F E D# D]
+    PLAY.RIT [C# C O4 B Bb A G# G F# F] :TEMPO 1
+END
+
+TO CODA
+    PLAY [[O1 A C E O2 A C E O3 2'1A]]
+END
+
+TO ELISE
+    MAKE "TEMPO 70
+    PLAY [R] SET.TEMPO :TEMPO
+    PLAY [L16 S0 REV10]
+    PLAY [O4 E D#]
+    THEME
+    INTERLUDE.1
+    THEME
+    CRESCENDO
+    INTERLUDE.2
+    THEME
+    CODA
+END
+
+MAKE "TEMPO 60
+MAKE "T 38
+
+CT
+PRINT `The procedures in this file will play "Für Elise" by Beethoven.`
+PRINT `To hear it, type ELISE.`

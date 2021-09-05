@@ -1,0 +1,44 @@
+TO star1 :size
+  repeat 4 [
+    fd 100 * :size
+    rt 170
+    fd 86 * :size
+    frag
+    lt 70
+    fd 86 * :size
+    rt 170
+    fd 100 * :size
+    frag
+    rt 180
+  ]
+END
+
+TO star2 :size
+  repeat 5 [fd 100 * :size rt 170 fd 86 * :size frag lt 88 fd 86 * :size rt 170 fd 100 * :size frag rt 180]
+END
+
+TO star3 :size
+  repeat 6 [fd 100 * :size rt 170 fd 86 * :size frag lt 100 fd 86 * :size rt 170 fd 100 * :size frag rt 180]
+END
+
+TO star4 :size
+  repeat 7 [fd 100 * :size rt 170 fd 86 * :size frag lt 108.625 fd 86 * :size rt 170 fd 100 * :size frag rt 180]
+END
+
+TO star5 :size
+  repeat 8 [fd 100 * :size rt 170 fd 86 * :size frag lt 115 fd 86 * :size rt 170 fd 100 * :size frag rt 180]
+END
+
+TO stars
+  reset cam:setposition [0 0 0]
+  cam:fixate [0 0 0]
+  cam:setviewpoint [0 0 0]
+  cam:newworker [forever [up 0.1 lt 0.1 rr 0.1 wait 1]]
+  repeat 200 [
+    pu home randori fd 400 + random 1000 up 90
+    lt random 60 pd randpc randfc randfs randps
+    make "size (10 + random 90) / 100
+    run {pick [star1 star2 star3 star4 star5] :size}
+  ]
+
+END

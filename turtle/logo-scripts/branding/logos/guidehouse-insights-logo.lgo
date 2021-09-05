@@ -1,0 +1,29 @@
+; Inspired by logo at:
+; https://guidehouseinsights.com
+to guidehouseInsightsLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "angle 22.1
+	localmake "outerLength :height / cos :angle
+	localmake "width :height * 2 * tan :angle
+	localmake "colors ["#231f20 "#94c83d]
+	jumpLeft :width / 2
+	setPenSize 0
+	repeat count :colors [
+		localmake "pos1 pos
+		localmake "sign sign repcount - 1.5
+		setFillColor item repcount :colors
+		left :angle * :sign
+		polyStart
+		jumpForward :outerLength
+		setHeading :oldHeading
+		jumpBackward :height * 0.7
+		polyEnd
+		jumpTo :pos1
+		jumpRight :width
+	]
+	
+	setTurtleState :oldState
+end
+
+guidehouseInsightsLogo 100

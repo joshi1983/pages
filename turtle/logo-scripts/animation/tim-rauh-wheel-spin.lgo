@@ -1,0 +1,73 @@
+; Inspired by a pen on paper drawing at:
+; https://www.facebook.com/share/p/1DJYoyuX75/
+; In case that post becomes inaccessible,
+; it was posted by Tim Rauh Jr.
+to timRauhJrLineArtWheel :height :t
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "numPoints 18
+	localmake "numCircles mixItems2 [2 3 5 6 6 8 16 32 64 256 512] :t
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize :height * 0.001
+	localmake "radius1 (:height - penSize) / 4
+	right 360 * ((int :numCircles) / :numCircles)
+	jumpForward :radius1
+	localmake "prevCenter pos
+	setLineJoinStyle "round
+	setLineCap "round
+	repeat :numCircles [
+		jumpTo :center
+		setHeading :oldHeading + 360 * repcount / :numCircles
+		jumpForward :radius1
+		localmake "center1 pos
+		repeat :numPoints [
+			setHeading :oldHeading + 360 * repcount / :numPoints
+			jumpForward :radius1
+			localmake "fromPos pos
+			repeat :numPoints [
+				jumpTo :center1
+				setHeading :oldHeading + 360 * repcount / :numPoints
+				jumpForward :radius1
+				setHeading towards :fromPos
+				localmake "d distanceToCircle :prevCenter :radius1
+				ifelse (distance :prevCenter) > :radius1 [
+					if :d < 0 [
+						localmake "d distance :fromPos
+					]
+					if :d > 0 [
+						forward min :d distance :fromPos
+					]
+				] [
+					jumpForward :d
+					localmake "d distanceToCircle :center1 :radius1
+					if :d > 0 [
+						forward :d
+					]
+				]
+			]
+			jumpTo :center1
+		]
+		localmake "prevCenter :center1
+	]
+	setTurtleState :oldState
+end
+
+make "t interpolateRatio easeInOut animation.clampedTimeRatio
+timRauhJrLineArtWheel 100 :t
+
+to animation.snapshotstyle
+	output createPList2 [
+		["position.y 50]
+		["zoom.scale 6.8]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 15
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

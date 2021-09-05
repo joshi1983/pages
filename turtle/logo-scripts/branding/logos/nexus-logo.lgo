@@ -1,0 +1,105 @@
+to drawN :fontHeight
+	localmake "oldState turtleState
+	localmake "fontHeight :fontHeight - penSize
+	localmake "angle 141
+	localmake "diagonalLength :fontHeight * 1.15
+	localmake "height1 abs :diagonalLength * cos :angle
+	jumpLeft :fontHeight * 0.3
+	forward :fontHeight
+	right :angle
+	forward :diagonalLength
+	left :angle
+	jumpForward :height1
+	backward :fontHeight
+	
+	setTurtleState :oldState
+end
+
+to drawE :fontHeight
+	localmake "oldState turtleState
+	localmake "width :fontHeight * 0.52
+	jumpRight :width / 2
+	left 90
+	forward :width
+	localmake "bottomLeftCorner pos
+	right 90
+	forward :fontHeight - penSize
+	localmake "topLeftCorner pos
+	right 90
+	forward :width
+	jumpTo mix :bottomLeftCorner :topLeftCorner 0.62
+	forward :width * 0.7
+	setTurtleState :oldState
+end
+
+to drawX :fontHeight
+	localmake "oldState turtleState
+	localmake "angle 35
+	localmake "size1 (:fontHeight - penSize) / 2 / cos :angle
+	jumpForward :fontHeight / 2
+	localmake "center pos
+	right :angle
+	repeat 2 [
+		jumpBackward :size1
+		forward :size1 * 2
+		jumpTo :center
+		left :angle * 2
+	]
+	setTurtleState :oldState
+end
+
+to drawU :fontHeight
+	localmake "oldState turtleState
+	localmake "fontHeight :fontHeight - penSize
+	localmake "width :fontHeight * 0.64
+	localmake "arcRadius :width / 2
+	localmake "straightHeight :fontHeight - :arcRadius
+	jumpForward :fontHeight
+	jumpLeft :width / 2
+	right 180
+	forward :straightHeight
+	arcLeft 180 :arcRadius
+	forward :straightHeight
+	setTurtleState :oldState
+end
+
+to drawS :fontHeight
+	localmake "oldState turtleState
+	jumpLeft :fontHeight * 0.28
+	jumpForward :fontHeight * 0.15
+	right 145
+	arcsLeft [[100 0.32] [90 0.21] [25 0.6]
+	[-25 0.5] [-90 0.17] [-104 0.24]] :fontHeight
+	setTurtleState :oldState
+end
+
+; Inspired by logo at
+; https://www.youtube.com/@NexusTRTWorld
+to nexusLogo :height
+	localmake "oldState turtleState
+	localmake "width :height * 3.6
+	localmake "fontHeight :height * 0.56
+	jumpForward :height / 2
+	setFillColor transparent
+	setPenSize :height * 0.04
+	setPenColor "#ddf
+	setLineJoinStyle "miter
+	rect :width :height - penSize
+	jumpLeft :height * 1.31
+	jumpBackward :fontHeight * 0.48
+	setLineJoinStyle "round
+	setPenSize :height * 0.03
+	drawN :fontHeight
+	jumpRight :height * 0.66
+	drawE :fontHeight
+	jumpRight :height * 0.65
+	drawX :fontHeight
+	jumpRight :height * 0.66
+	drawU :fontHeight
+	jumpRight :height * 0.64
+	drawS :fontHeight
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+nexusLogo 100

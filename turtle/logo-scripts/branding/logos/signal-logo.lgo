@@ -1,0 +1,49 @@
+; Inspired by logo at:
+; https://commons.wikimedia.org/wiki/File:Signal_logo_(2020).svg
+to signalLogo :height
+	localmake "oldState turtleState
+	localmake "dashArcAngle 17.4
+	localmake "dashThickness :height * 0.047
+	localmake "triangleAngle 32.19573
+	localmake "triangleWidth :height * 0.68
+	localmake "cornerDashLength :height * 0.067
+	localmake "len1 0.1
+	localmake "color "#3a76f0
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	setFillColor :color
+	circle :height * 0.404
+	left 135
+	localmake "heading1 heading
+	isoTriangle :triangleWidth :triangleWidth / 2 / tan :triangleAngle
+	setPenSize :dashThickness
+	localmake "arcRadius (:height - penSize) / 2
+	setLineCap "butt
+	setPenColor :color
+	repeat 15 [
+		setHeading :heading1 - :dashArcAngle / 2 + repcount  * 360 / 16
+		jumpForward :arcRadius
+		right 90
+		arcRight :dashArcAngle :arcRadius
+		jumpTo :center
+	]
+	localmake "angleOffset :dashArcAngle / 2 - 360 / 16
+	setPenSize :dashThickness
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		setHeading :heading1 + :sign * :angleOffset
+		jumpForward :arcRadius - :dashThickness / 2
+		right :sign * (:triangleAngle - :angleOffset)
+		jumpLeft :dashThickness / 2 * :sign
+		forward :cornerDashLength
+		localmake "pos1 pos
+		jumpTo :center
+	]
+	jumpTo :pos1
+	jumpForward :height * 0.043
+	arcLines [[:len1] [:triangleAngle * 2 - 180 0.02] [:len1]] :height
+	setTurtleState :oldState
+end
+
+signalLogo 100
