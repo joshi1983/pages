@@ -1,0 +1,49 @@
+to upworkLogo :height
+	localmake "oldState turtleState
+	localmake "uArcsInfo [ [0.359] [20 0.3] [30 0.19]
+	[30 0.145] [10 0.19065]]
+	jumpLeft :height * 0.04743
+	setPenSize 0
+	polyStart
+	arcLines (combine [[-9.94 0] [0.5079] [44 0] [-19.19 1.186] [165.13 0] [0.25]
+	[-30 0.4] [-60 0.314] [-10 0.5] [-30 0.29] [-30 0.35] [-20 0.4248686]
+	[0.3611707] [-90 0] [0.1637765] [-90 0]] :uArcsInfo 
+	reverse :uArcsInfo [[-90 0] [0.28504] [-77.685 0] [13.278 1.15] [142 0] 
+	[-80 0.3469] [-10 0.5] [-50 0.35] [-50 0.3985] [-50 0.351] [-50 0.3885]
+	[-40 0.439] [-180.7 0.07] [60 0.27] [110 0.215] [20 0.3] [80 0.195]
+	[50 0.195] [14.011 0.7] [0.575097]]) :height
+	polyEnd
+	print heading
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://www.upwork.com/
+to upworkGreenLogo :height
+	localmake "oldState turtleState
+	setFillColor "#14a800
+	upworkLogo :height
+	setTurtleState :oldState
+end
+
+; Inspired by favicon(browser tab icon) at 
+; https://www.upwork.com/
+to upworkFavicon :height
+	localmake "oldState turtleState
+	localmake "upHeight :height * 0.47
+	setFillColor "#14a800
+	setPenSize 0
+	jumpForward :height / 2
+	circle :height / 2
+	setFillColor "white
+	jumpBackward :upHeight / 2
+	upworkLogo :upHeight
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 5
+jumpLeft :separation / 2
+upworkGreenLogo :height
+jumpRight :separation
+upworkFavicon :height
