@@ -1,0 +1,141 @@
+make "frameColor "red
+
+to drawWheel :radius
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "treadThickness :radius * 0.08
+	localmake "radius1 :radius - :treadThickness / 2
+	localmake "spokeLength :radius1 - :treadThickness / 2
+	localmake "numSpokes 23
+	setPenSize :treadThickness
+	setFillColor transparent
+	setPenColor "black
+	; Draw tread.
+	circle :radius1
+
+	; Draw spokes
+	setPenSize :radius * 0.01
+	repeat :numSpokes [
+		forward :spokeLength
+		jumpTo :oldPos
+		right 360 / :numSpokes
+	]
+
+	setTurtleState :oldState
+end
+
+to drawFrame :frontWheel :rearWheel
+	localmake "oldState turtleState
+	localmake "peddleCenter mix :frontWheel :rearWheel 0.5
+	jumpTo :frontWheel
+	localmake "size distance :rearWheel
+	localmake "peddleRadius :size * 0.09
+	localmake "peddleWidth :size * 0.12
+	localmake "mainThickness :size * 0.025
+	localmake "thinThickness :mainThickness * 0.7
+	setPenSize :mainThickness
+	setPenColor :frameColor
+	setLineCap "round
+	localmake "horizontalHeading towards :rearWheel
+	setHeading :horizontalHeading - 60
+	localmake "frontHeading heading
+	forward :size * 0.5965953
+	localmake "pos1 pos
+	jumpForward (:mainThickness - :thinThickness) / 2 / sin 60
+	setHeading :horizontalHeading
+	setPenSize :thinThickness
+	forward :size * 0.15
+
+	; Draw peddles.
+	jumpTo :peddleCenter
+	setHeading :horizontalHeading
+	left 90
+	setPenSize :thinThickness
+	setLineCap "butt
+	setPenColor "black
+	forward :peddleRadius
+	jumpBackward :thinThickness / 2
+	stripes :peddleWidth :thinThickness ["black]
+	localmake "peddleState turtleState
+
+	; Draw diagonal bar between steering column 
+	;and peddle axel.
+	jumpTo :pos1
+	setLineCap "round
+	setPenColor :frameColor
+	setHeading :frontHeading
+	jumpBackward :size * 0.105
+	localmake "frontPos pos
+	setHeading towards :peddleCenter
+	setPenSize :mainThickness
+	forward distance :peddleCenter
+
+	; Draw cover for chain and gears.
+	setPenSize :size * 0.09
+	setHeading :horizontalHeading
+	forward distance :rearWheel
+
+	; Draw seat post.
+	jumpTo :peddleCenter
+	setPenSize :mainThickness
+	setPenColor :frameColor
+	setHeading :horizontalHeading - 60
+	forward :size * 0.57
+	
+	; Draw seat.
+	setPenSize :size * 0.045
+	setPenColor "black
+	setHeading :horizontalHeading
+	jumpBackward :size * 0.1
+	forward :size * 0.15
+	
+	; Draw horizontal bar from steering to seat post.
+	jumpTo :frontPos
+	setHeading :horizontalHeading
+	setPenColor :frameColor
+	setPenSize :mainThickness
+	forward (distance :peddleCenter)
+	setHeading towards :rearWheel
+	forward distance :rearWheel
+
+	; Draw peddles.
+	setTurtleState :peddleState
+	jumpTo :peddleCenter
+	setPenSize :thinThickness
+	setLineCap "butt
+	setPenColor "black
+	backward :peddleRadius + :thinThickness
+	stripes :peddleWidth :thinThickness ["black]
+
+	setTurtleState :oldState
+end
+
+; Inspired by an example in SuperLogo
+; SuperLogo is a Logo programming environment for Windows.
+; You can emulate Windows 3.1 in your web browser and run SuperLogo at:
+; https://archive.org/details/superlogo-voor-windows
+; To load the similar example in SuperLogo:
+; 1. Click the button near the upper right 
+;   that looks like a traffic light.
+; 2. The bicycle example is called "Fiets".
+; Fiets is Dutch for "bicycle".
+;
+; I didn't look at the SuperLogo source code for the example
+; so this is written from scratch to look like the drawing
+; without copying the SuperLogo code.
+to redBicycle :height
+	localmake "oldState turtleState
+	localmake "wheelRadius :height * 0.365
+	jumpLeft :height * 0.6
+	jumpForward :wheelRadius
+	localmake "frontWheel pos
+	drawWheel :wheelRadius
+	jumpRight :height * 1.2
+	drawWheel :wheelRadius
+	localmake "rearWheel pos
+
+	drawFrame :frontWheel :rearWheel
+	setTurtleState :oldState
+end
+
+redBicycle 100

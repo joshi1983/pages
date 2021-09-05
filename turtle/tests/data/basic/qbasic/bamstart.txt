@@ -1,0 +1,113 @@
+REM https://www.bamsoftware.com/bzr/qbasic/bamstart.bas
+DECLARE SUB delay (seconds!)
+SCREEN 12
+COLOR 1
+z = 0
+n = 0
+B = 0
+a = 480
+m = 640
+c = 1
+l = 215
+s = 175
+REM PLAY "mbl4f#f#gaagf#eddef#f#4.e8ep4f#f#gaagf#eddef#e4.d8d4p4"
+REM PLAY "mbl4eef#def#8g8f#def#8g8f#edeap4f#f#gaagf#eddef#e4.d8d4"
+REM PLAY "mbp4d2l8egf#ea4a4abf#ge4e4egf#el8d>dc#<bagf#el8d2egf#ea4a4abf#ge4e4egf#edaef#d"
+DO
+IF a = 220 THEN
+        'SCREEN 12
+        CLS
+        c = 2
+END IF
+
+LINE (B, 260)-(B - 80, 260), c
+LINE -(B - 80, 220), c
+LINE -(B, 220), c
+LINE -(B, 230), c
+LINE -(B - 10, 240), c
+LINE -(B, 250), c
+LINE -(B, 260), c
+LINE (B - 60, 225)-(B - 20, 235), c, B
+LINE (B - 60, 245)-(B - 20, 255), c, B
+PAINT (B - 1, 259), 0, c
+LINE (280, a)-(360, a), c + 1
+LINE -(360, a + 40), c + 1
+LINE -(340, a + 40), c + 1
+LINE -(340, a + 25), c + 1
+LINE -(300, a + 25), c + 1
+LINE -(300, a + 40), c + 1
+LINE -(280, a + 40), c + 1
+LINE -(280, a), c + 1
+LINE (300, a + 5)-(340, a + 15), c + 1, B
+LINE (300, a + 16)-(300, a + 19), 0
+LINE (340, a + 16)-(340, a + 19), 0
+LINE (300, a + 17)-(340, a + 17), 0
+PAINT (281, a + 1), 0, c + 1
+LINE (m, 220)-(m + 20, 220), c - 1
+LINE -(m + 40, 240), c - 1
+LINE -(m + 60, 220), c - 1
+LINE -(m + 80, 220), c - 1
+LINE -(m + 80, 260), c - 1
+LINE -(m + 60, 260), c - 1
+LINE -(m + 60, 240), c - 1
+LINE -(m + 40, 260), c - 1
+LINE -(m + 20, 240), c - 1
+LINE -(m + 20, 260), c - 1
+LINE -(m, 260), c - 1
+LINE -(m, 220), c - 1
+PAINT (m + 1, 221), 0, c - 1
+B = B + 2
+a = a - 2
+m = m - 2
+c = c + 3
+IF c > 15 THEN
+c = 2
+END IF
+delay 0.02
+LOOP UNTIL a < 220
+DO WHILE s < 465
+PSET (175, l), 15
+PSET (465, ABS(l - 480)), 15
+PSET (s, 215), 15
+PSET (ABS(s - 640), 265), 15
+l = l + (5 / 29)
+s = s + 1
+delay 0.005
+LOOP
+PAINT (B - 21, 259), 4, 2
+PAINT (281, a + 21), 4, 3
+PAINT (m + 21, 221), 4, 1
+
+LOCATE 13, 30
+PRINT "THANK YOU FOR CHOOSING"
+COLOR 15
+LOCATE 25, 5
+PRINT "(C) BAM1996"
+COLOR 2
+LOCATE 25, 64
+PRINT "PRESS ENTER"
+DO WHILE INKEY$ = ""
+LOOP
+FOR line1 = 0 TO 640 STEP 1
+LINE (320, 240)-(line1, 0), RND * 5
+LINE (320, 240)-(ABS(line1 - 640), 480), RND * 5
+delay 0.001
+NEXT line1
+FOR line1 = 0 TO 480 STEP 1
+LINE (320, 240)-(0, line1), RND * 5
+LINE (320, 240)-(640, ABS(line1 - 480)), RND * 5
+delay 0.001
+NEXT line1
+FOR line1 = 0 TO 640 STEP 2
+LINE (line1, 0)-(line1, 480), 0
+LINE (ABS(line1 - 639), 0)-(ABS(line1 - 639), 480), 0
+delay 0.002
+NEXT line1
+SYSTEM
+
+
+SUB delay (seconds!)
+start# = TIMER
+DO WHILE TIMER - start# < seconds!
+LOOP
+END SUB
