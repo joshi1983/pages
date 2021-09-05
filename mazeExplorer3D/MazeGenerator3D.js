@@ -79,6 +79,7 @@ class MazeGenerator3D {
 	getTriangles(width, height) {
 		var generator = new IterativeDepthFirstGenerator();
 		var maze = Maze.createEmpty(width, height);
+		this.maze = maze;
 		generator.generate(maze);
 		
 		// convert all walls to triangles.
@@ -97,6 +98,7 @@ class MazeGenerator3D {
 				}
 			}
 		}
+		this.physics = new Physics(maze, result);
 		return result;
 	}
 }

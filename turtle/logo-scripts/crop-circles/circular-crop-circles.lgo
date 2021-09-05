@@ -1,0 +1,88 @@
+to draw4Circles :xOffset :yOffset :circleRadius
+	localmake "oldState turtleState
+	localmake "thickness :circleRadius * 0.85
+	localmake "circleRadius2 :circleRadius - :thickness / 2
+	jumpLeft :xOffset
+	setPenSize :thickness
+	setFillColor transparent
+	repeat 2 [
+		jumpForward :yOffset
+		repeat 2 [
+			circle :circleRadius2
+			jumpBackward :yOffset * 2
+		]
+		jumpForward :yOffset * 3
+		jumpRight :xOffset * 2
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://www.pinterest.ca/pin/1103522714925713779/
+to circularCropCircles :height :lightColor
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "tinyRadius :height * 0.0988
+	localmake "mediumRadius :height * 0.2808
+	localmake "separation 4 * :mediumRadius
+	localmake "thickness1 :height * 0.0104
+	localmake "thickness2 :height * 0.0267
+	localmake "largeRadius :mediumRadius * 2  - :tinyRadius + :thickness1 / 2
+	localmake "largeRadius2 :largeRadius + (:thickness1 + :thickness2) / 2
+	localmake "largeArcAngle 120
+	localmake "sideArcAngle 238
+	localmake "mediumRadius2 :mediumRadius + (:thickness1 + :thickness2) / 2
+	setFillColor :lightColor
+	setPenSize 0
+	jumpForward :height / 2
+	localmake "center pos
+	setPenColor :lightColor
+	draw4Circles :height * 0.4368 :height * 0.3328 :height * 0.025
+	circle :tinyRadius
+	setPenSize :thickness1
+	setPenColor :lightColor
+	setFillColor transparent
+	circle :mediumRadius
+	jumpLeft :separation / 2
+	setLineCap "butt
+	repeat 2 [
+		localmake "pos1 pos
+		setPenSize 0
+		setFillColor :lightColor
+		circle :tinyRadius
+		setPenSize :thickness1
+		setPenColor :lightColor
+		localmake "sign sign repcount - 1.5
+		if repcount = 2 [
+			right 180
+		]
+		localmake "heading1 heading
+		jumpRight :tinyRadius - penSize / 2
+		arcRight 150 :largeRadius
+		jumpTo :pos1
+		setHeading :heading1 + 180
+		jumpLeft :mediumRadius
+		arcRight 304 :mediumRadius
+		setHeading :oldHeading - :sign * (:sideArcAngle - 180) / 2
+		jumpTo :pos1
+		jumpForward :mediumRadius2
+		right 90 * :sign
+		setPenSize :thickness2
+		arcLeft -:sign * :sideArcAngle :mediumRadius2
+		jumpTo :pos1
+		setHeading :oldHeading
+		jumpRight :separation
+	]
+	setPenSize :thickness2
+	repeat 2 [
+		jumpTo :center
+		setHeading :oldHeading + repcount * 180 - :largeArcAngle / 2
+		jumpForward :largeRadius2
+		right 90
+		arcRight :largeArcAngle :largeRadius2
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "#A2783F
+circularCropCircles 100 "#F5E7C1

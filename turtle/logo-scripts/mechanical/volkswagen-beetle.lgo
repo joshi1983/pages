@@ -1,0 +1,276 @@
+; Inspired by
+; https://www.pinterest.ca/pin/298082069082303451/
+; This is an attempt to convert a technical drawing
+; into WebLogo code.
+
+; I tried to use exact and written values as much as possible.
+; When exact values couldn't be found, some arc angles and 
+; other values were determined by overlaying 
+; this drawing over the image from pinterest.
+
+; The animation rotates the wheels 10 times in 10 seconds.
+
+to beetleWheel :scale
+	localmake "oldState turtleState
+	localmake "treadRadius 22 * :scale
+	localmake "rimRadius 13 * :scale
+	localmake "rimSize1 4.5 * :scale
+	localmake "rimSize2 :rimSize1 * tan 30
+	localmake "rimSize3 (sqrt (:rimRadius * :rimRadius - :rimSize1 * :rimSize1)) + :rimSize2
+	localmake "rimSize4 :rimSize1 / cos 30
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	setFillColor "black
+	circle :treadRadius
+	setFillColor "white
+	circle :rimRadius
+	setLineJoinStyle "miter ; sharp corners look good in the wheel.
+	repeat 3 [
+		jumpTo :oldPos
+		setHeading :oldHeading + repcount * 360 / 3
+		jumpForward :rimSize4
+		right 90 + 30
+		jumpForward :rimSize3
+		backward :rimSize3
+		left 60
+		backward :rimSize3
+	]
+	setTurtleState :oldState
+end
+
+to rotatedBeetleWheel :scale :rotationAngle
+	localmake "oldHeading heading
+	left :rotationAngle
+	beetleWheel :scale
+	setHeading :oldHeading	
+end
+
+to beetleRearWheelArch :scale
+	localmake "oldState turtleState
+	localmake "wheelArchSize1 28 * :scale
+	localmake "wheelArchSize2 37 * :scale
+	localmake "wheelArchSize3 14 * :scale
+
+	left 90 + arcSin 8 / 28
+	jumpForward :wheelArchSize1
+	right 90
+	; the following arc angles determined by tracing the image.
+	; I was unable to find the numbers written in the drawing.
+	; The arch wheel radii are written but angles were not found.
+	arcRight 65 :wheelArchSize1
+	arcRight 93 :wheelArchSize2
+	arcRight 140 :wheelArchSize3
+	setTurtleState :oldState
+end
+
+to beetleWindowsAndFrontHood :scale
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "oldFillColor fillColor
+	localmake "oldPenSize penSize
+	localmake "smallCircleRadius 72 * :scale
+	localmake "mediumCircleRadius 91 * :scale
+	localmake "largeCircleRadius 115 * :scale
+	localmake "arcOffset1 12 * :scale
+	; arc offsets were determined by image tracing and subjective guessing.
+	; I was unable to find or calculate the 12, 15... below 
+	; from the numbers in the technical drawing
+	localmake "arcOffset2 15 * :scale
+	localmake "arcOffset3 23.5 * :scale
+	localmake "windowBaseHeight 38 * :scale
+	localmake "angle1 arcCos (:arcOffset1 + :arcOffset2 + :arcOffset3 + :windowBaseHeight) / :largeCircleRadius
+	localmake "angle2 arcCos (:arcOffset1 + :arcOffset2 + :windowBaseHeight) / :mediumCircleRadius
+	localmake "angle3 arcCos (:arcOffset1 + :windowBaseHeight) / :smallCircleRadius
+
+	localmake "arcAngle1 :angle1 * 2
+	localmake "straightLength1 (:largeCircleRadius * sin :angle1) - (:mediumCircleRadius * sin :angle2)
+	localmake "windowHeight1 :smallCircleRadius - :windowBaseHeight - :arcOffset1
+	localmake "windowAngle1 arcTan (6 * :scale / :smallCircleRadius)
+	localmake "windowHeight2 (:smallCircleRadius * cos :windowAngle1) - :windowBaseHeight - :arcOffset1
+	localmake "windowHeight3 :windowHeight1 * cos :windowAngle1
+	localmake "windowAngle2 arcTan (3 * :scale / :windowHeight3)
+	localmake "straightLength3 hypot [:windowHeight2 3]
+	localmake "windowAngle3 9.5 
+	; eyeballed angle because I couldn't find it written in the technical drawing
+	; Making it equal to :windowAngle2 visually doesn't line up with the drawing.
+
+	localmake "straightLength4 :straightLength3 * 0.97
+	; hardcoded to an estimate to save time.
+	; This could be calculated more precisely, though.
+	localmake "straightLength5 (:smallCircleRadius * sin :angle3)
+	localmake "windowTrimSize1 (:mediumCircleRadius * sin :angle2) - :straightLength5
+
+	jumpBackward :arcOffset1 + :arcOffset2 + :arcOffset3
+	left :angle1
+	jumpForward :largeCircleRadius
+	right 90
+	setFillColor "gray
+	localmake "state1 turtleState
+	polyStart
+	setPenSize 0
+	arcRight :arcAngle1 :largeCircleRadius
+	polyEnd
+	setTurtleState :state1
+	arcRight :arcAngle1 :largeCircleRadius
+	localmake "turtleState1 turtleState
+	arcRight 8.4 :largeCircleRadius ; arc between rear window and rear wheel arch
+	setTurtleState :turtleState1
+	right 180 - :angle1
+	forward :straightLength1
+	right :angle2
+	localmake "turtleState1 turtleState
+	arcLeft :angle2 * 2 :mediumCircleRadius
+	setTurtleState :turtleState1
+	setFillColor :oldFillColor
+	setPenSize 0
+	polyStart
+	arcLeft :angle2 * 2 :mediumCircleRadius
+	right :angle2
+	jumpBackward :windowTrimSize1
+	right 180 - :angle3
+	arcRight :angle3 * 2 :smallCircleRadius
+	polyEnd
+
+	right 180 - :angle3
+	jumpForward :straightLength5 - 9 * :scale
+	
+	right 90 - :windowAngle2
+	setPenSize :oldPenSize
+	forward :straightLength3
+	jumpBackward :straightLength3
+	setHeading :oldHeading - 90
+	jumpBackward 6 * :scale
+	right 90 - :windowAngle3
+	forward :straightLength4
+	jumpBackward :straightLength4
+	setHeading :oldHeading - 90
+	jumpBackward :straightLength5 - 15 * :scale
+	localmake "pos1 pos
+	right :angle3
+	arcLeft :angle3 * 2 :smallCircleRadius
+	jumpTo :pos1
+	setHeading :oldHeading - 90
+
+	; The 2 * :scale is added because it is the only way to match the drawing.
+	; The 2 wasn't written or calculated in the drawing.
+	forward :straightLength5 + (:largeCircleRadius * sin :angle1) + 2 * :scale
+	arcLeft 54.5 46 * :scale
+	; The 55 was used to line up with the drawing but it also wasn't 
+	; written or calculated from anything in it.
+
+	arcLeft 18 21 * :scale ; arc around front hood.
+	localmake "frontLightPosition pos
+	arcLeft 62 21 * :scale ; arc around front hood.
+	left 155
+	arcRight 27 30 * :scale 
+	; lots of eyeballed angles and arc radii here.
+	; Unable to read much from the drawing so 
+	; lots of this comes from overlaying these lines over the image
+	arcRight 38 24 * :scale
+	arcRight 63 36 * :scale
+	arcRight 86 30 * :scale
+
+
+	setTurtleState :oldState
+	output :frontLightPosition
+end
+
+to beetleBottom :scale
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "size1 (63 - 28) * :scale
+	localmake "size2 (78 - 30) * :scale
+	localmake "size3 (63 - sqrt (28 * 28 - 5 * 5)) * :scale
+	localmake "size4 (78 - sqrt (30 * 30 - 5 * 5)) * :scale
+	localmake "halfChord1 (sqrt (22 * 22 - 8 * 8)) * :scale
+	localmake "size5 63 * :scale - :halfChord1
+	localmake "size6 78 * :scale - :halfChord1
+
+	jumpRight :size1
+	left 90
+	forward :size1 + :size2
+	jumpTo :oldPos
+	jumpLeft 5 * :scale
+	jumpBackward :size3
+	forward :size3 + :size4
+	jumpTo :oldPos
+	jumpLeft 8 * :scale
+	jumpBackward :size5
+	forward :size5 + :size6
+	jumpForward :halfChord1 * 2
+	forward 12.2 * :scale
+
+	setTurtleState :oldState
+end
+
+to beetleMirror :scale
+	localmake "oldState turtleState
+	localmake "arcAngle1 30
+	localmake "arcAngle2 120
+	localmake "arcRadius1 10 * :scale
+	localmake "arcRadius2 2 * :scale
+
+	jumpForward 38 * :scale
+	jumpLeft 55 * :scale
+	left 90
+	localmake "pos1 pos
+	arcLeft :arcAngle1 :arcRadius1
+	arcLeft :arcAngle2 :arcRadius2
+	arcLeft :arcAngle1 :arcRadius1
+	setPos :pos1
+	setTurtleState :oldState
+end
+
+to beetleFrontLight :scale
+	localmake "oldState turtleState
+	localmake "straightLength 5 * :scale
+	localmake "arcRadius1 12 * :scale
+	localmake "arcRadius2 1.8 * :scale
+	right 90
+	forward :straightLength
+	arcLeft 60 :arcRadius1
+	arcLeft 150 :arcRadius2
+	arcLeft 22 :arcRadius1
+	arcLeft 170 :arcRadius2
+	setTurtleState :oldState
+end
+
+to beetle :scale :wheelRotationAngle
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	setFillColor "white
+	setPenSize 1 * :scale
+	setLineJoinStyle "round
+	setLineCap "round
+	jumpLeft 78 * :scale
+	rotatedBeetleWheel :scale :wheelRotationAngle
+	jumpTo :oldPos
+	jumpRight 63 * :scale
+	rotatedBeetleWheel :scale :wheelRotationAngle
+	beetleRearWheelArch :scale
+	jumpTo :oldPos
+	localmake "frontLightPosition beetleWindowsAndFrontHood :scale
+	beetleBottom :scale
+	beetleMirror :scale
+	jumpTo :frontLightPosition
+	beetleFrontLight :scale
+	setTurtleState :oldState
+end
+
+beetle 2 animation.time * 360
+
+to animation.snapshotstyle
+	localmake "result createPList
+	setProperty "result "position.y 50
+	setProperty "result "zoom.scale 1.8
+	output :result
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 10
+	; Edit this if you want to change the length of your animation.
+	localmake "result createPList
+	setProperty "result "duration :minutes * 60 + :seconds
+	output :result
+end
