@@ -1,0 +1,35 @@
+; Inspired by
+; https://www.youtube.com/@TheMarshallProject
+to marshallProjectLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "width2 :height * 0.133333
+	localmake "width :width2 * 0.5
+	localmake "angle 45
+	localmake "len :height
+	jumpLeft :height / 2
+	setFillColor "white
+	setPenSize 0
+	repeat 8 [
+		localmake "pos1 pos
+		polyStart
+		jumpForward :len
+		right 90 + :angle
+		jumpForward :width / cos :angle
+		right 90 - :angle
+		jumpForward :len - :width * tan :angle
+		polyEnd
+		setHeading :oldHeading
+		jumpTo :pos1
+		jumpRight :width2
+		localmake "len :len - :width2 * tan :angle
+		if repcount = 4 [
+			localmake "angle -:angle
+			localmake "len :len + (:width - :width2) * tan :angle
+		]
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+marshallProjectLogo 100
