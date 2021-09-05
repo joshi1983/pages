@@ -1,0 +1,59 @@
+make "edenDarkRedColor "#d91b3c
+make "edenLightGrayColor "#ddd
+
+to getTileRadialGradient :height
+	localmake "colorStops createPList2 [
+		[0 "white] [0.3 :edenDarkRedColor]
+	]
+	output createRadialGradient pos :height * 1.2 :colorStops
+end
+
+to getGrayGradient :height
+	localmake "oldState turtleState
+	localmake "splitRatio 0.61
+	localmake "colorStops createPList2 [
+		[0 "#000] [:splitRatio :edenLightGrayColor] [:splitRatio + 0.001 "#888] [1 "black]
+	]
+	jumpLeft :height * 0.8
+	jumpForward :height * 1.6
+	localmake "result createRadialGradient pos :height * 2.5 :colorStops
+	setTurtleState :oldState
+	output :result
+end
+
+; Inspired by logo at:
+; https://www.tileit.ca
+to edenTileItLogo :height
+	localmake "oldState turtleState
+	localmake "tileSize 0.72
+	localmake "tileYStart 0.043
+	localmake "tileLen1 0.495
+	localmake "tileY 0.5 + (:tileLen1 - :tileSize) * (cos 45) + :tileYStart
+	localmake "tileLen2 :tileY / cos 45
+	localmake "tileBaseWidth (:tileSize - :tileLen2) * 2 * cos 45
+	localmake "tileLowerLeftLen :tileLen1 - :tileBaseWidth / 2 / cos 45
+	localmake "lowerLeftSquareSize :height * 0.2
+	setPenColor :edenDarkRedColor
+	setPenSize :height * 0.047
+	setLineJoinStyle "miter
+	setFillGradient getGrayGradient :height
+	jumpForward :height / 2
+	localmake "center pos
+	localmake "squareSize :height - penSize
+	rect :squareSize :squareSize
+
+	jumpLeft (:squareSize - penSize - :lowerLeftSquareSize) / 2
+	jumpBackward (:squareSize - penSize) / 2
+	stripes :lowerLeftSquareSize :lowerLeftSquareSize [:edenLightGrayColor]
+
+	jumpTo :center
+	setPenSize 0
+	setFillGradient getTileRadialGradient :height
+	drawArcLineShape [-0.5 :tileYStart
+		[[-45 0] [:tileLen1] [-90 0] [:tileSize] [-90 0] [:tileLen2]
+		[-45 0] [:tileBaseWidth] [-45 0] [:tileLowerLeftLen]]
+	] :height
+	setTurtleState :oldState
+end
+
+edenTileItLogo 100

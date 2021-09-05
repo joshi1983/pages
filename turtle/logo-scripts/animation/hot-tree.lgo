@@ -1,0 +1,61 @@
+make "colors ["yellow "red ]
+make "timeRatio animation.clampedTimeRatio
+make "angle -180 
+ifelse :timeRatio < 0.5 [
+	make "timeRatio :timeRatio / 0.5
+	make "timeRatio interpolateRatio easeInOut :timeRatio
+	make "angle mix 90 180 :timeRatio 
+] [
+	make "timeRatio (:timeRatio - 0.5) / 0.5
+	make "timeRatio interpolateRatio easeInOut :timeRatio
+	make "angle mix 0 90 :timeRatio 
+]
+
+to goldenTree :startSize :blendRatio
+	if :startSize > 0.5 [
+		localmake "oldState turtleState
+		setPenSize max 0.05 :startSize * 0.04
+		setPenColor mixItems2 :colors :blendRatio
+		forward :startSize
+		localmake "newSize :startSize / goldenRatio
+		localmake "newBlendRatio :blendRatio / goldenRatio
+		left :angle
+		repeat 3 [
+			goldenTree :newSize :newBlendRatio
+			right :angle
+		]
+		setTurtleState :oldState
+	]
+end
+
+setScreenColor "black
+setLineJoinStyle "round
+goldenTree 38 1
+
+to animation.snapshotstyle
+	localmake "t animation.clampedTimeRatio
+	localmake "box drawing.box
+	localmake "miY getProperty "box "minY ; roughly 0
+	localmake "maY getProperty "box "maxY ; roughly 10
+	localmake "averageY mix :miY :maY 0.5
+	localmake "maxScale 7
+	localmake "scale :maxScale
+	if :t < 0.5 [
+		localmake "t :t / 0.5
+		localmake "scale :maxScale * mix 1 0.8 :t
+	]
+	output createPList2 [
+		["position.y :averageY]
+		["zoom.scale :scale]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 5
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+		["thumbnailTime :seconds / 2]
+	]
+end

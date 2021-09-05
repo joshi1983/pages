@@ -1,0 +1,143 @@
+make "darkColor "#780
+make "lightColor "#ff8
+
+to drawTopShapes :outerCircleRadius
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	right 33
+	jumpForward :outerCircleRadius - penSize / 2
+	forward :outerCircleRadius * 0.75
+	repeat 3 [
+		localmake "pos1 pos
+		setHeading (towards :oldPos) - 90
+		localmake "arcAngle mix 10 20 repRatio
+		arcRight :arcAngle distance :oldPos
+		jumpTo :pos1
+		setHeading towards :oldPos
+		jumpForward :outerCircleRadius * 0.27
+	]
+	setTurtleState :oldState
+end
+
+to drawBottomShapes :outerCircleRadius
+	localmake "oldState turtleState
+	localmake "tinyRadius :outerCircleRadius * 0.06
+	localmake "separation :outerCircleRadius * 0.7
+	left 120
+	jumpForward :outerCircleRadius - penSize / 2
+	forward :outerCircleRadius * 1.05
+	localmake "pos1 pos
+	localmake "heading1 heading
+	right 22
+	jumpForward :outerCircleRadius * 0.2
+	jumpRight :separation / 2
+	repeat 2 [
+		circle :tinyRadius
+		jumpLeft :separation
+	]
+	jumpTo :pos1
+	setHeading :heading1
+	jumpBackward :outerCircleRadius * 0.4
+	left 75
+	penUp
+	arcRight 30 :outerCircleRadius
+	right 180
+	penDown
+	arcLeft 60 :outerCircleRadius
+	setTurtleState :oldState
+end
+
+; Inspired by images at:
+; https://temporarytemples.co.uk/project/chesterton-windmill-warks-26th-july-2018
+; Reported in July 26, 2018.
+; This was located at Chesterton Windmill, nr Royal Leamington Spa, Warwickshire
+to chestertonCropCircles :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "innerRadius :height * 0.08
+	localmake "separation :height * 0.387
+	localmake "armThickness :height * 0.06
+	localmake "tinyThickness :armThickness / 5
+	localmake "outerCircleRadius :height * 0.075
+	localmake "outerArcRadius :outerCircleRadius - :tinyThickness * 1.5
+	localmake "outerArcAngle 360 - 2 * arcSin :tinyThickness / :outerArcRadius
+	localmake "outerTurnAngle 90 - (360 - :outerArcAngle) / 2
+	localmake "innerArcRadius :innerRadius - :tinyThickness * 1.5
+	localmake "innerGapAngle arcSin :tinyThickness / :innerArcRadius
+	localmake "innerArcAngle 360 / 6 - :innerGapAngle * 2
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	setFillColor :lightColor
+	circle :innerRadius
+	repeat 3 [
+		jumpBackward :separation
+		stripes :armThickness :separation * 2 [:lightColor]
+		jumpTo :center
+		right 360 / 6
+	]
+	repeat 6 [
+		jumpForward :separation
+		circle :outerCircleRadius
+		jumpTo :center
+		right 360 / 6
+	]
+	setHeading :oldHeading
+	setPenSize :tinyThickness
+	setPenColor :darkColor
+	setLineJoinStyle "miter
+	setPenColor :darkColor
+	jumpForward :separation + :outerArcRadius
+	right 90
+	penUp
+	arcRight :outerArcAngle / 2 :outerArcRadius
+	penDown
+	polyStart
+	repeat 6 [
+		left :outerTurnAngle
+		localmake "separation2 distanceToCircle :center :innerArcRadius
+		forward :separation2
+		localmake "heading1 heading
+		setHeading (towards :center) - 90
+		arcRight :innerArcAngle :innerArcRadius
+		setHeading :heading1 + 180 + 60
+		forward :separation2
+		left :outerTurnAngle
+		arcRight :outerArcAngle :outerArcRadius
+	]
+	polyEnd
+	setHeading :oldHeading
+	setPenColor :lightColor
+	setLineCap "butt
+	repeat 6 [
+		jumpTo :center
+		jumpForward :height * 0.26
+		localmake "pos1 pos
+		localmake "heading1 heading
+		repeat 2 [
+			jumpLeft :armThickness / 2 + :tinyThickness * 3.5
+			repeat 2 [
+				localmake "len :height * (0.01 + repcount * 0.03)
+				jumpBackward :len / 2
+				forward :len
+				jumpBackward :len / 2
+				jumpRight :tinyThickness * 2
+			]
+			jumpTo :pos1
+			right 180
+		]
+		setHeading :heading1
+		right 360 / 6
+	]
+	jumpTo :center
+	setHeading :oldHeading
+	jumpForward :separation
+	drawTopShapes :outerCircleRadius
+	jumpTo :center
+	jumpBackward :separation
+	drawBottomShapes :outerCircleRadius
+	setTurtleState :oldState
+end
+
+setScreenColor :darkColor
+chestertonCropCircles 100

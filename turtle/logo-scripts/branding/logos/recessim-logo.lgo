@@ -1,0 +1,36 @@
+; Inspired by logo at:
+; https://www.youtube.com/@RECESSIM
+to recessimLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "color "white
+	localmake "thickness :height * 0.15
+	localmake "width :height
+	localmake "rectHeight :height * 0.49
+	jumpForward :height - (:rectHeight + :thickness) / 2
+	setPenSize :thickness
+	setPenColor :color
+	setFillColor transparent
+	roundRect :width - :thickness :rectHeight :height * 0.11
+
+	jumpTo :oldPos
+	setPenSize 0
+	setFillColor :color
+	drawArcLineShape [0.495 0
+		[[40 0.06] [0.397] [-130 0.0106] [90 0] [0.1]
+		[90 0] [0.24] [90 0] [0.1] [90 0] [-50 0.05]
+		[0.4467625]]
+	] :height
+	jumpLeft (:width - :thickness) / 2
+	stripes :thickness :height [:color]
+	jumpForward :height - :thickness / 2
+	right 90
+	repeat 2 [
+		stripes :thickness :width / 2 [:color]
+		jumpRight :rectHeight
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+recessimLogo 100
