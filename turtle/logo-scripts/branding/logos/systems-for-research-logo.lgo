@@ -1,0 +1,49 @@
+; Inspired by logo at:
+; https://sfr.ca
+to systemsForResearchLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "centralColorStops createPList2 [
+		[0 "#6a6a6a] [1 "#111]
+	]
+	localmake "hexColors ["#2180c0 "#ec1f36]
+	localmake "hexHeight :height * 0.29
+	localmake "hexThickness :height * 0.05
+	localmake "hexRadius (:hexHeight - :hexThickness) / 2 / cos 180 / 6
+	localmake "hexOffset (:height - :hexHeight) / 2
+	localmake "hexLength1 :hexOffset * (tan 180 / 6) - :hexRadius
+	localmake "radius :height * 0.129
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	setFillGradient createRadialGradient pos :radius :centralColorStops
+	circle :radius
+	setLineJoinStyle "miter
+	setLineCap "butt
+	setPenColor "black
+	setPenSize :height * 0.03
+	repeat 6 [
+		setHeading :oldHeading + repcount * 360 / 6
+		jumpForward :hexOffset
+		jumpRight :hexRadius
+		right 90
+		forward :hexLength1
+		right 360 / 6
+		forward :hexLength1
+		jumpTo :center
+	]
+	setPenSize :hexThickness
+	setFillColor transparent
+	repeat 6 [
+		setHeading :oldHeading + repcount * 360 / 6
+		jumpForward :hexOffset
+		setHeading :oldHeading + 180 / 6
+		localmake "index 1 + modulo repcount 2
+		setPenColor item :index :hexColors
+		regularPolygon :hexRadius 6		
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+systemsForResearchLogo 100

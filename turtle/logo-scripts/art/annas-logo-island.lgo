@@ -1,0 +1,160 @@
+to drawGround :height
+	localmake "oldState turtleState
+	localmake "width1 :height * 4
+	setFillColor "brown
+	stripes :width1 :height [fillColor]
+	setPenSize 0
+	jumpForward :height / 2
+	jumpLeft :width1 / 2
+	repeat 2 [
+		ellipse :height * 1.5 :height / 2
+		jumpRight :width1
+	]
+	setTurtleState :oldState
+end
+
+to drawSun :size
+	localmake "oldState turtleState
+	localmake "center pos
+	localmake "radius :size * 0.35
+	setFillColor "yellow
+	setPenColor "black
+	setPenSize :size * 0.01
+	localmake "len :size - penSize
+	setLineCap "round
+	repeat 4 [
+		jumpBackward :len / 2
+		forward :len
+		jumpTo :center
+		right 360 / 8
+	]
+	circle :radius
+	setTurtleState :oldState
+end
+
+to drawPalmTree :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "branches [
+		[0.21 0 55] [0.2 0.05 20] [0.16 0.1 -20]
+	]
+	setPenSize :height * 0.04
+	setPenColor "brown
+	forward  :height * 0.64
+	jumpBackward :height * 0.14
+	localmake "branchStartPos pos
+	setPenSize :height * 0.005
+	setPenColor "black
+	setFillColor "green
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		repeat count :branches [
+			localmake "branchInfo item repcount :branches
+			localmake "arcRadius :height * first :branchInfo
+			setHeading :oldHeading
+			jumpForward :height * item 2 :branchInfo
+			setHeading :oldHeading + :sign * last :branchInfo
+			polyStart
+			arcLeft :sign * -160 :arcRadius
+			polyEnd
+			jumpTo :branchStartPos
+		]
+	]
+	setTurtleState :oldState
+end
+
+to drawGarage :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "baseHeight :height * 0.5
+	localmake "baseWidth :height * 1.01
+	localmake "doorSeparation :height * 0.45
+	setLineCap "round
+	setLineJoinStyle "round
+	setFillColor "silver
+	setPenSize :height * 0.01
+	setPenColor "black
+	jumpForward :baseHeight / 2
+	rect :baseWidth :baseHeight
+	jumpForward :baseHeight / 2
+	setFillColor "sky_blue
+	isoTriangle :baseWidth :height - :baseHeight
+
+	jumpTo :oldPos
+	jumpLeft :doorSeparation / 2
+	repeat 2 [
+		stripes :height * 0.25 :height * 0.26 ["black]
+		jumpRight :doorSeparation
+	]	
+	setTurtleState :oldState
+end
+
+to drawHouse :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "baseWidth :height * 0.64
+	localmake "baseHeight :height * 0.68
+	localmake "windowSize :height * 0.13
+	localmake "windowSeparation :height * 0.21
+	jumpForward :baseHeight / 2
+	setFillColor "sky_blue
+	setPenColor "black
+	setPenSize :height * 0.01
+	rect :baseWidth :baseHeight
+	jumpForward :baseHeight / 2
+
+	setFillColor "dodgerBlue
+	isoTriangle :baseWidth :height - :baseHeight
+
+	jumpTo :oldPos
+	jumpRight :height * 0.03
+	stripes :height * 0.2 :height * 0.28 ["black]
+
+	jumpForward :height * 0.41
+	jumpRight :height * 0.04
+	setFillColor "silver
+	repeat 2 [
+		square :windowSize
+		jumpLeft :windowSeparation
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://www.youtube.com/watch?v=qOSklQCn2C8
+; This was implemented based on what is shown in the video.
+; Anna's original drawing was likely written with MSWLogo or FMSLogo.
+; The code here was written without seeing Anna's original code.
+to annasLogoIsland :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "sunSize :height * 0.44
+	localmake "treeSize :height * 0.36
+	localmake "garageSize :height * 0.35
+	localmake "houseSize :height * 0.25
+	setLineCap "round
+	setLineJoinStyle "round
+	drawGround :height * 0.3
+
+	jumpForward :height - :sunSize / 2
+	jumpRight :height * 0.52
+	drawSun :sunSize
+
+	jumpTo :oldPos
+	jumpForward :height * 0.28
+	jumpRight :height * 0.725
+	drawPalmTree :treeSize
+
+	jumpTo :oldPos
+	jumpForward :height * 0.3
+	jumpLeft :height * 0.47
+	drawGarage :garageSize
+
+	jumpTo :oldPos
+	jumpForward :height * 0.3
+	jumpRight :height * 0.133
+	drawHouse :houseSize
+	setTurtleState :oldState
+end
+
+annasLogoIsland 100

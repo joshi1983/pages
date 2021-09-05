@@ -1,0 +1,1 @@
+The go-content directory is for procedures that help translations from the Go programming language.

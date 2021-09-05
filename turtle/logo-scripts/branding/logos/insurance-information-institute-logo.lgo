@@ -1,0 +1,57 @@
+to drawTriangle :size
+	localmake "oldState turtleState
+	setFillColor "#377EBC
+	polyStart
+	jumpRight :size
+	jumpForward :size
+	polyEnd
+	setTurtleState :oldState
+end
+
+to drawRectRight :width :height
+	localmake "oldState turtleState
+	jumpRight :width / 2
+	stripes :width :height ["white]	
+
+	setTurtleState :oldState
+end
+
+to drawI :width
+	localmake "oldState turtleState
+	localmake "height :width * 3
+	localmake "size :width / 2
+	localmake "whiteHeight :size * 3
+	setPenSize 0
+	jumpBackward :height / 2
+	drawTriangle :size
+	jumpForward :size
+	drawRectRight :size :whiteHeight
+	jumpForward :whiteHeight
+	drawTriangle :size
+	jumpForward :size
+	drawRectRight :size :size
+	jumpForward :size
+	right 180
+	repeat 2 [
+		drawTriangle :size
+		jumpForward :size * 2
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://www.iii.org
+to iiiLogo :height
+	localmake "oldState turtleState
+	localmake "separation :height * 0.2
+	stripes :height :height ["#062C44]
+	jumpForward :height / 2
+	jumpLeft :separation
+	repeat 3 [
+		drawI :separation
+		jumpRight :separation
+	]
+	setTurtleState :oldState
+end
+
+iiiLogo 100

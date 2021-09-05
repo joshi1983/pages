@@ -1,0 +1,42 @@
+; Inspired by logo at:
+; https://medlabsofwindsor.com
+to medicalLabsOfWindsorLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "thickness1Factor 0.165
+	localmake "len1 0.322
+	localmake "angle1 47
+	localmake "angle2 85.6
+	localmake "angle3 180 - :angle1 - :angle2
+	localmake "lines1 [
+		[:angle1 0] [:len1] [:angle2 0] [:len1] [:angle3 0]
+		[:thickness1Factor] [180 - :angle3 0] [:len1] [-:angle2 0]
+		[:len1] [(180 - :angle1 * 2) / 2 0]
+	]
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	setFillColor "#ed1c24
+	repeat 2 [
+		setHeading :oldHeading + 180 * repcount
+		drawArcLineShape [0 0.5 - :len1 * cos :angle1
+				combine :lines1 reverse :lines1
+			] :height
+		jumpTo :center
+	]
+
+	setLineJoinStyle "miter
+	setLineCap "butt
+	setPenSize :height * 0.115
+	setPenColor fillColor
+	jumpRight :height * 0.321
+	jumpBackward :height * 0.041
+	left 90
+	forward :height * 0.545
+	right 90
+	forward :height * 0.255
+
+	setTurtleState :oldState
+end
+
+medicalLabsOfWindsorLogo 100
