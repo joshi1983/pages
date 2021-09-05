@@ -1,0 +1,42 @@
+to drawBranch1 :branchsize
+	fd :branchsize
+	penup
+	back :branchsize
+	pendown
+end
+
+to snowflake2 :size :c
+	setpencolor :c
+	setfillcolor :c
+	setpensize :size * 0.1
+	circle :size * 0.05
+	setfillcolor transparent
+	circle :size * 0.2
+	setpensize :size * 0.05
+	for ["a 0 300 60] [
+		penup
+		fd :size * 0.2
+		pendown
+		fd :size * 0.2
+		localmake "s :size * 0.4
+		repeat 2 [
+			fd :size * 0.2
+			right 60
+			drawBranch1 :s
+			left 120
+			drawBranch1 :s
+			right 60
+			localmake "s :s - :size * 0.25
+		]
+		penup
+		fd :size * 0.2
+		pendown
+		circle :size * 0.1
+		penup
+		back :size
+		pendown
+		right 60
+	]
+end
+
+snowflake2 100 "midnightblue

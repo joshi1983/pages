@@ -1,0 +1,112 @@
+to drawV :height
+	localmake "oldHeading heading
+	localmake "oldPos pos
+	localmake "angle1 30
+	localmake "angle2 27
+	localmake "angle3 28.6
+	localmake "width1Top :height * 0.295
+	localmake "slantedHeight1 :height * 0.266
+	localmake "height0 :height * 2 / 3
+	localmake "height1 :slantedHeight1 * cos :angle1
+	localmake "slantedHeight2 :height1 / cos :angle2
+	localmake "width1Bottom :width1Top - :height1 * ((tan :angle1) - tan :angle2)
+	localmake "separation1 :height * 0.153
+	localmake "borderSize1 :height * 0.007
+	localmake "borderSeparation :borderSize1 * tan :angle1
+	localmake "separation2 :separation1 + :height * 0.1
+	localmake "width2 :width1Bottom + :separation1 - :separation2 + :borderSeparation
+	localmake "vHeight1 :height * 0.718
+	localmake "vSize1 :vHeight1 / cos :angle3
+	localmake "vSize2 :separation1 + :width1Bottom -
+		:height0 * (tan :angle3) + :height * 0.00164947
+	localmake "vSize3 :slantedHeight1 * 0.75
+	localmake "vHeight2 :vSize3 * cos :angle1
+	localmake "vWidth1 :width1Top - :height * 0.0004244
+	localmake "vInnerX (:vHeight1 * (tan :angle3) + :vSize2 + 
+		:vHeight2 * (tan :angle1) - :vWidth1)
+	localmake "vInnerSize :vInnerX / sin :angle2
+	jumpForward :height0
+	localmake "middlePos pos
+	setPenSize 0
+	setFillColor "#777
+	localmake "sign 1
+	repeat 2 [
+		jumpLeft :separation1 * :sign
+		polyStart
+		left :angle2 * :sign
+		jumpForward :slantedHeight2
+		setHeading :oldHeading
+		jumpLeft :width1Top * :sign
+		right 180 - :angle1 * :sign
+		jumpForward :slantedHeight1
+		polyEnd
+		jumpTo :middlePos
+		setHeading :oldHeading
+		localmake "sign -1
+	]
+	jumpTo :middlePos
+	jumpForward :borderSize1
+	localmake "middlePos pos
+	setFillColor "#9e9e9e
+	repeat 2 [
+		jumpLeft :separation2 * :sign
+		polyStart
+		jumpLeft :width2 * :sign
+		left :angle1 * :sign
+		jumpForward :height * 0.1
+		polyEnd
+		jumpTo :middlePos
+		setHeading :oldHeading
+		localmake "sign 1
+	]
+	; draw big V.
+	jumpTo :oldPos
+	left :angle3
+	setFillColor "#555
+	polyStart
+	jumpForward :vSize1
+	setHeading :oldHeading
+	jumpLeft :vSize2
+	left :angle1
+	jumpForward :vSize3
+	setHeading :oldHeading
+	jumpRight :vWidth1
+	setHeading :oldHeading + 180 - :angle2
+	jumpForward :vInnerSize
+	setHeading :oldHeading + :angle2
+	jumpForward :vInnerSize
+	setHeading :oldHeading
+	jumpRight :vWidth1
+	left 180 - :angle1
+	jumpForward :vSize3
+	setHeading :oldHeading
+	jumpLeft :vSize2
+	polyEnd
+end
+
+to draw8 :height
+	setFillColor "white
+	setPenSize :height * 0.179
+	setPenColor "#4285f4
+	jumpForward :height * 0.435
+	circle :height * 0.193
+	jumpForward :height * 0.34799
+	setPenSize :height * 0.15
+	circle :height * 0.142
+	setPenSize 0
+	setFillColor "white
+	jumpBackward :height * 0.013
+	circle :height * 0.09
+end
+
+; Inspired by
+; https://commons.wikimedia.org/wiki/File:V8_JavaScript_engine_logo_2.svg
+to v8JavaScriptEngineLogo :height
+	localmake "oldState turtleState
+	drawV :height
+	setTurtleState :oldState
+	draw8 :height
+	setTurtleState :oldState
+end
+
+v8JavaScriptEngineLogo 100

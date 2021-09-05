@@ -1,0 +1,18 @@
+to DrawDot3D :color
+; Save 2D image position and orientation
+make "savepos2d posxyz
+make "saveori2d orientation
+; Restore 3D image position and orientation
+setposxyz :savepos3d
+setorientation :saveori3d
+; Now draw the dot we scanned in on the 2D image in 3D space
+setpixel :color
+; Next dot
+fd 1
+; Save 3D image position and orientation
+make "savepos3d posxyz
+make "saveori3d orientation
+; Restore 2D image position and orientation
+setposxyz :savepos2d
+setorientation :saveori2d
+end

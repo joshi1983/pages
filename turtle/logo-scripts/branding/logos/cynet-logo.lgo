@@ -1,0 +1,56 @@
+; Inspired by logo at:
+; https://www.cynetsystems.com/
+to cynetLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "radius :height * 0.384
+	localmake "centerOffsetX :height * 0.03
+	localmake "centerOffsetY :height / 2 - sqrt :radius * :radius - :centerOffsetX * :centerOffsetX
+	localmake "gap1 :height * 0.018
+	localmake "gap2 :height * 0.018
+	localmake "angle1a arcSin :centerOffsetX / :radius
+	localmake "angle1b arcSin (:centerOffsetY + :gap1) / :radius
+	localmake "angle1 90 - :angle1a - :angle1b
+	localmake "angle2a arcSin (:centerOffsetY - :gap2) / :radius
+	localmake "angle2 90 - :angle1a + :angle2a
+	jumpForward :height / 2
+	localmake "center pos
+	setFillColor "#ed0103
+	setPenSize 0
+	repeat 2 [
+		localmake "heading1 :oldHeading + (repcount - 1) * 360 / 2
+		setHeading :heading1
+		jumpRight :height * 0.015
+		localmake "pos1 pos
+		jumpBackward :centerOffsetY
+		jumpLeft :centerOffsetX
+		localmake "center2 pos
+		jumpTo :pos1
+		jumpForward :gap1
+		polyStart
+		jumpForward distanceToCircle :center2 :radius
+		setHeading (towards :center2) - 90
+		arcRight :angle1 :radius
+		polyEnd
+
+		jumpTo :pos1
+		setHeading :heading1
+		jumpBackward :gap2
+		right 180
+		polyStart
+		jumpForward distanceToCircle :center2 :radius
+		setHeading (towards :center2) + 90
+		arcLeft :angle2 :radius
+		polyEnd
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 4
+jumpLeft :separation / 2
+cynetLogo :height
+jumpRight :separation
+stripes :separation :height ["black]
+cynetLogo :height

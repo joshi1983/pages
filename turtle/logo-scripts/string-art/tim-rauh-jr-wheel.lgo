@@ -1,0 +1,52 @@
+; Inspired by a pen on paper drawing at:
+; https://www.facebook.com/share/p/1DJYoyuX75/
+; In case that post becomes inaccessible,
+; it was posted by Tim Rauh Jr.
+to timRauhJrLineArtWheel :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "numPoints 18
+	jumpForward :height / 2
+	localmake "center pos
+	jumpForward :height / 4
+	localmake "prevCenter pos
+	setPenSize :height * 0.001
+	localmake "radius1 (:height - penSize) / 4
+	setLineJoinStyle "round
+	setLineCap "round
+	repeat 6 [
+		jumpTo :center
+		setHeading :oldHeading + 360 * repcount / 6
+		jumpForward :radius1
+		localmake "center1 pos
+		repeat :numPoints [
+			setHeading :oldHeading + 360 * repcount / :numPoints
+			jumpForward :radius1
+			localmake "fromPos pos
+			repeat :numPoints [
+				jumpTo :center1
+				setHeading :oldHeading + 360 * repcount / :numPoints
+				jumpForward :radius1
+				setHeading towards :fromPos
+				localmake "d distanceToCircle :prevCenter :height / 4
+				ifelse (distance :prevCenter) > :radius1 [
+					if :d < 0 [
+						localmake "d distance :fromPos
+					]
+					forward min :d distance :fromPos
+				] [
+					jumpForward :d
+					localmake "d distanceToCircle :center1 :height / 4
+					if :d > 0 [
+						forward :d
+					]
+				]
+			]
+			jumpTo :center1
+		]
+		localmake "prevCenter :center1
+	]
+	setTurtleState :oldState
+end
+
+timRauhJrLineArtWheel 100

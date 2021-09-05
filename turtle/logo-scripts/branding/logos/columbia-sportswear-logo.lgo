@@ -1,0 +1,27 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Columbia_Sportswear#/media/File:Columbia_Sportswear_Co_logo.svg
+to columbiaSportswearLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "width1 :height * 0.352053
+	localmake "height1 :height * 0.169065
+	localmake "size1 :height * 0.1979055
+	localmake "cornerRadius :height * 0.06692985
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	setFillColor "#1987C7
+	repeat 4 [
+		setHeading :oldHeading + repcount * 360 / 4 - 45
+		jumpForward :height * 0.09497475
+		jumpRight :height * 0.192933
+		repeat 2 [
+			roundRect :width1 :height1 :cornerRadius
+			jumpForward :size1
+		]
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+columbiaSportswearLogo 100

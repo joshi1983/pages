@@ -1,0 +1,98 @@
+; Used to represent "datatypes".
+; The 01 and 10 are to represent the binary encoding 
+; at the lowest level for storing any data.
+; The boxes and arrows are to represent data structures 
+; and more specifically linked lists.
+
+to roundedBox :size
+	localmake "oldState turtleState
+	localmake "cornerRadius :size * 0.2
+	localmake "penSize1 :size * 0.1
+	localmake "size_ :size - :penSize1
+	localmake "size1 :size_ / 2 - :cornerRadius
+	localmake "size2 :size_ - :cornerRadius * 2
+	left 90
+	jumpForward :size_ * 0.5
+	right 90
+	jumpForward :size1
+	setFillColor "white
+	polyStart
+	setPenSize :penSize1
+	repeat 4 [
+		arcRight 90 :cornerRadius
+		jumpForward :size2
+	]
+	polyEnd
+	setTurtleState :oldState
+end
+
+to arrowHead :size
+	localmake "oldState turtleState
+	localmake "size1 :size
+	left 90
+	jumpForward :size1 * 0.5
+	setFillColor "black
+	setPenSize 0
+	polyStart
+	repeat 3 [
+		right 120
+		jumpForward :size1
+	]
+	polyEnd
+	setTurtleState :oldState
+end
+
+to arrow2 :size
+	localmake "oldState turtleState
+	localmake "angle 150
+	localmake "arrowHeadSize :size * 0.8
+	localmake "penSize1 :size * 0.2
+	localmake "radius :size
+	setPenSize :penSize1
+	arcRight :angle :radius
+	arrowHead :arrowHeadSize
+	setTurtleState :oldState
+end
+
+to dataTypeIcon :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "oldState turtleState
+	localmake "boxSize :size * 0.47
+	localmake "labels ["01 "10]
+	localmake "labelOffset :size * 0.1
+	localmake "arrowSize :size * 0.19
+
+	right 90
+	jumpBackward :size * 0.765
+	left 90
+	setLineJoinStyle "round
+	setPenSize :size * 0.01
+	setFillColor "black
+	setFontSize :size * 0.3
+	repeat count :labels [
+		roundedBox :boxSize
+		jumpBackward :labelOffset
+		right 90
+		jumpBackward :size * (0.16 + (repcount - 1) * 0.02)
+		label item repcount :labels
+		jumpForward :size * 0.69
+		left 90
+		jumpForward :labelOffset
+	]
+	jumpTo :oldPos
+	setHeading :oldHeading - 69
+	jumpForward :size * 0.75
+	right 68
+	arrow2 :arrowSize
+	jumpTo :oldPos
+	setHeading :oldHeading - 131.5
+	jumpForward :size * 0.41
+	left 48
+	arrow2 :arrowSize
+
+	setTurtleState :oldState
+end
+
+setScreenColor transparent
+dataTypeIcon 32

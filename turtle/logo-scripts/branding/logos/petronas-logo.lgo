@@ -1,0 +1,39 @@
+; Inspired by logo at:
+; https://www.petronas.com
+to petronasLogo :height
+	localmake "oldState turtleState
+	localmake "largeOuterArcRadius 0.3475
+	localmake "arcAngle1 120
+	localmake "outerLen1 0.07315
+	localmake "angle1 -60
+	localmake "outerHeight1 1 - :largeOuterArcRadius * (1 + sin :arcAngle1 - 90)
+	localmake "outerHeight2 :outerHeight1 - :outerLen1 * cos :arcAngle1 - 90
+	localmake "len2 :outerHeight2 / sin :arcAngle1
+	setPenSize 0
+	setFillColor "white
+	drawArcLineShape [0 0
+		[[-90 0] [:arcAngle1 :largeOuterArcRadius]
+		[:outerLen1] [:angle1 0] [:len2] [:arcAngle1 0]
+		[0.405] [10 0.35] [20 0.18] [20 0.12] [10 0.2]
+		[0.45808] [:arcAngle1 :largeOuterArcRadius]]
+	] :height
+	jumpForward :height * :largeOuterArcRadius
+	setFillColor "#00b1a9
+	circle :height * 0.172
+	setPenSize :height * 0.08
+	setPenColor fillColor
+	setLineJoinStyle "round
+	setFillColor transparent
+	jumpForward :height * 0.54
+	localmake "top pos
+	circlePair 0 :height * 0.27 -:height * 0.54
+	jumpTo :top
+	setPenSize :height * 0.079
+	setLineJoinStyle "miter
+	arcLines [[-30 0] [-30 0.05] [-30 0.11] [0.295]
+		[-:arcAngle1 0] [0.38]] :height
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+petronasLogo 100

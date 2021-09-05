@@ -1,0 +1,31 @@
+to drawLines :width :height :lineInfo
+	localmake "oldState turtleState
+	localmake "width1 :width * 0.825
+	localmake "thickness :height * last :lineInfo
+	setFillColor first :lineInfo
+	rect :width1 :thickness
+	jumpLeft :height * 0.19
+	rect :thickness :height
+	setTurtleState :oldState
+end
+
+; Inspired by flag at:
+; https://en.wikipedia.org/wiki/Flag_of_the_Faroe_Islands#/media/File:Flag_of_the_Faroe_Islands.svg
+to faroeIslandsFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 5 / 3
+	localmake "lines [
+		["#005EB8 1 / 4]
+		["#EF3340 1 / 8]
+	]
+	stripes :width :height ["white]
+	jumpForward :height / 2
+	setPenSize 0
+	repeat count :lines [
+		drawLines :width :height item repcount :lines
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+faroeIslandsFlag 100

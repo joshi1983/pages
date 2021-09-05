@@ -1,0 +1,114 @@
+make "midHeightFactor 0.965
+make "middleHeightFactor 0.643
+
+to drawF :height
+	localmake "oldState turtleState
+	localmake "bottomGap :height * 0.035
+	localmake "leftHeight :height - :bottomGap
+	localmake "leftOffset :height * 0.157
+	localmake "leftThickness :height * 0.255
+	localmake "topThickness :height * 0.215
+	localmake "middleWidth :height * 0.338
+	jumpForward :bottomGap
+	jumpLeft :leftOffset
+	stripes :leftThickness :leftHeight [fillColor] 
+	jumpForward :leftHeight - :topThickness
+	jumpRight :leftOffset
+	stripes :leftOffset * 2 + :leftThickness :topThickness [fillColor]
+	jumpBackward :height * 0.345
+	jumpLeft (:leftOffset - :middleWidth) / 2
+	stripes :middleWidth :height * 0.207 [fillColor]
+	setTurtleState :oldState
+end
+
+to drawE :height
+	drawArcLineShape [-0.124 0.298
+		[[-90 0] [0.47] [81.5 0] [50 0.35] [30 0.29] [45 0.4]
+		[50 0.32] [50 0.348] [60 0.35] [30 0.4] [36.5 0.278]
+		[107 0] [0.22] [66 0] [-30 0.08] [-60 0.133] [-66.5 0.135]
+		[0.1] [-55 0.15] [-30 0.1] [-20 0.15] [-32 0.11] [-35.5 0.12]
+		[-97 0] [0.3]
+		]
+	] :height
+end
+
+to drawD :height
+	localmake "oldState turtleState
+	localmake "rightHeight :height * :midHeightFactor
+	drawArcLineShape [-0.06 0
+		[[90 0] [-35 0.28] [-30 0.34] [-60 0.37] [-40 0.3] [-30 0.3]
+		[-60 0.22] [0.17] [-104 0] [0.095] [-90 0] [20 0.23] [25 0.13]
+		[60 0.122] [40 0.125] [60 0.195] [40 0.15] [30 0.1] [30 0.14]
+		[25 0.1] [27 0.2] [0.025] [-199 0.05] [0.25] [-12 0] [-50 0.223]]
+	] :height
+	jumpRight :height * 0.245
+	jumpForward :height - :rightHeight
+	stripes :height * 0.225 :rightHeight [fillColor]
+	setTurtleState :oldState
+end
+
+to drawBigE :height
+	localmake "oldState turtleState
+	localmake "width :height * 0.535
+	localmake "thickness :height * 0.21
+	localmake "leftThickness :height * 0.22
+	localmake "height1 :height * :midHeightFactor
+	localmake "bottomGap :height - :height1
+	localmake "middleThickness :height * 0.197
+	localmake "separation :height1 - :thickness
+	jumpForward :height - :height1
+	localmake "startPos pos
+	repeat 2 [
+		stripes :width :thickness [fillColor]
+		jumpForward :separation
+	]
+	jumpTo :startPos
+	jumpLeft (:width - :leftThickness) / 2
+	stripes :leftThickness :height1 [fillColor]	
+
+	jumpTo :startPos
+	jumpForward :height * :middleHeightFactor - :middleThickness - :bottomGap
+	stripes :width :middleThickness [fillColor]
+	setTurtleState :oldState
+end
+
+to drawX :height
+	localmake "oldState turtleState
+	localmake "bottomGap :height * (1 - :midHeightFactor)
+	localmake "height1 :height * :middleHeightFactor - :bottomGap
+	localmake "thickness :height * 0.28
+	localmake "angle 42
+	localmake "slantedLength :height1 / cos :angle
+	localmake "xOffset :height1 / 2 * tan :angle
+	jumpForward :bottomGap
+	localmake "center2 pos
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		jumpRight :sign * :xOffset
+		parallelogram :thickness :slantedLength -:angle * :sign
+		jumpTo :center2
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://en.wikipedia.org/wiki/FedEx#/media/File:FedEx_Corporation_-_2016_Logo.svg
+to fedexLogo :height
+	localmake "oldState turtleState
+	jumpLeft :height * 1.35
+	setPenSize 0
+	setFillColor "#652c8f
+	drawF :height
+	jumpRight :height * 0.56
+	drawE :height
+	jumpRight :height * 0.69
+	drawD :height
+	jumpRight :height * 0.625
+	setFillColor "#f60
+	drawBigE :height
+	jumpRight :height * 0.6813
+	drawX :height
+	setTurtleState :oldState
+end
+
+fedexLogo 100

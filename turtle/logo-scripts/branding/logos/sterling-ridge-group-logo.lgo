@@ -1,0 +1,29 @@
+; Inspired by logo at:
+; https://www.sterlingridgegroup.com/
+to sterlingRidgeGroupLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "gap :height * 0.02
+	localmake "colors ["#01783f "#74bc1f "#00a0e0 "#0033a0 ]
+	localmake "angle1 180 / count :colors
+	localmake "centralGap :gap / 2 / sin :angle1
+	localmake "triangleSideLength :height / 2 - :centralGap * cos :angle1
+	localmake "triangleWidth :triangleSideLength * 2 * sin :angle1
+	localmake "triangleHeight :triangleWidth / 2 / tan :angle1
+	localmake "len1 :triangleHeight + :centralGap
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	repeat count :colors [
+		setHeading :oldHeading + (repcount + 0.5) * 360 / count :colors
+		setFillColor item repcount :colors
+		jumpForward :len1
+		right 180
+		isoTriangle :triangleWidth :triangleHeight		
+		jumpTo :center
+	]
+
+	setTurtleState :oldState
+end
+
+sterlingRidgeGroupLogo 100

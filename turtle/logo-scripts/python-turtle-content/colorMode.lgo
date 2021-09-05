@@ -1,0 +1,24 @@
+; Start of colormode-related code
+; This code was added to translate some colors from their Python Turtle usage
+; into WebLogo.
+; Consider adjusting your code to stop relying on them 
+; so this can be removed.
+make "colorModeScaleFactor 255
+
+; colormode sets a scale factor to be used by convertColorUsingMode.
+; This is similar to the colormode function
+; in Python's turtle package
+to colorMode :num
+	make "colorModeScaleFactor 255 / :num
+end
+
+; convertColorUsingMode is to be called on any color 
+; that might be a list before the value goes into commands like 
+; setPenColor, setFillColor, setColors...
+to convertColorUsingMode :color
+	if and 1 <> :colorModeScaleFactor list? :color [
+		output vectorScale :color :colorModeScaleFactor
+	]
+	output :color
+end
+; END OF colormode-related code

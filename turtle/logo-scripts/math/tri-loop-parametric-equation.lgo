@@ -1,0 +1,39 @@
+; Inspired by parametric equation on page 179
+; of a book called:
+; 科学技术文献出版社重庆分社 - 中华机LOGO语言
+; Google Translate translated that title to:
+; Chongqing Branch of Science and Technology Literature Publishing House - China Machine LOGO Language
+;
+; You can read the book in electronic form at:
+; https://archive.org/details/science-and-technology-literature-publishing-house-chongqing-branch-chinese-machine-logo-language/page/178/mode/2up
+make "scale 100
+setFillColor "red
+
+; Use more maximum repeat count if you want
+; to sample more points and get a more accurate curve.
+; The main drawback would be that it gets slower.
+; Exports to SVG, PDF, and PostScript will also be larger files, if you sample more points.
+repeat 100 [
+	make "p 360 * repRatio ; p will range from 0 to 360
+	; because repRatio ranges from 0 to 1.
+
+	; Calculate the coordinates of the point using parametric equations.
+	make "x :scale * (cos 3 * :p) * cos :p
+	make "y :scale * (cos 3 * :p) * sin :p
+	make "newPos [:x :y]
+
+	; if not the first iteration of the loop
+	ifelse repcount <> 1 [
+		setHeading towards :newPos
+		setPenSize 1
+		; connect the points using straight lines to approximate 
+		; where the curve would go if we had more points.
+		forward distance :newPos
+	] [
+		; for first iteration, jump to the point without drawing a line.
+		jumpTo :newPos
+	]
+	setPenSize 0.2
+	; Mark the point with a circle.
+	circle 2
+]

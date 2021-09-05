@@ -1,0 +1,28 @@
+<code>; myPolygon procedure works similar to the polygon command if the points are only for 2D graphics.
+; myPolygon won't work well with arbitrary 3D points, though.
+; Nevertheless, reviewing this could help you understand the polygon command.
+; It can also help help you implement similar procedures that work slightly differently if you don't like
+; how the polygon command works.
+to myPolygon :points
+	localmake "oldState turtleState
+	jumpTo first :points
+	polyStart
+	for ["i 2 count :points] [
+		localmake "p item :i :points
+		setHeading towards :p
+		jumpForward distance :p
+	]
+	polyEnd
+	setTurtleState :oldState
+end
+
+polygon [[0 0] [100 0] [50 100]]
+; Draws a triangle</code>
+<code>polygon [[0 0] [100 0] [50 100]]
+; Draws a triangle with a horizontal base at y=0.
+; The triangle is isoscelese with a height of 100.
+; The top point is [50 100].
+
+setFillColor "red
+polygon [[100 0] [100 100] [200 100] [200 0]]
+; Draws a red square</code>

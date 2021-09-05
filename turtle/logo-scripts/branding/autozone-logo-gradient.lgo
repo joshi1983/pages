@@ -1,0 +1,37 @@
+; Inspired by logo at
+; https://www.autozone.com
+to autoZoneLogoGradient :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "angle 29.645
+	localmake "slantedHeight :height / cos :angle
+	localmake "parallelograms [
+		[1.4907 0.0335]
+		[1.303 0.07]
+		[1.085 0.12]
+		[0.833 0.189]
+		[0.519 0.3]
+		[0.112 0.395]
+		[-0.374 0.48]
+	]
+	setPenSize 0
+	setFillColor "#F37F00
+	repeat count :parallelograms [
+		localmake "parallelogramInfo item repcount :parallelograms
+		localmake "width :height * last :parallelogramInfo
+		jumpRight :height * first :parallelogramInfo
+		parallelogram :width :slantedHeight :angle
+		jumpTo :oldPos
+	]
+	jumpLeft :height * 0.65393
+	right :angle
+	polyStart
+	jumpForward :slantedHeight
+	left :angle
+	jumpLeft :height * 2.01
+	jumpBackward :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+autoZoneLogoGradient 100

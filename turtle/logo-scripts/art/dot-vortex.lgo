@@ -1,0 +1,31 @@
+; Inspired by
+; https://publicdomainvectors.org/en/free-clipart/Dot-vortex/40992.html
+to dotVortex :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "numAngles 45
+	localmake "angle 144.5
+	localmake "maxCircleSize :height * 0.0193
+	localmake "radius :height * 0.5
+	localmake "radius1 :radius - :maxCircleSize
+	localmake "numCircleSizes 30
+	jumpForward :radius
+	localmake "center pos
+	setPenSize 0
+	setFillColor "black
+	repeat :numAngles [
+		setHeading :oldHeading + (repcount - 0.4) * 360 / :numAngles
+		jumpForward :radius1
+		left :angle
+		localmake "circleRadius :maxCircleSize
+		repeat :numCircleSizes [
+			circle :circleRadius
+			jumpForward :circleRadius * 2.01
+			localmake "circleRadius :circleRadius * 0.9
+		]
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+dotVortex 100

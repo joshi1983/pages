@@ -1,0 +1,27 @@
+; Inspired by logo at:
+; https://docs.searxng.org
+to searXNGLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "largeRadius :height * 0.33
+	setPenSize :height * 0.12
+	setPenColor "#3050ff
+
+	jumpLeft :height * 0.12
+	localmake "leftPos pos
+	jumpForward :height - :largeRadius - penSize / 2
+	setFillColor transparent
+	circle :largeRadius
+	setLineCap "butt
+	setPenSize :height * 0.055
+	right 153
+	arc 143 :height * 0.2
+	setHeading :oldHeading + 135
+	jumpForward :largeRadius
+	setPenSize :height * 0.21
+	forward (distanceToLine :oldPos :leftPos) - penSize / 2
+	setTurtleState :oldState
+end
+
+searXNGLogo 100

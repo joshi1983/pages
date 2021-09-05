@@ -1,0 +1,25 @@
+EXTERNAL
+
+SUB Column (l$(), a$)
+
+    ! This routine assumes the current file is result of
+    ! a Files command, perhaps obtained through Echo.
+    ! Constructs a single-column list that can be used
+    ! to construct script files.
+
+    LIBRARY "{WB_c}WBcolumn.trc"
+
+    WHEN EXCEPTION IN
+         CALL WB_column (l$(), a$)
+         PRINT "Done with column."
+    USE
+         IF extype = 1 then
+            PRINT extext$
+         ELSE
+            PRINT extype, extext$
+            PRINT exline$
+            PRINT "Error in Column."
+         END IF
+    END WHEN
+
+END SUB

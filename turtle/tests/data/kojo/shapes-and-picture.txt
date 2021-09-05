@@ -1,0 +1,36 @@
+// copied from: https://docs.kogics.net/concepts/computing-essentials.html#an-example
+clear()
+drawStage(ColorMaker.black)
+val cb = canvasBounds
+
+class Shape(xOffset: Int, yOffset: Int) {
+    val pic = Picture {
+        setFillColor(red)
+        repeat(4) {
+            forward(40)
+            right(90)
+        }
+    }
+    pic.setPosition(cb.x + xOffset, cb.y + yOffset)
+    var vel = Vector2D(2, 10)
+    val gravity = Vector2D(0, -0.2)
+
+    def draw() {
+        pic.draw()
+    }
+
+    def step() {
+        vel = vel + gravity
+        pic.translate(vel)
+        if (pic.collidesWith(stageBorder)) {
+            vel = bouncePicVectorOffStage(pic, vel)
+        }
+    }
+}
+
+val shape = new Shape(20, 20)
+shape.draw()
+
+animate {
+    shape.step()
+}

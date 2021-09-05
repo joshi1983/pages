@@ -1,0 +1,33 @@
+; Inspired by logo at:
+; https://www.treatmyocd.com
+to treatMyOcdLogo :height
+	localmake "oldState turtleState
+	localmake "radius :height * 0.1
+	localmake "height1 :height - :radius * 2
+	setPenSize 0
+	jumpForward :radius
+	setFillColor "#ff5d47
+	circle :radius
+	jumpForward :height1
+	circle :radius
+	jumpBackward :height1 / 2
+	localmake "center pos
+	jumpLeft :height1 / 2
+	repeat 3 [
+		circle :radius
+		jumpRight :height1 / 2
+	]
+	setFillColor "#00a3ad
+	jumpTo :center
+	right 45
+	repeat 4 [
+		jumpForward :height1 / 2 * cos 45
+		circle :radius
+		right 360 / 4
+		jumpTo :center
+	]
+	
+	setTurtleState :oldState
+end
+
+treatMyOcdLogo 100

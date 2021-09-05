@@ -1,0 +1,24 @@
+EXTERNAL                          ! 1992/12/05
+
+SUB Man (l$(), c$)
+
+    ! This routine imitates the Unix man command.
+
+    ! SUB WB_man (c$)
+
+    LIBRARY "{WB_c}WButilit.trc"
+
+    WHEN EXCEPTION IN
+         CALL WB_man (c$)
+         PRINT "Done with Man."
+    USE
+         IF extype = 1 then
+            PRINT extext$
+         ELSE
+            PRINT extype, extext$
+            PRINT exline$
+            PRINT "Error in Man."
+         END IF
+    END WHEN
+
+END SUB

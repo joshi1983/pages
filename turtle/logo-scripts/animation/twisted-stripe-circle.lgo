@@ -1,0 +1,53 @@
+; Inspired by images at:
+; https://www.alancsmith.co.uk/logo/svgs.html
+to twistedStripeCircle :height :timeRatio
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "numStripes 64
+	localmake "numRadii 6
+	localmake "delta 180 / 2 / :numStripes
+	localmake "twist 10 * sin 360 * :timeRatio
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	setFillColor "black
+	repeat :numStripes [
+		localmake "startHeading :oldHeading + repcount * 360 / :numStripes
+		localmake "points1 []
+		localmake "points2 []
+		repeat :numRadii [
+			localmake "radius :height / 2 * mix 1 0.1 repRatio
+			localmake "startHeading2 :startHeading + :twist * sign (remainder repcount 2) - 0.5
+			setHeading :startHeading2 - :delta
+			jumpForward :radius
+			queue2 "points1 pos
+			jumpTo :center
+			setHeading :startHeading2 + :delta
+			jumpForward :radius
+			queue2 "points2 pos
+			jumpTo :center
+		]
+		localmake "points combine :points1 reverse :points2
+		polygon :points
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+make "timeRatio interpolateRatio easeInOut animation.clampedTimeRatio
+twistedStripeCircle 100 :timeRatio
+
+to animation.snapshotstyle
+	output createPList2 [
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 5
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+		["thumbnailTime 1]
+	]
+end

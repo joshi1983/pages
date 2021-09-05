@@ -1,0 +1,142 @@
+ setfps 60
+
+
+; Smooth Scroll Register
+    ScrollX  = 0      
+
+;  Block Size
+  BlockSize = 8
+
+; Create a map with some randomly shaded tiles      
+  ThisMap    = CreateDemoMap(BlockSize,BlockSize)
+  
+  Width        = (GetScreenWidth() /  BlockSize) +2
+  Height        = (GetScreenHeight() /  (BlockSize)) +2
+  
+  ScrollingLevel = NewLevel(ThisMap,Width,Height)
+  
+  ; prefill the existing maps tile 
+  for xlp =0 to GetLevelWidth(ThisMap,ScrollingLevel)
+      SeedScroll(ThisMap,ScrollingLevel,xlp)
+    next  
+
+
+    Dim Remap(255)
+    For lp=0 to 255
+        remap(lp) = (lp+3) and 255
+    next
+
+  
+; -----------------------------------------------
+; Start of Do/Loop
+; -----------------------------------------------
+  Do
+    
+      ; Clear the screen
+      ;  Cls RGB(30,50,20)
+
+    ;    inkmode 1+8
+
+      ; Draw Level #2 of MyMap to 100x,100y
+        DrawMap ThisMap,ScrollingLevel,0-ScrollX,0
+
+      ScrollX++
+      if ScrollX>=GetMapBlockWidth(ThisMap)
+
+            ;  Shift all the tiles in this level to the left by
+            ; 1 tile        
+        ScrollLevel ThisMap,ScrollingLevel,-1,0
+            
+        ; Render some tiles down the right hand edge of the 
+        ; the map.  So it appears to be scrolling
+            x =GetLevelWidth(THisMap,ScrollingLevel)
+            SeedScroll(ThisMap,ScrollingLevel,X)
+            ScrollX=0
+    endif
+
+
+    for ylp=0 to GetLevelHeight(ThisMap,ThisLevel)
+        for xlp=0 to GetLevelWidth(ThisMap,ThisLevel)
+                Tile=peekleveltile( ThisMap,ThisLevel,Xlp,Ylp)
+                Tile=Remap(Tile and 255)
+                pokeleveltile ThisMap,ThisLevel,Xlp,Ylp,Tile
+        next
+    next
+
+
+    
+  ; Display a Message
+    text 10,10, "Classic 8/16bit Smooth Scrolling Example"
+    
+  ; Display the screen and loop back to the DO
+    Sync
+
+  Loop spacekey()
+
+
+Function SeedScroll(ThisMap,ThisLEvel,Xpos)
+
+    Static OffsetAngle#
+  OffsetAngle#    =wrapangle(OffsetAngle#+10)
+    
+  Blocks            = GetMapBlocks(ThisMap)
+  for ylp =0 to GetLevelheight(ThisMap,ThisLevel)
+      Block =ylp+(sin(OffsetAngle#) * (Blocks*0.5) )  
+      pokeleveltile  ThisMap,ThisLevel,Xpos,ylp,abs(mod(block,Blocks))
+  next
+EndFunction
+
+
+
+Function CreateDemoMap(BlockWidth,BlockHeight)
+    
+    ; Create a map with provision for 5 levels
+  ThisMap=NewMap(5)
+
+    Blocks = 256
+  
+; Create some empty graphics blocks for MyMAP
+  CreateMapGFX  ThisMap,BlockWidth,BlockHeight,Blocks,RGB(0,0,0)
+
+  ThisRGB2 = $334455
+  ThisRGB2=$ffee70
+
+
+    AngleScale#= 360.0/ Blocks 
+    
+; Create randomly colours block for MyMap
+  For lp=0 To Blocks-1
+
+        scale# = 0.5 + (cos(lp*AngleScale#)*0.45)
+        
+        ThisRGB = RgbAlphaBlend( ThisRGB1,ThisRGB2, Scale#*100)
+
+      ; draw a randomly coloured box
+        BoxC 0,0,BlockWidth-1,BlockHeight-1,1,ThisRGB
+
+          ; Copy the box image into MyMap block
+        GetMapBlk ThisMap, lp, 0,0
+  Next
+  
+    PrepareFxMap  ThisMap  
+
+
+EndFunction ThisMap
+    
+
+
+
+
+Function ScrollLevel(ThisMap,ThisLevel,DirectionX,DirectionY)
+        if GetMapStatus(ThisMap)=false                    then exitfunction
+        if GetLevelStatus(ThisMap,ThisLevel)=false    then exitfunction
+    
+        local w=GetLevelWidth(ThisMap,ThisLevel)
+        local h=GetLevelHeight(ThisMap,ThisLevel)
+
+        local TempLevel =GetFreeMapLevel(ThisMap)
+        CloneLEvel ThisMap    ,ThisLevel    ,ThisMap    ,TempLevel
+        CopyLevel ThisMap,TempLevel,0,0,w,h,ThisMap,ThisLEvel,DirectionX,DirectionY
+        deletelevel ThisMap,TempLevel    
+    
+ENdFunction 

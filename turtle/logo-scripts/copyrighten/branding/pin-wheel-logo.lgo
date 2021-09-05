@@ -1,0 +1,55 @@
+; This logo was removed from logo-scripts/branding/various-logos.lgo because
+; it looked at too much risk of copyright conflict.
+; The site https://logoisus.com/product/pinwheel-logo/
+; was selling its exclusive use.
+; If it gets sold and used by a company, it should become a great WebLogo example.
+; Until then, it seems important to avoid having WebLogo users copy and 
+; try to use it as a company logo.
+
+; Inspired by
+; https://www.pinterest.ca/pin/726557352374422509/
+to pinWheelLogo :size
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "size1 :size / 3
+	localmake "size2 :size1 / cos 45
+	localmake "size3 :size2 * 0.5
+	localmake "colors ["#1800B3 "#A30096]
+	setPenSize 0
+	repeat 4 [
+		localmake "heading1 :oldHeading + repcount * 360 / 4
+		setHeading :heading1
+		setFillColor item 1 + (remainder repcount 2) :colors
+		polyStart
+		jumpForward :size1
+		left 45
+		jumpForward :size2
+		localmake "pos1 pos
+		right 90
+		jumpForward :size2
+		right 45
+		jumpForward :size1
+		right 135
+		jumpForward :size2
+		left 90
+		jumpForward :size2
+		polyEnd
+		jumpTo :pos1
+		setHeading :heading1
+		jumpLeft :size1
+		right 135
+		polyStart
+		repeat 3 [
+			jumpForward :size3
+			right 90
+		]
+		polyEnd
+
+		jumpTo :oldPos
+	]
+
+	setTurtleState :oldState
+end
+
+pinWheelLogo 100

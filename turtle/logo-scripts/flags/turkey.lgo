@@ -1,0 +1,174 @@
+make "turkeyRed "#E30A17
+
+; Built from construction sheet at
+; https://en.wikipedia.org/wiki/Flag_of_Turkey
+to turkeyFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 3 / 2
+	localmake "F :height / 2
+	localmake "E :height / 3
+	localmake "D :height * 2 / 5
+	localmake "C :height / 16
+	localmake "B :height / 4
+	setPenColor :turkeyRed
+	setPenSize :width
+	setLineCap "butt
+	forward :height
+	setPenSize 0
+	setFillColor "white
+	jumpBackward :height / 2
+	jumpLeft :width / 2 - :height / 2
+	circle :F / 2
+	jumpRight :C
+	setFillColor :turkeyRed
+	circle :D / 2
+	jumpRight :E + :B / 2 - :D / 2
+	setFillColor "white
+	left 90
+	isotoxalStar :B / 2 :B * 0.191 5
+	setTurtleState :oldState
+end
+
+to verticalFormTurkeyFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 6 / 15
+	setPenSize :width
+	setPenColor :turkeyRed
+	setLineCap "butt
+	forward :height
+	jumpBackward :width * 3 / 4
+	jumpLeft :width / 2
+	right 90
+	turkeyFlag :width
+	setTurtleState :oldState
+end
+
+to cockadeArcInfo :chordLength
+	localmake "arcAngle1 27
+	localmake "arcAngle2 30
+	localmake "arcAngle3 20
+	localmake "arcAngle4 180 - (:arcAngle1 + :arcAngle2 + :arcAngle3) * 2
+	localmake "arcRadius1 :chordLength * 0.12
+	localmake "arcRadius2 :chordLength * 0.25
+	localmake "arcRadius3 :chordLength * 0.88
+	localmake "arcRadius4 :chordLength * 0.52902
+	output [
+		[:arcAngle1 :arcRadius1]
+		[:arcAngle2 :arcRadius2] 
+		[:arcAngle3 :arcRadius3]
+		[:arcAngle4 :arcRadius4]
+	]
+end
+
+to cockadeArc :chordLength
+	localmake "oldHeading heading
+	localmake "arcInfo cockadeArcInfo :chordLength
+	localmake "numArcs1 (count :arcInfo) - 1
+	repeat count :arcInfo [
+		localmake "arcInfo1 item repcount :arcInfo
+		localmake "angle item 1 :arcInfo1
+		localmake "arcRadius item 2 :arcInfo1
+		arcRight :angle :arcRadius
+	]
+	repeat :numArcs1 [
+		localmake "arcInfo1 item (:numArcs1 + 1 - repcount) :arcInfo
+		localmake "angle item 1 :arcInfo1
+		localmake "arcRadius item 2 :arcInfo1
+		arcRight :angle :arcRadius
+	]
+	setHeading :oldHeading
+end
+
+
+to halfArc :chordLength
+	localmake "arcInfo cockadeArcInfo :chordLength
+	localmake "numArcs1 (count :arcInfo) - 1
+	localmake "middleArcInfo item (count :arcInfo) :arcInfo
+	localmake "angle item 1 :middleArcInfo
+	localmake "arcRadius item 2 :middleArcInfo
+	arcRight :angle / 2 :arcRadius
+	repeat :numArcs1 [
+		localmake "arcInfo1 item (:numArcs1 + 1 - repcount) :arcInfo
+		localmake "angle item 1 :arcInfo1
+		localmake "arcRadius item 2 :arcInfo1
+		arcRight :angle :arcRadius
+	]
+end
+
+to cockadeBubbleInfo :diameter
+	localmake "numAngles 24
+	localmake "size1 :diameter * 0.965
+	localmake "size2 :diameter / 2 - (:diameter - :size1)
+	localmake "chordSize1 :size2 * 2 * tan 180 / :numAngles
+	output [:numAngles :size1 :chordSize1]
+end
+
+to cockadeBubble :diameter
+	localmake "oldState turtleState
+	localmake "cockadeInfo cockadeBubbleInfo :diameter
+	localmake "numAngles item 1 :cockadeInfo
+	localmake "size1 item 2 :cockadeInfo
+	localmake "chordSize1 item 3 :cockadeInfo
+	jumpForward :size1 - :diameter / 2 
+	jumpLeft :chordSize1 / 2
+	polyStart
+	repeat :numAngles [
+		cockadeArc :chordSize1
+		right 360 / :numAngles
+	]
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Turkey#/media/File:National_Cockade_of_Turkey.svg
+; Notice that the copyright terms from Author Tibetan Pop Rocks wants
+; attribution with any copy.
+; In general, check any commented links for copyright conditions
+; from WebLogo examples before copying or deriving your own work.
+to nationalCockadeOfTurkey :diameter
+	localmake "oldState turtleState
+	localmake "radius :diameter / 2
+	localmake "shadeColor "#2000
+	localmake "circleRadius1 :diameter * 0.1666
+	localmake "cockadeInfo cockadeBubbleInfo :diameter
+	localmake "numAngles item 1 :cockadeInfo
+	localmake "chordSize1 item 3 :cockadeInfo
+	setPenSize 0
+	jumpForward :radius
+	localmake "center pos
+	setFillColor :turkeyRed
+	cockadeBubble :diameter
+	setFillColor "white
+	cockadeBubble :diameter * 2 / 3
+
+	setFillColor :shadeColor
+	repeat :numAngles [
+		localmake "heading1 heading
+		jumpForward :radius
+		right 90
+		polyStart
+		halfArc :chordSize1
+		setHeading towards :center
+		jumpForward distance :center
+		polyEnd
+		setHeading :heading1 + 360 / :numAngles
+	]
+
+	setFillColor :turkeyRed
+	setPenColor :shadeColor
+	circle :circleRadius1
+	setPenSize :diameter * 0.016605
+	circle :circleRadius1 - penSize / 2
+	
+	setTurtleState :oldState
+end
+
+make "size 100
+make "separation :size * 3
+jumpLeft :separation
+turkeyFlag :size
+jumpRight :separation
+verticalFormTurkeyFlag :size
+jumpRight :separation
+nationalCockadeOfTurkey :size

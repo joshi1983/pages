@@ -1,0 +1,14 @@
+to qbCircle5 :coords :radius :color :startAngleRadians :endAngleRadians
+	localmake "oldState turtleState
+	jumpTo [first :coords -last :coords]
+	setPenColor :color
+	ifelse :endAngleRadians - :startAngleRadians >= pi * 2 [
+		circle :radius
+	] [
+		localmake "deltaDegrees (:endAngleRadians - :startAngleRadians) * 180 / pi
+		localmake "startAngleDegrees :startAngleRadians * 180 / pi
+		setHeading :startAngleDegrees + 90
+		arc :deltaDegrees :radius
+	]
+	setTurtleState :oldState
+end

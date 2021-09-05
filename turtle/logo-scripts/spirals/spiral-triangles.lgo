@@ -1,0 +1,76 @@
+make "colors ["pink "red "orange "yellow "lime "aqua "purple]
+
+to trianglesLine :triangleWidth :numTriangles :directionSign :colorIndex
+	localmake "triangleHeight :triangleWidth / 2
+	repeat :numTriangles [
+		repeat 2 [
+			localmake "colorIndex 1 + remainder :colorIndex count :colors
+			setFillColor item :colorIndex :colors
+
+			isoTriangle :triangleWidth :triangleHeight
+			jumpForward :triangleHeight
+			jumpLeft :directionSign * :triangleWidth / 2 * -sign repcount - 1.5
+			right 180
+		]
+	]
+	localmake "colorIndex 1 + remainder :colorIndex count :colors
+	setFillColor item :colorIndex :colors
+	isoTriangle :triangleWidth :triangleHeight
+
+	output :colorIndex
+end
+
+to drawSpiralArm :triangleWidth
+	localmake "oldState turtleState
+	localmake "triangleHeight :triangleWidth / 2
+	localmake "numTriangleOffsets [1 2 0 0]
+	localmake "numTriangles 0
+	jumpLeft :triangleWidth / 2
+	localmake "colorIndex 0
+	repeat 4 [
+		localmake "colorIndex trianglesLine :triangleWidth :numTriangles 1 :colorIndex
+		jumpForward :triangleHeight
+		jumpLeft :triangleWidth / 2
+		right 90
+		localmake "numTriangles :numTriangles + item repcount :numTriangleOffsets
+	]
+	right 90
+	localmake "colorIndex 1 + remainder :colorIndex count :colors
+	setFillColor item :colorIndex :colors
+	isoTriangle :triangleWidth :triangleHeight
+	setTurtleState :oldState
+end
+
+; Inspired by hand drawing at:
+; https://www.pinterest.ca/pin/688417493075950664/
+to triangleSpiral :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	setPenSize :height * 0.01
+	localmake "triangleWidth (:height - penSize) / 5 * cos 45
+	jumpForward :height / 2
+	localmake "center pos
+	setPenColor "black
+	setLineJoinStyle "round
+	setLineCap "round
+	repeat 4 [
+		localmake "heading1 :oldHeading + (repcount + 0.5) * 360 / 4
+		setHeading :heading1
+		drawSpiralArm :triangleWidth
+		jumpForward :triangleWidth * 3.5
+		if even? repcount [
+			jumpLeft :triangleWidth * 2
+		]
+		jumpRight :triangleWidth
+		trianglesLine :triangleWidth 2 sign (remainder repcount 2) - 0.5 1
+		jumpTo :center
+		setHeading :heading1
+		jumpForward :triangleWidth * 4.5
+		setFillColor first :colors
+		isoTriangle :triangleWidth :triangleWidth / 2
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+triangleSpiral 100

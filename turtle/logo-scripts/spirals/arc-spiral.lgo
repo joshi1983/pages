@@ -1,0 +1,39 @@
+; Inspired by:
+; https://www.pinterest.ca/pin/649503577514729742/
+
+make "color1 "#fff
+make "color2 "#08f
+
+to spiral :size
+	localmake "arcAngle 130
+	localmake "angleDelta 2.5
+	localmake "angle -90 - :angleDelta
+	localmake "prevPos []
+	; loop from full size down to a size
+	; tiny enough that it is barely visible.
+	while :size > 0.5 [
+		localmake "x :size * cos :angle
+		localmake "y :size * sin :angle
+		localmake "size1 :size / sin (:arcAngle / 2)
+		setPenSize :size * 0.005
+		jumpTo [:x :y]
+		; if 1 iteration already completed, 
+		; we'll have a usable previous position.
+		if (count :prevPos) > 0 [
+			setHeading (towards :prevPos)
+			right 48.6
+			setPenColor :color1
+			arcRight :arcAngle :size1
+			right 180 - :arcAngle
+			setPenColor :color2
+			arcRight :arcAngle :size1
+		]
+		localmake "prevPos [:x :y]
+
+		localmake "angle :angle + :angleDelta
+		localmake "size :size * 0.98
+	]
+end
+
+setScreenColor "black
+spiral 100

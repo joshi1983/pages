@@ -1,0 +1,44 @@
+to texasStripes :height :blueSideSign
+	localmake "width :height * 3 / 2
+	localmake "blueWidth :height / 2
+	stripes :width :height ["#BF0D3E "white]
+	jumpLeft :blueSideSign * (:width - :blueWidth) / 2
+	stripes :blueWidth :height ["#00205B]
+	jumpForward :height / 2
+	texasStar :height
+end
+
+to texasStar :flagHeight
+	localmake "starSize :flagHeight * 0.1875
+	setPenSize 0
+	setFillColor "white
+	regularStar :starSize 5
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Texas#/media/File:Flag_of_Texas.svg
+to texasFlag :height
+	localmake "oldState turtleState
+	texasStripes :height 1
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://upload.wikimedia.org/wikipedia/commons/c/c1/Flag_of_Texas_%28proper_vertical_display%29.svg
+to texasFlagVertical :height
+	localmake "oldState turtleState
+	localmake "width :height * 2 / 3
+	jumpRight :width / 2
+	jumpForward :height / 2
+	left 90
+	texasStripes :width -1
+	setTurtleState :oldState
+end
+
+setScreenColor "#eee
+make "height 100
+make "separation :height * 5
+jumpLeft :separation / 2
+texasFlag :height
+jumpRight :separation
+texasFlagVertical :height

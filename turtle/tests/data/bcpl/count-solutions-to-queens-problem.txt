@@ -1,0 +1,29 @@
+GET "LIBHDR"
+
+GLOBAL $(
+	COUNT: 200
+	ALL: 201
+$)
+
+LET TRY(LD, ROW, RD) BE
+	TEST ROW = ALL THEN
+		COUNT := COUNT + 1
+	ELSE $(
+		LET POSS = ALL & ~(LD | ROW | RD)
+		UNTIL POSS = 0 DO $(
+			LET P = POSS & -POSS
+			POSS := POSS - P
+			TRY(LD + P << 1, ROW + P, RD + P >> 1)
+		$)
+	$)
+
+LET START() = VALOF $(
+	ALL := 1
+	FOR I = 1 TO 12 DO $(
+		COUNT := 0
+		TRY(0, 0, 0)
+		WRITEF("%I2-QUEENS PROBLEM HAS %I5 SOLUTIONS*N", I, COUNT)
+		ALL := 2 * ALL + 1
+	$)
+	RESULTIS 0
+$)

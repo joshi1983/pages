@@ -1,0 +1,81 @@
+to leaf :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "oldPenSize penSize
+	localmake "maxSize :height
+	localmake "minSize :height * 0.01
+	localmake "numGroups 5
+	localmake "numLines 5
+	localmake "arcsInfo [
+		[170 0] [-45 0.32] [-3 2.35]  [3 2.35] [90 0.2]
+	]
+	localmake "angle 10
+	setPenSize 0
+	setFillColor "white
+	jumpForward :height
+	polyStart
+	arcLines :arcsInfo :height
+	setHeading towards :oldPos
+	localmake "outerRadius distance :oldPos
+	jumpForward :outerRadius
+	left 90
+	jumpForward :outerRadius
+	left :angle
+	arcLines reverse :arcsInfo :height
+	polyEnd
+	setLineCap "round
+	setLineJoinStyle "round
+	setPenSize :oldPenSize
+	jumpTo :oldPos
+	setHeading :oldHeading
+	repeat :numGroups [
+		localmake "outerSize mix :maxSize :minSize repcount / :numGroups
+		localmake "innerSize mix :maxSize :minSize (repcount - 0.75) / :numGroups
+		setPenSize :oldPenSize * 3
+		repeat :numLines [
+			localmake "size mix :innerSize :outerSize repRatio
+			jumpForward :size
+			localmake "pos1 pos
+			arcLines :arcsInfo :size
+			jumpTo :pos1
+			setHeading :oldHeading
+			arcLines :arcsInfo -:size
+			jumpTo :oldPos
+			setHeading :oldHeading
+			setPenSize :oldPenSize
+		]
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://www.facebook.com/photo.php?fbid=765020028997900
+; which was posted by
+; Mikael Olsson
+to radiantFlower :height
+	localmake "oldState turtleState
+	localmake "numRadiantLines 182
+	localmake "radius :height * 0.5
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize :height * 0.003
+	setPenColor "black
+	setLineCap "round
+	setFillColor "white
+	circle :radius
+	repeat :numRadiantLines [
+		jumpBackward :radius
+		forward :radius * 2
+		jumpTo :center
+		right 180 / :numRadiantLines
+	]
+	repeat 4 [
+		leaf :height * 0.45
+		right 360 / 4
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+radiantFlower 100

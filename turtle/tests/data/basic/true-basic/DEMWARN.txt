@@ -1,0 +1,24 @@
+PROGRAM DemWarn
+
+! This program demonstrates how to use the Warning
+! and Message dialog boxes.
+
+LIBRARY "TrueDial.trc"
+
+DO
+
+   CALL TD_Warn ("Message from ET", "Read it|Ignore it|Quit", 1, result)
+   IF result = 3 then EXIT DO
+
+   IF result = 1 then
+      LET title$ = "Here is the message from ET"
+      LET message$ = "From outer space:|Hello, down there."
+      CALL TD_Message (title$, message$, "Again|Quit", 1, result)
+      IF result = 2 then EXIT DO
+   ELSE
+      PAUSE 1
+   END IF
+
+LOOP
+
+END

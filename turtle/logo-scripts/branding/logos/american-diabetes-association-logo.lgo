@@ -1,0 +1,34 @@
+; Inspired by logo at:
+; https://en.wikipedia.org/wiki/American_Diabetes_Association#/media/File:American_Diabetes_Association_logo_sans_slogan.svg
+to adaLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "width :height * 2 * tan 30
+	localmake "thickness :height * 0.2135
+	localmake "trapezoidTopWidth :width - 2 * :thickness * tan 30
+	localmake "pThickness :height * 0.226
+	localmake "slantedPThickness :pThickness / cos 30
+	localmake "parallelogramWidth :trapezoidTopWidth - 2 * :pThickness * tan 30
+	localmake "slantedThickness :thickness / cos 30
+	localmake "parallelogramWidth2 :trapezoidTopWidth - :slantedThickness
+	setPenSize 0
+	jumpRight :width / 2
+	left 120
+	jumpRight :width / 2
+	setFillColor "#A6192E
+	isoTrapezoid :width :trapezoidTopWidth :thickness
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpLeft (:width - :parallelogramWidth) / 2
+	parallelogram :parallelogramWidth :slantedPThickness 30
+	jumpLeft :parallelogramWidth / 2
+	right 120
+	jumpLeft :parallelogramWidth2 / 2
+	parallelogram :parallelogramWidth2 :slantedThickness -30
+	
+	setTurtleState :oldState
+end
+
+adaLogo 100

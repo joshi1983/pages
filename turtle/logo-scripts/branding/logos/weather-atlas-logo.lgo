@@ -1,0 +1,110 @@
+make "weatherAtlasRed "#b80000
+
+to drawWeatherAtlasLogoShape :height
+	:color localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "offsetX :height * 0.464
+	localmake "radius :height / 2
+	localmake "offsetY sqrt :radius * :radius - :offsetX * :offsetX
+	localmake "topLines1 [
+		[90 0] [30 0.12] [20 0.2] [20 0.88] [7 1] [1.8 6]
+		[101.2 0] [0.34020727]
+	]
+	jumpForward :height / 2
+	localmake "center pos
+	setFillColor :color
+	setPenSize 0
+	repeat 2 [
+		localmake "ySign sign repcount - 1.5
+		repeat 2 [
+			setHeading :oldHeading
+			localmake "xSign sign repcount - 1.5
+			jumpRight :offsetX * :xSign
+			jumpBackward :offsetY * :ySign
+			setHeading (towards :center) - 90  * :xSign * :ySign 
+			drawArcLineShape [0 0
+				[[-53.5 1] [-140 0] [10 1] [10 1.1] [3 4] [0.7 5]]
+			] :radius * :xSign * :ySign
+			jumpTo :center
+		]
+	]
+	localmake "outerArcAngle 29
+	localmake "innerArcAngle 10
+	localmake "innerArcRadius (:radius * sin :outerArcAngle / 2) / sin :innerArcAngle / 2
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		setHeading :oldHeading + 90 + repcount * 180 + :outerArcAngle / 2
+		jumpForward :radius
+		left 90
+		polyStart
+		arcLeft :outerArcAngle :radius
+		setHeading :oldHeading - 90 * :sign
+		jumpForward :height * 0.24
+		left 90 + :innerArcAngle / 2
+		arcRight :innerArcAngle :innerArcRadius
+		polyEnd
+		jumpTo :center
+	]
+	setHeading :oldHeading
+	repeat 2 [
+		drawArcLineShape [0 1
+			combine :topLines1 reverse :topLines1
+		] :radius
+		right 180
+	]
+	localmake "yOffset :radius * 2 * sin :outerArcAngle / 2
+	localmake "xOffset 0.377
+	localmake "arcRadius 2.7
+	localmake "arcAngle 2 * arcSin :yOffset / 2 / (:arcRadius * :radius)
+	localmake "xOffset2 :xOffset - :arcRadius * (1 - cos :arcAngle / 2)
+	localmake "centerLines1 [
+		[:arcAngle / 2 :arcRadius] [90 - :arcAngle / 2 0]
+		[:xOffset2]
+	]
+	localmake "centerLines2 combine :centerLines1 reverse :centerLines1
+	drawArcLineShape [:xOffset 0
+		combine :centerLines2 reverse :centerLines2
+	] :radius	
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://www.weather-atlas.com
+to weatherAtlasLogoWithShadow :height
+	localmake "oldState turtleState
+	localmake "shapeHeight :height * 0.962
+	localmake "offset :height - :shapeHeight
+	jumpRight :offset / 2
+	drawWeatherAtlasLogoShape :shapeHeight "black
+	jumpLeft :offset
+	jumpForward :offset
+	drawWeatherAtlasLogoShape :shapeHeight "white
+	setTurtleState :oldState
+end
+
+; Inspired by favicon(browser tab icon) at:
+; https://www.weather-atlas.com
+;
+; The original favicon uses a transparent background but 
+; not drawing a background would make the red shape invisible 
+; here due to the red screen color.
+; This draws a white square behind the shape to make the red one visible.
+to redOnWhiteWeatherAtlasLogo :height
+	localmake "oldState turtleState
+	localmake "innerHeight :height * 0.9
+	stripes :height :height ["white]
+	jumpForward (:height - :innerHeight) / 2
+	drawWeatherAtlasLogoShape :innerHeight :weatherAtlasRed
+
+	setTurtleState :oldState
+end
+
+setScreenColor :weatherAtlasRed
+make "height 100
+make "separation :height * 5
+jumpLeft :separation
+drawWeatherAtlasLogoShape :height "white
+jumpRight :separation
+weatherAtlasLogoWithShadow :height
+jumpRight :separation
+redOnWhiteWeatherAtlasLogo :height

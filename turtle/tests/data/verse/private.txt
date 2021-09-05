@@ -1,0 +1,15 @@
+# copied from https://verselang.github.io/book/12_access/
+inventory := class:
+    var Items<private>:[]item = array{}
+    var Capacity<private>:int = 20
+    var CurrentWeight<private>:float = 0.0
+    MaxWeight:float=20.0
+
+    AddItem<public>(NewItem:item, At:int)<transacts><decides>:void =
+        ValidateCapacity[NewItem]
+        set Items[At] = NewItem
+        set CurrentWeight = CurrentWeight + NewItem.Weight
+
+    ValidateCapacity<private>(NewItem:item)<reads><decides>:void =
+        Items.Length < Capacity
+        CurrentWeight + NewItem.Weight <= MaxWeight

@@ -1,0 +1,79 @@
+to colorToRingStops :color
+	output createPList2 [
+		[0.3 mix :color transparent 0]
+		[0.4 mix :color transparent 0.15]
+		[0.7 :color]
+		[1 mix :color transparent 0]
+	]
+end
+
+to drawBlack :height
+	localmake "oldState turtleState
+	localmake "openRadius :height * 0.4
+	localmake "thicknessFactor 0.5 - :openRadius / :height
+	localmake "numDots 48
+	localmake "separation :openRadius * 2 / :numDots
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize :height * :thicknessFactor
+	setFillColor transparent
+	circle (:height - penSize) / 2
+		; This circle might look redundant since it is almost completely concealed by
+		; the 4 black shapes filled below.
+		; The circle is drawn anyway to ensure that no background pixels appear
+		; at the boundary between the 4 shapes.
+
+	setPenSize 0
+	setFillColor "black
+	repeat 4 [
+		drawArcLineShape [0 :openRadius / :height
+			[[:thicknessFactor] [-90 0] [0.5] [-90 0] [0.5]
+			[-90 0] [:thicknessFactor] [-90 0] [90 :openRadius / :height]]
+		] :height
+		right 90
+	]
+	jumpTo :center
+	jumpLeft :separation * (:numDots - 1) / 2
+	jumpBackward :separation * (:numDots - 1) / 2
+	repeat :numDots [
+		repeat :numDots [
+			localmake "ratio clamp (distance :center) / :openRadius 0 1
+			localmake "dotRadius :separation / 2 * mixItems2 [1.5 1.2 1 0.7 0.25 1.2] :ratio
+			circle :dotRadius
+			jumpRight :separation
+		]
+		jumpLeft :numDots * :separation
+		jumpForward :separation		
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by an image at:
+; https://ca.pinterest.com/pin/970525788436454198/
+to blurredRing :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "gradientRadius :height * 0.35
+	localmake "whiteGradientRadius :height * 0.4
+	stripes :height :height ["white]
+	jumpForward :height * 0.65
+	setPenSize 0
+	setFillGradient createRadialGradient pos :gradientRadius colorToRingStops "violet
+	circle :gradientRadius
+	jumpTo :oldPos
+	jumpForward :height * 0.35
+	setFillGradient createRadialGradient pos :gradientRadius colorToRingStops "#08f
+	circle :gradientRadius
+	jumpTo :oldPos
+	jumpForward :height * 0.5
+	setFillGradient createRadialGradient pos :whiteGradientRadius createPList2 [
+		[0.5 "white] [1 "#0fff]
+	]
+	circle :whiteGradientRadius
+	jumpTo :oldPos
+	drawBlack :height
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+blurredRing 100

@@ -1,0 +1,80 @@
+to drawLeaf :height :arcAngle
+	drawArcLineShape [0 0
+		[[:arcAngle / 2 0] [-:arcAngle 1] [:arcAngle - 180 0]
+		[-:arcAngle 1]]
+	] :height / 2 / sin :arcAngle / 2
+end
+
+to drawLeafPattern :radius
+	localmake "oldState turtleState
+	localmake "oldPenSize penSize
+	localmake "numLeafs 12
+	localmake "radius2 :radius / cos 180 / :numLeafs
+	localmake "len1 :radius * 0.54
+	right 180 / :numLeafs
+	setPenSize 0
+	repeat :numLeafs [
+		drawLeaf :radius2 60
+		right 360 / :numLeafs
+	]
+	left 180 / :numLeafs
+	repeat :numLeafs [
+		stripes :oldPenSize :len1  [penColor]
+		right 360 / :numLeafs
+	]
+
+	setTurtleState :oldState
+end
+
+to drawLightningBolt :diagonalHeight
+	localmake "oldState turtleState
+	localmake "lines1 [[0.65] [100 0] [0.33] [-79 0] [0.48]]
+	localmake "angle1 30
+	right :angle1
+	setPenSize 0
+	setFillColor "white
+	drawArcLineShape [0 0.5 / cos :angle1
+		(combine [[155 0]] :lines1 [[159 0]]  :lines1)
+	] :diagonalHeight
+	setTurtleState :oldState
+end
+
+; Inspired by drawing done at:
+; https://www.youtube.com/watch?v=EZMRnctot_Q&t=500s
+;
+; This is reimplemented off an image at:
+; https://alchetron.com/cdn/shaktimaan-620b1119-e234-40b3-a6bb-ad546990907-resize-750.jpeg
+to shaktimaanLogo :height :background
+	localmake "oldState turtleState
+	localmake "thickness :height * 0.02
+	localmake "innerRadius :height * 0.16
+	localmake "innerRadius2 :innerRadius + :thickness
+	localmake "foreground "white
+	localmake "petalColorStops createPList2 [
+		[0 :foreground] [:innerRadius / (:height / 2) :foreground] [1 "yellow]
+	]
+	jumpForward :height / 2
+	setPenSize 0
+	setPenColor :background
+	setFillGradient createRadialGradient pos :height / 2 :petalColorStops
+	setPenSize :height * 0.001
+	drawLeafPattern :height / 2
+	setFillColor "white
+	circle :innerRadius2
+	setFillColor :background
+	circle :innerRadius
+	setFillColor :foreground
+	drawLightningBolt :height * 0.15
+	setFillColor transparent
+	setPenSize :thickness
+	setLineJoinStyle "round
+	setPenColor "white
+	repeat 2 [
+		regularPolygon :innerRadius 3
+		right 60
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "#800
+shaktimaanLogo 100 screenColor

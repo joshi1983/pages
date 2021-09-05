@@ -1,0 +1,159 @@
+! MathQuiz
+
+LIBRARY "TrueCtrl.trc"
+LIBRARY "TrueDial.trc"
+
+CALL TC_Init                      ! Initialize TC routines
+
+! Menus to set level and select problem or quit
+
+DIM menu$ (2, 0:3)              ! 2 menus and 4 items (title plus up to 3 choices)
+MAT READ menu$
+DATA Main, Next Problem@N, @, Quit@Q
+DATA Level, Beginner, Intermediate, Advanced
+
+CALL TC_Win_SetTitle (0, "Arithmetic Quiz")      ! Change window title
+CALL TC_Menu_Set (0, menu$)       ! Set the menu
+CALL TC_Menu_SetCheck (0, 2, 1, 1)     ! Check third menu, item two or menu$(2,1)
+CALL TC_Show (0)                  ! Make the default window visible
+CALL TC_Win_Active (0)            ! Move it to the front
+
+PRINT "select type of calculation"
+PRINT "Select LEVEL from menu"
+PRINT "Finally select NEXT PROBLEM from File Menu"
+PRINT "Select QUIT from menu to quit"
+
+! Radio buttons to indicate problem type
+
+DIM radio_text$ (4)               ! 4 buttons
+
+MAT READ radio_text$
+DATA Addition, Subtraction, Multiplication, Division
+
+! Group box around radio buttons, and radio buttons
+
+CALL TC_Groupbox_Create (box_id, "Select Problem Type", .6, .9, .1, .44)
+CALL TC_RadioGroup_Create (radio_id, radio_text$(), .62, .88, .1, .4)
+CALL TC_RadioGroup_Set (radio_id, 1)
+
+LET operation$ = radio_text$(1)
+
+! Push button to check answer
+
+CALL TC_PushBtn_Create (pbid, "Check my answer", .1, .4, .1, -99999)
+
+! Event loop
+! Difficulty levels:  beginner = 5, intermediate = 11, advanced = 20
+
+LET difficulty = 5                ! Default difficulty is beginner
+LET cur_check = 1                 ! Current menu item checked
+
+DO
+   CALL TC_Event (0, event$, window, x1, x2)
+
+   IF event$ = "HIDE" then EXIT DO
+
+   IF event$ = "MENU" then
+      LET menu = x1
+      LET item = x2
+
+      IF menu = 1 then            ! Main menu
+         IF item = 1 then CALL NextProblem (difficulty, operation$, answer, response)
+         IF item = 3 then EXIT DO      ! Quit is 3rd item (2nd is separator)
+
+      ELSEIF menu = 2 then        ! Level menu
+         CALL TC_Menu_SetCheck (0, 2, cur_check, 0)   ! Remove current check
+         IF item = 1 then
+            LET difficulty = 5    ! Beginner
+            CALL TC_Menu_SetCheck (0, 2, 1, 1)   ! Add check to first item
+            LET cur_check = 1
+
+         ELSEIF item = 2 then
+            LET difficulty = 11   ! Intermediate
+            CALL TC_Menu_SetCheck (0, 2, 2, 1)   ! Add check to 2nd item
+            LET cur_check = 2
+
+         ELSEIF item = 3 then
+            LET difficulty = 20   ! Advanced
+            CALL TC_Menu_SetCheck (0, 2, 3, 1)   ! Add check to 3rd item
+            LET cur_check = 3
+
+         END IF
+
+      END IF
+
+   ELSEIF event$ = "CONTROL DESELECTED" then     ! Control item selected
+
+      IF x2 = pbid then
+         ! Pushbutton to check answer, ignore x1
+         CALL Check_Answer (answer, response)
+
+      ELSE
+         ! Find out current radio button for problem type
+         CALL TC_RadioGroup_On (radio_id, on)
+         LET operation$ = radio_text$(on)
+
+      END IF
+
+   END IF
+
+LOOP
+
+CALL TC_Menu_Free (0)
+CALL TC_Cleanup
+
+SUB NextProblem (difficulty, operation$, answer, response)
+
+    LET v1 = 2 + int(rnd*(difficulty))
+    LET v2 = 2 + int(rnd*(difficulty))
+
+    SELECT CASE operation$
+    CASE "Addition"
+         LET problem$ = str$(v1) & " + " & str$(v2) & " = ?"
+         LET answer = v1+v2
+
+    CASE "Subtraction"
+         IF v1 > v2 then
+            LET temp = v1
+            LET v1 = v2
+            LET v2 = temp
+         END IF
+         LET problem$ = str$(v1) & " - " & str$(v2) & " = ?"
+         LET answer = v1-v2
+
+    CASE "Multiplication"
+         LET problem$ = str$(v1) & " * " & str$(v2) & " = ?"
+         LET answer = v1*v2
+
+    CASE "Division"
+         LET p = v1*v2
+         LET problem$ = str$(p) & " / " & str$(v2) & " = ?"
+         LET answer = v1
+
+    END SELECT
+
+    DO
+       LET text$ = ""
+       CALL TD_Input ("What is the answer?|" & problem$, "Ok", text$, 1, result)
+       WHEN EXCEPTION IN
+            LET response = val(text$)
+            EXIT DO
+       USE
+            CALL TD_Warn ("Please enter a number", "Ok", 1, result)
+       END WHEN
+    LOOP
+
+END SUB
+
+SUB Check_Answer (answer, response)
+
+    IF answer = response then
+       LET message$ = "Correct"
+    ELSE
+       LET message$ = "Wrong; the correct answer is: " & str$(answer)
+    END IF
+    CALL TD_Warn (message$, "Ok", 1, result)
+
+END SUB
+
+END

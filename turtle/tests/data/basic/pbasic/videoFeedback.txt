@@ -1,0 +1,146 @@
+// videofeedback.bas
+// Sparse analogue video feedback simulation
+// 5x5 sample grid over 500x500 pixel area, centred on canvas
+// Uses BUFFER for frame alternation
+
+cls
+clr
+//pen 14.0
+pen 32.0
+
+// ── Canvas centre ─────────────────────────────────────────────────────────
+var cx : Int = 630
+var cy : Int = 500
+//var cx : Int = 230
+//var cy : Int = 100
+
+// ── Sparse sample grid parameters ────────────────────────────────────────
+//var gridN    : Int = 5
+//var gridSpan : Int = 500
+//var gridStep : Int = 100
+
+var gridN    : Int = 25
+//var gridSpan : Int = 500
+var gridSpan : Int = 800
+var gridStep : Int = 35
+
+
+// ── Feedback parameters ───────────────────────────────────────────────────
+//var zoom     : Float = 1.04
+//var angle    : Float = 0.015
+//var bright   : Float = 0.92
+
+var zoom     : Float = 1.06
+var angle    : Float = 0.025
+var bright   : Float = 0.88
+
+var cosA     : Float = 0.0
+var sinA     : Float = 0.0
+
+// ── Sample storage ────────────────────────────────────────────────────────
+var sR[625] : Float
+var sG[625] : Float
+var sB[625] : Float
+var sX[625] : Int
+var sY[625] : Int
+
+// ── Loop variables ────────────────────────────────────────────────────────
+var gx   : Int = 0
+var gy   : Int = 0
+var idx  : Int = 0
+var px   : Int = 0
+var py   : Int = 0
+var fx   : Float = 0.0
+var fy   : Float = 0.0
+var dx   : Float = 0.0
+var dy   : Float = 0.0
+var nx   : Float = 0.0
+var ny   : Float = 0.0
+var fr   : Float = 0.0
+var fg   : Float = 0.0
+var fb   : Float = 0.0
+var frame : Int = 0
+
+// ── Seed first frame with random noise ───────────────────────────────────
+gy = 0
+while (gy < gridN) {
+    gx = 0
+    while (gx < gridN) {
+        px = cx - gridSpan / 2 + gx * gridStep
+        py = cy - gridSpan / 2 + gy * gridStep
+        POINT(px, py, RND(0), RND(0), RND(0), 1.0)
+        gx = gx + 1
+    }
+    gy = gy + 1
+}
+
+// ── Main feedback loop ────────────────────────────────────────────────────
+frame = 0
+while (frame < 200) {
+    
+    locate 1,70
+    print frame
+    
+    cosA = COS(angle)
+    sinA = SIN(angle)
+
+    // Pass 1: sample current frame at grid points
+    gy = 0
+    while (gy < gridN) {
+        gx = 0
+        while (gx < gridN) {
+            idx = gy * gridN + gx
+            px = cx - gridSpan / 2 + gx * gridStep
+            py = cy - gridSpan / 2 + gy * gridStep
+            sX[idx] = px
+            sY[idx] = py
+            sR[idx] = SAMPLE(px, py, 0, 1.0)
+            sG[idx] = SAMPLE(px, py, 1, 1.0)
+            sB[idx] = SAMPLE(px, py, 2, 1.0)
+            gx = gx + 1
+        }
+        gy = gy + 1
+    }
+
+    // Pass 2: draw feedback — each sample displaced toward/away from centre
+    // with zoom and rotation applied, brightness attenuated
+    BUFFER(1, 0)
+    clr
+
+    idx = 0
+    while (idx < 625) {
+        // Vector from centre to sample point
+        dx = sX[idx] - cx
+        dy = sY[idx] - cy
+
+        // Apply zoom
+        fx = dx * zoom
+        fy = dy * zoom
+
+        // Apply rotation
+        nx = fx * cosA - fy * sinA
+        ny = fx * sinA + fy * cosA
+
+        // New canvas position
+        px = cx + INT(nx)
+        py = cy + INT(ny)
+
+        // Attenuate brightness each generation
+        fr = sR[idx] * bright
+        fg = sG[idx] * bright
+        fb = sB[idx] * bright
+
+        // Draw with large pen to fill sparse gaps
+        POINT(px, py, fr, fg, fb, 1.0)
+
+        idx = idx + 1
+
+    }
+
+    BUFFER(0, 1)
+
+    frame = frame + 1
+}
+
+print "Done."
+end

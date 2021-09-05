@@ -1,0 +1,35 @@
+to heart :size
+	drawArcLineShape [0 0
+		pathMirror [
+			[20 1.8265] [-202.7 0.29224]
+		]
+	] :size
+end
+
+to fourLeafClover :size
+	localmake "oldPos pos
+	setPenSize :size * 0.01
+	setFillColor "green
+
+	; draw stem.
+	jumpBackward :size * 0.4
+
+	right 180
+	polyStart
+	arcLeft 60 :size * 0.6
+	right 90
+	forward :size * 0.05
+	right 90
+	arcRight 60 :size * 0.6
+	polyEnd
+	jumpTo :oldPos
+
+	; draw the 4 heart-shaped leafs.
+	repeat 4 [
+		heart :size * 0.5
+		right 90
+	]
+end
+
+fourLeafClover 100
+hideTurtle

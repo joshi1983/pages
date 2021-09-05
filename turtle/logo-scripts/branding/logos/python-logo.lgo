@@ -1,0 +1,63 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Python_(programming_language)#/media/File:Python-logo-notext.svg
+; Referenced from:
+; https://en.wikipedia.org/wiki/Python_(programming_language)
+
+to pythonSingleShapeGradient :size :colors
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	left 45
+	jumpForward :size * 0.4
+	localmake "colorStops createPList2 [
+		[0 item 1 :colors] [1 item 2 :colors]
+	]
+	setFillGradient createLinearGradient :oldPos pos :colorStops "pad
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to pythonSingleShape :size :colors
+	localmake "oldState turtleState
+	localmake "arcAngle1 10 
+	localmake "arcAngle2 45
+	localmake "arcAngle3 90 - :arcAngle1 - :arcAngle2
+	localmake "arcs1 [
+		[:arcAngle1 0.7] [:arcAngle2 0.151] [:arcAngle3 0.1]
+	]
+	localmake "arcs2 [
+		[:arcAngle3 0.102] [:arcAngle2 0.15402] [:arcAngle1 0.714]
+	]
+	pythonSingleShapeGradient :size :colors
+	setPenSize 0
+	jumpForward :size / 2
+	right 90
+	polyStart
+	arcsRight :arcs1 :size
+	arcLines [[0.232] [-90 0.12] [0.235] [90 0.15] [0.107] [-90 0]
+		[0.09]] :size
+	arcsRight combine :arcs2 reverse :arcs2 :size
+	jumpForward :size * 0.357
+	jumpLeft :size * 0.031
+	jumpBackward :size * 0.238
+	left 90
+	jumpForward :size * 0.094296408
+	arcsRight reverse :arcs1 :size
+	polyEnd
+
+	jumpRight :size * 0.119
+	jumpBackward :size * 0.133
+	setFillColor "white
+	circle :size * 0.045	
+	setTurtleState :oldState
+end
+
+to pythonLogo :height
+	localmake "oldState turtleState
+	jumpForward :height / 2
+	pythonSingleShape :height ["#306998 "#4c8cbf]
+	right 180
+	pythonSingleShape :height ["#ffe873 "#ffd43b]
+	setTurtleState :oldState
+end
+
+pythonLogo 100

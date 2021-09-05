@@ -1,0 +1,236 @@
+// functest_full.bas - pBasic v0.7.0 Function Test Suite
+// Tests: basic calls, local scope, multi-arg, return in expressions,
+//        string returns, recursion, mutual independence of calls
+
+print "=== pBasic v0.7.0 Function Test Suite ==="
+print ""
+
+// -------------------------------------------------------
+// Test 1: Basic function call and return
+// -------------------------------------------------------
+print "Test 1: Basic call and return"
+var result : Float = 0.0
+result = square(5)
+print result
+// Expected: 25
+
+print ""
+
+// -------------------------------------------------------
+// Test 2: Function call in a FOR loop
+// -------------------------------------------------------
+print "Test 2: Function in FOR loop"
+var n : Int = 0
+for z = 1 to 5
+n = square(z)
+print n
+next z
+// Expected: 1 4 9 16 25
+
+print ""
+
+// -------------------------------------------------------
+// Test 3: Two-argument function
+// -------------------------------------------------------
+print "Test 3: Two-argument function"
+var r : Float = 0.0
+r = add(7, 3)
+print r
+// Expected: 10
+r = multiply(6, 7)
+print r
+// Expected: 42
+
+print ""
+
+// -------------------------------------------------------
+// Test 4: Local scope — function locals do not leak
+// -------------------------------------------------------
+print "Test 4: Local scope isolation"
+var x : Int = 99
+var y : Int = 88
+var check : Int = 0
+check = localScopeTest(10)
+print check
+// Expected: 20  (function doubles its local copy)
+print x
+// Expected: 99  (global x unchanged)
+print y
+// Expected: 88  (global y unchanged)
+
+print ""
+
+// -------------------------------------------------------
+// Test 5: Function return value used directly in expression
+// -------------------------------------------------------
+print "Test 5: Return value in expression"
+var val : Float = 0.0
+val = square(3) + square(4)
+print val
+// Expected: 25  (9 + 16)
+
+print ""
+
+// -------------------------------------------------------
+// Test 6: Function call as argument to PRINT directly
+// -------------------------------------------------------
+print "Test 6: Function result printed directly"
+print square(6)
+// Expected: 36
+
+print ""
+
+// -------------------------------------------------------
+// Test 7: Nested function calls (result of one is arg to another)
+// -------------------------------------------------------
+print "Test 7: Nested function calls"
+var nested : Float = 0.0
+nested = square(add(2, 3))
+print nested
+// Expected: 25  (add returns 5, square(5) = 25)
+
+print ""
+
+// -------------------------------------------------------
+// Test 8: Function with IF/THEN logic inside
+// -------------------------------------------------------
+print "Test 8: Function with conditional logic"
+var a : Int = 0
+a = absVal(-7)
+print a
+// Expected: 7
+a = absVal(4)
+print a
+// Expected: 4
+
+print ""
+
+// -------------------------------------------------------
+// Test 9: String return value
+// -------------------------------------------------------
+print "Test 9: String return"
+var greeting$ = ""
+greeting$ = makeGreeting("pBasic")
+print greeting$
+// Expected: Hello, pBasic!
+
+print ""
+
+// -------------------------------------------------------
+// Test 10: Recursive function — factorial
+// -------------------------------------------------------
+print "Test 10: Recursive factorial"
+var f : Float = 0.0
+f = factorial(1)
+print f
+// Expected: 1
+f = factorial(5)
+print f
+// Expected: 120
+f = factorial(7)
+print f
+// Expected: 5040
+
+print ""
+
+// -------------------------------------------------------
+// Test 11: Recursive function — fibonacci
+// -------------------------------------------------------
+print "Test 11: Recursive fibonacci"
+var fib : Float = 0.0
+fib = fibonacci(0)
+print fib
+// Expected: 0
+fib = fibonacci(1)
+print fib
+// Expected: 1
+fib = fibonacci(6)
+print fib
+// Expected: 8
+fib = fibonacci(10)
+print fib
+// Expected: 55
+
+print ""
+
+// -------------------------------------------------------
+// Test 12: Multiple calls, verify independence
+// -------------------------------------------------------
+print "Test 12: Multiple sequential calls"
+print square(2)
+print square(3)
+print square(4)
+print square(5)
+// Expected: 4 9 16 25
+
+print ""
+
+// -------------------------------------------------------
+// Test 13: Function result in IF condition
+// -------------------------------------------------------
+print "Test 13: Function result in IF condition"
+var score : Int = 85
+if square(score) > 7000 then print "score squared is large"
+// Expected: score squared is large  (85*85 = 7225)
+
+print ""
+
+print "=== All Function Tests Complete ==="
+
+// -------------------------------------------------------
+// Function definitions
+// (placed after main code — pBasic pre-scans for them)
+// -------------------------------------------------------
+
+func square(N) {
+var k : Float = 0.0
+k = N * N
+return k
+}
+
+func add(A, B) {
+var s : Float = 0.0
+s = A + B
+return s
+}
+
+func multiply(A, B) {
+var p : Float = 0.0
+p = A * B
+return p
+}
+
+func localScopeTest(x) {
+// Local x shadows global x; local y is brand new
+var y : Int = 0
+y = x * 2
+return y
+}
+
+func absVal(N) {
+var result : Float = 0.0
+if N < 0 then result = N * -1
+if N >= 0 then result = N
+return result
+}
+
+func makeGreeting(name$) {
+var out$ = ""
+out$ = "Hello, " + name$ + "!"
+return out$
+}
+
+func factorial(N) {
+var result : Float = 0.0
+if N <= 1 then result = 1
+if N > 1 then result = N * factorial(N - 1)
+return result
+}
+
+func fibonacci(N) {
+var result : Float = 0.0
+if N <= 0 then result = 0
+if N == 1 then result = 1
+if N > 1 then result = fibonacci(N - 1) + fibonacci(N - 2)
+return result
+}

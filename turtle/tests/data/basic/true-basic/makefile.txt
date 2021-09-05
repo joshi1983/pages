@@ -1,0 +1,20 @@
+! We establish out compiled and source directories
+
+c       = c\
+t       = tools\
+s       = s\
+cfilelist  = column dhex diff dir finds format keep make mkdir &
+             sccs sort TBpp utilit xref
+
+tfilelist  = chksum column create cut delta dhex diff dir find &
+             findsb format get header keep make man mkdir mkscr &
+             omit plan show sort tbpp unget xref
+
+! Here is our dependency, and the resulting conditional command
+
+{c}WB${cfilelist}.trc <= {s}WB${?}.tru
+     cd {s};old WB?;compile;ren WB?.trc;cd ..\{c};saverep;close;cd ..
+
+{t}${tfilelist} <= {s}${?}-s.tru
+     cd {s};old ?-s.tru;compile;ren ?;cd ..\{t};saverep;close;cd ..
+

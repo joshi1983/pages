@@ -1,0 +1,59 @@
+to drawHouse :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "baseHeight :height * 0.55
+	localmake "baseWidth :height * 0.8
+	localmake "angle 50
+	localmake "tinyWidth :height * 0.35
+	localmake "doorHeight :height * 0.26
+	setPenSize :height * 0.03
+	localmake "roofHeight :height - :baseHeight - penSize
+	jumpRight :height * 0.12
+	localmake "houseBottomMiddle pos
+	jumpForward (penSize + :baseHeight) / 2
+	setLineJoinStyle "round
+	setFillColor "#dc8
+	rect :baseWidth :baseHeight
+	jumpForward :baseHeight / 2
+	setFillColor "#ddd
+	isoTriangle :baseWidth :roofHeight
+	jumpLeft :baseWidth / 2
+	arcLines [[0.23] [-:angle 0] [0.15]] :height
+	localmake "upperPos pos
+	backward :height * 0.25
+	setHeading :oldHeading + 90
+	repeat 2 [
+		jumpBackward :tinyWidth / 2
+		forward :tinyWidth
+		jumpTo :upperPos
+	]
+	jumpTo :houseBottomMiddle
+	setHeading :oldHeading
+	jumpRight :baseWidth * 0.17
+	jumpForward (:doorHeight + penSize) / 2
+	setFillColor "white
+	rect :doorHeight * 0.7 :doorHeight
+	jumpForward :baseHeight * 0.45
+	jumpLeft :baseWidth * 0.32
+	rect :baseWidth * 0.25 :baseHeight * 0.2
+	setTurtleState :oldState
+end
+
+; Inspired by a drawing at:
+; https://archive.org/details/turtle-news-vol-one-num-eleven-september-1982/page/n7/mode/2up
+; The drawing is in the lower right corner.
+; It is below the text: "SUBURB" from Apple Logo No. 2
+to apple2Suburb :height
+	localmake "oldState turtleState
+	jumpRight :height * 1.65
+	setPenColor "black
+	repeat 5 [
+		localmake "size :height * mix 1 0.5 repRatio
+		drawHouse :size
+		jumpLeft :size * 1.09
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "#cdf
+apple2Suburb 100

@@ -1,0 +1,98 @@
+; Inspired by:
+; https://en.wikipedia.org/wiki/Yin_and_yang#/media/File:Yin_and_Yang_symbol.svg
+to drawYinYang :size
+	localmake "oldState turtleState
+	localmake "size1 0.15 * :size
+	setPenColor "black
+	setPenSize :size * 0.01
+	circle :size
+	setPenSize 0
+	jumpForward :size * 0.5
+	setFillColor "black
+	circle :size1 ; black circle at top
+	jumpForward :size * 0.5
+	right 90
+
+	; Fill in the curved black shape.
+	polyStart
+	arcRight 180 :size * 0.5
+	arcLeft 180 :size * 0.5
+	arcLeft 180 :size
+	polyEnd
+	left 90
+	jumpForward :size * 1.5
+	setFillColor "white
+	circle :size1 ; white circle at bottom
+	setTurtleState :oldState
+end
+
+; Inspired by:
+; https://www.pinterest.ca/pin/3237030974143706/
+to yinYangTriple :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "penSize :size * 0.05
+	localmake "size1 (:size - :penSize) * 0.5 * cos 30 
+	localmake "tinyCircleRadius :size1 * 0.3
+	localmake "outerArcRadius :size1 + :size * 0.5
+	localmake "arcRadius2 :size1 * 1.07
+	localmake "colors ["red "black "white]
+	setFillColor "#FFC800
+	setPenSize 0
+	circle :size
+	setPenSize :penSize
+	setPenColor fillColor
+	repeat count :colors [
+		localmake "c1 item repcount :colors
+		localmake "c2 item (1 + remainder 1+repcount 3) :colors
+		setFillColor :c2
+		jumpForward :size * 0.5
+		localmake "pos1 pos
+		setPenSize 0
+		circle :size1
+		jumpForward :size1
+		right 90
+		polyStart
+		arcRight 106 :outerArcRadius
+		right 167
+		arcLeft 129 :arcRadius2
+		polyEnd
+		setFillColor :c1
+		jumpTo :pos1
+		setPenSize :penSize
+		circle :tinyCircleRadius
+		jumpTo :oldPos
+		setHeading :oldHeading + repcount * 360 / 3
+	]
+end
+
+; Inspired by
+; https://codingwithanimation.blogspot.com/2022/04/a-logo-design-program-using-python.html
+; Also shown at https://youtu.be/1xRSZE1VXME?t=37
+; white was replaced with black to be more visible on the 
+; white screen used by the other yin yang symbols.
+to yinYangFromArcs :size
+	localmake "oldState turtleState
+	localmake "colors [ "black "red ]
+	localmake "scale :size / 100
+	setPenSize :size * 0.015
+	left 90
+	repeat 180 [
+		setPenColor ( item 1 + remainder repcount count :colors :colors)
+		right repcount
+		arcLeft repcount :size
+		forward repcount * :scale
+		right 180
+		forward repcount * :scale
+	]
+	setTurtleState :oldState
+end
+
+make "size 100
+make "separation :size * 3
+jumpLeft :separation
+drawYinYang :size
+jumpRight :separation
+yinYangTriple :size
+jumpRight :separation
+yinYangFromArcs :size

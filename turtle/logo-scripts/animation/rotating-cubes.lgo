@@ -1,0 +1,95 @@
+to drawCube :size :angle1
+	localmake "oldState turtleState
+	rollRight 30
+	pitchUp 45 + :angle1
+	jumpOut :size / 2
+	square :size
+	jumpIn :size
+	square :size
+	jumpLeft :size / 2
+	jumpOut :size / 2
+	rollRight 90
+	square :size
+	jumpIn :size
+	square :size
+	setTurtleState :oldState
+end
+
+; Inspired by animation at:
+; https://www.facebook.com/groups/tiling/permalink/2087956344961233/?rdid=xcinEJAGqdXgKGLl#
+;
+; The source of inspiration video was made by Dominic Pons.
+; The user profile is at within the Mathematics and Tiling group:
+; https://www.facebook.com/groups/391950357895182/user/752350326/
+to drawModel :size :timeRatio
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "timeRatio1 clamp :timeRatio * 2.3 0 1
+	localmake "timeRatio2 clamp (:timeRatio - 0.55) * 3 0 1
+	localmake "timeRatioScaled 6 * :timeRatio1
+	localmake "numRotatedCubes1 int :timeRatioScaled
+	localmake "timeRatioScaled2 6 * :timeRatio2
+	localmake "numRotatedCubes2 int :timeRatioScaled2
+	localmake "ease1 easeInOut
+	setPenSize :size * 0.03
+	circle :size
+	setPenSize :size * 0.01
+	setLineJoinStyle "round
+	localmake "size1 :size * 0.60344
+	repeat 6 [
+		setHeading :oldHeading - 180 / 6 + repcount * 360 / 6
+		localmake "angle1 0
+		localmake "angle2 0
+		localmake "repcount1 repcount - 1
+		ifelse :repcount1 > :numRotatedCubes1 [
+			localmake "angle1 90
+		] [
+			if :repcount1 = :numRotatedCubes1 [
+				localmake "angle1 90 * interpolateRatio :ease1 (:timeRatioScaled - :numRotatedCubes1)
+			]
+		]
+		ifelse :repcount1 > :numRotatedCubes2 [
+			localmake "angle2 90
+		] [
+			if :repcount1 = :numRotatedCubes2 [
+				localmake "angle2 90 * interpolateRatio :ease1 (:timeRatioScaled2 - :numRotatedCubes2)
+			]
+		]
+		jumpForward :size * 0.49
+		setPenColor "#08f
+		setHeading :oldHeading
+		drawCube :size1 :angle1
+		setPenColor "#ff8
+		drawCube :size * 0.3 :angle2
+		jumpTo :oldPos
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+make "timeRatio animation.timeRatio
+setPenColor "white
+make "midFactor 1 / 4
+make "timeRatio1 mixItems2 [0 1 :midFactor :midFactor :midFactor :midFactor :midFactor 1 0] :timeRatio
+make "timeRatio2 0
+if between? :timeRatio 0.25 0.75 [
+	make "timeRatio2 (:timeRatio - 0.25) / 0.5
+]
+pitchUp 90 * :timeRatio1
+drawModel 100 :timeRatio2
+
+to animation.snapshotstyle
+	output createPList2 [
+		["zoom.scale 3.2]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 10
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

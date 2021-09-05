@@ -1,0 +1,105 @@
+; Inspired by
+; https://upload.wikimedia.org/wikipedia/commons/5/52/Safari_browser_logo.svg
+; Referenced from:
+; https://en.wikipedia.org/wiki/Safari_(web_browser)
+
+to safariNotches :radius
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "numNotches 60
+	localmake "penSize1 :radius * 0.03
+	localmake "radius1 :radius - :penSize1 / 2
+	setPenSize :penSize1
+	setLineCap "round
+	repeat :numNotches [
+		localmake "len1 :radius * 0.175
+		if even? repcount [
+			localmake "len1 :len1 * 0.43
+		]
+		jumpForward :radius1
+		backward :len1
+		jumpTo :oldPos
+		right 360 / :numNotches
+	]
+	setTurtleState :oldState
+end
+
+to safariBlueBackground :radius
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	setFillColor "#107ddd
+	localmake "colorStops createPList2 [
+		[0 "#08c0e8] [0.5 "#12aff1] [1 "#107ddd]
+	]
+	jumpForward :radius * 0.2
+	setFillGradient createRadialGradient pos :radius :colorStops
+	jumpTo :oldPos
+	setPenSize 0
+	circle :radius
+	setTurtleState :oldState
+end
+
+to safariGrayBackground :radius
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "colorStops createPList2 [
+		[0 "#fff] [1 "#bdbdbd]
+	]
+	jumpBackward :radius
+	localmake "fromPos pos
+	jumpForward :radius * 2
+	setFillGradient createLinearGradient pos :fromPos :colorStops "pad
+	setPenColor "#aaa
+	setPenSize :radius * 0.001
+	jumpTo :oldPos
+	circle :radius
+	setTurtleState :oldState
+end
+
+to safariShadow :radius
+	localmake "oldState turtleState
+	localmake "colorStops createPList2 [
+		[0.5 "#f000] [0.93 "#3000] [1 "#0000]
+	]
+	setFillGradient createRadialGradient pos :radius :colorStops
+	setPenSize 0
+	circle :radius
+	setTurtleState :oldState
+end
+
+to safariNeedle :size
+	localmake "oldState turtleState
+	localmake "angle1 46.15
+	localmake "widthFactor 0.172729993
+	localmake "width :size * :widthFactor
+	localmake "colors ["#f1f1f1 "#c13d3d ]
+	setPenSize 0
+	setFillColor "#ff5150
+	right :angle1
+	isoTriangle :width :size / 2
+	right 180
+	setFillColor "#b6b6b6
+	isoTriangle :width :size / 2
+
+	repeat count :colors [
+		setFillColor item repcount :colors
+		drawArcLineShape [:widthFactor 0
+			[[90 0] [:widthFactor] [-90 0] [1]]
+			] :size / 2
+		right 180
+	]
+	setTurtleState :oldState
+end
+
+to safariIcon :size
+	jumpForward :size * 0.48
+	safariShadow :size * 0.48
+	jumpForward :size * 0.043
+	safariGrayBackground :size * 0.475
+	safariBlueBackground :size * 0.437
+	setPenColor "#f4f2f3
+	safariNotches :size * 0.415
+	safariNeedle :size * 0.842
+end
+
+safariIcon 100

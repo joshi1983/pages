@@ -1,0 +1,38 @@
+to createBlenderKitGradient :height
+	localmake "oldState turtleState
+	localmake "colorStops createPList
+	localmake "stops [[0 "#28afdf] [0.11 "#48b1ba]
+	[0.2 "#53b2a3] [0.31 "#5fb47d] [0.39 "#66b557]
+	[0.42 "#6db34a] [0.56 "#9e9c42] [0.72 "#c67937]
+	[0.85 "#de522d] [1 "#ed1f24]
+	]
+	repeat count :stops [
+		localmake "pair item repcount :stops
+		localmake "ratio first :pair
+		localmake "val last :pair
+		setProperty "colorStops :ratio :val
+	]
+	jumpBackward :height / 2
+	localmake "fromPos pos
+	jumpForward :height
+	localmake "result createLinearGradient pos :fromPos :colorStops "pad
+	setTurtleState :oldState
+	output :result
+end
+
+; Inspired by logo at
+; https://blender-addons.org/blenderkit/ and
+; https://www.blenderkit.com/
+to blenderKitLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	jumpForward :height / 2
+	setPenSize 0
+	left 60
+	setFillGradient createBlenderKitGradient :height
+	setHeading :oldHeading
+	regularPolygon :height / 2 6
+	setTurtleState :oldState
+end
+
+blenderKitLogo 100

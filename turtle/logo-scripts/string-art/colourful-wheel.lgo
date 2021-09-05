@@ -1,0 +1,106 @@
+; Inspired by
+; https://www.pinterest.ca/pin/67976275614718436/
+
+make "blueString "#49f
+make "redString "#f20
+make "purpleString "#b0f
+make "yellowString "#fd0
+
+to getPoints :size
+	localmake "oldPos pos
+	localmake "numSides 12
+	localmake "numPoints 10
+	localmake "step1 :size * 0.15
+	localmake "minSize :size * 0.2
+	localmake "step2 (:size - :step1 - :minSize) / :numPoints
+	localmake "result []
+	repeat :numSides [
+		localmake "sidePoints []
+		jumpForward :minSize
+		queue "sidePoints pos
+		jumpForward :step1
+		repeat :numPoints [
+			queue "sidePoints pos
+			jumpForward :step2
+		]
+		right 180 / :numSides
+		jumpTo :oldPos
+		jumpForward :size * 0.78
+		queue "sidePoints pos
+		queue "result :sidePoints
+		right 180 / :numSides
+		jumpTo :oldPos
+	]
+	output :result
+end
+
+to drawDots :size
+	localmake "oldPos pos
+	localmake "dots getPoints :size
+	localmake "len count :dots
+	localmake "radius :size * 0.008
+	setFillColor "white
+	setPenSize 0
+	repeat :len [
+		localmake "points2 item repcount :dots
+		localmake "len2 count :points2
+		repeat :len2 [
+			localmake "p item repcount :points2
+			jumpTo :p
+			circle :radius
+		]
+	]
+	jumpTo :oldPos
+end
+
+to oneToMany :p :manyPoints
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	repeat count :manyPoints [
+		
+		jumpTo :p
+		localmake "otherPoint item repcount :manyPoints
+		setHeading towards :otherPoint
+		forward distance :otherPoint
+	]
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to colourfulStringWheel :size
+	localmake "points getPoints :size
+	localmake "numSides count :points
+	setPenSize :size * 0.0015
+	repeat :numSides [
+		localmake "curPoints item repcount :points
+		localmake "nextIndex 1 + (remainder repcount (count :points))
+		localmake "nextPoints item :nextIndex :points
+		localmake "p item 4 :curPoints
+		setPenColor :purpleString
+		oneToMany :p (sublist :nextPoints 5 (count :nextPoints) - 1)
+		localmake "p item 4 :nextPoints
+		oneToMany :p (sublist :curPoints 5 (count :curPoints) - 1)
+
+		localmake "p item 2 :curPoints
+		setPenColor :redString
+		oneToMany :p (sublist :nextPoints 3 (count :nextPoints) - 1)
+		localmake "p item 2 :nextPoints
+		oneToMany :p (sublist :curPoints 3 (count :curPoints) - 1)
+
+		setPenColor :blueString
+		localmake "p item (count :curPoints) :curPoints
+		oneToMany :p (sublist :curPoints 3 (count :curPoints) - 1)
+		oneToMany :p (sublist :nextPoints 3 (count :nextPoints) - 1)
+
+		setPenColor :yellowString
+		localmake "p item 1 :nextPoints
+		oneToMany :p (sublist :curPoints 2 (count :curPoints) - 1)
+		localmake "p item 1 :curPoints
+		oneToMany :p (sublist :nextPoints 2 (count :nextPoints) - 1)
+
+	]
+	drawDots :size
+end
+
+setScreenColor "#444
+colourfulStringWheel 150

@@ -1,0 +1,46 @@
+REM: _tbtmp=RUNDO program
+
+DIM line$(0)
+
+CALL read_prog("_tbin",line$())
+
+CALL write_prog("_tbout",line$())
+END
+
+SUB read_prog(filename$,ain$())   ! read program array
+    WHEN EXCEPTION IN
+         CLOSE #99
+         OPEN #99: name filename$, create newold, org text, access outin
+         SET #99: MARGIN maxnum
+         LET n=0
+         DO while more #99
+            LET n=n+1
+            MAT REDIM ain$(n)
+            LINE INPUT #99: ain$(n)
+         LOOP
+         CLOSE #99
+    USE
+         CLOSE #99
+    END WHEN
+END SUB
+
+SUB write_prog(filename$,ain$())  ! write program array
+    WHEN EXCEPTION IN
+         CLOSE #99
+         OPEN #99: name filename$, create newold, org text, access outin
+         CLOSE #99
+         UNSAVE filename$
+
+         OPEN #99: name filename$, create newold, org text, access outin
+         ERASE #99
+         SET #99: MARGIN maxnum
+         LET top=ubound(ain$)
+         FOR n=1 to top
+             PRINT #99: ain$(n)
+         NEXT n
+         CLOSE #99
+    USE
+         CLOSE #99
+    END WHEN
+END SUB
+

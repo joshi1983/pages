@@ -1,0 +1,235 @@
+make "yellowColor "#fcd116
+make "brownColor "#7b3f00
+
+to drawCurvedPattern :D
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "oldPos pos
+	localmake "yellowArcsInfo [[0.71] [5 2] [25 0.75] [0.075] [-48 0.23] [0.092] [142 0]
+	[68 0.3] [-50 0.75]]
+	localmake "brownArcsInfo [[-12.5 0] [0.32] [29 1.8] [-32 0.4] [157 0]
+	[50 0.27] [-50 0.65]]
+	setFillColor :yellowColor
+	setPenColor :brownColor
+	setPenSize :D * 0.03
+	repeat 8 [
+		setHeading :oldHeading + (repcount + 0.5) * 360 / 8
+		jumpRight :D * 0.13
+		polyStart
+		arcLines :yellowArcsInfo :D
+		polyEnd		
+		jumpTo :oldPos
+	]
+	setFillColor :brownColor
+	setPenColor :brownColor
+	repeat 8 [
+		setHeading :oldHeading + (repcount + 0.5) * 360 / 8
+		jumpLeft :D * 0.1
+		polyStart
+		arcLines :brownArcsInfo :D
+		polyEnd		
+		jumpTo :oldPos
+	]
+	setTurtleState :oldState
+end
+
+to drawStar :D
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "largeRadius :D * 1.5
+	localmake "faceRadius :D / 2
+	localmake "gap :faceRadius * cos 360 / 16
+	localmake "width1 :gap * tan 360 / 16
+	drawCurvedPattern :D
+	setFillColor :yellowColor
+	setLineJoinStyle "miter
+	setPenSize :D * 0.02
+	setPenColor :brownColor
+	isotoxalStar :largeRadius :faceRadius 8
+	setFillColor :brownColor
+	repeat 8 [
+		jumpForward :gap
+		jumpLeft :width1
+		polyStart
+		jumpRight :width1
+		jumpForward :largeRadius - :gap
+		polyEnd
+		jumpTo :oldPos
+		right 360 / 8
+	]
+	setTurtleState :oldState
+end
+
+to drawFace :faceRadius
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "arcsInfo1 [
+		; eyebrow
+		[0.1 0.37 [ [42 0.04] [27 0.62] [30 0.13] [29 0.72] [90 0]
+		[30 0.08] [50 0.04] [-20 0.68] [-30 0.39] [-22 0.35] 
+		[5 0.1] [41 0.04] [75 0.01]]]
+
+		; eye
+		[0.17 0.245 [[75 0.13] [10 0.2] [0.09] [45 0.28] [0.12] [150 0]
+		[19.5 0.16] [0.084] [-20 0.25] [-140 0] [96.5 0.105] [-157 0]
+		[-20 0.33] [-7 0.4] [10 0.07] [160 0.0015] [8 0.3] [15 0.5]
+		[32 0.185] [15 0.5] [15 0.2] [35 0.03] [147 0.027] [-17 0.4]
+		[-25 0.1] [-160 0] [78 0.15] [-118 0] [-20 0.2]]]
+
+		; mouth corner
+		[0.537 -0.515 [[-3 0] [-46 0.14] [0.07]]]
+	]
+	localmake "arcsInfo2 [
+		; nose
+		[-0.269 [
+[90 0] [-30 0.12] [8 0.3] [25 0.17] [20 0.5] [20 0.15]
+	[-133 0] [0.003]
+		[-20 0] [-63 0.13] [48 0.05] [5 0.1] [12 0.25] [-19 0.16] [-42 0.067] 
+		[-100 0] [-40 0.045] [0.02] [40 0.06] [70 0.035] [30 0.055] [10 0.11] 
+		[45 0.055] [-168 0] [0.02] [90 0.042] [10 0.2] [2 0.660672]
+		]]
+		; upper lip
+		[-0.462 [[90 0] [8 2.5] [-27 0] [0.15] [-170 0] [26 0.3] [0.17] [-34 0.22]
+		[17 0.22]]]
+		; lower lip
+		[-0.61 [[90 0] [-4 1] [-22.9 0.45] [0.25] [-160  0] [0.13] [-19 0] [25.9 0.77]]]
+	]
+	setPenSize 0
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		repeat count :arcsInfo1 [
+			localmake "info item repcount :arcsInfo1
+			jumpLeft :sign * :faceRadius * first :info
+			jumpForward :faceRadius * item 2 :info
+			polyStart
+			arcLines last :info :sign * :faceRadius			
+			polyEnd
+			jumpTo :oldPos
+			setHeading :oldHeading
+		]
+	]
+	repeat count :arcsInfo2 [
+		localmake "info item repcount :arcsInfo2
+		jumpForward :faceRadius * first :info
+		localmake "arcsInfo last :info
+		polyStart
+		arcLines :arcsInfo :faceRadius
+		arcLines reverse :arcsInfo :faceRadius
+		polyEnd
+		jumpTo :oldPos
+		setHeading :oldHeading
+	]
+	jumpBackward :faceRadius * 0.7105
+	ellipse :faceRadius * 0.086 :faceRadius * 0.014
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Uruguay#/media/File:Sol_de_Mayo-Bandera_de_Uruguay.svg
+to drawSunOfMay :D
+	localmake "oldState turtleState
+	localmake "faceRadius :D / 2
+	jumpForward :D + :faceRadius
+	drawStar :D
+	setPenSize :height * 0.003
+	setFillColor :yellowColor
+	setPenColor :brownColor
+	circle :faceRadius
+	setFillColor :brownColor
+	drawFace :faceRadius
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Uruguay#/media/File:Flag_of_Uruguay.svg
+; The construction sheet is at:
+; https://www.vexilla-mundi.com/uruguay_flag.html
+to uruguayFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 3 / 2
+	localmake "smallWidth :width * 99 / (99 + 153)
+	localmake "pair ["white "#0038a8]
+	stripes :width :height (combine :pair :pair :pair :pair ["white])
+	jumpForward :height / 2
+	jumpLeft (:width - :smallWidth) / 2
+	stripes :smallWidth :height / 2 ["white]
+	drawSunOfMay :height * 22 / 9 / 18
+	setTurtleState :oldState
+end
+
+to uruguayNavalJackSun :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "outlineSize :height * 0.2204
+	localmake "faceRadius :outlineSize * 0.4145
+	localmake "lengthRatios [ 0.58 0.43 0.35 0.43]	
+	localmake "numRays 32
+	setPenColor "#806900
+	setPenSize :outlineSize * 0.0188
+	setFillColor "#fcd116
+	regularStar :outlineSize 8
+	setFillColor transparent
+	circle :faceRadius
+	repeat :numRays [
+		localmake "index 1 + remainder repcount - 1 count :lengthRatios
+		localmake "len :outlineSize * item :index :lengthRatios
+		jumpForward :faceRadius
+		forward :len 
+		jumpTo :oldPos
+		right 360 / :numRays
+	]
+	setFillColor penColor
+	setHeading :oldHeading
+	drawFace :faceRadius
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Uruguay#/media/File:Naval_Jack_of_Uruguay.svg
+to uruguayNavalJack :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "width :height * 3 / 2
+	stripes :width :height ["#0038a8]
+	jumpForward :height / 2
+	setPenSize 0
+	localmake "center pos
+	setFillColor "white
+	repeat 2 [
+		jumpForward :height / 2
+		right 180
+		isoTriangle :width * 0.64444444 :height * 0.3200521
+		jumpTo :center
+	]
+	right 90
+	repeat 2 [
+		jumpForward :width / 2
+		right 180
+		isoTriangle :height * 0.6333333 :width * 0.31881945
+		jumpTo :center
+	]
+	setHeading :oldHeading
+	uruguayNavalJackSun :height	
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Uruguay#/media/File:Flag_of_Uruguay_(1825-1828).svg
+to uruguayFlag1825 :height
+	localmake "width :height * 3 / 2
+	stripes :width :height ["#B43232 "white "#003685]
+end
+
+setScreenColor "#ddd
+make "height 100
+make "separation :height * 3
+jumpLeft :separation * 1.5
+uruguayFlag :height
+jumpRight :separation
+uruguayNavalJack :height
+jumpRight :separation
+uruguayFlag1825 :height
+jumpRight :separation
+drawSunOfMay :height / 3

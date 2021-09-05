@@ -1,0 +1,19 @@
+REM  Illustrate relative plotting
+REM  Draw a spiral
+REM: time delays added 22 APR 2004
+
+LIBRARY "RelPlot.tru"
+SET WINDOW -15, 15, -10, 10
+
+CALL plot_start(0,0)             ! From origin
+LET s = 1                        ! Step size
+FOR n = 1 to 20
+    CALL plot_rel(s,0)           ! Horizontal step
+pause 0.1
+    CALL plot_rel(0,s)           ! Vertical step
+pause 0.1
+    LET s = - (s + sgn(s))       ! Increase size, change direction
+NEXT n
+PLOT
+
+END

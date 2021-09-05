@@ -1,0 +1,60 @@
+; Inspired by logo at:
+; https://simulatemore.mscsoftware.com
+to mscSoftwareHexagonLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angle1 30
+	localmake "width :height * cos :angle1
+	jumpForward :height
+	localmake "top pos
+	setPenSize 0
+	left 90 + :angle1
+	jumpForward :height * 0.5
+	localmake "upperLeft pos
+	setHeading :oldHeading + 180
+	jumpForward :height * 0.5
+	localmake "lowerLeft pos
+	jumpLeft :width
+	localmake "lowerRight pos
+	jumpBackward :height * 0.5
+	localmake "upperRight pos
+	jumpTo :lowerLeft
+
+
+	setFillColor "#bad879
+	polygon [:top :upperLeft :oldPos :lowerRight :upperRight :oldPos]			
+
+	setFillColor "#77c1d3
+	polygon [:top :upperLeft :lowerLeft :lowerRight :upperRight :lowerLeft]			
+
+	; Since no blend mode could be found to intersect with the same colour as the original logo,
+	; we'll make a separate polygon for each intersection.
+	setFillColor "#0097ba
+	jumpTo :lowerRight
+	polyStart
+	jumpTo :upperRight
+	setHeading towards :oldPos
+	jumpForward distanceToLine :lowerRight :lowerLeft
+	polyEnd
+
+	jumpTo :top
+	polyStart
+	jumpTo :upperLeft
+	setHeading towards :oldPos
+	jumpForward distanceToLine :top :lowerLeft
+	polyEnd
+
+	jumpForward distanceToLine :lowerLeft :upperRight
+	polyStart
+	jumpForward distanceToLine :lowerLeft :lowerRight
+	setHeading towards :lowerRight
+	jumpForward distanceToLine :top :oldPos
+	setHeading towards :top
+	jumpForward distanceToLine :lowerLeft :upperRight
+	polyEnd
+
+	setTurtleState :oldState
+end
+
+mscSoftwareHexagonLogo 100

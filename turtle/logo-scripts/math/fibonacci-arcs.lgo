@@ -1,0 +1,71 @@
+to circleGradient :radius :outerColor
+	localmake "oldPos pos
+	localmake "colorStops createPList2 [
+		[0 mix :outerColor transparent 0] [0.7 mix :outerColor transparent 0.1]
+		[1 :outerColor]
+	]
+	jumpForward :radius
+	localmake "result createRadialGradient2 pos :oldPos :radius :colorStops "pad
+	jumpBackward :radius
+	output :result
+end
+
+; Inspired by
+; https://www.pinterest.ca/pin/767723067757952905/
+; The radius of the arcs and circles correspond with fibonacci numbers.
+; Several fibonacci numbers are calculated and roughly the middle of the
+; calculated numbers is scaled to line up with the specified height
+to fibonacciCircles :height
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "width :height * 10
+	localmake "colors ["blue  "#f8f]
+	localmake "fibonacciNumbers []
+	localmake "n1 1
+	localmake "n2 1
+	repeat 15 [
+		localmake "oldN2 :n2
+		localmake "n2 :n1 + :n2
+		localmake "n1 :oldN2
+		queue2 "fibonacciNumbers :oldN2
+	]
+	localmake "numCircles int (count :fibonacciNumbers) / 2
+	localmake "numArcs (count :fibonacciNumbers) - :numCircles
+	localmake "scale1 :height / item :numCircles :fibonacciNumbers
+	setPenColor first :colors
+	setLineCap "round
+	repeat :numArcs [
+		localmake "radius :scale1 * item repcount + :numCircles :fibonacciNumbers
+		localmake "arcAngle arcCos (:radius - :height * 2) / :radius
+		if :width / 2 < :radius [
+			localmake "arcAngle2 arcSin :width / 2 / :radius
+			localmake "arcAngle min :arcAngle :arcAngle2
+		]
+		localmake "arcAngleGap 4
+		localmake "arcAngle1 :arcAngle - :arcAngleGap / 2
+		localmake "penSize1 :height * mix 0.01 0.03 repRatio
+		left 90
+		setPenSize 0 ; don't show arc for now.
+		arcRight :arcAngle :radius
+		right 180
+		setPenSize :penSize1
+		arcLeft :arcAngle1 :radius
+		setPenSize 0
+		arcLeft :arcAngleGap :radius
+		setPenSize :penSize1
+		arcLeft :arcAngle1 :radius
+		jumpTo :oldPos
+		setHeading :oldHeading
+	]
+	setPenSize 0
+	repeat :numCircles [
+		localmake "radius :scale1 * item repcount :fibonacciNumbers
+		setFillGradient circleGradient :radius mixItems :colors repcount / :numCircles
+		jumpForward :radius
+		circle :radius
+		jumpTo :oldPos
+	]
+end
+
+setScreenColor "black
+fibonacciCircles 100

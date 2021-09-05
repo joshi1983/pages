@@ -1,0 +1,60 @@
+; Inspired by
+; https://www.pinterest.ca/pin/69454019236871647/
+to octagonQuilt :height
+	localmake "oldState turtleState
+	localmake "thickness1 :height * 0.01
+	localmake "height1 :height - :thickness1
+	localmake "oldHeading heading
+	localmake "diagonalSize1 :height1 / 2 / cos 45
+	localmake "lineThickness :height1 * 0.002
+	localmake "lineSeparation :height1 * 0.011
+	localmake "size1 :height1 / (1 + 2 * tan 180 / 8)
+	localmake "size2 :size1 / (1 + 2 * cos 45)
+	localmake "numRepeats1 :size2 / 2 / :lineSeparation
+	localmake "numRepeats2 int :numRepeats1 * 2 * cos 45
+	localmake "numRepeats3 int (:diagonalSize1 - :height1 / 2) / :lineSeparation
+	jumpForward :height / 2
+	localmake "center pos
+	right 180 / 8
+	setPenSize :thickness1
+	regularPolygon :size1 / (cos 180 / 8) / 2 8
+	regularPolygon :height1 / 2 / cos 180 / 8 8
+	setHeading :oldHeading + 45
+	regularPolygon :diagonalSize1 4
+	setLineCap "round
+	setLineJoinStyle "round
+	repeat 4 [
+		repeat :numRepeats1 + 1 [
+			stripes :size1 :lineThickness [penColor]
+			jumpForward :lineSeparation
+		]
+		repeat :numRepeats2 [
+			stripes mix :size2 :size1 repcount / :numRepeats2 :lineThickness [penColor]
+			jumpForward :lineSeparation
+		]
+		jumpTo :center
+		jumpForward :lineSeparation + :height / 2 - :lineThickness
+		localmake "len :height * ( (1 / 2 / cos 45) - 1 / 2) - :lineSeparation
+		repeat :numRepeats3 [
+			localmake "size :len * 2
+			stripes :size :lineThickness [penColor]
+			localmake "len :len - :lineSeparation
+			jumpForward :lineSeparation
+		]		
+		jumpTo :center
+		right 90
+	]
+	setHeading :oldHeading
+	setFillColor "gray
+	repeat 8 [
+		setHeading :oldHeading + repcount * 360 / 8
+		jumpForward (:size1 + :size2) / 2
+		jumpLeft :size2 / 2
+		right 90
+		isoTrapezoid :size2 -:size2 :size2
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+octagonQuilt 100

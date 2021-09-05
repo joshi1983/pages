@@ -1,0 +1,34 @@
+; Inspired by pin at:
+; https://ca.pinterest.com/pin/302867143712853029
+to rayhanStar :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "triangleWidth :height * 0.485
+	localmake "triangleHeight :height * 0.12
+	localmake "colors [
+		["#fef200 "#c5b92f]
+		["#58b946 "#3c8840]
+		["#103c61 "#0058a2]
+		["#922a77 "#c1529e]
+		["#a51e22 "#ed1b24]
+		["#fdb513 "#cd8d29]
+	]
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	repeat count :colors [
+		localmake "pair item repcount :colors
+		setHeading :oldHeading + repcount * 360 / count :colors
+		jumpForward (:height - :triangleWidth) / 2
+		left 90
+		repeat 2 [
+			setFillColor item repcount :pair
+			isoTriangle :triangleWidth :triangleHeight
+			right 180
+		]		
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+rayhanStar 100
