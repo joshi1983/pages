@@ -1,0 +1,40 @@
+make "astroBackColor "#0d1663
+
+; Inspired by a painting at:
+; https://www.thisiscolossal.com/2022/01/shane-drinkwater-paintings/
+; by Shane Drinkwater
+; This code was written by Josh Greig to resemble the painting.
+to shaneDrinkwaterAstro :height
+	localmake "oldState turtleState
+	localmake "crescentRadius :height * 0.135
+	localmake "numRings 28
+	localmake "maxR :height * 0.45
+	localmake "minR :crescentRadius + (:maxR - :crescentRadius) / :numRings
+	localmake "dashLength (:maxR - :minR) / :numRings * 0.7
+	stripes :height :height [:astroBackColor]
+	jumpForward :height / 2
+	localmake "center pos
+	setFillColor "white
+	setPenSize 0
+	circle :crescentRadius
+	jumpRight :crescentRadius * 0.93
+	setFillColor :astroBackColor
+	circle :crescentRadius
+	setPenSize :height * 0.002
+	setPenColor "white
+	setLineCap "round
+	repeat :numRings [
+		localmake "jumpDistance mix :minR :maxR repRatio
+		localmake "numDashes round :jumpDistance * 1500 / :height
+		repeat :numDashes [
+			jumpTo :center
+			jumpForward :jumpDistance
+			forward :dashLength
+			right 360 / :numDashes
+		]
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor :astroBackColor
+shaneDrinkwaterAstro 100

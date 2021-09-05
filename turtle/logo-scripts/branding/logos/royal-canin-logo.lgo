@@ -1,0 +1,52 @@
+; Inspired by
+; https://commons.wikimedia.org/wiki/File:Royal-Canin-Logo.svg
+to royalCaninLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "angle1 59.5
+	localmake "angleStep :angle1 / 4
+	localmake "arcAngle1 65.63
+	localmake "arcAngle2 64
+	localmake "circleRadius :height * 0.125
+	localmake "arcRadius1 :height * 0.94
+	localmake "arcRadius2 :height * 1.06
+	jumpBackward :height * 0.75
+	localmake "center pos
+	setPenSize 0
+
+	; Draw the circles.
+	setFillColor "#e2001a
+	left :angleStep * 2
+	repeat 5 [
+		jumpForward :height * 1.31
+		circle :circleRadius
+		jumpForward :height * 0.315
+		circle :circleRadius
+		right :angleStep
+		jumpTo :center
+	]
+
+	; Now, draw the arcs.
+
+	; Draw the thinner arc.
+	setPenColor fillColor
+	jumpTo :center
+	setLineCap "round
+	setPenSize :height * 0.08
+	setHeading :oldHeading - :arcAngle1 / 2
+	jumpForward :arcRadius1
+	right 90
+	arcRight :arcAngle1 :arcRadius1
+
+	; Draw the thicker arc.
+	setPenSize :height * 0.11
+	jumpTo :center
+	setHeading :oldHeading - :arcAngle2 / 2
+	jumpForward :arcRadius2
+	right 90
+	arcRight :arcAngle2 :arcRadius2
+
+	setTurtleState :oldState
+end
+
+royalCaninLogo 100

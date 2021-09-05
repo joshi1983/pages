@@ -1,0 +1,23 @@
+; Inspired by flag at:
+; https://en.wikipedia.org/wiki/Ink_Flag#/media/File:Flag_of_Israel_(1948).svg
+to inkFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 11 / 8
+	localmake "inkBlue "#0038b8
+	stripes :width :height ["white]
+	jumpForward :height / 2
+	localmake "center pos
+	repeat 2 [
+		jumpForward :height / 4
+		stripes :width :height * 0.15 [:inkBlue]
+		jumpTo :center
+		right 180
+	]
+	setFillColor :inkBlue
+	setPenSize 0
+	regularStar :height * 0.22 6
+	setTurtleState :oldState
+end
+
+setScreenColor "gray
+inkFlag 100

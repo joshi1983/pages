@@ -1,0 +1,41 @@
+; Inspired by flag at:
+; https://en.wikipedia.org/wiki/Flag_of_Easton,_Pennsylvania#/media/File:Flag_of_Easton,_Pennsylvania.svg
+to eastonPennsylvaniaFlag :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "width :height * 1.71
+	localmake "stripeColors ["#bf0a30 "white]
+	localmake "stripeStep :height / 13
+	localmake "stripeWidth :height / 2
+	localmake "radius1 :height * 0.0686
+	localmake "radius2 :height * 0.037
+	localmake "numAngles 12
+	stripes :width :height ["#002868]
+	jumpForward :height / 2
+	localmake "center pos
+	jumpLeft :height / 2
+	repeat 6 [
+		stripes :stripeWidth :stripeStep :stripeColors
+		jumpForward :stripeStep
+	]
+	stripes :stripeWidth :stripeStep / 2 [first :stripeColors]
+	jumpTo :center
+	jumpRight :height / 4
+	localmake "center2 pos
+	setPenSize 0
+	setFillColor "white
+	isotoxalStar :radius1 :radius2 8
+	repeat :numAngles [
+		right repcount * 360 / :numAngles
+		jumpForward :height * 0.375
+
+		setHeading :oldHeading
+		isotoxalStar :radius1 :radius2 8
+
+		jumpTo :center2
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+eastonPennsylvaniaFlag 100

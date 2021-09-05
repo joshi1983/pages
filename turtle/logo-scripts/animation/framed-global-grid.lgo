@@ -1,0 +1,91 @@
+; Inspired by:
+; https://www.facebook.com/photo?fbid=2979756289078818
+to framedGlobalGrid :height :timeRatio
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "numRadiatingLines 256
+	localmake "sizeTime clamp :timeRatio * 2 0 1
+	localmake "innerRadius :height * mix 0.31 0.001 interpolateRatio easeInOut :sizeTime
+	localmake "spinTime interpolateRatio easeOut :timeRatio
+	localmake "numCurveLines 64
+	localmake "angleOffsetInterval 2 * 360 / :numCurveLines
+	localmake "innerColorStops createPList2 [
+		[0 transparent] [1 ["black easeIn]]
+	]
+	localmake "thickness :height * 0.001
+	setFillColor transparent
+	setPenColor "white
+	setPenSize :thickness
+	localmake "outlineSize :height - penSize
+	jumpForward :height / 2
+	localmake "center pos
+	setLineJoinStyle "miter
+	square :outlineSize
+	setLineCap "butt
+	repeat :numRadiatingLines [
+		localmake "angle 360 * repcount / :numRadiatingLines
+		setHeading :oldHeading + :angle
+		localmake "angle modulo :angle 90
+		if :angle > 45 [
+			localmake "angle 90 - :angle
+		]
+		localmake "len (:height - :thickness) / 2 / (cos :angle) - :innerRadius
+		jumpForward :innerRadius
+		setPenSize :thickness * (1 + modulo repcount 2)
+		forward :len
+		jumpTo :center
+	]
+	repeat 2 [
+		localmake "heading1 heading
+		localmake "angleOffset1 0
+		if repcount = 1 [
+			localmake "angleOffset1 50 * :spinTime * 360 / :numCurveLines
+			localmake "angleOffset1 :angleOffset1 - :angleOffsetInterval * (
+				floor :angleOffset1 / :angleOffsetInterval)
+		]
+		repeat :numCurveLines [
+			localmake "angle :angleOffset1 + 180 * repcount / :numCurveLines
+			localmake "r1 :innerRadius * cos :angle
+			if :r1 < 0 [
+				right 180
+				localmake "r1 -:r1
+			]
+			setPenSize :thickness * (1 + modulo repcount 2)
+			ifelse (abs :r1) < 0.0001 [
+				jumpBackward :innerRadius
+				forward :innerRadius * 2
+				jumpTo :center
+			] [
+				ellipseArc 180 :r1 :innerRadius 0
+			]
+			setHeading :heading1
+		]
+		right 90
+	]
+
+	setFillGradient createRadialGradient pos :innerRadius :innerColorStops
+	circle :innerRadius
+
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+make "time animation.clampedTimeRatio
+framedGlobalGrid 100 :time
+
+to animation.snapshotstyle
+	output createPList2 [
+		["position.y 50]
+		["zoom.scale 6.7]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 10
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+		["thumbnailTime 10]
+	]
+end

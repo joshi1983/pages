@@ -1,0 +1,88 @@
+make "plankSeparationRatio 0.15
+make "plankThicknessRatio 0.4
+make "plankLengthRatio 0.6
+make "railSeparationRatio 0.7
+make "railThicknessRatio 0.08
+make "gravelColor "#dfdddd
+
+; Inspired by various photos of railway tracks.
+; I(Josh Greig) wrote this code in 2023.
+; Consider this procedure public domain.
+to railwayTrack :width :len
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "plankSeparation :width * :plankSeparationRatio
+	localmake "plankThickness :plankSeparation * :plankThicknessRatio
+	localmake "plankLength :width * :plankLengthRatio
+	localmake "numPlanks (:len + :plankSeparation - :plankThickness) / :plankSeparation
+	localmake "railSeparation :plankLength * :railSeparationRatio
+	localmake "railThickness :railSeparation * :railThicknessRatio
+	stripes :width :len [:gravelColor]	; indicate gravel.
+
+	; Draw the planks.
+	repeat :numPlanks [
+		stripes :plankLength :plankThickness ["#7B5F37]
+		jumpForward :plankSeparation
+	]
+	jumpForward (:len - (int :numPlanks) * :plankSeparation)
+	localmake "endPos pos
+
+	; Draw the metal rails.
+	jumpTo :oldPos
+	jumpRight :railSeparation / 2
+	stripes :railThickness :len ["black]
+	jumpLeft :railSeparation
+	stripes :railThickness :len ["black]
+
+	setTurtleState :oldState
+	jumpTo :endPos
+end
+
+to railwayArcLeft :width :arcAngle :arcRadius
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "plankSeparation :width * :plankSeparationRatio
+	localmake "plankThickness :plankSeparation * :plankThicknessRatio
+	localmake "plankLength :width * :plankLengthRatio
+	localmake "len :arcRadius * :arcAngle * pi / 180
+	localmake "numPlanks (:len + :plankSeparation - :plankThickness) / :plankSeparation
+	localmake "railSeparation :plankLength * :railSeparationRatio
+	localmake "railThickness :railSeparation * :railThicknessRatio
+	localmake "angleSeparation :arcAngle / :numPlanks
+	setPenSize :width
+	setLineCap "butt
+	setPenColor :gravelColor
+	arcLeft :arcAngle :arcRadius
+	localmake "resultHeading heading
+	localmake "endOfArcPos pos
+	; Draw the planks.
+	setPenSize 0
+	jumpTo :oldPos
+	setHeading :oldHeading
+	repeat :numPlanks [
+		stripes :plankLength :plankThickness ["#7B5F37]
+		arcLeft :angleSeparation :arcRadius
+	]
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpRight :railSeparation / 2
+	setPenColor "black
+	setPenSize :railThickness
+	arcLeft :arcAngle :arcRadius + :railSeparation / 2
+	jumpLeft :railSeparation
+	right 180
+	arcLeft -:arcAngle :arcRadius - :railSeparation / 2
+
+	setTurtleState :oldState
+	setHeading :resultHeading
+	jumpTo :endOfArcPos
+end
+
+; Indicate a grassy ground.
+setScreenColor "#5FAB5F
+right 90
+repeat 2 [
+	railwayTrack 100 2000
+	railwayArcLeft 100 180 500
+]

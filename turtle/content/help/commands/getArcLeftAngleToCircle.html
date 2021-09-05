@@ -1,0 +1,109 @@
+<code>; The following code selects a random
+; circle.
+; Then, up to 200 random arcs are drawn which end at the edge of the circle.
+; The end of each arc is marked in blue.
+; You'll see every blue dot on the circle.
+
+make "circleRadius 1 + random 50
+make "circlePosition [random 20 random 20]
+jumpTo :circlePosition
+circle :circleRadius
+setPenColor "red
+
+repeat 200 [
+	make "arcStartPosition [random 20 random 20]
+	make "arcStartHeading random 360
+	make "arcRadius 1 + random 50
+	jumpTo :arcStartPosition
+	setHeading :arcStartHeading
+	make "arcAngle getArcLeftAngleToCircle :arcRadius :circlePosition :circleRadius
+	if :arcAngle &gt; 0 [
+		setPenSize 0.2
+		arcLeft :arcAngle :arcRadius
+		setFillColor "blue
+		setPenSize 0
+		circle 1
+	]
+]</code>
+<code>; The myGetArcLeftAngleToCircle works the same way as the built in getArcLeftAngleToCircle command.
+; The getArcLeftAngleToCircle command is available so you don't need to implement it yourself.
+; Reviewing this implementation could help you implement something similar using procedures, though.
+to myGetArcLeftAngleToCircle :arcRadius :circlePosition :circleRadius
+	localmake "distanceToCircleCenter distance :circlePosition
+	localmake "theta heading - 90
+	localmake "arcCenterX xCor + :arcRadius * (sin :theta)
+	localmake "arcCenterY yCor + :arcRadius * (cos :theta)
+	localmake "dx :arcCenterX - first :circlePosition
+	localmake "dy :arcCenterY - item 2 :circlePosition
+	localmake "dc hypot [:dx :dy]
+
+	; Prevent passing impossible triangles to triLengthsToAngle.
+	if :dc + :circleRadius &lt;= :arcRadius [
+		output -1
+	]
+	if :dc + :arcRadius &lt;= :circleRadius [
+		output -1
+	]
+	if :circleRadius + :arcRadius &lt;= :dc [
+		output -1
+	]
+	if :arcRadius + :distanceToCircleCenter &lt; :dc [
+		output -1
+	]
+	if :dc + :distanceToCircleCenter &lt; :arcRadius [
+		output -1
+	]
+	if :dc + :arcRadius &lt; :distanceToCircleCenter [
+		output -1
+	]
+	localmake "angle1 triLengthsToAngle :arcRadius :dc :distanceToCircleCenter
+	localmake "angleFromIntersectionToCircleCenter triLengthsToAngle :arcRadius :dc :circleRadius 
+	if :angleFromIntersectionToCircleCenter &lt; 0 [
+		output -1
+	]
+	localmake "result :angle1 - :angleFromIntersectionToCircleCenter
+	localmake "delta heading - towards :circlePosition
+	if (abs :delta) &gt; 180 [
+		localmake "delta 360 - abs :delta
+	] 
+	if (abs :delta) &gt; 90 [
+		localmake "result (abs :angleFromIntersectionToCircleCenter) - :angle1
+		if or (:result &gt; 180) :result &lt; 0 [
+			localmake "result -(abs :angleFromIntersectionToCircleCenter) - :angle1
+		]
+	]
+	if :result &lt; 0 [
+		if :circleRadius &gt; :distanceToCircleCenter [
+			output :angle1 + :angleFromIntersectionToCircleCenter
+		]
+		output :result + 360
+	]
+	output :result
+end
+
+make "circleRadius 5 + random 10
+make "circlePosition [random 20 random 20] 
+jumpTo :circlePosition
+circle :circleRadius
+circle 0.5
+
+jumpTo [random 20 0]
+make "arcRadius 20
+setHeading 0
+print ["arcRadius :arcRadius]
+make "oldState turtleState
+make "result myGetArcLeftAngleToCircle :arcRadius :circlePosition :circleRadius
+setTurtleState :oldState
+print :result
+circle 0.5
+setPenColor "red
+if :result &lt; 0 [
+	setPenColor "blue
+]
+arcLeft :result :arcRadius
+setPenSize 0.3
+setPenColor "green
+circle 0.1
+setPenSize 0.1
+jumpLeft :arcRadius
+circle :arcRadius</code>

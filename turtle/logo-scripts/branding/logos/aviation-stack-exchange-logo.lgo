@@ -1,0 +1,285 @@
+make "thicknessRatio 0.05
+
+to aviationCircle :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "radius :height / 2
+	localmake "thickness :height * :thicknessRatio
+	localmake "sideArcAngle 46
+	localmake "sideAngle1 96
+	jumpForward :radius
+	localmake "center pos
+	jumpForward :thickness / 2
+	right 90
+	localmake "len distanceToCircle :center :radius
+	localmake "topArcAngle 2 * arcSin :len / :radius
+	jumpForward :len
+	setHeading (towards :center) + 90
+	setPenSize 0
+	polyStart
+	arcLeft :topArcAngle :radius
+	polyEnd
+	jumpTo :center
+	setHeading :oldHeading
+	jumpBackward :thickness / 2
+	localmake "belowCenter pos
+	right 90
+	jumpForward distanceToCircle :center :radius
+	localmake "rightPos pos
+	setHeading (towards :center) - 90
+	polyStart
+	arcRight :sideArcAngle :radius
+	right :sideAngle1
+	localmake "heading1 heading
+	localmake "sideLen1 distanceToLine :belowCenter :rightPos
+	jumpForward :sideLen1
+	polyEnd
+	jumpTo :center
+	setHeading :oldHeading
+	jumpBackward :radius
+	localmake "bottomArcAngle (90 - :sideArcAngle) - 3 * arcSin :thickness / 2 / :radius
+	left 90
+	arcRight :bottomArcAngle :radius
+	right 180
+	polyStart
+	arcLeft :bottomArcAngle * 2 :radius
+	setHeading :heading1
+	jumpForward distanceToLine :belowCenter :rightPos
+	localmake "len2 distance :belowCenter
+	setHeading :oldHeading - 90
+	jumpForward :len2 * 2
+	polyEnd
+	jumpTo :belowCenter
+	setHeading :oldHeading - 90
+	jumpForward distanceToCircle :center :radius
+	polyStart
+	setHeading (towards :center) + 90
+	arcLeft :sideArcAngle :radius
+	left :sideAngle1
+	jumpForward distanceToLine :belowCenter :rightPos
+	polyEnd
+	setTurtleState :oldState
+end
+
+to aviationWings :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "thickness :height * :thicknessRatio
+	localmake "outerRadius :height / 2 + :thickness
+	localmake "arcsInfo [[0.38] [-30 0.3] [-37.7 0.6]]
+	localmake "lowerArcs [[0.39] [-109 0] [-20 0.5]
+	[-20 0.67] [-31 0.27]]
+	jumpForward :height / 2
+	localmake "center pos
+	jumpForward :thickness / 2
+	localmake "aboveCenter pos
+	left 90
+	localmake "startGap distanceToCircle :center :outerRadius
+	jumpForward :startGap
+	setPenSize 0
+	polyStart
+	localmake "startPos pos
+	arcLines :arcsInfo :height
+	setHeading :oldHeading + 90
+	jumpForward distanceToCircle :center :outerRadius
+	setHeading (towards :center) + 90
+	localmake "len distance :startPos
+	localmake "arcAngle 2 * arcSin :len / 2 / :outerRadius
+	arcLeft :arcAngle :outerRadius
+	polyEnd
+	jumpTo :aboveCenter
+	setHeading :oldHeading
+	jumpRight :startGap
+	right 90
+	polyStart
+	arcLines :arcsInfo -:height
+	setHeading :oldHeading - 90
+	jumpForward distanceToCircle :center :outerRadius
+	setHeading (towards :center) - 90
+	arcRight :arcAngle :outerRadius
+	polyEnd
+	jumpTo :center
+	setHeading :oldHeading
+	jumpBackward :thickness / 2
+	localmake "belowCenter pos
+	right 90
+	localmake "startGap distanceToCircle :center :outerRadius
+	jumpForward :startGap
+	localmake "startPos pos
+	polyStart
+	arcLines :lowerArcs :height
+	localmake "len2 distanceToCircle :center :outerRadius
+	jumpForward :len2
+	localmake "chordLength distance :startPos
+	localmake "arcAngle 2 * arcSin :chordLength / 2 / :outerRadius
+	setHeading (towards :center) + 90
+	arcLeft :arcAngle :outerRadius
+	polyEnd
+	jumpTo :belowCenter
+	setHeading :oldHeading - 90
+	jumpForward :startGap
+	polyStart
+	arcLines :lowerArcs -:height
+	jumpForward :len2
+	setHeading (towards :center) - 90
+	arcRight :arcAngle :outerRadius
+	polyEnd
+	setTurtleState :oldState
+end
+
+to drawA :fontHeight
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "innerBaseWidth :fontHeight * 0.54
+	localmake "baseThickness :fontHeight * 0.145
+	localmake "outerAngle 23.6
+	localmake "innerAngle 21.5
+	localmake "outerHeight (:innerBaseWidth / 2 + :baseThickness) / sin :outerAngle
+	localmake "innerHeight :innerBaseWidth / 2 / sin :innerAngle
+	jumpForward :fontHeight * 0.275
+	stripes :fontHeight * 0.5 :fontHeight * 0.143 [fillColor]
+	jumpBackward :fontHeight * 0.22
+	jumpRight :innerBaseWidth / 2
+	polyStart
+	jumpRight :baseThickness
+	left :outerAngle
+	jumpForward :outerHeight
+	left 180 - :outerAngle * 2
+	jumpForward :outerHeight
+	setHeading :oldHeading
+	jumpRight :baseThickness
+	right :innerAngle
+	jumpForward :innerHeight
+	polyEnd
+	setTurtleState :oldState
+end
+
+to drawV :fontHeight
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "outerAngle 22
+	localmake "outerLen :fontHeight / cos :outerAngle
+	localmake "thickness :fontHeight * 0.15
+	jumpForward :fontHeight
+	localmake "upperPos pos
+	jumpTo :oldPos
+	right :outerAngle
+	polyStart
+	jumpForward :outerLen
+	setHeading :oldHeading - 90
+	jumpForward :thickness
+	left 90 - :outerAngle
+	localmake "innerLen distanceToLine :oldPos :upperPos
+	jumpForward :innerLen
+	setHeading :oldHeading - :outerAngle
+	jumpForward :innerLen
+	setHeading :oldHeading
+	jumpLeft :thickness
+	polyEnd
+	setTurtleState :oldState
+end
+
+to drawI :fontHeight
+	localmake "oldState turtleState
+	localmake "bottomGap :fontHeight * 0.05
+	localmake "fontHeight1 :fontHeight - :bottomGap
+	jumpForward :bottomGap
+	stripes :fontHeight * 0.14 :fontHeight1 [fillColor]
+	setTurtleState :oldState
+end
+
+to drawT :fontHeight
+	localmake "oldState turtleState
+	localmake "thickness :fontHeight * 0.145
+	drawI :fontHeight
+	jumpForward :fontHeight - :thickness
+	stripes :fontHeight * 0.53 :thickness [fillColor]
+	setTurtleState :oldState
+end
+
+to drawO :fontHeight
+	localmake "oldState turtleState
+	localmake "bottomGap :fontHeight * 0.05
+	localmake "fontHeight1 :fontHeight - :bottomGap
+	localmake "thickness :fontHeight * 0.145
+	localmake "radius (:fontHeight1 - :thickness) / 2
+	jumpForward :fontHeight - :radius - :thickness / 2
+	setPenColor fillColor
+	setFillColor transparent
+	setPenSize :thickness
+	circle :radius
+	setTurtleState :oldState
+end
+
+to drawN :fontHeight
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "leftHeight :fontHeight * 0.95
+	localmake "bottomGap :fontHeight * 0.02
+	localmake "rightHeight :fontHeight - :bottomGap
+	localmake "width :fontHeight * 0.8
+	localmake "thickness :fontHeight * 0.14
+	localmake "angle 45
+	localmake "diagonalLength (:width - :thickness) / cos :angle
+	localmake "innerHeight :diagonalLength * cos :angle
+	localmake "innerHeight2 :innerHeight + :leftHeight - :rightHeight
+	jumpForward :bottomGap
+	jumpRight :width / 2
+	polyStart
+	jumpForward :rightHeight
+	jumpLeft :thickness
+	jumpBackward :innerHeight
+	left :angle
+	jumpForward :diagonalLength
+	setHeading :oldHeading
+	jumpBackward :leftHeight
+	jumpRight :thickness
+	jumpForward :innerHeight2
+	polyEnd
+	setTurtleState :oldState
+end
+
+to drawAviationText :fontHeight
+	localmake "oldState turtleState
+	drawA :fontHeight
+	jumpRight :fontHeight * 0.865
+	drawV :fontHeight
+	jumpRight :fontHeight * 0.69
+	drawI :fontHeight
+	jumpRight :fontHeight * 0.73
+	drawA :fontHeight
+	jumpRight :fontHeight * 0.835
+	drawT :fontHeight
+	jumpRight :fontHeight * 0.585
+	drawI :fontHeight
+	jumpRight :fontHeight * 0.807
+	drawO :fontHeight
+	jumpRight :fontHeight * 1.12
+	drawN :fontHeight
+	setTurtleState :oldState
+end
+
+; Inspired by favicon at:
+; https://aviation.stackexchange.com/
+; The biggest difference is this code draws the 
+; circular part of the glyph as an exact circle.
+; The actual aviation logo uses a slightly elliptical shape.
+to aviationStackExchangeLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "fontSize :height * 0.631
+	jumpLeft :height * 2.056
+	setFillColor "#f74f57
+	aviationCircle :height
+	aviationWings :height
+	setFillColor "#2a4e68
+	setPenSize 0
+	jumpTo :oldPos
+	jumpLeft :height * 0.4164
+	jumpForward :height * 0.116
+	drawAviationText :fontSize
+	setTurtleState :oldState
+end
+
+aviationStackExchangeLogo 100

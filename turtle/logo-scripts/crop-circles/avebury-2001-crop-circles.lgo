@@ -1,0 +1,41 @@
+make "darkColor "#780
+
+; Inspired by
+; http://www.cropcircleconnector.com/Sorensen/2001/NineSpheresTK.jpg
+; Located at Avebury Down, Wiltshire, England
+; It was reported at:
+; June 22, 2001
+to aveburyCropCircles :height
+	localmake "oldState turtleState
+	localmake "lightColor "#ef8
+	localmake "outerCircleRadius :height * 0.1
+	localmake "numOuterCircles 9
+	localmake "largeRadius (:height - :outerCircleRadius * 2) / (1 + cos 180 / :numOuterCircles)
+	localmake "circlesInfo [[0.21 0.002] [0.15 0.025] [0.1 0.025]]
+	setFillColor transparent
+	setPenColor :lightColor
+	setPenSize :height * 0.03
+	jumpForward :height - :outerCircleRadius - :largeRadius
+	localmake "center pos
+	circle :largeRadius
+	setPenSize 0
+	setFillColor :lightColor
+	repeat :numOuterCircles [
+		jumpForward :largeRadius
+		circle :outerCircleRadius
+		jumpTo :center
+		right 360 / :numOuterCircles
+	]
+	circle :height * 0.05
+	setFillColor transparent
+	repeat count :circlesInfo [
+		localmake "circleInfo item repcount :circlesInfo
+		localmake "radius :height * first :circleInfo
+		setPenSize :height * last :circleInfo
+		circle :radius 
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor :darkColor
+aveburyCropCircles 100

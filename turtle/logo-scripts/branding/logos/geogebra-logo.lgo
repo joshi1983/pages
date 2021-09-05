@@ -1,0 +1,58 @@
+; Inspired by:
+; https://en.wikipedia.org/wiki/GeoGebra#/media/File:Geogebra.svg
+to geogebraLogo :height
+	localmake "oldState turtleState
+	localmake "ellipseRadius1 :height * 0.475
+	localmake "ellipseRadius2 :height * 0.375
+	localmake "angles [17 94.5 166 237 315.3]
+	jumpForward :height * 0.485
+	left 25
+	setPenColor "#666
+	setPenSize :height * 0.093
+	setFillColor transparent
+	ellipse :ellipseRadius1 :ellipseRadius2
+	localmake "center pos
+	setPenSize :height * 0.034
+	setPenColor "#000
+	setFillColor "#99F
+	repeat count :angles [
+		localmake "angle item repcount :angles
+		jumpRight :ellipseRadius1 * sin :angle	
+		jumpForward :ellipseRadius2 * cos :angle
+		circle :height * 0.114
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by the favicon and geometry icon at:
+; https://www.geogebra.org/geometry
+to geogebraGeometryFavicon :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "radius :height * 0.31
+	localmake "thickness :height * 0.06
+	setPenSize 0
+	setFillColor "#844f
+	setLineJoinStyle "miter
+	repeat 2 [
+		jumpLeft :height * 0.18
+		jumpForward :radius + :thickness / 2
+		circle :radius
+		jumpRight :height * 0.28
+		isoTriangle :height * 0.7 :height * 0.6
+
+		setFillColor transparent
+		setPenSize :thickness
+		setPenColor "black
+		jumpTo :oldPos
+	]	
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 5
+jumpLeft :separation / 2
+geogebraLogo :height
+jumpRight :separation
+geogebraGeometryFavicon :height

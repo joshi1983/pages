@@ -1,0 +1,34 @@
+make "darkColor "#780
+
+; Inspired by:
+; https://www.pinterest.co.uk/pin/497788565043658407/
+; Reported in July 28, 2001
+; Cliffords Hill, Wiltshire
+to cliffordsHill2001CropCircles :height
+	localmake "oldState turtleState
+	localmake "lightColor "#ff8
+	jumpForward :height / 2
+	setPenColor :lightColor
+	setPenSize :height * 0.01
+	setFillColor transparent
+	localmake "height1 :height - penSize
+	circle :height1 / 2
+	setPenSize 0
+	jumpBackward :height1 / 2
+	localmake "bottomPos pos
+	repeat 10 [
+		localmake "numCircles power 2 repcount
+		localmake "radius :height1 / (:numCircles * 2)
+		setFillColor ifelse even? repcount :darkColor :lightColor
+		repeat :numCircles [
+			jumpForward :radius
+			circle :radius
+			jumpForward :radius
+		]
+		jumpTo :bottomPos
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor :darkColor
+cliffordsHill2001CropCircles 100

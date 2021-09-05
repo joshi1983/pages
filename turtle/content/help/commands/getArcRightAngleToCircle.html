@@ -1,0 +1,27 @@
+<code>; The following code selects a random
+; circle.
+; Then, up to 200 random arcs are drawn which end at the edge of the circle.
+; The end of each arc is marked in blue.
+; You'll see every blue dot on the circle.
+
+make "circleRadius 1 + random 50
+make "circlePosition [random 20 random 20]
+jumpTo :circlePosition
+circle :circleRadius
+setPenColor "red
+
+repeat 200 [
+	make "arcStartPosition [random 20 random 20]
+	make "arcStartHeading random 360
+	make "arcRadius 1 + random 50
+	jumpTo :arcStartPosition
+	setHeading :arcStartHeading
+	make "arcAngle getArcRightAngleToCircle :arcRadius :circlePosition :circleRadius
+	if :arcAngle &gt; 0 [
+		setPenSize 0.2
+		arcRight :arcAngle :arcRadius
+		setFillColor "blue
+		setPenSize 0
+		circle 1
+	]
+]</code>

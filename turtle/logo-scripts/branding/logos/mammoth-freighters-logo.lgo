@@ -1,0 +1,52 @@
+; Inspired by logo at:
+; https://www.mammoth777.com/
+to mammothFreightersLogo:height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angle1 39.5
+	localmake "angle2 180 - :angle1 * 2
+	localmake "separation :height * 0.51
+	localmake "width1  tan :angle1
+	localmake "thickness 0.14
+	localmake "thickness1 :thickness
+	jumpRight :separation
+	localmake "rightPos pos
+	localmake "len2 0.57
+	localmake "len3 0.375
+	localmake "len4 0.29
+	localmake "thickness2 0.18
+	localmake "bottomMiddleLength (:len2 + :len3 - :len4 * 2) * (sin :angle1) -
+		:thickness2
+	setPenSize 0
+	setFillColor "#7fbae6
+	repeat 3 [
+		localmake "len1 0.36
+		if repcount = 3 [
+			localmake "len1 0.56
+		]
+		drawArcLineShape [:width1 0
+			[[:angle1 0] [1 / cos :angle1] [:angle2 0] [:len1]
+			[:angle1 * 2 0] [:thickness1] [:angle2 0]
+			[:len1 - :thickness1] [-:angle2 0] [1.016]]
+		] :height
+		jumpLeft :separation
+	]
+	jumpRight :separation
+	jumpForward :height
+	left 180 - :angle1
+	jumpForward distanceToLine :oldPos :rightPos
+	setHeading :oldHeading
+	setFillColor "#2e9bd6
+	drawArcLineShape [0 0
+		[[-:angle1 0] [:len2] [-:angle2 0] [:len3] [:angle2 0] [:len3]
+		[-:angle2 0] [:len2] [270 - :angle1 0] [:thickness2]
+		[:angle1 - 90 0] [:len4] [:angle2 0] [:len4] [:angle1 - 90 0]
+		[2 * :bottomMiddleLength] [:angle1 - 90 0] [:len4]
+		[:angle2 0] [:len4]
+		]
+	] :height
+	setTurtleState :oldState
+end
+
+mammothFreightersLogo 100

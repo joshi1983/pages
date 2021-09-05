@@ -1,0 +1,35 @@
+; Inspired by logo at:
+; https://en.wikipedia.org/wiki/Dart_(programming_language)#/media/File:Dart_programming_language_logo.svg
+to dartLogo :height
+	localmake "oldState turtleState
+	localmake "darkBlueColor "#01579B
+	localmake "lightBlueColor "#ee40C4FF
+	localmake "len1 0.178
+	localmake "len2 0.92
+	localmake "foregroundShape [0 0
+		[[:len2] [-135 0] [0.545] [-45 0.1] [0.301]
+		[-45 0] [0.4076]]
+	]
+	localmake "angle1 109
+	localmake "backgroundShape [0 0
+		[[:len2] [-:angle1 0] [0.367] [:angle1 - 180 0.1]
+		[0.292]]
+	]
+	jumpForward :height * :len1
+	jumpRight :height * 0.2379
+	setPenSize 0
+	left 45
+	setFillColor :lightBlueColor
+	drawArcLineShape :backgroundShape :height
+
+	setFillColor :darkBlueColor
+	drawArcLineShape :backgroundShape -:height
+
+	drawArcLineShape :foregroundShape :height
+	setFillColor :lightBlueColor
+	drawArcLineShape :foregroundShape -:height
+
+	setTurtleState :oldState
+end
+
+dartLogo 100

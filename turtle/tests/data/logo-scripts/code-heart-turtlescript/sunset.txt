@@ -1,0 +1,162 @@
+
+var i, brightness, x, y, r, g, b, t, width, height, baseSpeed
+
+// smoothstep [smthstp] from http://graphicscodex.com 
+function smoothstep(start, end, t) {
+   t = clamp((t - start) / (end - start), 0, 1)
+   return t * t * (3 - 2 * t)
+}
+
+
+// Set to Infinity to draw instantly
+baseSpeed = 3
+
+setSpeed(baseSpeed * 5)
+ht()
+pu()
+bk(180)
+lt(90)
+fd(1920 / 2)
+rt(90)
+
+// Sky
+i = 0
+while (i <= 235) {
+
+    // "heatmap" gradient from https://www.shadertoy.com/view/4dsSzr
+    t = pow(1 - i / 235, 2)
+    brightness = pow(t, 1.5) * 0.8 + 0.2
+    r = sqrt(clamp(brightness * smoothstep(0, 0.35, t) + t * 0.5, 0, 1))
+    g = sqrt(clamp(brightness * smoothstep(0.5, 1, t), 0, 1))
+    b = sqrt(clamp(brightness * max(1 - t * 1.7, t * 7 - 6), 0, 1))
+
+    height = 4
+
+    startFill(r, g, b)
+    fd(height)
+    rt(90)
+    fd(1920)
+    rt(90)
+    fd(height)
+    rt(90)
+    fd(1920)
+    rt(90)
+    fd(height)
+    endFill()
+    bk(0.5)
+
+    i = i + 1
+}
+
+// Sun
+setSpeed(baseSpeed)
+bk(650)
+rt(90)
+fd(640)
+
+i = 0
+while (i <= 80) {
+    r = 1
+    g = 0.2 * i / 100 + 0.8
+    b = 0.5 * i / 100 + 0.5
+    startFill(r, g, b, 0.02)
+    arc(360, 400 - i * 2)
+    endFill()
+    i = i + 1
+}
+
+i = 0
+while (i <= 5) {
+    r = 1
+    g = 0.1 * i / 5 + 0.9
+    b = 0.4 * i / 5 + 0.6
+    startFill(r, g, b)
+    arc(360, 250 - i * 2)
+    endFill()
+    i = i + 1
+}
+
+
+// Stars
+setSpeed(baseSpeed * 4)
+i = 0
+while (i < 200) {
+    t = sqrt(randomReal(0, 1))
+    x = randomInteger(-960, 960)    
+    y = t * 700 - 60
+    setPosition(x, y)
+    
+    pd()
+    setColor(1, 1, 1, t * 0.1 + randomReal(0, 0.1))
+    rt(randomReal(0, 360))
+    fd(5)
+    bk(10)
+    fd(5)
+    rt(90) 
+    fd(5)
+    bk(10)
+    pu()
+    
+    i = i + 1
+}
+
+setSpeed(baseSpeed)
+
+// Mountains
+i = 0
+st()
+while (i <= 5) {
+    t = pow(1 - i / 5, 2)
+
+    r = t * 0.20 + 0.05
+    g = t * 0.16 + 0.01
+    b = t * 0.10 + 0.02
+
+    height = 6 + i * 3
+
+    x = -960
+
+    // Shift lower each time
+    y = -100 - i * 60
+
+    setPosition(x, y)
+    startFill(r, g, b)
+
+    while (x <= 960) {
+        setPosition(x, y)
+        x = x + 10
+        y = y + randomInteger(-height, height)
+    }
+    setPosition(960, -640)
+    setPosition(-960, -640)
+    endFill()
+    
+    i = i + 1
+}
+ht()
+
+// Lens flare + bloom
+setPosition(-320, 0)
+startFill(1, 1, 0.8, 0.01)
+arc(360, 220)
+endFill()
+startFill(1, 1, 1, 0.01)
+arc(360, 210)
+endFill()
+startFill(1, 1, 1, 0.01)
+arc(360, 200)
+endFill()
+
+i = 2
+while (i <= 6) {
+    x = -320 + i * 200
+    y =  50 - i * 75
+    r = randomReal(0.5, 1.0)
+    g = randomReal(0.5, 1.0)
+    b = randomReal(0.5, 1.0)
+    setPosition(x, y)
+    startFill(r, g, b, 0.08)
+    arc(360, randomInteger(20, 150))
+    endFill()
+    i = i + 1
+}

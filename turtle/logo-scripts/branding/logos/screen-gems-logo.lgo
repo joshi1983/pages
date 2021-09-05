@@ -1,0 +1,24 @@
+; Inspired by logo at:
+; https://upload.wikimedia.org/wikipedia/commons/7/79/Screen_Gems_%281965%29_Logo.svg
+to screenGemsLogo :height
+	localmake "oldState turtleState
+	localmake "radius :height * 0.163
+	localmake "arcAngle 139
+	localmake "len (:height / 2 - :radius * sin :arcAngle - 90) / sin :arcAngle
+	setFillColor "#B52825
+	setPenSize 0
+	jumpForward :height / 2
+	circle :height * 0.061
+	repeat 2 [
+		drawArcLineShape [0 -:radius
+			[[90 0] [-:arcAngle :radius] [:len]
+			[:arcAngle 0] [:height * 0.33] [180 - :arcAngle 0]
+			[:len] [:arcAngle :radius]]
+		] 1
+		right 180
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "#E9A323
+screenGemsLogo 100

@@ -1,0 +1,12 @@
+# copied from https://verselang.github.io/book/12_access/
+Graphics := module:
+    # Define an interface scoped to the physics module
+    CollidableShape<scoped{Physics}> := interface:
+        GetBounds():bounding_box
+
+Physics := module:
+    using{Graphics}
+
+    # Physics can implement the interface even though it is defined in graphics
+    sphere_collider := class<abstract>(CollidableShape):
+        GetBounds<override>():bounding_box

@@ -1,0 +1,49 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Microsoft_Windows_version_history#/media/File:Windows_logo_-_1985-1989.svg
+to windows1Logo :height
+	localmake "oldState turtleState
+	localmake "cornerRadius :height * 0.13
+	localmake "width :height * 1.452352
+	localmake "thickness1 :height * 0.0515727
+	localmake "thickness2 :height * 0.05559967
+	localmake "offsetX :height * 0.0940161
+	localmake "offsetY :height * 0.388869
+	localmake "offsetY2 :height * 0.2430363
+	setPenSize 0
+	setFillColor "#96c4eb
+	jumpLeft :offsetX
+	polyStart
+	jumpRight :width / 2 + :offsetX - :cornerRadius
+	right 90
+	arcLeft 90 :cornerRadius
+	jumpForward :offsetY - :cornerRadius
+	jumpLeft :offsetX + :width / 2
+	polyEnd
+
+	jumpForward :thickness1
+	polyStart
+	jumpRight :width / 2 + :offsetX
+	jumpForward :height - :thickness1 - :offsetY - :cornerRadius
+	arcLeft 90 :cornerRadius
+	jumpForward :width / 2 + :offsetX - :cornerRadius
+	polyEnd
+
+	jumpForward :thickness2
+	polyStart
+	jumpForward :width / 2 - :thickness2 - :offsetX - :cornerRadius
+	arcLeft 90 :cornerRadius
+	jumpForward :offsetY2
+	jumpLeft :width / 2 - :thickness2 - :offsetX
+	polyEnd
+
+	jumpForward :thickness2
+	polyStart
+	jumpRight :width / 2 - :thickness2 - :offsetX
+	jumpForward :height - :thickness2 - :cornerRadius * 2 - :offsetY2
+	arcLeft 90 :cornerRadius
+	jumpForward :width / 2 - :cornerRadius - :offsetX - :thickness2
+	polyEnd
+	setTurtleState :oldState
+end
+
+windows1Logo 100

@@ -1,0 +1,44 @@
+make "newMexicoRed "#bf0a30
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_New_Mexico#/media/File:Flag_of_New_Mexico.svg
+to newMexicoFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 3 / 2
+	localmake "radius :height * 93.25 / 1200
+	localmake "lineStep :radius * 0.405
+	localmake "lineLength :radius * 0.78
+	localmake "scale 1.35
+	stripes :width :height ["gold]
+	jumpForward :height / 2
+	localmake "center pos
+	setLineCap "round
+	setPenColor :newMexicoRed
+	setPenSize :lineStep * 2 / 3
+	repeat 4 [
+		localmake "dx -:lineStep * 1.5
+		jumpRight :dx
+		repeat 4 [
+			localmake "dx1 abs :dx
+			localmake "size1 sqrt :radius * :radius - :dx1 * :dx1
+			localmake "pos1 pos
+			jumpForward :size1
+			forward :lineLength + :size1 * :scale
+			jumpTo :pos1
+			jumpRight :lineStep
+			localmake "dx :dx + :lineStep
+		]
+		jumpTo :center
+		right 360 / 4
+	]
+
+	setFillColor "gold
+	setPenColor :newMexicoRed
+	setPenSize :height * 13.5 / 1200
+	circle :radius
+
+	setTurtleState :oldState
+end
+
+make "height 100
+newMexicoFlag :height

@@ -1,0 +1,69 @@
+; Inspired by the logo at:
+; https://wiki.haskell.org/Haskell
+
+to haskellLogo :height
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angle 34
+	localmake "thickness :height * 0.25
+	localmake "size1 :height / 2 / cos :angle
+	localmake "size2 :size1 - :thickness / 2 / sin :angle
+	localmake "halfWidth :height * 0.7142857
+	localmake "operatorSize1 :height * 0.165
+	localmake "operatorSize2 :height * 0.39
+	localmake "step :height * 0.25
+	setPenSize 0
+	jumpLeft :halfWidth
+	setFillColor "#666
+	polyStart
+	jumpRight :thickness
+	right :angle
+	jumpForward :size1
+	left :angle * 2
+	jumpForward :size1
+	right :angle
+	jumpLeft :thickness
+	right 180 - :angle
+	jumpForward :size1
+	polyEnd
+	setHeading :oldHeading
+	jumpTo :oldPos
+	jumpRight :halfWidth
+	jumpForward :height * 0.293
+	repeat 2 [
+		localmake "pos1 pos
+		polyStart
+		jumpForward :operatorSize1
+		jumpLeft :operatorSize2
+		left 180 + :angle
+		jumpForward :operatorSize1 / cos :angle
+		polyEnd
+		setHeading :oldHeading
+		jumpTo :pos1
+		jumpForward :step
+		localmake "operatorSize2 :operatorSize2 + :step * tan :angle
+	]
+
+	setHeading :oldHeading
+	jumpTo :oldPos
+	setFillColor "#999
+	jumpLeft :height * 0.377
+	circle 0.1
+	polyStart
+	jumpRight :thickness
+	right :angle
+	jumpForward :size2
+	right 180 - 2 * :angle
+	jumpForward :size2
+	setHeading :oldHeading
+	jumpRight :thickness
+	left :angle
+	jumpForward :size1 * 2
+	setHeading :oldHeading
+	jumpLeft :thickness
+	left 180 + :angle
+	jumpForward :size1
+	polyEnd
+end
+
+haskellLogo 100

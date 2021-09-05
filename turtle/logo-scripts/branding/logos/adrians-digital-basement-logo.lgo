@@ -1,0 +1,50 @@
+; Inspired by logo at:
+; https://www.youtube.com/@adriansdigitalbasement
+to adriansDigitalBasementLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "colorStops createPList2 [
+		[0 "#d9d9d9] [1 "#9f9f9f]
+	]
+	localmake "thicknessFactor 0.06
+	localmake "angle1 48
+	localmake "angle2 :angle1 - 45
+	localmake "squareSize :height * 0.47
+	localmake "height1 :height * 0.24
+	jumpForward :height
+	setPenGradient createLinearGradient :oldPos pos :colorStops "pad
+	setLineCap "butt
+	setPenSize :height
+	backward :height
+	jumpForward :height * 0.295
+	localmake "pos1 pos
+	right 90 - :angle1
+	jumpLeft :squareSize / 2
+	setFillColor "white
+	setPenSize 0
+	parallelogram :squareSize :squareSize 2 * :angle2
+	setFillColor "black
+	drawArcLineShape [:thicknessFactor - 0.5 :thicknessFactor
+		[[90 - :angle1 * 2 0] [1 - :thicknessFactor * 1.9]
+		[:angle1 - 180 0] [0.47] [-:angle1 0] [0.54]]
+		] :squareSize
+	setFillColor "#f14924
+	right 180
+	parallelogram :squareSize :height1 -:angle1 + :angle2 * 2
+	jumpTo :pos1
+	setHeading :oldHeading + 90 + :angle1
+	jumpLeft :squareSize / 2
+	setFillColor "#f47320
+	parallelogram :squareSize :height1 :angle1 - :angle2 * 2
+
+	setFillColor "black
+	jumpTo :pos1
+	setHeading :oldHeading
+	jumpForward :height * 0.22
+	circle :height * 0.07
+
+	setTurtleState :oldState
+end
+
+adriansDigitalBasementLogo 100

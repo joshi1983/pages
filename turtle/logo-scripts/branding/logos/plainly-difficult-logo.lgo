@@ -1,0 +1,106 @@
+to drawEye :height
+	localmake "oldState turtleState
+	setPenSize 0
+	setFillColor "white
+	circle :height
+	setFillColor "black
+	jumpRight :height * 0.35
+	circle :height * 0.3
+
+	setTurtleState :oldState
+end
+
+to drawMustache :height
+	localmake "oldState turtleState
+	localmake "shape [-0.9 0
+		[[-90 0] [80 0.01] [0.55] [-70 0.07]
+		[0.65] [80 0.02] [0.2] [140 0.04]
+		[-45 0.3] [14 2] [65 0.1] [0.55]
+		[50 0.15] [30 0.02]]
+	]
+	setPenSize 0
+	setFillColor "black
+	drawArcLineShape :shape :height
+	drawArcLineShape :shape -:height
+	setTurtleState :oldState
+end
+
+to drawBeard :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "lines1 [
+		[-90 0] [0.05] [90 0] [0.32]
+		[-80 0] [30 1.1] [30 0.85] [9 0.8]
+		[103 0] [0.11] [79 0] [-30 0.45]
+		[-20 0.55] [-15 0.85] [-16 1.0870924]
+	]
+	localmake "wiskersShape [0.74 0.7
+		[[140 0] [30 0.8] [-100 0] [-75 0.1]
+		[172 0] [20 0.5] [-135 0] [-20 0.31]
+		[140 0] [41 0.19] [-140 0] [-60 0.13]
+		[170 0] [-61 0.15] [-110 0] [0.11]
+		[175 0] [-70 0.2] [-130 0] [47 0.2]
+		[137 0] [28 0.3] [-120 0] [-30 0.1]
+		[-50 0.15] [0.2]]
+	]
+	setPenSize :height * 0.05
+	jumpForward :height
+	setPenColor "black
+	ellipseArc 180 :height * 0.8 :height * 0.65 270
+
+	jumpTo :oldPos
+	setPenSize 0
+	setFillColor "black
+	drawArcLineShape [0 0
+		combine :lines1 reverse :lines1
+	] :height
+	; Draw the lowest wiskers.
+	drawArcLineShape :wiskersShape :height
+	drawArcLineShape :wiskersShape -:height
+
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://www.youtube.com/@PlainlyDifficult
+to plainlyDifficultLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "eyeSeparation :height * 0.37
+	jumpForward :height * 0.56
+	setPenSize 0
+	setFillColor "#ccc
+	circle :height * 0.4
+	jumpForward :height * 0.13
+	jumpLeft :eyeSeparation / 2
+	repeat 2 [
+		drawEye :height * 0.065
+		jumpRight :eyeSeparation
+	]
+
+	; Draw eyebrows
+	jumpTo :oldPos
+	jumpForward :height * 0.83
+	jumpLeft :height * 0.265
+	right 90
+	setPenSize :height * 0.06
+	setPenColor "black
+	setLineCap "round
+	forward :height * 0.175
+	jumpLeft :height * 0.035
+	jumpForward :height * 0.2
+	left 3
+	forward :height * 0.13
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.35
+	drawMustache :height * 0.15
+
+	jumpTo :oldPos
+	drawBeard :height * 0.5
+	setTurtleState :oldState
+end
+
+plainlyDifficultLogo 100

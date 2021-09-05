@@ -1,0 +1,124 @@
+to drawCheckmark :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "backgroundHeight :height * 0.37
+	localmake "backgroundStops createPList2 [
+		[0 "#1d718d]
+		[0.5 "#3e64d1]
+		[1 "#6438bb]
+	]
+	localmake "foregroundStops createPList2 [
+		[0 "#73d3a1]
+		[0.4 "#fcd525]
+		[1 "#a71247]
+	]
+	localmake "angle -32
+	localmake "width1 :height * 0.133
+	localmake "slantedBackgroundHeight :backgroundHeight / cos :angle
+	localmake "cornerRadius :height * 0.0123
+	localmake "separation :height * 0.182
+	localmake "angle2 90 - abs :angle
+	localmake "cornerY :cornerRadius * (1 - abs cos :angle2)
+	localmake "len1 :width1 / 2 / (sin abs :angle) -
+		:cornerY / (cos abs :angle)
+	jumpForward :backgroundHeight
+	setFillGradient createLinearGradient :oldPos pos :backgroundStops "pad
+	setPenSize 0
+	jumpRight :width1 / 2
+	right 180
+	repeat 2 [
+		roundParallelogram :width1 :slantedBackgroundHeight :angle :cornerRadius
+		jumpLeft :separation
+	]
+	jumpRight :separation * 2 - :height * 0.02
+	right :angle
+	jumpForward :slantedBackgroundHeight
+	setHeading :oldHeading
+	localmake "bottomPos pos
+	jumpForward :height
+	setFillGradient createLinearGradient :oldPos pos :foregroundStops "pad
+	jumpTo :bottomPos
+	repeat 2 [
+		localmake "pos1 pos
+		roundParallelogram :width1 :height / cos :angle -:angle :cornerRadius
+		polyStart
+		jumpForward abs :width1 / 2 / tan :angle
+		left :angle + 180
+		jumpForward :len1
+		arcLeft -:angle2 :cornerRadius
+		polyEnd
+		jumpTo :pos1
+		setHeading :oldHeading
+		jumpRight :separation
+	]
+	setTurtleState :oldState
+end
+
+to drawA :height
+	localmake "oldState turtleState
+	drawArcLineShape [-0.435 0
+		[[90 0] [-180 0.0347] [0.035] [30 0.055] [28 0.17] [0.981] [-144 0.067]
+		[0.8086] [86 0.063] [0.001] [-180 0.0347] [0.38] [-180 0.0347]
+		[0.03] [94 0.05] [0.562] [144 0] [0.67] [122 0.03] [0.024] [-180 0.0347]]
+	] :height
+	jumpForward :height * 0.346
+	jumpRight :height * 0.08
+	stripes :height * 0.4 :height * 0.07 [fillColor]
+	setTurtleState :oldState
+end
+
+to drawM :height
+	drawArcLineShape [-0.675 0
+		[[90 0] [-180 0.0347] [0.02] [74 0.075] [0.768] [106 0.04] [0.03]
+		[-180 0.0347] [0.267] [-86 0.0347] [0.64] [144 0] [0.772] [-58 0.0347]
+		[0.311] [-180 0.0347] [0.032] [74 0.07] [0.77] [106 0.04] [0.02] [-180 0.0347]
+		[0.41] [-180 0.0347] [0.03] [74 0.08] [0.7] [164 0] [0.9] [-144 0.07] [0.6]
+		[160 0] [0.56] [106 0.05] [0.02] [-180 0.0347]]
+	] :height
+end
+
+to drawI :height
+	drawArcLineShape [-0.335 0
+		[[90 0] [-180 0.0347] [0.02] [74 0.085] [0.745] [30 0.08] [76 0.03]
+		[0.03] [-180 0.0347] [0.41] [-180 0.0347] [0.03] [74 0.08] [0.74]
+		[20 0.1] [86 0.04] [0.03] [-180 0.0347]
+		]
+	] :height
+end
+
+to drawG :height
+	drawArcLineShape [0 0
+		[[90 0] [-20 0.7] [-40 0.4] [-30 0.3] [-50 0.47] [-25 1.13] [-20 0.9]
+		[-11 0.5] [-88 0.04] [0.15] [-167 0.05] [0.09] [93 0.05] [50 0.63]
+		[40 0.56] [50 0.28] [47 0.2] [65 0.07] [0.185] [106 0.04] [0.025]
+		[-180 0.0347] [0.41] [-180 0.0347] [0.03] [73 0.07] [0.22] [-73 0.12]]
+	] :height
+end
+
+; Inspired by an 2026 logo for Amiga at:
+; https://youtu.be/i97KHKkhdpc?t=806
+to amiga2026Logo :height
+	localmake "oldState turtleState
+	localmake "fontHeight :height * 0.48
+	jumpLeft :height * 1.575
+	drawCheckmark :height
+	jumpRight :height * 1
+	jumpForward :height * 0.042
+	setPenSize 0
+	setFillColor "white
+	drawA :fontHeight
+	jumpRight :height * 0.6
+	drawM :fontHeight
+	jumpRight :height * 0.44
+	drawI :fontHeight
+	jumpRight :height * 0.36
+	drawG :fontHeight
+	jumpRight :height * 0.427
+	drawA :fontHeight
+
+	setTurtleState :oldState
+end
+
+setScreenColor "#1a1f2e
+amiga2026Logo 100

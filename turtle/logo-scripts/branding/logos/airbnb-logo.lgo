@@ -1,0 +1,31 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Airbnb#/media/File:Airbnb_Logo_B%C3%A9lo.svg
+to airBnBLogo :height
+	localmake "oldState turtleState
+	localmake "arcAngle1 63.7
+	localmake "arcRadius1 :height * 0.145
+	localmake "arcsInfo [
+		[15 0.2] [115 0.186] [30 0.3] [15 1]
+		[15 0.32] [15 0.285] [50 0.132] [41.3 0.1388946]
+	]
+	localmake "size1 :height * 0.65
+	setPenSize :height * 0.065
+	jumpForward :height - penSize / 2
+	right 90
+	arcRight :arcAngle1 :arcRadius1
+	forward :size1
+	arcsRight :arcsInfo :height
+	arcsRight reverse :arcsInfo :height
+	forward :size1
+	arcRight :arcAngle1 :arcRadius1
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 4
+jumpLeft :separation / 2
+setPenColor "#FF5A5F
+airBnBLogo :height
+jumpRight :separation
+setPenColor "black
+airBnBLogo :height

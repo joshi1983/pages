@@ -1,0 +1,12 @@
+; Implemented to be similar to:
+; https://processing.org/reference/unhex_.html
+to pUnhex :value
+	localmake "result 0
+	repeat count :value [
+		localmake "digit item repcount :value
+		localmake "digitVal pHexDigitToInt :digit
+		localmake "result bitShiftLeft :result 4
+		localmake "result bitOr :result :digitVal
+	]
+	output :result
+end

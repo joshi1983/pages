@@ -1,0 +1,48 @@
+; Inspired by a post at:
+; https://www.facebook.com/share/p/16LdVhZZx1/
+;
+; That was posted by:
+; https://www.facebook.com/profile.php?id=100090120354592
+to drawSpiral :timeRatio
+	localmake "oldState turtleState
+	localmake "endIndex :timeRatio * 559
+	setLineJoinStyle "round
+	setLineCap "round
+	make "colors [ "orange "red "pink "yellow "green "blue "white "purple
+	"purple "skyblue "lightgreen "grey ]
+	setScreenColor "black
+	setPenSize 2
+	right 90
+	for [ "x 0 :endIndex ] [
+		make "index  1 + ( modulo :x count :colors )
+		setPenColor item :index :colors
+		setPenSize :x / 100 + 1
+		forward :x
+		right 59 - 300
+		hideTurtle
+	]
+	setTurtleState :oldState
+end
+
+to getTimeRatio
+	output interpolateRatio easeOut animation.clampedTimeRatio
+end
+
+drawSpiral getTimeRatio
+
+to animation.snapshotstyle
+	localmake "scale mix 0.8 2 getTimeRatio
+	output createPList2 [
+		["zoom.scale :scale]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 5
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+		["thumbnailTime :seconds]
+	]
+end

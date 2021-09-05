@@ -1,0 +1,30 @@
+; Inspired by drawing at:
+; https://ca.pinterest.com/pin/634726141279333524/
+to biaJaksEyeStar :height
+	localmake "oldState turtleState
+	localmake "width :height * 1.86
+	localmake "eyeArcAngle 4 * arcTan :height / :width
+	localmake "radius1 :height * 0.46
+	jumpForward :height / 2
+	localmake "center pos
+	jumpLeft :width / 2
+	right 90
+	setPenSize 0
+	setFillColor "white
+	arcPair :width :eyeArcAngle
+	setFillColor "#418bee
+	jumpTo :center
+	circle :radius1
+	setFillColor "#ffb7dc
+	isotoxalStar :height * 0.3 :radius1 24
+	
+	setFillColor screenColor
+	circle :height * 0.23
+	setFillColor "#ff7123
+	isotoxalStar :height * 0.09 :height * 0.15 10
+
+	setTurtleState :oldState
+end
+
+setScreenColor "#40304b
+biaJaksEyeStar 100

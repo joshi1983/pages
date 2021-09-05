@@ -1,0 +1,70 @@
+to recyclingArrow1 :height :color
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "arrowWidth :height * 0.237
+	localmake "angle1 150
+	localmake "topWidth :height * 0.263
+	localmake "arcAngle1 :angle1 - 90
+	localmake "arcAngle2 35
+	localmake "arcRadius1 :height * 0.0715
+	localmake "size1 -:topWidth * (cos :angle1) - :arrowWidth + :arcRadius1 * (1 - cos :arcAngle1)
+	localmake "arcRadius2 abs :size1 / (1 - cos :arcAngle2)
+
+	; draw arrow head before it curves.
+	jumpLeft :height * 0.145
+	jumpForward :height * 0.125
+	setPenSize 0
+	setFillColor :color
+	right 30.3
+	polyStart
+	jumpLeft :arrowWidth
+	jumpForward :height * 0.2
+	arcRight 118 :height * 0.111
+	jumpForward :height * 0.082
+	polyEnd
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.39
+	jumpRight :height * 0.126
+	setPenColor fillColor
+	setPenSize :arrowWidth
+	right :angle1
+	localmake "len :height * 0.245
+	arrow :len 59 :height * 0.09238
+	jumpBackward :len
+	jumpLeft :arrowWidth / 2
+	right 180
+	setPenSize 0
+	polyStart
+	arcLeft :arcAngle1 :arcRadius1
+	jumpForward :topWidth
+	right 90 + :angle1 - :arcAngle2
+	arcRight :arcAngle2 :arcRadius2
+	jumpForward :height * 0.2
+	polyEnd
+
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://publicdomainvectors.org/en/free-clipart/Recycle-symbol-silhouette/69043.html
+to recyclingSymbol1 :height :color
+	localmake "oldState turtleState
+	jumpForward :height * 0.515
+	repeat 3 [
+		recyclingArrow1 :height :color
+		right 360 / 3
+	]
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 5
+make "colors ["black "green]
+jumpLeft ((count :colors) - 1 ) * :separation / 2
+repeat count :colors [
+	recyclingSymbol1 :height item repcount :colors
+	jumpRight :separation
+]

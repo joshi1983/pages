@@ -1,0 +1,49 @@
+to kochForward :len :baseLen
+	ifelse :len > :baseLen [
+		localmake "smallLen1 :len / 4
+		localmake "smallLen2 :smallLen1 / cos 45
+		kochForward :smallLen1 :baseLen
+		left 45
+		kochForward :smallLen2 :baseLen
+		right 90
+		kochForward :smallLen2 :baseLen
+		left 45
+		kochForward :smallLen1 :baseLen
+	] [
+		jumpForward :len
+	]
+end
+
+; Inspired by an image in
+; a promotional booklet titled:
+; Object Logo programing language for Macintosh - Paradigm Software 1991
+; Publication date 1991
+; The figure is on page 3.
+; You can view a digital version of the booklet and figure at:
+; https://archive.org/details/TNM_Object_Logo_programing_language_for_Macintosh_20170828_0278/page/n1/mode/2up?view=theater
+to kochSquareFractal :size
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "smallerSize :size * 0.664
+	localmake "baseLen :size * 0.01
+	localmake "colors ["#ddd "#e80 "#48d "#ee4 "white]
+	setFillColor transparent
+	repeat count :colors [
+		setFillColor item repcount :colors
+		jumpForward (:size - :smallerSize) / 2
+		jumpLeft :smallerSize / 2
+		setPenSize :baseLen / 4
+		polyStart
+		repeat 4 [
+			kochForward :smallerSize :baseLen
+			right 90
+		]
+		polyEnd
+		localmake "smallerSize :smallerSize * 0.7
+		localmake "baseLen :baseLen * 2
+		jumpTo :oldPos
+	]
+	setTurtleState :oldState
+end
+
+kochSquareFractal 100
