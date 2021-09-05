@@ -1,0 +1,47 @@
+; Inspired by logo at:
+; https://www.youtube.com/@c64as
+to commodore64AppreciationLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "xStart 0.3
+	localmake "yStart 0.015
+	localmake "width1 0.19
+	localmake "width2 0.34
+	localmake "height1 0.155
+	localmake "innerArcAngle 248
+	localmake "innerArcRadius :height * ((:height1 + :yStart) / sin (360 - :innerArcAngle) / 2)
+	localmake "outerArcRadius :height * 0.39
+	setPenSize 0
+	setFillColor "white
+	jumpForward :height / 2
+	localmake "center pos
+	repeat 2 [
+		setHeading :oldHeading + repcount * 180
+		localmake "sign sign repcount - 1.5
+		drawArcLineShape [:xStart :yStart
+			[[90 0] [:width1] [-90 0] [:height1] [-90 0]
+			[:width2]]
+		] :sign * :height
+	]
+	setHeading :oldHeading
+	jumpForward :height * (:height1 + :yStart)
+	jumpRight :height * (:xStart - :width1)
+	localmake "rightPos1 pos
+	jumpForward :height
+	localmake "rightPos2 pos
+	jumpTo :rightPos1
+	left (360 - :innerArcAngle) / 2
+	polyStart
+	arcLeft :innerArcAngle :innerArcRadius
+	setHeading :oldHeading + 180
+	jumpForward distanceToCircle :center :outerArcRadius
+	setHeading (towards :center) - 90
+	arcRight 1 :outerArcRadius
+	localmake "arcAngle getArcRightAngleToLine :outerArcRadius :rightPos1 :rightPos2
+	arcRight :arcAngle :outerArcRadius
+	polyEnd
+	setTurtleState :oldState
+end
+
+setScreenColor "#5d5950
+commodore64AppreciationLogo 100

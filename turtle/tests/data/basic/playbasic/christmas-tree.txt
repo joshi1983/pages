@@ -1,0 +1,141 @@
+; Christmas colours
+TreeGreen = $006618 ; Deep pine green
+TreeDarkGreen = $00330a ; Almost black-green for shadows/depth
+TrunkBrown = $8B4513 ; Classic tree trunk brown (or $A0522D for lighter)
+SnowWhite = $F0F8FF ; Soft alice-white for subtle highlights
+GoldOrnament = $FFD700 ; Warm gold for lights/baubles
+RedOrnament = $C41E3A ; Deep Christmas red
+WarmGlow = $FFAA44 ; Soft orange-yellow glow (for star/lights)
+Background = $101020 ; Very dark midnight blue (instead of black)
+
+Camera = NewCamera()
+Image = MakeParticle(64, TreeGreen) ; bright green tip of the needle
+cameracls Camera,off
+scenecachesize 8 * (1024*1024)
+
+Offset =GetImageWidth(Image)/-2
+
+StarImage = loadnewimage("gfx/flare.png",2)
+BackDropImage = loadNewImage("gfx/Merry-Christmas-LQ2.png",8)
+
+BaseAngle# = 0
+
+sw=getscreenwidth()
+sh=getscreenheight()
+
+LogoX# = sw*0.52
+LogoY#=sh*1.75
+
+do
+inkmode 1
+shadebox 0,0,sw,sh,Background,Background,0,0 ; dark midnight blue sky
+
+; Fade the logo in/out using sinus
+LogoFade#=wrapangle(LogoFade#,0.2)
+Alpha# = 0.5 +sin(LogoFade#)*0.45
+LogoY# = CurveValue(sh*0.45,LogoY# ,50)
+DrawFadedSprite(BackdropImage,LogoX#,LogoY#,Alpha#)
+
+local x# = sw / 2
+local y# = sh / 2
+local I# = 10
+capturetoscene
+clsscene
+inkmode 1+64 ; additive + alpha
+
+Count = 0
+xpos2# = x#
+ypos2# = y# + 100 ; start trunk a bit lower
+
+Current_TIME =timer()
+
+angle# = BaseAngle# + RadToDegree(I#)
+Xpos2# = I# * Cos(angle#) + x#
+Ypos2# = 20 - I# * (Sin(angle#) * 0.2 - 2)
+
+
+While I# < y# - 50
+
+angle# = BaseAngle# + RadToDegree(I#)
+
+Xpos# = I# * Cos(angle#) + x#
+Ypos# = 20 - I# * (Sin(angle#) * 0.2 - 2)
+
+; Make branches darker the lower they are (more realistic)
+depth# = I# / (y#-50)
+
+green = rgbalphablend(TreeGreen, TreeDarkGreen, depth#*80)
+
+; Twinkling lights effect
+twinkle# = Sin(degreeToRad(Count*15 + Current_TIME*0.02)) * 0.5 + 0.5
+
+lightCol = rgbalphablend(GoldOrnament, RedOrnament, (Sin(Current_TIME*0.005 + Count)*0.5+0.5)*100)
+
+scale# = 0.5 - (Sin(angle#)*0.45)
+z# = 1000 + 500*(1-Scale#)
+
+capturedepth z#
+
+; Main green branch
+drawrotatedimage image, Xpos#, Ypos#, 0, Scale#, Scale#, Offset, Offset, true
+
+; lights on every 4th branch
+if (Count and 3) = 0
+capturedepth z#-5
+circlec Xpos#, Ypos#, (rndrange#(2,5))*(Scale#), true,rgbfade(LightCol,50)
+endif
+
+; Branch connection line (slightly darker)
+linec xpos2#, ypos2#, xpos#, Ypos#, $003308
+
+xpos2# = Xpos#
+ypos2# = Ypos#
+
+I# += 1.48
+Count++
+endwhile
+
+inkmode 1+64
+capturedepth 1000
+scale#=10
+
+StarScale# =curvevalue(0.5,STarScale#+rnd#(0.25),10)
+io =GetImageWidth(StarImage)/-2
+
+drawrotatedimage StarIMage,sw*0.5 , sh*0.02, 0, StarScale#, StarScale#, io,io, false
+drawcamera camera
+
+BaseAngle# += 0.11 ; nice slow spin
+
+ink -1
+inkmode 1
+text 10,10, "FPS:"+str$(fps())+" Branches:"+str$(Count)
+
+sync
+loop spacekey()
+
+
+end
+
+
+Function DrawFadedSprite(ThisImage,x#,y#,Alpha#)
+Temp=newsprite(X#,y#,ThisIMage)
+spritedrawmode temp,2
+centerspritehandle temp
+Level = cliprange(Alpha#*255,0,255)
+spritetint temp,argb(level,level/2,level,level)
+drawsprite temp
+deletesprite Temp
+EndFunction
+
+
+Function MakeParticle(Size, Col)
+ThisImage = NewFXImage(Size, Size)
+; Brighter tip, darker base ? looks like real pine needles
+RenderPhongImage ThisImage, Size/2, Size/2, Col, 255, 300/(Size/2)
+; Add white highlight
+ink $88FF88
+inkmode 1+64
+circlec ThisImage, Size/2, Size/2, Size*0.15, true
+inkmode 1
+EndFunction ThisImage
