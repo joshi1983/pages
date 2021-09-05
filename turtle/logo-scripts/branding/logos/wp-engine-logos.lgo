@@ -1,0 +1,94 @@
+make "wpGreen "#0ECAD4
+
+to fillShapes :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "cornerRadiusRatio 0.01435
+	localmake "cornerRadiusRatio2 0.03
+	localmake "diagonalLengthRatio 0.08392
+	localmake "lenRatio1 0.204
+	localmake "arcLines1 [[90 0] [0.1395] [90 :cornerRadiusRatio] [:lenRatio1]
+	[45 :cornerRadiusRatio2] [:diagonalLengthRatio] [45 :cornerRadiusRatio2] [0.064509599]]
+	localmake "cornerRadius :height * :cornerRadiusRatio
+	localmake "cornerArcsInfo [[0.279] [-90 :cornerRadiusRatio] [:lenRatio1]
+	[-45 :cornerRadiusRatio2] [0.0419665]]
+	localmake "len1 :height * 0.0839
+	localmake "topLeftOffset :height / 2 - :len1 / 2 * (cos 45) - 
+		:cornerRadiusRatio2 * :height * (1 - cos 45)
+	localmake "topLeftCornerArcs [[:len1 / 2 /  :height]
+	[45 :cornerRadiusRatio2] [:lenRatio1] [90 :cornerRadiusRatio] [:lenRatio1] 
+	[45 :cornerRadiusRatio2] [:len1 / 2 / :height]]
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	circle :height * 0.077
+	repeat 4 [
+		setHeading :oldHeading + repcount * 360 / 4
+		jumpForward :height / 2
+		polyStart
+		arcLines :arcLines1 :height
+		arcLines reverse :arcLines1 :height
+		polyEnd
+		jumpTo :center
+	]
+	repeat 3 [
+		setHeading :oldHeading + (repcount - 1) * 360 / 4
+		jumpForward :height / 2
+		jumpRight :height / 2 - :cornerRadiusRatio * :height
+		right 90
+		polyStart
+		arcRight 90 :cornerRadius
+		arcLines :cornerArcsInfo :height
+		arcLines reverse :cornerArcsInfo :height
+		polyEnd
+		jumpTo :center
+	]
+	setHeading :oldHeading
+	jumpForward :topLeftOffset
+	jumpLeft :topLeftOffset
+	left 135
+	polyStart
+	arcLines :topLeftCornerArcs :height
+	arcLines reverse :topLeftCornerArcs :height	
+	polyEnd
+	
+	setTurtleState :oldState
+end
+
+; Inspired by logo at
+; https://wpengine.com/
+to wpEngineGreenLogo :height
+	localmake "oldState turtleState
+	setFillColor :wpGreen
+	fillShapes :height
+	setTurtleState :oldState
+end
+
+to wpEngineGreenLogoWithDarkBlueBackground :height
+	localmake "oldState turtleState
+	localmake "innerHeight :height * 0.8
+	stripes :height * 3 :height ["#002447]
+	setFillColor :wpGreen
+	jumpForward (:height - :innerHeight) / 2
+	fillShapes :innerHeight
+	setTurtleState :oldState
+end
+
+to wpEngineWhiteLogo :height
+	localmake "oldState turtleState
+	localmake "innerHeight :height * 0.8
+	stripes :height * 3 :height [:wpGreen]
+	setFillColor "white
+	jumpForward (:height - :innerHeight) / 2
+	fillShapes :innerHeight
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 5
+jumpLeft :separation
+wpEngineGreenLogoWithDarkBlueBackground :height
+jumpRight :separation
+wpEngineGreenLogo :height
+jumpRight :separation
+wpEngineWhiteLogo :height

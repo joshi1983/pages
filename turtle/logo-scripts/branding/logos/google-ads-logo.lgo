@@ -1,0 +1,27 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Google_Ads#/media/File:Google_Ads_logo.svg
+to googleAdsLogo :height
+	localmake "oldState turtleState
+	localmake "angle 29.9
+	localmake "thickness :height * 0.364
+	localmake "height1 :height - :thickness
+	localmake "slantedHeight :height1 / cos :angle
+	localmake "baseSeparation :height1 * 2 * tan :angle
+	jumpLeft :baseSeparation / 2
+	jumpForward :thickness / 2
+	right :angle
+	stripes :thickness :slantedHeight ["#FABC04]
+	setPenSize 0
+	setFillColor "#34A852
+	circle :thickness / 2
+	left :angle
+	jumpRight :baseSeparation
+	left :angle
+	setLineCap "round
+	setPenSize :thickness
+	setPenColor "#3C8BD9
+	forward :slantedHeight
+	setTurtleState :oldState
+end
+
+googleAdsLogo 100

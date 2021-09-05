@@ -1,0 +1,30 @@
+; Inspired by:
+; https://en.wikipedia.org/wiki/Bank_of_Montreal#/media/File:BMO_Logo.svg
+to bmoLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "width :height * 0.472
+	localmake "arcsInfo1 [[-38 0] [0.355] [-104.5 0.043] [0.305] [52.5 0.035]]
+	localmake "arcsInfo combine :arcsInfo1 reverse :arcsInfo1
+	jumpForward :height / 2
+	setPenSize 0
+	setFillColor "#ED1C24
+	circle :height / 2
+	jumpBackward :height * 0.218
+	setPenColor "white
+	setLineCap "butt
+	setPenSize :width
+	forward :height * 0.149
+	jumpLeft :width / 2
+	setPenSize 0
+	setFillColor penColor
+	polyStart
+	arcLines :arcsInfo :width
+	setHeading :oldHeading
+	jumpForward :height * 0.202
+	arcLines :arcsInfo -:width
+	polyEnd
+	setTurtleState :oldState
+end
+
+bmoLogo 100
