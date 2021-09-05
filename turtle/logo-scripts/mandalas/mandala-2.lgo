@@ -1,0 +1,366 @@
+; Inspired by:
+; https://www.pinterest.ca/pin/761389880739163292/
+
+make "darkColors ["black "#3c4f55 "#3a4445 "#627d91]
+make "greenColors ["#74866c "#76846f "#81bd9f "#91aa8a "#87bfa2]
+make "grayColors ["#abbec6 "#95a8af "#5d8092]
+make "colors ["#598ba2 "#a8d5e7 "#87c8a7]
+
+to centreCircles :size
+	setPenSize :size * 0.07
+	setFillColor item 3 :greenColors
+	circle :size * 0.97
+	setPenSize :size * 0.03
+	setFillColor item 2 :greenColors
+	circle :size * 0.8
+	setFillColor item 2 :darkColors
+	circle :size * 0.6
+end
+
+to heartPath :size
+	localmake "angle 125
+	localmake "size1 :size * 0.3177475
+	arcRight :angle :size1
+	left 70
+	arcRight :angle :size1
+end
+
+to bubbleCircle :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "size1 :size * 0.65
+	jumpForward :size * 0.849
+	right 180 / 8
+	penDown
+	polyStart
+	repeat 8 [
+		heartPath :size1
+		left 180 - 360 / 8
+	]
+	polyEnd
+	penUp
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to circles :size
+	localmake "circleColors [
+		item 4 :darkColors
+		item 2 :grayColors
+		item 2 :darkColors
+		item 3 :grayColors
+		item 2 :grayColors
+		item 1 :grayColors
+	]
+	localmake "maxSize :size * 0.45
+	localmake "minSize :size * 0.16
+	localmake "numColors count :circleColors
+	localmake "step :size / :numColors
+	jumpForward :size - :maxSize
+	penDown
+	repeat :numColors [
+		localmake "size1 mix :minSize :maxSize ((repcount - 1) / :numColors)
+		setFillColor item repcount :circleColors
+		circle :size1
+		jumpBackward :step
+	]
+end
+
+to drawCircleContours :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "size1 :size * 0.28
+	localmake "size2 :size * 0.07
+	localmake "size3 :size * 0.272
+	repeat 8 [
+		right 4
+		jumpForward :size1
+		right 10.5
+		jumpForward :size2
+		penDown
+		circles :size3
+		penUp
+		jumpTo :oldPos
+		setHeading :oldHeading + repcount * 360 / 8
+	]
+	penUp
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to leafPath :size :angle
+	localmake "oldHeading heading
+	localmake "size1 :size * 0.5 / sin (:angle / 2)
+	left :angle / 2
+	polyStart
+	penUp
+	arcRight :angle :size1
+	right 180 - :angle
+	arcRight :angle :size1
+	penDown
+	polyEnd
+	setHeading :oldHeading
+end
+
+to centredLeafPath :size :angle
+	jumpBackward :size / 2
+	penDown
+	leafPath :size :angle
+	penUp
+	jumpForward :size / 2
+end
+
+to leafContours :size
+	localmake "oldPenSize penSize
+	setPenSize :size * 0.015
+	setFillColor item 4 :greenColors
+	centredLeafPath :size 90
+	setPenSize :size * 0.01
+	centredLeafPath :size * 0.92 85
+	setFillColor item 2 :colors
+	centredLeafPath :size * 0.7 70
+	setFillColor item 3 :grayColors
+	centredLeafPath :size * 0.4 60
+	setPenSize :oldPenSize
+end
+
+to contourArc :arcRadius :repCountValue
+	penDown
+	localmake "angle 4 * power 1 - (:repCountValue - 0.9) / 3 2
+	arcRight 44 - :angle :arcRadius
+	penUp
+end
+
+to arcContours :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "size1 :size * 0.3
+	localmake "size2 :size * 0.96
+	setFillColor item 3 :colors
+	setPenSize :size * 0.008
+	repeat 8 [
+		right 5
+		jumpForward :size1
+		left 28
+		localmake "pos1 pos
+		localmake "heading1 heading
+		polyStart
+		contourArc :size2 * 0.99 1
+		left 76
+		arcLeft 123 :size * 0.21
+		left 30
+		forward :size * 0.6
+		polyEnd
+		setPos :pos1
+		setHeading :heading1
+		penDown
+
+		repeat 6 [
+			contourArc :size2 repcount
+			setPos :pos1
+			setHeading :heading1 - repcount * 5
+		]
+		setPos :oldPos
+		setHeading :oldHeading + repcount * 360 / 8
+	]
+	setHeading :oldHeading
+end
+
+to rectangleStrip :len :thickness
+	localmake "oldPos pos
+	localmake "hiddenThickness :thickness * 0.35
+	localmake "tinyThickness :thickness * 0.05
+	localmake "numNotches 1 + (:len ) / (:hiddenThickness + :tinyThickness)
+	setPenSize :thickness
+	setPenColor item 1 :grayColors
+	
+	jumpForward :len + :thickness * 0.5
+	penDown
+	backward :len + :thickness
+	fourSquare :thickness
+	penDown
+	jumpForward :thickness
+	setPenColor item 1 :darkColors
+	repeat :numNotches [
+		forward :tinyThickness
+		jumpForward :hiddenThickness
+	]
+	penUp
+	jumpTo :oldPos
+end
+
+to fourSquare :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "oldPenSize penSize
+	localmake "halfSize :size * 0.5
+	localmake "thinSize :size * 0.05
+	setPenSize :size
+	setPenColor item 2 :grayColors
+	penDown
+	forward :size
+	setPenSize :thinSize
+	setPenColor item 1 :darkColors
+	backward :size
+	
+	jumpForward :halfSize
+	right 90
+	jumpForward :halfSize
+	penDown
+	backward :size
+	
+	jumpForward :halfSize * 0.5
+	right 90
+	setPenSize :halfSize
+	penDown
+	forward :halfSize
+	penUp
+	jumpTo :oldPos
+	setHeading :oldHeading
+	setPenSize :oldPenSize
+end
+
+to calcStarSettings :largeRadius :smallRadius :numPoints
+	localmake "angle1 180 / :numPoints
+	localmake "len1 :smallRadius * sin :angle1
+	localmake "len2 :smallRadius * cos :angle1
+	localmake "size1 hypot [:len1 (:largeRadius - :len2)]
+	localmake "angle2 90 - arcCos :len1 / :size1
+	localmake "angle3 180 - 2 * (:angle1 + :angle2)
+	output [:angle2 :angle3 :size1]
+end
+
+to trimStar :largeRadius :smallRadius
+	localmake "oldPos pos
+	localmake "oldPenColor penColor
+	localmake "oldHeading heading
+	localmake "numPoints 8
+	localmake "starSettings calcStarSettings :largeRadius :smallRadius :numPoints
+	localmake "size1 item 3 :starSettings
+	localmake "angle2 item 1 :starSettings
+	localmake "angle3 item 2 :starSettings
+	localmake "thickness :size1 * 0.11
+	localmake "size3 :thickness * 0.82
+	localmake "size2 :size1 - :size3
+
+	
+	setPenSize :thickness
+	isotoxalStar :largeRadius :smallRadius :numPoints
+	jumpForward :largeRadius
+	setHeading :oldHeading
+	repeat :numPoints [
+		right 180 - :angle2
+		rectangleStrip :size2 :size3
+		jumpForward :size1
+		left :angle3
+		rectangleStrip :size2 :size3
+		jumpForward :size1
+		left :angle2
+	]
+	
+	jumpTo :oldPos
+	setHeading :oldHeading
+	setFillColor transparent
+	setPenSize :thickness * 0.15
+	penDown
+	; make the square corners look a little better.
+	isotoxalStar :largeRadius * 1.035 :smallRadius * 1.035 :numPoints
+	setPenColor :oldPenColor
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to star1 :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "size1 :size * 0.85
+	setPenSize :size * 0.01
+	setFillColor item 1 :colors	
+	isotoxalStar :size :size * 0.5 8
+	setFillColor item 2 :colors
+	setPenSize :size * 0.02
+	isotoxalStar :size1 :size1 * 0.5 8
+	setPenSize :size * 0.008
+	repeat 8 [
+		jumpForward :size * 0.15
+		penDown
+		setFillColor item 4 :darkColors
+		leafPath :size * 0.45 60
+
+		setFillColor item 2 :grayColors
+		leafPath :size * 0.33 60
+
+		jumpTo :oldPos
+		right 360 / 8
+	]
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to star2 :size
+	localmake "oldHeading heading
+	localmake "oldPos pos
+	localmake "tinyCircleRadius :size * 0.04
+	right 180 / 8
+	setFillColor item 2 :colors
+	setPenSize :size * 0.015
+	isotoxalStar :size :size * 0.75 8
+	setHeading :oldHeading
+	setFillColor item 1 :colors
+	bubbleCircle :size * 0.75
+	setFillColor item 2 :darkColors
+	setPenSize :size * 0.008
+	bubbleCircle :size * 0.69
+	setFillColor transparent
+	setPenSize :size * 0.01
+	bubbleCircle :size * 0.62
+	setHeading :oldHeading + 180 / 8
+	setPenSize :size * 0.007
+
+	repeat 8 [
+		jumpForward :size * 0.86
+		penDown
+		setFillColor item 2 :grayColors
+		circle :tinyCircleRadius
+		jumpTo :oldPos
+		right 360 / 16
+		jumpForward :size * 0.85
+		leafContours :size * 0.4
+		jumpTo :oldPos
+		right 360 / 16
+	]
+	drawCircleContours :size
+	arcContours :size * 0.62
+	setHeading :oldHeading
+end
+
+to star3 :size
+	localmake "oldHeading heading
+	localmake "oldPos pos
+	localmake "size1 :size * 0.92
+	localmake "ratio 0.76
+	localmake "size2 :size * 0.86
+	right 180 / 8
+	setFillColor item 1 :colors
+	setPenSize :size * 0.015
+	isotoxalStar :size :size * :ratio 8
+
+	setFillColor item 1 :greenColors
+	setPenSize :size * 0.005
+	isotoxalStar :size1 :size1 * :ratio 8
+	trimStar :size2 :size2 * :ratio
+	setHeading :oldHeading
+	jumpTo :oldPos
+end
+
+to drawPattern :size
+	localmake "star1Size :size * 0.41
+	localmake "star2Size :size * 0.8
+	star3 :size
+	star2 :star2Size
+	star1 :star1Size
+	centreCircles :star1Size * 0.28
+end
+
+setScreenColor "gray
+drawPattern 200

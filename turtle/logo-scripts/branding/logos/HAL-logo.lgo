@@ -1,0 +1,95 @@
+; Inspired by
+; https://commons.wikimedia.org/wiki/File:HAL_-_Logotype_2021_-_EN_01.svg
+to HALLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "radius :height / 2
+	localmake "thickness :height * 0.11
+	localmake "topColor "#FF4600
+	localmake "bottomColor "#171775
+	localmake "diagonalAngle 45
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	localmake "arcAngle 2 * arcSin :thickness / 2 / :radius
+	right :diagonalAngle - :arcAngle / 2
+	jumpLeft :radius
+	setFillColor mix :topColor :bottomColor 0.5
+	polyStart
+	arcRight :arcAngle :radius
+	right 90 - :arcAngle / 2
+	jumpForward :radius * 2 * cos :arcAngle / 2
+	right 90 - :arcAngle / 2
+	arcRight :arcAngle :radius
+	polyEnd
+	localmake "heading1 :oldHeading + :diagonalAngle
+	localmake "smallRadius :height * 0.105
+	localmake "angle1 arcSin :smallRadius / 2 / :radius
+	localmake "arcAngle 2 * :angle1
+	localmake "smallAngle 180 - :angle1 * 2
+	setHeading :heading1
+	repeat 2 [
+		setFillColor item repcount [:bottomColor :topColor]
+		jumpTo :center
+		setHeading :heading1 + repcount * 180
+		jumpForward :radius
+		left 90
+		polyStart
+		arcLeft :arcAngle :radius
+		left 90 - :angle1
+		arcLeft :smallAngle :smallRadius
+		left 90 - :angle1
+		arcLeft :arcAngle :radius
+		polyEnd
+	]
+	localmake "max1 :radius * 0.71
+	repeat 5 [
+		if repcount <> 3 [
+			localmake "sign sign repcount - 3
+			localmake "ratio 1 - 2 * abs repRatio - 0.5
+			localmake "offset :thickness * 0.5 * mix 1 0 :ratio
+			if repcount < 4 [
+				localmake "offset -:offset
+			]
+			localmake "y :offset + :max1 * mix 1 -1 repRatio
+			setFillColor mix :topColor :bottomColor repRatio
+			localmake "smallRadius :radius * mix 3.1 0.57 1 - 2 * abs repRatio - 0.5
+			localmake "len1 (abs :y) + :smallRadius
+			localmake "smallArcAngle triLengthsToAngle :len1 :smallRadius :radius
+			localmake "thicknessAngle -2 * arcSin :thickness / 2 / :radius
+			jumpTo :center
+			setHeading :heading1
+			jumpForward :y + :smallRadius * :sign
+			localmake "center1 pos
+			jumpBackward :smallRadius * :sign
+			left -90 * :sign
+			localmake "heading2 heading
+			localmake "pos1 pos
+			localmake "distance1 distance :center1
+			arcLeft :smallArcAngle :smallRadius
+			setHeading (towards :center) - 90
+			arcLeft :thicknessAngle :radius
+			localmake "distance2 distance :center1
+			localmake "thickness1 :distance2 - :distance1
+			jumpTo :pos1
+			setHeading :heading2
+			localmake "largeRadius :smallRadius + :thickness1
+			localmake "largeArcAngle triLengthsToAngle :len1 :largeRadius :radius
+			polyStart
+			arcLeft :smallArcAngle :smallRadius
+			setHeading (towards :center) - 90
+			arcLeft :thicknessAngle :radius
+			setHeading (towards :center1) - 90
+			arcLeft -:largeArcAngle * 2 :largeRadius
+			setHeading (towards :center) - 90
+			arcLeft :thicknessAngle :radius
+			setHeading (towards :center1) + 90
+			arcLeft :smallArcAngle :smallRadius
+			
+			polyEnd
+		]
+	]
+	setTurtleState :oldState
+end
+
+HALLogo 100
