@@ -1,0 +1,98 @@
+to getRegularStarInfo :radius :numPoints
+	localmake "angle1 90 / :numPoints
+	localmake "angle2 :angle1 * 2
+	localmake "angle3 :angle2 * 2
+	localmake "separation1 :radius * 2 * sin :angle1
+	localmake "separation2 :radius * sin :angle2
+	localmake "size1 sqrt :separation1 * :separation1 - :separation2 * :separation2
+	localmake "size2 :separation2 * tan :angle3 - :angle2
+	localmake "innerRadius :radius - :size1 - :size2
+	output [:innerRadius :angle1 :angle2]
+end
+
+to drawTopStar :radius
+	localmake "oldState turtleState
+	localmake "info getRegularStarInfo :radius 5
+	localmake "innerRadius item 1 :info
+	localmake "size3 :innerRadius * 1.904
+	left 90 + 180 / 10
+	setPenSize 0
+	jumpForward :innerRadius
+	left 36 / 2 + 360 / 10
+	polyStart
+	repeat 2 [
+		jumpForward :size3
+		left 180 - 36
+		jumpForward :size3
+		right 72
+	]
+	polyEnd
+	setTurtleState :oldState
+end
+
+to drawBottomStar :radius
+	localmake "oldState turtleState
+	localmake "info getRegularStarInfo :radius 5
+	localmake "innerRadius item 1 :info
+	localmake "size3 :innerRadius * 1.904
+	left 90 + 180 / 10
+	setPenSize 0
+	jumpForward :innerRadius
+	right 36 / 2 + 360 / 10
+	polyStart
+	repeat 3 [
+		jumpForward :size3
+		right 180 - 36
+		jumpForward :size3
+		left 72
+	]
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Bosnia_and_Herzegovina#/media/File:Flag_of_Bosnia_and_Herzegovina.svg
+; Construction sheet is at:
+; https://upload.wikimedia.org/wikipedia/commons/d/d9/Flag_of_Bosnia_and_Herzegovina_%28construction_sheet%29.svg
+to bosniaFlag :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "width :height * 2
+	localmake "triangleWidth :height / cos 45
+	localmake "triangleHeight :triangleWidth / 2
+	localmake "A (19 * (sqrt 5) - 38) / 2 * :height / 200
+	localmake "starSize 38 / 2 * :height / 200
+	stripes :width :height ["#002395]
+	jumpForward :height / 2
+	jumpRight :width / 2 - (94 + 100) * :height / 200
+	right 45
+	setPenSize 0
+	setFillColor "#fecb00
+	isoTriangle :triangleWidth :triangleHeight
+
+	; Draw stars.
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpLeft :width / 2 - 68 * :height / 200
+	jumpForward :height + :A
+	setFillColor "white
+	drawTopStar :starSize
+	right 135
+	localmake "heading1 heading
+	repeat 7 [
+		setHeading :heading1
+		jumpForward :triangleWidth / 8
+		setHeading :oldHeading
+		regularStar :starSize 5
+	]
+	setHeading :heading1
+	jumpForward :triangleWidth / 8
+	setHeading :oldHeading
+	drawBottomStar :starSize
+
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+bosniaFlag 100

@@ -1,0 +1,38 @@
+; Inspired by a logo at:
+; https://en.wikipedia.org/wiki/Michael_%26_Susan_Dell_Foundation#/media/File:Msdf_logo.png
+to dellFoundationLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "ellipseRadius1 :height * 0.325
+	localmake "oldHeading heading
+	setPenSize :height * 0.017
+	localmake "colors ["#fea000 "#fdcb2c]
+	repeat 5 [
+		queue2 "colors mix "#004c98 "#00c1cb repRatio
+	]
+	setFillColor transparent
+	repeat count :colors [
+		setPenColor item repcount :colors
+		localmake "coords mix [0.202 0.684 22] [0.07 0.555 44] repRatio
+		jumpForward :height * item 2 :coords
+		jumpRight :height * item 1 :coords
+		left item 3 :coords
+		ellipse :height * 0.155 :ellipseRadius1
+		jumpTo :oldPos
+		setHeading :oldHeading
+	]
+	localmake "ellipseRadius1 :height * 0.4
+	repeat 7 [
+		setPenColor mixItems2 ["#ff6e00 "#aa1a7c "#4b3580] repRatio
+		localmake "coords mix [0.01 0.255 -60] [-0.08 0.44 -86] repRatio
+		jumpForward :height * item 2 :coords
+		jumpRight :height * item 1 :coords
+		left item 3 :coords
+		ellipse :height * 0.175 :ellipseRadius1
+		jumpTo :oldPos
+		setHeading :oldHeading
+	]
+	setTurtleState :oldState
+end
+
+dellFoundationLogo 100

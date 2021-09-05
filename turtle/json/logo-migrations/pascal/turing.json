@@ -1,0 +1,229 @@
+{
+	"name": "Turing",
+	"description": "Turing is a Pascal-like programming language intended for education.",
+	"externalLink": "https://en.wikipedia.org/wiki/Turing_(programming_language)",
+	"alternativeLinks": [
+		"https://www.youtube.com/watch?v=1tR-uXKvn6c"
+	],
+	"commands": [
+		{
+			"primaryName": "abs",
+			"to": "abs"
+		},
+		{
+			"primaryName": "arccos",
+			"to": "radArcCos"
+		},
+		{
+			"primaryName": "arcsin",
+			"to": "radArcSin"
+		},
+		{
+			"primaryName": "arctan",
+			"to": "radArcTan"
+		},
+		{
+			"primaryName": "assert",
+			"to": "assert"
+		},
+		{
+			"primaryName": "break",
+			"args": [],
+			"removeInMigration": true,
+			"description": "Pauses execution of the program.  Turing's 'break' is very different from WebLogo's break command.  Turing's 'exit' is very much like WebLogo's break command."
+		},
+		{
+			"primaryName": "ceil",
+			"to": "ceiling"
+		},
+		{
+			"primaryName": "chr",
+			"to": "char"
+		},
+		{
+			"primaryName": "cls",
+			"to": "clearScreen"
+		},
+		{
+			"primaryName": "cos",
+			"to": "radCos"
+		},
+		{
+			"primaryName": "cosd",
+			"to": "cos"
+		},
+		{
+			"primaryName": "delay",
+			"args": [
+				{"name": "interval"}
+			],
+			"description": "Delays by the interval number of miliseconds",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "Draw",
+			"args": [
+				{"name": "message", "types": "string"},
+				{"name": "x"},
+				{"name": "y"},
+				{"name": "font"}
+			],
+			"className": "Font",
+			"isStaticMethod": true,
+			"description": "Draws text similar to Logo's label command"
+		},
+		{
+			"primaryName": "drawbox",
+			"args": [
+				{"name": "x"},
+				{"name": "y"},
+				{"name": "width"},
+				{"name": "height"},
+				{"name": "colour"}
+			],
+			"description": "Draws a rectangle",
+			"returnTypes": null
+		},
+		{
+			"primaryName": "drawfilloval",
+			"args": [
+				{"name": "x"},
+				{"name": "y"},
+				{"name": "width"},
+				{"name": "height"},
+				{"name": "colour", "types": "int"}
+			],
+			"description": "Draws an ellipse",
+			"returnTypes": null
+		},
+		{
+			"primaryName": "drawline",
+			"args": [
+				{"name": "x1"},
+				{"name": "y1"},
+				{"name": "x2"},
+				{"name": "y2"},
+				{"name": "colour", "types": "int"}
+			],
+			"description": "Draws a line between the specified points",
+			"returnTypes": null
+		},
+		{
+			"primaryName": "exp",
+			"to": "exp"
+		},
+		{
+			"primaryName": "floor",
+			"to": "floor"
+		},
+		{
+			"primaryName": "get",
+			"args": [
+				{"name": "promptMessage", "types": "string"}
+			],
+			"migrateToCode": "1",
+			"description": "Reads value"
+		},
+		{
+			"primaryName": "length",
+			"to": "count"
+		},
+		{
+			"primaryName": "ln",
+			"to": "ln"
+		},
+		{
+			"primaryName": "max",
+			"to": "max"
+		},
+		{
+			"primaryName": "min",
+			"to": "min"
+		},
+		{
+			"primaryName": "ord",
+			"to": "ascii"
+		},
+		{
+			"primaryName": "put",
+			"to": "print"
+		},
+		{
+			"primaryName": "round",
+			"to": "round"
+		},
+		{
+			"primaryName": "setscreen",
+			"args": [
+				{"name": "options", "types": "string"}
+			],
+			"removeInMigration": true,
+			"description": "Sets settings related to the display such as window size"
+		},
+		{
+			"primaryName": "sin",
+			"to": "radSin"
+		},
+		{
+			"primaryName": "sind",
+			"to": "sin"
+		},
+		{
+			"primaryName": "sqrt",
+			"to": "sqrt"
+		},
+		{
+			"primaryName": "tan",
+			"to": "radTan"
+		},
+		{
+			"primaryName": "tand",
+			"to": "tan"
+		},
+		{
+			"primaryName": "ThickLine",
+			"className": "Draw",
+			"isStaticMethod": true,
+			"description": "Draws a line with arbitrary thickness"
+		},
+		{
+			"primaryName": "tolower",
+			"to": "lowerCase"
+		},
+		{
+			"primaryName": "toupper",
+			"to": "upperCase"
+		}
+	],
+	"keywords": [],
+	"operators": [
+		{"symbol": "*", "to": "*"},
+		{"symbol": "**", "convertToCommand": "power"},
+		{"symbol": "+", "to": "+"},
+		{"symbol": "+=", "description": "Adds specified right side to the value of the left side", "isAssignment": true},
+		{
+			"symbol": "-",
+			"precedence": 2,
+			"description": "Minus",
+			"unary": {
+				"name": "Negative",
+				"description": "Negates the operand's value",
+				"returnType": "float"
+			}
+		},
+		{"symbol": "-=", "description": "Subtracts specified right side from the value of the left side", "isAssignment": true},
+		{"symbol": "..", "description": "Expresses a range of numbers"},
+		{"symbol": "/", "to": "/"},
+		{"symbol": ":=", "convertToCommand": "make"},
+		{"symbol": "<", "to": "<"},
+		{"symbol": "<=", "to": "<="},
+		{"symbol": "=", "to": "="},
+		{"symbol": ">", "to": ">"},
+		{"symbol": ">=", "to": ">="},
+		{"symbol": "and", "convertToCommand": "and"},
+		{"symbol": "mod", "convertToCommand": "modulo"},
+		{"symbol": "or", "convertToCommand": "or"},
+		{"symbol": "rem", "convertToCommand": "remainder"},
+		{"symbol": "xor", "convertToCommand": "xor"}
+	]
+}

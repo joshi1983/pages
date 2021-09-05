@@ -1,0 +1,45 @@
+; This was translated from a facebook post by Kurt Moerman.
+; Kurt's post is at:
+; https://www.facebook.com/share/p/1CaY2fi2uQ/
+; Kurt's profile is at:
+; https://www.facebook.com/profile.php?id=100010796895973
+
+; Kurt called it Swimming Quiverbloom.
+; Based on info at https://community.wolfram.com/groups/-/m/t/3516580?p_p_auth=FgO1nw3g
+
+setScreenColor "black
+setPenSize 0
+
+make "t animation.timeRatio * pi * 2
+for [ "x 0 12000 .5 ] [
+	make "y :x / 235
+	make "k ( 4 + radSin :x / 11 + 8 * :t ) * radCos :x / 14
+	make "e :y / 9 - 19
+	make "d ( hypot [:k :e] ) + radSin :y / 9 + 3 * :t
+	make "q 2 * ( radSin 2 * :k ) + ( radSin :y / 17 ) * :k *
+	( 9 + 2 * radSin :y - 3 * :d )
+	make "c :d * :d / 50
+	make "xp :q - 50 * ( radCos :c ) - 85
+	make "yp :d * 39 - :q * ( radSin :c ) - 620
+	make "xr :xp * ( radCos :t ) - :yp * radSin :t
+	make "yr :xp * ( radSin :t ) + :yp * radCos :t
+	make "col 100 * radSin 3 * :k
+	setFillColor [ 255 :col + 155 255 - :col ]
+	jumpTo [:xr :yr]
+	circle 0.5
+]
+
+to animation.snapshotstyle
+	output createPList2 [
+		["zoom.scale 1.4]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 10
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

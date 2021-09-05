@@ -1,0 +1,19 @@
+! Shoot an arrow across the screen
+!
+
+SET WINDOW 0, 10, 0, 10
+
+PLOT 0,5; 1,5                     ! Draw arrow
+PLOT .6,4.5; 1,5; .6,5.5
+BOX KEEP 0, 1, 4, 6 in arrow$     ! Memorize arrow
+PAUSE 1                           ! Pause before shooting
+
+LET x = 0
+FOR move = 1 to 50                ! Move in small steps
+    BOX CLEAR x, x+1, 4, 6        ! Erase old arrow
+    LET x = x + .2                ! Advance x position
+    BOX SHOW arrow$ at x,4        ! Draw at new position
+Pause 0.1
+NEXT move
+
+END

@@ -1,0 +1,55 @@
+; Uses Law of Cosines to compute the cosine ratio of one vertex in a triangle
+; with lengths a, b, and c
+; More can be learned about the Law of Cosines at:
+; https://en.wikipedia.org/wiki/Law_of_cosines
+to getCosRatio :a :b :c
+	if :a * :b = 0 [
+		; avoid division by zero.
+		output 0
+	]
+	output (:a * :a + :b * :b - :c * :c) / (2 * :a * :b)
+end
+
+; Inspired by
+; https://codepen.io/z-/pen/MWPvoJM
+to moonSunTransition :radius :ratio
+	localmake "angle 45
+	localmake "smallRadius :radius * 0.9
+	localmake "gap :radius * mix 1.9 0.45 :ratio
+	localmake "cosRatio getCosRatio :radius :gap :smallRadius
+	setScreenColor mix "#8494D7 "black :ratio
+	setFillColor mix "#FFD257 "lightyellow :ratio
+	setPenSize 0
+	; if the circles don't overlap at all,
+	; draw a complete circle.
+	if (abs :cosRatio) >= 1 [
+		circle :radius
+		stop
+	]
+	localmake "angle1 arcCos :cosRatio
+	localmake "size1 :radius * sin :angle1
+	localmake "angle2 arcSin :size1 / :smallRadius
+	left :angle + :angle1
+	jumpForward :radius
+	left 90
+	polyStart
+	arcLeft 360 - :angle1 * 2 :radius
+	left :angle1 + :angle2
+	arcRight :angle2 * 2 :smallRadius
+	polyEnd
+end
+
+moonSunTransition 150 animation.timeRatio
+
+to animation.snapshotstyle
+	output createPList
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 3
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

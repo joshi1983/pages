@@ -1,0 +1,37 @@
+make "oxioBlack "#2F2E2E
+
+; Inspired by logo at:
+; https://oxio.ca
+to oxioLogo :height :color
+	localmake "oldState turtleState
+	localmake "radius :height / 2
+	jumpLeft :radius
+	jumpForward :radius
+	setPenSize 0
+	setFillColor :color
+	repeat 2 [
+		circle :radius
+		jumpRight :radius * 2
+	]
+
+	setTurtleState :oldState
+end
+
+; Inspired by the logo shown in the footer at
+; https://oxio.ca
+to oxioLogoOnBlackBackground :height
+	localmake "oldState turtleState
+	localmake "innerHeight :height * 0.8
+	stripes :height * 2 :height [:oxioBlack]
+	jumpForward (:height - :innerHeight) / 2
+	oxioLogo :innerHeight "white
+
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 5
+jumpLeft :separation / 2
+oxioLogo :height :oxioBlack
+jumpRight :separation
+oxioLogoOnBlackBackground :height

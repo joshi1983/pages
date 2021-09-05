@@ -1,0 +1,22 @@
+; Similar to println when a color is passed to it.
+; https://processing.org/reference/println_.html
+; An example showing a color passed to println is at:
+; https://processing.org/reference/binary_.html
+to pPrintColorAsDecimal :color
+	if string? :color [
+		if '#' = first :color [
+			localmake "result 0
+			if 7 = count :color [
+				localmake "result 255 ; 100% opacity.
+			]
+			for ["i 2 count :color] [
+				localmake "result bitShiftLeft :result 4
+				localmake "hexDigitVal pHexDigitToInt item :i :color
+				localmake "result bitOr :result :hexDigitVal
+			]
+			print :result
+			stop
+		]
+	]
+	print :color
+end

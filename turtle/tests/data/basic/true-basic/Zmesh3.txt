@@ -1,0 +1,31 @@
+!
+!  ZMESH3
+!
+!  Demonstrate the Zmesh function plotting.
+!
+LIBRARY "3DCont.trc"
+
+CALL SetMesh3 (100, 100)
+CALL ScalePersWindow (-4, 4, -4, 4, 0, 5)
+CALL SetCamera3 (8, -4, 4.5)
+ASK WINDOW w1, w2, w3, w4
+SET WINDOW .5*w1, .6*w2, 1*w3, .3*w4
+CALL Zmesh
+
+END
+
+!
+!
+!  Our function to plot.  A strange one with two lumps.
+!
+DEF F(x,y)
+
+    LET x1 = x-1
+    LET y1 = y-1
+    LET a = x1*x1 + y1*y1
+    LET x1 = x+1
+    LET y1 = y+1
+    LET b = x1*x1 + y1*y1
+    LET F = 1.7*cos (1.75*b)*exp (-.4*b) + 3.7*cos (1.75*a)*exp (-.8*a)
+
+END DEF

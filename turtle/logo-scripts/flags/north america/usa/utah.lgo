@@ -1,0 +1,112 @@
+to getPointsMountainSide :len1 :len2 :angle2
+	repeat 2 [
+		jumpForward :len1
+		right :angle2
+		jumpForward :len2
+		left :angle2
+	]
+end
+
+to drawSky :width :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "angle1 120
+	localmake "angle2 60
+	localmake "len1 :height * 0.2887
+	localmake "len2 :height * 0.0962
+	jumpLeft :width / 2
+	localmake "bottomLeftPoint pos
+	jumpForward :height
+	localmake "topLeftPoint pos
+	jumpBackward :height * 0.1150926
+	jumpRight :width / 2
+	setPenSize 0
+	setHeading :oldHeading - :angle1
+	polyStart
+	getPointsMountainSide :len1 :len2 :angle2
+	localmake "sideLength1 distanceToLine :bottomLeftPoint :topLeftPoint
+	jumpForward :sideLength1
+	localmake "sideHeight distance :topLeftPoint
+	setHeading :oldHeading
+	jumpForward :sideHeight
+	jumpRight :width
+	jumpBackward :sideHeight
+	left :angle2
+	jumpForward :sideLength1 - :len1
+	getPointsMountainSide :len1 :len2 -:angle2
+
+	polyEnd
+	setTurtleState :oldState
+end
+
+to drawBeeHive :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angle 89.5
+	localmake "polies [
+		[
+			0.42395 [[90 0] [:angle 0.02534] [-:angle 0.0071]
+			[0.1479] [-99 0.0071] [0.0264] [-81 0.0165] [0.166924624505545]]
+		]
+		[0.45633
+			[[90 0] [0.1694] [-101 0.0071] [0.027] [-79 0.0165] [0.155020862]]
+		]
+		[0.520975
+			[[90 0] [0.1555] [-106 0.0071] [0.0285] [-74 0.0165] [0.1386084754174]]
+		]
+		[0.5855555
+			[[90 0] [0.1316] [-118 0.0071] [-6.3 0.3] [-55.7 0.022] [0.10263997592144]]
+		]
+		[0.65018523
+			[[90 0] [0.0902] [-136 0.004] [-21 0.16] [-23 0.1136]]
+		]
+	]
+	setPenSize 0
+	repeat count :polies [
+		localmake "polyInfo item repcount :polies
+		localmake "arcLinesInfo last :polyInfo
+		jumpForward :height * first :polyInfo
+		polyStart
+		arcLines :arcLinesInfo :height
+		arcLines reverse :arcLinesInfo :height
+		polyEnd
+		jumpTo :oldPos
+		setHeading :oldHeading
+	]	
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Utah#/media/File:2022_Utah_Flag_design.svg
+to utahFlag :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "width :height * 5 / 3
+	localmake "utahBlue "#071d49
+	localmake "utahYellow "#ffb81d
+	stripes :width :height ["white]
+	stripes :width :height * 0.307546 ["#aa0200]
+	setFillColor :utahBlue
+	drawSky :width :height
+	jumpForward :height / 2
+	setLineJoinStyle "miter
+	setPenSize :height * 0.045
+	setPenColor "white
+	setFillColor :utahBlue
+	regularPolygon :height * 0.359 6
+	setPenSize :height * 0.0125
+	setPenColor :utahYellow
+	regularPolygon :height * 0.2959 6
+	jumpBackward :height * 0.197
+	setPenSize 0
+	setFillColor "white
+	regularStar :height * 0.0462 5
+	jumpTo :oldPos
+	setFillColor :utahYellow
+	drawBeeHive :height
+	setTurtleState :oldState
+end
+
+setScreenColor "#ddd
+utahFlag 100

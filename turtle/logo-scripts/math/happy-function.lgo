@@ -1,0 +1,24 @@
+; Inspired by a post at:
+; https://www.facebook.com/share/p/16ZCuLSyJY
+
+to radSec :val
+	output 1 / radCos :val
+end
+
+to getValue :x
+	localmake "d power radCos :x 2
+	if :d < 0 [
+		output false
+	]
+	output :x * (radArcSin radSin :x) - 1/2 * :x * :x * (sqrt :d) * radSec :x
+end
+
+setFillColor "black
+setPenSize 0
+make "range1 1.5 * pi
+repeat 400 [
+	make "x mix -:range1 :range1 repRatio
+	make "y getValue :x
+	jumpTo [:x :y]
+	circle 0.1
+]

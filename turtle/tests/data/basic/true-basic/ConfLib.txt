@@ -1,0 +1,67 @@
+MODULE ConformalMapping
+
+    SUB ConformalMap (ll, ur, dz)
+
+        DECLARE COMPLEX ll, ur, f, z
+
+        DECLARE FUNCTION f, real, imag
+
+        LET xl = real(ll)
+        LET yb = imag(ll)
+        LET xr = real(ur)
+        LET yt = imag(ur)
+
+        LET xrange = xr - xl
+        LET yrange = yt - yb
+
+        OPEN #1: screen 0, .47, .1, .9
+        SET WINDOW xl - xrange/3, xr + xrange/3, yb - yrange/3, yt+yrange/3
+        CALL Axes
+        SET COLOR "red"
+
+        OPEN #2: screen .53, 1, .1, .9
+        SET WINDOW min(xl,0) - xrange, max(xr,0) + xrange, min(yb,0) - yrange, max(yt,0) + yrange
+        CALL Axes
+        SET COLOR "blue"
+
+        FOR x = xl to xr step dz
+            FOR y = yb to yt step dz
+                LET z = x + i*y
+                WINDOW #1
+                PLOT z;
+                WINDOW #2
+                PLOT f(z);
+            NEXT y
+            WINDOW #1
+            PLOT
+            WINDOW #2
+            PLOT
+        NEXT x
+
+        FOR y = yb to yt step dz
+            FOR x = xl to xr step dz
+                LET z = x + i*y
+                WINDOW #1
+                PLOT z;
+                WINDOW #2
+                PLOT f(z);
+            NEXT x
+            WINDOW #1
+            PLOT
+            WINDOW #2
+            PLOT
+        NEXT y
+
+    END SUB
+
+    SUB Axes
+
+        SET COLOR "black"
+        ASK WINDOW left, right, bottom, top
+        BOX LINES  left, right, bottom, top
+        PLOT LINES: left,0; right,0
+        PLOT LINES: 0,bottom; 0,top
+
+    END SUB
+
+END MODULE

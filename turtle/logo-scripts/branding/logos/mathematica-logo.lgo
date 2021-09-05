@@ -1,0 +1,40 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Wolfram_Mathematica#/media/File:Mathematica_Logo.svg
+to mathematicaLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "scaleRatios [0.3 0.15]
+	localmake "thicknesses [0.05 0.035]
+	localmake "numPoints 5
+	localmake "angles [33 22]
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	setFillColor "#D10
+	isotoxalStar :height / 2 :height * 0.34 10
+	setPenColor "white
+	setFillColor transparent
+	setLineJoinStyle "miter
+	right 180
+	repeat count :scaleRatios [
+		localmake "angle item repcount :angles
+		localmake "scale :height * item repcount :scaleRatios
+		localmake "straightSideLength :scale * 2 * sin 180 / :numPoints
+		localmake "arcRadius :straightSideLength / 2 / sin :angle
+		setHeading :oldHeading + 180
+		jumpForward :scale
+		right 180 / :numPoints + 90 + :angle
+		setPenSize :height * item repcount :thicknesses
+		polyStart
+		repeat :numPoints [
+			arcLeft :angle * 2 :arcRadius
+			right :angle * 2 + 360 / :numPoints
+		]
+		polyEnd
+		jumpTo :center
+		
+	]
+	setTurtleState :oldState
+end
+
+mathematicaLogo 100

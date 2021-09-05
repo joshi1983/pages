@@ -1,0 +1,121 @@
+make "darkColor "#680
+; Morse code translation data copied from:
+; https://en.wikipedia.org/wiki/Morse_code#/media/File:International_Morse_Code.svg
+make "morseCodes [
+ ".- ; A
+"-... ; B
+"-.-. ; C
+"-.. ; D
+". ; E
+"..-. ; F
+"--. ; G
+".... ; H
+".. ; I
+".--- ; J
+"-.- ; K
+".-.. ; L
+"-- ; M
+"-. ; N
+"--- ; O
+".--. ; P
+"--.- ; Q
+".-. ; R
+"... ; S
+"- ; T
+"..- ; U
+"...- ; V
+".-- ; W
+"-..- ; X
+"-.-- ; Y
+"--.. ; Z
+]
+
+to letterToMorseCode :letter
+	localmake "letter upperCase :letter
+	localmake "asciiVal ascii :letter
+	if or (:asciiVal < ascii "A) :asciiVal > ascii "Z [
+		output ' '
+	]
+	localmake "index :asciiVal - (ascii "A) + 1
+	output item :index :morseCodes
+end
+
+to convertToMorseCode :message
+	localmake "result ''
+	repeat count :message [
+		localmake "result (combine :result 
+			letterToMorseCode item repcount :message)
+		if repcount <> count :message [
+			localmake "result (combine :result ' ')
+		]
+	]
+	output :result
+end
+
+to lenToAngle :len :radius
+	output arcSin :len / 2 / :radius
+end
+
+to processMorseCodeSymbol :symbol :radius :innerRadius :radiusStep
+	localmake "spaceLength :radiusStep
+	localmake "angle 1.2 + 2 * lenToAngle :spaceLength :radius
+	localmake "tinyGapAngle lenToAngle :innerRadius :radius
+	localmake "mainThickness penSize	
+	arcRight :angle :radius
+	ifelse :symbol <> ' ' [
+		circle :innerRadius
+		if :symbol = "- [
+			setPenSize :innerRadius * 1.2
+			localmake "dashLength :radiusStep * 1.1
+			localmake "dashAngle 2.2 * lenToAngle :dashLength :radius
+			arcRight :dashAngle :radius
+			setPenSize :mainThickness
+			circle :innerRadius
+			arcRight :tinyGapAngle :radius
+			localmake "angle :angle + :dashAngle + :tinyGapAngle
+		]
+	] [
+		localmake "extraAngle :angle * 0.5
+		arcRight :extraAngle :radius
+		localmake "angle :angle + :extraAngle
+	]
+	output :radius + :radiusStep * :angle / 360
+end
+
+; Inspired by
+; https://www.pinterest.ca/pin/557179785142854103/
+; Reported on June 6, 2014
+; located in Gipsy Lane, Chilcomb Down, Hampshire, United Kingdom
+; 
+to morseCodeCropCircles :height
+	localmake "oldState turtleState
+	localmake "lightColor "#efc
+	localmake "innerRadius :height * 0.03
+
+	; The actual crop circle encodes 'no more war' but
+	; edit the messsage to whatever you want and rerun the program to 
+	; see your text converted to Morse code.
+	localmake "message 'no more war'
+
+	localmake "morseCode (combine '       '
+		convertToMorseCode :message)
+	localmake "mainThickness :height * 0.01
+	localmake "radiusStep :height * 0.103
+	jumpForward :height * 0.545
+	setPenSize 0
+	setFillColor :lightColor
+	circle :innerRadius
+	setPenSize :mainThickness
+	jumpRight :innerRadius - penSize / 2
+	right 180
+	setPenColor :lightColor
+	localmake "radius :innerRadius + :radiusStep * 0.3
+	repeat count :morseCode [
+		localmake "symbol item repcount :morseCode
+		localmake "radius processMorseCodeSymbol :symbol :radius :innerRadius :radiusStep
+	]	
+	setTurtleState :oldState
+end
+
+setScreenColor :darkColor
+morseCodeCropCircles 100

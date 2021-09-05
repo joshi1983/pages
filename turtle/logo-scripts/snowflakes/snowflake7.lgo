@@ -1,0 +1,21 @@
+; Inspired by
+; https://www.pinterest.ca/pin/78039006035989256/
+
+to snowflake7 :size
+	localmake "numSides 6
+	localmake "angle 360 / :numSides
+	localmake "size1 :size * 0.1
+	localmake "size2 :size1 * 2 * (tan :angle / 2)
+	jumpForward :size1
+	right 90
+	jumpForward :size2 / 2
+	right :angle
+	repeat :numSides [
+		forward :size2
+		right :angle
+	]
+	closePath
+
+end
+
+snowflake7 100

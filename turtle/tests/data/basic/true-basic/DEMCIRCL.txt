@@ -1,0 +1,72 @@
+PROGRAM DemCircl
+
+! This program demonstrates how to construct and show the
+! graphics object CIRCLE, with various choices of colors, etc.
+
+LIBRARY "TrueCtrl.trc"
+
+CALL TC_Init
+
+SET WINDOW 0, 8, 0, 8
+
+CALL TC_Show (0)                  ! Use the default output window
+CALL TC_Win_Active (0)            ! Move it to the front
+PRINT "Press Escape to quit."
+
+CALL TC_Show_Default (0)          ! Don't show objects upon creation
+
+CALL TC_Graph_Create (circle1, "CIRCLE", 1, 3, 1, 3)
+LET width = 3                     ! Pen is 3 pixels wide
+LET color = 5                     ! Should be purple
+CALL TC_Graph_SetPen (circle1, width, color, "", "")
+LET backcolor = 3                 ! Should be cyan
+LET brushcolor = 12               ! Should be bright red
+LET pattern$ = "CROSS"
+CALL TC_Graph_SetBrush (circle1, backcolor, brushcolor, pattern$)
+CALL TC_Show (circle1)
+
+CALL TC_Graph_Create (circle2, "CIRCLE", 5, 7, 1, 3)
+LET width = 1                     ! Pen is 1 pixels wide (default)
+LET color = 12                    ! Should be bright red
+LET style$ = "DASH"               ! A dashed line
+CALL TC_Graph_SetPen (circle2, width, color, style$, "")
+LET backcolor = 3                 ! Should be cyan
+LET brushcolor = 10               ! Should be bright green
+LET pattern$ = "DIAGCROSS"
+CALL TC_Graph_SetBrush (circle2, backcolor, brushcolor, pattern$)
+CALL TC_Show (circle2)
+
+CALL TC_Graph_Create (circle3, "CIRCLE", 1, 3, 5, 7)
+LET width = 1                     ! Pen is 1 pixels wide (default)
+LET color = 15                    ! Should be white
+LET style$ = "SOLID"              ! A solid line (default)
+LET pattern$ = "RUBBER"           ! A rubber line
+CALL TC_Graph_SetPen (circle3, width, color, style$, pattern$)
+LET backcolor = 3                 ! Should be cyan
+LET brushcolor = 10               ! Should be bright green
+LET pattern$ = "HORIZ"
+CALL TC_Graph_SetBrush (circle3, backcolor, brushcolor, pattern$)
+CALL TC_Show (circle3)
+
+CALL TC_Graph_Create (circle4, "CIRCLE", 5, 7, 5, 7)
+LET width = 6                     ! Pen is 1 pixels wide (default)
+LET color = 2                     ! Should be blue
+LET style$ = "SOLID"              ! A solid line (default)
+CALL TC_Graph_SetPen (circle4, width, color, style$, "")
+LET brushcolor = 4                ! Should be red
+LET pattern$ = "SOLID"
+CALL TC_Graph_SetBrush (circle4, -1, brushcolor, pattern$)
+CALL TC_Show (circle4)
+
+DO
+
+   CALL TC_Event (0, event$, window, x1, x2)
+
+   IF event$ = "HIDE" then EXIT DO
+   IF event$ = "KEYPRESS" and x1 = 27 then EXIT DO    ! Escape key
+
+LOOP
+
+CALL TC_Cleanup
+
+END

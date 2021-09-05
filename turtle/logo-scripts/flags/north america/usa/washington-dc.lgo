@@ -1,0 +1,29 @@
+; Inspired by flag at:
+; https://en.wikipedia.org/wiki/Flag_of_Washington,_D.C.#/media/File:Flag_of_Washington,_D.C.svg
+to washingtonDCFlag :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "width :height * 2
+	localmake "washingtonDCRed "#e81b39
+	localmake "starSeparation :width * 0.275
+	stripes :width :height ["white]
+	jumpForward :height * 0.2
+	repeat 2 [
+		stripes :width :height * 0.2 [:washingtonDCRed]
+		jumpForward :height * 0.3
+	]
+	jumpTo :oldPos
+	jumpForward :height * 0.84
+	setFillColor :washingtonDCRed
+	setPenSize 0
+	jumpLeft :starSeparation
+	repeat 3 [
+		regularStar :height * 0.105 5
+		jumpRight :starSeparation
+	]
+
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+washingtonDCFlag 100

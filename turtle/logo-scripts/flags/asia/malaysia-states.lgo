@@ -1,0 +1,92 @@
+; Inspired by a flag at:
+; https://en.wikipedia.org/wiki/File:BenderaSultanJohor.svg
+to benderaSultanJohorFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 2
+	localmake "benderaBlue "#191970
+	stripes :width :height ["white]
+	jumpForward :height / 2
+	setPenSize 0
+	setFillColor :benderaBlue
+	jumpLeft :height * 0.05
+	circle :height * 0.312
+	jumpRight :height * 0.08
+	setFillColor "white
+	circle :height * 0.27
+	jumpRight :height * 0.24
+	jumpBackward :height * 0.056
+	setFillColor :benderaBlue
+	isotoxalStar :height * 0.06 :height * 0.256 9
+	setTurtleState :oldState
+end
+
+; Inspired by flag at:
+; https://en.wikipedia.org/wiki/File:Flag_of_Negeri_Sembilan.svg
+to negeriSembilanFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 2
+	localmake "colors ["#dc241f "black]
+	setPenSize 0
+	jumpForward :height / 2
+	setFillColor "#ffd100
+	rect :width :height
+	repeat 2 [
+		setFillColor item repcount :colors
+		polyStart
+		jumpForward :height / 2
+		jumpLeft :width / 2
+		polyEnd
+		right 180
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by flag at:
+; https://en.wikipedia.org/wiki/File:Flag_of_Johor.svg
+to johorFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 2
+	localmake "redWidth :width / 2
+	localmake "redHeight :height * 2 / 3
+	localmake "johorRed "#ce1126
+	stripes :width :height ["#002b7f]	
+	jumpForward :height - :redHeight
+	jumpLeft (:width - :redWidth) / 2
+	stripes :redWidth :redHeight [:johorRed]
+	setFillColor "white
+	setPenSize 0
+	jumpForward :height * 0.363
+	jumpLeft :height * 0.14
+	circle :height * 0.255
+	jumpRight :height * 0.07
+	setFillColor :johorRed
+	jumpBackward :height * 0.015
+	circle :height * 0.22
+	jumpRight :height * 0.225
+	jumpBackward :height * 0.05
+	setFillColor "white
+	left 6
+	isotoxalStar :height * 0.065 :height * 0.225 5
+	setTurtleState :oldState
+end
+
+; Inspired by flag at:
+; https://en.wikipedia.org/wiki/File:Flag_of_Perak.svg
+to perakFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 2
+	stripes :width :height ["black "#fcd116 "white]
+	setTurtleState :oldState
+end
+
+setScreenColor "gray
+make "height 100
+make "separation :height * 3
+jumpLeft :separation * 1.5
+benderaSultanJohorFlag :height
+jumpRight :separation
+negeriSembilanFlag :height
+jumpRight :separation
+johorFlag :height
+jumpRight :separation
+perakFlag :height

@@ -1,0 +1,86 @@
+to drawPetals :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "thickness :height * 0.02
+	localmake "radius (:height - :thickness) / 2
+	localmake "angle1 30
+	localmake "numPetals 18
+	localmake "size1 :height * 0.3
+	setPenColor "yellow
+	setLineJoinStyle "round
+	setPenSize :thickness
+	setFillColor mix penColor transparent 0.2
+	repeat :numPetals [
+		setHeading :oldHeading + repcount * 360 / :numPetals
+		jumpForward :radius
+		right 90 + :angle1 / 2
+		jumpRight :size1 / 2
+		parallelogram :size1 :size1 90 - :angle1
+		jumpTo :oldPos
+	]
+	setTurtleState :oldState
+end
+
+to drawStemAndLeafs :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	setPenSize :height * 0.02
+	setPenColor "#0a0
+	setLineCap "butt
+	setLineJoinStyle "round
+	stripes penSize :height [penColor]
+	jumpForward :height * 0.18
+	right 40
+	setFillColor mix penColor transparent 0.5
+	arcPair :height * 0.3 90
+
+	setHeading :oldHeading
+	jumpForward :height * 0.3
+	left 30
+	arcPair :height * 0.4 80 
+	setTurtleState :oldState
+end
+
+to drawFlower :height
+	localmake "oldState turtleState
+	localmake "stemHeight :height * 0.6
+	localmake "petalRadius :height - :stemHeight
+
+	drawStemAndLeafs :stemHeight
+	jumpForward :stemHeight
+	drawPetals :petalRadius
+
+	setTurtleState :oldState
+end
+
+; Inspired by a figure on page 8 of a book.
+; The book is called 知っておきたい 83ポイント集 FM 77の本 Basic, Logo,プログラミング.
+; Google Translate translates that book title to:
+; 83 Points You Should Know: FM 77's Book on Basic, Logo, and Programming
+;
+; The book was published in 1984.
+;
+; FM 77 is a Japanese personal computer originally released in 1985.
+;
+; A digital version of the book is at:
+; https://archive.org/details/83-fm-77-basic-logo-fm-7-fm-77-fm-7_202103/page/7/mode/2up
+to flowerCircle :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "numFlowers 9
+	jumpForward :height * 0.5037
+	localmake "center pos
+	repeat :numFlowers [
+		setHeading :oldHeading + repcount * 360 / :numFlowers
+		jumpForward :height * 0.15
+		jumpLeft :height * 0.06
+		right 90
+		drawFlower :height * 0.669
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+flowerCircle 100

@@ -1,0 +1,46 @@
+make "flagBlue "#0707b9
+
+to sun :height
+	setPenSize 0
+	setFillColor "white
+	isotoxalStar :height :height * 0.5173333 12
+	setPenSize :height / 15
+	setPenColor :flagBlue
+	circle :height * 8 / 15
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Taiwan#/media/File:Flag_of_the_Republic_of_China.svg
+to taiwanFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 3 / 2
+	localmake "blueHeight :height * 0.5
+	localmake "blueWidth :width * 0.5
+	stripes :width :height ["#ef2900]
+	jumpForward :height / 2
+	jumpLeft :width / 4
+	stripes :blueWidth :blueHeight [:flagBlue]
+	jumpForward :blueHeight / 2	
+	sun :height * 0.1875
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://upload.wikimedia.org/wikipedia/commons/8/8b/National_Emblem_of_the_Republic_of_China.svg
+to taiwanEmblem :height
+	localmake "oldState turtleState
+	setFillColor :flagBlue
+	setPenSize 0
+	jumpForward :height / 2
+	circle :height / 2
+	sun :height / 3
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+make "height 100
+make "separation :height * 3
+jumpLeft :separation * 0.5
+taiwanFlag :height
+jumpRight :separation
+taiwanEmblem :height

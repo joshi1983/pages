@@ -1,0 +1,93 @@
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Honduras#/media/File:Flag_of_Honduras.svg
+; Construction sheet at:
+; https://en.wikipedia.org/wiki/Flag_of_Honduras#/media/File:Flag_of_Honduras_(construction_sheet).svg
+to hondurasFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 2
+	localmake "hondurasFlagBlue "#00bce4
+	localmake "starSize :height * 2 / 36
+	localmake "hSeparation :height * 20 / 36
+	localmake "vSeparation :height * 6 / 36
+	stripes :width :height [:hondurasFlagBlue "white :hondurasFlagBlue]
+	setPenSize 0
+	setFillColor :hondurasFlagBlue
+	jumpForward :height / 2
+	regularStar :starSize 5
+	jumpRight :hSeparation / 2
+	jumpBackward :vSeparation / 2
+	regularStar :starSize 5
+	jumpForward :vSeparation
+	regularStar :starSize 5
+	jumpLeft :hSeparation
+	regularStar :starSize 5
+	jumpBackward :vSeparation
+	regularStar :starSize 5
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://upload.wikimedia.org/wikipedia/commons/e/e2/Bandera_de_Ocotepeque.svg
+to banderaDeOcotepequeFlag :height
+	localmake "width :height * 3 / 2
+	stripes :width :height ["#00913f "white "#d7352e]
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Honduras#/media/File:Bandera_de_Santa_Barbara_Honduras.svg
+to santaBarbaraFlag :height
+	localmake "width :height * 3 / 2
+	stripes :width :height ["white "#209854]
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Honduras#/media/File:Bandera_de_olancho.jpg
+; This drawing doesn't line up very well with the jpeg but seems worth sharing anyway.
+; Some of the biggest differences are:
+; - green stripe in this procedure is exactly centered. 
+; The JPEG has the green stripe a few percent closer to the bottom
+; - the star ring in this is exactly centered.
+; The JPEG has the blue star ring a few percent closer to the bottom 
+; and horizontally off center
+; - the stars here are centered at exactly 360 / 23 degrees apart.
+; The JPEG shows some closer and some farther apart than that.
+to banderaDeOlanchoFlag :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "width :height * 676 / 416
+	localmake "starRingRadius :height * 0.305
+	localmake "numStars 23
+	localmake "starRingThickness :height * 0.08
+	localmake "starSize :starRingThickness * 0.55
+	stripes :width :height ["white "#05a742 "white]
+	jumpForward :height / 2
+	setPenColor "#0195db
+	setFillColor transparent
+	setPenSize :starRingThickness
+	circle :starRingRadius
+	localmake "center pos
+	setPenSize 0
+	setFillColor "white
+	repeat :numStars [
+		setHeading :oldHeading + repcount * 360 / :numStars
+		jumpForward :starRingRadius
+		setHeading :oldHeading
+		regularStar :starSize 5
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+; for a little contrast with white in the flag
+setScreenColor "black
+make "height 100
+make "separation :height * 3
+jumpLeft :separation * 1.5
+hondurasFlag :height
+jumpRight :separation
+banderaDeOcotepequeFlag :height
+jumpRight :separation
+santaBarbaraFlag :height
+jumpRight :separation
+banderaDeOlanchoFlag :height

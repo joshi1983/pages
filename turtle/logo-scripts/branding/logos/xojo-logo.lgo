@@ -1,0 +1,41 @@
+; Inspired by logo at:
+; https://www.xojo.com
+to xojoLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "lines1 [
+		[-90 0] [44 0.19]
+	]
+	localmake "radius :height / 2
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	setFillColor "#70b332
+	repeat 4 [
+		setHeading :oldHeading + repcount * 360 / 4
+		jumpForward :radius
+		localmake "top pos
+		jumpBackward :radius - :height * 0.14
+		polyStart
+		arcLines :lines1 :height
+		localmake "len1 distanceToCircle :center :radius
+		localmake "lines2 [
+			[:len1 / :height]
+		]
+		arcLines :lines2 :height
+		localmake "angle heading - (towards :center) - 90
+		queue2 "lines2 [:angle 0]
+		left :angle
+		localmake "angle 2 * arcSin (distance :top) / 2 / :radius
+		queue2 "lines2 [:angle :radius / :height]
+		arcLeft :angle :radius
+		arcLines reverse :lines2 :height
+		arcLines reverse :lines1 :height
+		polyEnd
+
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+xojoLogo 100

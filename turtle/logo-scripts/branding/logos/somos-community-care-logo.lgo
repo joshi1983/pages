@@ -1,0 +1,108 @@
+make "linesInfo [0.53 0.66 0.53]
+make "lineStepRatio 0.174
+make "lineThicknessRatio 0.07
+make "largeLineThicknessRatio 0.09
+make "middleLineLengthRatio 0.855
+make "middleLineBackRatio 0.05
+make "somosRed "#fd0000
+
+; Inspired by logo at
+; https://somoscommunitycare.org
+to somosCommunityCareLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "thickness :height * :lineThicknessRatio
+	jumpForward :height / 2
+	setPenSize 0
+	setFillColor :somosRed
+	circle :height / 2
+	jumpTo :oldPos
+	setPenColor "white
+	setPenSize :height * :largeLineThicknessRatio
+	setLineCap "butt
+	forward :height * :middleLineLengthRatio
+	jumpBackward :height * :middleLineBackRatio
+	repeat count :linesInfo [
+		localmake "width :height * item repcount :linesInfo
+		jumpBackward :height * :lineStepRatio
+		stripes :width :thickness ["white]
+	]
+	setTurtleState :oldState
+end
+
+to somosCommunityCareLogoTransparent :height
+	; This is more code mainly because the path around the central lines
+	; is more complex than if we simply fill those lines in.
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "thickness :height * :lineThicknessRatio
+	localmake "largeLineThickness :height * :largeLineThicknessRatio
+	localmake "largeArcRadius :height / 2
+	localmake "middleArcAngle arcSin :largeLineThickness / 2 / :largeArcRadius
+	localmake "largeArcAngle 360 - 2 * :middleArcAngle
+	localmake "middleLineLength :height * :middleLineLengthRatio
+	localmake "gap1 :height * :middleLineBackRatio
+	localmake "lineSeparation :height * :lineStepRatio
+	localmake "widthFactor :height / 2
+	right 90
+	setPenSize 0
+	arcLeft :middleArcAngle :largeArcRadius
+	polyStart
+	arcLeft :largeArcAngle :largeArcRadius
+	setHeading :oldHeading
+	jumpForward :middleLineLength - :gap1 - 3 * :lineSeparation - :thickness / 2
+	repeat count :linesInfo [
+		localmake "index (count :linesInfo) + 1 - repcount
+		localmake "width (:widthFactor * item :index :linesInfo) - :largeLineThickness / 2
+		jumpLeft :width
+		jumpForward :thickness
+		jumpRight :width
+		jumpForward :lineSeparation - :thickness
+	]
+	jumpForward :gap1
+	jumpRight :largeLineThickness
+	jumpBackward :gap1 + :lineSeparation - :thickness
+	repeat count :linesInfo [
+		localmake "width (:widthFactor * item repcount :linesInfo) - :largeLineThickness / 2
+		jumpRight :width
+		jumpBackward :thickness
+		jumpLeft :width
+		jumpBackward :lineSeparation - :thickness
+	]
+	polyEnd
+	setTurtleState :oldState	
+end
+
+to somosCommunityCareLogo2 :height
+	localmake "oldState turtleState
+	stripes :height * 3 :height ["#2a3870]
+	setFillColor :somosRed
+	somosCommunityCareLogoTransparent :height
+	setTurtleState :oldState	
+end
+
+; Inspired by logo at
+; https://somosinnovation.com
+to somosInnovationLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "colorStops createPList2 [
+		[0 "#22A571] [1 "#215aa8]
+	]
+	jumpLeft :height / 2
+	localmake "fromPos pos
+	jumpRight :height
+	setFillGradient createLinearGradient :fromPos pos :colorStops "pad
+	jumpTo :oldPos
+	somosCommunityCareLogoTransparent :height
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 5
+jumpLeft :separation
+somosCommunityCareLogo :height
+jumpRight :separation
+somosCommunityCareLogo2 :height
+jumpRight :separation
+somosInnovationLogo :height

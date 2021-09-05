@@ -1,0 +1,53 @@
+; Inspired by logo at:
+; https://gordiehoweinternationalbridge.com
+to gordieHoweInternationalBridgeLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "radiusFactor 0.501
+	localmake "radius :height * :radiusFactor
+	localmake "pieSlices [
+		[0.61 -149 21 "#badf91]
+		[0.685 -129 24 "#b3def0]
+		[0.735 -99.5 34 "#66bde2]
+		[0.775 0 61.5 "#0091ce]
+	]
+	localmake "arcAngle 12.8
+	localmake "cornerAngle 90
+	localmake "bottomLines1 [
+		[-90 0] [:arcAngle :radiusFactor] [:cornerAngle 0]
+		[0.393] [180 - :arcAngle - :cornerAngle 0]
+	]
+	jumpForward :radius
+	localmake "center pos
+	setPenSize 0
+	setFillColor "white
+	circle :radius
+	jumpTo :oldPos
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		repeat count :pieSlices [
+			localmake "info item repcount :pieSlices
+			setFillColor last :info
+			jumpRight :sign * :height * 0.044
+			jumpForward :height * first :info
+			polyStart
+			left :sign * item 2 :info
+			jumpForward distanceToCircle :center :radius
+			setHeading (towards :center) - 90 * :sign
+			arcLeft :sign * -item 3 :info :radius
+			polyEnd
+			jumpTo :oldPos
+			setHeading :oldHeading
+		]
+	]
+	setFillColor "#8cc947
+	polyStart
+	arcLines :bottomLines1 :height
+	jumpForward 2 * distanceToLine :oldPos :center
+	arcLines reverse :bottomLines1 :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+gordieHoweInternationalBridgeLogo 100

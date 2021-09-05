@@ -1,0 +1,212 @@
+; Inspired by reddit branding graphics for the website:
+; https://www.reddit.com/
+; Also, inspired by graphics at
+; https://www.msn.com/en-ca/entertainment/other/reddit-hackers-demand-4-5-million-ransom-for-stolen-company-data/ar-AA1cOb3l?ocid=msedgntp&cvid=6946d277e6c64ec58a31e44144cd1f3e&ei=14#image=1
+
+; Exported and shared at
+; https://imgur.com/a/vPQYQ9q
+
+to redditAntenna :size
+	localmake "oldState turtleState
+	jumpForward :size * 0.81
+	setLineJoinStyle "round
+	right 17.7
+	forward :size * 0.174
+	right 85.5
+	forward :size * 0.1425
+	left 90
+	circleRight :size * 0.053
+	setTurtleState :oldState
+end
+
+to redditEars :size
+	localmake "oldState turtleState
+	localmake "earSeparation1 :size * 0.2767
+	localmake "earRadius :size * 0.0691
+	jumpForward :size * 0.7035
+	jumpRight :earSeparation1
+	circle :earRadius
+	jumpLeft :earSeparation1 * 2
+	circle :earRadius
+	setTurtleState :oldState
+end
+
+to angryEyebrows :eyeSeparation1 :angerRatio
+	localmake "oldHeading heading
+	localmake "eyebrowLength :eyeSeparation1 * mix 0.9 0.8 :angerRatio
+	localmake "eyeSeparation2 :eyeSeparation1 * 1.4
+	localmake "angerRatio clamp :angerRatio 0 1
+	localmake "eyebrowAngle 85 + 25 * :angerRatio
+	setPenColor mix "black transparent clamp :angerRatio * 1.5 0 1
+	setPenSize :eyeSeparation1 * mix 0.3 0.15 :timeRatio
+	jumpForward :eyeSeparation1 * 0.4
+	localmake "eyebrowMiddle pos
+	setLineCap "round
+	jumpRight :eyeSeparation2
+	left :eyebrowAngle
+	forward :eyebrowLength
+	jumpTo :eyebrowMiddle
+	setHeading :oldHeading
+	jumpLeft :eyeSeparation2
+	right :eyebrowAngle
+	forward :eyebrowLength
+end
+
+to redditFace :size :angerRatio
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "width :size * 0.31
+	localmake "height :size * 0.2
+	localmake "lipArcScale mix 0.6 1 :angerRatio
+	localmake "arcAngle1 32.5
+	localmake "arcRadius1 :size * 0.1 * :lipArcScale
+	localmake "arcRadius2 :size * 0.265 * :lipArcScale
+	localmake "eyeSeparation1 :size * 0.1083
+	localmake "eyeRadius :size * 0.0495
+	jumpForward :size * 0.612
+	ellipse :width :height
+	jumpBackward :size * 0.0925
+	jumpLeft :size * 0.107 * :lipArcScale
+	right 135
+	setLineCap "round
+
+	; lips
+	arcLeft :arcAngle1 :arcRadius1
+	arcLeft 25 :arcRadius2
+	arcLeft :arcAngle1 :arcRadius1
+
+	setFillColor "#fe2200
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :size * 0.6505
+	localmake "eyeMiddle pos
+	jumpRight :eyeSeparation1
+	setPenSize 0
+	; eyes
+	circle :eyeRadius
+	jumpLeft :eyeSeparation1 * 2
+	circle :eyeRadius
+
+	jumpTo :eyeMiddle
+	setHeading :oldHeading
+	angryEyebrows :eyeSeparation1 :angerRatio
+	setTurtleState :oldState
+end
+
+to redditArms :size
+	localmake "oldState turtleState
+	localmake "armSeparation :size * 0.081
+	localmake "armRadius :size * 0.145
+	jumpForward :size * 0.287
+	jumpRight :armSeparation
+	circle :armRadius
+	jumpLeft :armSeparation * 2
+	circle :armRadius
+	setTurtleState :oldState
+end
+
+to redditFeet :size
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "size1 :size * 0.21
+	localmake "arcRadius1 :size * 0.061
+	localmake "arcRadius2 :size * 0.089
+	localmake "arcAngle1 70
+	localmake "arcAngle2 90
+	localmake "angle1 78
+	jumpForward penSize / 2
+	localmake "pos1 pos
+	setLineJoinStyle "round
+	polyStart
+	left 90
+	jumpForward :size1
+	right :angle1
+	arcRight :arcAngle1 :arcRadius1	
+	arcRight :arcAngle2 :arcRadius2	
+	polyEnd
+	jumpTo :pos1
+	setHeading :oldHeading + 90
+	polyStart
+	jumpForward :size1
+	left :angle1
+	arcLeft :arcAngle1 :arcRadius1
+	arcLeft :arcAngle2 :arcRadius2
+	polyEnd
+	setTurtleState :oldState
+end
+
+to redditChest :size
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "arcAngle1 20
+	localmake "arcAngle2 20
+	localmake "arcAngle3 25
+	localmake "arcRadius1 :size * 0.68
+	localmake "arcRadius2 :size * 0.38
+	localmake "arcRadius3 :size * 0.18
+	jumpForward :size * 0.43
+	jumpLeft :size * 0.147
+	left 171
+	setFillColor "white
+	polyStart
+	arcLeft :arcAngle1 :arcRadius1
+	arcLeft :arcAngle2 :arcRadius2
+	arcLeft :arcAngle3 :arcRadius3
+	localmake "angle1 abs (heading - :oldHeading - 90)
+	left :angle1
+	jumpForward :size * 0.08
+	left :angle1
+	arcLeft :arcAngle3 :arcRadius3
+	arcLeft :arcAngle2 :arcRadius2
+	arcLeft :arcAngle1 :arcRadius1
+	polyEnd	
+	setTurtleState :oldState
+end
+
+to redditAlien :size :angerRatio
+	setPenSize :size * 0.028
+	setPenColor "black
+	setFillColor "white
+	redditArms :size
+	redditFeet :size
+	redditChest :size
+	redditAntenna :size
+	redditEars :size
+	redditFace :size :angerRatio
+end
+
+to hotGradient :size :timeRatio
+	localmake "oldPos pos
+	localmake "timeRatio clamp :timeRatio 0 1
+	localmake "color1 mix "#ff8 screenColor :timeRatio
+	localmake "colorStops createPList2 [
+		[0 :color1] [1 screenColor]
+	]
+	jumpForward :size / 2
+	setFillGradient createRadialGradient pos :size :colorStops
+	setPenSize 0
+	circle :size
+	jumpTo :oldPos
+end
+
+make "timeRatio interpolateRatio easeIn animation.clampedTimeRatio
+setScreenColor mix "red "#d3f3fe :timeRatio
+hotGradient 100 :timeRatio
+redditAlien 100 :timeRatio
+
+to animation.snapshotstyle
+	output createPList2 [
+		["position.y 50]
+		["zoom.scale 5]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 2
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

@@ -1,0 +1,55 @@
+make "numStripes 100
+
+to repcountToRatio :repcount :timeRatio
+	localmake "dz :repcount - 2 * :timeRatio
+	output clamp power 1 / :dz 2 0 1
+end
+
+; Inspired by
+; https://ca.pinterest.com/pin/AQEZJZ12fRu3NvOkO1LNyu5wMEUTGHpUknT0_qK9PxAM347_NcDdTmw/
+to radialLoop :height :timeRatio
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "colorStops createPList
+	localmake "c "#0df
+	repeat :numStripes [
+		localmake "ratio repcountToRatio repcount :timeRatio
+		localmake "numDivisions 3
+		if :ratio > 0.2 [
+			localmake "numDivisions 5
+		]
+		localmake "rpc repcount
+		repeat :numDivisions [
+			localmake "ratio1 abs repRatio - 0.5
+			localmake "c2 mix :c transparent 2 * :ratio1
+			localmake "ratio2 repcountToRatio :rpc + :ratio1 :timeRatio
+			setProperty "colorStops :ratio2 :c2
+		]
+	]
+	jumpForward :height / 2
+	setPenGradient createRadialGradient pos :height / 2 / cos 45  :colorStops
+	jumpTo :oldPos
+	setPenSize :height
+	setLineCap "butt
+	forward :height
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+radialLoop 100 animation.timeRatio
+
+to animation.snapshotstyle
+	output createPList2 [
+		["position.y 50]
+		["zoom.scale 9]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 2
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

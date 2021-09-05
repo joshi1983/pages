@@ -1,0 +1,46 @@
+; Inspired by logo at:
+; https://en.wikipedia.org/wiki/Rolex#/media/File:Logo_da_Rolex.png
+to rolexLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "circles [
+		[0.4 0.735 20.4 0.0935 0.6]
+		[0.216 0.884 8.4 0.128 0.7]
+	]
+	localmake "middleTriangleHeight :height * 0.75
+	localmake "radius :height * 0.0585
+	setPenSize 0
+	setFillColor "#a27418
+	jumpForward :height - :radius
+	circle :radius
+	jumpBackward :middleTriangleHeight
+	isoTriangle :height * 0.158 :middleTriangleHeight
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		localmake "height1 :sign * :height
+		repeat count :circles [
+			localmake "info item repcount :circles
+			localmake "triangleHeight :height * last :info
+			localmake "triangleWidth :height * item 4 :info
+			jumpTo :oldPos
+			jumpRight :height1 * first :info
+			jumpForward :height * item 2 :info
+			circle :radius
+			right :sign * item 3 :info
+			jumpBackward :triangleHeight
+			isoTriangle :triangleWidth :triangleHeight
+			setHeading :oldHeading
+		]
+		jumpTo :oldPos
+		drawArcLineShape [0 0
+			[[90 0] [-20 0.35] [-10 0.25] [-20 0.15] [-23 0.12]
+			[0.05] [-80 0] [0.3] [-120 0] [0.139] [-85 0] [0.04]
+			[6 0.6] [13 0.3] [13 0.12] [30 0.041] [40 0.016] [36 0.027]
+			[20 0.1] [15 0.35] [6 0.6] [-110 0.03]]
+		] :height1
+	]
+	setTurtleState :oldState
+end
+
+rolexLogo 100

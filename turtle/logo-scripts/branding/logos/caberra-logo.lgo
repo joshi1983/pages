@@ -1,0 +1,52 @@
+to setCarberraLogoGradient :height
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "colorStops createPList2 [
+		[0 "#3e6ec3] [1 "#9a1df3]
+	]
+	left 45
+	jumpForward :height * 0.7
+	localmake "result createLinearGradient :oldPos pos :colorStops "pad
+	jumpTo :oldPos
+	setHeading :oldHeading
+	output :result
+end
+
+; Inspired by logo at
+; https://www.youtube.com/@Carberra
+to carberraLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "gradient setCarberraLogoGradient :height
+	localmake "tiltAngle 5.3
+	setLineCap "round
+	setLineJoinStyle "round
+	setPenGradient :gradient
+	setPenSize :height * 0.168
+	jumpForward :height - penSize / 2
+	localmake "top1 pos
+	jumpLeft :height 
+	localmake "top2 pos
+
+	jumpTo :oldPos
+	jumpForward penSize / 2
+	jumpRight :height * 0.056
+	right :tiltAngle
+	forward :height * 0.418
+	localmake "centerPosition pos
+	setHeading :oldHeading - 90
+	forward :height * 0.575
+	right 90 + :tiltAngle
+	forward distanceToLine :top1 :top2
+	setHeading :oldHeading + 90
+	forward :height * 0.42
+
+	jumpTo :centerPosition
+	jumpForward :height * 0.227
+	forward :height * 0.16
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+carberraLogo 100

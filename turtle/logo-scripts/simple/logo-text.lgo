@@ -1,0 +1,85 @@
+make "thicknessRatio 0.15
+
+to o :height
+	localmake "oldState turtleState
+	localmake "oldPenSize penSize
+	localmake "oldPenColor penColor
+	localmake "size1 :height * 0.68
+	localmake "height1 :height - penSize
+	localmake "thickness1 :height * :thicknessRatio * 2
+	jumpForward :height / 2
+	setPenSize :thickness1 / 2
+	setPenColor fillColor
+	setFillColor transparent
+	rect :size1 - :thickness1 / 2 :height - :thickness1 / 2
+
+	setPenSize :oldPenSize
+	setPenColor :oldPenColor
+	rect :size1 :height1
+	rect :size1 - :thickness1 :height1 - :thickness1
+	setTurtleState :oldState
+end
+
+to l :height
+	localmake "oldState turtleState
+	localmake "height1 :height - penSize
+	localmake "thickness1 :height * :thicknessRatio
+	jumpForward penSize / 2
+	polyStart
+	jumpForward :height1
+	jumpRight :thickness1
+	jumpBackward :height1 - :thickness1
+	jumpRight :height * 0.52
+	jumpBackward :thickness1
+	polyEnd
+	setTurtleState :oldState
+end
+
+to g :height
+	localmake "oldState turtleState
+	localmake "height1 :height - penSize
+	localmake "thickness1 :height * :thicknessRatio
+	localmake "width :height * 0.68
+	jumpForward penSize / 2
+	polyStart
+	jumpForward :height1
+	jumpRight :width
+	jumpBackward :thickness1
+	jumpLeft :width - :thickness1
+	jumpBackward :height1 - :thickness1 * 2
+	jumpRight :width - :thickness1 * 2
+	jumpForward :thickness1
+	jumpRight :thickness1
+	jumpBackward :thickness1 * 2
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by a drawing at Figure 2.6 
+; in a book called Logo: potenza e semplicita
+; The book was published in 1984.
+; The figure is on page 33.
+; You can find the figure at:
+; https://archive.org/details/logo-potenza-e-semplicita/page/32/mode/2up
+; The book has some Logo code to draw the same text but
+; this is a more WebLogo-optimized version that was
+; made mostly by tracing the book's drawing.
+to logoText :height
+	localmake "oldState turtleState
+	setPenSize :height * 0.01
+	setLineCap "butt
+	setFillColor "white
+	jumpLeft :height * 1.902
+	l :height
+	jumpRight :height * 1.38
+	o :height
+	jumpRight :height * 0.7
+	g :height
+	jumpRight :height * 1.375
+	o :height
+
+	setTurtleState :oldState
+end
+
+setScreenColor "#666
+logoText 100

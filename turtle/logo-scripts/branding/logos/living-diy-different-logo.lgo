@@ -1,0 +1,28 @@
+; Inspired by logo at:
+; https://www.youtube.com/@livingdiyfferent
+to livingDIYfferentLogo :height
+	localmake "oldState turtleState
+	localmake "radius :height / 2 / (1 + cos 45)
+	jumpForward :height / 2
+	setPenSize 0
+	setFillColor "#5aa02c
+	right 45
+	repeat 4 [
+		circleLeft :radius
+		right 90
+	]
+	setFillColor "#77cd38
+	repeat 4 [
+		arcPair :radius * 2 10
+		right 90
+	]
+	setFillColor "#447921
+	right 45
+	repeat 4 [
+		arcPair :radius / cos 45 90
+		right 90
+	]
+	setTurtleState :oldState
+end
+
+livingDIYfferentLogo 100

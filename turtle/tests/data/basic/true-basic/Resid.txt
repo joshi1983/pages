@@ -1,0 +1,32 @@
+!
+!  RESID.  Show off least-squares linear fit & error distributions.
+!
+LIBRARY "Stat2Lib.trc"
+
+DIM x(0),y(0),r(0),ls(0)
+
+DECLARE DEF ls_r2
+
+CALL SimNormal (100, 20, 2, x())  ! Get x-values normally distributed
+CALL SimLinear (x(), 1, 0, 2, y())     ! ...and y-values along line
+
+OPEN #1: screen 0, 1, .5, 1
+CALL SetText ("Least Squares", "", "")
+CALL ReserveLegend                ! Save space for legend
+CALL SetLS (1)                    ! Show least-squares line
+CALL SetConfBand (.99, 3)         ! Show 99% confidence band
+CALL PlotScat (x, y, 2, 0, "black")    ! Scatter plot data
+
+CALL AskLineStats (ls)            ! Make fancy legend
+CALL AddLegend ("N = 100", 0, 0, "black")
+CALL AddLegend ("R2 = " & Str$(ls(ls_r2)), 0, 0, "black")
+CALL AddLegend ("99% Confidence", 2, 3, "black")
+CALL DrawLegend
+
+OPEN #2: screen 0, 1, 0, .49
+CALL SetText ("", "Residuals", "")
+CALL SetLS (0)
+CALL PlotResid (x, y, 3, 0, "black")   ! Scatter plot residues
+
+END
+

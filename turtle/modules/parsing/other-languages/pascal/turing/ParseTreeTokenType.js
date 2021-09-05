@@ -1,0 +1,73 @@
+const typeNames = [];
+
+export class ParseTreeTokenType {
+	static getNameFor(type) {
+		return typeNames[type];
+	}
+};
+
+[
+	'ARG_LIST', // for FUNCTION_CALL but not function/procedure definitions
+	'ARRAY',
+	'ASSIGNMENT_OPERATOR',
+	'BINARY_OPERATOR',
+	'BOOLEAN_LITERAL',
+	'BY',
+	'CASE',
+	'CLASS',
+	'CLASS_BODY',
+	'CODE_BLOCK',
+	'COLON',
+	'COMMA',
+	'COMMA_LIST',
+	'CONST',
+	'CURLY_BRACKET_EXPRESSION',
+	'CURLY_LEFT_BRACKET',
+	'CURLY_RIGHT_BRACKET',
+	'CURVED_BRACKET_EXPRESSION',
+	'CURVED_LEFT_BRACKET',
+	'CURVED_RIGHT_BRACKET',
+	'DATA_TYPE_EXPRESSION',
+	'DOT',
+	'ELSE',
+	'ELSIF',
+	'END',
+	'END_CLASS',
+	'END_FOR',
+	'END_FUNCTION',
+	'END_IF',
+	'END_LOOP',
+	'END_MATCH_SYMBOL',
+	'END_PROCEDURE',
+	'EXIT',
+	'EXPORT',
+	'EXPRESSION_DOT_PROPERTY',
+	'FOR',
+	'FORMAL_ARG_LIST', // like ARG_LIST but used for FUNCTION and PROCEDURE instead of FUNCTION_CALL.
+	'FUNCTION_CALL',
+	'FUNCTION',
+	'IDENTIFIER',
+	'IF',
+	'LOOP',
+	'MULTI_LINE_COMMENT',
+	'NUMBER_LITERAL',
+	'OF',
+	'PROCEDURE',
+	'RESULT',
+	'SEMICOLON',
+	'SINGLE_LINE_COMMENT',
+	'SQUARE_BRACKET_EXPRESSION',
+	'SQUARE_LEFT_BRACKET',
+	'SQUARE_RIGHT_BRACKET',
+	'STRING_LITERAL',
+	'THEN',
+	'TREE_ROOT',
+	'UNARY_OPERATOR',
+	'UNRECOGNIZED',
+	'VAR',
+	'WHEN'
+].forEach(function(key, index) {
+	index++;
+	ParseTreeTokenType[key] = index;
+	typeNames[index] = key;
+});

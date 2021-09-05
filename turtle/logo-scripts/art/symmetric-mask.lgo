@@ -1,0 +1,47 @@
+; Inspired by a mask at.
+; http://www.publicdomainfiles.com/show_file.php?id=13945827019786
+to symmetricMask :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "lines1 [[70 0] [-30 0.38] [-30 0.7] [-6 2.03] [-94 0.325] [0.01595]
+		[-90 0] [0.445] [-90 0] [70 0.005] [18 0.25] [0.07] [-30 0.12] [19 0.2]
+		[120 0.01] [-30 0.07] [13 0.073847] [-90 0] [0.055] [-93 0] [-18.5 0.5]
+		[155 0.003] [10 0.7] [36.5 0.115954]]
+	localmake "colors [ "black "white]
+	setPenSize 0
+	jumpTo :oldPos
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		localmake "height1 :height * :sign
+		localmake "index1 repcount
+		localmake "index2 3 - repcount
+		jumpForward :height / 2
+		left 90 * :sign
+		stripes :height * 0.75	:height * 0.17 [item :index2 :colors]
+
+		setFillColor item :index1 :colors
+		jumpTo :oldPos
+		setHeading :oldHeading
+		drawArcLineShape [0 0 :lines1] :height1
+		setFillColor item :index2 :colors
+		drawArcLineShapes [
+			; eye
+			[-0.043 0.478
+				[[50 0.03] [14 0.1] [40 0.24] [130 0.008] [8 0.1]
+				[15 0.5] [29.4 0.1] [45 0.018]]
+			]
+
+			; eyebrow
+			[-0.032 0.55
+				[[50 0.007] [16 0.35] [33 0.05] [9.9 0.7] [170 0.0032]
+				[-3.3 2] [-28 0.08] [-8.72 0.53] [90 0.003]]
+			]
+		] :height1		
+	]
+
+	setTurtleState :oldState
+end
+
+setScreenColor "gray
+symmetricMask 100

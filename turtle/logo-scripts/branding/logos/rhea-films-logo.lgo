@@ -1,0 +1,80 @@
+to fillInnerCurve :height
+	localmake "oldState turtleState
+	setLineJoinStyle "round
+	polyStart
+	arcLines [[0.7] [85 0.3] [160 0] [-65 0.17] [0.468]] :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://www.rheafilms.com/
+; The actual logo has a rust-like or stained-glass-like texture
+; in each block.
+; The following code draws each block as single colors.
+to rheaFilmsLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "width :height * 63 / 78
+	localmake "leftThickness :height * 0.21
+	localmake "angle 25
+	localmake "rheaBlue "#57b99e
+	localmake "rheaOrange "#e18b27
+	setPenSize :height * 0.02
+	localmake "parallelogramWidth :height / 2  - :leftThickness * (tan :angle) - penSize / 2
+	localmake "trapezoidWidth :height * 0.4
+	localmake "innerCurveWidth :height * 0.6
+	localmake "innerArcRadiusRatio :trapezoidWidth / 2 / :height
+	localmake "outerArcRadiusRatio 0.298
+	jumpLeft (:width - :leftThickness) / 2
+	jumpForward :height / 2
+	setFillColor :rheaBlue
+	setPenColor "black
+	rect :leftThickness :height - penSize
+
+	jumpBackward (:height - penSize) / 2
+	jumpLeft :leftThickness / 2
+	jumpForward :parallelogramWidth / 2 + :leftThickness * tan :angle
+	setFillColor :rheaOrange
+	right 90
+	setLineJoinStyle "round
+	parallelogram :parallelogramWidth :leftThickness / cos :angle :angle
+
+	jumpLeft :parallelogramWidth / 2
+	fillInnerCurve :innerCurveWidth
+	setFillColor :rheaBlue
+	fillInnerCurve -:innerCurveWidth
+	jumpLeft :trapezoidWidth
+	fillInnerCurve -:innerCurveWidth
+	setFillColor :rheaOrange
+	polyStart
+	jumpLeft (:height - penSize) / 2 - :trapezoidWidth
+	arcLines [[(:width - :height * :outerArcRadiusRatio) / :height]
+	[-130 :outerArcRadiusRatio] [-50 0] [0.336] [-180 0] [180 :innerArcRadiusRatio]] :height
+	polyEnd
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward penSize / 2
+	jumpRight :width / 2
+	setLineJoinStyle "miter
+	polyStart
+	localmake "bottomRight pos
+	jumpLeft :leftThickness
+	setHeading :oldHeading
+	jumpForward :height * (0.5 - :innerArcRadiusRatio) - penSize / 2
+	arcLeft 90 :height * :innerArcRadiusRatio
+	jumpBackward :height * 0.3402812440
+	left 130
+	arcRight 40 :height * :outerArcRadiusRatio
+	polyEnd
+
+	jumpTo :bottomRight
+	setHeading :oldHeading - 90 + :angle
+	forward :leftThickness / cos :angle
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+rheaFilmsLogo 100

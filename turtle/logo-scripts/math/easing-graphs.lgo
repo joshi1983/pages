@@ -1,0 +1,60 @@
+to graphEasing :size :easing :easingName
+	localmake "oldState turtleState
+	localmake "numIterations 100
+	localmake "thickness :size * 0.05
+	localmake "axisColor "#bbb
+	localmake "points []
+	stripes :size :thickness [:axisColor]
+	jumpLeft :size / 2
+	localmake "ySize :size - penSize
+	jumpForward penSize / 2
+	localmake "startPos pos
+	stripes :thickness :size [:axisColor]
+	repeat :numIterations [
+		jumpRight :size * repRatio
+		jumpForward :ySize * interpolateRatio :easing repRatio
+		queue2 "points pos
+		jumpTo :startPos
+	]
+	setPenColor "#008
+	jumpTo first :points
+	for ["i 2 count :points] [
+		setPos item :i :points
+	]
+	jumpTo :startPos
+	setFontSize :size * 0.2
+	jumpBackward fontSize
+	right 90
+	setPenSize 0
+	setFillColor penColor
+	label :easingName
+	setTurtleState :oldState
+end
+
+make "easings [
+	[easeBounceOut "bounceOut]
+	[easeEase "ease]
+	[easeIn "in]
+	[easeInCirc "inCirc]
+	[easeInCubic "inCubic]
+	[easeInOut "inOut]
+	[easeInOutCubic "inOutCubic]
+	[easeInOutQuad "inOutQuad]
+	[easeInQuad "inQuad]
+	[easeInQuart "inQuart]
+	[easeLinear "linear]
+	[easeOut "out]
+	[easeOutCirc "outCirc]
+	[easeOutCubic "outCubic]
+	[easeOutQuad "outQuad]
+	[easeOutQuart "outQuart]
+]
+
+make "height 100
+make "separation :height * 1.2
+jumpLeft :separation * (-1 + count :easings) / 2
+repeat count :easings [
+	make "easing item repcount :easings
+	graphEasing 100 first :easing last :easing
+	jumpRight :separation
+]

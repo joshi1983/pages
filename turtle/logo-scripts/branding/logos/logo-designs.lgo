@@ -1,0 +1,311 @@
+
+; Inspired by
+; https://www.pinterest.ca/pin/70437486974011/
+to shigetoInsatsu :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "size1 :size * 0.9228
+	localmake "size2 :size * 0.9
+	localmake "angle1 51.5
+	localmake "angle2 15
+	setPenSize 0
+	setFillColor "white
+	repeat 3 [
+		localmake "heading1 heading
+		left 52
+		jumpForward :size
+		left 159
+
+		polyStart
+		arcLeft :angle1 :size1
+		arcLeft :angle2 :size2
+		arcLeft :angle1 :size1
+		left 69
+		arcLeft 15 :size
+		left 101
+		arcRight 127.95 :size * 0.67
+		left 100.96
+		arcLeft 14.96 :size
+		polyEnd
+
+		jumpTo :oldPos
+		setHeading :heading1 - 26
+		jumpForward :size
+		right 90
+		polyStart
+		arcRight 15.5 :size
+		right 113
+		arcLeft 205 :size * 0.187
+		right 113.07
+		arcRight 15.3 :size
+		right 70
+		arcRight 168 :size * 0.44
+		polyEnd
+		jumpTo :oldPos
+		setHeading :oldHeading + repcount * 360 / 3
+	]
+	setHeading :oldHeading
+end
+
+; Inspired by
+; https://www.pinterest.ca/pin/437975132504010461/
+to sungevity :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "size1 :size * 0.554
+	localmake "size2 :size - :size1
+	localmake "size3 :size1 * 0.6667
+	localmake "triangleSideLength :size3 * 0.5 / cos 45
+	setPenColor "white
+	setFillColor "white
+	setLineCap "butt
+	repeat 8 [
+		jumpForward :size2
+		setPenSize :size3
+		forward :size3
+		jumpRight :size3 * 0.5
+		left 45
+		setPenSize 0
+		polyStart
+		jumpForward :triangleSideLength
+		left 90
+		jumpForward :triangleSideLength
+		left 45
+		jumpForward :size3 * 0.1
+		polyEnd
+		setHeading :oldHeading + repcount * 360 / 8
+		jumpTo :oldPos
+	]
+	setHeading :oldHeading
+end
+
+; Inspired by
+; https://www.pinterest.ca/pin/600878775297332949/
+to octoVLogo :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "size1 :size * 0.637
+	localmake "size2 :size * 0.35
+	setLineJoinStyle "miter
+	setLineCap "butt
+	setPenColor "white
+	setPenSize :size * 0.12
+	repeat 8 [
+		jumpForward :size1
+		localmake "pos1 pos
+		right 45
+		jumpForward :size2
+		setPos :pos1
+		left 90
+		forward :size2
+		jumpTo :oldPos
+		setHeading :oldHeading + repcount * 360 / 8
+	]
+	setHeading :oldHeading
+end
+
+; Inspired by
+; https://www.pinterest.ca/pin/823032900670034563/
+to roundedOctoVLogo :size
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angle 22
+	localmake "size1 :size * 0.34
+	localmake "size2 :size * 0.5757
+	setLineJoinStyle "round
+	setLineCap "round
+	setPenColor "white
+	setPenSize :size * 0.2
+	repeat 8 [
+		localmake "heading1 heading
+		jumpForward :size1
+		localmake "pos1 pos
+		right :angle
+		jumpForward :size2
+		setPos :pos1
+		setHeading :heading1 - :angle
+		forward :size2
+		jumpTo :oldPos
+		setHeading :oldHeading + repcount * 360 / 8
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://www.pinterest.ca/pin/1018446903203759056/
+to mrTranscendenceLogo :size
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "thickness1 :size * 0.09
+	localmake "straightSize1 :size * 0.695
+	localmake "straightSize2 :size * 0.31
+	localmake "straightSize3 :size * 0.115
+	localmake "straightSize4 :size * 0.24
+	localmake "gapSize :size * 0.025
+	localmake "arcRadius1 :size * 0.275
+	localmake "arcRadius2 :size * 0.17
+	localmake "arcAngle1 225
+	localmake "angle1 :arcAngle1 - 180
+	localmake "angle2 180 - :angle1
+	localmake "straightSize5 :straightSize3 / cos :angle1
+	localmake "straightSize6 :straightSize4 + :straightSize3 * (cos 45) - :thickness1 / (cos :angle1)
+	localmake "straightSize7 :size * 0.2
+	localmake "straightSize8 :straightSize1 - :thickness1
+	setFillColor "white
+	setPenSize 0
+	repeat 4 [
+		setHeading :oldHeading + repcount * 360 / 4
+		jumpRight :gapSize
+		jumpForward :gapSize
+		polyStart
+		jumpForward :straightSize1
+		arcRight :arcAngle1 :arcRadius1
+		jumpForward :straightSize2
+		right :angle1
+		jumpForward :straightSize3
+		right 90
+		jumpForward :straightSize4
+		right :angle1
+		jumpForward :straightSize5
+		right :angle2
+		jumpForward :straightSize6
+		left :angle2
+		jumpForward :straightSize7
+		arcLeft :arcAngle1 :arcRadius2
+		jumpForward :straightSize8
+		left 90 ; reflection point
+
+		jumpForward :straightSize8
+		arcLeft :arcAngle1 :arcRadius2
+		jumpForward :straightSize7
+		left :angle2
+		jumpForward :straightSize6
+		right :angle2
+		jumpForward :straightSize5
+		right :angle1
+		jumpForward :straightSize4
+		right 90
+		jumpForward :straightSize3
+		right :angle1
+		jumpForward :straightSize2
+		arcRight :arcAngle1 :arcRadius1
+		polyEnd
+
+		jumpTo :oldPos
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://www.pinterest.ca/pin/583779170462069901/
+to sunHelix :size
+	localmake "penSize1_ 0.15
+	localmake "size1 0.628
+	setFillColor transparent
+	setPenColor "white
+	setPenSize :size * :penSize1_
+	circle :size * 0.35
+	setPenSize 0
+	setFillColor "white
+	repeat 8 [
+		drawArcLineShape [0 :size1
+			[[-90 0] [:size1] [90 0] [:penSize1_]
+			[90 0] [:size1 - :penSize1_]]
+			] :size
+		right 360 / 8
+	]
+end
+
+; Inspired by
+; https://www.pinterest.ca/pin/27936460183155161/
+to braintrustLogo :size
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	setFillColor transparent
+	setPenColor "white
+	setPenSize :size * 0.12
+	circle :size * 0.355
+	setFillColor "white
+	setPenSize 0
+	repeat 6 [
+		left 25
+		drawArcLineShape [0 1
+			[[168 0] [153.63 0.437] [78 0] [8.5 1] [100 0]
+			[-166.5 0.29] [100 0] [8.4 1]]
+			] :size
+		setHeading :oldHeading + repcount * 360 / 6
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://www.pinterest.ca/pin/11329436554407756/
+; pinterest design by Jeroen van Eerden
+to xSquare :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "step :size / 5
+	setLineJoinStyle "miter
+	setLineCap "butt
+	setPenColor "white
+	setPenSize :step
+	repeat 4 [
+		setHeading :oldHeading + 45 + repcount * 360 / 4
+		jumpLeft :step
+		jumpForward :step * 0.5
+		repeat 3 [
+			localmake "len :size - (repcount - 1.035) * :step * 2
+			forward :len
+			jumpBackward :len
+			jumpLeft :step * 2
+		]
+		jumpTo :oldPos
+	]
+	setHeading :oldHeading
+end
+
+; Inspired by
+; https://www.pinterest.ca/pin/1079245498178267776/
+; and
+; https://www.instagram.com/p/CWlynvMvCsH/
+to kudosMark :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+
+	setPenColor "white
+	setPenSize :size * 0.3
+
+	repeat 5 [
+		setHeading :oldHeading + 10 + repcount * 360 / 5
+		jumpForward :size * 0.2
+		jumpRight :size * 0.22
+		left 10
+		arcLeft 90 :size * 0.62
+		jumpTo :oldPos
+	]
+	setHeading :oldHeading
+end
+
+setScreenColor "black
+make "size 50
+make "separation :size * 2.5
+jumpLeft :separation * 4
+shigetoInsatsu :size
+jumpRight :separation
+sungevity :size
+jumpRight :separation
+octoVLogo :size
+jumpRight :separation
+roundedOctoVLogo :size
+jumpRight :separation
+mrTranscendenceLogo :size
+jumpRight :separation
+sunHelix :size
+jumpRight :separation
+braintrustLogo :size
+jumpRight :separation
+xSquare :size
+jumpRight :separation
+kudosMark :size

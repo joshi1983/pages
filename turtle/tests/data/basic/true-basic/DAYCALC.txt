@@ -1,0 +1,155 @@
+! DAYCALC
+! Day of the Week calculator
+
+! This demo program is "laid out" using pixel coordinates
+
+LIBRARY "TrueCtrl.trc", "TrueDial.trc"
+
+DIM day$(7), daysin(12)
+DIM dlist$(31), mlist$(12)
+
+MAT READ mlist$
+
+DATA January, February, March, April, May, June, July
+DATA August, September, October, November, December
+
+MAT READ day$, daysin
+DATA  Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday
+DATA 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31
+
+! If a leap year, daysin(2) will be changed to 29.
+
+FOR i = 1 to 31
+    LET dlist$(i) = str$(i)
+NEXT i
+
+DIM menu$(1:1,0:1)
+MAT READ menu$
+DATA File, Quit@Q
+
+CALL TC_Init
+
+CALL TC_Menu_Set (0, menu$)       ! Using the default window
+
+CALL TC_SetUnitsToPixels          ! Set to work with pixels
+CALL TC_GetScreensize (screen_l, screen_r, screen_b, screen_t)
+
+IF screen_r > 512 and screen_b > 322 then
+   CALL TC_SetRect (0, 60, 572, 382, 60)    ! Offset, if large enough
+ELSE
+   CALL TC_SetRect (0, 0, 512, 322, 0)
+END IF
+
+LET pxs = 512
+LET pys = 322
+
+SET BACK "blue"
+SET COLOR 15
+CLEAR
+
+CALL TC_Win_SetFont (0, "helvetica", 14, "bold")
+PLOT TEXT, AT .1,.9: "This program calculates the day of the week"
+PLOT TEXT, AT .1,.82: "for any date in the Gregorian calendar."
+CALL TC_Win_SetFont (0, "helvetica", 12, "plain")
+
+CALL TC_SText_Create (std_id, "The Day:", pxs*.1, pxs*.3-2, pys*.3, -1)
+CALL TC_ListBox_Create (day_id, "SINGLE", pxs*.1, pxs*.3, pys*.3, pys*.6)
+CALL TC_SetList (day_id, dlist$)
+
+CALL TC_SText_Create (stm_id, "The Month:", pxs*.5, pxs*.7-2, pys*.3, -1)
+CALL TC_ListBox_Create (month_id, "SINGLE", pxs*.5, pxs*.7, pys*.3, pys*.6)
+CALL TC_SetList (month_id, mlist$)
+
+CALL TC_SText_Create (st_id, "Day Of The Week:", pxs*.1, pxs*.45, pys-30, -1)
+
+CALL TC_SText_Create (styr_id, "Year:", pxs*.1, pxs*.3, pys-65, -1)
+CALL TC_Edit_Create (year_id, "1997", pxs*.35, pxs*.45, pys-65, -1)
+
+CALL TC_PushBtn_Create (quit_id, "Quit", pxs*.5, pxs*.7, pys-30, -1)
+
+DO
+   CALL TC_Event (0,event$, eventwin, x1, x2)
+   IF event$ = "HIDE" then EXIT DO
+
+   IF event$ = "MENU" then
+      IF x2 = 1 then EXIT DO
+
+   ELSEIF event$ = "CONTROL DESELECTED" then
+      IF x2 = quit_id then
+         EXIT DO
+
+      ELSEIF x2 = year_id then
+         CALL Get_Day
+
+      END IF
+
+   ELSEIF event$ = "CONTROL SINGLE" or event$ = "CONTROL DOUBLE" then
+      CALL Get_Day
+
+   END IF
+
+LOOP
+
+CALL TC_Menu_Free (0)
+CALL TC_Cleanup
+
+! Now, the subroutines
+
+SUB Get_Day
+
+    DIM res(1)
+
+    WHEN ERROR IN
+         CALL TC_ListBox_Get (day_id, res)
+         IF ubound(res) = 0 then EXIT SUB       ! Make sure selection
+         LET day = res(1)
+
+         CALL TC_ListBox_Get (month_id, res)
+         IF ubound(res) = 0 then EXIT SUB       ! Make sure selection      
+         LET month = res(1)
+
+         CALL TC_Edit_GetText (year_id, y$)
+         LET year = val(y$)
+
+         CALL DayOfTheWeek (month, day, year, dayofweek)
+         LET dayofweek$ = day$(dayofweek)   ! 1 = Sunday
+         CALL TC_SetText (st_id, "Day of week: " & dayofweek$)
+
+    USE
+         CALL TD_Warn ("Please select a day, a month, and a year.", "Continue", 1, r)
+
+    END WHEN
+
+END SUB
+
+SUB DayOfTheWeek (month, day, y, dayofweek)
+
+    ! Leap years are all years divisible by 4,
+    !    except for years divisible by 100,
+    !    but years divisible by 400 ARE leap years.
+
+    IF mod(y,4)=0 and mod(y,100)<>0 or mod(y,400)=0 then
+       LET daysin(2) = 29         ! Leap year Februarys have 29 days
+    ELSE
+
+       LET daysin(2) = 28         ! Other Februarys have 28 days
+    END IF
+
+    ! Number of days in years past, since year 1.
+
+    IF day > daysin(month) then
+       CALL TD_Warn ("Not that many days in " & mlist$(month), "Continue", 1, r)
+       EXIT SUB
+    END IF
+
+    LET days = 365*(y-1) + int((y-1)/4) - int((y-1)/100) + int((y-1)/400)
+    FOR i = 1 to month - 1        ! Number of days in months past, current year
+        LET days = days + daysin(i)
+    NEXT i
+
+    LET days = days + day
+    LET dayofweek = mod(days,7) + 1    ! Change 0..6 to 1..7
+
+END SUB
+
+END

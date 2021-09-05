@@ -1,0 +1,137 @@
+to drawCurvedTriangle :height :topRadius :sideRadius :bottomNotchHeight
+	localmake "oldState turtleState
+	localmake "sideLength1 (1 
+		- :topRadius * (cos 60) - (:sideRadius * (1 + sin 30))) / cos 30 
+	localmake "bottomNotchWidth :bottomNotchHeight
+	localmake "bottomNotchRadius :bottomNotchWidth
+	localmake "bottomStraightWidth :sideLength1 * (sin 30) +
+		:topRadius * (sin 60) -
+		:sideRadius * (cos 30) -
+		:bottomNotchWidth
+	localmake "lines1 [
+		[90 0] [60 :topRadius] [:sideLength1] [120 :sideRadius]
+		[:bottomStraightWidth] [90 :bottomNotchRadius]
+		[-90 0]
+	]
+	drawArcLineShape [0 1
+		combine :lines1 reverse :lines1
+	] :height
+	setTurtleState :oldState
+end
+
+to drawTriangle :height :colors
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "topRadius 0.03
+	localmake "bottomNotchHeight 0.07
+	localmake "color1 first :colors
+	localmake "color2 item 2 :colors
+	localmake "triangles [
+		[2 0.012 0.935]
+		[1 0.184 0.7]
+		[2 0.204 0.65]
+		[1 0.36 0.42]
+		[2 0.382 0.36]
+		[1 0.5 0.16]
+	]
+	localmake "dotRadius :height * 0.02
+	localmake "dotSeparation :height * 0.132
+	localmake "dotVSeparation :height * 0.178
+	jumpForward :height
+	localmake "gradient createLinearGradient :oldPos pos createPList2 [
+		[0 :color2] [1 last :colors]
+	] "pad
+	jumpTo :oldPos
+	setFillColor "white
+	setPenSize 0
+	repeat count :triangles [
+		localmake "info item repcount :triangles
+		localmake "heightFactor item 3 :info
+		localmake "height1 :height * :heightFactor
+		localmake "bottomNotchHeight1 :bottomNotchHeight / :heightFactor
+		localmake "color first :info
+		ifelse :color = 2 [
+			setFillGradient :gradient
+		] [
+			setFillColor item (first :info) :colors
+		]
+		jumpForward :height * item 2 :info
+		drawCurvedTriangle :height1 :topRadius mix 0.07 0.1 repRatio :bottomNotchHeight1
+		jumpTo :oldPos
+	]
+	setFillColor :color1
+	jumpForward :dotVSeparation * 2 + :height * 0.105
+	repeat 3 [
+		localmake "pos1 pos
+		localmake "numDots repcount
+		repeat 2 [
+			localmake "sign sign repcount - 1.5
+			jumpLeft :sign * ((:numDots - 1) * :dotSeparation + :height * 0.113)
+			repeat :numDots [
+				circle :dotRadius
+				jumpRight :dotSeparation * :sign
+			]
+			jumpTo :pos1
+		]
+
+		jumpTo :pos1
+		jumpBackward :dotVSeparation
+	]
+	setFillColor :color2
+	jumpTo :oldPos
+	jumpForward :height / (cos 30) / 2 * tan 30
+	localmake "center pos
+	left 120
+	repeat 2 [
+		jumpForward :height * 0.59
+		circle :dotRadius
+		jumpTo :center
+		left 120
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by a drawing at:
+; https://www.facebook.com/share/p/1F1t4NMQTR
+; which was shared by: Andi Hillestad
+to drawHexagon :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "largeRadius :height / 2 / cos 30
+	localmake "innerHeight :height * 0.99 / 4
+	localmake "innerWidth :innerHeight / cos 30
+	localmake "colors [
+		"#ff9 "#420 "#f00
+	]
+	setFillColor first :colors
+	setPenSize 0
+	jumpForward :height / 2
+	right 30
+	localmake "center pos
+	roundRegularPolygon :largeRadius 6 :height * 0.04
+	repeat 6 [
+		setHeading :oldHeading + (repcount + 0.5) * 360 / 6
+		stripes :height * 0.005 :largeRadius * 0.988  ["white]		
+	]
+	setFillColor "white
+	repeat 6 [
+		setHeading :oldHeading + repcount * 360 / 6
+		jumpForward :innerHeight
+		rect :height - :innerHeight * tan 30 :height * 0.005
+		repeat 2 [
+			drawTriangle :innerHeight :colors
+			right 180
+			drawTriangle :innerHeight :colors
+
+			jumpRight :innerWidth / 2
+			right 60
+			jumpRight :innerWidth / 2
+		]
+		
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "#953
+drawHexagon 100

@@ -1,0 +1,41 @@
+to drawImmersivelyCareSymbol :height :color
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "radius :height * 0.08
+	jumpForward :height - :radius
+	setPenSize 0
+	setFillColor :color
+	circle :radius
+	jumpBackward :height * 0.26
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		setHeading :oldHeading + 65 * :sign
+		stripes :height * 0.13 :height * 0.35 [:color]
+	]
+
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://www.youtube.com/@immersivelycare3569
+to immersivelyCareLogo :height
+	localmake "oldState turtleState
+	localmake "colors ["#385ea9 "#f28d49 "#e94061 
+		"#4d4797 "#7fcbd8 "#a579b4]
+	setFillColor transparent
+	setLineJoinStyle "miter
+	jumpForward :height / 2
+	repeat count :colors [
+		localmake "color item repcount :colors
+		drawImmersivelyCareSymbol :height / 2 :color
+		right 360 / count :colors
+	]
+
+	right 180 / 6
+	setPenSize :height * 0.06
+	setPenColor first :colors
+	regularPolygon :height * 0.27 6
+	setTurtleState :oldState
+end
+
+immersivelyCareLogo 100

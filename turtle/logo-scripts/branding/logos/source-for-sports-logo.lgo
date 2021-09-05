@@ -1,0 +1,41 @@
+; Inspired by logo at
+; https://www.sourceforsports.ca
+to sourceForSportsLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "upperArcsInfo [
+		[48 0] [25 0.47] [23 0.37] [30 0.23]
+		[90 0.222] [35 0.24] [20 0.2] [-180 0.068]
+		[-75 0.365] [-90 0.355] [-30 0.4] [-15 0.68]
+		[-10.5 0.25]
+	]
+	localmake "lowerArcsInfo [
+		[40.1 0] [33.5 0.47] [23 0.37] [30 0.23]
+		[90 0.222] [35 0.24] [20 0.2] [-180 0.068]
+		[-75 0.365] [-90 0.355] [-30 0.4] [-15 0.68]
+		[-29 0.25]
+	]
+	localmake "shapes [
+		[0.345 0.205 :lowerArcsInfo]
+		[0.295 0.253 :upperArcsInfo]
+	]
+	setPenSize 0
+	setFillColor "white
+	jumpForward :height / 2
+	localmake "center pos
+	repeat 2 [
+		setHeading :oldHeading + repcount * 180
+		localmake "shapeInfo item repcount :shapes
+		localmake "arcsInfo last :shapeInfo
+		jumpRight :height * first :shapeInfo
+		jumpForward :height * item 2 :shapeInfo
+		polyStart
+		arcsLeft :arcsInfo :height
+		polyEnd
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+sourceForSportsLogo 100

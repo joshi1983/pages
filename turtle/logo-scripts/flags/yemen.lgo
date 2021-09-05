@@ -1,0 +1,27 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Yemen#/media/File:Flag_of_Yemen.svg
+to yemenFlag :height
+	localmake "width :height * 3 / 2
+	localmake "colors ["black "white "#ce1126]
+	stripes :width :height :colors
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Yemen#/media/File:Flag_of_North_Yemen.svg
+to yemenArabRepublicFlag :height
+	localmake "oldState turtleState
+	localmake "starSize :height * 0.15
+	yemenFlag :height
+	jumpForward :height / 2 - :starSize / 2 * (1 - cos 180 / 5)
+	setPenSize 0
+	setFillColor "#007b3a
+	regularStar :starSize 5
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 5
+jumpLeft :separation / 2
+yemenFlag :height
+jumpRight :separation
+yemenArabRepublicFlag :height

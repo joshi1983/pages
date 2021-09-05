@@ -1,0 +1,88 @@
+to drawDiscOutline :height
+	localmake "oldState turtleState
+	localmake "startOffset :height * 0.215
+	localmake "len1 :startOffset / cos 45
+	localmake "len2 :height * 0.155
+	localmake "notchSize :height * 0.015
+	localmake "notchLength :height * 0.04
+	localmake "squareSize :height * 0.62
+	jumpBackward :startOffset
+	jumpLeft :startOffset
+	left 45
+	polyStart
+	jumpForward :len1
+	jumpRight :len2
+	jumpBackward :notchSize
+	jumpRight :notchLength
+	jumpForward :notchSize
+	jumpRight :squareSize - :notchLength - :len2
+	jumpBackward :squareSize
+	jumpLeft :len1
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by logo at
+; https://www.youtube.com/@userlandia
+; Userlandia has good educational videos about computing history.
+to userLandiaLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "linesInfo [
+		[0.016 0.005] [0.0337 0.007] [0.05 0.01] [0.08 0.0115]
+		[0.119 0.02] [0.173 0.028]
+	]
+	localmake "lightColor "#9edae5
+	localmake "darkColor "#1b2b3a
+	localmake "topArcOffset :height * 0.237
+	localmake "r :height * 0.482
+	localmake "arcAngle 360 - 2 * arcCos :topArcOffset / :r
+	setPenSize 0
+	setFillColor :lightColor
+	jumpForward :height / 2
+	localmake "center pos
+	circle :height / 2
+	repeat count :linesInfo [
+		localmake "lineInfo item repcount :linesInfo
+		localmake "y :height * first :lineInfo
+		localmake "stripeHeight :height * last :lineInfo
+		localmake "yDelta :height / 2 - :y - :stripeHeight
+		localmake "width 2 * sqrt :r * :r - :yDelta * :yDelta
+		jumpTo :oldPos
+		jumpForward :y
+		stripes :width :stripeHeight [:darkColor]
+	]
+	jumpTo :center
+	setPenSize :height / 2 - :r
+	setFillColor transparent
+	setPenColor :lightColor
+	circle :r + penSize / 2
+	jumpBackward :topArcOffset
+	right 90
+	jumpForward distanceToCircle :center :r
+	setHeading (towards :center) + 90
+	setFillColor :darkColor
+	setPenSize 0
+	polyStart
+	arcLeft :arcAngle :r
+	polyEnd
+	jumpTo :center
+	setFillColor :lightColor
+	setHeading :oldHeading
+	drawDiscOutline :height
+
+	setFillColor :darkColor
+	circle :height * 0.083
+
+	setHeading :oldHeading + 45
+	jumpForward :height * 0.148
+	setPenSize :height * 0.05
+	setPenColor :darkColor
+	setLineCap "round
+	forward :height * 0.102
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+userLandiaLogo 100
