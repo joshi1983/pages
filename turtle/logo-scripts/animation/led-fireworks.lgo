@@ -1,0 +1,89 @@
+to createLEDGradient :len :colors
+	localmake "oldPos pos
+	localmake "colorStops createPList
+	repeat count :colors [
+		setProperty "colorStops repRatio item repcount :colors
+	]
+	jumpForward :len
+	localmake "output createLinearGradient :oldPos pos :colorStops "pad
+	jumpTo :oldPos
+	output :output
+end
+
+to createLEDRadialGradient :maxRadius :gradientRadius :colors
+	localmake "ratioOffset (:maxRadius - :gradientRadius) / :maxRadius
+	localmake "ratioScale :maxRadius / :gradientRadius
+	localmake "colorStops createPList
+	repeat count :colors [
+		localmake "ratio (repRatio - :ratioOffset) * :ratioScale
+		setProperty "colorStops :ratio item repcount :colors
+	]
+	output createRadialGradient pos :gradientRadius :colorStops
+end
+
+; Inspired by a product at:
+; https://www.pinterest.ca/pin/367606388349367783/
+; Also similar to this DIY project:
+; https://www.youtube.com/watch?v=dkP51VAvc6w
+to animatedFireworkLights :height :timeRatio
+	localmake "stickThickness :height * 0.02
+	localmake "radius :height * 0.35
+	localmake "standHeight :height - :radius - :stickThickness
+	localmake "changeTimeRatio 0.7
+	localmake "standGradientLength :height * 1.05 * :timeRatio
+	localmake "radialGradientRadius mix :radius 0 clamp (:timeRatio - :changeTimeRatio) / (1 - :changeTimeRatio) 0 1 
+	localmake "stickAngleSpan 270
+	localmake "numSticks 10
+	localmake "leftAngle :stickAngleSpan / 2 - :stickAngleSpan / 2 / :numSticks
+	localmake "oldHeading heading
+	localmake "colors ["orange "yellow "#00f "#f00 "#f0f "white]
+	setPenColor "#000
+	setPenSize :stickThickness
+	setLineCap "round
+	jumpForward :stickThickness / 2
+	localmake "startPos pos
+	forward :standHeight
+	localmake "center pos
+	left :leftAngle
+	repeat :numSticks [
+		forward :radius
+		jumpTo :center
+		right :stickAngleSpan / :numSticks
+	]
+	jumpTo :startPos
+	setHeading :oldHeading
+	jumpBackward :standHeight - :standGradientLength
+	setPenGradient createLEDGradient :standHeight :colors
+	jumpTo :startPos
+	forward clamp :standGradientLength 0 :standHeight
+	if :radialGradientRadius > 0 [
+		jumpTo :center
+		setPenGradient createLEDRadialGradient :radius :radialGradientRadius :colors
+		left :leftAngle
+		repeat :numSticks [
+			forward :radialGradientRadius
+			jumpTo :center
+			right :stickAngleSpan / :numSticks
+		]
+	]
+end
+
+setScreenColor "#048
+animatedFireworkLights 100 1.3 * animation.timeRatio
+
+to animation.snapshotstyle
+	output createPList2 [
+		["zoom.scale 5]
+		["position.y 50]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 3
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+		["thumbnailTime 2.15]
+	]
+end

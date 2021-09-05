@@ -1,0 +1,46 @@
+to drawAshokaChakra :radius :darkColor
+	localmake "outerThickness :radius / 8
+	localmake "radius1 :radius - :outerThickness * 0.5
+	localmake "radius2 :radius / 20
+	localmake "len1 :radius * 0.4
+	localmake "len2 :radius * 0.555
+	setPenSize :outerThickness
+	setPenColor :darkColor
+	setFillColor transparent
+	circle :radius
+	setFillColor :darkColor
+	setPenSize 0
+	circle :radius / 5
+	right 360 / 48
+	repeat 24 [
+		jumpForward :radius1
+		circle :radius2
+		jumpBackward :radius1
+		right 360 / 24
+	]
+	left 12
+	repeat 24 [
+		polyStart
+		jumpForward :len1
+		right 7.735
+		jumpForward :len2
+		right 173.52228
+		jumpForward :len2
+		right 7.735
+		jumpForward :len1
+		polyEnd
+		right 186.008	
+	]
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_India#/media/File:Flag_of_India.svg
+to drawIndianFlag :width :height
+	localmake "navyBlue "#000080
+	localmake "colors ["#128807 "#fff "#f93]
+	stripes :width :height :colors
+	jumpForward :height / 2
+	drawAshokaChakra :height * 0.125 :navyBlue
+end
+
+drawIndianFlag 300 200

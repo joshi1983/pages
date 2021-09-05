@@ -1,0 +1,103 @@
+to fillTriangle :height :leftOffset :rightOffset
+	localmake "startPos pos
+	jumpForward :height
+	localmake "endPos pos
+	jumpTo :startPos
+	jumpLeft :leftOffset
+	localmake "leftPos pos
+	jumpRight :leftOffset + :rightOffset
+	polygon [pos :endPos :leftPos]
+
+	jumpTo :startPos
+end
+
+to drawEyeCircle :radius
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "eyeWidth :radius * 1.93
+	localmake "triangleWidth :radius * 0.73
+	localmake "offset :radius * 0.2
+	localmake "maxRadius hypot [:triangleWidth / 2 :offset]
+	localmake "circles [
+		[1 penColor]
+		[0.9 "white]
+		[0.8 penColor]
+	]
+	setFillColor "white
+	setPenSize 0
+	circle :radius
+	setFillColor penColor
+	circle :eyeWidth / 2
+	setFillColor "white
+	right 90
+	repeat 2 [
+		jumpForward :offset
+		isoTriangle :triangleWidth :eyeWidth / 2 - :offset
+		right 180
+		jumpTo :oldPos
+	]
+	repeat count :circles [
+		localmake "circleInfo item repcount :circles
+		setFillColor last :circleInfo
+		circle :maxRadius * first :circleInfo
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by drawing at:
+; https://ca.pinterest.com/pin/393290979983720070
+to surrealEye :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "width :height * 0.66
+	localmake "numAnglePairs 9
+	localmake "pointOffset :height * 0.14
+	localmake "triangleWidth :pointOffset * 2 * tan 45 / :numAnglePairs
+	localmake "tinyCapLength 0.01
+		; A little cap to overlap triangles
+		; This is to avoid a faint line appearing between the arc and triangles
+
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize :height * 0.002
+	setFillColor transparent
+	setPenColor "black
+	setLineJoinStyle "miter
+	rect :width - penSize :height - penSize
+	setPenSize 0
+	setFillColor penColor
+	drawArcLineShape [:width / 2 / :height 0
+		[[0.5] [90 0] [:width / :height] [90 0] [0.5] [180 0]
+		[-180 :width / 2 / :height]]
+	] :height
+	drawArcLineShape [1 -:tinyCapLength
+		[[:tinyCapLength] [180 1] [:tinyCapLength]]
+	] :height * 0.235
+	circle hypot [:pointOffset :triangleWidth]
+	jumpRight :width / 2
+	localmake "middleRight pos
+	jumpBackward :height / 2
+	localmake "bottomRight pos
+	repeat :numAnglePairs [
+		localmake "angleOffset 90 + 90 * (repcount - 1) / :numAnglePairs
+		jumpTo :center
+		setHeading :oldHeading + :angleOffset
+		localmake "distance distanceToLines [[:oldPos :bottomRight] [:bottomRight :middleRight]]
+		localmake "triHeight :distance - :pointOffset
+		localmake "rightOffset :triangleWidth
+		localmake "leftOffset 0
+		jumpForward :pointOffset
+		fillTriangle :triHeight :leftOffset :rightOffset
+		jumpTo :center
+		setHeading :oldHeading - :angleOffset
+		jumpForward :pointOffset
+		fillTriangle :triHeight :rightOffset :leftOffset 
+	]
+	jumpTo :center
+	setHeading :oldHeading
+	drawEyeCircle :pointOffset * 0.95
+	setTurtleState :oldState
+end
+
+surrealEye 100

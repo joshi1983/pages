@@ -1,0 +1,380 @@
+; Inspired by:
+; https://en.wikipedia.org/wiki/Indian_Space_Research_Organisation#/media/File:Indian_Space_Research_Organisation_Logo.svg
+; Referenced from:
+; https://en.wikipedia.org/wiki/Indian_Space_Research_Organisation
+
+make "logoBlue "#0e88d3
+make "logoOrange "#f47216
+make "fontSizeRatio 0.23
+make "fontRatio1 0.601
+
+to solarPanelPair :pairLength
+	localmake "oldHeading heading
+	localmake "angle 77.5
+	localmake "singlePanelLength :pairLength * 0.45
+	localmake "singlePanelWidth :singlePanelLength * 0.637
+	localmake "gap :pairLength - :singlePanelLength * 2
+	repeat 2 [
+		polyStart
+		jumpForward :singlePanelLength
+		localmake "pos1 pos
+		left :angle
+		jumpForward :singlePanelWidth
+		left 180 - :angle
+		jumpForward :singlePanelLength
+		polyEnd
+		setHeading :oldHeading
+		jumpTo :pos1
+		if repcount <> 2 [
+			jumpForward :gap
+		]
+	]
+end
+
+to streaks :logoHeight
+	localmake "oldState turtleState
+	localmake "angle 0.115
+	jumpRight :logoHeight * 0.0233
+	right :angle
+	setPenSize 0
+	setFillColor :logoOrange
+	polyStart
+	jumpForward :logoHeight / cos :angle
+	left 153.86
+	jumpForward :logoHeight * 0.6498
+	left 166.48
+	jumpForward :logoHeight * 0.3225
+	polyEnd
+	setTurtleState :oldState
+end
+
+to drawSolarPanels :logoHeight
+	localmake "oldState turtleState
+	localmake "pairLength :logoHeight * 0.1818
+	jumpForward :logoHeight * 0.803
+	jumpLeft :logoHeight * 0.3055
+	setFillColor :logoBlue
+	setPenSize 0
+	right 102.98
+	solarPanelPair :pairLength
+	jumpForward :logoHeight * 0.1847
+	solarPanelPair :pairLength	
+	setTurtleState :oldState
+end
+
+to letterI :fontSize
+	localmake "oldState turtleState
+	localmake "strokeWidth :fontSize * 0.135
+	jumpRight :fontSize * 0.1447
+	jumpBackward :fontSize * :fontRatio1
+	setPenSize :strokeWidth
+	forward :fontSize * 0.479
+	jumpForward :fontSize * 0.289
+	setPenSize 0
+	circle :strokeWidth * 0.59
+	setTurtleState :oldState
+end
+
+to letterS :fontSize
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	jumpBackward :fontSize * :fontRatio1
+	jumpRight :fontSize * 0.022
+	setPenSize 0
+	polyStart
+	jumpRight :fontSize * 0.382
+	right 54
+	arcLeft 7 :fontSize * 0.9
+	arcLeft 15 :fontSize * 0.36
+	arcLeft 8 :fontSize * 0.2
+	arcLeft 30 :fontSize * 0.1
+	arcLeft 30 :fontSize * 0.08
+	arcLeft 25 :fontSize * 0.21
+	arcLeft 22 :fontSize * 0.4
+	arcLeft 8.7 :fontSize * 1.2
+	right 124
+	jumpForward :fontSize * 0.07
+	arcRight 30 :fontSize * 0.1
+	arcRight 30 :fontSize * 0.04
+	arcRight 15 :fontSize * 0.27
+	arcRight 6 :fontSize * 0.4
+	arcRight 6.9 :fontSize * 1.3
+	left 75.5
+	jumpForward :fontSize * 0.16
+	left 103
+	arcLeft 11 :fontSize * 0.9
+	left 14.2
+	arcLeft 40 :fontSize * 0.45
+	arcLeft 30 :fontSize * 0.3
+	arcLeft 8.15 :fontSize * 0.9
+	left 106.3
+	jumpForward :fontSize * 0.2
+	arcRight 10 :fontSize * 0.45
+	arcRight 21 :fontSize * 0.22
+	jumpForward :fontSize * 0.04
+	arcRight 22 :fontSize * 0.17
+	arcRight 21.5 :fontSize * 0.1
+	setHeading :oldHeading
+	jumpLeft :fontSize * 0.326
+	polyEnd
+	setTurtleState :oldState
+end
+
+to letterR :fontSize
+	localmake "oldState turtleState
+	jumpBackward :fontSize * :fontRatio1
+	jumpRight :fontSize * 0.099
+	setPenSize :fontSize * 0.137
+	forward :fontSize * 0.478
+	setPenSize 0
+	jumpBackward :fontSize * 0.128
+	jumpRight :fontSize * 0.06
+	right 42
+	polyStart
+	arcRight 15 :fontSize * 0.35
+	arcRight 10 :fontSize * 0.5
+	arcRight 30 :fontSize * 0.21
+	arcRight 25 :fontSize * 0.1
+	arcRight 50 :fontSize * 0.14
+	arcRight 10.7 :fontSize * 0.3
+	right 43
+	jumpForward :fontSize * 0.1625
+	right 137
+	arcLeft 5 :fontSize * 0.4
+	arcLeft 8 :fontSize * 0.3
+	arcLeft 30 :fontSize * 0.12
+	arcLeft 30 :fontSize * 0.08
+	arcLeft 30 :fontSize * 0.195
+	arcLeft 15 :fontSize * 0.3
+	polyEnd
+	setTurtleState :oldState
+end
+
+to letterO :fontSize
+	localmake "oldState turtleState
+	localmake "size1 :fontSize * 0.35
+	localmake "size2 :fontSize * 0.395
+	localmake "arcAngle1 40
+	localmake "arcAngle2 50
+	localmake "arcRadius1 :fontSize * 0.15
+	localmake "arcRadius2 :fontSize * 0.09
+	setPenSize 0
+	jumpBackward :fontSize * :fontRatio1
+	jumpRight :fontSize * 0.54
+	repeat 2 [
+		polyStart
+		jumpForward :size1
+		arcLeft :arcAngle1 :arcRadius1
+		arcLeft :arcAngle2 :arcRadius2
+		jumpForward :size2
+		localmake "pos1 pos
+		left 135
+		jumpForward :fontSize * 0.179
+		left 45
+		jumpForward :fontSize * 0.22
+		arcRight 90 :fontSize * 0.024
+		jumpForward :fontSize * 0.2
+		polyEnd
+		jumpTo :pos1
+	]
+	setTurtleState :oldState
+end
+
+to blueText :logoHeight
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "fontSize :logoHeight * :fontSizeRatio
+	jumpRight :logoHeight * 0.0488
+	localmake "pos1 pos
+	right 90
+	setPenColor :logoBlue
+	setFillColor penColor
+	setPenSize :logoHeight * 0.0213
+	forward :logoHeight * 0.4703
+	jumpTo :pos1
+	setHeading :oldHeading
+	letterI :fontSize
+	jumpRight :fontSize * 0.25
+	letterS :fontSize
+	jumpRight :fontSize * 0.65
+	letterR :fontSize
+	jumpRight :fontSize * 0.55
+	letterO :fontSize
+	setTurtleState :oldState
+end
+
+to letter1 :fontSize
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	jumpRight :fontSize * 0.583
+	setPenSize 0
+	polyStart
+	jumpBackward :fontSize * 0.262
+	left 52
+	arcLeft 40 :fontSize * 0.42
+	arcLeft 30 :fontSize * 0.26
+	arcLeft 30 :fontSize * 0.13
+	arcLeft 16 :fontSize * 0.2
+	left 125
+	arcRight 25 :fontSize * 0.55
+	arcRight 45 :fontSize * 0.31
+	arcRight 35 :fontSize * 0.157
+	arcRight 40 :fontSize * 0.1
+	arcRight 30 :fontSize * 0.16
+	arcRight 18 :fontSize * 0.45
+	left 118
+	jumpForward :fontSize * 0.179
+	right 128
+	jumpForward :fontSize * 0.141
+	right 56.2
+	jumpForward :fontSize * 0.173
+	left 44
+	arcRight 28 :fontSize * 0.24
+	arcRight 5 :fontSize * 0.4
+	arcRight 12.5 :fontSize * 0.18
+	right 88
+	jumpForward :fontSize * 0.15
+	right 127
+	arcLeft 30 :fontSize * 0.14
+	arcLeft 30 :fontSize * 0.11
+	arcLeft 30 :fontSize * 0.13
+	arcLeft 5 :fontSize * 0.3
+	arcLeft 20 :fontSize * 0.12
+	arcLeft 20 :fontSize * 0.1
+	arcLeft 20 :fontSize * 0.08
+	arcLeft 40 :fontSize * 0.05
+	arcLeft 30 :fontSize * 0.06
+	arcLeft 21 :fontSize * 0.1
+	arcLeft 10 :fontSize * 0.3
+	arcLeft 30 :fontSize * 0.41
+	arcLeft 10 :fontSize * 0.45
+	right 80
+	arcRight 30 :fontSize * 0.24
+	arcRight 30 :fontSize * 0.18
+	arcRight 30 :fontSize * 0.23
+	arcRight 25 :fontSize * 0.3
+	arcRight 25.9 :fontSize * 0.36
+	setHeading :oldHeading
+	jumpForward :fontSize * 0.099
+	polyEnd
+	setTurtleState :oldState
+end
+
+to letter2 :fontSize
+	localmake "oldState turtleState
+	jumpBackward :fontSize * :fontRatio1
+	jumpRight :fontSize * 0.231
+	setPenSize 0
+	polyStart
+	jumpRight :fontSize * 0.138
+	left 39.2
+	jumpForward :fontSize * 0.233
+	right 127
+	arcLeft 15 :fontSize * 0.19
+	arcLeft 20 :fontSize * 0.11
+	arcLeft 30 :fontSize * 0.12
+	arcLeft 25 :fontSize * 0.25
+	arcLeft 15 :fontSize * 0.4
+	arcLeft 28 :fontSize * 0.24
+	left 70
+	jumpForward :fontSize * 0.151
+	left 102
+	jumpForward :fontSize * 0.03
+	arcRight 23 :fontSize * 0.38
+	arcRight 20 :fontSize * 0.13
+	arcRight 20 :fontSize * 0.11
+	arcRight 62 :fontSize * 0.043
+	arcRight 40 :fontSize * 0.01
+	right 12
+	arcRight 6.15 :fontSize * 1.4
+	left 97
+	jumpForward :fontSize * 0.073
+	polyEnd
+	setTurtleState :oldState
+end
+
+to letter3 :fontSize
+	localmake "oldState turtleState
+	localmake "size1 :fontSize * 0.142
+	setPenSize 0
+	jumpBackward :fontSize * :fontRatio1
+	jumpRight :fontSize * 0.246
+	polyStart
+	jumpRight :size1
+	jumpForward :fontSize * 0.6
+	jumpLeft :size1
+	jumpBackward :fontSize * 0.21
+	left 162
+	arcRight 30 :fontSize * 0.1
+	arcRight 45 :fontSize * 0.27
+	jumpLeft :fontSize * 0.04
+	left 152.5
+	arcLeft 65 :fontSize * 0.21
+	polyEnd
+	setTurtleState :oldState
+end
+
+to letter4 :fontSize
+	localmake "oldState turtleState
+	localmake "size1 :fontSize * :fontRatio1
+	setPenSize 0
+	jumpBackward :size1
+	jumpRight :fontSize * 0.237
+	setPenSize :fontSize * 0.145
+	forward :size1
+	setPenSize 0
+	jumpLeft :fontSize * 0.03
+	left 10
+	polyStart
+	arcLeft 20 :fontSize * 0.37
+	arcLeft 15 :fontSize * 0.22
+	arcLeft 30 :fontSize * 0.12
+	arcLeft 19 :fontSize * 0.18
+	arcLeft 6.4 :fontSize * 0.5
+	right 123
+	jumpForward :fontSize * 0.12
+	right 64
+	jumpForward :fontSize * 0.03
+	arcRight 30 :fontSize * 0.2
+	arcRight 25 :fontSize * 0.15
+	arcRight 15 :fontSize * 0.4
+	arcRight 13.8 :fontSize * 0.7
+	polyEnd
+	setTurtleState :oldState
+end
+
+to orangeText :logoHeight
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "fontSize :logoHeight * :fontSizeRatio
+	jumpLeft :logoHeight * 0.056
+	setPenColor :logoOrange
+	setFillColor penColor
+	setPenSize :logoHeight * 0.0213
+	left 90
+	forward :logoHeight * 0.463
+	setHeading :oldHeading
+	letter1 :fontSize
+	jumpRight :fontSize * 0.6
+	letter2 :fontSize
+	jumpRight :fontSize * 0.3
+	letter3 :fontSize
+	jumpRight :fontSize * 0.431
+	letter2 :fontSize
+	jumpRight :fontSize * 0.3
+	letter4 :fontSize
+	setTurtleState :oldState
+end
+
+to indianSpaceOrganization :height
+	localmake "oldState turtleState
+	drawSolarPanels :height
+	streaks :height
+	jumpForward :height * 0.3851
+	blueText :height
+	orangeText :height
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+indianSpaceOrganization 100

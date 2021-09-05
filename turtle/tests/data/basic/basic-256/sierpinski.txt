@@ -1,0 +1,67 @@
+fastgraphics
+include "turtle.kbs"
+graphsize 1000,502
+clg white
+# sierpinski triangle with turtle graphics
+call t_penup()
+call t_goto(25, 475)
+call t_setheading(90)
+call t_pendown()
+penwidth 1
+call sierpinski(500, 6)
+# sierpinski gasket with turtle graphics
+call t_penup()
+call t_goto(3*(graphwidth / 4 )-10, graphheight / 2+50)
+call t_setheading(0)
+call t_backward(200)
+call t_pendown()
+call Gasket(4,5)
+refresh
+end
+subroutine sierpinski(len, level)
+  if level = 0 then
+    for x = 0 to 2
+      call t_forward(len)
+      call t_left(120)
+    next x  
+  else
+    call sierpinski(len / 2, level - 1)
+    call t_forward(len / 2)
+    call sierpinski(len / 2, level - 1)
+    call t_backward(len / 2)
+    call t_left(60)
+    call t_forward(len / 2)
+    call t_right(60)
+    call sierpinski(len / 2, level - 1)
+    call t_left(60)
+    call t_backward(len / 2)
+    call t_right(60)
+  endif  
+end subroutine
+subroutine gasket(len, level)
+   for i = 1 to 2
+      call half_s(len, level)
+      call t_right(90)
+      call t_forward(len)
+      call t_right(90)
+   next i
+end subroutine
+subroutine half_s(len, level)
+   if level = 0 then
+      call t_forward(len)
+   else
+      call half_s(len, level - 1)
+      call t_left(45)
+      call t_forward(len * sqr(2))
+      call t_left(45)
+      call half_s(len, level - 1)
+      call t_right(90)
+      call t_forward(len)
+      call t_right(90)
+      call half_s(len, level - 1)
+      call t_left(45)
+      call t_forward(len * sqr(2))
+      call t_left(45)
+      call half_s(len, level - 1)
+   endif
+end subroutine

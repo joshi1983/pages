@@ -1,0 +1,46 @@
+; Inspired by a drawing and program at:
+; https://www.youtube.com/shorts/sRqN9149Mus
+to simpleBicycle :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "wheelRadius :height * 0.2
+	localmake "angle1 20
+	setPenSize :height * 0.06
+	localmake "wheelRadius2 :wheelRadius + penSize / 2
+	setPenColor "black
+	setFillColor "#8000
+	setLineJoinStyle "round
+	setLineCap "round
+	jumpLeft :height * 0.5
+	jumpForward :wheelRadius + penSize / 2
+	circle :wheelRadius
+	localmake "rearPosition pos
+	jumpRight :height * 1.1
+	localmake "frontPosition pos
+	circle :wheelRadius
+	left :angle1
+	forward (:height - :wheelRadius2 - penSize / 2) / cos :angle1
+	localmake "joint1 pos
+	right 90 + :angle1
+	arcLines [[0.19] [-170 0.1]] :height
+	jumpTo :joint1
+	setHeading :oldHeading - :angle1
+	jumpBackward :height * 0.3
+	setHeading :oldHeading - 90
+	localmake "handleJoint1 pos
+	forward :height * 0.49
+	localmake "seatJointPos1 pos
+	right 90 - :angle1
+	arcLines [[0.26] [90 - :angle1 0] [0.15]] :height
+	jumpTo :seatJointPos1
+	setHeading :oldHeading - :angle1 + 180
+	forward distanceToLine :rearPosition :frontPosition
+	localmake "peddlePosition pos
+	setPos :rearPosition
+	setPos :seatJointPos1
+	jumpTo :handleJoint1
+	setPos :peddlePosition
+	setTurtleState :oldState
+end
+
+simpleBicycle 100

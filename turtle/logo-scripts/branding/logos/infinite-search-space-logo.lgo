@@ -1,0 +1,23 @@
+; Inspired by logo at:
+; https://infinitesearchspace.com
+to infiniteSearchSpaceLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	setPenSize 0
+	setFillColor "#eee
+	jumpForward :height / 2
+	repeat 2 [
+		setHeading :oldHeading + 90 + repcount * 180
+		repeat 2 [
+			drawArcLineShape [0 0
+				[[58 0] [-40 1.1] [-40 0.61] [-40 0.43] [-18.5 0.7]
+				[-99.5 0] [0.295] [-81 0] [80 0.31] [10 0.87] [25 0.8]]
+			] :height * sign repcount - 1.5
+		]
+	]
+
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+infiniteSearchSpaceLogo 100

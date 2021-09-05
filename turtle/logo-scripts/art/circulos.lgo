@@ -1,0 +1,32 @@
+; Inspired by
+; https://www.pinterest.ca/pin/601723200237351185/
+to circulos :height
+	localmake "oldState turtleState
+	localmake "thickness :height * 0.002
+	localmake "height1 :height - :thickness
+	localmake "radius :height1 / 6
+	localmake "numCircles 50
+	jumpForward :height1 / 3 + :thickness / 2
+	left 90
+	setPenSize :thickness
+	repeat :numCircles [
+		circleLeft :radius
+		right 180 / :numCircles
+	]
+	jumpLeft :radius * 2
+	repeat :numCircles + 1 [
+		circleRight :radius
+		left 180 / :numCircles
+	]
+	
+	setTurtleState :oldState
+end
+
+to horizontalCirculos :height
+	jumpForward :height / 2
+	right 90
+	jumpBackward :height * 3 / 4
+	circulos :height * 3 / 2
+end
+
+horizontalCirculos 100

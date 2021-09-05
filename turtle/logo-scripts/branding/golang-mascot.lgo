@@ -1,0 +1,106 @@
+to drawEars :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	setLineCap "round
+	setLineJoinStyle "round
+	setPenSize :height * 0.01
+	jumpForward :height * 0.808
+	localmake "middle pos
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		localmake "height1 :height * :sign
+		jumpLeft :height1 * 0.35
+		localmake "startPos pos
+		left :sign * 41
+		arcLeft :sign * 54 :height * 0.08
+		jumpTo :startPos
+		right :sign * 37
+		arcLeft :sign * 78 :height * 0.05
+		setHeading :oldHeading
+		jumpTo :middle		
+	]
+	setTurtleState :oldState
+end
+
+to drawEyes :height
+	localmake "oldState turtleState
+	localmake "eyeSeparation :height * 0.345
+	jumpForward :height * 0.71
+	jumpLeft :eyeSeparation / 2
+	setPenSize 0
+	repeat 2 [
+		localmake "eyeCenter pos
+		setFillColor "white
+		circle :height * 0.15
+		jumpRight :height * 0.05
+		setFillColor "black
+		circle :height * 0.065
+		jumpTo :eyeCenter
+		jumpRight :eyeSeparation
+	]
+	setTurtleState :oldState
+end
+
+to drawSnout :height
+	localmake "oldState turtleState
+	localmake "toothWidth :height * 0.12
+	localmake "toothCornerRadius :height * 0.023
+	localmake "snoutRadiusX :height * 0.13
+	localmake "snoutRadiusY :height * 0.055
+	localmake "shadowColor "#4f97aa
+	setFillColor :shadowColor
+	jumpForward :height * 0.5
+	setPenSize 0
+	roundRect :toothWidth :height * 0.2 :toothCornerRadius
+	jumpForward :height * 0.023
+	ellipse :snoutRadiusX :snoutRadiusY	
+	setFillColor "white
+	jumpBackward :height * 0.044
+	roundRect :toothWidth :height * 0.12 :toothCornerRadius
+	setFillColor mix :shadowColor transparent 0.6
+	jumpForward :height * 0.03
+	rect :height * 0.15 :height * 0.05
+	setFillColor "#c38c74
+	jumpForward :height * 0.035
+	ellipse :snoutRadiusX :snoutRadiusY	
+	jumpForward :height * 0.053
+	setFillColor "black
+	ellipse :height * 0.065 :height * 0.04
+	setTurtleState :oldState
+end
+
+; Inspired by favicon and mascot shown at:
+; https://go.dev
+to goMascot :height
+	localmake "oldState turtleState
+	localmake "darkLine [
+		[0.66] [-18 0.27] [90 0] [-180 0.113]
+		[-26 0.15] [85 0] [-30 0.279] [-10 0.7]
+		[-1 3.2]
+	]
+	localmake "darkLineInfo arcLinesInfo :darkLine
+	localmake "darkStartOffset (item 2 :darkLineInfo) * sin last :darkLineInfo
+	localmake "lightBlueLine [
+		[0.66] [-22 0.24] [90 0] [0.057] [-194 0.061]
+		[0.06] [77 0] [-30 0.33] [-11 0.85]
+	]
+	localmake "lightBlueLineInfo arcLinesInfo :lightBlueLine
+	localmake "lightStartOffset (item 2 :lightBlueLineInfo) * sin last :lightBlueLineInfo
+	localmake "mascotDark "#384e54
+	setPenSize 0
+	setFillColor "#384e54
+	drawArcLineShape [-:darkStartOffset 0
+		combine :darkLine reverse :darkLine
+	] :height
+	setFillColor "#76e1fe
+	drawArcLineShape [-:lightStartOffset 0
+		combine :lightBlueLine reverse :lightBlueLine
+	] :height
+	setPenColor :mascotDark
+	drawEars :height
+	drawEyes :height
+	drawSnout :height
+	setTurtleState :oldState
+end
+
+goMascot 100

@@ -1,0 +1,46 @@
+; Inspired by
+; https://www.pinterest.co.kr/pin/293015519513274678/
+
+to finFillGradient :size :maxAlpha
+	localmake "colorStops createPList2 [
+		[0 mix "#038 transparent :maxAlpha]
+		[1 "#0038]
+	]
+	setFillGradient createRadialGradient pos :size :colorStops
+end
+
+to fan :size
+	localmake "oldHeading heading
+	localmake "numFins 4
+	localmake "numBlur 3
+	localmake "finShape [0 1
+		[[-110 0] [-130 0.54597] [-30 0.1] [-160 0.02]
+		[30 0.1202] [89.7 0.6562559]]
+	]
+	setPenSize 0
+	repeat :numFins [
+		setHeading :oldHeading + 25 + repcount * 360 / :numFins
+		repeat :numBlur [
+			finFillGradient :size repcount / 3
+			drawArcLineShape :finShape :size
+			right 40 / :numBlur
+		]
+	]
+	setHeading :oldHeading
+end
+
+right animation.timeRatio * 360
+fan 250
+
+to animation.snapshotstyle
+	output createPList
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 10
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

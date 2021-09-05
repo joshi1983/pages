@@ -1,0 +1,111 @@
+make "numSides 7
+
+to transformPos :center :patternRadius
+	localmake "displacement vectorSubtract pos :center
+	localmake "magnitude hypot :displacement
+	localmake "scale 1.1 / (1 + :magnitude / :patternRadius)
+
+	output vectorAdd vectorScale :displacement :scale :center	
+end
+
+to drawStar :center :radius :patternRadius
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "numPoints 8
+	localmake "separation :radius / :numPoints
+	localmake "allPoints []
+	repeat :numSides [
+		setHeading :oldHeading + repcount * 360 / :numSides
+		localmake "points []
+		repeat :numPoints [
+			jumpForward :separation
+			queue2 "points transformPos :center :patternRadius
+		]
+		queue2 "allPoints :points
+		jumpTo :oldPos
+	]
+	repeat :numSides [
+		localmake "fromPoints item repcount :allPoints
+		localmake "index 1 + remainder repcount :numSides
+		localmake "toPoints item :index :allPoints
+		repeat :numPoints [
+			localmake "index :numPoints + 1 - repcount
+			localmake "pos1 item repcount :fromPoints 
+			localmake "pos2 item :index :toPoints
+			jumpTo mix :pos1 :pos2 0.5
+			setPenSize max 0 0.01 * (:patternRadius - distance :center)
+			jumpTo :pos1
+			setPos :pos2
+		]
+	]
+
+	setTurtleState :oldState
+end
+
+to drawStarPattern :radius :ratio
+	localmake "oldHeading heading
+	localmake "center pos
+	localmake "gridSize 20
+	localmake "size :radius * 0.5
+	localmake "separation :size * 2 * sin 360 * 2 / :numSides
+	right 360 * :ratio
+	jumpForward :size
+
+	setHeading :oldHeading
+	localmake "center2 pos
+	repeat :gridSize [
+		localmake "ratio sqrt 1/4 - power repRatio - 0.5 2
+		localmake "numStars 2 * floor :gridSize * :ratio
+		localmake "angle 0
+		if 0 = remainder repcount 3 [
+			jumpRight :separation / 2
+		]
+		if 2 = remainder repcount 3 [
+			localmake "angle 180 / :numSides
+		]
+		jumpLeft :separation * :numStars / 2
+		jumpForward :separation * (repcount - (1 + :gridSize) / 2)
+		repeat :numStars [
+			right :angle
+			drawStar :center :size :radius
+			setHeading :oldHeading
+			jumpRight :separation
+		]
+		jumpTo :center2
+	]
+
+end
+
+; Inspired by image at:
+; https://www.facebook.com/photo/?fbid=10235123244763001
+to poincareCircle :height :ratio
+	localmake "oldState turtleState
+	jumpForward :height / 2
+	setPenSize :height * 0.002
+	setPenColor "white
+	setLineJoinStyle "round
+	setLineCap "round
+	drawStarPattern :height / 2 :ratio
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+make "ratio animation.clampedTimeRatio
+poincareCircle 100 :ratio
+
+to animation.snapshotstyle
+	output createPList2 [
+		["position.y 50]
+		["zoom.scale 6.5]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 5
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

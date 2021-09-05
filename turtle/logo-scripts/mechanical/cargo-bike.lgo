@@ -1,0 +1,99 @@
+to drawBikeFrame :rearAxilPos :t
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "oldPenSize penSize
+	localmake "frontAxilPos pos
+	localmake "pedalAngle :t * 360
+	setHeading towards :rearAxilPos
+	localmake "separation distance :rearAxilPos
+	localmake "pedalWidth :separation * 0.07
+	setLineJoinStyle "round
+	forward :separation * 0.63
+	localmake "seatPostBase pos
+	setPos :rearAxilPos
+	right 137
+	forward :separation * 0.33
+	localmake "seatPostVertex1 pos
+	jumpTo :seatPostBase
+	setHeading towards :seatPostVertex1
+	forward :separation * 0.534
+	setHeading :oldHeading + 90
+	jumpBackward :separation * 0.04
+	forward :separation * 0.13
+	
+	jumpTo mix :frontAxilPos :rearAxilPos 0.61
+	localmake "boxStartPos pos
+	setPenSize penSize * 0.6
+	setHeading :oldHeading
+	forward :separation * 0.489
+	localmake "boxTopLeft pos
+	arcLines [[25 0] [0.07] [30.5 0] [0.125]] :separation
+	setPenSize 0
+	setFillColor penColor
+	circle :separation * 0.02
+
+	jumpTo :boxTopLeft
+	setHeading :oldHeading
+	jumpForward :separation * 0.015
+	polyStart
+	arcLines [[-93.5 0] [0.725] [-86.5 0.02] [0.39] [-88 0.02] [0.2]] :separation
+	jumpTo :boxStartPos
+	polyEnd
+
+	setPenSize :oldPenSize
+	repeat 2 [
+		setHeading :oldHeading + :pedalAngle + 180 * repcount
+		jumpTo :seatPostBase
+		forward :separation * 0.15
+		setHeading :oldHeading + 90
+		jumpBackward :pedalWidth / 2
+		forward :pedalWidth
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by drawing at:
+; https://publicdomainvectors.org/en/free-clipart/Cargo-Bike-%28Tricycle%29/67149.html
+to cargoBike :height :t
+	localmake "oldState turtleState
+	localmake "wheelRadius :height * 0.274
+	localmake "wheelSeparation :height * 1.15
+	setPenSize :height * 0.05
+	localmake "wheelRadius2 :wheelRadius - penSize / 2
+	localmake "frontWheelRadius :height * 0.25
+	setPenColor "black
+	jumpForward :wheelRadius
+	setFillColor transparent
+	jumpLeft :height * 0.64
+	circle :wheelRadius2
+	localmake "rearWheelPosition pos
+	jumpRight :wheelSeparation
+	jumpBackward :wheelRadius - :frontWheelRadius
+	drawBikeFrame :rearWheelPosition :t
+	setFillColor "white
+	circle :frontWheelRadius - penSize / 2
+	setPenSize 0
+	setFillColor penColor
+	circle :height * 0.04
+	setTurtleState :oldState
+end
+
+make "t animation.timeRatio
+cargoBike 100 :t
+
+to animation.snapshotstyle
+	output createPList2 [
+		["position.y 50]
+		["zoom.scale 3]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 3
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+		["thumbnailTimeStamp :seconds * 0.26]
+	]
+end

@@ -1,0 +1,21 @@
+!
+!  BLOCKS3           version 2.0
+!
+!  Draw a bunch of blocks in a perspective view.
+!
+LIBRARY "3DLib.trc"
+CALL PersWindow (0, 11, -1, 10, 0, 10)
+
+CALL AskDistance3 (d)
+CALL SetDistance3 (d/3)           ! Move in a little...
+
+FOR y = 10 to -1 step -2
+    FOR x = 1 to 11 step 2
+        LET z = (10 - Sqr((x-5)^2+(y-5)^2) )
+        CALL Block3 (x-1.7, x-.3, y-1.7, y-.3, 0, z, "yellow", "red", "green", 1)
+
+    NEXT x
+
+NEXT y
+
+END

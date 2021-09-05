@@ -1,0 +1,30 @@
+; Inspired by logo at:
+; http://dada.compart-bremen.de
+to compartLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "arcs [
+		[150 -125] [248 80] [242 -9]
+	]
+	localmake "circleRadius :height * 0.12
+	setPenSize :height * 0.06
+	localmake "maxArcRadius (:height - penSize) / 2
+	localmake "minArcRadius :circleRadius + (:maxArcRadius - :circleRadius) / (count :arcs)
+	setFillColor transparent
+	setLineCap "round
+	setPenColor "black
+	jumpForward :height / 2
+	circle :circleRadius
+	repeat count :arcs [
+		localmake "sign sign (modulo repcount 2) - 0.5
+		localmake "arcInfo item repcount :arcs
+		localmake "arcAngle1 first :arcInfo
+		localmake "arcAngle2 last :arcInfo
+		localmake "arcRadius mix :maxArcRadius :minArcRadius repRatio
+		setHeading :oldHeading + :arcAngle2
+		arc :sign * :arcAngle1 :arcRadius
+	]
+	setTurtleState :oldState
+end
+
+compartLogo 100

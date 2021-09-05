@@ -1,0 +1,197 @@
+; Inspired by
+; https://upload.wikimedia.org/wikipedia/commons/a/a0/Firefox_logo%2C_2019.svg
+; Referenced from:
+; https://en.wikipedia.org/wiki/Firefox#/media/File:Firefox_logo,_2019.svg
+; And from:
+; https://en.wikipedia.org/wiki/Firefox
+
+to firefoxCircle :radius
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "size1 :radius * 0.2
+	localmake "colorStops createPList2 [
+		[0 "#8c5afd] [1 "#5939af]
+	]
+	setFillGradient createRadialGradient pos :radius :colorStops
+	setPenSize 0
+	circle :radius
+	localmake "colorStops createPList2 [
+		[0 "#0f9a] [1 "#6f9a]
+	]
+	right 45
+	jumpBackward :size1
+	jumpForward :radius + :size1
+	setFillGradient createLinearGradient :oldPos pos :colorStops "pad
+	jumpTo :oldPos
+	circle :radius
+	setTurtleState :oldState
+end
+
+to firefoxHeadGradient1 :headHeight
+	localmake "oldPos pos
+	localmake "colorStops createPList2 [
+		[0 "#ffaf1e] [0.2 "#ffaf1e] [1 "#ff5435]
+	]
+	jumpBackward :headHeight * 0.9
+	localmake "result createLinearGradient :oldPos pos :colorStops "pad
+	jumpTo :oldPos
+	output :result
+end
+
+to headShape1 :headHeight
+	setPenSize 0
+	drawArcLineShape [0 0
+		[[112 0] [15 0.22] [55 1.04] [59.95 0] [1.07] [90 0]
+		[93 0.002] [-20 0.68] [-49.7 0.536] [95.2 0] [-65.35 0.315]
+		[-82.8 0] [-47 0.44] [-9 0.8] [44.2 0.585] [108 0] [22 0.015]
+		[4 1.4] [-10 1.2] [-14 0.2] [23 0.51] [12 0.2] [16.2 0.715]
+		[-53 0] [-20 0.1] [-14 0.43] [-6.3 1.56]]
+		] :headHeight
+end
+
+to firefoxEarGradient :earHeight
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "colorStops createPList2 [
+		[0 "#ffbe3b] [1 "#ff833c]
+	]
+	right 35
+	jumpBackward :earHeight * 1.2
+	localmake "result createLinearGradient :oldPos pos :colorStops "pad
+	setTurtleState :oldState
+	output :result
+end
+
+to firefoxEar :earHeight
+	setFillGradient firefoxEarGradient :earHeight
+	setPenSize 0
+	drawArcLineShape [0 0
+		[[116.05 0] [23.3 3.1] [130 0] [-25 2.38] [131.88 0] [-31 1.87]]]
+		:earHeight
+end
+
+to snoutGradient :headHeight
+	localmake "oldState turtleState
+	localmake "colorStops createPList2 [
+		[0 "#ffa315] [1 "#ffde3f]
+	]
+	right 70
+	jumpBackward :headHeight * 0.25
+	localmake "fromPos pos
+	jumpForward :headHeight * 0.7
+	localmake "result createLinearGradient :fromPos pos :colorStops "pad
+	setTurtleState :oldState
+	output :result
+end
+
+to firefoxSnout :headHeight
+	localmake "oldState turtleState
+	setFillGradient snoutGradient :headHeight
+	setPenSize 0
+	polyStart
+	arcLines [[62 0] [-30 0.59] [-28.13 0.41] [-24 0]
+		[-35 0.26] [-35 0.47] [0.034] [29.5 0.042] [26 0.36]
+		[10 0.09] [18 0.0235] [40 0.002] [45 0] [1.1] [137 0] 
+		[1] [16 0] [11 1.35]] :headHeight
+	polyEnd
+	setTurtleState :oldState
+end
+
+; headHeight is vertical distance from top of highest ear 
+; to bottom of neck curve
+to firefoxHead :headHeight
+	localmake "oldPos pos
+	localmake "earHeight :headHeight * (80.1551 - 68.5438) / 39.0591
+	jumpRight :headHeight * 0.3355
+	jumpBackward :headHeight * 0.0787
+	firefoxEar :earHeight
+	jumpTo :oldPos
+	jumpBackward :headHeight * 1.398
+	jumpRight :headHeight * 0.485
+	firefoxSnout :headHeight
+	jumpTo :oldPos
+	setFillGradient firefoxHeadGradient1 :headHeight
+	headShape1 :headHeight
+end
+
+to backgroundTail :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "colorStops createPList2 [
+		[0 "#fff04c] [0.3 "#fece4a] [0.5 "#fb9754]
+		[0.75 "#fa6c59] [1 "#e60a72]
+	]
+	jumpBackward :height
+	setFillGradient createLinearGradient :oldPos pos :colorStops "pad
+	jumpTo :oldPos
+	setPenSize 0
+	polyStart
+	arcLines [[120 0] [90 0.33] [-119 0] [0.4997] [82.7 0] [90 0.47]
+		[40 0.49] [84 0.465] [28.2 0.24] [149.9 0] [-14.9 0.6]
+		[-168 0] [20 0.59] [-8 1.2] [-15.022 0.23] [90 0.0011]] :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+to firefoxTail1 :height
+	localmake "oldState turtleState
+	jumpForward :height * 0.6335
+	jumpRight :height * 0.095
+	localmake "pos1 pos
+	localmake "colorStops createPList2 [
+		[0 "#ffe545] [1 "#ff5535]
+	]
+	jumpBackward :height * 0.35
+	setFillGradient createLinearGradient :pos1 pos :colorStops "pad
+	jumpTo :pos1
+	setPenSize 0
+	polyStart
+	arcLines [[-82 0] [-45 0.16] [-13 0.15] [-35 0.2] [-128 0.27]
+		[-172 0.037] [55 0.215] [82 0.193] [10 0.25] [31.8 0.173]] :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+to firefoxTail2 :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	jumpLeft :height * 0.4706
+	jumpForward :height * 0.532
+	localmake "pos1 pos
+	localmake "colorStops createPList2 [
+		[0 "#ff5435] [0.2 "#ff5435] [0.5 "#ff4b3b] [1 "#ffe545]
+	]
+	right 60
+	jumpForward :height * 0.8
+	setFillGradient createLinearGradient :pos1 pos :colorStops "pad
+	jumpTo :pos1
+	setHeading :oldHeading
+	setPenSize 0
+	polyStart
+	arcLines [[175 0] [25 0.3] [80 0.485] [90 0.403] [7.75 0.6]
+		[170 0] [-43 0.29] [-40 0.43] [-39.5 0.285] [-45 0.4]] :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+to firefoxIcon :height
+	localmake "oldPos pos
+	localmake "circleRadius :height * 0.233
+	jumpForward :height	* 0.991
+	jumpRight :height * 0.149
+	backgroundTail :height
+	jumpTo :oldPos
+	jumpForward :height * 0.495
+	jumpRight :height * 0.003
+	firefoxCircle :circleRadius
+	jumpTo :oldPos
+	firefoxTail1 :height
+	firefoxTail2 :height
+
+	jumpTo :oldPos
+	jumpLeft :height * 0.291382
+	jumpForward :height * 0.832205
+	firefoxHead :height * (0.832205 - 0.441614)
+end
+
+firefoxIcon 100

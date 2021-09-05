@@ -1,0 +1,37 @@
+make "darkColor "#cc5e3b
+
+; Inspired by logo shown on the cover
+; of a book at
+; https://archive.org/details/sctfm/TheFactory-Binder
+to sunburstCommunicationsLogo :height
+	localmake "oldState turtleState
+	localmake "largeRadius1 :height * 0.46
+	localmake "largeRadius2 :height * 0.44
+	localmake "smallStarRadius :height * 0.2
+	localmake "smallStarRadius2 :smallStarRadius * 0.53
+	localmake "smallRadiusRatio 0.48
+	localmake "lightColor "#ffeeaa
+	localmake "thickness1 :height * 0.005
+	setPenSize :height * 0.032
+	setPenColor :lightColor
+	setFillColor transparent
+	jumpForward :height / 2
+	circle (:height - penSize) / 2
+	setPenSize 0
+	setFillColor :lightColor
+	isotoxalStar :largeRadius1 :largeRadius1 * :smallRadiusRatio 8
+	right 360 / 16
+	setPenSize :thickness1
+	setPenColor :darkColor
+	isotoxalStar :largeRadius2 :largeRadius2 * :smallRadiusRatio 8
+	right 360 / 16
+	setPenSize 0
+	setFillColor :darkColor
+	isotoxalStar :smallStarRadius :smallStarRadius2 8
+	setFillColor :lightColor
+	circle :smallStarRadius2 - :thickness1
+	setTurtleState :oldState
+end
+
+setScreenColor :darkColor
+sunburstCommunicationsLogo 100

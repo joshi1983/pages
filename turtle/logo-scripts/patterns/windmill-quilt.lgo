@@ -1,0 +1,210 @@
+to drawSquare :size :color1 :color2
+	localmake "oldState turtleState
+	localmake "width :size / cos 45
+	localmake "height :width / 2
+	setPenSize :size * 0.005
+	setPenColor "black
+	setLineCap "round
+	setLineJoinStyle "round
+	jumpForward :size / 2
+	left 45
+	setFillColor :color1
+	isoTriangle :width :height
+	right 180
+	setFillColor :color2
+	isoTriangle :width :height
+	setTurtleState :oldState
+end
+
+to drawSquare2 :size :color1 :color2
+	localmake "oldState turtleState
+	jumpForward :size / 2
+	jumpLeft :size / 2
+	right 90
+	drawSquare :size :color1 :color2
+	setTurtleState :oldState
+end
+
+to groundPattern :squareSize :width :height
+	localmake "oldState turtleState
+	localmake "colors ["#088 "#080]
+	localmake "numColors count :colors
+	jumpLeft :squareSize * (:width - 1) / 2
+	jumpForward :squareSize * (:height - 1)
+	repeat :height [
+		localmake "colorOffset repcount
+		repeat :width [
+			localmake "color1 item 1 + remainder (:colorOffset + repcount) :numColors :colors
+			drawSquare :squareSize "white :color1
+			jumpRight :squareSize
+		]
+		jumpLeft :width * :squareSize
+		jumpBackward :squareSize
+	]
+	setTurtleState :oldState
+end
+
+to itemWrapped :index :items
+	localmake "index 1 + remainder :index count :items
+	output item :index :items
+end
+
+to windmillMount :squareSize :height
+	localmake "oldState turtleState
+	localmake "colors ["#600 "#840 "#444 "#000]
+	jumpLeft :squareSize / 2
+	repeat :height [
+		localmake "width :height + 1 - repcount
+		localmake "middlePos pos
+		localmake "rowOffset remainder repcount 2
+		localmake "rowEven? even? repcount
+		repeat :width [
+			localmake "color1 "white
+			localmake "color2 itemWrapped :rowOffset + repcount :colors
+			if xor :rowEven? even? repcount [
+				swap "color1 "color2
+			]
+			drawSquare :squareSize :color1 :color2
+			jumpLeft :squareSize
+		]
+		jumpTo :middlePos
+		jumpRight :squareSize
+		repeat :width [
+			localmake "color1 "white
+			localmake "color2 itemWrapped :rowOffset + repcount :colors
+			if xor not :rowEven? even? repcount [
+				swap "color1 "color2
+			]
+			drawSquare2 :squareSize :color2 :color1
+			jumpRight :squareSize
+		]
+		jumpTo :middlePos
+		jumpForward :squareSize
+	]	
+	setTurtleState :oldState
+end
+
+to fin :squareSize
+	localmake "oldState turtleState
+	localmake "colors ["#800 "#444 "#844 "#000]
+	localmake "colors2 ["white]
+	jumpRight :squareSize * 0.5
+	repeat 4 [
+		jumpForward :squareSize * 2
+		drawSquare :squareSize pick :colors2 pick :colors
+		jumpBackward :squareSize
+		drawSquare2 :squareSize pick :colors pick :colors2
+		jumpRight :squareSize
+		drawSquare2 :squareSize pick :colors2  pick :colors 
+		jumpBackward :squareSize
+		drawSquare2 :squareSize  pick :colors pick :colors2
+		jumpRight :squareSize
+		drawSquare :squareSize  pick :colors pick :colors2
+		jumpForward :squareSize
+		jumpLeft :squareSize
+	]
+	jumpForward :squareSize
+	drawSquare2 :squareSize pick :colors2 pick :colors
+	jumpBackward :squareSize
+	jumpRight :squareSize
+	drawSquare2 :squareSize pick :colors2 pick :colors
+	
+	setTurtleState :oldState
+end
+
+to windMillFins :squareSize
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "colors ["#600 "#840 "#444 "#408]
+	jumpForward :squareSize * 3
+	localmake "center pos
+	repeat 4 [
+		localmake "heading1 :oldHeading + repcount * 360 / 4
+		setHeading :heading1
+		localmake "color1 "white
+		localmake "color2 item repcount :colors
+		ifelse even? repcount [
+			jumpForward :squareSize / 2
+			right 90
+			drawSquare :squareSize :color1 :color2
+		] [
+			jumpRight :squareSize / 2
+			drawSquare2 :squareSize :color1 :color2
+		]
+		jumpTo :center
+		setHeading :heading1
+		fin :squareSize
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+to drawSquares :squareSize :len :swapColors? :sign :color1 :color2
+	repeat :len [
+		ifelse :swapColors? [
+			drawSquare2 :squareSize :color2 :color1
+		] [
+			drawSquare :squareSize :color1 :color2
+		]
+		jumpLeft :squareSize * :sign
+	]
+end
+
+to drawSkySquares :squareSize :skyInfo :swapColors? :sign :color1 :color2
+	repeat count :skyInfo [
+		localmake "pos1 pos
+		localmake "len item repcount :skyInfo
+		ifelse :len = -1 [
+			localmake "swapColors? not :swapColors?
+		] [
+			drawSquares :squareSize :len :swapColors? :sign :color1 :color2
+			jumpTo :pos1
+			jumpForward :squareSize
+		]
+	]
+end
+
+to drawSky :squareSize
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "skyInfo [
+		3 4 3 2 -1 2 3 4 5 -1 5 4 3 2 -1 2 3 4 4
+	]
+	localmake "width 16
+	localmake "color1 "white
+	localmake "color2 "#B8E0FF
+	localmake "swapColors? false
+	localmake "sign 1
+	jumpRight :squareSize * 7.5
+	repeat 2 [
+		drawSkySquares :squareSize :skyInfo :swapColors? :sign :color1 :color2
+		localmake "sign -1
+		localmake "swapColors? true
+		swap "color1 "color2
+		jumpTo :oldPos
+		jumpLeft (:width - 1) * :squareSize / 2
+	]
+	jumpTo :oldPos
+	jumpForward :squareSize * 15.5
+	jumpLeft :squareSize * 4
+	right 90
+	drawSkySquares :squareSize [2 3 4 5 -1 5 4 3 2] false :sign :color2 :color1
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://www.publicdomainpictures.net/en/view-image.php?image=10519&picture=windmill-quilt
+to windmillQuilt :height
+	localmake "oldState turtleState
+	localmake "squareSize :height / 16
+	groundPattern :squareSize 16 3
+	jumpForward 3 * :squareSize
+	drawSky :squareSize
+	windmillMount :squareSize 5
+	jumpForward :squareSize * 5
+	windMillFins :squareSize
+	setTurtleState :oldState
+end
+
+setScreenColor "#000
+windmillQuilt 100

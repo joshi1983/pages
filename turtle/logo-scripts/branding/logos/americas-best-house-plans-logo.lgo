@@ -1,0 +1,39 @@
+; Inspired by logo at:
+; https://www.houseplans.net
+to houseplansLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "width :height * 0.98
+	localmake "gap :height * 0.08
+	localmake "angle 125
+	localmake "sideWidth (:width - :gap) / 2
+	localmake "upperLength :sideWidth / sin :angle
+	localmake "stripeWidth (:sideWidth - :gap * 2) / 3  / :height
+	localmake "height1 1
+	localmake "separation :gap + :stripeWidth * :height
+	setPenSize 0
+	setFillColor "#233b78
+	jumpRight :width / 2
+	polyStart
+	jumpLeft :sideWidth
+	jumpForward :height
+	right :angle
+	jumpForward :upperLength
+	polyEnd
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpLeft :gap / 2
+	setFillColor "#d2202e
+	repeat 3 [
+		drawArcLineShape [0 0
+			[[:height1] [:angle 0] [:stripeWidth / sin :angle] [180 - :angle 0]
+			[:height1 + :stripeWidth / tan :angle]]
+		] :height
+		jumpLeft :separation
+		localmake "height1 :height1 + :separation / :height / (tan :angle)
+	]
+	setTurtleState :oldState
+end
+
+houseplansLogo 100

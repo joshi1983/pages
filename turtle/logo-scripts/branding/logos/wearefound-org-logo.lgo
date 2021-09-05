@@ -1,0 +1,38 @@
+; Inspired by logo at:
+; https://www.wearefound.org
+to weAreFoundOrgLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "weAreFoundBlueColor "#028aed
+	localmake "shapesInfo [
+		[1 :weAreFoundBlueColor [[90 0] [80 0] [-18 0.25] [-14 0.7]
+		[0.14] [30 0.5599728] [35 0.35] [10 0.33] [57 0.3594026]
+		]]
+		[0.89 "white [[90 0] [50 0.01] [11 0.25] [-9 0.8] [13.5 1.1]
+		[60 0.305] [54.5 0.2567252845]
+		]]
+		[0.746 :weAreFoundBlueColor [[90 0] [30 0.025] [22 0.05]
+		[10 1.2] [20 0.5] [40 0.245] [58 0.188245325]]]
+		[0.635 "white [[90 0] [40 0.04] [20 0.2] [29 0.36]
+		[30 0.19] [50 0.105] [11 0.120233565]]]
+		[0.5 :weAreFoundBlueColor [[90 0] [30 0.03] [20 0.05] [25 0.16]
+		[22 0.22] [50 0.092] [33 0.0457775855]]]
+	]
+	setPenSize 0
+	repeat count :shapesInfo [
+		localmake "shapeInfo item repcount :shapesInfo
+		localmake "arcLinesInfo last :shapeInfo
+		setFillColor item 2 :shapeInfo
+		jumpForward :height * first :shapeInfo
+		polyStart
+		arcLines :arcLinesInfo :height
+		arcLines reverse :arcLinesInfo :height
+		polyEnd
+		jumpTo :oldPos
+		setHeading :oldHeading
+	]
+	setTurtleState :oldState
+end
+
+weAreFoundOrgLogo 100

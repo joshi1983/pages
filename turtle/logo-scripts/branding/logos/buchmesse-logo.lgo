@@ -1,0 +1,24 @@
+; Inspired by logo at:
+; https://www.buchmesse.de
+to buchmesseLogo :height
+	localmake "oldState turtleState
+	localmake "angle1 26.7
+	localmake "len1 0.5
+	localmake "len2 (1 - :len1 * (sin :angle1 * 2)) / cos :angle1 
+	localmake "lines1 [
+		[90 + :angle1 0] [:len1] [90 - :angle1 0]
+		[:len2] [90 + :angle1 0] [:len1] [-:angle1 0]
+	]
+	setPenSize 0
+	setFillColor "#e32339
+	jumpForward :height
+	jumpRight :height * 0.249
+	right :angle1
+	drawArcLineShape [0 0
+		combine :lines1 reverse :lines1
+	] :height
+	
+	setTurtleState :oldState
+end
+
+buchmesseLogo 100

@@ -1,0 +1,53 @@
+; Inspired by:
+; https://en.wikipedia.org/wiki/Avolta#/media/File:Avolta_Logo_2023.svg
+to avoltaLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "color "#8F53F0
+	localmake "thickness :height * 0.22
+	localmake "angle1 52
+	localmake "arcAngle1 (90 - :angle1) * 2
+	localmake "arcRadius1 :height / 2 / sin :arcAngle1 / 2
+	localmake "angle2 23
+	localmake "arcAngle2 (90 - :angle2) * 2
+	localmake "arcRadius2 :height / 2 / sin :arcAngle2 / 2
+	localmake "angle3 37
+	localmake "arcAngle3 (90 - :angle3) * 2
+	localmake "arcRadius3 :height / 2 / sin :arcAngle3 / 2
+	
+	stripes :thickness :height [:color]
+	jumpForward :height / 2
+	localmake "center pos
+	setFillColor :color
+	setPenSize 0
+	repeat 2 [
+		localmake "heading1 :oldHeading + 90 + repcount * 180
+		setHeading :heading1
+		jumpRight :height * 0.5
+		jumpForward :height * 0.14
+		left :angle1
+		polyStart
+		arcLeft :arcAngle1 :arcRadius1
+		right 90 + :arcAngle1 / 2
+		jumpForward :thickness
+		right :angle1
+		arcRight :arcAngle1 :arcRadius1
+		polyEnd
+
+		setHeading :heading1
+		jumpForward :height * 0.025
+		left :angle2
+		polyStart
+		arcLeft :arcAngle2 :arcRadius2
+		right 90 + :arcAngle2 / 2
+		jumpForward :height * 0.28
+		right :angle3
+		arcRight :arcAngle3 :arcRadius3
+		polyEnd
+		
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+avoltaLogo 100

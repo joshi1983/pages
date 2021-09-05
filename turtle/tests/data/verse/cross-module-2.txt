@@ -1,0 +1,26 @@
+# copied from https://verselang.github.io/book/12_access/
+Gameplay := module:
+    # This scope includes both the inventory and crafting modules
+    SharedGameplayScope := scoped{Inventory, Crafting}
+
+    # Items can be accessed by both inventory and crafting
+    Item<SharedGameplayScope> := class:
+        ID<public>:int
+        Properties<public>:[string]string
+
+    # Factory function available to both systems
+    CreateItem<SharedGameplayScope>(TheID:int):Item = Item{ID:=TheID, Properties:=map{}}
+
+Inventory := module:
+    using{Gameplay}
+
+    AddToInventory(ItemID:int):void =
+        NewItem := CreateItem(ItemID)  # Can access scoped function
+        # Implementation...
+
+Crafting := module:
+    using{Gameplay}
+
+    CraftItem(Recipe:[]int)<decides>:Item =
+        # Can create items and access their properties
+        CreateItem(Recipe[0])

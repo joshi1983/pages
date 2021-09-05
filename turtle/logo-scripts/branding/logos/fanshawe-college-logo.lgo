@@ -1,0 +1,78 @@
+to fanshaweF :size
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "arcAngle1 45
+	localmake "arcRadius1 :size * 0.0104
+	localmake "arcRadius2 :size * 0.024
+	localmake "arcRadius3 :size * 0.0047
+	localmake "size1 :size * 0.14325
+	localmake "size2 :size1 * 0.883
+	localmake "size3 :size * 0.2585
+	localmake "size4 :size1 + :arcRadius1 * ((1 / cos 45) - 1)
+	localmake "size5 :size4 * cos 45
+	jumpForward :size * 0.18225521
+	jumpLeft :size * 0.1286598
+	localmake "pos1 pos
+	setFillColor "#e32124
+	setPenSize 0
+	polyStart
+	jumpBackward :size1
+	right 90
+	arcLeft :arcAngle1 :arcRadius1
+	jumpForward :size * 0.438
+	arcLeft 45 :arcRadius2
+	jumpForward :size2
+	arcLeft 135 :arcRadius3
+	polyEnd
+
+	setFillColor "#b3212c
+	jumpTo :pos1
+	setHeading :oldHeading
+	polyStart
+	jumpBackward :size1
+	left 90
+	arcRight 45 :arcRadius1
+	jumpForward :size3
+	arcRight 45 :arcRadius2
+	jumpForward :size2
+	arcRight 135 :arcRadius3
+	polyEnd
+
+	jumpTo :pos1
+	setHeading :oldHeading + 45
+	jumpForward :size * 0.0756
+	polyStart
+	jumpForward :size5
+	localmake "pos2 pos
+	right 135
+	jumpForward :size4
+	polyEnd
+
+	jumpTo :pos2
+	setHeading :oldHeading - 45
+	setFillColor "#e32124
+	polyStart
+	jumpLeft :size5
+	jumpForward :size * 0.1633
+	arcRight 45 :arcRadius2
+	jumpForward :size2
+	arcRight 135 :arcRadius3
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Fanshawe_College#/media/File:Fanshawe_College_Logo_vecotrized.svg
+; Referenced from:
+; https://en.wikipedia.org/wiki/Fanshawe_College
+to fanshaweLogo :height
+	localmake "oldState turtleState
+	jumpForward :height / 2
+	repeat 4 [
+		fanshaweF :height
+		right 90
+	]
+	setTurtleState :oldState
+end
+
+fanshaweLogo 100

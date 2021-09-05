@@ -1,0 +1,40 @@
+REM copied from:
+REM https://jm.iq.pl/applesoft-basic-programming-course/
+        10 REM PRIME-NUMBER BENCHMARK
+        20 HOME:HGR
+        30 COL = 2
+        40 VTAB 24
+        50 PRINT TAB ( 9); : INVERSE
+        60 PRINT "PRIME-NUMBER BENCHMARK"
+        70 NORMAL
+        100 P = 0 : X = 0 : Y = 0
+        110 FOR N = 2 TO 4000
+        120 GOSUB 1000
+        130 FOR K = 2 TO 2000
+        140 M = N / K
+        150 L = INT(M)
+        160 IF L = 0 THEN 200
+        170 IF L = 1 OR M > L THEN 190
+        180 IF M = L THEN 250
+        190 NEXT K
+        200 VTAB 22
+        210 PRINT TAB( 2);
+        220 PRINT "PRIME-NUMBER: ";N;"  TOTAL PRIMES: ";B
+        230 GOSUB 2000
+        240 B = B + 1
+        250 NEXT N
+        1000 IF X > 294 THEN Y = Y + 5 : X = 0
+        1010 HPLOT X,Y TO X + 5, Y
+        1020 HPLOT X + 5, Y TO X + 5,Y + 5
+        1030 HPLOT X + 5, Y + 5 TO X,Y + 5
+        1040 HPLOT X,Y + 5 TO X,Y
+        1050 P = 5 + 1 : X = X + 5
+        1060 IF X = 275 THEN Y = Y + 5 : X = 0
+        1065 IF Y = 155 THEN GOTO 2040
+        1070 RETURN
+        2000 FOR E = 1 TO 4
+        2010 HPLOT X + 1, Y + E TO X + 4, Y + E
+        2020 NEXT E
+        2030 RETURN
+        2040 PRINT TAB(20);: INPUT "PRESS ENTER "; Q$
+        2050 END

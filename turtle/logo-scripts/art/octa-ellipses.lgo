@@ -1,0 +1,30 @@
+; Inspired by
+; https://www.youtube.com/watch?v=zNjrP3q78NA
+; The video is a tutorial showing how to make a similar drawing using Corel Draw.
+to octaEllipse :height
+	localmake "oldState turtleState
+	; A few colors to make things look more complex and interesting.
+	localmake "colors ["yellow "orange "white]
+	localmake "ratio 0.35
+	localmake "penThickness :height * 0.003
+	localmake "height1 :height - :penThickness
+	localmake "maxSize :height1 / 2
+	localmake "maxShrink :height1 * 0.1
+	localmake "numEllipses 10
+	setPenSize :penThickness
+	jumpForward :height / 2
+	repeat 4 [
+		repeat :numEllipses [
+			localmake "shrink :maxShrink * repRatio
+			localmake "index 1 + remainder repcount count :colors
+			setPenColor item :index :colors
+			ellipse :maxSize - :shrink :maxSize * :ratio - :shrink
+		]
+		right 360 / 8
+	]
+
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+octaEllipse 100

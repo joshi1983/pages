@@ -1,0 +1,52 @@
+; Inspired by logo at:
+; https://www.youtube.com/@ThisDoesNotCompute
+to thisDoesNotComputeLogo :height
+	localmake "oldState turtleState
+	localmake "darkColor "#00344a
+	localmake "colorStops createPList2 [
+		[0 "white] [0.6 "#def] [1 :darkColor]
+	]
+	localmake "squareSize :height * 0.36
+	localmake "pinSpread :squareSize * 1.1
+	localmake "numPins 7
+	setPenSize :height * 0.03
+	setPenColor :darkColor
+	jumpForward :height / 2
+	localmake "center pos
+	setFillGradient createRadialGradient pos :height * 0.55 :colorStops
+	circle (:height - penSize) / 2
+	right 45
+	setFillColor transparent
+	setLineJoinStyle "miter
+	setPenSize :height * 0.07
+	square :squareSize
+	repeat 4 [
+		stripes :height * 0.02 :squareSize / 2 [penColor]
+		jumpForward :squareSize / 2
+		jumpLeft :pinSpread / 2 * (:numPins - 1) / :numPins
+		repeat :numPins [
+			stripes :height * 0.02 :height * 0.12 [penColor]
+			jumpRight :pinSpread / :numPins
+		]
+		jumpTo :center
+		right 360 / 4
+	]
+	setFillColor penColor
+	setPenSize 0
+	localmake "squareSize1 :height * 0.09
+	jumpForward :squareSize1 / 2
+	jumpRight :squareSize1 / 2
+	square :squareSize1
+	localmake "squareSize2 :height * 0.06
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		jumpTo :center
+		jumpRight :sign * (:squareSize - :squareSize2 - :height * 0.045) / 2
+		jumpForward :squareSize2 / 2
+		square :squareSize2
+		right 90
+	]
+	setTurtleState :oldState
+end
+
+thisDoesNotComputeLogo 100

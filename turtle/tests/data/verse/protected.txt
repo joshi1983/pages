@@ -1,0 +1,15 @@
+# copied from https://verselang.github.io/book/12_access/
+game_entity := class:
+    var Position<protected>:vector3 = vector3{x:=0.0, y:=0.0, z:=0.0}
+    var Health<protected>:int = 100
+
+    UpdatePosition<protected>(NewPos:vector3):void =
+        set Position = NewPos
+        OnPositionChanged()
+
+    OnPositionChanged<protected>():void = {}  # Overridable by subclasses
+
+player := class(game_entity):
+    MoveToSpawn():void =
+        UpdatePosition(GetSpawnLocation())  # Can access protected member
+        set Health = MaxHealth              # Can modify protected variable

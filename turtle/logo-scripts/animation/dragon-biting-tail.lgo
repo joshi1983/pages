@@ -1,0 +1,290 @@
+; Inspired by
+; https://www.pinterest.ca/pin/612771093063523262/
+
+make "green1 "#49bb56
+make "green2 "#3b9556
+make "green3 "#326b5a
+make "lightGreen1 "#a7ce52
+make "lightYellowColor "#fffc87
+make "shadowTeethColor "#93722d
+make "mouthColor "#6b2441
+make "angle1 55
+
+to tooth :size
+	drawArcLineShape [0 0 [[:angle1 0] [1] [-90 - :angle1 0] [sin :angle1]]] :size
+end
+
+to dragonUpperFace :size
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "angle2 :angle1 * 2
+	localmake "angle3 180 - :angle1
+	localmake "tinySize1 :size * 0.05
+	localmake "tinySize2 :tinySize1 * sin :angle1
+	localmake "tinySize3 :tinySize1 * cos :angle1
+	localmake "tinySize4 :tinySize3 * 2
+	localmake "size1 :tinySize1 * 8
+	localmake "size2 :tinySize1 * 5
+	localmake "size3 :size1 + :size2 - :tinySize3
+	localmake "size4 :size2 + :tinySize4 * 0.5
+	localmake "size5 :size4 + :size1 - :tinySize4
+	setPenSize 0
+	
+	setFillColor :green1
+	left 90 - :angle1
+	jumpForward :tinySize1 * 5
+	left :angle1
+	jumpForward :tinySize4 * 2
+	setHeading :oldHeading + 90
+
+	; start background shape
+	polyStart
+	jumpForward :size1
+	jumpRight :tinySize2
+	jumpForward :size2
+	left :angle1
+	jumpForward :tinySize1 ; nose point
+	right :angle2
+	jumpForward :tinySize1 * 3
+	right 180 - :angle2
+	localmake "rightMostPos pos
+	jumpForward :tinySize1
+	right :angle1
+	jumpForward :size3
+	polyEnd
+	localmake "bottomLeftCorner pos
+
+	right :angle1
+	jumpForward :tinySize1 * 2
+	setFillColor :lightGreen1
+
+	; start parallelogram at side of head
+	polyStart
+	jumpForward :tinySize1
+	right 180 - :angle1
+	jumpForward :size1 - :tinySize4
+	right :angle1
+	jumpForward :tinySize1
+	polyEnd
+	left :angle1
+	jumpForward :size4
+
+	; start parallelogram near nose
+	polyStart
+	jumpForward :tinySize4
+	localmake "pos1 pos
+	left 180 - :angle1
+	jumpForward :tinySize1
+	left :angle1
+	jumpForward :tinySize4
+	polyEnd
+	jumpForward :size2 - :tinySize4 * 0.5
+	right :angle1
+
+	; start triangle
+	polyStart
+	jumpForward :tinySize1
+	left :angle2
+	jumpForward :tinySize1
+	polyEnd
+
+	jumpTo :pos1
+	polyStart
+	jumpForward :tinySize1
+	localmake "pos1 pos
+	left :angle3
+	jumpForward :tinySize3
+	polyEnd
+	
+	jumpTo :pos1
+	setFillColor :green2
+	polyStart
+	jumpBackward :size5
+	left :angle3
+	jumpForward :tinySize1
+	right :angle3
+	jumpForward :size5
+	polyEnd
+	
+	jumpBackward :size4
+	setFillColor :green3
+
+	polyStart
+	jumpBackward :tinySize4 * 3
+	right :angle1
+	jumpForward :tinySize1
+	left :angle1
+	jumpForward :tinySize4 * 3
+	polyEnd
+	jumpForward :size4
+	; dark area around eye
+	polyStart
+	jumpLeft :tinySize2
+	jumpBackward :tinySize3
+	polyEnd
+
+	; eye
+	jumpBackward :size4 + :tinySize4
+	setFillColor :lightYellowColor
+	polyStart
+	jumpBackward :tinySize4
+	left  :angle3
+	jumpBackward :tinySize1
+	left :angle1
+	jumpBackward :tinySize4
+	polyEnd
+
+	jumpBackward :size4 + :tinySize4
+	right 180 + :angle1
+	jumpForward :tinySize1
+	setFillColor :green2
+	polyStart
+	jumpForward :tinySize1
+	setHeading towards :rightMostPos
+	jumpForward distance :rightMostPos
+	polyEnd
+
+	jumpTo :bottomLeftCorner
+	setHeading :oldHeading + 90 + :angle1
+	; start jaw
+	polyStart
+	jumpForward :tinySize1
+	left :angle1
+	jumpForward :size1 - :tinySize4 * 5 - :tinySize3 * 0.5
+	left :angle1
+	jumpForward :tinySize1
+	polyEnd
+
+	setHeading :oldHeading + 90
+	jumpForward :tinySize4 * 1
+	setFillColor :lightYellowColor
+	repeat 5 [
+		tooth -:tinySize1
+		jumpForward (:size4 + 2 * :tinySize4) / 5
+	]
+	setTurtleState :oldState
+end
+
+to lowerJaw :size
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "oldPos pos
+	localmake "tinySize1 :size * 0.05
+	localmake "tinySize2 :tinySize1 * 2 * cos :angle1
+	localmake "size1 :tinySize1 * 8
+	localmake "colors [
+			[:mouthColor :shadowTeethColor]
+			[:green2 :lightYellowColor]
+		]
+	setPenSize 0
+	repeat 2 [
+		localmake "colorPair item repcount :colors
+		setHeading :oldHeading
+		jumpTo :oldPos
+		if repcount = 2 [
+			jumpBackward :tinySize1 * 0.5
+			jumpLeft :tinySize1 * 0.5
+		]
+		right 90 + :angle1
+		setFillColor item 1 :colorPair
+		polyStart
+		jumpForward :tinySize1 * 2
+		localmake "pos1 pos
+		left :angle1
+		jumpForward :size1
+		localmake "pos2 pos
+		jumpRight :tinySize1
+		jumpBackward :size1 + :tinySize2 * 2
+		right 180 + :angle1
+		jumpForward :tinySize1
+		polyEnd
+		jumpTo :pos1
+		setHeading :oldHeading + 90
+		jumpForward :tinySize1
+		setFillColor item 2 :colorPair
+		repeat 4 [
+			tooth :tinySize1
+			jumpForward :size1 / 4
+		]
+	]
+	jumpTo :pos2
+	setHeading :oldHeading + 90 - :angle1
+	setFillColor :green2
+	polyStart
+	jumpForward :tinySize1
+	setHeading :oldHeading + 180
+	jumpForward :tinySize1 + :tinySize1 * sin :angle1
+	jumpRight :tinySize1
+	polyEnd
+
+	setTurtleState :oldState
+end
+
+to bodyTriangle :size :darkRatio
+	localmake "oldState turtleState
+	localmake "colors [:green1 :green2 :green3]
+	setPenSize 0
+	repeat 3 [
+		setFillColor item repcount :colors
+		setFillColor mix "black fillColor clamp :darkRatio 0 1	
+		isoTriangle :size * 0.5 :size / 4 * tan 60
+		right 360 / 3
+	]
+	setTurtleState :oldState
+end
+
+to bodyRing :size
+	localmake "oldState turtleState
+	localmake "numTriangles 32
+	localmake "oldPos pos
+	localmake "maxTriangleSize :size * 0.4
+	localmake "minTriangleSize :size * 0.1
+	localmake "size1 :size - :maxTriangleSize
+	repeat :numTriangles [
+		localmake "ratio repcount / :numTriangles
+		localmake "triangleSize mix :maxTriangleSize :minTriangleSize :ratio
+		jumpForward :size1
+		right 90
+		bodyTriangle :triangleSize (1 - :ratio) * 0.6
+		right 360 / :numTriangles - 90
+		jumpTo :oldPos
+	]
+	setTurtleState :oldState
+end
+
+to dragonWithTail :size :jawAngle :rotationAngle
+	localmake "oldState turtleState
+	localmake "size1 :size * 0.6
+	localmake "headSize :size * 0.9
+	right :rotationAngle
+	localmake "oldHeading heading
+	localmake "heading1 :oldHeading + 12
+	bodyRing :size
+	jumpForward :size1
+	setHeading :heading1
+	right :jawAngle
+	lowerJaw :headSize
+	setHeading :heading1 - :jawAngle
+	dragonUpperFace :headSize
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+make "timeRatio animation.clampedTimeRatio
+make "timeRatio interpolateRatio easeInOut :timeRatio
+make "jawAngle 12 * ( 0.5 + sin 360 * 4 * :timeRatio)
+make "totalAngle 360 * :timeRatio
+dragonWithTail 300 :jawAngle :totalAngle
+
+to animation.snapshotstyle
+	output createPList
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 3
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

@@ -1,0 +1,25 @@
+; Inspired by favicon at:
+; https://allbasic.info
+to allBasicFavicon :height
+	localmake "oldState turtleState
+	localmake "gearToothHeight :height * 0.15
+	jumpForward :height / 2
+	localmake "center pos
+	setFillColor transparent
+	setPenSize :height * 0.16
+	setPenColor "#c00
+	circle :height * 0.17
+	setPenSize :height * 0.05
+	circle :height * 0.35
+	setFillColor penColor
+	setPenSize 0
+	repeat 12 [
+		jumpForward :height / 2 - :gearToothHeight / 2
+		square :gearToothHeight
+		jumpTo :center
+		right 360 / 12
+	]
+	setTurtleState :oldState
+end
+
+allBasicFavicon 100

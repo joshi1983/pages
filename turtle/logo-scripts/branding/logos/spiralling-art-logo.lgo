@@ -1,0 +1,35 @@
+; Inspired by the logo shown at:
+; https://www.facebook.com/photo/?fbid=173380778569944
+; Also, used at:
+; https://www.instagram.com/spiralling.art
+to spirallingArtLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "colors ["yellow "#00B800 "red]
+	localmake "numColors count :colors
+	localmake "numSpiralArms 2 * :numColors
+	localmake "numStringsPerArm 20
+	localmake "lengths vectorScale [0.07 0.135 0.225 0.422] :height
+	jumpForward :height / 2
+	localmake "center pos
+	setLineCap "round
+	setPenSize :height * 0.003
+	repeat :numSpiralArms [
+		setPenColor item (1 + remainder repcount :numColors) :colors
+		setHeading :oldHeading + repcount * 360 / :numSpiralArms 
+		jumpLeft :height * 0.025
+		jumpForward :height * 0.013
+		left 5
+		repeat :numStringsPerArm [
+			localmake "length mixItems2 :lengths repRatio
+			right 7.75
+			forward :length
+			jumpBackward :length * 0.938
+		]
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+spirallingArtLogo 100

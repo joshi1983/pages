@@ -1,0 +1,38 @@
+to laurentienBankLogoForegroundShapes :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "width :height * 0.28
+	localmake "size1 :height * 0.39401
+	localmake "longArrowLen :height * 0.592
+	localmake "size2 :height - :size1
+	localmake "shortArrowLen :height - :longArrowLen
+	localmake "angle 45
+	setPenColor "#FDB714
+	setPenSize :width
+	arrow :longArrowLen :angle 0
+	jumpTo :oldPos
+	jumpForward :size1
+	left 90
+	localmake "center pos
+	repeat 5 [
+		jumpForward :size2
+		right 180
+		arrow :shortArrowLen :angle 0
+		jumpTo :center
+		right 225
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://commons.wikimedia.org/wiki/File:Laurentian_Bank_logo.png
+to laurentienBankLogo :height
+	localmake "oldState turtleState
+	localmake "foregroundHeight :height * 0.6
+	stripes :height :height [ "#004070 ]
+	jumpForward ( :height - :foregroundHeight ) / 2
+	laurentienBankLogoForegroundShapes :foregroundHeight
+	setTurtleState :oldState
+end
+
+laurentienBankLogo 100
