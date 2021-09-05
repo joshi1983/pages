@@ -1,0 +1,30 @@
+; Inspired by:
+; https://en.wikipedia.org/wiki/File:Nebula_Logo.png
+to nebulaStreamingLogo :height
+	localmake "oldState turtleState
+	localmake "gradients [
+		[0 0 [[0 "#b1e4f9] [0.1 "#93d9f7] [0.4 "#4175d6] [1 "#8142c0]]]
+		[-0.1 0.4 [[0 "#223ec6] [0.3 "#b08142c0] [0.5 "#008142c0]]]
+		[0.5 0.25 [[0 "#8344c0] [0.4 "#8344c0] [0.6 "#008142c0]]]
+		[0.1 -0.42 [[0 "#0010CE] [0.3 "#000C9F] [0.4 "#8142c0] [0.5 "#008142c0]]]
+		[-0.08 -0.45 [[0 "#0013FD] [0.3 "#0010D5] [0.5 "#00000C9F]]]
+		[-0.4 0.1 [[0 "#0d83fd] [0.25 "#806F79FF] [0.5 "#00000C9F]]]
+	]
+	localmake "radius :height / (1 + cos 180 / 5)
+	jumpForward :radius
+	localmake "center pos
+	right 180 / 5
+	setPenSize 0
+	repeat count :gradients [
+		localmake "gradientInfo item repcount :gradients
+		localmake "colorStops createPList2  last :gradientInfo
+		jumpRight :height * first :gradientInfo
+		jumpForward :height * item 2 :gradientInfo
+		setFillGradient createRadialGradient pos :height / 2 :colorStops
+		jumpTo :center
+		regularStar :radius 5
+	]
+	setTurtleState :oldState
+end
+
+nebulaStreamingLogo 100

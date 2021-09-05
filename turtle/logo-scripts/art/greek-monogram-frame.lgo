@@ -1,0 +1,71 @@
+; Inspired by
+; https://www.pinterest.ca/pin/177258935324192480/
+
+to greekMonogramFrame :size :thickness
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "oldState turtleState
+	localmake "midRadius :size - :thickness * 0.5
+	localmake "numSections 10
+	localmake "radiusDeltaDelta :thickness * 0.15
+	localmake "angleDelta 30 / :numSections
+	setPenSize :thickness
+	setPenColor "black
+	setLineCap "butt
+	circle :midRadius
+	setPenColor screenColor
+	setPenSize :thickness * 0.06
+	repeat :numSections [
+		
+		jumpForward :midRadius + :radiusDeltaDelta * 0.5
+		left 90
+		localmake "angle 60 / :numSections
+		localmake "radius :midRadius
+		localmake "radiusDelta :radiusDeltaDelta
+		repeat 4 [
+			ifelse even? repcount [
+				arcRight :angle :radius
+				localmake "radius :radius + :radiusDelta
+			] [
+				arcLeft :angle :radius
+				localmake "radius :radius - :radiusDelta
+			]
+			if repcount <> 4 [
+				left 90
+				forward :radiusDelta
+				left 90
+				localmake "radiusDelta :radiusDelta + :radiusDeltaDelta
+				localmake "angle :angle + :angleDelta
+			]
+		]
+		localmake "radiusDelta :radiusDelta - :radiusDeltaDelta
+		localmake "radius :radius - :radiusDelta
+		repeat 4 [
+			ifelse even? repcount [
+				arcLeft :angle :radius
+				localmake "radius :radius - :radiusDelta
+			] [
+				arcRight :angle :radius
+				localmake "radius :radius + :radiusDelta
+			]
+			left 90
+			forward :radiusDelta
+			left 90
+			localmake "radiusDelta :radiusDelta - :radiusDeltaDelta
+			localmake "angle :angle - :angleDelta
+		]
+		setHeading :oldHeading + repcount * 360 / :numSections
+		jumpTo :oldPos
+	]
+	setTurtleState :oldState
+end
+
+to greekMonogramFrames :size :numLevels
+	repeat :numLevels [
+		localmake "thickness :size * 0.2
+		greekMonogramFrame :size :thickness
+		localmake "size :size - :thickness
+	]
+end
+
+greekMonogramFrames 150 15

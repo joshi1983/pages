@@ -1,0 +1,34 @@
+<code>to forwardDashed :len<br>
+&nbsp;&nbsp;if :len &lt; 2 [<br>
+&nbsp;&nbsp;&nbsp;&nbsp;forward :len<br>
+&nbsp;&nbsp;&nbsp;&nbsp;stop<br>
+&nbsp;&nbsp;]<br>
+&nbsp;&nbsp;forward 2<br>
+&nbsp;&nbsp;localmake "len :len - 2<br>
+&nbsp;&nbsp;if :len &lt; 2 [<br>
+&nbsp;&nbsp;&nbsp;&nbsp;jumpForward :len<br>
+&nbsp;&nbsp;&nbsp;&nbsp;stop<br>
+&nbsp;&nbsp;]<br>
+&nbsp;&nbsp;jumpForward 2<br>
+&nbsp;&nbsp;forwardDashed :len - 2<br>
+end<br>
+<br>
+; A similar procedure except using ifelse instead of stop.<br>
+to forwardDashedNoStop :len<br>
+&nbsp;&nbsp;ifelse :len &lt; 2 [<br>
+&nbsp;&nbsp;&nbsp;&nbsp;forward :len<br>
+&nbsp;&nbsp;] [<br>
+&nbsp;&nbsp;&nbsp;&nbsp;forward 2<br>
+&nbsp;&nbsp;&nbsp;&nbsp;localmake "len :len - 2<br>
+&nbsp;&nbsp;&nbsp;&nbsp;ifelse :len &lt; 2 [<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;jumpForward :len<br>
+&nbsp;&nbsp;&nbsp;&nbsp;] [<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;jumpForward 2<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;forwardDashedNoStop :len - 2<br>
+&nbsp;&nbsp;&nbsp;&nbsp;]<br>
+&nbsp;&nbsp;]<br>
+end<br>
+<br>
+forwardDashed 100<br>
+right 45
+forwardDashedNoStop 75</code>

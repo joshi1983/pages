@@ -1,0 +1,62 @@
+to filmWheel :radius :rotation :skippedHoleIndex
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "holeRadius :radius * 0.22
+	localmake "gap :radius * 0.67
+	setFillColor "#f36f21
+	circle :radius
+	setFillColor "black
+	right :rotation
+	setPenSize 0
+	repeat 6 [
+		jumpForward :gap
+		if repcount <> :skippedHoleIndex [ 
+			circle :holeRadius
+		]
+		jumpTo :oldPos
+		right 360 / 6
+	]
+	setTurtleState :oldState
+end
+
+to drawW :height
+	localmake "oldState turtleState
+	setFillColor "white
+	setPenColor "black
+	setPenSize :height * 0.02
+	jumpLeft :height * 0.145
+	jumpForward :height * 0.01
+	left 90
+	polyStart
+	arcLines [[-67.3 0.03] [0.555] [-172.4 0.032] [0.378] [120.2 0]
+	[0.234] [-119.3 0.017] [0.2] [127.6 0] [0.5] [-174 0.04] [0.7]
+	[-135 0.04] [0.225] [122.5 0] [0.2181] [-62.3 0.045]] :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by a logo shown at:
+; https://www.cbc.ca/news/canada/windsor/wiff-capitol-theatre-building-1.4810824
+; https://windsorite.ca/2019/11/photos-wiff-celebrates-opening-night-on-15th-anniversary/
+; The WIFF website is at:
+; https://windsorfilmfestival.com
+; but that isn't showing the same logo as I type this comment.
+to windsorInternationalFilmFestivalLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	jumpLeft :height * 0.35
+	jumpForward :height * 0.534
+	filmWheel :height * 0.25 180 / 6 3
+
+	jumpTo :oldPos
+	jumpRight :height * 0.32
+	jumpForward :height * 0.715
+	filmWheel :height * 0.275 20 4
+
+	jumpTo :oldPos
+	drawW :height
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+windsorInternationalFilmFestivalLogo 100

@@ -1,0 +1,48 @@
+; Inspired by
+; https://commons.wikimedia.org/wiki/File:International_Data_Group-logo.svg
+to idgLogo :height
+	localmake "oldState turtleState
+	localmake "size1 :height * 0.451
+	localmake "numSteps1 7
+	localmake "numSteps2 6
+	localmake "step1 :size1 * 1.865 / (:numSteps1 - 1)
+	localmake "step2 :step1 * 1.07
+	localmake "size2 :step1 * 1.29
+	localmake "lineLength :height * 0.735
+	jumpForward :height / 2
+	setPenSize 0
+	setFillColor "black
+	circle :height / 2
+	jumpForward :size1
+	setPenSize :height * 0.018
+	setLineCap "round
+	setPenColor fillColor
+	right 90
+	localmake "step :step1
+	localmake "numSteps :numSteps1
+	repeat 2 [
+		repeat :numSteps [
+			forward :lineLength
+			jumpBackward :lineLength
+			jumpRight :step
+		]
+		if repcount = 2 [
+			break
+		]
+		localmake "numSteps :numSteps2
+		jumpLeft :size2
+		localmake "step :step2
+		right 180
+	]
+	jumpLeft penSize / 2 + :step2
+	left 90
+	localmake "gap :step1 * (:numSteps1) - :step2 * :numSteps2 - penSize / 2
+	repeat 6 [
+		stripes :height :gap ["white]
+		jumpForward :step2
+		localmake "gap :gap - :step2 + :step1
+	]
+	setTurtleState :oldState
+end
+
+idgLogo 100

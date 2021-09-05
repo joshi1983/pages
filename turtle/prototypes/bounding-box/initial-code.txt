@@ -1,0 +1,60 @@
+to drawStar :starSize
+	localmake "oldState turtleState
+	localmake "len1 0.34
+	localmake "len2 0.1
+	localmake "len3 0.21
+	localmake "arcRadius1 0.033
+	localmake "arcRadius2 0.02
+	localmake "arcs1 [
+		[-90 0] [-90 :arcRadius1] [:len1] [135 :arcRadius2] [:len2]
+		[-180 :arcRadius1] [:len2] [135 :arcRadius2] [:len3] [-90 :arcRadius1]
+	]
+	localmake "arcs2 (combine :arcs1 reverse :arcs1 [[180 0]])
+	localmake "starShape [0 0 combine :arcs2 :arcs2]
+	localmake "startY :len1 + :arcRadius1 + (:arcRadius1 + :arcRadius2) / tan 45 / 2
+	jumpForward :startY * :starSize
+	drawArcLineShape :starShape :starSize
+	setTurtleState :oldState
+end
+
+to drawStars :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "stars [
+		["blue [[-0.1927 0.77] [0.195 0.61] [19.6 0.61] [0.262 0.66]
+			[0.227 0.8416] [0.354 0.441]]]
+		["white [[-0.132 0.8557] [0.098 0.645] [0.2015 0.71] [0.403 0.346]]]
+	]
+	localmake "starSize :height * 0.053
+	setPenSize 0
+	repeat count :stars [
+		localmake "starsOfColor item repcount :stars
+		localmake "starPoints last :starsOfColor
+		setFillColor first :starsOfColor
+		repeat count :starPoints [
+			localmake "point item repcount :starPoints
+			jumpRight :height * first :point
+			jumpForward :height * last :point
+			drawStar :starSize
+			jumpTo :oldPos
+		]
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by:
+; https://en.wikipedia.org/wiki/Teacher_in_Space_Project#/media/File:Teacher_in_Space_logo.svg
+to teacherInSpaceLogo :height :timeRatio
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "cornerRadius :height * 0.08
+	setPenSize 0
+	jumpForward :height / 2
+	setFillColor "black
+	roundRect :height :height :cornerRadius
+	jumpTo :oldPos
+	drawStars :height
+	setTurtleState :oldState
+end
+
+teacherInSpaceLogo 100 0

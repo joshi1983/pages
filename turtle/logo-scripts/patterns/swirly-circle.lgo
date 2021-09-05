@@ -1,0 +1,28 @@
+to radiatingCurves :radius
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "line1 [
+		[90 0.1] [-90 0.1] [90 0.1] [-90 0.1]
+	]
+	localmake "scale :radius / item 2 arcLinesInfo :line1
+	localmake "numAngles 32
+	setPenSize 0
+	setFillColor "black
+	repeat :numAngles [
+		setHeading :oldHeading + repcount * 360 / :numAngles
+		polyStart
+		arcLines :line1 :scale
+		localmake "angle ((towards :oldPos) - 90) - heading
+		right :angle
+		arcRight 180 / :numAngles :radius
+		right 90 + :angle
+		arcLines :line1 :scale
+		polyEnd
+		right 360 / :numAngles
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor transparent
+radiatingCurves 100

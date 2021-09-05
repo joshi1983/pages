@@ -1,0 +1,83 @@
+make "colors ["limegreen "green "black "brown]
+
+to sizeToColor :size
+	localmake "size min 1 :size / 100 ; convert to ratio
+	if :size = 1 [
+		output item count :colors :colors
+	]
+	localmake "size sqrt :size
+	localmake "index1 int (1 + :size * count :colors)
+	localmake "index2 min count :colors (:index1 + 1)
+	localmake "ratio (:size * count :colors) - int (:size * count :colors)
+	output mix (item :index1 :colors) (item :index2 :colors) 1 - :ratio
+end
+
+to squareAndTriangle :size :angle
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "size1 :size * 0.5 / cos :angle
+
+	jumpLeft :size * 0.5
+	localmake "pos1 pos
+	setFillColor sizeToColor :size
+	polyStart
+	repeat 4 [
+		forward :size
+		right 90
+	]
+	polyEnd
+
+	jumpTo :pos1
+	setHeading :oldHeading
+	jumpForward :size
+	right 90 - :angle
+	forward :size1
+	setHeading :oldHeading + 90 + :angle
+	forward :size1
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to pythagoreanTree :size :angle
+	if :size > 2 [
+		localmake "oldHeading heading
+		localmake "oldPos pos
+		squareAndTriangle :size :angle
+
+		localmake "size1 :size * 0.5 / cos :angle
+		localmake "triangleHeight :size * 0.5 * tan :angle
+		jumpForward :size + (:triangleHeight * 0.5)
+		localmake "pos1 pos
+		left 90
+		jumpForward :size * 0.25
+		setHeading :oldHeading - :angle
+		pythagoreanTree :size1 :angle
+		jumpTo :pos1
+		setHeading :oldHeading + 90
+		jumpForward :size * 0.25
+		setHeading :oldHeading + :angle
+		pythagoreanTree :size1 :angle
+
+		jumpTo :oldPos
+		setHeading :oldHeading
+	]
+end
+
+setFillColor "black
+setPenSize 0
+jumpBackward 200
+pythagoreanTree 100 4.7 * animation.time
+
+to animation.snapshotstyle
+	output createPList
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 10
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+		["thumbnailTime 6]
+	]
+end

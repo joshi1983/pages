@@ -1,0 +1,151 @@
+make "colors ["#FFF780 "green]
+
+to cluster1 :largeRadius
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "size1 :largeRadius * 2.3
+	localmake "size2 :size1 * 0.83
+	localmake "smallRadius1 :largeRadius * 0.4
+	repeat 2 [
+		setHeading :oldHeading + repcount * 180
+		forward :size1
+		circle :largeRadius
+		localmake "center1 pos
+		left 90
+		repeat 3 [
+			forward :size2
+			circle :smallRadius1
+			right 90
+			jumpTo :center1
+		]
+		jumpTo :oldPos
+	]
+	circle :smallRadius1
+	setTurtleState :oldState
+end
+
+to cluster2 :midRadius :size1
+	localmake "outlineRadius :size1 * 1
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	circle :outlineRadius * 0.4
+	setFillColor transparent
+	circle :outlineRadius
+	setFillColor penColor
+	repeat 4 [
+		setHeading :oldHeading + repcount * 360 / 4
+		jumpForward :outlineRadius
+		circle :midRadius
+		if even? repcount [
+			forward :size1
+			circle :midRadius
+		]
+		jumpTo :oldPos
+	]
+end
+
+to drawRows :size
+	localmake "oldState turtleState
+	localmake "rowWidth :size / 4
+	jumpRight :size
+	left 90
+	repeat 2 [
+		repeat 2 [
+			stripes :size :rowWidth [penColor]
+			jumpForward :rowWidth * 2
+		]	
+		jumpForward :rowWidth
+	]
+	setTurtleState :oldState
+end
+
+to outlinedCircle :outlineRadius :filledRadius
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	jumpForward :outlineRadius
+	circle :filledRadius
+	jumpTo :oldPos
+	right 90
+	setFillColor transparent
+	circleLeft :outlineRadius
+	setTurtleState :oldState
+end
+
+to rightCluster :smallRadius
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "arcAngle1 120
+	localmake "arcAngle2 85
+	localmake "arcRadius1 :smallRadius * 1.5
+	localmake "arcRadius2 :smallRadius * 10
+	localmake "radius1 :smallRadius * 1.3
+	localmake "outlineRadius1 :radius1 * 1.5
+	localmake "outlineRadius2 :smallRadius * 3.5
+	localmake "radius2 :outlineRadius2 - (:outlineRadius1 - :radius1)
+	localmake "size1 :arcRadius2 - :arcRadius1 - :outlineRadius2
+	jumpForward :arcRadius2
+	localmake "center1 pos
+	jumpTo :oldPos
+	right :arcAngle1 / 2
+	jumpForward :arcRadius1
+	localmake "rightPos pos
+	left 90
+	arcLeft :arcAngle1 :arcRadius1
+	setHeading (towards :center1) - 90
+	arcRight :arcAngle2 :arcRadius2
+	outlinedCircle :outlineRadius1 :radius1
+	
+
+	jumpTo :rightPos
+	setHeading (towards :center1) + 90
+	arcLeft :arcAngle2 :arcRadius2
+	outlinedCircle :outlineRadius1 :radius1
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :arcRadius1
+	forward :size1
+	outlinedCircle :outlineRadius2 :radius2
+	jumpBackward :smallRadius * 1.5
+	drawRows :smallRadius * 1.3
+end
+
+; Inspired by
+; https://ichef.bbci.co.uk/news/976/cpsprodpb/154C6/production/_84483278_manton2009_annemiekewitteveen.jpg.webp
+; It is referenced from:
+; https://www.bbc.com/news/uk-england-wiltshire-33649458
+; The location is mentioned to be:
+; Manton near Marlborough, England in 2009
+;
+; I guess the original designer is an alien.
+to mantonCropCircles :height
+	localmake "oldState turtleState
+	localmake "radius2 :height * 0.052955
+	localmake "radius3 :radius2 * 0.8
+	localmake "size1 :height * 0.4
+	localmake "size2 :size1 * 0.33
+	setPenSize :height * 0.005
+	setLineCap "round
+	setLineJoinStyle "round
+	setFillColor penColor
+	jumpForward :height / 2
+	cluster1 :radius2
+	jumpLeft :size1
+	cluster2 :radius3 :size1 / 2
+	jumpLeft :size1
+	cluster1 :radius2
+	jumpLeft :size2
+	circle :radius3
+	right 90
+	forward :size2 + :size1 / 2
+	jumpForward :size1
+	forward :size1
+	circle :radius3
+	rightCluster :radius3
+	setTurtleState :oldState
+end
+
+setScreenColor first :colors
+setPenColor last :colors
+mantonCropCircles 100

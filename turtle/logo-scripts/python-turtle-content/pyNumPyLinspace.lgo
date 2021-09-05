@@ -1,0 +1,33 @@
+; Similar to the Python package numpy's linspace function/method.
+; linspace is documented at:
+; https://numpy.org/doc/stable/reference/generated/numpy.linspace.html
+;
+; numpy.linspace's axis is omitted because
+;  the documentation didn't make enough sense to implement a WebLogo equivalent.
+; 
+; numpy.linspace's dtype is unnecessarily explicit 
+; in WebLogo so it was omitted.
+;
+; numpy.linspace's device is also omitted because WebLogo code 
+; doesn't care if its lists were created in GPU or CPU.
+to pyNumPyLinspace :start :stop :num :endpoint? :retstep?
+	assert and integer? :num :num >= 0
+	assert boolean? :endpoint?
+	assert boolean? :retstep?
+	localmake "samples []
+	if (and :num > 0 number? :start number? :stop) [
+		if :endpoint? [
+			; If True, stop is the last sample. 
+			; Otherwise, it is not included. Default is True.
+			localmake "stop :stop - (:stop - :start) / (:num + 1)
+		]
+		localmake "step (:stop - :start) / :num
+		localmake "samples rseq :start :stop :step
+	]
+
+	ifelse :retstep? [
+		output [:samples :step]
+	] [
+		output :samples
+	]
+end

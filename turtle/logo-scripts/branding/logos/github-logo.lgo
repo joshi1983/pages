@@ -1,0 +1,59 @@
+; draws logo for https://github.com
+
+to drawGithubLogo :size
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "angle1 18.5
+	localmake "angle2 360 - :angle1 * 2
+	localmake "angle3 90 + :angle1
+	localmake "angle4 45
+	localmake "angle5 29.7
+	localmake "radius1 :size * 0.5
+	localmake "radius2 :size * 0.025
+	localmake "radius3 :size * 0.11
+	localmake "radius4 :size * 0.49
+	localmake "size1 :size * 0.155
+	setPenSize 0
+
+	jumpForward :size / 2
+	jumpTo :oldPos
+	left 90
+	arcRight :angle1 :radius1
+
+	polyStart
+	arcRight :angle2 :radius1
+	arcRight :angle3 :radius2
+	jumpForward :size1
+	arcLeft :angle4 :radius3
+	localmake "arcsInfo [
+		[-135 0] [35 0.25] [25 0.19] [30 0.21]
+		[12 0.5] [40 0.11] [-75 0] [50 0.16] [55 0]
+		[26 0.1] [17.3 0.35] [-50.1 0]
+	]
+	arcsLeft :arcsInfo :size
+	; point of symmetry at top of cat's head
+	arcLeft :angle5 :radius4
+	arcsLeft reverse :arcsInfo :size
+
+	; symmetric part ending
+	arcLeft 41 :radius3
+	; outline the tail	
+	right 58.5
+	arcRight 90 :size * 0.11
+	arcLeft 67 :size * 0.09
+	; tail tip
+	arcLeft 130 :size * 0.01
+	arcLeft 16 :size * 0.06
+	arcRight 45 :size * 0.12
+	arcLeft 70 :size * 0.09
+	arcLeft 8.8 :size * 0.6
+	right 94
+	jumpForward :size * 0.092
+	arcRight :angle3 :radius2
+	polyEnd
+
+	setTurtleState :oldState
+end
+
+setFillColor "black
+drawGithubLogo 300

@@ -1,0 +1,34 @@
+; Inspired by logo at:
+; https://www.collinsaerospace.com
+to collinsAerospaceLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "angleStep 360 / 18
+	localmake "numDashes 17
+	localmake "radius :height * 0.503
+	jumpForward :height * 0.5
+	localmake "center pos
+	setPenSize 0
+	setFillColor "black
+	repeat :numDashes [
+		localmake "heading1 :oldHeading + 90 + :angleStep * (repcount - 1)
+		setHeading :heading1
+		localmake "thickness :height * mix 0.025 0.12  repRatio
+		localmake "arcAngle 2 * arcSin :thickness / 2 / :radius
+		jumpLeft :thickness / 2
+		polyStart
+		localmake "len distanceToCircle :center :radius
+		jumpForward :len
+		setHeading (towards :center) - 90
+		arcRight :arcAngle :radius
+		setHeading :heading1 + 180
+		jumpForward :len
+		polyEnd
+		jumpTo :center
+	]
+	setFillColor "white
+	circle :height * 0.202
+	setTurtleState :oldState
+end
+
+collinsAerospaceLogo 100

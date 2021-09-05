@@ -1,0 +1,22 @@
+; Inspired by logo at:
+; https://www.hopehealthclinics.com
+to hopeHealthClinicsLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "lines [
+		[0.3 0] [6 2] [25 0.12] [115 0.01]
+		[15 0.35] [-86.3 0]
+	]
+	setFillColor "#f5d20a
+	setPenSize 0
+	polyStart
+	repeat 12 [
+		setHeading :oldHeading + (repcount - 1) * 360 / 12
+		arcLines :lines :height
+		arcLines reverse :lines :height
+	]
+	polyEnd
+	setTurtleState :oldState
+end
+
+hopeHealthClinicsLogo 100

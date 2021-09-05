@@ -1,0 +1,53 @@
+; Inspired by:
+; https://en.wikipedia.org/wiki/Yamada_Denki#/media/File:Yamada_Denki_Logo_2024.png
+to yamadaDinkiLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "radius1 0.03
+	localmake "len1 0.352
+	localmake "len2 :len1 - :radius1
+	localmake "x 0.025
+	localmake "y 0.166
+	localmake "angle1 44.5
+	localmake "angle2 180 - :angle1
+	localmake "bottomInnerLen 0.137
+	localmake "middleDiagonalLen 0.36
+	localmake "radius2 0.026
+	localmake "outerLen :bottomInnerLen +
+		:middleDiagonalLen * (cos :angle1)
+		+ 0.002803637
+		; the constant could be calculated using the angles and radii.
+		; I didn't calculate because my attempts took longer than I wanted.
+	localmake "bottomLen :middleDiagonalLen * (sin :angle1)
+	localmake "bottomLines1 [
+		[:bottomInnerLen] [:angle1 :radius1]
+		[:middleDiagonalLen] [:angle2 :radius2]
+		[:outerLen] [90 :radius2] [:bottomLen]
+		[90 :radius2]
+	]
+	localmake "redShapes [
+		[0 0.865
+			[[135 0] [:len1] [90 0] [:len2] [90 :radius1]
+			[:len2 - :radius1] [90 :radius1]] 
+		]
+		[-:x :y
+			:bottomLines1
+		]
+		[:x :y
+			flipAngles :bottomLines1
+		]
+	]
+	setPenSize :height * 0.075
+	jumpForward :height / 2
+	setFillColor transparent
+	setPenColor "#004ea2
+	setLineJoinStyle "miter
+	rect :height * 0.86 :height - penSize
+	setFillColor "#e60012
+	setPenSize 0
+	jumpTo :oldPos
+	drawArcLineShapes :redShapes :height
+	setTurtleState :oldState
+end
+
+yamadaDinkiLogo 100

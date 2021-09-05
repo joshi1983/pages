@@ -1,0 +1,37 @@
+; Inspired by image at:
+; https://ca.pinterest.com/pin/57491332740587821
+to spiralPair :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "maxRadius :height * 0.08
+	localmake "maxOffset :height * 0.335
+	localmake "numAngles 12
+	jumpForward :height / 2
+	setFillColor "#e04020
+	setPenSize 0
+	square :height * 0.45
+	setFillColor "#e3e3cc
+	circle :maxRadius
+	setPenColor fillColor
+	setPenSize :height * 0.003
+	localmake "center pos
+	repeat 2 [
+		forward :maxOffset
+		circle :maxRadius
+		localmake "outerCenter pos
+		right 180
+		repeat :numAngles [
+			left 360 / (1 + :numAngles)
+			forward :maxRadius + mix :height * 0.015 :maxOffset * 0.4 interpolateRatio easeOut repRatio
+			circle mix :height * 0.005 :maxRadius * 0.6 repRatio
+			jumpTo :outerCenter
+		]
+		jumpTo :center
+		setHeading :oldHeading + 180
+	]
+
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+spiralPair 100

@@ -1,0 +1,43 @@
+; Inspired by a drawing at:
+; https://www.facebook.com/share/p/1CBStqtjwm/
+to eyeOfCircles :height
+	localmake "oldState turtleState
+	localmake "whiteRadius :height * 0.16
+	localmake "numWhiteCircles 64
+	setPenSize :height * 0.005
+	jumpForward :height / 2
+	localmake "center pos
+	setPenColor "green
+	setPenSize :height * 0.003
+	repeat :numWhiteCircles [
+		jumpRight :height * 0.08
+		circleRight :height * 0.08
+		jumpTo :center
+		right 360 / :numWhiteCircles		
+	]
+
+	setPenColor "white
+	repeat :numWhiteCircles [
+		jumpRight :height * 0.18
+		circleRight :height * 0.04
+		jumpTo :center
+		right 360 / :numWhiteCircles		
+	]
+
+	repeat :numWhiteCircles [
+		jumpRight (:height - penSize) / 2 - :whiteRadius * 2
+		circleRight :whiteRadius
+		jumpTo :center
+		right 360 / :numWhiteCircles
+	]
+	repeat 2 [
+		jumpBackward :height / 2
+		stripes :height :height * 0.2 ["black]
+		jumpTo :center
+		right 180
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+eyeOfCircles 100

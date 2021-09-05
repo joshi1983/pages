@@ -1,0 +1,49 @@
+; The following animation was inspired by a drawing.
+; The drawing is shown at:
+; https://ca.pinterest.com/pin/558094578800382500
+;
+; It is also mentioned at:
+; https://www.facebook.com/photo/?fbid=1586793378613484
+
+to getCenter
+	output [-0.008 0.4261]
+end
+
+to getTimeRatio
+	output interpolateRatio easeInOut animation.clampedTimeRatio
+end
+
+image 100 * 505 / 720 100 'weblogo://logo-scripts/images/sketch.jpg'
+
+make "scale 100
+make "center getCenter
+make "twistAngle 10 * sin 180 * getTimeRatio
+repeat 30 [
+	make "sign sign (remainder repcount 2) - 0.5
+	image :scale * 505 / 720 :scale 'weblogo://logo-scripts/images/sketch-inner.png'
+	jumpRight :scale * first :center
+	jumpForward :scale * last :center
+	make "scale :scale * 0.2
+	right :sign * :twistAngle	
+	jumpLeft :scale * first :center
+	jumpBackward :scale * last :center
+]
+
+to animation.snapshotstyle
+	localmake "timeRatio getTimeRatio
+	localmake "center getCenter
+	output createPList2 [
+		["position.x 100 * first :center]
+		["position.y 100 * last :center]
+		["zoom.scale 4 + power 500000 :timeRatio * 2]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 10
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

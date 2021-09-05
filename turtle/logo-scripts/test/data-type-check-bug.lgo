@@ -1,0 +1,60 @@
+to cloneList :list1
+	localmake "result []
+	repeat count :list1 [
+		queue2 "result item repcount :list1
+	]
+	output :result
+end
+
+to clonePropertyList :plist1
+	localmake "result createPList
+	localmake "keyValuePairs plist "plist1
+	repeat count :keyValuePairs [
+		localmake "pair item repcount :keyValuePairs
+		localmake "key first :pair
+		localmake "value last :pair
+		setProperty "result :key :value
+	]
+	output :result
+end
+
+to myClone :value
+	ifelse list? :value [
+		output cloneList :value
+	] [
+		output clonePropertyList :value
+		; This is where the error is showing.
+		; There should be no error here because :value can be any of list|plist.
+	]
+end
+
+print clone []
+; prints []
+
+make "plist1 createPList2 [["x 3]]
+print myClone :plist1
+; prints [x:=3]
+
+make "clonedPList1 :plist1
+setProperty "clonedPList1 "x 5
+
+type 'clonedPList1 = '
+print :clonedPList1
+; prints clonedPList1 = [x:=5]
+
+type 'pList1 = '
+print :pList1
+; prints plist1 = [x:=4]
+
+make "list1 []
+
+make "clonedList1 myClone :list1
+setItem 1 "list1 3
+
+type 'list1 = '
+print :list1
+; prints [3]
+
+type 'clonedList1 = '
+print :clonedList1
+; prints clonedList1 = []

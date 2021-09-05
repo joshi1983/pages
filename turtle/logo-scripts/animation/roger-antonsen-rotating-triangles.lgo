@@ -1,0 +1,42 @@
+; Inspired by an animation at:
+; https://rantonse.org/art/2016-11-30
+to rogerAntonsenRotatingTriangles :height :timeRatio
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "numTriangles 90
+	localmake "startAngle :timeRatio * 120
+	jumpForward :height / 2
+	localmake "center pos
+	setPenColor "black
+	setPenSize :height * 0.005
+	setLineJoinStyle "miter
+	setFillColor transparent
+	repeat :numTriangles [
+		setHeading :oldHeading + 14.4 + repcount * 360 / :numTriangles
+		jumpForward :height * 0.325
+		right repcount * 2 * 360 / :numTriangles + :startAngle
+		regularPolygon :height * 0.175 3
+		jumpTo :center
+	]
+
+	setTurtleState :oldState
+end
+
+make "timeRatio animation.clampedTimeRatio
+rogerAntonsenRotatingTriangles 100 :timeRatio
+
+to animation.snapshotstyle
+	output createPList2 [
+		["position.y 50]
+		["zoom.scale 7]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 3
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

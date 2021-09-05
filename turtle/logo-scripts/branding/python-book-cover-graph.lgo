@@ -1,0 +1,68 @@
+to getPoints :separation :numDots
+	localmake "oldPos pos
+	localmake "result []
+	localmake "h :separation * (:numDots - 1)
+	jumpBackward :h / 2
+	repeat :numDots [
+		queue2 "result pos
+		jumpForward :separation
+	]
+	jumpTo :oldPos
+	output :result
+end
+
+; Inspired by an image on the cover of a book called:
+; Neural Networks from Scratch in Python.
+; Building neural networks in raw Python
+;
+; The book can be found at:
+; https://printrado.com/product/neural-networks-from-scratch-in-python-2/
+;
+to graphImage :height
+	localmake "oldState turtleState
+	localmake "separation :height * 0.29
+	localmake "maxDots 4
+	localmake "outerRadius :height * 0.075
+	localmake "vSeparation (:height - :outerRadius * 2) / (:maxDots - 1)
+	localmake "thickness :height * 0.01
+	localmake "circleRadius :outerRadius - :thickness / 2
+	localmake "points []
+	jumpForward :height / 2
+	jumpLeft :separation * 1.5
+	setLineJoinStyle "round
+	setLineCap "butt
+	repeat 4 [
+		localmake "numDots :maxDots
+		if 1 < abs (repcount - 2.5) [
+			localmake "numDots :numDots - 1
+		]
+		localmake "columnPoints getPoints :vSeparation :numDots
+		queue2 "points :columnPoints
+		jumpRight :separation
+	]
+	setPenSize :thickness
+	setPenColor "#0dd
+	for ["i 2 4] [
+		localmake "prev item :i - 1 :points
+		localmake "current item :i :points
+		for ["prevIndex 1 count :prev] [
+			for ["nextIndex 1 count :current] [
+				jumpTo item :prevIndex :prev
+				setPos item :nextIndex :current				
+			]
+		]
+	]
+	setFillColor "black
+	setPenColor "#ddd
+	repeat count :points [
+		localmake "col item repcount :points
+		repeat count :col [
+			jumpTo item repcount :col
+			circle :circleRadius
+		]
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+graphImage 100

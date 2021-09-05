@@ -1,0 +1,39 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Fedora_Linux#/media/File:Fedora_logo_(2021).svg
+to fedoraLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "oldPos pos
+	localmake "smallArcRadius :height * 0.1
+	localmake "size1 :height / 2 - :smallArcRadius
+	localmake "angle1 7
+	setPenSize 0
+	setFillColor "#51A2DA
+	right 90
+	polyStart
+	arcLeft 270 :height / 2
+	jumpForward :size1
+	arcLeft 90 :smallArcRadius
+	polyEnd
+
+	setPenColor "white
+	setHeading :oldHeading
+	jumpTo :oldPos
+	jumpForward :height * 0.62
+	jumpRight :height * 0.226
+	setLineCap "round
+	setPenSize :height * 0.08
+	right :angle1
+	arcLeft 180 + :angle1 :height * 0.121
+	forward :height * 0.303
+	arcRight 130 :height * 0.148
+	arcRight 140 :height * 0.142
+	setLineCap "butt
+	forward :height * 0.073
+	jumpForward :height * 0.1
+	setLineCap "round
+	forward :height * 0.1
+	setTurtleState :oldState
+end
+
+fedoraLogo 100

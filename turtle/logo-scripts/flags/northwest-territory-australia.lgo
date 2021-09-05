@@ -1,0 +1,54 @@
+; Inspired by flag at:
+; https://en.wikipedia.org/wiki/Flag_of_the_Northern_Territory#/media/File:Flag_of_the_Northern_Territory.svg
+to northernTerritoryAustraliaFlag :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "width :height * 2
+	localmake "blackWidth :width / 3
+	localmake "stars [
+		[0 0.25 0.075 0.04 8]
+		[0 0.75 0.06666667 0.04 7]
+		[-0.2 0.54 0.06666667 0.04 7]
+		[0.177 0.58 0.06 0.04 6]
+		[0.0766 0.48 0.04 0.0225 5]
+	]
+	localmake "petalLine1 [
+		[90 0] [-30 0.05] [-55 0.09] [-2 1]
+		[-75 0.045] [-18 0.132872]
+	]
+	localmake "northWestBrown "#c75b12
+	stripes :width :height [:northWestBrown]
+	jumpLeft (:width - :blackWidth) / 2
+	stripes :blackWidth :height ["black]
+	localmake "blackBottom pos
+	setPenSize 0
+	setFillColor "white
+	repeat count :stars [
+		localmake "info item repcount :stars
+		jumpRight :height * first :info
+		jumpForward :height * item 2 :info
+		localmake "radius1 :height * item 3 :info
+		localmake "radius2 :height * item 4 :info
+		localmake "numPoints last :info
+		isotoxalStar :radius1 :radius2 :numPoints
+		jumpTo :blackBottom
+	]
+	jumpTo :oldPos
+	jumpRight :blackWidth / 2
+	jumpForward :height / 2
+	setFillColor "black
+	circle :height * 0.13
+	setPenColor :northWestBrown
+	setPenSize :height * 0.01
+	setFillColor "white
+	setLineJoinStyle "round
+	repeat 7 [
+		drawArcLineShape [0 0.088
+			combine :petalLine1 reverse :petalLine1
+		] :height
+		right 360 / 7
+	]
+	setTurtleState :oldState
+end
+
+northernTerritoryAustraliaFlag 100

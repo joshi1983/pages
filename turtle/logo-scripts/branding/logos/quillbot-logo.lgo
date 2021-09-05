@@ -1,0 +1,152 @@
+to drawFeather :height
+	localmake "oldState turtleState
+	setPenSize 0
+	setFillColor "white
+	drawArcLineShape [0.02 0
+		[[-90 0] [72 0.22] [95 0] [0.077] [-150 0]
+		[0.08] [41 0.11] [0.115] [92 0] [0.095] [-150 0]
+		[0.13] [62 0] [0.14] [96 0] [0.09] [-154 0] [0.107]
+		[58 0] [0.125] [85 0] [0.088] [-150 0] [0.09]
+		[75.8 0] [0.31] [101 0] [32.5 0.53] [66 0]
+		[0.095] [-155 0] [0.08] [92 0] [31.2 0.53]
+		[40 0] [23 0.27] [-163 0] [0.084] [94 0] [14 0.95]
+		[57 0] [0.11] [-160 0] [0.1] [90 0] [26 0.15]
+		[7 0.8] [50 0] [0.085] [-146 0] [0.078] [85 0] [30 0.3]
+		[35 0.12] [109.5 0] [-19.8 2.6] [-181 0.012] [25 2.05]]
+	] :height	
+	setTurtleState :oldState
+end
+
+to quillbotHead :height :backgroundColor
+	localmake "oldState turtleState
+	localmake "headCenter pos
+	localmake "eyeSeparation :height * 0.325
+
+	jumpForward :height * 0.1185
+	drawFeather :height * 0.3122
+
+
+	jumpTo :headCenter
+	jumpBackward :height * 0.088
+	setFillColor "white
+	roundRect :height * 0.61 :height * 0.4 :height * 0.017
+	jumpLeft :eyeSeparation / 2
+	setFillColor :backgroundColor
+	repeat 2 [
+		circle :height * 0.052
+		jumpRight :eyeSeparation
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by favicon(browser tab icon) at:
+; https://quillbot.com
+to quillbotFavicon :height
+	localmake "oldState turtleState
+	localmake "quillbotGreen "#008847
+
+	jumpForward :height / 2
+	setPenSize 0
+	setFillColor :quillbotGreen
+	roundRect :height :height :height * 0.1
+	quillbotHead :height :quillbotGreen
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://quillbot.com
+to quillbotLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "quillbotLogoGreen "#499557
+	localmake "shoulderSeparationAngle 41
+	localmake "cornerRadius 0.015
+	localmake "straightWidth 0.505
+	localmake "angle 180 - arcSin :straightWidth
+	setPenSize 0
+	setFillColor :quillbotLogoGreen
+	jumpForward :height / 2
+	circle :height / 2
+	localmake "center pos
+	jumpForward :height * 0.065
+	quillbotHead :height * 0.85 :quillbotLogoGreen
+	jumpBackward :height * 0.296
+	stripes :height * 0.15 :height * 0.03 ["white]
+	setFillColor "white
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		jumpTo :center
+		setHeading :oldHeading + 180 + :sign * :shoulderSeparationAngle
+		jumpForward :height / 2
+		right 160 * :sign
+		polyStart
+		localmake "startPos pos
+		arcLeft -60 * :sign :height * 0.07
+		setHeading :oldHeading + 180
+		jumpForward distanceToCircle :center :height / 2
+		setHeading (towards :center) - 90 * :sign
+		localmake "arcAngle -:sign * 2 * arcSin (distance :startPos) / :height
+		arcLeft :arcAngle :height / 2
+		polyEnd
+	]
+	jumpTo :center
+	setHeading :oldHeading + :angle
+	jumpForward :height / 2
+	localmake "startPos pos
+	setHeading :oldHeading
+	setFillColor "white
+	polyStart
+	arcLines [[0.163] [90 :cornerRadius]
+		[:straightWidth - :cornerRadius * 2]
+		[90 :cornerRadius] [0.063] [90 0] [0.318]
+		[-90 0]
+	] :height
+	jumpForward distanceToCircle :center :height / 2
+	setHeading (towards :center) + 90
+	localmake "arcAngle 2 * arcSin (distance :startPos) / 2 / (:height / 2)
+	arcLeft :arcAngle :height / 2
+	polyEnd
+
+	jumpTo :center
+	setHeading :oldHeading - :angle
+	jumpForward :height / 2
+	setHeading :oldHeading
+	localmake "startPos pos
+	polyStart
+	arcLines [[0.078] [-90 0] [0.3] [-90 0]] :height
+	jumpForward distanceToCircle :center :height / 2
+	localmake "endPos pos
+	localmake "arcAngle 2 * arcSin (distance :startPos) / :height
+	setHeading (towards :center) - 90
+	arcRight :arcAngle :height / 2
+	polyEnd
+
+	setPenSize :height * 0.022
+	setPenColor :quillbotLogoGreen
+	setFillColor "white
+	jumpTo :center
+	setHeading :oldHeading
+	jumpBackward :height * 0.382
+	jumpRight :height * 0.159
+	circle :height * 0.04
+
+	jumpTo mix :startPos :endPos 0.5 
+	; get to the middle of the lower left panel.
+
+	setHeading :oldHeading
+	jumpForward :height * 0.077
+	right 90
+	setLineCap "round
+	localmake "len :height * 0.205
+	setPenSize :height * 0.02
+	jumpBackward :len / 2
+	forward :len
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 5
+jumpLeft :separation / 2
+quillbotFavicon :height
+jumpRight :separation
+quillbotLogo :height

@@ -1,0 +1,29 @@
+; Inspired by flag at:
+; https://en.wikipedia.org/wiki/File:Flag_of_Syracuse,_New_York.svg
+to syracuseFlag :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "width :height * 3 / 2
+	localmake "triangleColors ["#6BA4B8 "#041E42]
+	stripes :width :height ["white]
+	setPenSize 0
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		setFillColor item repcount :triangleColors
+		polyStart
+		jumpRight :sign * :width / 2
+		jumpForward :height
+		polyEnd
+		jumpTo :oldPos
+		setHeading :oldHeading
+	]
+	jumpForward :height * 0.625
+	setFillColor "#FF671F
+	isotoxalStar :height * 0.2875 :height * 0.1218 6
+
+	setTurtleState :oldState
+end
+
+setScreenColor "#ddd
+syracuseFlag 100

@@ -1,0 +1,406 @@
+// asteroids.bas
+// pBasic 0.8.30 — Milestone 30
+// Classic Asteroids: ship, bullets, 12 bouncing meteors, collision detection.
+//
+// Controls:
+//   Arrow Left/Right : rotate ship 22.5°
+//   Up Arrow         : thrust
+//   Space            : fire bullet
+//   ESC              : quit
+//
+// IMPORTANT TIMER EXECUTOR RULES:
+//   1. All variables used in timer-called functions must be declared globally.
+//   2. Functions called from the timer cannot use parameters — use globals.
+//   3. Maximum safe call depth from gameLoop() is 2 levels
+//      (gameLoop → funcA → funcB is OK; gameLoop → A → B → C will hang).
+//   4. distance() is inlined as dx/dy/dist calculations to avoid adding depth.
+
+// ── Canvas bounds ─────────────────────────────────────────────────────────────
+var xMin : Float = 0.0
+var xMax : Float = 1260.0
+var yMin : Float = 0.0
+var yMax : Float = 1000.0
+
+// ── Ship state ────────────────────────────────────────────────────────────────
+var shipX   : Float = 630.0
+var shipY   : Float = 500.0
+var shipRot : Float = 0.0
+var velX    : Float = 0.0
+var velY    : Float = 0.0
+var thrust  : Float = 0.0
+
+// ── Scratch globals ───────────────────────────────────────────────────────────
+var tx   : Float = 0.0
+var ty   : Float = 0.0
+var spd  : Float = 0.0
+var bvx  : Float = 0.0
+var bvy  : Float = 0.0
+var bsx  : Float = 0.0
+var bsy  : Float = 0.0
+var dist : Float = 0.0
+var dx   : Float = 0.0
+var dy   : Float = 0.0
+var mang : Float = 0.0
+var mi   : Int   = 0
+
+// ── Bullet pool (sprites ID 10-13) ───────────────────────────────────────────
+var b0x  : Float = 0.0
+var b0y  : Float = 0.0
+var b0vx : Float = 0.0
+var b0vy : Float = 0.0
+var b0on : Int   = 0
+
+var b1x  : Float = 0.0
+var b1y  : Float = 0.0
+var b1vx : Float = 0.0
+var b1vy : Float = 0.0
+var b1on : Int   = 0
+
+var b2x  : Float = 0.0
+var b2y  : Float = 0.0
+var b2vx : Float = 0.0
+var b2vy : Float = 0.0
+var b2on : Int   = 0
+
+var b3x  : Float = 0.0
+var b3y  : Float = 0.0
+var b3vx : Float = 0.0
+var b3vy : Float = 0.0
+var b3on : Int   = 0
+
+var bulletSlot : Int = 0
+
+// ── Meteor arrays (12 meteors, sprite IDs 20-31) ──────────────────────────────
+var meteorID[12] : Int
+var mx[12]       : Float
+var my[12]       : Float
+var mvx[12]      : Float
+var mvy[12]      : Float
+var mon[12]      : Int
+var mmRot        : Float = 0.0
+
+// ── Physics ───────────────────────────────────────────────────────────────────
+var thrustPower : Float = 12.0
+var thrustDecay : Float = 0.92
+var bulletSpeed : Float = 22.0
+var rotStep     : Float = 22.5
+var maxSpeed    : Float = 18.0
+var meteorSpeed : Float = 3.5
+var degToRad    : Float = 0.01745329
+var twoPi       : Float = 6.2831853
+
+// ── Collision threshold (ship+meteor radii combined) ──────────────────────────
+var shipHitDist   : Float = 75.0   // shipRadius(40) + meteorRadius(35)
+var bulletHitDist : Float = 50.0   // bulletRadius(15) + meteorRadius(35)
+
+// ── Game state ────────────────────────────────────────────────────────────────
+var running   : Int    = 1
+var shipAlive : Int    = 1
+var k$        : String = ""
+
+// ── Declare ship and bullet sprites ──────────────────────────────────────────
+SPRITE(1,  630.0, 500.0, 0, 2.5, 1, 1.0, "@⧋")
+SPRITE(10, 0.0, 0.0, 0, 1.8, 0, 1.0, "@•")
+SPRITE(11, 0.0, 0.0, 0, 1.8, 0, 1.0, "@•")
+SPRITE(12, 0.0, 0.0, 0, 1.8, 0, 1.0, "@•")
+SPRITE(13, 0.0, 0.0, 0, 1.8, 0, 1.0, "@•")
+
+// ── Initialise 12 meteor sprites ─────────────────────────────────────────────
+mi = 0
+while (mi < 12) {
+    meteorID[mi] = 20 + mi
+    mx[mi] = RND(0) * xMax
+    my[mi] = RND(0) * yMax
+    mang = RND(0) * twoPi
+    mvx[mi] = COS(mang) * meteorSpeed
+    mvy[mi] = SIN(mang) * meteorSpeed
+    mon[mi] = 1
+    SPRITE(meteorID[mi], mx[mi], my[mi], 0, 2.0, 1, 1.0, "@🪨")
+    mi = mi + 1
+}
+
+cls
+print "ASTEROIDS   ▲=Thrust  Space=Fire  ◄ ►=Rotate  ESC=Quit"
+
+// ─────────────────────────────────────────────────────────────────────────────
+// GAME LOOP  (depth 0)
+// Calls depth-1 functions only. Each depth-1 function may call one depth-2
+// function. No deeper nesting — timer executor limit.
+// ─────────────────────────────────────────────────────────────────────────────
+func gameLoop() {
+    k$ = INKEY$
+
+    if k$ == "ESC" then running = 0
+    if k$ == "^L"  then shipRot = shipRot - rotStep
+    if k$ == "^R"  then shipRot = shipRot + rotStep
+
+    if shipRot < 0.0    then shipRot = shipRot + 360.0
+    if shipRot >= 360.0 then shipRot = shipRot - 360.0
+
+    if k$ == "^U" then thrust = thrust + thrustPower
+
+    tx = SIN(shipRot * degToRad) * thrust
+    ty = 0.0 - COS(shipRot * degToRad) * thrust
+    velX = velX + tx * 0.1
+    velY = velY + ty * 0.1
+
+    spd = SQR(velX * velX + velY * velY)
+    if spd > maxSpeed then velX = velX * maxSpeed / spd
+    if spd > maxSpeed then velY = velY * maxSpeed / spd
+
+    thrust = thrust * thrustDecay
+    if thrust < 0.1 then thrust = 0.0
+
+    shipX = shipX + velX
+    shipY = shipY + velY
+
+    if shipX < xMin then shipX = xMax
+    if shipX > xMax then shipX = xMin
+    if shipY < yMin then shipY = yMax
+    if shipY > yMax then shipY = yMin
+
+    if shipAlive == 1 then SPRITE(1, shipX, shipY, shipRot, , , , )
+
+    if k$ == " " then spawnBullet()
+
+    // depth-1 calls — each internally uses one depth-2 call max
+    updateBullets()
+    updateMeteors()
+    checkShipCollision()
+
+    if running == 0 then timeroff
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// SPAWN BULLET  (depth 1, no further calls)
+// ─────────────────────────────────────────────────────────────────────────────
+func spawnBullet() {
+    bvx = velX + SIN(shipRot * degToRad) * bulletSpeed
+    bvy = velY - COS(shipRot * degToRad) * bulletSpeed
+    bsx = shipX + SIN(shipRot * degToRad) * 30.0
+    bsy = shipY - COS(shipRot * degToRad) * 30.0
+
+    if bulletSlot == 0 then b0x  = bsx
+    if bulletSlot == 0 then b0y  = bsy
+    if bulletSlot == 0 then b0vx = bvx
+    if bulletSlot == 0 then b0vy = bvy
+    if bulletSlot == 0 then b0on = 1
+    if bulletSlot == 0 then SPRITE(10, bsx, bsy, 0, 1.8, 1, 1.0, )
+
+    if bulletSlot == 1 then b1x  = bsx
+    if bulletSlot == 1 then b1y  = bsy
+    if bulletSlot == 1 then b1vx = bvx
+    if bulletSlot == 1 then b1vy = bvy
+    if bulletSlot == 1 then b1on = 1
+    if bulletSlot == 1 then SPRITE(11, bsx, bsy, 0, 1.8, 1, 1.0, )
+
+    if bulletSlot == 2 then b2x  = bsx
+    if bulletSlot == 2 then b2y  = bsy
+    if bulletSlot == 2 then b2vx = bvx
+    if bulletSlot == 2 then b2vy = bvy
+    if bulletSlot == 2 then b2on = 1
+    if bulletSlot == 2 then SPRITE(12, bsx, bsy, 0, 1.8, 1, 1.0, )
+
+    if bulletSlot == 3 then b3x  = bsx
+    if bulletSlot == 3 then b3y  = bsy
+    if bulletSlot == 3 then b3vx = bvx
+    if bulletSlot == 3 then b3vy = bvy
+    if bulletSlot == 3 then b3on = 1
+    if bulletSlot == 3 then SPRITE(13, bsx, bsy, 0, 1.8, 1, 1.0, )
+
+    bulletSlot = bulletSlot + 1
+    if bulletSlot > 3 then bulletSlot = 0
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// UPDATE BULLETS  (depth 1)
+// Each bullet: move, edge check, meteor collision — all inlined at depth 2.
+// distance() is inlined as dx/dy/dist — no extra function call depth.
+// ─────────────────────────────────────────────────────────────────────────────
+func updateBullets() {
+    if b0on == 1 then moveBullet0()
+    if b1on == 1 then moveBullet1()
+    if b2on == 1 then moveBullet2()
+    if b3on == 1 then moveBullet3()
+}
+
+// Bullet 0 — depth 2: move + edge + all meteor collision checks inlined
+func moveBullet0() {
+    b0x = b0x + b0vx
+    b0y = b0y + b0vy
+    if b0x < xMin then b0on = 0
+    if b0x > xMax then b0on = 0
+    if b0y < yMin then b0on = 0
+    if b0y > yMax then b0on = 0
+    if b0on == 0 then SPRITE(10, , , , , 0, , )
+    if b0on == 1 then SPRITE(10, b0x, b0y, , , , , )
+    // Check vs all meteors — distance inlined
+    mi = 0
+    while (mi < 12) {
+        if mon[mi] == 1 then checkB0M()
+        mi = mi + 1
+    }
+}
+
+func checkB0M() {
+    dx = b0x - mx[mi]
+    dy = b0y - my[mi]
+    dist = SQR(dx * dx + dy * dy)
+    if dist < bulletHitDist then mon[mi] = 0
+    if dist < bulletHitDist then SPRITE(meteorID[mi], , , , , 0, , )
+    if dist < bulletHitDist then b0on = 0
+    if dist < bulletHitDist then SPRITE(10, , , , , 0, , )
+}
+
+// Bullet 1
+func moveBullet1() {
+    b1x = b1x + b1vx
+    b1y = b1y + b1vy
+    if b1x < xMin then b1on = 0
+    if b1x > xMax then b1on = 0
+    if b1y < yMin then b1on = 0
+    if b1y > yMax then b1on = 0
+    if b1on == 0 then SPRITE(11, , , , , 0, , )
+    if b1on == 1 then SPRITE(11, b1x, b1y, , , , , )
+    mi = 0
+    while (mi < 12) {
+        if mon[mi] == 1 then checkB1M()
+        mi = mi + 1
+    }
+}
+
+func checkB1M() {
+    dx = b1x - mx[mi]
+    dy = b1y - my[mi]
+    dist = SQR(dx * dx + dy * dy)
+    if dist < bulletHitDist then mon[mi] = 0
+    if dist < bulletHitDist then SPRITE(meteorID[mi], , , , , 0, , )
+    if dist < bulletHitDist then b1on = 0
+    if dist < bulletHitDist then SPRITE(11, , , , , 0, , )
+}
+
+// Bullet 2
+func moveBullet2() {
+    b2x = b2x + b2vx
+    b2y = b2y + b2vy
+    if b2x < xMin then b2on = 0
+    if b2x > xMax then b2on = 0
+    if b2y < yMin then b2on = 0
+    if b2y > yMax then b2on = 0
+    if b2on == 0 then SPRITE(12, , , , , 0, , )
+    if b2on == 1 then SPRITE(12, b2x, b2y, , , , , )
+    mi = 0
+    while (mi < 12) {
+        if mon[mi] == 1 then checkB2M()
+        mi = mi + 1
+    }
+}
+
+func checkB2M() {
+    dx = b2x - mx[mi]
+    dy = b2y - my[mi]
+    dist = SQR(dx * dx + dy * dy)
+    if dist < bulletHitDist then mon[mi] = 0
+    if dist < bulletHitDist then SPRITE(meteorID[mi], , , , , 0, , )
+    if dist < bulletHitDist then b2on = 0
+    if dist < bulletHitDist then SPRITE(12, , , , , 0, , )
+}
+
+// Bullet 3
+func moveBullet3() {
+    b3x = b3x + b3vx
+    b3y = b3y + b3vy
+    if b3x < xMin then b3on = 0
+    if b3x > xMax then b3on = 0
+    if b3y < yMin then b3on = 0
+    if b3y > yMax then b3on = 0
+    if b3on == 0 then SPRITE(13, , , , , 0, , )
+    if b3on == 1 then SPRITE(13, b3x, b3y, , , , , )
+    mi = 0
+    while (mi < 12) {
+        if mon[mi] == 1 then checkB3M()
+        mi = mi + 1
+    }
+}
+
+func checkB3M() {
+    dx = b3x - mx[mi]
+    dy = b3y - my[mi]
+    dist = SQR(dx * dx + dy * dy)
+    if dist < bulletHitDist then mon[mi] = 0
+    if dist < bulletHitDist then SPRITE(meteorID[mi], , , , , 0, , )
+    if dist < bulletHitDist then b3on = 0
+    if dist < bulletHitDist then SPRITE(13, , , , , 0, , )
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// UPDATE METEORS  (depth 1 → depth 2: moveMeteorMi)
+// ─────────────────────────────────────────────────────────────────────────────
+func updateMeteors() {
+    mi = 0
+    while (mi < 12) {
+        if mon[mi] == 1 then moveMeteorMi()
+        mi = mi + 1
+    }
+}
+
+func moveMeteorMi() {
+    mx[mi] = mx[mi] + mvx[mi]
+    my[mi] = my[mi] + mvy[mi]
+
+    if mx[mi] < xMin then mvx[mi] = ABS(mvx[mi])
+    if mx[mi] > xMax then mvx[mi] = 0.0 - ABS(mvx[mi])
+    if my[mi] < yMin then mvy[mi] = ABS(mvy[mi])
+    if my[mi] > yMax then mvy[mi] = 0.0 - ABS(mvy[mi])
+
+    if mx[mi] < xMin then mx[mi] = xMin
+    if mx[mi] > xMax then mx[mi] = xMax
+    if my[mi] < yMin then my[mi] = yMin
+    if my[mi] > yMax then my[mi] = yMax
+	
+	mmRot = mmRot + 0.125
+	if mmRot > 360 then mmRot = 0
+	
+    SPRITE(meteorID[mi], mx[mi], my[mi], mmRot, , , , )
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// SHIP COLLISION  (depth 1 → depth 2: checkShipMi)
+// distance inlined — no extra depth
+// ─────────────────────────────────────────────────────────────────────────────
+func checkShipCollision() {
+    if shipAlive == 0 then return 0
+    mi = 0
+    while (mi < 12) {
+        if mon[mi] == 1 then checkShipMi()
+        mi = mi + 1
+    }
+}
+
+func checkShipMi() {
+    dx = shipX - mx[mi]
+    dy = shipY - my[mi]
+    dist = SQR(dx * dx + dy * dy)
+    if dist < shipHitDist then shipHit()
+}
+
+func shipHit() {
+    shipAlive = 0
+    SPRITE(1, , , , , 0, , )
+    locate 12, 35
+    print "*** SHIP DESTROYED ***"
+    locate 13, 35
+    print "    Press ESC to quit  "
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// START
+// ─────────────────────────────────────────────────────────────────────────────
+timer 0.0333 gameLoop
+timeron
+
+while (running == 1) {
+}
+
+print ""
+print "Game over!"

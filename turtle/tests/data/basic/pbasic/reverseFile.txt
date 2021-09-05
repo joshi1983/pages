@@ -1,0 +1,42 @@
+// reverseFile.bas — pScript file read/write demo with line reversal
+var fileLines[255] : String
+var a$ : String = ""
+var b$ : String = "outputFile.txt"
+input "Enter File: "; a$
+if a$ <> "" then doReadFile()
+if a$ <> "" then doReverseLines()
+if a$ <> "" then doWriteFile()
+print "Sample of Five lines from File (reversed)"
+for n = 0 to 4
+    print "Line ";
+    print n;
+    print ": ";
+    print fileLines[n]
+next n
+end
+
+func doReadFile() {
+    fileLines[] = LOAD(a$)
+    return 0
+}
+
+func doReverseLines() {
+    var lineCount : Int = 0
+    var src$ : String = ""
+    var rev$ : String = ""
+    while (fileLines[lineCount] <> "") {
+        src$ = fileLines[lineCount]
+        rev$ = ""
+        for c = len(src$) - 1 to 0 step -1
+            rev$ = rev$ + mid$(src$, c, 1)
+        next c
+        fileLines[lineCount] = rev$
+        lineCount = lineCount + 1
+    }
+    return 0
+}
+
+func doWriteFile() {
+    SAVE b$, fileLines[]
+    return 0
+}

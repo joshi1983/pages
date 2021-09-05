@@ -1,0 +1,37 @@
+; Inspired by a drawing by Ghee Boem Kim at:
+; https://www.facebook.com/photo?fbid=10237553171512696&set=pcb.2105101556580045
+;
+; You can see other geometric and mathematical art from Ghee Beom Kim at:
+; https://www.facebook.com/groups/391950357895182/user/1354565139
+to gheeBeomKimCircle :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "numAngles 60
+	localmake "len1 0.0122 * :height
+	localmake "angle1 60
+	localmake "lines1 [[1] [-:angle1 0] [1] [:angle1 0] [1]]
+	setLineJoinStyle "round
+	setLineCap "round
+	setPenSize :height * 0.0035
+	setPenColor "white
+	jumpForward :height / 2
+	localmake "center pos
+	repeat :numAngles [
+		setHeading :oldHeading + repcount * 360 / :numAngles
+		jumpForward (:height - penSize) / 2
+		jumpLeft :len1 * 1.21
+		right 90
+		repeat 14 [
+			arcLines :lines1 :len1
+			right 180
+			arcLines :lines1 -:len1
+			right 180
+		]	
+		arcLines :lines1 :len1
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+gheeBeomKimCircle 100

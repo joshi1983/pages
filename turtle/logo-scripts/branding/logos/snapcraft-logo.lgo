@@ -1,0 +1,72 @@
+; Inspired by logo at:
+; https://en.wikipedia.org/wiki/Snap_(software)#/media/File:Snapcraft-logo-bird.svg
+;
+; The main difference here is:
+; - This code draws the neck area in a more straight line into the wing.
+to snapdLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "height1 :height * 0.35
+	localmake "gap :height * 0.02
+	jumpForward :height
+	localmake "top pos
+	jumpLeft 100
+	localmake "topPos2 pos	
+
+	setPenSize 0
+	jumpTo :oldPos
+	jumpLeft :height * 0.3717
+	setFillColor "#82bea0
+	left 45
+	polyStart
+	jumpRight :height * 0.576
+	localmake "pos1 pos
+	jumpForward :height * 0.175
+	polyEnd
+
+	jumpTo :pos1
+	setHeading :oldHeading - 45
+	jumpRight :gap
+	
+	setHeading :oldHeading
+	localmake "pos2 pos
+	jumpForward :height1
+	polyStart
+	jumpBackward :height1
+	left 45
+	jumpForward distanceToLine :top :topPos2
+	polyEnd
+	localmake "topLeftPos pos
+
+	jumpTo :pos2
+	setHeading :oldHeading - 45
+	jumpRight :gap / cos 45
+	localmake "pos4 pos
+	setHeading :oldHeading
+	jumpForward 100
+	localmake "verticalPos1 pos
+
+	left 45
+	jumpTo :pos4
+	polyStart
+	jumpRight :height * 0.325
+	setHeading towards :topLeftPos
+	jumpForward distanceToLine :pos4 :verticalPos1
+	polyEnd
+	
+	setFillColor "#fa6441
+	jumpRight :gap
+	localmake "heading1 heading
+	localmake "headStartPos pos
+	setHeading :oldHeading
+	jumpRight :height * 0.34
+	localmake "headPos2 pos
+	jumpTo :headStartPos
+	setHeading :heading1
+	jumpBackward :height * 0.46
+	polygon [:headStartPos :headPos2 pos]
+	setTurtleState :oldState
+end
+
+snapdLogo 100

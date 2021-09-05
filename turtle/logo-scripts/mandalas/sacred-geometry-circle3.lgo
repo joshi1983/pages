@@ -1,0 +1,50 @@
+; circle :radius would look similar with an orange penColor.
+; softCircle uses a gradient to create a subtly soft line.
+; You won't notice the difference unless you zoom in on the line.
+to softCircle :radius
+	localmake "oldState turtleState
+	localmake "radius2 :radius + penSize / 2
+	localmake "thicknessFactor penSize / :radius2
+	localmake "mid 1 - :thicknessFactor / 2
+	localmake "colorStops createPList2 [
+		[1 - :thicknessFactor transparent]
+		[:mid [penColor easeOutCirc]]
+		[1 [transparent easeInCirc]]
+	]
+	setPenSize 0
+	setFillGradient createRadialGradient pos :radius2 :colorStops
+	setFillBlendMode "lighter
+	circle :radius2
+	setTurtleState :oldState
+end
+
+; Inspired by an image at:
+; https://ca.pinterest.com/pin/57069120275472327
+to sacredGeometryCircle :height :drawCircle
+	localmake "oldState turtleState
+	setPenSize :height * 0.007
+	localmake "largeRadius (:height - penSize) / 2
+	localmake "smallRadius :largeRadius / 2
+	setPenColor "#f83
+	setFillColor transparent
+	jumpForward :height / 2
+	localmake "center pos
+	(invoke :drawCircle :largeRadius)
+	(invoke :drawCircle :smallRadius)
+	right 90
+	repeat 6 [
+		jumpLeft :smallRadius
+		(invoke :drawCircle :smallRadius)
+		jumpTo :center
+		right 360 / 6
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+make "height 100
+make "separation :height * 5
+jumpLeft :separation / 2
+sacredGeometryCircle 100 "softCircle
+jumpRight :separation
+sacredGeometryCircle 100 "circle

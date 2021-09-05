@@ -1,0 +1,322 @@
+// trochoids.bas
+// Final integrated version — 4 hypotrochoid meteors + working bullets
+
+CLS
+print "ASTEROIDS   ▲=Thrust  Space=Fire  ◄ ►=Rotate  ESC=Quit"
+
+// ── Canvas bounds ────────────────────────────────────────────────────────────
+var xMin : Float = 0.0
+var xMax : Float = 1260.0
+var yMin : Float = 0.0
+var yMax : Float = 1000.0
+
+// ── Ship state ────────────────────────────────────────────────────────────────
+var shipX   : Float = 630.0
+var shipY   : Float = 500.0
+var shipRot : Float = 0.0
+var velX    : Float = 0.0
+var velY    : Float = 0.0
+var thrust  : Float = 0.0
+
+// ── Scratch globals ───────────────────────────────────────────────────────────
+var tx   : Float = 0.0
+var ty   : Float = 0.0
+var spd  : Float = 0.0
+var bvx  : Float = 0.0
+var bvy  : Float = 0.0
+var bsx  : Float = 0.0
+var bsy  : Float = 0.0
+var dist : Float = 0.0
+var dx   : Float = 0.0
+var dy   : Float = 0.0
+var mi   : Int   = 0
+
+// ── Bullet pool ──────────────────────────────────────────────────────────────
+var b0x  : Float = 0.0
+var b0y  : Float = 0.0
+var b0vx : Float = 0.0
+var b0vy : Float = 0.0
+var b0on : Int   = 0
+
+var b1x  : Float = 0.0
+var b1y  : Float = 0.0
+var b1vx : Float = 0.0
+var b1vy : Float = 0.0
+var b1on : Int   = 0
+
+var b2x  : Float = 0.0
+var b2y  : Float = 0.0
+var b2vx : Float = 0.0
+var b2vy : Float = 0.0
+var b2on : Int   = 0
+
+var b3x  : Float = 0.0
+var b3y  : Float = 0.0
+var b3vx : Float = 0.0
+var b3vy : Float = 0.0
+var b3on : Int   = 0
+
+var bulletSlot : Int = 0
+
+// ── 4 Meteors ────────────────────────────────────────────────────────────────
+var meteorID[5] : Int
+var mx[5]       : Float
+var my[5]       : Float
+var mrot[5]     : Float
+var mt[5]       : Float
+var mR[5]       : Float
+var mr[5]       : Float
+var md[5]       : Float
+var mcx[5]      : Float
+var mcy[5]      : Float
+var mon[5]      : Int
+
+var meteorSpeed : Float = 0.032
+var meteorIndex : Int   = 0
+
+// ── Physics constants ────────────────────────────────────────────────────────
+var thrustPower : Float = 12.0
+var thrustDecay : Float = 0.92
+var bulletSpeed : Float = 22.0
+var rotStep     : Float = 22.5
+var maxSpeed    : Float = 18.0
+var degToRad    : Float = 0.01745329
+
+var shipHitDist   : Float = 75.0
+var bulletHitDist : Float = 50.0
+
+// ── Game state ───────────────────────────────────────────────────────────────
+var running   : Int    = 1
+var shipAlive : Int    = 1
+var k$        : String = ""
+
+// ── Initialise sprites ───────────────────────────────────────────────────────
+SPRITE(1,  630.0, 500.0, 0, 2.5, 1, 1.0, "@⧋")
+SPRITE(10, 0.0, 0.0, 0, 1.8, 0, 1.0, "@•")
+SPRITE(11, 0.0, 0.0, 0, 1.8, 0, 1.0, "@•")
+SPRITE(12, 0.0, 0.0, 0, 1.8, 0, 1.0, "@•")
+SPRITE(13, 0.0, 0.0, 0, 1.8, 0, 1.0, "@•")
+
+// ── Initialise 4 meteors with different emojis ───────────────────────────────
+meteorIndex = 0
+while (meteorIndex < 4) {
+    meteorID[meteorIndex] = 20 + meteorIndex
+    mt[meteorIndex] = meteorIndex * 1.57
+    mR[meteorIndex] = 160.0 + meteorIndex * 45.0
+    mr[meteorIndex] = 48.0 + meteorIndex * 18.0
+    md[meteorIndex] = 62.0 + meteorIndex * 22.0
+    mon[meteorIndex] = 1
+
+    if meteorIndex < 2 then mcx[meteorIndex] = 460.0
+    if meteorIndex < 2 then mcy[meteorIndex] = 500.0
+    if meteorIndex >= 2 then mcx[meteorIndex] = 800.0
+    if meteorIndex >= 2 then mcy[meteorIndex] = 500.0
+
+    if meteorIndex < 2 then SPRITE(meteorID[meteorIndex], 630.0, 500.0, 0, 2.0, 1, 1.0, "@🔹")
+    if meteorIndex >= 2 then SPRITE(meteorID[meteorIndex], 630.0, 500.0, 0, 2.0, 1, 1.0, "@🔸")
+
+    meteorIndex = meteorIndex + 1
+}
+
+// ── Main game loop ───────────────────────────────────────────────────────────
+func gameLoop() {
+	while (running == 1) {
+	    k$ = INKEY$
+	
+	    if k$ == "ESC" then running = 0
+	    if k$ == "^L"  then shipRot = shipRot - rotStep
+	    if k$ == "^R"  then shipRot = shipRot + rotStep
+	
+	    if shipRot < 0.0    then shipRot = shipRot + 360.0
+	    if shipRot >= 360.0 then shipRot = shipRot - 360.0
+	
+	    if k$ == "^U" then thrust = thrust + thrustPower
+	    if k$ == " " then spawnBullet()
+		
+		if k$ == "^D" then thrust = 0.0
+		
+	    tx = SIN(shipRot * degToRad) * thrust
+	    ty = 0.0 - COS(shipRot * degToRad) * thrust
+	    velX = velX + tx * 0.1
+	    velY = velY + ty * 0.1
+	
+	    spd = SQR(velX * velX + velY * velY)
+	    if spd > maxSpeed then velX = velX * maxSpeed / spd
+	    if spd > maxSpeed then velY = velY * maxSpeed / spd
+	
+	    thrust = thrust * thrustDecay
+	    if thrust < 0.1 then thrust = 0.0
+		
+		if k$ == "^D" then velX = 0.0
+		if k$ == "^D" then velY = 0.0
+		
+	    shipX = shipX + velX
+	    shipY = shipY + velY
+	
+	    if shipX < xMin then shipX = xMax
+	    if shipX > xMax then shipX = xMin
+	    if shipY < yMin then shipY = yMax
+	    if shipY > yMax then shipY = yMin
+	
+	    if shipAlive == 1 then SPRITE(1, shipX, shipY, shipRot, , , , )
+	
+	    updateBullets()
+	    updateMeteorsFlat()
+	    checkShipCollision()
+	}
+}
+
+//print ""
+//print "Game over!"
+
+// ── Bullet functions ─────────────────────────────────────────────────────────
+func spawnBullet() {
+    bvx = velX + SIN(shipRot * degToRad) * bulletSpeed
+    bvy = velY - COS(shipRot * degToRad) * bulletSpeed
+    bsx = shipX + SIN(shipRot * degToRad) * 30.0
+    bsy = shipY - COS(shipRot * degToRad) * 30.0
+
+    if bulletSlot == 0 then b0x  = bsx
+    if bulletSlot == 0 then b0y  = bsy
+    if bulletSlot == 0 then b0vx = bvx
+    if bulletSlot == 0 then b0vy = bvy
+    if bulletSlot == 0 then b0on = 1
+    if bulletSlot == 0 then SPRITE(10, bsx, bsy, 0, 1.8, 1, 1.0, )
+
+    if bulletSlot == 1 then b1x  = bsx
+    if bulletSlot == 1 then b1y  = bsy
+    if bulletSlot == 1 then b1vx = bvx
+    if bulletSlot == 1 then b1vy = bvy
+    if bulletSlot == 1 then b1on = 1
+    if bulletSlot == 1 then SPRITE(11, bsx, bsy, 0, 1.8, 1, 1.0, )
+
+    if bulletSlot == 2 then b2x  = bsx
+    if bulletSlot == 2 then b2y  = bsy
+    if bulletSlot == 2 then b2vx = bvx
+    if bulletSlot == 2 then b2vy = bvy
+    if bulletSlot == 2 then b2on = 1
+    if bulletSlot == 2 then SPRITE(12, bsx, bsy, 0, 1.8, 1, 1.0, )
+
+    if bulletSlot == 3 then b3x  = bsx
+    if bulletSlot == 3 then b3y  = bsy
+    if bulletSlot == 3 then b3vx = bvx
+    if bulletSlot == 3 then b3vy = bvy
+    if bulletSlot == 3 then b3on = 1
+    if bulletSlot == 3 then SPRITE(13, bsx, bsy, 0, 1.8, 1, 1.0, )
+
+    bulletSlot = bulletSlot + 1
+    if bulletSlot > 3 then bulletSlot = 0
+}
+
+func updateBullets() {
+    if b0on == 1 then moveBullet0()
+    if b1on == 1 then moveBullet1()
+    if b2on == 1 then moveBullet2()
+    if b3on == 1 then moveBullet3()
+}
+
+func moveBullet0() {
+    b0x = b0x + b0vx
+    b0y = b0y + b0vy
+    if b0x < xMin then b0on = 0
+    if b0x > xMax then b0on = 0
+    if b0y < yMin then b0on = 0
+    if b0y > yMax then b0on = 0
+    if b0on == 0 then SPRITE(10, , , , , 0, , )
+    if b0on == 1 then SPRITE(10, b0x, b0y, , , , , )
+}
+
+func moveBullet1() {
+    b1x = b1x + b1vx
+    b1y = b1y + b1vy
+    if b1x < xMin then b1on = 0
+    if b1x > xMax then b1on = 0
+    if b1y < yMin then b1on = 0
+    if b1y > yMax then b1on = 0
+    if b1on == 0 then SPRITE(11, , , , , 0, , )
+    if b1on == 1 then SPRITE(11, b1x, b1y, , , , , )
+}
+
+func moveBullet2() {
+    b2x = b2x + b2vx
+    b2y = b2y + b2vy
+    if b2x < xMin then b2on = 0
+    if b2x > xMax then b2on = 0
+    if b2y < yMin then b2on = 0
+    if b2y > yMax then b2on = 0
+    if b2on == 0 then SPRITE(12, , , , , 0, , )
+    if b2on == 1 then SPRITE(12, b2x, b2y, , , , , )
+}
+
+func moveBullet3() {
+    b3x = b3x + b3vx
+    b3y = b3y + b3vy
+    if b3x < xMin then b3on = 0
+    if b3x > xMax then b3on = 0
+    if b3y < yMin then b3on = 0
+    if b3y > yMax then b3on = 0
+    if b3on == 0 then SPRITE(13, , , , , 0, , )
+    if b3on == 1 then SPRITE(13, b3x, b3y, , , , , )
+}
+
+// ── Meteor update ────────────────────────────────────────────────────────────
+func updateMeteorsFlat() {
+    meteorIndex = 0
+    while (meteorIndex < 4) {
+        if mon[meteorIndex] == 1 then updateOneMeteor()
+        meteorIndex = meteorIndex + 1
+    }
+}
+
+func updateOneMeteor() {
+    if meteorIndex >= 4 then return 0
+
+    mt[meteorIndex] = mt[meteorIndex] + meteorSpeed
+
+    var R  : Float = mR[meteorIndex]
+    var r  : Float = mr[meteorIndex]
+    var d  : Float = md[meteorIndex]
+    var cx : Float = mcx[meteorIndex]
+    var cy : Float = mcy[meteorIndex]
+
+    var temp1 : Float = R - r
+    var temp2 : Float = temp1 * mt[meteorIndex]
+    var temp3 : Float = temp2 / r
+    var temp4 : Float = COS(temp3)
+
+    mx[meteorIndex] = temp1 * COS(mt[meteorIndex]) + d * temp4 + cx
+    my[meteorIndex] = temp1 * SIN(mt[meteorIndex]) - d * SIN(temp3) + cy
+
+    mrot[meteorIndex] = mrot[meteorIndex] + 5.5
+
+    //SPRITE(meteorID[meteorIndex], mx[meteorIndex], my[meteorIndex], mrot[meteorIndex], 2.0, 1, 1.0, "@🔹")
+    SPRITE(meteorID[meteorIndex], mx[meteorIndex], my[meteorIndex], mrot[meteorIndex], 2.0, 1, 1.0, )
+    return 0
+}
+
+//----------- GAME START ----------------
+
+timer 0.0333 gameLoop
+timeron
+
+while (running == 1) {
+}
+
+timeroff
+
+print ""
+print "Game over!"
+
+
+// Clean exit
+SPRITE(1,  , , , , 0, , )
+SPRITE(10, , , , , 0, , )
+SPRITE(11, , , , , 0, , )
+SPRITE(12, , , , , 0, , )
+SPRITE(13, , , , , 0, , )
+
+meteorIndex = 0
+while (meteorIndex < 4) {
+    SPRITE(meteorID[meteorIndex], , , , , 0, , )
+    meteorIndex = meteorIndex + 1
+}

@@ -1,0 +1,40 @@
+; Inspired by flag at:
+; https://en.wikipedia.org/wiki/Sasanian_Empire#/media/File:Derafsh_kaviani.svg
+to persianFlag :height
+	localmake "oldState turtleState
+	localmake "persianBlue "#7f00ff
+	setLineJoinStyle "miter
+	setPenColor "red
+	setFillColor :persianBlue
+	setPenSize :height / 8
+	jumpForward :height / 2
+	localmake "center pos
+	localmake "squareSize :height - penSize
+	square :squareSize
+	setPenSize 0
+	setFillColor "yellow
+	repeat 4 [
+		jumpForward :height / 4
+		circle :height * 0.06
+		right 180 / 4
+		jumpTo :center
+		jumpForward :squareSize * 0.235 / cos 45
+		ellipse :height * 0.05 :height * 0.188
+		right 180 / 4
+		jumpTo :center
+	]
+	right 180 / 12
+	repeat 12 [
+		circlePair 0 :height * 0.0125 :height * 0.056
+		jumpTo :center
+		right 360 / 12
+	]
+	setPenColor :persianBlue
+	setPenSize :height * 0.003
+	circle :height * 0.028
+	circle :height * 0.018
+	
+	setTurtleState :oldState
+end
+
+persianFlag 100

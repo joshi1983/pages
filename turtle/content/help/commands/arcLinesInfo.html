@@ -1,0 +1,33 @@
+<code>print arcLinesInfo [[1]]
+; prints [ 0 1 0 ]
+; because: [1] means move forward 1.
+; The first element 0 is returned because moving forward by 1 doesn't change the heading.
+; The second element is 1 because the final position of the turtle would be at a distance of 1 from where it started.
+; The third element is 0 because a heading of 0 points the turtle towards the final position.
+
+
+print arcLinesInfo [[90 0]]
+; prints [ 270 0 0 ]
+; Note that the [[90 0]] means turn left 90.
+; because the final heading would be 270.  
+; A heading of 270 is similar to a heading of -90 because 270 = 360 - 90.
+; The second element is 0 because the specified arc/line information doesn't move the turtle at all.
+; The third element is 0 because the turtle would not move at all.  
+; The direction is meaningless without moving at all but the result defaults to 0 in such a situation.
+; The turtle would not be displaced at all.
+
+print arcLinesInfo [[90 0] [1]]
+; prints [ 270 1 270 ]
+
+print arcLinesInfo [[-90 0] [1]]
+; prints [ 90 0 90 ]
+
+print arcLinesInfo [[-90 0] [1] [90 0] [1]]
+; prints [ 0 1.414214 45 ]
+; Note that 1.414214 is roughly sqrt 2.
+; The described path is of 2 sides of an iscosilese right angle triangle.
+
+print arcLinesInfo [[180 1]]
+; prints [ 180 2 270 ]
+; [180 1] represents a 180-degree arc with radius 1.
+; The final position would be [ -2 0 0 ]</code>

@@ -1,0 +1,42 @@
+; Inspired by logo at
+; https://adusearch.ca/
+; The main differences from that logo are:
+; - The roof angles here are drawn exactly the same on both sides.
+; The original logo has a couple degrees difference.
+to aduSearchLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "thickness :height * 0.1
+	localmake "width1 :height * 0.84
+	localmake "roofAngle 47.5
+	localmake "roofHeight :width1 / 2 / tan :roofAngle
+	localmake "baseHeight :height - (:thickness / 2 / sin :roofAngle) - :roofHeight
+	localmake "roofSlantedLength hypot [:width1 / 2 :roofHeight]
+	localmake "innerRoofHeight :height * 0.22
+	localmake "innerSlantedRoofLength :innerRoofHeight / cos :roofAngle
+	localmake "baseWidth1 :width1 / 2 + :innerRoofHeight * tan :roofAngle
+	setLineCap "butt
+	setLineJoinStyle "miter
+	setPenSize :thickness
+	setPenColor "black
+	jumpLeft :width1 / 2
+	forward :baseHeight
+	right :roofAngle
+	forward :roofSlantedLength
+	right 180 - :roofAngle * 2
+	forward :roofSlantedLength
+	setHeading :oldHeading + 180
+	forward :baseHeight - penSize / 2
+	right 90
+	forward :baseWidth1
+	right 90
+	forward :baseHeight * 0.7
+	right :roofAngle
+	forward :innerSlantedRoofLength
+	right 180 - :roofAngle * 2
+	forward :innerSlantedRoofLength * 1.15
+	
+	setTurtleState :oldState
+end
+
+aduSearchLogo 100

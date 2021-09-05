@@ -1,0 +1,44 @@
+; Inspired by logo at:
+; https://www.youtube.com/@SCALER
+to scalerLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "thickness1 :height * 0.17
+	localmake "innerSquareSize :thickness1 * 2.4
+	localmake "outerSize :innerSquareSize + :thickness1
+	localmake "outerThickness :height * 0.04
+	localmake "separation :outerSize / (cos 45) - :outerThickness
+	jumpForward :height
+	localmake "top pos
+	jumpLeft :height
+	localmake "topLeft pos
+
+	jumpTo :oldPos
+	setPenSize :thickness1
+	setPenColor "#0245b8
+	setFillColor transparent
+	setLineJoinStyle "miter
+	jumpLeft :height * 0.21
+	jumpForward (:innerSquareSize + penSize) / 2
+	localmake "center pos
+	square :innerSquareSize
+
+	right 45
+	jumpLeft :separation / 2
+	repeat 2 [
+		stripes :outerThickness :height * 0.5 [penColor]
+		jumpRight :separation
+	]
+
+	jumpTo :center
+	jumpForward distanceToLine :top :topLeft
+	right 180
+	setFillColor penColor
+	setPenSize 0
+	drawArcLineShape [0 0
+		pathMirror [[135 0] [1] [45 0] [0.55] [135 0] [1]]
+		] :outerSize
+	setTurtleState :oldState
+end
+
+scalerLogo 100

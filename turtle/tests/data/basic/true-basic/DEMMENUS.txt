@@ -1,0 +1,46 @@
+! DemMenus
+
+! Demonstrates hierarchical menus
+! Also demonstrates platform dependent menu text and hot keys
+
+LIBRARY "TrueCtrl.trc"
+
+CALL TC_Init
+
+DIM Menu$(6, 0:3)
+MAT READ menu$
+DATA "|MAC|File|OTHER|File@F|", "Open@@"
+DATA        "Close@W", "|MAC|Quit@Q|OTHER|Exit@X|"
+DATA "Edit", "|WIN32|Cut@T|OTHER|Cut@X|"
+DATA        "Copy@C", "|WIN32|Paste@P|OTHER|Paste@V|"
+DATA "Special", "Run", "Colors@@", "Compile"
+DATA "@Open", "File", @, "Document"
+DATA "@Colors", "Red@@", "White", "Blue"
+DATA "@Red", "Light Red", "Dark Red", ""
+
+LET win = 0      ! Use the default output window
+
+CALL TC_Show (win)
+CALL TC_Win_Active (win)
+CALL TC_Menu_Set (win, menu$)
+CALL TC_Menu_SetEnable (win, 1, 2, 0)
+CALL TC_Menu_SetCheck (win, 3, 1, 1)
+
+DO
+   CALL TC_Event (0, event$, window, x1, x2)
+
+   IF event$ = "HIDE" then EXIT DO
+   IF event$ = "KEYPRESS" and x1 = 27 then EXIT DO
+
+   IF event$ = "MENU" then
+      IF x1 = 1 and x2 = 3 then EXIT DO
+      PRINT x1, x2, menu$(x1,x2)
+
+   END IF
+
+LOOP
+
+CALL TC_Menu_Free (0)
+CALL TC_Cleanup
+
+END

@@ -1,0 +1,33 @@
+to polygonHeart :height
+	localmake "thickness :height * 0.01
+	localmake "height1 :height - :thickness * (0.5 + 0.5 / cos 45)
+	; height1 is the height minus the part of the outline that protrudes vertically.
+	localmake "longSize :height * 0.82
+	localmake "smallSize (:height1 - (:longSize * cos 45)) / (1 + cos 45)
+	; smallSize is calculated to keep the heart touching but 
+	; not protruding beyond the specified height.
+
+	localmake "middleSize ((:longSize * cos 45) - :smallSize - :smallSize * cos 45) / cos 45
+	; middleSize is calculated to keep the heart shape perfectly symmetrical.
+	setFillColor "red
+	setPenSize :thickness
+	jumpForward penSize / 2 / cos 45
+	polyStart
+	left 45
+	jumpForward :longSize
+	repeat 3 [
+		right 45
+		jumpForward :smallSize
+	]
+	right 45
+	jumpForward :middleSize
+	left 90 ; point of symmetry
+	jumpForward :middleSize
+	repeat 4 [
+		right 45
+		jumpForward :smallSize
+	]
+	polyEnd
+end
+
+polygonHeart 100

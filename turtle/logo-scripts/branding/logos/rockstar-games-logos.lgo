@@ -1,0 +1,191 @@
+
+; This draws a little protrusion beyond the bottom of the R
+; that can be overlapped by the star.
+to drawR :fontHeight
+	localmake "oldState turtleState
+	localmake "tiltAngle 11.95
+	localmake "slantedHeight :fontHeight / cos :tiltAngle
+	setPenSize 0
+	jumpLeft :fontHeight * 0.464
+	parallelogram :fontHeight * 0.264 :slantedHeight :tiltAngle
+	right :tiltAngle
+	jumpForward :slantedHeight
+	polyStart
+	arcLines [[-90 + :tiltAngle 0] [0.4] [-20.1 0.46] [-60 0.2]
+	[-11 0.5] [-30 0.3] [-40 0.21] [-9.2 0.55] [160 0] [-20 0.15] [-30 0.11]
+	[-25 0.15] [-7 1] [0.095] [34 0.3] [-121.7 0] [0.26465] [-46.6 0] 
+	[0.03] [-18 0.03] [-15 0.1] [-10 0.33] [-4 0.6] [0.1] [10 0.3]
+	[20 0.14] [60 0.1] [3.6 1] [0.2] [-90 0] [0.1868] [-90 0] [0.31]
+	[20 0.3] [40 0.11] [20 0.11] [12.5 0.2] [35 0.097] [24 0.07] [20 0.17]
+	[8.5 0.3] [0.3]] :fontHeight
+	polyEnd
+	setTurtleState :oldState
+end
+
+; The star in the official logo looks roughly like a 
+; regular star that went through a linear transformation.
+; The inner points were calculated such that all lines point 
+; to the next-next outer point.
+; This star doesn't line up perfectly with the official Rockstar Games logo
+; but it seems like a good compromise between almost lining up and following 
+; the structure of a transformed regular star.
+to drawStar :scale
+	localmake "oldState turtleState
+	localmake "center pos
+	localmake "oldHeading heading
+	localmake "outerPoints [
+		[-0.82 0.29] [0.2 0.98] [0.98 0.29] [0.48 -0.83] [-0.8 -0.83]
+	]
+	localmake "positions []
+	repeat count :outerPoints [
+		localmake "pointInfo item repcount :outerPoints
+		jumpRight :scale * first :pointInfo
+		jumpForward :scale * last :pointInfo
+		queue2 "positions pos
+		jumpTo :center
+		setHeading :oldHeading
+	]
+	localmake "positions2 []
+	repeat count :positions [
+		localmake "pos item repcount :positions
+		jumpTo :pos
+		queue2 "positions2 :pos
+		localmake "nextPos item 1 + remainder repcount + 5 5 :positions
+		localmake "prevPos item 1 + remainder repcount + 3 5 :positions
+		localmake "twoAheadIndex 1 + remainder 1 + repcount 5
+		localmake "twoAheadPos item :twoAheadIndex :positions
+		setHeading towards :twoAheadPos
+		jumpForward distanceToLine :nextPos :prevPos
+		queue2 "positions2 pos
+	]
+
+	setLineJoinStyle "miter
+	jumpTo first :positions2
+	polyStart
+	for ["i 2 count :positions2] [
+		localmake "nextPos item :i :positions2
+		setHeading towards :nextPos
+		jumpForward distance :nextPos
+	]
+	polyEnd
+	setTurtleState :oldState
+end
+
+to rockstarGamesCustomizedLogo :height :outlineColor :backgroundColor :starFillColor
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "width :height * 216 / 198.8
+	jumpForward :height / 2
+	setPenSize :height * 0.022
+	setPenColor :outlineColor
+	setFillColor :backgroundColor
+	roundRect :width - penSize :height - penSize :height * 0.176
+
+	jumpTo :oldPos
+	jumpForward :height * 0.4149
+	setFillColor :outlineColor
+	drawR :height * 0.404839
+
+	jumpTo :oldPos
+	jumpForward :height * 0.345
+	jumpRight :height * 0.192
+	setPenColor :outlineColor
+	setFillColor :starFillColor
+	setHeading :oldHeading
+	setPenSize :height * 0.018
+	drawStar :height * 0.17
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://commons.wikimedia.org/wiki/File:Rockstar_Games_Logo.svg
+to rockstarGamesLogo :height
+	rockstarGamesCustomizedLogo :height "black "#ffab00 "white
+end
+
+; Inspired by logo at:
+; https://commons.wikimedia.org/wiki/File:RAGE_Technology_Group_Logo.svg
+to rageTechnologyGroupLogo :height
+	rockstarGamesCustomizedLogo :height "#ffab00 "black  "white
+end
+
+; Inspired by logo at:
+; https://commons.wikimedia.org/wiki/File:Rockstar_India_Logo.svg
+to rockstarIndiaLogo :height
+	rockstarGamesCustomizedLogo :height "#ffab00 "#138808  "white
+end
+
+; Inspired by logo at:
+; https://commons.wikimedia.org/wiki/File:Rockstar_Leeds_Logo.svg
+to rockstarLeedsLogo :height
+	rockstarGamesCustomizedLogo :height "#005daa "white  "white
+end
+
+; Inspired by logo at:
+; https://commons.wikimedia.org/wiki/File:Rockstar_Lincoln_Logo.svg
+to rockstarLincolnLogo :height
+	rockstarGamesCustomizedLogo :height "black "#c0cc23  "white
+end
+
+; Isnpired by logo at:
+; https://commons.wikimedia.org/wiki/File:Rockstar_London_Logo.svg
+to rockstarLondonLogo :height
+	rockstarGamesCustomizedLogo :height "black "#f38ab2  "white
+end
+
+; Inspired by logo at:
+; https://commons.wikimedia.org/wiki/File:Rockstar_San_Diego_Logo.svg
+to rockstarSanDiegoLogo :height
+	rockstarGamesCustomizedLogo :height "black "#675dc6  "white
+end
+
+; Inspired by logo at:
+; https://commons.wikimedia.org/wiki/File:Rockstar_Toronto_Logo.svg
+to rockstarTorontoLogo :height
+	rockstarGamesCustomizedLogo :height "black "#e93528  "white
+end
+
+; Inspired by logo at:
+; https://commons.wikimedia.org/wiki/File:Rockstar_Vancouver_Logo.svg
+to rockstarVancouverLogo :height
+	rockstarGamesCustomizedLogo :height "black "#00843f  "white
+end
+
+; Inspired by logo at:
+; https://commons.wikimedia.org/wiki/File:Rockstar_Vienna_Logo.svg
+to rockstarViennaLogo :height
+	rockstarGamesCustomizedLogo :height "black "#bbd1e5  "white
+end
+
+make "logosInfo [
+	["rockstarGames "Games] ["rageTechnologyGroup 'RAGE Technology Group']
+	["rockstarIndia "India] ["rockstarLeeds "Leeds] ["rockstarLincoln "Lincoln]
+	["rockstarLondon "London] ["rockstarSanDiego 'San Diego'] ["rockstarToronto "Toronto]
+	["rockstarVancouver "Vancouver] ["rockStarVienna "Vienna]
+]
+make "height 100
+make "separation :height * 1.5
+jumpLeft :separation * (-1 + count :logosInfo) / 2
+
+make "textRowHeight :height * 0.15
+make "height1 :height - :textRowHeight
+setFontSize :textRowHeight * 0.8
+setFillColor "black
+setPenSize 0
+repeat count :logosInfo [
+	make "pos1 pos
+	make "logoInfo item repcount :logosInfo
+	make "procName combine (first :logoInfo) "logo
+	make "title last :logoInfo
+	jumpForward :textRowHeight
+	(invoke :procName :height1)
+	jumpTo :pos1
+	jumpForward :textRowHeight * 0.2
+	jumpLeft :height1 / 2
+	right 90
+	label :title
+	jumpTo :pos1
+	setHeading 0
+	jumpRight :separation
+]

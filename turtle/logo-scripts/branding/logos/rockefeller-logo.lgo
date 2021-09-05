@@ -1,0 +1,30 @@
+; Inspired by logo at
+; https://www.rockefellercenter.com
+to rockefellerLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "height1 :height * 0.83455
+	localmake "contours [[0.816 0.0827] [0.504 0]]
+	setPenColor "black
+	setPenSize :height * 0.0212
+	setLineCap "butt
+	jumpForward :height
+	backward :height1
+	repeat 2 [
+		localmake "x :height * 0.165 * repcount / 2
+		localmake "contour item repcount :contours
+		localmake "height2 :height * first :contour
+		jumpTo :oldPos
+		jumpForward penSize / 2 + :height * last :contour
+		jumpRight :x
+		jumpForward :height2
+		backward :height2
+		left 90
+		forward :x * 2
+		right 90
+		forward :height2
+	]
+	setTurtleState :oldState
+end
+
+rockefellerLogo 100

@@ -1,0 +1,102 @@
+make "letters [
+	["T [
+'#####'
+'  #  '
+'  #  '
+'  #  '
+'  #  '
+]]
+	["E [
+'#####'
+'#    '
+'###  '
+'#    '
+'#####'
+]]
+	["S [
+'#####'
+'#    '
+'#####'
+'    #'
+'#####'
+]]
+	["D [
+'#### '
+'#   #'
+'#   #'
+'#   #'
+'#### '
+]]
+]
+make "testedRed "#df001d
+
+to drawLetter :letter :height
+	localmake "index 0
+	repeat count :letters [
+		if :letter = first item repcount :letters [
+			localmake "index repcount
+		]
+	]
+	if :index <> 0 [
+		localmake "oldState turtleState
+		localmake "rectHeight :height / 5
+		localmake "rectWidth :rectHeight * 0.91
+		localmake "letterInfo last item :index :letters
+		setLineCap "butt
+		setPenSize :rectHeight
+		jumpForward :height - :rectHeight / 2
+		jumpLeft :rectWidth * 2.5
+		right 90
+		repeat 5 [
+			localmake "rowStart pos
+			localmake "line item repcount :letterInfo
+			repeat count :line [
+				ifelse '#' = item repcount :line [
+					forward :rectWidth
+				] [
+					jumpForward :rectWidth
+				]
+			]
+			jumpTo :rowStart
+			jumpRight :rectHeight
+		]
+		setTurtleState :oldState
+	]
+end
+
+to drawText :msg :height
+	localmake "oldState turtleState
+	localmake "separation :height * 1.035
+	jumpLeft :separation * ((count :msg) - 1) / 2
+	repeat count :msg [
+		localmake "letter item repcount :msg
+		drawLetter :letter :height
+		jumpRight :separation
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://www.youtube.com/@tested
+to testedLogo :height
+	localmake "oldState turtleState
+	setPenColor :testedRed
+	drawLetter "T :height
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://www.youtube.com/@tested
+to testedFullWidthLogo :height
+	localmake "oldState turtleState
+	setPenColor :testedRed
+	drawText 'TESTED' :height
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 8
+jumpLeft :separation / 2
+testedLogo :height
+jumpRight :separation
+testedFullWidthLogo :height

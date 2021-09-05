@@ -1,0 +1,152 @@
+! ARCHERY
+
+! A simple archery game.
+! Shooting over a hill at a hidden target.
+
+OPTION ANGLE degrees
+
+RANDOMIZE
+
+LET left = -50                    ! World coordinates, in feet
+LET right = 200
+LET bottom = -50
+LET top = 100
+LET g = 32.16                     ! Acceleration due to gravity
+
+OPEN #1: screen 0, 1, .2, 1       ! Graphics part of the screen
+SET WINDOW left, right, bottom, top
+
+OPEN #2: screen 0, 1, 0, .19      ! Command part of the screen
+
+DO
+   CALL MakeScene
+   CALL PlayGame
+
+   WINDOW #2
+   PRINT "Play another (y or n)?";
+   GET KEY key
+   PRINT
+
+LOOP while key = ord("y") or key = ord("Y")
+
+PRINT "Thanks for playing."
+
+! Now, the subroutines
+
+DEF Hill (x)
+    ! Hill_ht and hill_at are defined in MakeScene
+    LET Hill = hill_ht/(1 + ( (x - hill_at)/hill_spread )^2 )
+END DEF
+
+SUB MakeScene
+
+    WINDOW #1
+
+    CLEAR
+
+    LET hill_at = int(50*rnd+50)  ! Hill peak location
+    LET hill_ht = int(30*rnd+30)  ! Hill height
+    LET hill_spread = int(10*rnd+20)   ! Hill spread
+
+    LET target_at = int(100*rnd+hill_at)
+    LET target_ht = Hill(target_at)
+
+    LET you_at = 0
+    LET you_ht = Hill(you_at)
+
+    CALL DrawHill
+    CALL DrawYou
+    CALL DrawTarget
+
+END SUB
+
+SUB DrawHill
+
+    FOR x = left to right
+        PLOT LINES: x,hill(x);
+    NEXT x
+    PLOT
+
+END SUB
+
+SUB DrawYou
+
+    BOX LINES you_at - 2, you_at + 2, you_ht - 2, you_ht + 2
+    PLOT TEXT, AT you_at - 5, you_ht - 8: "You"
+
+END SUB
+
+SUB DrawTarget
+
+    BOX CIRCLE target_at - 2, target_at + 2, target_ht - 2, target_ht + 2
+    PLOT TEXT, AT target_at - 8, target_ht - 8: "Target"
+
+END SUB
+
+SUB PlayGame
+
+    LET tries = 0
+    DO
+       LET tries = tries + 1
+       CALL MakeShot (bullseye)
+    LOOP until bullseye = 1
+    WINDOW #2
+    PRINT "Congratulations, you hit the target."
+    PRINT "It took you"; tries; "tries."
+    PRINT
+
+END SUB
+
+SUB MakeShot (bullseye)
+
+    WINDOW #2
+    INPUT prompt "Enter angle, velocity (e.g., 25, 30): ": angle, vel
+    LET velx = vel*cos(angle)
+    LET vely = vel*sin(angle)
+    LET delta = .01               ! Seconds
+
+    WINDOW #1
+    LET x = you_at
+    LET y = you_ht
+    FOR t = 0 to 1000 step delta  ! More than enough time (seconds)
+        PLOT x,y;
+
+        ! Check for hitting the ground, or hitting the target
+
+        IF (x-target_at)^2 + (y-target_ht)^2 < 4 then
+
+           ! Within two units of the target, so score a hit.
+
+           DRAW Burst with shift(target_at, target_ht)
+           LET bullseye = 1       ! Score a hit
+           EXIT FOR               ! ... and leave the loop
+
+        ELSE IF t > 0 and y < hill(x) then  ! Just hit the ground
+           LET bullseye = 0       ! Score a miss
+           EXIT FOR               ! ... and leave the loop
+
+        END IF
+
+        ! Not yet at the ground, so try again.
+
+        LET x = x + velx*delta    ! Newton's Laws of Motion
+        LET y = y + vely*delta
+        LET vely = vely - g*delta      ! ... effect of gravity
+
+    NEXT t
+    PLOT
+
+END SUB
+
+PICTURE Burst
+
+    LET radius = 8
+    FOR a = 0 to 360 step 22.5    ! Eight-pointed star
+        PLOT LINES: radius*cos(a),radius*sin(a);
+        LET radius = 12 - radius
+    NEXT a
+    PLOT
+
+END PICTURE
+
+END

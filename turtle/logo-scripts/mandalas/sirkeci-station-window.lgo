@@ -1,0 +1,253 @@
+make "sirkeciRed "#fa0432
+make "sirkeciAntiqueWhite "#fbd3c4
+make "outerArcRadiusRatio 0.25
+make "outerArcDistanceRatio 0.56
+
+to drawBlueCircles :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "oldPenSize penSize
+	localmake "serkeciBlue "#b6d8e9
+	localmake "blueInnerRadius :height * 0.115
+	localmake "blueInnerRadius2 :blueInnerRadius + :oldPenSize / 2
+	localmake "circleDistance :height * 0.245
+	localmake "x :circleDistance * sin 180 / 8
+	localmake "lineLength1 sqrt :blueInnerRadius2 * :blueInnerRadius2 - :x * :x
+	localmake "lineDistance :circleDistance * (cos 180 / 8) - :lineLength1
+	setFillColor "black
+	setPenSize penSize * 2
+	repeat 2 [
+		repeat 8 [
+			setHeading :oldHeading + (repcount + 0.5) * 360 / 8
+			jumpForward :circleDistance
+			circle :blueInnerRadius
+			jumpTo :oldPos
+		]
+		setFillColor :serkeciBlue
+		setPenSize 0
+	]
+	setHeading :oldHeading
+	setPenSize :oldPenSize
+	repeat 8 [
+		jumpForward :lineDistance
+		forward :lineLength1 * 2
+		jumpTo :oldPos
+		right 360 / 8
+	]
+	setTurtleState :oldState
+end
+
+to drawLittleRedCircles :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	setFillColor :sirkeciRed
+	repeat 8 [
+		jumpForward :height * 0.29
+		circle :height * 0.04
+		jumpTo :oldPos
+		right 360 / 8
+	]
+	setTurtleState :oldState
+end
+
+to drawOuterCorners :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "outerArcRadius :height * :outerArcRadiusRatio
+	localmake "x :height * :outerArcDistanceRatio * sin 180 / 8
+	localmake "arcAngle 90 - (180 / 8) - arcCos :x / :outerArcRadius
+	localmake "startGap :height * :outerArcDistanceRatio - :outerArcRadius
+	setFillColor :sirkeciAntiqueWhite
+	setLineJoinStyle "round
+	repeat 8 [
+		setHeading :oldHeading + (repcount + 0.5) * 360 / 8
+		jumpForward :startGap
+		right 90
+		polyStart
+		arcLeft :arcAngle :outerArcRadius
+		right :arcAngle * 2 + 360 / 8
+		arcLeft :arcAngle :outerArcRadius
+		polyEnd
+		jumpTo :oldPos
+	]
+	repeat 8 [
+		setHeading :oldHeading + repcount * 360 / 8
+		jumpForward :startGap
+		forward :height / 2 - :startGap
+		jumpTo :oldPos
+	]
+	setTurtleState :oldState
+end
+
+to drawLeaf :size :angle
+	localmake "oldHeading heading
+	localmake "oldPos pos
+	localmake "arcRadius :size / 2 / sin :angle
+	right 90
+	jumpBackward :size / 2
+	left :angle
+	polyStart
+	arcRight :angle * 2 :arcRadius
+	right 180 - :angle * 2
+	arcRight :angle * 2 :arcRadius
+	polyEnd
+	setHeading :oldHeading
+	jumpTo :oldPos
+end
+
+to drawOuterRedAndOrangle :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "outerArcRadius :height * :outerArcRadiusRatio
+	localmake "redLeafAngle 26
+	localmake "redLeafSize :outerArcRadius * 2 * sin :redLeafAngle
+	localmake "redLeafWidth 2 * :outerArcRadius * (1 - cos :redLeafAngle)
+	localmake "serkeciOrange "#f7ba22
+	localmake "orangeLeafAngle 18
+	localmake "orangeLeafSize :outerArcRadius * 2 * sin :orangeLeafAngle
+	localmake "orangeLeafWidth 2 * :outerArcRadius * (1 - cos :orangeLeafAngle)
+	localmake "separation (:redLeafWidth - :orangeLeafWidth) / 2
+	right 180 / 8
+	setLineJoinStyle "round
+	repeat 8 [
+		jumpForward :height * :outerArcDistanceRatio - :outerArcRadius + :redLeafWidth / 2
+		setFillColor :sirkeciRed
+		drawLeaf :redLeafSize :redLeafAngle
+		jumpBackward :separation
+		setFillColor :serkeciOrange
+		drawLeaf :orangeLeafSize :orangeLeafAngle
+		jumpTo :oldPos
+		right 360 / 8
+	]
+	setTurtleState :oldState
+end
+
+to drawOuterBlackTriangles :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "jumpSize (:height - penSize) / 2
+	setPenSize 0
+	setFillColor "black
+	repeat 8 [
+		setHeading :oldHeading + repcount * 360 / 8
+		jumpForward :jumpSize
+		right 180
+		isoTriangle :height * 0.1 :height * 0.1
+		jumpTo :oldPos
+	]
+	setTurtleState :oldState
+end
+
+to drawBlackMiddleNotches :size
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "separation :size * 2 * tan 180 / 16
+	localmake "triWidth :size * 0.15
+	localmake "triHeight :size * 0.15
+	setPenSize 0
+	setFillColor "black
+	repeat 8 [
+		setHeading :oldHeading + (repcount) * 360 / 8
+		jumpForward :size
+		jumpLeft :separation / 2
+		right 180
+		repeat 2 [
+			isoTriangle :triWidth :triHeight
+			jumpLeft :separation
+		]
+		jumpTo :oldPos
+	]
+	setTurtleState :oldState
+end
+
+to drawBlackSquares :height :squareSize
+	setPenSize :height * 0.03
+	setFillColor transparent
+	repeat 2 [
+		square :squareSize
+		right 45
+	]
+end
+
+; Inspired by the upper circular window at:
+; https://www.pinterest.ca/pin/438045501268087121
+; It is a window from Serkeci Station in Istanbul, Turkey.
+; You can learn more about the station at
+; https://en.wikipedia.org/wiki/Sirkeci_railway_station
+to sirkeciWindow :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "thin :height * 0.003
+	localmake "innerRadius1 :height * 0.2
+	localmake "innerRadius2 :height * 0.2
+	localmake "diagonalLength :innerRadius1 / cos 45
+	localmake "blackTriangleWidth :height * 0.15
+	localmake "antiqueTriangleWidth :height * 0.07
+	jumpForward :height / 2
+	setPenSize :height * 0.06
+	setFillColor "#acd897
+	circle (:height - penSize) / 2
+	localmake "center pos
+	setFillColor :sirkeciRed
+	setPenSize :thin
+	setHeading :oldHeading + 45 / 2
+	setFillColor :sirkeciRed
+	repeat 8 [
+		forward :innerRadius2
+		jumpBackward :height * 0.01
+		right 180
+		jumpForward :height * 0.02
+		setFillColor :sirkeciRed
+		isoTriangle :height * 0.18 :height * 0.05
+		jumpTo :center
+		right 45
+	]
+	drawOuterCorners :height
+	drawLittleRedCircles :height
+	drawBlueCircles :height
+	drawOuterRedAndOrangle :height
+	drawOuterBlackTriangles :height
+	setLineCap "butt
+	repeat 8 [
+		setHeading :oldHeading + repcount * 360 / 8
+		jumpForward :diagonalLength
+		localmake "pos1 pos
+		setPenSize :height * 0.04
+		forward :height / 2 - :diagonalLength
+		jumpTo :pos1
+		jumpBackward :blackTriangleWidth / 2
+		setPenSize 0
+		setFillColor "black
+		isoTriangle :blackTriangleWidth :blackTriangleWidth / 2
+		stripes :height * 0.03 :height * 0.07 [:sirkeciAntiqueWhite]
+		setFillColor :sirkeciAntiqueWhite
+		jumpForward :height * 0.032
+		right 180
+		setFillColor :sirkeciAntiqueWhite
+		isoTriangle :antiqueTriangleWidth :antiqueTriangleWidth * 0.8
+		jumpTo :center
+	]
+	setPenSize :height * 0.01
+	setHeading :oldHeading
+	repeat 4 [
+		jumpBackward :innerRadius1
+		forward :innerRadius1 * 2
+		jumpTo :center
+		right 45
+	]
+	drawBlackSquares :height :innerRadius1 * 2
+	drawBlackMiddleNotches :innerRadius1
+	setPenSize 0
+	setFillColor "black
+	circle :height * 0.06
+	setFillColor :sirkeciRed
+	isotoxalStar :height * 0.022 :height * 0.035 8
+	setTurtleState :oldState
+end
+
+setScreenColor "#796d61
+sirkeciWindow 100

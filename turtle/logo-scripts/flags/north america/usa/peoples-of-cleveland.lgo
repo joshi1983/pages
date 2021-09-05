@@ -1,0 +1,52 @@
+to starRadiusToInnerRadius :largeRadius :numPoints :innerAngle
+	localmake "angle1 180 / :numPoints
+	localmake "polySideLength1 :largeRadius * sin :angle1
+	localmake "inwardLength :polySideLength1 / cos :innerAngle / 2
+	localmake "len1 :inwardLength * sin 90 - :angle1 - :innerAngle / 2
+	output :len1 / sin :angle1
+end
+
+; Inspired by flag at:
+; https://en.wikipedia.org/wiki/Flag_of_Cleveland#/media/File:People's_flag_of_Cleveland.svg
+to peoplesFlagOfCleveland :height
+	localmake "oldState turtleState
+	localmake "width :height * 5 / 3
+	localmake "redColor "#f42e3d
+	localmake "darkColor "#0d2241
+	localmake "circleRadius :height * 0.2755
+	localmake "circleOffset :height / 3
+	localmake "cThickness (:circleOffset - :circleRadius) * 2
+	localmake "largeStarRadius :circleRadius - :cThickness / 2
+	localmake "numStarPoints 6
+	localmake "smallStarRadius starRadiusToInnerRadius :largeStarRadius :numStarPoints 90
+	localmake "triangleHeight :height / 2
+	localmake "rightOffset (:width - :height) / :height / 2
+	localmake "rightLines1 [
+		[135 0] [1 / 2 / cos 45] [45 0] [:rightOffset] [90 0] [0.5]
+	]
+	stripes :width :height [:redColor]
+	jumpForward :height / 2
+	localmake "center pos
+	jumpLeft :circleOffset
+	setFillColor "white
+	setPenSize 0
+	isotoxalStar :largeStarRadius :smallStarRadius :numStarPoints
+
+	setPenSize :cThickness
+	setPenColor :darkColor
+	setFillColor transparent
+	circle :circleRadius
+	left 90
+	jumpBackward :triangleHeight + :smallStarRadius
+	setFillColor :redColor
+	setPenSize 0
+	isoTriangle :height :triangleHeight
+	jumpTo :center
+	setFillColor :darkColor
+	drawArcLineShape [0 0
+		combine :rightLines1 reverse :rightLines1
+	] :height
+	setTurtleState :oldState
+end
+
+peoplesFlagOfCleveland 100

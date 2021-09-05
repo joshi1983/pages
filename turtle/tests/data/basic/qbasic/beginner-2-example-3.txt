@@ -1,0 +1,26 @@
+REM copied from https://www.qbasic.net/en/qbasic-tutorials/beginner/qbasic-beginner-2.htm
+1 CLS 'this command clears the screen, so it’s empty
+INPUT "Enter the first number "; a
+INPUT "Enter the second number "; b
+IF b = 0 THEN 'checks if the second number is zero,
+'because you can’t divide by zero
+PRINT "the second number cannot be 0. Try again."
+DO: LOOP WHILE INKEY$ = "" 'waits for you to press a key to continue
+GOTO 1 'then sends you back to line 1
+END IF
+CLS 'clear the screen again
+c = a MOD b
+d = a / b
+e = a - c
+f = e / b
+PRINT a; "MOD"; b; "="; c
+IF c = 0 THEN 'this checks if the result of a MOD b = 0, because
+'it means that the result of a / b is integer
+PRINT "because"; a; "/"; b; "="; d; " - integer.  Try again."
+DO: LOOP WHILE INKEY$ = "" 'waits for you to press a key to continue
+GOTO 1 'then sends you back to the line 1
+END IF
+PRINT "because"; a; "/"; b; "="; d; " -not integer" 'The rest of the program
+PRINT "but"; a; "-"; c; "="; e 'executes if the result of
+PRINT "and"; e; "/"; b; "="; f; " - integer" 'a / b is not integer
+END

@@ -1,0 +1,52 @@
+to drawShape :size
+	localmake "oldState turtleState
+	localmake "arcLines [
+		[42.5 0] [-7 0.16] [-13 0.085] [-10 0.1] [-2.1535 0.365]
+		[83 0] [-30 0.035] [-18 0.047] [-13 0.07] [-16.3 0.0355]
+		[-82 0] [10 0.1] [54.88 0.06569] [91.0735 0] [0.09955]
+		[-90 0] [0.05375] [-90 0] [0.048] [90 0]
+		[20 0.09] [10 0.11] [80 0.043] [40 0.033] [33 0.049]
+		[10 0.075] [22.3 0.031] [-135 0] [-15 0.125]
+		[-30 0.09] [-30 0.07] [-30 0.118] [-50 0.081] [-45 0.072]
+		[-30 0.13] [-25 0.21] [-2.47 0.9] [87.17 0] [0.0278] [90 0]
+		[6 0.5] [12 0.3] [3.1 2] [-40 0.177] [-20 0.3] [-3.032761 0.6845]
+		[-48.06724 0]
+	]
+	setPenSize 0
+	jumpForward :size * 0.1666666
+	polyStart
+	arcLines :arcLines :size
+	arcLines reverse :arcLines :size
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Quebec#/media/File:Flag_of_Quebec.svg
+to quebecFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 3 / 2
+	localmake "thickness :height / 4
+	localmake "size (:width + :thickness) / 2
+	localmake "size2 (:height - :thickness) / 2
+	stripes :width :height ["#039]
+	stripes :thickness :height ["white]
+	jumpForward (:height - :thickness) / 2
+	stripes :width :thickness ["white]
+	jumpForward :thickness
+	jumpLeft :width / 2 - (:width - :thickness) / 4
+	setFillColor "white
+	setPenSize 0
+	repeat 2 [
+		repeat 2 [
+			drawShape :size2
+			jumpRight :size
+		]
+		jumpBackward (:height + :thickness) / 2
+		jumpLeft :size * 2
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+quebecFlag 100

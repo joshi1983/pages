@@ -1,0 +1,51 @@
+make "darkColor "#680
+make "lightColor "#efa
+
+; Inspired by:
+; https://www.pinterest.ca/pin/879609370949827685/
+; Reported July 30, 2013
+; Formed near Oudenbosch in The Netherlands
+to standdaarbuiten2013CropCircles :height
+	localmake "oldState turtleState
+	localmake "gap1 :height * 0.355
+	localmake "triWidth :gap1 * 2 * (cos 30)
+	localmake "triHeight :triWidth * cos 30
+	localmake "height1 :height * 0.615
+	localmake "largeRadius :height * 0.1
+	localmake "sideCircleRadius :height * 0.06
+	localmake "sideOffset :height * 0.17
+	localmake "sideGap :sideOffset - :largeRadius - :sideCircleRadius
+	localmake "endCircleRadius :height * 0.035
+	localmake "midCircleRadius :height * 0.04
+	localmake "midOffset :largeRadius + :midCircleRadius + :sideGap
+	jumpForward :height - :height1
+	localmake "center pos
+	setPenColor :lightColor
+	setPenSize :height * 0.03
+	setFillColor transparent
+	jumpBackward :triHeight - :gap1
+	isoTriangle :triWidth :triHeight
+	setPenSize 0
+	setFillColor :lightColor
+	repeat 3 [
+		jumpTo :center
+		jumpForward :gap1
+		circle :largeRadius
+		jumpLeft :sideOffset
+		repeat 2 [
+			circle :sideCircleRadius
+			jumpRight :sideOffset * 2
+		]
+		jumpLeft :sideOffset * 3
+		jumpForward :midOffset
+		circle :midCircleRadius
+		jumpTo :center
+		jumpForward :height1 - :endCircleRadius
+		circle :endCircleRadius
+		right 360 / 3
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor :darkColor
+standdaarbuiten2013CropCircles 100

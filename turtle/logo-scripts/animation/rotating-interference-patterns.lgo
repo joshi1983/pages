@@ -1,0 +1,69 @@
+to drawDottedSquare :size :numDots
+	localmake "oldState turtleState
+	localmake "dotRadius :size * 0.35 / :numDots
+	localmake "dotSeparation (:size - :dotRadius * 2) / (:numDots - 1)
+	jumpLeft :dotSeparation * (:numDots - 1) / 2
+	jumpBackward :dotSeparation * (:numDots - 1) / 2
+	setPenSize 0
+	setFillColor "black
+	repeat :numDots [
+		localmake "rowStart pos
+		repeat :numDots [
+			circle :dotRadius
+			jumpRight :dotSeparation
+		]
+		jumpTo :rowStart
+		jumpForward :dotSeparation
+	]	
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://www.facebook.com/photo/?fbid=10101538168866903
+; The Moire patterns show where the squares overlap.
+; You can learn more about Moire patterns at:
+; https://en.wikipedia.org/wiki/Moir%C3%A9_pattern
+to moireSquares :height :timeRatio
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "squareSizeRatio 0.51
+	localmake "squareSize :height * :squareSizeRatio
+	localmake "numDots 26
+	localmake "angleOffset :timeRatio * 360
+	localmake "squaresInfo [
+		[-0.52 :squareSizeRatio / 2 0]
+		[-0.227 0.51 15 + :angleOffset]
+		[0.164 0.64 46 + :angleOffset]
+		[0.52 1 - :squareSizeRatio / 2 0]
+	]
+	repeat count :squaresInfo [
+		localmake "squareInfo item repcount :squaresInfo
+		jumpRight :height * first :squareInfo
+		jumpForward :height * item 2 :squareInfo
+		right last :squareInfo
+		drawDottedSquare :squareSize :numDots
+		jumpTo :oldPos
+		setHeading :oldHeading
+	]
+	setTurtleState :oldState
+end
+
+make "timeRatio interpolateRatio easeInOut animation.clampedTimeRatio
+moireSquares 100 :timeRatio
+
+to animation.snapshotstyle
+	output createPList2 [
+		["zoom.scale 5]
+		["position.y 50]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 10
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

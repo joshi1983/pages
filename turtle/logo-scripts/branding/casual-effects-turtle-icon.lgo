@@ -1,0 +1,62 @@
+make "turtleGreen "#9ef160
+
+to drawHead :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "eyeSeparation :height * 0.24
+	setPenSize :height * 0.01
+	setFillColor :turtleGreen
+	circlePair 0 :height * 0.125 :height * 0.48
+	setFillColor "white
+	jumpLeft :eyeSeparation / 2
+	repeat 2 [
+		setHeading :oldHeading + repcount * 180 - 90
+		roundIsoTriangle :height * 0.16 :height * 0.09 :height * 0.02
+		setHeading :oldHeading
+		jumpRight :eyeSeparation
+	]
+	setTurtleState :oldState
+end
+
+to drawLegs :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "offsets [
+		52 128 233 308
+	]
+	setPenSize :height * 0.01
+	setFillColor :turtleGreen
+	repeat count :offsets [
+		localmake "offset item repcount :offsets
+		setHeading :oldHeading + :offset
+		circlePair 0 :height * 0.08 :height * 0.46
+		jumpTo :oldPos		
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by favicon from
+; https://casual-effects.com/codeheart/turtle/
+to casualEffectsTurtleIcon :height
+	localmake "oldState turtleState
+	localmake "shellRadius :height * 0.38
+	setPenSize :height * 0.02
+	jumpForward :shellRadius + penSize / 2
+	setFillColor "#e4d286
+	setPenColor "black
+	localmake "center pos
+	drawHead :height
+	drawLegs :height
+	circle :shellRadius
+	repeat 3 [
+		jumpBackward :shellRadius
+		forward :shellRadius * 2
+		jumpTo :center
+		right 360 / 6
+	]
+	regularPolygon :shellRadius * 0.45 6
+	setTurtleState :oldState
+end
+
+casualEffectsTurtleIcon 100

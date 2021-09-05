@@ -1,0 +1,39 @@
+; This is used to indicate lines in the code editor 
+; that have associated breakpoints.
+
+to breakpointPath :size
+	localmake "angle 60
+	localmake "angle2 180 - :angle * 2
+	localmake "size1 :size * 0.1
+	localmake "size2 :size * 0.5 / sin :angle
+	forward :size
+	right 90
+	forward :size1
+	right :angle
+	forward :size2
+	right :angle2 ; point of symmetry
+	forward :size2
+end
+
+to breakpoint :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	
+	setPenSize 0
+	right 90
+	forward :size * 0.05
+	left 90
+	setFillColor "black
+	polyStart
+	breakPointPath :size
+	polyEnd
+
+	setPos :oldPos
+	setHeading :oldHeading
+	setFillColor "red
+	polyStart
+	breakPointPath :size
+	polyEnd
+end
+
+breakpoint 32

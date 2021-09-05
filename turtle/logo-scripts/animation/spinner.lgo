@@ -1,0 +1,99 @@
+to vectorScaleLasts :line :scale
+	localmake "result []
+	repeat count :line [
+		localmake "element clone item repcount :line
+		setItem count :element "element :scale * last :element 
+		queue2 "result :element
+	]
+	output :result
+end
+
+; Inspired by an animation at:
+; https://ca.pinterest.com/pin/17521886048370340
+to spinner :height :t
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "largeThickness :height * 0.44
+	localmake "shapes [
+		[
+			[[-50 1]]
+			[[30 1.5]]
+			129
+		]
+		[
+			[[20 1] [-10 1]]
+			[[-40 1] [-20 0.5]]
+			-138
+		]
+		[
+			[[70 1] [-27 2]]
+			[[30 1.5] [-40 1]]
+			143
+		]
+		[
+			[[20 1] [-30 2] [0.5]]
+			[[30 1.5] [-40 1]]
+			-160
+		]
+	]
+	localmake "numCircles count :shapes
+	localmake "thicknessFactor :largeThickness / :height / :numCircles
+	localmake "minRadiusFactor 0.5 - :thicknessFactor * (:numCircles - 1)
+	setPenColor "white
+	setPenSize :largeThickness
+	setFillColor "black
+	jumpForward :height / 2
+	localmake "center pos
+	circle (:height - penSize) / 2
+	setPenSize 0
+	repeat count :shapes [
+		localmake "outerRadius :height * mix :minRadiusFactor 0.5 repRatio
+		localmake "innerRadius :outerRadius - :height * :thicknessFactor
+		localmake "info item repcount :shapes
+		localmake "angleOffset last :info
+		localmake "line1 first :info
+		localmake "line2 item 2 :info
+		localmake "line1 vectorScaleLasts :line1 1/item 2 arcLinesInfo :line1
+		localmake "line2 vectorScaleLasts :line2 1/item 2 arcLinesInfo :line2
+		localmake "angle1 last arcLinesInfo :line1
+		localmake "info arcLinesInfo :line2
+		localmake "angle2 (last :info)  
+		localmake "numAngles 32
+		localmake "sign sign -0.5 + modulo repcount 2
+		localmake "startHeading :oldHeading + :t * 2 * :sign * 360 / :numAngles
+		repeat :numAngles [
+			setHeading 	:startHeading + repcount * 360 / :numAngles
+			jumpForward :outerRadius
+			localmake "startPos pos
+			left :angleOffset
+			localmake "len distanceToCircle :center :innerRadius
+			left :angle1
+			polyStart
+			arcLines :line1 :len
+			setHeading (towards :startPos) - :angle2
+			arcLines :line2 :len
+			polyEnd
+			jumpTo :center
+		]
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+spinner 100 animation.timeRatio
+
+to animation.snapshotstyle
+	output createPList2 [
+		["position.y 50]
+		["zoom.scale 7]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 1
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

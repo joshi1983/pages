@@ -1,0 +1,30 @@
+; Inspired by logo at
+; https://greenslate.com
+to greenslateLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "oldPos pos
+	localmake "angle 33
+	jumpForward :height / 2
+	setPenSize :height * 0.09
+	setPenColor "#4FB847
+	roundRegularPolygon (:height - penSize) * 0.511 6 :height * 0.065
+	setLineJoinStyle "miter
+	setLineCap "butt
+	repeat 2 [
+		localmake "size :height * 0.086 + :height * 0.0845 * (repcount - 1)
+		localmake "triLen1 :size * tan 360 / 6
+		localmake "triLen2 :triLen1 / sin :angle
+		jumpTo :oldPos
+		setHeading :oldHeading
+		jumpForward :size
+		jumpLeft :triLen1
+		setHeading :oldHeading + :angle
+		forward :triLen2
+		right 180 - :angle * 2
+		forward :triLen2
+	]
+	setTurtleState :oldState
+end
+
+greenslateLogo 100

@@ -1,0 +1,25 @@
+; Inspired by https://www.facebook.com/share/p/1V7PgN33x3/
+; which was posted by Eric Schraf and uses Sinclair ZX81 Basic code.
+;
+; The following is an implementation of the same algorithm in WebLogo.
+; Minsky algorithm is one for drawing a circle 
+; by calculating many points around it.
+
+make "e 1 / 16
+
+; Start coordinates
+make "x 20
+make "y 0
+
+setPenSize 0
+setFillColor "black
+repeat 101 [
+
+	; calculate the next dot position.
+	make "x :x - :y * :e
+	make "y :y + :x * :e
+
+	; Draw the dot.
+	jumpTo [ :x + 30 :y + 20 ]
+	circle 1 ; plot a dot.
+]

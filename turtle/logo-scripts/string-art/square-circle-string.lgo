@@ -1,0 +1,48 @@
+; Inspired by
+; https://www.pinterest.ca/pin/187251296993528281/
+
+to squareCircleStringArt :radius :numOuterAngles :maxInnerAngle
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "chordAngle 260
+	localmake "numAngles 64
+	setPenSize :radius * 0.008 / :numOuterAngles
+	repeat :numOuterAngles [
+		localmake "quadHeading heading
+		repeat :numAngles [
+			jumpTo :oldPos
+			jumpForward :radius
+			localmake "toPos pos
+			jumpTo :oldPos
+			right :chordAngle + repcount * :maxInnerAngle / :numAngles
+			jumpForward :radius
+			setHeading towards :toPos
+			forward distance :toPos
+			setHeading :quadHeading + repcount * :maxInnerAngle / :numAngles
+		]
+		setHeading :oldHeading + repcount * 360 / :numOuterAngles
+	]
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+; Call with various different parameters to visualize
+; the flexibility of the procedure.
+make "size 50
+make "separation :size * 2.3
+jumpLeft :separation * 3.5
+squareCircleStringArt :size 2 90
+jumpRight :separation
+squareCircleStringArt :size 3 70
+jumpRight :separation
+squareCircleStringArt :size 4 70
+jumpRight :separation
+squareCircleStringArt :size 8 70
+jumpRight :separation
+squareCircleStringArt :size 8 30
+jumpRight :separation
+squareCircleStringArt :size 8 10
+jumpRight :separation
+squareCircleStringArt :size 16 30
+jumpRight :separation
+squareCircleStringArt :size 16 100

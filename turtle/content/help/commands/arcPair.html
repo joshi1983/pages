@@ -1,0 +1,44 @@
+<code>backward 100
+; draws a black line 100 long.
+
+setPenColor "red
+setFillColor transparent
+; make sure the shape won't hide the black line
+
+arcPair 100 90
+; Draws a red closed pair of arcs with
+; vertices 100 units apart</code>
+
+<code>setFillColor transparent
+
+repeat 10 [
+	arcPair 100 mix 120 20 repRatio
+]</code>
+<code>; myArcPair procedure works exactly like the arcPair command.
+; The arcPair command is available so you don't need to implement it yourself.
+; Reviewing this implementation could help you implement something similar using procedures, though.
+to myArcPair :length :arcAngle
+	localmake "arcAngle clamp :arcAngle 0 359.9
+	localmake "sinRatio sin :arcAngle / 2
+	ifelse (abs :sinRatio) &lt; 0.0001 [
+		; avoid division by 0 and problems associated 
+		; with floating-point calculation error.
+
+		localmake "oldPos pos
+		forward :length
+		jumpTo :oldPos
+	] [
+		localmake "arcRadius abs :length / 2 / :sinRatio
+		left :arcAngle / 2
+		polyStart
+		arcRight :arcAngle :arcRadius
+		right 180 - :arcAngle
+		arcRight :arcAngle :arcRadius
+		polyEnd
+		right 180 - :arcAngle / 2
+	]
+end
+
+repeat 120 [
+	myArcPair 100 mix 360 0 repRatio
+]</code>

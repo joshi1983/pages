@@ -1,0 +1,49 @@
+; Inspired by logo at:
+; https://robocop.fandom.com/wiki/Omni_Consumer_Products
+; The OCP logo was used in several RoboCop movies
+to omniCorpLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "thickness :height * 0.1
+	jumpRight :height
+	localmake "rightBottomPos pos
+	localmake "largeRadius (:height - :thickness) / 2 / (cos 180 / 8)
+	localmake "smallRadius :largeRadius * 0.45
+	localmake "distance1 :smallRadius + :thickness / 2 / cos 180 / 8
+	localmake "midRadius mix :largeRadius :smallRadius 0.5
+	localmake "distance2 :midRadius - :thickness / 2 / cos 180 / 8
+	localmake "pThickness (:distance2 * cos 180 / 8) - (:distance1 * sin 180 / 8)
+	jumpTo :oldPos
+
+	jumpForward :height / 2
+	localmake "center pos
+	setFillColor "black
+	setPenColor "white
+	setPenSize :thickness
+	setLineJoinStyle "miter
+	right 180 / 8 
+	repeat 3 [
+		localmake "radius mix :smallRadius :largeRadius repRatio
+		regularPolygon :radius 8
+	]
+	setPenSize 0
+	setHeading :oldHeading - 90
+	localmake "radius :radius * 1.16
+	jumpBackward :radius
+	isoTriangle :radius :radius * 0.79
+	jumpTo :center
+	setHeading :oldHeading + 180 * 9 / 8
+	jumpForward :distance1
+	setHeading :oldHeading + 180
+	polyStart
+	jumpForward distanceToLine :oldPos :rightBottomPos
+	jumpRight :pThickness
+	jumpBackward :height * 0.4
+	polyEnd
+	
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+omniCorpLogo 100

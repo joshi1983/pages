@@ -1,0 +1,37 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/File:Flag_of_Guernsey.svg
+to guernseyFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 3 / 2
+	localmake "redThickness :height * 0.25
+	localmake "redColor "#e8112d
+	localmake "yellowColor "#f9dd16
+	localmake "yellowThickness :height * 0.083333
+	localmake "len :height * 0.75
+	localmake "triWidth :height / 6
+	localmake "triHeight :triWidth / 2
+	stripes :width :height ["white]
+	stripes :redThickness :height [:redColor]
+	jumpForward (:height - :redThickness) / 2
+	stripes :width :redThickness [:redColor]
+	setFillColor :yellowColor
+	jumpForward :redThickness / 2
+	localmake "center pos
+	repeat 2 [
+		jumpBackward :len / 2
+		stripes :yellowThickness :len [:yellowColor]
+		jumpTo :center
+		right 90
+	]
+	setPenSize 0
+	repeat 4 [
+		jumpBackward :len / 2
+		isoTriangle :triWidth :triHeight
+		jumpTo :center
+		right 90
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "#ddd
+guernseyFlag 100

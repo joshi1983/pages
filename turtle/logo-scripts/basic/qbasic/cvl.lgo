@@ -1,0 +1,13 @@
+; Similar to CVL function from QBasic.
+; QBasic's CVL function is documented at:
+; https://qb64.com/wiki/CVL.html
+to cvl :s
+	assert 4 = count :s
+	localmake "result 0
+	repeat 4 [
+		localmake "result bitShiftLeft :result 8
+		localmake "byteVal ascii item repcount :s
+		localmake "result bitOr :result :byteVal
+	]
+	output :result
+end

@@ -1,0 +1,73 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Wikimedia_Foundation#/media/File:Wikimedia_Foundation_logo_-_vertical.svg
+to wikimediaFoundationLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "circleRadius :height * 0.1555724
+	localmake "size1 :height * 0.533
+	localmake "thickness1 :height * 0.1225
+	localmake "arcRadius1 :height/ 2
+	localmake "arcRadius2 :arcRadius1 - :thickness1
+	localmake "arcRadius3 :arcRadius2 - :height * 0.07
+	localmake "arcAngle1 131
+	setPenSize 0
+	setFillColor "black
+	jumpForward :height - :circleRadius
+	circle :circleRadius
+
+	jumpTo :oldPos
+	jumpForward :height / 2
+	localmake "center pos
+	jumpTo :oldPos
+	jumpForward :size1
+	localmake "upperPos pos
+	setLineCap "butt
+	setPenColor "#f0f
+	setPenSize 0
+	right 45
+	localmake "size2a distanceToCircle :center :arcRadius1
+	localmake "size2b :size2a * sin 45
+	localmake "angle1 arcSin :size2b / :arcRadius1
+	localmake "size2c distanceToCircle :center :arcRadius2
+	localmake "angle2 arcSin (:size2c * sin 45) / :arcRadius2
+	jumpForward :size2a
+	localmake "rightPos pos
+
+	; Draw the large outer arc.
+	polyStart
+	setHeading (towards :center)  - 90
+	arcRight 360 - :angle1 * 2 :arcRadius1
+	localmake "leftPos pos
+	setHeading (towards :upperPos)
+	jumpForward distanceToCircle :center :arcRadius2
+	setHeading (towards :center) + 90
+	arcLeft 360 - :angle2 * 2 :arcRadius2
+	polyEnd
+
+	; Draw the inner shape pair.
+	setHeading towards :upperPos
+	jumpForward distanceToCircle :center :arcRadius3
+	setPenSize 0
+	
+	setHeading (towards :center) - 90
+	polyStart
+	arcRight :arcAngle1 :arcRadius3
+	setHeading :oldHeading
+	jumpForward distanceToLine :upperPos :rightPos
+	polyEnd
+
+	jumpTo :upperPos
+	setHeading :oldHeading - 45
+	jumpForward distanceToCircle :center :arcRadius3
+	setHeading (towards :center) + 90
+	polyStart
+	arcLeft :arcAngle1 :arcRadius3
+	setHeading :oldHeading
+	jumpForward distanceToLine :upperPos :leftPos
+	polyEnd
+	
+	setTurtleState :oldState
+end
+
+wikimediaFoundationLogo 100
