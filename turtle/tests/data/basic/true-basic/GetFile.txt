@@ -1,0 +1,21 @@
+!
+!  GETFILE.  Read numbers from statistics data file,
+!  and print the results.
+!
+LIBRARY "Stat1Lib.trc"
+
+DIM d$(0,0), d(0,0)
+
+OPEN #1: name "statdata.tru"
+CALL GetStatFile (#1, d$(,))
+
+PRINT "Raw string values:"
+MAT PRINT using "  #.#########": d$
+
+CALL SetMissingText ("")          ! Any bad string is missing value
+CALL TextToNum2 (d$, d)           ! Convert strings to numbers
+
+PRINT "Numeric values:"
+MAT PRINT using "  #.#########": d
+
+END

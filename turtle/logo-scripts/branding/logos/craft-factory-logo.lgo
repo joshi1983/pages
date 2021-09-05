@@ -1,0 +1,58 @@
+; Inspired by logo at:
+; https://www.facebook.com/CraftFactory
+;
+; More specifically at:
+; https://www.facebook.com/photo?fbid=286809914007018
+to craftFactoryLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angle 120
+	localmake "radius 0.5
+	localmake "smallRadius 0.137
+	localmake "cornerRadius1 0.03
+	localmake "x :radius * sin :angle
+	localmake "y :radius * cos :angle
+	localmake "cShape [:x 0.5 + :y
+		[[-:angle - 90 0] [-298 :radius] [-94 :cornerRadius1]
+		[0.3] [-80 :cornerRadius1] [283.5 :smallRadius] [-78.2 :cornerRadius1]
+		[0.306] [-80 :cornerRadius1]]
+	]
+	localmake "shadowColorStops createPList2 [
+		[0 "#000] [0.32 "#0000] [0.9 "#0000] [1 "#5000]
+	]
+	setPenSize 0
+	setFillColor "#13b9b9
+	jumpTo :oldPos
+	drawArcLineShape :cShape :height
+	right 24
+	jumpLeft :height * 0.272
+	localmake "heading1 heading
+	localmake "pos1 pos
+	setFillGradient createLinearGradient :oldPos pos createPList2 [
+		[0.8 "#0000] [1 "#5000]
+	] "pad
+	setHeading :oldHeading
+	jumpTo :oldPos
+	drawArcLineShape :cShape :height
+
+	setHeading :heading1
+	jumpTo :pos1
+	setFillColor "#ec6825
+	drawArcLineShape [0 0
+		[[0.343] [60.7 0] [-122 :smallRadius] [61.5 0] [0.369] [98 0]
+		[163.5 :radius]]
+	] :height
+
+	setHeading :oldHeading
+	jumpTo :oldPos
+	jumpRight :height * 0.035
+	jumpForward :height / 2
+	setFillGradient createRadialGradient pos :radius * 1.05 * :height :shadowColorStops
+	jumpTo :oldPos
+	drawArcLineShape :cShape :height
+
+	setTurtleState :oldState
+end
+
+craftFactoryLogo 100

@@ -1,0 +1,131 @@
+make "hexPatternRed "#fd0207
+
+to hexStar :height
+	localmake "oldState turtleState
+	localmake "center pos
+	localmake "oldHeading heading
+	regularPolygon :height / 2 6
+	right 360 / 2 / 6
+	setLineJoinStyle "bevel
+	regularStar :height / 2 * cos 360 / 12 6
+	setHeading :oldHeading
+	repeat 6 [
+		forward :height / 4
+		right 360 / 6		
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+to triLines :height :drawOutline
+	localmake "oldState turtleState
+	setLineJoinStyle "bevel
+	if :drawOutline [
+		regularPolygon :height / 2 3
+	]
+	localmake "center pos
+	repeat 3 [
+		forward :height / 2
+		right 360 / 3
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+to triSymbol :height
+	localmake "oldState turtleState
+	localmake "center pos
+	regularPolygon :height / 2 6
+	triLines :height false
+	right 360 / 2 / 3
+	repeat 3 [
+		jumpForward :height / 4
+		triLines :height / 2 true
+		jumpTo :center
+		right 360 / 3
+	]
+	setTurtleState :oldState
+end
+
+to randomSymbol :symbolSize
+	ifelse 1 = random 2 [
+		triSymbol :symbolSize
+	] [
+		hexStar :symbolSize
+	]
+end
+
+to symbolsForward :size1 :size2 :symbolSize :numSymbols
+	repeat :numSymbols [
+		jumpRight :size2
+		jumpForward :size1
+		randomSymbol :symbolSize
+	]
+end
+
+to drawHexGrid :gridSize :size1 :size2
+	localmake "center pos
+	localmake "colorStops createPList2 [
+		[0 "white] [0.5 :hexPatternRed] [1 "#0000]
+	]
+	setPenGradient createRadialGradient pos :size1 * 5 :colorStops
+	setPenSize :size1 * 0.06
+	regularPolygon :gridSize / 2 6
+	repeat 3 [
+		repeat 5 [
+			localmake "pos1 pos
+			jumpLeft :size2 * 2
+			repeat 4 [
+				regularPolygon :gridSize / 2 6
+				jumpLeft :size2 * 2
+			]
+			jumpTo :pos1
+			jumpRight :size2
+			jumpForward :size1
+		]
+		jumpTo :center
+		right 360 / 3
+	]
+end
+
+; Inspired by a drawing made by
+; Regan Barker
+; His drawing can be found at:
+; https://www.facebook.com/photo/?fbid=10159891306725936
+; Regan used the R programming language to draw that original design.
+to hexagonChaos :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "symbolSize :height * 0.1145
+	localmake "gridSize :height * 0.1425
+	localmake "size1 :gridSize * (0.5 + 0.5 * sin 30)
+	localmake "size2 :gridSize / 2 * cos 30
+	setPenSize :height * 0.003
+	jumpForward :height / 2
+	localmake "center pos
+	setPenColor :hexPatternRed
+	triSymbol :symbolSize
+	repeat 3 [
+		setHeading :oldHeading + repcount * 360 / 3
+		setPenColor :hexPatternRed
+		symbolsForward :size1 :size2 :symbolSize 4
+		right 180
+		symbolsForward :size1 -:size2 :symbolSize 4
+		symbolsForward :size1 :size2 :symbolSize 3
+		setPenColor "white
+		right 180
+		repeat 3 [
+			localmake "pos1 pos
+			symbolsForward :size1 -:size2 :symbolSize 3
+			jumpTo :pos1
+			jumpRight :size2
+			jumpForward :size1
+		]
+		jumpTo :center
+	]
+	drawHexGrid :gridSize :size1 :size2
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+hexagonChaos 100

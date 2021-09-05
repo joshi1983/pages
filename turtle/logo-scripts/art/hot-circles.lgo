@@ -1,0 +1,72 @@
+; Inspired by
+; https://ca.pinterest.com/pin/1759287346621641/
+to hotCircles :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "colors1 [
+		"#ffb503 "#fece02 "#ffe400 "#650707
+		"#8b0607 "#bc0404 "#ec0701 "#fe1e02
+		"#ff4701 "#ff6d00 "#ff870c
+	]
+	localmake "colors2 [
+		"#ff4600 "#ff6d00 "#ff8901 "#ff9f03 "#feb801
+		"#fece00 "#fde401 "#650707
+		"#8b0607 "#bc0404 
+	]
+	localmake "mixItemsData [
+		  0.48 0.245 0.06 
+	]
+	localmake "angle1 77.5
+	localmake "angle2 :angle1 + 77.2
+	localmake "angle3 50.5
+	localmake "angle4 :angle3 + 77.2
+	stripes :height :height ["#fea002]
+	jumpForward :height / 2
+	localmake "center pos
+	jumpTo :oldPos
+	jumpRight :height / 2
+	localmake "bottomRightPos pos
+	jumpTo :center
+	setPenSize 0
+	repeat count :colors1 [
+		localmake "radius :height * mixItems2 [0.46 0.315 0.198 0.045] repRatio
+		setFillColor item repcount :colors1
+		circle :radius
+	]
+	left :angle1
+	setFillColor "#fe1e02
+	polyStart
+	jumpForward :height / 2 / sin :angle1
+	setHeading :oldHeading + 180
+	jumpForward distanceToLine :oldPos :bottomRightPos
+	jumpLeft :height / 2 * (1 + tan :angle2)
+	polyEnd
+	jumpTo :center
+	setHeading :oldHeading + :angle3
+	polyStart
+	jumpForward :height / 2 / sin :angle3
+	setHeading :oldHeading
+	jumpBackward :height / 2 * ((tan :angle4 - 90) + tan 90 - :angle3)
+	polyEnd
+	jumpTo :center
+	setLineCap "butt
+	repeat count :colors2 [
+		localmake "innerRatio repcount / count :colors2
+		localmake "outerRatio (repcount - 1) / count :colors2
+		localmake "outerRadius :height * mixItems2 :mixItemsData :outerRatio
+		localmake "innerRadius :height * mixItems2 :mixItemsData :innerRatio
+		localmake "radius (:outerRadius + :innerRadius) / 2
+		setPenSize :outerRadius - :innerRadius
+		setPenColor item repcount :colors2
+		setHeading :oldHeading + 180 - :angle2
+		arc :angle2 - :angle1 :radius
+		setHeading :oldHeading + 180 + :angle3
+		arc :angle4 - :angle3 :radius
+	]
+	
+	setTurtleState :oldState
+end
+
+setScreenColor "#844
+hotCircles 100

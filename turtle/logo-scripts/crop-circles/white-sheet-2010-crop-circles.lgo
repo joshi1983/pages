@@ -1,0 +1,82 @@
+make "darkColor "#680
+make "lightColor "#efa
+make "littleRadiusRatio 0.1
+
+to drawSmallPattern :height :drawLittleCircles?
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "littleRadius :height * :littleRadiusRatio
+	localmake "largeGap :height / 2 - :littleRadius
+	localmake "tinyOffsetX :height * 0.07
+	localmake "tinyOffsetY :height * 0.03
+	localmake "tinyRadius :height * 0.013
+	circle :height / 6
+	setPenColor :lightColor
+	repeat 6 [
+		jumpForward :largeGap
+		if :drawLittleCircles? [
+			setPenSize 0
+			setFillColor :lightColor
+			circle :littleRadius
+		]
+		jumpBackward :largeGap * 0.4
+		localmake "tinyPos pos
+		jumpLeft :tinyOffsetX
+		setPenSize :tinyRadius * 0.7
+		setFillColor transparent
+		repeat 2 [
+			circle :tinyRadius
+			jumpRight :tinyOffsetX * 2
+		]
+		jumpTo :tinyPos
+		jumpForward :tinyOffsetY
+		repeat 2 [
+			circle :tinyRadius
+			jumpBackward :tinyOffsetY * 2
+		]
+		jumpTo :oldPos
+		right 360 / 6
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by:
+; https://www.pinterest.ca/pin/879609370949827685/
+; Drone footage of the crop circles is at
+; https://www.youtube.com/watch?v=lyfdaC2jKGQ
+; White Sheet Hill Wiltshire June 25, 2010
+to whiteSheet2010CropCircles :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "smallSize :height * ( (1 + :littleRadiusRatio * 1.5) / 3)
+	localmake "arcRadius :smallSize *( 1 - :littleRadiusRatio * 2) / 2
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	setFillColor :lightColor
+	repeat 6 [
+		setHeading :oldHeading + repcount * 360 / 6
+		jumpForward :arcRadius
+		right 90
+		polyStart
+		repeat 3 [
+			arcRight 60 :arcRadius
+			left 180
+		]
+		polyEnd
+		jumpTo :center
+	]
+	setHeading :oldHeading
+	setFillColor :lightColor
+	drawSmallPattern :smallSize false
+	repeat 6 [
+		jumpForward (:height - :smallSize) / 2
+		drawSmallPattern :smallSize true
+		jumpTo :center
+		right 360 / 6
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor :darkColor
+whiteSheet2010CropCircles 100

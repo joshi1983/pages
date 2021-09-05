@@ -1,0 +1,66 @@
+make "svelteOrange "#ff3e00
+make "radius1Ratio 0.307
+make "thickness1Ratio :radius1Ratio / 2
+
+to sveltePiece :height
+	localmake "oldState turtleState
+	localmake "radius1 :height * :radius1Ratio
+	localmake "len1 :height - :radius1 * 2
+	localmake "thickness1 :height * :thickness1Ratio
+	setFillColor "white
+	setPenColor :svelteOrange
+	setPenSize :thickness1
+	jumpBackward :len1 / 2
+	circlePair :radius1 :radius1 :len1
+	setLineCap "round
+	setFillColor penColor
+	backward :len1
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://commons.wikimedia.org/wiki/File:Svelte_Logo.svg
+; The logo is also at
+; https://svelte.dev/
+to svelteLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angle 57
+	localmake "pieceSize1 :height * 0.74
+	localmake "pieceVSize1 :height * (:radius1Ratio + :thickness1Ratio / 2 + (1 - :radius1Ratio * 2) * (cos :angle) / 2) * :pieceSize1 / :height
+
+	; Draw lower piece.
+	jumpForward :pieceVSize1
+	right :angle
+	sveltePiece :pieceSize1	
+
+	; Draw upper piece.
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height - :pieceVSize1
+	jumpRight :height * 0.00862
+	right :angle
+	sveltePiece :pieceSize1
+
+	; Draw connections between the upper and lower pieces.
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :pieceVSize1
+	right :angle
+	setPenSize :pieceSize1 * :thickness1Ratio
+	jumpRight penSize
+	jumpForward :pieceSize1 * (1 - :radius1Ratio * 2) / 2
+	localmake "pos1 pos
+	setPenColor "white
+	arcLeft 180 penSize
+	setPenColor :svelteOrange
+	jumpTo :pos1
+	setHeading :oldHeading + :angle
+	jumpRight penSize
+	arcLeft 180 :pieceSize1 * :radius1Ratio
+
+	setTurtleState :oldState
+end
+
+svelteLogo 100

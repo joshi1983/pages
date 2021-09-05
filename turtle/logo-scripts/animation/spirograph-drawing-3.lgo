@@ -1,0 +1,93 @@
+to drawCircles :height :timeRatio :rotationSpeeds :numIterations
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "circles [
+	]
+	localmake "originalRadius 0.245
+	localmake "r :originalRadius
+	repeat count :rotationSpeeds [
+		queue2 "circles [:r 360 * item repcount :rotationSpeeds]
+		localmake "r :r / 3
+	]
+
+	localmake "points []
+	repeat :numIterations [
+		localmake "angleScale :timeRatio * repRatio
+		setHeading :oldHeading - :angleScale * last first :circles
+		repeat count :circles [
+			localmake "info item repcount :circles
+			localmake "factor last :info
+			localmake "radius :height * first :info
+
+			if repcount <> 1 [
+				jumpForward :radius
+				setHeading :oldHeading + :factor * :angleScale
+			]
+			jumpForward :radius
+		]
+		queue2 "points pos
+		jumpTo :oldPos
+	]
+	setFillColor transparent
+	setLineJoinStyle "round
+	jumpTo first :points
+	for ["i 2 count :points] [
+		setPos item :i :points
+	]
+	localmake "lastPos pos
+	setTurtleState :oldState
+	output [:originalRadius * :height :lastPos]
+end
+
+; Inspired by:
+; https://www.facebook.com/share/v/1H61QA8KtR
+to drawBenice :height :timeRatio
+	localmake "oldState turtleState
+	localmake "rotationSpeeds []
+	localmake "base mix 12 0 :timeRatio
+	localmake "baseInt int :base
+	localmake "baseRatio :base - :baseInt
+	localmake "baseRatio clamp (:baseRatio - 0.1) / 0.8 0 1
+	localmake "base :baseInt + interpolateRatio easeInOut :baseRatio
+	repeat 6 [
+		localmake "speed power :base repcount - 1
+		if and repcount > 2 odd? repcount [
+			localmake "speed -:speed
+		]
+		queue2 "rotationSpeeds :speed
+	]
+	jumpForward :height / 2
+	localmake "numIterations int 1000 * mixItems [1 1 1 3 10 50] :timeRatio
+	setPenColor "black
+	setPenSize :height * mix 0.001 0.002 :timeRatio
+	localmake "info drawCircles :height 1 :rotationSpeeds :numIterations
+	setPenColor "red
+	setPenSize :height * 0.005
+	circle first :info
+	setPenSize 0
+	setFillColor "lime
+	jumpTo last :info
+	circle :height * 0.01
+	setTurtleState :oldState
+end
+
+make "timeRatio interpolateRatio easeIn animation.clampedTimeRatio
+drawBenice 100 :timeRatio
+
+to animation.snapshotstyle
+	output createPList2 [
+		["position.y 50]
+		["zoom.scale 6]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 20
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+		["thumnailTime :seconds * 0.5]
+	]
+end

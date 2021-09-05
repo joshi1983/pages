@@ -1,0 +1,28 @@
+; Inspired by:
+; https://ca.pinterest.com/pin/41376890313055860
+to kashmir :height
+	localmake "oldState turtleState
+	localmake "numIterations 71
+	localmake "gradientColors [
+		[[0 "yellow] [0.6 "#fd0] [0.8 "#c05] [1 "#0b00]]
+		[[0 "#fff] [0.5 "#b0f0] [0.8 "#0f0f]]
+		[[0 "white] [0.15 "white] [0.35 "#0bf] [0.5 "#800f] [0.8 "#00ff]]
+	]
+	jumpForward :height / 2
+	setPenSize :height * 0.0025
+	setFillColor transparent
+	repeat count :gradientColors [
+		localmake "gradient createRadialGradient pos :height / 2 
+			createPList2 item repcount :gradientColors 
+		setPenGradient :gradient
+		repeat :numIterations [
+			circleLeft :height / 4
+			right 360 / :numIterations
+		]
+		right 360 / :numIterations / count :gradientColors
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+kashmir 100

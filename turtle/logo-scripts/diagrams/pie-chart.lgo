@@ -1,0 +1,53 @@
+; piecesInfo should be a list of information on each piece of the pie graph.
+; The sum of ratios in the pieces should add up to exactly 1.
+to pieChart :piecesInfo :radius :labelColor
+	localmake "oldHeading heading
+	localmake "thickness :radius * 0.01
+	localmake "radius1 :radius - :thickness / 2	
+	jumpForward :radius
+	localmake "center pos
+	setPenSize :thickness
+	setFontSize :radius * 0.2
+	setFontFamily 'Arial'
+	repeat count :piecesInfo [
+		localmake "pieceInfo item repcount :piecesInfo
+		localmake "ratio item 2 :pieceInfo
+		localmake "angle 360 * :ratio
+		setFillColor first :pieceInfo
+		localmake "headingBeforePoly heading
+		setPenSize :thickness
+		polyStart
+		jumpForward :radius1
+		left 90
+		arcLeft :angle :radius1
+		polyEnd
+
+		; Draw the label.
+		setPenSize fontSize * 0.02
+		setFillColor :labelColor
+		setHeading :headingBeforePoly - :angle / 2
+		jumpTo :center
+		jumpForward :radius1 / 2
+		setHeading :oldHeading + 90
+		localmake "labelPos1 pos
+		localmake "text last :pieceInfo
+		jumpBackward fontSize * (count :text) * 0.3
+		label :text
+
+		; Draw the percentage.
+		jumpTo :labelPos1
+		localmake "text (combine round :ratio * 100 '%' )
+		jumpRight fontSize
+		jumpBackward fontSize * (count :text) * 0.3
+		label :text
+
+		setHeading :headingBeforePoly - :angle
+		jumpTo :center
+	]
+end
+
+; The 0.75 comes from the 75% mentioned at:
+; https://en.wikipedia.org/wiki/Water_distribution_on_Earth#Distribution_of_saline_and_fresh_water
+make "waterRatio 0.75
+pieChart [
+	["green 1 - :waterRatio "Land] ["blue :waterRatio "Water]] 100 "white

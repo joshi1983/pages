@@ -1,0 +1,61 @@
+to drawInnerShape :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "lines1 [
+		[30 0] [0.3] [-20 0] [0.51] [-55.074564 0]
+		[0.3369374] [-44.92544 0]
+	]
+	setPenSize 0
+	setFillColor "#abdaf4
+	drawArcLineShape [0 0
+		(combine :lines1 reverse :lines1)
+	] :height
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.5
+	setFillColor "#275c7b
+	ellipse :height * 0.013 :height * 0.4
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://scontent-yyz1-1.xx.fbcdn.net/v/t39.30808-1/275243682_109904168302566_5626012168912130281_n.jpg?stp=dst-jpg_s200x200_tt6&_nc_cat=100&ccb=1-7&_nc_sid=2d3e12&_nc_ohc=MePKzQ-tXoMQ7kNvwGmr5fx&_nc_oc=Adn4uLUNN4leQycD-uSGdO2MOCXoEp-H9b5aqTbXKPRcT53Q4uhd4Y32s-Ub3aXOMKw&_nc_zt=24&_nc_ht=scontent-yyz1-1.xx&_nc_gid=edPWYR10yhYsgL_Cn9cfdA&oh=00_AfWjgX2dHddKsKLMu1OABcdAwKeAzxfekzcJKthBP0kK4Q&oe=68983946
+;
+; The logo is also at:
+; https://www.facebook.com/NiveeCyber/
+to niveeCyberSecurityLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "numDashes 67
+	localmake "redRadius :height * 0.405
+	localmake "innerShapeHeight :height * 0.22
+	localmake "numInnerShapes 16
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	setFillColor "#ce3635
+	circle :redRadius
+	setPenSize :height * 0.025
+	setLineCap "round
+	setPenGradient createRadialGradient pos :height / 2 createPList2 [
+		[0.83 "white] [1 "#426777]
+	]
+	repeat :numDashes [
+		setHeading :oldHeading + 4.5 + repcount * 360 / :numDashes
+		jumpForward (:height - penSize) / 2
+		left 150
+		forward :height * 0.06
+		jumpTo :center
+	]
+	repeat :numInnerShapes [
+		setHeading :oldHeading + repcount * 360 / :numInnerShapes
+		jumpForward :redRadius - :innerShapeHeight
+		drawInnerShape :innerShapeHeight
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+niveeCyberSecurityLogo 100

@@ -1,0 +1,28 @@
+! Tests an integer by Fermat's Theorem to see whether prime.
+! Integer must be positive, greater than 2.
+! Checks whether 2^(n-1) is congruent to 1 mod n.
+!
+! **NOTE:** type 'do huge' in the command window before running
+
+DECLARE HUGE n, n1, power
+
+PRINT "Test for prime numbers"
+PRINT "Type '0' to stop"
+PRINT
+DO
+   PRINT "Number";
+   INPUT n
+   IF n = 0 then STOP             ! Type '0' to stop
+   LET n1 = n - 1                 ! n-1
+   LET power = mod(2^n1,n)        ! 2^(n-1) mod n
+   IF power = 1 then
+      PRINT "Probably a prime"
+
+   ELSE
+      PRINT "Not a prime"
+
+   END IF
+
+LOOP
+
+END

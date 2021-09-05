@@ -1,0 +1,52 @@
+; Approximates a hyperbolic arc
+; We want the hyperbolic arc angle + the larger arc angles to add up to exactly 90 degrees.
+; This hyperbolic arc is at an angle of 78 degrees.
+; The 78 comes from 90 - (9 + 15) / 2.
+; The 9 and 15 are from the youtubeLogo procedure.
+to hyperbolicArcLeft :size
+	; The more circular arcs, the more accurately 
+	; you can approximate a hyperbolic curve.
+	; We're using only 3 here to keep things simple and yet looking accurate enough.
+	arcLeft 18.5 :size
+	arcLeft 41 :size * 0.59
+	arcLeft 18.5 :size
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/YouTube#/media/File:YouTube_Logo_2017.svg
+to youtubeLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "oldPos pos
+	localmake "cornerSize :height * 0.27
+	localmake "arcAngle1 9
+	localmake "arcAngle2 15
+	localmake "largeArcRadius :height * 6.43
+	localmake "smallArcRadius :height * 2.2955165
+	left 90
+	setPenSize 0
+	arcRight :arcAngle1 / 2 :largeArcRadius
+	right 180
+	setFillColor "red
+	; draw red background
+	polyStart
+	repeat 2 [
+		arcLeft :arcAngle1 :largeArcRadius
+		hyperbolicArcLeft :cornerSize
+		arcLeft :arcAngle2 :smallArcRadius
+		hyperbolicArcLeft :cornerSize
+	]
+	polyEnd
+
+	; draw white triangle
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height / 2
+	jumpLeft :height * 0.1435
+	right 90
+	setFillColor "white
+	isoTriangle :height * 0.4284 :height * 0.371
+	setTurtleState :oldState
+end
+
+youtubeLogo 100

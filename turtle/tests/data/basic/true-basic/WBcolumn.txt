@@ -1,0 +1,107 @@
+MODULE WBcolumn                   ! 1992/12/05
+
+    ! SUB WB_column (l$(), options$)
+    ! SUB CurrentColumn (l$())
+    ! SUB InterpretColumnOptions (option$(), dir$)
+
+    LIBRARY "{WB_c}WButilit.trc"
+    LIBRARY "{WB_c}ExecLib.trc"
+
+    PRIVATE CurrentColumn, InterpretColumnOptions
+
+    OPTION TYPO
+
+    SUB WB_column (l$(), options$)
+
+        LOCAL option$(0)
+        LOCAL temp$, n$(0), size(0), dlm$(0), tlm$(0), typ$(0), typ(0), vol$
+        LOCAL dir$, olddir$, uboundn, i, k, filesOnly
+
+        CALL WB_Decode (options$, option$())
+        CALL InterpretColumnOptions (option$(), dir$, temp$, filesOnly)
+
+        IF dir$ = "" then
+           CALL CurrentColumn (l$())
+           EXIT SUB               ! Nothing more to be done.
+        ELSE IF dir$ = "current directory" then
+           CALL Exec_ReadDir (temp$, n$(), size(), dlm$(), tlm$(), typ$(), vol$)
+           LET dir$ = ""          ! Reset dir$ to null
+        ELSE                      ! Must be a remote directory
+           CALL WB_MakeLegalDir (dir$)
+           CALL Exec_AskDir (olddir$)
+           CALL Exec_ChDir (dir$)
+           CALL Exec_AskDir (dir$)
+           CALL Exec_ReadDir (temp$, n$(), size(), dlm$(), tlm$(), typ$(), vol$)
+           CALL Exec_ChDir (olddir$)
+        END IF
+
+        SET NAME "Result"
+
+        LET uboundn = ubound(n$)
+        MAT Redim l$(uboundn)
+        LET k = 0
+        FOR i = 1 to uboundn
+            IF filesOnly = 0 or typ$(i)[1:1] = "-" then
+               LET k = k + 1
+               LET l$(k) = dir$ & n$(i)
+            END IF
+        NEXT i
+        MAT Redim l$(k)
+
+    END SUB
+
+    SUB CurrentColumn (l$())
+
+        LOCAL m$(0), llen, mlen, j, i, s$, p1, p2, name$
+
+        LET llen = ubound(l$)
+        LET mlen = 4*llen
+        MAT redim m$(4*ubound(l$))
+        LET j = 0
+        FOR i = 1 to llen
+            LET s$ = l$(i)
+            DO
+               LET p1 = ncpos(s$, " ")
+               IF p1 = 0 then EXIT DO
+               LET p2 = pos(s$, " ", p1)
+               IF p2 = 0 then LET p2 = len(s$)+1
+               LET name$ = s$[p1:p2-1]
+               LET s$ = s$[p2:1000]
+               LET j = j+1
+               IF j > mlen then
+                  LET mlen = mlen + 10
+                  MAT redim m$(mlen)
+               END IF
+               LET m$(j) = name$
+            LOOP
+        NEXT i
+        MAT redim m$(j)
+        MAT l$ = m$
+
+    END SUB
+
+    SUB InterpretColumnOptions (option$(), dir$, template$, filesOnly)
+
+        LOCAL i, nopts
+
+        LET nopts = ubound(option$)
+
+        LET dir$, template$ = ""
+        LET filesOnly = 0
+        FOR i = 1 to nopts
+            IF option$(i) = "-d" then
+               LET dir$ = "current directory"
+            ELSE IF option$(i)[1:2] = "-d" then
+               LET dir$ = option$(i)[3:1000]
+            ELSE IF option$(i) = "-f" then
+               LET filesOnly = 1
+            ELSE IF option$(i)[1:2] = "-t" then
+               LET template$ = option$(i)[3:1000]
+            ELSE
+               CALL WB_Error ("Column error. USAGE: do column [, -d[DIR] [-f] [-tTEMP]]")
+            END IF
+        NEXT i
+
+    END SUB
+
+END MODULE

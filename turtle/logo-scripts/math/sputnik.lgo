@@ -1,0 +1,38 @@
+; Inspired by
+; https://www.pinterest.ca/pin/190628996716003950
+; This is also shown at:
+; https://geometrydaily.tumblr.com/post/37555826031/344-sputnik-second-advent-sunday-means-even
+;
+; The design may have been made to resemble the antenna of the
+; Soviet space probe explained at:
+; https://en.wikipedia.org/wiki/Sputnik_1
+to sputnik :height
+	localmake "oldState turtleState
+	localmake "tinyRadius :height * 0.013
+	setPenSize :height * 0.0015
+	localmake "maxRadius ((:height - penSize) / 2 - :tinyRadius) / cos 30
+	localmake "len1 0.06
+	localmake "len2 0.19
+	localmake "linesInfo [
+		[0.123 0.375]
+		[:len1 :len2 1 - :len1 - :len2]
+	]
+	localmake "numLines 12
+	jumpForward :height / 2
+	localmake "center pos
+	setPenColor "#81274b
+	setFillColor penColor
+	repeat :numLines [
+		localmake "index 1 + remainder 1 + repcount 2
+		localmake "lineLengths item :index :linesInfo
+		repeat count :lineLengths [
+			forward :maxRadius * item repcount :lineLengths
+			circle :tinyRadius
+		]
+		jumpTo :center
+		right 360 / :numLines
+	]
+	setTurtleState :oldState
+end
+
+sputnik 100

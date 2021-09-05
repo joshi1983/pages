@@ -1,0 +1,108 @@
+make "klmBlue "#00a1e4
+
+to drawCrown :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "crossSize :height * 0.172
+	localmake "circleRadius :height * 0.198
+	localmake "separation :height * 0.4565
+	stripes :height * 1.37 :height * 0.2365 [fillColor]
+	jumpForward :height * 0.485
+	jumpLeft :separation * 1.5
+	setPenSize 0
+	repeat 4 [
+		circle :circleRadius
+		jumpRight :separation
+	]
+	jumpTo :oldPos
+	jumpForward :height - :crossSize
+	localmake "center pos
+	repeat 2 [
+		jumpBackward :crossSize
+		stripes :height * 0.11 :crossSize * 2 [fillColor]
+		jumpTo :center
+		right 90
+	]
+	setTurtleState :oldState
+end
+
+to drawK :fontHeight
+	localmake "oldState turtleState
+	setPenSize 0
+	jumpLeft :fontHeight * 0.374
+	stripes :fontHeight * 0.38 :fontHeight [fillColor]
+	jumpRight :fontHeight * 0.806
+	parallelogram :fontHeight * 0.5 :fontHeight * 0.8 -45
+	jumpForward :fontHeight
+	right 180
+	jumpRight :fontHeight * 0.053
+	parallelogram :fontHeight * 0.38 :fontHeight * 0.8 45.2
+	setTurtleState :oldState
+end
+
+to drawL :fontHeight
+	localmake "oldPos pos
+	stripes :fontHeight * 1.007 :fontHeight * 0.253 [fillColor]
+	jumpLeft :fontHeight * 0.31
+	stripes :fontHeight * 0.388 :fontHeight [fillColor]
+	jumpTo :oldPos
+end
+
+to drawM :fontHeight
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "angle 19.5
+	setPenSize 0
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		localmake "fontHeight1 :sign * :fontHeight
+		jumpRight :fontHeight1 * 0.01
+		parallelogram :fontHeight * 0.33 :fontHeight / cos :angle :sign * :angle
+		jumpRight :fontHeight1 * 0.634
+		stripes :fontHeight * 0.38 :fontHeight [fillColor]
+		jumpTo :oldPos
+	]
+	setTurtleState :oldState
+end
+
+to drawKLMLetters :fontHeight
+	localmake "oldPos pos
+	jumpLeft :fontHeight * 1.43
+	drawK :fontHeight
+	jumpRight :fontHeight * 1.179
+	drawL :fontHeight
+	jumpRight :fontHeight * 1.425
+	drawM :fontHeight
+
+	jumpTo :oldPos
+end
+
+; Inspired by:
+; https://en.wikipedia.org/wiki/KLM#/media/File:KLM_logo.svg
+to klmLogo :height :color
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "crownHeight :height * 0.47311
+	setFillColor :color
+	jumpForward :height - :crownHeight
+	drawCrown :crownHeight
+	jumpTo :oldPos
+	drawKLMLetters :height * 0.4313
+	setTurtleState :oldState
+end
+
+to klmWhiteOnBlueLogo :height
+	localmake "oldState turtleState
+	localmake "innerHeight :height * 0.8
+	stripes :height * 2 :height [:klmBlue]
+	jumpForward (:height - :innerHeight) / 2
+	klmLogo :innerHeight "white
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 5
+jumpLeft :separation * 0.5
+klmLogo :height :klmBlue
+jumpRight :separation
+klmWhiteOnBlueLogo :height

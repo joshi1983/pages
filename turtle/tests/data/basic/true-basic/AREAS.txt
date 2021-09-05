@@ -1,0 +1,27 @@
+LIBRARY "BronzeTD.trc"
+DO
+   CALL TD_Message("GEOMETRY","Select a button","Triangle|Rectangle|Circle",1,type)
+   IF type=1 then                 ! triangles
+      CALL TD_LineInput("Enter base length of triangle",text$)
+      LET base=val(text$)         ! convert text to number
+      CALL TD_LineInput("Enter height of triangle",text$)
+      LET height=val(text$)       ! convert text to number
+      LET area=base*height/2      ! area calculation
+   ELSEIF type=2 then             ! rectangles
+      CALL TD_LineInput("Enter length of rectangle",text$)
+      LET length=val(text$)       ! convert text to number
+      CALL TD_LineInput("Enter width of rectangle",text$)
+      LET width=val(text$)        ! convert text to number
+      LET area=length*width       ! area calculation
+   ELSEIF type=3 then             ! circles
+      CALL TD_LineInput("Enter radius of circle",text$)
+      LET radius=val(text$)       ! convert text to number
+      LET area=pi*radius^2        ! area calculation
+   END IF
+   LET answer$="The area is " & str$(area) & "|Do you want to continue?"
+   CALL TD_Message("ANSWER",answer$,"More|Quit",1,result)
+   IF result=2 then
+      EXIT DO
+   END IF
+LOOP
+END

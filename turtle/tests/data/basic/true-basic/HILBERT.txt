@@ -1,0 +1,53 @@
+! Space filling curve, by David Hilbert
+! PAUSE time delay added to clarify the drawing procedure
+
+SET BACK "white" ! not required in TB Bronze
+CLEAR
+
+!********ALWAYS USE THIS WHEN PLOTTING IN WINDOWS************
+ASK PIXELS px,py
+SET WINDOW 0,px-1,0,py-1          ! Make pixels work nicely
+!***********************************************************
+
+LET xc = 2^(Int(Log2(px)))
+LET yc = 2^(Int(Log2(py)))
+LET step  = Min(xc,yc)/2
+LET xbase = (px/2)-step
+LET ybase = (py/2)-step           ! Center the picture
+
+DO while step > 2
+   LET x = xbase + step/2
+   LET y = ybase + step/2
+   LET level = level + 1
+   IF end data then RESTORE
+   READ color$
+   SET COLOR color$
+   CALL Hilbert (0,step,step,0,level)
+   PLOT x,y
+   LET step = step / 2
+LOOP
+
+DATA magenta, blue, cyan, green
+
+SUB Draw (xs, ys)
+
+    PLOT x,y;
+    LET x = x + xs
+    LET y = y + ys
+
+END SUB
+
+SUB Hilbert (xs, ys, x2, y2, lev)
+
+    IF lev = 0 then EXIT SUB
+    CALL Hilbert (x2, y2, xs, ys, lev-1)
+    CALL Draw (xs, ys)
+    CALL Hilbert (xs, ys, x2, y2, lev-1)
+    CALL Draw (x2, y2)
+    CALL Hilbert (xs, ys, x2, y2, lev-1)
+    CALL Draw (-xs, -ys)
+    CALL Hilbert (-x2, -y2, -xs, -ys, lev-1)
+    PAUSE .05 ! time delay
+END SUB
+
+END

@@ -1,0 +1,163 @@
+
+to drawGround :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "groundLines [
+		[-90 0] [0.05] [-22 0.2] [22 0.1] [0.06]
+		[10 0.1] [-10 0.1] [0.25] [10 0.2] [-10 0.2]
+		[0.07] [-12 0.2] [12 0.2]  [0.270034]
+	]
+	jumpLeft :height / 2
+	localmake "bottomLeft pos
+	setFillColor "green
+	setPenSize 0
+	polyStart
+	jumpForward :height * 0.077
+	localmake "groundTopLeft pos
+	arcLines :groundLines :height
+	setHeading :oldHeading + 180
+	jumpForward distanceToLine :oldPos :bottomLeft
+	polyEnd
+
+	jumpTo :groundTopLeft
+	setHeading :oldHeading
+	setPenSize :height * 0.005
+	setLineCap "butt
+	setPenColor "black
+	arcLines :groundLines :height
+	setTurtleState :oldState
+end
+
+to drawParachute :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "lines1Part1 [
+		[90 0] [30 0.2] [28 0.6] [0.17]
+		[118 0]
+	]
+	localmake "lines1 combine :lines1Part1 [
+		[0.2] [4 2.85855]
+	]
+	localmake "hangBarWidth :height * 0.12
+	setLineJoinStyle "round
+	setPenColor "black
+	setPenSize :height * 0.01
+	repeat 8 [
+		localmake "angle 27 * mix -1 1 repRatio
+		jumpRight :hangBarWidth / 2 * mix 1 -1 repRatio
+		left :angle
+		stripes penSize :height * 0.64 / cos :angle [penColor]
+		jumpTo :oldPos
+		setHeading :oldHeading
+	]
+	stripes :hangBarWidth penSize ["black]
+	
+	setFillColor "lime
+	drawArcLineShape [0 1
+		combine :lines1 reverse :lines1
+	] :height	
+	setFillColor "red
+	drawArcLineShapes [
+		[0 1
+			combine :lines1Part1 [[0.13] [67 0] [0.1]
+			[-20 1]]
+		]
+		[0 1
+			[[180 0] [0.393] [90 0] [6.2 2.5]
+			[106 0] [20 1]]
+		]
+	] :height
+
+	setTurtleState :oldState
+end
+
+to drawHead :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "eyeSeparation :height * 0.35
+	jumpForward :height / 2
+	setFillColor "#fda
+	setPenSize :height * 0.05
+	circle :height / 2
+
+	; Draw hair.
+	setPenSize :height * 0.15
+	right 90
+	setLineCap "round
+	arc 180 :height / 2
+
+	setHeading :oldHeading
+	jumpBackward :height * 0.05
+	jumpLeft :eyeSeparation / 2
+	setFillColor "white
+	setPenSize :height * 0.02
+	repeat 2 [
+		circle :height * 0.07
+		jumpRight :eyeSeparation
+	]
+	jumpTo :oldPos
+	jumpForward :height * 0.2
+	setFillColor "black
+	circle :height * 0.07	
+	setTurtleState :oldState
+end
+
+to drawLameGuy :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "armShape [0.1 1
+		[[-100 0] [-110 0.2] [-30 0.35] [-120 0]
+		[0.08] [-50 0] [90 0.225]]
+	]
+	localmake "footSeparation :height * 0.12
+	localmake "footHeight :height * 0.13
+	setPenSize :height * 0.01
+	setFillColor "green
+	drawArcLineShape :armShape :height
+	drawArcLineShape :armShape -:height
+
+	; torso and legs
+	jumpForward :height * 0.52
+	rect :height * 0.2 :height * 0.32
+	jumpBackward :height * 0.3
+	rect :height * 0.18 :height * 0.32
+
+	jumpBackward :height * 0.15
+	stripes penSize :height * 0.25 [penColor]
+
+	; feet
+	jumpTo :oldPos
+	jumpLeft :footSeparation / 2
+	jumpForward (:footHeight + penSize) / 2
+	repeat 2 [
+		circle (:footHeight - penSize) / 2
+		jumpRight :footSeparation
+	]
+
+	jumpTo :oldPos
+	jumpForward :height * 0.69
+	drawHead :height * 0.18
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://www.youtube.com/@MyLameAnimations
+to myLameAnimationsLogo :height
+	localmake "oldState turtleState
+	localmake "lameGuyHeight :height * 0.275
+	stripes :height :height ["aqua]
+	drawGround :height
+	jumpForward :height * 0.464
+	jumpLeft :height * 0.013
+	drawParachute :height * 0.484
+	left 8
+	jumpBackward :lameGuyHeight
+	drawLameGuy :lameGuyHeight
+	
+	setTurtleState :oldState
+end
+
+myLameAnimationsLogo 100

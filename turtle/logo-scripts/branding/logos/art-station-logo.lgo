@@ -1,0 +1,53 @@
+; Inspired by logo at
+; https://www.artstation.com/
+to artStationLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angle1 30.09
+	localmake "angle2 90 - :angle1
+	localmake "triangleHeight :height * 0.4463197
+	localmake "triangleWidth :triangleHeight * 2 * tan :angle1
+	localmake "aGap1 :height * 0.16272
+	localmake "middleWidth (:triangleHeight + :aGap1) * 2 * tan :angle1
+	localmake "height1 :height * 0.39176
+	localmake "bottomSlantedHeight1 (:height1 - :aGap1) / cos :angle1
+	localmake "bottomCornerRadius :height * 0.115
+	localmake "bottomCornerHeight :bottomCornerRadius * (1 - sin :angle1)
+	localmake "bottomCornerOffset :bottomCornerRadius * (cos :angle1) -
+		:bottomCornerHeight * tan :angle1
+	localmake "bottomWidth :middleWidth -
+		:bottomCornerOffset
+	localmake "size1 :height * 0.195
+	localmake "rightWidth :height * 0.75808
+	jumpForward :height1
+	setPenSize 0
+	setFillColor "#13AFF0
+	isoTriangle :triangleWidth :triangleHeight
+	jumpBackward :aGap1
+	jumpLeft :middleWidth / 2
+	polyStart
+	jumpRight :middleWidth
+	right 180 - :angle1
+	jumpForward :bottomSlantedHeight1
+	setHeading :oldHeading - 90
+	jumpForward :bottomWidth
+	arcRight 90 - :angle1 :bottomCornerRadius
+	polyEnd
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpRight :height * 0.67373
+	right :angle1
+	polyStart
+	jumpForward :size1
+	arcLeft :angle2 :bottomCornerRadius
+	jumpForward :rightWidth
+	arcLeft :angle2 :bottomCornerRadius
+	jumpForward :size1
+	polyEnd
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+artStationLogo 100

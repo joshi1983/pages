@@ -1,0 +1,44 @@
+; Inspired by a flag at:
+; https://en.wikipedia.org/wiki/Flag_of_the_Democratic_Republic_of_the_Congo#/media/File:Flag_of_the_Democratic_Republic_of_the_Congo.svg
+to democraticRepublicOfCongoFlag :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "width :height * 4 / 3
+	localmake "len1 :height * 0.25
+	localmake "len2 :height * 0.084
+	localmake "redHeight :height * 0.2
+	localmake "angle arcTan (:height - :redHeight) / :width
+	stripes :width :height ["#007fff]
+	setFillColor "#f7d618
+	jumpLeft :height * 0.423333
+	jumpForward :height * 0.738
+	setPenSize 0
+	regularStar :height * 0.2 5
+
+	jumpTo :oldPos
+	jumpLeft :width / 2 - :len2
+	localmake "bottomLeft1 pos
+	jumpLeft :len2
+	localmake "bottomLeft pos
+	jumpForward :len1
+	localmake "left pos
+	jumpTo :oldPos
+	jumpForward :height
+	jumpRight :width / 2 - :len2
+	polyStart
+	jumpRight :len2
+	jumpBackward :len1
+	jumpTo :bottomLeft1
+	jumpTo :bottomLeft
+	jumpTo :left
+	polyEnd
+	setFillColor "#ce1021
+	jumpTo :bottomLeft
+	jumpForward :redHeight / 2
+	right 90
+	parallelogram :redHeight :width / cos :angle -:angle
+
+	setTurtleState :oldState
+end
+
+democraticRepublicOfCongoFlag 100

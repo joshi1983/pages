@@ -1,0 +1,13 @@
+; Converts the specified 64-bit integer to a 8-character string
+; Similar to QB64's MK$ function where the first parameter is _integer64.
+; https://qb64phoenix.com/qb64wiki/index.php/MK$
+to makeInteger64String :integer64Val
+	localmake "result "
+	localmake "den 1
+	repeat 8 [
+		localmake "byteVal remainder (int :integer64Val / :den) 256
+		localmake "result word ( char :byteVal ) :result
+		localmake "den :den * 256
+	]
+	output :result
+end

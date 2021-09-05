@@ -1,0 +1,51 @@
+; Inspired by an animation in the first few seconds at:
+; https://www.youtube.com/watch?v=ycUYPnNLhOs
+;
+; In case that link stops working,
+; it is a part of the Battle Beyond The Stars movie while mentioning
+; New World Pictures and Roger Corman.
+to battleBeyondTheStarsIntro :height :t
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "arcRadius :height * 0.49
+	localmake "offsetAngle mix 0 60 :t
+	setPenColor "#88f
+	setPenSize :height * 0.003
+	jumpForward :height / 2
+	localmake "center pos
+	localmake "radius (:height - penSize) / 2
+	circle :radius
+	setLineJoinStyle "round
+	;setPenSize penSize * mix 0 1 interpolateRatio easeIn clamp :t * 3 0 1
+	repeat 4 [
+		localmake "heading1 :oldHeading + 45 + repcount * 360 / 4
+		setHeading :heading1
+		penUp
+		left 90
+		jumpForward :radius
+		left 180
+		arcRight :offsetAngle :arcRadius
+
+		penDown
+		localmake "endPos pos
+		circle 2
+
+		jumpTo :center
+		setHeading :heading1
+		jumpForward :radius
+		localmake "d distance :endPos
+		localmake "angle 2 * arcSin :d / 2 / :arcRadius
+		setHeading (towards :endPos) - :angle / 2
+		arcRight :angle :arcRadius
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+make "t animation.timeRatio
+battleBeyondTheStarsIntro 100 :t
+make "height 104.2
+jumpLeft :height * 0.006
+jumpBackward :height * 0.0085
+imageAlpha :height * 525 / 473 :height 'local://image.png' 0.5

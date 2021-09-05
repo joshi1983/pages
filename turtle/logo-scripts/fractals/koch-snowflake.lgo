@@ -1,0 +1,36 @@
+; This draws a Koch snowflake
+; The pattern is explained at:
+; https://en.wikipedia.org/wiki/Koch_snowflake
+
+to drawKochLine :len
+	ifelse :len < 1 [
+		forward :len
+	] [
+		drawKochLine :len / 3
+		left 60
+		drawKochLine :len / 3
+		right 120
+		drawKochLine :len / 3
+		left 60
+		drawKochLine :len / 3
+	]
+end
+
+to drawKochSnowflake :size
+	ifelse :size < 50 [
+		forward :size
+	] [
+		repeat 3 [
+			drawKochLine :size / 3
+			right 120
+		]
+	]
+end
+
+setScreenColor "black
+setFillColor "white
+setPenColor "#08f
+setPenSize 0.2
+polyStart
+drawKochSnowflake 300
+polyEnd

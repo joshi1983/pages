@@ -1,0 +1,26 @@
+<code>print random 1000
+; prints some number from 0 to 999 inclusive.
+; We don't know what that number will be until running.
+
+rerandom
+
+print random 1000
+; prints 341 every time because that's
+; WebLogo's internal pseudorandom generator works 
+; immediately after it is reset by the rerandom command.
+
+print random 1000
+; prints 251 every time.
+; The 341 is not repeated because a real random number would be 
+; independently selected from its previous.
+; The pseudorandom number generator tries to be as much like a 
+; real random number generator.
+; It is just also deterministic and more predictable.
+
+(rerandom 5)
+print random 1000
+; prints 957 every time.
+
+(rerandom 0) ; same as rerandom with no arguments.
+print random 1000
+; prints 341 for the same reason as earlier.</code>

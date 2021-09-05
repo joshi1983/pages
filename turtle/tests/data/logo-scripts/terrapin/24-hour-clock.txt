@@ -1,0 +1,106 @@
+; Copied from https://resources.terrapinlogo.com/logolib/clock.html
+; The author's email address is: tekwiz@beyondbb.com
+TO START
+    CLEANUP
+    SETUP_SCREEN
+    SETUP_OPTIONS
+    RUN [CHANGE_TIME]
+    SETBG 0
+END
+
+TO STARTUP
+    CT
+    PU
+    HOME
+    PD
+    SETUP_SCREEN
+    SETUP_OPTIONS
+    RUN [CHANGE_TIME]
+END
+
+TO CLEANUP
+    CLEAN
+    CS
+    DRAW
+    SS
+    CT
+    SETBG 0
+END
+
+TO SETUP_SCREEN
+    HT
+    PU
+    SETW 8
+    TELL [0 1]
+    SETXY [-200 -50]
+    PD
+    TELL 0
+    SETPC 0
+    (STAMPRECT 400 100 "TRUE)
+    PU
+    FD 100
+    RT 90
+    FD 14
+    SETPC 12
+    SETBG 0
+    PD
+    SETBG 0
+END
+
+TO CHANGE_TIME
+    SETFONT "TIMES 60 1
+    SETBG 0
+    TELL 0
+    ASK 1 [SETPOS [-200 -50]]
+    REPEAT 43200 [MAKE "H (FIRST TIME) \
+    MAKE "M (ITEM 2 TIME) \
+    MAKE "S (LAST TIME) \
+    MAKE "C (CHAR 58) \
+    IF (COUNT :H) < 2 [MAKE "H WORD 0 :H] \
+    IF (COUNT :M) < 2 [MAKE "M WORD 0 :M] \
+    IF (COUNT :S) < 2 [MAKE "S WORD 0 :S] \
+    SETBG 0 \
+    TT (LIST :H :C :M :C :S) \
+    WHILE [:S = (LAST TIME)] [] \
+    ASK 1 [(STAMPRECT 400 100 "TRUE)]]
+    CEASE
+END
+
+TO SETUP_OPTIONS
+    PR "|Welcome to my clock. Here are some options for you.|
+    PR "|To stop the clock, click the red light.|
+    PR "|To learn about the author, type "author".|
+    PR "|To learn about this program, type "about".|
+    PR "|To restart the clock, type "startup".|
+END
+
+TO AUTHOR
+    ED "AUTHOR_RJ
+END
+
+TO AUTHOR_RJ
+    ;My name is RJ.
+    ;I was 14 when I made this.
+    ;I am home schooled,
+    ;and I have an endless fascination
+    ;for electronics and programming.
+    ;Hope you have fun with this program!
+END
+
+TO CEASE
+    PR "|STOPPED!!|
+    PR "|To restart.  Type "startup".|
+    HALT
+END
+
+TO ABOUT
+    ED "ABOUT_CLOCK
+END
+
+TO ABOUT_CLOCK
+    ;This is a 24-hour clock
+    ;that will run for 12 hours
+    ;then stop.
+END
+
+START

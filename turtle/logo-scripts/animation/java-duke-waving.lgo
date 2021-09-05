@@ -1,0 +1,137 @@
+to drawNose :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "colorStops createPList2 [
+		[0 "#fff] [0.1 "#f88] [0.7 "#f00] [1 "#f00]
+	]
+	jumpForward :height * 0.22
+	jumpLeft :height * 0.18
+	setFillGradient createRadialGradient pos :height / 2 :colorStops
+	jumpTo :oldPos
+	setPenColor "black
+	setPenSize :height * 0.1
+	ellipse :height * 0.53 :height * 0.45
+	setTurtleState :oldState
+end
+
+to drawTorsoAndFace :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	jumpForward :height * 0.893
+	jumpLeft :height * 0.157
+	setPenSize 0
+	setFillColor "black
+	polyStart
+	arcLines [[-163 0] [-8 0.16] [-5.5 0.25] [-5.5 1] [0.15] [-8.4 0.5]
+	[0.3] [8 0.7] [0.07] [20 0.08] [60 0.028] [30 0.05] [21 0.1] [0.05]
+	[-5 0.8] [-23 0.15] [-30 0.083] [-30 0.117] [-8 0.5] [8.4 0.2]
+	[90 0.048] [30 0.075] [18 0.2] [5 1.4] [10 0.3] [6.8 1.6]
+	[-30 0.11] [-20 0.2] [176 0.01] [-60 0.05] [-56 0.022] [20 1.1]
+	[10 0.23]] :height
+	polyEnd
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.4965
+	jumpLeft :height * 0.1347
+	setFillColor "white
+	polyStart
+	arcLines [[-54 0] [-15 0.8] [-17.7 0.12] [-60 0] [-20 0.9]
+	[-20 0.72] [-20 0.08] [-40 0.024] [-70 0.027] [-15 0.1]
+	[25 0.26] [50 0.11] [25 0.2] [8 0.4] [-20 0.18] [-110 0.017]
+	[-12 0.3] [-8 2]] :height
+	polyEnd
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.558
+	jumpLeft :height * 0.02
+	left 20
+	drawNose :height * 0.18
+	setTurtleState :oldState
+end
+
+to drawHand :height
+	localmake "oldState turtleState
+	right 90
+	setPenSize 0
+	setFillColor "black
+	polyStart
+	arcLines [[30 0.3] [31 0.26] [21 0.4] [-10 0.5] [-10 0.7] [-14.5 0.1]
+	[-7 1] [20 0.25] [50 0.075] [40 0.065] [60 0.145] [15 0.32] [9.1 1.1]
+	[-120 0] [-25 0.1] [-15 0.45] [0.1] [20 0.3] [40 0.06] [35 0.155]
+	[60 0.055] [15 0.25] [19 1.01] [-148 0] [-25 0.36] [-1.3 5] [20 0.14]
+	[70 0.069] [16 0.2] [45 0.08] [21 0.25] [26.5 0.97] [-124 0] [20 0.5]
+	[30 0.1] [65 0.1] [62 0.073] [11 0.2] [0.03] [-50 0.175] [6 1] [20 0.12]
+	[0.011] [30 0.1]
+	] :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+to drawArmWithHand :scale :angle
+	localmake "oldState turtleState
+	localmake "minRadiusRatio 0.025
+	localmake "numArmParts 10
+	localmake "step :scale * 0.48 / :numArmParts
+	localmake "remainingAngle :angle
+	setFillColor "black
+	setPenSize 0
+	localmake "radius :scale * :minRadiusRatio
+	repeat :numArmParts [
+		localmake "ratio interpolateRatio easeInOut repRatio
+ 		localmake "ratio power :ratio 4
+		localmake "nextRadius :scale * mix 0.15 :minRadiusRatio :ratio
+		circlePair :radius :nextRadius :step
+		localmake "a :remainingAngle / :numArmParts
+		left :a
+		localmake "remainingAngle :remainingAngle - :a
+		localmake "radius :nextRadius
+	]
+	jumpBackward :radius * 1.2
+	right 8
+	drawHand :scale * 0.75
+	setTurtleState :oldState
+end
+
+to drawLeftArm :height
+	setPenSize 0
+	setFillColor "black
+	drawArcLineShape [-0.162 0.52 [
+	[172 0] [-30 0.2] [4 0.6] [40 0.09] [15 0.18] [-63 0.085]
+	[7.5 0.3] [170 0.03] [35 0] [0.105] [32 0.13] [-40 0.07]
+	[-26 0.09] [-135 0.005] [0.06]]
+	] :height
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Java_(programming_language)#/media/File:Duke_(Java_mascot)_waving.svg
+to drawDuke :height :timeRatio
+	localmake "oldState turtleState
+	localmake "angle 30 + 35 * cos 360 * :timeRatio
+	drawTorsoAndFace :height
+	drawLeftArm :height
+	jumpForward :height * 0.59
+	jumpRight :height * 0.198
+	right 15
+	drawArmWithHand :height * 0.4 :angle
+	setTurtleState :oldState
+end
+
+drawDuke 100 animation.timeRatio
+
+to animation.snapshotstyle
+	output createPList2 [
+		["zoom.scale 5.5]
+		["position.y 50]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 1
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

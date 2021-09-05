@@ -1,0 +1,66 @@
+; Inspired by:
+; https://ca.pinterest.com/pin/281543724541094
+; It was shared by Steve Darval.
+to redCircleInCurvedSpace :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "width :height * 2.6
+	localmake "cornerRadius :height * 0.1
+	localmake "thickness :height * 0.007
+	localmake "height1Factor 0.045
+	localmake "height1 :height * :height1Factor
+	localmake "arcs1 [
+		[[0.55] [-15 1] [-30 0.7] [-24.4 0.6]]
+		[[0.6] [-10 1.8] [-14 1] [-20 0.38] [-26 0.17]]
+	]
+	localmake "lines [
+		[0.31 :height1Factor]
+		[0.374 :height1Factor]
+		[0.456 :height1Factor]
+		[0.575 :height1Factor]
+		[0.745 0.064]
+		[0.96 0.138]
+	]
+	localmake "arcs clone :arcs1
+	queue2 "arcs [[(:width - :thickness) / :height / 2]]
+	repeat count :arcs1 [
+		queue2 "arcs flipAngles item ((count :arcs1) + 1 - repcount) :arcs1
+	]
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize :thickness
+	setPenColor "#888
+	setFillColor transparent
+	roundRect :width - penSize :height - penSize :cornerRadius
+	repeat 2 [
+		localmake "heading1 :oldHeading + 90 + repcount * 180
+		localmake "sign sign repcount - 1.5
+		repeat count :arcs [
+			setHeading :heading1
+			jumpLeft :height1 * :sign * mix 1 -1 repRatio
+			arcLines (item repcount :arcs) :height * :sign
+
+			jumpTo :center
+		]
+	]
+	repeat 2 [
+		setHeading :oldHeading + 180 * repcount
+		repeat count :lines [
+			localmake "line vectorScale item repcount :lines :height
+			localmake "lineHeight 2 * last :line
+			jumpRight first :line
+			jumpBackward :lineHeight / 2
+			forward :lineHeight
+			jumpTo :center
+		]
+	]
+
+	jumpTo :center
+	setPenSize 0
+	setFillColor "red
+	circle :height * 0.257
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+redCircleInCurvedSpace 100

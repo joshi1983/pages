@@ -1,0 +1,93 @@
+to drawTop :logoHeight
+	localmake "oldState turtleState
+	localmake "arcRadius :logoHeight * 0.36
+	localmake "angle1 84.2
+	localmake "arcAngle1 64
+	localmake "angle2 90 - :arcAngle1 + :angle1
+	localmake "size1 :logoHeight * 0.115
+	localmake "size2 :logoHeight * 0.0313
+	localmake "size3 :logoHeight * 0.1871425
+	localmake "size4 :logoHeight * 0.075
+	localmake "size5 :logoHeight * 0.095
+	localmake "size6 :logoHeight * 0.0360147
+	jumpForward :logoHeight * 0.59
+	setPenSize 0
+	left :angle1
+	jumpForward :arcRadius
+	right 90
+	polyStart
+	arcRight :arcAngle1 :arcRadius
+	right :angle2
+	jumpForward :size1
+	jumpLeft :size2
+	jumpBackward :size3
+	jumpLeft :size4
+	jumpForward :size5
+	jumpLeft :size6 ; point of symmetry.
+	jumpBackward :size5
+	jumpLeft :size4
+	jumpForward :size3
+	jumpLeft :size2
+	jumpBackward :size1
+	left 180 - :angle2
+	arcRight :arcAngle1 :arcRadius
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by logo at
+; https://www.facebook.com/photo/?fbid=582798907287609
+; The logo is used for:
+; https://www.facebook.com/CivilEngineeringDaily77
+to civilEngineeringDailyLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "arcAngle1 0.25
+	localmake "arcRadius1 :height * 0.288
+	localmake "arcThickness1 :height * 0.155
+	localmake "arcThickness2 :height * 0.137
+	localmake "radius2 (:arcRadius1 - :arcThickness2 / 2) * cos :arcAngle1
+	localmake "gearCenterOffset :height * 0.439
+	localmake "gearToothSize :gearCenterOffset - :arcRadius1
+	localmake "gearToothSize2 :gearToothSize + :arcThickness2 / 2 / cos :arcAngle1
+	setFillColor "black
+	setPenColor "black
+	setPenSize 0
+	jumpForward :height * 0.547
+	roundRect :height * 0.875 :height * 0.093 :height * 0.035
+	jumpTo :oldPos
+	jumpForward :gearCenterOffset
+	localmake "center pos
+	setLineCap "butt
+	right 90 + :arcAngle1
+	jumpForward :arcRadius1
+	right 90
+	setPenSize :arcThickness2
+	arcRight 180 - :arcAngle1 * 2 :arcRadius1
+	jumpTo :center
+	setHeading :oldHeading - 135
+	setPenSize :arcThickness1
+	repeat 3 [
+		jumpForward :arcRadius1
+		forward :gearToothSize
+		jumpTo :center
+		left 45
+	]
+	setHeading :oldHeading + 90
+	jumpRight :arcThickness1 / 4
+	localmake "center pos
+	setPenSize :arcThickness1 / 2
+	repeat 2 [
+		jumpForward :radius2
+		forward :gearToothSize2
+		left 180
+		jumpTo :center
+	]
+	jumpTo :oldPos
+	setHeading :oldHeading
+	drawTop :height
+	setTurtleState :oldState
+end
+
+civilEngineeringDailyLogo 100

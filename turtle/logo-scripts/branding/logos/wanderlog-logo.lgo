@@ -1,0 +1,26 @@
+; Inspired by logo at:
+; https://wanderlog.com/
+to wanderlogLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "midLevel :height * 0.436
+	setPenSize :height * 0.124
+	localmake "arcRadiusRatio (:midLevel - penSize / 2) / 2 / :height
+	localmake "lowerArcsInfo [[90 0] [:arcRadiusRatio] [270 :arcRadiusRatio]]
+	setPenColor "#f75940
+	jumpForward :midLevel
+	localmake "center pos
+	repeat 2 [
+		setHeading :oldHeading + 90 + repcount * 180
+		arcLines :lowerArcsInfo -:height * sign repcount - 1.5
+		closePath
+		jumpTo :center
+	]
+	setHeading :oldHeading
+	setLineCap "butt
+	localmake "arcRadiusRatio (:height - :midLevel - penSize / 2) / (2 * :height)
+	arcLines [[1] [-270 1] [2] [-210 1]] :arcRadiusRatio * :height
+	setTurtleState :oldState
+end
+
+wanderlogLogo 100

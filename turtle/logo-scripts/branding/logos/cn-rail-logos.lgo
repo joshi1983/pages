@@ -1,0 +1,58 @@
+make "cnRedColor "#da291c
+
+to cnRailLogoCustomColor :height :color
+	localmake "oldState turtleState
+	localmake "arcRatio 0.16
+	localmake "thicknessRatio 0.2
+	localmake "heightRatio 1 - :thicknessRatio - :arcRatio * 2
+	localmake "diagonalAngle 48
+	localmake "len1Ratio (1 - :thicknessRatio - 2 * :arcRatio * (1 - cos :diagonalAngle)) / sin :diagonalAngle
+	setPenSize :height * :thicknessRatio
+	setPenColor :color
+	setLineCap "butt
+	jumpForward :height - penSize / 2
+	jumpLeft :height * 0.2667
+	arcLines [[90 0] [0.8] [90 :arcRatio] [:heightRatio]
+	[90 :arcRatio] [0.948] [90 :arcRatio] [:heightRatio]
+	[-90 - :diagonalAngle :arcRatio] [:len1Ratio]
+	[90 + :diagonalAngle :arcRatio]
+	[1 - :arcRatio - :thicknessRatio / 2]] :height
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Canadian_National_Railway#/media/File:CN_Railway_logo.svg
+to cnRailLogo :height
+	cnRailLogoCustomColor :height :cnRedColor
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Canadian_National_Railway#/media/File:Cn7402.JPG
+to cnRailWhiteLogo :height
+	localmake "oldState turtleState
+	localmake "innerHeight :height * 0.8
+	stripes :height * 4 :height ["black]
+	jumpForward (:height - :innerHeight) / 2
+	cnRailLogoCustomColor :innerHeight "white
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Canadian_National_Railway#/media/File:Cntrain7331.JPG
+to cnRailRedBackgroundLogo :height
+	localmake "oldState turtleState
+	localmake "innerHeight :height * 0.8
+	stripes :height * 4 :height [:cnRedColor]
+	jumpForward (:height - :innerHeight) / 2
+	cnRailLogoCustomColor :innerHeight "white
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 5
+jumpLeft :separation
+cnRailWhiteLogo :height
+jumpRight :separation
+cnRailLogo :height
+jumpRight :separation
+cnRailRedBackgroundLogo :height

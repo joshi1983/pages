@@ -1,0 +1,56 @@
+make "angle 45
+
+to drawV :height
+	localmake "oldState turtleState
+	localmake "thickness 0.22
+	localmake "width tan :angle
+	localmake "len2 (:width - :thickness) / :width / cos :angle
+	localmake "lines [
+		[-:angle 0] [1 / cos :angle] [90 + :angle 0]
+		[:thickness] [90 - :angle 0] [:len2] [:angle - 90 0]
+	]
+	setPenSize 0
+	drawArcLineShape [0 0
+		combine :lines reverse :lines
+	] :height
+
+	setTurtleState :oldState
+end
+
+; Inspired by a pattern at the top of:
+; https://s3.ca-central-1.amazonaws.com/ehq-production-canada/a1d1bb3dfbee746f09920f4c778fd39bb46ab6dd/original/1752174504/86c79ccc0f5d12c08418232ef3f4da95_Caldwell%20Pow%20Wow.png?1752174504
+to caldwellTrianglePattern :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "triangleHeight :height / 5
+	localmake "triangleWidth :triangleHeight * 2 * (tan :angle)
+	localmake "vHeight :height * 0.677
+	setPenSize 0
+	setFillColor "#a5591f
+	isoTriangle :triangleWidth :triangleHeight
+	jumpForward :vHeight
+	right 180
+	drawV :vHeight
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height
+	localmake "top pos
+	right 180
+	repeat 5 [
+		isoTriangle :triangleWidth :triangleHeight
+		jumpForward :triangleHeight
+		jumpRight :triangleWidth / 2
+	]
+	jumpTo :top
+	repeat 4 [
+		jumpForward :triangleHeight
+		jumpLeft :triangleWidth / 2
+		isoTriangle :triangleWidth :triangleHeight
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "#ede5d0
+caldwellTrianglePattern 100

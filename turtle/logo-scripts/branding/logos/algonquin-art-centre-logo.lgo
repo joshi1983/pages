@@ -1,0 +1,68 @@
+make "angle 27.1
+
+to drawV :height :thickness :color
+	localmake "oldState turtleState
+	localmake "thicknessFactor :thickness / :height
+	localmake "outerLen 1 / cos :angle
+	localmake "innerLen :outerLen - :thicknessFactor / sin :angle
+	localmake "lines1 [[-:angle 0] [:outerLen] [90 + :angle 0] [:thicknessFactor]
+		[90 - :angle 0] [:innerLen] [:angle - 90 0]
+		]
+	setFillColor :color
+	setPenSize 0
+	drawArcLineShape [0 0
+		combine :lines1 reverse :lines1
+	] :height
+
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://www.facebook.com/photo/?fbid=444748427666287&set=a.444748400999623
+;
+; The logo is also shown at:
+; https://algonquinartcentre.com
+to algonquinArtCentreLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "thickness :height * 0.108
+	localmake "gapThickness :height * 0.055
+	jumpRight :height
+	localmake "bottomRight pos
+	jumpTo :oldPos
+	jumpForward :height
+	right 180
+	drawV :height :thickness "#4d4c4b
+	jumpForward :height * 0.324
+	drawV :height * 0.383 :thickness "#7a7a7c
+	localmake "innerTop pos
+	right :angle
+	jumpForward :height
+	localmake "innerLeft pos
+
+	jumpTo :innerTop
+	setHeading :oldHeading + 180 - :angle
+	jumpForward distanceToLine :oldPos :bottomRight
+	localmake "bottomRight pos
+	setFillColor "#b91f24
+	setPenSize 0
+	polyStart
+	jumpBackward :thickness
+	right 90 + :angle
+	jumpForward (distanceToLine :innerTop :innerLeft) - :thickness
+	right 90 + :angle
+	jumpForward :gapThickness
+	right 90 - :angle
+	jumpForward distanceToLine :innerTop :bottomRight 
+	left 90 + :angle
+	jumpForward :thickness
+	left 90 - :angle
+	jumpForward distanceToLine :innerTop :innerLeft
+	left 90 - :angle
+	jumpForward distanceToLine :oldPos :bottomRight
+	polyEnd
+	setTurtleState :oldState
+end
+
+algonquinArtCentreLogo 100

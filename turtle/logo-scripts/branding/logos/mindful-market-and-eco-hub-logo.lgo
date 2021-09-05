@@ -1,0 +1,75 @@
+to drawBall :height :smallArcFactor
+	localmake "oldState turtleState
+	localmake "height1 :height * 0.22
+	localmake "radius (:height - :height1 - penSize) / 2
+	localmake "arcRadius :radius * :smallArcFactor
+	setLineCap "round
+	forward :height1
+	right 90
+	circleLeft :radius
+	jumpLeft :radius
+	jumpForward :arcRadius
+	left 90
+	arcLeft 90 :arcRadius
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://www.mindfulontalbot.com
+;
+; It is a small market called:
+; Mindful Market & Eco Hub
+to mindfulMarketLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "arcRadius :height * 0.88
+	localmake "arcSeparation :height * 0.31
+	setFillColor transparent
+	setPenSize :height * 0.033
+	setPenColor "#1dab0a
+	jumpForward :height / 2
+	localmake "center pos
+	localmake "radius (:height - penSize) / 2
+	circle :radius
+	jumpBackward :height * 0.03
+	left 90
+	jumpForward distanceToCircle :center :radius
+	right 180
+	localmake "pos1 pos
+	jumpBackward :arcSeparation
+	penUp
+	localmake "angle getArcRightAngleToCircle 
+			:arcRadius :center :radius
+	arcRight :angle :arcRadius
+	penDown
+	arcRight 1 :arcRadius
+	localmake "angle getArcRightAngleToCircle 
+			:arcRadius :center :radius
+	arcRight :angle :arcRadius
+	jumpTo :pos1
+	repeat 3 [
+		setHeading :oldHeading + 90
+		ifelse 1 <> repcount [
+			forward :arcSeparation
+			localmake "pos1 pos
+		] [
+			localmake "pos1 pos
+			arcRight 1 :arcRadius
+		]
+		localmake "angle getArcRightAngleToCircle
+			:arcRadius :center :radius
+		arcRight :angle :arcRadius
+		jumpTo :pos1
+	]
+	jumpTo :center
+	setHeading :oldHeading
+	jumpBackward penSize / 2
+	jumpLeft :height * 0.245
+	drawBall :height * 0.32 0.38
+	jumpRight :height * 0.347
+	drawBall :height * 0.406 0.52
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+mindfulMarketLogo 100

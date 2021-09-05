@@ -1,0 +1,69 @@
+to myArc :arcAngle :arcRadius
+	localmake "oldState turtleState
+	localmake "oldPenSize penSize
+	localmake "tinyArcRadius :oldPenSize * 0.17
+	localmake "outerArcRadius :arcRadius + :oldPenSize / 2
+	localmake "innerArcRadius :arcRadius - :oldPenSize / 2
+	localmake "angle1 arcTan :tinyArcRadius / (:outerArcRadius - :tinyArcRadius)
+	localmake "angle2 arcTan :tinyArcRadius / (:innerArcRadius + :tinyArcRadius)
+	setFillColor penColor
+	setPenSize 0
+	right :angle1
+	jumpBackward :outerArcRadius
+	left 90
+	polyStart
+	arcRight :arcAngle - :angle1 * 2 :outerArcRadius
+	arcRight 90 + :angle1 :tinyArcRadius
+	jumpForward :oldPenSize - :tinyArcRadius * 2
+	arcRight 90 - :angle2 :tinyArcRadius
+	arcLeft :arcAngle - :angle2 * 2 :innerArcRadius
+	arcRight 90 - :angle2 :tinyArcRadius
+	jumpForward :oldPenSize - :tinyArcRadius * 2
+	arcRight 90 + :angle1 :tinyArcRadius	
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://securityconference.org
+to munichSecurityConferenceLogo :height :color
+	localmake "oldState turtleState
+	localmake "angle1 23
+	localmake "arcs [
+		[0 180] [0 180 + :angle1 * 2] [180 90 + :angle1]
+	]
+	localmake "thickness :height * 0.077
+	localmake "arcRadius :height * 0.485
+	setPenSize :thickness
+	setPenColor :color
+	setLineCap "butt
+	jumpForward :arcRadius + :thickness / 2
+	left :angle1
+	localmake "heading1 heading
+	localmake "radiusStep :arcRadius / 2.88
+	repeat count :arcs [
+		localmake "arcInfo item repcount :arcs
+		localmake "arcAngle last :arcInfo
+		setHeading :heading1 + first :arcInfo
+		myArc :arcAngle :arcRadius
+		localmake "arcRadius :arcRadius - :radiusStep 
+	]
+	setTurtleState :oldState
+end
+
+to munichSecurityConferenceOnWhiteLogo :height
+	localmake "oldState turtleState
+	localmake "innerHeight :height * 0.8
+	stripes :height :height ["white]
+	jumpForward (:height - :innerHeight) / 2
+	munichSecurityConferenceLogo :innerHeight "#005e88
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+make "height 100
+make "separation :height * 5
+jumpLeft :separation / 2
+munichSecurityConferenceLogo :height "#d3ecfc
+jumpRight :separation
+munichSecurityConferenceOnWhiteLogo :height

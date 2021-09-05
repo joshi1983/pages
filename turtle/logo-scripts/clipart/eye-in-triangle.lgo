@@ -1,0 +1,85 @@
+to drawIris :radius
+	localmake "oldState turtleState
+	localmake "center pos
+	localmake "oldHeading heading
+	localmake "innerRadius :radius * 0.9
+	localmake "pupilRadius :radius * 0.33
+	localmake "outlineColor "#3c6c8c
+	localmake "colors [:outlineColor "#99c6e4 "#338dc9]
+	localmake "numSegments 2 * count :colors
+	setFillColor :outlineColor
+	circle :radius
+	repeat :numSegments [
+		localmake "index 1 + remainder repcount count :colors
+		setFillColor item :index :colors
+		setHeading :oldHeading - 9 + repcount * 360 / :numSegments
+		polyStart
+		jumpForward :innerRadius
+		right 90
+		arcRight 360 / :numSegments :innerRadius
+		polyEnd
+		jumpTo :center
+	]
+	setFillColor "black
+	circle :pupilRadius
+
+	; draw some reflections
+	setFillColor "#fff
+	setHeading :oldHeading - 82
+	jumpForward :radius * 0.85
+	circle :radius * 0.2
+	jumpTo :center
+	setHeading :oldHeading - 135
+	jumpForward :radius * 0.84
+	circle :radius * 0.2
+
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://openclipart.org/detail/276086/eye-in-triangle
+to eyeInTriangle :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "eyeLevel :height * 0.372
+	localmake "width :height / cos 30
+	localmake "eyeWidth :height * 0.71
+	localmake "outerEyeArcAngle 100
+	localmake "outerEyeArcRadius :eyeWidth / 2 / sin :outerEyeArcAngle / 2
+	localmake "eyeLidArcAngle 55
+	localmake "eyeLidArcRadius :eyeWidth / 2 / sin :eyeLidArcAngle / 2
+	setPenSize 0
+	setFillColor "#c71d25
+	isoTriangle :width :height
+	setFillColor "white
+	jumpForward :eyeLevel
+	localmake "eyeCenter pos
+	jumpRight :eyeWidth / 2
+	left 90 - :outerEyeArcAngle / 2
+	; Draw white of the eye.
+	polyStart
+	repeat 2 [
+		arcLeft :outerEyeArcAngle :outerEyeArcRadius
+		left 180 - :outerEyeArcAngle
+	]
+	polyEnd
+	jumpTo :eyeCenter
+	setHeading :oldHeading
+	drawIris :height * 0.15
+
+	; Draw eye lid.
+	jumpTo :eyeCenter
+	setHeading :oldHeading
+	jumpRight :eyeWidth / 2
+	left 90 - :outerEyeArcAngle / 2
+	setFillColor "#c7b299
+	polyStart
+	arcLeft :outerEyeArcAngle :outerEyeArcRadius
+	left 180 - (:outerEyeArcAngle - :eyeLidArcAngle) / 2
+	arcRight :eyeLidArcAngle :eyeLidArcRadius
+	polyEnd
+	
+	setTurtleState :oldState
+end
+
+eyeInTriangle 100

@@ -1,0 +1,48 @@
+make "usaAsciiArt [
+'#    #      #  #     #'
+' ##   ##  ####   ###'
+'# #   #####  ##   ## #'
+' ##  # # ##      #### #'
+' ##   ## ####  # ## #'
+' ##   ##  ####   #  ##'
+' # #  ##     ## ######'
+'  #####  ##  ## ## # ##'
+'#  ###  # #### ##    ##'
+'  #   #      #      #'
+]
+make "maxLineLength 0
+repeat count :usaAsciiArt [
+	make "len count item repcount :usaAsciiArt
+	if :len > :maxLineLength [
+		make "maxLineLength :len
+	]
+]
+
+; Inspired by logo at:
+; https://www.visittheusa.com
+to visitTheUSALogo :height
+	localmake "oldState turtleState
+	localmake "radiusRatio 0.85
+	localmake "squareSize :height / ((count :usaAsciiArt) + :radiusRatio - 1)
+	localmake "radius :squareSize / 2 * :radiusRatio
+	localmake "width :maxLineLength * :squareSize
+	setPenSize 0
+	setFillColor "#1F3A53
+	jumpForward :height - :radius
+	jumpLeft :width / 2 - :squareSize / 2
+	repeat count :usaAsciiArt [
+		localmake "line item repcount :usaAsciiArt
+		repeat count :line [
+			localmake "char item repcount :line
+			if :char <> ' ' [
+				circle :radius
+			]
+			jumpRight :squareSize
+		]
+		jumpLeft :squareSize * count :line
+		jumpBackward :squareSize
+	]
+	setTurtleState :oldState
+end
+
+visitTheUSALogo 100

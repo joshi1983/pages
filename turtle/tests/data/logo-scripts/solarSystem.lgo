@@ -1,0 +1,43 @@
+to SolarSystem
+perspective
+; We are in deep space
+setscreencolor [0 0 0]
+cs
+ht
+; Space is big so back up
+setturtle -1
+setxyz 1000 1000 2000
+setturtle 0
+pd
+; Draw a big sun in yellow
+setpc [255 255 0]
+sphere 200 20
+pu
+; Now do some random planets oribiting the sun
+repeat 10 ~
+   [
+   ; Random position in orbit
+   make "angle random 360
+   ; Random radius of orbit
+   make "dist 200 + random 2000
+   downpitch 90
+   pd
+   setpc (list 56+random 200 56+random 200 56+random 200)
+   ; Show oribit path
+   circle :dist
+   pu
+   ; go to planet position
+   rt :angle
+   fd :dist
+   uppitch 90
+   pd
+   ; draw planet
+   sphere 10 + random 100 20
+   pu
+   downpitch 90
+   ; get back to the sun
+   bk :dist
+   lt :angle
+   uppitch 90
+   ]
+end

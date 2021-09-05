@@ -1,0 +1,46 @@
+to drawD :height
+	localmake "oldState turtleState
+	localmake "width :height * 0.82
+	localmake "leftThickness :height * 0.2
+	localmake "line1 [
+		[20 0.8] [40 0.3] [20 0.49022] [10 0.7] [0.2]
+		[90 0] [0.15] [90 0] [0.22] [-40 0.22] [-30 0.3] [-20 0.499983]
+	]
+	jumpLeft (:width - :leftThickness) / 2
+	stripes :leftThickness :height [penColor]
+	jumpForward :height / 2
+	setPenSize 0
+	setFillColor penColor
+	right 90
+	drawArcLineShape [0 (:width - :leftThickness / 2) / :height - item 2 arcLinesInfo :line1
+		pathMirror reverse :line1
+	] :height
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://definithing.com
+to definithingLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "squareSize :height * cos 45
+	localmake "fontHeight :height * 0.435
+	jumpForward :height / 2
+	setFillColor "#369
+	setPenSize 0
+	repeat 2 [
+		right 45
+		square :squareSize
+	]
+	setFillColor transparent
+	setPenColor "white
+	setPenSize :height * 0.025
+	square :squareSize * 0.86
+	setHeading :oldHeading
+	jumpBackward :fontHeight * 0.47
+	jumpRight :height * 0.013
+	drawD :fontHeight
+	setTurtleState :oldState
+end
+
+definithingLogo 100

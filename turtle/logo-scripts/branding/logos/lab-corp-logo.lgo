@@ -1,0 +1,22 @@
+; Inspired by logo at:
+; https://www.labcorp.com
+to labCorpLogo :height
+	localmake "oldState turtleState
+	localmake "circles [
+		[0 0.5 "#4cd5f7] [0.095 0.37 "#2998e3] [0.145 0.275 "#3a5ce9] 
+	]
+	jumpForward :height / 2
+	localmake "center pos
+	right 55.5
+	setPenSize 0
+	repeat count :circles [
+		localmake "circleInfo item repcount :circles
+		jumpForward :height * first :circleInfo
+		setFillColor last :circleInfo
+		circle :height * item 2 :circleInfo
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+labCorpLogo 100

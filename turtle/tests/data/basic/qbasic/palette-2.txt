@@ -1,0 +1,55 @@
+REM copied from:
+REM https://qbmikehawk.neocities.org/articles/palette/
+
+CONST DACPelMask = &H3C6
+CONST DACRead = &H3C7
+CONST DACWrite = &H3C8
+CONST DACData = &H3C9
+
+' init mode 13
+SCREEN 13
+OUT DACPelMask, &HFF
+
+' draw palette
+FOR y2% = 0 TO 15
+  FOR x2% = 0 TO 15
+    LINE (95 + x2% * 8, 35 + y2% * 8)-STEP(7, 7), x2% + (y2% * 16), BF
+  NEXT x2%
+NEXT y2%
+
+' go
+DO
+  palShift 32, 24
+LOOP UNTIL LEN(INKEY$)
+
+''
+'' Shifting {shftCount} palette attributes, starting at index {shftStart}
+''
+SUB palShift (shftStart AS INTEGER, shftCount AS INTEGER)
+  DIM shftBuffer AS STRING
+  DIM offset AS INTEGER
+
+  ' create temporary buffer
+  shftBuffer = SPACE$(shftCount * 3)
+
+  ' copy section to shift
+  OUT DACRead, shftStart
+  FOR i% = 0 TO shftCount - 1
+    offset = (i% * 3) + 1
+    MID$(shftBuffer, offset, 1) = CHR$(INP(DACData))
+    MID$(shftBuffer, offset + 1, 1) = CHR$(INP(DACData))
+    MID$(shftBuffer, offset + 2, 1) = CHR$(INP(DACData))
+  NEXT i%
+
+  ' shift temporary buffer to the right
+  shftBuffer = RIGHT$(shftBuffer, 3) + LEFT$(shftBuffer, LEN(shftBuffer) - 3)
+
+  ' replace colors
+  OUT DACWrite, shftStart
+  FOR i% = 0 TO shftCount - 1
+    offset = (i% * 3) + 1
+    OUT DACData, ASC(MID$(shftBuffer, offset, 1))
+    OUT DACData, ASC(MID$(shftBuffer, offset + 1, 1))
+    OUT DACData, ASC(MID$(shftBuffer, offset + 2, 1))
+  NEXT i%
+END SUB

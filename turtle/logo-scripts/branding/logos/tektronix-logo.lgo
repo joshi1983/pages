@@ -1,0 +1,58 @@
+; Inspired by favicon and logo from the footer at:
+; https://www.tek.com
+to tektronixLogo :height :circleColor :tColor
+	localmake "oldState turtleState
+	localmake "thickness1 :height * 0.11
+	localmake "thickness2 :height * 0.095
+	jumpForward :height / 2
+	setPenSize 0
+	setFillColor :circleColor
+	circle :height / 2
+	localmake "center pos
+	jumpBackward :height * 0.26
+	jumpRight :height * 0.215
+	setFillColor :tColor
+	parallelogram :thickness1 :height * 0.3 -32
+
+	jumpTo :center
+	jumpBackward :height * 0.23
+	jumpLeft :height * 0.11
+	setPenSize :thickness1
+	setLineCap "butt
+	setPenColor :tColor
+	forward :height * 0.435
+	jumpBackward :thickness2
+	jumpRight :height * 0.05
+	stripes :height * 0.43 :thickness2 [:tColor]
+	jumpForward :thickness2
+	jumpRight :height * 0.265
+	right 180
+	setPenSize 0
+	repeat 2 [
+		localmake "pThickness :height * item repcount [0.17 0.13]
+		setFillColor item repcount [:circleColor "#1cb5d8]
+		parallelogram :pThickness :height * 0.56 34.5
+	]
+	setTurtleState :oldState
+end
+
+to tektronixFavicon :height
+	tektronixLogo :height "#3e434a "white
+end
+
+to tektronixFooterLogo :height
+	localmake "oldState turtleState
+	localmake "innerHeight :height * 0.8
+	stripes :height :height ["black]
+	jumpForward (:height - :innerHeight) / 2
+	tektronixLogo :innerHeight "white "black	
+
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 5
+jumpLeft :separation / 2
+tektronixFavicon :height
+jumpRight :separation
+tektronixFooterLogo :height

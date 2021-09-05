@@ -1,0 +1,20 @@
+; Implemented to be similar to:
+; https://processing.org/reference/rect_.html
+; when 8 parameters are passed to the rect function
+to pRect8 :x :y :width :height :tlRadius :trRadius :brRadius :blRadius
+	localmake "oldState turtleState
+	jumpTo [:x :y]
+	setHeading 0
+	jumpForward :height / 2 - :tlRadius
+	jumpLeft :width / 2
+	polyStart
+	arcRight 90 :tlRadius
+	jumpForward :width - :tlRadius - :trRadius
+	arcRight 90 :trRadius
+	jumpForward :height - :trRadius - :brRadius
+	arcRight 90 :brRadius
+	jumpForward :width - :brRadius - :blRadius
+	arcRight 90 :blRadius
+	polyEnd
+	setTurtleState :oldState
+end

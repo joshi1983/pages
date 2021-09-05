@@ -1,0 +1,94 @@
+; Inspired by logo at 
+; https://en.wikipedia.org/wiki/Patreon#/media/File:Patreon_logo_with_wordmark.svg
+to patreonLogo2017 :height
+	localmake "oldState turtleState
+	setPenSize 0
+	jumpLeft :height * 0.5
+	setFillColor "#E6461A
+	polyStart
+	arcLines [[0.5] [-270 0.5] [0.228] [-90 0]
+	[0.5] [-298 0.228] [118 0] [0.155] [73 0.01]
+	[20 0.35] [267 0.381211208] [0.5]
+	] :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by logo at
+; https://upload.wikimedia.org/wikipedia/commons/4/49/Digital-Patreon-Logo_Black.svg
+to patreonLogo2023 :height
+	localmake "oldState turtleState
+	localmake "radius :height * 0.375
+	localmake "patreonRed "#ff424d
+	jumpLeft :height * 0.5
+	stripes :height * 0.18 :height [:patreonRed]
+	jumpRight :height * 0.571
+	jumpForward :height - :radius
+	setPenSize 0
+	setFillColor :patreonRed
+	circle :radius
+	setTurtleState :oldState
+end
+
+; Inspired by an unofficial version of
+; the Patreon Logo made by 8-bit Guy
+; to fit the retro computing theme of his youtube channel
+; https://youtu.be/acUH4lWe2NQ?t=1502
+to patreonLogo8BitGuyVersion :height
+	localmake "oldState turtleState
+	localmake "height1 :height * 0.84
+	localmake "diagonalSize1 (:height - :height1) / cos 45
+	localmake "diagonalSize2 :diagonalSize1 * 0.92
+	localmake "innerLengths [0.117 0.157 0.13]
+	stripes :height * 4 :height ["black]
+	jumpLeft :height * 0.47
+	setPenSize 0
+	setFillColor "#856129
+	polyStart
+	jumpForward :height1
+	right 45
+	jumpForward :diagonalSize1
+	right 45
+	jumpForward :height * 0.62
+	right 45
+	jumpForward :diagonalSize1
+	right 45
+	jumpForward :height1 * 2 - :height
+	right 45
+	jumpForward :diagonalSize1
+	right 45
+	jumpForward :height * 0.51
+	right 90
+	jumpForward :height * 0.57
+	repeat 3 [
+		right 45
+		jumpForward :diagonalSize2 * mix 0.91 1 repRatio
+		right 45
+		jumpForward :height * item repcount :innerLengths
+	]
+	jumpLeft :height * 0.13
+	jumpBackward :height * 0.26
+	right 135
+	jumpForward :diagonalSize2
+	left 45
+	jumpForward :height * 0.4
+	left 45	
+	jumpForward :diagonalSize2
+	left 45	
+	jumpForward :height * 0.38
+	left 45	
+	jumpForward :diagonalSize2
+	left 45
+	jumpForward :height * 0.702872
+	polyEnd
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 5
+jumpLeft :separation
+patreonLogo2017 :height
+jumpRight :separation
+patreonLogo2023 :height
+jumpRight :separation
+patreonLogo8BitGuyVersion :height

@@ -1,0 +1,103 @@
+to drawD :fontHeight
+	localmake "oldState turtleState
+	localmake "lines1 [
+		[90 0] [20 0.65] [65 0.42215]
+		[5 0.4] [0.1] [90 0] [0.23] [90 0]
+		[0.105] [-45 0.1] [-45 0.340409]
+	]
+	jumpLeft :fontHeight * 0.17
+	stripes :fontHeight * 0.25 :fontHeight [fillColor]
+	jumpForward :fontHeight / 2
+	right 90
+	setPenSize 0
+	drawArcLineShape [0 0.56
+		combine :lines1 reverse :lines1
+	] :fontHeight
+
+	setTurtleState :oldState
+end
+
+to drawE :fontHeight
+	localmake "oldState turtleState
+	localmake "width :fontHeight * 0.5
+	localmake "thickness :fontHeight * 0.23
+	localmake "leftThickness :fontHeight * 0.26
+	localmake "topAngle 60
+	stripes :width :thickness [fillColor]
+	jumpLeft (:width - :leftThickness) / 2
+	stripes :leftThickness :fontHeight [fillColor]
+	jumpForward :fontHeight * 0.5
+	right 90
+	stripes :thickness :fontHeight * 0.34 [fillColor]
+	jumpLeft :fontHeight / 2
+	setPenSize 0
+	polyStart
+	jumpForward :width - :leftThickness / 2 - :thickness / tan :topAngle
+	right :topAngle
+	jumpForward :thickness / sin :topAngle
+	right 180 - :topAngle
+	jumpForward :width
+	polyEnd
+	setTurtleState :oldState
+end
+
+to drawP :fontHeight
+	localmake "oldState turtleState
+	localmake "width :fontHeight * 0.64
+	localmake "leftThickness :fontHeight * 0.245
+	localmake "outerLines1 [
+		[0.22] [-45 0.3] [-45 0.35]
+	]
+	jumpLeft (:width - :leftThickness) / 2
+	setLineCap "butt
+	setPenSize :leftThickness
+	setPenColor fillColor
+	forward :fontHeight
+	setPenSize 0
+	right 90
+	polyStart
+	arcLines :outerLines1 :fontHeight
+	arcLines reverse :outerLines1 :fontHeight
+	jumpRight :fontHeight * 0.21
+	jumpBackward :fontHeight * 0.13
+	right 180
+	arcLeft 180 :fontHeight * 0.127
+	jumpForward :fontHeight * 0.1
+	polyEnd
+
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://www.youtube.com/@PEOPLEAREDEEP
+to peopleAreDeepLogo :height
+	localmake "oldState turtleState
+	localmake "fontHeight :height * 0.28
+	jumpForward :height / 2
+	setPenSize :height * 0.015
+	setFillColor "white
+	circle (:height - penSize) / 2
+	jumpBackward :fontHeight / 2
+	jumpLeft :height * 0.285
+	setFillColor "black
+	drawD :fontHeight
+	jumpRight :height * 0.213
+	drawE :fontHeight
+	jumpRight :height * 0.175
+	drawE :fontHeight
+	jumpRight :height * 0.195
+	drawP :fontHeight
+	setTurtleState :oldState
+end
+
+to peopleAreDeepOnBlack :height
+	stripes :height :height ["black]
+	peopleAreDeepLogo :height
+end
+
+make "height 100
+make "separation :height * 4
+jumpLeft :separation / 2
+peopleAreDeepLogo :height
+jumpRight :separation
+peopleAreDeepOnBlack :height

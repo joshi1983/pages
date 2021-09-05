@@ -1,0 +1,456 @@
+REM copied from https://www.bamsoftware.com/bzr/qbasic/graphics.bas
+
+REM                             Press F5
+
+
+DECLARE SUB Bamstart ()
+CALL Bamstart:
+SCREEN 0
+CLS
+LOCATE 25, 35
+PRINT "QBASIC GRAPHICS MAKER (C)BAM1996 DAVID FIFIELD"
+DO
+LOCATE 1, 1
+INPUT "Drive: ", drive$
+LOOP WHILE drive$ = "" OR LEN(drive$) > 1
+drive$ = drive$ + ":"
+drive$ = UCASE$(drive$)
+DO
+INPUT "Filename to write to: ", filename$
+LOOP WHILE LEN(filename$) > 8 OR LEN(filename$) < 0
+filename$ = RTRIM$(LTRIM$(UCASE$(filename$)))
+IF RIGHT$(filename$, 4) <> ".BAS" THEN filename$ = filename$ + ".BAS"
+filename$ = drive$ + filename$
+OPEN filename$ FOR APPEND AS 1
+PRINT #1, "SCREEN 12"
+DO WHILE centerx$ = "" OR centery$ = ""
+INPUT "Centerx, centery: ", centerx$, centery$
+LOOP
+DIM zzz(1 TO 200)
+REM
+SCREEN 12
+x = 320
+y = 240
+LINE (x - 5, y)-(x + 5, y), 15
+LINE (x, y - 5)-(x, y + 5), 15
+PRESET (x, y)
+GET (x - 5, y - 5)-(x + 5, y + 5), zzz
+LINE (x - 5, y - 5)-(x + 5, y + 5), 0, BF
+LOCATE 1, 1
+PRINT "SET " + centerx$ + ", " + centery$
+DO UNTIL key$ = "5"
+key$ = INKEY$
+PUT (x - 5, y - 5), zzz, XOR
+PUT (x - 5, y - 5), zzz, XOR
+IF key$ = "4" THEN x = x - 1
+IF key$ = "6" THEN x = x + 1
+IF key$ = "8" THEN y = y - 1
+IF key$ = "2" THEN y = y + 1
+IF key$ = " " THEN STOP
+
+LOOP
+CLS
+centerx = x
+centery = y
+PRINT #1, centerx$; " = "; x
+PRINT #1, centery$; " = "; y
+DO
+oldx = x
+oldy = y
+key$ = INKEY$
+IF key$ = "0" THEN
+        LOCATE 1, 1
+        DO
+        INPUT "COLOR?", col
+        LOOP WHILE col < 0 OR col > 15
+        LOCATE 1, 1
+        COLOR col
+        PRINT "COLOR   "
+        END IF
+IF key$ = "e" THEN
+        LINE (0, 470)-(10, 480), 0, BF
+        LINE (0, 480)-(10, 470)
+        LINE (0, 470)-(10, 480)
+        GET (0, 470)-(10, 480), zzz
+        DO
+        getkey$ = INKEY$
+        IF getkey$ = "4" THEN x = x - 1
+        IF getkey$ = "6" THEN x = x + 1
+        IF getkey$ = "2" THEN y = y + 1
+        IF getkey$ = "8" THEN y = y - 1
+        IF getkey$ = " " THEN
+                copysx = x
+                copysy = y
+                END IF
+        PUT (x - 5, y - 5), zzz, XOR
+        PUT (x - 5, y - 5), zzz, XOR
+        LOOP UNTIL getkey$ = " "
+        DO
+        getkey$ = INKEY$
+        IF getkey$ = "4" THEN x = x - 1
+        IF getkey$ = "6" THEN x = x + 1
+        IF getkey$ = "2" THEN y = y + 1
+        IF getkey$ = "8" THEN y = y - 1
+        IF getkey$ = " " THEN
+                copyex = x
+                copyey = y
+                END IF
+        PUT (x - 5, y - 5), zzz, XOR
+        PUT (x - 5, y - 5), zzz, XOR
+        LOOP UNTIL getkey$ = " "
+        REDIM graphname((ABS(copysx - copyex) * ABS(copysy - copyey)))
+        GET (copysx, copysy)-(copyex, copyey), graphname
+        LOCATE 1, 1
+        INPUT "NAME?", picname$
+        LINE (0, 470)-(10, 480), 0, BF
+        LINE (0, 475)-(10, 475), 15
+        LINE (5, 470)-(5, 480), 15
+        PRESET (5, 475)
+        GET (0, 470)-(10, 480), zzz
+        PRINT #1, "DIM " + picname$ + "("; (ABS(copysx - copyex) * ABS(copysy - copyey)); ")"
+        PRINT #1, "GET (" + centerx$ + " + "; copysx - centerx; ", " + centery$ + " + "; copysy - centery; ")-(" + centerx$ + " + "; copyex - centerx; ", " + centery$ + " + "; copyey - centery; "), " + picname$
+        END IF
+IF key$ = "d" THEN
+        DO
+        PUT (x, y), graphname, XOR
+        PUT (x, y), graphname, XOR
+        getkey$ = INKEY$
+        IF getkey$ = "4" THEN x = x - 1
+        IF getkey$ = "6" THEN x = x + 1
+        IF getkey$ = "8" THEN y = y - 1
+        IF getkey$ = "2" THEN y = y + 1
+        IF getkey$ = " " THEN
+        PUT (x, y), graphname, OR
+        PRINT #1, "PUT (" + centerx$ + " + "; x - centerx, ", " + centery$ + " + "; y - centery; "), " + picname$ + ", XOR"
+        END IF
+        LOOP UNTIL getkey$ = " "
+        END IF
+IF key$ = "r" THEN
+        LOCATE 1, 1
+        LINE INPUT "REM? ", remmer$
+        PRINT #1, "REM " + remmer$
+        END IF
+IF key$ = "c" THEN
+        LINE (0, 470)-(10, 480), 0, BF
+        CIRCLE (5, 474), 5
+        LINE (5, 470)-(5, 480)
+        LINE (0, 475)-(10, 475)
+        PRESET (5, 475)
+        GET (0, 469)-(10, 480), zzz
+        DO
+        oldx = x
+        oldy = y
+        getkey$ = INKEY$
+        IF getkey$ = "4" THEN x = x - 1
+        IF getkey$ = "6" THEN x = x + 1
+        IF getkey$ = "8" THEN y = y - 1
+        IF getkey$ = "2" THEN y = y + 1
+        PUT (x - 5, y - 5), zzz, XOR
+        PUT (x - 5, y - 5), zzz, XOR
+        PSET (1, y), 15
+        PSET (639, y), 15
+        PSET (x, 1), 15
+        PSET (x, 479), 15
+        PRESET (1, oldy)
+        PRESET (639, oldy)
+        PRESET (oldx, 1)
+        PRESET (oldx, 479)
+        LOCATE 1, 70
+        PRINT x; ","; y
+        LOOP UNTIL getkey$ = " "
+                LOCATE 2, 70
+                PRINT x; ","; y
+                PSET (x, y), col
+                circlecenx = x
+                circleceny = y
+                DO
+                oldx = x
+                oldy = y
+                getkey$ = INKEY$
+                IF getkey$ = "4" THEN x = x - 1
+                IF getkey$ = "6" THEN x = x + 1
+                IF getkey$ = "8" THEN y = y - 1
+                IF getkey$ = "2" THEN y = y + 1
+                PUT (x - 5, y - 5), zzz, XOR
+                PUT (x - 5, y - 5), zzz, XOR
+                LOCATE 1, 70
+                PSET (1, y), 15
+                PSET (639, y), 15
+                PSET (x, 1), 15
+                PSET (x, 479), 15
+                PRESET (1, oldy)
+                PRESET (639, oldy)
+                PRESET (oldx, 1)
+                PRESET (oldx, 479)
+                LOCATE 1, 70
+                PRINT x; ","; y
+                LOOP UNTIL getkey$ = " "
+                circleradx = ABS(circlecenx - x)
+                circlerady = ABS(circleceny - y)
+                radius = SQR(circleradx ^ 2 + circlerady ^ 2)
+                CIRCLE (circlecenx, circleceny), radius
+                PRINT #1, "CIRCLE (" + centerx$ + "+ "; circlecenx - centerx; ", " + centery$ + "+ "; circleceny - centery; "), "; radius; ", "; col
+                lastx = x
+                lasty = y
+                LINE (0, 470)-(10, 480), 0, BF
+                LINE (0, 475)-(10, 475), 15
+                LINE (5, 470)-(5, 480), 15
+                PRESET (5, 475)
+                GET (0, 470)-(10, 480), zzz
+                END IF
+IF key$ = "l" THEN
+        LINE (0, 470)-(10, 480), 0, BF
+        LINE (0, 480)-(10, 470)
+        LINE (5, 473)-(5, 477)
+        LINE (3, 475)-(7, 475)
+        PRESET (5, 475)
+        GET (0, 470)-(10, 480), zzz
+        DO
+        oldx = x
+        oldy = y
+        getkey$ = INKEY$
+        IF getkey$ = "4" THEN x = x - 1
+        IF getkey$ = "6" THEN x = x + 1
+        IF getkey$ = "8" THEN y = y - 1
+        IF getkey$ = "2" THEN y = y + 1
+        PUT (x - 5, y - 5), zzz, XOR
+        PUT (x - 5, y - 5), zzz, XOR
+        PSET (1, y), 15
+        PSET (639, y), 15
+        PSET (x, 1), 15
+        PSET (x, 479), 15
+        PRESET (1, oldy)
+        PRESET (639, oldy)
+        PRESET (oldx, 1)
+        PRESET (oldx, 479)
+        LOCATE 1, 70
+        PRINT x; ","; y
+        LOOP UNTIL getkey$ = " "
+                LOCATE 2, 70
+                PRINT x; ","; y
+                PSET (x, y), col
+                linestartx = x
+                linestarty = y
+                DO
+                oldx = x
+                oldy = y
+                getkey$ = INKEY$
+                IF getkey$ = "4" THEN x = x - 1
+                IF getkey$ = "6" THEN x = x + 1
+                IF getkey$ = "8" THEN y = y - 1
+                IF getkey$ = "2" THEN y = y + 1
+                PUT (x - 5, y - 5), zzz, XOR
+                PUT (x - 5, y - 5), zzz, XOR
+                LOCATE 1, 70
+                PSET (1, y), 15
+                PSET (639, y), 15
+                PSET (x, 1), 15
+                PSET (x, 479), 15
+                PRESET (1, oldy)
+                PRESET (639, oldy)
+                PRESET (oldx, 1)
+                PRESET (oldx, 479)
+                LOCATE 1, 70
+                PRINT x; ","; y
+                LOOP UNTIL getkey$ = " " OR getkey$ = "b"
+                lineendx = x
+                lineendy = y
+                IF getkey$ = " " THEN
+                        LINE (linestartx, linestarty)-(lineendx, lineendy), col
+                        PRINT #1, "LINE (" + centerx$ + "+ "; linestartx - centerx; ", " + centery$ + "+ "; linestarty - centery; ")-(" + centerx$ + "+ "; lineendx - centerx; ", " + centery$ + "+ "; lineendy - centery; "), "; col
+                        END IF
+                IF getkey$ = "b" THEN
+                        LINE (linestartx, linestarty)-(lineendx, lineendy), col, B
+                        PRINT #1, "LINE (" + centerx$ + "+ "; linestartx - centerx; ", " + centery$ + "+ "; linestarty - centery; ")-(" + centerx$ + "+ "; lineendx - centerx; ", " + centery$ + "+ "; lineendy - centery; "), "; col; ", B"
+                        END IF
+                        lastx = x
+                        lasty = y
+                        LINE (0, 470)-(10, 480), 0, BF
+                        LINE (0, 475)-(10, 475), 15
+                        LINE (5, 470)-(5, 480), 15
+                        PRESET (5, 475)
+                        GET (0, 470)-(10, 480), zzz
+                        END IF
+IF key$ = "p" THEN
+        PAINT (x, y), col, col
+        PRINT #1, "PAINT (" + centerx$ + "+ "; x - centerx; ", " + centery$ + "+ "; y - centery; "), "; col; ", "; col
+        lastx = x
+        lasty = y
+        END IF
+IF key$ = "q" THEN
+        DO
+        getkey$ = INKEY$
+        oldx = x
+        oldy = y
+        IF getkey$ = "4" THEN x = x - 1
+        IF getkey$ = "6" THEN x = x + 1
+        IF getkey$ = "8" THEN y = y - 1
+        IF getkey$ = "2" THEN y = y + 1
+        IF oldy <> y OR oldx <> x THEN
+                PSET (x, y), col
+                PRINT #1, "PSET (" + centerx$ + "+ "; x - centerx; "," + centery$ + "+ "; y - centery; "), "; col
+                END IF
+        IF key$ = "q" THEN
+                lastx = x
+                lasty = y
+                END IF
+        LOOP UNTIL getkey$ = "q"
+        END IF
+IF key$ = "s" THEN
+        ender = RND * 10
+        FOR count = 1 TO ender
+        xvar = (RND * 10) - 5 + x
+        yvar = (RND * 10) - 5 + y
+        PSET (xvar, yvar), col
+        PRINT #1, "PSET (" + centerx$ + "+ "; xvar - centerx; ", " + centery$ + "+ "; yvar - centery; "), "; col
+        NEXT
+        END IF
+IF key$ = "g" THEN
+        IF gridcol = 0 THEN gridcol = 1 ELSE gridcol = 0
+        FOR gridx = 10 TO 630 STEP 10
+                FOR gridy = 10 TO 470 STEP 10
+                        PSET (gridx, gridy), gridcol * 8
+                        NEXT
+                NEXT
+        END IF
+IF key$ = "4" THEN x = x - 1
+IF key$ = "6" THEN x = x + 1
+IF key$ = "8" THEN y = y - 1
+IF key$ = "2" THEN y = y + 1
+PUT (x - 5, y - 5), zzz, XOR
+PUT (x - 5, y - 5), zzz, XOR
+IF key$ = " " THEN
+        PSET (x, y), col
+        PRINT #1, "PSET (" + centerx$; "+ "; (x - centerx); ","; centery$; "+ "; (y - centery); "),"; col
+        lastx = x
+        lasty = y
+        END IF
+PSET (1, y), 15
+PSET (639, y), 15
+PSET (x, 1), 15
+PSET (x, 479), 15
+PRESET (1, oldy)
+PRESET (639, oldy)
+PRESET (oldx, 1)
+PRESET (oldx, 479)
+LOCATE 1, 70
+PRINT x; ","; y
+LOCATE 2, 70
+PRINT lastx; ","; lasty
+IF key$ = "x" THEN
+        CLOSE #1
+        STOP
+        END IF
+LOOP
+
+SUB delay (seconds!)
+start# = TIMER
+DO WHILE TIMER - start# < seconds!
+LOOP
+END SUB
+
+SUB Bamstart
+SCREEN 12
+COLOR 1
+z = 0
+n = 0
+B = 0
+a = 480
+m = 640
+c = 1
+l = 215
+s = 175
+REM PLAY "mbl4f#f#gaagf#eddef#f#4.e8ep4f#f#gaagf#eddef#e4.d8d4p4"
+REM PLAY "mbl4eef#def#8g8f#def#8g8f#edeap4f#f#gaagf#eddef#e4.d8d4"
+REM PLAY "mbp4d2l8egf#ea4a4abf#ge4e4egf#el8d>dc#<bagf#el8d2egf#ea4a4abf#ge4e4egf#edaef#d"
+DO
+IF a = 220 THEN
+        'SCREEN 12
+        CLS
+        c = 2
+END IF
+
+LINE (B, 260)-(B - 80, 260), c
+LINE -(B - 80, 220), c
+LINE -(B, 220), c
+LINE -(B, 230), c
+LINE -(B - 10, 240), c
+LINE -(B, 250), c
+LINE -(B, 260), c
+LINE (B - 60, 225)-(B - 20, 235), c, B
+LINE (B - 60, 245)-(B - 20, 255), c, B
+PAINT (B - 1, 259), 0, c
+LINE (280, a)-(360, a), c + 1
+LINE -(360, a + 40), c + 1
+LINE -(340, a + 40), c + 1
+LINE -(340, a + 25), c + 1
+LINE -(300, a + 25), c + 1
+LINE -(300, a + 40), c + 1
+LINE -(280, a + 40), c + 1
+LINE -(280, a), c + 1
+LINE (300, a + 5)-(340, a + 15), c + 1, B
+LINE (300, a + 16)-(300, a + 19), 0
+LINE (340, a + 16)-(340, a + 19), 0
+LINE (300, a + 17)-(340, a + 17), 0
+PAINT (281, a + 1), 0, c + 1
+LINE (m, 220)-(m + 20, 220), c - 1
+LINE -(m + 40, 240), c - 1
+LINE -(m + 60, 220), c - 1
+LINE -(m + 80, 220), c - 1
+LINE -(m + 80, 260), c - 1
+LINE -(m + 60, 260), c - 1
+LINE -(m + 60, 240), c - 1
+LINE -(m + 40, 260), c - 1
+LINE -(m + 20, 240), c - 1
+LINE -(m + 20, 260), c - 1
+LINE -(m, 260), c - 1
+LINE -(m, 220), c - 1
+PAINT (m + 1, 221), 0, c - 1
+B = B + 2
+a = a - 2
+m = m - 2
+c = c + 3
+IF c > 15 THEN
+c = 2
+END IF
+delay 0.02
+LOOP UNTIL a < 220
+DO WHILE s < 465
+PSET (175, l), 15
+PSET (465, ABS(l - 480)), 15
+PSET (s, 215), 15
+PSET (ABS(s - 640), 265), 15
+l = l + (5 / 29)
+s = s + 1
+delay 0.005
+LOOP
+PAINT (B - 21, 259), 4, 2
+PAINT (281, a + 21), 4, 3
+PAINT (m + 21, 221), 4, 1
+
+LOCATE 13, 30
+PRINT "THANK YOU FOR CHOOSING"
+COLOR 15
+LOCATE 25, 5
+PRINT "(C) BAM1996"
+COLOR 2
+LOCATE 25, 64
+PRINT "PRESS ENTER"
+DO WHILE INKEY$ = ""
+LOOP
+FOR line1 = 0 TO 640 STEP 1
+LINE (320, 240)-(line1, 0), RND * 5
+LINE (320, 240)-(ABS(line1 - 640), 480), RND * 5
+delay 0.001
+NEXT line1
+FOR line1 = 0 TO 480 STEP 1
+LINE (320, 240)-(0, line1), RND * 5
+LINE (320, 240)-(640, ABS(line1 - 480)), RND * 5
+delay 0.001
+NEXT line1
+FOR line1 = 0 TO 640 STEP 2
+LINE (line1, 0)-(line1, 480), 0
+LINE (ABS(line1 - 639), 0)-(ABS(line1 - 639), 480), 0
+delay 0.002
+NEXT line1
+END SUB

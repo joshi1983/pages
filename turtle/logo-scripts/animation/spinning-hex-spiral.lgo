@@ -1,0 +1,44 @@
+; inspired by 
+; https://ca.pinterest.com/pin/10625749105882277
+to rousseauSpiral :height :t
+	localmake "oldState turtleState
+	localmake "t power 2 * (0.5 - :t) 2
+	jumpForward :height / 2
+	setPenSize :height * 0.002
+	localmake "radius (:height - penSize) / 2
+	setPenColor "violet
+	setPenBlendMode "lighter
+	repeat 60 [
+		regularPolygon :radius 6
+		localmake "ratio1 repcount / 30 + 2 * :t
+		localmake "ratio (1 + sin 360 * :ratio1) / 2
+		localmake "angle mix 360 / 6 10 interpolateRatio easeInOut :ratio
+		right :angle
+		localmake "radius :radius * (cos 180 / 6) / cos (180 / 6 - :angle)
+	]
+	setPenSize 0
+	setFillColor "white
+	circle :height * 0.01
+	
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+make "t animation.clampedTimeRatio
+rousseauSpiral 100 :t
+
+to animation.snapshotstyle
+	output createPList2 [
+		["position.y 50]
+		["zoom.scale 6]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 10
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

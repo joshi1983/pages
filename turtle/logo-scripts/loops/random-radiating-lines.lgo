@@ -1,0 +1,44 @@
+; Inspired by:
+; https://www.pinterest.ca/pin/703756184761950
+; Also similar to:
+; https://www.pinterest.ca/pin/21251429482695745/
+
+to randomBrightColor
+	localmake "result []
+	repeat 3 [
+		queue2 "result 100 + random 155
+	]
+	output :result
+end
+
+to randomRadiatingLines :width :height
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "pos1 [
+		:width * randomRatio
+		:height * randomRatio
+	]
+
+	; convert pos1 into a position that respects 
+	; the current turtle position and heading.
+	jumpLeft item 1 :pos1
+	jumpForward item 2 :pos1
+	localmake "pos1 pos
+	localmake "divisionSize (:width + :height) / 2 / 200
+	setPenSize :divisionSize * 0.2
+	repeat 5000 [
+		localmake "x :width * randomRatio
+		localmake "y :height * randomRatio
+		jumpTo :oldPos
+		jumpLeft :x
+		jumpForward :y
+		setHeading towards :pos1
+		setPenColor randomBrightColor
+		forward :divisionSize * 5
+		setHeading :oldHeading
+	]
+	jumpTo :oldPos
+end
+
+setScreenColor "black
+randomRadiatingLines 800 100

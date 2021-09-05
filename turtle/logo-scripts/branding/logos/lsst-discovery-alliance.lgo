@@ -1,0 +1,55 @@
+; Inspired by logo at:
+; https://lsstdiscoveryalliance.org
+to lsstDiscoveryAllianceLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "innerRadius :height * 0.2885
+	localmake "outerRadius :height / 2
+	localmake "midRadius :innerRadius / cos 45
+	localmake "arcAngle1 90
+	localmake "arcAngle2 2 * arcSin :innerRadius / :outerRadius
+	localmake "crossLines1 [
+		[-179 0] [6 1.957] [15 0.45] [23 0.25]
+	]
+	localmake "crossLinesPair (combine :crossLines1
+		reverse :crossLines1 [[-180 0]])
+	setPenSize 0
+	setFillColor "#f5821e
+	jumpForward :height / 2
+	localmake "center pos
+	circle :innerRadius
+	repeat 4 [
+		setHeading :oldHeading + repcount * 360 / 4
+		setFillColor "#7496ce
+		drawArcLineShape [-1 1
+			[
+				[:arcAngle1 / 2 - 90 0]
+				[-:arcAngle1 :midRadius / :innerRadius]
+			]
+		] :innerRadius
+		setFillColor "#5063b2
+		drawArcLineShape [-:innerRadius / :outerRadius
+			:midRadius / :outerRadius
+			[
+				[:arcAngle2 / 2 - 90 0]
+				[-:arcAngle2 1]
+			]
+		] :outerRadius
+		jumpLeft :innerRadius
+		jumpForward :innerRadius
+		polyStart
+		jumpForward distanceToCircle :center :outerRadius
+		setHeading (towards :center) + 90
+		arcLeft 90 - :arcAngle2 :outerRadius
+		polyEnd
+		jumpTo :center
+	]
+	setFillColor "white
+	setHeading :oldHeading
+	drawArcLineShape [0 0.5 
+		(combine :crossLinesPair :crossLinesPair :crossLinesPair :crossLinesPair)
+	] :height
+	setTurtleState :oldState
+end
+
+lsstDiscoveryAllianceLogo 100

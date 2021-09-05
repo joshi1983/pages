@@ -1,0 +1,46 @@
+; Inspired by logo at:
+; https://chartwell.com
+to chartwellLogo :height
+	localmake "oldState turtleState
+	localmake "brownColor "#5d4156
+	localmake "blueColor "#0172bb
+	localmake "purpleColor "#8d135e
+	localmake "leafs [
+		[:brownColor :blueColor :blueColor :blueColor]
+		[:purpleColor :brownColor :brownColor :purpleColor]
+		[:brownColor :blueColor :blueColor :brownColor]
+	]
+	localmake "opaqueShape [0 0
+		[[0.32] [-40 0] [0.13] [-64 0] [0.22] [-105.3 0]
+		[-19 1.4]]
+	]
+	localmake "semitransparentShape [0 0
+		[[0.39] [-70.503178 0] [0.0886453] [-39 0] [0.26]
+		[-102 0] [-27 1]]
+	]
+	localmake "opacity 0.5
+	jumpForward :height / 2
+	localmake "center pos
+	right 38 + 90
+	setPenSize 0
+	repeat count :leafs [
+		localmake "info item repcount :leafs
+		jumpForward :height * 0.045
+		setFillColor mix item 3 :info transparent :opacity
+		drawArcLineShape :semitransparentShape -:height
+
+		setFillColor mix last :info transparent :opacity
+		drawArcLineShape :semitransparentShape :height
+
+		setFillColor first :info
+		drawArcLineShape :opaqueShape :height
+		setFillColor item 2 :info
+		drawArcLineShape :opaqueShape -:height
+
+		right 90
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+chartwellLogo 100

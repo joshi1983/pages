@@ -1,0 +1,21 @@
+to indexOfSorted :needle :haystack :compareProc
+	if empty? :haystack [
+		output 0 ; indicate not found
+	]
+	localmake "maxIndex count :haystack
+	localmake "minIndex 1
+	while :maxIndex >= :minIndex [
+		localmake "midIndex int (:maxIndex + :minIndex) / 2
+		localmake "value item :midIndex :haystack
+		localmake "compareResult (invoke :compareProc :needle :value)
+		ifelse :compareResult < 0 [
+			localmake "maxIndex :midIndex - 1
+		] [
+			if :compareResult = 0 [
+				output :midIndex
+			]
+			localmake "minIndex :midIndex + 1
+		]
+	]
+	output 0 ; indicate not found
+end

@@ -1,0 +1,71 @@
+; Inspired by:
+; https://en.wikipedia.org/wiki/File:Flag_of_the_Federal_Supreme_Court.jpg
+;
+; The main difference between what this code draws and the original JPG is:
+; - the stars on the left side don't line up very well.
+; This code equally spaces every little star assuming that is desirable.
+; Maybe the stars were positioned by eye or freehand instead of 
+; precisely measuring their position.
+to brazilSupremeCourtFlag1 :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "width :height * 3 / 2
+	localmake "brazilYellow "#ffc000
+	localmake "starRadiusRatio 0.5
+	localmake "largeRadius :height * 0.155
+	localmake "largeStarHeight :largeRadius * (1 + cos 180 / 5)
+	localmake "numTinyStars 20
+	localmake "tinyStarOffset :height * 0.42
+	localmake "tinyRadius :height * 0.045
+	stripes :width :height [:brazilYellow]
+	jumpForward :height / 2
+	setPenSize 0
+	setFillColor "#001478
+	jumpBackward :largeRadius - :largeStarHeight / 2  
+	isotoxalStar :largeRadius :largeRadius * :starRadiusRatio 5
+	localmake "center pos
+	repeat :numTinyStars [
+		right repcount * 360 / :numTinyStars
+		jumpForward :tinyStarOffset
+		setHeading :oldHeading
+		isotoxalStar :tinyRadius :tinyRadius * :starRadiusRatio 5
+		
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by:
+; https://upload.wikimedia.org/wikipedia/commons/d/d8/Flag_of_the_Federal_Supreme_Court_of_Brazil.svg
+to brazilSupremeCourtFlag2 :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "width :height * 3 / 2
+	localmake "largeStarSize :height * 0.139
+	localmake "largeStarHeight :largeStarSize * (1 + cos 180 / 5)
+	localmake "numTinyStars 20
+	localmake "tinyStarOffset :height * 0.375
+	localmake "tinyRadius :height * 0.04
+	stripes :width :height ["#ffcb00] 
+	jumpForward :height / 2
+	setPenSize 0
+	setFillColor "#302681
+	localmake "center pos
+	jumpBackward :largeStarSize - :largeStarHeight / 2
+	regularStar :largeStarSize 5
+	repeat :numTinyStars [
+		right repcount * 360 / :numTinyStars
+		jumpForward :tinyStarOffset
+		setHeading :oldHeading
+		regularStar :tinyRadius 5
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 5
+jumpLeft :separation / 2
+brazilSupremeCourtFlag1 :height
+jumpRight :separation
+brazilSupremeCourtFlag2 :height

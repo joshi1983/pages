@@ -1,0 +1,148 @@
+; This shows a few variations of an Irish Celtic symbol Triskelion.
+; Learn more at: https://en.wikipedia.org/wiki/Triskelion
+
+to spiralArm :size
+	localmake "maxDotSize :size * 0.03
+	localmake "numDots 71.8
+	localmake "oldState turtleState
+	localmake "maxAngleDelta 100000 / :numDots
+	localmake "minAngleDelta 0
+	repeat :numDots [
+		localmake "dotSize max 0.01 (:maxDotSize * sin repcount * 180 / :numDots)
+		forward :dotSize * 3
+		circle :dotSize
+		left (mix :maxAngleDelta :minAngleDelta repcount / :numDots) * :dotSize / :size
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by:
+; https://www.pinterest.ca/pin/70368812919029032/
+to triplePattern :size
+	localmake "oldPos pos
+	localmake "angle1 19
+	localmake "size1 :size * 1.02
+	repeat 3 [
+		jumpBackward :size * 0.3
+		left :angle1
+		spiralArm :size1
+		jumpTo :oldPos
+		right 120 + :angle1
+	]
+end
+
+to triskelionArm :size
+	localmake "oldState turtleState
+	localmake "angle 30
+	localmake "radius :size * 0.6
+	repeat 40 [
+		arcLeft :angle :radius
+		ifelse repcount > 3 [
+			localmake "radius :radius * 0.95
+		] [
+			localmake "radius :radius * 0.9
+		]
+	]
+	setTurtleState :oldState
+end
+
+; Triskelion inspired by
+; https://mythologian.net/celtic-symbols-meanings/
+to triskelion :size
+	localmake "oldPos pos
+	localmake "angle1 19
+	localmake "size1 :size * 1.00665
+	setPenSize :size * 0.02
+	setLineCap "round
+	setLineJoinStyle "round
+	repeat 3 [
+		jumpBackward :size * 0.14
+		left :angle1
+		triskelionArm :size1
+		jumpTo :oldPos
+		right 120 + :angle1
+	]
+end
+
+to spiralIn2 :maxRadius :minRadius :finalAngle
+	localmake "numDivisions 100
+	localmake "angleStep :finalAngle / :numDivisions
+	localmake "step (:maxRadius - :minRadius) / (:numDivisions - 1)
+	repeat :numDivisions [
+		arcLeft :angleStep :maxRadius
+		localmake "maxRadius :maxRadius - :step
+	]
+end
+
+to spiralOut2 :maxRadius :minRadius :finalAngle
+	localmake "numDivisions 100
+	localmake "angleStep :finalAngle / :numDivisions
+	localmake "step (:maxRadius - :minRadius) / :numDivisions
+	localmake "maxRadius :maxRadius - (:numDivisions - 1) * :step
+	repeat :numDivisions [
+		arcRight :angleStep :maxRadius
+		localmake "maxRadius :maxRadius + :step
+	]
+end
+
+to triskele :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "inOutAngle 172
+	localmake "size1 :size * 0.05
+	localmake "innerAngleSpiral2 180
+	localmake "outerAngleSpiral2 378
+
+	; draw around the tiny circle in the center.
+	setPenColor "black
+	setFillColor transparent
+	setPenSize :size * 0.065
+	circle :size * 0.077
+
+	setPenSize 0
+	setFillColor "black
+	repeat 3 [
+		setHeading :oldHeading + repcount * 360 / 3 - 22.5
+		jumpForward :size
+		left 90
+		polyStart
+		arcLeft 96 :size
+		spiralIn2 :size * 0.47 :size1 500
+		spiralIn2 :size1 0 120
+		localmake "spiralCenterPos pos
+		localmake "spiralInHeading heading
+		left :inOutAngle
+		spiralOut2 :size1 0 120
+		spiralOut2 :size * 0.37 :size1 490
+		arcRight 88.905 :size * 0.91
+		left 35.4
+		arcRight 19.95 :size * 0.5
+		polyEnd
+		jumpTo :spiralCenterPos
+		setHeading :spiralInHeading
+		polyStart
+		spiralOut2 :size1 0 :innerAngleSpiral2
+		spiralOut2 :size * 0.43 :size1 :outerAngleSpiral2
+		forward :size * 0.435
+		right 133
+		forward :size * 0.2
+		right 60
+		forward :size * 0.23
+		spiralIn2 :size * 0.3453 :size1 :outerAngleSpiral2
+		spiralIn2 :size1 0 :innerAngleSpiral2
+		polyEnd
+		jumpTo :oldPos
+	]
+	setHeading :oldHeading
+end
+
+make "size 100
+make "separation :size * 3
+jumpLeft :separation
+setFillColor "black
+setPenSize 0
+triplePattern :size
+jumpRight :separation
+triskelion :size
+jumpRight :separation
+triskele :size

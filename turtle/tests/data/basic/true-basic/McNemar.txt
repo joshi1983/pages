@@ -1,0 +1,21 @@
+!
+!  MCNEMAR
+!
+!  Show how to use the McNemar chi-square test on a 2x2 table.
+!
+LIBRARY "Stat1Lib.trc"
+
+DIM t(2,2)
+
+MAT READ t                        ! Read 2x2 table
+DATA 0, 6, 6, 2
+
+PRINT "For 2x2 Table:"            ! Print it
+MAT PRINT t;
+
+CALL McNemarChi (t, chi2, p)      ! Compute stats and print them
+PRINT "McNemar chi-square: "; chi2
+PRINT "Probability: "; Using$("#.####",p)
+
+END
+

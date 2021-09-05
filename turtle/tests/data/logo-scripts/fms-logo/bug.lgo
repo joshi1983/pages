@@ -1,0 +1,187 @@
+; Copied from:
+; https://sourceforge.net/p/fmslogo/discussion/500407/thread/85ba0ad393/
+
+to aaa
+   ; In the spirit of the new "Bug" movies
+   perspective
+   cs
+   setsc [0 0 0]
+   ask -3 [setxyz 207 243 97]
+
+   ht
+   pu
+
+   ;FillColorPalette ; Only needed for 256 color mode (also for saving a GIF)
+
+   DrawBug 10 100
+   polyview
+
+   ;gifsave "bug.gif
+end
+
+to ConnectDots :PointA :PointB :PointC :PointD
+   localmake "PointE posxyz
+   setposxyz :PointA
+   pd
+   polystart
+   setposxyz :PointB
+   setposxyz :PointC
+   setposxyz :PointD
+   setposxyz :PointA
+   polyend
+   pu
+   setposxyz :PointE
+end
+
+to Cylinder :length :rad :step :color
+   setpc :color
+   repeat 360/:step ~
+      [
+      down 90
+      localmake "PointA GetPoint :rad
+      rt :step
+      localmake "PointB GetPoint :rad
+      up 90
+      fd :length
+      down 90
+      localmake "PointC GetPoint :rad
+      lt :step
+      localmake "PointD GetPoint :rad
+      up 90
+      bk :length
+      ConnectDots :PointA :PointB :PointC :PointD
+      rr :step
+      ]
+end
+
+to DrawBug :step :size
+   up 90
+   bk :size*2
+
+   ; Body
+   repeat 3 [Sphere :size :step [0 0 128] fd :size*2]
+
+   rr 180
+
+   ; Legs
+   repeat 3~
+      [
+      bk :size*2
+      DrawLeg  45 45  90 :size*2 :size :size/10 :size/10 :step [128 0 0]
+      DrawLeg -45 45 -90 :size*2 :size :size/10 :size/10 :step [128 0 0]
+      ]
+
+   fd :size*2*2
+
+   up 45
+
+   ; Eyes
+   DrawEye  30 :size :size/5 :step [128 128 128]
+   DrawEye -30 :size :size/5 :step [128 128 128]
+
+   down 45
+
+   ; Antenna
+   DrawLeg  240 30  90 :size*2 :size/2 :size/10 :size/10 :step [0 128 0]
+   DrawLeg -240 30 -90 :size*2 :size/2 :size/10 :size/10 :step [0 128 0]
+end
+
+to DrawEye :ang :dis :rad :step :color
+   ; An eye is made up of a sphere with another smaller sphere protruding through
+   lt :ang
+   fd :dis
+   sphere :rad :step :color
+   fd :rad/2+:rad/10
+   sphere :rad/2 :step [0 0 0]
+   bk :rad/2+:rad/10
+   bk :dis
+   rt :ang
+end
+
+To DrawLeg :ang1 :ang2 :dir :len1 :len2 :rad1 :rad2 :step :color
+   ; A leg is made of 2 cylinders and a sphere at the joint and the foot
+   rr :ang1
+   rt :dir
+   Cylinder :len1 :rad1 :step :color
+   fd :len1
+   Sphere :rad2 :step :color
+   down :ang2
+   Cylinder :len2 :rad1 :step :color
+   fd :len2
+   Sphere :rad2 :step :color
+   bk :len2
+   up :ang2
+   bk :len1
+   lt :dir
+   lr :ang1
+end
+
+to FillColorPalette
+; This is only needed if working in 256 color mode (or wishing to
+; save a 256 color GIF). The Bug I have chosen to draw used many
+; more colors than 256. By drawing these 5 COARSE looking spheres
+; first I get a reasonable range of colors for the entire bug.
+;
+; The smoother the surface the more colors MSWLogo will use (small changes).
+; By the time I draw a smooth body (shades of blue) and smooth legs
+; (shades of red) the 256 color palette is full and there is nothing
+; left for the other objects. By drawing a very coarse red sphere first
+; I use a moderate number of shades of red (61 to be exact). Then
+; I draw a course blue sphere which uses approx. another 61 colors
+; (shades of blue). And so on, I simply spread out the priorities of
+; colors I needed.
+
+   ClearPalette
+   Sphere 50 30 [0     0 128] fd 100
+   Sphere 50 30 [128   0   0] fd 100
+   Sphere 50 30 [0   128   0] fd 100
+   Sphere 50 30 [0     0   0] fd 100
+   Sphere 50 30 [128 128 128] fd 100
+   PolyView
+   CS
+end
+
+to GetPoint :rad
+   ; grab the point out at :rad distance away
+   fd :rad
+   localmake "pos posxyz
+   bk :rad
+   output :pos
+end
+
+to Slice :rad :step
+   ; Draw an "orange" slice (just the outside surface)
+   localmake "i 0
+   repeat 180/:step ~
+     [
+     down :i
+     localmake "PointA GetPoint :rad
+     down :step
+     localmake "PointB GetPoint :rad
+     up :step
+     up :i
+     rr :step
+     down :i
+     localmake "PointD GetPoint :rad
+     down :step
+     localmake "PointC GetPoint :rad
+     up :step
+     up :i
+     lr :step
+     ConnectDots :PointA :PointB :PointC :PointD
+     make "i :i + :step
+     ]
+;   down 90
+end
+
+to Sphere :rad :step :color
+   setpc :color
+   ; Cover the surface of the sphere with polygons
+   repeat 360/:step [Slice :rad :step rr :step]
+end
+
+to zzz
+ifelse YesNoBox [Welcome] [Choose YES to run example now, Choose NO to Study it now.] [aaa] [edall]
+end
+
+Make "startup [zzz]

@@ -1,0 +1,46 @@
+; This was inspired by a drawing and
+; QB64 code at:
+; https://www.facebook.com/share/p/1CaAFCiwdq/
+; That post was from Mark Stasak.
+
+setScreenColor "black
+make "time interpolateRatio easeInOut animation.clampedTimeRatio
+make "cx 450
+make "cy 450
+make "pi 3.141592654
+make "a 400
+make "b 93
+make "h 128
+make "cycles 5000 * :time
+for [ "t 0 :cycles * :pi 0.05 ] [
+	make "x ( :a - :b ) * ( radCos :t ) + :h *
+	radCos ( :a - :b ) / :b * :t
+	make "y ( :a - :b ) * ( radSin :t ) + :h *
+	radSin ( :a - :b ) / :b * :t
+	setPenColor [ 55 + 200 * radSin 2.1 * :t 55 +
+	200 * radSin 3.3 * :t + :pi / 3 55 + 200 *
+	radSin 7.7 * :t + 2 * :pi / 3]
+	make "p [ :cx + :x :cy + :y ] 
+	ifelse :t = 0 [
+		jumpTo :p
+	] [
+		setPos :p
+	]
+]
+
+to animation.snapshotstyle
+	output createPList2 [
+		["position.x 452]
+		["position.y 452]
+		["zoom.scale 0.8]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 5
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

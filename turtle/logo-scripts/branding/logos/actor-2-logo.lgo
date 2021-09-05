@@ -1,0 +1,70 @@
+; Inspired by a logo at:
+; https://winworldpc.com/product/actor/2x
+;
+; The wink animation is there to resemble the animation shown on
+; the computer when running Actor 2 software.
+
+; https://archive.org/details/programming_2
+;
+; This should start at a part of the video shortly before the Actor 2.0 animation:
+; https://archive.org/details/programming_2?start=666.8
+;
+; Another copy of the video is at:
+; https://youtu.be/TcrmLfQx_to?t=674
+to actor2Logo :height :timeRatio
+	localmake "oldState turtleState
+	localmake "eyeRadius :height * 0.045
+	setFillColor "white
+	setPenSize 0
+	drawArcLineShapes [
+		; eyebrow and nose
+		[0.0375 0.025
+			[[50 0.01] [38 0.14] [-83 0] [-8 3.5] [0.3] [80 0.06] [-30 0.02]
+			[0.1] [50 0.03] [0.02] [120 0.02] [-150 0.007] [40 0.15] [0.05]
+			[-50 0.05] [60 0.02] [-25 0.1] [40 0.05] [0.025] [-20 0.1] [0.02] [165 0.026]
+			[0.03] [30 0.12] [-37 0.03] [0.18] [-25 0.1] [0.05] [90 0.06] [-155 0]
+			[0.84] [90 0.02] [0.08] [20 0.15] [40 0.02] [20 0.006]]
+		]
+
+		; other eyebrow above winking eye
+		[0.06 0.848
+			[[-50 0.02] [0.08] [-5 0.3] [-40 0.2] [0.02] [-17 0.1] [25 0.03] [0.06]
+			[-20 0.1] [0.1] [20 0.15] [0.03] [-90 0] [-18 0.13] [-76 0.02] [0.04]
+			[-15 0.5] [17 0.1] [0.055] [48 0] [0.057] [-140 0.01] [170 0] [-120 0.012]
+			[-40 0.01] [140 0] [-90 0.015] [-80 0.014] [0.025] [165 0] [0.06] [-55 0.02]
+			[-5 0.4] [10 0.3] [-20 0.08] [-30 0.03]]
+		]
+	] :height
+
+	; eyes
+	jumpForward :height * 0.71
+	jumpLeft :height * 0.215
+	setPenColor fillColor
+	setFillColor transparent
+	setPenSize :height * 0.015
+	circle :eyeRadius
+	jumpRight :height * 0.402
+
+	; winking eye
+	ellipse :eyeRadius :eyeRadius * mixItems [1 0.1] interpolateRatio easeIn clamp 2 * :timeRatio - 1 0 1
+	setTurtleState :oldState
+end
+
+setScreenColor "#5057ff
+actor2Logo 100 animation.clampedTimeRatio
+
+to animation.snapshotstyle
+	output createPList2 [
+		["position.y 50]
+		["zoom.scale 5]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 2
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

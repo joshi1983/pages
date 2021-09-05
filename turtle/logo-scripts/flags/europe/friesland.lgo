@@ -1,0 +1,118 @@
+to drawDiagonalStripes :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "width :height * 13 / 9
+	localmake "size1 :height * 6 / 21
+	localmake "angle1 arcTan :height / :width
+
+	jumpLeft :width / 2
+	setFillColor "#0155a5
+	setPenSize 0
+	polyStart
+	jumpForward :size1
+	localmake "pos1 pos
+	right 90 + :angle1
+	jumpForward :size1 / sin :angle1
+	polyEnd
+
+	jumpTo :pos1
+	setHeading :oldHeading
+	jumpForward :size1
+	polyStart
+	jumpForward :size1
+	right 90 + :angle1
+	jumpForward :size1 * 3 / sin :angle1
+	setHeading :oldHeading
+	jumpLeft :size1 / tan :angle1
+	polyEnd
+
+	setTurtleState :oldState
+end
+
+to drawSeeblatt :size
+	localmake "oldState turtleState
+	localmake "arcsInfo [
+		[7.5 0] [85 0.675] [52 0.34] [100 0.24]
+		[18.8 0.51]
+	]
+	localmake "middleAngle 180
+	repeat count :arcsInfo [
+		localmake "arcInfo item repcount :arcsInfo
+		localmake "angle first :arcInfo
+		localmake "middleAngle :middleAngle - :angle
+	]
+	localmake "middleAngle -2 * :middleAngle
+	setPenSize 0
+	setFillColor "#ee3e34
+	jumpLeft :size * 0.5035
+	polyStart
+	arcsRight :arcsInfo :size
+	arcLeft :middleAngle :size * 0.042115
+	arcsRight reverse :arcsInfo :size
+	polyEnd
+	setTurtleState :oldState
+end
+
+to drawSeeblattsPair :height :seeblattSize :flipAngle
+	localmake "oldState turtleState
+	localmake "width :height * 13 / 9
+	localmake "size1 :height * 6 / 21
+	localmake "angle1 arcTan :height / :width
+	jumpLeft :width / 2 - :size1 * 1.5 / tan :angle1
+	left 90 - :angle1
+	jumpForward :height * 0.2728
+	repeat 2 [
+		right :flipAngle
+		drawSeeblatt :seeblattSize
+		left :flipAngle
+		jumpForward :height * 0.3045
+	]
+	setTurtleState :oldState
+end
+
+to drawSeeblatts :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "width :height * 13 / 9
+	localmake "angle1 arcTan :height / :width
+	localmake "size2 (hypot [:width :height]) * 0.267
+	localmake "seeblattSize :height * 0.175
+	jumpForward :height / 2
+	left 90 - :angle1
+	jumpBackward :size2 * 2
+	repeat 3 [
+		jumpForward :size2
+		drawSeeblatt :seeblattSize
+	]
+	jumpTo :oldPos
+	setHeading :oldHeading
+	drawSeeblattsPair :height :seeblattSize 0
+	jumpForward :height
+	right 180
+	drawSeeblattsPair :height :seeblattSize 180
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Friesland#/media/File:Frisian_flag.svg
+to frieslandFlag :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "width :height * 13 / 9
+	stripes :width :height ["white]
+
+	drawDiagonalStripes :height
+	jumpForward :height
+	right 180
+	drawDiagonalStripes :height
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	drawSeeblatts :height
+	setTurtleState :oldState
+end
+
+setScreenColor "#000
+frieslandFlag 100

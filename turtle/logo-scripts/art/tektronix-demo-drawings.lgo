@@ -1,0 +1,193 @@
+make "thicknessFactor 0.002
+make "mainColor "lime
+
+to drawBowTie :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	jumpRight :height * 0.302
+	jumpForward penSize / 2
+	localmake "startPos pos
+	arcLines [
+		[-90 0] [107 0.02] [0.04] [-50 0.029] [0.04] [150 0.016]
+		[0.01]
+	] :height
+	jumpTo :startPos
+	setHeading :oldHeading
+	arcLines [[90 0] [-40 0.04] [0.065]] :height
+
+	localmake "startPos pos
+	setHeading :oldHeading + 30
+	arcLeft 64 :height * 0.033
+
+	jumpTo :startPos
+	setHeading :oldHeading - 90
+	forward :height * 0.077
+	localmake "startPos pos
+	setHeading :oldHeading + 30
+	arcLeft 62 :height * 0.054
+
+	jumpTo :startPos
+	setHeading :oldHeading - 115
+	arcLines [[0.1] [-147 0.019] [0.035] [53 0.02] [0.035]
+		[-130 0.021] [0.045]] :height
+	setTurtleState :oldState
+end
+
+to drawTongue :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	jumpForward :height * 0.198
+	jumpRight :height * 0.1019
+	arcLines [[-70 0] [-51.5 0.086]] :height
+	localmake "startPos pos
+	arcLines [[-8 0.086] [0.025]] :height
+
+	jumpTo :startPos
+	setHeading :oldHeading + 40
+	arcLines [[-79 0.032] [-35 0.105] [-23 0.05]] :height
+	setTurtleState :oldState
+end
+
+to drawEye :height :rotation
+	localmake "oldState turtleState
+	setFillColor transparent
+	right :rotation
+	ellipse :height * 0.23 :height / 2	
+	jumpRight :height * 0.17
+	jumpBackward :height * 0.34
+	arcLines [[90 0] [-177 0.12] [-21 0.16]] :height
+	setTurtleState :oldState
+end
+
+to drawEyes :height
+	localmake "oldState turtleState
+	jumpForward :height * 0.5134
+	jumpRight :height * 0.1773
+	drawEye :height * 0.155 -30
+
+	jumpRight :height * 0.112
+	jumpForward :height * 0.04
+	drawEye :height * 0.13 -30
+	setTurtleState :oldState
+end
+
+to drawEyeBrows :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	jumpForward :height * 0.553
+	jumpRight :height * 0.075
+	arcLines [[0.02] [-58 0.05]] :height
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.625
+	jumpRight :height * 0.23
+	arcLines [[-40 0] [-70 0.028] [-14 0.05]] :height
+	setTurtleState :oldState
+end
+
+to drawJawAndNose :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	jumpRight :height * 0.043
+	jumpForward :height * 0.215
+	right 155
+	arcLines [[35 0.23] [20 0.2] [76 0.09] [43 0.15]] :height	
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpRight :height * 0.285
+	jumpForward :height * 0.251
+	arcLines [[-162 0] [-18 0.2] [-110 0.072] [-30 0.2] [-36 0.3]
+		[-142.5 0] [40 0.3] [35 0.34] [78 0.23] [-90 0] [360 0.049]
+		[180 0] [-55 0.049] [40 0] [40 0.14] [7 0.4]] :height
+	localmake "startPos pos
+	arcLeft 6 :height * 0.4
+
+	jumpTo :startPos
+	setHeading :oldHeading - 90
+	arcLines [[40 0.11] [14 0.25]] :height
+	setTurtleState :oldState
+end
+
+to drawFace :height
+	localmake "oldState turtleState
+	drawTongue :height
+	drawEyes :height
+	drawEyeBrows :height
+	drawJawAndNose :height
+
+	jumpRight :height * 0.069
+	jumpForward :height * 0.17
+	left 95
+	arcLines [[-30 0.17] [-10 0.15] [-140 0.123] [-24 0.2]
+		[160 0] [-40 0.22] [-24 0.15] [-70 0.07] [-47 0.09]
+		[-11.8 0.3] [156 0] [-50 0.055] [-70 0.04] [-16 0.1]] :height
+	setTurtleState :oldState
+end
+
+to drawEars :height
+	localmake "oldState turtleState
+	jumpRight :height * 0.36
+	jumpForward :height * 0.495
+	arcLines [[10 0] [60 0.246] [44 0.35] [-165 0]
+	[120 0.18] [80 0.2] [60 0.165] [87 0.196]
+	[-168 0] [43 0.3] [-165 0] [70 0.17] [60 0.21]
+	[90 0.165] [30 0.18] [90 0.2] [-160 0]
+	[64.5 0.27]] :height
+
+	setTurtleState :oldState
+end
+
+; Inspired by drawing at:
+; https://youtu.be/-IavrvMZzE0?t=56
+to mickeyMouse :height
+	localmake "oldState turtleState
+	setPenSize :height * :thicknessFactor
+	setPenColor :mainColor
+	drawBowTie :height
+	drawFace :height
+	drawEars :height
+	setTurtleState :oldState
+end
+
+; Inspired by drawing at:
+; https://youtu.be/-IavrvMZzE0?t=291
+to marvelShape :height
+	localmake "oldState turtleState
+	localmake "angle 45
+	localmake "numIterations 100
+	setPenSize :height * :thicknessFactor
+	setPenColor :mainColor
+	jumpForward :height / 2
+	localmake "height :height / cos :angle
+	localmake "center pos
+	left :angle
+	localmake "heading1 heading
+	repeat :numIterations [
+		localmake "xRatio 5 * cos 500 * repRatio
+		localmake "angle arcTan :xRatio
+		jumpBackward :height / 2
+		left 90 - :angle / 2
+		localmake "w :height / 2 / cos :angle / 2
+		jumpRight :w / 2
+		parallelogram :w :w 90 - :angle
+		setHeading :heading1
+		jumpTo :center
+		localmake "height :height * (1 - 2 / :numIterations)
+	]
+
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+setLineJoinStyle "round
+setLineCap "round
+make "height 100
+make "separation :height * 5
+jumpLeft :separation / 2
+mickeyMouse :height
+jumpRight :separation
+marvelShape :height

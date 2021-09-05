@@ -1,0 +1,39 @@
+; Inspired by logo at:
+; https://1000logos.net/wp-content/uploads/2021/06/ngcbrand.png
+;
+; It is also at:
+; https://www.gallery.ca
+to nationalGalleryOfCanadaLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "thickness :height * 0.25
+	localmake "lines1 [
+		[45 0] [:thickness / :height / 2 / cos 45]
+		[-45 0]
+	]
+	localmake "radius :height / 2
+	localmake "arcAngle 2 * arcSin :thickness / 2 / :radius
+	setPenSize 0
+	setFillColor "black
+	jumpForward :height / 2
+	localmake "center pos
+	square :thickness
+	repeat 8 [
+		setHeading :oldHeading + repcount * 360 / 8
+		jumpForward :height * 0.177
+		polyStart
+		arcLines :lines1 :height
+		localmake "len1 distanceToCircle :center :radius
+		jumpForward :len1
+		localmake "angle1 ((towards :center) - 90)  - heading
+		right :angle1
+		arcRight :arcAngle :radius
+		right :angle1
+		jumpForward :len1
+		polyEnd
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+nationalGalleryOfCanadaLogo 100

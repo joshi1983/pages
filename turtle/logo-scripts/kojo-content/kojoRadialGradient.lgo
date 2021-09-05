@@ -1,0 +1,11 @@
+; Similar to Kojo's ColorMaker.radialGradient function
+to kojoRadialGradient :x :y :color1 :radius :color2 :cyclic?
+	localmake "colorStops createPList2 [
+		[0 :color1] [1 :color2]
+	]
+	localmake "spreadMethod "pad
+	if :cyclic? [
+		localmake "spreadMethod "reflect
+	]
+	output createRadialGradient2 [:x :y] [:x :y] :radius :colorStops :spreadMethod
+end

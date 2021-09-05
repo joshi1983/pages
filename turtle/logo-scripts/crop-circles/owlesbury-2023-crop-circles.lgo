@@ -1,0 +1,60 @@
+; Inspird by crop circles near Owslebury, Hampshire
+; discovered June 26, 2023
+;
+; An image of it is at:
+; https://www.latest-ufo-sightings.net/2023/07/the-mysterious-crop-circles-of-2023-the-enigmatic-formation-at-allan-king-way.html
+to owslebury2023CropCircle :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "largeRadius :height * 0.445
+	localmake "mediumRadius :height * 0.313
+	localmake "innerRadius1 :height * 0.24
+	localmake "numInnerCircles 12
+	localmake "triAngleStep 30
+	localmake "outerThickness :height * 0.012
+	localmake "offset1 :height * 0.112
+	localmake "triangleOffset (:mediumRadius + :outerThickness / 2) * cos :triAngleStep / 2
+	localmake "triangleWidth :triangleOffset * 2 * tan :triAngleStep / 2
+	localmake "triangleHeight :height - :offset1 - :outerThickness / 2 -
+		:largeRadius - :triangleOffset
+	setPenSize :outerThickness
+	setPenColor "#bf8
+	jumpForward :largeRadius + penSize / 2
+	circle :largeRadius
+	jumpForward :offset1
+	circle :mediumRadius
+	setPenSize 0
+	setFillColor penColor
+	circle :height * 0.063
+	repeat :numInnerCircles [
+		rect :innerRadius1 * 2 :height * 0.005
+		right 180 / :numInnerCircles
+	]
+	localmake "center pos
+	setHeading :oldHeading - :triAngleStep * 2
+	repeat 5 [
+		jumpForward :triangleOffset
+		isoTriangle :triangleWidth :triangleHeight
+		jumpTo :center
+		right :triAngleStep
+	]
+
+	setHeading :oldHeading
+	repeat :numInnerCircles [
+		jumpForward :innerRadius1
+		circle :height * 0.043
+		jumpTo :center
+		right 360 / :numInnerCircles
+	]
+	right 180 / :numInnerCircles
+	repeat :numInnerCircles [
+		jumpForward :height * 0.158
+		circle :height * 0.02
+		jumpTo :center
+		right 360 / :numInnerCircles
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "green
+owslebury2023CropCircle 100

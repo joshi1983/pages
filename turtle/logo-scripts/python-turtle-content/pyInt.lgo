@@ -1,0 +1,26 @@
+; Similar to Python's int function
+; Unlike WebLogo's int command, Python's int function
+; converts strings to integers.
+to pyInt :s
+	; convert s from a string to integer.
+	if string? :s [
+		localmake "negative? "- = first :s
+		localmake "index 1
+		localmake "result 0
+		if :negative? [
+			localmake "index 2
+		]
+		while :index <= count :s [
+			localmake "ch item :index :s
+			localmake "digitVal (ascii :ch) - ( ascii "0 )
+			localmake "result :result + :digitVal
+			localmake "index :index + 1
+		]
+		ifelse :negative? [
+			output -:result
+		] [
+			output :result
+		]
+	]
+	output :s
+end

@@ -1,0 +1,82 @@
+; Based on a table at
+; https://leapcell.medium.com/leapcell-the-next-gen-serverless-platform-for-web-hosting-dae89b12fa6c
+to base64DecodeDigit :digit
+	ifelse and :digit <= "Z :digit >= "A [
+		output (ascii :digit) - ascii "A
+	] [
+		ifelse and :digit <= "9 :digit >= "0 [
+			output 52 + ((ascii :digit) - ascii "0)
+		] [
+			ifelse and :digit <= "z :digit >= "a [
+				output 26 + ((ascii :digit) - ascii "a)
+			] [
+				ifelse :digit = "+ [
+					output 62
+				] [
+					output 63
+				]
+			]
+		]
+	]
+end
+
+; Inspired by a post at:
+; https://www.facebook.com/share/p/16npVb6mz4/
+; Holger Weßling wrote
+; "Redraw the image 1:1 using as little code as possible."
+to basicHeart :height
+	localmake "oldState turtleState
+	localmake "base64Data [
+		"AAH ; lowest row of pixels
+		"AgI
+		"AQQ
+		"AIg
+		"AEAB
+		"AEAB
+		"ACAC
+		"ACAC
+		"ABAE
+		"ABAE
+		"gAAI
+		"QAAQ
+		"opuu
+		"oqoi
+		"k7uCB
+		"iqiCC
+		"i5uOC
+		"BAAAE
+		"BACAE
+		"BAFAE
+		"CgIAC
+		"CgIAC
+		"EYwAB
+		'YEAx'
+		'gDAO'
+	]
+	localmake "numLines 25
+	localmake "step :height / :numLines
+	localmake "squareSize :step
+	localmake "width :height * 27 / :numLines
+	localmake "colors ["white "brown]
+	jumpLeft (:width - :squareSize) / 2
+	repeat count :base64Data [
+		localmake "startPos pos
+		localmake "lineData item repcount :base64Data
+		repeat count :lineData [
+			localmake "sixBits base64DecodeDigit (item repcount :lineData)
+			repeat 6 [
+				localmake "index 1 + bitAnd :sixBits 1
+				localmake "color item :index :colors
+				stripes :squareSize :squareSize [:color]
+				jumpRight :squareSize
+				localmake "sixBits bitShiftRight :sixBits 1
+			]
+		]
+		jumpTo :startPos
+		jumpForward :step
+	]
+
+	setTurtleState :oldState
+end
+
+basicHeart 100

@@ -1,0 +1,49 @@
+; Inspired by drawing at:
+; https://youtu.be/0Pjd5SB0syI?t=311
+to mango :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "colorStops createPList2 [
+		[0 "#ffb] [1 "#fd0]
+	]
+	localmake "bottomArcRadius :height * 0.2
+	jumpForward :height * 0.61
+	setPenSize :height * 0.02
+	setPenColor "#850
+	setLineCap "round
+	setLineJoinStyle "round
+	arcRight 135 :height * 0.15
+	setPenSize :height * 0.01
+	jumpTo :oldPos	
+	setHeading :oldHeading
+	jumpForward :height - penSize / 2
+	jumpRight :height * 0.07
+	setFillColor "lime
+	right 115
+	polyStart
+	arcRight 90 :height * 0.19
+	polyEnd
+
+	jumpTo :oldPos	
+	setHeading :oldHeading
+	jumpForward :height * 0.4
+	setFillGradient createRadialGradient pos :height * 0.4 :colorStops
+	setPenColor "black
+	jumpTo :oldPos
+	jumpForward penSize / 2
+	jumpRight :height * 0.13
+	right 90
+	setPenSize 0
+	arcLeft 44 :bottomArcRadius
+	setPenSize :height * 0.01
+	right 180
+	drawArcLineShape [0 0
+		[[-50 :bottomArcRadius / :height] [-45 0.5] [-100 0.3] [-90 0.23]
+		[-40 0.3] [0.1] [50 0.15]]
+	] :height
+
+	setTurtleState :oldState
+end
+
+mango 100

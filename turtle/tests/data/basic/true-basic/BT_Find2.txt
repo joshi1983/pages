@@ -1,0 +1,77 @@
+!------------------------------------------------------------------------
+! Program .. Bt-Find2                                                   |
+! This program displays the Key of the the Data Base entry nearest to   |
+! the name you specify.  Nearest Key means the Key which would come     |
+! next, if the keys in the Data Base were sorted alphabetically.        |
+!------------------------------------------------------------------------
+ 
+LIBRARY "BTreeLib.trc"
+
+!------------------------------------------------------------------------ 
+! First, the program Opens the Data Base.                               |
+!------------------------------------------------------------------------
+ 
+CALL BtOpen ("NameAdPh", DataBaseSize, #1)
+
+!------------------------------------------------------------------------ 
+! The following lines of code prompt for part of a person's name.       |
+! The program uses this name to build the Data Base search Key (DbKey$).|
+!------------------------------------------------------------------------
+
+CLEAR
+SET CURSOR 2, 2
+INPUT PROMPT "Enter part of a person's name .. ": LastName$
+
+LET DbKey$ = UCASE$(LastName$)
+
+!------------------------------------------------------------------------ 
+! The following B-Tree subroutine stores in variable (NearestKey$),     |
+! the Data Base Key which is nearest to the name you specified.         |
+! Nearest Key means the Key which would come next, if the keys were     |
+! sorted alphabetically.                                                |
+! If the Data Base is empty, or if there is no Key which comes after    |
+! the name you specified, then the (GetNearest) subroutine sets         |
+! variable (NearestKey$) equal to the Null string.                      |
+!------------------------------------------------------------------------
+
+CALL GetNearest (DbKey$, NearestKey$, #1)
+
+!------------------------------------------------------------------------ 
+! If the Data Base is empty, or the nearest Key was not found,          |
+! then the program displays a message and stops.                        |
+!------------------------------------------------------------------------
+
+IF NearestKey$ = "" THEN
+   SET CURSOR 4, 2
+   PRINT "Either the Data Base is empty, "
+   SET CURSOR 6, 2
+   PRINT "or there is no entry which comes after the name you specified."
+   SET CURSOR 8, 2
+   PRINT "Press any key to end the program .. ";
+   DO WHILE KEY INPUT
+      GET KEY KeyPressed
+      LOOP
+   GET KEY KeyPressed
+   CALL BtClose (#1)
+   CLEAR
+   STOP
+   END IF
+
+!------------------------------------------------------------------------ 
+! Getting to this point means that the (GetNearest) subroutine found    |
+! the Key nearest to the name you specified.                            |
+! The following lines of code will display the nearest Key and stop.    |
+!------------------------------------------------------------------------
+
+SET CURSOR 4, 2
+PRINT "The nearest or next name is .... "; NearestKey$;
+SET CURSOR 6, 2
+PRINT "Press any key to end the program .. ";
+DO WHILE KEY INPUT
+   GET KEY KeyPressed
+   LOOP
+GET KEY KeyPressed
+
+CALL BtClose (#1)
+CLEAR
+END

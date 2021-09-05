@@ -1,0 +1,352 @@
+; Most of these are inspired by logos shown at
+; https://www.pinterest.ca/pin/810155420457577180/
+;
+; I tried to match the procedure names with the images but 
+; the text wasn't intelligible so some names are most-definitely wrong.
+;
+; A few are company logos drawn.
+; Their specific links are in the comments.
+
+to royalArchitectureInstituteOfCanada :size
+	localmake "oldPos pos
+	localmake "oldState turtleState
+	localmake "radius :size * 0.4
+	localmake "size1 :size * 0.24
+	localmake "size2 :size * 0.535
+	localmake "size3 :size2 * 1.1
+	localmake "size4 :radius * 0.9
+	setPenSize :size * 0.2
+	circle :radius
+	setPenSize :size * 0.15
+	setLineCap "butt
+	right 45
+	repeat 4 [
+		jumpTo :oldPos
+		jumpForward :size4
+		localmake "oldPos1 pos
+		forward :size2
+		jumpTo :oldPos1
+		jumpLeft :size1
+		forward :size3
+		jumpTo :oldPos1
+		jumpRight :size1
+		forward :size3
+		right 90
+	]
+	setTurtleState :oldState
+end
+
+to ideoBooks :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "innerSize :size * 0.1
+	localmake "innerSize2 :innerSize * 0.4
+	localmake "barThickness :size * 0.2
+	localmake "size1 :size * 0.808
+	localmake "size2 :size1 - :barThickness * tan 30
+	localmake "circleRadius :barThickness * 0.392
+	localmake "circleOffset :barThickness * 0.55
+	localmake "circlePenSize :circleRadius * 0.55
+	setPenSize 0
+	repeat 6 [
+		jumpTo :oldPos
+		setHeading :oldHeading + repcount * 360 / 6
+		jumpForward :innerSize
+		jumpRight :innerSize2
+		left 90
+		polyStart
+		jumpForward :size1
+		right 90
+		jumpForward :barThickness * 0.5
+		jumpLeft :circleOffset
+		setPenSize :circlePenSize
+		setFillColor transparent
+		circle :circleRadius
+		setPenSize 0
+		jumpRight :circleOffset
+		jumpForward :barThickness * 0.5
+		right 90
+		jumpForward :size2
+		setFillColor "black
+		polyEnd
+		right 360 / 6
+	]
+	setHeading :oldHeading
+	jumpTo :oldPos
+end
+
+to artigrafiche :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "oldState turtleState
+	localmake "size1 :size * 0.08
+	localmake "size2 :size * 0.811
+	localmake "size3 :size * 0.11
+	localmake "size4 :size * 0.96
+	localmake "arcRadius1 :size * 0.06
+	localmake "arcRadius2 :size * 0.2
+	localmake "arcRadius3 :size * 0.43
+	localmake "arcRadius4 :size * 0.155
+	localmake "arcRadius5 :size * 0.07
+	localmake "shortLineSize1 :size * 0.38
+	localmake "shortLineSize2 :size * 0.2
+	localmake "shortLineSize3 :size * 0.28
+	setLineJoinStyle "miter
+	setLineCap "butt
+	setPenSize :size * 2
+	jumpBackward :size
+	forward :size * 2
+	setFillColor "white
+	setPenSize 0
+	repeat 4 [
+		jumpTo :oldPos
+		setHeading :oldHeading + repcount * 360 / 4
+		jumpForward :size1
+		right 90
+		polyStart
+		arcLeft 150 :arcRadius1
+		arcLeft 55 :arcRadius2
+		arcLeft 65 :arcRadius3
+		jumpForward :size2
+		left 90
+		jumpForward :size3
+		left 90
+		jumpForward :size4
+		arcRight 123 :arcRadius4
+		arcLeft 40 :arcRadius5
+		polyEnd
+	]
+	; add the short straight lines
+	setPenSize :size * 0.05
+	setPenColor "white
+	setLineJoinStyle "round
+	repeat 4 [
+		jumpTo :oldPos
+		setHeading :oldHeading + repcount * 360 / 4
+		jumpForward :shortLineSize1
+		right 90
+		jumpForward :shortLineSize2
+		forward :shortLineSize3
+	]
+	setTurtleState :oldState
+end
+
+to impressCarioFrigario :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "size1 :size * 0.2
+	localmake "size2 :size * 0.08
+	localmake "size3 :size * 0.6
+	localmake "arcRadius1 :size * 0.15
+	localmake "arcRadius2 :size * 0.06
+	localmake "thickness :size * 0.15
+	localmake "size4 :size3 + :arcRadius1 - 
+		:arcRadius2 - :thickness
+	localmake "size5 :size * 0.9645
+	localmake "size6 :size5 - :thickness + :arcRadius2
+	setPenColor "black
+	setPenSize :size * 2
+	setLineCap "butt
+	right 45
+	jumpBackward :size
+	forward :size * 2
+	setPenSize 0
+	setFillColor "white
+	repeat 4 [
+		jumpTo :oldPos
+		setHeading :oldHeading + repcount * 360 / 4
+		jumpForward :size1
+		right 90
+		polyStart
+		jumpForward :size2
+		arcLeft 90 :arcRadius1
+		jumpForward :size3
+		left 90
+		jumpForward :thickness
+		left 90
+		jumpForward :size4
+		arcRight 180 :arcRadius2
+		jumpForward :size5
+		left 135
+		jumpForward :thickness / sin 45
+		left 45
+		jumpForward :size6
+		arcLeft 90 :arcRadius1
+		polyEnd
+	]
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to walterMontego :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "size :size /1.028
+	localmake "size1 :size * 0.28
+	localmake "size2 :size - :size1 * 0.5
+	localmake "size3 (:size - :size1) / 2
+	setPenColor "black
+	setLineJoinStyle "miter
+	setLineCap "butt
+	setPenSize :size1
+	repeat 4 [
+		jumpTo :oldPos
+		setHeading :oldHeading + repcount * 360 / 4
+		jumpForward penSize * 0.1
+		jumpLeft penSize * 0.6
+		forward :size
+		jumpBackward :size - penSize * 0.5
+		left 90
+		repeat 3 [
+			jumpForward penSize * 0.4
+			forward :size2 - penSize * 0.4
+			jumpBackward :size2
+			if repcount <> 3 [
+				right 90
+				; jump to prevent the lines from getting 
+				;joined into a path.
+				forward :size3
+				left 90
+			]
+		]
+	]
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+; Inspired by:
+; https://www.pinterest.ca/pin/326581410493997968/
+to wirelessGroupLogo :size
+	localmake "oldHeading heading
+	localmake "oldPos pos
+	localmake "numArcs 3
+	localmake "arcAngle 90
+	localmake "penSize :size * 0.15
+	localmake "step (:size - :penSize * 0.5) / :numArcs
+	setLineJoinStyle "round
+	setLineCap "round
+	setPenSize :penSize
+	repeat :numArcs [
+		localmake "arcRadius repcount * :step
+		setHeading :oldHeading + 90 - :arcAngle * 0.5
+		arc :arcAngle :arcRadius
+		right 180
+		arc :arcAngle :arcRadius
+	]
+	setHeading :oldHeading - 90 - :arcAngle * 0.5
+	repeat 2 [
+		jumpForward :step
+		setPos :oldPos
+		left 90
+	]
+	setHeading :oldHeading
+end
+
+; Inspired by:
+; https://www.pinterest.ca/pin/469711436148353797/
+to mercedesLogo :size
+	localmake "oldState turtleState
+	localmake "circleThickness :size * 0.07
+	localmake "size1 :size - :circleThickness * 0.5
+	localmake "size2 :size1 * 0.96
+	localmake "size3 :size1 * 0.145
+	setPenColor "black
+	setFillColor transparent
+	setPenSize :circleThickness
+	circle :size1
+	jumpBackward :size * 0.011
+	setFillColor "black
+	setPenSize 0
+	isotoxalStar :size2 :size3 3
+	setTurtleState :oldState
+end
+
+to mitsubishiDiamond :size
+	localmake "size1 :size * 0.5 / cos 30
+	jumpForward :size
+	isotoxalStar :size :size1 2
+	jumpBackward :size
+end
+
+; Inspired by
+; https://www.pinterest.ca/pin/322922235793315890/
+to mitsubishiLogo :size
+	localmake "oldState turtleState
+	localmake "size :size / 2
+	setPenSize 0
+	setFillColor "black
+	repeat 3 [
+		mitsubishiDiamond :size
+		right 360 / 3
+	]
+	setTurtleState :oldState
+end
+
+to chevyLogo :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "height :size * 0.9
+	localmake "height2 :height * 0.6
+	localmake "width :size * 1.8
+	localmake "angle 30
+	localmake "height2Side :height2 / cos :angle
+	setLineJoinStyle "miter
+	setLineCap "butt
+	jumpBackward :height * 0.5
+	setPenColor "black
+	setPenSize :size * 0.6
+	forward :height
+	jumpBackward (:height - :height2) * 0.5
+	jumpRight 0.5 * (:width + :height2 * sin :angle)
+	setPenSize 0
+	left 180 - :angle
+	setFillColor "black
+	polyStart
+	jumpForward :height2Side
+	right 90 - :angle
+	jumpForward :width
+	right 90 + :angle
+	jumpForward :height2Side
+	polyEnd
+	setHeading :oldHeading
+	jumpTo :oldPos
+end
+
+to audiLogo :size
+	localmake "oldPos pos
+	localmake "circleRadius :size * 0.307
+	localmake "numRings 4
+	localmake "separation :size * 0.435
+	jumpLeft :separation * 1.5
+	setPenSize :circleRadius * 0.26
+	setPenColor "black
+	setFillColor transparent
+	repeat :numRings [
+		circle :circleRadius
+		jumpRight :separation
+	]
+	jumpTo :oldPos
+end
+
+make "size 100
+make "separation :size * 3
+jumpLeft :separation * 4.5
+royalArchitectureInstituteOfCanada :size
+jumpRight :separation
+ideoBooks :size
+jumpRight :separation
+artigrafiche :size
+jumpRight :separation
+impressCarioFrigario :size
+jumpRight :separation
+walterMontego :size
+jumpRight :separation
+wirelessGroupLogo :size
+jumpRight :separation
+mercedesLogo :size
+jumpRight :separation
+mitsubishiLogo :size
+jumpRight :separation
+chevyLogo :size
+jumpRight :separation
+audiLogo :size

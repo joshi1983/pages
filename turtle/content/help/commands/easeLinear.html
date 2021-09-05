@@ -1,0 +1,17 @@
+<code>print interpolateRatio easeLinear 0.5
+; prints 0.5
+print interpolateRatio easeLinear 0.9
+; prints 0.9</code>
+<code>to graphEasing :easing
+	localmake "numPoints 200
+	localmake "size 100
+	setPenSize 0.1
+	repeat :numPoints [
+		localmake "ratio repcount / :numPoints
+		localmake "y :size * interpolateRatio :easing :ratio
+		setXY :ratio * :size :y
+		circle 0.1
+	]
+end
+
+graphEasing easeLinear</code>

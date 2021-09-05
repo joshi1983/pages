@@ -1,0 +1,113 @@
+! Towers of Hanoi
+!
+! Version 2.0 copyright (c) 1988 by True BASIC, Inc.
+! Revised 22 APR 2004
+! Shows how to use TC_win_setfont
+
+LIBRARY "BronzeTC.trc"
+
+CALL TC_Init
+
+CALL TC_Show (0)                  ! Show the default window
+CALL TC_Win_Switch (0)            ! Move it to the fron
+CALL TC_win_SetFont(0,"Times",24,"BOLD")
+
+LET disks = 6
+CALL setup (disks, 1)
+CALL hanoi (disks, 1, 2, 3)
+CALL ending
+
+CALL TC_cleanup
+END
+
+MODULE Hanoi
+
+    SHARE #1, top(3),diskcolor,towercolor,basecolor,back
+    LET diskcolor=9               ! bright blue
+    LET towercolor=14             ! yellow
+    LET basecolor=10              !green
+    LET back=7                    ! light gray background
+
+
+    SUB setup (n, a)              ! n disks, on tower a
+        REM: insert small window inside main window
+        REM: set the small window background to gray
+        OPEN #1: screen .1875,.8125,.2,.8
+        SET WINDOW 0,4,0,n+2
+        SET BACK back
+        CLEAR
+
+        REM: plot a title in black in the small window
+        SET TEXT justify "center","base"
+        SET COLOR -1              ! black
+        PLOT TEXT, AT 2,n+1.5: "The Towers of Hanoi"
+
+        REM: color the base area green
+        SET COLOR basecolor
+        BOX AREA 0,4,0,1
+
+        !!        PLOT 0,1;4,1
+        REM: draw 3 pillars in yellow
+        SET COLOR towercolor
+        FOR i = 1 to 3
+            BOX AREA i-.02,i+.02,1,n+1
+        NEXT i
+
+        REM: draw a set of 6 disks in blue
+        FOR j = n to 1 step -1
+            CALL disk(a,n+1-j,j,diskcolor)
+        NEXT j
+        LET top(1) = n
+    END SUB
+
+    SUB hanoi(n,a,b,c)            ! Recursive routine
+        IF n > 0 then
+           CALL hanoi(n-1,a,c,b)
+           CALL move(n,a,b)
+           PAUSE .25
+           CALL hanoi(n-1,c,b,a)
+        END IF
+    END SUB
+
+    SUB move(s,a,b)
+        CALL disk(a,top(a),s,0)   ! Erase
+        LET top(a) = top(a) - 1
+        LET top(b) = top(b) + 1
+        CALL disk(b,top(b),s,diskcolor)     ! Draw
+    END SUB
+
+    SUB disk(t,h,s,c)             ! Tower no., height, size, color
+        LET x1 = t - (s+1)/15
+        LET x2 = t + (s+1)/15
+        LET y1 = h
+        LET y2 = h + 1
+        IF c = 0 then
+           SET COLOR back
+           BOX AREA x1, x2, y1, y2
+           SET COLOR towercolor   ! If erasing, replace the tower
+           BOX AREA t-.02,t+.02,y1,y2
+        ELSE
+           SET COLOR c
+           BOX AREA x1, x2, y1, y2
+           SET COLOR back         ! Make an empty border
+           BOX LINES x1, x2, y1, y2
+        END IF
+        PAUSE .2                  ! time delay so we can see what is going on
+    END SUB
+
+    SUB ending
+        ! This flashes the inner window
+
+        FOR count=1 to 10
+            FOR i = 9 to 14
+                SET BACK i
+                CLEAR
+                PAUSE .05
+            NEXT i
+        NEXT count
+        SET COLOR -1              !black
+        PLOT TEXT, AT 2,4: "N I R V A N A"
+
+    END SUB
+
+END MODULE

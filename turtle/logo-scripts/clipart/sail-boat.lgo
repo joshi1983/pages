@@ -1,0 +1,102 @@
+to drawSailPosts :height
+	localmake "oldState turtleState
+	localmake "poleSeparation :height * 0.548
+	localmake "shortPoleHeight :height * 0.44
+	localmake "crossHeight :height * 0.26
+	jumpForward :height * 0.45
+	localmake "middle pos
+	setLineCap "round
+	setPenColor "#860
+	setPenSize :height * 0.02
+	forward :height * 0.535
+	jumpTo :middle
+	jumpLeft :poleSeparation / 2
+	repeat 2 [
+		localmake "startPos pos
+		forward :shortPoleHeight
+		jumpTo :startPos
+		jumpForward :crossHeight
+		stripes :height * 0.11 :height * 0.01 [penColor]
+		jumpTo :startPos
+		jumpRight :poleSeparation
+	]
+	jumpTo :middle
+	jumpForward :crossHeight
+	stripes :height * 0.28 :height * 0.01 [penColor]
+
+	setTurtleState :oldState
+end
+
+; Inspired by a figure in a book called:
+; Building Logo skills Apple : Book A
+; The book was published in 1985.
+; The figure is on page 208.
+;
+; You can borrow a digital version of the book to see the figure at:
+; https://archive.org/details/buildinglogoskil0000mand/page/208/mode/2up
+to drawShip :height
+	localmake "oldState turtleState
+	localmake "windowSeparation :height * 0.228
+	localmake "thickness1 :height * 0.01
+	localmake "baseWidth :height * 0.87
+	localmake "topWidth :height * 1.18
+	localmake "mainHeight :height * 0.43
+	setPenSize :thickness1
+	localmake "basePosition pos
+	jumpForward penSize / 2
+	drawSailPosts :height	
+
+	setFillColor "#ecb
+	setPenColor "black
+	setLineJoinStyle "miter
+	isoTrapezoid :baseWidth :topWidth :mainHeight
+	setPenSize :height * 0.001
+	repeat 11 [
+		localmake "w mix :topWidth :baseWidth repRatio
+		stripes :w :height * 0.001 ["black]
+		jumpForward :mainHeight / 10
+	]	
+
+	jumpTo :basePosition
+	jumpForward :height * 0.255
+	jumpLeft :windowSeparation * 1.5
+	setFillColor "#888
+	setPenSize :thickness1
+	repeat 4 [
+		rect :height * 0.17 :height * 0.14
+		jumpRight :windowSeparation
+	]
+
+	setTurtleState :oldState
+end
+
+to drawShipScene :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "waterColor "#46c
+	localmake "waterStops createPList2 [
+		[0 :waterColor] [0.9 :waterColor] [1 mix :waterColor transparent 0]
+	]
+	localmake "skyStops createPList2 [
+		[0 "#eef] [0.8 "#eef] [1 "#0eef]
+	]
+	jumpForward :height
+	setLineCap "butt
+	setPenSize :height * 1.2
+	setPenGradient createRadialGradient pos :height :waterStops
+	jumpBackward :height * 0.8
+	backward :height * 0.2
+	jumpForward :height * 0.5
+	setPenGradient createRadialGradient pos :height * 0.7 :skyStops
+	setPenSize :height * 1.5
+	jumpBackward :height * 0.3
+	forward :height * 0.8
+
+	jumpTo :oldPos
+	jumpForward :height * 0.15
+	drawShip :height * 0.7
+
+	setTurtleState :oldState
+end
+
+drawShipScene 100

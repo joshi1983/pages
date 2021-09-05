@@ -1,0 +1,96 @@
+to offsetsToPositions :offsets :scale
+	localmake "oldPos pos
+	localmake "result []
+	repeat count :offsets [
+		localmake "offset vectorScale item repcount :offsets :scale
+		jumpRight first :offset
+		jumpForward last :offset
+		queue2 "result pos
+		jumpTo :oldPos
+	]
+	output :result
+end
+
+; Inspired by logo at:
+; https://www.youtube.com/@IcebergLore
+to icebergLoreLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "baseY -0.155
+	jumpForward :height * 1.15
+	setFillGradient createRadialGradient pos :height * 1.2 createPList2 [
+		[0 "#ddf] [0.2 "#aaf]  [0.5 "#383888] [0.65 "#227] [1 "black]
+	]
+	jumpTo :oldPos
+	jumpForward :height / 2
+	setPenSize 0
+	circle :height / 2
+	localmake "points offsetsToPositions [
+		[-0.45 :baseY] [-0.055 0.33] [0.083 0.156]
+		[0.125 0.202] [0.45 :baseY]
+	] :height
+	setFillColor "white
+	polygon :points
+	setFillColor "#e9eaee
+	jumpTo first :points
+	polyStart
+	jumpTo item 2 :points
+	setHeading :oldHeading - 160
+	jumpForward :height * 0.075
+	left 86.5
+	jumpForward distanceToLine item 2 :points item 3 :points
+	setHeading towards item 3 :points
+	jumpForward :height * 0.15
+	left 70
+	jumpForward distanceToLine item 4 :points last :points
+	setHeading towards last :points
+	jumpForward :height * 0.098
+	right 50
+	jumpForward :height * 0.095
+	right 64
+	jumpForward distanceToLine first :points last :points
+	polyEnd
+
+	setFillColor "#c7c7d1
+	jumpTo first :points
+	setHeading towards last :points
+	polyStart
+	jumpForward :height * 0.17
+	left 10
+	jumpForward :height * 0.423
+	left 60
+	jumpForward distanceToLine item 4 :points last :points
+	left 118
+	jumpForward :height * 0.03
+	setPos item 4 :points
+	setPos item 3 :points
+	setHeading towards item 2 :points
+	jumpForward :height * 0.062
+	left 112
+	jumpForward :height * 0.287
+	right 130
+	jumpForward distanceToLine first :points item 2 :points
+	polyEnd
+
+	setFillColor "#a8aab9
+	jumpTo first :points
+	setHeading towards last :points
+	polyStart
+	jumpForward :height * 0.12
+	left 24
+	jumpForward :height * 0.2
+	left 80
+	jumpForward distanceToLine first :points item 2 :points
+	polyEnd
+
+	jumpTo item 3 :points
+	polyStart
+	jumpTo item 4 :points
+	setHeading :oldHeading - 160
+	jumpForward :height * 0.09
+	polyEnd
+	setTurtleState :oldState
+end
+
+icebergLoreLogo 100

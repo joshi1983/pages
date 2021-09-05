@@ -1,0 +1,25 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_the_Republic_of_the_Congo#/media/File:Flag_of_the_Republic_of_the_Congo.svg
+to congoFlag :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "width :height * 3 / 2
+	localmake "triWidth :height * 2 * cos 45
+	localmake "triHeight :triWidth / 2
+	stripes :width :height ["#fbde4a]
+	jumpForward :height / 2
+	jumpRight :width / 6
+	right 135
+	setPenSize 0
+	setFillColor "#da1a35
+	isoTriangle :triWidth :triHeight
+	setHeading :oldHeading
+	jumpLeft :width / 3
+	left 45
+	setFillColor "#009543
+	isoTriangle :triWidth :triHeight
+
+	setTurtleState :oldState
+end
+
+congoFlag 100

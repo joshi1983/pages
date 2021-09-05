@@ -1,0 +1,35 @@
+; Inspired by
+; https://www.pinterest.ca/pin/740279257516980507/
+; Also at:
+; https://chasing-highs.tumblr.com/post/155618678882
+
+to pyramidLines :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "angleRange 283
+	localmake "numLines 500
+	localmake "width :height * 10
+	localmake "penWidths [0.0005 0.0005 0.0015 0.0005 0.0005 0.001]
+	jumpForward :height / 2
+	setPenColor "white
+	setLineCap "butt
+	localmake "center pos
+	right :angleRange / 2
+	repeat :numLines [
+		localmake "angle mix -:angleRange / 2 :angleRange / 2 repRatio
+		setHeading :oldHeading + :angle
+		localmake "len min :width / 2 / abs sin :angle :height / 2 / abs cos :angle
+
+		; Vary the pen widths to make the line pattern more clear when zoomed out.
+		; the narrower line widths will still look intriquette when looking 
+		;closely at the drawing.
+		localmake "penWidthIndex 1 + remainder repcount count :penWidths
+		setPenSize :height * item :penWidthIndex :penWidths
+		forward :len
+		jumpTo :center
+	]	
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+pyramidLines 100

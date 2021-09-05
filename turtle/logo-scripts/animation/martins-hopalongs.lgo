@@ -1,0 +1,40 @@
+; Inspired by:
+; https://www.facebook.com/photo/?fbid=3808953572713067&set=gm.4032347713743294&idorvanity=2057165187928233
+; A few things were changed.
+; - B's 0.9998 value was replaced with 0.9999
+; because that change made the pattern look a little sharper.
+; - 
+setPenSize 0
+setFillColor "#000
+make "a animation.timeRatio
+make "c 2 - 2 * :a
+make "x 0
+make "y 12.17
+make "w :a * :x + :c * :x * :x / ( 1 + :x * :x )
+repeat 50000 [
+	if repcount >= 100 [
+		jumpTo [:x * 5 :y * 5]
+		circle 0.15
+	]
+	make "z :x
+	make "x .9999 * :y + :w
+	make "u :x * :x
+	make "w :a * :x + :c * :u / ( 1 + :u )
+	make "y :w - :z
+]
+
+to animation.snapshotstyle
+	output createPList2 [
+		["zoom.scale 3]
+	]
+end
+
+to animation.setup
+	localmake "minutes 3
+	localmake "seconds 30
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+		["thumbnailTime 3 * 60]
+	]
+end
