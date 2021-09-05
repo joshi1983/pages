@@ -1,0 +1,199 @@
+to nmaccLogoRing1 :logoHeight
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "numPieces 16
+	localmake "radius1 :logoHeight * 0.185
+	localmake "arcAngle1 135 / :numPieces
+	localmake "arcAngle2 64.17
+	localmake "pieceHeight :logoHeight * 0.06
+	localmake "arcLength hypot [:pieceHeight + :radius1 - :radius1 * cos :arcAngle1 :radius1 * 2 * sin :arcAngle1 / 2]
+	localmake "arcRadius :arcLength / 2 / sin :arcAngle2 / 2 
+	setPenSize 0
+	repeat :numPieces [
+		localmake "heading1 :oldHeading + (repcount - 0.5) * 360 / :numPieces
+		setHeading :heading1
+		jumpForward :radius1
+		jumpForward :pieceHeight
+		localmake "pos1 pos
+		jumpBackward :pieceHeight
+		left 90
+		arcLeft :arcAngle1 :radius1
+		localmake "pos2 pos
+		right 180
+		polyStart
+		arcRight :arcAngle1 * 2 :radius1
+		setHeading (towards :pos1) + :arcAngle2 / 2
+		arcLeft :arcAngle2 :arcRadius
+		setHeading (towards :pos2) + :arcAngle2 / 2
+		arcLeft :arcAngle2 :arcRadius
+		polyEnd
+		jumpTo :oldPos
+	]
+	setHeading :oldHeading
+end
+
+to nmaccLogoRing2 :logoHeight
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "numPieces 16
+	localmake "radius1 :logoHeight * 0.227
+	localmake "angle1 25
+	localmake "arcAngle1 36
+	localmake "arcRadius1 :logoHeight * 0.1
+	localmake "pieceHeight :logoHeight * 0.085
+	setPenSize 0
+	repeat :numPieces [
+		localmake "heading1 :oldHeading + repcount * 360 / :numPieces
+		setHeading :heading1
+		jumpForward :radius1
+		jumpForward :pieceHeight
+		localmake "farPos pos
+		jumpBackward :pieceHeight
+		left :angle1
+		arcLeft :arcAngle1 :arcRadius1
+		right 180
+		polyStart
+		arcRight :arcAngle1 :arcRadius1
+		setHeading :heading1 + :angle1
+		arcRight :arcAngle1 :arcRadius1
+		setHeading towards :farPos
+		jumpForward distance :farPos
+		polyEnd
+		jumpTo :oldPos
+	]
+	setHeading :oldHeading
+end
+
+to nmaccLogoRing3 :logoHeight
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "numPieces 16
+	localmake "radius1 :logoHeight * 0.285
+	localmake "angle1 25
+	localmake "arcAngle1 36
+	localmake "arcRadius1 :logoHeight * 0.125
+	localmake "pieceHeight :logoHeight * 0.108
+	setPenSize 0
+	repeat :numPieces [
+		localmake "heading1 :oldHeading + (repcount + 0.5) * 360 / :numPieces
+		setHeading :heading1
+		jumpForward :radius1
+		jumpForward :pieceHeight
+		localmake "farPos pos
+		jumpBackward :pieceHeight
+		left :angle1
+		arcLeft :arcAngle1 :arcRadius1
+		right 180
+		polyStart
+		arcRight :arcAngle1 :arcRadius1
+		setHeading :heading1 + :angle1
+		arcRight :arcAngle1 :arcRadius1
+		setHeading towards :farPos
+		jumpForward distance :farPos
+		polyEnd
+		jumpTo :oldPos
+	]
+	setHeading :oldHeading
+end
+
+to nmaccLogoRing4 :logoHeight
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "numPieces 16
+	localmake "radius1 :logoHeight * 0.36
+	localmake "angle1 24
+	localmake "arcAngle1 36
+	localmake "arcRadius1 :logoHeight * 0.164
+	localmake "pieceHeight :logoHeight / 2 - :radius1
+	setPenSize 0
+	repeat :numPieces [
+		localmake "heading1 :oldHeading + repcount * 360 / :numPieces
+		setHeading :heading1
+		jumpForward :radius1
+		jumpForward :pieceHeight
+		localmake "farPos pos
+		jumpBackward :pieceHeight
+		left :angle1
+		arcLeft :arcAngle1 :arcRadius1
+		right 180
+		polyStart
+		arcRight :arcAngle1 :arcRadius1
+		setHeading :heading1 + :angle1
+		arcRight :arcAngle1 :arcRadius1
+		setHeading towards :farPos
+		jumpForward distance :farPos
+		polyEnd
+		jumpTo :oldPos
+	]
+	setHeading :oldHeading
+end
+
+to nmaccLogoCustomColors :height :colors
+	localmake "oldState turtleState
+	jumpForward :height / 2
+	setPenSize 0
+	setFillColor first :colors
+	circle :height * 0.145
+	nmaccLogoRing1 :height
+	setFillColor item 2 :colors
+	nmaccLogoRing2 :height
+	setFillColor item 3 :colors
+	nmaccLogoRing3 :height
+	setFillColor item 4 :colors
+	nmaccLogoRing4 :height
+	setTurtleState :oldState
+end
+
+to backgroundGradientCircle :height :color
+	localmake "oldState turtleState
+	localmake "radius :height / 2
+	jumpForward :radius
+	; Use gradient for a softer edge around the circle.
+	localmake "colorStops createPList
+	setProperty "colorStops 0 :color
+	setProperty "colorStops 0.7 mix :color transparent 0.8
+	setProperty "colorStops 0.9 mix :color transparent 0.3
+	setProperty "colorStops 1 mix :color transparent 0
+	setFillGradient createRadialGradient pos :radius :colorStops
+	setPenSize 0
+	circle :radius
+	setTurtleState :oldState
+end
+
+; Inspired by logo at
+; https://nmacc.com/
+; That is Nita Mukesh Ambani Cultural Centre.
+to mainNmaccLogo :height
+	backgroundGradientCircle :height "white
+	nmaccLogoCustomColors :height ["#faa011 "#ecb0ce "#d65998 "#cc307e]
+end
+
+to blackNmaccLogo :height
+	backgroundGradientCircle :height "white
+	nmaccLogoCustomColors :height duplicate "black 4
+end
+
+to whiteNmaccLogo :height
+	backgroundGradientCircle :height "black
+	nmaccLogoCustomColors :height duplicate "white 4
+end
+
+to goldNmaccLogo :height
+	backgroundGradientCircle :height "#620d30
+	nmaccLogoCustomColors :height duplicate "gold 4
+end
+
+; Draw logo in a few different colors.
+; Most of these colors are shown in the website: 
+; https://nmacc.com/
+setScreenColor "#eee
+make "height 100
+make "separation :height * 3
+jumpLeft :separation * 1.5
+mainNmaccLogo :height
+jumpRight :separation
+blackNmaccLogo :height
+jumpRight :separation
+whiteNmaccLogo :height
+jumpRight :separation
+goldNmaccLogo :height

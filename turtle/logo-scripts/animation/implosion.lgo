@@ -1,0 +1,72 @@
+; Inspired by
+; https://www.pinterest.ca/pin/914230793081112511/
+
+to circleGradient :size
+	if :size <= 0 [
+		stop
+	]
+	localmake "oldHeading heading
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#0fff
+	setProperty "colorStops 1 "black
+	left 180
+	jumpBackward :size
+	localmake "fromPos pos
+	jumpForward :size * 2
+	setPenGradient createLinearGradient pos :fromPos :colorStops "pad
+	setPenSize :size * 0.07
+	jumpBackward :size
+	penDown
+	circle :size
+	setHeading :oldHeading
+end
+
+to backgroundGradient :size
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "white
+	setProperty "colorStops 0.1 "yellow
+	setProperty "colorStops 0.5 "red
+	setProperty "colorStops 1 transparent
+	setFillGradient createRadialGradient pos :size :colorStops
+	setPenSize 0
+	circle :size
+	setFillColor transparent
+end
+
+to spiralPattern :size
+	localmake "oldPos pos
+	localmake "numReps 64
+	localmake "t animation.time * 0.5
+	backgroundGradient :size
+	repeat :numReps [
+		localmake "base (0.01 + :numReps - repcount) / :numReps
+		localmake "r :size * power :base  0.2 + :t * :t *
+			(0.5 + :t * 1)	localmake "size1 :r * 0.4
+		repeat 3 [
+			penUp
+			jumpTo :oldPos
+			jumpForward :r
+			circleGradient :size1
+			right 360 / 3
+		]
+		right 280 / :numReps
+	]
+end
+
+setScreenColor "#9E9EFF
+spiralPattern 100
+
+to animation.snapshotstyle
+	localmake "result createPList
+	setProperty "result "zoom.scale 1.8
+	output :result
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 10
+	; Edit this if you want to change the length of your animation.
+	localmake "result createPList
+	setProperty "result "duration :minutes * 60 + :seconds
+	output :result
+end

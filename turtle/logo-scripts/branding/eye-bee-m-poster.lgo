@@ -1,0 +1,167 @@
+to leaf :size :angle
+	localmake "oldHeading heading
+	localmake "arcRadius :size / 2 / sin :angle
+	left :angle
+	polyStart
+	arcRight :angle * 2 :arcRadius
+	right 180 - :angle * 2
+	arcRight :angle * 2 :arcRadius
+	polyEnd
+	setHeading :oldHeading
+end
+
+to eyebrow :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "arcsInfoBottom1 [
+		[3 0.8] [30 0.69]
+	]
+	localmake "arcsInfoBottom (combine :arcsInfoBottom1 [[29 0.5]] reverse :arcsInfoBottom1)
+	localmake "arcsInfoTop1 [[6 0.66] [35 0.562]]
+	localmake "arcsInfoTop (combine :arcsInfoTop1 [[42 0.454865]] reverse reverse :arcsInfoTop1)
+	jumpForward :height * 0.62
+	jumpLeft :height * 0.465
+	right 42.5
+	setPenSize 0
+	setFillColor "#e3663c
+	polyStart
+	arcsRight :arcsInfoBottom :height
+	setHeading :oldHeading
+	jumpForward :height * 0.08
+	left 28
+	arcsLeft :arcsInfoTop :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+to eye :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "width :height * 0.97
+	eyebrow :height
+	jumpForward :height * 0.345
+	localmake "center pos
+	setPenSize 0
+	setFillColor "#F8F5F1
+	jumpLeft :width / 2
+	right 90
+	leaf :width 69
+
+	jumpTo :center
+	setHeading :oldHeading
+	setFillColor "#ae8c6b
+	circle :height * 0.275
+
+	setFillColor "black
+	circle :height * 0.12
+	
+	setTurtleState :oldState
+end
+
+to bee :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "eyeSeparation :height * 0.182
+	localmake "eyeRadius :height * 0.085
+	localmake "wingAngle 137.5
+	localmake "wingSeparation :height * 0.32
+	localmake "wingRadius :height * 0.14
+	localmake "wingLength :height * 0.375
+	setPenSize 0
+	setFillColor "#f7a14f
+	localmake "radius :height * 0.182
+	jumpForward :height * 0.185
+	circlePair :radius :radius :height * 0.265
+	localmake "stripeWidth :height * 0.088
+	setPenColor "black
+	setLineCap "butt
+	setPenSize :height * 0.37
+	jumpForward :height * 0.175
+	repeat 3 [
+		jumpBackward :stripeWidth
+		backward :stripeWidth
+	]
+	setPenSize 0
+	jumpTo :oldPos
+	jumpForward :height * 0.7222
+	jumpRight :eyeSeparation / 2
+	setFillColor "#ffa0ae
+	circle :eyeRadius
+	jumpLeft :eyeSeparation
+	circle :eyeRadius
+	jumpRight :eyeSeparation / 2
+	jumpBackward :height * 0.15
+	localmake "wingMiddle pos
+	jumpRight :wingSeparation / 2
+	right :wingAngle
+	setFillColor "#307143
+	circlePair 0 :wingRadius :wingLength
+	setHeading :oldHeading
+	jumpTo :wingMiddle
+	jumpLeft :wingSeparation / 2
+	left :wingAngle
+	circlePair 0 :wingRadius :wingLength
+	setTurtleState :oldState
+end
+
+to letterM :height
+	localmake "oldState turtleState
+	localmake "stripeWidth :height * 0.0565
+	localmake "oldHeading heading
+	localmake "oldPos pos
+	jumpForward :height * 0.048
+	setLineCap "butt
+	setPenSize :height * 0.96
+	setPenColor "#205fa5
+	repeat 8 [
+		forward :stripeWidth
+		jumpForward :stripeWidth
+	]
+	setFillColor "black
+	setPenSize 0
+	right 180
+	isoTriangle :height * 0.38 :height * 0.5
+	localmake "separation :height * 0.87
+	jumpRight :separation / 2
+	jumpForward :height * 0.25
+	repeat 2 [
+		stripes :height * 0.12 :height * 0.47 ["black]
+		jumpLeft :separation
+	]
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.041
+	localmake "middlePos pos
+	localmake "separation :height * 0.385
+	localmake "size1 :height * 0.46
+	jumpLeft :separation / 2
+	polyStart
+	jumpForward :size1
+	setHeading towards :middlePos
+	jumpForward distance :middlePos
+	localmake "angle arcTan :size1 / (:separation / 2)
+	setHeading :oldHeading + 90 - :angle
+	jumpForward hypot [:size1 :separation / 2]
+	setHeading :oldHeading
+	jumpBackward :size1
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Paul_Rand#/media/File:Eye-Bee-M-Poster.jpg
+; It is a famous poster designed by Paul Rand for IBM in 1981.
+to eyeBeeMPoster :height
+	localmake "oldState turtleState
+	jumpLeft :height * 1.13
+	eye :height
+	jumpRight :height * 1.165
+	bee :height
+	jumpRight :height * 1.098
+	letterM :height
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+eyeBeeMPoster 100

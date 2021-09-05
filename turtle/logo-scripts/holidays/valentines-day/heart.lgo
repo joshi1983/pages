@@ -1,0 +1,30 @@
+to curvyLeaf :size :delta
+	if :size > 1 [
+		localmake "originalPos pos
+		localmake "originalHeading heading
+		forward :size * 0.2
+		left 80
+		curvyLeaf :size * 0.3 :delta
+		right 80
+		forward :size * 0.05
+		right 80
+		curvyLeaf :size * 0.25 0-:delta
+		setHeading :originalHeading + :delta
+		curvyLeaf :size * 0.9 :delta
+		setHeading :originalHeading
+		setPos :originalPos
+	]
+end
+
+to drawHeart
+	setScreenColor "black
+	setPenColor "#ff1665
+	setPenSize 1
+	setXY 0 -100
+	left 51.2
+	curvyLeaf 200 8
+	right 102.4
+	curvyLeaf 200 -8
+end
+
+drawHeart

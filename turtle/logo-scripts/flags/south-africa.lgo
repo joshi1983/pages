@@ -1,0 +1,57 @@
+to filledTrapezoid :height :width1 :directionSign
+	localmake "oldState turtleState
+	localmake "angle arcTan 2 / 3
+	localmake "slantedLength :height / sin :angle
+	polyStart
+	jumpForward :height
+	jumpLeft :width1 * :directionSign
+	left (90 + :angle) * :directionSign
+	jumpForward :slantedLength
+	polyEnd
+	setTurtleState :oldState
+end
+
+to filledTrapezoidFullShape :flagHeight :directionSign
+	localmake "oldFillColor fillColor
+	localmake "whiteWidth :flagHeight * 0.7197223
+	localmake "coloredWidth :flagHeight * 0.6995373
+	setFillColor "white
+	filledTrapezoid :flagHeight * 2 / 5 :whiteWidth :directionSign
+	setFillColor :oldFillColor
+	filledTrapezoid :flagHeight / 3 :coloredWidth :directionSign
+end
+
+; Inspired by
+; https://commons.wikimedia.org/wiki/File:Flag_of_South_Africa.svg
+to southAfricaFlag :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "width :height * 3 / 2
+	localmake "triangleSize1 :height * 0.75963
+	localmake "triangleSize2 :height * 0.59938315
+	stripes :width :height ["#007749]
+	jumpLeft :width / 2
+	jumpForward :height / 2
+	setPenSize 0
+	right 90
+	setFillColor "#ffb81c
+	isoTriangle :triangleSize1 :triangleSize1 * 3 / 4
+	setFillColor "black
+	isoTriangle :triangleSize2 :triangleSize2 * 3 / 4
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpRight :width / 2
+	setFillColor "#001489
+	filledTrapezoidFullShape :height 1
+	setFillColor "#e03c31
+	jumpForward :height
+	right 180
+	filledTrapezoidFullShape :height -1
+	setTurtleState :oldState
+end
+
+; #eee for contrast with the white parts of the flag
+setScreenColor "#eee
+southAfricaFlag 100

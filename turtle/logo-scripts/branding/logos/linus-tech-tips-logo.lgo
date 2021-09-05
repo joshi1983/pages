@@ -1,0 +1,84 @@
+; Inspired by logo at:
+; https://www.youtube.com/@LinusTechTips
+to linusTechTipsLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "size1 :height * 0.135
+	localmake "size2 :height * 0.37
+	localmake "angle1 108
+	localmake "angle2 180 - :angle1
+	setPenSize :height * 0.045
+	localmake "radius1 (:height - penSize) / 2
+	jumpForward :height / 2
+	setPenColor "#fe4d01
+	localmake "center pos
+	circle :radius1
+
+	jumpTo :oldPos
+	jumpForward :height * 0.216
+	jumpRight :height * 0.16
+	setPenSize 0
+	setFillColor penColor
+	polyStart
+	jumpForward :size1
+	left :angle1
+	jumpForward :size2
+	setHeading :oldHeading
+	jumpForward distanceToCircle :center :radius1
+	setHeading (towards :center) + 90
+	arcLeft 19 :radius1
+	setHeading :oldHeading + 180
+	jumpForward :height * 0.1
+	jumpForward distanceToCircle :center :radius1
+	setHeading (towards :center) + 90
+	arcLeft 13 :radius1
+	polyEnd
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	localmake "y :height * 0.041
+	localmake "y1 :radius1 - :y
+	jumpForward :y
+	jumpRight sqrt :radius1 * :radius1 - :y1 * :y1
+	setHeading (towards :center) + 90
+	polyStart
+	arcLeft 18.5 :radius1
+	setHeading :oldHeading
+	jumpForward :height * 0.42
+	right :angle2
+	jumpForward distanceToCircle :center :radius1
+	setHeading (towards :center) + 90
+	arcLeft 15 :radius1
+	setHeading :oldHeading - :angle1
+	jumpForward :height * 0.349
+	setHeading :oldHeading + 180
+	jumpForward :height * 0.132
+	setHeading :oldHeading + :angle2
+	jumpForward :height * 0.100692635
+	polyEnd
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.314
+	jumpLeft :height * 0.061
+	polyStart
+	right :angle2
+	jumpForward :size1
+	setHeading :oldHeading
+	jumpForward :height * 0.375
+	right :angle2
+	jumpForward distanceToCircle :center :radius1
+	setHeading (towards :center) + 90
+	arcLeft 18.3 :radius1
+	setHeading :oldHeading - :angle1
+	jumpForward :height * 0.41
+	setHeading :oldHeading + 180
+	jumpForward :size1
+	left :angle1
+	jumpForward :height * 0.101508692
+	polyEnd
+	setTurtleState :oldState
+end
+
+linusTechTipsLogo 100

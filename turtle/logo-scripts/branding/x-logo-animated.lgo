@@ -1,0 +1,50 @@
+; Twitter's X Logo has been changing very frequently lately.
+; This animation shows the rapid changes between thin and thick.
+
+; Inspired by
+; https://www.thegatewaypundit.com/2023/07/elon-musk-makes-it-official-twitter-undergoes-major/
+to twitterXSawyerMerrittProposedLogo :height :timeRatio
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "width :height * 244 / 232
+	localmake "angle1 43
+	localmake "angle2 37
+	localmake "size3 :height * (mix 0.225 0.3 :timeRatio)
+	localmake "size6 :height * (mix 0.09 0.2 :timeRatio)
+	jumpLeft (:width - :size6) / 2
+	setPenSize 0
+	setFillColor "white
+	parallelogram :size6 :height / cos :angle1 :angle1
+
+	setPenSize :height * (mix 0.06 0.2 :timeRatio)
+	jumpTo :oldPos
+	jumpRight (:width * 0.95 - :size3 - penSize) / 2
+	jumpForward penSize / 2
+	localmake "height1 :height - penSize
+	setPenColor "white
+	setFillColor "black
+	parallelogram :size3 :height1 / cos :angle2 -:angle2
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+make "timeRatio animation.time / animation.duration
+make "timeRatio clamp :timeRatio 0 1
+make "timeRatio 0.5 + 0.5 * radSin :timeRatio * pi * 2
+twitterXSawyerMerrittProposedLogo 100 :timeRatio
+
+to animation.snapshotstyle
+	localmake "result createPList
+	setProperty "result "position.y 50
+	setProperty "result "zoom.scale 6
+	output :result
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 1
+	; Edit this if you want to change the length of your animation.
+	localmake "result createPList
+	setProperty "result "duration :minutes * 60 + :seconds
+	output :result
+end

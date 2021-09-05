@@ -1,0 +1,100 @@
+; Camera shutter animation
+; inspired by:
+; http://golancourses.net/2014/wp-content/uploads/2014/01/harisusmai_shutter.gif
+
+to calculateShutterProperties :size :openRatio
+	localmake "y :size * :openRatio
+	localmake "x sqrt :size * :size - :y * :y
+	output [:x :y]
+end
+
+to drawSingleShutter :size :openRatio
+	localmake "oldState turtleState
+	localmake "coords calculateShutterProperties :size :openRatio
+	localmake "y item 2 :coords
+	localmake "x item 1 :coords
+	localmake "angle arcSin :x / :size
+	jumpForward :y
+	left 90
+	jumpForward :x
+	right 180 - :angle
+	setPenSize 0
+	polyStart
+	arcRight :angle * 2 :size
+	right 180 - :angle
+	jumpForward :x + :x
+	polyEnd
+	setTurtleState :oldState
+end
+
+to drawShutters :size :openRatio
+	localmake "openRatio clamp :openRatio 0 1
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "oldPos pos
+	localmake "pw1 :size * 0.08
+	localmake "size1 :size - :pw1 * 0.5
+	localmake "nutRadius :size * 0.03
+	localmake "darkColor1 "#000
+	localmake "darkColor2 "#444
+	localmake "nutColor "#bbb
+
+	setPenColor :darkColor1
+	setFillColor :darkColor2
+	repeat 6 [
+		drawSingleShutter :size :openRatio
+		right 360 / 6
+	]
+	setPenSize :size * 0.01
+	repeat 6 [
+		localmake "coords calculateShutterProperties :size :openRatio
+		localmake "x item 1 :coords
+		localmake "y item 2 :coords
+		localmake "startCoord min :x (:y * tan (360 / 12))
+		jumpForward :y
+		right 90
+		jumpForward :startCoord
+		right 180
+		
+		forward :x + :startCoord
+		jumpTo :oldPos
+		setHeading :oldHeading + repcount * 360 / 6
+	]
+	setPenSize :pw1
+	setPenColor :darkColor2
+	setFillColor transparent
+	
+	circle :size1
+	setPenColor :darkColor1
+	setPenSize :size * 0.01
+	circle :size1 - :pw1 * 0.5
+	circle :size1 + :pw1 * 0.5
+
+	setFillColor :nutColor
+	setPenColor :darkColor1
+	setPenSize :nutRadius * 0.1
+	repeat 6 [
+		jumpForward :size1
+		circle :nutRadius
+		jumpTo :oldPos
+		right 360 / 6
+	]
+	setTurtleState :oldState
+end
+
+drawShutters 250 animation.time / 3
+
+to animation.snapshotstyle
+	localmake "result createPList
+	output :result
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 3
+	; Edit this if you want to change the length of your animation.
+	localmake "result createPList
+	setProperty "result "duration :minutes * 60 + :seconds
+	setProperty "result "thumbnailTime 1.5
+	output :result
+end

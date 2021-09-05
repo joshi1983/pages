@@ -1,0 +1,170 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Microsoft_Edge#/media/File:Microsoft_Edge_logo_(2019).svg
+; Referenced from:
+; https://en.wikipedia.org/wiki/Microsoft_Edge
+
+to createDarkGradient1 :height
+	localmake "oldPos pos
+	localmake "gradientRadius :height * 0.32
+	localmake "colorStops createPList
+	setProperty "colorStops 0 transparent
+	setProperty "colorStops 0.85 transparent
+	setProperty "colorStops 1 "#4000	
+	jumpRight :height * 0.08
+	jumpForward :height * 0.33
+	localmake "result createRadialGradient pos :gradientRadius :colorStops
+	jumpTo :oldPos
+	output :result
+end
+
+to edgeDarkestShape :height
+	localmake "oldState turtleState
+	localmake "innerRadius :height * 0.125
+	localmake "radius :height / 2
+	localmake "gradients [
+		createDarkGradient1 :height
+	]
+	jumpForward :height / 2
+	setPenSize 0
+	left 28
+	jumpForward :innerRadius
+	setFillColor "#0e539a
+	localmake "pos1 pos
+	localmake "heading1 heading
+	repeat 1 + count :gradients [
+		polyStart
+		jumpLeft sqrt :radius * :radius - :innerRadius * :innerRadius
+		left 180 - arcSin :innerRadius / :radius
+		arcLeft 134.4 :radius
+		arcLeft 149 :height * 0.0153
+		arcRight 64.9 :height * 0.4
+		arcRight 51.3 :height * 0.26
+		arcRight 60 :innerRadius
+		polyEnd
+		jumpTo :pos1
+		setHeading :heading1
+		if repcount <= count :gradients [
+			setFillGradient item repcount :gradients
+		]
+	]
+	setTurtleState :oldState
+end
+
+to edgeTopGradient :height
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#57df71
+	setProperty "colorStops 0.5 "#2fc2e0
+	setProperty "colorStops 1 "#2cc3d5
+	left 80
+	jumpBackward :height * 0.395
+	localmake "fromPos pos
+	jumpForward :height * 0.98
+	setFillGradient createLinearGradient :fromPos pos :colorStops "pad
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to edgeTopShape :height
+	localmake "oldState turtleState
+	edgeTopGradient :height
+	localmake "innerRadius :height * 0.125
+	localmake "size1 :height * 0.05
+	localmake "radius :height / 2
+	jumpLeft :size1
+	jumpForward :radius + sqrt :innerRadius * :innerRadius - :size1 * :size1
+	right 90 - arcSin :size1 / :innerRadius
+	setPenSize 0
+	polyStart
+	arcRight 158.5 :innerRadius
+	arcLeft 75 :height * 0.022
+	arcLeft 20 :height * 0.05
+	arcLeft 15 :height * 0.1
+	arcLeft 15 :height * 0.2
+	arcLeft 12 :height * 0.5
+	arcLeft 40 :height * 0.23
+	arcLeft 53 :height * 0.25
+	arcLeft 20 :height * 0.35
+	arcLeft 55 :height * 0.482
+	arcLeft 40 :height * 0.57
+	arcLeft 30 :height * 0.43
+	arcLeft 30 :height * 0.55
+	polyEnd
+	setTurtleState :oldState
+end
+
+to middleLinearGradient :height
+	localmake "oldPos pos
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#037cd6
+	setProperty "colorStops 1 "#1392de
+	jumpForward :height * 0.75
+	localmake "result createLinearGradient :oldPos pos :colorStops "pad
+	jumpTo :oldPos
+	output :result
+end
+
+to middleRadialGradient :height
+	localmake "oldPos pos
+	localmake "gradientRadius :height * 0.36
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#0000
+	setProperty "colorStops 0.8 "#0000
+	setProperty "colorStops 1 "#4000
+	jumpForward :height * 0.42
+	jumpLeft :height * 0.21
+	setFillColor transparent
+	localmake "result createRadialGradient pos :gradientRadius :colorStops
+	jumpTo :oldPos
+	output :result
+end
+
+to edgeMiddleTopPath :height
+	localmake "innerRadius :height * 0.125
+	arcRight 110 :innerRadius
+	left 178
+	arcLeft 18 :height * 0.26
+	arcLeft 20 :height * 0.22
+	arcLeft 40 :height * 0.32
+	arcLeft 40 :height * 0.38
+	arcLeft 59.45 :height * 0.25
+end
+
+to edgeMiddleShape :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "radius :height / 2
+	setPenSize 0
+	right 90
+	localmake "oldPos pos
+	setFillGradient middleLinearGradient :height
+	polyStart
+	arcLeft 15 :radius
+	left 175
+	arcRight 95 :height * 0.311
+	arcRight 69.4 :height * 0.32
+	localmake "heading2 heading
+	localmake "pos1 pos
+	edgeMiddleTopPath :height
+	arcLeft 104 :radius
+	polyEnd
+	jumpTo :oldPos
+	setHeading :oldHeading
+	setFillGradient middleRadialGradient :height
+	jumpTo :pos1
+	setHeading :heading2
+	polyStart
+	edgeMiddleTopPath :height
+	arcLeft 12 :radius
+	polyEnd
+	setTurtleState :oldState
+end
+
+to edgeLogo :height
+	edgeDarkestShape :height
+	edgeTopShape :height
+	edgeMiddleShape :height
+end
+
+edgeLogo 100

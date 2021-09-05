@@ -1,0 +1,68 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/The_Travelers_Companies#/media/File:The_Travelers_Companies.svg
+to travelersLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "bigArcRadius :height * 0.62
+	localmake "bigArcAngle 132.7
+	localmake "tinyArcRadius :height * 0.0035
+	localmake "tinyArcAngle1 64
+	localmake "tinyArcAngle2 141.85
+	localmake "midArcAngle 63.8
+	localmake "midArcAngle2 60.3
+	localmake "chordLength :bigArcRadius * 2 * sin :bigArcAngle / 2
+	localmake "midArcRadius :chordLength * 0.32136484
+	localmake "handleThickness :height * 0.062
+	localmake "handleRadius :height * 0.0825
+	localmake "handleHeight :height * 0.4805
+	localmake "handleMidAngle 13
+	localmake "handleMidAngle2 90 - :handleMidAngle / 2
+	; The 1.7 is estimated based on what roughly aligns with the SVG.
+	localmake "handleMidRadius (:handleThickness - :tinyArcRadius * 1.7) / 2 / sin :handleMidAngle / 2
+	jumpForward :height
+	left 90
+	setPenSize 0
+	arcLeft :bigArcAngle / 2 :bigArcRadius
+	right 180
+	setFillColor "#E31B23
+	polyStart
+	arcRight :bigArcAngle :bigArcRadius
+	arcRight :tinyArcAngle2 :tinyArcRadius
+	arcLeft :midArcAngle2 :midArcRadius
+	arcRight :tinyArcAngle1 :tinyArcRadius
+	arcLeft :midArcAngle :midArcRadius
+	arcRight :tinyArcAngle1 :tinyArcRadius
+	arcLeft :midArcAngle2 :midArcRadius
+	arcRight :tinyArcAngle2 :tinyArcRadius
+	polyEnd
+
+	setPenColor fillColor
+	jumpTo :oldPos
+	setHeading :oldHeading
+	setPenSize :handleThickness
+	setLineCap "round
+	jumpForward :handleThickness / 2 + :handleRadius + :handleHeight
+	localmake "handleTop pos
+	right 180
+	forward :handleHeight
+	arcRight 162 :handleRadius		
+	
+	; Draw cap on top of handle.
+	jumpTo :handleTop
+	setHeading :oldHeading
+	jumpLeft :handleThickness / 2
+	setPenSize 0
+	polyStart
+	jumpRight :handleThickness
+	jumpForward :handleThickness / 2 - :tinyArcRadius -
+		:handleMidRadius * (1 - cos :handleMidAngle / 2)
+	arcLeft :handleMidAngle2 :tinyArcRadius
+	arcLeft :handleMidAngle :handleMidRadius
+	arcLeft :handleMidAngle2 :tinyArcRadius
+	polyEnd
+
+	setTurtleState :oldState
+end
+
+travelersLogo 100

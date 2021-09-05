@@ -1,0 +1,147 @@
+; Inspired by Conway's Game of Life explained at:
+; https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life
+
+to createInitialState
+	; Represent as strings since it is easier to see 
+	; the pattern in WebLogo code here.
+	localmake "resultAsStrings [
+'000000000000'
+'000000000000'
+'000000100000'
+'000000101000'
+'000000110000'
+'000000000000'
+'000000000000'
+'000000000000'
+'000000000000'
+]
+
+	localmake "result []
+	; Convert the list of string to list of boolean.
+	; true/false values are better to compute with 
+	; than strings.
+	repeat count :resultAsStrings [
+		localmake "s item repcount :resultAsStrings
+		localmake "convertedList []
+		repeat count :s [
+			queue2 "convertedList ("1 = item repcount :s)
+		]
+		queue2 "result :convertedList
+	]
+	output :result
+end
+
+to getLivingNeighbourCount :cells :i :j
+	localmake "xRange count :cells
+	localmake "yRange count (item 1 :cells)
+	localmake "minX max 1 :i - 1
+	localmake "maxX min :xRange (:i + 1)
+	localmake "minY max 1 :j - 1
+	localmake "maxY min :yRange (:j + 1)
+	localmake "result 0
+	for ["x :minX :maxX] [
+		localmake "xCells item :x :cells
+		for ["y :minY :maxY] [
+			; if x and y corresponds with a neighbour instead of being exactly :i :j.
+			if or (:x <> :i) (:y <> :j) [
+				localmake "cell item :y :xCells
+				if :cell [
+					localmake "result :result + 1
+				]
+			]
+		]
+	]
+	output :result
+end
+
+to isLiving :currentlyLiving :numLivingNeighbours
+	;Any live cell with fewer than two live neighbours dies,
+	;as if by underpopulation
+	if and :currentlyLiving :numLivingNeighbours < 2 [
+		output false
+	]
+	; Any live cell with two or three live neighbours lives 
+	;on to the next generation
+	if and :currentlyLiving (or (:numLivingNeighbours = 2) (:numLivingNeighbours = 3)) [
+		output true
+	]
+	;Any live cell with more than three live neighbours dies, 
+	; as if by overpopulation
+	if and :currentlyLiving (:numLivingNeighbours > 3) [
+		output false
+	]
+	;Any dead cell with exactly three live neighbours 
+	;becomes a live cell, as if by reproduction
+	if and (not :currentlyLiving) (:numLivingNeighbours = 3) [
+		output true
+	]
+	output false
+end
+
+; Simulates a single iteration of the game of life
+to simulateGameOfLife :cells
+	localmake "newCells []
+	for ["i 1 count :cells] [
+		localmake "row item :i :cells
+		localmake "outRow []
+		for ["j 1 count :row] [
+			localmake "cell item :j :row
+			localmake "livingNeighbourCount getLivingNeighbourCount :cells :i :j
+			ifelse isLiving :cell :livingNeighbourCount [
+				queue2 "outRow true
+			] [
+				queue2 "outRow false
+			]
+		]
+		queue2 "newCells :outRow
+	]
+	; Replace with newCells
+	repeat count :cells [
+		localmake "row item repcount :newCells
+		setItem repcount "cells :row
+	]
+end
+
+to gameOfLife :height :numIterations
+	localmake "cells createInitialState
+	localmake "totalCellSize :height / count :cells
+	localmake "cellSize :totalCellSize * 0.9
+	localmake "gapSize :totalCellSize - :cellSize
+	repeat :numIterations [
+		simulateGameOfLife :cells
+	]
+	setPenSize :cellSize
+	repeat count :cells [
+		localmake "row item repcount :cells
+		repeat count :row [
+			localmake "cell item repcount :row
+			ifelse :cell [
+				setPenColor "black
+			] [
+				setPenColor "white
+			]
+			forward :cellSize
+			jumpForward :gapSize
+		]
+		jumpRight :totalCellSize
+		jumpBackward :totalCellSize * count :row
+	]
+end
+
+setScreenColor "#166D74
+jumpTo [-180 -260]
+gameOfLife 400 20 * animation.time / animation.duration
+
+to animation.snapshotstyle
+	localmake "result createPList
+	output :result
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 3
+	; Edit this if you want to change the length of your animation.
+	localmake "result createPList
+	setProperty "result "duration :minutes * 60 + :seconds
+	output :result
+end

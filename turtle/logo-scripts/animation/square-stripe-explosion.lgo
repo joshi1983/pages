@@ -1,0 +1,53 @@
+to square :size
+	localmake "oldState turtleState
+	if :size < penSize [
+		localmake "size :size + penSize
+		setPenSize 0
+		setFillColor penColor
+	]
+	rect :size :size
+	setTurtleState :oldState
+end
+
+; Inspired by animation done at
+; https://www.youtube.com/watch?v=D4oVQ9tK07U
+to squareStripeExplosion :size :timeRatio
+	localmake "colors ["#00A800 "#D5C834 "#001D24 "white]
+	localmake "numColors count :colors
+	localmake "size1 :size
+	localmake "numStripes 20
+	localmake "stripeThickness :size1 / :numStripes
+	localmake "sizeOffset :timeRatio * 20 * :stripeThickness - :stripeThickness
+	setPenSize :size1 / :numStripes
+	setLineJoinStyle "miter
+	setFillColor transparent
+	localmake "size1 :sizeOffset
+	localmake "index :numColors
+	while :size1 >= -:stripeThickness [
+		setPenColor item :index :colors
+		square :size1
+		localmake "size1 :size1 - :stripeThickness
+		localmake "index 1 + remainder :numColors + :index - 2 :numColors
+	]
+end
+
+make "timeRatio animation.time / animation.duration
+make "timeRatio interpolateRatio easeOut :timeRatio
+make "timeRatio clamp :timeRatio 0 1
+squareStripeExplosion 100 :timeRatio
+
+to animation.snapshotstyle
+	localmake "result createPList
+	setProperty "result "zoom.scale 7
+	output :result
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 1
+	; Edit this if you want to change the length of your animation.
+	localmake "result createPList
+	setProperty "result "duration :minutes * 60 + :seconds
+	setProperty "result "thumbnailTime 1
+	output :result
+end
