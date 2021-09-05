@@ -1,0 +1,49 @@
+to getGreenGradient :radius
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#C8FF00
+	setProperty "colorStops 0.7 "#89E01F
+	setProperty "colorStops 1 "#66AE0F
+	localmake "gradient createRadialGradient pos :radius :colorStops
+	output :gradient
+end
+
+; Inspired by:
+; https://publicdomainvectors.org/en/free-clipart/Tennis-ball-vector-drawing/4888.html
+to tennisBall :radius
+	localmake "oldState turtleState
+	localmake "angle1 155
+	localmake "arcAngle 2 * (180 - :angle1)
+	localmake "oldHeading heading
+	localmake "size1 :radius * 0.73
+	localmake "size2 sqrt (:radius * :radius - :size1 * :size1)
+	localmake "chordLength 2 * :size2
+	localmake "arcRadius :chordLength / 2 / sin :arcAngle / 2
+	setFillColor "#C8FF00
+	setPenColor "#5E9F0F
+	setPenSize :radius * 0.01
+	jumpForward :radius
+	localmake "center pos
+	setFillGradient getGreenGradient :radius
+	circle :radius
+
+	; draw left arc.
+	jumpLeft :size1
+	jumpForward :size2
+	right :angle1
+	setPenSize :radius * 0.05
+	setLineCap "round
+	setPenColor "#bbFFFDE5
+	arcRight :arcAngle :arcRadius
+
+	; draw right arc.
+	jumpTo :center
+	setHeading :oldHeading
+	jumpRight :size1
+	jumpForward :size2
+	left :angle1
+	arcLeft :arcAngle :arcRadius
+	
+	setTurtleState :oldState
+end
+
+tennisBall 100

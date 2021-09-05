@@ -1,0 +1,345 @@
+to leaf :size :angle
+	localmake "oldHeading heading
+	localmake "arcRadius :size / 2 / sin :angle
+	left :angle
+	polyStart
+	arcRight :angle * 2 :arcRadius
+	right 180 - :angle * 2
+	arcRight :angle * 2 :arcRadius
+	polyEnd
+	setHeading :oldHeading
+end
+
+to coneBall :length :angle
+	localmake "oldState turtleState
+	localmake "arcAngle 180 + :angle
+	localmake "length1 :length / (1 + tan :angle * 0.5)
+	localmake "arcRadius :length - :length1
+	localmake "scaleFactor (:arcRadius + :length1 / cos (:angle * 0.5)) / :length	localmake "length1 :length1 / :scaleFactor
+	localmake "arcRadius :arcRadius / :scaleFactor
+	left :angle * 0.5
+	polyStart
+	forward :length1
+	arcRight :arcAngle :arcRadius
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://www.pinterest.ca/pin/767089749023125559
+; and
+; https://pngtree.com/freepng/initial-letter-bp-logo-template-vector-design_3577974.html
+to owlEyeLogo :size
+	localmake "oldPos pos
+	localmake "size :size * 1.06
+	localmake "circleRadius :size * 0.16
+	localmake "size1 :size * 0.5
+	localmake "penSize1 :size * 0.12
+	localmake "penSize2 :size * 0.23
+	localmake "size2 :size1 - :penSize1 * 0.5
+	localmake "largeArcRadius :size * 0.5 - :penSize1 * 0.5
+	setPenColor "black
+	setPenSize :penSize1
+	setLineJoinStyle "round
+	setFillColor transparent
+	jumpBackward :size2
+	forward :size2
+	circleRight :largeArcRadius
+	jumpLeft :largeArcRadius * 2
+	right 180
+	arcLeft 270 :largeArcRadius
+	forward :largeArcRadius
+	right 90
+	forward :largeArcRadius * 0.5
+	jumpTo :oldPos
+	jumpRight :largeArcRadius
+	setPenSize :penSize2
+	circle :circleRadius
+	jumpLeft :largeArcRadius * 2
+	circle :circleRadius
+	jumpTo :oldPos
+end
+
+
+to squareWithLines :size
+	localmake "oldState turtleState
+	localmake "step (:size - penSize) / 4
+	jumpLeft penSize * 0.5
+	repeat 5 [
+		forward :size
+		jumpLeft :step
+		jumpBackward :size
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://freebiesupply.com/logos/asml-logo/
+; ASML is a microchip manufacturing equipment supplier.
+to asmlLogo :size
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "size :size * cos 45
+	localmake "size1 :size / 3
+	localmake "step :size * 0.1
+	localmake "step2 :step * 1.4
+	localmake "size2 :size - :step2
+	setLineCap "butt
+	right 45
+	setPenSize :step
+	setPenColor "#322678
+	repeat 2 [
+		jumpBackward :size1
+		forward :size1 * 2
+		jumpTo :oldPos
+		right 90
+	]
+	setHeading :oldHeading + 45
+	repeat 4 [
+		jumpLeft :step2
+		jumpForward :step2
+		squareWithLines :size2
+		jumpTo :oldPos
+		right 90
+	]
+	setTurtleState :oldState
+end
+
+to setLogoDesign1Gradient :size
+	localmake "oldPos pos
+	localmake "colors [
+		"#FFBB00
+		"red
+		"#700070
+	]
+
+	localmake "colorStops createPList
+	repeat count :colors [
+		localmake "ratio 1 - repRatio
+		localmake "color item repcount :colors
+		setProperty "colorStops :ratio :color
+	]
+	jumpLeft :size * 0.6
+	localmake "fromPos pos
+	jumpRight :size * 1.6
+	setFillGradient createLinearGradient :fromPos pos :colorStops "pad
+	jumpTo :oldPos
+end
+
+; Inspired by final logo from this 
+; Adobe Illustrator tutorial video:
+; https://www.pinterest.ca/pin/35325178321414359/
+to logoDesign1 :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "smallRadius :size * 0.695235
+	setPenSize 0
+	repeat 2 [
+		localmake "heading1 heading
+		setLogoDesign1Gradient :size
+		jumpForward :size
+		left 90
+		polyStart
+		arcLeft 115.9994532 :smallRadius
+		left 128
+		arcRight 243.9989738 :smallRadius
+		setHeading :heading1 + 90
+		arcLeft 180 :size
+		polyEnd
+		setHeading :oldHeading + 180
+		jumpTo :oldPos
+	]
+	setHeading :oldHeading
+end
+
+; Inspired by:
+; https://www.pinterest.ca/pin/423549539949430504/
+to bpLogo :size
+	localmake "oldState turtleState
+	localmake "numSides 18
+	localmake "colors [ "#05a450 "#9fd039 "#fddb00 "#fff]
+	localmake "sizeRatios [1 0.78 0.575 0.352]
+	localmake "leafAngles [40 35 25 22]
+
+	setPenSize 0
+	repeat count :colors [
+		setFillColor item repcount :colors
+		localmake "size1 :size * item repcount :sizeRatios
+		localmake "leafAngle item repcount :leafAngles
+
+		repeat :numSides [
+			leaf :size1 :leafAngle
+			right 360 / :numSides
+		]
+		right 180 / :numSides
+	]
+	setTurtleState :oldState
+end
+
+to nbcLogo :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "colors ["#fccc12 "#ff7112 "#ef1541 "#6e55dc "#069de0 "#05ac3f]
+	localmake "angles [15 16 18]
+	localmake "sizes [0.903 0.845 0.808]
+	localmake "gap :size * 0.054
+	setPenSize 0
+	jumpLeft :size * 0.1
+	left 90 - item 1 :angles
+	repeat 3 [
+		localmake "angle item repcount :angles
+		localmake "nextAngle item 1 + (remainder repcount 3) :angles
+		localmake "size1 :size * item repcount :sizes
+		setFillColor item repcount :colors
+		coneBall :size1 :angle * 2
+		right :angle
+		jumpForward :size1 * 0.08
+		jumpRight :gap
+		right :nextAngle
+	]
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpRight :size * 0.1
+	right 90 - item 1 :angles
+	repeat 3 [
+		localmake "index repcount
+		localmake "angle item :index :angles
+		localmake "nextAngle item 1 + (remainder :index 3) :angles
+		localmake "size1 :size * item :index :sizes
+		setFillColor item 7 - repcount :colors
+		coneBall :size1 :angle * 2
+		left :angle
+		jumpForward :size1 * 0.08
+		jumpLeft :gap
+		left :nextAngle
+	]
+
+	; Draw the rooster's beak
+	jumpTo :oldPos
+	setHeading :oldHeading + 5
+	jumpForward :size * 0.63
+	setFillColor "white
+	polyStart
+	jumpForward :size * 0.05
+	arcRight 50 :size * 0.1
+	arcRight 18.3 :size * 0.28
+	left 115
+	arcLeft 48 :size * 0.06
+	jumpForward :size * 0.12
+	polyEnd
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+; Inspired by:
+; https://upload.wikimedia.org/wikipedia/commons/7/76/Today_logo.svg
+; Referenced from:
+; https://en.wikipedia.org/wiki/Today_(American_TV_program)
+to todayLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "penSize1 :height * 0.26
+	localmake "arcRadius1 :height - :penSize1 / 2
+	setPenColor "#ff503c
+	setPenSize :penSize1
+	repeat 2 [
+		jumpLeft :arcRadius1
+		arcRight 180 :arcRadius1
+		jumpTo :oldPos
+		left 180
+		localmake "arcRadius1 :arcRadius1 * 0.62
+	]
+	jumpTo :oldPos
+	jumpLeft :arcRadius1
+	setPenSize 0
+	setFillColor penColor
+	polyStart
+	arcRight 180 :arcRadius1
+	polyEnd
+	setTurtleState :oldState
+end
+
+to cbsLogo :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "len1 :size * 1.88
+	setFillColor "black
+	setPenSize 0
+	circle :size
+	jumpLeft :len1 * 0.5
+	right 90
+	setFillColor "white
+	leaf :len1 60
+	jumpTo :oldPos
+	setFillColor "black
+	circle :size * 0.5
+	setHeading :oldHeading
+end
+
+; Logo for the National Film Board of Canada.
+; The logo is shown at:
+; https://www.nfb.ca
+; and
+; https://logos.fandom.com/wiki/National_Film_Board_of_Canada
+to nfbLogo :size
+	localmake "oldState turtleState
+	localmake "size :size * 2
+	jumpBackward :size * 0.5
+	localmake "oldPos pos
+	localmake "size1 :size * 0.720916
+	localmake "bodyWidth :size * 0.175 * 2
+	localmake "legHeight :size * 0.275
+	localmake "legGap :size * 0.0235 * 2
+	localmake "legThickness (:bodyWidth - :legGap) * 0.5
+	localmake "legSeparation (:legThickness + :legGap) * 0.5
+	localmake "outerEyeWidth :size * 0.473188 * 2
+	localmake "innerEyeWidth :size * 0.28 * 2
+	localmake "circleRadius :size * 0.133
+	setLineJoinStyle "miter
+	setPenColor "black
+	setPenSize :legThickness
+	jumpRight :legSeparation
+	forward :size1
+	jumpLeft :legSeparation * 2
+	backward :size1
+	jumpTo :oldPos
+	setPenSize :bodyWidth
+	jumpForward :legHeight
+	forward :size1 - :legHeight
+	setPenSize 0
+	setFillColor "black
+	; Draw the eye.
+	localmake "pos1 pos
+	jumpRight :outerEyeWidth * 0.5
+	left 90
+	leaf :outerEyeWidth 61
+	jumpForward (:outerEyeWidth - :innerEyeWidth) * 0.5
+	setFillColor "white
+	leaf :innerEyeWidth 49.5
+	jumpTo :pos1
+	setFillColor "black
+	circle :circleRadius
+
+	setTurtleState :oldState
+end
+
+make "size 100
+make "separation :size * 3
+jumpLeft :separation * 3.5
+owlEyeLogo :size
+jumpRight :separation
+asmlLogo :size
+jumpRight :separation
+logoDesign1 :size
+jumpRight :separation
+bpLogo :size
+jumpRight :separation
+nbcLogo :size
+jumpRight :separation
+todayLogo :size
+jumpRight :separation
+cbsLogo :size
+jumpRight :separation
+nfbLogo :size
