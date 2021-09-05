@@ -1,0 +1,57 @@
+; Inspired by logo at:
+; https://mswlogo.en.softonic.com
+; The same logo is sometimes shown for FMSLogo such as at:
+; https://en.wikipedia.org/wiki/FMSLogo#/media/File:Logo_of_FMSLogo.jpg
+; A more FMSLogo-specific logo is at:
+; https://sourceforge.net/p/fmslogo/discussion/500407/thread/4bcc3c38/
+;
+; It looks like FMSLogo continued using MSWLogo's logo a few years after
+; David Costanzo started maintaining it.
+; Eventually, FMSLogo started using a logo resembling a green jewel
+; but many references with MSWLogo have not yet been replaced.
+to mswLogoLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	setPenSize :height * 0.032
+	localmake "height1 :height - penSize
+	localmake "diagonalLen :height1 / cos 45
+	localmake "len1 :diagonalLen / 2  * cos 45
+	localmake "smallSize :height * 0.13
+	setPenColor "black
+	setLineJoinStyle "round
+	setLineCap "round
+	jumpForward :height / 2
+	right 135
+	isoTriangle :diagonalLen :diagonalLen / 2
+	setHeading :oldHeading
+	jumpForward :height1 / 2
+	jumpRight :len1
+	left 90
+	forward :len1
+	left 45
+	forward :len1 / 2
+	jumpBackward :height * 0.044
+	setFillColor "white
+	setPenSize penSize / 2
+	isoTriangle :smallSize * 2 :smallSize
+	setFillColor "#0918f9
+	setPenSize 0
+	setHeading :oldHeading + 90
+	jumpRight :height * 0.35
+	jumpBackward :height * 0.35
+	setFontFamily "arial
+	setFontSize 24.5
+	label "to
+
+	setFillColor "#fd0d0c
+	jumpTo :oldPos
+	jumpLeft :height * 0.04
+	jumpBackward :height * 0.335
+	label "45°
+	jumpForward :height * 0.425
+	label "90°
+	setTurtleState :oldState
+end
+
+mswLogoLogo 100
