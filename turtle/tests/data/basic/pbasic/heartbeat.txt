@@ -1,0 +1,133 @@
+// Heartbeat.bas — restructured without multi-line IF
+// Milestone 26: Read CSV file and display as graph
+
+var canvasW : Int = 1260
+var canvasH : Int = 1000
+var marginL : Int = 85
+var marginR : Int = 80
+var marginT : Int = 80
+var marginB : Int = 80
+var plotW   : Int = 0
+var plotH   : Int = 0
+plotW = canvasW - marginL - marginR
+plotH = canvasH - marginT - marginB
+
+cls
+clr
+pen 2.0
+var myFile$ : String = "pBasic/heartbeat.csv"
+
+var fileLines[500] : String
+fileLines[] = LOAD(myFile$)
+
+var timeData[200] : Float
+var sigData[200]  : Float
+var rowCount  : Int = 0
+var lineIdx   : Int = 1
+var line$     : String = ""
+var commaPos  : Int = 0
+var tStr$     : String = ""
+var vStr$     : String = ""
+var keepGoing : Int = 1
+var skipLine  : Int = 0
+
+while (keepGoing == 1) {
+    line$ = fileLines[lineIdx]
+    skipLine = 0
+    if line$ == "" then keepGoing = 0
+    if line$ == "\n" then skipLine = 1
+    if keepGoing == 1 && skipLine == 0 then commaPos = findComma(line$)
+    if keepGoing == 1 && skipLine == 0 && commaPos > 0 then tStr$ = MID$(line$, 0, commaPos)
+    if keepGoing == 1 && skipLine == 0 && commaPos > 0 then vStr$ = MID$(line$, commaPos + 1, LEN(line$))
+    if keepGoing == 1 && skipLine == 0 && commaPos > 0 then timeData[rowCount] = VAL(tStr$)
+    if keepGoing == 1 && skipLine == 0 && commaPos > 0 then sigData[rowCount] = VAL(vStr$)
+    if keepGoing == 1 && skipLine == 0 && commaPos > 0 then rowCount = rowCount + 1
+    if keepGoing == 1 then lineIdx = lineIdx + 1
+}
+
+print "Loaded ";
+print rowCount;
+print " data points from: ";
+print myFile$
+
+var minVal  : Float = sigData[0]
+var maxVal  : Float = sigData[0]
+var minTime : Float = timeData[0]
+var maxTime : Float = timeData[rowCount - 1]
+var si : Int = 1
+while (si < rowCount) {
+    if sigData[si] < minVal then minVal = sigData[si]
+    if sigData[si] > maxVal then maxVal = sigData[si]
+    si = si + 1
+}
+
+var valRange  : Float = maxVal - minVal
+var valPad    : Float = valRange * 0.1
+minVal = minVal - valPad
+maxVal = maxVal + valPad
+valRange  = maxVal - minVal
+var timeRange : Float = maxTime - minTime
+
+CLR
+
+LINE(marginL, marginT, marginL, marginT + plotH, 1.0, 1.0, 1.0, 1.0)
+LINE(marginL, marginT + plotH, marginL + plotW, marginT + plotH, 1.0, 1.0, 1.0, 1.0)
+
+var zeroY : Float = 0.0
+zeroY = marginT + plotH - ((0.0 - minVal) / valRange * plotH)
+LINE(marginL, zeroY, marginL + plotW, zeroY, 0.4, 0.4, 0.4, 1.0)
+
+var px1 : Float = 0.0
+var py1 : Float = 0.0
+var px2 : Float = 0.0
+var py2 : Float = 0.0
+
+px1 = marginL + ((timeData[0] - minTime) / timeRange * plotW)
+py1 = marginT + plotH - ((sigData[0] - minVal) / valRange * plotH)
+
+var di : Int = 1
+while (di < rowCount) {
+    px2 = marginL + ((timeData[di] - minTime) / timeRange * plotW)
+    py2 = marginT + plotH - ((sigData[di] - minVal) / valRange * plotH)
+    LINE(px1, py1, px2, py2, 0.0, 1.0, 0.4, 1.0)
+    POINT(px2, py2, 0.2, 1.0, 0.6, 1.0)
+    px1 = px2
+    py1 = py2
+    di = di + 1
+}
+
+var tickCount : Int = 5
+var tickStep  : Float = valRange / tickCount
+var ti : Int = 0
+while (ti <= tickCount) {
+    var tickVal : Float = minVal + tickStep * ti
+    var tickY   : Float = marginT + plotH - ((tickVal - minVal) / valRange * plotH)
+    LINE(marginL - 5, tickY, marginL, tickY, 1.0, 1.0, 1.0, 1.0)
+    ti = ti + 1
+}
+
+var xTickCount : Int = 6
+var xTickStep  : Float = timeRange / xTickCount
+var xi : Int = 0
+while (xi <= xTickCount) {
+    var xTickVal : Float = minTime + xTickStep * xi
+    var xTickX   : Float = marginL + ((xTickVal - minTime) / timeRange * plotW)
+    LINE(xTickX, marginT + plotH, xTickX, marginT + plotH + 5, 1.0, 1.0, 1.0, 1.0)
+    xi = xi + 1
+}
+
+print "Graph complete!"
+end
+
+func findComma(s$) {
+    var pos : Int = 0
+    var idx : Int = 0
+    var found : Int = 0
+    while (idx < LEN(s$)) {
+        if found == 0 && MID$(s$, idx, 1) == "," then pos = idx
+        if MID$(s$, idx, 1) == "," then found = 1
+        idx = idx + 1
+    }
+    if found == 0 then pos = 0
+    return pos
+}

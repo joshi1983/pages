@@ -1,0 +1,30 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Scheme_(programming_language)#/media/File:Lambda_lc.svg
+; I'm naming it the Scheme logo because that's how Scheme's wikipedia article references it:
+; https://en.wikipedia.org/wiki/Scheme_(programming_language)
+; The main difference between the linked SVG and what this code draws is with
+; the bottom arc-like shape.
+; The original does not have a matching top and bottom arc-like shape.
+; This code draws the bottom arc a little differently from the SVG so it could reuse 
+; the data for the top arc.  This code makes the lower right arc look like a 
+; 92.8% scale version of the top left arc.
+to schemeLogo :height
+	localmake "oldState turtleState
+	localmake "topArcsInfo [[4 1.2] [5 0.65] [10 0.35] [10 0.15]
+		[25 0.1] [21 0.06] [40 0.1] [40 0.095] [7.52 0.4] [-84 0] [0.0247]
+		[-90 0] [-18 0.4] [-32 0.18] [-30 0.09] [-40 0.1] [-30 0.139]]
+	setPenSize 0
+	setFillColor "black
+	jumpLeft :height * 0.3500486
+	jumpForward :height * 0.0097646
+	polyStart
+	arcLines (combine [[-24.9 0] [0.70933] [35.7 0]] :topArcsInfo) :height
+	arcLines [[-13 0.4] [-4 3] [0.337]] :height
+	arcLines :topArcsInfo :height * 0.928
+	arcLines [[-19 0.57] [0.255] [144.2 0] [0.518]] :height
+	polyEnd
+	circle 0.1
+	setTurtleState :oldState
+end
+
+schemeLogo 100

@@ -1,0 +1,69 @@
+! Operation on Complex Matrices
+! TRN, multiply (both ways), vectors, dot products, etc.
+!
+! **NOTE:** type 'do complex' in the command window before running
+
+
+DECLARE COMPLEX A, B, C, D, V, W, x, y, z, VV, WW
+DECIMALS 4
+
+DIM A(2,3), B(3,2), C(3,3), D(2,2), V(2), W(3), VV(2), WW(3)
+DIM RR(2,3), II(2,3)
+
+MAT READ RR, II
+DATA 1, 2, 3
+DATA 4, 5, 6
+
+DATA 1, 0, -1
+DATA 1, -2, 1
+
+LET V(1) = 2    ! 2 + 0*i
+LET V(2) = 3
+LET W(1) = 1
+LET W(2) = 0
+LET W(3) = -1
+
+PRINT "V, W"
+MAT PRINT V
+MAT PRINT W
+
+CALL c_MatComp (RR, II, A)
+PRINT "A"
+MAT PRINT A
+
+PRINT "Press key to continue."
+GET KEY key
+
+MAT B = TRN(A)
+PRINT "B = TRN(A)"
+MAT PRINT B
+
+MAT C = B*A
+MAT D = A*B
+
+PRINT "C = B*A, D = A*B"
+MAT PRINT C
+MAT PRINT D
+
+MAT VV = V*A
+MAT WW = A*W
+PRINT "VV = V*A, WW = A*W"
+MAT PRINT VV
+MAT PRINT WW
+
+MAT x = WW*WW
+PRINT
+PRINT "Dot Product of WW with self"
+PRINT x
+
+MAT W = CONJ(WW)
+PRINT
+PRINT "Conjugate of WW"
+MAT PRINT W
+
+MAT x = W*WW
+PRINT
+PRINT "Dot product of W with WW"
+PRINT x
+
+END
