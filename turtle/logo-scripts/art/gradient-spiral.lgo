@@ -1,0 +1,64 @@
+make "color1 "#D600D6
+make "color2 "#00B3FF
+
+to createForwardGradient :len :colorStops
+	jumpBackward :len
+	localmake "fromPos pos
+	jumpForward :len * 2
+	localmake "result createLinearGradient :fromPos pos :colorStops "pad
+	jumpBackward :len
+	output :result
+end
+
+; Inspired by
+; https://www.pinterest.ca/pin/779122804299682521/
+to circleSpiral :outerRadius
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "numSides 7
+	localmake "thickness :outerRadius * 0.5
+	localmake "innerRadius :outerRadius - :thickness
+	localmake "gradientAngle 4
+	localmake "arcRadius :outerRadius * 0.8
+	localmake "arcAngle 124
+	localmake "colorStops createPList
+	setProperty "colorStops 0 :color1
+	setProperty "colorStops 1 :color2
+	right 45
+	jumpBackward :outerRadius
+	localmake "fromPos pos
+	jumpForward :outerRadius * 2
+	setPenGradient createLinearGradient pos :fromPos :colorStops "pad
+	setPenSize :thickness
+	jumpTo :oldPos
+	circle :outerRadius - :thickness * 0.5
+	left 45
+	setProperty "colorStops 0 "#dfff
+	setProperty "colorStops 0.49 "#0fff
+	setProperty "colorStops 0.5 "#0000
+	setProperty "colorStops 1 "black
+	setPenSize 0
+	setPenColor "black
+	repeat :numSides [
+		setHeading :oldHeading - :gradientAngle + repcount * 360 / :numSides
+		jumpBackward :outerRadius * 0.25
+		setFillGradient createForwardGradient :outerRadius * 0.8 :colorStops
+		right :gradientAngle
+		jumpTo :oldPos
+		jumpForward :innerRadius
+		left 90
+		polyStart
+		arcLeft :arcAngle :arcRadius
+		left 14.3
+		arcLeft 360 / :numSides :outerRadius
+		left 165.5
+		arcRight :arcAngle :arcRadius
+		arcRight 360 / :numSides :innerRadius
+		polyEnd
+		jumpTo :oldPos
+	]
+	setTurtleState :oldState
+end
+
+circleSpiral 100
