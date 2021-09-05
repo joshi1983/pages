@@ -1,0 +1,64 @@
+; Inspired by
+; https://www.facebook.com/photo/?fbid=1720458468476205
+;
+; The following drawing animates between a Fermat spiral with no spikes 
+; into a spiked spiral similar to the one on facebook.
+; You can learn more about Fermat Spirals at:
+; https://en.wikipedia.org/wiki/Fermat%27s_spiral
+
+to spiral :height :timeRatio
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "numSpikes 15000
+	jumpForward :height / 2
+	setPenSize :height * 0.002
+	setPenColor "black
+	localmake "center pos
+	repeat 2 [
+		localmake "heading1 :oldHeading + repcount * 360 / 2
+		localmake "points []
+		repeat :numSpikes [
+			localmake "angle 7000 * repRatio
+			localmake "radius :height * 0.00545 * sqrt :angle
+			localmake "scaledAngle :angle * 22 * :timeRatio
+			localmake "scale power cos :scaledAngle 10
+			localmake "scaledAngle remainder :scaledAngle 360
+			if and :scaledAngle < 270 :scaledAngle > 90 [
+				localmake "scale -:scale
+			]
+			localmake "radius :radius + :radius * 0.12 * :scale
+			setHeading :heading1 + :angle
+			jumpForward :radius
+			queue2 "points pos
+			jumpTo :center
+		]
+		repeat count :points [
+			localmake "nextPoint item repcount :points
+			setHeading towards :nextPoint
+			forward distance :nextPoint
+		]
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+make "timeRatio clamp animation.time / animation.duration 0 1
+make "timeRatio interpolateRatio easeOut :timeRatio
+spiral 100 :timeRatio
+
+to animation.snapshotstyle
+	localmake "result createPList
+	setProperty "result "position.y 50
+	setProperty "result "zoom.scale 6.9
+	output :result
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 10
+	; Edit this if you want to change the length of your animation.
+	localmake "result createPList
+	setProperty "result "duration :minutes * 60 + :seconds
+	setProperty "result "thumbnailTime 10
+	output :result
+end

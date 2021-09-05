@@ -1,0 +1,41 @@
+; Inspired by:
+; https://www.pinterest.ca/pin/464433780334351661/
+
+; A very similar pattern is used for string art in this video:
+; https://www.youtube.com/watch?v=nULTxqJKcdA
+
+to design :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "backHeading :oldHeading + 180
+	localmake "numBottomPoints 20
+	localmake "numOtherRanges 11
+	localmake "bottomAngleRange 60
+	localmake "bottomHeadingStart :backHeading - :bottomAngleRange * 0.5
+	setPenColor "#fc6
+	setPenSize :size * 0.03
+	circle :size
+	setPenSize :size * 0.005
+	repeat :numBottomPoints [
+		localmake "angleOffset :bottomAngleRange * repcount / :numBottomPoints
+		localmake "angle :bottomHeadingStart + :angleOffset
+		jumpTo :oldPos
+		setHeading :angle
+		jumpForward :size
+		localmake "fromPoint pos
+		repeat :numOtherRanges [
+			localmake "angleStart :backHeading + repcount * 360 / :numOtherRanges
+			localmake "angle2 :angleStart + :angleOffset
+			jumpTo :oldPos
+			setHeading :angle2
+			jumpForward :size
+			setHeading towards :fromPoint
+			forward distance :fromPoint
+		]
+	]
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+setScreenColor "black
+design 200
