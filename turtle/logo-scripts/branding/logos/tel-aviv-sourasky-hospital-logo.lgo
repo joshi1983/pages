@@ -1,0 +1,37 @@
+; Inspired by logo at:
+; https://www.tasmc.org.il
+to telAvivSouraskyHospitalLogo :height
+	localmake "oldState turtleState
+	localmake "len1 0.51
+	localmake "thickness1 0.11
+	localmake "len2 :len1 - :thickness1 * (1 + 1 / 2 / cos 45)
+	localmake "arrowLines1 [[45 0] [:len1] [-90 0] [:thickness1]
+		[-90 0] [:len2] [135 0] [0.275] [-90 0] [:thickness1 / 2]]
+	localmake "arrowShape [0 0.027
+		combine :arrowLines1 reverse :arrowLines1
+	]
+	localmake "heartArcs1 [
+		[45 0] [0.515] [-95 0] [-18 0.5] [-102 0.169241618]
+		[80 0]
+	]
+	localmake "arrowColors ["#0093c9 "#00acd8 "#58c3e3]
+	setPenSize 0
+	setFillColor "#1b3b72
+	drawArcLineShape [0 0.542
+		combine :heartArcs1 reverse :heartArcs1
+	] :height
+	jumpForward :height * 0.515
+	localmake "center pos
+	repeat count :arrowColors [
+		right 90
+		if odd? repcount [
+			jumpForward :height * 0.018
+		]
+		setFillColor item repcount :arrowColors
+		drawArcLineShape :arrowShape :height
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+telAvivSouraskyHospitalLogo 100

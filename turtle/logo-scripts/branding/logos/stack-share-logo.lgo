@@ -1,0 +1,41 @@
+; Inspired by logo at:
+; https://stackshare.io/
+to stackShareLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "width :height * 1.073
+	localmake "radius1 :height * 0.094
+	localmake "len1 :height * 0.124
+	localmake "len2 :height * 0.265
+	localmake "angle1 60
+	setLineJoinStyle "miter
+	setLineCap "butt
+	setPenSize 0
+	setFillColor "#008ff9
+	jumpForward :height / 2
+	roundRect :width :height :height * 0.065
+	setPenColor "white
+	setPenSize :height * 0.059
+	jumpLeft :height * 0.185
+	setFillColor transparent
+	circleLeft :radius1
+	right 90
+	forward :len1
+	left :angle1
+	localmake "pos1 pos
+	forward :len2
+	setHeading :oldHeading + 90
+	forward :len1
+	setHeading :oldHeading
+	circleRight :radius1
+	jumpTo :pos1
+	setHeading :oldHeading + 90 + :angle1
+	forward :len2
+	setHeading :oldHeading + 90
+	forward :len1
+	left 90
+	circleRight :radius1
+	setTurtleState :oldState
+end
+
+stackShareLogo 100

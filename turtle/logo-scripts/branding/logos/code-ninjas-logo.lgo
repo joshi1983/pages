@@ -1,0 +1,85 @@
+to drawEyes :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "skinColors ["#e0cba1 "#d1b489]
+	localmake "eyeMiddleHeightRatio 0.155
+	localmake "maskOpeningArcRadius1 :height * 4.5
+	localmake "maskOpeningArcRadius2 :height * 0.42
+	setFillColor first :skinColors
+	localmake "center pos
+	; so there is no light creeping through the fringe between either side.
+	rect :height * 0.1 :eyeMiddleHeightRatio * :height
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		setHeading :oldHeading
+		setFillColor item repcount :skinColors
+		localmake "startPos pos
+		jumpRight -:maskOpeningArcRadius2 * :sign
+		localmake "pos1 pos
+		jumpTo :startPos
+		polyStart
+		arcLines [[:eyeMiddleHeightRatio / 2] [:sign * 90 0]] :height
+		ifelse repcount = 1 [
+			localmake "arcAngle1 getArcLeftAngleToCircle :maskOpeningArcRadius1 :center 
+				:maskOpeningArcRadius2
+		] [
+			localmake "arcAngle1 getArcRightAngleToCircle :maskOpeningArcRadius1 :center 
+				:maskOpeningArcRadius2
+		]
+		localmake "arcAngle1 -:sign * :arcAngle1
+		arcLeft :arcAngle1 :maskOpeningArcRadius1
+		localmake "arcAngle2 4 * arcSin (distance :pos1)  / 2 / :maskOpeningArcRadius2
+		localmake "delta heading - ((towards :center) + :sign * 90)
+		left :delta
+		arcLeft :sign * :arcAngle2 :maskOpeningArcRadius2
+		left :delta
+		arcLeft :arcAngle1 :maskOpeningArcRadius1
+		polyEnd
+		jumpTo :center
+	]
+	setFillColor "black
+	setPenColor fillColor
+	setPenSize :height * 0.02
+	setLineJoinStyle "round
+	setHeading :oldHeading
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		drawArcLineShape [:sign * 0.283 0.02
+			[[:sign * 137 0] [:sign * -78 0.12]]
+		] :height
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://www.codeninjas.com/
+to codeNinjasLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "bandanaLines1 [
+		[26 0] [80 0.177] [10 0.3] [98 0.015] [90 0.177]
+	]
+	setPenSize 0
+	jumpForward :height / 2
+	setFillColor "black
+	ellipse :height * 0.48 :height / 2
+	drawArcLineShapes [
+		[-0.42 0.03
+			:bandanaLines1
+		]
+		[-0.461 0.032
+			combine [[70 0]] :bandanaLines1
+		]
+	] :height
+	setFillColor "#3a3f44
+	repeat 2 [
+		setHeading :oldHeading + repcount * 180
+		drawArcLineShape [0.37 0.19
+			[[22 0] [108 0.4] [162 0] [-67 0.555]]
+		] :height
+	]
+	drawEyes :height
+	setTurtleState :oldState
+end
+
+codeNinjasLogo 100

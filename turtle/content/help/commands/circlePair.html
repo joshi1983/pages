@@ -1,0 +1,62 @@
+<div class="svg-container">
+	<img src="content/help/commands/images/circlePair.svg" alt="circlePair diagram and examples">
+<code>setFillColor "red
+
+circlePair 100 50 0
+; Draws a red single circle with radius 100
+; This is because the 50 radius circle would be inside the larger circle
+
+jumpForward 220
+circlePair 100 50 200
+; Draws a shape that contains a circle with radius 100
+; centered on the point the turtle was at.
+; The area between the 100 radius circle 
+; and a 50 radius circle is filled in.
+; The circular arcs are centered on points 
+; that are 200 apart along the turtle's heading</code>
+<code>to zeroTolerantArcLeft :angle :arcRadius
+	ifelse :arcRadius = 0 [
+		left :angle
+		; don't draw an arc because an arc can't exist with a radius of 0.
+	] [
+		arcLeft :angle :arcRadius
+	]
+end
+
+; The myCirclePair procedure works exactly like the circlePair command.
+; The circlePair command is available so you don't need to implement it yourself.
+; Reviewing this implementation could help you implement something similar using procedures, though.
+to myCirclePair :startRadius :endRadius :separation
+	if :separation &lt; 0 [
+		right 180
+		myCirclePair :startRadius :endRadius -:separation
+		right 180
+		stop
+	]
+	localmake "maxRadius max :startRadius :endRadius
+	ifelse :separation &lt;= :maxRadius -
+	(min :startRadius :endRadius) [
+		circle :maxRadius
+	] [
+		localmake "oldPos pos
+		localmake "oldHeading heading
+		localmake "size1 :endRadius - :startRadius
+		localmake "angle1 arcSin :size1 / :separation
+		localmake "tangentLength :separation * cos :angle1
+		left 90 + :angle1
+		jumpForward :startRadius
+		left 90
+		polyStart
+		zeroTolerantArcLeft 180 - :angle1 * 2 :startRadius
+		forward :tangentLength
+		zeroTolerantArcLeft 180 + :angle1 * 2 :endRadius
+		polyEnd
+		jumpTo :oldPos
+		setHeading :oldHeading
+		jumpForward :separation
+	]
+end
+
+setFillColor "red
+myCirclePair 100 50 200</code>
+</div>

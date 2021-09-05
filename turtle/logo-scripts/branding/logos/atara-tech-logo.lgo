@@ -1,0 +1,45 @@
+; Inspired by logo from
+; https://atara.tech
+to ataraLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "penSize1 :height * 0.02
+	localmake "gap :height * 0.002
+	localmake "maxRadius (:height / 2 - :gap - :penSize1) / 2
+	localmake "numCircles 10
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize :penSize1
+	setPenColor "white
+	setFillColor transparent
+	repeat 4 [
+		setHeading :oldHeading + repcount * 360 / 4
+		localmake "swapRadii odd? repcount
+		repeat :numCircles [
+			localmake "radius :maxRadius * repcount / :numCircles
+			localmake "radius1 :radius
+			localmake "radius2 :radius * 1.04
+			if :swapRadii [
+				swap "radius1 "radius2
+			]
+			jumpTo :center
+			jumpRight :radius2 + :gap + penSize / 2
+			jumpForward :radius1 + :gap + penSize / 2
+			ellipse :radius2 :radius1
+		]
+	]
+	setTurtleState :oldState
+end
+
+to ataraLogo2 :separation :height
+	stripes :separation :height ["#43b3ae]
+	ataraLogo :height
+end
+
+setScreenColor "black
+make "height 100
+make "separation :height * 4
+jumpLeft :separation * 0.5
+ataraLogo :height
+jumpRight :separation
+ataraLogo2 :separation :height

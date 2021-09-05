@@ -1,0 +1,44 @@
+; drawCube draws a 3D cube using the turtle's orientation.
+; If you want some Apple 2 basic code for drawing a rotating cube,
+; see: https://www.youtube.com/watch?v=PHfKCxjsmos
+to drawCube :size
+	localmake "oldState turtleState
+	setLineJoinStyle "round
+	setLineCap "round
+	jumpOut :size / 2
+	rect :size :size
+	jumpIn :size
+	rect :size :size
+	jumpOut :size
+	jumpForward :size / 2
+	jumpLeft :size / 2
+	repeat 4 [
+		pitchUp 90
+		forward :size
+		jumpBackward :size
+		pitchDown 90
+		right 90
+		jumpForward :size
+	]
+	setTurtleState :oldState
+end
+
+pitchUp 30
+rollRight 360 * animation.timeRatio
+drawCube 100
+
+to animation.snapshotstyle
+	output createPList2 [
+		["zoom.scale 3.2]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 3
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+		["thumbnailTime 0.4]
+	]
+end
