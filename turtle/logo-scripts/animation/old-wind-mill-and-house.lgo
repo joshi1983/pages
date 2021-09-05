@@ -1,0 +1,292 @@
+; inspired by
+; https://www.pinterest.ca/pin/438608451204236419/
+
+to framedRect :width :height
+	localmake "oldState turtleState
+	localmake "ratio 0.965
+	localmake "ratio2 1 - ((1 - :ratio) * :height / :width)
+	stripes :width :height ["black]
+	setPenColor "#dcc499
+	setPenSize (:width + :height) * 0.018
+	jumpForward :height / 2
+	setFillColor transparent
+	rect :width * :ratio2 :height * :ratio
+	setTurtleState :oldState
+end
+
+to smoke :size :circleCenter :circleRadius
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "angle1 45
+	localmake "angle2 60.647395
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#2000
+	setProperty "colorStops 0.3 "#6234
+	setProperty "colorStops 0.7 "#2046
+	setProperty "colorStops 1 "#4524
+	localmake "fromRatio animation.time / 3
+	jumpForward :size * :fromRatio
+	localmake "from pos
+	jumpForward :size * (2 - :fromRatio)
+	localmake "to pos
+
+	jumpTo :oldPos
+	setPenSize 0
+	localmake "gradient1 createLinearGradient  :from :to :colorStops "pad
+	setFillGradient :gradient1
+	jumpForward distanceToCircle :circleCenter :circleRadius
+	setHeading (towards :circleCenter) - 90
+	polyStart
+	arcRight 8 :circleRadius
+	right 43
+	arcRight :angle2 :size * 0.62
+	arcLeft :angle1 :size * 0.4
+	right 180
+	arcLeft 30 :size * 0.4
+	arcRight 50 :size * 0.3
+	arcRight 12 :size * 0.4
+	localmake "arcRadius :size * 0.701
+	arcLeft (getArcLeftAngleToCircle :arcRadius :circleCenter :circleRadius) :arcRadius
+	
+	polyEnd
+	setTurtleState :oldState
+end
+
+to drawBrick :width :height :brickHeight
+	localmake "oldState turtleState
+	localmake "chimneyColor "#830
+	localmake "numBrickLayers int (:height / :brickHeight)
+	localmake "layerGapThickness :brickHeight * 0.1
+	localmake "maxBricksPerLayer int :width / :brickHeight / 2
+	localmake "brickWidth :width / :maxBricksPerLayer
+	stripes :width :height [:chimneyColor]
+	repeat :numBrickLayers [
+		localmake "pos1 pos
+		stripes :width :layerGapThickness ["black]
+		localmake "numBricksOnLayer :maxBricksPerLayer
+		if even? repcount [
+			localmake "numBricksOnLayer :numBricksOnLayer - 1
+		]
+		jumpLeft :brickWidth * (:numBricksOnLayer + 1) / 2
+		repeat :numBricksOnLayer [
+			jumpRight :brickWidth
+			stripes :layerGapThickness :brickHeight ["black]
+		]
+		jumpTo :pos1
+		jumpForward :brickHeight
+	]
+	setTurtleState :oldState
+end
+
+to house :size :circleCenter :circleRadius
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "height1 :size * 0.13
+	localmake "height2 :size * 0.2
+	localmake "height3 :size * 0.35
+	localmake "width1 :size * 0.25
+	localmake "width3 :width1
+	localmake "width2 :size - :width1 - :width3
+	localmake "roofAngle1 arcTan (:height2 - :height1) / :width1
+	localmake "roofAngle2 arcTan (:height3 - :height2) * 2 / :width2
+	localmake "roofLen1 0.5 * :width2 / cos :roofAngle2
+	localmake "roofLen2 :width1 / cos :roofAngle1
+	localmake "brickHeight :size * 0.01
+
+	setPenSize :size * 0.05
+	jumpForward :size * 0.37
+	smoke :size * 0.55 :circleCenter :circleRadius
+	jumpTo :oldPos
+	jumpForward :size * 0.05
+	drawBrick :size * 0.05 :size * 0.38 :brickHeight
+	
+	jumpTo :oldPos
+	jumpRight :size * 0.49
+	setPenSize :size * 0.03
+	jumpForward :size * 0.001
+	drawBrick :size * 0.03 :size * 0.19 :brickHeight
+	
+	jumpTo :oldPos
+	jumpLeft :size * 0.5
+	setFillColor "#a78d61
+	setPenColor "black
+	setPenSize :size * 0.002
+	polyStart
+	forward :height1
+	setPenSize :size * 0.01
+	right 90 - :roofAngle1
+	forward :roofLen2
+	left :roofAngle2 - :roofAngle1
+	forward :roofLen1
+	right :roofAngle2 * 2
+	forward :roofLen1
+	left :roofAngle2 - :roofAngle1
+	forward :roofLen2
+	right 90 - :roofAngle1
+	setPenSize :size * 0.002
+	forward :height1
+	setPenSize 0
+	polyEnd
+	
+	right 180
+	jumpTo :oldPos
+	jumpForward :size * 0.02
+	framedRect :size * 0.06 :size * 0.11
+	forward :size * 0.21
+	framedRect :size * 0.06 :size * 0.07
+	setPos :oldPos
+	right 89
+	forward :size * 0.33
+	left 89
+	framedRect :size * 0.06 :size * 0.11 ; side door
+	right 70
+	forward :size * 0.1
+	left 70
+	framedRect :size * 0.04 :size * 0.05
+	setPos :oldPos
+	left 89
+	forward :size * 0.37
+	right 89
+	framedRect :size * 0.08 :size * 0.1
+	setPos :oldPos
+	right 90
+	backward :width2 * 0.5
+	setPenSize :size * 0.001
+	left 90
+	repeat 2 [
+		stripes penSize :height2 ["#dcc499]
+		jumpRight :width2
+	]
+	setTurtleState :oldState
+end
+
+to skyAndGround :size
+	localmake "oldPos pos
+	setPenSize 0
+	jumpBackward :size * 0.6
+	localmake "from pos
+	jumpForward :size
+	localmake "to pos
+	localmake "colorStops createPList
+	setProperty "colorStops 0 screenColor
+	setProperty "colorStops 0.2 "#5d671e
+	setProperty "colorStops 0.495 "#bfbd8d
+	setProperty "colorStops 0.505 "#8badb3
+	setProperty "colorStops 0.6 "#b9c4c6
+	setProperty "colorStops 0.65 "#b9c4c6
+	setProperty "colorStops 0.7 "#a9c3c8
+	setProperty "colorStops 0.75 "#b9c4c6
+	setProperty "colorStops 1 screenColor
+	localmake "gradient createLinearGradient :from :to :colorStops "pad
+	setFillGradient :gradient
+	jumpTo :oldPos
+	circle :size * 0.5
+end
+
+to drawWindMillMount :size
+	localmake "oldState turtleState
+	localmake "notchSize :size * 0.005
+	localmake "numNotches 5
+	localmake "height :size
+	localmake "notchGap :height / :numNotches
+	localmake "maxWidth :size * 0.15
+	localmake "angle1 arcTan :maxWidth / 2 / :height
+	setPenColor "#464e3d
+
+	; draw mount.
+	repeat :numNotches [
+		setPenSize :maxWidth * (1 + :numNotches - repcount) / :numNotches
+		forward :notchSize
+		setPenSize :notchSize
+		forward :notchGap
+	]
+	right :angle1
+	setPenSize :size * 0.01
+	localmake "size1 (:height + 5 * :notchSize) / cos :angle1
+	backward :size1
+	jumpForward :size1 ; mount diagonal on left
+	left :angle1 * 2
+	backward :size1 ; mount diagonal on right
+	setTurtleState :oldState
+end
+
+to windFin :len
+	localmake "oldState turtleState
+	localmake "outerLen :len * 0.3
+	localmake "angle 5.5
+	localmake "baseWidth :outerLen - :len * 2 * sin :angle
+	setPenSize 0
+	left :angle
+	jumpLeft :baseWidth / 2
+	isoTrapezoid :baseWidth :outerLen :len * cos :angle
+	setTurtleState :oldState
+end
+
+to windFins :radius
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "numFins 20
+	localmake "innerRadius :radius * 0.35
+	setFillColor transparent
+	setPenSize :radius * 0.01
+	setPenColor "#222
+	
+	circle :radius * 0.7
+	repeat 2 [
+		jumpBackward :radius * 0.5
+		forward :radius
+		jumpTo :oldPos
+		right 90
+	]
+	jumpTo :oldPos
+	setFillColor "#707768
+	repeat :numFins [
+		forward :innerRadius
+		windFin :radius * 0.65
+		setPos :oldPos
+		right 360 / :numFins
+	]
+	setTurtleState :oldState
+end
+
+to windMill :size :angle
+	localmake "mountHeight :size * 0.8
+	drawWindMillMount :mountHeight
+	jumpForward :mountHeight
+	right :angle
+	setFillColor "#808778
+	windFins :size * 0.15	
+end
+
+to drawScene :size :angle
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	skyAndGround :size
+	jumpBackward :size * 0.105
+	jumpRight :size * 0.15
+	setLineCap "butt
+	house :size * 0.6 :oldPos :size / 2
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpBackward :size * 0.3
+	jumpLeft :size * 0.16
+	windMill :size * 0.7 :angle
+end
+
+drawScene 200 animation.time * 360 / 3
+hideTurtle
+
+to animation.snapshotstyle
+	localmake "result createPList
+	setProperty "result "zoom.scale 3
+	output :result
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 3
+	; Edit this if you want to change the length of your animation.
+	localmake "result createPList
+	setProperty "result "duration :minutes * 60 + :seconds
+	output :result
+end

@@ -1,0 +1,68 @@
+to drawArcs :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "arcAngle1 180
+	localmake "arcRadius1 :height * 0.269
+	localmake "sideStep :height * 0.0918
+	localmake "radius1 :height * 0.493
+	localmake "radius3 :height / 2
+	localmake "center pos
+	setPenSize 0
+	repeat 2 [
+		localmake "heading1 :oldHeading + repcount * 180
+		setHeading :heading1
+		jumpRight :radius1
+		polyStart
+		arcLeft :arcAngle1 :arcRadius1
+		jumpRight :sideStep
+		left 180
+		arcsRight [[90 0.32] [53 0.318]
+		] :height
+		left 175
+		arcLeft 148.5 :height * 0.36
+		setHeading :heading1
+		jumpLeft :sideStep
+		arcsRight [[100 0.412] [42 0.41]
+		] :height
+		left 175.5
+		arcLeft 147.1 :height * 0.45
+		setHeading :heading1 - 90
+		jumpForward distanceToCircle :center :radius3
+		setHeading (towards :center) - 90
+		arcRight 180 :radius3
+		polyEnd
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Airbus#/media/File:First_Airbus_logo.svg
+to airBusLogo :height
+	localmake "oldState turtleState
+	setPenSize :height * 0.0052
+	localmake "radius2 (:height - penSize) / 2
+	setPenColor "#b24000
+	setFillColor "#f35800
+	jumpForward :height / 2
+	circle :radius2
+	setFillColor "#ffff83
+	drawArcs :radius2 * 2 - penSize
+	setTurtleState :oldState
+end
+
+; Uses color from a newer version of the Airbus logo
+to airBusNewLogo :height
+	localmake "oldState turtleState
+	jumpForward :height / 2
+	setFillColor "#081d58
+	drawArcs :height
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 5
+jumpLeft :separation * 0.5
+airBusLogo :height
+jumpRight :separation
+airBusNewLogo :height
