@@ -1,0 +1,81 @@
+to drawDepartureBackground :width :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#3d6999
+	setProperty "colorStops 0.25 "#6b8a9f
+	setProperty "colorStops 0.45 "#7e7f84
+	setProperty "colorStops 0.85 "#a6b8b3
+	setProperty "colorStops 1 "#a6b8b3
+	jumpForward :height
+	setLineCap "butt
+	setPenGradient createLinearGradient pos :oldPos :colorStops "pad
+	setPenSize :width
+	backward :height
+
+	localmake "departureOrange "#B5915E
+	localmake "radialDistance :height * 2
+	jumpForward :radialDistance
+	localmake "radialCenter pos
+	localmake "colorStops createPList
+	setProperty "colorStops 0 mix :departureOrange transparent 0
+	setProperty "colorStops 0.93 mix :departureOrange transparent 0
+	setProperty "colorStops 0.955 :departureOrange
+	setProperty "colorStops 0.96 "#854b45
+	setProperty "colorStops 1 "#493331
+	setPenGradient createRadialGradient :radialCenter :radialDistance :colorStops
+	jumpTo :oldPos
+	forward :height
+	setTurtleState :oldState
+end
+
+to drawBrightDisc :radius
+	localmake "oldState turtleState
+	localmake "darkerColor "#b4a283
+	localmake "yellowColor "#d1b381
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#fff
+	setProperty "colorStops 0.97 [:darkerColor easeInCirc]
+	setProperty "colorStops 0.98 mix :yellowColor transparent 0.5
+	setProperty "colorStops 1 mix :yellowColor transparent 0
+	setPenSize 0
+	setFillGradient createRadialGradient pos :radius :colorStops
+	circle :radius
+	setTurtleState :oldState
+end
+
+to drawSemitransparentDisc :radius
+	localmake "oldState turtleState
+	localmake "centralBlue "#4e1f77
+	localmake "opaqueColor "#6e505b
+	localmake "outlineColor "#b4a283
+	localmake "colorStops createPList
+	setProperty "colorStops 0 mix :centralBlue transparent 0
+	setProperty "colorStops 0.95 [(mix :centralBlue transparent 0.6) easeInCirc]
+	setProperty "colorStops 0.97 :opaqueColor
+	setProperty "colorStops 0.985 :opaqueColor
+	setProperty "colorStops 0.99 mix :outlineColor transparent 0.5
+	setProperty "colorStops 1 mix :outlineColor transparent 0
+	setPenSize 0
+	setFillGradient createRadialGradient pos :radius :colorStops
+	circle :radius
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://www.pinterest.ca/pin/253397916524942151/
+; by artist Agnes Pelton
+; https://en.wikipedia.org/wiki/Agnes_Lawrence_Pelton
+to drawDeparture :height
+	localmake "oldState turtleState
+	localmake "width :height * 563 / 783
+	localmake "radius :height * 0.168
+	drawDepartureBackground :width :height
+	jumpForward :height * 0.652
+	drawBrightDisc :radius
+	jumpBackward :radius * 1.2
+	drawSemitransparentDisc :radius
+	setTurtleState :oldState
+end
+
+drawDeparture 100

@@ -1,0 +1,53 @@
+to drawCentralGlow :radius
+	localmake "oldState turtleState
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#fff
+	setProperty "colorStops 0.1 "#fff
+	setProperty "colorStops 0.4 "#bfec
+	setProperty "colorStops 0.6 "#8fc8
+	setProperty "colorStops 1 "#0fff
+	setFillGradient createRadialGradient pos :radius :colorStops
+	setPenSize 0
+	circle :radius
+	setTurtleState :oldState
+end
+
+to setGreenGradient :radius
+	localmake "greenColor "#080
+	localmake "colorStops createPList
+	setProperty "colorStops 0 mix :greenColor transparent 0
+	setProperty "colorStops 0.92 mix :greenColor transparent 0
+	setProperty "colorStops 1 mix :greenColor transparent 1
+	setFillGradient createRadialGradient pos :radius :colorStops
+end
+
+; Inspired by
+; https://www.pinterest.ca/pin/13299761393599556
+to flowerOfLife :height
+	localmake "oldState turtleState
+	localmake "thickness :height * 0.005
+	localmake "radius (:height - :thickness) / 4
+	localmake "numCircles 12
+	jumpForward :height / 2
+	drawCentralGlow :radius * 1.5
+	setPenSize 0
+	repeat :numCircles [
+		jumpRight :radius
+		setGreenGradient :radius
+		circle :radius
+		jumpLeft :radius
+		left 360 / :numCircles
+	]
+	setPenSize :thickness
+	setFillColor transparent
+	repeat :numCircles [
+		jumpRight :radius
+		circle :radius
+		jumpLeft :radius
+		left 360 / :numCircles
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "#bcb
+flowerOfLife 100
