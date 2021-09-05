@@ -1,0 +1,97 @@
+to drawCenter :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "center pos
+	localmake "centerColors ["#ccc "#e8e8e8 "white]
+	localmake "numCenterColors count :centerColors
+	localmake "size1 :height * 0.25
+	localmake "triangleWidth :size1 * 2 * tan 180 / :numCenterColors
+	right 180 / :numCenterColors
+	setPenSize 0
+	repeat :numCenterColors [
+		setFillColor item repcount :centerColors
+		setHeading :oldHeading + repcount * 360 / :numCenterColors
+		jumpForward :size1
+		right 180
+		isoTriangle :triangleWidth :size1
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+to getOuterGradient :colors :size
+	localmake "oldPos pos
+	localmake "colorStops createPList
+	setProperty "colorStops 0 first :colors
+	setProperty "colorStops 1 last :colors
+	jumpLeft :size
+	localmake "result createLinearGradient :oldPos pos :colorStops "pad
+	jumpTo :oldPos
+	output :result
+end
+
+to drawOuterShapes :height
+	localmake "oldHeading heading
+	localmake "center pos
+	localmake "outerShapesInfo [
+		["#8f140d "#f21d21]
+		["#f96229 "#f79939]
+		["#E6B800 "#f2ed17]
+		["#52A636 "#a5cd36]
+		["#233d91 "#3952a6]
+		["#362559 "#1e2262]
+	]
+	localmake "numOuterShapes count :outerShapesInfo
+	localmake "gradientSize :height * (1 + (sin 30) / 2) / 2
+	localmake "arcRadius1 :height / 4 * sin 60
+	localmake "size1 :height / 2 - :arcRadius1 - :height / 4 * cos 60
+	setPenSize 0
+	repeat :numOuterShapes [
+		setHeading :oldHeading + repcount * 360 / :numOuterShapes
+		localmake "outerShapeInfo item repcount :outerShapesInfo
+		jumpForward :height / 4
+		left 60
+		setFillGradient getOuterGradient :outerShapeInfo :gradientSize
+		polyStart
+		jumpForward :size1
+		arcLeft 90 :arcRadius1
+		arcLeft 60 :height / 2
+		left 180
+		arcRight 90 :arcRadius1
+		polyEnd		
+		jumpTo :center
+	]
+end
+
+; Inspired by
+; https://www.pinterest.ca/pin/757167756084914398/
+; An Adobe Illustrator tutorial on it is shown at:
+; https://www.youtube.com/watch?v=uOmNrLN8by4
+to mohamedSewelmanLogo2 :height
+	localmake "oldState turtleState
+	jumpForward :height / 2
+	drawCenter :height
+	drawOuterShapes :height
+	setTurtleState :oldState
+end
+
+to drawBackgroundGradient :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "white
+	setProperty "colorStops 1 "#d7d5c0
+	localmake "gradientRadius :height
+	
+	jumpForward :height / 2
+	setPenGradient createRadialGradient pos :gradientRadius :colorStops
+	setLineCap "butt
+	setPenSize :height * 2
+	jumpTo :oldPos
+	forward :height
+	setTurtleState :oldState
+end
+
+setScreenColor "#d7d5c0
+drawBackgroundGradient 100
+mohamedSewelmanLogo2 100

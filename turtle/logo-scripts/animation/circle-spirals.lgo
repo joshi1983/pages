@@ -1,0 +1,67 @@
+; This animation was inspired by:
+; https://i.pinimg.com/originals/c7/cd/89/c7cd892c64d869b3ef373bff9551fb67.jpg
+
+to drawArm :numDots :maxDotSize :maxDistance :twistDelta
+	repeat :numDots [
+		localmake "distanceSize repcount * :maxDistance / :numDots
+		localmake "dotSize repcount * :maxDotSize / :numDots
+		circle :dotSize
+		forward :distanceSize * 4
+		right :twistDelta
+	]
+end
+
+to getArmRadius :numDots :maxDotSize :maxDistance :twistDelta
+	localmake "oldPos pos
+
+	repeat :numDots [
+		localmake "distanceSize repcount * :maxDistance / :numDots
+		localmake "dotSize repcount * :maxDotSize / :numDots
+		localmake "result (distance :oldPos) + :dotSize
+		forward :distanceSize * 4
+		right :twistDelta
+	]
+	output :result
+end
+
+to circleSpiral :numLines :size :twist
+	localmake "delta 360 / :numLines
+	localmake "numDots int 0.1 * (100 + abs :twist)
+	localmake "maxDistanceSize :size * 0.0055 * abs (100 + abs :twist) / :numDots
+	localmake "maxDotSize :size * 0.2 / power :numDots 0.4
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "twistDelta :twist / :numDots
+	localmake "scale :size / (getArmRadius :numDots :maxDotSize :maxDistanceSize :twistDelta)
+	localmake "maxDistanceSize :scale * :maxDistanceSize
+	localmake "maxDotSize :scale * :maxDotSize
+
+	setPos :oldPos
+	setHeading :oldHeading
+	repeat :numLines [
+		drawArm :numDots :maxDotSize :maxDistanceSize :twistDelta
+
+		setHeading :oldHeading + :delta * repcount
+		setPos :oldPos
+	]
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+setFillColor "black
+setPenSize 0
+circleSpiral 6 500 500 * animation.time
+
+to animation.snapshotstyle
+	localmake "result createPList
+	output :result
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 3
+	; Edit this if you want to change the length of your animation.
+	localmake "result createPList
+	setProperty "result "duration :minutes * 60 + :seconds
+	output :result
+end

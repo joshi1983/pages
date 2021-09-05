@@ -1,0 +1,127 @@
+; Inspired by:
+; https://commons.wikimedia.org/wiki/File:Flag_of_the_Philippines.svg
+make "starColor "#fcd116
+
+to drawThreeStars :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "starSize :size * 0.055
+	localmake "distanceToStars :size * 0.42
+	jumpForward :size / 2
+	jumpRight :size / 2 * tan 30
+	localmake "pos1 pos
+	setFillColor :starColor
+	left 30
+	repeat 3 [
+		jumpForward :distanceToStars
+		;star :starSize
+		regularStar :starSize 5
+		jumpTo :pos1
+		right 360 / 3
+	]
+	setHeading :oldHeading
+	jumpTo :oldPos
+	jumpForward :size / 2
+	jumpRight :size * 0.31
+	drawSun :size * 0.1
+	setHeading :oldHeading
+end
+
+to drawSun :innerRadius
+	localmake "oldState turtleState
+	localmake "angle1 11.19
+	localmake "angle2 56
+	localmake "angle3 45 - :angle1 * 2
+	localmake "angle4 128.135
+	localmake "angle5 3.5
+	localmake "angle6 48.55
+	localmake "size1 :innerRadius * 0.8
+	localmake "size2 :innerRadius * 0.17
+	localmake "size3 :innerRadius * 0.9001
+	localmake "size4 :innerRadius * 1
+	localmake "size5 :innerRadius * 0.174
+	setFillColor :starColor
+	setPenSize 0
+	right :angle1
+	jumpForward :innerRadius
+	right 90
+	polyStart
+	repeat 8 [
+		arcRight :angle3 :innerRadius
+		left 90
+		jumpForward :size1
+		right :angle2
+		jumpForward :size2
+		right :angle4
+		jumpForward :size3
+		left 90
+		arcRight :angle5 :innerRadius
+		left 90
+		jumpForward :size4
+		right :angle6
+		jumpForward :size5
+		right 90
+		jumpForward :size5
+		right :angle6
+		jumpForward :size4
+		left 90
+		arcRight :angle5 :innerRadius
+		left 90
+		jumpForward :size3
+		right :angle4
+		jumpForward :size2
+		right :angle2
+		jumpForward :size1
+		left 90
+	]
+	polyEnd
+	setTurtleState :oldState
+end
+
+to philippinesFlag :width
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "height :width * 0.5
+	localmake "halfWidth :width * 0.5
+	localmake "halfHeight :height * 0.5
+	localmake "size1 :height
+	localmake "angle1 60
+	localmake "angle2 90 - :angle1
+	localmake "size2 :width - :size1 * sin :angle1
+	setPenSize :height
+	jumpForward :halfHeight
+	jumpLeft :halfWidth
+	right 90
+	setLineCap "butt
+	setPenColor "white
+	forward :width
+	jumpTo :oldPos
+	setHeading :oldHeading
+	setPenSize 0
+	jumpLeft :halfWidth
+	localmake "pos1 pos
+	right :angle1
+	setFillColor "#ce1126
+	polyStart
+	jumpForward :size1
+	right :angle2
+	jumpForward :size2
+	jumpRight :halfHeight
+	polyEnd
+	setFillColor "#0038a8
+	jumpLeft :halfHeight
+	polyStart
+	jumpLeft :halfHeight
+	jumpBackward :width
+	right :angle2
+	jumpForward :size1
+	polyEnd
+	jumpTo :pos1
+	setHeading :oldHeading
+	drawThreeStars :size1
+	setTurtleState :oldState
+end
+
+setScreenColor "#ddd
+philippinesFlag 200

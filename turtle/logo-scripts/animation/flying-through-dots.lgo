@@ -1,0 +1,65 @@
+to drawGrid :dotSize :numDots
+	if odd? :numDots [
+		localmake "numDots :numDots + 1
+	]
+	localmake "oldPos pos
+	localmake "separation :dotSize * 20
+	localmake "offset :separation * (:numDots - 1) / 2
+	jumpLeft :offset
+	jumpForward :offset
+	repeat :numDots [
+		repeat :numDots [
+			circle :dotSize
+			jumpRight :separation
+		]
+		jumpLeft :separation * :numDots
+		jumpBackward :separation
+	]
+	jumpTo :oldPos
+end
+
+; Inspired by
+; https://www.pinterest.ca/pin/577657089735188682/
+to dotFieldZoom :height :timeRatio
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "numLevels 35
+	localmake "maxDepth 10
+	localmake "depth :maxDepth * :timeRatio
+	localmake "colors ["red "yellow "blue]
+	jumpForward :height / 2
+	setPenSize 0
+	setFillColor "red
+	repeat :numLevels [
+		localmake "gridDepthFactor 2 * (:numLevels - repcount - :depth)
+		if :gridDepthFactor > 0.001 [
+			setHeading :oldHeading
+			right 360 / :maxDepth * repcount
+			localmake "dotRadius :height * 0.1 / :gridDepthFactor
+			localmake "numDots 1 + int :height / :dotRadius / 6
+			setFillColor mixItems2 :colors interpolateRatio easeOut clamp :gridDepthFactor / :numLevels / 1.5 0 1
+			drawGrid :dotRadius :numDots
+		]
+	]
+	setTurtleState :oldState
+end
+
+make "timeRatio animation.time / animation.duration
+setScreenColor "black
+dotFieldZoom 100 :timeRatio
+
+to animation.snapshotstyle
+	localmake "result createPList
+	setProperty "result "position.y 50
+	setProperty "result "zoom.scale 3
+	output :result
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 5
+	; Edit this if you want to change the length of your animation.
+	localmake "result createPList
+	setProperty "result "duration :minutes * 60 + :seconds
+	output :result
+end

@@ -1,0 +1,123 @@
+to octaArrowMandala :height
+	localmake "oldState turtleState
+	localmake "radius :height / 2
+	localmake "arrowEdgeSize :height * 0.0864466094067263
+	localmake "numArrows 8
+	setPenSize :height * 0.12
+	jumpForward :radius
+	localmake "center pos
+	repeat :numArrows [
+		jumpTo :center
+		arrow :radius 45 :arrowEdgeSize
+		right 360 / :numArrows
+	]
+	setTurtleState :oldState
+end
+
+to quadDirection :height
+	localmake "oldState turtleState
+	localmake "radius :height / 2
+	localmake "arrowEdgeSize :height * 0.1
+	localmake "numArrows 4
+	setPenSize :height * 0.2
+	jumpForward :radius
+	localmake "center pos
+	repeat :numArrows [
+		jumpTo :center
+		arrow :radius 45 :arrowEdgeSize
+		right 360 / :numArrows
+	]
+	setTurtleState :oldState
+end
+
+to rightAngle1 :height
+	localmake "oldState turtleState
+	localmake "arrowEdgeSize :height * 0.1
+	setPenSize :height * 0.2
+	localmake "height1 :height - :arrowEdgeSize - penSize / 2
+	localmake "heightGap :height - :height1
+	jumpLeft :height / 2
+	localmake "corner pos
+	jumpRight :heightGap
+	arrow :height 45 :arrowEdgeSize
+	jumpTo :corner
+	jumpForward :heightGap
+	right 90
+	arrow :height 45 :arrowEdgeSize
+	setTurtleState :oldState
+end
+
+to rightAngle2 :height
+	localmake "oldState turtleState
+	localmake "arrowEdgeSize :height * 0.1
+	setPenSize :height * 0.2
+	localmake "height1 :height - :arrowEdgeSize - penSize / 2
+	localmake "heightGap :height - :height1
+	localmake "heightGap2 :heightGap - penSize / 2
+	jumpLeft :height / 2
+	localmake "corner pos
+	jumpRight :heightGap
+	jumpForward :heightGap2
+	arrow :height - :heightGap2 45 :arrowEdgeSize
+	jumpTo :corner
+	jumpForward :heightGap
+	jumpRight :heightGap2
+	right 90
+	arrow :height - :heightGap2 45 :arrowEdgeSize
+	setTurtleState :oldState
+end
+
+to headToward :point :ratio
+	localmake "towardPoint towards :point
+	localmake "delta :towardPoint - heading
+
+	; calculate meaningfully equal delta angle in the range -180..180.
+	; This is to prevent the heading to get biased toward values outside that range.
+	;
+	; Forcing delta into the range -180..180 solves a problem like:
+	; right 330 * 0.1
+	; being very different from:
+	; right -30 * 0.1
+	if :delta > 180 [
+		localmake "delta :delta - 360
+	]
+	if :delta < -180 [
+		localmake "delta :delta + 360
+	]
+
+	right :delta * :ratio
+end
+
+to arrowSpiral :height
+	localmake "oldState turtleState
+	localmake "numArrows 60
+	localmake "radius :height / 2
+	jumpForward :height / 2
+	setPenSize 0.2
+	localmake "center pos
+	localmake "radius :radius * 0.9
+	jumpForward :radius * 0.891535
+	right 120
+	repeat :numArrows [
+		localmake "length :radius * 0.7
+		setPenSize :length * 0.4
+		localmake "edgeSize penSize * 0.7
+		arrow :length 45 :edgeSize
+		localmake "radius :radius * 0.9
+		headToward :center 0.35
+	]
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 2
+jumpLeft :separation * 2
+rightAngle1 :height
+jumpRight :separation
+octaArrowMandala :height
+jumpRight :separation
+arrowSpiral :height
+jumpRight :separation
+quadDirection :height
+jumpRight :separation
+rightAngle2 :height

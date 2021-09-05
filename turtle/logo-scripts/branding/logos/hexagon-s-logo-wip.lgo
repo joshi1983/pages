@@ -1,0 +1,147 @@
+make "blue1 "#B3FFFF
+make "blue2 "#99ADFF
+make "blue3 "#2177ff
+make "blue4 "#1637BB
+make "purple1 "#a152fb
+
+to hexagonCurvedCalc :size
+	localmake "angle1 180 / 6
+	localmake "straightLength1 :size * 2 * sin :angle1
+	localmake "chordLength :straightLength1 * 0.2
+	localmake "arcRadius :chordLength * 0.5 / sin :angle1
+	localmake "straightLength2 :straightLength1 - 2 * :arcRadius * sin :angle1
+	localmake "straightLength3 (:straightLength1 + :straightLength2) * 0.5 
+	output [:arcRadius :angle1 :straightLength2 :straightLength3]
+end
+
+; Inspired by
+; https://www.pinterest.ca/pin/445082375687414897/
+to hexagonCurved :size
+	localmake "oldState turtleState
+	localmake "calcValues hexagonCurvedCalc :size
+	localmake "arcRadius item 1 :calcValues
+	localmake "angle1 item 2 :calcValues
+	localmake "straightLength item 3 :calcValues
+	jumpForward :size
+	right 90
+	arcRight :angle1 :arcRadius
+	polyStart
+	repeat 6 [
+		jumpForward :straightLength
+		arcRight 2 * :angle1 :arcRadius
+	]
+	polyEnd
+	setTurtleState :oldState
+end
+
+to hexagonCurvePath1 :size
+	localmake "oldState turtleState
+	localmake "calcValues hexagonCurvedCalc :size
+	localmake "arcRadius item 1 :calcValues
+	localmake "angle1 item 2 :calcValues
+	localmake "straightLength item 3 :calcValues
+	localmake "angle2 25 ; determines thickness of the enclosed path
+	localmake "angle3 :angle1 * 2 - :angle2
+	localmake "straightLength2 :straightLength * 1.027
+	left :angle1 * 2
+	jumpForward :size - :arcRadius
+	left :angle1
+	jumpForward :arcRadius
+	right 90
+	setPenSize 0
+	polyStart
+	repeat 2 [
+		arcRight :angle1 * 2 :arcRadius
+		jumpForward :straightLength
+	]
+	arcRight :angle1 * 2 :arcRadius
+	right 180 - :angle2
+	arcLeft :angle3 :arcRadius
+	jumpForward :straightLength2
+	arcLeft :angle1 * 2 :arcRadius
+	jumpForward :straightLength2
+	arcLeft :angle3 :arcRadius
+	setPenSize 0
+	polyEnd
+
+	setTurtleState :oldState
+end
+
+to innerHex :size
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "colorStops createPList
+	setProperty "colorStops 0 :blue2
+	setProperty "colorStops 1 :blue3
+	right 30
+	jumpBackward :size
+	localmake "fromPos pos
+	jumpForward :size * 2
+	setFillGradient createLinearGradient pos :fromPos :colorStops "pad
+	jumpTo :oldPos
+	left 30
+	setPenSize 0
+	hexagonCurved :size
+	setProperty "colorStops 0 mix :blue4 transparent 0.001
+	setProperty "colorStops 0.8 mix :blue4 transparent 0.1
+	setProperty "colorStops 1 mix :blue4 transparent 0.3
+	setFillGradient createRadialGradient pos:size :colorStops
+	hexagonCurved :size
+	setFillColor mix :blue1 transparent 0.5
+	setHeading :oldHeading
+	hexagonCurvePath1 :size
+	setFillColor mix :blue4 transparent 0.2
+	setHeading :oldHeading + 180
+	hexagonCurvePath1 :size
+	setTurtleState :oldState
+end
+
+to parallelogramCurved :size
+	localmake "oldState turtleState
+	localmake "calcValues hexagonCurvedCalc :size
+	localmake "arcRadius item 1 :calcValues
+	localmake "angle1 item 2 :calcValues
+	localmake "straightLength item 4 :calcValues
+	localmake "smallLength :straightLength * 0.2
+	localmake "sharpAngle 180 - 2 * :angle1
+	jumpForward :size - :arcRadius
+	right :angle1
+	jumpForward :arcRadius
+	right 90
+	polyStart
+	jumpForward :straightLength
+	right :sharpAngle
+	jumpForward :smallLength
+	arcRight :angle1 * 2 :arcRadius
+	jumpForward :straightLength
+	right :sharpAngle
+	jumpForward :smallLength
+	arcRight :angle1 * 2 :arcRadius
+	polyEnd
+	
+	setTurtleState :oldState
+end
+
+to cornerPiece :size
+; FIXME: finish this path with polyStart and polyEnd.
+; It should be shaped a bit like a hockey stick.
+end
+
+to hexLogo :size
+	localmake "oldState turtleState
+	setPenSize 0
+	setFillColor :blue2
+	repeat 2 [
+		; FIXME: set gradient.
+		parallelogramCurved :size
+		; FIXME: set another gradient.
+		cornerPiece :size
+		right 180
+	]
+	innerHex :size * 0.4
+
+	setTurtleState :oldState
+end
+
+hexLogo 100
