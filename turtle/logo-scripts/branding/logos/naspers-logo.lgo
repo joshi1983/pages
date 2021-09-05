@@ -1,0 +1,84 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Naspers#/media/File:Naspers.svg
+to naspersLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "radius :height / 2
+	localmake "arcs [
+		[0.175 [[15 0.057] [30 0.035] [25 0.06] [4.4 0.15]] 0.198 [[87 0.014]]]
+		[0.14 [[10 0.17] [30 0.13] [13 0.09] [4.4 0.15]] 0.166 [[30 0.1] [40 0.06]]]
+		[0.1 [[8 0.35] [20 0.25] [9 0.15] [4.4 0.15]] 0.12 [[25 0.18] [26 0.1]]]
+		[0.055 [[8 0.6] [15 0.25] [3 0]] 0.085 [[25 0.36] [10 0.2]]]
+	]
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	repeat count :arcs [
+		localmake "arcInfo item repcount :arcs
+		localmake "arcsInfo1 item 2 :arcInfo
+		localmake "arcs2Info item 4 :arcInfo
+		setHeading 0
+		jumpForward :height * first :arcInfo
+		right 90
+		arcLines :arcsInfo1 :height
+		localmake "len1 distanceToCircle :center :radius
+		jumpForward :len1
+		localmake "endPos1 pos
+		localmake "heading1 heading
+		queue2 "arcsInfo1 [:len1 / :height]
+		localmake "angle2 (270 - (towards :center) + heading)
+		queue2 "arcsInfo1 [:angle2 0]
+		localmake "pos1 pos
+
+		jumpTo :center
+		setHeading 0
+		jumpForward :height * item 3 :arcInfo
+		right 90
+		arcLines :arcs2Info :height
+		localmake "endPos pos
+		localmake "len2 distanceToCircle :center :radius
+		jumpForward :len2
+		localmake "chordLength distance :pos1
+		localmake "angle 2 * arcSin :chordLength / 2 / :radius
+		setItem 3 "arcInfo :angle
+		queue2 "arcsInfo1 [:angle 0.5]
+
+		jumpTo :endPos1
+		setHeading :heading1 - :angle2
+		arcLeft :angle :radius
+		localmake "angle (- (towards :endPos) + heading)
+		left :angle
+		queue2 "arcsInfo1 [:angle 0]
+		queue2 "arcsInfo1 [:len2 / :height]
+		forward :len2
+		repeat count :arcs2Info [
+			localmake "index (count :arcs2Info) + 1 - repcount
+			localmake "e item :index :arcs2Info
+			if 2 = count :e [
+				localmake "e [-first :e last :e]
+			]
+			queue2 "arcsInfo1 :e
+		]
+		jumpTo :center
+	]
+	setFillColor "#f37023
+	setHeading :oldHeading
+	repeat 3 [
+		localmake "heading1 :oldHeading + (repcount + 0.5) * 360 / 3
+		repeat count :arcs [
+			setHeading :heading1
+			localmake "arcInfo item repcount :arcs
+			localmake "arcsInfo1 item 2 :arcInfo
+			jumpForward :height * first :arcInfo
+			right 90
+			polyStart
+			arcLines :arcsInfo1 :height
+			arcLines reverse :arcsInfo1 :height
+			polyEnd
+			jumpTo :center
+		]
+	]
+	setTurtleState :oldState
+end
+
+naspersLogo 100
