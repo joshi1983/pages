@@ -1,0 +1,1457 @@
+{
+	"name": "QBasic",
+	"description": "A version of the Basic programming language used by Microsoft QBasic, a DOS-based interpreter and code editor that was most popular in the 1980's and early 1990's.  Some commands are listed in this file from QB64(a much newer QBasic-like language).  This file represents a mix of QBasic and QB64.",
+	"externalLink": "https://en.wikipedia.org/wiki/QBasic",
+	"alternateLinks": [
+		"https://qbasic.com"
+	],
+	"toProcPath": "logo-scripts/qbasic",
+	"commands": [
+		{
+			"primaryName": "$CHECKING",
+			"args": [
+				{"name": "onOff"}
+			],
+			"tokenVals": ["on", "off"],
+			"description": "turns C++ event checking ON or OFF",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "$CONSOLE",
+			"args": [],
+			"argCount": {
+				"min": 0,
+				"max": 1
+			},
+			"description": "creates a console window that can be used throughout a QB64 program module.",
+			"externalLink": "https://qb64phoenix.com/qb64wiki/index.php/$CONSOLE",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "$DEBUG",
+			"args": [],
+			"description": "enables debugging features",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "$EMBED",
+			"args": [
+				{"name": "filename", "types": "string"},
+				{"name": "handle"}
+			],
+			"description": "Embeds data from a specified file in the generated executable file.  This is instead of writing a lot of data declarations which are essentially a copy of the file's data.",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "$EXEICON",
+			"args": [
+				{"name": "icon"}
+			],
+			"description": "Sets the executable file's icon for use in Windows.",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "$SCREENHIDE",
+			"args": [],
+			"description": "hide the main program window throughout a program",
+			"externalLink": "https://qb64phoenix.com/qb64wiki/index.php/$SCREENHIDE",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "_ALPHA",
+			"args": [
+				{"name": "color"},
+				{"name": "imageHandle"}
+			],
+			"argCount": {
+				"min": 1,
+				"max": 2
+			},
+			"description": "returns the alpha channel transparency level of a color value used on a screen page or image.",
+			"externalLink": "https://qb64phoenix.com/qb64wiki/index.php/ALPHA",
+			"returnTypes": "int"
+		},
+		{
+			"primaryName": "_BLUE",
+			"args": [
+				{"name": "rgbaColorIndex", "types": "int"},
+				{"name": "imageHandle"}
+			],
+			"argCount": {
+				"min": 1,
+				"max": 2
+			},
+			"description": "returns the palette index or the blue component intensity of a 32-bit image color",
+			"externalLink": "https://wiki.qb64.dev/qb64wiki/index.php/BLUE",
+			"returnTypes": "int"
+		},
+		{
+			"primaryName": "_BLUE32",
+			"args": [
+				{"name": "rgbaColor", "types": "int"}
+			],
+			"description": "returns the blue component intensity of a 32-bit image or surface color",
+			"externalLink": "https://wiki.qb64.dev/qb64wiki/index.php/BLUE32",
+			"returnTypes": "int",
+			"to": "colorToBlue"
+		},
+		{
+			"primaryName": "_CONSOLETITLE",
+			"args": [
+				{"name": "text", "types": "string"}
+			],
+			"description": "creates the title of the console window using a literal or variable string",
+			"externalLink": "https://qb64phoenix.com/qb64wiki/index.php/CONSOLETITLE",
+			"isStatement": true,
+			"returnTypes": null,
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "_CopyImage",
+			"argCount": {
+				"min": 0,
+				"max": 2
+			},
+			"description": "creates an identical designated image in memory with a different negative LONG handle value",
+			"externalLink": "https://wiki.qb64.dev/qb64wiki/index.php/COPYIMAGE",
+			"migrateToCode": "0",
+			"returnTypes": "int"
+		},
+		{
+			"primaryName": "_cv",
+			"args": [
+				{"name": "dataType"},
+				{"name": "encodedIntegerValue", "types": "string"}
+			],
+			"description": "Converts _MK$, ASCII, STRING values to numerical values",
+			"externalLink": "https://qb64phoenix.com/qb64wiki/index.php/CV",
+			"returnTypes": "int"
+		},
+		{
+			"primaryName": "_DEFINE",
+			"argCount": {
+				"min": 1
+			},
+			"description": "defines a set of variable names according to their first character as a specified data type",
+			"externalLink": "https://wiki.qb64.dev/qb64wiki/index.php/DEFINE",
+			"returnTypes": null
+		},
+		{
+			"primaryName": "_DELAY",
+			"args": [
+				{"name": "numSeconds", "types": "num"}
+			],
+			"description": "suspends program execution for a SINGLE value of seconds",
+			"externalLink": "https://qb64phoenix.com/qb64wiki/index.php/DELAY",
+			"returnTypes": null,
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "_DESKTOPHEIGHT",
+			"args": [],
+			"description": "returns the height of the users current desktop",
+			"externalLink": "https://qb64phoenix.com/qb64wiki/index.php/DESKTOPHEIGHT",
+			"migrateToCode": "1080",
+			"returnTypes": "int"
+		},
+		{
+			"primaryName": "_DESKTOPWIDTH",
+			"args": [],
+			"description": "returns the width of the users current desktop",
+			"externalLink": "https://qb64phoenix.com/qb64wiki/index.php/DESKTOPWIDTH",
+			"migrateToCode": "1900",
+			"returnTypes": "int"
+		},
+		{
+			"primaryName": "_DEST",
+			"args": [],
+			"description": "returns the handle value of the current write page",
+			"externalLink": "https://qb64.com/wiki/_DEST-(function)",
+			"migrateToCode": "0",
+			"returnTypes": "int"
+		},
+		{
+			"primaryName": "_DISPLAY",
+			"args": [],
+			"description": "turns off the automatic display while only displaying the screen changes when called",
+			"externalLink": "https://qb64.com/wiki/_DISPLAY.html",
+			"removeInMigration": true,
+			"returnTypes": null
+		},
+		{
+			"primaryName": "_FREEIMAGE",
+			"argCount": {
+				"min": 0,
+				"max": 1
+			},
+			"description": "releases the designated file image created by the _LOADIMAGE, _NEWIMAGE or _COPYIMAGE functions from memory",
+			"externalLink": "https://wiki.qb64.dev/qb64wiki/index.php/FREEIMAGE",
+			"returnTypes": null,
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "_fullScreen",
+			"argCount": {
+				"min": 0,
+				"max": 3
+			},
+			"description": "Attempts to make the program window fullscreen.  May return 0,1, or 2.",
+			"externalLink": "https://qb64phoenix.com/qb64wiki/index.php/FULLSCREEN",
+			"migrateToCode": "2",
+			"returnTypes": "int"
+		},
+		{
+			"primaryName": "_GREEN",
+			"args": [
+				{"name": "rgbaColorIndex", "types": "int"},
+				{"name": "imageHandle"}
+			],
+			"argCount": {
+				"min": 1,
+				"max": 2
+			},
+			"description": "returns the palette index or the green component intensity of a 32-bit image color",
+			"externalLink": "https://wiki.qb64.dev/qb64wiki/index.php/GREEN",
+			"returnTypes": "int"
+		},
+		{
+			"primaryName": "_GREEN32",
+			"args": [
+				{"name": "rgbaColor", "types": "int"}
+			],
+			"description": "Returns the green component intensity of a 32-bit image or surface color",
+			"externalLink": "https://wiki.qb64.dev/qb64wiki/index.php/GREEN32",
+			"returnTypes": "int",
+			"to": "colorToGreen"
+		},
+		{
+			"primaryName": "_HEIGHT",
+			"args": [
+			],
+			"argCount": {
+				"min": 0,
+				"max": 1
+			},
+			"description": "returns the height of an image handle or of the current write page.  If an argument is specified, it is to be the image handle.  If not, the height of the page/screen is returned.",
+			"externalLink": "https://qb64.com/wiki/_HEIGHT.html",
+			"migrateToCode": "100",
+			"returnTypes": "int"
+		},
+		{
+			"primaryName": "_LIMIT",
+			"args": [
+				{"name": "framesPerSecond", "types": "num", "min": 0}
+			],
+			"description": "sets the loop repeat rate of a program to so many per second, relinquishing spare CPU cycles to other applications",
+			"externalLink": "https://qb64phoenix.com/qb64wiki/index.php/LIMIT",
+			"removeInMigration": true,
+			"returnTypes": null
+		},
+		{
+			"primaryName": "_loadImage",
+			"args": [
+				{"name": "filename", "types": "string"}
+			],
+			"argCount": {
+				"min": 1,
+				"max": 2
+			},
+			"description": "loads an image into memory and returns valid LONG image handle values that are less than -1",
+			"externalLink": "https://qb64.com/wiki/_LOADIMAGE.html",
+			"returnTypes": "int"
+		},
+		{
+			"primaryName": "_MK$",
+			"args": [
+				{"name": "dataType"},
+				{"name": "integerValue", "types": "int"}
+			],
+			"description": "Convert any numerical type into an ASCII STRING value that can be converted back using _CV",
+			"externalLink": "https://qb64phoenix.com/qb64wiki/index.php/MK$",
+			"returnTypes": "string"
+		},
+		{
+			"primaryName": "_MOUSEBUTTON",
+			"args": [
+				{"name": "buttonNumber", "min": 1, "max": 3, "types": "int"}
+			],
+			"description": "returns the button status of a specified mouse button when read after _MOUSEINPUT",
+			"externalLink": "https://wiki.qb64.dev/qb64wiki/index.php/MOUSEBUTTON",
+			"migrateToCode": "-1",
+			"returnTypes": "int"
+		},
+		{
+			"primaryName": "_MOUSEHIDE",
+			"args": [],
+			"description": "hides the mouse cursor",
+			"externalLink": "https://qb64.com/wiki/_MOUSEHIDE.html",
+			"removeInMigration": true,
+			"returnTypes": null
+		},
+		{
+			"primaryName": "_MOUSEINPUT",
+			"args": [],
+			"description": "monitor any new mouse positions, button presses or movements of the scroll wheel",
+			"externalLink": "https://qb64.com/wiki/_MOUSEINPUT",
+			"migrateToCode": "0",
+			"returnTypes": "int"
+		},{
+			"primaryName": "_MOUSEMOVEMENTX",
+			"args": [],
+			"description": "Returns the relative horizontal position of the mouse cursor as positive or negative values",
+			"externalLink": "https://qb64phoenix.com/qb64wiki/index.php/MOUSEMOVEMENTX",
+			"migrateToCode": "0",
+			"returnTypes": "int"
+		},{
+			"primaryName": "_MOUSEMOVEMENTY",
+			"args": [],
+			"description": "returns the relative vertical position of the mouse cursor as positive or negative values",
+			"externalLink": "https://qb64phoenix.com/qb64wiki/index.php/MOUSEMOVEMENTY",
+			"migrateToCode": "0",
+			"returnTypes": "int"
+		},{
+			"primaryName": "_MOUSESHOW",
+			"args": [
+				{"name": "cursorShape", "types": "strings"}
+			],
+			"argCount": {
+				"min": 0,
+				"max": 1
+			},
+			"description": "shows the mouse cursor",
+			"externalLink": "https://qb64.com/wiki/_MOUSESHOW",
+			"removeInMigration": true,
+			"returnTypes": null
+		},
+		{
+			"primaryName": "_MOUSEX",
+			"args": [],
+			"description": "returns the current horizontal (column) mouse cursor position when read after _MOUSEINPUT",
+			"externalLink": "https://qb64.com/wiki/_MOUSEX",
+			"migrateToCode": "0",
+			"returnTypes": "int"
+		},
+		{
+			"primaryName": "_MOUSEY",
+			"args": [],
+			"description": "returns the current vertical (row) mouse cursor position when read after _MOUSEINPUT",
+			"externalLink": "https://qb64.com/wiki/_MOUSEY",
+			"migrateToCode": "0",
+			"returnTypes": "int"
+		},
+		{
+			"primaryName": "_newImage",
+			"args": [
+				{"name": "width", "types": "int"},
+				{"name": "height", "types": "int"},
+				{"name": "bitDepth", "types": "int"}
+			],
+			"argCount": {
+				"min": 2,
+				"max": 3
+			},
+			"description": "prepares a window image surface and returns the LONG handle value",
+			"externalLink": "https://wiki.qb64.dev/qb64wiki/index.php/NEWIMAGE",
+			"migrateToCode": "0",
+			"returnTypes": "int"
+		},
+		{
+			"primaryName": "_PaletteColor",
+			"args": [
+				{"name": "attributeNumber", "types": "int"},
+				{"name": "newColor"},
+				{"name": "destHandle"}
+			],
+			"argCount": {
+				"min": 2,
+				"max": 3
+			},
+			"description": "Sets the color value of a palette entry of an image using 256 color modes or less (4 or 8 BPP).  Also, returns the assigned color.",
+			"externalLink": "https://qb64phoenix.com/qb64wiki/index.php/PALETTECOLOR",
+			"returnTypes": "int"
+		},
+		{
+			"primaryName": "_PIXELSIZE",
+			"args": [],
+			"argCount": {
+				"min": 0,
+				"max": 1
+			},
+			"description": "returns the color depth (Bits Per Pixel) of an image as 0 for text, 1 for 1 to 8 BPP or 4 for 32 bit",
+			"externalLink": "https://qb64.com/wiki/_PIXELSIZE.html",
+			"migrateToCode": "1",
+			"returnTypes": "int"
+		},
+		{
+			"primaryName": "_PRINTSTRING",
+			"args": [
+				{"name": "coords", "types": "list<int>"},
+				{"name": "s", "types": "string"}
+			],
+			"description": "Prints text strings using graphic column and row coordinate positions",
+			"externalLink": "https://wiki.qb64.dev/qb64wiki/index.php/PRINTSTRING",
+			"toProc": "_printstring",
+			"returnTypes": null
+		},
+		{
+			"primaryName": "_RED",
+			"args": [
+				{"name": "rgbaColorIndex", "types": "int"},
+				{"name": "imageHandle"}
+			],
+			"argCount": {
+				"min": 1,
+				"max": 2
+			},
+			"description": "returns the palette index or the red component intensity of a 32-bit image color",
+			"externalLink": "https://wiki.qb64.dev/qb64wiki/index.php/RED",
+			"returnTypes": "int"
+		},
+		{
+			"primaryName": "_RED32",
+			"args": [
+				{"name": "rgbaColor", "types": "int"}
+			],
+			"description": "returns the red component intensity of a 32-bit image or surface color",
+			"externalLink": "https://wiki.qb64.dev/qb64wiki/index.php/RED32",
+			"returnTypes": "int",
+			"to": "colorToRed"
+		},
+		{
+			"primaryName": "_RGB",
+			"args": [
+				{"name": "red", "min": 0, "max": 255, "types": "int"},
+				{"name": "green", "min": 0, "max": 255, "types": "int"},
+				{"name": "blue", "min": 0, "max": 255, "types": "int"}
+			],
+			"argCount": {
+				"min": 3,
+				"max": 4
+			},
+			"description": "Returns the closest palette attribute index (legacy SCREEN modes) OR the LONG 32-bit color value (32-bit screens)",
+			"externalLink": "https://qb64.com/wiki/_RGB.html",
+			"returnTypes": "int"
+		},
+		{
+			"primaryName": "_RGB32",
+			"argCount": {
+				"min": 1,
+				"max": 3
+			},
+			"description": "returns the 32-bit RGBA color value with specified red, green and blue component intensities and optional alpha",
+			"externalLink": "https://qb64phoenix.com/qb64wiki/index.php/RGB32",
+			"returnTypes": "int"
+		},
+		{
+			"primaryName": "_RGBA32",
+			"args": [
+				{"name": "red", "types": "int", "min": 0, "max": 255},
+				{"name": "green", "types": "int", "min": 0, "max": 255},
+				{"name": "blue", "types": "int", "min": 0, "max": 255},
+				{"name": "alpha", "types": "int", "min": 0, "max": 255}
+			],
+			"description": "returns the 32-bit RGBA color value with specified red, green, blue, and alpha component intensities and optional alpha",
+			"externalLink": "https://qb64phoenix.com/qb64wiki/index.php/RGBA32",
+			"returnTypes": "int",
+			"toProc": "_rgba32"
+		},
+		{
+			"primaryName": "_SAVEIMAGE",
+			"args": [
+				{"name": "filename", "types": "string"},
+				{"name": "imageHandle"}
+			],
+			"argCount": {
+				"min": 1,
+				"max": 3
+			},
+			"description": "saves the contents of an image or screen page to an image file",
+			"externalLink": "https://qb64phoenix.com/qb64wiki/index.php/SAVEIMAGE",
+			"removeInMigration": true,
+			"returnTypes": null
+		},
+		{
+			"primaryName": "_SCREENHIDE",
+			"args": [],
+			"description": "hide the main program window in a section of code",
+			"removeInMigration": true,
+			"returnTypes": null
+		},
+		{
+			"primaryName": "_SCREENIMAGE",
+			"argCount": {
+				"min": 0,
+				"max": 4
+			},
+			"description": "Stores the current desktop image or a portion of it and returns an image handle",
+			"externalLink": "https://github-wiki-see.page/m/QB64Official/qb64/wiki/_SCREENIMAGE",
+			"migrateToCode": "0",
+			"returnTypes": "int"
+		},
+		{
+			"primaryName": "_SCREENMOVE",
+			"args": [
+				{"name": "position"}
+			],
+			"argCount": {
+				"min": 1,
+				"max": 3
+			},
+			"description": "positions the program window on the desktop using designated coordinates",
+			"externalLink": "https://qb64phoenix.com/qb64wiki/index.php/SCREENMOVE",
+			"removeInMigration": true,
+			"returnTypes": null
+		},
+		{
+			"primaryName": "_SCREENX",
+			"args": [],
+			"description": "returns the current column pixel coordinate of the program window on the desktop",
+			"externalLink": "https://qb64phoenix.com/qb64wiki/index.php/SCREENX",
+			"migrateToCode": "0",
+			"returnTypes": "int"
+		},
+		{
+			"primaryName": "_SCREENY",
+			"args": [],
+			"description": "returns the current row pixel coordinate of the program window on the desktop",
+			"externalLink": "https://qb64phoenix.com/qb64wiki/index.php/SCREENY",
+			"migrateToCode": "0",
+			"returnTypes": "int"
+		},
+		{
+			"primaryName": "_SNDRAW",
+			"args": [
+				{"name": "leftSample"}
+			],
+			"argCount": {
+				"min": 1,
+				"max": 3
+			},
+			"description": "plays sound wave sample frequencies created by a program",
+			"externalLink": "https://qb64phoenix.com/qb64wiki/index.php/SNDRAW",
+			"removeInMigration": true,
+			"returnTypes": null
+		},
+		{
+			"primaryName": "_SOURCE",
+			"args": [
+				{"name": "function"}
+			],
+			"description": "Returns the handle for a specified function",
+			"externalLink": "https://qb64.com/wiki/_SOURCE-(function).html",
+			"migrateToCode": "0",
+			"returnTypes": "int"
+		},
+		{
+			"primaryName": "_title",
+			"args": [
+				{"name": "newTitle", "types": "string"}
+			],
+			"description": "provides the program name in the title bar of the program window",
+			"externalLink": "https://qb64phoenix.com/qb64wiki/index.php/TITLE",
+			"returnTypes": null,
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "_WIDTH",
+			"argCount": {
+				"min": 0,
+				"max": 1
+			},
+			"description": "returns the width of an image handle or of the current write page.  If an argument is specified, it is to be the image handle.  If not, the width of the page/screen is returned.",
+			"externalLink": "https://qb64.com/wiki/_WIDTH.html",
+			"migrateToCode": "100",
+			"returnTypes": "int"
+		},
+		{
+			"primaryName": "abs",
+			"to": "abs"
+		},
+		{
+			"primaryName": "asc",
+			"to": "ascii"
+		},
+		{
+			"primaryName": "atn",
+			"to": "radArcTan"
+		},
+		{
+			"primaryName": "beep",
+			"args": [],
+			"description": "Generates a beep sound from your computer's speaker",
+			"returnTypes": null,
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "bsave",
+			"args": [
+				{"name": "saveFile"},
+				{"name": "arrayIndex", "types": "int"},
+				{"name": "fileSize", "types": "int"}
+			],
+			"description": "saves the contents of an image array to a BINARY file",
+			"externalLink": "https://qb64.com/wiki/BSAVE",
+			"removeInMigration": true,
+			"returnTypes": null
+		},
+		{
+			"primaryName": "chdir",
+			"args": [
+				{"name": "newDirectory", "types": "string"}
+			],
+			"description": "Changes the default directory for the specified drive",
+			"externalLink": "https://qbasic.com/documentation/CHDIR.html",
+			"removeInMigration": true,
+			"returnTypes": null
+		},
+		{
+			"primaryName": "chr$",
+			"to": "char"
+		},
+		{
+			"primaryName": "cint",
+			"to": "ceiling"
+		},
+		{
+			"primaryName": "circle",
+			"args": [
+				{"name": "step"},
+				{"name": "center"},
+				{"name": "radius"},
+				{"name": "color"},
+				{"name": "startRadians", "types": "num"},
+				{"name": "endRadians", "types": "num"},
+				{"name": "aspectRatio", "types": "num"}
+			],
+			"argCount": {
+				"min": 2,
+				"max": 7
+			},
+			"description": "Draws a circle or ellipse on the screen.  Can also draw circular or elliptical args.",
+			"externalLink": "https://www.qbasic.net/en/reference/qb11/Statement/CIRCLE.htm",
+			"isStatement": true,
+			"mightUseColor": true,
+			"returnTypes": null
+		},
+		{
+			"primaryName": "close",
+			"args": [
+				{"name": "fileNumber", "types": "int"}
+			],
+			"description": "Closes one or more open files",
+			"migrateToCode": "[0 0]"
+		},
+		{
+			"primaryName": "cls",
+			"to": "clearScreen"
+		},
+		{
+			"primaryName": "color",
+			"args": [
+				{"name": "foregroundColor"},
+				{"name": "backgroundColor"}
+			],
+			"argCount": {
+				"min": 1,
+				"max": 2
+			},
+			"description": "Sets the screen display colors",
+			"externalLink": "https://www.qbasic.net/en/reference/qb11/Statement/COLOR.htm",
+			"returnTypes": null
+		},
+		{
+			"primaryName": "const",
+			"description": "Declares a constant"
+		},
+		{
+			"primaryName": "cos",
+			"to": "radCos"
+		},
+		{
+			"primaryName": "cvi",
+			"args": [
+				{"name": "s", "types": "string(minlen=2)"}
+			],
+			"description": "Decodes a 2-byte STRING generated by MKI$ (or read from a file) to INTEGER numeric values",
+			"externalLink": "https://qb64.com/wiki/CVI.html",
+			"returnTypes": "int",
+			"toProc": "cvi"
+		},
+		{
+			"primaryName": "cvl",
+			"args": [
+				{"name": "s", "types": "string(minlen=4)"}
+			],
+			"description": "Decodes a 4-byte STRING generated by MKL$ (or read from a file) to INTEGER numeric values",
+			"externalLink": "https://qb64.com/wiki/CVL.html",
+			"returnTypes": "int",
+			"toProc": "cvl"
+		},
+		{
+			"primaryName": "data",
+			"argCount": {
+				"min": 1
+			},
+			"description": "Defines data",
+			"removeInMigration": true,
+			"returnTypes": null
+		},
+		{
+			"primaryName": "date$",
+			"args": [],
+			"description": "Returns current date",
+			"returnTypes": "string",
+			"migrateToCode": "0"
+		},
+		{
+			"primaryName": "dim",
+			"description": "Declares a variable"
+		},
+		{
+			"primaryName": "draw",
+			"args": [
+				{"name": "commandString", "types": "string"}
+			],
+			"description": "Draws using the specified sequence of commands from a string",
+			"externalLink": "https://qbasic.com/documentation/DRAW.html",
+			"toProc": "qbDraw",
+			"isStatement": true,
+			"mightUseColor": true,
+			"returnTypes": null
+		},
+		{
+			"primaryName": "eof",
+			"args": [
+				{"name": "fileNumber", "types": "int"}
+			],
+			"description": "indicates that the end of a file or HTTP response has been reached",
+			"externalLink": "https://qb64phoenix.com/qb64wiki/index.php/EOF",
+			"returnTypes": "int",
+			"migrateToCode": "-1"
+		},
+		{
+			"primaryName": "get",
+			"args": [
+				{"name": "topLeftPoint"},
+				{"name": "bottomRightPoint"},
+				{"name": "arrayVariable"}
+			],
+			"tokenVals": ["step"],
+			"description": "Stores a graphics screen image in an array",
+			"externalLink": "https://qbasic.com/documentation/GET.html",
+			"returnTypes": null
+		},
+		{
+			"primaryName": "goto",
+			"args": [
+				{"name": "labelOrLineNumber"}
+			],
+			"description": "Jumps to the specified label or line number",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "hex$",
+			"args": [
+				{"name": "num", "types": "num"}
+			],
+			"description": "Returns a string with a hex representation of the specified number",
+			"returnTypes": "string",
+			"toProc": "hexString"
+		},
+		{
+			"primaryName": "inkey$",
+			"args": [],
+			"description": "Reads a key from the keyboard",
+			"migrateToCode": "\"a"
+		},
+		{
+			"primaryName": "inp",
+			"args": [
+				{"name": "portNumber", "types": "int"}
+			],
+			"description": "Reads a byte value from the specified I/O port",
+			"returnTypes": "int",
+			"migrateToCode": "0"
+		},
+		{
+			"primaryName": "input",
+			"args": [
+				{"name": "filenumber", "types": "int"}
+			],
+			"argCount": {
+				"min": 2
+			},
+			"description": "Reads input from keyboard or a file",
+			"removeInMigration": true,
+			"isStatement": true,
+			"returnTypes": null
+		},
+		{
+			"primaryName": "input$",
+			"args": [
+				{"name": "filenumber", "types": "int"}
+			],
+			"argCount": {
+				"min": 1,
+				"max": 2
+			},
+			"description": "Reads input string from a specified file",
+			"migrateToCode": " '' ",
+			"returnTypes": "string"
+		},
+		{
+			"primaryName": "instr",
+			"args": [
+				{"name": "startIndex", "types": "int"},
+				{"name": "str1", "types": "string"},
+				{"name": "str2", "types": "string"}
+			],
+			"description": "Returns the position of the first occurrence of a string in another string.",
+			"returnTypes": "int"
+		},
+		{
+			"primaryName": "int",
+			"to": "int"
+		},
+		{
+			"primaryName": "kill",
+			"args": [
+				{"name": "fileName", "types": "string"}
+			],
+			"description": "deletes a file from disk",
+			"externalLink": "https://www.qbasic.net/en/reference/qb11/Statement/KILL.htm",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "lcase$",
+			"to": "lowerCase"
+		},
+		{
+			"primaryName": "left$",
+			"hintNames": ["left"],
+			"args": [
+				{"name": "s", "types": "string"},
+				{"name": "charCount", "types": "int"}
+			],
+			"description": "Retrieves the specified number of characters from the string’s left side",
+			"returnTypes": "string"
+		},
+		{
+			"primaryName": "len",
+			"to": "count",
+			"returnTypes": "int"
+		},
+		{
+			"primaryName": "let",
+			"description": "Declares a variable",
+			"isStatement": true,
+			"returnTypes": null
+		},
+		{
+			"primaryName": "line",
+			"args": [
+				{"name": "point1", "types": "list<num>"},
+				{"name": "point2", "types": "list<num>"}
+			],
+			"argCount": {
+				"min": 3,
+				"max": 4
+			},
+			"description": "Draws a line or rectangle",
+			"isStatement": true,
+			"returnTypes": null
+		},
+		{
+			"primaryName": "line input",
+			"args": [
+				{"name": "variable"}
+			],
+			"description": "Reads a line of text into the specified variable.  This is different from input since input delimits the input with whitespaces.",
+			"isStatement": true,
+			"returnTypes": null
+		},
+		{
+			"primaryName": "locate",
+			"args": [
+				{"name": "x", "types": "int"},
+				{"name": "y", "types": "int"}
+			],
+			"description": "Moves the cursor to the specified location on the screen",
+			"externalLink": "https://www.qbasic.net/en/reference/qb11/Statement/LOCATE.htm",
+			"toProc": "qbLocate",
+			"returnTypes": null
+		},
+		{
+			"primaryName": "lof",
+			"args": [
+				{"name": "fileNumber", "types": "int"}
+			],
+			"description": "Returns the length of an OPEN file in bytes, or content length of an HTTP response",
+			"externalLink": "https://qb64phoenix.com/qb64wiki/index.php/LOF",
+			"returnTypes": "int",
+			"migrateToCode": "0"
+		},
+		{
+			"primaryName": "ltrim$",
+			"args": [
+				{"name": "s", "types": "string"}
+			],
+			"description": "Remove leading spaces from a string",
+			"externalLink": "https://www.qbasic.net/en/reference/qb11/Function/LTRIM_.htm",
+			"returnTypes": "string",
+			"toProc": "ltrimString"
+		},
+		{
+			"primaryName": "Mid$",
+			"hintNames": ["mid"],
+			"args": [
+				{"name": "s", "types": "string"},
+				{"name": "startOffset", "types": "int"},
+				{"name": "length", "types": "int"}
+			],
+			"argCount": {
+				"min": 2,
+				"max": 3
+			},
+			"description": "Returns a substring of a string expression that begins at the specified offset location",
+			"returnTypes": "string"
+		},
+		{
+			"primaryName": "MKI$",
+			"args": [
+				{"name": "num", "types": "int"}
+			],
+			"description": "Converts a integer value to a 2-byte string for output to a random-access file by PUT#",
+			"toProc": "makeIntegerString",
+			"returnTypes": "string"
+		},
+		{
+			"primaryName": "MKL$",
+			"args": [
+				{"name": "num", "types": "int"}
+			],
+			"description": "Converts a long integer value to a 4-byte string for output to a random-access file by PUT#",
+			"toProc": "makeLongString",
+			"returnTypes": "string"
+		},
+		{
+			"primaryName": "oct$",
+			"args": [
+				{"name": "num", "types": "num"}
+			],
+			"description": "Returns a string with the octal(base 8) representation of the specified number",
+			"returnTypes": "string",
+			"toProc": "octalString"
+		},
+		{
+			"primaryName": "open",
+			"args": [
+				{"name": "filename"}
+			],
+			"argCount": {
+				"min": 1,
+				"max": 3
+			},
+			"tokenVals": ["append", "binary", "for", "input", "output", "random"],
+			"description": "To establish input/output (I/O) to a file or device.",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "out",
+			"args": [
+				{"name": "portNumber", "types": "int"},
+				{"name": "byteValue", "types": "int"}
+			],
+			"description": "Sends the specified byte value to the specified port",
+			"removeInMigration": true,
+			"returnTypes": null
+		},
+		{
+			"primaryName": "paint",
+			"argCount": {
+				"min": 1,
+				"max": 5
+			},
+			"description": "Fills a graphics area with a specified color or pattern",
+			"externalLink": "https://www.qbasic.net/en/reference/qb11/Statement/PAINT.htm",
+			"isStatement": true,
+			"mightUseColor": true,
+			"removeInMigration": true,
+			"returnTypes": null
+		},
+		{
+			"primaryName": "palette",
+			"argCount": {
+				"min": 0,
+				"max": 2
+			},
+			"description": "Change one or more colors in the color palette.",
+			"mightUseColor": true,
+			"externalLink": "https://qbasic.com/documentation/PALETTE.html",
+			"returnTypes": null
+		},
+		{
+			"primaryName": "peek",
+			"args": [
+				{"name": "memoryAddress", "types": "int"}
+			],
+			"description": "Reads a byte value from the specified RAM memory address",
+			"returnTypes": "int"
+		},
+		{
+			"primaryName": "play",
+			"args": [
+				{"name": "value"}
+			],
+			"description": "Plays a tune specified by a string expression; additionally support play event trapping enabling/disabling",
+			"externalLink": "https://qbasic.com/documentation/PLAY.html",
+			"removeInMigration": true,
+			"returnTypes": null
+		},
+		{
+			"primaryName": "point",
+			"args": [
+				{"name": "coordsOrTypeOfCoord", "types": "int|list<num>"}
+			],
+			"description": "Either returns the specified coordinate type or returns the color at the specified coordinates",
+			"returnTypes": "int"
+		},
+		{
+			"primaryName": "poke",
+			"args": [
+				{"name": "memoryAddress", "types": "int"},
+				{"name": "newValue", "types": "int"}
+			],
+			"description": "Writes a byte value to the specified RAM address",
+			"returnTypes": null
+		},
+		{
+			"primaryName": "preset",
+			"args": [
+				{"name": "step"},
+				{"name": "xyCoords", "types": "list<int>"},
+				{"name": "color", "types": "int"}
+			],
+			"argCount": {
+				"min": 1,
+				"max": 3
+			},
+			"description": "Sets a single pixel on the screen to a specified color",
+			"mightUseColor": true,
+			"isStatement": true,
+			"returnTypes": null
+		},
+		{
+			"primaryName": "print",
+			"argCount": {
+				"min": 0,
+				"max": 1
+			},
+			"to": "print",
+			"isStatement": true
+		},
+		{
+			"primaryName": "pset",
+			"args": [
+				{"name": "step"},
+				{"name": "xyCoords"},
+				{"name": "color", "types": "int"}
+			],
+			"argCount": {
+				"min": 1,
+				"max": 3
+			},
+			"description": "Sets a single pixel on the screen to a specified color",
+			"mightUseColor": true,
+			"isStatement": true,
+			"returnTypes": null
+		},
+		{
+			"primaryName": "put",
+			"args": [
+				{"name": "fileNumber", "types": "int"},
+				{"name": "recordNumber", "types": "int"},
+				{"name": "variable"}
+			],
+			"argCount": {
+				"min": 1,
+				"max": 3
+			},
+			"description": "writes a variable or random-access buffer to a file.",
+			"externalLink": "https://www.qbasic.net/en/reference/qb11/Statement/PUT-001.htm",
+			"removeInMigration": true,
+			"returnTypes": null
+		},
+		{
+			"primaryName": "randomize",
+			"args": [
+				{"name": "seed"}
+			],
+			"to": "rerandom"
+		},
+		{
+			"primaryName": "read",
+			"argCount": {
+				"min": 1
+			},
+			"description": "Reads values into a specified list of variables",
+			"returnTypes": null
+		},
+		{
+			"primaryName": "restore",
+			"argCount": {
+				"min": 0,
+				"max": 1
+			},
+			"description": "allows READ to reread values in specified DATA statements",
+			"removeInMigration": true,
+			"returnTypes": null
+		},
+		{
+			"primaryName": "return",
+			"argCount": {
+				"min": 0,
+				"max": 1
+			},
+			"description": "Returns control from a subroutine to the calling procedure.  There is an optional label argument but I couldn't find any examples of it used.  The optional label argument makes return confusingly similar to what goto does in my(Josh's) limited understanding.",
+			"externalLink": "https://qbasic.com/documentation/RETURN.html",
+			"returnTypes": null
+		},
+		{
+			"primaryName": "right$",
+			"hintNames": ["right"],
+			"args": [
+				{"name": "s", "types": "string"},
+				{"name": "charCount", "types": "int"}
+			],
+			"description": "Retrieves the specified number of characters from the string’s right side",
+			"returnTypes": "string",
+			"toProc": "rightString"
+		},
+		{
+			"primaryName": "rnd",
+			"to": "randomRatio"
+		},
+		{
+			"primaryName": "rset",
+			"description": "move data into a random-access file buffer (in preparation for a PUT statement) and left- or right-justify the value of a string variable",
+			"externalLink": "https://www.qbasic.net/en/reference/qb11/Statement/LSET.htm",
+			"returnTypes": null
+		},
+		{
+			"primaryName": "rtrim$",
+			"args": [
+				{"name": "s", "types": "string"}
+			],
+			"description": "Remove trailing spaces from a string",
+			"externalLink": "https://www.qbasic.net/en/reference/qb11/Function/RTRIM_.htm",
+			"returnTypes": "string",
+			"toProc": "rtrimString"
+		},
+		{
+			"primaryName": "SaveImage",
+			"args": [
+				{"name": "imageHandle"},
+				{"name": "filename", "types": "string"}
+			],
+			"description": "saves the contents of an image or screen page to an image file",
+			"externalLink": "https://qb64.com/wiki/SAVEIMAGE.html",
+			"returnTypes": null
+		},
+		{
+			"primaryName": "screen",
+			"args": [
+				{"name": "newScreenNumber", "types": "int"}
+			],
+			"description": "Sets the screen mode to the specified number.  Each screen mode has different resolution and interpretation of screen video data.",
+			"returnTypes": null,
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "seek",
+			"args": [
+				{"name": "fileNumber", "types": "int"}
+			],
+			"description": "Returns the current file pointer position",
+			"externalLink": "https://qbasic.com/documentation/SEEK.html",
+			"returnTypes": "int",
+			"migrateToCode": "0"
+		},
+		{
+			"primaryName": "sgn",
+			"to": "sign"
+		},
+		{
+			"primaryName": "sin",
+			"to": "radSin"
+		},
+		{
+			"primaryName": "sleep",
+			"args": [
+				{"name": "sleepSeconds", "types": "num"}
+			],
+			"argCount": {
+				"min": 0,
+				"max": 1
+			},
+			"description": "Sleeps for the specified number of seconds or until a key is pressed.  If the sleepSeconds is 0 or unspecified, it'll wait until a key is pressed.",
+			"externalLink": "https://www.qbasic.net/en/reference/qb11/Statement/SLEEP.htm",
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "space$",
+			"args": [
+				{"name": "numSpaces", "types": "int"}
+			],
+			"description": "",
+			"externalLink": "https://qbasic.com/documentation/SPACE$.html",
+			"returnTypes": "string"
+		},
+		{
+			"primaryName": "sqr",
+			"to": "sqrt"
+		},
+		{
+			"primaryName": "step",
+			"args": [
+				{"name": "coordinates", "types": "list<num>"}
+			],
+			"description": "step is often used in for-loops to indicate the step or interval between counter values in each iteration.  Step is also used like a function in graphics subroutines like circle and line to indicate positions.",
+			"returnTypes": "list<num>",
+			"toProc": "qbStep"
+		},
+		{
+			"primaryName": "stop",
+			"args": [],
+			"description": "Ends the program at any point",
+			"returnTypes": null
+		},
+		{
+			"primaryName": "str$",
+			"args": [
+				{"name": "value"}
+			],
+			"description": "Converts the specified value to string",
+			"returnTypes": "string",
+			"to": "str"
+		},
+		{
+			"primaryName": "swap",
+			"args": [
+				{"name": "variable1"},
+				{"name": "variable2"}
+			],
+			"description": "Swaps values of the specified variables",
+			"externalLink": "https://www.qbasic.net/en/reference/qb11/Statement/SWAP.htm",
+			"to": "swap",
+			"returnTypes": null
+		},
+		{
+			"primaryName": "system",
+			"args": [],
+			"description": "Closes all open files and returns control to the operating system",
+			"externalLink": "https://www.qbasic.net/en/reference/qb11/Statement/SYSTEM.htm",
+			"removeInMigration": true,
+			"returnTypes": null
+		},
+		{
+			"primaryName": "tab",
+			"args": [
+				{"name": "tabCount", "types": "int"}
+			],
+			"description": "Returns a string containing the specified number of tab characters",
+			"externalLink": "https://www.qbasic.net/en/reference/qb11/Function/TAB.htm",
+			"returnTypes": "string",
+			"toProc": "qbTab"
+		},
+		{
+			"primaryName": "tan",
+			"to": "radTan"
+		},
+		{
+			"primaryName": "time$",
+			"args": [],
+			"description": "Returns current time",
+			"returnTypes": "string",
+			"migrateToCode": "0"
+		},
+		{
+			"primaryName": "timer",
+			"args": [{
+				"name": "onOffOrStop",
+				"tokenVals": ["off", "on", "stop"]
+			}],
+			"argCount": {
+				"min": 0,
+				"max": 1
+			},
+			"description": "Returns the number of seconds after midnight.  QBasic accepts no arguments but QB64 supports an optional accuracy argument.",
+			"returnTypes": "num",
+			"migrateToCode": "animation.time"
+		},
+		{
+			"primaryName": "ucase$",
+			"to": "upperCase"
+		},
+		{
+			"primaryName": "val",
+			"args": [
+				{"name": "stringVal", "types": "string"}
+			],
+			"description": "returns the decimal numerical equivalent value of a STRING numerical value",
+			"toProc": "qbVal",
+			"returnTypes": "num"
+		},
+		{
+			"primaryName": "varptr",
+			"args": [
+				{"name": "variableOrExpression"}
+			],
+			"description": "Returns RAM memory address of the specified variable",
+			"removeCallTokenOnly": true,
+			"returnTypes": "int"
+		},
+		{
+			"primaryName": "varptr$",
+			"args": [
+				{"name": "commandstring"}
+			],
+			"description": "Returns a string representation of a variable's offset for use in the PLAY and DRAW statements",
+			"removeCallTokenOnly": true,
+			"returnTypes": "int"
+		},
+		{
+			"primaryName": "view",
+			"args": [
+				{"name": "coords"}
+			],
+			"argCount": {
+				"min": 1,
+				"max": 5
+			},
+			"description": "Specifies the screen boundaries for output to subsequent graphics commands",
+			"returnTypes": null,
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "wait",
+			"args": [
+				{"name": "portNumber", "types": "int"},
+				{"name": "andMask", "types": "int"}
+			],
+			"argCount": {
+				"min": 2,
+				"max": 3
+			},
+			"description": "Blocks/waits/suspends program until a specific bit pattern is read from the specified port.  andMask and an optional xor value are applied to any value read from the port.",
+			"returnTypes": null,
+			"removeInMigration": true
+		},
+		{
+			"primaryName": "WIDTH",
+			"args": [
+				{"name": "fileNumberOrDeviceName", "types": "int|string"},
+				{"name": "columnCount", "types": "int"}
+			],
+			"description": "Sets the number of columns on the screen or other device or sets the width of a file",
+			"externalLink": "https://qbasic.com/documentation/WIDTH.html",
+			"returnTypes": null
+		},
+		{
+			"primaryName": "window",
+			"args": [],
+			"argCount": {
+				"min": 2,
+				"max": 3
+			},
+			"tokenVals": ["screen"],
+			"description": "Defines logical dimensions for the current graphics viewport. Use the WINDOW statement to define your own viewport coordinate system",
+			"externalLink": "https://scruss.com/qbasic_hlp/T004C.html",
+			"removeInMigration": true,
+			"returnTypes": null
+		}
+	],
+	"operators": [
+		{"symbol": "*", "args": [
+			"num",
+			"num"
+		], "precedence": 4, "to": "*"},
+		{"symbol": "+", "args": [
+			"num|string",
+			"num|string"
+		], "precedence": 3, "to": "+"},
+		{"symbol": "-", "args": [
+			"num",
+			"num"
+		], "precedence": 3, "to": "-"},
+		{"symbol": "/", "args": [
+			"num",
+			"num"
+		], "precedence": 4, "to": "/"},
+		{"symbol": "<", "args": [
+			"num|string",
+			"num|string"
+		], "precedence": 1, "to": "<"},
+		{"symbol": "<=", "args": [
+			"num|string",
+			"num|string"
+		], "precedence": 1, "to": "<="},
+		{"symbol": "<>", "args": [
+			"num|string",
+			"num|string"
+		], "precedence": 1, "to": "<>"},
+		{"symbol": "=", "args": [
+			"num|string",
+			"num|string"
+		], "precedence": 1, "to": "="},
+		{"symbol": ">", "args": [
+			"num|string",
+			"num|string"
+		], "precedence": 1, "to": ">"},
+		{"symbol": ">=", "args": [
+			"num|string",
+			"num|string"
+		], "precedence": 1, "to": ">="},
+		{"symbol": "\\", "args": [
+			"num",
+			"num"
+		], "precedence": 4, "description": "Integer division", "to": "/"},
+		{"symbol": "^", "args": [
+			"num",
+			"num"
+		], "precedence": 5, "convertToCommand": "power"},
+		{"symbol": "and", "args": [
+			"bool|int",
+			"bool|int"
+		], "precedence": 0, "convertToCommand": "and"},
+		{"symbol": "imp", "args": [
+			"bool|int",
+			"bool|int"
+		],  "precedence": 0, "convertToProc": "implies"},
+		{"symbol": "mod", "args": [
+			"bool|int",
+			"bool|int"
+		], "precedence": 4, "convertToCommand": "modulo"},
+		{"symbol": "not", "args": [
+			"bool|int"
+		], "precedence": 2, "convertToCommand": "not"},
+		{"symbol": "or", "args": [
+			"bool|int",
+			"bool|int"
+		], "precedence": 0, "convertToCommand": "or"},
+		{"symbol": "to", "precedence": 0,
+			"description": "Expresses a range.  For example 'CASE 2 to 4' could be in a select case statement."},
+		{"symbol": "xor", "args": [
+			"bool|int",
+			"bool|int"
+		], "precedence": 0, "convertToCommand": "xor"}
+	],
+	"keywords": [
+		{
+			"from": "shared",
+			"to": "",
+			"description": "gives procedures access to module-level variables.  Shared is not a function but rather a keyword in QBasic.",
+			"externalLink": "https://www.qbasic.net/en/reference/qb11/Statement/SHARED.htm"
+		}
+	]
+}
