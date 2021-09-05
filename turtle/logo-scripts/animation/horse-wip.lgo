@@ -1,0 +1,144 @@
+; The dr
+make "animationKeyFrames [
+	[35 0 [-0.04 206 26 15 -40 0.67] [0 175 56 30 30] [214 0.15] 0.02 0.41]
+	[20 0 [-0.04 206 26 15 -40 0.67] [0 175 56 30 30] [214 0.15] 0.02 0.41]
+	[20 0 [-0.04 206 26 15 -40 0.67] [0 175 56 30 30] [214 0.15] 0.02 0.41]
+	[5 11 [0 130 108 95 30 0.65] [0 155 56 47 51] [215 0.12] 0 0.41]
+	[20 0 [0 156 -18 25 30 0.62] [0 155 56 47 51] [196 0.14] 0 0.385]
+	[20 5 [0 156 -18 25 30 0.62] [0 155 56 47 51] [210 0.15] 0 0.385]
+	[35 0 [-0.04 206 18 5 30 0.67] [0 155 56 47 51] [196 0.15] 0 0.39]
+]
+
+to getAnimationStateForTime :timeRatio
+	output mixItems2 :animationKeyFrames :timeRatio 
+end
+
+to horseTorso :length
+	localmake "oldState turtleState
+	localmake "thickness :length * 0.25
+	localmake "arcRadius1 :thickness * 0.67
+	localmake "arcRadius2 :length * 0.8
+	localmake "size1 :length * 0.3
+	jumpBackward :thickness / 2
+	jumpRight :size1
+	setPenSize 0
+	right 90
+	polyStart
+	arcLeft 207 :arcRadius1 ; front of torso
+	arcRight 15 :arcRadius2 ; middle back of horse
+	arcRight 23 :length * 0.3 ; middle back of horse
+	arcLeft 25 :length * 0.4 ; near lower back of the horse
+	arcLeft 165 :length * 0.11 ; back and butt of horse
+	arcRight 20 :length * 0.7
+	arcLeft 20 :length * 0.1
+	arcLeft 14 :length * 1
+	polyEnd
+	setTurtleState :oldState
+end
+
+to horseHead :length :headSettings
+	localmake "oldState turtleState
+	localmake "arcRadius1 :length * 0.5
+	setPenSize 0
+	left first :headSettings
+	arcLeft 10 :arcRadius1
+	right 180
+	polyStart
+	arcRight 170 :arcRadius1
+	arcRight 12 :length * 7
+	arcRight 180 :length * 0.33
+	arcLeft 30 :length * 0.75
+	arcRight 14 :length * 4
+	polyEnd	
+	setTurtleState :oldState
+end
+
+to horseNeck :length
+	localmake "arcRadius1 :length * 0.5
+	localmake "arcRadius2 :length * 0.3
+	setPenSize 0
+	circlePair :arcRadius1 :arcRadius2 :length
+	jumpBackward :length * 0.08
+end
+
+to horseHindLeg :size :angle1 :angle2 :angle3
+	setPenSize 0
+	circlePair :size * 0.35 :size * 0.2 :size * 0.4
+	right :angle1
+	circlePair :size * 0.2 :size * 0.08 :size * 0.68
+	left :angle2
+	circlePair :size * 0.08 :size * 0.04 :size * 0.55
+	left :angle3
+	circlePair :size * 0.05 :size * 0.04 :size * 0.2
+end
+
+to horseHindLegs :height :hindLegsInfo
+	localmake "len :height * 0.2
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	repeat count :hindLegsInfo [
+		localmake "hindLegInfo item repcount :hindLegsInfo
+		localmake "angle1 item 3 :hindLegInfo
+		localmake "angle2 item 4 :hindLegInfo
+		localmake "angle3 item 5 :hindLegInfo
+		jumpRight :len * item 1 :hindLegInfo
+		right item 2 :hindLegInfo
+		horseHindLeg :len :angle1 :angle2 :angle3
+		jumpTo :oldPos
+		setHeading :oldHeading
+	]
+end
+
+to horse :height :timeRatio
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "settings getAnimationStateForTime :timeRatio
+	localmake "torsoSettings item 3 :settings
+	localmake "torsoLength :height * last :torsoSettings
+	localmake "torsoPositionX :height * item 6 :settings
+	localmake "torsoPositionY :height * item 7 :settings
+	localmake "headSettings item 5 :settings
+	localmake "headLength :height * 0.106
+	localmake "neckLength :height * item 2 :headSettings
+	localmake "neckAngle item 1 :settings
+	localmake "headHeading :oldHeading
+	jumpForward :torsoPositionY
+	jumpLeft :torsoPositionX
+	right item 2 :settings
+	setFillColor "red
+	horseTorso :torsoLength
+	localmake "pos1 pos
+	jumpLeft :torsoLength * 0.26
+	horseHindLegs :height [:torsoSettings item 4 :settings]
+	jumpTo :pos1
+	jumpRight :torsoLength * 0.35
+	jumpForward :torsoLength * 0.1
+	right :neckAngle
+	horseNeck :neckLength
+	setHeading :headHeading
+	horseHead :headLength :headSettings
+	setTurtleState :oldState
+end
+
+make "timeRatio animation.clampedTimeRatio
+horse 100 :timeRatio
+setFontSize 10
+right 90
+label str (:timeRatio * (-1 + count :animationKeyFrames))
+
+jumpTo [0 0]
+setHeading 0
+animation.imageAlpha 100 * 467 / 456 100 'local://horse.gif' 0.5 :timeRatio
+
+to animation.snapshotstyle
+	output createPList
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 9
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

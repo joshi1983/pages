@@ -1,0 +1,47 @@
+; Inspired by logo at:
+; https://robotframework.org
+to robotFrameworkLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "outlineArcs1 [
+		[0.29012] [45 0.04] [0.08335]]
+	localmake "lipsWidth :height * 0.47
+	setPenSize :height * 0.104
+	setPenColor "black
+	jumpForward penSize / 2
+	setFillColor transparent
+	right 90
+	setLineJoinStyle "round
+	polyStart
+	repeat 4 [
+		arcLines :outlineArcs1 :height
+		arcLines reverse :outlineArcs1 :height
+	]
+	polyEnd
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.337
+	jumpLeft :lipsWidth / 2
+	right 90
+	setPenSize :height * 0.1
+	setLineCap "round
+	forward :lipsWidth
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.575
+	localmake "eyeMiddle pos
+	jumpRight :height * 0.11
+	right 56
+	forward :height * 0.147
+
+	jumpTo :eyeMiddle
+	setHeading :oldHeading
+	jumpLeft :height * 0.06
+	arcLeft 180 :height * 0.089
+	setTurtleState :oldState
+end
+
+robotFrameworkLogo 100
