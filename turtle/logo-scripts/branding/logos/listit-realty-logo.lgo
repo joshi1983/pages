@@ -1,0 +1,80 @@
+; Inspired by logo at:
+; https://listitontario.ca/List-It
+to listitRealtyLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "realtyYellow "#c8d700
+	localmake "darkColor "#25262a
+	localmake "thickness :height * 0.152
+	localmake "roofAngle 45
+	localmake "roofAngle2 180 - :roofAngle * 2
+	localmake "thickness2 :thickness / cos :roofAngle
+	localmake "baseWidth :height * 0.42
+	localmake "roofLength1 (:baseWidth / 2) / sin :roofAngle
+	localmake "roofLength2 :height * 0.755
+	localmake "roofGap :height * 0.41
+	localmake "separation (:roofLength2 * sin :roofAngle) * 2 - :thickness * (1 + 2 * sin :roofAngle)
+	localmake "thickness3 :thickness / sin :roofAngle
+	localmake "windowSeparationX :height * 0.118
+	localmake "windowSeparationY :height * 0.117
+	localmake "windowWidth :height * 0.093
+	localmake "windowHeight :height * 0.095
+	stripes :baseWidth :thickness [:realtyYellow]
+	jumpLeft :baseWidth / 2
+	jumpForward :height - :thickness2 - :roofLength1 * cos :roofAngle
+	setFillColor :realtyYellow
+	setPenSize 0
+	polyStart
+	jumpForward :thickness2
+	right :roofAngle
+	jumpForward :roofLength1
+	right :roofAngle2
+	jumpForward :roofLength2
+	jumpRight :thickness
+	jumpBackward :roofLength2 - :thickness / tan :roofAngle
+	polyEnd
+	jumpBackward :thickness / 2
+	setHeading :oldHeading - :roofAngle - 90
+	jumpForward :roofGap
+	stripes :thickness :roofLength2 - :roofGap - :thickness [:realtyYellow]
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpLeft (:separation - :thickness) / 2
+	polyStart
+	jumpLeft :thickness
+	jumpForward :height * 0.73
+	right :roofAngle
+	jumpForward :thickness3
+	polyEnd
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpRight (:separation - :thickness) / 2
+	jumpForward :height * 0.214
+	polyStart
+	jumpRight :thickness
+	jumpForward :height * 0.045
+	left :roofAngle
+	jumpForward :thickness3
+	polyEnd
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpRight :separation / 2
+	stripes :thickness :thickness [:darkColor]
+
+	jumpTo :oldPos
+	jumpForward :height * 0.309
+	jumpLeft :windowSeparationX / 2
+	repeat 2 [
+		repeat 2 [
+			stripes :windowWidth :windowHeight [:darkColor]
+			jumpRight :windowSeparationX
+		]
+		jumpLeft :windowSeparationX * 2
+		jumpForward :windowSeparationY
+	]
+	setTurtleState :oldState
+end
+
+listitRealtyLogo 100
