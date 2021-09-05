@@ -1,0 +1,20 @@
+; copied from https://leonisx.itch.io/nextbasic-examples
+; Andy C Spencer.zip
+10 ;
+20 ; Coded on 4th January 2022 - whilst watching Alien (DC)
+30 ; Code, Graphics  & idea by Andy C Spencer for RCM / TWE
+40 ;
+50 RUN AT 3: SPRITE CLEAR : SAVE "AlienMovieIntro_v3.bas" LINE %60
+60 LAYER 0: RUN AT 3: BORDER 0: PAPER 0: INK 7: CLS
+70 .bmpload AlienBackdrop.bmp: SPRITE CLEAR
+80 LOAD "AlienMovieIntroImages.spr" BANK 12: RESTORE %170
+90 SPRITE BANK 12: SPRITE PRINT 1: SPRITE BORDER 0: RUN AT 0
+100 s=48: REPEAT : PROC p():s=s-8: REPEAT UNTIL s=-16:s=48:n=0:d=-16
+110 REPEAT : PROC p():os=s: READ x: REPEAT : SPRITE n,x,64,s,1: PROC p()
+120 s=s-16: REPEAT UNTIL s=d:n=n+1:d=d+1:s=os+1: REPEAT UNTIL n=12
+130 s=48: REPEAT : PROC p():s=s-8: REPEAT UNTIL s=-16
+140 n=26:m=56: REPEAT : SPRITE DIM 32,n,255,m: PROC p(): SPRITE MOVE INT
+150 n=n+1:m=m-1: REPEAT UNTIL m=38: PROC p(): SPRITE MOVE
+155 n=0: REPEAT : LAYER DIM 0,n,0,191-n: REPEAT UNTIL n=89: REPEAT : REPEAT UNTIL 0
+160 DEFPROC p(): FOR q=0 TO 23: SPRITE MOVE INT: NEXT q: ENDPROC
+170 DATA 152,64,247,108,203,64,247,203,108,247,64,203

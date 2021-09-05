@@ -1,0 +1,119 @@
+make "widthFactor 5 / 3
+
+to getArcLeftAngleToLines :arcRadius :lines
+	localmake "result -1
+	repeat count :lines [
+		localmake "line item repcount :lines
+		localmake "angle getArcLeftAngleToLine :arcRadius first :line last :line
+		if and :angle > 0 (or :angle < :result :result <= 0) [
+			localmake "result :angle
+		]
+	]
+	output :result
+end
+
+to arcToLines :arcRadius :lines
+	localmake "oldState turtleState
+	localmake "arcAngle getArcLeftAngleToLines :arcRadius :lines
+	
+	arcLeft :arcAngle :arcRadius
+
+	setTurtleState :oldState
+end
+
+to drawRect :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "width :height * :widthFactor
+	localmake "rightArcRadius :height * 0.65
+	localmake "sideLineCount 28
+	localmake "topLineCount int 1.5 * :sideLineCount * :width / :height
+	stripes :width :height ["black]
+
+	jumpLeft :width / 2
+	localmake "bottomLeftPos pos
+
+	jumpRight :width
+	localmake "fromPos pos
+	jumpForward :height
+	localmake "topRightPos pos
+	setLineCap "butt
+	setLineJoinStyle "miter
+	setPenSize :height * 0.007
+	repeat :sideLineCount [
+		jumpTo mix :topRightPos :fromPos clamp power repcount / :sideLineCount 0.7 0 1
+		setHeading :oldHeading + 180 + mix 52 15 repRatio
+		arcToLines :rightArcRadius [[:oldPos :fromPos]]
+	]
+	setHeading :oldHeading
+	jumpLeft :width
+	localmake "topLeftPos pos
+	repeat :topLineCount [
+		jumpTo mix :topLeftPos :topRightPos 0.99 * repcount / :topLineCount
+		setHeading :oldHeading + 180 + mix 80 52 repRatio
+		localmake "arcRadius :rightArcRadius * mix 1.5 1 repRatio
+		arcToLines :arcRadius [[:bottomLeftPos :topLeftPos] [:bottomLeftPos :oldPos]]
+	]
+	setHeading :oldHeading + 90
+	jumpRight penSize / 2
+	forward :width
+
+	setTurtleState :oldState
+end
+
+to drawFrame :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "frameThickness :height / (1 + :widthFactor)
+	setLineCap "butt
+	repeat 4 [
+		jumpBackward :height / 2
+		jumpLeft :frameThickness / 2
+		drawRect :frameThickness
+		jumpTo :oldPos
+		right 90
+	]	
+
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://www.facebook.com/share/p/14LwnGfYA9N/
+to opArtPillowRide :height :z1
+	localmake "oldState turtleState
+	localmake "zPerFrame 0.8
+	localmake "numFrames int (20 - :z1) / :zPerFrame
+	localmake "startColor "white
+	stripes :height :height ["#888]
+	jumpForward :height / 2
+	setPenColor :startColor
+	repeat :numFrames [
+		localmake "z 1 + (:numFrames + :z1 - repcount) * :zPerFrame
+		if :z > 0 [
+			drawFrame :height / :z
+		]
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+make "t interpolateRatio easeInOut animation.clampedTimeRatio
+make "z :t * -50
+opArtPillowRide 100 :z
+
+to animation.snapshotstyle
+	output createPList2 [
+		["position.y 50]
+		["zoom.scale 12]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 20
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

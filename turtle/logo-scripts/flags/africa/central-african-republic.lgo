@@ -1,0 +1,22 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Central_African_Republic#/media/File:Flag_of_the_Central_African_Republic.svg
+to centralAfricanRepublicFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 3 / 2
+	localmake "A (107 - 9 * sqrt 5) / 16
+	localmake "AScaled :height * :A / 40
+	localmake "flagYellow "#ffce00
+	stripes :width :height [:flagYellow "#289728 "white "#003082]
+	stripes :height / 4 :height ["#d21034]
+	jumpForward :height - :AScaled
+	jumpLeft :width / 2 - :height * 10 / 40
+	setPenSize 0
+	setFillColor :flagYellow
+	regularStar :height * 9 / 2 / 40 5
+	setTurtleState :oldState
+end
+
+; avoiding a white background will help the white stripe stand out.
+setScreenColor "#ddd
+
+centralAfricanRepublicFlag 100

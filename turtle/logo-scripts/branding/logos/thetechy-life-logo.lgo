@@ -1,0 +1,76 @@
+to drawLightbulb :height
+	localmake "oldState turtleState
+	localmake "baseRadius :height * 0.15
+	localmake "baseLineThickness :height * 0.115
+	localmake "baseLen :height * 0.285
+	localmake "bulbArcsInfo [
+		[0.16] [85 0.04] [-45 0.12] [140 0.366] [0.006996374]
+	]
+	setFillColor "#3f5c6c
+	jumpForward :baseRadius
+	circle :baseRadius
+	setPenColor "#547580
+	setLineCap "round
+	jumpForward :height * 0.022
+	localmake "baseTop pos
+	jumpLeft :baseLen / 2
+	setPenSize :baseLineThickness
+	right 90
+	forward :baseLen
+	jumpTo :baseTop
+	jumpLeft penSize / 2
+	setFillColor "#f0c419
+	setPenSize 0
+	polyStart
+	arcLines :bulbArcsInfo :height
+	arcLines reverse :bulbArcsInfo :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+to drawCheckmark :height
+	localmake "oldState turtleState
+	localmake "thickness :height * 0.22
+	localmake "shortLen :height * 0.29
+	localmake "angle1 37
+	localmake "angle 90 - :angle1
+	localmake "longLen (:height - :thickness) / sin :angle
+	setPenSize :thickness
+	setPenColor "#24ae5f
+	setLineCap "round
+	setLineJoinStyle "round
+	jumpLeft (:shortLen * (cos :angle1) + :longLen * sin :angle) / 2
+	jumpForward :thickness / 2 + :shortLen * sin :angle1
+	right 90 + :angle1
+	forward :shortLen
+	left 90
+	forward :longLen
+	setTurtleState :oldState
+end
+
+; Inspired by favicon at
+; https://thetechy.life
+to thetechylife :height
+	localmake "oldState turtleState
+	localmake "squareSize :height * 0.75
+	localmake "outerRadius :height * 0.085
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	setFillColor "#2fa8cc
+	roundRect :squareSize :squareSize :height * 0.05
+	repeat 4 [
+		jumpForward :height / 2 - :outerRadius
+		circle :outerRadius
+		jumpTo :center
+		right 360 / 4
+	]
+	jumpBackward :height * 0.31
+	drawLightbulb :height * 0.604
+	jumpForward :height * 0.295
+	jumpRight :height * 0.015
+	drawCheckmark :height * 0.17
+	setTurtleState :oldState
+end
+
+thetechylife 100

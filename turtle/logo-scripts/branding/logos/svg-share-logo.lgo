@@ -1,0 +1,231 @@
+; Inspired by:
+; https://svgshare.com/static/sharelogo.svg
+; That is the logo for:
+; https://svgshare.com/
+; svgshare.com is a place for sharing free SVG images.
+
+; You can share your drawings there too.
+; You can export your drawings as SVG by:
+; 1. Click Drawing -> Download.
+; 2. If prompted for export type, select "2D Drawing or Image".
+; 3. Under format, select SVG.
+
+to letterS :fontHeight
+	localmake "oldState turtleState
+	localmake "penSize1 :fontHeight * 0.01
+	localmake "smallRadius :fontHeight * 0.125
+	localmake "largeRadius :smallRadius * 2.3
+	setPenSize :penSize1
+	jumpForward :largeRadius + :penSize1 / 2
+	jumpRight :penSize1 / 2
+	right 180
+	polyStart
+	arcLeft 270 :largeRadius
+	arcRight 270 :smallRadius
+	jumpLeft :largeRadius - :smallRadius
+	left 180
+	arcLeft 270 :largeRadius
+	arcRight 270 :smallRadius
+	polyEnd
+	setTurtleState :oldState
+end
+
+to letterV :fontHeight
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "penSize1 :fontHeight * 0.01
+	localmake "angle1 168.3
+	localmake "angle2 :angle1 - 90
+	localmake "slantHeight (:fontHeight - :penSize1) / sin :angle2
+	localmake "thickness :fontHeight * 0.17
+	localmake "slantHeight2 :slantHeight - :thickness / 2 / cos :angle2
+	setPenSize :penSize1
+	jumpForward :fontHeight - :penSize1 / 2
+	jumpRight :penSize1 / 2 / sin :angle2
+	right :angle1
+	polyStart
+	jumpForward :slantHeight
+	setHeading :oldHeading + 90
+	jumpForward :thickness
+	left :angle2
+	jumpForward :slantHeight
+	setHeading :oldHeading - 90
+	jumpForward :thickness
+	left :angle2
+	jumpForward :slantHeight2
+	setHeading :oldHeading + :angle1 - 180
+	jumpForward :slantHeight2
+	polyEnd
+	setTurtleState :oldState
+end
+
+to letterG :fontHeight
+	localmake "oldState turtleState
+	localmake "penSize1 :fontHeight * 0.01
+	localmake "innerRadius :fontHeight * 0.126
+	localmake "outerRadius :innerRadius * 2.3
+	localmake "thickness :outerRadius - :innerRadius
+	localmake "size1 :fontHeight * 0.29
+	localmake "size3 :fontHeight - :penSize1 - 2 * :outerRadius
+	setPenSize :penSize1
+	jumpForward :outerRadius + :penSize1 / 2
+	jumpRight :penSize1 / 2
+	right 180
+	polyStart
+	arcLeft 180 :outerRadius
+	jumpForward :size1
+	jumpLeft :outerRadius
+	jumpBackward :thickness
+	jumpRight :outerRadius - :thickness
+	jumpBackward :size1 - :thickness
+	right 180
+	arcRight 180 :innerRadius
+	jumpForward :size3
+	arcRight 180 :innerRadius
+	jumpLeft :thickness
+	left 180
+	arcLeft 180 :outerRadius
+	polyEnd
+	setTurtleState :oldState
+end
+
+to connectionPath :size
+	localmake "oldState turtleState
+	localmake "radius :size * 0.09
+	localmake "thickness :radius * 1.25
+	localmake "angle 31
+	localmake "startAngle :angle - 23.5
+	localmake "neckAngle 2 * arcSin :thickness / 2 / :radius 
+	localmake "angle2 360 - :neckAngle
+	localmake "angle3 90 - :neckAngle / 2
+	localmake "penSize1 :size * 0.027
+	setPenColor "black
+	setPenSize :penSize1
+	setFillColor "white
+	jumpRight :size / 2 - :penSize1 / 2 - :radius * (1 + cos :startAngle)
+	jumpForward :size * 0.305 - :radius * sin :startAngle
+	right 180 - :startAngle
+	polyStart
+	arcLeft :angle2 :radius
+	right :angle3
+	jumpForward :size * 0.22
+	right 180 - :angle * 2
+	jumpForward :size * 0.215
+	right :angle3
+	arcLeft :angle2 :radius
+	right :angle3
+	jumpForward :size * 0.245
+	right :angle3
+	arcLeft 220 :radius
+	polyEnd
+	setTurtleState :oldState
+end
+
+to backgroundAreas :size
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "oldPos pos
+	localmake "cornerRadius :size * 0.04
+	localmake "cornerRadius2 :size * 0.045
+	localmake "cornerRadius3 :size * 0.052
+	localmake "size1 :size - :cornerRadius * 2
+	localmake "size2 :size * 0.405
+	localmake "size3 :size * 0.803
+	setFillColor "#f90
+	setPenSize 0
+	jumpForward :cornerRadius
+	jumpLeft :size / 2
+	localmake "lowerLeftCorner pos
+	polyStart
+	repeat 4 [
+		jumpForward :size1
+		arcRight 90 :cornerRadius
+	]
+	polyEnd
+	setFillColor "#de8500
+	jumpTo :oldPos
+	setHeading :oldHeading + 90
+	polyStart
+	arcLeft 63 :size * 0.185
+	right 80
+	arcLeft 124 :size * 0.19
+	right 79.8
+	arcLeft 62 :size * 0.1802
+	setHeading :oldHeading + 180
+	jumpForward :size *  0.4960171 - :cornerRadius
+	arcRight 90 :cornerRadius
+	polyEnd
+	setHeading :oldHeading
+	jumpTo :oldPos
+	jumpForward :size * 0.3682
+	right 90
+	polyStart
+	arcRight 18.6 :size * 0.185
+	left 81
+	arcRight 20 :size * 0.185
+	left 102
+	jumpForward :size * 0.1208
+	polyEnd
+	setFillColor "#ffb13b
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpLeft :size / 2
+	jumpForward :size * 0.52
+	right 7
+	polyStart
+	arcRight 62 :size * 0.185
+	left 26.5
+	jumpForward :size * 0.37
+	right 1.2616
+	arcRight 45.96 :size * 0.185
+	setHeading :oldHeading - 90
+	jumpForward :size / 2 - :cornerRadius
+	arcLeft 90 :cornerRadius
+	polyEnd
+	setFillColor "black
+	jumpTo :lowerLeftCorner
+	setHeading :oldHeading + 90
+	jumpLeft :size * 0.009
+	jumpForward :size * 0.035
+	localmake "lowerLeftCorner2 pos
+	polyStart
+	jumpForward :size2
+	arcLeft 90 :cornerRadius2
+	jumpForward :size3
+	arcLeft 90 :cornerRadius2
+	jumpForward :size2
+	polyEnd
+	setFillColor "#4fff
+	jumpTo :lowerLeftCorner2
+	setHeading :oldHeading + 180
+	jumpBackward :size * 0.092
+	jumpLeft :size * 0.042
+	polyStart
+	arcLeft 90 :cornerRadius3
+	jumpForward :size * 0.105
+	left 89
+	arcRight 9.08 :size * 5.2
+	setHeading :oldHeading - 90
+	jumpForward :size * 0.184
+	arcLeft 90 :cornerRadius3
+	polyEnd
+	setTurtleState :oldState
+end
+
+to svgShareLogo :height
+	localmake "fontHeight :height * 0.401
+	backgroundAreas :height
+	connectionPath :height
+	jumpLeft :height * 0.035
+	left 90
+	setFillColor "white
+	setPenColor "black
+	jumpRight :height * 0.143
+	letterS :fontHeight
+	jumpRight :fontHeight * 0.58
+	letterV :fontHeight
+	jumpRight :fontHeight * 0.582
+	letterG :fontHeight
+end
+
+svgShareLogo 100

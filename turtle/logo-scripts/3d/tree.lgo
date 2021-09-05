@@ -1,0 +1,23 @@
+to tree :size
+	localmake "oldPos pos
+	setPenColor mix "#820 "lime power :size / 50 0.3
+	forward :size
+	if :size > 3 [
+		localmake "oldState turtleState
+		localmake "angle 30
+		localmake "smallerSize :size * 0.6
+		left :angle
+		tree :smallerSize
+		right :angle * 2
+		tree :smallerSize
+		left :angle
+		pitchUp :angle
+		tree :smallerSize
+		pitchDown :angle * 2
+		tree :smallerSize
+		setTurtleState :oldState
+	]
+	jumpTo :oldPos
+end
+
+tree 50

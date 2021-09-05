@@ -1,0 +1,41 @@
+; Inspired by logo at
+; https://www.weddingwire.ca/
+to weddingWireLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "thickness :height * 0.032
+	localmake "radius1 (:height - :thickness) / 2
+	localmake "commonRadius :height * 0.073
+	localmake "arcAngle 43
+	localmake "arcRadius :height * 0.74
+	localmake "size1 :commonRadius * 0.31
+	setLineCap "butt
+	jumpForward :height / 2
+	setPenSize :thickness
+	setPenColor "#1AB3BC
+	setFillColor transparent
+	circle :radius1
+	jumpBackward :height * 0.34
+	localmake "basePosition pos
+	setLineCap "butt
+	forward :height * 0.3633
+	jumpForward :height * 0.0875
+	setFillColor penColor
+	setPenSize 0
+	circle :height * 0.059
+	jumpForward :height * 0.1527
+	circle :commonRadius
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		jumpTo :basePosition
+		setHeading :oldHeading
+		setPenSize :thickness
+		arcLeft :arcAngle * :sign :arcRadius
+		jumpRight :size1 * :sign
+		setPenSize 0
+		circle :commonRadius
+	]
+	setTurtleState :oldState
+end
+
+weddingWireLogo 100

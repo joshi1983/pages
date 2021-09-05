@@ -1,0 +1,44 @@
+<code>print distanceToLines []
+; prints -1
+; because there is no intersection with the specified lines.
+; There are no lines to intersect with.
+
+print distanceToLines [[[0 100] [100 100]]]
+; prints 100
+; because the distance from position [0 0 0](home) on heading 0 
+; to a horizontal intersecting x=0, y=100.
+
+print distanceToLines [[[0 10] [100 10]]]
+; prints 10
+; because the horizontal line is up 10.
+
+print distanceToLines [[[0 100] [50 50]]]
+; prints 100
+; because the distance from position [0 0 0](home) on heading 0 
+; to a diagonal line intersecting x=0, y=100.</code>
+<code>make "lines []
+; Calculate some random lines.
+repeat 5 [
+	make "pos1 [random 100 random 100]
+	make "pos2 [random 100 random 100]
+	jumpTo :pos1
+	circle 1
+	setHeading towards :pos2
+	jumpBackward 100
+	circle 1
+	forward (distance :pos2) * 2
+	queue2 "lines [:pos1 :pos2]
+]
+
+setPenColor "red
+setLineJoinStyle "round
+; Draw some red lines from [0 0] in many different headings 
+; to the nearest intersection with the lines.
+repeat 100 [
+	jumpTo [0 0]
+	setHeading 360 * repRatio
+	make "d distanceToLines :lines
+	if :d > 0 [
+		forward :d
+	]
+]</code>

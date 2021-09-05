@@ -1,0 +1,47 @@
+to fillFlame :height
+	setPenSize 0
+	drawArcLineShape [0.04 1
+		[
+			[-163 0] [17 0.8] [-6.4 3] [-150 0.342]
+			[-110 0.39] [-98 0] [-16 0.8] [165 0]
+			[-31.59 0.994279]
+		]
+		] :height
+end
+
+to getYellowFlameGradient :height
+	localmake "oldState turtleState
+	localmake "colorStops createPList2 [
+		[0 "#FFEB7A] [1 "#F9C91A]
+	]
+	jumpForward :height
+	right 140
+	jumpForward :height * 0.2
+	localmake "fromPos pos
+	jumpForward :height * 0.15
+	localmake "result createLinearGradient :fromPos pos :colorStops "pad
+	setTurtleState :oldState
+	output :result
+end
+
+; Inspired by logo at
+; https://www.uubyte.com
+to uubyteLogo :height
+	localmake "oldState turtleState
+	localmake "uubyteBlue "#209cdc
+	localmake "yellowFlameHeight :height * 0.235
+	jumpForward :height / 2
+	setPenColor :uubyteBlue
+	setPenSize :height * 0.152
+	setFillColor transparent
+	circle (:height - penSize) / 2
+	setFillColor :uubyteBlue
+	jumpBackward :height * 0.25
+	fillFlame :height * 0.52
+	jumpForward :height * 0.005
+	setFillGradient getYellowFlameGradient :yellowFlameHeight
+	fillFlame :yellowFlameHeight
+	setTurtleState :oldState
+end
+
+uubyteLogo 100

@@ -1,0 +1,9 @@
+; copied from https://leonisx.itch.io/nextbasic-examples
+; Andy C Spencer.zip
+#autostart 10
+10 BORDER 0: PAPER 0: INK 4: CLS : RUN AT 3: SPRITE CLEAR
+20 LOAD "MatrixFont.spr" BANK 12: SPRITE PRINT 1: SPRITE BORDER 0: SPRITE BANK 12
+30 LET %g=63 : FOR %a=0 TO %g: PROC s(%a) : NEXT %a
+40 REPEAT : FOR %a=0 TO %g: SPRITE %a,%x[a],%y[a],% RND 63,1: LET %y[a]=%y[a]+s[a]: IF %y[a] > 224 THEN PROC s(%a)
+50 NEXT %a: REPEAT UNTIL 0
+60 DEFPROC s(%a):%x[a]=%32+ RND 240:%y[a]=% RND 16:%s(a)=%4+ RND 4: ENDPROC

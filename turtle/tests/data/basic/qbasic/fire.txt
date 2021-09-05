@@ -1,0 +1,31 @@
+REM copied from https://www.bamsoftware.com/bzr/qbasic/fire.bas
+DECLARE SUB delay (seconds!)
+SCREEN 13
+DIM map(32, 32)
+FOR x = 1 TO 32
+FOR y = 1 TO 32
+map(x, y) = 16
+NEXT
+NEXT
+
+FOR x = 1 TO 80
+map(RND * 32, RND * 32) = INT(RND * 17) + 16
+NEXT
+WHILE 1
+FOR x = 1 TO 32
+FOR y = 1 TO 32
+IF INT(map(y, x)) > 16 THEN
+map(y - 1, x) = INT((map(y, x) + map(y - 1, x)) / 2)
+map(y, x) = map(y, x) - 1
+END IF
+PSET (x, y), map(y, x)
+NEXT
+NEXT
+delay 0.1
+WEND
+
+SUB delay (seconds!)
+start# = TIMER
+DO WHILE TIMER - start# < seconds!
+LOOP
+END SUB

@@ -1,0 +1,77 @@
+<code>; The myDrawArcLineShapes works the same way as the built in drawArcLineShapes command.
+; The drawArcLineShapes command is available so you don't need to implement it yourself.
+; Reviewing this implementation could help you implement something similar using procedures, though.
+to myDrawArcLineShapes :shapes :scale
+	localmake "oldHeading heading
+	localmake "oldPos pos
+	repeat count :shapes [
+		localmake "shapeInfo item repcount :shapes
+		jumpRight :scale * first :shapeInfo
+		jumpForward (abs :scale) * item 2 :shapeInfo
+		polyStart
+		arcLines item 3 :shapeInfo :scale
+		polyEnd
+		setHeading :oldHeading
+		jumpTo :oldPos
+	]
+end
+
+; The myDrawArcLineShapes2 is another way to do the same as myDrawArcLineShapes.
+; This makes use of the drawArcLineShape command which is closely related to drawArcLineShapes.
+to myDrawArcLineShapes2 :shapes :scale
+	repeat count :shapes [
+		localmake "shapeInfo item repcount :shapes
+		drawArcLineShape :shapeInfo :scale
+	]
+end
+
+setFillColor "red
+
+; Draws a red circle
+myDrawArcLineShapes [
+	[1 0 [[360 1]]]
+] 100
+
+setFillColor "green
+make "shapesInfo [
+	[0.5 0.3 [[360 0.2]]] ; small circle
+
+	; Draws a heart-like shape
+	[-0.3 0.3 [
+		[45 0] ; same as left 45.
+		[0.2] ; same as jumpForward 0.2 * :scale.
+		[-180 0.1] ; arcRight 120 0.1 * :scale
+		[90 0] ; same as left 60
+		[-180 0.1] ; arcRight 120 0.1 * :scale
+	]]
+]
+; Draws a green shapes
+myDrawArcLineShapes :shapesInfo 100
+
+jumpRight 100
+setFillColor "purple
+; This will draw a red shape that looks 
+; the same as the green one to its left.
+; This demonstrates how similar the two procedures are.
+myDrawArcLineShapes2 :shapesInfo 100</code>
+<code>setFillColor "red
+
+; Draws a red circle
+drawArcLineShapes [
+	[1 0 [[360 1]]]
+] 100
+
+setFillColor "green
+; Draws a green shapes
+drawArcLineShapes [
+	[0.5 0.3 [[360 0.2]]] ; small circle
+
+	; Draws a heart-like shape
+	[-0.3 0.3 [
+		[45 0] ; same as left 45.
+		[0.2] ; same as jumpForward 0.2 * :scale.
+		[-180 0.1] ; arcRight 120 0.1 * :scale
+		[90 0] ; same as left 60
+		[-180 0.1] ; arcRight 120 0.1 * :scale
+	]]
+] 100</code>

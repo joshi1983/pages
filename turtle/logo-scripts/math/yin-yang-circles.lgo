@@ -1,0 +1,31 @@
+; Inspired by drawing at:
+; https://ca.pinterest.com/pin/801359327475002715
+; In case that link becomes unavailable, it was uploaded by
+; an account named IL GRANDE TATTOO.
+to yinYangCircles :height
+	localmake "oldState turtleState
+	localmake "circleSeparation :height * 0.58
+	localmake "radius1 :height * 0.15
+	localmake "height1 :circleSeparation + 2 * :radius1
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize :height * 0.007
+	setFillColor transparent
+	roundRect :height * 0.585 :height - penSize :height * 0.017
+	repeat 4 [
+		localmake "width :height * mix 0.46 0.21 repRatio
+		localmake "radius2 :radius1 * item repcount [0.7 0.9 1 1]
+		roundRect :width :height1 :radius2
+	]
+	repeat 2 [
+		jumpForward :height1 / 2 - :radius1 * 0.7
+		circle :height * 0.06
+		jumpTo :center
+		right 180
+		setFillColor penColor
+	]
+
+	setTurtleState :oldState
+end
+
+yinYangCircles 100

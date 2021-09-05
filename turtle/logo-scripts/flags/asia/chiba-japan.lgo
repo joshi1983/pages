@@ -1,0 +1,70 @@
+make "arcAngle1 14.5
+make "largeArcRadiusFactor 1/3
+make "largeArcAngle 180 - 2 * :arcAngle1
+make "topCircleRadiusFactor 1 / 15
+make "topCircleOffsetFactor 0.3112
+
+to chibaEmblem :height :color
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "largeArcRadius :height * :largeArcRadiusFactor
+	localmake "innerArcAngle :largeArcAngle * 0.615
+	localmake "innerArcRadius (:largeArcRadius * sin :largeArcAngle / 2) / sin :innerArcAngle / 2
+	localmake "len 2 * ((:largeArcRadius * sin :arcAngle1) +
+		:innerArcRadius * (1 - cos :innerArcAngle / 2))
+	setPenSize 0
+	setFillColor :color
+	jumpForward :height / 2
+	localmake "center pos
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		setHeading :oldHeading + :arcAngle1 * :sign
+		jumpForward :largeArcRadius
+		right 90 * :sign
+		polyStart
+		arcLeft -:sign * :largeArcAngle :largeArcRadius
+		right (180 + (:innerArcAngle - :largeArcAngle) / 2) * :sign
+		arcLeft :sign * :innerArcAngle :innerArcRadius
+		polyEnd
+		jumpTo :center
+	]
+	repeat 2 [
+		setHeading :oldHeading + 90 * repcount
+		jumpBackward :len / 2
+		arcPair :len 82
+		jumpTo :center
+	]
+
+	jumpTo :center
+	setHeading :oldHeading
+	jumpForward :height * 0.3112
+	circle :height / 15
+	setTurtleState :oldState
+end
+
+; Inspired by flag at:
+; https://commons.wikimedia.org/wiki/File:Flag_of_Chiba,_Chiba.svg
+; Chiba is a city in Japan.
+to chibaCityFlag :height
+	localmake "oldState turtleState
+	stripes :height * 3 / 2 :height ["#00693f]
+	chibaEmblem :height "white
+	setTurtleState :oldState
+end
+
+to chibaBlackEmblem :height
+	localmake "oldState turtleState
+	localmake "offset 1/2 - (:largeArcRadiusFactor * sin :largeArcAngle / 2)
+	localmake "topOffset 0.5 - :topCircleOffsetFactor - :topCircleRadiusFactor
+	localmake "height1 :height / (1 - :offset - :topOffset)
+	jumpBackward :height1 * :offset
+	chibaEmblem :height1 "black
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 5
+jumpLeft :separation / 2
+chibaCityFlag :height
+jumpRight :separation
+chibaBlackEmblem :height

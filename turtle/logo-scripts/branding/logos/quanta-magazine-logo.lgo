@@ -1,0 +1,54 @@
+; Inspired by logo at:
+; https://www.quantamagazine.org
+to quantaMagazineLogo :height :color
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "outerRadius :height * 0.03
+	localmake "gap1 :height * 0.25
+	localmake "gap2 :height * 0.171
+	localmake "len1 :gap1
+	localmake "outerGap (:height / 2 - :outerRadius) / cos 30
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	setFillColor :color
+	repeat 6 [
+		jumpForward :gap1
+		circle :height * 0.052
+		jumpForward :gap2
+		circle :height * 0.037
+		jumpTo :center
+		right 180 / 6
+		jumpForward :outerGap
+		circle :outerRadius
+		jumpTo :center
+		right 180 / 6
+	]
+	setHeading :oldHeading
+	jumpForward :gap1
+	left 120
+	setPenSize :height * 0.019
+	setPenColor :color
+	repeat 4 [
+		forward :len1
+		left 60
+	]
+	right 120
+	forward :gap2
+	setTurtleState :oldState
+end
+
+to quantaMagazineWhiteOnBlackLogo :height
+	localmake "oldState turtleState
+	localmake "innerHeight :height * 0.8
+	stripes :height * 1.2 :height ["black]
+	jumpForward (:height - :innerHeight) / 2
+	quantaMagazineLogo :innerHeight "white
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 5
+quantaMagazineLogo :height "black
+jumpRight :separation
+quantaMagazineWhiteOnBlackLogo :height

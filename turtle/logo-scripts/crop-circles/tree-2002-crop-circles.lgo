@@ -1,0 +1,68 @@
+make "darkColor "#680
+make "shrinkRatio 0.5
+make "shrinkRatios [0.35 0.5 0.7 0.8 0.5]
+
+to drawTree :thickness :len :iterationCount
+	localmake "oldState turtleState
+	localmake "angle 60
+	ifelse :iterationCount > count :shrinkRatios [
+		setPenSize 0
+		circle :len
+	] [
+		setPenSize :thickness
+		forward :len
+		left :angle
+		localmake "thickness :thickness * :shrinkRatio
+		localmake "len :len * item :iterationCount :shrinkRatios
+		localmake "iterationCount :iterationCount + 1
+		drawTree :thickness :len :iterationCount
+		right :angle * 2
+		drawTree :thickness :len :iterationCount
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://www.pinterest.ca/pin/388576274111146449/
+; This was reported in August 15, 2002.
+; This was located in Farley Mount, Hampshire
+to tree2002CropCircles :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "lightColor "#ffa
+	localmake "arcAngle 80
+	localmake "arcRadius :height / 2
+	localmake "baseWidth :arcRadius * 2 * sin :arcAngle / 2
+	localmake "trunkWidth :height * 0.03
+	localmake "trunkArcRadius :height * 0.05
+	setFillColor transparent
+	setPenColor :lightColor
+	setPenSize :height * 0.05
+	jumpForward :height / 2
+	circle (:height - penSize) / 2
+	jumpBackward :arcRadius * cos :arcAngle / 2
+	localmake "basePos pos
+	jumpLeft :baseWidth / 2
+	setFillColor :lightColor
+	setPenSize 0
+	polyStart
+	right 90 + :arcAngle / 2
+	arcLeft :arcAngle :arcRadius
+	setHeading :oldHeading
+	jumpLeft (:baseWidth - :trunkWidth) / 2 - :trunkArcRadius
+	left 90
+	arcRight 90 :trunkArcRadius
+	jumpLeft :trunkWidth
+	right 180
+	arcRight 90 :trunkArcRadius
+	polyEnd
+	setHeading :oldHeading
+	jumpTo :basePos
+	setLineJoinStyle "miter
+	setLineCap "butt
+	drawTree :trunkWidth :height * 0.45 1
+	setTurtleState :oldState
+end
+
+setScreenColor :darkColor
+tree2002CropCircles 100

@@ -1,0 +1,80 @@
+
+; Inspired by:
+; https://ca.pinterest.com/pin/357191814210063335
+to dotGrid :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "dotRadius :height * 0.02
+	localmake "thickness :height * 0.001
+	localmake "color "white
+
+	; The lines in the grid are not perfectly straight.
+	; That is why this data is used to 
+	; represent where the points are.
+	;
+	; If the lines were perfectly straight, we could 
+	; calculate positions without extra data.
+	localmake "points [
+		[0 0.178] [0.17 0.167] [0 0.343]
+		[0.163 0.32]
+	]
+	localmake "edges [
+		[1 2] [2 3] [2 4] [3 4] [4 5]
+	]
+	localmake "lastPoint last :points
+	localmake "len3 :height * hypot :lastPoint
+	localmake "angle arcTan2 last :lastPoint first :lastPoint
+	localmake "offset :len3 * cos 45 - :angle
+	localmake "len :len3 * 2 * sin 45 - :angle 
+	setPenColor :color
+	setPenSize 0
+	jumpForward :height / 2
+	localmake "center pos
+	setFillColor :color
+	circle :height * 0.085
+	repeat 4 [
+		stripes :thickness :height / 2 - :dotRadius [:color]
+		jumpForward :height / 2 - :dotRadius
+		circle :dotRadius
+		localmake "pos1 pos
+		repeat 2 [
+			localmake "sign sign repcount - 1.5
+			localmake "points2 []
+			setPenSize 0
+			repeat count :points [
+				localmake "point item repcount :points
+				jumpTo :center
+				jumpForward :height * last :point
+				jumpRight :height * :sign * first :point
+				circle :dotRadius
+				queue2 "points2 pos
+			]
+			queue2 "points2 :pos1
+			setPenSize :thickness
+			repeat count :edges [
+				localmake "edge item repcount :edges
+				jumpTo item (first :edge) :points2
+				setPos item (last :edge) :points2
+			]
+		]
+		jumpTo :center
+		right 90
+	]
+	right 45
+	localmake "innerSquareSize :height * 2 * (cos 45) * last first :points
+	setFillColor transparent
+	square :innerSquareSize
+	repeat 4 [
+		setHeading :oldHeading + 45 + repcount * 360 / 4
+		jumpForward :offset
+		jumpLeft :len / 2
+		right 90
+		forward :len
+		jumpTo :center
+	]
+
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+dotGrid 100

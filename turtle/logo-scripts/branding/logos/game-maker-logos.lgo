@@ -1,0 +1,55 @@
+to gameMakerLogoCustomColor :height
+	localmake "oldState turtleState
+	localmake "size1 :height * 0.2143
+	setPenSize 0
+	jumpForward :height / 2
+	polyStart
+	jumpRight :size1
+	jumpBackward :height / 2 - :size1
+	left 135
+	jumpForward :size1 / cos 45
+	repeat 3 [
+		right 90
+		jumpForward :height / 2 / cos 45
+	]
+	right 135
+	jumpForward :height / 2 - :size1
+	right 45
+	repeat 3 [
+		jumpForward :size1 / cos 45
+		left 90
+	]
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by logo at
+; https://en.wikipedia.org/wiki/GameMaker#/media/File:GameMaker_Logo.svg
+to gameMakerBlack :height
+	setFillColor "black
+	gameMakerLogoCustomColor :height
+end
+
+; Inspired by one of the logos at
+; https://www.youtube.com/@GameMakerEngine
+to gameMakerWhite :height
+	stripes :height * 3 :height ["black]
+	setFillColor "white
+	gameMakerLogoCustomColor :height
+end
+
+; Inspired by one of the logos at
+; https://www.youtube.com/@GameMakerEngine
+to gameMakerPink :height
+	setFillColor "#fe8083
+	gameMakerLogoCustomColor :height
+end
+
+make "height 100
+make "separation :height * 4
+jumpLeft :separation
+gameMakerBlack :height
+jumpRight :separation
+gameMakerWhite :height
+jumpRight :separation
+gameMakerPink :height

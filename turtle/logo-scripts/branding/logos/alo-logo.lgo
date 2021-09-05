@@ -1,0 +1,71 @@
+make "thicknessFactor 0.12
+make "radiusFactor 0.245
+
+to drawA :height
+	localmake "oldState turtleState
+	localmake "radius :height * :radiusFactor
+	localmake "thickness :height * :thicknessFactor
+	setFillColor transparent
+	setPenSize :thickness
+	jumpForward :radius + penSize / 2
+	setLineCap "round ; to make sure there is at least a small overlap between arcs.
+	; We don't want background colors creeping through from antialiasing artifacts.
+	arc -180 :radius
+	ellipseArc 180 :radius * 0.92 :radius 0
+	jumpRight :radius
+	setPenSize 0
+	setFillColor penColor
+	rect :thickness :radius * 2.3
+	setTurtleState :oldState
+end
+
+to drawL :height
+	localmake "oldPos pos
+	localmake "lowerGap :height * 0.023
+	jumpForward :lowerGap
+	stripes :height * :thicknessFactor :height - :lowerGap [penColor]
+	jumpTo :oldPos
+end
+
+to drawO :height
+	localmake "oldState turtleState
+	localmake "thickness :height * 0.12
+	localmake "radius :height * :radiusFactor
+	setPenSize :height * :thicknessFactor
+	setFillColor transparent
+	jumpForward :radius + :thickness / 2
+	ellipse :radius * 0.97 :radius
+	setTurtleState :oldState
+end
+
+; Inspired by the log at
+; https://www.aloyoga.com
+to aloLogo :height :color
+	localmake "oldState turtleState
+	setPenColor :color
+	drawL :height
+	jumpLeft :height * 0.454
+	drawA :height
+	jumpRight :height * 0.877
+	drawO :height
+	setTurtleState :oldState
+end
+
+; Inspired by favicon(browser tab icon) in:
+; https://www.aloyoga.com
+to aloFavicon :height
+	localmake "oldState turtleState
+	localmake "innerHeight :height * 0.62
+	stripes :height :height ["black]
+	jumpForward :height * 0.222
+	jumpRight :height * 0.01
+	aloLogo :innerHeight "white
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 5
+jumpLeft :separation / 2
+aloLogo :height "black
+jumpRight :separation
+aloFavicon :height

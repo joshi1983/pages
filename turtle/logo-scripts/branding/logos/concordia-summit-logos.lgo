@@ -1,0 +1,40 @@
+; Inspired by logo at:
+; https://www.concordia.net
+to concordiaSummitLogo :height :color
+	localmake "oldState turtleState
+	localmake "gapFromTopRatio 0.5
+	localmake "shape [0.076 :gapFromTopRatio
+		[[-99 0] [0.0286] [-29.6 0] [0.127] [-169 0]
+		[20 0.115] [20 0.2] [12 0.5] [4 0.7] [2.5 1] [3 1.2]
+		[1.5 1.65] [1.2 1.7]
+		]
+	]
+	localmake "numAngles 12
+	setPenSize 0
+	setFillColor :color
+	jumpForward :height * (1 - :gapFromTopRatio)
+	repeat :numAngles [
+		drawArcLineShape :shape :height
+		right 360 / :numAngles
+	]
+	setTurtleState :oldState
+end
+
+to concordiaWhiteOnBlackLogo :height
+	localmake "oldState turtleState
+	localmake "innerHeight :height * 0.9
+	stripes :height * 1.5 :height ["black]
+	jumpForward (:height - :innerHeight) / 2
+	concordiaSummitLogo :innerHeight "white
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 4
+jumpLeft :separation
+make "colors ["#a30046 "black]
+repeat count :colors [
+	concordiaSummitLogo :height item repcount :colors
+	jumpRight :separation
+]
+concordiaWhiteOnBlackLogo :height

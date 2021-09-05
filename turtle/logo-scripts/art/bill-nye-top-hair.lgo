@@ -1,0 +1,74 @@
+; Inspired by photo at:
+; https://crosscut.com/2017/11/bill-nye-the-science-guy-new-documentary-climate-science
+
+; Used for a crosshatching pattern
+to straightJaggedEdgePath :len :width :numPoints
+	localmake "step :len / :numPoints
+	localmake "angle arcTan :width / (:step * 0.5)
+	localmake "sideStepLength :step * 0.5 / cos :angle
+	repeat :numPoints [
+		right :angle
+		jumpForward :sideStepLength
+		left :angle * 2
+		jumpForward :sideStepLength
+		right :angle
+	]
+end
+
+to arc2JaggedEdgePath :angle :radius :jaggedWidth :numPoints
+	localmake "stepAngle :angle / :numPoints
+	localmake "step 2 * :radius * sin (:stepAngle * 0.5)
+	repeat :numPoints [
+		straightJaggedEdgePath :step :jaggedWidth 1
+		right :stepAngle
+	]
+end 
+
+to arcLeftJaggedEdgePath :angle :radius :jaggedWidth :numPoints
+	localmake "stepAngle :angle / :numPoints
+	localmake "step 2 * :radius * sin (:stepAngle * 0.5)
+	repeat :numPoints [
+		straightJaggedEdgePath :step :jaggedWidth 1
+		left :stepAngle
+	]
+end
+
+to drawHairBackgroundGradient1 :nyeSize
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	left 21.15
+	jumpForward :nyeSize * 0.4065
+	localmake "fromPos pos
+	right 90
+	jumpForward :nyeSize * 0.29
+	localmake "colorStops createPList2 [
+		[0 "#463e39] [0.4 "#2f2120] [0.5 "#3d231e] [0.6 "#3c221b]
+		[0.7 "#381f17] [1 "#12090a]
+	]
+	setFillGradient createLinearGradient :fromPos pos :colorStops "pad
+	jumpTo :fromPos
+	setHeading :oldHeading
+	polyStart
+	arcLines [[-60 0] [-50 0.023] [-35 0.05] [60 0] [0.02] [85 0]
+		[-35 0.1] [60 0.04] [-150 0.016] [55 0.014] [-2 0.2] [-60 0.085]
+		[-5 0.1] [22 0.11] [-31 0] [-45 0.1] [30 0] [0.003] [130 0]
+		[38 0.03] [-90 0] [90 0.017] [8 0.2] [-30 0.06] [40 0.01] [17 0.05]
+		[-40 0.015] [45 0.01] [30 0.05]] :nyeSize
+	repeat 4 [
+		right 25
+		arcLeft 30 :nyeSize * 0.05
+	]
+	arcLines [[25 0.11] [-55 0] [50 0.055] [60 0.1] [13 0.2]] :nyeSize
+	polyEnd
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to drawBillNyeTopHair :nyeSize
+	drawHairBackgroundGradient1 :nyeSize
+end
+
+image 888 600 'weblogo://images/bill-nye-extended.jpg'
+setPenSize 0.1
+drawBillNyeTopHair 888
+;drawHairBackgroundGradient1 888

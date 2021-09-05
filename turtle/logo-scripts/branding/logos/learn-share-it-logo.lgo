@@ -1,0 +1,47 @@
+; Inspired by logo at
+; https://learnshareit.com
+to learnShareItLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "angle 45
+	localmake "colors [
+		["#6e008c "#30004e]
+		["#faa332 "#f46709]
+	]
+	localmake "width1 :height / 3
+	localmake "height1 :height * 0.1374362
+	setPenSize 0
+	jumpForward :height / 2
+	localmake "center pos
+	repeat 2 [
+		setHeading :oldHeading + repcount * 360 / 2
+		localmake "heading1 heading
+		localmake "colorInfo item repcount :colors
+		jumpLeft :height * 2 / 3
+		setFillColor first :colorInfo
+		polyStart
+		arcLines [
+			[-:angle 0] [0.42917] [:angle - 90 0] [1/3]
+			[90 - :angle 0] [0.278] [-90 0] [0.471] [-90 0]
+			[0.471] [-(90 + :angle) 0] [0.3321] [90 0]
+		] :height
+		localmake "pos1 pos
+		arcLines [[0.45]
+			[:angle 0] [0.2316388]] :height
+		polyEnd
+		jumpTo :pos1
+		setFillColor last :colorInfo
+		setHeading :heading1
+		polyStart
+		jumpLeft :width1
+		right :angle
+		jumpForward :height1 / cos :angle
+		setHeading :heading1 + 90
+		jumpForward :width1 - :height1 * tan :angle
+		polyEnd
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+learnShareItLogo 100

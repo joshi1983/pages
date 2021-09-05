@@ -1,0 +1,43 @@
+; Inspired by logo at:
+; https://en.wikipedia.org/wiki/Npm#/media/File:Npm-logo.svg
+to npmLogo :height :color
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "innerLines1 [10 2 0]
+	setPenColor :color
+	setPenSize :height / 7
+	setLineCap "butt
+	setLineJoinStyle "miter
+	jumpLeft penSize / 2
+	localmake "startPos pos
+	arcLines [
+		[1.5] [-90 0] [9] [90 0] [5]
+		[90 0] [17] [90 0] [5] [90 0]
+		[5] [-90 0] [1] [90 0] [3]
+	] penSize
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpLeft penSize * 5.5
+	jumpForward penSize
+	repeat count :innerLines1 [
+		stripes penSize penSize * 4 [penColor]
+		jumpRight penSize * item repcount :innerLines1
+	]
+	jumpTo :oldPos
+	jumpLeft penSize * 3.5
+	jumpForward penSize
+	repeat 2 [
+		stripes penSize penSize * 6 [penColor]
+		jumpRight penSize * 5
+	]
+
+	jumpTo :startPos
+	jumpForward penSize * 3
+	forward penSize * 2
+
+	setTurtleState :oldState
+end
+
+npmLogo 100 "#CB3837

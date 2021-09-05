@@ -1,0 +1,73 @@
+; Inspired by:
+; https://www.pinterest.ca/pin/1477812369704617/
+; A very similar design is at:
+; https://www.facebook.com/photo/?fbid=122119169834058368
+
+to gridPattern :size1 :size2 :angle
+	localmake "oldState turtleState
+	localmake "numLines 20
+	localmake "step1 :size1 / :numLines
+	localmake "step2 :size2 / :numLines
+	localmake "points []
+	; store points along 1 direction.
+	repeat :numLines [
+		queue2 "points pos
+		jumpForward :step1
+	]
+	right :angle
+	forward :size2
+	; draw line through one side of end-points.
+	jumpBackward :size2
+	repeat :numLines [
+		localmake "fromPos1 pos
+		localmake "toPos item repcount :points
+
+		setPos :toPos
+		jumpTo :fromPos1
+		jumpForward :step2
+	]
+	setTurtleState :oldState
+end
+
+to gridStringArt :size1 :size2 :angle :numGrids
+	repeat :numGrids [
+		gridPattern :size1 :size2 :angle
+		right 360 / :numGrids
+	]
+end
+
+to gridStringArtFull :size
+	setPenSize :size * 0.006
+	setPenColor "white
+	gridStringArt :size :size -90 8
+	setPenColor "red
+	gridStringArt :size :size 90 8
+end
+
+to gridStringArtFull2 :size
+	setPenSize :size * 0.006
+	setPenColor "white
+	gridStringArt :size :size -60 6
+	setPenColor "red
+	gridStringArt :size :size 60 6
+end
+
+to gridStringArtFull3 :size
+	localmake "size1 :size
+	localmake "size2 :size * tan 30
+	setPenSize :size * 0.006
+	setPenColor "white
+	gridStringArt :size1 :size2 -90 6
+	setPenColor "red
+	gridStringArt :size1 :size2 90 6
+end
+
+
+setScreenColor "black
+make "separation 300
+jumpLeft :separation
+gridStringArtFull 100
+jumpRight :separation
+gridStringArtFull2 85
+jumpRight :separation
+gridStringArtFull3 100

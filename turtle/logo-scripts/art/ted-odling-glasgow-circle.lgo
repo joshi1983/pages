@@ -1,0 +1,44 @@
+; Inspired by painting at:
+; https://ca.pinterest.com/pin/104708760081919677
+;
+; It is also shown at:
+; https://no.pinterest.com/pin/250653535495673688
+;
+; Those pins indicate that the original artist was Ted Odling
+; and the paintings were made in the 1970's.
+to tedOdlingGlasgowCircle :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "thickness1 0.43
+	localmake "thickness2 0.28
+	localmake "arcs [
+		["#1f43cf 62 :thickness1]
+		["#428e45 154 :thickness2]
+		["#ce1e14 123 1 - :thickness1 - :thickness2]
+	]
+	jumpForward :height / 2
+	setFillColor "black
+	setPenSize 0
+	circle :height / 2
+	setLineCap "butt
+	repeat 2 [
+		setHeading :oldHeading + 90 + 180 * repcount
+		localmake "arcRadius 0
+		repeat count :arcs [
+			localmake "arcInfo item repcount :arcs
+			setPenColor first :arcInfo
+			localmake "arcAngle item 2 :arcInfo
+			localmake "thickness :height / 2 * last :arcInfo
+			localmake "arcRadius :arcRadius + :thickness / 2
+			setPenSize :thickness
+			arc :arcAngle :arcRadius
+			localmake "arcRadius :arcRadius + :thickness / 2
+		]
+	]
+	setPenSize 0
+	setFillColor "white
+	circle :height * 0.017
+	setTurtleState :oldState
+end
+
+tedOdlingGlasgowCircle 100

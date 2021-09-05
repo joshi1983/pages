@@ -1,0 +1,30 @@
+! DemGroup
+
+! This demonstrates a group box, which is
+! really nothing more than a box with a title.
+
+LIBRARY "TrueCtrl.trc"
+
+CALL TC_Init
+
+CALL TC_Show (0)                  ! Use the default window
+CALL TC_Win_Active (0)            ! Move it to the front
+PRINT "Press ESC to quit."
+
+SET TEXT justify "left", "bottom"
+PLOT TEXT, AT .25, .5: "This was placed before the group box was displayed."
+PAUSE 2
+CALL TC_Groupbox_Create (gbid, "This is a group box", .3, .7, .2, .7)
+PLOT TEXT, AT .37, .4: "Note: the box is opaque."
+
+DO
+   CALL TC_Event (0, event$, window, x1, x2)
+
+   IF event$ = "HIDE" then EXIT DO
+   IF event$ = "KEYPRESS" and x1 = 27 then EXIT DO
+
+LOOP
+
+CALL TC_Cleanup
+
+END

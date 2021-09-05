@@ -1,0 +1,96 @@
+; This program includes procedures 
+; inspired by drawings in a book.
+; The book is called Logo for the Apple II/IIe/IIc.
+; The book was published in 1984.
+; The book was written by Maryann Marrapodi.
+; 
+; A digital version of the book is at:
+; https://archive.org/details/marrapodi-1984-logo-for-the-apple-ii-iie-iic/page/n1/mode/2up
+
+
+to drawMouth :height
+	localmake "oldState turtleState
+	localmake "height1 :height - penSize
+	localmake "angle 35
+	localmake "len1 :height1 / sin :angle
+	setLineJoinStyle "round
+	setLineCap "round
+	jumpLeft 3 * :height1 / tan :angle
+	right 90 + :angle
+	repeat 3 [
+		forward :len1
+		left :angle * 2
+		forward :len1
+		right :angle * 2
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by a figure near the bottom of page 60 from the book.
+;
+; Here is a link to a digital version of the page:
+; https://archive.org/details/marrapodi-1984-logo-for-the-apple-ii-iie-iic/page/60/mode/2up
+to pumpkin :height
+	localmake "oldState turtleState
+	localmake "eyeSeparation :height * 0.55
+	jumpForward :height / 2
+	localmake "center pos
+	setPenColor "red
+	setPenSize :height * 0.015
+	setFillColor "white
+	circle (:height - penSize) / 2
+	jumpBackward :height * 0.2
+	drawMouth :height * 0.1
+
+	jumpTo :center
+	setFillColor penColor
+	setPenSize 0
+	isoTriangle :height * 0.25 :height * 0.14
+	jumpForward :height * 0.24
+	right 180
+	jumpRight :eyeSeparation / 2
+	repeat 2 [
+		isoTriangle :height * 0.2 :height * 0.11
+		jumpLeft :eyeSeparation
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by a figure at page 65 of the book.
+;
+; Here is a link to a digital version of the page:
+; https://archive.org/details/marrapodi-1984-logo-for-the-apple-ii-iie-iic/page/64/mode/2up
+to truck :height
+	localmake "oldState turtleState
+	localmake "wheelHeight :height * 0.14
+	localmake "wheelSeparation :height * 1.66
+	localmake "trailerWidth :height * 2.05
+	localmake "frontWidth :height * 0.83
+	localmake "frontHeight :height * 0.56
+	setLineJoinStyle "miter
+	setPenColor "red
+	setFillColor "white
+	setPenSize :height * 0.03
+	localmake "wheelOffset (penSize + :wheelHeight) / 2
+	localmake "trailerHeight :height - :wheelOffset - (:wheelHeight + penSize) / 2
+	jumpLeft :height * 1.05
+	jumpForward :wheelOffset
+	repeat 2 [
+		square :wheelHeight
+		jumpRight :wheelSeparation
+	]
+	jumpLeft :wheelSeparation + :trailerWidth / 2
+	jumpForward :trailerHeight / 2 + :wheelHeight / 2
+	rect :trailerWidth :trailerHeight
+	jumpBackward (:trailerHeight - :frontHeight) / 2
+	jumpRight (:trailerWidth + :frontWidth) / 2
+	rect :frontWidth :frontHeight
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 5
+jumpLeft :separation / 2
+pumpkin :height
+jumpRight :separation
+truck :height

@@ -1,0 +1,58 @@
+to drawSeaTurtleShape :height
+	localmake "oldState turtleState
+	localmake "lines1 [
+		[2.8 0] [8 1] [-121 0.042] [260 0.074] [-125 0.042]
+		[22 0.5] [-137 0.11] [0.11]
+	]
+	localmake "lines2 (combine :lines1 [[-90 0]] reverse flipAngles :lines1)
+	setPenSize :height * 0.02
+	setLineJoinStyle "round
+	drawArcLineShape [0 0
+		(combine :lines2 [[-90 0]] reverse :lines2)
+	] :height
+	setTurtleState :oldState
+end
+
+; Inspired by:
+; https://www.facebook.com/share/p/19hmGYiha1
+;
+; In case that post becomes unavailable, 
+; it shows an image of a similar pattern by 
+; Cyril Schmedlap.
+to seaTurtlePuzzle :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "heightFactor1 0.6405
+	localmake "turtleHeight :height * 0.435
+	localmake "separation1 :turtleHeight * 2 * :heightFactor1
+	localmake "numColumns 20
+	setPenColor "white
+
+	jumpForward :height * 0.099
+	jumpLeft :separation1 * (:numColumns - 0.5) / 2
+	setPenColor "white
+	repeat :numColumns [
+		localmake "pos1 pos
+		setFillColor "white
+		repeat 2 [
+			drawSeaTurtleShape :turtleHeight
+			jumpForward :separation1
+		]
+		jumpTo :pos1
+		jumpRight :separation1
+		localmake "pos2 pos
+		if repcount <> :numColumns [
+			jumpForward :separation1
+			left 180
+			setFillColor "red
+			drawSeaTurtleShape :turtleHeight
+		]
+
+		setHeading :oldHeading
+		jumpTo :pos2
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+seaTurtlePuzzle 100

@@ -1,0 +1,48 @@
+; Inspired by a drawing at:
+; https://www.youtube.com/watch?v=r3kwAa0B80A
+; Sha Graphics made the drawing in the video using 
+; Python's turtle graphics.
+;
+; The following was implemented without looking at the Python code.
+to waveSpiral :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "numRadii 64
+	localmake "numAngles 9
+	localmake "maxRadius :height / (1 + cos 180 / :numAngles) /
+		(1 + sin 180 / :numAngles)
+	localmake "minRadius :maxRadius / :numRadii
+	localmake "colors ["#00f "#f0f "#0ff]
+	localmake "hotColors ["black "red "white]
+	localmake "blendRatio2 1
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize :height * 0.004
+	setLineCap "round
+	setLineJoinStyle "round
+	setPenBlendMode "lighter
+	repeat :numRadii [
+		localmake "innerRadius mix :maxRadius :minRadius repRatio
+		localmake "colorOffset repcount  / :numAngles
+		localmake "arcRadius :innerRadius * sin 180 / :numAngles
+		repeat :numAngles [
+			localmake "blendRatio repRatio + :colorOffset
+			localmake "blendRatio2f :blendRatio2 - int :blendRatio2
+			localmake "blendRatio :blendRatio - int :blendRatio
+			setHeading :oldHeading + (repcount - 0.5) * 360 / :numAngles
+			setPenColor mixItems2 :colors :blendRatio
+			; 2 spirals are overlapped here to look more interesting than 1.
+			setPenColor mix penColor (mixItems :hotColors :blendRatio2f) 0.5
+			jumpForward :innerRadius
+			right 180 / :numAngles
+			arcRight 180 :arcRadius
+			jumpTo :center
+			localmake "blendRatio2 :blendRatio2 + 1 / :numAngles
+		]
+		localmake "blendRatio2 :blendRatio2 + 1 / 2 / :numAngles
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+waveSpiral 100

@@ -1,0 +1,40 @@
+; Inspired by:
+; https://ca.pinterest.com/pin/677791812683320710
+; which is also at:
+; https://giphy.com/gifs/art-abstract-digital-l41m5kVa9TVXvBJxC
+to ringedWaves :scale :timeRatio
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "numRings 30
+	localmake "yScale :scale * 0.7
+	setPenSize :scale * 0.015
+	setPenColor "white
+	repeat :numRings [
+		localmake "radius :scale * repcount / :numRings
+		localmake "angle (repRatio * 0.75 + 2 * :timeRatio) * 360
+		localmake "y :yScale * sin :angle
+		jumpForward :y
+		circle :radius
+		jumpTo :oldPos
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+pitchDown 70
+ringedWaves 100 animation.timeRatio
+
+to animation.snapshotstyle
+	output createPList2 [
+		["zoom.scale 3.5]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 5
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

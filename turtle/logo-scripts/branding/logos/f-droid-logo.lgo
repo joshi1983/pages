@@ -1,0 +1,122 @@
+to shadedRoundRect :width :height :cornerRadius :color :bottomColor :topColor
+	localmake "oldState turtleState
+	localmake "cr :cornerRadius / :width
+	localmake "line1 [
+		[90 0] [0.5 - :cr] [90 :cr] [0.03] [180 0]
+		[-90 :cr] [0.5 - :cr]
+	]
+	setPenSize 0
+	setFillColor :color
+	roundRect :width :height :cornerRadius
+	setFillColor :topColor
+	repeat 2 [
+		drawArcLineShape [0 :height / 2 / :width
+			combine :line1 reverse :line1
+		] :width
+		right 180
+		setFillColor :bottomColor
+	]
+	setTurtleState :oldState
+end
+
+to drawReverseC :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "innerRadius 0.26
+	localmake "angle1 63
+	localmake "outerAngle 360 - 2 * arcSin (:innerRadius * cos :angle1) / 0.5
+	setFillColor penColor
+	setPenSize 0
+	left :angle1
+	jumpForward :height * :innerRadius
+	polyStart
+	arcLines [[-90 0] [-180 - :angle1 * 2 :innerRadius] [:angle1 0]] :height
+	jumpForward distanceToCircle :oldPos :height / 2
+	setHeading (towards :oldPos) + 90
+	arcLeft :outerAngle :height / 2
+	polyEnd
+
+	setTurtleState :oldState
+end
+
+to drawAntenna :length :thickness :angle
+	localmake "oldState turtleState
+	localmake "radius :thickness / 2
+	localmake "colors ["#a7bc6a "#738d30]
+	if :angle < 0 [
+		localmake "colors reverse :colors
+	]
+	jumpBackward :radius
+	left :angle
+	repeat count :colors [
+		setFillColor item repcount :colors
+		drawArcLineShape [0 -1 + :radius / :length
+			[[90 0] [:radius / :length] [-90 0]
+			[1 - :radius / :length] [-90 :radius / :length]]
+		] :length * sign repcount - 1.5
+	]
+	setLineCap "round
+	setPenColor "#94b716
+	setPenSize :thickness * 0.65
+	jumpForward (:thickness - penSize) / 2
+	backward :length
+	setTurtleState :oldState
+end
+
+to drawAntennas :separation :length :thickness
+	localmake "oldState turtleState
+	jumpLeft :separation / 2
+	setPenSize 0
+	repeat 2 [
+		drawAntenna :length :thickness -38 * sign repcount - 1.5
+		jumpRight :separation
+	]
+
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://f-droid.org/en/
+to fDroidLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "baseWidth :height * 0.85
+	localmake "baseHeight :height * 0.581
+	localmake "cornerRadius :height * 0.067
+	localmake "darkGreenColor "#97c714
+	localmake "separation :height * 0.435
+	localmake "circleRadius :height * 0.075
+	jumpForward :baseHeight / 2
+	setPenSize 0
+	shadedRoundRect :baseWidth :baseHeight :cornerRadius "#1b77d2 "#1c68b3 "#4a93db
+	setPenSize :height * 0.04
+	setPenColor "#134ca3
+	setFillColor transparent
+	circle :height * 0.214
+	drawReverseC :height * 0.28
+	setPenSize 0
+	jumpTo :oldPos
+	jumpForward :height
+	drawAntennas :height * 0.9555 :height * 0.18 :height * 0.0555
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.75
+	shadedRoundRect :baseWidth :height * 0.29 :cornerRadius "#b2eb0c :darkGreenColor  "#c9f055
+	jumpLeft :separation / 2
+	jumpForward :height * 0.009
+	repeat 2 [
+		localmake "startPos pos
+		setFillColor :darkGreenColor
+		circle :circleRadius
+		jumpBackward :height * 0.023
+		setFillColor "white
+		circle :circleRadius
+		jumpTo :startPos
+		jumpRight :separation
+	]
+	setTurtleState :oldState
+end
+
+fDroidLogo 100

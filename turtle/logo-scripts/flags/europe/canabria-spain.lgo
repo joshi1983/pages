@@ -1,0 +1,29 @@
+; Inspired by flag at:
+; https://ca.pinterest.com/pin/648025833886187266
+; and at:
+; https://en.wikipedia.org/wiki/Flag_of_Cantabria#/media/File:Cantabrian_L%C3%A1baru_Flag.svg
+to cantabriaFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 3 / 2
+	localmake "curvePath [
+		[-10 0.07] [-10 0.12] [-10 0.2] [-10 0.22] [-15 0.41]
+		[-5 0.3] [10 0.11] [43 0.017]  [-288 0.04] [0.008] [67 0.006]
+		[10 0.6] [10 0.23] [10 0.2] [18 0.0736523]
+	]
+	stripes :width :height ["#b90058]
+	jumpForward :height / 2
+	localmake "center pos
+	setFillColor "#ffd700
+	setPenSize 0
+	circle :height * 0.052
+	repeat 4 [
+		drawArcLineShape [0 0.0883
+			pathMirror :curvePath
+		] :height
+		jumpTo :center
+		right 360 / 4
+	]
+	setTurtleState :oldState
+end
+
+cantabriaFlag 100

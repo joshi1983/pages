@@ -1,0 +1,43 @@
+to lululemonLogo :height :backgroundColor :foregroundColor
+	localmake "oldState turtleState
+	localmake "arcsInfo [
+		[8 0.8] [20 0.3] [20 0.15] [20 0.13]
+		[20 0.16] [20 0.305] [8 0.4] [3 2]
+		[-5 0.6] [-10 0.18] [-120 0.102]
+		[-16.2 0.2] [150 0] [30 0.2] [140 0.161]
+		[5 0.2] [-6 1.8] [-10 0.5] [-18 0.2]
+		[-20 0.08] [-49 0.1] [-9.8 0.26573154]
+	]
+	jumpForward :height / 2
+	setPenSize 0
+	setFillColor :backgroundColor
+	circle :height / 2
+	setFillColor :foregroundColor
+	jumpForward :height * 0.3685
+	left 90
+	polyStart
+	arcLines :arcsInfo :height
+	arcLines reverse :arcsInfo :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Lululemon_Athletica#/media/File:Lululemon_Athletica_logo.svg
+to lululemonRedLogo :height
+	lululemonLogo :height "#d41935 "white
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Lululemon_Athletica#/media/File:HK_%E9%87%91%E9%90%98_Admiralty_%E5%A4%AA%E5%8F%A4%E5%BB%A3%E5%A0%B4_Pacific_Place_mall_shop_clothing_Lululemon_Store_July_2021_SS2_01.jpg
+to lululemonBlackLogo :height
+	lululemonLogo :height "white "black
+end
+
+setScreenColor "#bbb
+make "height 100
+make "separation :height * 4
+jumpLeft :separation / 2
+lululemonRedLogo :height
+jumpRight :separation
+lululemonBlackLogo :height

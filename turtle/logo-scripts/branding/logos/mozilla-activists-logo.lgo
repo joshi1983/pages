@@ -1,0 +1,35 @@
+; Inspired by logo at:
+; https://blog.mozilla.org/en/mozilla/mozilla-brand-next-era-of-tech/
+to mozillaActivistsLogo :height
+	localmake "oldState turtleState
+	localmake "mGreen "#00d230
+	localmake "thickness :height * 0.126
+	localmake "thickness2Factor 0.113
+	localmake "thickness2 :height * :thickness2Factor
+	localmake "angle1 70.2
+	localmake "arcs1 [[0.05] [-:angle1 0] [0.35] [:angle1 0]
+		[0.031] [90 0] [0.393] [-90 0] [0.1114] [-90 0]
+		[0.506] [-90 0] [0.202] [-:angle1 0] [0.284]
+		[:angle1 0] [0.012756702736189]]
+	localmake "arcs2 reverse :arcs1
+	localmake "lowerLengthIndexes [7 11]
+	repeat count :lowerLengthIndexes [
+		localmake "index item repcount :lowerLengthIndexes
+		setItem :index "arcs2 [(first item :index :arcs2) + :thickness2Factor]
+	]
+	jumpLeft :height * 0.3645
+	stripes :thickness :height [:mGreen]
+	jumpForward :height - :thickness2 * 2
+	jumpRight :height * 0.227
+	stripes :thickness2 :thickness2 [:mGreen]
+	setLineJoinStyle "miter
+	setPenSize 0
+	setFillColor :mGreen
+	drawArcLineShape [0.12 -0.085
+		(combine :arcs1 :arcs2)
+		] :height
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+mozillaActivistsLogo 100

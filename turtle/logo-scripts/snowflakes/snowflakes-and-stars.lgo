@@ -1,0 +1,148 @@
+; Inspired by drawings shown in a book called
+; "Explorer's Guide to Commodore Logo"
+; These drawings are found in page 104.
+; You can find a digital version of the book at:
+; https://archive.org/details/explorers-guide-to-commodore-logo/page/n121/mode/2up
+
+
+to design1 :size
+	localmake "oldState turtleState
+	jumpForward :size * 0.285
+	jumpLeft :size * 0.09
+	setPenSize :size * 0.02
+	polyStart
+	repeat 12 [
+		jumpForward :size * 0.21
+		right 90
+		jumpForward :size * 0.105
+		jumpRight :size * 0.105
+		jumpBackward :size * 0.105
+		jumpForward :size * 0.055
+		if repcount <> 12 [
+			right 45
+			jumpForward :size * 0.14
+			left 105
+		]
+	]
+	polyEnd
+	setTurtleState :oldState
+end
+
+to design2 :size
+	localmake "oldState turtleState
+	localmake "angle1 120
+	localmake "angle2 20
+	localmake "size1 :size * 0.265
+	jumpForward :size * 0.22
+	jumpLeft :size * 0.101
+	setPenSize :size * 0.06
+	polyStart
+	repeat 4 [
+		jumpForward :size1
+		right :angle1
+		jumpForward :size1
+		left :angle2
+		jumpForward :size1
+		right :angle1
+		jumpForward :size1
+		right 90 - :angle1 * 2 + :angle2
+	]
+	polyEnd
+	setTurtleState :oldState
+end
+
+to design3 :size
+	localmake "oldState turtleState
+	jumpForward :size * 0.215
+	jumpLeft :size * 0.1
+	setPenSize :size * 0.05
+	polyStart
+	repeat 4 [
+		jumpForward :size * 0.265
+		right 90
+		jumpForward :size * 0.1325
+		jumpRight :size * 0.1325
+		jumpBackward :size * 0.1325
+		jumpForward :size * 0.065
+		if repcount <> 12 [
+			right 45
+			jumpForward :size * 0.35
+			left 45
+		]
+	]
+	polyEnd
+	setTurtleState :oldState
+end
+
+to dodecaStar :size
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angle 35
+	localmake "size1 :size * 0.2
+	localmake "size2 :size * 0.32
+	setPenSize :size * 0.02
+	repeat 12 [
+		setHeading :oldHeading + repcount * 360 / 12
+		jumpForward :size1
+		left :angle
+		jumpForward :size2
+		backward :size2
+		right :angle * 2
+		forward :size2
+		jumpTo :oldPos
+	]
+	setTurtleState :oldState
+end
+
+to hexStar :size
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angle 60
+	localmake "size1 :size * 0.2
+	localmake "size2 :size * 0.37
+	setPenSize :size * 0.05
+	repeat 6 [
+		setHeading :oldHeading + repcount * 360 / 6
+		jumpForward :size1
+		left :angle
+		jumpForward :size2
+		backward :size2
+		right :angle * 2
+		forward :size2
+		jumpTo :oldPos
+	]
+	setTurtleState :oldState
+end
+
+to star :size
+	localmake "oldState turtleState
+	localmake "size1 :size * 0.91
+	localmake "angle1 150
+	jumpBackward :size1 / 2
+	jumpLeft :size * 0.122
+	setPenSize :size * 0.02
+	polyStart
+	repeat 12 [
+		jumpForward :size1
+		right :angle1
+	]
+	polyEnd
+	setTurtleState :oldState
+end
+
+make "size 100
+make "separation :size * 1.5
+jumpLeft :separation * 2.5
+design1 :size
+jumpRight :separation
+hexStar :size
+jumpRight :separation
+design2 :size
+jumpRight :separation
+design3 :size
+jumpRight :separation
+star :size
+jumpRight :separation
+dodecaStar :size

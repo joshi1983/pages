@@ -1,0 +1,74 @@
+; Inspired by the logo for 
+; Christian Farmers Federation of Ontario
+; https://www.christianfarmers.org/
+to christianFarmers :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "radius :height * 0.7635
+	localmake "size1 :height * 0.726
+	localmake "arcAngle 11.5
+	localmake "numStreaks 6
+	localmake "angle1 arcCos :size1 / :radius
+	localmake "angle2 80.5
+	localmake "angle3 (:angle2 * 2 - :arcAngle) / (:numStreaks - 1)
+	localmake "size2 :radius * 0.32
+	jumpRight :size1
+	right :angle1
+	setPenSize 0
+	setFillColor "#fdb71d
+	polyStart
+	arcLeft 180 + :angle1 * 2 :radius
+	polyEnd
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward sqrt :radius * :radius - :size1 * :size1
+	setPenSize 0
+	right :angle2
+	localmake "center pos
+	setFillColor "#f58220
+	repeat :numStreaks [
+		setHeading :oldHeading + :angle2 - (repcount - 1) * :angle3
+		jumpForward :size2
+		left 90
+		polyStart
+		arcLeft :arcAngle :size2
+		right 90
+		jumpForward :radius - :size2
+		right 90
+		arcRight :arcAngle :radius
+		polyEnd
+		jumpTo :center
+	]
+	; background grass hill
+	jumpTo :oldPos
+	setHeading :oldHeading
+	setFillColor "#164734
+	polyStart
+	jumpLeft :size1
+	localmake "pos1 pos
+	left :angle1
+	arcRight 20 :radius
+	right 88
+	arcRight 11 :radius * 5.5
+	polyEnd
+
+	; foreground grassy hill
+	setFillColor "#088542	
+	jumpTo :pos1
+	localmake "angle5 70.2
+	localmake "arcAngle2 19.329632
+	localmake "arcRadius :radius * 5.9
+	setHeading :oldHeading + :angle5
+	polyStart
+	arcRight :arcAngle2 :arcRadius
+	setHeading :oldHeading + 177.5
+	arcRight 20.26 :radius
+	polyEnd
+	
+	jumpTo :oldPos
+	setHeading :oldHeading
+	setTurtleState :oldState
+end
+
+christianFarmers 100

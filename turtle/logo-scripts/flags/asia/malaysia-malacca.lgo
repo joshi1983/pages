@@ -1,0 +1,28 @@
+; Inspired by flag at:
+; https://en.wikipedia.org/wiki/Flag_of_Malacca#/media/File:Flag_of_Malacca.svg
+to malaccaFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 2
+	localmake "cornerWidth :height * 8 / 9
+	localmake "malaccaBlue "#002b7f
+	localmake "malaccaYellow "#fcd116
+	localmake "radius :height * 0.201
+	stripes :width :height ["white "#c30000]
+	jumpForward :height / 2
+	jumpLeft (:width - :cornerWidth) / 2
+	stripes :cornerWidth :height / 2 [:malaccaBlue]
+	setPenSize 0
+	jumpForward :height / 4
+	setFillColor :malaccaYellow
+	circle :radius
+	setFillColor :malaccaBlue
+	jumpRight :height * 0.069
+	circle :radius
+	setFillColor :malaccaYellow
+	right 90 / 5
+	regularStar :height * 0.131 5
+	setTurtleState :oldState
+end
+
+setScreenColor "gray
+malaccaFlag 100

@@ -1,0 +1,49 @@
+; Inspired by image at:
+; https://www.svgrepo.com/svg/275139/satellite-sputnik
+to sputnik :height
+	localmake "oldState turtleState
+	localmake "antennaAngle 24.9
+	localmake "circleRadius :height * 0.167
+	localmake "thickness :height * 0.03
+	localmake "antennaSideLength (
+			:height - :circleRadius * (1 + cos 45) - :thickness
+		)
+		/ cos 45 - :antennaAngle
+
+	setPenColor "black
+	setPenSize :thickness
+	setLineCap "round
+	setLineJoinStyle "round
+	jumpForward :height - :circleRadius - :thickness / 2
+	jumpRight :height * 0.317
+	setFillColor "#E4EAF8
+	circle :circleRadius
+	localmake "center pos
+	right 45
+	localmake "sputnikHeading heading
+	setFillColor "#D5DCED
+	drawArcLineShape [0 0
+		[[90 0] [1] [90 0] [180 1]]
+	] :circleRadius
+	jumpBackward :circleRadius * 0.35
+	right 90
+	jumpBackward :circleRadius / 2
+	forward :circleRadius
+	jumpTo :center
+	setHeading :sputnikHeading
+	backward :height * 0.85
+
+	jumpTo :center
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		jumpRight :circleRadius * :sign
+		right (180 - :antennaAngle) * :sign
+		forward :antennaSideLength
+		jumpTo :center
+		setHeading :sputnikHeading
+	]
+	
+	setTurtleState :oldState
+end
+
+sputnik 100

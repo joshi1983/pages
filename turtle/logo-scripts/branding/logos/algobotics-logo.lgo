@@ -1,0 +1,88 @@
+to drawSmile :height
+	localmake "oldState turtleState
+	localmake "thickness :height * 0.2
+	localmake "arcsInfo [
+		[10 2] [10 1.5] [20 1.1] [42.68 0.8]
+	]
+	setLineCap "round
+	jumpForward :thickness / 2
+	right 90
+	setPenSize 0
+	arcsLeft :arcsInfo :height
+	right 180
+	setPenSize :thickness
+	arcsRight reverse :arcsInfo :height
+	arcsRight :arcsInfo :height
+	setTurtleState :oldState
+end
+
+to drawAntenna :logoHeight
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "angle1 39
+	localmake "length1 :logoHeight * 0.38
+	localmake "numWaveArcs 3
+	localmake "minWaveArcRadius :logoHeight * 0.04
+	localmake "maxWaveArcRadius :logoHeight * 0.1
+	localmake "waveStartAngle 25
+	jumpForward :logoHeight * 0.095
+	localmake "startPos pos
+	setLineCap "round
+	setPenColor "red
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		setHeading :oldHeading + :angle1 * :sign
+		setPenSize :logoHeight * 0.02
+		setPenColor "white
+		forward :length1
+		setPenSize :logoHeight * 0.007
+		setFillColor "black
+		circle :logoHeight * 0.02
+		localmake "center pos
+		setPenColor "black
+		setPenSize :logoHeight * 0.015
+		repeat :numWaveArcs [
+			setHeading :oldHeading + :waveStartAngle * :sign
+			localmake "waveArcRadius mix :minWaveArcRadius :maxWaveArcRadius repRatio
+			jumpForward :waveArcRadius
+			right 90 * :sign
+			arcLeft -85 * :sign :waveArcRadius
+			jumpTo :center
+		]
+		jumpTo :startPos
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by logo that was at:
+; https://www.youtube.com/@Algobotics
+; If that link is broken, it may be due to changes in the channel.
+; It looks like the channel's logo was replaced
+; with a photo of the creator's face shown at:
+; https://www.youtube.com/c/Algobotics/videos
+to algoboticsLogo :height
+	localmake "oldState turtleState
+	localmake "eyeSeparation :height * 0.33
+	localmake "eyeRadius :height * 0.033
+	stripes :height :height ["#6ac37f]
+	setPenSize 0
+	jumpForward :height * 0.34
+	localmake "center pos
+	setFillColor "white
+	circle :height * 0.305
+	roundRect :height * 0.67 :height * 0.24 :height * 0.02
+	jumpForward :height * 0.043
+	jumpRight :eyeSeparation / 2
+	setFillColor "black
+	circle :eyeRadius
+	jumpLeft :eyeSeparation
+	circle :eyeRadius
+	jumpTo :center
+	jumpBackward :height * 0.075
+	drawSmile :height * 0.067
+	jumpTo :center
+	drawAntenna :height
+	setTurtleState :oldState
+end
+
+algoboticsLogo 100
