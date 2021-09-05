@@ -1,0 +1,64 @@
+; Inspired by
+; https://www.pinterest.ca/pin/73887250128555830/
+make "colors ["#fff "#f88 "#f00 "#f0f "#00f "#0ff "#0f0 "#ff0]
+
+to polygon :radius :timeRatio
+	localmake "numSides 10 * count :colors
+	localmake "angleStep 360 / :numSides
+	localmake "size1 :radius * 2 * sin :angleStep / 2
+	jumpBackward :size1 / 2
+	jumpLeft :radius / 2
+	repeat :numSides [
+		localmake "ratio :timeRatio + (repcount - 1) / (:numSides - 1)
+		localmake "ratio remainder :ratio 1
+		setPenColor mixItems :colors :ratio
+		forward :size1
+		right :angleStep
+	]
+end
+
+to drawing :size :timeRatio
+	localmake "timeRatio clamp :timeRatio 0 1
+	localmake "oldPos pos
+	localmake "numRepeats 8
+	localmake "groupSize 4
+	localmake "angleStep 360 / :numRepeats / :groupSize
+	localmake "radius1 :size * 0.5
+	localmake "maxRadiusOffset :size * 0.4
+	setPenSize :size * 0.008
+	localmake "timeRatio2 :timeRatio
+	if :timeRatio >= 0.5 [
+		localmake "timeRatio2 (1 - :timeRatio)
+	]
+	localmake "timeRatio2 interpolateRatio easeInOut 2 * :timeRatio2
+	repeat :numRepeats [
+		repeat :groupSize [
+			localmake "groupRatio (repcount - 1) / (:groupSize - 1) - 1
+			localmake "groupRatio :groupRatio + :timeRatio2 * 2.2
+			localmake "groupRatio clamp :groupRatio 0 1
+			localmake "radius2 :size * 0.03
+			localmake "radius2 :radius2 + :maxRadiusOffset * :groupRatio
+			jumpForward :radius1
+			polygon :radius2 :timeRatio
+			jumpTo :oldPos
+			right :angleStep
+		]
+	]
+end
+
+setScreenColor "black
+drawing 265 animation.time / animation.duration
+
+to animation.snapshotstyle
+	localmake "result createPList
+	output :result
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 5
+	; Edit this if you want to change the length of your animation.
+	localmake "result createPList
+	setProperty "result "duration :minutes * 60 + :seconds
+	output :result
+end

@@ -1,0 +1,347 @@
+; This was made to look similar to an image from
+; an Amiga Logo manual.
+; The Amiga Logo manual can be found at:
+; https://archive.org/details/amiga-logo-manual/page/n67/mode/2up
+
+; The manual's title is: "Amiga Logo Tutorial And Reference"
+; Publication date 1989
+; by Carl Sassenrath
+; The image of the house is found at page 68.
+
+; I didn't find the Amiga source code although the manual says
+; the example's Amiga Logo source code is in Amiga Logo by clicking "house".
+; The following code was written directly in WebLogo.
+; Color and gradients are added for extra visual appeal.
+make "windowColor "#C3D1DF
+make "picketSeparationRatio 0.323
+
+to filledIsoTrapezoid :startWidth :height :angle
+	localmake "endWidth :startWidth - :height * 2 * tan :angle
+	isoTrapezoid :startWidth :endWidth :height
+end
+
+to picket :height
+	localmake "oldState turtleState
+	localmake "width :height * 0.2
+	localmake "baseHeight :height * 0.02
+	localmake "pointAngle1 60
+	localmake "pointAngle2 90 - :pointAngle1
+	localmake "pointHeight :width / 2 * tan :pointAngle1
+	localmake "pointSlantLength :pointHeight / sin :pointAngle1
+	localmake "height1 :height - :pointHeight - :baseHeight
+	localmake "thinPenWidth :height * 0.01
+	setPenSize :width + :thinPenWidth
+	setLineCap "butt
+	forward :baseHeight
+	jumpLeft :width / 2
+	setPenSize :thinPenWidth
+	polyStart
+	jumpForward :height1
+	right :pointAngle2
+	jumpForward :pointSlantLength
+	right 180 - 2 * :pointAngle2
+	jumpForward :pointSlantLength
+	right :pointAngle2
+	jumpForward :height1
+	polyEnd
+	setTurtleState :oldState
+end
+
+to picketFence :height :numPickets
+	localmake "oldPos pos
+	localmake "picketSeparation :height * :picketSeparationRatio
+	localmake "width (:numPickets - 1) * :picketSeparation
+	localmake "backgroundThickness :height * 0.03
+	setPenColor "black
+	jumpRight :width / 2
+	jumpForward :height * 0.52
+	setPenSize :width
+	forward :backgroundThickness
+	setPenColor "white
+	forward :height * 0.08
+	setPenColor "black
+	forward :backgroundThickness
+	jumpTo :oldPos
+	setFillColor "white
+	repeat :numPickets [
+		picket :height
+		jumpRight :picketSeparation
+	]
+	jumpTo :oldPos
+end
+
+to picketFences :picketHeight :gapWidth :width
+	localmake "oldPos pos
+	localmake "picketSeparation :picketHeight * :picketSeparationRatio
+	localmake "numPickets 1 + int (:width - :gapWidth) / 2 / :picketSeparation
+	jumpLeft (:gapWidth / 2) + (:numPickets - 1) * :picketSeparation
+	picketFence :picketHeight :numPickets
+	jumpTo :oldPos
+	jumpRight :gapWidth / 2
+	picketFence :picketHeight :numPickets
+end
+
+to filledRect :width :height
+	polyStart
+	repeat 2 [
+		jumpForward :height
+		right 90
+		jumpForward :width
+		right 90
+	]
+	polyEnd
+end
+
+to window :width :height :numPanelColumns
+	localmake "oldState turtleState
+	localmake "sideGap :height * 0.01
+	localmake "verticalGap :height * 0.02
+	localmake "width2 :width - :sideGap * 2
+	localmake "height2 :height - :verticalGap * 2
+	localmake "thickness1 :height * 0.03
+	localmake "glassPanelGap1 (:height2 - :thickness1) / 3 - :thickness1
+	localmake "thickness2 :height * 0.02
+	localmake "glassPanelGap2 (:width2 - :thickness2) / :numPanelColumns - :thickness2
+	setPenSize :height * 0.005
+	setFillColor "white
+	filledRect :width :height
+	setFillColor :windowColor
+	jumpRight :sideGap
+	jumpForward :verticalGap
+	localmake "pos1 pos
+	filledRect :width2 :height2
+	jumpRight :width2 / 2
+	setPenSize :width2
+	repeat 4 [
+		forward :thickness1
+		jumpForward :glassPanelGap1
+	]
+	jumpTo :pos1
+	jumpForward :height2 / 2
+	right 90
+	setPenSize :height2
+	repeat :numPanelColumns + 1 [
+		forward :thickness2
+		jumpForward :glassPanelGap2
+	]
+	setTurtleState :oldState
+end
+
+to sky :drawingHeight :width
+	localmake "oldPos pos
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#fff
+	setProperty "colorStops 0.5 "#F0F0FF
+	setProperty "colorStops 1 "#ccf
+	setPenSize 0
+	jumpForward :drawingHeight
+	setFillGradient createLinearGradient :oldPos pos :colorStops "pad
+	jumpBackward :drawingHeight
+	jumpLeft :width / 2
+	filledRect  :width :drawingHeight
+	jumpTo :oldPos
+end
+
+to lawn :lawnHeight :width
+	localmake "oldPos pos
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#2B9D01
+	setProperty "colorStops 0.5 "#09AA09
+	setProperty "colorStops 0.92 "#3CAA80	
+	setProperty "colorStops 1 "#5BC8B6	
+	setPenSize 0
+	jumpForward :lawnHeight
+	setFillGradient createLinearGradient :oldPos pos :colorStops "pad
+	jumpTo :oldPos
+	jumpLeft :width / 2
+	filledRect :width :lawnHeight
+	jumpTo :oldPos
+end
+
+to houseBackground :drawingHeight
+	localmake "oldState turtleState
+	localmake "roofAngle 12
+	localmake "width :drawingHeight * 0.81
+	localmake "roofHeight :drawingHeight * 0.29
+	localmake "mainFloorHeight :drawingHeight * 0.325
+	jumpForward :drawingHeight * 0.38
+	jumpLeft :drawingHeight * 0.36
+	setPenSize :drawingHeight * 0.005
+	setPenColor "gray
+	setFillColor "white
+	filledRect :width :mainFloorHeight
+	setFillColor "#855
+	setPenColor "black
+	jumpRight :width / 2
+	jumpForward :mainFloorHeight
+	filledIsoTrapezoid :width :roofHeight :roofAngle
+	setTurtleState :oldState
+end
+
+to porchBackgroundShadowGradient :porchRoofHeight
+	localmake "oldPos pos
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "white
+	setProperty "colorStops 0.5 "#e0e0e0
+	setProperty "colorStops 0.7 "#ddd
+	setProperty "colorStops 1 "#888
+	jumpForward :porchRoofHeight
+	setFillGradient createLinearGradient :oldPos pos :colorStops "pad
+	jumpTo :oldPos
+end
+
+to door :doorHeight
+	localmake "oldState turtleState
+	localmake "width :doorHeight * 0.33
+	localmake "innerWidth :width * 0.9
+	localmake "innerHeight :doorHeight * 0.85
+	localmake "doorKnobWidth :innerWidth * 0.15
+	localmake "windowWidth :innerWidth * 0.55
+	localmake "windowHeight :innerWidth * 0.65
+	setPenSize :width
+	setPenColor "gray
+	forward :doorHeight
+	jumpBackward (:doorHeight - :innerHeight) / 2
+	setPenColor "white
+	setPenSize :innerWidth
+	backward :innerHeight
+	; door knob
+	jumpForward :innerHeight * 0.38
+	localmake "middlePosition pos
+	jumpLeft :innerWidth * 0.25
+	setPenSize :doorKnobWidth
+	setPenColor "gray
+	forward :doorKnobWidth * 1.7
+	jumpTo :middlePosition
+	jumpForward :innerHeight * 0.25
+	jumpLeft :windowWidth / 2
+	setPenSize :innerWidth * 0.05
+	setFillColor :windowColor
+	filledRect :windowWidth :windowHeight
+	setTurtleState :oldState
+end
+
+to steps :width
+	localmake "topHeight :width * 0.1
+	localmake "bottomWidth :width * 0.9
+	localmake "baseHeight :width * 0.1
+	localmake "stepWidth1 :width * 0.22
+	localmake "stepWidth2 :width * 0.25
+	localmake "height2 :width * 0.05
+	localmake "topFillColor "#FFF0D1
+	setLineJoinStyle "round
+	setPenColor "#AD8976
+	setPenSize :width * 0.01
+	setFillColor :topFillColor
+	filledIsoTrapezoid :width :topHeight 60
+	setFillColor "#F5DBA8
+	setPenColor "#A27C67
+	jumpRight :width / 2
+	right 180
+	filledRect :width :height2
+	jumpForward :height2
+	jumpRight (:width - :bottomWidth) / 2
+	setPenColor "#98725D
+	setFillColor "#E6C98E
+	filledRect :bottomWidth :baseHeight
+	jumpRight (:bottomWidth - :stepWidth1) / 2
+	filledRect :stepWidth1 :baseHeight * 1.3
+	jumpForward :baseHeight * 0.6
+	jumpRight (:stepWidth1 - :stepWidth2) / 2
+	filledRect :stepWidth2 :baseHeight * 0.8
+	setFillColor :topFillColor
+	jumpRight :stepWidth2 / 2
+	right 180
+	setPenColor "#F4D3AE
+	filledIsoTrapezoid :stepWidth2 :baseHeight * 0.15 50
+end
+
+to porch :drawingHeight
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "width :drawingHeight * 0.295
+	localmake "roofAngle1 38
+	localmake "roofAngle2 180 - :roofAngle1 * 2
+	localmake "roofSize1 :width / 2 / sin :roofAngle1
+	localmake "roofHeight :width / 2 / tan :roofAngle1
+	localmake "roofGap :width * 0.01
+	localmake "roofSize2 :roofSize1 - :roofGap
+	localmake "roofBase :drawingHeight * 0.58
+	jumpForward :roofBase
+	localmake "midPoint pos
+	jumpLeft :width / 2
+	localmake "roofLowerLeftCorner pos
+	porchBackgroundShadowGradient :roofHeight
+	right :roofAngle1
+	setPenSize 0
+	polyStart
+	jumpForward :roofSize1
+	right :roofAngle2
+	jumpForward :roofSize1
+	polyEnd
+
+	jumpTo :roofLowerLeftCorner
+	setHeading :oldHeading + :roofAngle1
+	setPenSize :drawingHeight * 0.02
+	setPenColor "gray
+	forward :roofSize1
+	right :roofAngle2
+	forward :roofSize1
+	left 180
+	jumpForward :roofGap
+	setPenColor "white
+	setPenSize penSize * 0.7
+	forward :roofSize2
+	left :roofAngle2
+	forward :roofSize2
+
+	jumpTo :midPoint
+	setHeading :oldHeading
+	jumpBackward :drawingHeight * 0.155
+	door :drawingHeight * 0.213
+	jumpTo :midPoint
+	jumpBackward :drawingHeight * 0.2
+	steps :drawingHeight * 0.31
+
+	setTurtleState :oldState
+end
+
+to walkway :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#ddd
+	setProperty "colorStops 1 "#fff
+	jumpForward :height
+	localmake "gradient1 createLinearGradient :oldPos pos :colorStops "pad
+	right 180
+	setFillColor "#8060
+	filledIsoTrapezoid :height * 0.23 :height -7.5
+	setFillGradient :gradient1
+	filledIsoTrapezoid :height * 0.19 :height -7
+	setTurtleState :oldState
+end
+
+to amigaHouse :height
+	localmake "width :height * 13
+	localmake "fenseHeight :height * 0.16
+	localmake "windowHeight :height * 0.184
+	localmake "oldPos pos
+
+	sky :height * 1.2 :width
+	lawn :height * 0.52 :width
+	walkway :height * 0.36
+	houseBackground :height
+	porch :height
+
+	jumpForward :height * 0.448
+	jumpLeft :height * 0.309	
+	window :height * 0.11 :windowHeight 3
+	jumpRight :height * 0.5
+	window :height * 0.205 :windowHeight 6
+
+	jumpTo :oldPos
+	picketFences :fenseHeight :height * 0.3 :width
+end
+
+amigaHouse 100

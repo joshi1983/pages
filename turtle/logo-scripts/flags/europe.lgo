@@ -1,0 +1,34 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Europe#/media/File:Flag_of_Europe.svg
+; Referenced from
+; https://en.wikipedia.org/wiki/Flag_of_Europe
+to europeFlag :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "width :height * 3 / 2
+	localmake "starDistance :height / 3
+	localmake "starDiameter :height / 9
+	localmake "starSize :starDiameter / 2
+	localmake "numStars 12
+	jumpForward :height / 2
+	localmake "center pos
+	jumpLeft :width / 2
+	right 90
+	setPenSize :height
+	setPenColor "#1E448A ; the flag's azure color
+	forward :width
+	jumpTo :center
+	left 90
+	setPenSize 0
+	setFillColor "#FDCB0B ; the flag's gold color
+	repeat :numStars [
+		setHeading :oldHeading + repcount * 360 / :numStars
+		jumpForward :starDistance
+		setHeading :oldHeading
+		regularStar :starSize 5
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+europeFlag 100

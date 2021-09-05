@@ -1,0 +1,85 @@
+; minHeading and maxHeading determine the random range of directions 
+; the lightning will follow.
+; The :minHeading and :maxHeading should be within 90 degrees of the current heading.
+to randomLightning :size :minHeading :maxHeading
+	ifelse :size > 2 [
+		localmake "averageHeading (:minHeading + :maxHeading) * 0.5
+		; calculate size such that the turtle moves vertically by :size * 0.2.
+		; This is why the lightning always reaches the same height
+		; despite the angles being randomly selected.
+		localmake "size1 :size * 0.2 / cos (heading - :averageHeading)
+		localmake "thickness :size * 0.02
+		setFillColor "white
+		setPenSize 0
+		circle :thickness * 0.5
+		setPenColor "white
+		setPenSize :thickness
+
+		forward :size1
+
+		; draw a circle to help the lightning look more connected.
+		; Gaps may appear as this turns.
+		setPenSize 0
+		setFillColor penColor
+		circle :thickness * 0.5
+
+		setHeading :minHeading + random (:maxHeading - :minHeading) 
+		localmake "result randomLightning :size * 0.8 :minHeading :maxHeading
+		output :result ; return whatever point gets hit.
+	] [
+		output pos ; return the striked point on the ground.
+	]
+end
+
+to drawNightSky :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	jumpForward :size
+	localmake "colorStops createPList
+	; Use semitransparent/alphacolor to represent light 
+	; reflected off haze and cloud in the sky.
+	setProperty "colorStops 0 "#4fff
+	setProperty "colorStops 0.5 "#1fff
+	setProperty "colorStops 1 transparent
+	localmake "gradient createRadialGradient pos :size * 0.7 :colorStops
+	setFillGradient :gradient
+	jumpTo :oldPos
+	jumpLeft :size
+	setPenSize 0
+	polyStart
+	arcRight 180 :size
+	polyEnd
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+; draws an ellipse with a bright area at :lightStrikePos.
+to drawGround :size :lightStrikePos
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "white
+	setProperty "colorStops 0.05 "#6fff
+	setProperty "colorStops 0.08 "#4fff
+	setProperty "colorStops 0.1 "#3fff
+	setProperty "colorStops 0.5 "#1fff
+	setProperty "colorStops 1 transparent
+	localmake "gradient createRadialGradient :lightStrikePos :size :colorStops
+	setFillGradient :gradient
+	setPenSize 0
+	ellipse :size :size * 0.01
+end
+
+to drawSkyAndLightning :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	drawNightSky :size
+	forward :size
+	right 180
+	localmake "lightStrikePos randomLightning :size 130 230
+	setPos :oldPos
+	setHeading :oldHeading
+	drawGround :size :lightStrikePos
+end
+
+setScreenColor "black
+drawSkyAndLightning 150
+hideTurtle
