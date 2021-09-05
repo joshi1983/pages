@@ -1,0 +1,41 @@
+make "ratio 0.65
+
+; Inspired by:
+; https://www.facebook.com/photo/?fbid=9612936518716774
+to crackerFractal :height
+	localmake "height1 :height
+	localmake "center pos
+	repeat 15 [
+		jumpBackward :height1 / 2
+		image :height1 :height1 'weblogo://logo-scripts/images/cracker-fractal.jpg'
+		jumpTo :center
+		localmake "height1 :height1 * :ratio
+	]
+end
+
+make "timeRatio interpolateRatio easeInOut animation.clampedTimeRatio
+make "z 1 / power :ratio 11
+make "factor power :z :timeRatio
+make "log (ln :factor) / (ln :ratio)
+if :log < -1 [
+	make "factor :factor / power :ratio int :log
+]
+make "size 100 * :factor
+jumpForward 50
+crackerFractal :size
+
+to animation.snapshotstyle
+	output createPList2 [
+		["position.y 50]
+		["zoom.scale 7.2]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 4
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

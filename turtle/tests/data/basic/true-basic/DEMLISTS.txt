@@ -1,0 +1,47 @@
+! DemListS
+
+! Tests the Selection List Box.
+
+LIBRARY "TrueCtrl.trc"
+
+DIM t$(0 to 10), list(0)
+
+MAT READ t$
+DATA Select a fruit
+DATA apples, bananas, blueberries, huckleberries, kumquats
+DATA loganberries, mangos, peaches, pears, plums
+
+CALL TC_Init
+
+CALL TC_Show (0)
+PRINT "Press ESC to quit."
+
+CALL TC_ListBox_Create (id, "MULTIPLE", .54, .98, .17, .44)
+CALL TC_SetList (id, t$)
+
+DO
+   CALL TC_Event (0, event$, window, x1, x2)
+
+   IF event$ = "CONTROL SINGLE" then
+      CALL TC_ListBox_Get (id, list())
+      PRINT "You are now selecting:"
+      FOR i = 1 to ubound(list)
+          PRINT "     "; t$(list(i))
+      NEXT i
+      PRINT
+      PAUSE 1
+      FOR i = 1 to ubound(list)
+          CALL TC_ListBox_Clear (id, list(i))
+      NEXT i
+      CALL TC_ListBox_Set (id, 1)    ! Reset
+
+   END IF
+
+   IF event$ = "HIDE" then EXIT DO
+   IF event$ = "KEYPRESS" and x1 = 27 then EXIT DO
+
+LOOP
+
+CALL TC_Cleanup
+
+END

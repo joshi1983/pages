@@ -1,0 +1,234 @@
+to createWheelGradient
+	localmake "oldState turtleState
+	localmake "oldPenColor penColor
+	localmake "darkColor mix :oldPenColor "black 0.5
+	localmake "colorStops createPList2 [
+		[0 :darkColor] [0.5 :oldPenColor] [1 :darkColor]
+	]
+	jumpRight penSize / 2
+	localmake "fromPos pos
+	jumpLeft penSize
+	localmake "result createLinearGradient :fromPos pos :colorStops "pad
+	setTurtleState :oldState
+	output :result
+end
+
+to drawWheel :radius
+	localmake "oldState turtleState
+	localmake "wheelWoodColor "#A58073
+	localmake "radius1 :radius * 0.9
+	localmake "center pos
+	setPenSize :radius * 0.03
+	setFillColor transparent
+	setPenSize :radius * 0.2
+	setPenColor :wheelWoodColor
+	repeat 4 [
+		jumpBackward :radius1
+		setPenGradient createWheelGradient
+		forward :radius1 * 2
+		right 180 / 4
+		jumpTo :center
+	]
+	setPenColor :wheelWoodColor
+	circle :radius - penSize / 2
+	setPenColor "black
+	setPenSize :radius * 0.03
+	circle :radius - penSize / 2
+	setPenSize :radius * 0.005
+	circle :radius * 0.8
+	setPenSize :radius * 0.01
+	setFillColor :wheelWoodColor
+	circle :radius * 0.25
+	setPenSize :radius * 0.03
+	setPenColor "#4fff
+	circle :radius * 0.23
+	setFillColor "black
+	setPenSize 0
+	circle :radius * 0.1
+
+	setTurtleState :oldState
+end
+
+to drawRotatedWheel :radius :rotation
+	localmake "oldState turtleState
+	jumpForward :radius
+	right :rotation
+	drawWheel :radius
+	setTurtleState :oldState
+end
+
+to drawBarrel :length
+	localmake "oldState turtleState
+	localmake "arcsInfo [
+		[-90 0] [85 0.2] [15 1] [2.5 10.155497]
+		[-45 0.05] [109.5 0.05] [13 0.342893]
+	]
+	localmake "barrelShape [0 0 combine :arcsInfo reverse :arcsInfo]
+	setPenSize :length * 0.03
+	setPenColor "black
+	setFillColor "#444
+	drawArcLineShape :barrelShape :length
+	setTurtleState :oldState
+end
+
+to drawFlame :size :timeRatio
+	localmake "oldState turtleState
+	localmake "timeRatio2 1 - :timeRatio
+	localmake "colorStops createPList2 [
+		[0 mix "white transparent :timeRatio2]
+		[0.2 mix (mix "yellow "white :timeRatio) transparent :timeRatio2]
+		[0.5 mix (mix "orange "#ff8 :timeRatio) transparent :timeRatio2]
+		[1 "#0f00]
+	]
+	localmake "radius :size
+	setFillGradient createRadialGradient pos :radius :colorStops
+	jumpRight :radius
+	setPenSize 0
+	polyStart
+	arcLeft 180 :radius
+	polyEnd
+	setTurtleState :oldState
+end
+
+to drawCanonBall :radius
+	localmake "oldState turtleState
+	localmake "colorStops createPList2 [
+		[0 "black] [1 "#666]
+	]
+	setFillGradient createRadialGradient pos :radius :colorStops
+	setPenSize :radius * 0.1
+	setPenColor "black
+	circle :radius - penSize / 2
+	setTurtleState :oldState
+end
+
+to drawCanon :size :angle :flashTimeRatio :offset
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "barrelLength :size * 0.8
+	localmake "flashSize :barrelLength * 0.2
+	localmake "wheelHeight :size * 0.5
+	localmake "wheelRadius :wheelHeight / 2
+	localmake "wheelAngle1 :oldHeading - :offset * 180 / pi / :wheelRadius
+	localmake "wheelAngle2 :wheelAngle1 + 20
+	jumpLeft :offset
+	localmake "pos1 pos
+	drawRotatedWheel :wheelRadius :wheelAngle1
+
+	setHeading :oldHeading
+	jumpForward :wheelHeight / 2
+	right 90 - :angle
+	jumpForward :barrelLength * 0.7
+	if :flashTimeRatio > 0 [
+		drawFlame :flashSize :flashTimeRatio
+	]
+	localmake "result pos
+	jumpBackward :barrelLength
+	drawBarrel :barrelLength
+
+	jumpTo :pos1
+	setHeading :oldHeading
+	drawRotatedWheel :wheelRadius :wheelAngle2
+	setHeading :oldHeading
+	jumpTo :result
+	jumpRight :offset
+	localmake "result pos
+	setTurtleState :oldState
+	
+	output :result
+end
+
+to drawFence :width
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "height :width * 0.015
+	localmake "numPosts 35
+	localmake "woodThickness :height * 0.1
+	localmake "step :height / 3
+	setPenColor "gray
+	repeat 2 [
+		jumpForward :step
+		stripes :width :woodThickness [penColor]
+	]
+	jumpTo :oldPos
+	jumpLeft :width / 2
+	jumpForward :height / 2
+	right 90
+	repeat :numPosts [
+		stripes :height :woodThickness [penColor]
+		jumpForward :width / :numPosts
+	]
+	setTurtleState :oldState
+end
+
+to drawBackground :width
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "ratio 0.99
+	localmake "angle 2 * arcCos :ratio
+	localmake "radius :width / 2 / sin :angle / 2
+	localmake "colorStops createPList2 [
+		[:ratio "#280] [1 "#0280]
+	]
+	drawFence :width
+	jumpForward :radius * :ratio
+	localmake "center pos
+	setPenSize 0
+	setFillGradient createRadialGradient pos :radius :colorStops
+	jumpTo :oldPos
+	jumpRight :width / 2
+	setHeading (towards :center) - 90
+	circle 10
+	polyStart
+	arcRight :angle :radius
+	polyEnd
+	setTurtleState :oldState
+end
+
+setScreenColor "#def2ff
+drawBackground 2500
+jumpLeft 700
+make "timeRatio animation.clampedTimeRatio
+make "fireTimeRatio 0.15
+make "shootAngle 30
+make "canonAngle mix :shootAngle 22 interpolateRatio easeOut (clamp :timeRatio / :fireTimeRatio 0 1)
+make "flashTimeRatio clamp (:timeRatio - :fireTimeRatio) * 20 0 1
+make "canonOffset 0
+if :timeRatio > :fireTimeRatio [
+	make "timeRatio2 clamp (:timeRatio - :fireTimeRatio) / 0.3 0 1
+	make "canonOffset (power :timeRatio2 0.25) * 10
+]
+make "startBallPos drawCanon 100 :canonAngle :flashTimeRatio :canonOffset
+if :timeRatio > :fireTimeRatio [
+	make "timeRatio2 (:timeRatio - :fireTimeRatio) / (0.945 - :fireTimeRatio)
+	make "timeRatio3 :timeRatio2 - 0.5
+	make "vx 1200
+	make "a :vx * tan :shootAngle
+	make "c :a / 4
+	make "yOffset :c - :timeRatio3 * :timeRatio3 * :a
+	jumpTo :startBallPos
+	jumpRight :vx * :timeRatio2
+	jumpForward :yOffset
+	drawCanonBall 5
+]
+
+to animation.snapshotstyle
+	localmake "timeRatio animation.clampedTimeRatio
+	localmake "timeRatio2 :timeRatio - 0.5
+	localmake "xOffset 1300 * interpolateRatio easeInOut :timeRatio
+	localmake "scale 1.5 + 5 * :timeRatio2 * :timeRatio2
+	output createPList2 [
+		["position.x :xOffset - 700]
+		["position.y 150 - 300 * :timeRatio2 * :timeRatio2]
+		["zoom.scale :scale]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 3.5
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

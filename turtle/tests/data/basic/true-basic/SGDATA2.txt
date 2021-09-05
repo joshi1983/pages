@@ -1,0 +1,85 @@
+!  DATA2   Chris' & Dave's cars' mileage.
+
+!  Both drove the same kind of car.  Notice that one car's mileage
+!  goes up and down depending on the season (winter is low).
+!  The other is less affected.  Also, notice a few erroneous
+!  data points!
+
+LIBRARY "SGLib.trc"
+
+DIM cmiles(0 to 200), cgallons(200), cmpg(200)
+DIM dmiles(0 to 200), dgallons(200), dmpg(200)
+
+CALL ReadData (cmiles, cgallons, cmpg)
+CALL ReadData (dmiles, dgallons, dmpg)
+
+CALL SetText ("Gas Mileage", "Miles Driven (Thousands)", "MPG")
+CALL DataGraph (cmiles, cmpg, 0, 3, "red green blue")
+CALL AddDataGraph (dmiles, dmpg, 0, 1, "green")
+
+SUB ReadData (miles(), gallons(), mpg())
+
+    READ miles(0)
+    LET n = 0
+    DO
+       LET n = n + 1
+       READ miles(n), gallons(n)
+    LOOP until miles(n) = 0
+    LET n = n - 1
+
+    FOR i = 1 to n
+        LET mpg(i) = (miles(i) - miles(i-1)) / gallons(i)
+    NEXT i
+    MAT redim mpg(n), miles(1:n)
+    MAT miles = (1/1000) * miles
+
+END SUB
+
+! Chris's car
+
+DATA 677.3                        ! first recorded
+
+DATA 1104.9,9.5,  1567.6,9.3,  1869.7,6.7,  2179.5,6.0
+DATA 2564.2,8.0,  2812.3,4.7,  3192.0,7.8,  3540.4,7.4
+DATA 4044.4,10.2, 4317.5,5.8,  4747.8,8.7,  4946.2,3.7
+DATA 5406.7,9.6,  5870.0,10.1, 6344.2,10.0, 6789.3,9.6
+DATA 7208.1,9.1,  7624.8,9.6,  7786.6,3.2,  8244.3,9.4
+DATA 8614.1,8.6,  9050.0,9.5,  9584,13.2,   9991.6,9.3
+DATA 10389,9.4,   10804.4,9.1, 11216.1,10.3,11623.4,10.1
+DATA 11970.4,9.54,12215.5,6.6, 12599.8,9.6, 12921.9,8.84
+DATA 13238.1,7.7
+DATA 13815.0,14.3,14170.0,8.8, 14531.0,8.3, 14880.9,9.0
+DATA 15671,8.95, 16065,8.2,    16453,8.47,  16696,5.4
+DATA 17144,8.8,  17568,9.1,    17997,8.65,  18450,9.3
+DATA 18934,9.9,  19356,8.7,    19787,8.4,   20162,7.4
+DATA 20572,8.25, 21025,8.8,    21345,9.0    ! did I read this right?
+DATA 21713,5.0,  22043,6.6,    22514,9.2,  22968,9.6
+DATA 23450,9.1,  23923,9.5,    24302,7.2,  24814,9.9
+DATA 25272,9.1,  25738,9.0,    26128,7.7,  26603,8.9
+DATA 26975,7.45, 27145,3.772
+DATA 27523,7.36, 27834,6.4,    28266,8.4,  28652,8.3
+DATA 29091,8.7,  29510,8.8,    29818,6.4,  30223,8.48
+DATA 30626,8.9,  31056,8.24       ! ?
+DATA 31410,8.16, 31786,8.6,    32161,8.9    ! ?
+DATA 32550,9.2,  32941,9.045,  33302,9.3
+DATA 0,0
+
+! Dave's car
+
+DATA 0                            ! full tank on delivery
+DATA 272,6.35,   599,6.56,     924,7.44,   1281,7.56
+DATA 1462,4.47,  1705,4.32,    2099,8.02,  2673,12.03
+DATA 3090,8.76,  3537,8.6,     3991,9.28,  4419,8.73
+DATA 4779,7.86,  5022,5.4,     5407,7.88,  5731,7.3
+DATA 6049,7.04,  6388,7.61,    6836,8.56,  7204,7.87
+DATA 7633,9.21,  8000,7.93,    8455,9.52,  8765,7.17
+DATA 9188,9.2,   9578,9.21,    10111,13.7, 10551,10.13
+DATA 10884,6.16, 11261,8.16,   11550,7.01, 11888,8.43
+DATA 12255,6.79, 12690,8.11,   13237,10.8, 13563,6.47
+DATA 14036,8.89, 14418,8.91,   14758,7.28, 15183,9.16
+DATA 15757,11,   16394,12.75,  16752,7.95, 17108,6.83
+DATA 17543,9.01, 17943,9.48,   18362,8.88, 18781,9.07
+DATA 19179,8.83, 19361,4.63,   19600,6.07, 19898,6.57
+DATA 0,0
+
+END

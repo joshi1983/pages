@@ -1,0 +1,127 @@
+!  Library of probability functions
+!
+!     logbase
+!     Erf
+!     Normal
+!     Norm1
+!     Factrl
+!     Binom
+!     BinomPr
+!     Poisson
+!
+!  Copyright (c) 1985, 2001 by True BASIC, Inc.
+
+EXTERNAL
+
+DEF Logbase (x, b)                ! Log to base b
+
+    IF b <= 0 or b = 1 then
+       CAUSE EXCEPTION -3000, "Argument not in range"
+
+    ELSE
+       LET logbase = log(x)/log(b)
+
+    END IF
+
+END DEF
+
+DEF Erf (x)
+
+    ! Error function
+
+    DECLARE DEF norm1
+
+    LET erf = 2*norm1(sqr(2)*x)
+
+END DEF
+
+DEF Normal (a, b)
+
+    ! Area under the standard normal curve from a to b
+
+    DECLARE DEF norm1
+
+    IF a*b < 0 then
+       LET normal = norm1(a) + norm1(b)
+    ELSE
+       LET normal = abs(norm1(a) - norm1(b))
+    END IF
+
+END DEF
+
+DEF Norm1 (x)
+
+    ! Area under the standard normal curve from 0 to x
+
+    LET x1 = abs(x)
+    IF x1 > 5.1 then
+       LET norm1 = .5
+       EXIT DEF
+
+    END IF
+
+    LET u = x1*x1/2
+    LET c = 1/sqr(2*pi)
+    LET term, sum = x1
+    FOR i = 1 to 45
+        LET term = -term * u/i
+        LET sum = sum + term/(2*i+1)
+    NEXT i
+    LET norm1 = c*sum
+
+END DEF
+
+DEF Factrl (n)
+
+    ! Factorial
+
+    IF n<0 or n<>int(n) then CAUSE EXCEPTION -3000, "Argument not in range"
+
+    LET f = 1
+    FOR i = 1 to n
+        LET f = f*i
+    NEXT i
+    LET factrl = f
+
+END DEF
+
+DEF Binom (n, j)
+
+    ! Binomial coefficient
+
+    IF n<0 or n<>int(n) or j<0 or j<>int(j) then CAUSE EXCEPTION -3000, "Argument not in range"
+
+    IF j > n then
+       LET binom = 0
+       EXIT DEF
+
+    END IF
+
+    LET j1 = min(j,n-j)
+    LET b = 1
+    FOR k = 1 to j1
+        LET b = b*(n-k+1)/k
+    NEXT k
+    LET binom = b
+
+END DEF
+
+DEF BinomPr (n, j, p)
+
+    ! Binomial distribution, individual terms
+
+    DECLARE DEF binom
+
+    IF p<0 or p>1 then CAUSE EXCEPTION -3000, "Argument not in range"
+    LET binompr = binom(n,j) * p^j * (1-p)^(n-j)
+
+END DEF
+
+DEF Poisson (m, j)
+
+    ! Poisson distribution, individual terms
+
+    DECLARE DEF factrl
+    LET Poisson = exp(-m) * m^j / factrl(j)
+
+END DEF

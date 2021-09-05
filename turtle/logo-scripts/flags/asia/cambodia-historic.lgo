@@ -1,0 +1,181 @@
+make "kampucheaRed "#da121a
+
+; Inspired by
+; https://en.wikipedia.org/wiki/List_of_Cambodian_flags#/media/File:Flag_of_Cambodia_(pre-1863).svg
+to cambodiaFlagBefore1863 :height
+	localmake "oldState turtleState
+	localmake "width :height * 5 / 3
+	localmake "innerScale 0.7915
+	setPenSize 0
+	jumpLeft :width / 2
+	jumpForward :height / 2
+	right 90
+	setFillColor "#6f993c
+	isoTriangle :height :width
+	setFillColor "#ffc90e
+	isoTriangle :height * :innerScale :width * :innerScale
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://upload.wikimedia.org/wikipedia/commons/a/ae/Flag_of_Cambodia_under_Japanese_occupation.svg
+; The Wikipedia article is good but you can learn more at:
+; https://www.crwflags.com/fotw/flags/kh-japan.html
+; The referenced SVG had a slightly rectangular but not square
+; large white shape.  Also, the SVG was virtically assymetric.
+; The code below uses exact squares and symmetry in the hopes that the 
+; slight assymetry and dimensions were a mistake from the SVG author.
+to japanOccupiedCambodiaFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 3 / 2
+	localmake "squareSize :height * 0.11
+	localmake "largeSquareWidth :height / 2
+	localmake "largeSquareHeight :largeSquareWidth
+	stripes :width :height ["#c00]
+	jumpForward (:height - :squareSize) / 2
+	stripes :squareSize :squareSize ["white]
+	jumpForward :squareSize / 2
+	setPenSize :height * 0.01
+	setPenColor "white
+	setFillColor transparent
+	rect :largeSquareWidth :largeSquareHeight
+	jumpLeft :largeSquareWidth / 2
+	jumpBackward (:largeSquareHeight + :squareSize) / 2
+	repeat 2 [
+		repeat 2 [
+			stripes :squareSize :squareSize ["white]
+			jumpRight :largeSquareWidth			
+		]
+		jumpLeft :largeSquareWidth * 2
+		jumpForward :largeSquareHeight
+	]
+	setTurtleState :oldState
+end
+
+to fillRects :rects :scale
+	repeat count :rects [
+		localmake "rect item repcount :rects
+		stripes :scale * first :rect :scale * last :rect [fillColor]
+	]
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/List_of_Cambodian_flags#/media/File:Flag_of_Democratic_Kampuchea.svg
+to kampuchea1975Flag :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "width :height * 3 / 2
+	localmake "topPlatformRatio 0.1843523
+	localmake "rects [[0.557041 0.0407024] [0.478831 0.0742198] 
+		[0.3926408 :topPlatformRatio]]
+	localmake "bigCurveInfo [
+		[90 0] [0.078] [-90 0] [:topPlatformRatio] [-8.5 0]
+		[-2.2 2] [-5 0.4] [-10 0.35] [-20 0.08] [-20 0.04]
+		[-24.3 0.01937069]
+	]
+	localmake "littleWidthRatio 0.0474
+	localmake "littleCurveInfo [
+		[90 0] [:littleWidthRatio] [-90 0] [:topPlatformRatio] [-10 0]
+		[-4 0.45] [-8 0.231] [-7 0.12] [-19 0.065] [-42 0.017]
+	]
+	localmake "separation :height * 0.2589
+	stripes :width :height [:kampucheaRed]
+	jumpForward :height * 0.3084747
+	localmake "startPos pos
+	setFillColor "#fcdd09
+	fillRects :rects :height
+	setPenSize 0
+	polyStart
+	arcLines :bigCurveInfo :height
+	arcLines reverse :bigCurveInfo :height
+	polyEnd
+	jumpTo :startPos
+	setHeading :oldHeading
+	jumpLeft :separation / 2
+	repeat 2 [
+		localmake "startPos2 pos
+		polyStart
+		arcLines :littleCurveInfo :height
+		arcLines reverse :littleCurveInfo :height
+		polyEnd
+		setHeading :oldHeading
+		jumpTo :startPos2
+		jumpRight :separation
+	]
+	setTurtleState :oldState
+end
+
+to drawAngkorWat :flagHeight
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "towerWidth :flagHeight * 0.0625
+	localmake "towerBaseHeight :flagHeight * 0.15
+	localmake "towerRoofAngle 45
+	localmake "towerRoofLength :towerWidth / 2 / sin :towerRoofAngle
+	localmake "towerHeight :towerBaseHeight + :towerRoofLength * cos :towerRoofAngle
+	localmake "platformWidthRatio1 0.4375
+	localmake "platformWidthRatio2 0.25
+	localmake "rects [[0.7 0.05] [0.5666666 0.1] [0.4375 0.15]
+	[:platformWidthRatio2 0.25]]
+	localmake "towerInfo1 [
+		[(:platformWidthRatio2 - :towerWidth / :height) / 2 0.7]
+		[(:platformWidthRatio1 - :towerWidth / :height) / 2 0.6]]
+	localmake "towers combine :towerInfo1 [[0 0.75]]
+	repeat count :towerInfo1 [
+		localmake "pair item repcount :towerInfo1
+		queue2 "towers [-first :pair last :pair]
+	] 
+	jumpForward :flagHeight * 0.35
+	fillRects :rects :flagHeight
+	setPenSize 0
+	repeat count :towers [
+		localmake "towerInfo item repcount :towers
+		jumpTo :oldPos
+		setHeading :oldHeading
+		jumpLeft :flagHeight * first :towerInfo
+		jumpForward (:flagHeight * last :towerInfo) - :towerHeight
+		jumpRight :towerWidth / 2
+		polyStart
+		jumpLeft :towerWidth
+		jumpForward :towerBaseHeight
+		right :towerRoofAngle
+		jumpForward :towerRoofLength
+		right 180 - :towerRoofAngle * 2
+		jumpForward :towerRoofLength
+		polyEnd		
+	]
+end 
+
+to kampuchea1979Flag :height
+	localmake "oldState turtleState
+	localmake "width :height * 3 / 2
+	stripes :width :height [:kampucheaRed]
+	setFillColor "#fcdd09
+	drawAngkorWat :height
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/List_of_Cambodian_flags#/media/File:Flag_of_State_of_Cambodia.png
+to cambodiaState1989Flag :height
+	localmake "oldState turtleState
+	localmake "width :height * 3 / 2
+	stripes :width :height ["#032ea1 :kampucheaRed]
+
+	setFillColor "#fcdd09
+	drawAngkorWat :height
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 3
+jumpLeft :separation * 2
+cambodiaFlagBefore1863 :height
+jumpRight :separation
+japanOccupiedCambodiaFlag :height
+jumpRight :separation
+kampuchea1975Flag :height
+jumpRight :separation
+kampuchea1979Flag :height
+jumpRight :separation
+cambodiaState1989Flag :height

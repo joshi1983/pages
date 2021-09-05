@@ -1,0 +1,39 @@
+; Inspired by logo at:
+; https://innisfil.ca
+;
+; The main difference here is that the
+; shapes don't line up well.
+; The following code reuses the same shape but the logo
+; from that Innisfil website distorts the shape in various ways.
+to innisfilLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "shape1 [0 0
+		[[73 0] [-15 1.83] [-15 0.98] [-20 0.52] [-12.56 0.39]
+		[176 0] [-30 0.37] [-35 0.4] [-18 0.73] [-10 1.4]
+		[-3 1.6] [0.07] [179.5 0] [0.1] [-15 1.8] [-20 0.62]
+		[-30 0.35] [-30 0.25] [-10 0.6] [143 0] [-6 5] [-6 2]]
+	]
+	localmake "shapesInfo [
+		[0 0.703 "#80c342 0.5]
+		[0.03 0.205 "#3870b2 0.48]
+		[-0.35 0.488 "#3c9cd7 0.43]
+		[0.35 0.43 "#5a9240 0.46]
+		[0.66 0.65 "#eb8023 0.45]
+		[0.615 0.22 "#e15927 0.35]
+		[0.87 0.43 "#f1aa1e 0.3]
+	]
+	setPenSize 0
+	repeat count :shapesInfo [
+		localmake "shapeInfo item repcount :shapesInfo
+		localmake "shapeSize :height * last :shapeInfo
+		setFillColor item 3 :shapeInfo
+		jumpRight :height * first :shapeInfo
+		jumpForward :height * item 2 :shapeInfo
+		drawArcLineShape :shape1 :shapeSize
+		jumpTo :oldPos
+	]
+	setTurtleState :oldState
+end
+
+innisfilLogo 100

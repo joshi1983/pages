@@ -1,0 +1,73 @@
+; Inspired by
+; https://thenounproject.com/icon/pattern-2719636/
+to completeCircles :outerRadius :numRings
+	localmake "oldPenSize penSize
+	setPenSize :outerRadius / :numRings / 2
+	localmake "outerRadius1 :outerRadius - penSize / 2
+	repeat :numRings [
+		localmake "radiusRatio 1 - (repcount - 1) / :numRings
+		localmake "radius :radiusRatio * :outerRadius1
+		circle :radius
+	]
+	setPenSize :oldPenSize
+end
+
+to halfCircles :outerRadius :numArcs
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "penSize1 :outerRadius / :numArcs / 2
+	localmake "outerRadius1 :outerRadius - :penSize1 / 2
+	localmake "minRadius :penSize1 * (2.5 - 0.5/:numArcs)
+	setPenSize 0
+	jumpBackward :outerRadius1
+	left 90
+	polyStart
+	arcRight 180 :outerRadius1
+	polyEnd
+	setFillColor penColor
+	repeat :numArcs [
+		jumpTo :oldPos
+		setHeading :oldHeading + 90
+		localmake "radius mix :minRadius :outerRadius repRatio
+		left 90
+		jumpBackward :radius
+		left 90
+		polyStart
+		arcRight 180 :radius
+		jumpRight :penSize1
+		right 180
+		arcLeft 180 :radius - :penSize1
+		polyEnd
+	]
+	setTurtleState :oldState
+end
+
+to curlyWave :size
+	localmake "oldState turtleState
+	localmake "numRings 6
+	localmake "circleRadius :size * 0.2791
+	localmake "penSize1 :circleRadius / :numRings / 2
+	localmake "coreRadius :penSize1 * (1.5 - 0.5/:numRings)
+	localmake "size1 :circleRadius + :coreRadius
+	setFillColor "white
+	jumpForward :size / 2
+	setPenColor "#000
+	left 45
+	jumpForward :size1
+	completeCircles :circleRadius :numRings
+	jumpBackward :size1 * 2
+	completeCircles :circleRadius :numRings
+	jumpForward :size1
+	completeCircles :circleRadius :numRings
+	right 90
+	jumpForward :size1
+	completeCircles :circleRadius :numRings
+	jumpBackward :size1 * 2
+	completeCircles :circleRadius :numRings
+	jumpForward :size1
+	halfCircles :circleRadius :numRings
+	setTurtleState :oldState
+end
+
+curlyWave 100

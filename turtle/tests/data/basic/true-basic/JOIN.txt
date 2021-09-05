@@ -1,0 +1,154 @@
+EXTERNAL
+
+! Join
+
+! This utility, which runs as a DO program,
+! combines the main program and one or more subroutine files
+! into a single long compiled file.
+!
+! The conditions are:
+!      All LIBRARY statements must be in the main program.
+!      All library files must be compiled.
+!      The main program must have been compiled and saved with the
+!           same name as the main program but with the .trc extension
+!
+! The utility operates by collecting all the compiled file names found
+! in the LIBRARY statements in the main program.
+!
+! Starting with the compiled form of the main program, it appends in succession the
+! compiled files named in the LIBRARY statements.
+!
+! Finally, it asks the user for the name to be given to the new combined
+! compiled file.
+!
+! Once completed, the user may want to invoke the TraToTrc Do Program to turn
+! the result into a Web BASIC Applet.
+!
+SUB Join (l$(), arg$)
+
+    DIM cFileList$(0)
+
+    CALL TBD (-1, -1, 2, "Main Program", "", file$, "", "", 0, 1, 0, result)
+    IF result = 0 then EXIT SUB
+
+    WHEN EXCEPTION IN
+         OPEN #1: name file$, access input
+    USE
+         PRINT "Main program " & file$ & " not available."
+         EXIT SUB
+    END WHEN
+
+    DO while more #1
+       LINE INPUT #1: line$
+       LET line$ = lcase$(line$)
+       IF pos(ltrim$(line$), "library") = 1 then
+          CALL Parse (line$, cFileList$())
+       END IF
+
+    LOOP
+    CLOSE #1
+
+    ! Now, collect the compiled files.
+    ! Start with the compiled version of the Main Program
+
+    LET pp = pos(file$, ".")
+    IF pp = 0 then
+       LET file$ = file$ & "."
+       LET pp = pos(file$, ".")
+
+    END IF
+
+    LET file1$ = file$[1:pp] & "trc"
+
+    WHEN exception in
+         OPEN #1: name file1$, org byte, access input
+    USE
+         PRINT "Main program compiled file " & file1$ & " not available."
+         EXIT SUB
+    END WHEN
+
+
+    ASK #1: FILESIZE n
+    READ #1, bytes n: s1$
+    CLOSE #1
+
+    ! Now add the other compiled files
+
+    FOR i = 1 to ubound(cFileList$)
+        LET file2$ = cFileList$(i)
+        WHEN exception in
+             OPEN #1: name file2$, org byte, access input
+        USE
+             PRINT "LIBRARY file " & file2$ & " not available."
+             EXIT SUB
+
+        END WHEN
+
+        ASK #1: FILESIZE n2
+        READ #1, bytes n2: s2$
+        LET s1$ = s1$ & s2$
+
+        CLOSE #1
+
+    NEXT i
+
+    ! Now save the result
+
+    LET filename$ = file$[1:pp] & "tra"
+    CALL TBD (-1, -1, 3, "Output TrueApp File", "", filename$, "",  "",  0, 0, 0, result)
+
+    IF result = 0 then
+       PRINT "Save not performed."
+       EXIT SUB
+
+    END IF
+
+    WHEN EXCEPTION IN
+         OPEN #1: name filename$, org byte, access outin, create newold
+    USE
+         PRINT "Designated output file " & filename$ & " not available for output."
+         EXIT SUB
+
+    END WHEN
+
+    ! Need to warn the user!!!
+
+    CALL TBD (-1, -1, 1, "", "Okay to write to file " & filename$ & "?", "Yes|No", "", "", 0, 1, 0, result)
+    IF result = 2 then EXIT SUB
+
+    ERASE #1
+    WRITE #1: s1$
+    CLOSE #1
+
+END SUB
+
+SUB Parse (l$, c$())
+
+    LOCAL pl, pc, n$, ll
+
+    LET pl = pos(l$, "library")
+    LET l$ = ltrim$(l$[pl+7:1000])
+
+    DO
+       LET pc = pos(l$, ",")
+       IF pc = 0 then EXIT DO
+       LET n$ = trim$(l$[1:pc-1])
+
+       LET ll = len(n$)
+       MAT redim c$(ubound(c$) + 1)
+       LET c$(ubound(c$)) = n$[2:ll-1]
+
+       LET l$ = l$[pc+1:1000]
+
+    LOOP
+
+    LET l$ = trim$(l$)
+    IF l$ <> "" then
+       LET ll = len(l$)
+       MAT redim c$(ubound(c$) + 1)
+       LET c$(ubound(c$)) = l$[2:ll-1]
+
+    END IF
+
+END SUB
+

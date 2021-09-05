@@ -1,0 +1,53 @@
+; Inspired by
+; https://studycadcam.blogspot.com/2020/10/2d-cad-exercises-1025.html
+to polygonHeart :scale
+	localmake "oldState turtleState
+	localmake "angle1 100
+	localmake "angle2 18
+	localmake "angle3 180 - 135
+	localmake "angle4 34
+	localmake "angle5 90 + :angle1/2 - :angle4 - :angle3 - :angle2
+	localmake "angle6 40
+	
+; a lot of these values were found by overlaying the 
+; drawing over the source image.
+; They could be calculated from numbers in the CAD drawing but
+; that would just take a little more math.
+	localmake "size1 72.11 * :scale
+	localmake "size2 29.5 * :scale
+	localmake "size3 28 * :scale
+	localmake "size4 :scale * hypot [16 17]
+	localmake "size5 27 * :scale
+	localmake "size6 ((95 / 2) * :scale - :size5) / cos :angle6
+	left :angle1 / 2
+	setPenSize :scale * 5
+	setPenColor "black
+	setFillColor "red
+	polyStart
+	jumpForward :size1
+	right :angle2
+	jumpForward :size2
+	right :angle3
+	jumpForward :size3
+	right :angle4
+	jumpForward :size4
+	right :angle5
+	jumpForward :size5
+	right :angle6
+	jumpForward :size6
+	left :angle6 * 2 ; reflection point
+	jumpForward :size6
+	right :angle6
+	jumpForward :size5
+	right :angle5
+	jumpForward :size4
+	right :angle4
+	jumpForward :size3
+	right :angle3
+	jumpForward :size2
+	right :angle2
+	polyEnd
+	setTurtleState :oldState
+end
+
+polygonHeart 1

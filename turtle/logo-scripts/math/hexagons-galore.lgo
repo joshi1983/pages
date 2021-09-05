@@ -1,0 +1,78 @@
+; Inspired by image at:
+; https://ca.pinterest.com/pin/76631631198260241
+to hexagonsGalore :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "numSides 12
+	localmake "radius :height / 2 / cos 180 / :numSides
+	localmake "smallLength :height / 8 / cos 30
+	localmake "smallRadius :smallLength
+	localmake "innerColors [
+		"#2ffed0 "#b0ff4e "#ffb55e
+		"#9a21fc "#012fff "#00afff
+	]
+	localmake "outerColors [
+		"#00ffff "#41ffbf "#80ff7e "#c0ff3f
+		"#ffff00 "#ff9c7d "#fa36fa "#7d1cff
+		"#0000fe "#003fff "#0080ff "#00bffe
+	]
+	setPenSize 0
+	setFillColor "#84aca3
+	jumpForward :height / 2
+	localmake "center pos
+	right 180 / :numSides
+	regularPolygon :radius :numSides
+	setHeading :oldHeading + 180 / 6
+	repeat count :innerColors [
+		setFillColor item repcount :innerColors
+		jumpForward :height / 4
+		right 180 / 6
+		regularPolygon :smallRadius 6		
+		jumpTo :center
+		right 180 / 6
+	]
+	repeat count :outerColors [
+		localmake "startHeading :oldHeading + (repcount - 1.5) * 360 / 12
+		setHeading :startHeading
+		setFillColor item repcount :outerColors
+		jumpForward :radius
+		localmake "points [pos]
+		right 90 + 180 / 12
+		jumpForward :radius * 2 * sin 180 / 12
+		queue2 "points pos
+
+		jumpTo :center
+		setHeading :startHeading + 180 / 12
+		ifelse odd? repcount [
+			jumpForward :smallRadius + :smallLength
+			right 90 - 180 / 6
+			jumpForward :smallLength
+		] [
+			jumpForward :height / 4
+			right 180 / 6
+			jumpForward :smallRadius
+		]
+		queue2 "points pos
+		jumpTo first :points
+		polyStart
+		for ["i 2 count :points] [
+			setPos item :i :points
+		]
+		ifelse odd? repcount [
+			setHeading :startHeading - 90 - 180 / 12
+			repeat 2 [
+				jumpForward :smallLength
+				right 360 / 6
+			]
+		] [
+			setHeading :startHeading - 90 + 180 / 12
+			jumpForward :smallLength
+		]
+		polyEnd
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+hexagonsGalore 100
