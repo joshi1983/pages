@@ -1,0 +1,256 @@
+to drawOuterPeddles :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "arcsInfo1 [
+		[-40 0] [20 0.3] [25 0.067]
+	]
+	localmake "arcsInfo2 [
+		[25 0.067] [20 0.08] [2 0.5] [7 0.15]
+		[-16.38 0.192]
+	]
+	localmake "arcsAngle 180
+	repeat count :arcsInfo1 [
+		localmake "arcsAngle :arcsAngle - first (item repcount :arcsInfo1)
+	]
+	repeat count :arcsInfo2 [
+		localmake "arcsAngle :arcsAngle - first (item repcount :arcsInfo2)
+	]
+	localmake "penSize1 :height * 0.015
+	localmake "penSize2 :height * 0.023
+	localmake "center pos
+	setLineJoinStyle "miter
+	setLineCap "butt
+	repeat 12 [
+		localmake "heading1 :oldHeading + repcount * 360 / 12
+		setHeading :heading1
+		jumpForward :height * 0.247
+		if 0 = remainder repcount 3 [
+			jumpForward :height * 0.012
+		]
+		jumpRight :height * 0.038
+		setPenSize :penSize1
+		arcsLeft :arcsInfo1 :height
+		setPenSize :penSize2
+		jumpRight (:penSize2 - :penSize1) / 2
+		arcsLeft :arcsInfo2 :height
+		setHeading :heading1 - :arcsAngle
+		arcsLeft reverse :arcsInfo2 :height
+		jumpLeft (:penSize2 - :penSize1) / 2
+		setPenSize :penSize1
+		arcsLeft reverse :arcsInfo1 :height
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+to drawTriangularPoints :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "linesInfo [
+		[0.112 134.2] [0.137 -111] [0.21 150]
+		[0.21 -112] [0.139 133] [0.112 0]
+	]
+	setLineJoinStyle "miter
+	setLineCap "butt
+	localmake "center pos
+	setPenSize :height * 0.012
+	repeat 4 [
+		setHeading :oldHeading + repcount * 360 / 4
+		jumpLeft :height * 0.1505
+		jumpForward :height * 0.175
+		left 7.5
+		repeat count :linesInfo [
+			localmake "lineInfo item repcount :linesInfo
+			forward :height * first :lineInfo
+			right last :lineInfo
+		]
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+to drawLeafs :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "arcsInfo1 [
+		[-40 0] [20 0.1] [60 0.045]
+		[16.5 0.125]
+	]
+	localmake "arcsAngle 180
+	repeat count :arcsInfo1 [
+		localmake "arcsAngle :arcsAngle - first (item repcount :arcsInfo1)
+	]
+	localmake "center pos
+	setPenSize :height * 0.008
+	repeat 4 [
+		localmake "heading1 :oldHeading + (repcount - 0.5) * 360 / 4 
+		setHeading :heading1
+		jumpForward :height * 0.148
+		jumpRight :height * 0.018
+		arcsLeft :arcsInfo1 :height
+		setHeading :heading1 - :arcsAngle
+		arcsLeft reverse :arcsInfo1 :height
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+to drawTriples :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "arcsInfo1 [
+		[-22 0] [-8 0.2] [-60 0.025]
+		[12 0.045] [120 0.0055] [40 0.03]
+		[21 0.075] [-117 0]
+		[67.5 0.05]
+	]
+	localmake "arcsAngle 180
+	repeat count :arcsInfo1 [
+		localmake "arcsAngle :arcsAngle - first (item repcount :arcsInfo1)
+	]
+	localmake "center pos
+	setPenSize :height * 0.008
+	setFillColor "black ; cut off triangular corners
+	repeat 4 [
+		localmake "heading1 :oldHeading + repcount * 360 / 4 
+		setHeading :heading1
+		jumpForward :height * 0.148
+		jumpRight :height * 0.017
+		polyStart
+		arcsLeft :arcsInfo1 :height
+		setHeading :heading1 - :arcsAngle
+		arcsLeft reverse :arcsInfo1 :height
+		polyEnd
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+to drawM :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "arcAngle1 43
+	localmake "arcAngle2 23
+	localmake "waveRadius1 :height * 0.043
+	localmake "waveRadius2 :height * 0.06
+	localmake "size1 :height * 0.06
+	localmake "size2 :height * 0.033
+	localmake "tinyMArcRadius :height * 0.012
+	jumpBackward :height * 0.01
+	jumpLeft :height * 0.0975
+	right 90 + :arcAngle2
+	setPenSize :height * 0.009
+	arcLeft :arcAngle2 + :arcAngle1 / 2 :waveRadius1
+	repeat 2 [
+		arcRight :arcAngle1 :waveRadius2
+		if repcount <> 2 [
+			arcLeft :arcAngle1 :waveRadius2
+		]
+	]
+	arcLeft :arcAngle2 + :arcAngle1 / 2 :waveRadius1
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpRight :height * 0.075
+	jumpBackward :height * 0.011
+	setPenSize 0
+	setFillColor penColor
+	polyStart
+	jumpForward :height * 0.06
+	arcsLeft [[60 0.039] [86 0.032] [-110 0] [115 0.0335]] :height
+	setHeading :oldHeading
+	jumpBackward :height * 0.022
+	jumpRight :height * 0.003
+	localmake "leftSidePos pos
+	arcRight 180 :tinyMArcRadius
+	jumpForward :size1
+	jumpLeft :size2
+	jumpBackward :size1
+	right 180
+	arcRight 180 :tinyMArcRadius
+	jumpForward :height * 0.05
+	polyEnd
+
+	setPenSize :size2
+	setHeading :oldHeading
+	jumpTo :leftSidePos
+	jumpLeft :size2 / 2
+	jumpBackward :height * 0.056
+	forward :height * 0.0925
+	setTurtleState :oldState
+end
+
+to drawS :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "arcsInfo [
+		[20 0] [60 0.0085] [20 0.02]
+		[150 0.007] [12 0.02] [-13 0.1]
+		[-80 0.018] [-70 0.026]
+		[-20 0.07] [-20 0.031] [-58 0.02]
+	]
+	jumpBackward :height * 0.042
+	jumpLeft :height * 0.028
+	setFillColor penColor
+	setPenSize 0
+	polyStart
+	arcsLeft :arcsInfo :height
+	setHeading :oldHeading
+	jumpRight :height * 0.0225
+	right 180
+	arcsLeft :arcsInfo :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+to drawC :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "innerArcsInfo [
+		[10 0] [30 0.017] [30 0.012]
+		[40 0.0075] [30 0.015] [40 0.0235]
+	]
+	localmake "outerArcsInfo [
+		[40 0.04] [40 0.03]
+	]
+	jumpBackward :height * 0.052
+	jumpRight :height * 0.05
+	setPenSize 0
+	setFillColor penColor
+	polyStart
+	arcsLeft :innerArcsInfo :height
+	arcsLeft reverse :innerArcsInfo :height
+	setHeading :oldHeading
+	jumpRight :height * 0.0205
+	right 180 + 10
+	arcsRight :outerArcsInfo :height
+	arcsRight reverse :outerArcsInfo :height
+	arcRight 20 :height * 0.046
+	arcsRight :outerArcsInfo :height
+	arcsRight reverse :outerArcsInfo :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by logo at
+; https://explorajourneys.com
+to mcsExploraJourneysLogo :height
+	localmake "oldState turtleState
+	setLineCap "butt
+	jumpForward :height / 2
+	drawOuterPeddles :height
+	drawTriangularPoints :height
+	drawLeafs :height
+	drawTriples :height
+	setPenSize :height * 0.013
+	circle :height * 0.146
+	drawM :height
+	drawS :height
+	drawC :height
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+setPenColor "white
+mcsExploraJourneysLogo 100

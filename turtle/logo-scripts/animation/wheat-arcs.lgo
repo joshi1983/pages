@@ -1,0 +1,219 @@
+; Inspired by:
+; https://www.pinterest.ca/pin/702069029418970918/
+
+to drawPeddle :size
+	localmake "oldState turtleState
+	localmake "angle1 30
+	localmake "arcsInfo [
+		[-15 1.42925]
+		[-30 0.6]
+		[-15 1.42925]
+	]
+	localmake "angle4 120
+
+	setFillColor penColor
+	setPenSize 0
+	polyStart
+	left :angle1
+	arcsLeft :arcsInfo :size
+	right :angle4 ; point of symmetry
+	arcsLeft :arcsInfo :size
+	polyEnd
+	setTurtleState :oldState
+end
+
+to drawPaddedPeddle :size
+	localmake "oldState turtleState
+	penDown
+	setPenSize :size * 0.015
+	forward :size * 0.15
+	drawPeddle :size * 0.9
+	setTurtleState :oldState
+end
+
+to wheatArcSettings :angle :size
+	localmake "peddleAngle 7
+	localmake "numPeddles (int (:angle / :peddleAngle)) - 1
+	localmake "peddleSize :size * 0.2
+	localmake "peddleAngle2 30
+	localmake "peddleAngle3 :peddleAngle2 * 1.5
+	localmake "stemThickness :size * 0.01
+	output [:peddleAngle :numPeddles :peddleSize :peddleAngle2 :peddleAngle3 :stemThickness]
+end
+
+to singlePeddleSettings :angle :size
+	localmake "settings wheatArcSettings :angle :size
+	localmake "stemThickness item 6 :settings
+	localmake "peddleSize item 3 :settings
+	localmake "angle2 :angle - 11.4781
+	output [:stemThickness :peddleSize :angle2 5.739]
+end
+
+to arcRightSinglePeddle :angle :size
+	localmake "oldState turtleState
+	localmake "settings singlePeddleSettings :angle :size
+	localmake "stemThickness item 1 :settings
+	localmake "peddleSize item 2 :settings
+	localmake "angle2 item 3 :settings
+	localmake "angle3 item 4 :settings
+	penDown
+	if :angle2 > 0 [
+		setPenSize :stemThickness
+		arcRight :angle2 + 1 :size
+		penUp
+		arcRight -1 :size
+	]
+	right :angle3
+	drawPeddle :peddleSize
+
+	setTurtleState :oldState
+end
+
+to arcLeftSinglePeddle :angle :size
+	localmake "oldState turtleState
+	localmake "settings singlePeddleSettings :angle :size
+	localmake "stemThickness item 1 :settings
+	localmake "peddleSize item 2 :settings
+	localmake "angle2 item 3 :settings
+	localmake "angle3 item 4 :settings
+	penDown
+	if :angle2 > 0 [
+		setPenSize :stemThickness
+		arcLeft :angle2 + 1 :size
+		jumpBackward :size * pi * 2 / 360
+	]
+	left :angle3
+	drawPeddle :peddleSize
+
+	setTurtleState :oldState
+end
+
+to wheatArcRight :angle :size
+	localmake "oldState turtleState
+	localmake "settings wheatArcSettings :angle :size
+	localmake "peddleAngle item 1 :settings
+	localmake "numPeddles item 2 :settings
+	localmake "peddleSize item 3 :settings
+	localmake "peddleAngle2 item 4 :settings
+	localmake "peddleAngle3 item 5 :settings
+	arcRightSinglePeddle :angle :size
+	setTurtleState :oldState
+	penDown
+	repeat :numPeddles [
+		left :peddleAngle2
+		penDown
+		drawPaddedPeddle :peddleSize
+		right :peddleAngle2 + :peddleAngle3
+		drawPaddedPeddle :peddleSize
+		left :peddleAngle3
+		penUp
+		arcRight :peddleAngle :size
+	]
+	setTurtleState :oldState
+end
+
+to wheatArcLeft :angle :size
+	localmake "oldState turtleState
+	localmake "settings wheatArcSettings :angle :size
+	localmake "peddleAngle item 1 :settings
+	localmake "numPeddles item 2 :settings
+	localmake "peddleSize item 3 :settings
+	localmake "peddleAngle2 item 4 :settings
+	localmake "peddleAngle3 item 5 :settings
+	arcLeftSinglePeddle :angle :size
+	setTurtleState :oldState
+	repeat :numPeddles [
+		right :peddleAngle2
+		penDown
+		drawPaddedPeddle :peddleSize
+		left :peddleAngle2 + :peddleAngle3
+		drawPaddedPeddle :peddleSize
+		right :peddleAngle3
+		penUp
+		arcLeft :peddleAngle :size
+	]
+	setTurtleState :oldState
+end
+
+to stemmedWheatArcSettings :angle :size
+	localmake "settings wheatArcSettings :angle :size
+	localmake "stemStartAngle 5
+	localmake "stemAngle 10
+	localmake "stemStartRadius :size * 0.15
+	localmake "stemThickness item 6 :settings
+	output [:stemStartAngle :stemAngle :stemStartRadius :stemThickness 35]
+end
+
+to stemmedWheatArcLeft :angle :size
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "settings stemmedWheatArcSettings :angle :size
+	localmake "stemStartAngle item 1 :settings
+	localmake "stemAngle item 2 :settings
+	localmake "stemStartRadius item 3 :settings
+	setPenSize item 4 :settings
+	penUp
+	arcLeft :stemStartAngle :size
+	localmake "oldPos2 pos
+	penDown
+	left 180
+	arcLeft (item 5 :settings) :stemStartRadius
+	setHeading :oldHeading - :stemStartAngle
+	jumpTo :oldPos2
+	arcLeft :stemAngle - :stemStartAngle :size
+
+	if :angle > :stemAngle [
+		wheatArcLeft :angle - :stemAngle :size
+	]
+	setTurtleState :oldState
+end
+
+to stemmedWheatArcRight :angle :size
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "settings stemmedWheatArcSettings :angle :size
+	localmake "stemStartAngle item 1 :settings
+	localmake "stemAngle item 2 :settings
+	localmake "stemStartRadius item 3 :settings
+	setPenSize item 4 :settings
+	penUp
+	arcRight :stemStartAngle :size
+	localmake "oldPos2 pos
+	penDown
+	right 180
+	arcRight (item 5 :settings) :stemStartRadius
+	setHeading :oldHeading + :stemStartAngle
+	jumpTo :oldPos2
+	arcRight :stemAngle - :stemStartAngle :size
+
+	if :angle > :stemAngle [
+		wheatArcRight :angle - :stemAngle :size
+	]
+	setTurtleState :oldState
+end
+
+setPenColor "#fc0
+setScreenColor "black
+make "angle clamp (30 + animation.time * 70) 0 300
+penUp
+jumpBackward 200
+left 90
+
+stemmedWheatArcRight :angle 200
+right 180
+stemmedWheatArcLeft :angle 200
+
+to animation.snapshotstyle
+	localmake "result createPList
+	output :result
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 2
+	; Edit this if you want to change the length of your animation.
+	localmake "result createPList
+	setProperty "result "duration :minutes * 60 + :seconds
+	setProperty "result "thumbnailTime 0.5
+	output :result
+end
