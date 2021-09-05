@@ -1,0 +1,70 @@
+; This is not included in scriptExamples.json because
+; zooming in on this reproduces an arc-drawing bug in the canvas.
+; This should be added to json/scriptExamples.json after the bug is fixed.
+
+to flippingArc :arcAngle :arcRadius :direction
+	ifelse :direction = 1 [
+		arcLeft :arcAngle :arcRadius
+	] [
+		arcRight :arcAngle :arcRadius
+	]
+end
+
+; penColor is treated as the background color
+to metisFlag :height
+	localmake "width :height * 4 / 3
+	localmake "arcs [
+		[14 0.8]
+		[20 0.3]
+		[45 0.232]
+		[59 0.168062]
+	]
+	setPenSize :width
+	setLineCap "butt
+	forward :height
+	jumpBackward :height / 2
+	setPenColor "white
+	setPenSize :height * 0.08
+	left 42
+	repeat 2 [
+		localmake "arcDirection repcount
+		repeat count :arcs [
+			localmake "arcInfo item repcount :arcs
+			localmake "arcAngle item 1 :arcInfo
+			localmake "arcRadius :height * item 2 :arcInfo
+			flippingArc :arcAngle :arcRadius :arcDirection
+		]
+		repeat count :arcs [
+			localmake "arcInfo item 1 + (count :arcs) - repcount :arcs
+			localmake "arcAngle item 1 :arcInfo
+			localmake "arcRadius :height * item 2 :arcInfo
+			flippingArc :arcAngle :arcRadius :arcDirection
+		]
+	]
+	closePath
+end
+
+; Inspired by:
+; https://en.wikipedia.org/wiki/File:Metis_Blue.svg
+to metisBlueFlag :height
+	localmake "oldState turtleState
+	setPenColor "#23C
+	metisFlag :height
+	setTurtleState :oldState
+end
+
+; Inspired by:
+; https://en.wikipedia.org/wiki/File:Metis_Red.svg
+to metisRedFlag :height
+	localmake "oldState turtleState
+	setPenColor "#C00
+	metisFlag :height
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 3
+jumpLeft :separation * 0.5
+metisBlueFlag 100
+jumpRight :separation
+metisRedFlag 100

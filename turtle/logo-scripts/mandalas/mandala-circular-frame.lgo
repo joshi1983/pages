@@ -1,0 +1,163 @@
+; inspired by mirror design at:
+; https://www.pinterest.ca/pin/1059682987293933578/
+make "colors [ "white ( mix "white "aqua 0.7 ) "aqua "blue "navy "black
+]
+
+to getColor :num
+	; force num into a valid range.
+	localmake "num min :num count :colors
+	localmake "num max 1 :num
+	ifelse :num = ( int :num ) [
+		output item :num :colors
+	] [
+		localmake "c1 item (int :num) :colors
+		localmake "c2 item (1 + int :num) :colors
+		output mix :c1 :c2 (:num - int :num)
+	]
+end
+
+to circleOfCircles :numCircles :largeRadius :smallRadius
+	localmake "oldPos pos
+	localmake "angleDelta 360 / :numCircles
+	setPenSize 0
+	repeat :numCircles [
+		jumpForward :largeRadius
+		circle :smallRadius
+		jumpTo :oldPos
+		right :angleDelta
+	]
+end
+
+to drawLoop :size
+	circlePair 0 :size * 0.1479605 :size * 0.826
+end
+
+to drawDotPattern :size
+	localmake "oldState turtleState
+	localmake "dotSize :size * 0.06
+	localmake "dotSize2 :size * 0.1
+	localmake "dotSize3 :size * 0.05
+	localmake "size1 :size * 0.4
+	localmake "size2 :size * 0.15
+	localmake "size3 :size * 0.25
+	localmake "loopAngle 110
+	setFillColor item 1 :colors
+	circle :dotSize
+	forward :size1
+	setFillColor item 4 :colors
+	circle :dotSize2
+	setFillColor getColor 3.7
+	circle :dotSize3
+	localmake "loopCentre pos
+	setFillColor item 1 :colors
+	left :loopAngle / 2 - 10
+	repeat 5 [
+		forward :size2
+		drawLoop :size3
+		setPos :loopCentre
+		right :loopAngle / 5
+	]
+	setTurtleState :oldState
+end
+
+to circleFrame :size
+	localmake "size1 :size * 0.6
+	localmake "size2 :size * 0.76
+	localmake "size3 :size * 0.22
+	localmake "oldPos pos
+	setFillColor transparent
+	setPenColor "black
+	setPenSize :size3 * 1.9
+	circle :size - penSize * 0.5
+	localmake "circleCounts [ 128 112 106 96 96 ]
+	localmake "largeSize :size1
+	repeat count :circleCounts [
+		localmake "circleCount item repcount :circleCounts
+		setFillColor item 1 + repcount :colors
+		localmake "circleSize :largeSize * pi / :circleCount
+		circleOfCircles :circleCount :largeSize :circleSize
+		localmake "largeSize :largeSize + :circleSize * 2.1
+	]
+	repeat 16 [
+		forward :size2
+		drawDotPattern :size3
+		setPos :oldPos
+		right 360 / 32
+		forward :size2
+		arch :size3
+		right 360 / 32
+		jumpTo :oldPos
+	]
+end
+
+to arcOfDots :angle :size :numDots :dotSize
+	localmake "angleDelta :angle / :numDots
+	localmake "delta :size * :angleDelta * pi / 180
+	repeat :numDots [
+		jumpForward :delta
+		circle :dotSize
+		right :angleDelta
+	]
+end
+
+to archOfDots :size
+	; These values should be similar to values from archStroke.
+	localmake "size2 :size * 0.5
+	localmake "size3 :size * 1.5
+	localmake "angle1 60
+	localmake "angle2 30
+	localmake "angle3 70
+	localmake "dotSize1 :size * 0.04
+	localmake "dotSize2 :size * 0.03
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	forward :size
+	localmake "oldPos2 pos
+	circle :dotSize1
+	left -90 + :angle3 / 2
+	arcOfDots -:angle2 :size3 5 :dotSize1
+	arcOfDots -:angle1 :size2 3 :dotSize2
+	setPos :oldPos2
+	setHeading :oldHeading + 90 + :angle3 / 2
+	arcOfDots :angle2 :size3 5 :dotSize1
+	arcOfDots :angle1 :size2 3 :dotSize2
+
+	setTurtleState :oldState
+end
+
+to archStroke :size
+	localmake "oldState turtleState
+	localmake "size1 :size * 0.53
+	localmake "angle3 64.4
+	localmake "arcsInfo [[60 0.55] [30 1.5]]
+	setPenSize 0
+	left 107.2
+	jumpForward :size1
+	right 75
+	setPenSize :size * 0.07
+	arcsRight :arcsInfo :size
+	right :angle3
+	; point of symmetry
+	arcsRight reverse :arcsInfo :size
+	setTurtleState :oldState
+end
+
+to arch :size
+	localmake "dotSize :size * 0.1
+	setPenSize 0
+	setFillColor getColor 3.5
+	circle :dotSize
+	setPenColor item 1 :colors
+	archStroke :size
+	setPenColor item 4 :colors
+	forward :size * 0.017
+	archStroke :size * 0.9
+
+	repeat 6 [
+		setFillColor getColor repcount
+		archOfDots :size * (0.85 - 0.1 * repcount)
+	]
+end
+
+setScreenColor "gray
+circleFrame 150

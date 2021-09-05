@@ -1,0 +1,24 @@
+; Steps to reproduce bug:
+; 1. Run the following program.
+; 2. Zoom in and out of the peddle looking closely at the lower corner.
+; You'll see polygons moving around as you zoom in and out.
+; These problems don't appear when exporting to SVG so it is likely a problem with the canvas drawer.
+
+to peddle :len
+	localmake "oldState turtleState
+	localmake "angle1 28.4661027
+	localmake "arcAngle1 20
+	localmake "arcAngle3 180 - 2 * (-:angle1 + :arcAngle1)
+	localmake "arcRadius1 :len * 1.79830587
+	localmake "arcRadius3 :len * 0.2
+	left :angle1
+	polyStart
+	arcRight :arcAngle1 :arcRadius1
+	arcRight :arcAngle3 :arcRadius3
+	arcRight :arcAngle1 :arcRadius1
+	polyEnd
+	setTurtleState :oldState
+end
+
+setPenSize 30
+peddle 100
