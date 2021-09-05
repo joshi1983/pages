@@ -1,0 +1,82 @@
+to drawTorso :torsoRadius
+	localmake "oldState turtleState
+	localmake "buttonRadius :torsoRadius * 0.15
+	localmake "buttonSeparation :torsoRadius * 0.5
+	circle :torsoRadius
+	jumpForward :buttonSeparation * 0.85
+	setFillColor "#888
+	repeat 3 [
+		circle :buttonRadius
+		jumpBackward :buttonSeparation
+	]
+	setTurtleState :oldState
+end
+
+to drawHead :headRadius
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "eyeSeparation :headRadius * 0.85
+	localmake "eyeRadius :headRadius * 0.22
+	localmake "arcRadius :headRadius * 0.4
+	localmake "arcAngle 180
+
+	; Draw outline of head.
+	circle :headRadius
+
+	; Draw eyes.
+	jumpForward :headRadius * 0.15
+	jumpRight :eyeSeparation / 2
+	circle :eyeRadius
+	jumpLeft :eyeSeparation
+	circle :eyeRadius
+
+	; Draw smile.
+	jumpTo :oldPos
+	jumpBackward :headRadius * 0.75
+	setLineCap "round
+	right 90
+	penUp
+	arcLeft :arcAngle / 2 :arcRadius
+	right 180
+	penDown
+	arcRight :arcAngle :arcRadius
+
+	setTurtleState :oldState
+end
+
+to drawHat :height
+	localmake "oldState turtleState
+
+	setFillColor penColor
+	stripes :height * 1.6 penSize [penColor]
+	jumpForward (:height + penSize) / 2
+	roundRect :height :height 0
+
+	setTurtleState :oldState
+end
+
+; Inspired by a drawing of a snowman in a book
+; The book is called
+; "1,2,3, My Computer And Me: A Logo Funbook For Kids"
+; The drawing is on page 48.
+; An electronic version of the book is at:
+; https://archive.org/details/123mycomputerandmealogofunbookforkidsdonnabearden/page/n61/mode/2up
+to drawSnowman :height
+	localmake "oldState turtleState
+	localmake "radius1 :height * 0.24
+	localmake "headRadius :height * 0.17
+	setPenSize :height * 0.01
+	setPenColor "black
+	setFillColor "white
+	jumpForward :radius1 + penSize / 2
+	drawTorso :radius1
+	jumpForward :radius1 + :headRadius - :height * 0.01
+	drawHead :headRadius
+
+	jumpForward :headRadius
+	drawHat :height * 0.175
+	setTurtleState :oldState
+end
+
+setScreenColor "#88d
+drawSnowman 100
