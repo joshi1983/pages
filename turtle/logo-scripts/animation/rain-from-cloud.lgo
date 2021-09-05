@@ -1,0 +1,138 @@
+to rainDrop :width :height :alpha
+	localmake "oldState turtleState
+	localmake "thickness1 :width * 0.15
+	localmake "arcAngle1 90
+	localmake "outerRadius :width / 2
+	localmake "arcRadius1 :outerRadius - :thickness1 / 2
+	localmake "size1 :height - :arcRadius1 - :thickness1 / 2
+	localmake "tangentAngle1 arcSin :arcRadius1 / :size1
+	localmake "arcAngle1 :arcAngle1 + :tangentAngle1
+	localmake "size3 :size1 * cos :tangentAngle1
+	jumpForward :thickness1 / 2
+	left 90
+	setPenSize :thickness1
+	setPenColor mix "#2D578B transparent :alpha
+	setFillColor mix "#6195C2 transparent :alpha
+	arcRight :arcAngle1 :arcRadius1
+	right 180
+	polyStart
+	arcLeft :arcAngle1 * 2 :arcRadius1
+	jumpForward :size3
+	polyEnd
+	setTurtleState :oldState
+end
+
+to drawCircles :size :circlesInfo
+	localmake "oldPos pos
+	repeat count :circlesInfo [
+		localmake "circleInfo item repcount :circlesInfo
+		localmake "radius :size * item 1 :circleInfo
+		jumpRight :size * item 2 :circleInfo
+		jumpForward :size * item 3 :circleInfo
+		circle :radius
+		jumpTo :oldPos
+	]	
+end
+
+to darkCloud :size
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	setPenSize :size * 0.1
+	setPenColor "#4E4E6A
+	setFillColor "#B1BBCD
+	localmake "circlesInfo [
+		[0.3 -0.6 0]
+		[0.3 -0.4 0.2]
+		[0.3 -0.3 0]
+		[0.3 -0.2 -0.1]
+		[0.4 0 0.2]
+		[0.3 0.1 -0.2]
+		[0.3 0.4 0]
+		[0.3 0.8 0.2]
+	]
+	drawCircles :size :circlesInfo
+	setPenSize 0
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#959FB2
+	setProperty "colorStops 0.5 "#BCC5D7
+	setProperty "colorStops 1 "#DBE3F0
+	jumpBackward :size * 0.2
+	localmake "fromPos pos
+	jumpForward :size * 0.4
+	setFillGradient createLinearGradient :fromPos pos :colorStops "pad
+	jumpTo :oldPos
+	drawCircles :size :circlesInfo	
+	setTurtleState :oldState
+end
+
+to rainingWithoutCloud :height :timeRatio
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "width :height * 1.5
+	localmake "angle 30
+	localmake "lineLength :height / cos :angle
+	localmake "numDropsPerLine 3
+	localmake "numLines 4
+	localmake "lineStep :width / :numLines
+	localmake "dropHeightRatio 0.7
+	localmake "betweenDropStep (:lineLength * (1 - :dropHeightRatio/:numDropsPerLine)) / :numDropsPerLine
+	localmake "dropWidth :lineStep * 0.3
+	localmake "dropHeight :betweenDropStep * :dropHeightRatio
+	localmake "initialDropStep :betweenDropStep * (0 - :timeRatio)
+	jumpLeft :width / 2 + :height / 2 * sin :angle
+	jumpBackward :height * 0.3
+	repeat :numLines [
+		localmake "pos1 pos
+		localmake "initialStep1 :initialDropStep
+		if even? repcount [
+			localmake "initialStep1 :initialStep1 + :betweenDropStep / 2
+		]
+		setHeading :oldHeading + :angle
+		jumpForward :initialStep1
+		localmake "alphaOffset 0
+		repeat :numDropsPerLine + 1 [
+			localmake "alpha 1 - :alphaOffset + :timeRatio
+			if repcount >= :numDropsPerLine [
+				localmake "alpha :alpha - 0.7 * (1 + repcount - :numDropsPerLine)
+			]
+			if repcount <= 3 [
+				localmake "alpha repcount - 1 + :initialStep1 / :betweenDropStep
+			]
+			localmake "alpha clamp :alpha 0 1
+			jumpForward :betweenDropStep
+			if :alpha > 0 [
+				rainDrop :dropWidth :dropHeight :alpha
+			]
+		]
+		setHeading :oldHeading
+		jumpTo :pos1
+		jumpRight :lineStep
+	]
+	setTurtleState :oldState
+end
+
+to rainingFromCloud :height :timeRatio
+	localmake "oldState turtleState
+	rainingWithoutCloud :height * 0.9 :timeRatio
+	jumpForward :height * 0.9
+	darkCloud :height * 0.5
+	setTurtleState :oldState
+end
+
+rainingFromCloud 100 animation.time / animation.duration
+
+to animation.snapshotstyle
+	localmake "result createPList
+	setProperty "result "zoom.scale 3.8
+	setProperty "result "position.y 60
+	output :result
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 1
+	; Edit this if you want to change the length of your animation.
+	localmake "result createPList
+	setProperty "result "duration :minutes * 60 + :seconds
+	output :result
+end

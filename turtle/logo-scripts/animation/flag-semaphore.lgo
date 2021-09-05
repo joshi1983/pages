@@ -1,0 +1,220 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_semaphore
+
+; A message to be illustrated using the semaphore
+; The animation will progress through representing each letter
+make "message ' WEBLOGO'
+
+; The semaphore states as depicted on wikipedia
+; The pairs represent angles measured in degrees for each arm
+make "semaphoreStates [
+	[135 180] ; A or 1
+	[90 180] ; B or 2
+	[45 180] ; C, 3, Acknowledge / Correct
+	[0 180] ; D or 4
+	[180 45] ; E, 5, Error (if signaled 8 times)
+	[180 90] ; F or 6
+	[180 135] ; G or 7
+	[90 225] ; H or 8
+	[45 225] ; I or 9
+	[0 90] ; J or Letters to follow
+	[135 0] ; K or 0
+	[135 45] ; L
+	[135 90] ; M
+	[135 135] ; N
+	[90 -45] ; O
+	[90 0] ; P
+	[90 45] ; Q
+	[90 90] ; R
+	[90 135] ; S
+	[45 0] ; T
+	[45 45] ; U
+	[0 135] ; V
+	[-45 90] ; W
+	[-45 135] ; X
+	[45 90] ; Y
+	[-135 90] ; Z
+	[180 180] ; Rest or space
+	[0 45] ; Numerals (#)
+	[45 135] ; Cancel / Annul Disregard previous signal
+]
+; The Error / Attention doesn't fit in the list
+; because it isn't a single static state 
+; but a repeating animation of flag movements.
+
+to armStandard :length
+	localmake "oldState turtleState
+	localmake "length1 :length * 0.3
+	localmake "length2 :length - :length1
+	setPenColor "black
+	setLineCap "round
+	setPenSize :length * 0.05
+	forward :length1
+	setPenSize :length * 0.03
+	forward :length2
+	setTurtleState :oldState
+end
+
+to squareFlag :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "width :size * 2
+	localmake "height :size
+	localmake "size1 :size * 1.46
+	jumpBackward :size
+	right 45
+	jumpLeft :size / sqrt 2
+	jumpBackward (:size1 - :size * sqrt 2) / 2
+	stripes :size1 :size1 ["black]
+	jumpTo :oldPos
+	setHeading :oldHeading
+	setPenSize 0
+	setFillColor "yellow
+	isoTriangle :width :height
+	setFillColor "red
+	right 180
+	isoTriangle :width :height
+end
+
+to arm1 :length
+	localmake "oldState turtleState
+	localmake "flagSize :length * 0.27
+	jumpForward :length
+	left 135
+	jumpForward :flagSize
+	squareFlag :flagSize
+	setTurtleState :oldState
+	armStandard :length 
+	setTurtleState :oldState
+end
+
+to arm2 :length
+	localmake "oldState turtleState
+	localmake "flagSize :length * 0.27
+	jumpForward :length
+	right 135
+	jumpForward :flagSize
+	squareFlag :flagSize
+	setTurtleState :oldState
+	armStandard :length 
+	setTurtleState :oldState
+end
+
+to arm :length :right?
+	ifelse :right? [
+		arm1 :length
+	] [
+		arm2 :length
+	]
+end
+
+to drawState :size :angle1 :angle2 :letter
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "torsoHeight :size * 0.5
+	localmake "torsoWidth :size * 0.15
+	localmake "torsoLineThickness :size * 0.1
+	localmake "headRadius :size * 0.08
+	localmake "headElevation :torsoHeight + :torsoLineThickness / 2 + :headRadius * 1.2
+	localmake "shoulderSeparation (:torsoWidth + :torsoLineThickness) * 1.3
+	localmake "armLength :size
+	setPenSize :torsoLineThickness
+	setPenColor "black
+	setFillColor "black
+	setLineJoinStyle "round
+	jumpLeft :torsoWidth / 2
+	polyStart
+	repeat 2 [
+		jumpForward :torsoHeight
+		right 90
+		jumpForward :torsoWidth
+		right 90
+	]
+	polyEnd
+	jumpTo :oldPos
+	jumpForward :torsoHeight / 2
+	setFillColor "aqua
+	setFontSize :torsoHeight * 0.3
+	setPenSize 0
+	right 90
+	jumpBackward :torsoWidth * 0.35
+	label :letter
+
+	setFillColor "black
+	jumpTo :oldPos
+	setHeading :oldHeading
+	setPenSize 0
+	jumpForward :headElevation
+	circle :headRadius
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :torsoHeight
+	jumpLeft :shoulderSeparation / 2
+	setHeading :oldHeading - :angle1
+
+	; comparing with 90.1 instead of 90 to rule out
+	; floating point calculation error when :angle1 should 
+	; be exactly 180 or 0.
+	arm :armLength (abs :angle1 - 90) < 90.1
+	setHeading :oldHeading
+	jumpRight :shoulderSeparation
+	setHeading :oldHeading + :angle2
+	arm :armLength (abs :angle2 - 90) > 90.1
+
+	setTurtleState :oldState
+end
+
+; letter should be a capital letter like "A or "L
+to letterToSemaphoreState :letter
+	assert 1 = count :letter
+	if :letter = ' ' [
+		output item 27 :semaphoreStates
+	]
+	localmake "offset (ascii "A) - 1
+	localmake "index (ascii :letter) - :offset
+	output item :index :semaphoreStates
+end
+
+to drawLetter :size :timeRatio
+	localmake "indexRatio 1 + :timeRatio * count :message
+	localmake "letter1Index min int :indexRatio count :message
+	localmake "letter2Index min 1 + :letter1Index count :message
+	localmake "letter1State letterToSemaphoreState item :letter1Index :message
+	localmake "letter2State letterToSemaphoreState item :letter2Index :message
+	localmake "ratio :indexRatio - int :indexRatio
+	localmake "ratio ((clamp :ratio 0.35 0.65) - 0.35) / 0.3
+	localmake "ratio interpolateRatio easeInOut :ratio
+	localmake "semaphoreAngles mix :letter2State :letter1State  :ratio
+	localmake "angle1 item 1 :semaphoreAngles
+	localmake "angle2 item 2 :semaphoreAngles
+	localmake "letter ' '
+	if or (:ratio < 0.01) (:letter1Index = :letter2Index) [
+		localmake "letter item :letter1Index :message
+	]
+	if :ratio > 0.99 [
+		localmake "letter item :letter2Index :message
+	]
+	drawState :size :angle1 :angle2 :letter
+end
+
+make "timeRatio animation.time / animation.duration
+make "timeRatio clamp :timeRatio 0 1
+drawLetter 100 :timeRatio
+
+to animation.snapshotstyle
+	localmake "result createPList
+	setProperty "result "zoom.scale 3
+	setProperty "result "position.y 50
+	output :result
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 8
+	; Edit this if you want to change the length of your animation.
+	localmake "result createPList
+	setProperty "result "duration :minutes * 60 + :seconds
+	output :result
+end
