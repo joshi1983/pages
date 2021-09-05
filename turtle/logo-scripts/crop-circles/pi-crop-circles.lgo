@@ -1,0 +1,98 @@
+make "darkColor "#680
+make "lightColor "#efa
+
+to digitToAngleDegrees :digit
+	output ((ascii :digit) - (ascii "0)) * 360 / 10
+end
+
+to drawDarkBackgroundForDigits :maxRadius :step :digits
+	localmake "oldState turtleState
+	localmake "innerRadius :maxRadius - :step
+	localmake "totalAngle 0
+	repeat count :digits [
+		localmake "digit item repcount :digits
+		if :digit <> '.' [
+			localmake "totalAngle :totalAngle + digitToAngleDegrees :digit
+		]
+	]
+	right :totalAngle - 2
+	jumpForward :innerRadius
+	left 90
+	setFillColor :darkColor
+	setPenSize 0
+	polyStart
+	arcLeft 180 :innerRadius
+	jumpRight :step
+	arcLeft 180 :maxRadius
+	polyEnd
+	arcLeft 180 :maxRadius
+	setFillColor :lightColor
+	setPenColor :darkColor
+	setPenSize :maxRadius * 0.02
+	repeat 3 [
+		localmake "radius :maxRadius * mix 0.13 0.06 repRatio
+		localmake "radiusAngle arcTan :radius / :maxRadius
+		penUp
+		arcLeft :radiusAngle :maxRadius
+		penDown
+		circle :radius
+		penUp
+		arcLeft :radiusAngle + 1.4 :maxRadius
+		penDown
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by:
+; https://www.reddit.com/r/pics/comments/1dalem/most_complex_crop_circle_ever_discovered_in/
+; The connection to base 10 digits of pi is explained at:
+; https://www.youtube.com/shorts/q31K4u7iaNk
+; This was reported in June 2008.
+; The location was near Barbury Castle.
+to piCropCircles :height
+	localmake "oldState turtleState
+	localmake "digits "3.14159265
+	localmake "maxRadius :height * 0.43
+	localmake "minRadius :height * 0.07
+	localmake "step (:maxRadius - :minRadius) / count :digits
+	localmake "arcRadius :minRadius + :step
+	localmake "maxRadiusOuter :maxRadius + :height * 0.01
+	jumpForward :height / 2
+	setPenSize 0
+	setFillColor :lightColor
+	circle :height / 2
+	drawDarkBackgroundForDigits :maxRadiusOuter :step :digits
+	setFillColor :lightColor
+	circle :minRadius
+	jumpForward :minRadius
+	setPenSize :height * 0.006
+	setPenColor :lightColor
+	repeat count :digits [
+		localmake "digit item repcount :digits
+		ifelse :digit = '.' [
+			localmake "pos1 pos
+			localmake "heading1 heading
+			right 90
+			penUp
+			arcRight 10 :arcRadius
+			penDown
+			circle :height * 0.006
+			jumpTo :pos1
+			setHeading :heading1
+		] [
+			localmake "arcAngle digitToAngleDegrees :digit
+			forward :step
+			right 90
+			arcRight :arcAngle :arcRadius
+			left 90
+			localmake "arcRadius :arcRadius + :step
+		]
+	]
+	forward :step
+	right 90
+	arcRight 150 :maxRadius
+	setTurtleState :oldState
+end
+
+setScreenColor :darkColor
+piCropCircles 100

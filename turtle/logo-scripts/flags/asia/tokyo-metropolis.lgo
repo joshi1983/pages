@@ -1,0 +1,89 @@
+make "mainFlagColor "#4b0082
+
+to tokyoMonsho :height :color
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "thickness :height * 0.0833
+	localmake "angle 46.1
+	localmake "gap :height * 0.2083
+	localmake "size1 :height / 2 - :gap - :thickness / 2 / tan :angle
+	localmake "size2 :thickness  / 2 / sin :angle
+	jumpForward :height / 2
+	setPenColor :color
+	setFillColor :color
+	localmake "center pos
+	setPenSize 0
+	repeat 6 [	
+		setHeading :oldHeading + repcount * 360 / 6
+		jumpForward :gap
+		jumpLeft :thickness / 2
+		polyStart
+		jumpForward :size1
+		right :angle
+		jumpForward :size2
+		right 180 - :angle * 2
+		jumpForward :size2
+		right :angle
+		jumpForward :size1
+		polyEnd
+		jumpTo :center
+	]
+	setPenSize :thickness
+	setFillColor transparent
+	circle :gap
+	setPenSize 0
+	setFillColor :color
+	circle :thickness
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Symbols_of_Tokyo#/media/File:Flag_of_Tokyo_Metropolis.svg
+to tokyoMetropolisFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 3 / 2
+	stripes :width :height [:mainFlagColor]
+	jumpForward :height / 6
+	tokyoMonsho :height * 2 / 3 "white
+	setTurtleState :oldState
+end
+
+to tokyoGinkgoLeaf :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "baseWidth :height * 0.03
+	jumpLeft :baseWidth / 2
+	localmake "leftPos pos
+	jumpRight :baseWidth / 2
+	jumpForward :height / 2
+	localmake "center pos
+	jumpForward :height / 2
+	localmake "top pos
+	jumpTo :oldPos
+	setPenSize 0
+	setFillColor "#199332
+	jumpRight :baseWidth / 2
+	polyStart
+	localmake "offsetAngle 5
+	arcRight :offsetAngle :height / 2
+	localmake "baseArcAngle getArcRightAngleToCircle :height * 0.5 :center :height / 2
+	arcRight :baseArcAngle :height / 2
+	localmake "baseArcAngle :baseArcAngle + :offsetAngle
+	localmake "topArcAngle 2 * arcSin (distance :top) / 2 / (:height / 2)
+	setHeading (towards :center) + 90
+	arcLeft :topArcAngle * 2 :height / 2
+	setHeading (towards :leftPos) - :baseArcAngle / 2
+	arcRight :baseArcAngle :height / 2
+	polyEnd
+	setTurtleState :oldState
+end
+
+setScreenColor "#eee
+make "height 100
+make "separation 4 * :height
+jumpLeft :separation
+tokyoMetropolisFlag :height
+jumpRight :separation
+tokyoMonsho :height "black
+jumpRight :separation
+tokyoGinkgoLeaf :height

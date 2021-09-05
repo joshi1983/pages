@@ -1,0 +1,68 @@
+; Inspired by:
+; https://publicdomainvectors.org/en/free-clipart/Radioactive-icon/52704.html
+to radioactiveSign :height
+	localmake "oldState turtleState
+	localmake "arcRadius :height * 0.289
+	stripes :height :height ["yellow]
+	jumpForward :height * 0.529
+	setPenSize 0
+	setFillColor "black
+	circle :height * 0.09
+	setPenColor fillColor
+	setLineCap "butt
+	setPenSize :height * 0.312
+	right 180 / 6
+	jumpForward :arcRadius
+	right 90
+	repeat 3 [
+		arcRight 360 / 6 :arcRadius
+		penUp
+		arcRight 360 / 6 :arcRadius
+		penDown
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by:
+; https://publicdomainvectors.org/en/free-clipart/Radioactive-hazard-warning-sign-vector-image/15145.html
+to radioactiveHazardSign :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "cornerRadius :height * 0.06
+	localmake "radius1 (:height + :cornerRadius * ((1 / sin 30) - 1)) / (1 + sin 30)
+	localmake "len1 :height * 0.39
+	jumpForward :radius1 * sin 30
+	setFillColor "yellow
+	setPenSize 0
+	roundRegularPolygon :radius1 3 :cornerRadius
+	setFillColor "black
+	roundRegularPolygon :height * 0.65 3 :height * 0.03
+	setFillColor "yellow
+	regularPolygon :height * 0.505 3
+	setFillColor "black
+	circle :height * 0.075
+	repeat 6 [
+		rect :height * 0.39 :height * 0.012
+		right 180 / 6
+	]
+	right 180 / 12
+	repeat 6 [
+		rect :height * 0.26 :height * 0.009
+		right 180 / 6
+	]
+	setHeading :oldHeading + 90
+	setPenSize :height * 0.015
+	setLineCap "butt
+	setPenColor fillColor
+	jumpBackward :len1 / 2
+	forward :len1 + :height * 0.14	
+
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 4
+jumpLeft :separation / 2
+radioactiveSign :height
+jumpRight :separation
+radioactiveHazardSign :height
