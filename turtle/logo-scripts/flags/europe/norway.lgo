@@ -1,0 +1,89 @@
+make "norwayRed "#ba0c2f
+make "norwayBlue "#00205b
+
+to norwayFlagCustomWidth :width :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	stripes :width :height [:norwayRed]
+	setPenSize :height * 4 / 16
+	setLineCap "butt
+	setPenColor "white
+	jumpLeft :width / 2 - :height * 8 / 16
+	localmake "pos1 pos
+	repeat 2 [
+		forward :height
+		jumpBackward :height / 2
+		right 90
+		jumpBackward :height * 8 / 16
+		forward :width
+		jumpTo :pos1
+		setHeading :oldHeading
+		setPenSize :height * 2 / 16
+		setPenColor :norwayBlue
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Norway#/media/File:Flag_of_Norway.svg
+; Based mostly on construction sheet at
+; https://en.wikipedia.org/wiki/Flag_of_Norway#/media/File:Flag_of_Norway_(construction_sheet).svg
+to norwayFlag :height
+	localmake "width :height * 11 / 8
+	norwayFlagCustomWidth :width :height
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Norway#/media/File:Flag_of_Norway,_state.svg
+; Based mostly on construction sheet at
+; https://en.wikipedia.org/wiki/Flag_of_Norway#/media/File:Flag_of_Norway_-_state_and_war_(construction_sheet).svg
+to norwayWarFlag :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "width :height * 27 / 16
+	localmake "size1 :height / 16 * hypot [6 11]
+	localmake "angle1 arcTan 11 / 6
+	jumpLeft :height * 11 / 32
+	norwayFlagCustomWidth :height :height
+	jumpTo :oldPos
+	setPenSize 0
+	setFillColor :norwayRed
+	polyStart
+	jumpRight :width / 2
+	left :angle1
+	jumpForward :size1
+	polyEnd
+	setHeading :oldHeading
+	jumpForward :height * 2 / 16
+	right 90
+	localmake "middle pos
+	setFillColor "white
+	isoTriangle :height * 4 / 16 :height * 11 / 16
+	setPenColor :norwayBlue
+	setPenSize :height * 2 / 16
+	forward :height * 11 / 16 * 2 / 4
+	setFillColor penColor
+	setPenSize 0
+	isoTriangle :height * 2 / 16 :height * 11 / 16 * 2 / 4
+	jumpTo :middle
+	setHeading :oldHeading
+	jumpForward :height * 2 / 16
+	setFillColor :norwayRed
+	right :angle1
+	polyStart
+	jumpForward :size1
+	setHeading :oldHeading
+	jumpLeft :width / 2
+	polyEnd
+	setTurtleState :oldState
+end
+
+; #eee for subtle contrast to white in the flag.
+setScreenColor "#888
+make "height 100
+make "separation :height * 4
+jumpLeft :separation * 0.5
+norwayFlag :height
+jumpRight :separation
+norwayWarFlag :height
