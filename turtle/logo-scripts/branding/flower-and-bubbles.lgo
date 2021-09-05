@@ -1,0 +1,296 @@
+; A lot of this is inspired by graphics from
+; a container of GAIN laundry detergent.
+; An image of this material is at:
+; https://m.media-amazon.com/images/I/81SAMJQqOtL._AC_SL1500_.jpg
+; Another source image is at:
+; https://images.heb.com/is/image/HEBGrocery/002796008
+;
+; Note that the source of inspiration is most-likely protected by copyright
+; or trademark restrictions.
+; I'm sharing this derived work for your educational purposes only.
+;
+; As with any other example, check the source of inspiration's copyright restrictions
+; carefully before copying, editing, or sharing derived Logo source code.
+
+to gainFlowerBackgroundGradient :height
+	localmake "colorStops createPList2 [
+		[0.2 "#D4F5A3] [0.5 "white] [0.55 "white] [0.8 "#C2DF8B] [1 "#dfeee7]
+	]
+	output createRadialGradient pos :height / 2 :colorStops
+end
+
+to gainFlowerBackground :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "arcsInfo [
+		[-30 0.07]
+		[-35 0.10980647]
+		[-30 0.28]
+	]
+	localmake "numPeddles 8
+	localmake "angle 180 + 360 / :numPeddles + 2 * sumOfFirsts :arcsInfo
+	jumpForward :height / 2
+	setFillGradient gainFlowerBackgroundGradient :height
+	setPenSize :height * 0.01
+	setLineCap "round
+	setLineJoinStyle "round
+	setPenColor "#8260
+	jumpForward :height * 0.38
+	polyStart
+	repeat :numPeddles [
+		setHeading :oldHeading + (repcount - 1) * 360 / :numPeddles
+		arcsLeft :arcsInfo :height
+		right :angle
+		arcsLeft reverse :arcsInfo :height
+	]
+	polyEnd
+	setTurtleState :oldState
+end
+
+to gainFlowerOrangePattern :height
+	localmake "oldState turtleState
+	localmake "colorStops createPList2 [
+	[0 "#f6b325] [0.1 "white] [0.12 "#C9FDE5] [0.13 "#f6b325] [1 "#F7E522]
+	]
+	jumpForward :height / 2
+	setPenSize 0
+	setFillGradient createRadialGradient pos :height / 2 :colorStops
+	isotoxalStar :height * 0.13 :height * 0.09 16
+	setPenGradient fillGradient
+	setPenSize :height * 0.007
+	localmake "center pos
+	repeat 8 [
+		setPenGradient fillGradient
+		forward :height * 0.4
+		setPenColor "#4620
+		circlePair :height * 0.01 :height * 0.02 :height * 0.08
+		right 360 / 8
+		jumpTo :center
+	]
+	right 180 / 8
+	setPenColor "#F0B500
+	setFillColor penColor
+	repeat 8 [
+		jumpForward :height * 0.1
+		setPenSize :height * 0.007
+		forward :height * 0.2
+		setPenSize 0
+		circlePair :height * 0.007 :height * 0.02 :height * 0.04
+		circlePair :height * 0.015 :height * 0.001 :height * 0.03
+		right 360 / 8
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by a Gain original
+; laundry detergent container
+; An image is at:
+; https://m.media-amazon.com/images/I/81SAMJQqOtL._AC_SL1500_.jpg
+to gainFlower :height
+	localmake "oldState turtleState
+	gainFlowerBackground :height
+	gainFlowerOrangePattern :height
+	setTurtleState :oldState
+end
+
+to gainGlare1 :height
+	localmake "oldState turtleState
+	setPenSize 0
+	jumpForward :height / 2
+	setFillColor "white
+	isotoxalStar :height / 2 :height * 0.1 22
+	setTurtleState :oldState
+end
+
+to gainGlare2 :height
+	localmake "oldState turtleState
+	localmake "gradientRadius :height * 0.35
+	localmake "colorStops createPList2 [
+		[0 "#ffff] [0.2 "#8fff] [1 "#0fff]
+	]
+	setPenSize 0
+	jumpForward :height / 2
+	setFillGradient createRadialGradient pos :gradientRadius :colorStops
+	circle :gradientRadius
+	setFillColor "white
+	isotoxalStar :height / 2 :height * 0.02 2
+	isotoxalStar :height * 0.02 :height * 0.38 2
+	isotoxalStar :height * 0.3 :height * 0.01 8
+	setTurtleState :oldState
+end
+
+to bubble :height
+	localmake "oldState turtleState
+	localmake "colorStops createPList2 [
+		[0 "#5bffffff] [0.5 "#3fff] [0.7 "#2fff]
+		[0.95 "#2fff] [1 "#5fff]
+	]
+	jumpForward :height / 2
+	setPenSize 0
+	setFillGradient createRadialGradient pos :height / 2 :colorStops
+	circle :height / 2
+	setTurtleState :oldState
+end
+
+to gainBubblySpiral :height
+	localmake "oldState turtleState
+	localmake "colors ["#8fff "#8ff0 "#fff0 "#aff8 "#5fff]
+	jumpForward :height * 0.37
+	setFillColor "white
+	setPenSize 0
+	repeat 16 [
+		setFillColor mixItems :colors repRatio
+		localmake "radius :height * 0.1 * (0.2 + sin 180 * interpolateRatio easeIn repRatio)
+		circle :radius
+		jumpForward :radius + :height * 0.25 * (0.2 + interpolateRatio easeIn repRatio)
+		right 40
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by a dandelion depiction on
+; a Gain Blissful Breeze laundry deterent container.
+; The image is at:
+; https://images.heb.com/is/image/HEBGrocery/002796008
+to dandelion :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "numWhiteArcs 32
+	localmake "whiteRadius :height * 0.43
+	localmake "whiteArcAngle1 360 * 0.3 / :numWhiteArcs
+	localmake "outerGreenCircleRadius :height * 0.025
+	localmake "outerGreenCirclePenSize :height * 0.004
+	localmake "outerGreenCircleDistance :height / 2 - :outerGreenCircleRadius - :outerGreenCirclePenSize / 2
+	localmake "colorStops createPList2 [
+		[0 "#ffff] [0.5 "#dfff] [0.86 "#8fff] [0.87 "#4000]
+		[1 "#0000]
+	]
+	localmake "gradientRadius :height / 2
+	jumpForward :height / 2
+	setFillGradient createRadialGradient pos :gradientRadius :colorStops
+	setPenSize 0
+	circle :gradientRadius
+	localmake "center pos
+	setFillColor "#afff
+	polyStart
+	repeat :numWhiteArcs [
+		setHeading :oldHeading - (:whiteArcAngle1 / 2) + repcount * 360 / :numWhiteArcs
+		jumpForward :whiteRadius
+		right 90
+		arcRight :whiteArcAngle1 :whiteRadius
+		jumpRight :whiteRadius
+	]
+	polyEnd
+	setHeading :oldHeading
+	setFillColor "#4c0
+	circle :height * 0.125
+	isotoxalStar :height * 0.5 :height * 0.04 8
+	right 180 / 8
+	setPenSize :height * 0.015
+	setPenColor fillColor
+	repeat 8 [
+		forward :height * 0.2
+		circle :height * 0.02
+		jumpForward :height * 0.12
+		circle :height * 0.01
+		jumpTo :center
+		right 360 / 8
+	]
+	setPenColor "#8000
+	setPenSize :outerGreenCirclePenSize
+	setHeading :oldHeading
+	repeat 8 [
+		jumpForward :outerGreenCircleDistance
+		circle :outerGreenCircleRadius
+		jumpTo :center
+		right 360 / 8
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by a flower in a Gain
+; laundry detergent container shown at:
+; https://i5.peapod.com/c/7I/7ISIA.png
+to moonlightBreezeFlower :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "backgroundColor "#2a238b
+	localmake "numPeddles 5
+	localmake "arcsInfo [
+		[-10 1.571331]
+		[-106.364 0.1683569]
+		[30 0.1122379]
+	]
+	localmake "arcsInfo2 [
+		[-15 0.8]
+		[-57.1944 0.25]
+		[30 0.1]
+	]
+	localmake "delta2 30
+	localmake "height2 :height * 0.7
+	localmake "delta 40
+	localmake "angle 180 + :delta * 2 + 2 * sumOfFirsts :arcsInfo
+	localmake "angle2 180 + :delta2 * 2 + 2 * sumOfFirsts :arcsInfo2
+	jumpForward :height / 2
+	localmake "center pos
+	localmake "colorStops createPList2 [
+		[0 "black] [0.2 mix "black :backgroundColor 0.5]
+		[1 :backgroundColor]
+	]
+	setFillGradient createRadialGradient pos :height * 0.4 :colorStops
+	setPenSize 0
+	repeat 5 [
+		setHeading :oldHeading + (repcount - 1) * 360 / :numPeddles
+		left :delta
+		polyStart
+		arcsLeft :arcsInfo :height
+		right :angle
+		arcsLeft reverse :arcsInfo :height
+		polyEnd
+		jumpTo :center
+	]
+	setFillColor "#d33999
+	repeat :numPeddles [
+		setHeading :oldHeading + (repcount - 1) * 360 / :numPeddles
+		left :delta2
+		polyStart
+		arcsLeft :arcsInfo2 :height2
+		right :angle2
+		arcsLeft reverse :arcsInfo2 :height2
+		polyEnd
+		jumpTo :center
+	]
+
+	setFillColor "white
+	repeat :numPeddles [
+		setHeading :oldHeading + (repcount - 1) * 360 / :numPeddles
+		circlePair 0 :height * 0.02 :height * 0.15
+		jumpTo :center
+	]
+	localmake "colorStops createPList2 [
+		[0 :backgroundColor] [1 mix :backgroundColor transparent 0]
+	]
+	localmake "gradientRadius :height * 0.14
+	setFillGradient createRadialGradient pos :gradientRadius :colorStops
+	circle :gradientRadius
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+make "height 100
+make "separation :height * 1.5
+jumpLeft :separation * 3
+gainFlower :height
+jumpRight :separation
+gainGlare1 :height
+jumpRight :separation
+gainGlare2 :height
+jumpRight :separation
+bubble :height
+jumpRight :separation
+gainBubblySpiral :height
+jumpRight :separation
+dandelion :height
+jumpRight :separation
+moonlightBreezeFlower :height

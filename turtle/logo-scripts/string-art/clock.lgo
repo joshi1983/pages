@@ -1,0 +1,82 @@
+to spiralPolygon :numSides :size :minSizeRatio
+	localmake "oldState turtleState
+	localmake "numCycles 20
+	localmake "minSize :size * :minSizeRatio
+	localmake "sizeRange :size - :minSize
+	localmake "numIterations :numCycles * :numSides
+	localmake "stepRatio 1 / :numIterations
+	localmake "step :sizeRange / :numIterations
+	localmake "angleStep 90 * :step / :sizeRange
+	while :size > :minSize [
+		forward :size
+		right (360 / :numSides) + :angleStep
+		localmake "size :size - :step - :stepRatio * :size
+	]
+	setTurtleState :oldState
+end
+
+to circleDesign :radius :numDots :thickness
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "dotOffset int ((:numDots / 180) * arcCos (:radius - :thickness) / :radius)
+	localmake "dots []
+	repeat :numDots [
+		jumpTo :oldPos
+		setHeading :oldHeading + 360 * repcount / :numDots
+		jumpForward :radius
+		queue "dots pos
+	]
+	repeat :numDots [
+		localmake "fromDot item repcount :dots
+		localmake "toIndex 1 + (remainder (repcount + :dotOffset) :numDots)
+		localmake "toDot item :toIndex :dots
+		jumpTo :fromDot
+		setHeading towards :toDot
+		forward distance :toDot
+	]
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to stringArtClock :size
+	localmake "oldPos pos
+	localmake "oldState turtleState
+	localmake "clockRadius :size * 0.26
+	localmake "clockStringThicknessRatio 0.3
+	localmake "clockOuterRadius :clockRadius * (1 + :clockStringThicknessRatio)
+	localmake "squareRadius :clockOuterRadius * 0.95
+	localmake "squareSize :clockOuterRadius * 2.15 * cos 60
+	localmake "triangleRadius hypot [:squareRadius :squareSize * 0.5]
+	localmake "triangleHeight :squareSize * cos 30
+	circleDesign :clockOuterRadius 64 :clockRadius * :clockStringThicknessRatio
+	repeat 6 [
+		jumpTo :oldPos
+		jumpForward :squareRadius
+		jumpLeft :squareSize * 0.5
+		spiralPolygon 4 :squareSize 0.2
+		jumpForward :squareSize
+		right 30
+		spiralPolygon 3 :squareSize 0
+		left 30
+		right 180 / 6
+		localmake "tempHeading heading
+		jumpTo :oldPos
+		jumpForward :triangleRadius
+		left 30
+		spiralPolygon 3 :squareSize 0
+		right 30
+		jumpForward :triangleHeight
+		left 90
+		jumpForward :squareSize * 0.5
+		right 120
+		spiralPolygon 3 :squareSize 0
+		setHeading :tempHeading
+		right 180 / 6
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "white
+setPenColor "black
+setPenSize 0.3
+stringArtClock 150
