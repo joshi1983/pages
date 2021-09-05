@@ -1,0 +1,79 @@
+to drawColoredCircles :height
+	localmake "oldState turtleState
+	localmake "whiteRadius :height * 0.275
+
+	; It is tempting to use whiteRadius / 4 but
+	; 0.25 doesn't line up with the image as well as 0.26.
+	localmake "blueRadius :whiteRadius * 0.26
+	localmake "blackRadius :blueRadius / 3
+	localmake "separation :height * 0.58
+	jumpLeft :separation / 2
+	jumpForward :height * 0.557
+	setPenColor "#cc242a
+	repeat 2 [
+		setPenSize 0
+		setFillColor "white
+		circle :whiteRadius
+		setFillColor "#235ab9
+		circle :blueRadius
+		setFillColor transparent
+		setPenSize :blueRadius
+		circle :whiteRadius * 5 / 8
+		jumpRight :separation
+	]
+	jumpLeft :separation
+	setFillColor "black
+	setPenSize 0
+	circle :blackRadius
+	setTurtleState :oldState
+	output :blackRadius
+end
+
+; Inspired by a drawing by artist Paul Rand.
+; You can learn more about the artist at:
+; https://en.wikipedia.org/wiki/Paul_Rand
+;
+; The drawing is shown at:
+; https://ca.pinterest.com/pin/545920786058139439
+; and
+; https://www.mutualart.com/Artwork/THE-PREPARED-PROFESSIONAL---INTERNATIONA/DA5FA2F118B04713
+to preparedProfessional :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "lightColor "#b2ab8d
+	localmake "holes [
+		[-0.1653 0.345 "black] [-0.3372 0.3658 "black] [-0.528 0.4707 "black]
+		[-0.392 0.622 "black] [-0.389 0.696 "black] [-0.1525 0.777 "black]
+		[-0.067 0.129 :lightColor] [-0.202 0.028 :lightColor]
+		[-0.313 0.245 :lightColor] [-0.506 0.19 :lightColor]
+		[-0.355 0.898 :lightColor] [-0.2809 0.989 :lightColor]
+		[-0.0807 0.927 :lightColor]
+	]
+	localmake "holeRadius drawColoredCircles :height
+	setPenSize 0
+	repeat count :holes [
+		localmake "holeInfo item repcount :holes
+		localmake "y :height * item 2 :holeInfo
+		jumpRight :height * first :holeInfo
+		jumpForward :y
+		setFillColor last :holeInfo
+		ifelse :y + :holeRadius > :height [
+			localmake "oldHeading heading
+			localmake "angle 90 - arcSin (:height - :y) / :holeRadius
+			right :angle
+			jumpForward :holeRadius
+			right 90
+			polyStart
+			arcRight 360 - 2 * :angle :holeRadius
+			polyEnd
+			setHeading :oldHeading
+		] [
+			circle :holeRadius
+		]
+		jumpTo :oldPos
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+preparedProfessional 100

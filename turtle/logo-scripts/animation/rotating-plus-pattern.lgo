@@ -1,0 +1,67 @@
+; Inspired by
+; https://64.media.tumblr.com/984678bdd008ef3c6c0684901d0a2100/tumblr_mz48duQQHZ1rpco88o1_400.gifv
+
+to plus :squareSize
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	setPenSize :squareSize
+	repeat 2 [
+		jumpBackward :squareSize * 1.5
+		forward :squareSize * 3
+		jumpTo :oldPos
+		right 90
+	]
+	setTurtleState :oldState
+end
+
+to rotatedPlus :size :angle
+	right :angle
+	plus :size
+	left :angle
+end
+
+to rotatingPlusPattern :squareSize :numHeight :numWidth :angle
+	setLineCap "butt
+	jumpBackward :squareSize * 0.5 * :numHeight
+	jumpLeft :squareSize * 10 * 0.5 * :numWidth
+	repeat :numHeight [
+		localmake "pos1 pos
+		jumpLeft :squareSize * 10 * int repcount / 3
+		jumpRight :squareSize * 3 * repcount
+		repeat :numWidth [
+			rotatedPlus :squareSize :angle
+			jumpRight :squareSize * 10
+		]
+		jumpTo :pos1
+		jumpForward :squareSize
+	]
+end
+
+make "squareSize 40
+make "animationRatio animation.timeRatio
+jumpBackward :squareSize * 2
+
+; handle the change in direction and colors for 
+; the last half of the video.
+if :animationRatio > 0.5 [
+	setScreenColor "black
+	setPenColor "white
+	jumpForward :squareSize * 5
+	make "animationRatio 1 - :animationRatio
+]
+make "animationRatio interpolateRatio easeInOut clamp :animationRatio * 2 0 1
+
+rotatingPlusPattern :squareSize 25 20 90 * :animationRatio
+
+to animation.snapshotstyle
+	output createPList
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 3
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end
