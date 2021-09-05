@@ -1,0 +1,58 @@
+; Inspired by logo at:
+; https://www.youtube.com/@ActionRetro
+to actionRetroLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "rightX 0.333
+	localmake "rightY 0.3206
+	localmake "thickness :height * 0.004
+	stripes :height :height ["black]
+	setPenSize 0
+	setFillColor "white
+	drawArcLineShape [0 0.129
+		[[-70 0] [0.312] [80 0.02] [0.59] [74 0] [0.32]
+		[44 0.03] [0.227] [42 0] [0.07] [15 0] [0.477] [68 0]
+		[0.228] [40 0.05]]
+	] :height
+	drawArcLineShape [:rightX :rightY
+		[[-80 0] [93.4 0.02] [0.491] [71 0.02] [0.1] [90 0] [0.6]]
+	] :height
+
+	setPenColor "violet
+	setPenSize :thickness
+	jumpRight :height * :rightX
+	jumpForward :height * :rightY
+	arcLines [[106 0] [0.367] [-98.7 0.02] [0.638]
+	] :height
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpRight :height * 0.226
+	jumpForward :height * 0.42
+	left 10
+	setLineJoinStyle "round
+	parallelogram :height * 0.115 :height * 0.011 -10
+	jumpBackward :height * 0.17
+	jumpRight :height * 0.01
+	setPenSize :height * 0.01
+	setLineCap "butt
+	forward :height * 0.03
+
+	setPenSize :thickness
+	jumpTo :oldPos
+	setHeading :oldHeading
+	setFillColor transparent
+	drawArcLineShape [-0.0193 0.5014
+		[[-153 0] [70 0.02] [0.255] [95 0.02] [0.235] [76 0.02]
+		[0.2656] [90 0.01]]
+	] :height
+
+	setFillColor "black
+	drawArcLineShape [-0.0193 0.5014
+		[[-84 0] [0.25] [96 0.02] [0.21] [76 0.02] [0.255]]
+	] :height
+	
+	setTurtleState :oldState
+end
+
+actionRetroLogo 100

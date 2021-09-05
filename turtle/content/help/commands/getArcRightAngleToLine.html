@@ -1,0 +1,62 @@
+<code>; The following code visualizes
+; random data passed to getArcRightAngleToLine
+; Various shapes are drawn to illustrate
+; different elements of the problem and
+; meaning of the resulting arc angle.
+
+make "linePoint1 [random 100 random 100]
+
+; We want to loop until finding distinct linePoint2.
+; There is a 1 / 10000 probability of a random linePoint2
+; being the same as linePoint1.
+; That's a low probability but 0 is better.
+do.while [
+	make "linePoint2 [random 100 random 100]
+] equal? :linePoint2 :linePoint1
+
+make "linePoints [:linePoint1 :linePoint2]
+setPenSize 0
+setFillColor "blue
+
+repeat 2 [
+	jumpTo item repcount :linePoints
+	circle 3
+]
+
+jumpTo :linePoint1
+setHeading towards :linePoint2
+jumpBackward 200
+setPenSize 1
+setPenColor "black
+forward 200 + distance :linePoint2
+
+make "startPos [random 100 random 100]
+jumpTo :startPos
+setFillColor "lime
+circle 3
+make "startHeading random 360
+setHeading :startHeading
+stripes penSize 100 ["green]
+make "arcRadius 10 + random 100
+make "arcAngle getArcRightAngleToLine :arcRadius :linePoint1 :linePoint2
+
+ifelse :arcAngle >= 0 [
+	arcRight :arcAngle :arcRadius
+	circle 2
+] [
+	setFontSize 20
+	label 'No intersection'
+]
+
+jumpTo :startPos
+setHeading :startHeading
+jumpRight :arcRadius
+setFillColor "red
+setPenSize 0
+circle 2
+setPenSize 0.1
+setPenColor "#5000
+setFillColor "#1000
+circle :arcRadius
+jumpTo :startPos
+setHeading :startHeading</code>

@@ -1,0 +1,47 @@
+; Inspired by
+; https://www.pinterest.ca/pin/43136108901698121
+to polarTreeCircle :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "radius :height / 4
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize :height * 0.02
+	circle (:height - penSize) / 2
+	localmake "maxRadius :height / 2 - penSize
+	localmake "pointsByLevel [[:center]]
+	repeat 8 [
+		localmake "numRepeats 4 * power 3 (repcount - 1)
+		localmake "points []
+		repeat :numRepeats [
+			setHeading :oldHeading + repcount * 360 / :numRepeats
+			jumpForward :radius
+			queue2 "points pos
+			jumpTo :center
+		]
+		queue2 "pointsByLevel :points
+		localmake "radius mix :radius :maxRadius 0.5
+	]
+	setLineJoinStyle "round
+	setLineCap "round
+	for ["levelIndex 2 count :pointsByLevel] [
+		localmake "prevLevelInfo item :levelIndex - 1 :pointsByLevel
+		localmake "levelInfo item :levelIndex :pointsByLevel
+		setPenSize :height * 0.05 / (power 2 :levelIndex)
+		repeat count :levelInfo [
+			localmake "prevLevelPointIndex remainder (round repcount / 3) count :prevLevelInfo
+			if :prevLevelPointIndex = 0 [
+				localmake "prevLevelPointIndex count :prevLevelInfo
+			]
+			localmake "prevPoint item :prevLevelPointIndex :prevLevelInfo
+			localmake "point item repcount :levelInfo
+			jumpTo :point
+			setHeading towards :prevPoint
+			forward distance :prevPoint
+		]
+	]
+
+	setTurtleState :oldState
+end
+
+polarTreeCircle 100

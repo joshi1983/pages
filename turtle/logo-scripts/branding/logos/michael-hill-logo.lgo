@@ -1,0 +1,103 @@
+to drawShape :height :maxWidth :minWidth
+	localmake "oldState turtleState
+	localmake "arcAngle 2 * arcTan (:maxWidth - :minWidth) / :height
+	localmake "arcRadius :height / 2 / sin :arcAngle / 2
+	localmake "lines1 [
+		[:minWidth / 2] [90 - :arcAngle / 2 0] [:arcAngle / 2 :arcRadius]
+	]
+	localmake "lines2 combine :lines1 reverse :lines1
+	drawArcLineShape [0 0
+		(combine [[-90 0]] :lines2 :lines2)
+	] 1
+	
+	setTurtleState :oldState
+end
+
+to setFillLinearGradient :width :color
+	localmake "oldPos pos
+	localmake "colorStops createPList2 [
+		[0 :color] [0.3 "white] [0.7 "white]
+		[1 :color]
+	]
+	jumpLeft :width / 2
+	localmake "fromPos pos
+	jumpRight :width
+	setFillGradient createLinearGradient :fromPos pos :colorStops "pad
+	jumpTo :oldPos
+end
+
+; Inspired by a sign at:
+; https://fr.wikipedia.org/wiki/Michael_Hill_International#/media/Fichier:Michael_hill_in_Chadstone_Shopping_Centre_2017.JPG
+to michaelHillSign :height
+	localmake "oldState turtleState
+	localmake "outerHeight1 :height * 0.135
+	localmake "gap1 :height * 0.19
+	localmake "gap2 :height / 2 - :gap1 - :outerHeight1
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	setFillColor "white
+	repeat 12 [
+		jumpForward :gap1
+		setFillColor "white
+		drawShape :height * 0.07 :height * 0.025 :height * 0.02
+		jumpForward :gap2
+		setFillLinearGradient :height * 0.07 "#d4f
+		drawShape :outerHeight1 :height * 0.07 :height * 0.04
+		right 360 / 12
+		jumpTo :center
+	]
+	right 180 / 12
+	repeat 12 [
+		jumpForward :height * 0.275
+		setFillLinearGradient :height * 0.1 "#d4f
+		drawShape :height * 0.18 :height * 0.1 :height * 0.055		
+		right 360 / 12
+		jumpTo :center
+	]
+
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://bananaworks.co.nz/michael-hill-jeweller-wechat-marketing
+to michaelHillLogo :height
+	localmake "oldState turtleState
+	localmake "radius :height * 0.38
+	localmake "outerHeight1 :radius * 0.27
+	localmake "gap1 :radius * 0.38
+	localmake "gap2 :radius - :gap1 - :outerHeight1
+	stripes :height :height ["white]
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	setFillColor "white
+	repeat 12 [
+		jumpForward :gap1
+		setFillColor "#aca7a5
+		drawShape :radius * 0.14 :radius * 0.05 :radius * 0.04
+		jumpForward :gap2
+		setFillColor "#59504b
+		drawShape :outerHeight1 :radius * 0.14 :radius * 0.08
+		right 360 / 12
+		jumpTo :center
+	]
+	right 180 / 12
+	setFillColor "#d2b6d7
+	repeat 12 [
+		jumpForward :radius * 0.55
+		drawShape :radius * 0.36 :radius * 0.2 :radius * 0.11		
+		right 360 / 12
+		jumpTo :center
+	]
+
+	setTurtleState :oldState
+end
+
+setScreenColor "#003
+make "height 100
+make "separation :height * 5
+jumpLeft :separation / 2
+michaelHillSign :height
+jumpRight :separation
+michaelHillLogo :height

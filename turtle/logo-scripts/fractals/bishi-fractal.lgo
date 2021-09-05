@@ -1,0 +1,36 @@
+to drawBishiBranch :size
+	if :size < 0.1 [
+		stop
+	]
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "size2 :size / 3
+	repeat 3 [
+		setHeading :oldHeading - 0 + repcount * 120
+		jumpRight :size / 2
+		parallelogram :size :size 30
+		jumpRight :size / 2
+		left 180
+		jumpForward :size2 * 2 * cos 30
+		drawBishiBranch :size2
+		right 60
+		jumpTo :oldPos
+	]
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+; Inspired by 
+; https://www.pinterest.ca/pin/728457308505891908/
+to bishiFractal :height
+	localmake "oldState turtleState
+	localmake "size :height / 4 / cos 30
+	setPenSize 0
+	setFillColor "white
+	jumpForward :height / 2
+	drawBishiBranch :size
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+bishiFractal 100

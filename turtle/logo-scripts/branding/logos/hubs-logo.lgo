@@ -1,0 +1,36 @@
+; Inspired by logo at:
+; https://www.hubs.com
+to hubsLogo :height
+	localmake "oldState turtleState
+	localmake "numSides 6
+	localmake "thickness :height * 0.093
+	localmake "angle 180 / :numSides
+	localmake "slantedHeight :height * 0.24 / cos :angle
+	localmake "thickness2 :thickness / cos 180 / :numSides
+	localmake "polyRadius (:height - :thickness2) / 2
+	setLineJoinStyle "miter
+	setPenSize :thickness
+	jumpForward :height / 2
+	localmake "center pos
+	setFillColor transparent
+	setPenColor "white
+	regularPolygon :polyRadius :numSides
+	setPenSize 0
+	setFillColor penColor
+	repeat 2 [
+		jumpForward :height * 0.202
+		left 90
+		parallelogram :thickness2 :slantedHeight -:angle
+		jumpTo :center
+		left 90
+	]
+	left :angle + 90
+	jumpBackward :slantedHeight
+	right :angle
+	parallelogram :thickness2 :slantedHeight * 2 -:angle
+	
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+hubsLogo 100

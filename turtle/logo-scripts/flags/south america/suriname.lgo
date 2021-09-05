@@ -1,0 +1,30 @@
+; Inspired by flag at:
+; https://en.wikipedia.org/wiki/Flag_of_the_Faroe_Islands#/media/File:Flag_of_the_Faroe_Islands.svg
+to surinameFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 5 / 3
+	localmake "innerWidth :height * 3 / 2
+	localmake "stripeHeight :height * 2 / 5
+	localmake "starRadius :height / 5
+	stripes :width :height ["white]
+	jumpForward :height / 2
+	localmake "center pos
+	repeat 2 [
+		jumpForward (:height - :stripeHeight) / 2
+		stripes :innerWidth :stripeHeight / 2 ["#377e3f]
+		jumpTo :center
+		right 180
+	]
+	setFillColor "#b40a2d
+	setPenSize 0
+	rect :innerWidth :stripeHeight
+	setFillColor "white
+	circle 1
+	setFillColor "#ecc81d
+	jumpBackward :starRadius * (1 - cos 180 / 5) / 2
+	regularStar :starRadius 5
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+surinameFlag 100

@@ -1,0 +1,33 @@
+; Inspired by flag at:
+; https://en.wikipedia.org/wiki/Flag_of_Roraima#/media/File:Bandeira_de_Roraima.svg
+to roraimaFlag :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "width :height * 10 / 7
+	localmake "colors ["#008200 "#00a5ff]
+	localmake "sideStep :height * 3 / 7
+	stripes :width :height ["white]
+	setPenSize 0
+	repeat count :colors [
+		localmake "pos1 pos
+		setFillColor item repcount :colors
+		jumpLeft :sideStep
+		polyStart
+		jumpRight :sideStep + :width / 2
+		jumpForward :height * 4 / 7
+		polyEnd
+		jumpTo :pos1
+		jumpForward :height
+		right 180
+	]
+	jumpForward :height / 2
+	setFillColor "#f8c300
+	regularStar :height * 5 / 14 5
+	jumpTo :oldPos
+	jumpForward :height * 9 / 70
+	stripes :width :height / 35 ["#dc0000]
+	setTurtleState :oldState
+end
+
+setScreenColor "#888
+roraimaFlag 100

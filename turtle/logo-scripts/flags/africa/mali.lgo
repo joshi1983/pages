@@ -1,0 +1,107 @@
+to kanagaLimbs :width :limbHeight
+	localmake "oldState turtleState
+	jumpForward :limbHeight
+	jumpLeft :width / 2
+	backward :limbHeight
+	right 90
+	forward :width
+	left 90
+	forward :limbHeight
+	setTurtleState :oldState
+end
+
+to kanaga :height
+	localmake "oldState turtleState
+	localmake "headRadius :height * 0.1
+	localmake "limbHeight :height * 0.18
+	localmake "limbWidth :height * 0.46
+	localmake "lineWidth :height * 0.045
+	jumpForward :height - :headRadius
+	setPenSize 0
+	setFillColor "black
+	setPenColor "black
+	circle :headRadius
+	setPenSize :lineWidth
+	backward :height - :headRadius - :limbHeight
+	right 180
+	kanagaLimbs :limbWidth :limbHeight
+	right 180
+	jumpForward :height * 0.515
+	kanagaLimbs :limbWidth :limbHeight
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Mali#/media/File:Flag_of_Mali.svg
+to maliFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 3 / 2
+	localmake "colors ["#14b53a "#fcd116  "#ce1126]
+	jumpLeft :width / 2
+	jumpForward :height / 2
+	right 90
+	stripes :height :width :colors
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Mali#/media/File:Flag_of_Mali_(1959%E2%80%931961).svg
+; Used 1959–1961
+to mali1961Flag :height
+	localmake "oldState turtleState
+	maliFlag :height
+	jumpForward :height * 2 / 15
+	kanaga :height * 0.65
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Mali#/media/File:Flag_of_French_Sudan_(1958%E2%80%931959).svg
+; Used 1958–1959
+to frenchMaliFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 3 / 2
+	localmake "colors ["#002654 "white  "#ce1126]
+	jumpLeft :width / 2
+	jumpForward :height / 2
+	right 90
+	stripes :height :width :colors
+	setTurtleState :oldState
+	jumpForward :height * 2 / 15
+	kanaga :height * 0.65
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Mali#/media/File:Flag_of_the_Mali_Empire.svg
+to maliEmpireFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 3 / 2
+	localmake "borderThickness :height * 0.22245
+	setPenSize :borderThickness
+	setFillColor "#ffcb00
+	setPenColor "#d7073a
+	setLineJoinStyle "miter
+	jumpLeft (:width - :borderThickness) / 2
+	jumpForward :borderThickness / 2
+	polyStart
+	repeat 2 [
+		jumpForward :height - :borderThickness
+		right 90
+		jumpForward :width - :borderThickness
+		right 90
+	]
+	polyEnd
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 4
+jumpLeft :separation * 1.5
+maliFlag :height
+jumpRight :separation
+mali1961Flag :height
+jumpRight :separation
+frenchMaliFlag :height
+jumpRight :separation
+maliEmpireFlag :height

@@ -1,0 +1,58 @@
+; Inspired by logo at:
+; https://www.diamondleague.com
+to diamondLeagueLogo :height :color
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angle1 39.7
+	localmake "upperHeight :height * 0.28
+	localmake "colorStops createPList2 [
+		[0 "#c7effc] [0.4 "aqua] [1 "#007fb9]
+	]
+	setPenSize :height * 0.08
+	localmake "bottomOffset penSize / 2 / sin :angle1
+	localmake "len (:height - :upperHeight - :bottomOffset) / cos :angle1
+	localmake "len2 (:upperHeight - penSize / 2) / (cos :angle1)
+	localmake "lenStep :len * 0.309
+	localmake "topWidth 2 * ((:len - :len2) * (sin :angle1))
+	setLineJoinStyle "miter
+	setLineCap "butt
+	ifelse :color = transparent [
+		jumpForward :height
+		setPenGradient createLinearGradient :oldPos pos :colorStops "pad
+	] [
+		setPenColor :color
+	]
+	jumpTo :oldPos
+	jumpForward :bottomOffset
+	right :angle1
+	repeat 3 [
+		localmake "startPos pos
+		forward :len
+		left :angle1 * 2
+		forward :len2
+		if repcount = 1 [
+			setHeading :oldHeading - 90
+			forward :topWidth
+			left 90 - :angle1
+			forward :len2
+			left :angle1 * 2
+			closePath
+
+		]
+		jumpTo :startPos
+		setHeading :oldHeading - :angle1
+		jumpForward :lenStep
+		setHeading :oldHeading + :angle1
+		localmake "len :len - :lenStep
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "#0e003c
+make "height 100
+make "separation :height * 5
+jumpLeft :separation / 2
+diamondLeagueLogo :height transparent
+jumpRight :separation
+diamondLeagueLogo :height "white

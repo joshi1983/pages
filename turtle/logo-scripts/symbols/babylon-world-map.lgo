@@ -1,0 +1,128 @@
+to getForeignMountainGradient :radius
+	localmake "colorStops createPList2 [
+		; dry, desert-like Iraqi land near Babylon
+		[0 "white] [0.4 "#fc0] [0.43 "#db0]
+
+		; wet sand at ocean beaches
+		[0.5 "brown]
+
+		; very green mountain bases
+		[0.63 "green] [0.85 "#fd8]
+		[1 "#ddd] ; snowy, treeless mountain tops
+	]
+	output createRadialGradient pos :radius :colorStops
+end
+
+to drawOceanReflections :radius
+	localmake "oldState turtleState
+	localmake "oldPenSize penSize
+	localmake "center pos
+	localmake "reflectionSpan :radius * 0.4
+	localmake "colorStops createPList2 [
+		[0 "#0fff] [0.5 "#8fff] [1 "#0fff]
+	]
+	localmake "numWaveLines 10
+	setFillColor transparent
+	left 180 / 8
+	repeat 4 [
+		jumpLeft :reflectionSpan / 2
+		localmake "fromPos pos
+		jumpRight :reflectionSpan
+		setPenGradient createLinearGradient :fromPos pos :colorStops "pad
+		jumpTo :center
+		circle :radius
+		right 360 / 8
+	]
+	setPenSize :oldPenSize / 3 / :numWaveLines
+	setPenColor "#6000
+	repeat :numWaveLines [
+		localmake "radius1 :radius + :oldPenSize * (repRatio - 0.5)
+		circle :radius1		
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://www.reddit.com/media?url=https%3A%2F%2Fpreview.redd.it%2Flc9liim5zxi61.jpg%3Fauto%3Dwebp%26s%3D789a90ea37a4b0e1ff320be8e171f7c913b3cc3e
+; A video explains the meaning at:
+; https://www.youtube.com/watch?v=LUxFzh8r384
+; I used colors and gradients to illustrate the 
+; mountains, water, land, and swamps referenced by the ancient map.
+; The actual Babylonian map has a more irregular star pattern but
+; I thought an isotoxal star would look more appealing.
+to babylonianMap :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "outerThickness :height * 0.001
+	localmake "starLargeRadius (:height - :outerThickness * 2.3) / (2 * cos 180 / 8)
+	localmake "starSmallRAdius :height * 0.28
+	localmake "circles [
+		[38 0.03 false] [70 0.03 false] [90 0.03 true] [111 0.033 false] 
+		[197 0.033 false] [267 0.03 false] 
+		[306 0.03 true] [331 0.03 true]
+	]
+	localmake "shapes [
+		; river
+		[-0.03 -0.11 "#a08f [[-3 0] [0.11] [11 0.5] [0.165]
+		[-89 0] [-12 0.3] [-76.5 0] [0.18] [-12 0.3] [0.16]]]
+
+		; Babylon
+		[-0.1 0.1 "#cfff [[0.05] [-95 0] [0.232] [-85 0] [0.05]]]
+
+		; channel
+		[-0.24 -0.11 "#a08f [[-90 0] [0.22] [-100 0] [-16 0.2]
+		[-67 0] [0.18]]]
+
+		; swamp
+		[-0.02 -0.11 "#080 [[-90 0] [0.17] [-82 0] [-13 0.2]
+		[-82 0] [0.19]]]
+
+		; mountain
+		[-0.05 0.26 "#620 [[-82 0] [-41 0.3] [-121 0] [-74 0.17]]]
+	]
+	localmake "oceanRadius :height * 0.3
+	jumpForward :height / 2
+	setFillGradient getForeignMountainGradient :starLargeRadius
+	setPenSize :outerThickness
+	setPenColor "black
+	right 180 / 8
+	isotoxalStar :starLargeRadius :starSmallRAdius 8
+	setPenColor "#03a
+	setPenSize :height * 0.075
+	circle :oceanRadius
+	drawOceanReflections :oceanRadius
+	localmake "center pos
+	repeat count :circles [
+		localmake "circleInfo item repcount :circles
+		localmake "drawDot? item 3 :circleInfo
+		setHeading :oldHeading + first :circleInfo
+		jumpForward :height * 0.21
+		setPenSize :height * 0.002
+		setFillColor transparent
+		circle :height * item 2 :circleInfo
+		if :drawDot? [
+			setFillColor "navy
+			setPenSize 0
+			circle :height * 0.005
+		]
+		jumpTo :center
+	]
+	setPenSize :height * 0.002
+	setPenColor "navy
+	repeat count :shapes [
+		localmake "shapeInfo item repcount :shapes
+		localmake "arcsInfo last :shapeInfo
+		setFillColor item 3 :shapeInfo
+		jumpTo :center
+		setHeading :oldHeading
+		jumpRight :height * item 1 :shapeInfo
+		jumpForward :height * item 2 :shapeInfo
+		polyStart
+		arcLines :arcsInfo :height
+		polyEnd
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+babylonianMap 100

@@ -1,0 +1,250 @@
+to macauFlagStars :flagHeight
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "starDistance :flagHeight * 0.2366
+	localmake "topStarPos :flagHeight * 0.75651038
+	localmake "smallSize 0.0381
+	localmake "largeSize 0.05494785
+	localmake "angle1 65.025
+	localmake "starsInfo [
+		[:angle1 :smallSize]
+		[35 :smallSize]
+		[0 :largeSize]
+		[-35 :smallSize]
+		[-:angle1 :smallSize]
+	]
+	jumpForward :topStarPos - :starDistance
+	localmake "center pos
+	setPenSize 0
+	setFillColor "#ffde23
+	repeat count :starsInfo [
+		localmake "starInfo item repcount :starsInfo
+		setHeading :oldHeading + first :starInfo
+		jumpForward :starDistance
+		regularStar :flagHeight * last :starInfo 5
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+to waveyLine :outerArcRadius
+	localmake "oldState turtleState
+	localmake "arcRadius1 :outerArcRadius * 0.57
+	localmake "arcRadius2 :outerArcRadius * 0.565
+	localmake "angle1 38.1
+	localmake "angle2 40
+	localmake "angle3 3.95
+	localmake "angle4 43.5
+	localmake "size1 :outerArcRadius * (cos :angle1) - :arcRadius1 * sin :angle2
+	localmake "size2 :outerArcRadius * (cos :angle1 - :angle3) - :arcRadius2 * sin :angle4
+	setPenSize 0
+	jumpBackward :outerArcRadius * (sin :angle1) - :arcRadius1 * (1 - cos :angle2)
+	right 90 + :angle2
+	setFillColor "white
+	polyStart
+	arcLeft :angle2 :arcRadius1
+	jumpForward :size1
+	left 90 - :angle1
+	arcLeft :angle3 :outerArcRadius
+	left 90 + (:angle1 - :angle3)
+	jumpForward :size2
+	arcRight :angle4 :arcRadius2
+	left 2 * :angle4 ; point of symmetry
+	arcRight :angle4 :arcRadius2
+	jumpForward :size2
+	left 90 + (:angle1 - :angle3)
+	arcLeft :angle3 :outerArcRadius
+	left 90 - :angle1
+	jumpForward :size1
+	arcLeft :angle2 :arcRadius1
+	polyEnd
+	setTurtleState :oldState
+end
+
+to macauWater :flagHeight
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "bottomPos :flagHeight * 0.21979168
+	localmake "radius :flagHeight * 0.3
+	localmake "linesInfo [
+		[0 21.61383] [25.58977 32.1827]
+		[36.58713 40.57558] [45.39165 47.58626]
+	]
+	jumpForward :bottomPos + :radius
+	waveyLine :radius
+	localmake "center pos
+	setPenSize 0
+	setFillColor "#fff
+	repeat count :linesInfo [
+		localmake "lineInfo item repcount :linesInfo
+		localmake "fromAngle first :lineInfo
+		localmake "toAngle last :lineInfo
+		setHeading :oldHeading + 180 - :toAngle
+		jumpForward :radius
+		right 90
+		polyStart
+		ifelse 0 = :fromAngle [
+			arcRight :toAngle * 2 :radius
+		] [
+			arcRight :toAngle - :fromAngle :radius
+			right :fromAngle
+			jumpForward :radius * 2 * sin :fromAngle
+			right :fromAngle
+			arcRight :toAngle - :fromAngle :radius
+		]
+		polyEnd
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+to leaf :size :angle
+	localmake "oldHeading heading
+	localmake "arcRadius :size / 2 / sin :angle
+	left :angle
+	polyStart
+	arcRight :angle * 2 :arcRadius
+	right 180 - :angle * 2
+	arcRight :angle * 2 :arcRadius
+	polyEnd
+	setHeading :oldHeading
+end
+
+to singleLotus1 :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "oldPos pos
+	localmake "arcsInfo1 [
+		[-53.5 0] [20 1] [20 0.56] [20 0.74] [20 0.6] [3.05 0.8]
+		[133.8 0]
+		[-27.05 0.26]
+		[69.5 0]
+		[-20 0.63] [-15 0.7] [-15 0.61] [-20 0.75]
+	]
+	setFillColor "white
+	setPenSize 0
+	leaf :height 49.2
+	setHeading :oldHeading
+	jumpTo :oldPos
+	polyStart
+	arcsLeft :arcsInfo1 :height
+	polyEnd
+	
+	setHeading :oldHeading
+	jumpTo :oldPos
+	polyStart
+	arcsRight :arcsInfo1 :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+to singleLotus2 :height :flipSign
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "oldPos pos
+	localmake "arcsInfo1 [
+		[-57 0] [20 0.78] [20 0.56] [20 0.74] [20 0.64] [4.9 0.8]
+		[128.5 0]
+		[-18 0.26]
+		[66.5 0]
+		[-20 0.63] [-15 0.7] [-15 0.61] [-20 0.75]
+	]
+	localmake "arcsInfo2 [
+		[-57 0] [20 0.78] [14 0.4] [20 0.85] [20 0.8] [5 0.8]
+		[135 0]
+		[-21 0.26]
+		[66.5 0]
+		[-20 0.65] [-15 0.73] [-15 0.62] [-20 0.75]
+	]
+	if :flipSign = -1 [
+		swap "arcsInfo1 "arcsInfo2
+	]
+	setFillColor "white
+	setPenSize 0
+	leaf :height 47
+	setHeading :oldHeading
+	jumpTo :oldPos
+	polyStart
+	arcsLeft :arcsInfo1 :height
+	polyEnd
+	
+	setHeading :oldHeading
+	jumpTo :oldPos
+	polyStart
+	arcsRight :arcsInfo2 :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+to macauLotus :flagHeight
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "lotusLength :flagHeight * 0.256
+	localmake "lotusLength2 :flagHeight * 0.252
+	localmake "angle1 80
+	localmake "gap :flagHeight * 0.01675
+	jumpForward :flagHeight * 0.424
+	singleLotus1 :lotusLength
+	jumpBackward :flagHeight * 0.023
+	localmake "center pos
+	repeat 2 [
+		setHeading :oldHeading + (repcount - 1.5) * 180
+		jumpForward :gap
+		localmake "lotusStartPos pos
+		left (repcount - 1.5) * 40
+		singleLotus2 :lotusLength2 sign repcount - 1.5
+		jumpTo :center
+		right :angle1
+	]
+
+	localmake "arcRadius :lotusLength2 * 0.78
+	
+	jumpTo :oldPos
+	setHeading :oldHeading
+	localmake "middlePos :flagHeight * 0.4162393
+	localmake "arcs [[10 0.19656] [110 0] [0.085] [150 0] [0.068403639] [-44.4015 0]]
+	jumpForward :middlePos
+	setHeading (towards :lotusStartPos) + arcSin (distance :lotusStartPos) / 2 / :arcRadius
+	setFillColor "white
+	setPenSize 0
+	polyStart
+	arcLines :arcs :flagHeight
+	arcLines reverse :arcs :flagHeight
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/List_of_Chinese_flags#/media/File:Flag_of_Macau.svg
+; The slanted lotus flowers don't line up perfectly but the minor difference 
+; didn't seem worth the time to fix.
+to macauFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 3 / 2
+	stripes :width :height ["#0f7562]
+	macauFlagStars :height
+	macauWater :height
+	macauLotus :height
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/List_of_Macanese_flags#/media/File:Flag_of_Macau_(vertical).svg
+to macauVerticalFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 2 / 3
+	jumpLeft :width / 2
+	jumpForward :height / 2
+	right 90
+	macauFlag :width
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+make "height 100
+make "separation :height * 5
+jumpLeft :separation * 0.5
+macauFlag :height
+jumpRight :separation
+macauVerticalFlag :height

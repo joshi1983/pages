@@ -1,0 +1,46 @@
+; Inspired by
+; https://www.youtube.com/@Illinois1867
+to uIllinoisLogo :height
+	localmake "oldState turtleState
+	localmake "whiteHeight :height * 0.27
+	localmake "whiteThickness :height * 0.04
+	localmake "whiteWidth1 :height * 0.392
+	localmake "whiteWidth2 :height * 0.68
+	localmake "uRed "#f15735
+	localmake "redWidth :whiteWidth1 - 2 * :whiteThickness
+	localmake "gap :height / 2 - :whiteHeight
+	localmake "gap2 :gap + :whiteThickness
+	localmake "overlapLen :whiteThickness * 2
+	localmake "overlapLen2 :overlapLen * cos 45
+	localmake "arcs [
+		[:gap2 - :whiteThickness * cos 45]
+		[45 0]
+		[:overlapLen]
+		[-135 0]
+		[:redWidth / 2 + :overlapLen2]
+	]
+	stripes :whiteWidth1 :height ["white]
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	repeat 2 [
+		jumpForward :gap
+		stripes :whiteWidth2 :whiteHeight ["white]
+		jumpForward :whiteThickness
+		stripes :whiteWidth2 - :whiteThickness * 2 :whiteHeight - :whiteThickness * 2 [:uRed] 
+		jumpTo :center
+		right 360 / 2
+	]
+	jumpLeft :redWidth / 2
+	setFillColor :uRed
+	polyStart
+	repeat 2 [
+		arcLines :arcs 1
+		arcLines reverse :arcs 1
+	]
+	polyEnd		
+	setTurtleState :oldState
+end
+
+setScreenColor "#12294b
+uIllinoisLogo 100

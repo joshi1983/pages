@@ -1,0 +1,58 @@
+make "color1 "#7D643F
+make "color2 "#FFF5D1
+
+to drawLegs :angle1 :angle2 :thickness :len1 :len2
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "arcRadius :len1 * 0.1
+	setPenSize :thickness
+	left 90 - :angle1
+	forward :len1
+	arcLeft :angle2 :arcRadius 
+	forward :len2
+
+	jumpTo :oldPos
+	setHeading :oldHeading - 90 - :angle1
+	forward :len1
+	arcLeft -:angle2 :arcRadius 
+	forward :len2
+
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://proofofalien.com/wp-content/uploads/2016/02/The-ant-crop-circle-found-in-Britain.jpg
+; Mentioned at:
+; https://proofofalien.com/top-10-mysterious-alien-crop-circles-in-the-world/
+; Also mentioned at:
+; https://www.pinterest.ca/pin/194851121347868191/
+to antCropCircle :height
+	localmake "oldState turtleState
+	localmake "radius1 :height * 0.3
+	localmake "radius2 :height * 0.205
+	localmake "radius3 :height * 0.133
+	localmake "headRadius :height * 0.215
+	jumpForward :height / 2
+	setPenSize 0
+	setFillColor :color2
+	setPenColor fillColor
+	jumpLeft :radius1 + :radius2
+	drawLegs 35 80 :height * 0.02 :height * 0.41 :height * 0.041
+	circle :radius1
+	jumpRight :radius1 + :radius2
+	drawLegs 60 -60 :height * 0.04 :height * 0.43462 :height * 0.081
+	drawLegs 105 -40 :height * 0.04 :height * 0.4 :height * 0.1
+	circle :radius2
+	jumpRight :radius2 + :radius3
+	drawLegs 125 -50 :height * 0.04 :height * 0.4 :height * 0.081
+	circle :radius3
+	jumpRight :radius3 + :headRadius
+	right 90
+	circlePair :headRadius :height * 0.16 :height * 0.21
+
+	setTurtleState :oldState
+end
+
+setScreenColor :color1
+antCropCircle 100

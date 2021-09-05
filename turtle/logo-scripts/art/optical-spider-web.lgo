@@ -1,0 +1,72 @@
+; Inspired by image at:
+; https://ca.pinterest.com/pin/141300507053763587
+; In case the pin becomes unavailable, it was
+; shared by LUCKY AVATAR(https://ca.pinterest.com/AVATAR456/).
+to spiderWebOptical :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "numAngles 16
+	localmake "separation :height * 0.0055
+	localmake "angleStep 1.61
+	localmake "numInnerArcs 360 / :numAngles / :angleStep
+	localmake "blue1 "#00f
+	localmake "blue2 "#8ff
+	localmake "arcs []
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize :height * 0.002
+	localmake "maxRadius (:height - penSize) / 2
+	setPenColor "red
+	setFillColor transparent
+	setPenBlendMode "lighter
+	circle :maxRadius
+	setLineCap "round
+	repeat :numInnerArcs [
+		localmake "arcRadius :maxRadius - :separation * repcount
+		localmake "gapAngle :angleStep * repcount
+		localmake "arcAngle 360 / :numAngles - :gapAngle
+		setPenColor mixItems2 ["#f00 "#ff0 "#ffd "#fff] repRatio
+		jumpForward :arcRadius
+		left 90
+		penUp
+		arcLeft :arcAngle / 2 :arcRadius
+		penDown
+		right 180
+		repeat :numAngles [
+		queue2 "arcs [heading pos :arcRadius :arcAngle]
+			arcRight :arcAngle :arcRadius
+			penUp
+			arcRight :gapAngle :arcRadius
+			penDown
+		]
+		setHeading :oldHeading
+		jumpTo :center
+	]
+	right 180 / :numAngles
+	setPenColor :blue1
+	repeat 45 [
+		localmake "arcRadius :height * mix 0.02 0.095 repRatio
+		localmake "radius1 :height * mix 0.2 0.5 repRatio
+		localmake "radius2 :height * 0.02
+		setPenColor mix :blue2 :blue1 repRatio
+		roundIsoStar :radius1 :radius2 :numAngles 0 :arcRadius
+	]
+	repeat count :arcs [
+		localmake "info item repcount :arcs
+		localmake "arcAngle 180
+		localmake "angle last :info
+		localmake "chordLength (item 3 :info) * (2 * sin :angle / 2)
+		localmake "arcRadius :chordLength / 2
+		setPenColor mix :blue2 :blue1 repRatio
+		setHeading (first :info) + (:angle / 2)
+		jumpTo item 2 :info
+		right :arcAngle / 2
+		arcLeft :arcAngle :arcRadius
+		setHeading :oldHeading
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+spiderWebOptical 100

@@ -1,0 +1,85 @@
+; Inspired by cover of book at:
+; https://archive.org/details/logoformacintosh0000abel
+;
+; The book is called:
+; Logo for the Macintosh : an introduction through Object Logo
+to logoForMacintoshCover :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "width :height * 3 / 4
+	localmake "stepWidth :height * 0.104
+	localmake "stepHeight :height * 0.11
+	localmake "innerRadius :height * 0.13
+	localmake "outerRadius :height * 0.37
+	localmake "darkGreenColor "#045943
+	localmake "torusColorStops createPList2 [
+		[:innerRadius / :outerRadius :darkGreenColor]
+		[mix :innerRadius / :outerRadius 1 0.5 "#73bca7]
+		[1 :darkGreenColor]
+	]
+	localmake "numWhiteCircles 16
+	setPenSize 0
+	setFillColor "#1c4a98
+	jumpForward :height / 2
+	rect :width :height
+
+	jumpTo :oldPos
+	jumpRight :width / 2
+	jumpForward :height
+	localmake "topRight pos
+	jumpLeft :width
+	localmake "topLeft pos
+
+	setFillColor "#7c3d76
+	jumpTo :oldPos
+	jumpLeft :width / 2
+	polyStart
+	jumpRight :stepWidth * 5
+	jumpForward :stepHeight * 0.7
+	repeat 5 [
+		jumpLeft :stepWidth
+		jumpForward :stepHeight
+	]
+	polyEnd
+
+	setHeading :oldHeading
+	jumpTo :topRight
+	jumpLeft :height * 0.2
+	localmake "center pos
+	setFillGradient createRadialGradient pos :outerRadius :torusColorStops
+	jumpLeft :innerRadius
+	polyStart
+	arcLines [[180 0] [180 1] [180 0]] :innerRadius
+	jumpTo :topRight
+	jumpForward distanceToCircle :center :outerRadius
+	setHeading (towards :center) - 90
+	arcRight (getArcRightAngleToLine :outerRadius :topLeft :topRight) :outerRadius 
+	polyEnd
+
+	setPenColor "white
+	setPenSize :height * 0.0015
+	setFillColor transparent
+	localmake "offset (:outerRadius - :innerRadius) / 2
+	repeat :numWhiteCircles [
+		jumpTo :center
+		jumpForward :offset
+		circle :outerRadius - :offset
+		right 360 / :numWhiteCircles
+	]
+
+	jumpTo :oldPos
+	jumpLeft :height * 0.14
+	jumpForward :height / 2
+	localmake "whiteCenter pos
+	repeat :numWhiteCircles [
+		jumpForward :height * 0.08
+		circle :height * 0.15
+		jumpTo :whiteCenter
+		right 360 / :numWhiteCircles
+	]
+
+	setTurtleState :oldState
+end
+
+logoForMacintoshCover 100

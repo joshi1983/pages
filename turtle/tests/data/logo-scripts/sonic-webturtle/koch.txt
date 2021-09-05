@@ -1,0 +1,47 @@
+; Copied from http://www.sonic.net/~nbs/webturtle/webturtle.cgi?file=koch
+; Koch - A line system fractal
+; Written for WebTurtle by
+; Geert Pante (Geert.Pante@rug.ac.be)
+; January 1999
+
+LET D 4
+LET LEN 3
+
+RIGHT 90
+MOVE 120
+RIGHT 90
+MOVE 70
+RIGHT 150
+GO KOCH
+LEFT 120
+GO KOCH
+LEFT 120
+GO KOCH
+END
+
+# KOCH
+  IF D > 0
+    PUSH D
+    LET D D-1
+    GO KOCH
+    POP D
+    RIGHT 60
+    PUSH D
+    LET D D-1
+    GO KOCH
+    POP D
+    LEFT 120
+    PUSH D
+    LET D D-1
+    GO KOCH
+    POP D
+    RIGHT 60
+    PUSH D
+    LET D D-1
+    GO KOCH
+    POP D
+  ENDIF
+  IF D = 0
+    DRAW LEN
+  ENDIF
+RETURN

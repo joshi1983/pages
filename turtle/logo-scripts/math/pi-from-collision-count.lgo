@@ -1,0 +1,49 @@
+; Copied from:
+; http://convertalot.com/elastic_collision_calculator.html
+; A purely elastic collision is basically a collision that 
+; doesn't lose any kinetic energy.
+; In other words, the objects bounce off each other as fast as absolutely possible.
+to getElasticCollisionResults :v1 :m1 :v2 :m2
+	localmake "totalMass :m1 + :m2
+	localmake "v1Final ((:m1 - :m2) * :v1 + 2 * :m2 * :v2) / :totalMass
+	localmake "v2Final (2 * :m1 * :v1 - (:m1 - :m2) * :v2) / :totalMass
+	output [:v1Final :v2Final]
+end
+
+; This was inspired by math explained at:
+; https://www.youtube.com/watch?v=HEfHFsfGXjs
+; 
+; More can be learned at:
+; https://archive.nytimes.com/wordplay.blogs.nytimes.com/2014/03/10/pi/
+to getNumberOfCollisions :largeMass
+	localmake "smallMassVelocity 0
+	localmake "largeMassVelocity 1
+	localmake "numCollisions -1
+
+	forever [
+		; simulate collision between small object and wall.
+		localmake "smallMassVelocity -:smallMassVelocity
+		localmake "numCollisions :numCollisions + 1
+		if :smallMassVelocity > :largeMassVelocity [
+			break
+		]
+
+		; simulate collision between large and small objects.
+		localmake "results getElasticCollisionResults :smallMassVelocity 1 :largeMassVelocity :largeMass
+		localmake "smallMassVelocity first :results
+		localmake "largeMassVelocity last :results
+		localmake "numCollisions :numCollisions + 1
+
+		if :smallMassVelocity < 0 [
+			break
+		]
+	]
+	output :numCollisions
+end
+
+make "numDigits 5
+make "initialMass power 10 2 * :numDigits
+type 'The number of collisions is '
+print getNumberOfCollisions :initialMass
+print word 'pi = ' str pi
+print 'Notice that the number of collisions has the same digit sequence as pi.'

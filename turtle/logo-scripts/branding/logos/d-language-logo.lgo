@@ -1,0 +1,35 @@
+; Inspired by logo at:
+; https://dlang.org
+to dLanguageLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "cornerRadius 0.03
+	localmake "dOuterLines1 [
+		[0.473 - :cornerRadius] [-90 :cornerRadius]
+		[0.42] [-15 1] [-20 0.55] [-20 0.48] [-35 0.44253]
+	]
+	localmake "dInnerLines1 [
+		[0.287] [90 0] [0.24] [20 0.52] [20 0.32] [50 0.28]
+	]
+	localmake "tinyRadius :height * 0.08
+	setPenSize 0
+	setFillColor "white
+	jumpRight :height * 0.657
+	jumpForward :height - :tinyRadius
+	circle :tinyRadius
+	jumpTo :oldPos
+	jumpForward :height * 0.66
+	jumpRight :height * 0.37
+	circle :height * 0.245
+
+	jumpTo :oldPos
+	drawArcLineShape [-0.732 0.5
+		(combine :dOuterLines1 reverse :dOuterLines1
+		[[-180 0.116]]
+		:dInnerLines1 reverse :dInnerLines1)
+	] :height
+	setTurtleState :oldState
+end
+
+setScreenColor "#C25454
+dLanguageLogo 100

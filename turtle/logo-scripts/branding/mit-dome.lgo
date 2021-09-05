@@ -1,0 +1,46 @@
+; Inspired by a logo at:
+; https://mitsloan.mit.edu
+to mitDome :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "bottomInnerWidth :height * 1.15
+	localmake "bottomSideWidth :height * 0.132
+	localmake "sideSeparation :bottomInnerWidth - :bottomSideWidth
+	localmake "innerWidth :bottomSideWidth * 0.9
+	localmake "innerSeparation :sideSeparation / 5 * 0.97
+	localmake "topLine [[-3 1.924174] [-10 1.2] [105 0]  [0.027] [45 0] [43 0.45]]
+	setFillColor "#a31f34
+	setPenSize 0
+	drawArcLineShapes [
+		[0 1 - item 2 arcLinesInfo :topLine
+			pathMirror :topLine
+		]
+		[0 0.692
+			pathMirror [
+				[90 0] [0.423] [-90 0] [0.07] [-45 0.01] [-20 0.1] [-15 0.4]
+				[-10 1.6817575]
+		 	]
+		]
+	] :height
+
+	repeat 2 [
+		isoTrapezoid :height * 1.25 :bottomInnerWidth :height * 0.12
+		jumpForward :height * 0.65
+		right 180
+	]
+	jumpLeft :sideSeparation / 2
+	repeat 2 [
+		stripes :bottomSideWidth :height * 0.6 [fillColor]
+		jumpRight :sideSeparation
+	]
+	jumpTo :oldPos
+	jumpLeft :innerSeparation * 1.5
+	repeat 4 [
+		stripes :innerWidth :height * 0.6 [fillColor]
+		jumpRight :innerSeparation
+	]
+
+	setTurtleState :oldState
+end
+
+mitDome 100

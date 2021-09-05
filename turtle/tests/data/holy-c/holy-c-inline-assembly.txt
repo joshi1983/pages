@@ -1,0 +1,23 @@
+// copied from: https://holyc-lang.com/docs/language-spec/learn-assembly
+asm {
+_STRCPY::
+    PUSH    RBP
+    MOVQ    RBP,RSP
+    TEST    RDI,RDI
+    JZ      @@15
+    TEST    RSI, RSI
+    JNZ     @@05
+    XOR     RAX,RAX
+    JMP     @@10
+@@05:
+    LODSB
+@@10:
+    STOSB
+    TEST    AL,AL
+    JNZ	@@05
+@@15:
+    LEAVE
+    RET
+}
+
+public _extern _STRCPY U8 *StrCpy(U8 *str);

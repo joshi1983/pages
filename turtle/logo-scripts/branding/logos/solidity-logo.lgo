@@ -1,0 +1,35 @@
+; Inspired by logo at:
+; https://en.wikipedia.org/wiki/Solidity#/media/File:Solidity_logo.svg
+to solidityLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "radius :height * 0.33
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	repeat 2 [
+		setHeading :oldHeading + repcount * 180
+		jumpForward :height / 2 - :radius * cos 30
+		setFillColor "#6000
+		polyStart
+		jumpRight :radius
+		left 30
+		repeat 4 [
+			jumpForward :radius
+			left 360 / 6
+		]
+		polyEnd
+		right 360 / 6
+		jumpBackward :radius
+		right 360 / 6
+		jumpBackward :radius / 2
+		left 90
+		isoTrapezoid :radius :radius * 2 :radius * cos 30
+		setFillColor "black
+		isoTriangle :radius :radius * cos 30
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+solidityLogo 100

@@ -1,0 +1,69 @@
+; Inspired by
+; https://www.pinterest.ca/pin/147352219046462037/
+
+to centerPoly :size
+	localmake "oldState turtleState
+	localmake "arcs1 [[-15 0.22] [-168 0] [19 0.2] [59 0]]
+	localmake "arcs combine :arcs1 reverse :arcs1
+	jumpForward :size * 0.065
+	polyStart
+	repeat 12 [
+		arcLines :arcs :size
+		left 180
+	]
+	polyEnd
+
+	setTurtleState :oldState
+end
+
+to shape1 :size
+	localmake "oldState turtleState
+
+	localmake "size1 :size * 0.12
+	localmake "arcRadius1 :size * 0.15
+	localmake "arcs1 [[-13 0.15] [-30 0.045] [-68 0.018] [150 0]
+	[-60 0.014] [-25 0.018] [-7.5 0.15] [25.5 0.156234] [-90 0]]
+	localmake "arcs combine :arcs1 reverse :arcs1
+	jumpForward :size1
+	polyStart
+	arcLeft 28 :arcRadius1
+	arcLines :arcs :size
+	arcLeft 27 :arcRadius1
+	polyEnd
+
+	setTurtleState :oldState
+end
+
+to shape2 :size
+	localmake "oldState turtleState
+	localmake "arcs1 [[40 0.11] [48 0.04] [-140 0] [-20 0.05]
+	[-68 0.018] [-15 0.1] [170 0] [30 0.14] [-72 0.025]
+	[22.176305 0.1] [-70.1763 0]
+	]
+	jumpForward :size * 0.073
+	left 30
+	polyStart
+	arcRight 45 :size * 0.15
+
+	arcLines :arcs1 :size
+	arcLines reverse :arcs1 :size
+
+	arcRight 44 :size * 0.15
+	polyEnd
+
+	setTurtleState :oldState
+end
+
+to babualamMandala :size
+	setPenSize 0
+	setFillColor "black
+	centerPoly :size
+	repeat 12 [
+		shape1 :size
+		right 360 / 24
+		shape2 :size
+		right 360 / 24
+	]
+end
+
+babualamMandala 150

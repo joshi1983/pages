@@ -1,0 +1,96 @@
+to drawInnerTriangles :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	setLineJoinStyle "miter
+	setPenColor "lime
+	regularPolygon :height * 0.153 3
+	setPenColor "blue
+	regularPolygon :height * 0.163 3
+	repeat 3 [
+		jumpForward :height * 0.155
+		setPenColor "lime
+		regularPolygon :height * 0.113 3
+		setPenColor "blue
+		regularPolygon :height * 0.125 3
+
+		jumpTo :oldPos
+		right 360 / 3
+	]
+
+	right 180
+	setPenColor "yellow
+	regularPolygon :height * 0.143 3
+	setPenColor "violet
+	regularPolygon :height * 0.152 3
+
+	repeat 3 [
+		jumpForward :height * 0.145
+		setPenColor "yellow
+		regularPolygon :height * 0.105 3
+		jumpForward :height * 0.008
+		setPenColor "violet
+		regularPolygon :height * 0.11 3
+
+		jumpTo :oldPos
+		right 360 / 3
+	]
+
+	setTurtleState :oldState
+end
+
+to drawStringArtCircle :radius :lines
+	localmake "oldState turtleState
+	localmake "center pos
+	localmake "numPoints 43
+	localmake "points []
+	repeat :numPoints [
+		jumpForward :radius
+		queue2 "points pos
+		jumpTo :center
+		right 360 / :numPoints
+	]
+	setPenSize :radius * 0.0004
+	for ["i 1 :numPoints] [
+		localmake "fromPos item :i :points
+		repeat :numPoints [
+			if repcount <> :i [
+				setPenColor item 1 + modulo repcount 2 ["violet "lime] 
+				jumpTo :fromPos
+				localmake "toPos item repcount :points
+				setHeading towards :toPos
+				localmake "len (distance :toPos)
+				localmake "linesDistance distanceToLines :lines
+				forward min :linesDistance :len * 1.5
+			]
+		]
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by:
+; https://www.facebook.com/photo/?fbid=1133987822262028
+to stringArtStar :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize :height * 0.003
+	setPenBlendMode "lighter
+	drawInnerTriangles :height
+
+	jumpTo :oldPos
+	jumpLeft 100
+	localmake "leftPos pos
+	jumpForward :height
+	localmake "topLeft pos
+	jumpRight 100
+	localmake "top pos
+	jumpTo :center
+	drawStringArtCircle :height * 0.464 [[:oldPos :leftPos] [:top :topLeft]]
+
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+jumpBackward 50
+stringArtStar 100

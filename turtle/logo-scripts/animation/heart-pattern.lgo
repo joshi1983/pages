@@ -1,0 +1,42 @@
+; This was inspired from:
+; https://www.facebook.com/share/p/18d3NxcDLj/
+; The code was mostly translated from Aurel Wizzard's Micro(A) Basic
+; The constant 0.0004 was replaced with a variable :step that gets 
+; closer to 0 with time.
+make "i 0
+make "p 150
+setPenSize 0
+setScreenColor "black
+setFillColor "white
+make "t interpolateRatio easeIn interpolateRatio easeIn power animation.clampedTimeRatio 2
+make "stepMixRatio power :t 1/10
+make "step mix 0.00005 0.05 :stepMixRatio
+make "radius mix 1 3 :stepMixRatio
+while :i < pi/2 [
+	make "x :p * :i
+	make "y :p * ((sqrt abs radCos :i) * (radCos 313 * :i) 
+- (sqrt :i))
+	repeat 2 [
+		jumpTo [:x -:y]
+		circle :radius
+		make "x -:x
+	]
+	make "i :i + :step
+]
+
+to animation.snapshotstyle
+	output createPList2 [
+		["position.y 60]
+		["zoom.scale 1.2]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 20
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+		["thumbnailTime :seconds * 0.9]
+	]
+end

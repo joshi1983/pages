@@ -1,0 +1,61 @@
+
+to getGradient :width
+	localmake "colorStops createPList2 [
+		[0 "#68bf56 ] [1 "#0aabd9]
+	]
+	jumpLeft :width / 2
+	localmake "fromPos pos
+	jumpRight :width
+	localmake "gradient createLinearGradient :fromPos pos :colorStops "pad
+	jumpLeft :width / 2
+	output :gradient
+end
+
+to leaf :height
+	localmake "oldState turtleState
+	localmake "arcsInfo [
+		[-37 0.28] [-30 0.5] [58 0.45] [25 0.8]
+		[80 0.05] [25 0.8] [60 0.52] [5 2] [27 0.69]
+	]
+	setFillGradient getGradient :height * 0.6
+	right 173
+	setPenSize 0
+	polyStart
+	arcsRight :arcsInfo :height
+	polyEnd	
+	setTurtleState :oldState
+end
+
+; Inspired by logo at
+; https://www.everydayhealth.com/
+to everydayHealthLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "arcsInfo [
+		[6 2.2] [10 1.1] [80 0.245]
+		[50 0.14] [61.853512 0.22]
+	]
+	jumpForward :height
+	jumpLeft :height * 0.1919
+	leaf :height * 0.3
+	jumpTo :oldPos
+	setFillGradient getGradient :height * 0.7
+	setPenSize 0
+	left 54
+	polyStart
+	arcsRight :arcsInfo :height
+	setHeading :oldHeading + 26.1465
+	arcsRight reverse :arcsInfo :height
+	polyEnd
+	setPenGradient fillGradient
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.53
+	setPenSize :height * 0.04
+	setLineCap "round
+	arcRight 50 :height * 0.35	
+	setTurtleState :oldState
+end
+
+everydayHealthLogo 100

@@ -1,0 +1,110 @@
+to drawSacredHexagon :radius
+	regularPolygon :radius 6
+	repeat 2 [	
+		regularPolygon :radius 3
+		right 180
+	]
+end
+
+to drawSacredTriangle :radius
+	localmake "oldState turtleState
+	localmake "center pos
+	localmake "size1 :radius / 3
+	setLineJoinStyle "round
+	setFillColor screenColor
+	regularPolygon :radius 3
+	setFillColor transparent
+	drawSacredHexagon :size1
+	repeat 3 [
+		jumpForward :size1
+		drawSacredHexagon :size1
+		jumpTo :center
+		forward :radius
+		jumpTo :center
+		right 360 / 3
+	]
+
+	setTurtleState :oldState
+end
+
+; Inspired by drawing at:
+; https://www.facebook.com/share/p/1FLofqoYdG/
+to sacredGeometry :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "thickness :height * 0.003
+	localmake "circleRadii [0.5 0.4775 0.4665 0.4325 0.4225 0.2]
+	localmake "lineLength1 :height * 0.45
+	localmake "numAngles1 72
+	localmake "numAngles2 2 * :numAngles1
+	localmake "gap1 :height * 0.19
+	localmake "largeTriRadius :height * 0.095
+	localmake "minTriRadius :height * 0.045
+	jumpForward :height / 2
+	localmake "center pos
+	setPenColor "white
+	setPenSize :thickness
+
+	setLineCap "round
+	repeat :numAngles1 [
+		forward :lineLength1
+		jumpBackward :height * 0.045
+		repeat 11 [
+			localmake "toggleColorIndex 1 + modulo repcount 2
+			localmake "radius (distance :center) * 0.025
+			setFillColor item :toggleColorIndex [penColor screenColor]
+			circle :radius
+			jumpBackward :radius * 2.15 + :thickness
+		]
+		right 360 / :numAngles1
+		jumpTo :center
+	]
+	repeat :numAngles2 [
+		jumpForward :height * item 2 :circleRadii
+		forward :height * 0.01
+		right 360 / :numAngles2
+		jumpTo :center
+	]
+	right 180 / :numAngles1
+	setPenSize 0
+	setFillColor penColor
+	repeat :numAngles1 [
+		jumpForward :lineLength1 - :thickness / 2
+		circle :thickness / 2
+		right 360 / :numAngles1
+		jumpTo :center
+	]
+	setFillColor screenColor
+	setPenSize :thickness
+	setHeading :oldHeading
+	repeat 3 [
+		jumpForward :gap1
+		repeat 6 [
+			localmake "radius mix :minTriRadius :largeTriRadius repRatio
+			circle :radius
+		]
+		jumpForward :largeTriRadius
+		setPos :center
+		right 360 / 3
+	]
+	setFillColor transparent
+	setPenSize :thickness
+	repeat count :circleRadii [
+		localmake "r (:height - :thickness) * item repcount :circleRadii
+		circle :r
+	]
+	setFillColor screenColor
+	setHeading :oldHeading
+	repeat 3 [
+		jumpForward :height * last :circleRadii
+		circle :height * 0.012
+		right 360 / 3
+		jumpTo :center
+	]
+	drawSacredTriangle :height * 0.15
+
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+sacredGeometry 100

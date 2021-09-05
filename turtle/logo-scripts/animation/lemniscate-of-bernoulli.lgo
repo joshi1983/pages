@@ -1,0 +1,93 @@
+to getHyperbolicPoint :timeRatio
+	; Avoid reaching exactly 0 or 1 to avoid
+	; problems with dividing by 0 and infinity.
+	localmake "timeRatio clamp :timeRatio 0.001 0.999
+
+	localmake "timeRatio pi / 2 * :timeRatio
+	localmake "x 1 / radCos :timeRatio
+	localmake "y radTan :timeRatio
+	output [:x :y]
+end
+
+to plotPoint :oldPos :center :xSign :ySign
+	jumpTo :oldPos
+	jumpRight (first :center) * :xSign
+	jumpForward (item 2 :center) * :ySign
+	circle distance :oldPos
+	circle penSize * 2
+end
+
+to drawCurves :size
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "numPoints 40
+	localmake "numCircles 10
+	localmake "dotSize :size * 0.01
+	setFillColor "white
+	setPenSize 0
+	repeat :numPoints [
+		localmake "p vectorScale (getHyperbolicPoint repRatio) :size
+		for ["xSign -1 1 2] [
+			for ["ySign -1 1 2] [
+				jumpRight :xSign * item 1 :p
+				jumpForward :ySign * item 2 :p
+				circle :dotSize
+				jumpTo :oldPos
+			]
+		]
+	]
+	setFillColor transparent
+	setPenSize :size * 0.005
+	setPenColor "#8fff
+	repeat :numCircles [
+		localmake "p vectorScale (getHyperbolicPoint repRatio) :size
+		for ["xSign -1 1 2] [
+			for ["ySign -1 1 2] [
+				jumpRight :xSign * item 1 :p
+				jumpForward :ySign * item 2 :p
+				circle distance :oldPos
+				jumpTo :oldPos
+			]
+		]
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/MSWLogo#/media/File:LemniscatadiBernoulli_Tartapelago_03.gif
+; You can learn more about the shape at:
+; https://en.wikipedia.org/wiki/Lemniscate_of_Bernoulli
+to lemniscateOfBernoulli :size :timeRatio
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "center vectorScale (getHyperbolicPoint :timeRatio) :size
+	drawCurves :size
+	setPenSize 0
+	setFillColor "white
+	circle :size * 0.05
+	setPenColor "red
+	setFillColor transparent
+	setPenSize :size * 0.02
+	plotPoint :oldPos :center 1 1
+	plotPoint :oldPos :center 1 -1
+	plotPoint :oldPos :center -1 1
+	plotPoint :oldPos :center -1 -1
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+lemniscateOfBernoulli 100 animation.clampedTimeRatio
+
+to animation.snapshotstyle
+	output createPList
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 3
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+		["thumbnailTime 2]
+	]
+end

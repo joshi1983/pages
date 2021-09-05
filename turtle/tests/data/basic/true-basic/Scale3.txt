@@ -1,0 +1,36 @@
+!
+!  SCALE3        version 2.0
+!
+!  Show the difference between an unscaled and a
+!  scaled view of a 10 x 10 x 1 viewing volume.
+!
+!  We plot a number of small blocks of various heights.
+!
+!
+LIBRARY "3DLib.trc"
+
+OPEN #1: screen 0, .5, .1, .9
+PLOT TEXT, at .2, .2: "10 x 10 x 1  (Unscaled)"
+CALL PersWindow (0, 10, 0, 10, 0, 1)
+CALL DrawBlocks
+
+OPEN #2: screen .5, 1, .1, .9
+PLOT TEXT, at .2, 0: "10 x 10 x 1  (Scaled)"
+CALL ScalePersWindow (0, 10, 0, 10, 0, 1)
+CALL DrawBlocks
+
+SUB DrawBlocks
+
+    CALL RectZ3 (0, 0, 10, 0, 10)
+    FOR y = 9.5 to .5 step -2
+        FOR x = .5 to 9.5 step 2
+            LET z = Sqr (x+y)/5
+            CALL Block3 (x-.4, x+.4, y-.4, y+.4, 0, z, "red", "yellow", "green", 1)
+        NEXT x
+    NEXT y
+
+    CALL RectZ3 (1, 0, 10, 0, 10)
+
+END SUB
+
+END

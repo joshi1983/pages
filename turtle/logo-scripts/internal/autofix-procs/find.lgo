@@ -1,0 +1,16 @@
+; Looks for the first item in list that gets a true result from matchProc.
+; If not found, an empty list is returned.
+;
+; Note that an empty list may not imply "not found", though.
+; Consider that :list could contain an empty list. 
+; if (invoke :matchProc []) returns true, 
+; the output could be one of the elements in the list you specified.
+to find :matchProc :list
+	repeat count :list [
+		localmake "item item repcount :list
+		if (invoke :matchProc :item) [
+			output :item
+		]
+	]
+	output []
+end
