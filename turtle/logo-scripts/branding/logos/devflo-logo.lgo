@@ -1,0 +1,68 @@
+make "gradientXRatio 0.06
+make "gradientYRatio 0.93
+
+to createDevfloRadialGradient :height
+	localmake "oldPos pos
+	localmake "colorStops createPList2 [
+		[0 "#7e67ed] [0.4 "#ff6dac] [1 "#ffc15d]
+	]
+	jumpForward :height * :gradientYRatio
+	jumpLeft :height * :gradientXRatio
+	localmake "result createRadialGradient pos :height * 0.9 :colorStops
+	jumpTo :oldPos
+	output :result
+end
+
+to createDevfloLinearGradient :height
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "colorStops createPList2 [
+		[0 "#00ff6dac] [0.4 "#88ff6dac] [1 "#ffc15d]
+	]
+	jumpForward :height * :gradientYRatio
+	jumpLeft :height * :gradientXRatio
+	left 105
+	localmake "fromPos pos
+	jumpForward :height * 0.3
+	localmake "result createLinearGradient :fromPos pos :colorStops "pad
+	jumpTo :oldPos
+	setHeading :oldHeading
+	output :result
+end
+
+; Inspired by logo at
+; https://www.youtube.com/channel/UCyNfHJVho6SN-tTwBYGhS7A
+to devfloLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "thickness :height * 0.187
+	localmake "height1 :height - :thickness
+	localmake "gradients [
+		createDevfloRadialGradient :height
+		createDevfloLinearGradient :height
+	]
+	setPenSize :thickness
+	jumpForward :height - penSize / 2
+	jumpLeft :height * 0.465
+	setLineCap "round
+	setLineJoinStyle "round
+	right 90
+	localmake "topPos pos
+	repeat count :gradients [
+		setPenGradient item repcount :gradients
+		forward :height * 0.525
+		arcRight 180 (:height - penSize) / 2
+		forward :height * 0.133
+		right 90
+		forward :height1
+		jumpBackward :height1 / 2
+		left 90
+		forward :height * 0.27
+		jumpTo :topPos
+		setHeading :oldHeading + 90
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+devfloLogo 100
