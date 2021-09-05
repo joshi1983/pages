@@ -1,0 +1,106 @@
+make "thicknessFactor 0.22
+make "mitRed "#750014
+
+to drawM :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "thickness :height * :thicknessFactor
+	localmake "width :height * 0.89
+	localmake "separation (:width - :thickness) / 2
+	localmake "middleGap :height * 0.223
+	jumpLeft :separation
+	repeat 2 [
+		stripes :thickness :height [penColor]
+		jumpRight :separation * 2
+	]
+	jumpTo :oldPos
+	jumpForward :middleGap
+	stripes :thickness :height - :middleGap [penColor]
+	setTurtleState :oldState
+end
+
+to drawI :height
+	localmake "oldState turtleState
+	localmake "thickness :height * :thicknessFactor
+	stripes :thickness :height * 2 / 3 [penColor]
+	jumpForward :height - :thickness / 2
+	setPenSize 0
+	setFillColor penColor
+	rect :thickness :thickness
+	setTurtleState :oldState
+end
+
+to drawT :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "width :height * 5 / 9
+	localmake "thickness :height * :thicknessFactor
+	jumpLeft (:width - :thickness) / 2
+	stripes :thickness :height * 2 / 3 [penColor]
+
+	jumpTo :oldPos
+	jumpForward :height - :thickness
+	stripes :width :thickness [penColor]
+
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://web.mit.edu
+to mitLogo :height :color
+	localmake "oldState turtleState
+	jumpLeft :height * 0.5
+	setPenColor :color
+	drawM :height
+	jumpRight :height * 2 / 3
+	drawI :height
+	jumpRight :height / 2
+	drawT :height
+
+	setTurtleState :oldState
+end
+
+; Inspired by logo in the web page header at:
+; https://web.mit.edu
+to mitWhiteOnRedLogo :height
+	localmake "oldState turtleState
+	localmake "innerHeight :height * 0.7
+	stripes :height * 2 :height [:mitRed]
+	jumpForward (:height - :innerHeight) / 2	
+	mitLogo :innerHeight "white
+	setTurtleState :oldState
+end
+
+; Inspired by the favicon(browser tab icon) at
+; https://web.mit.edu
+to mitFavicon :height
+	localmake "oldState turtleState
+	localmake "fontHeight :height * 0.64
+	setPenSize 0
+	jumpForward :height / 2
+	setFillColor "black
+	circle :height / 2
+	setPenColor "white
+	jumpBackward :fontHeight / 2
+	drawM :fontHeight
+
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 5
+jumpLeft :separation * 1.5
+mitWhiteOnRedLogo :height
+jumpRight :separation
+
+; Inspired by logo at:
+; https://professionalprogramsmit.com/
+mitLogo :height :mitRed
+jumpRight :separation
+
+; The black on white version is shown at:
+;https://catalog.mit.edu/schools/science/brain-cognitive-sciences/
+mitLogo :height "black
+
+jumpRight :separation
+mitFavicon :height
