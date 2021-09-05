@@ -1,0 +1,60 @@
+!
+!  REGHAT. Show use of HAT matrix and Studentized residuals
+!  residuals in a multiple regression model. This is quite
+!  an advanced topic so don't worry if you don't recognize
+!  any of this!
+!
+!  Reference: "Classical and Modern Regression with Analysis"
+!  by R. Myers, pp. 84-87, 144-147.
+!
+LIBRARY "Stat4Lib.trc"
+
+DIM d(25,8), corr(0,0), beta(0), se(0), t(0), p(0)
+DIM ey(0), res(0), sres(0), stres(0), press(0), hat(0,0), ra(0)
+
+MAT READ d
+CALL MultiLSFit (d(,), 8, corr(,), int, beta(), se(), t(), p(), ey(), res(), sres(), stres(), press(), hat(,), ra())
+
+LET t$ = "##  ####.##  ####.###    ---#.###   --.###    #.####"
+
+PRINT "U.S. Navy BOQ Manpower/Workload Analysis"
+PRINT
+PRINT using t$: "","y","est.y","e","Stu.e","hat"
+FOR i = 1 to Size(d,1)
+    PRINT using t$: i, d(i,8), ey(i), res(i), stres(i), hat(i,i)
+NEXT i
+
+!
+! Data on manpower and workload for Navy
+! Bachelor Officers' Quarters. 8th column is 'y'.
+! Point 23 is most troublesome but others aren't
+! so good either. The model seems to become strained
+! for y > 2000.
+!
+DATA   2.00,    4.00,    4,   1.26,   1,    6,    6,    180.23
+DATA   3.00,    1.58,   40,   1.25,   1,    5,    5,    182.61
+DATA  16.60,   23.78,   40,   1.00,   1,   13,   13,    164.38
+DATA   7.00,    2.37,  168,   1.00,   1,    7,    8,    284.55
+DATA   5.30,    1.67,   42.5, 7.79,   3,   25,   25,    199.92
+DATA  16.50,    8.25,  168,   1.12,   2,   19,   19,    267.38
+DATA  25.89,    3.00,   40,   0,      3,   36,   36,    999.09
+DATA  44.42,  159.75,  168,   0.60,  18,   48,   48,   1103.24
+DATA  39.63,   50.86,   40,  27.37,  10,   77,   77,    944.21
+DATA  31.92,   40.08,  168,   5.52,   6,   47,   47,    931.84
+DATA  97.33,  255.08,  168,  19.00,   6,  165,  130,   2268.06
+DATA  56.63,  373.42,  168,   6.03,   4,   36,   37,   1489.50
+DATA  96.67,  206.67,  168,  17.86,  14,  120,  120,   1891.70
+DATA  54.58,  207.08,  168,   7.77,   6,   66,   66,   1387.82
+DATA 113.88,  981.00,  168,  24.48,   6,  166,  179,   3559.92
+DATA 149.58,  233.83,  168,  31.07,  14,  185,  202,   3115.29
+DATA 134.32,  145.82,  168,  25.99,  12,  192,  192,   2227.76
+DATA 188.74,  937.00,  168,  45.44,  26,  237,  237,   4804.24
+DATA 110.24,  410.00,  168,  20.05,  12,  115,  115,   2628.32
+DATA  96.83,  677.33,  168,  20.31,  10,  302,  210,   1880.84
+DATA 102.33,  288.83,  168,  21.01,  14,  131,  131,   3036.63
+DATA 274.92,  695.25,  168,  46.63,  58,  363,  363,   5539.98
+DATA 811.08,  714.33,  168,  22.76,  17,  242,  242,   3534.49
+DATA 384.50, 1473.66,  168,   7.36,  24,  540,  453,   8266.77
+DATA  95.00,  368.00,  168,  30.26,   9,  292,  196,   1845.89
+
+END

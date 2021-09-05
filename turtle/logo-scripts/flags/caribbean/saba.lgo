@@ -1,0 +1,24 @@
+; Inspired by flag at:
+; https://en.wikipedia.org/wiki/Saba_(island)#/media/File:Flag_of_Saba.svg
+to sabaFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 3 / 2
+	setPenSize 0
+	stripes :width :height ["#012a87 "#dc171d]
+	jumpForward :height / 2
+	localmake "points []
+	localmake "center pos
+	repeat 4 [
+		jumpForward 1 / 2 * item 1 + remainder repcount 2 [:width :height]
+		queue2 "points pos
+		right 360 / 4
+		jumpTo :center
+	]
+	setFillColor "white
+	polygon :points
+	setFillColor "#f9d90f
+	regularStar :height * 0.28 5
+	setTurtleState :oldState
+end
+
+sabaFlag 100

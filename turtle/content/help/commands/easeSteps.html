@@ -1,0 +1,25 @@
+<p>The stepPosition parameter defines what happens whether or not the step jumps at the first and last steps.
+The stepPosition parameter can be one of:</p>
+<ul>
+	<li><strong>jumpStart</strong> - jump at the first step but not the end.  The first step will not be at 0 but the last step will be at 1.</li>
+	<li><strong>jumpEnd</strong> - jump at the end step but not the first.  The first step will be at 0 but the last step will not be at 1.</li>
+	<li><strong>jumpBoth</strong> - jump at both first and end step.  The first step will not be at 0 and the end step will not be at 1.</li>
+	<li><strong>jumpNone</strong> - never jump at the first or last steps.  The first step will be at 0, last at 1.  Each jump in the middle are higher.</li>
+</ul>
+<code>print interpolateRatio easeSteps 2 "jumpEnd 0.1
+; prints 0
+print interpolateRatio easeSteps 2 "jumpEnd 0.9
+; prints 0.5</code>
+<code>to graphEasing :easing
+	localmake "numPoints 200
+	localmake "size 100
+	setPenSize 0.1
+	repeat :numPoints [
+		localmake "ratio repcount / :numPoints
+		localmake "y :size * interpolateRatio :easing :ratio
+		setXY :ratio * :size :y
+		circle 0.1
+	]
+end
+
+graphEasing easeSteps 2 "jumpStart</code>

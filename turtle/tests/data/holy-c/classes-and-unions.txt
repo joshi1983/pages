@@ -1,0 +1,17 @@
+#define FLOAT_TYPE 0
+#define CHAR_TYPE  1
+#define VALUE_TYPE 2
+
+class Value
+{
+  I32 type;
+  union {
+    F64 f;
+    U8 ch;
+    Value *val;
+  };
+};
+
+Value *v = MAlloc(sizeof(Value));
+v->type = FLOAT_TYPE;
+v->f = 4.20;

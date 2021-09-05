@@ -1,0 +1,109 @@
+to drawFeather :height
+	localmake "oldState turtleState
+	localmake "colors ["black "brown "white]
+	localmake "ellipseRadius1 :height * 0.3
+	localmake "numSteps 5
+	localmake "step :height * 0.3 / :numSteps
+	setPenColor "black
+	setPenSize :height * 0.05
+	setLineCap "round
+	forward :height - penSize / 2
+	jumpBackward :ellipseRadius1
+	jumpForward penSize / 2
+	setPenSize 0
+	repeat :numSteps [
+		setFillColor mixItems2 :colors repRatio
+		ellipse :height * 0.1 :ellipseRadius1
+		jumpBackward :step
+	]
+	setTurtleState :oldState
+end
+
+to drawFeathers :radius
+	localmake "oldState turtleState
+	right 45
+	repeat 4 [
+		drawFeather :radius
+		right 360 / 4
+	]
+	setTurtleState :oldState
+end
+
+to drawTriangles :radius
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "center pos
+	localmake "colors ["black "brown "orange "yellow "black]
+	localmake "angle1 45
+	repeat 4 [
+		localmake "heading1 :oldHeading + repcount * 360 / 4
+		repeat count :colors [
+			localmake "len1 :radius * mix 0.8 0.45 repRatio
+			setHeading :heading1
+			jumpForward :len1
+			setFillColor item repcount :colors
+			left :angle1
+			polyStart
+			localmake "len2 distanceToCircle :center :radius
+			jumpForward :len2
+			localmake "len3 distance :center
+			localmake "arcAngle 2 * triLengthsToAngle :len3 :len1 :len2
+			setHeading (towards :center) - 90
+			arcRight :arcAngle :radius
+			polyEnd
+			jumpTo :center
+		]
+	]
+
+	setTurtleState :oldState
+end
+
+to drawRings :radius :roughInterval
+	localmake "oldState turtleState
+	localmake "numRings round :radius / :roughInterval
+	localmake "step :radius / :numRings
+	setPenSize :radius * 0.001
+	setPenColor "#036
+	setFillColor transparent
+	repeat :numRings [
+		circle :radius - :step * (repcount - 1)
+	]
+
+	setTurtleState :oldState
+end
+
+; Inspired by a design at:
+; https://welcomenativespirit.com/products/four-feather-handmade
+to circleDesign :height
+	localmake "oldState turtleState
+	localmake "numOuterBeeds 72
+	localmake "beedSize :height * 0.02
+	localmake "featherRadius :height * 0.44
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	setFillColor "brown
+	circle :height / 2 - :beedSize
+	setFillColor "#0df
+	circle :height / 2 - :beedSize * 2
+	drawRings :featherRadius :beedSize
+	drawFeathers :featherRadius
+	drawTriangles :featherRadius
+	setFillColor "orange
+	right 180 / :numOuterBeeds
+	repeat :numOuterBeeds [
+		jumpForward (:height - :beedSize) / 2
+		square :beedSize
+		right 180 / :numOuterBeeds
+		jumpTo :center
+		jumpForward :height / 2 - :beedSize * 1.5
+		square :beedSize
+
+		right 180 / :numOuterBeeds
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+circleDesign 100

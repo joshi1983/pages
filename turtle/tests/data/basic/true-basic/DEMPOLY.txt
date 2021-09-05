@@ -1,0 +1,77 @@
+PROGRAM DemPoly
+
+! This program demonstrates how to construct and show the
+! graphics objects polyline and polygon
+
+LIBRARY "TrueCtrl.trc"
+
+CALL TC_Init
+
+SET WINDOW -3, 3, -2, 2
+
+CALL TC_Show (0)                  ! Use the default output window
+CALL TC_Win_Active (0)
+PRINT "Press Escape to quit."
+
+CALL TC_Show_Default (0)          ! Don't show objects upon creation
+
+! Generate the points for a star
+
+DIM star(10,2)
+
+OPTION ANGLE Degrees
+
+LET i = 1
+LET r = 1
+LET short = cos(72)/cos(36)
+FOR a = 90 to 414 step 36
+    LET star(i,1) = r*cos(a)      ! x-coordinate
+    LET star(i,2) = r*sin(a)      ! y-coordinate
+    LET i = i + 1
+    IF r = 1 then LET r = short else LET r = 1
+NEXT a
+
+CALL TC_Graph_Create (poly1, "POLYLINE", 0, 1, 0, 1)
+CALL TC_Graph_SetPoly (poly1, star(,))
+LET width = 10                    ! Pen is 10 pixels wide
+LET color = 4                     ! Should be red
+CALL TC_Graph_SetPen (poly1, width, color, "", "")
+
+CALL TC_Graph_Create (poly2, "POLYGON", 0, 1, 0, 1)
+CALL TC_Graph_SetPoly (poly2, star(,))
+LET color = 2                     ! Green
+CALL TC_Graph_SetPen (poly2, width, color, "", "")
+
+CALL TC_Show (poly1)
+LET nowshowing = poly1
+LET starttime = time
+DO
+
+   CALL TC_Event (0, event$, window, x1, x2)
+
+   IF event$ = "HIDE" then EXIT DO
+   IF event$ = "KEYPRESS" and x1 = 27 then EXIT DO    ! Escape key
+
+   IF time > starttime + 1 then   ! Seconds
+
+      ! Change to the other object
+
+      IF nowshowing = poly1 then
+         CALL TC_Erase (poly1)
+         CALL TC_Show (poly2)     ! Polygon automatically closes
+         LET nowshowing = poly2
+      ELSE
+         CALL TC_Erase (poly2)
+         CALL TC_Show (poly1)     ! Polyline does not close
+         LET nowshowing = poly1
+      END IF
+
+      LET starttime = time
+
+   END IF
+
+LOOP
+
+CALL TC_Cleanup
+
+END

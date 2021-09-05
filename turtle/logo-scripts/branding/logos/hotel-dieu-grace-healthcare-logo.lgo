@@ -1,0 +1,43 @@
+; Inspired by logo at:
+; https://www.hdgh.org
+to hdghLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "len :height * 0.5
+	setPenSize 0
+	left 30
+	jumpForward :height * cos 30
+	localmake "gradient createLinearGradient :oldPos pos createPList2 [
+		[0 "#c97151] [1 "#fbc7a5]
+	] "pad
+	setPenSize :height * 0.045
+	setLineJoinStyle "miter
+	setPenGradient :gradient
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height / 2
+	setFillColor "#583060
+	regularPolygon :height / 2 - penSize / 2/ cos 30 6
+	setLineCap "butt
+	setPenSize :height * 0.15
+	localmake "center pos
+	repeat 2 [
+		jumpBackward :len / 2
+		forward :len
+		jumpTo :center
+		right 90
+	]
+	jumpForward :height * 0.3
+	setPenSize :height * 0.033
+	setPenColor fillColor
+	backward :height * 0.395
+	localmake "len2 distance :center
+	setHeading :oldHeading
+	jumpTo :center
+	jumpBackward penSize / 2
+	stripes :len2 * 2 penSize [penColor]
+	setTurtleState :oldState
+end
+
+hdghLogo 100
