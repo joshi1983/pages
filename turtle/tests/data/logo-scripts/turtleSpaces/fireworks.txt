@@ -1,0 +1,130 @@
+TO fireworks
+  ;simple 2D fireworks
+
+  reset
+  hideturtle
+
+  repeat 5 + random 10 [
+    ;launch at least 5 but not more
+    ;than 14 fireworks
+
+    penup
+    ;pull up the turtle's pen
+
+    home
+    ;return to [0 0 0]
+
+    raise repcount
+    ;raise the turtle so its lines
+    ;don't overlap
+
+    sety -100
+    ;set the turtle's y position to
+    ;-100
+
+    hatch [left -60 + random 121 burst]
+    ;hatch a new turtle, turn that
+    ;turtle left some random value
+    ;between -60 (same as right 60)
+    ;and 60 degrees, then execute the
+    ;burst procedure
+
+    wait 30 + random 31
+    ;wait between one half and one
+    ;second before launching the next
+  ]
+  ;repeat until all fireworks launched
+
+END
+
+TO burst
+  ;a single firework 'burst'
+  ;originally called 'firwork' but
+  ;that was a little confusing!
+
+  penup hideturtle
+
+  newmodel "firework [icosphere 1]
+  setmodel "firework
+  ;create and use a simple model
+  ;made from a single icosphere
+
+  randomfillcolor
+  ;set a random fill color
+  ;models inherit the fill color
+  ;if not otherwise set inside
+  ;the model
+
+  showturtle
+
+  repeat 100 + random 601 [
+    ;travel between 200 and 700
+    ;turtle steps
+
+    forward 1 - 0.002 * repcount
+    ;move forward 1 step minus
+    ;a fraction based on the current
+    ;loop iteration. This has the
+    ;effect of slowing us down
+    ;over time (reduce velocity)
+
+    sety ypos - 0.0005 * repcount
+    ;change the y position of the
+    ;turtle a fraction based on the
+    ;current loop iteration, simulating
+    ;very simple gravity
+
+    sleep 2
+    ;take a little nap
+
+  ]
+  ;repeat until finished travelling
+
+  setpencolor fillcolor
+  ;set the pen color to the fill color
+
+  hideturtle
+
+  repeat 20 + random 21 [
+    ;create between 20 and 40 fragments
+
+    raise 0.01
+    ;ensures seperation between
+    ;overlapping lines
+
+    hatch [
+      pendown
+      ;draw lines
+
+      right random 360
+      ;turn right between 0 and 359
+      ;degrees
+
+      make "steps 30 + random 71
+      repeat :steps [
+        ;travel between 30 and 100
+        ;turtle steps
+
+        ;setpenshade -15 + repcount / 5
+        setpenshade -15 + 30 * (repcount / :steps)
+        ;set the pen shade based on the
+        ;loop iterations
+
+        fd 1 - 0.002 * repcount
+        ;move forward minus "drag"
+
+        sety ypos - 0.01 * repcount
+        ;apply fake gravity
+
+      ]
+      merge
+      ;merge the hatchling's track
+      ;(output) into the track of its
+      ;permanent ancestor, in this case
+      ;myrtle
+    ]
+    ;done with hatchling
+  ]
+  ;repeat until finished
+
+END

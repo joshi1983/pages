@@ -1,0 +1,28 @@
+; Copied from http://www.sonic.net/~nbs/webturtle/webturtle.cgi?file=tree
+; Example 10 - Tree
+
+; L is the depth of branching...
+
+LET L 6
+
+GO TREE
+END
+
+
+# TREE
+  DRAW L*5
+
+  LET L L-1
+  
+  IF L > 0
+    LEFT 45
+    REPEAT 3
+      REMEMBER
+      PUSH L
+      GO TREE
+      POP L
+      GOBACK
+      RIGHT 45
+    NEXT
+  ENDIF
+RETURN

@@ -1,0 +1,33 @@
+; Inspired by flag at:
+; https://en.wikipedia.org/wiki/Flag_of_Kazakhstan#/media/File:Flag_of_the_Kazakh_Khanate.svg
+to allegedKazakhKhanateFlag :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "width :height * 2
+	localmake "arcLinesInfo [[0.197] [180 0.05] [0.345] [-275 0.059]
+	[0.345] [180 0.05] [0.197]]
+	stripes :width :height ["#0093dd]
+	setPenSize 0
+	setFillColor "white
+	jumpLeft :height * 0.7515
+	jumpForward :height * 0.4288
+	repeat 3 [
+		; can't use regularStar because the flag's stars have a slightly 
+		; smaller inner radius than a regular star would have.
+		isotoxalStar :height * 0.0745 :height * 0.0255 5
+		jumpForward :height * 0.1677
+	]
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.563
+	setPenColor "white
+	setPenSize :height * 0.03
+	repeat 2 [
+		setHeading :oldHeading - 47.5 + 360 / 2 * repcount
+		arcLines :arcLinesInfo :height
+	]
+	setTurtleState :oldState
+end
+
+allegedKazakhKhanateFlag 100

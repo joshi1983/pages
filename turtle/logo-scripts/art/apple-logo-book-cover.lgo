@@ -1,0 +1,164 @@
+; The drawings here are inspired by the images
+; on the cover of a book called
+; Apple Logo: Programming and Problem Solving
+; You can find the book at
+; https://archive.org/details/applelogoprogram0000bill
+
+to getRainbowGradient :height
+	localmake "oldState turtleState
+	localmake "colors ["red "#AD008E "royalblue "#00A800 "orange]
+	localmake "numColors count :colors
+	localmake "colorStops createPList
+	repeat count :colors [
+		localmake "color item repcount :colors
+		setProperty "colorStops (repcount - 1) / :numColors :color
+		localmake "repRatio1 (repcount - 0.01) / :numColors
+		setProperty "colorStops :repRatio1 :color
+	]
+	left 60
+	jumpForward :height * 0.28
+	localmake "pos1 pos
+	jumpForward :height * 0.55
+	localmake "gradient createLinearGradient pos :pos1 :colorStops "repeat
+	setTurtleState :oldState
+	output :gradient
+end
+
+; The colorful version is shown on the book cover.
+;
+; A monochrome version with a coding challenge can be found on page 90.
+; You can electronically borrow the book to view page 90 at:
+; https://archive.org/details/applelogoprogram0000bill/page/90/mode/2up
+;
+; Pages 127 to 130 elaborate more on implementing an 
+; umbrella drawing in Logo.
+; The book suggests a different way to fill in the umbrella cover.
+; This umbrella procedure uses polyStart, polyEnd commands to
+; define a filled path more efficiently and accurately.
+to umbrella :height
+	localmake "oldState turtleState
+	localmake "handleRadius :height * 0.095
+	localmake "coverRadius :height * 0.3
+	localmake "coverArcAngle1 82
+	localmake "coverArcAngle2 40
+	localmake "numCoverArcs 6
+	localmake "coverWidth :coverRadius * 2 * sin :coverArcAngle1
+	localmake "coverTinyRadius :coverWidth / 2 / :numCoverArcs / sin :coverArcAngle2
+	setPenSize :height * 0.015
+	setLineCap "round
+	setPenGradient getRainbowGradient :height
+
+	; Draw the handle.
+	jumpLeft :handleRadius * 2
+	jumpForward penSize / 2 + :handleRadius
+	right 180
+	arcLeft 180 :handleRadius
+	forward :height - :handleRadius - penSize
+
+	; Draw the cover.
+	jumpBackward :height * 0.33
+	jumpLeft :coverWidth / 2
+	setPenSize 0
+	setFillGradient penGradient
+	right 90 - :coverArcAngle1
+	polyStart
+	arcRight :coverArcAngle1 * 2 :coverRadius
+	right 180 - :coverArcAngle1 + :coverArcAngle2
+	repeat :numCoverArcs [
+		arcLeft :coverArcAngle2 * 2 :coverTinyRadius
+		right :coverArcAngle2 * 2
+	]
+	polyEnd	
+
+	setTurtleState :oldState
+end
+
+to star :size
+	localmake "oldState turtleState
+	repeat 5 [
+		forward :size
+		right 144
+	]
+	closePath ; join the start to the end point in the path.
+	setTurtleState :oldState
+end
+
+; The star pattern is similar to what is 
+; shown on the book cover.
+; Code for a similar pattern is shown on page 222 of the book.
+; You can borrow the book for free to see page 222 at:
+; https://archive.org/details/applelogoprogram0000bill/page/222/mode/2up
+; One difference from the book's graphics and code was 
+; I disconnected the line between each star.
+; Keeping the stars barely touching looked more appealing to me.
+to starPattern :height
+	localmake "oldState turtleState
+	localmake "starSize1 :height / 2
+	setPenSize :height * 0.02
+	localmake "angle1 180 - 144
+	localmake "starSize2 :starSize1 - (penSize + penSize / cos :angle1) / tan :angle1
+	localmake "numStarsWide 3
+	setLineCap "butt
+	setLineJoinStyle "miter
+	setPenGradient getRainbowGradient :height
+	jumpLeft :starSize1 * (:numStarsWide - 1) / 2
+	jumpForward (:starSize1 - :starSize2) / 2
+	repeat 2 [
+		repeat :numStarsWide [
+			star :starSize2
+			jumpRight :starSize1
+		]
+		jumpLeft :starSize1 * :numStarsWide
+		jumpForward :starSize1
+	]
+	setTurtleState :oldState
+end
+
+to pentagonsRotated :height
+	localmake "oldState turtleState
+	localmake "size1 :height * 0.304
+	localmake "numOuterIterations 16
+	setPenGradient getRainbowGradient :height
+	jumpForward :height / 2
+	setPenSize :height * 0.015
+	setFillColor transparent
+	repeat :numOuterIterations [
+		repeat 5 [
+			forward :size1
+			right 360 / 5
+		]
+		closePath
+		right 360 / :numOuterIterations
+	]
+	setTurtleState :oldState
+end
+
+to starsRotated :height
+	localmake "oldState turtleState
+	localmake "starSize1 :height * 0.2165
+	localmake "starSize2 :height * 0.05
+	localmake "numOuterIterations 6
+	setPenGradient getRainbowGradient :height
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize :height * 0.02
+	setFillColor transparent
+	repeat :numOuterIterations [
+		jumpForward :starSize1
+		isotoxalStar :starSize1 :starSize2 8
+		jumpTo :center
+		right 360 / :numOuterIterations
+	]
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 2
+jumpLeft :separation * 1.5
+umbrella :height
+jumpRight :separation
+starPattern :height
+jumpRight :separation
+pentagonsRotated :height
+jumpRight :separation
+starsRotated :height

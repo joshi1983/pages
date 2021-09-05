@@ -1,0 +1,73 @@
+make "color1 "#fff
+
+to straightSmear :len
+	localmake "oldPos pos
+	localmake "len2 :len * 0.1
+	forward :len / 2
+	ellipse :len :len2
+	setPos :oldPos
+end
+
+to polyArc :squareSize :arcRadius1 :arcRadius2
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "size1 :squareSize - :arcRadius1
+	localmake "size2 :squareSize - :arcRadius2
+
+	polyStart
+	forward :size1
+	ifelse :arcRadius1 > 0 [
+		arcRight 90 :arcRadius1
+	] [
+		right 90
+	]
+	forward :size1
+	right 180
+	forward :size2
+	if :arcRadius2 > 0 [
+		arcLeft 90 :arcRadius2
+	]
+	polyEnd
+
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to blendedArc :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "numDivisions 64
+	repeat :numDivisions [
+		localmake "ratio repcount / :numDivisions
+		localmake "arcRadius1 :size * repcount / :numDivisions
+		setFillColor mix :color1 transparent 0.1 * :ratio * :ratio
+		polyArc :size :size :arcRadius1
+	]
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to design :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	repeat 5 [
+		setHeading :oldHeading + 180 * (repcount - 3) / 4
+		straightSmear :size
+		if repcount <> 5 [
+			blendedArc :size
+		]
+		left 45
+		forward :size * sqrt 2
+		right 135
+		if repcount <> 1 [
+			blendedArc :size
+		]
+		setPos :oldPos
+	]
+end
+
+setScreenColor "black
+setFillColor "red
+setPenSize 0
+design 150
+ 

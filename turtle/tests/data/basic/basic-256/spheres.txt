@@ -1,0 +1,54 @@
+# copied from:
+# https://www.facebook.com/share/v/1Kp43CquAF/
+
+# Spheres
+#**************************************
+# This code is based on original code by Jan Vibe for the Matrix Brandy and BBC BASIC
+# This version runs blazingly fast on modern computers, so play with the pause at the end
+# By left-click, you cycle through purple, blue, greyscale and random color
+#
+#setup
+fastgraphics
+width = 1280
+height = 1024
+graphsize width, height
+color white
+rect 0,0,width,height
+refresh
+#initializations
+col=0
+minrad = 30
+#Drawloop
+while 1
+set colorscheme
+if clickb=1 then
+col = col +1
+clickclear
+if col = 4 then col = 0
+endif
+#choose random position on the screen
+x = rand*width
+y = rand*height
+#select a radius between 30 and 130
+radius = rand*100+minrad
+#calculate stepsize so sphere is drawn in 30 filled circles
+stepsize = radius/minrad
+# for the random color version...
+r=rand*255
+g=rand*255
+b=rand*255
+rstep = r/minrad
+gstep = g/minrad
+bstep = b/minrad
+#draw the sphere according to the selected color scheme
+FOR M = 1 TO minrad
+if col = 0 then color rgb(0+(255/30)*M,0+(255/60)*M,0+(255/30)*M) #purple
+if col = 1 then color rgb(0+(255/60)*M,0+(255/60)*M,0+(255/30)*M) #blue
+if col = 2 then color rgb(0+(255/30)*M,0+(255/30)*M,0+(255/30)*M) #black&white
+if col = 3 then color rgb(rstep*m,gstep*m,bstep*m) #multicolor
+CIRCLE x,y,radius
+radius = radius-stepsize
+NEXT M
+refresh
+pause 0.01
+end while

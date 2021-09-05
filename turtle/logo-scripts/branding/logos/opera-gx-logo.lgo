@@ -1,0 +1,32 @@
+; Inspired by Opera GX browser logo at:
+; https://www.opera.com/gx
+to operaGXLogo :height
+	localmake "oldState turtleState
+	localmake "middleArcRadiusY :height * 0.414
+	localmake "middleArcRadiusX :height * 0.37
+	localmake "middleArcAngle 240
+	localmake "smallArcInfo [[25 0.44] [10 0.33] [11 0.32] [11.05 0.272]
+	[-153 0] [-30 0.17] [-20 0.24] [-20 0.355] [-14.05 0.45739412]]
+	jumpForward :height / 2
+	localmake "center pos
+	setFillColor transparent
+	setPenSize :height * 0.0475
+	setPenColor "#FA1E4E
+	circle (:height - penSize) / 2
+
+	jumpLeft :height * 0.247
+	jumpRight :middleArcRadiusX
+	ellipseArc :middleArcAngle :middleArcRadiusX :middleArcRadiusY (180 - :middleArcAngle) / 2
+
+	jumpTo :center
+	jumpRight :height * 0.2412
+	setFillColor penColor
+	setPenSize 0
+	polyStart
+	arcsLeft :smallArcInfo :height
+	arcsLeft reverse :smallArcInfo :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+operaGXLogo 100

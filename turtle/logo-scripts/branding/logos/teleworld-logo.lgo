@@ -1,0 +1,53 @@
+; Inspired by logo at:
+; https://www.avid.wiki/Teleworld,_Inc.
+; The differently coloured versions there have a very similar shape.
+;
+; The original looks like it had curved corners
+; but the corners were so small that it is hard to be sure.
+; If the corners were sharp, the low resolution could make 
+; the corners look rounded anyway.
+; This procedure draws sharp corners because the code is simpler
+; and because the difference is subtle.
+to teleworldLogo :height :color
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "radiusFactor 0.5045
+	localmake "radius :height * :radiusFactor
+	localmake "lowerAngle 180 - arcCos (1 - :radiusFactor) / :radiusFactor
+	localmake "topArcAngle 131.5
+	jumpForward :height - :radius
+	localmake "center pos
+	setPenSize 0
+	setFillColor :color
+	left :topArcAngle / 2
+	jumpForward :radius
+	drawArcLineShape [0 0
+		[[-90 0] [-:topArcAngle 1]]
+	] :radius
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		jumpTo :center
+		setHeading :oldHeading + :sign * :lowerAngle
+		jumpForward :radius
+		setHeading :oldHeading
+		localmake "startPos pos
+		polyStart
+		jumpForward :radius * 1.01
+		right 90 * :sign
+		jumpForward distanceToCircle :center :radius
+		setHeading (towards :center) - 90 * :sign
+		localmake "arcAngle 2 * arcSin (distance :startPos) / 2 / :radius
+		arcLeft -:sign * :arcAngle :radius
+		polyEnd
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+make "height 100
+make "separation :height * 5
+jumpLeft :separation / 2
+teleworldLogo :height "white
+jumpRight :separation
+teleworldLogo :height "#9eb72c

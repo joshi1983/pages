@@ -1,0 +1,20 @@
+EXTERNAL
+
+SUB Sort (l$(), options$)
+
+    LIBRARY "{WB_c}WBsort.trc"
+
+    WHEN EXCEPTION IN
+         CALL WB_Sort (l$(), options$)
+         PRINT "Done with Sort."
+    USE
+         IF extype = 1 then
+            PRINT extext$
+         ELSE
+            PRINT extype, extext$
+            PRINT exline$
+            PRINT "Error in Sort."
+         END IF
+    END WHEN
+
+END SUB

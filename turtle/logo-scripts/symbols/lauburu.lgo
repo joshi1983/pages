@@ -1,0 +1,41 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Lauburu#/media/File:Lauburu.svg
+to lauburu1 :height
+	localmake "oldState turtleState
+	localmake "shape [0 0
+		[[-11 0] [-179 0.126] [180 0.125] [180 0.251]]
+	]
+	jumpForward :height / 2
+	setPenColor "black
+	setPenSize :height * 0.004
+	setLineJoinStyle "round
+	setFillColor penColor
+	repeat 4 [
+		drawArcLineShape :shape :height
+		right 360 / 4
+	]
+	setTurtleState :oldState
+end
+
+to lauburuCurved :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	setPenColor "black
+	setPenSize :height * 0.052
+	jumpForward :height / 2
+	circle (:height - penSize) / 2
+	localmake "center pos
+	repeat 4 [
+		setHeading :oldHeading + 360 * repcount / 4
+		arcRight 180 (:height - penSize) / 4
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 5
+jumpLeft :separation / 2
+lauburu1 :height
+jumpRight :separation
+lauburuCurved :height

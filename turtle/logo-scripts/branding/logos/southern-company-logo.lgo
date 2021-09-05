@@ -1,0 +1,72 @@
+; Inspired by logo at
+; https://www.southerncompany.com/
+to southernCompanyLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "redY1 :height * 0.30502985
+	localmake "baseWidth :height * 1.155
+	localmake "angle1 arcTan :baseWidth / 2 / :height
+	localmake "greenRatio 0.291
+	localmake "blueRatio 0.51852
+	localmake "diagonalLength hypot [:height :baseWidth / 2]
+	localmake "greenHeight :greenRatio * :height * :height / :diagonalLength
+	localmake "blueHeight :blueRatio * :height * :height / :diagonalLength
+	localmake "greenLeftGap :greenRatio * :height * sin :angle1
+	localmake "greenSlope :greenHeight / (:baseWidth - :greenLeftGap)
+	localmake "blueSlope :blueHeight / (:baseWidth - :blueRatio * :height * sin :angle1)
+	localmake "intersectionX :greenLeftGap + (:greenHeight - :blueSlope * :greenLeftGap) / (:blueSlope + :greenSlope)
+	localmake "intersectionY :blueSlope * :intersectionX
+	localmake "size3 hypot [:intersectionX :intersectionY]
+	jumpLeft :baseWidth / 2
+	localmake "leftPos1 pos
+	jumpRight :baseWidth
+	localmake "rightPos1 pos
+	jumpTo :oldPos
+	jumpForward :height
+	localmake "topPos pos
+	setPenSize 0
+	isoTriangle :baseWidth :height
+	jumpTo :oldPos
+	jumpForward :redY1
+	jumpLeft :baseWidth / 2 * (1 - :redY1 / :height)
+	setFillColor "#ed1d24
+	setHeading towards :topPos
+	polyStart
+	jumpForward distance :topPos
+	setHeading :oldHeading + 180 - :angle1
+	jumpForward :height * 0.5747
+	polyEnd
+
+	setFillColor "#b2d235
+	jumpTo :rightPos1
+	setHeading :oldHeading
+	polyStart
+	jumpLeft :baseWidth
+	setHeading towards :topPos
+	jumpForward :height * :greenRatio
+	polyEnd
+
+	setFillColor "#00bdf2
+	jumpTo :leftPos1
+	setHeading towards :rightPos1
+	polyStart
+	jumpForward distance :rightPos1
+	setHeading towards :topPos
+	jumpForward :height * :blueRatio
+	polyEnd
+	localmake "rightPos2 pos
+
+	setFillColor "#007dba
+	jumpTo :rightPos1
+	setHeading :oldHeading
+	polyStart
+	jumpLeft :baseWidth
+	setHeading towards :rightPos2
+	jumpForward :size3
+	polyEnd
+	
+	setTurtleState :oldState
+end
+
+southernCompanyLogo 100

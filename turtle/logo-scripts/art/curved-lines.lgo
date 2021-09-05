@@ -1,0 +1,42 @@
+setScreenColor "black
+setPenColor "white
+make "Nlines 300
+make "Npoints 30
+make "DS 0.02
+make "DH 0.015
+
+make "heading pi * 2 * animation.timeRatio
+setPenSize 0.005
+for [ "lines 0 :Nlines ] [
+	make "x 2 * randomRatio - 1
+	make "y 2 * randomRatio - 1
+	for [ "points 0 :Npoints ] [
+		make "angle ( radArcTan2 :y :x ) + :heading +
+		( radSin 6 * pi * hypot [:x :y] ) / 4
+		make "x :x + :DS * radCos :angle
+		make "y :y + :DS * radSin :angle
+		make "hue 30 + 30 * radSin :points / 2
+		ifelse :points = 0
+		 [
+			jumpTo [:x :y]
+		] [
+			setPenColor hsvToRGB :hue / 360 1 1
+			setPos [ :x :y ] 
+		]
+	]
+]
+
+to animation.snapshotstyle
+	output createPList2 [
+		["zoom.scale 300]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 3
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

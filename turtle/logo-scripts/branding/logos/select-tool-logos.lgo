@@ -1,0 +1,45 @@
+make "selectToolOrange "#ef4b24
+
+to selectToolLogoCustomColor :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "arcLinesInfo [
+		[60 0] [0.285] [-92.5 0.057] [-17 0.37]
+		[-61 0.295] [80.5 0] [0.1] [-95.32 0.096]
+		[-156.2 0.5] [-109 0] [0.115] [-66 0] [149 0.392]
+		[98 0] [0.149] [-92 0.035] [22 0.26] [55 0.191]
+		[104.52 0] [0.2]
+	]
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	repeat 2 [
+		setHeading :oldHeading + repcount * 360 / 2
+		polyStart
+		jumpBackward :height * 0.066
+		arcLines :arcLinesInfo :height
+		polyEnd
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by logo at
+; https://www.selecttool.com
+to selectToolLogoOrangeForeground :height
+	setFillColor :selectToolOrange
+	selectToolLogoCustomColor :height
+end
+
+to selectToolLogoWhiteForeground :height
+	stripes :height * 3 :height [:selectToolOrange]
+	setFillColor "white
+	selectToolLogoCustomColor :height
+end
+
+make "height 100
+make "separation :height * 5
+jumpLeft :separation * 0.5
+selectToolLogoOrangeForeground :height
+jumpRight :separation
+selectToolLogoWhiteForeground :height

@@ -1,0 +1,29 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/File:Flag_of_Greek_Macedonia.svg
+to greekMacedoniaFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 3 / 2
+	localmake "numRays 8
+	stripes :width :height ["#002d70]
+	jumpForward :height / 2
+	setPenSize 0
+	setFillColor "#d6b429
+	circle :height * 21.5 / 300
+	localmake "center pos
+	repeat :numRays [
+		jumpForward :height * 31 / 300
+		circlePair :height * 6 / 300 0 :height * 89 / 300
+		right 360 / :numRays
+		jumpTo :center
+	]
+	right 180 / :numRays
+	repeat :numRays [
+		jumpForward :height * 2 / 15
+		circlePair :height * 6 / 300 0 :height * 70 / 300
+		right 360 / :numRays
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+greekMacedoniaFlag 100

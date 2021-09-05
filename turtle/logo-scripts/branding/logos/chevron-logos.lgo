@@ -1,0 +1,111 @@
+to getVShapeLine :len1 :angle1
+	localmake "len2 1 - :len1 * cos :angle1
+	output [
+		[:angle1 0] [:len1] [-:angle1 0] [:len2]
+		[:angle1 - 180 0] [:len1]
+	]
+end
+
+to getVShape :len1 :angle1
+	output pathMirror getVShapeLine :len1 :angle1
+end
+
+; Inspired by logo at:
+; https://en.wikipedia.org/wiki/Chevron_Corporation#/media/File:Standardoil_calif_logo_1931.png
+to chevronStandardLogo :height
+	localmake "oldState turtleState
+	localmake "colors ["#f5232c "white "#0d345d]
+	localmake "shapeHeight :height * 0.5
+	localmake "separation (:height - :shapeHeight) / (-1 + count :colors)
+	setPenSize 0
+	repeat count :colors [
+		setFillColor item repcount :colors
+		drawArcLineShape [0 0
+			getVShape 1.31 68
+		] :shapeHeight
+		jumpForward :separation
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://en.wikipedia.org/wiki/Chevron_Corporation#/media/File:Chevron_logo1969.png
+to chevron1969Logo :height
+	localmake "oldState turtleState
+	localmake "colors ["#e70103 "#09107a]
+	localmake "shapeHeight :height * 0.56
+	localmake "separation (:height - :shapeHeight) / (-1 + count :colors)
+	localmake "angle1 68
+	localmake "width1 0.98
+	setPenSize 0
+	setFillColor "white
+	drawArcLineShape [0 0
+		getVShape :width1 * :shapeHeight / :height :angle1
+	] :height
+	repeat count :colors [
+		setFillColor item repcount :colors
+		drawArcLineShape [0 0
+			getVShape :width1 :angle1
+		] :shapeHeight
+		jumpForward :separation
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://en.wikipedia.org/wiki/Chevron_Corporation#/media/File:Chevron_Logo.svg/2
+to chevron2004Logo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "colors [
+		["#e6192f "#9d1a36]
+		["#2fa1d3 "#0056a2]
+	]
+	localmake "shapeHeight :height * 0.565
+	localmake "separation (:height - :shapeHeight) / (-1 + count :colors)
+	localmake "angle1 71.5
+	localmake "width1 1.055
+	localmake "line getVShapeLine :width1 :angle1
+	setPenSize 0
+	repeat count :colors [
+		localmake "pos1 pos
+		localmake "pair item repcount :colors
+		setFillColor first :pair
+		drawArcLineShape [0 0
+			pathMirror :line
+		] :shapeHeight
+		right 40
+		jumpLeft :height
+		setFillGradient createLinearGradient :pos1 pos createPList2 [
+			[0.25 last :pair] [0.6 first :pair]
+		] "pad
+		jumpTo :pos1
+		setHeading :oldHeading
+		drawArcLineShape [0 0
+			:line
+		] :shapeHeight
+		right 90 - :angle1
+		jumpForward :shapeHeight * 1.1
+		setFillGradient createLinearGradient :pos1 pos createPList2 [
+			[0 last :pair] [0.2 first :pair] [0.8 first :pair] [1 last :pair] 
+		] "pad
+		jumpTo :pos1
+		setHeading :oldHeading
+		drawArcLineShape [0 0
+			combine flipAngles :line [[1.048]]
+		] :shapeHeight
+
+		jumpForward :separation
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "#ddd
+make "height 100
+make "separation :height * 3
+jumpLeft :separation
+chevronStandardLogo :height
+jumpRight :separation
+chevron1969Logo :height
+jumpRight :separation
+chevron2004Logo :height

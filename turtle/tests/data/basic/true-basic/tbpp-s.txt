@@ -1,0 +1,20 @@
+EXTERNAL
+
+SUB TBpp (l$(), options$)
+
+    LIBRARY "{WB_c}WBtbpp.trc"
+
+    WHEN EXCEPTION IN
+         CALL WB_TBpp (l$(), options$)
+         PRINT "Done with TBpp preprocessor."
+    USE
+         IF extype = 1 then
+            PRINT extext$
+         ELSE
+            PRINT extype, extext$
+            PRINT exline$
+            PRINT "Error in Tbpp."
+         END IF
+    END WHEN
+
+END SUB

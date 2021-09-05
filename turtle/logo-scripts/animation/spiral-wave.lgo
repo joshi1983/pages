@@ -1,0 +1,56 @@
+; Inspired by:
+; https://ca.pinterest.com/pin/646477721512935070
+;
+; It is also shown at:
+; https://zoombeani.tumblr.com/image/146402317571
+;
+; The uploader's profile at: 
+; https://www.tumblr.com/zoombeani
+to spiralWave :height :timeRatio
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "colors ["white "aqua "blue "violet "red "orange "lime]
+	localmake "maxRadius :height / 2
+	localmake "timeRatio2 0.5 * sin 360 * :timeRatio
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	right 45
+	localmake "waveHeading heading
+	repeat 200 [
+		localmake "waveOffset :height * 0.04 * (mix 1 0.2 repRatio) * 
+			sin 360 * 3 * (repRatio + :timeRatio2)
+		localmake "r :maxRadius * ((0.2 * power repRatio 0.5) + power repRatio 2) * 0.8
+		setFillColor mixItems2 :colors repRatio
+		localmake "twistedHeading :oldHeading + 360 * 3 * power repRatio 0.3
+		repeat 8 [
+			setHeading :twistedHeading + repcount * 360 / 8
+			jumpForward :r
+			setHeading :waveHeading
+			jumpForward :waveOffset
+			circle :height * 0.003
+			jumpTo :center
+		]
+	]
+	setTurtleState :oldState
+end
+
+make "timeRatio animation.clampedTimeRatio
+setScreenColor "black
+spiralWave 100 :timeRatio
+
+to animation.snapshotstyle
+	output createPList2 [
+		["position.y 50]
+		["zoom.scale 8]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 5
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

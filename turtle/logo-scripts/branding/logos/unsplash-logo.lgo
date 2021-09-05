@@ -1,0 +1,25 @@
+; Inspired by logo at:
+; https://unsplash.com
+to unsplashLogo :height
+	localmake "oldState turtleState
+	localmake "bottomWidth :height
+	localmake "innerWidth :height * 0.375
+	localmake "bottomHeight :height * 0.2812
+	localmake "topHeight :bottomHeight
+	localmake "sideWidth (:bottomWidth - :innerWidth) / 2
+	localmake "midSeparation :bottomWidth - :sideWidth
+	localmake "oldPos pos
+	setPenSize 0
+	stripes :bottomWidth :bottomHeight ["black]
+	jumpLeft :midSeparation / 2
+	repeat 2 [
+		stripes :sideWidth :height * 0.562 ["black]
+		jumpRight :midSeparation		
+	]
+	jumpTo :oldPos
+	jumpForward :height - :topHeight
+	stripes :innerWidth :topHeight ["black]
+	setTurtleState :oldState
+end
+
+unsplashLogo 100

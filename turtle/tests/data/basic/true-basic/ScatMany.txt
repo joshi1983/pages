@@ -1,0 +1,19 @@
+!
+!  SCATMANY. Plot a scatter chart of multiple datasets.
+!  Source: World Almanac & Book of Facts, 1982. Page 900.
+!
+LIBRARY "Stat2Lib.trc"
+
+DIM x(0,2), y(2,1921:1940), legend$(2)
+
+MAT READ y, legend$
+DATA 23,42,41,27,39,21,30,31,43,56,31,38,28,35,34,33,31,36,28,43     ! Nat'l
+DATA 59,39,41,46,33,47,60,54,46,49,46,58,48,49,36,49,46,58,35,41     ! Amer
+DATA National League, American League
+
+CALL SetText ("Major League Home Run Leaders", "Year", "Home Runs")
+CALL SetLS (1)
+CALL PlotManyScat (x, y, 1, legend$, "black black red blue")
+
+END
+

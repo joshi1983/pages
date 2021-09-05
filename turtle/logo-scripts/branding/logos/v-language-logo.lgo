@@ -1,0 +1,53 @@
+to fillShape :height :reverse?
+	localmake "oldState turtleState
+	localmake "startArcs [[109.3 0.013]]
+	localmake "endArcs [[70.3 0.05]]
+	; remove the corner so it won't show in the background shape.
+	if :reverse? [
+		localmake "startArcs []
+		localmake "endArcs [[0.009] [30 0.05] [40.3 0.013]]
+	]
+	localmake "arcsInfo (combine :startArcs [ [0.971] [65 0.06] [0.265] 
+	[115.4 0.018] [1.001407499]] :endArcs) 
+	localmake "startOffset 0.14
+	if :reverse? [
+		localmake "startOffset 0.14
+		localmake "arcsInfo reverse :arcsInfo
+	]
+	setPenSize 0
+	jumpRight :height * :startOffset
+	right 90
+	polyStart
+	arcLines :arcsInfo :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+to createBackgroundGradient :height
+	localmake "oldState turtleState
+	localmake "colorStops createPList2 [
+		[0 "#252F3C] [0.1 "#3c4e65] [1 "#536b8a]
+	]
+	right 70.8
+	jumpForward :height * 0.15
+	localmake "fromPos pos
+	jumpForward :height * 0.03
+	localmake "result createLinearGradient :fromPos pos :colorStops "pad
+	setTurtleState :oldState
+	output :result
+end
+
+; Inspired by logo at:
+; https://vlang.io/
+to vLanguageLogo :height
+	localmake "oldState turtleState
+	setFillGradient createBackgroundGradient :height
+	fillShape :height true
+
+	setFillColor "#5d87bf
+	fillShape :height false
+
+	setTurtleState :oldState
+end
+
+vLanguageLogo 100

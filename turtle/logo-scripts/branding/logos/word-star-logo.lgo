@@ -1,0 +1,50 @@
+; Inspired by logo for WordStar.
+; The logo is shown at:
+; https://thegamesdb.net/game.php?id=130767
+;
+; You can learn more about it at:
+; https://en.wikipedia.org/wiki/WordStar
+to wordStarLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "ringRadius1 :height * 0.79
+	localmake "ringRadius2 :height * 0.13
+	localmake "ringThickness :height * 0.033
+	localmake "ballColorStops createPList2 [
+		[0 "#0ff] [1 ["#00f easeIn]]
+	]
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize :ringThickness
+	setPenColor "red
+	right 19
+	jumpRight :height * 0.035
+	localmake "ringPos pos
+	localmake "ringHeading heading
+	ellipse :ringRadius1 :ringRadius2
+
+	setPenSize 0
+	jumpTo :center
+	setHeading :oldHeading - 30
+	jumpForward :height * 0.3
+	setFillGradient createRadialGradient2 :center pos :height * 0.6 :ballColorStops "pad
+	jumpTo :center
+	circle :height / 2
+
+	jumpTo :ringPos
+	setHeading :ringHeading
+	setPenSize :ringThickness
+	ellipseArc 180 :ringRadius1 :ringRadius2 -90
+
+	jumpTo :center
+	setHeading :oldHeading
+	setPenSize 0
+	setFillColor "yellow
+	jumpRight :height * 0.17
+	jumpBackward :height * 0.159
+	regularStar :height * 0.22 5
+
+	setTurtleState :oldState
+end
+
+wordStarLogo 100

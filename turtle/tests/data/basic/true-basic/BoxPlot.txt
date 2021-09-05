@@ -1,0 +1,19 @@
+!
+!  BOXPLOT.  Show a box plot.
+!
+LIBRARY "Stat2Lib.trc"
+
+DIM d(100)
+
+FOR i = 1 to 100                  ! Most of the data
+    LET d(i) = Rnd + Rnd
+NEXT i
+
+FOR i = 1 to 5                    ! Outliers
+    LET d(i) = 5*(Rnd-.5)
+NEXT i
+
+CALL SetTitle ("Box Plot with Outliers")
+CALL BoxPlot (d, "black")
+
+END

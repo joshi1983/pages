@@ -1,0 +1,59 @@
+; Inspired by an article at:
+; https://en.wikipedia.org/wiki/Thomas%27_cyclically_symmetric_attractor
+to thomasAttractor :scale
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "numIterations 50000
+	localmake "b 0.19
+	localmake "dt 0.05
+	localmake "x 1
+	localmake "y 0
+	localmake "z 0
+	localmake "points []
+
+	; calculate points
+	repeat :numIterations [
+		localmake "delta [
+			(-:b * :x + radSin(:y)) * :dt
+			(-:b * :y + radSin(:z)) * :dt
+			(-:b * :z + radSin(:x)) * :dt
+		]
+		localmake "x :x + first :delta
+		localmake "y :y + item 2 :delta
+		localmake "z :z + item 3 :delta
+		jumpTo :oldPos
+		jumpForward :scale * :y
+		jumpRight :scale * :x
+		jumpOut :scale * :z
+		queue2 "points pos
+	]
+	setPenSize :scale * 0.01
+	setLineJoinStyle "round
+	setPenColor "black
+
+	; draw lines through the points.	
+	jumpTo first :points
+	for ["i 2 count :points] [
+		setPos item :i :points
+	]
+	setTurtleState :oldState
+end
+
+rollRight 30
+pitchUp 360 * animation.timeRatio
+thomasAttractor 100
+
+to animation.snapshotstyle
+	output createPList2 [
+		["zoom.scale 0.5]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 10
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

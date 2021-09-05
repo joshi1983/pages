@@ -1,0 +1,35 @@
+; Inspired by:
+; https://upload.wikimedia.org/wikipedia/commons/b/b9/Slack_Technologies_Logo.svg
+; Referenced at:
+; https://en.wikipedia.org/wiki/Slack_(software)
+to slackLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "colors ["#2eb67d "#ecb22e "#e01e5a "#36c5f0]
+	localmake "radius :height * 0.1045
+	localmake "size1 :height * 0.265
+	jumpForward :height / 2
+	setLineCap "round
+	localmake "center pos
+	repeat count :colors [
+		setHeading :oldHeading + 360 * (repcount - 1) / count :colors
+		setPenColor item repcount :colors
+		setFillColor penColor
+		setPenSize :radius * 2
+		jumpRight :height * 0.132
+		jumpForward :height * 0.131
+		forward :size1
+		setPenSize 0
+		jumpBackward :size1 + :radius
+		jumpRight :height * 0.1575
+		polyStart
+		jumpForward :radius
+		arcRight 270 :radius
+		polyEnd
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor transparent
+slackLogo 100

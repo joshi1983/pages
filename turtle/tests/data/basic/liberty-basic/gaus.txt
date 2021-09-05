@@ -1,0 +1,86 @@
+rem system of linear equations solver
+rem gaussian elimination
+
+print "Linear Equations - Gaussian Elimination"
+print "to solve multiple equations of the form"
+print "A1*x1+A2*x2+...+An*xn=Constant"
+'print "enter 'q' at any prompt to quit"
+print  "test case"
+print  "A1      A2    A3   Constant"
+print  "----------------------------"
+print  "  x1  +   x2+   x3=6"
+print  "  x1  + 2*x2+ 3*x3=14"
+print  "2*x1  +   x2+   x3=7"
+print "3 equations"
+print "end test case"
+dim a(15,16)
+
+for j=1 to 15
+ for i=1 to 16
+  a(j,i)=0
+ next i
+next j
+
+input "Number of Equations ";r$
+if r$="q" then end
+r=val(r$)
+M=r:N=M+1
+print
+for j=1 to M
+ print "Equation ";j
+ for i=1 to N
+  if i=N then
+   print "      Constant: ";
+  else
+   print "Coefficient A(";i;")";
+  end if
+  input " ";a$
+  if a$="q" then end
+  C(j,i)=val(a$)
+ next i
+ print
+next j
+print
+
+REM *******  Gauss-Jordan elimination *****
+  FOR J=1 TO M              'M= number of equations
+       FOR I=J TO M
+         IF C(I,J)<>0 THEN  'pivoting routine
+         FOR K=1 TO N       'N= number of equations+1
+           X=C(J,K)
+           C(J,K)=C(I,K)
+           C(I,K)=X
+         NEXT K
+        END IF              'end pivoting routine
+       NEXT I
+         IF ABS(C(J,J))<10^(-80) THEN' only information
+         q2$="Result wrong! Division with zero has been avoided."
+         exit for
+         else
+         q2$= "No problems detected"
+         end if             ' end of "only information"
+        Y=1/C(J,J)          'here starts the Gauss-Jordan substitution
+        FOR K=1 TO N
+          C(J,K)=Y*C(J,K)
+        NEXT K
+        FOR I=1 TO M
+          IF I=J THEN goto [jump]
+          Y=(-1)*C(I,J)
+           FOR K=1 TO N
+            C(I,K)=C(I,K)+Y*C(J,K)
+            'The results stored in C(J,N)for J=1 to M
+           NEXT K
+           [jump]
+        NEXT I               'here ends the Gauss-Jordan substitution
+  NEXT J
+    print""
+    PRINT"  *** SOLUTION VECTOR ***"
+    FOR J=1 TO M
+      X(J)=C(J,N)
+      PRINT J;"   ";X(J)
+    Next J
+    print q2$
+end
+
+
+

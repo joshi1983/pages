@@ -1,0 +1,62 @@
+; Inspired by emblem at:
+; https://en.wikipedia.org/wiki/Unification_Church#/media/File:Unification_Church_symbol.svg
+to unifactionChurchEmblem :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "smallTriangleHeight :height * 0.25
+	localmake "largeTriangleHeight :height * 0.616
+	localmake "angle1 30
+	localmake "angle2 50
+	localmake "largeRadius :height / 2
+	localmake "smallRadius :largeRadius - :height * 0.126
+	localmake "midRadius mix :largeRadius :smallRadius 0.5
+	jumpForward :height / 2
+	localmake "center pos
+	setPenColor "red
+	setFillColor transparent
+	setPenSize :height * 0.038
+	square :height * 0.49
+	setFillColor penColor
+	setPenSize 0
+	circle :height * 0.123
+	repeat 4 [
+		setHeading :oldHeading + 45 + repcount * 360 / 4
+		jumpForward :largeTriangleHeight
+		right 180
+		isoTriangle :height * 0.165 :largeTriangleHeight		
+		jumpTo :center
+		left :angle1
+		repeat 2 [
+			jumpForward :smallTriangleHeight
+			right 180
+			isoTriangle :height * 0.072 :smallTriangleHeight
+			right 180 + :angle1 * 2
+			jumpTo :center
+		]
+	]
+	setPenSize 0
+	repeat 2 [
+		setHeading :oldHeading + repcount * 360 / 2
+		jumpForward :largeRadius
+		localmake "startPos pos
+		polyStart
+		arcLines [[-90 0] [-87.2 1] [-68 0]] :largeRadius
+		jumpForward distanceToCircle :center :midRadius
+		right :angle2
+		jumpForward distanceToCircle :center :smallRadius
+		setHeading (towards :center) + 90
+		arcLeft 176.5 :smallRadius
+		right 115
+		jumpForward distanceToCircle :center :midRadius
+		left :angle2
+		jumpForward distanceToCircle :center :largeRadius
+		setHeading (towards :center) - 90
+		localmake "angle 2 * arcSin (distance :startPos) / 2 / :largeRadius
+		arcRight :angle :largeRadius
+		polyEnd
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+unifactionChurchEmblem 100

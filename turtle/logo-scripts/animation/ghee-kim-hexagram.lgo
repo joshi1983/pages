@@ -1,0 +1,71 @@
+to innerHexagramRadiusScale
+	localmake "len1 sin 30
+	localmake "len2 :len1 * tan 30
+	output (cos 180 / 6) - :len2
+end
+
+; Inspired by image at:
+; https://www.facebook.com/photo/?fbid=10238275800537970
+to gheeBeomKimHexagram :height
+	localmake "oldState turtleState
+	localmake "radius :height / 2 / cos 180 / 6
+	localmake "scale innerHexagramRadiusScale
+	jumpForward :height / 2
+	setPenSize 0
+	localmake "center pos
+	localmake "heading1 heading
+	setFillColor "white
+	right 180 / 6
+	regularPolygon :radius * :scale / cos 180 / 6 6
+	repeat 16 [
+		localmake "triangleWidth :radius * tan 30
+		localmake "triangleHeight :triangleWidth / 2 * tan 30
+		setFillColor "black
+		repeat 6 [
+			setHeading :heading1 + 180 / 6 + repcount * 360 / 6
+			jumpForward :radius
+			right 120
+			jumpRight :triangleWidth / 2
+			isoTriangle :triangleWidth :triangleHeight
+			jumpTo :center
+		]
+		setFillColor "#888
+		repeat 6 [
+			setHeading :heading1 + 180 / 6 + repcount * 360 / 6
+			jumpForward :radius
+			left 120
+			jumpLeft :triangleWidth / 2
+			isoTriangle :triangleWidth :triangleHeight
+			jumpTo :center
+		]
+		localmake "radius :radius * :scale
+		localmake "heading1 :heading1 + 180 / 6
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "#c4cfd1
+gheeBeomKimHexagram 100
+
+to animation.snapshotstyle
+	localmake "t interpolateRatio easeInOut animation.clampedTimeRatio
+	localmake "zLog :t * 20
+	if :zLog > 3 [
+		localmake "zLog :zLog + 3 - int :zLog
+	]
+	localmake "zoomScale 4 / power innerHexagramRadiusScale 2 * :zLog 
+
+	output createPList2 [
+		["position.y 50]
+		["zoom.scale :zoomScale]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 20
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

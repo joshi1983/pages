@@ -1,0 +1,43 @@
+; Inspired by
+; https://www.youtube.com/watch?v=VxqK8HtWbpo
+to hexagonAndStarOamen
+	; This is almost an exact copy of DJ Oamen's code.
+	; I just quoted the q, broke lines, and indented.
+	for ["q 100 20 -5] [
+		repeat 6 [
+			repeat 6 [
+				forward :q
+				right 60
+			]
+			right 60
+		]
+	]
+end
+
+; This draws a similar looking figure.
+; This depends on the regularPolygon and regularStar commands.
+to hexagonAndStarOptimized
+	localmake "oldPos pos
+	localmake "size1 50 / sin 30
+	for ["q 100 20 -5] [
+		regularPolygon :q * 2 6
+		right 180 / 6
+		regularStar :q * 2 * cos 180 / 6 6
+		left 180 / 6
+	]
+
+	; Draw the diagonal lines to finish the look of
+	; DJ Oamen's figure.
+	repeat 3 [
+		jumpBackward :size1
+		forward :size1 * 2
+		jumpTo :oldPos
+		right 360 / 6
+	]
+end
+
+make "separation 1000
+jumpLeft :separation * 0.5
+hexagonAndStarOamen
+jumpRight :separation
+hexagonAndStarOptimized

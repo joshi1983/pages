@@ -1,0 +1,20 @@
+EXTERNAL                          ! 1992/12/05
+
+SUB Mkscr (l$(), options$)
+
+    LIBRARY "{WB_c}WBmkdir.trc"
+
+    WHEN EXCEPTION IN
+         CALL WB_Mkscr (l$(), options$)
+         PRINT "Done with Mkscr."
+    USE
+         IF extype = 1 then
+            PRINT extext$
+         ELSE
+            PRINT extype, extext$
+            PRINT exline$
+            PRINT "Error in Mkscr."
+         END IF
+    END WHEN
+
+END SUB

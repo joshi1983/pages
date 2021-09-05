@@ -1,0 +1,38 @@
+; Inspired by logo at:
+; https://dodocase.com
+to circleGrid :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "numCircles 13
+	localmake "numAngles 6
+	localmake "vAngle 60
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize :height * 0.002
+	localmake "outerRadius (:height - penSize) / 2
+	setPenColor "black
+	circle :outerRadius
+	repeat :numCircles [
+		localmake "radius1 :outerRadius * (repcount + 1) / (:numCircles + 1)
+		repeat :numAngles [
+			setHeading :oldHeading + (repcount + 0.5) * 360 / :numAngles
+			jumpForward :radius1 - :outerRadius / (:numCircles + 1)
+			localmake "startPos pos
+			left :vAngle
+			forward distanceToCircle :center :outerRadius
+			jumpTo :startPos
+			right :vAngle * 2
+			forward distanceToCircle :center :outerRadius
+			jumpTo :center
+		]
+	]
+	setHeading :oldHeading + 180 / :numAngles
+	repeat :numAngles [
+		stripes penSize :outerRadius [penColor]
+		right 360 / :numAngles
+	]
+	
+	setTurtleState :oldState
+end
+
+circleGrid 100

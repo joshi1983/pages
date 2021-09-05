@@ -1,0 +1,29 @@
+; Inspired by
+; https://commons.wikimedia.org/wiki/File:Lexmark-primary-logo.svg
+to lexmarkLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "colors ["#008A44 "#006446 "#3AF23A "#00C425]
+	localmake "gap :height * 0.139
+	localmake "size1 ((:height / 2) / cos 45) - 2 * :gap
+	localmake "size2 :gap / cos 45
+	jumpForward :height / 2
+	setPenSize 0
+	localmake "center pos
+	repeat count :colors [
+		setHeading :oldHeading + (repcount - 0.5) * 360 / count :colors
+		setFillColor item repcount :colors
+		jumpForward :gap
+		jumpLeft :gap
+		polyStart
+		jumpForward :size1
+		right 45
+		jumpForward :size2
+		jumpRight :height - :size2
+		polyEnd
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+lexmarkLogo 100

@@ -1,0 +1,20 @@
+EXTERNAL
+
+SUB Format (line$(),arg$)
+
+    LIBRARY "{WB_c}WBformat.trc"
+
+    WHEN EXCEPTION IN
+         CALL WB_Format (line$(), arg$)
+         PRINT "Done with Format."
+    USE
+         IF extype = 1 then
+            PRINT extext$
+         ELSE
+            PRINT extype, extext$
+            PRINT exline$
+            PRINT "Error in Format."
+         END IF
+    END WHEN
+
+END SUB

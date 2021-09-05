@@ -1,0 +1,24 @@
+DIM Buff$[2000] BUFFER
+CLEAR SCREEN
+PRINT "*** ABORTIO TEST ****"
+PRINT
+PRINT
+PRINT "  Press F1 to cause an ABORTIO"
+ASSIGN @Test TO BUFFER [50]
+ASSIGN @In TO 9
+TRANSFER @In TO @Test
+I=0
+LOOP
+   WAIT .1
+   ON KEY 1 GOTO Abrt
+   GOTO Actv
+ Abrt: ABORTIO @In
+ Actv: IF (STATUS(@Test,10))=64 THEN
+      DISP "Transfer status is: Active"
+   ELSE
+      DISP "Transfer status is: Inactive"
+      GOTO Done
+   END IF
+   I=I+1
+ Done: END LOOP
+END

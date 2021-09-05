@@ -1,0 +1,33 @@
+to drawArcs :height
+	localmake "oldState turtleState
+	localmake "radius :height * 0.455
+	localmake "ratios [0.77 0.77 0.5 0.7 0.4 1 0.6]
+	left 90
+	jumpBackward :height * 0.0264
+	repeat 7 [
+		polyStart
+		arcRight 90 :radius
+		jumpBackward :radius
+		polyEnd
+		jumpForward :radius
+		localmake "radius :radius * item repcount :ratios
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://www.pinterest.ca/pin/149463281370653184/
+to spiralArcs :height
+	localmake "oldState turtleState
+	localmake "colors ["#246769 "orange]
+	setPenSize 0
+	repeat 2 [
+		setFillColor item repcount :colors
+		drawArcs :height
+		jumpForward :height
+		right 180
+	]
+	setTurtleState :oldState
+end
+
+spiralArcs 100

@@ -1,0 +1,23 @@
+' copied from https://basicfusion.org/tutorial.html
+SCREEN 12
+
+' --- DEFINED MUSIC ID: 0 (BPM: 130, STEPS: 16) ---
+CONST MUS_GAME = 0
+DEFMUSIC MUS_GAME, 16
+MUSICDATA MUS_GAME, 0, "C4:1:80:150:0:0,-,E4:1:80:150:0:0,-,G4:1:80:150:0:0,-,E4:1:70:150:0:0,-,D4:1:80:150:0:0,-,F4:1:80:150:0:0,-,E4:1:75:150:0:0,-,-,-,-,-"
+MUSICDATA MUS_GAME, 1, "C3:2:55:300:0:0,-,-,-,G2:2:55:300:0:0,-,-,-,F2:2:55:300:0:0,-,-,-,G2:2:55:300:0:0,-,-,-"
+
+PX = 320 : PY = 240
+PLAYMUSIC MUS_GAME, 1, 130   ' start music, loop, 130 BPM
+
+GL:
+  PAINT "#080820"
+  IF KEY("ARROWLEFT")  THEN PX = PX - 4
+  IF KEY("ARROWRIGHT") THEN PX = PX + 4
+  IF KEY("ARROWUP")    THEN PY = PY - 4
+  IF KEY("ARROWDOWN")  THEN PY = PY + 4
+  CIRCLE (PX,PY), 14, "cyan"
+  FONTSIZE 14
+  TEXT (10,22), "arrows to move | music plays in background", "white"
+  SYNC
+GOTO GL

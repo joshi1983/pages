@@ -1,0 +1,36 @@
+; Inspired by logo at:
+; https://www.myus.com/
+to myUSLogo :height
+	localmake "oldState turtleState
+	localmake "redArcs1 [[90 0] [0.17] [-92 0]
+		[-8.7 1.9] [-79.3 0] [0.138121742096587]]
+	localmake "redShape [0 0.198
+		combine :redArcs1 reverse :redArcs1
+		]
+	localmake "angle1 50
+	localmake "angle3 10
+	localmake "arcAngle 30
+	localmake "angle2 90 + :angle1 + :angle3 - :arcAngle
+	localmake "blueArcs1 [[:angle1 0] [:angle3 1.3] [-:angle2 0]
+		[-:arcAngle 0.371247785]]
+	localmake "blueShape [0 0.32
+		combine :blueArcs1 reverse :blueArcs1
+		]
+	jumpForward :height / 2
+	setFillColor "#BF333A
+	setPenSize 0
+	left 24.5
+	repeat 4 [
+		drawArcLineShape :redShape :height
+		right 90
+	]
+	setFillColor "#2B5882
+	right 45
+	repeat 4 [
+		drawArcLineShape :blueShape :height
+		right 90
+	]
+	setTurtleState :oldState
+end
+
+myUSLogo 100

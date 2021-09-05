@@ -1,0 +1,34 @@
+to drawT :height
+	localmake "oldPos pos
+	stripes :height / 3 :height [penColor]
+	jumpForward :height * 2 / 3
+	stripes :height :height / 3 [penColor]
+	jumpTo :oldPos
+end
+
+to drawC :height
+	localmake "oldState turtleState
+	stripes :height :height / 3 [penColor]
+	jumpLeft :height / 3
+	stripes :height / 3 :height * 2 / 3 [penColor]
+	jumpForward :height * 5 / 6
+	right 90
+	jumpForward :height / 6
+	stripes :height / 3 :height * 2 / 3 [penColor]
+
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://en.wikipedia.org/wiki/TechCrunch#/media/File:TechCrunch_logo.svg
+to techCrunchLogo :height
+	localmake "oldState turtleState
+	jumpLeft :height / 2
+	setPenColor "#0A9E01
+	drawT :height
+	jumpRight :height
+	drawC :height
+	setTurtleState :oldState
+end
+
+techCrunchLogo 100

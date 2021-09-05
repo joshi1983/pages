@@ -1,0 +1,23 @@
+# copied from https://invent.kde.org/education/kturtle
+
+# Fractal tree
+
+reset
+canvassize 800, 600
+go 400, 500
+direction 0
+
+learn tree $depth, $length
+{
+	if $depth > 0 {
+		forward $length
+		turnleft 75
+		tree $depth-1, 0.7*$length
+		turnright 115
+		tree $depth-1, 0.7*$length
+		turnleft 40
+		backward $length
+	}
+}
+
+tree 12, 150

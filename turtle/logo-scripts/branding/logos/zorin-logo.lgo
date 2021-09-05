@@ -1,0 +1,38 @@
+; Inspired by logo at:
+; https://zorin.com
+to zorinLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "sideLength :height * tan 180 / 6
+	localmake "bottomThickness :height / 6
+	localmake "innerBottomWidth :sideLength + :bottomThickness * 2 * tan 180 / 6
+	localmake "startX :height * 0.13
+	localmake "middleHeight :height / 3
+	localmake "len1 :middleHeight / 2 / cos 180 / 6
+	localmake "innerWidth1 :startX + :height / 2 / (cos 180 / 6) - :middleHeight / 2 * tan 180 / 6
+	setPenSize 0
+	setFillColor "#15a6f0
+	jumpForward :height / 2
+	localmake "center pos
+	repeat 2 [
+		setHeading :oldHeading + repcount * 180
+		jumpBackward :height / 2
+		isoTrapezoid :sideLength :innerBottomWidth :bottomThickness
+		jumpForward :height / 2 - :middleHeight / 2
+
+		jumpLeft :startX
+		polyStart
+		jumpRight :innerWidth1
+		right 180 / 6
+		jumpForward :len1
+		left 360 / 6
+		jumpForward :len1
+		polyEnd
+
+		jumpTo :center
+	]
+
+	setTurtleState :oldState
+end
+
+zorinLogo 100

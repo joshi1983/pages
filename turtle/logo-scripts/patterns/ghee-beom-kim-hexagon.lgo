@@ -1,0 +1,97 @@
+make "lineThicknessFactor 0.005
+
+to drawSegment :size
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "radii vectorScale [0.01 0.03 0.05 0.1 0.17] :size
+	localmake "len1 (last :radii) / tan 45
+	jumpForward :size
+	jumpBackward :size / 2
+	localmake "center pos
+	localmake "points []
+	repeat count :radii [
+		localmake "radius item repcount :radii
+		localmake "circlePoints []
+		repeat 6 [
+			jumpForward :radius
+			queue2 "circlePoints pos
+			jumpTo :center
+			right 360 / 6
+		]
+		queue2 "points :circlePoints
+		right 180 / 6
+	]
+	setLineJoinStyle "round
+	repeat 2 [
+		setHeading :oldHeading + repcount * 180
+		localmake "iStart item repcount [1 4]
+		localmake "p1 item :iStart last :points
+		jumpTo :p1
+		jumpForward :len1
+		localmake "p2 pos
+		localmake "p3 item :iStart + 1 last :points
+		localmake "p5 item :iStart + 2 last :points
+		jumpTo :p5
+		jumpForward :len1
+		localmake "p4 pos
+
+		setPenSize 0
+		setFillColor "black
+		polygon [:center :p1 :p2 :p3 :p4 :p5 ]
+		jumpTo :center
+		jumpForward :size / 2
+		setFillColor "#448
+		setPenSize :lineThicknessFactor * :size / 2
+		polygon [pos :p2 :p3 :p4]
+		jumpTo :center
+	]
+
+	setHeading :oldHeading + 180 / 6
+	setPenSize :lineThicknessFactor * :size
+	setFillGradient createRadialGradient pos last :radii createPList2 [
+			[0 "#f00] [0.5 "#48f] [0.6 "violet] [0.8 "white]
+		]
+	isotoxalStar item 4 :radii last :radii  6
+	setPenSize penSize / 2
+	for ["i 1 6] [
+		jumpTo :center
+		repeat count :points [
+			localmake "p item :i (item repcount :points)
+			setPos :p
+		]
+	]
+	for ["i 1 6] [
+		jumpTo :center
+		repeat count :points [
+			localmake "i2 1 + :i + (count :points) - repcount 
+			localmake "i2 1 + modulo :i2 6
+			localmake "p item :i2 (item repcount :points)
+			setPos :p
+		]
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by a post from Beom Ghee Kim at:
+; https://www.facebook.com/share/p/1CLwt43rZ3
+to gheeKimHexagon :height
+	localmake "oldState turtleState
+	localmake "size :height * (1 - :lineThicknessFactor) / 2
+	jumpForward :height / 2
+	
+	repeat 6 [
+		drawSegment :size
+		right 360 / 6
+	]
+	jumpForward :size
+	right 90 + 180 / 6
+	repeat 6 [
+		drawSegment :size
+		jumpForward :size
+		right 360 / 6
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "#ddd
+gheeKimHexagon 100

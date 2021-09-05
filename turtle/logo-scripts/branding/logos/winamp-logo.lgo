@@ -1,0 +1,38 @@
+to drawRoundedParallelogram :height
+	localmake "oldState turtleState
+	localmake "angle 22.98
+	localmake "largeRadius 0.082
+	localmake "smallRadius 0.0395
+	localmake "sideLength (1 -
+		:smallRadius * (1 + sin :angle) -
+		:largeRadius * (1 - sin :angle)) / cos :angle
+	localmake "arcs [
+		[90 - :angle :largeRadius] [:sideLength] [90 + :angle :smallRadius]
+		[0.188]
+	]
+	polyStart
+	arcLines :arcs :height
+	arcLines :arcs :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Winamp#/media/File:Winamp_Logo.svg
+to winampLogo :height
+	localmake "oldState turtleState
+	localmake "height1 :height * 0.669
+	setPenSize 0
+	setFillColor "#F93821
+	jumpLeft :height * 0.008
+	right 90
+	
+	drawRoundedParallelogram :height1
+	jumpLeft :height - :height1
+	jumpBackward :height * 0.1444
+	drawRoundedParallelogram :height1
+
+	setTurtleState :oldState
+end
+
+winampLogo 100

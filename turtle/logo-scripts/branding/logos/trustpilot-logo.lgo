@@ -1,0 +1,28 @@
+; Inspired by logo at
+; https://www.trustpilot.com/
+; The original logo on the site is very slightly different.
+; The original SVG on the site was shrunk to 
+; about 98% horizontally compared to vertically.
+; The following draws as if there is no stretch or shrinking.
+to trustpilotLogo :height
+	localmake "oldState turtleState
+	localmake "radius :height / (1 + cos 180 / 5)
+	localmake "length1 :radius * (sin 36 / 2)
+	localmake "length2 :length1 / cos 180 / 5
+	localmake "length3 :length2 * sin 180 / 5
+	jumpForward :height - :radius
+	setPenSize 0
+	setFillColor "#04DA8D
+	regularStar :radius 5
+	jumpBackward :length2
+	setFillColor "#126849
+	polyStart
+	right 54
+	jumpForward :length3 * 2
+	right 108
+	jumpForward :height * 0.093
+	polyEnd
+	setTurtleState :oldState
+end
+
+trustpilotLogo 100
