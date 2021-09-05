@@ -1,0 +1,45 @@
+; Inspired by logo at:
+; https://www.xenon-pharma.com
+to xenonPharmaLogo :height :color
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "thickness :height * 0.03
+	localmake "startHeight :height * 0.116
+	localmake "len1 :height * 0.28
+	localmake "len2 :height * 0.2
+	localmake "squareHeight :height / 2 - :startHeight 
+		- :len2 - :thickness / 2
+	localmake "colors1 [transparent :color]
+	setLineJoinStyle "miter
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize :thickness
+	setPenColor :color
+	setLineCap "butt
+	repeat 2 [
+		setHeading :oldHeading + repcount * 360 / 2
+		forward :startHeight
+		localmake "pos1 pos
+		left 90
+		forward :len1
+		right 90
+		forward :len2
+		jumpForward :squareHeight / 2
+		setFillColor item repcount :colors1
+		circle :squareHeight / 2
+
+		jumpTo :pos1
+		right 90
+		forward :len1
+		left 90
+		forward :len2
+		jumpForward :squareHeight / 2
+		setFillColor item repcount reverse :colors1
+		rect :squareHeight :squareHeight
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+xenonPharmaLogo 100 "white
