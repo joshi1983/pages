@@ -1,0 +1,56 @@
+make "colors ["yellow "black "purple "Indigo "blueViolet "white]
+
+to gradient :size
+	localmake "colorStops createPList
+	localmake "numColors count :colors
+	repeat :numColors [
+		setProperty "colorStops (repcount - 1) / :numColors item repcount :colors
+	]
+	localmake "gradient createRadialGradient pos :size :colorStops
+	setFillGradient :gradient
+end
+
+to gradientReversed :size
+	localmake "colorStops createPList
+	localmake "numColors count :colors
+	repeat :numColors [
+		setProperty "colorStops (:numColors + 1 - repcount) / :numColors item repcount :colors
+	]
+	localmake "gradient createRadialGradient pos :size :colorStops
+	setFillGradient :gradient
+end
+
+to peddle :length
+	gradient :length * 1.2
+	circle :length
+end
+
+to flower :size
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "numScales 5
+	localmake "radius 1.2 * :size / :numScales
+
+	setPenSize 0
+	repeat :numScales [
+		localmake "size1 :size * 0.77 * (1 + :numScales - repcount) / :numScales
+		localmake "numAngles 5 * (:numScales - repcount)
+		localmake "peddleSize :size / :numScales * 1.1
+		localmake "largeRadius :size1
+		if :numAngles > 0 [
+			repeat :numAngles [
+				jumpTo :oldPos
+				jumpForward :largeRadius
+				peddle :peddleSize
+				right 360 / :numAngles
+			]
+			jumpTo :oldPos
+		]
+	]
+	gradientReversed :radius * 3
+	circle :radius
+	setTurtleState :oldState
+end
+
+setScreenColor "darkgreen
+flower 200

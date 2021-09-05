@@ -1,0 +1,32 @@
+; Inspired by logo at
+; https://www.youtube.com/@dropout
+to dropoutLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "eyeSize :height * 0.255
+	localmake "gap1 (:height / 2 - :eyeSize) / 2
+	localmake "dSize1 :height * 0.27
+	jumpLeft :height * 0.53
+	repeat 2 [
+		jumpForward :gap1
+		stripes :eyeSize :eyeSize ["black]
+		jumpForward :eyeSize + :gap1
+	]
+	jumpTo :oldPos
+	jumpLeft :height * 0.115
+	setPenSize :height * 0.26
+	setPenColor "black
+	jumpForward penSize / 2
+	setLineJoinStyle "miter
+	setFillColor transparent
+	right 90
+	polyStart
+	forward :dSize1
+	arcLeft 180 (:height - penSize) / 2
+	forward :dSize1
+	polyEnd
+	setTurtleState :oldState
+end
+
+setScreenColor "#feea3b
+dropoutLogo 100

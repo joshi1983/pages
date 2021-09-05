@@ -1,0 +1,215 @@
+make "rangoliRed "#800
+
+to drawLeaf :height
+	localmake "oldState turtleState
+	localmake "arcsInfo [[62.5 0] [-100 0.485] [13.35 1.333] [-65.85 0]]
+	setFillColor :rangoliRed
+	setLineJoinStyle "miter
+	polyStart
+	arcLines :arcsInfo :height
+	arcLines reverse :arcsInfo :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+to drawLeafs :squareSize :height
+	localmake "oldState turtleState
+	localmake "gap :squareSize * (1/2 + 1/3 * 3/5)
+	localmake "leafHeight (:height / 2 - :gap) - penSize / 2 / cos 50
+	localmake "center pos
+	repeat 4 [
+		jumpForward :gap
+		drawLeaf :leafHeight
+		jumpTo :center
+		right 360 / 4
+	]	
+	setTurtleState :oldState
+end
+
+to drawStraightLines :width :step :drawCircles?
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldPenSize penSize
+	setFillColor penColor
+	setPenSize 0
+	repeat 3 [
+		jumpForward :step
+		stripes :width :oldPenSize [penColor]
+	]
+	if :drawCircles? [
+		jumpTo :oldPos
+		jumpLeft :step * 1.5
+		jumpForward (:step + :oldPenSize) / 2
+		repeat 4 [
+			repeat 4 [
+				circle :step * 0.13
+				jumpRight :step
+			]
+			jumpLeft :step * 4
+			jumpForward :step
+		]
+	]
+	setTurtleState :oldState
+end
+
+to drawSquares :size
+	localmake "oldState turtleState
+	localmake "tinySize :size / 12
+	localmake "tinyWidth :tinySize * 4 / 5
+	localmake "center pos
+	setLineJoinStyle "miter
+	rect :size :size
+	repeat 4 [
+		jumpForward :size / 6 - penSize / 2
+		stripes :size penSize [penColor]
+		jumpRight :size / 3
+		drawStraightLines :size / 3 :tinySize true
+		jumpLeft :size / 6 + penSize / 2
+		jumpForward :size / 6		
+		right 90
+		drawStraightLines :size / 3 :tinySize false
+		jumpTo :center
+	]
+	repeat 4 [
+		jumpForward :size / 2
+		repeat 3 [
+			localmake "width :size / 3 - :tinyWidth * 2 * (repcount - 1)
+			localmake "height :tinyWidth * repcount
+			jumpForward :tinyWidth / 2
+			rect :width :height
+		]
+		jumpTo :center
+		right 360 / 4
+	]
+	setTurtleState :oldState
+end
+
+to drawInnerCircles :squareSize
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "tinySize :squareSize / 12
+	localmake "thirdAngle arcSin 2 / 3
+	localmake "center pos
+	repeat 4 [
+		setHeading :oldHeading + repcount * 360 / 4
+		jumpForward :squareSize / 6
+		jumpRight :squareSize / 6
+		localmake "heading1 :oldHeading + repcount * 360 / 4
+		localmake "center2 pos
+		repeat 2 [
+			localmake "arcRadius :tinySize * repcount
+			setHeading :heading1
+			jumpForward :arcRadius
+			left 90
+			arcLeft 270 :arcRadius
+			jumpTo :center2
+		]
+		localmake "arcRadius :tinySize * 3
+		setHeading :heading1
+		jumpForward :arcRadius
+		left 90
+		arcLeft :thirdAngle :arcRadius
+		right :thirdAngle * 2
+		arcLeft :thirdAngle :arcRadius
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+to drawOuterCircles :squareSize
+	localmake "oldState turtleState
+	localmake "center pos
+	localmake "tinySize :squareSize / 12
+	localmake "numTinyArcs 32
+	localmake "outerArcRadius :tinySize * 3
+	localmake "tinyChordLength 2 * :outerArcRadius * sin 180 * 270 / 360 / :numTinyArcs
+	localmake "tinyArcAngle 220
+	localmake "tinyArcRadius :tinyChordLength / 2 / sin :tinyArcAngle / 2
+	repeat 4 [
+		jumpRight :squareSize / 2
+		jumpForward :squareSize / 2
+		localmake "heading1 heading
+		localmake "center2 pos
+		repeat 3 [
+			localmake "arcRadius :tinySize * repcount
+			jumpLeft :arcRadius
+			arcRight 270 :arcRadius
+			setHeading :heading1
+			jumpTo :center2
+		]
+		repeat :numTinyArcs [
+			setHeading :heading1 - 90 + (repcount - 0.5) * 270 / :numTinyArcs
+			jumpForward :outerArcRadius
+			jumpLeft :tinyChordLength / 2
+			left :tinyArcAngle / 2 - 90
+			arcRight :tinyArcAngle :tinyArcRadius
+			jumpTo :center2
+		]
+		jumpTo :center
+		setHeading :heading1 + 360 / 4
+	]
+	setTurtleState :oldState
+end
+
+to fillRedAreas :squareSize
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "tinySize :squareSize / 12
+	localmake "center pos
+	setPenSize 0
+	jumpForward :squareSize / 6
+	setFillColor :rangoliRed
+	polyStart
+	repeat 4 [
+		right 180
+		arcLeft 90 :tinySize * 2
+	]
+	polyEnd
+	repeat 4 [
+		jumpTo :center
+		jumpForward :squareSize / 6
+		jumpRight :squareSize / 6
+		polyStart
+		jumpLeft :tinySize
+		left 180
+		arcLeft 90 :tinySize
+		polyEnd
+	]
+	setHeading :oldHeading
+	repeat 4 [
+		jumpTo :center
+		jumpForward :squareSize / 2
+		jumpRight :squareSize / 2
+		polyStart
+		jumpLeft :tinySize
+		arcRight 270 :tinySize
+		polyEnd
+		left 180
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by:
+; https://www.youtube.com/watch?v=7umuqMsjkBU
+; She has lots of similarly interesting rangoli 
+; designs in other videos on her channel.
+to classyRangoli :height
+	localmake "oldState turtleState
+	localmake "squareSize :height * 0.46
+	jumpForward :height / 2
+	setPenSize :height * 0.007
+	setPenColor "white
+	fillRedAreas :squareSize
+	drawInnerCircles :squareSize
+	drawOuterCircles :squareSize
+	drawLeafs :squareSize :height
+	drawSquares :squareSize
+
+	setFillColor "white
+	setPenSize 0
+	circle :height * 0.01
+	setTurtleState :oldState
+end
+
+setScreenColor "navy
+classyRangoli 100
