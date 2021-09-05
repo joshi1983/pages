@@ -1,0 +1,225 @@
+; Inspired by:
+; https://fineartamerica.com/featured/central-sun-soul-structures.html?epik=dj0yJnU9VjQ3N1pNbDJsQXp5bjh6T0ZpRlFTa09LZTNkTmVZV3omcD0wJm49X3oyU2U3aFFBVGNSNFlWNlZ6Nng1ZyZ0PUFBQUFBR0kyQWNz
+
+make "red "red
+make "orange "orange
+make "yellow "yellow
+
+to spikeArc :size
+	localmake "outerAngle 30
+	localmake "innerAngle 90 - :outerAngle * 2
+	localmake "size1 :size * 1.3464
+	localmake "innerSize :size * 0.4
+	arcLeft :outerAngle :size1
+	arcLeft :innerAngle :innerSize
+	arcLeft :outerAngle :size1
+end
+
+to spikePoly :size
+	back :size
+	polyStart
+	repeat 4 [
+		spikeArc :size
+		right 180
+	]
+	polyEnd
+end
+
+to getSpikeSmallSize :size
+	output :size * 0.5
+end
+
+to spike :size :color1 :color2 :color3
+	localmake "oldPos pos
+	localmake "smallSize getSpikeSmallSize :size
+	setPenSize 0
+	localmake "colorStops plistCreate
+	setProperty "colorStops 0 :color1
+	setProperty "colorStops 0.5 :color2
+	setProperty "colorStops 1 :color3
+	localmake "gradient createRadialGradient :oldPos :oldPos :size * 0.7 :colorStops "pad
+	setFillGradient :gradient
+	spikePoly :size
+	setFillColor :color1
+	setPos :oldPos
+	spikePoly :smallSize
+	setPos :oldPos
+end
+
+to calcStarSettings :largeRadius :smallRadius :numPoints
+	localmake "angle1 180 / :numPoints
+	localmake "len1 :smallRadius * sin :angle1
+	localmake "len2 :smallRadius * cos :angle1
+	localmake "size1 hypot [:len1 (:largeRadius - :len2)]
+	localmake "angle2 90 - arcCos :len1 / :size1
+	localmake "angle3 180 - 2 * (:angle1 + :angle2)
+	output [:angle2 :angle3 :size1]
+end
+
+to star :size
+	localmake "numPoints 32
+	localmake "settings calcStarSettings :size :size * 0.5 :numPoints
+	localmake "angle1 item 1 :settings
+	localmake "angle2 item 2 :settings
+	localmake "size1 item 3 :settings
+	forward :size
+	polyStart
+	repeat :numPoints [
+		right 180 - :angle1
+		forward :size1
+		left :angle2
+		forward :size1
+		left :angle1
+	]
+	polyEnd
+	right 180 / :numPoints
+end
+
+to radientCore :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "numScales 3
+	localmake "maxSize :size * 0.9
+	localmake "minSize :size * 0.5
+	localmake "colorStops plistCreate
+	setProperty "colorStops 0 :yellow
+	setProperty "colorStops 0.6 :orange
+	setProperty "colorStops 1 :red
+	localmake "gradient createRadialGradient pos pos :size :colorStops "pad
+	setFillGradient :gradient
+	circle :size
+	repeat :numScales [
+		localmake "ratio (:numScales - repcount) / (:numScales - 1)
+		setFillColor mix :yellow "white :ratio
+		localmake "starRadius mix :maxSize :minSize :ratio
+		star :starRadius
+		setPos :oldPos
+	]
+	setHeading :oldHeading
+end
+
+to tinyCore :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "colorStops plistCreate
+	setProperty "colorStops 0 :yellow
+	setProperty "colorStops 0.5 :orange
+	setProperty "colorStops 1 :red
+	localmake "gradient createRadialGradient pos pos :size :colorStops "pad
+	setFillGradient :gradient
+	circle :size
+	setFillColor :yellow
+	spikePoly :size
+	setPos :oldPos
+	setFillColor :red
+	spikePoly getSpikeSmallSize :size
+	setHeading :oldHeading
+	setPos :oldPos
+end
+
+to tinyCores :size
+	localmake "oldPos pos
+	localmake "numCores 22
+	localmake "coreRadius :size * 0.1
+	right 60 / :numCores
+	repeat :numCores [
+		fd :size
+		setFillColor "black
+		circle :coreRadius * 1.15
+		tinyCore :coreRadius
+		setPos :oldPos
+		right 360 / :numCores
+	]
+	setPos :oldPos
+end
+
+to darkStar :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "numPoints 66
+	localmake "settings calcStarSettings :size :size * 0.4 :numPoints
+	localmake "angle1 item 1 :settings
+	localmake "angle2 item 2 :settings
+	localmake "size1 item 3 :settings
+	forward :size
+	setFillColor "black
+	polyStart
+	repeat :numPoints [
+		right 180 - :angle1
+		forward :size1
+		left :angle2
+		forward :size1
+		left :angle1
+	]
+	polyEnd
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to drawCore :size
+	radientCore :size
+	spike :size	:yellow :orange :red
+end
+
+to radiatingArcPath :size :pointSpreadAngle
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "returnAngle 180 - :pointSpreadAngle
+	localmake "midSize :size * 0.55
+	localmake "numPoints 128
+	localmake "angle1 30
+	localmake "size1 :size * 0.43
+	localmake "angle2 30
+	localmake "size2 :size * 0.43
+	repeat :numPoints [
+		left :pointSpreadAngle * 0.5
+		forward :midSize
+		left 10 - :pointSpreadAngle * 1.2
+		arcRight :angle1 :size1
+		arcLeft :angle2 :size2
+		right :returnAngle ; point of symmetry
+		arcRight :angle2 :size2
+		arcLeft :angle1 :size1
+		setPos :oldPos
+		setHeading :oldHeading + repcount * 360 / :numPoints
+	]
+	setHeading :oldHeading
+end
+
+to centralSun :size
+	localmake "oldHeading heading
+	localmake "midSize1 :size * 0.55
+	localmake "midSize2 :midSize1 * 0.95
+	localmake "smallSize :midSize2 * 0.4
+	localmake "colorStops plistCreate
+	setProperty "colorStops 0 "white
+	setProperty "colorStops 1 screenColor
+	localmake "gradient createRadialGradient pos pos :size :colorStops "pad
+	setFillGradient :gradient
+	circle :size
+
+	setFillColor "white
+	polyStart
+	radiatingArcPath :size 4.5
+	polyEnd
+
+	setFillColor :orange
+	polyStart
+	radiatingArcPath :size 3.5
+	polyEnd
+
+	localmake "colorStops plistCreate
+	setProperty "colorStops 0 :yellow
+	setProperty "colorStops 1 :orange
+	localmake "gradient createRadialGradient pos pos :midSize1 :colorStops "pad
+	setFillGradient :gradient
+	circle :midSize1
+	setHeading :oldHeading
+	darkStar :midSize2
+	tinyCores :midSize2 * 0.82
+	drawCore :smallSize
+end
+
+setScreenColor "#005
+setPenSize 0
+centralSun 150

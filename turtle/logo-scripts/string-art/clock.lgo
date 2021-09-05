@@ -1,0 +1,93 @@
+to spiralPolygon :numSides :size :minSizeRatio
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "numCycles 20
+	localmake "minSize :size * :minSizeRatio
+	localmake "sizeRange :size - :minSize
+	localmake "numIterations :numCycles * :numSides
+	localmake "stepRatio 1 / :numIterations
+	localmake "step :sizeRange / :numIterations
+	localmake "angleStep 90 * :step / :sizeRange
+	penDown
+	while :size > :minSize [
+		forward :size
+		right (360 / :numSides) + :angleStep
+		localmake "size :size - :step - :stepRatio * :size
+	]
+	penUp
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to circleDesign :radius :numDots :thickness
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "dotOffset int ((:numDots / 180) * arcCos (:radius - :thickness) / :radius)
+	localmake "dots []
+	penUp
+	repeat :numDots [
+		setPos :oldPos
+		setHeading :oldHeading + 360 * repcount / :numDots
+		forward :radius
+		queue "dots pos
+	]
+	repeat :numDots [
+		penUp
+		localmake "fromDot item repcount :dots
+		localmake "toIndex 1 + (remainder (repcount + :dotOffset) :numDots)
+		localmake "toDot item :toIndex :dots
+		setPos :fromDot
+		setHeading towards :toDot
+		penDown
+		forward distance :toDot
+	]
+	penUp
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to stringArtClock :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "clockRadius :size * 0.26
+	localmake "clockStringThicknessRatio 0.3
+	localmake "clockOuterRadius :clockRadius * (1 + :clockStringThicknessRatio)
+	localmake "squareRadius :clockOuterRadius * 0.95
+	localmake "squareSize :clockOuterRadius * 2.15 * cos 60
+	localmake "triangleRadius hypot [:squareRadius :squareSize * 0.5]
+	localmake "triangleHeight :squareSize * cos 30
+	circleDesign :clockOuterRadius 64 :clockRadius * :clockStringThicknessRatio
+	repeat 6 [
+		setPos :oldPos
+		forward :squareRadius
+		left 90
+		forward :squareSize * 0.5
+		right 90
+		spiralPolygon 4 :squareSize 0.2
+		forward :squareSize
+		right 30
+		spiralPolygon 3 :squareSize 0
+		left 30
+		right 180 / 6
+		localmake "tempHeading heading
+		setPos :oldPos
+		forward :triangleRadius
+		left 30
+		spiralPolygon 3 :squareSize 0
+		right 30
+		forward :triangleHeight
+		left 90
+		forward :squareSize * 0.5
+		right 120
+		spiralPolygon 3 :squareSize 0
+		setHeading :tempHeading
+		right 180 / 6
+	]
+	setHeading :oldHeading
+	setPos :oldPos
+end
+
+setScreenColor "white
+setPenColor "black
+setPenSize 0.3
+stringArtClock 150

@@ -1,0 +1,38 @@
+; Inspired by
+; https://www.pinterest.ca/pin/186899453282849852/
+
+to circleArcs :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	setPenSize 0
+	repeat 3 [
+		setPos :oldPos
+		setHeading :oldHeading + repcount * 360 / 3
+		forward :size
+		right 90
+		polyStart
+		arcRight 360 / 3 :size
+		right 90
+		arcRight 180 / 3 :size * 1.73
+		polyEnd
+	]
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to circles :size
+	localmake "oldPos pos
+	repeat 6 [
+		penUp
+		setPos :oldPos
+		forward :size * 2 / 3
+		penDown
+		circleArcs :size / 3
+		right 360 / 6
+	]
+	setPos :oldPos
+end
+
+setScreenColor "black
+setFillColor "white
+circles 100

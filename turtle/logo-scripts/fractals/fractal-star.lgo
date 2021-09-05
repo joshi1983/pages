@@ -1,0 +1,63 @@
+; made to look similar to drawing at:
+; https://benice-equation.blogspot.com/2012/12/fractal-star.html
+
+make "colors [ "white "#7f00ff]
+
+to drawStar :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	setpensize 0
+	forward :size * 1.4
+	left 162
+	polystart
+	repeat 5 [
+		forward :size
+		right 72
+		forward :size
+		left 144
+	]
+	polyend
+	setpos :oldPos
+	setHeading :oldHeading
+end
+
+to drawFractalStar :size :colorIndex
+	if :size > 1 [
+		localmake "mainStarSize :size / 3
+		localmake "minorStarSize :size / 9
+		localmake "radius1 :size * 0.7
+		localmake "radius2 :size * 0.35
+		localmake "oldPos pos
+		localmake "oldHeading heading
+		if :colorIndex <= 0 [
+			localmake "colorIndex :colorIndex + count :colors
+		]
+		setfillcolor item :colorIndex :colors
+		drawStar :mainStarSize
+
+		drawFractalStar :mainStarSize :colorIndex - 1
+		right 36 * 2
+		repeat 5 [
+			forward :radius1
+			drawFractalStar :mainStarSize :colorIndex - 1
+			back :radius1
+			right 360 / 5
+		]
+		right 36
+		repeat 5 [
+			forward :radius2
+			left 36
+			drawFractalStar :minorStarSize :colorIndex
+			right 36
+			back :radius2
+			right 360 / 5
+		]
+
+		setpos :oldPos
+		setheading :oldHeading
+	]
+end
+
+setscreencolor "black
+setpensize 0
+drawFractalStar 100 1

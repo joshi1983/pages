@@ -1,0 +1,46 @@
+
+to branchLengthToColor :size
+	if :size < 10 [
+		output [0 200 0]
+	]
+	if :size < 30 [
+		output [70 100 30]
+	]
+	output [80 60 30]
+end
+
+to tree :size :shrinkRatio
+	if :size > 2 [
+		localmake "originalHeading heading
+		localmake "originalPosition pos
+		setpencolor branchLengthToColor :size
+		setpensize :size * 0.1
+		forward :size
+		right 30
+		tree :size * :shrinkRatio :shrinkRatio
+		left 60
+		tree :size * :shrinkRatio :shrinkRatio
+
+		; restore original heading and position.
+		penup
+		setPos :originalPosition
+		pendown
+		setHeading :originalHeading
+	]
+end
+
+; Draw the tree with different parameters
+; to show how parameters affect the drawing 
+make "separation 100
+jumpLeft 700
+tree 150 0.3
+jumpRight 130
+tree 100 0.5
+jumpRight 190
+tree 90 0.6
+jumpRight 260
+tree 80 0.7
+jumpRight 340
+tree 70 0.75
+jumpRight 360
+tree 50 0.8

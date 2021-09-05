@@ -1,0 +1,66 @@
+to lentocolor :size
+	ifelse :size < 20 [
+		output "green
+	] [
+		output "brown
+	]
+end
+
+to tree :size :angle :a
+	localmake "p pos
+	localmake "h heading
+	ifelse :size < 10 [
+		setpensize 2
+	] [
+		setpensize :size * 0.08
+	]
+	setpencolor lentocolor :size
+	ifelse :angle < 0 [
+		arcLeft -:angle :size
+	] [
+		ifelse :angle = 0 [
+			forward :size * 1.9
+		] [
+			arcRight :angle :size
+		]
+	]
+	if :size > 5 [
+		tree :size * 0.65 (-:a) :a
+		tree :size * 0.65 0 :a
+		tree :size * 0.65 :a :a
+	]
+	penup
+	setpos :p
+	pendown
+	setheading :h
+end
+
+to treeTrunk :size :a
+	localmake "oldPos pos
+	penDown
+	setpencolor lentocolor :size
+	setPenSize :size * 0.08
+	forward :size
+	tree :size :a :a
+	tree :size 0 :a
+	tree :size -:a :a
+	penUp
+	setPos :oldPos
+end
+
+; draw the tree with different parameters
+; to show how the parameters affect the drawing
+jumpLeft 360
+treeTrunk 20 120
+jumpRight 170
+treeTrunk 20 90
+jumpRight 150
+treeTrunk 22 60
+jumpRight 130
+treeTrunk 22 45
+jumpRight 120
+treeTrunk 22 30
+jumpRight 90
+treeTrunk 23 20
+jumpRight 70
+treeTrunk 25 10

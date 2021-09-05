@@ -1,0 +1,162 @@
+; Inspired by
+; https://www.pinterest.ca/pin/1012254453723729800/
+
+to shape1 :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angle1 17
+	localmake "angle2 50
+	localmake "angle3 15
+	localmake "angle4 25
+	localmake "angle5 6
+	localmake "angle10 113
+	localmake "arcRadius1 :size * 0.35
+	localmake "arcRadius2 :size * 0.07
+	localmake "arcRadius3 :size * 0.04
+	localmake "arcRadius4 :size * 0.2449
+	localmake "arcRadius5 :size * 5.715
+	forward :size * 0.153
+	polyStart
+	arcLeft :angle1 :arcRadius1
+	arcLeft :angle2 :arcRadius2
+	arcLeft :angle3 :arcRadius3
+	right :angle10
+	arcLeft :angle4 :arcRadius4
+	arcLeft :angle5 :arcRadius5
+
+	right 180
+
+	arcLeft :angle5 :arcRadius5
+	arcLeft :angle4 :arcRadius4
+	right :angle10
+	arcLeft :angle3 :arcRadius3
+	arcLeft :angle2 :arcRadius2
+	arcLeft :angle1 :arcRadius1 
+	polyEnd
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to shape2 :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angle1 38
+	localmake "angle2 113
+	localmake "angle3 70
+	localmake "angle4 170
+	localmake "angle5 55
+	localmake "angle6 100
+	localmake "angle7 12.5
+	localmake "angle8 78.7
+	localmake "angle9 171.8
+	localmake "angle10 4.1
+	localmake "arcRadius1 :size * 0.2
+	localmake "arcRadius2 :size * 0.16
+	localmake "arcRadius3 :size * 0.13
+	localmake "arcRadius4 :size * 0.32
+	localmake "arcRadius5 :size * 4
+	localmake "size_ :size * 0.203
+	localmake "size1 :size * 0.01
+	localmake "size2 :size * 0.26
+	forward :size_
+	left 90
+	forward :size1
+	polyStart
+	arcLeft :angle1 :arcRadius1
+	right :angle2
+	arcRight :angle3 :arcRadius2
+	right :angle4
+	arcLeft :angle5 :arcRadius3
+	left :angle6
+	arcRight :angle7 :arcRadius4
+	left :angle8
+	forward :size2
+	right :angle9
+	arcRight :angle10 :arcRadius5
+	polyEnd
+
+	setPos :oldPos
+	setHeading :oldHeading
+	forward :size_
+	right 90
+	forward :size1
+	polyStart
+	arcRight :angle1 :arcRadius1
+	left :angle2
+	arcLeft :angle3 :arcRadius2
+	left :angle4
+	arcRight :angle5 :arcRadius3
+	right :angle6
+	arcLeft :angle7 :arcRadius4
+	right :angle8
+	forward :size2
+	left :angle9
+	arcLeft :angle10 :arcRadius5
+	polyEnd
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to shape3 :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angle1 7
+	localmake "angle2 16
+	localmake "angle3 68
+	localmake "angle4 14.2
+	localmake "angle5 170
+	localmake "angle6 22.24395
+	localmake "angle7 54
+	localmake "angle8 30
+	localmake "angle9 3.04395
+	localmake "arcRadius1 :size * 1
+	localmake "arcRadius2 :size * 0.2
+	localmake "arcRadius3 :size * 1.2
+	localmake "arcRadius4 :size * 0.75
+	localmake "arcRadius5 :size* 0.2
+	localmake "arcRadius6 :size * 2
+	forward :size * 0.45
+	polyStart
+	arcLeft :angle1 :arcRadius1
+	arcLeft :angle2 :arcRadius2
+	left :angle3
+	arcLeft :angle4 :arcRadius3
+	right :angle5
+	arcRight :angle6 :arcRadius4
+	left :angle7
+	arcLeft :angle8 :arcRadius5
+	arcLeft :angle9 :arcRadius6
+
+	right 180 ; reflection point
+
+	arcLeft :angle9 :arcRadius6
+	arcLeft :angle8 :arcRadius5
+	left :angle7
+	arcRight :angle6 :arcRadius4
+	right :angle5
+	arcLeft :angle4 :arcRadius3
+	left :angle3
+	arcLeft :angle2 :arcRadius2
+	arcLeft :angle1 :arcRadius1
+
+	polyEnd
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to bullsEye :size
+	localmake "oldPos pos
+	circle :size * 0.152
+	repeat 4 [
+		setPos :oldPos
+		shape1 :size
+		right 45
+		shape2 :size
+		shape3 :size
+		right 45
+	]
+end
+
+setFillColor "black
+setPenSize 0
+bullsEye 100

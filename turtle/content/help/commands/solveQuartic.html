@@ -1,0 +1,65 @@
+<code>; The following code graphs the curve for:<br>
+; y = :a * :x*:x*:x*:x + :b * :x*:x*:x +<br>
+; :c * :x*:x + :d * :x + :e.<br>
+;<br>
+; It marks the x-axis intersections with red circles.<br>
+; solveQuartic :a :b :c :d :e is used<br>
+; to calculate the x values.<br>
+<br>
+; adjust the a, b, and c values to see<br>
+; the red points adjust correctly.<br>
+make "a 1 + animation.time * 0.1<br>
+make "b 2 + animation.time<br>
+make "c -5<br>
+make "d 4 + animation.time * 10<br>
+make "e -5 + animation.time * 4<br>
+<br>
+to quartic :x<br>
+	output :a * :x*:x*:x*:x + :b * :x*:x*:x +<br>
+		:c * :x*:x + :d * :x + :e<br>
+end<br>
+<br>
+; transforms the x-value to display it more clearly<br>
+to mathXToDrawingX :x<br>
+	output :x * 20<br>
+end<br>
+<br>
+; Graph the curve.<br>
+setFillColor "black<br>
+repeat 100 [<br>
+	make "x (repcount - 50) * 0.2<br>
+	penup<br>
+	setXY (mathXToDrawingX :x) quartic :x<br>
+	pendown<br>
+	circle 3<br>
+]<br>
+<br>
+; Show the solved intersection between<br>
+; the curve and the x-axis.<br>
+make "xWhenYIsZero solveQuartic :a :b :c :d :e<br>
+setFillColor "red<br>
+repeat count :xWhenYIsZero [<br>
+	make "x item repcount :xWhenYIsZero<br>
+	penup<br>
+	setXY (mathXToDrawingX :x) 0<br>
+	pendown<br>
+	circle 8<br>
+	penup<br>
+	; move away from dot enough to<br>
+	; make text more readable.<br>
+	setY yCor + 15<br>
+	pendown<br>
+	label str :x<br>
+]<br>
+<br>
+to animation.snapshotstyle<br>
+	localmake "result plistCreate<br>
+	output :result<br>
+end<br>
+<br>
+to animation.setup<br>
+	localmake "minutes 0<br>
+	localmake "seconds 10<br>
+	; Edit this if you want to change the length of your animation.<br>
+	output :minutes * 60 + :seconds<br>
+end</code>

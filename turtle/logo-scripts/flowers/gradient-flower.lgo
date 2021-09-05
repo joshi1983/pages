@@ -1,0 +1,104 @@
+; Inspired by
+; https://www.pinterest.ca/pin/11962755251923656/
+
+to peddleGradient :size
+	localmake "oldPos pos
+	localmake "colorStops plistCreate
+	setProperty "colorStops 0 "#fff
+	setProperty "colorStops 0.05 "#7ff0
+	setProperty "colorStops 0.2 "#5b00
+	setProperty "colorStops 0.7 "#7fff
+	setProperty "colorStops 1 "#ff0f
+	penUp
+	forward :size
+	setFillGradient createLinearGradient :oldPos pos :colorStops "pad
+	setPos :oldPos
+end
+
+to leaf :size :angle
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "arcRadius :size * 0.5 / sin :angle 
+
+	polyStart
+	left :angle
+	arcRight :angle * 2 :arcRadius
+	right 180 - :angle * 2
+	arcRight :angle * 2 :arcRadius
+	polyEnd
+
+	penUp
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to flowerPeddle :size
+	localmake "angle 60
+	localmake "oldPenSize penSize
+
+	peddleGradient :size
+	setPenSize :size * 0.001
+	leaf :size :angle
+	setPenSize :oldPenSize
+end
+
+to stemmedLeaf :size
+	localmake "oldPos pos
+	localmake "oldPenColor penColor
+	localmake "oldPenSize penSize
+	setPenSize :size * 0.01
+	setFillColor penColor
+	penDown
+	forward :size * 0.1
+	leaf :size 40
+	forward :size
+	setPenSize :size * 0.001
+	setPenColor "black
+	penDown
+	setPos :oldPos
+	setPenColor :oldPenColor
+	setPenSize :oldPenSize
+end
+
+to stemmedLeafPair :size
+	localmake "oldHeading heading
+	setHeading :oldHeading + 70
+	stemmedleaf :size
+	setHeading :oldHeading - 70
+	stemmedleaf :size
+	setHeading :oldHeading
+end
+
+to stem :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "arcRadius :size * 10
+	setPenColor "#080
+	setPenSize :size * 0.08
+	setLineJoinStyle "round
+	penDown
+	right 170
+	localmake "arcAngles [6 5 9]
+	repeat count :arcAngles [
+		localmake "arcAngle item repcount :arcAngles
+		arcRight :arcAngle :arcRadius
+		if repcount <> count :arcAngles [
+			stemmedLeafPair :size
+		]
+	]
+	penUp
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to flower :size
+	localmake "numPeddles 16
+	stem :size
+	repeat :numPeddles [
+		flowerPeddle :size
+		right 360 / :numPeddles
+	]
+end
+
+setScreenColor "#E5E5FF
+flower 100

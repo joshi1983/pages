@@ -1,0 +1,25 @@
+make "colors ["red "yellow "limegreen "blue "violet]
+
+to rainbow :size
+	localmake "colorStops plistCreate
+	localmake "rainbowThicknessRatio 0.2
+	setPenSize 0
+	repeat count :colors [
+		localmake "ratio 1 - :rainbowThicknessRatio * (repcount - 0.5) / count :colors
+		setProperty "colorStops :ratio item repcount :colors
+	]
+	localmake "gradient createRadialGradient pos pos :size :colorStops "pad
+	setFillGradient :gradient
+	left 90
+	forward :size
+	right 90
+	polyStart
+	arcRight 180 :size
+	right 90
+	forward :size * :rainbowThicknessRatio
+	right 90
+	arcLeft 180 :size * (1 - :rainbowThicknessRatio)
+	polyEnd
+end
+
+rainbow 200

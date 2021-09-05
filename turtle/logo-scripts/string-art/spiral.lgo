@@ -1,0 +1,78 @@
+; Inspired by
+; https://www.pinterest.ca/pin/9992430414175406/
+
+to triangleCurve :size :numPoints
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "lineSize :size * 0.07 / :numPoints
+	localmake "step :size / :numPoints
+	localmake "points []
+	penUp
+	repeat :numPoints [
+		forward :step
+		queue "points pos
+	]
+	setPos :oldPos
+	repeat :numPoints [
+		setHeading :oldHeading + 90
+		localmake "otherPoint item (:numPoints + 1 - repcount) :points
+		forward :step
+		localmake "tempPos pos
+		setHeading towards :otherPoint
+		penDown
+		setPenSize :lineSize
+		forward distance :otherPoint
+		setPenSize 0
+		setPos :tempPos
+	]
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to triangleCurves :size :numLines
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	penUp
+	back :size * 0.5
+	left 90
+	forward :size * 0.5
+	right 90
+	penDown
+	triangleCurve :size :numLines
+	penUp
+	forward :size
+	right 90
+	forward :size
+	right 90
+	penDown
+	triangleCurve :size :numLines
+	penUp
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to spiral :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "numScales 10
+	repeat :numScales [
+		triangleCurves :size int (100 * (:numScales - repcount) / :numScales)
+		left 20
+		localmake "size :size * 0.7
+	]
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+setScreenColor "black
+setPenColor "white
+right 45
+spiral 100
+
+make "numLines 10
+setPos [-300 -100 * cos 45 0]
+setHeading 0
+triangleCurve 100 / cos 45 :numLines
+setPos [300 100 * cos 45 0]
+setHeading 180
+triangleCurve 100 / cos 45 :numLines

@@ -1,0 +1,115 @@
+; Inspired by
+; https://www.pinterest.ca/pin/326440673000319768
+
+to drawGradient :radius
+	localmake "colorStops plistCreate
+	setProperty "colorStops 0 "black
+	setProperty "colorStops 0.02 "black
+	setProperty "colorStops 0.05 "white
+	setProperty "colorStops 0.6 "white
+	setProperty "colorStops 1 screenColor
+	localmake "gradient createRadialGradient pos pos :radius :colorStops "pad
+	setFillGradient :gradient
+	setPenSize 0
+	circle :radius
+end
+
+to scaleRotatePoints :points :singlePoint :maxRotation :numScales
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "numPoints count :points
+	penUp
+	repeat :numScales [
+		localmake "ratio (repcount - 1) / (:numScales - 1)
+		localmake "rotationRatio (sqrt abs (:ratio - 0.2)) / sqrt 0.8
+		localmake "rotation (1 - :rotationRatio) * :maxRotation
+		localmake "previousPoint []
+		localmake "firstPoint []
+		repeat :numPoints [
+			localmake "point item repcount :points
+			setPos :singlePoint
+			setHeading :rotation + towards :point
+			forward :ratio * distance :point
+			localmake "newPoint pos
+			ifelse (count :previousPoint) <> 0 [
+				setHeading towards :previousPoint
+				penDown
+				localmake "x distance :previousPoint
+				if :x <> 0 [
+					forward :x
+				]
+				penUp
+			] [
+				localmake "firstPoint pos
+			]
+			localmake "previousPoint :newPoint
+		]
+		setPos :newPoint
+		setHeading towards :firstPoint
+		penDown
+		forward distance :firstPoint
+		penUp
+	]
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to regolo :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "colors ["orange "red "maroon "#b06 
+		"purple "#06f "blue "navy "green "limegreen]
+	localmake "numColors count :colors
+	localmake "size1 :size * 0.8
+	localmake "thickOutlineSize :size * 0.02
+	drawGradient :size * 1.3
+	setPenSize :size * 0.003
+	repeat :numColors [
+		penUp
+		setPenColor item repcount :colors
+		setPos :oldPos
+		forward :size
+		localmake "points [:oldPos pos]
+		setPos :oldPos
+		right 360 / :numColors
+		forward :size1
+		queue "points pos
+		left 180 / :numColors
+		setPos :oldPos
+		forward :size * 0.6
+		scaleRotatePoints :points pos 50 40
+		setHeading :oldHeading + repcount * 360 / :numColors
+	]
+	setPenColor "black
+	repeat :numColors [
+		setPos :oldPos
+		setPenSize :size * 0.012
+		penDown
+		forward :size
+		localmake "p1 pos
+		penUp
+		setPos :oldPos
+		right 360 / :numColors
+		forward :size1
+		setHeading towards :p1
+		setPenSize :thickOutlineSize
+		penDown
+		forward distance :p1
+		penUp
+		setHeading :oldHeading + repcount * 360 / :numColors
+	]
+	; add black circles to polish the corners.
+	setPenSize 0
+	setFillColor "black
+	repeat :numColors [
+		setHeading :oldHeading + repcount * 360 / :numColors
+		setPos :oldPos
+		forward :size
+		circle :thickOutlineSize * 0.5
+	]
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+setScreenColor "#ccc
+regolo 100

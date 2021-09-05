@@ -1,0 +1,58 @@
+make "colors ["black "red "blue "yellow "white]
+
+to plotNails :size :numNails
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "result []
+	localmake "minRadius :size * 0.1
+	localmake "maxRadius :size
+	repeat :numNails [
+		localmake "val1 2 * ((repcount - 1) / :numNails - 0.5)
+		localmake "ratio power (1-:val1 * :val1) 0.6
+		localmake "radius mix :minRadius :maxRadius :ratio
+		penUp
+		setPos :oldPos
+		forward :radius
+		queue "result pos
+		penDown
+		circle 0.3
+		right 360 / :numNails
+	]
+	penUp
+	setPos :oldPos
+	setHeading :oldHeading
+	output :result
+end
+
+to connectPoints :p1 :p2
+	penUp
+	setPos :p1
+	setHeading towards :p2
+	penDown
+	forward distance :p2
+end
+
+to drawPattern :size :numNails
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "points plotNails :size :numNails
+	localmake "numColors count :colors
+	localmake "offsetScale int :numNails * 0.5 / :numColors
+	setPenSize :size * 0.1 / :numNails
+	repeat :numNails [
+		localmake "p1Index repcount
+		localmake "p1 item :p1Index :points
+		repeat :numColors [
+			localmake "p2Index :p1Index + repcount * :offsetScale
+			localmake "p2Index 1 + remainder :p2Index :numNails
+			localmake "p2 item :p2Index :points
+			setPenColor item repcount :colors
+			connectPoints :p1 :p2
+		]
+	]
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+setScreenColor "#42545C
+drawPattern 100 100

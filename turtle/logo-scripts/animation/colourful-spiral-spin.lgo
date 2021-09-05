@@ -1,0 +1,64 @@
+; Inspired by
+; https://www.pinterest.ca/pin/2111131068711235/
+
+make "colors ["red "navy "blue "green "yellow]
+
+to getColor :ratio
+	if :ratio < 0 [
+		localmake "ratio :ratio + 1 - int :ratio
+	]
+	localmake "ratio :ratio * count :colors
+	localmake "c1 item 1 + (remainder int :ratio count :colors) :colors
+	localmake "c2 item 1 + (remainder 1 + int :ratio count :colors) :colors
+	output mix :c2 :c1 :ratio - int :ratio
+end
+
+to colourfulSpiral :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "numRadii 25
+	localmake "numAngles 25
+
+	setPenSize :size * 0.004
+	repeat :numRadii [
+		localmake "radius1 :size * repcount / :numRadii
+		localmake "radius2 :size * (repcount + 1) / :numRadii
+		localmake "angleOffset 0
+		if 0 = remainder repcount 2 [
+			localmake "angleOffset 180 / :numAngles
+		]
+		repeat :numAngles [
+			localmake "angle1 :oldHeading + :angleOffset + 360 * (repcount - 1) / :numAngles
+			penUp
+			setPos :oldPos
+			setHeading :angle1
+			forward :radius1
+			penDown
+			setFillColor getColor (:angle1 - :oldHeading) / 360 + :radius1 * (animation.time - 2.5) / :size
+			polyStart
+			forward :size / :numRadii
+			right 90
+			arcRight 360 / :numAngles :radius2
+			right 90
+			forward :size / :numRadii
+			right 90
+			arcLeft 360 / :numAngles :radius1
+			polyEnd
+		]
+	]
+end
+
+colourfulSpiral 250
+
+to animation.snapshotstyle
+	localmake "result plistCreate
+	setProperty "result "zoom.scale 2
+	output :result
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 5
+	; Edit this if you want to change the length of your animation.
+	output :minutes * 60 + :seconds
+end

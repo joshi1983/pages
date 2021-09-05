@@ -1,0 +1,28 @@
+; made to look similar to:
+; https://en.wikipedia.org/wiki/Yin_and_yang#/media/File:Yin_and_Yang_symbol.svg
+
+to drawYinYang :size
+	localmake "size1 0.15 * :size
+	setpencolor "black
+	setpensize :size * 0.01
+	circle :size
+	setpensize 0
+	forward :size * 0.5
+	setfillcolor "black
+	circle :size1 ; black circle at top
+	forward :size * 0.5
+	right 90
+
+	; Fill in the curved black shape.
+	polystart
+	arcRight 180 :size * 0.5
+	arcLeft 180 :size * 0.5
+	arcLeft 180 :size
+	polyend
+	left 90
+	forward :size * 1.5
+	setfillcolor "white
+	circle :size1 ; white circle at bottom
+end
+
+drawYinYang 200

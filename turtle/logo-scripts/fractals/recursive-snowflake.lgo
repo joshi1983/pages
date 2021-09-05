@@ -1,0 +1,24 @@
+; The pattern idea came from:
+; https://pythonturtle.academy/snowflake/
+
+to recursiveSnowflake :size
+	ifelse :size < 2 [
+		setpensize 0.1
+		circle 2
+	] [
+		repeat 6 [
+			setpensize :size * 0.02
+			forward :size
+			recursiveSnowflake :size * 0.333333
+			penup
+			back :size
+			pendown
+			right 60
+		]
+	]
+end
+
+setfillcolor "blue
+setpencolor "white
+setscreencolor "black
+recursiveSnowflake 200

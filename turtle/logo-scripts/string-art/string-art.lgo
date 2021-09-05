@@ -1,0 +1,193 @@
+; Inspired by:
+; https://www.pinterest.ca/pin/17732992273353577/
+
+to gridPattern :size1 :size2 :angle :numLines
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "step1 :size1 / :numLines
+	localmake "step2 :size2 / :numLines
+	localmake "points []
+	penUp
+	; store points along 1 direction.
+	repeat :numLines [
+		queue "points pos
+		forward :step1
+	]
+	right :angle
+	penDown
+	forward :size2
+	; draw line through one side of end-points.
+	penUp
+	back :size2
+	localmake "rightHeading heading
+	repeat :numLines [
+		localmake "fromPos1 pos
+		localmake "toPos item repcount :points
+
+		; draw line between fromPos1 and 
+		; corresponding point from :points.
+		setHeading towards :toPos
+		penDown
+		forward distance :toPos
+		penUp
+		setPos :fromPos1
+		setHeading :rightHeading
+		forward :step2
+	]
+	; restore original position and heading.
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to gridPattern2 :size1 :size2 :angle :numLines
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	forward :size1
+	right 180
+	gridPattern :size1 :size2 :angle :numLines
+
+	; restore original position and heading.
+	penUp
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to linePattern1 :size1 :nailedSize2 :emptySize2 :angle :numLines
+	localmake "oldPos pos
+	localmake "step1 :size1 / :numLines
+	localmake "step2 :nailedSize2 / :numLines
+	localmake "side1Points []
+	penUp
+	repeat :numLines [
+		forward :step1
+		queue "side1Points pos
+	]
+	penUp
+	setPos :oldPos
+	right :angle
+	forward :emptySize2
+	penDown
+	localmake "tempHeading heading
+	repeat :numLines [
+		localmake "fromPoint pos
+		localmake "toPoint item repcount :side1Points
+		penDown
+		setHeading towards :toPoint
+		forward distance :toPoint
+		penUp		
+		setPos :fromPoint
+		setHeading :tempHeading
+		forward :step2
+	]
+	forward :nailedSize2
+	penUp
+	setPos :oldPos
+end
+
+to sideGridPattern1 :size :size2 :angle :angle1 :angle2 :numLines
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angle_ 90 + :angle1 + :angle2 + :angle
+	setPenColor "#38f
+	; outward curve
+	gridPattern :size :size -:angle1 :numLines
+	penUp
+	forward :size
+	left :angle1
+	penDown
+	; draw the top and bottom curve.
+	gridPattern :size :size2 :angle_ :numLines
+	setHeading :oldHeading + 180
+	gridPattern :size :size2 -:angle_ :numLines
+	left 180
+	; inward pattern
+	gridPattern2 :size :size -:angle1 :numLines * 2
+	penDown
+	penUp
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to backgroundGridPattern :size1 :size2 :size3 :angle1 :angle2 :numLines
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "emptySize :size3 * 0.85
+	localmake "nailedSize :size3 - :emptySize
+	localmake "angle_ :angle2 - (:angle1 - 90)
+	setPenColor "#f61
+	penUp
+	forward :size1 * 0.5
+	right :angle1
+	penDown
+	linePattern1 :size2 :nailedSize :emptySize :angle_ :numLines
+	setHeading :oldHeading - :angle1
+	linePattern1 :size2 :nailedSize :emptySize -:angle_ :numLines
+	penUp
+	setPos :oldPos
+	setHeading :oldHeading
+	back :size1 * 0.5
+	penDown
+	right 180 - :angle1
+	linePattern1 :size2 :nailedSize :emptySize -:angle_ :numLines
+	setHeading :oldHeading - 180 + :angle1
+	linePattern1 :size2 :nailedSize :emptySize :angle_ :numLines
+
+	penUp
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to stringArt :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "size1 :size * 0.9
+	localmake "size2 :size * 1.1
+	localmake "angle1 105
+	localmake "halfWidth :size2 * abs (sin :angle1)
+	localmake "sideHeight (:size1 - :size2 * 2 * abs cos :angle1)
+	localmake "sideRise :size1 - 0.5 * (:size1 - :sideHeight)
+	localmake "angle2 arcTan :sideRise / :halfWidth
+	localmake "angle3 180 - :angle2 * 2
+	localmake "ratio1 :sideHeight * 0.5 / :sideRise
+	localmake "size3 :ratio1 * hypot [:sideRise :halfWidth]
+	localmake "size4 :size3 * :size2 / :size1
+	localmake "size5 :size3 * (1 / :ratio1 - 1)
+	localmake "numLines1 50
+	localmake "numLines2 20
+	setPenSize :size * 0.0008
+	backgroundGridPattern :size1 :size2 :size5 :angle1 :angle2 :numLines1
+	penUp
+	repeat 2 [
+		setPos :oldPos
+		setHeading :oldHeading
+		forward :sideHeight * 0.5
+		setHeading :oldHeading + repcount * 180 + 90
+		forward :halfWidth
+		ifelse 2 = repcount [
+			right :angle2 + :angle3
+		] [
+			left 90
+			forward :sideHeight
+			setHeading :oldHeading + :angle3 * 0.5
+		]
+		sideGridPattern1 :size3 :size4 -:angle1 :angle3 :angle2 :numLines2
+	]
+	setPenColor "white
+	penUp
+	setPos :oldPos
+	setHeading :oldHeading
+	forward :size1 * 0.5
+	back :size1
+	penDown
+	repeat 2 [
+		gridPattern :size1 :size2 :angle1 :numLines1
+		gridPattern :size1 :size2 -:angle1 :numLines1
+		penUp
+		forward :size1
+		penDown
+		right 180
+	]
+end
+
+setScreenColor "black
+stringArt 150
