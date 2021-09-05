@@ -1,0 +1,92 @@
+; Draws glare like you might see from a bright star
+
+make "color1 "#ff9
+make "color2 "#f80
+make "color3 "#fff
+make "colors1 mixColors :color1 :color2
+make "colors2 mixColors :color3 :color2
+
+to mixColors :color1 :color2
+	localmake "result []
+	repeat 15 [
+		queue "result mix :color2 :color1 (repcount - 1) / 15
+	]
+	output :result
+end
+
+to flareSpecificColors :colors :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "delta :size / count :colors
+	localmake "ps1 max 0.1 :size * 0.02
+	repeat 4 [
+		repeat count :colors [
+			setPenColor item repcount :colors
+			setPenSize :ps1 * (1.1 - repcount / count :colors)
+			forward :delta
+		]
+		jumpTo :oldPos
+		right 360 / 4
+	]
+	setHeading :oldHeading
+end
+
+; draws lens flare without gradients
+; uses short line segments to simulate a smooth gradient
+to flare :size
+	localmake "oldHeading heading
+	localmake "numSizes 5
+	repeat :numSizes [
+		localmake "numRepeats power 2 (:numSizes - repcount)
+		localmake "angleDelta 90 / :numRepeats
+		localmake "size1 :size * (power 0.7 (:numSizes - repcount))
+		repeat :numRepeats [
+			flareSpecificColors :colors1 :size1
+			right :angleDelta
+		]
+		setHeading :oldHeading
+	]
+	flareSpecificColors :colors2 :size
+end
+
+; draws a lens flare using radial gradients
+to gradientFlare :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "glareAngle 1
+	localmake "numScales 4
+	localmake "minSize :size * 0.3
+	localmake "colorStops createPList
+	setProperty "colorStops 0 :color3
+	setProperty "colorStops 0.1 :color1
+	setProperty "colorStops 1 :color2
+	setPenSize 0
+	repeat :numScales [
+		localmake "ratio repRatio
+		localmake "size1 mix :size :minSize :ratio
+		localmake "size2 :size1 / cos :glareAngle
+		localmake "gradient createRadialGradient :oldPos :size1 :colorStops
+		setFillGradient :gradient
+		localmake "numAngles power 2 (1 + :numScales - repcount)
+		repeat :numAngles [
+			jumpTo :oldPos
+			setHeading :oldHeading + repcount * 180 / :numAngles
+			jumpForward :size1
+			right 180 - :glareAngle
+			polyStart
+			repeat 2 [
+				jumpForward :size2
+				right :glareAngle * 2
+				jumpForward :size2
+				right 180 - :glareAngle * 2
+			]
+			polyEnd
+		]
+	]
+end
+
+setScreenColor "black
+flare 100
+
+jumpRight 300
+gradientFlare 100

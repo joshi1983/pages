@@ -1,0 +1,326 @@
+; Inspired by
+;  https://www.pinterest.ca/pin/819303357227621400/
+to peddle1 :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angle1 180 / 8
+	localmake "angle2 35
+	localmake "angle3 15
+	localmake "angle4 140
+	localmake "size1 :size * 0.64
+	localmake "size2 :size * 0.5
+	localmake "arcRadius1 :size * 0.269238816
+	localmake "arcRadius2 :size * 0.3
+	localmake "arcRadius3 :size * 0.13
+	left :angle1
+	setPenSize :size * 0.06
+	setFillColor "white
+	polyStart
+	forward :size1
+	arcRight 180 + :angle1 * 2 :arcRadius1
+	polyEnd
+	setPenSize 0
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :size * 0.09
+	setHeading :oldHeading - :angle3
+	setFillColor "black
+	polyStart
+	jumpForward :size2
+	arcRight :angle2 :arcRadius2
+	arcRight :angle4 :arcRadius3
+	arcRight :angle2 :arcRadius2
+	polyEnd
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to flower1 :size
+	localmake "innerRadius :size * 0.3
+	repeat 8 [
+		peddle1 :size
+		right 360 / 8
+	]
+	setPenSize :size * 0.06
+	setFillColor "white
+	circle :innerRadius
+end
+
+; Inspired by
+; https://www.pinterest.ca/pin/961026007959457646/
+to flower2 :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "numPeddles 6
+	localmake "size1 :size * 0.37
+	setPenSize 0
+	setFillColor "black
+	repeat :numPeddles [
+		jumpTo :oldPos
+		jumpForward :size - :size1
+		circle :size1
+		right 360 / :numPeddles
+	]
+	jumpTo :oldPos
+	setFillColor "white
+	circle :size1
+	setHeading :oldHeading
+end
+
+; Inspired by
+; https://www.pinterest.ca/pin/19914423343741086/
+to flower3 :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "numPeddles 6
+	localmake "size1 :size * 0.34
+	setPenSize 0
+	setFillColor "black
+	repeat :numPeddles [
+		jumpTo :oldPos
+		jumpForward :size - :size1
+		circle :size1
+		right 360 / :numPeddles
+	]
+	jumpTo :oldPos
+	circle :size - :size1
+	setFillColor "white
+	circle :size1 * 0.5
+	setHeading :oldHeading
+end
+
+; Inspired by
+; https://www.pinterest.ca/pin/614459942913716470/
+to flower4 :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "numPeddles 8
+	localmake "size1 :size * 0.5
+	setPenSize 0
+	setFillColor "black
+	repeat :numPeddles [
+		jumpTo :oldPos
+		jumpForward :size - :size1
+		ifelse even? repcount [
+			ellipse :size1 * 0.22 :size1
+		] [
+			ellipse :size1 * 0.3 :size1
+		]
+		right 360 / :numPeddles
+	]
+	jumpTo :oldPos
+	setFillColor "white
+	circle :size1 * 0.5
+	setHeading :oldHeading
+end
+
+to peddle5 :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angle1 30
+	localmake "angle2 50
+	localmake "angle3 98
+	localmake "arcRadius1 :size
+	localmake "arcRadius2 :size * 0.45
+	localmake "arcRadius3 :size * 0.14
+	jumpForward :size
+	right 141
+	setFillColor "black
+	polyStart
+	arcRight :angle1 :arcRadius1
+	arcRight :angle2 :arcRadius2
+	arcRight :angle3 :arcRadius3 ; reflection point in middle of arc
+	arcRight :angle2 :arcRadius2
+	arcRight :angle1 :arcRadius1
+	polyEnd
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+; Inspired by
+; https://www.pinterest.ca/pin/855050679270516484/
+to flower5 :size
+	localmake "numPeddles 6
+	repeat :numPeddles [
+		peddle5 :size
+		right 360 / :numPeddles
+	]
+end
+
+; Inspired partly by
+; https://www.pinterest.ca/pin/724235183828337951/
+; and https://www.vexels.com/png-svg/preview/147068/grey-sunflower-head-graphic
+; Notice the copyright terms at:
+; https://www.vexels.com/terms-and-conditions/
+to flower6 :size
+	localmake "oldPos pos
+	localmake "size1 :size * 0.3777
+	localmake "size2 :size - :size1
+	localmake "numPeddles 15
+	repeat :numPeddles [
+		jumpTo :oldPos
+		jumpForward :size1
+		peddle5 :size2
+		right 360 / :numPeddles
+	]
+	jumpTo :oldPos
+	circle :size1
+end
+
+; Inspired by
+; https://www.pinterest.ca/pin/480337116516610265/
+to flower7 :size
+	localmake "oldPos pos
+	localmake "numAngles 20
+	localmake "linePenSize :size * 0.1
+	localmake "tinyRadius :size * 0.12
+	localmake "size1 :size * 0.3
+	localmake "size2 :size - :size1 - :tinyRadius
+	repeat :numAngles [
+		setPenSize 0
+		jumpTo :oldPos
+		jumpForward :size1
+		setPenSize :linePenSize
+		forward :size2
+		setPenSize 0
+		circle :tinyRadius
+		right 360 / :numAngles
+	]
+	jumpTo :oldPos
+end
+
+to leaf :size
+	localmake "oldHeading heading
+	localmake "angle 50
+	localmake "arcRadius :size / 2 / sin :angle
+	left :angle
+	polyStart
+	arcRight :angle * 2 :arcRadius
+	right 180 - :angle * 2
+	arcRight :angle * 2 :arcRadius
+	polyEnd
+	setHeading :oldHeading
+end
+
+to droplet :size
+	localmake "oldHeading heading
+	localmake "angle 53
+	localmake "arcRadius :size / 2 / sin :angle
+	localmake "arcRadius2 :arcRadius * (1 - cos :angle)
+
+	; scale so the drop's height matches size.
+	localmake "scale :size / (:arcRadius2 + :arcRadius * sin :angle)
+	localmake "arcRadius :arcRadius * :scale
+	localmake "arcRadius2 :arcRadius2 * :scale
+
+	left :angle
+	polyStart
+	arcRight :angle :arcRadius
+	arcRight 180 :arcRadius2
+	arcRight :angle :arcRadius
+	polyEnd
+	setHeading :oldHeading
+end
+
+; Inspired by
+; https://www.pinterest.ca/pin/914862417230436/
+; Also very similar to:
+; https://symmetrysymptom.tumblr.com/post/100070331914
+; This looks older at 8 years but I'm not sure if it is from Dan Choi.
+to flower8 :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "size1 :size * 1.45
+	localmake "size2 :size * 0.2
+	localmake "size3 :size * 0.323
+	localmake "angle1 7.5
+	localmake "angle2 35
+	localmake "angle3 279.56
+	setPenSize 0
+	setFillColor "black
+	repeat 6 [
+		jumpRight :size * 0.01
+		polyStart
+		arcRight :angle1 :size1
+		arcRight :angle2 :size2
+		arcRight :angle1 :size1
+		arcLeft :angle3 :size3
+		arcRight :angle1 :size1
+		arcRight :angle2 :size2
+		arcRight :angle1 :size1
+		polyEnd
+
+		jumpTo :oldPos
+		setHeading :oldHeading + repcount * 360 / 6
+	]
+	setHeading :oldHeading
+end
+
+; Inspired by
+; https://dribbble.com/shots/5996618-Flower-Mark
+; and 
+; https://www.pinterest.ca/pin/580119995765838124/ 
+; The original designer's name is Alexander Tsanev.
+; The flowerMark design roughly follows the copyright license at: https://creativecommons.org/licenses/by-nc-nd/4.0/
+; The code in the flowerMark procedure is for educational purposes only.
+; You are NOT free to share derivative works made from the flowerMark design or code in the flowerMark procedure.
+; Alexander's design was translated to logo code by Josh Greig.
+; This code was shared in Logo by Josh Greig only after getting permission to do so from
+; Alexander(aleksandar.tsanev@gmail.com) under the terms described above.
+; If code from the flowerMark procedure is copied purely for educational purposes, always include this comment.
+to flowerMark :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "penSize :size * 0.1
+	localmake "angle1 220
+	localmake "angle2 74
+	localmake "angle3 97
+	localmake "size1 :size * 0.493
+	localmake "arcRadius :size * 0.3
+	setLineJoinStyle "miter
+	repeat 6 [
+		localmake "heading1 heading
+		jumpForward :size1
+		right 90
+		setPenSize 0
+		arcLeft :angle1 * 0.5 :arcRadius
+		right 180
+		setPenSize :penSize
+		arcRight :angle1 :arcRadius
+		right :angle2
+		arcRight :angle3 :arcRadius
+		setPenSize 0
+		setHeading :heading1
+		jumpTo :oldPos
+		jumpForward :size1
+		right 90
+		arcLeft :angle1 * 0.5 :arcRadius
+		left :angle2
+		setPenSize :penSize
+		arcLeft :angle3 :arcRadius
+		jumpTo :oldPos
+		setHeading :oldHeading + repcount * 360 / 6
+	]
+	setHeading :oldHeading
+end
+
+make "size 50
+make "sideStepSize :size * 2.2
+jumpLeft :sideStepSize * 4
+flower1 :size
+jumpRight :sideStepSize
+flower2 :size
+jumpRight :sideStepSize
+flower3 :size
+jumpRight :sideStepSize
+flower4 :size
+jumpRight :sideStepSize
+flower5 :size
+jumpRight :sideStepSize
+flower6 :size
+jumpRight :sideStepSize
+flower7 :size
+jumpRight :sideStepSize
+flower8 :size
+jumpRight :sideStepSize
+flowerMark :size

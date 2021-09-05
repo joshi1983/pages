@@ -1,0 +1,77 @@
+to getDarkGradient :len
+	localmake "oldPos pos
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#4066CE
+	setProperty "colorStops 1 "black
+	jumpForward :len
+	localmake "result createLinearGradient :oldPos pos :colorStops "pad
+	jumpTo :oldPos
+	output :result
+end
+
+to getLightGradient :len
+	localmake "oldPos pos
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#4D5EA3
+	setProperty "colorStops 0.4 "#4981B6
+	setProperty "colorStops 0.7 "#6a98ba
+	setProperty "colorStops 1 "#45B3BF
+	jumpForward :len * 0.1
+	localmake "fromPos pos
+	jumpBackward :len
+	localmake "result createLinearGradient :fromPos pos :colorStops "pad
+	jumpTo :oldPos
+	output :result
+end
+
+; Inspired by the final logo design at:
+; https://www.youtube.com/watch?v=tkAxaRZE0Bg
+; The video is an Adobe Illustrator tutorial.
+; The impossibleLogo procedure draws a logo that resembles it.
+to impossibleLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "cornerRadius1 :height * 0.2695
+	localmake "angle 90 / 5
+	localmake "x :height * 0.17
+	localmake "y :height * 0.312
+	jumpForward :height * 0.475
+	localmake "center pos
+
+	; Draw the dark parts.
+	setPenSize 0
+	repeat 5 [
+		setHeading :oldHeading + repcount * 360 / 5
+		jumpForward :x
+		jumpLeft :y
+		right :angle
+		setFillGradient getDarkGradient :height * 0.7
+		polyStart
+		jumpForward :height * 0.177
+		arcRight 145 :cornerRadius1
+		polyEnd
+		jumpTo :center	
+	]
+
+	; Draw the light parts.
+	repeat 5 [
+		setHeading :oldHeading + repcount * 360 / 5
+		jumpForward :x
+		jumpLeft :y
+		right :angle
+		setFillGradient getLightGradient :height * 0.45
+		polyStart
+		jumpBackward :height * 0.31
+		right 180
+		arcLeft 105 :cornerRadius1
+		left 180
+		arcRight 105 :height * 0.127
+		jumpForward :height * 0.507
+		polyEnd
+		jumpTo :center	
+	]
+
+	setTurtleState :oldState
+end
+
+impossibleLogo 100

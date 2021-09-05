@@ -1,0 +1,70 @@
+make "arcRadiusRatio 0.3785
+
+to drawArcGradient :height :color1 :color2
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "colorStops createPList
+	localmake "arcRadius :height * :arcRadiusRatio
+	setProperty "colorStops 0.1 :color1
+	setProperty "colorStops 0.8 :color2
+	right 180
+	jumpForward :height * 0.8
+	jumpRight :height * 1.1
+	localmake "fromPos pos
+	jumpTo :oldPos
+	jumpBackward :height * 0.3
+	setPenGradient createLinearGradient pos :fromPos :colorStops "pad
+	jumpTo :oldPos
+	jumpForward :height * 0.154
+	setLineCap "butt
+	setPenSize :height * 2 / 26
+	forward :height * 0.16
+	arcRight 90 :arcRadius
+	localmake "fromPos pos
+	localmake "len :height * 0.3
+	localmake "overlap :height * 0.01
+	forward :overlap
+	jumpForward :len - :overlap
+	
+	localmake "colorStops createPList
+	setProperty "colorStops 0 mix :color1 :color2 0.2
+	setProperty "colorStops 1 mix :color2 transparent 0
+	setPenGradient createLinearGradient :fromPos pos :colorStops "pad
+	jumpTo :fromPos
+	forward :len
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/CICS#/media/File:IBM_CICS_Transaction_Server_for_z-OS_app_icon.svg
+to ibmCICSLogo :height
+	localmake "oldState turtleState
+	localmake "r :height * 2 / 26
+	localmake "offset1 :height * 13 / 28
+	localmake "offsetY :height * 6 / 26
+	localmake "blue1 "#0f62fe
+	localmake "green1 "#08bdba
+	jumpForward :height / 2
+	localmake "center pos
+	jumpBackward :offsetY
+	jumpLeft :offset1
+	setPenSize 0
+	setFillColor "#001d6c
+	circle :r
+	right 180
+	drawArcGradient :height :green1 :blue1
+	right 180
+	jumpRight :offset1 * 2
+	jumpForward :offsetY * 2
+	circle :r
+	drawArcGradient :height :blue1 :green1
+	jumpTo :center
+	setPenColor fillColor
+	setFillColor transparent
+	setPenSize :height * 2 / 26
+	circle :height * 4 / 26
+	
+	setTurtleState :oldState
+end
+
+ibmCICSLogo 100

@@ -1,0 +1,92 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/GitLab#/media/File:GitLab_logo_(2).svg
+; Referenced from
+; https://en.wikipedia.org/wiki/GitLab
+to gitlabLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "oldPos pos
+	localmake "angle1 71.8
+	localmake "arcAngle1 37.1
+
+	localmake "arcAngle2 73.9
+	localmake "arcAngle3 26.5
+	localmake "arcAngle4 140.8
+	localmake "size1 :height * 0.2139
+	localmake "size3 :height * 0.2747
+	localmake "size4 :height * 0.00583
+	localmake "size5 :height * 0.394
+	localmake "size6 :height * 0.30868
+	localmake "size7 :height * 0.19227704
+	localmake "arcRadius1 :height * 0.0465
+	localmake "arcRadius2 :height * 0.258
+	localmake "arcRadius3 :height * 0.44
+	localmake "arcRadius4 :height * 0.0377
+	localmake "size2 :size1 + :arcRadius1 * (1 - cos :arcAngle1 * 2) / sin 180 - :arcAngle1 * 2
+	setPenSize 0
+	right 90
+	arcLeft :arcAngle1 :arcRadius1
+	jumpForward :size1 + :size3
+	arcLeft :arcAngle2 :arcRadius2
+	jumpForward :size4
+	setFillColor "#e24329
+	polyStart
+	jumpForward :size5
+	arcLeft :arcAngle4 :arcRadius4
+	jumpForward :size6
+	right :angle1
+
+	jumpForward :size7 * 2 ; middle is a point of symmetry
+
+	right :angle1
+	jumpForward :size6
+	arcLeft :arcAngle4 :arcRadius4
+	jumpForward :size5
+	setHeading towards :oldPos
+	jumpForward distance :oldPos
+	polyEnd
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	setFillColor "#fca326
+	right 90
+	arcLeft :arcAngle1 :arcRadius1
+	jumpForward :size1
+	polyStart
+	jumpBackward :size1
+	right 180
+	arcRight :arcAngle1 * 2 :arcRadius1
+	jumpForward :size1
+	setHeading :oldHeading + 90 - :arcAngle1
+	jumpForward :size2
+	polyEnd
+	localmake "middlePos1 pos
+
+	setHeading :oldHeading - 90 - :arcAngle1
+	setFillColor "#fc6d26
+	polyStart
+	jumpForward :size2
+	setHeading :oldHeading - 90 + :arcAngle1
+	jumpForward :size3
+	arcRight :arcAngle2 :arcRadius2
+	jumpForward :size4
+	setHeading :oldHeading + 90 + :arcAngle1 - :arcAngle3
+	arcRight :arcAngle3 :arcRadius3
+	polyEnd
+
+	jumpTo :middlePos1
+	setHeading :oldHeading + 90 + :arcAngle1
+	polyStart
+	jumpForward :size2
+	setHeading :oldHeading + 90 - :arcAngle1
+	jumpForward :size3
+	arcLeft :arcAngle2 :arcRadius2
+	jumpForward :size4
+	setHeading :oldHeading - 90 - :arcAngle1 + :arcAngle3
+	arcLeft :arcAngle3 :arcRadius3
+	polyEnd
+
+	setTurtleState :oldState
+end
+
+gitlabLogo 100

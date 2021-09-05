@@ -1,0 +1,102 @@
+make "smallSquareSizeRatio 0.9
+make "colors1 ["#0b7eeb "#022ad7 "#8165c9
+	"#301c28 "#b6314c "#b02546 "#ca3121 "#fc3122 "#f73a24
+	]
+make "colors2 [
+		"#005be1 "#113237 "#02521f "#329e00 "#a8c105 "#edc806
+		"#ffa911 "#fd9609 "#fd6706 "#ff3511
+	]
+make "averageColor "#d49d75
+
+to drawTriangle :squareSize :colors :directionSign
+	localmake "oldPos pos
+	localmake "smallSquareSize :squareSize * :smallSquareSizeRatio
+	localmake "avgSize (:squareSize + :smallSquareSize) / 2
+	localmake "signedSquareSize :directionSign * :squareSize
+	jumpLeft :signedSquareSize / 2
+	jumpBackward :avgSize
+	repeat count :colors [
+		localmake "color item repcount :colors
+		localmake "numSquares repcount
+		repeat :numSquares [
+			stripes :smallSquareSize :smallSquareSize [:color]
+			jumpForward :squareSize
+			jumpLeft :signedSquareSize
+		]
+		jumpBackward (:numSquares + 1) * :squareSize
+		jumpRight :numSquares * :signedSquareSize
+	]
+	jumpTo :oldPos
+end
+
+to drawSquareOutline :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "squareSize :height / (40 - (1 - :smallSquareSizeRatio))
+
+	stripes :height :height ["white]
+	jumpForward :height / 2
+	localmake "center pos
+	repeat 4 [
+		setHeading :oldHeading + repcount * 360 / 4
+		jumpForward :squareSize * 10
+		jumpRight :squareSize * 10
+		localmake "center2 pos
+		localmake "heading1 heading
+		repeat 3 [
+			setHeading :heading1 + repcount * 360 / 4
+			drawTriangle :squareSize :colors2 1
+			jumpBackward :squareSize * 10
+			jumpLeft :squareSize * 10
+			right 180
+			drawTriangle :squareSize :colors1 1
+			jumpTo :center2
+		]
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://www.pinterest.ca/pin/595390013266947325/
+to allysonGreySquare :height
+	localmake "oldState turtleState
+	localmake "numSquareOutlines 20
+	repeat :numSquareOutlines [
+		drawSquareOutline :height
+		localmake "height :height * cos 45
+		right 45
+		jumpLeft :height / 2
+	]
+	stripes :height :height [:averageColor]
+	setTurtleState :oldState
+end
+
+setScreenColor "#000
+allysonGreySquare 100
+
+to timeRatioToZoomRatio :timeRatio
+	localmake "timeFactor 80 * :timeRatio
+	localmake "scale 10 * power 2 (:timeFactor - floor :timeFactor)
+	output :scale
+end
+
+to animation.snapshotstyle
+	localmake "timeRatio clamp animation.time / animation.duration 0 1
+	localmake "timeRatio interpolateRatio easeInOut :timeRatio
+	localmake "scale timeRatioToZoomRatio :timeRatio
+
+	localmake "result createPList
+	setProperty "result "zoom.scale :scale
+	setProperty "result "position.y 50
+	output :result
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 20
+	; Edit this if you want to change the length of your animation.
+	localmake "result createPList
+	setProperty "result "duration :minutes * 60 + :seconds
+	output :result
+end

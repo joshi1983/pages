@@ -1,0 +1,98 @@
+; This is not related to Commodore's logo(branding graphics) but rather
+; the Commodore Logo interpreter.
+; Commodore's Logo interpreter is like WebLogo.
+; Commodore's Logo is software that runs in a
+; Commodore personal computer.
+;
+; These articles explain more about this software from the 1980's:
+; https://www.c64-wiki.com/wiki/Turtle_Graphics_Interpreter
+; https://www.c64-wiki.com/wiki/Commodore_Logo
+
+to horseLegs :length :separation
+	localmake "legPositions [0 0.2 0.8 1]
+	localmake "oldPos pos
+	setPenSize :separation * 0.05
+	repeat count :legPositions [
+		jumpLeft :separation * item repcount :legPositions		
+		forward :length
+		jumpTo :oldPos
+	]
+end
+
+to horseTorso :width :height
+	setFillColor "brown
+	polyStart
+	repeat 2 [
+		jumpForward :height
+		left 90
+		jumpForward :width
+		left 90
+	]
+	polyEnd
+end
+
+to tail :size
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	setPenSize :size * 0.05
+	right 90
+	repeat 4 [
+		forward :size
+		right 12
+		jumpTo :oldPos
+	]
+	setTurtleState :oldState
+end
+
+to horseHead :size
+	localmake "oldHeading heading
+	localmake "numSteps 4
+	localmake "stepSize :size / (1 + :numSteps)
+	localmake "earSize :stepSize / sin 60
+	localmake "noseLength :size * 0.5
+	localmake "noseHeight :size * 0.35
+	polyStart
+	repeat :numSteps [
+		jumpForward :stepSize
+		jumpLeft :stepSize * 0.8
+	]
+	left 30
+	jumpForward :earSize
+	setHeading :oldHeading - 150
+	jumpForward :earSize
+	setHeading :oldHeading - 90
+	jumpForward :noseLength
+	jumpLeft :noseHeight
+	jumpBackward :noseLength + :earSize * 2 * cos 60
+	jumpLeft :size - :noseHeight - :stepSize
+	polyEnd
+end
+
+; Inspired by a digital drawing on pages 208 and 250 of
+; Explorer's Guide to Commodore Logo
+; You can find it electronically at
+; https://archive.org/details/explorers-guide-to-commodore-logo/page/n267/mode/2up
+; Page 208 is at:
+; https://archive.org/details/explorers-guide-to-commodore-logo/page/n225/mode/2up
+to commodoreLogoHorse :size
+	localmake "oldState turtleState
+	localmake "bodyWidth :size * 0.63
+	localmake "bodyHeight :size * 0.27
+	localmake "legHeight :size * 0.27
+	localmake "headSize :size - :bodyHeight - :legHeight
+	setPenColor "black
+	setLineCap "round
+	setLineJoinStyle "round
+	jumpRight :size * 0.39
+	horseLegs :legHeight :bodyWidth
+	jumpForward :legHeight
+	setPenSize :size * 0.01
+	horseTorso :bodyWidth :bodyHeight
+	jumpForward :bodyHeight
+	tail :size * 0.2
+	jumpLeft :bodyWidth - :headSize * 0.64
+	horseHead :headSize
+	setTurtleState :oldState
+end
+
+commodoreLogoHorse 100

@@ -1,0 +1,109 @@
+<div class="svg-container">
+	<img src="content/help/commands/images/distanceToCircle.svg" alt="distancetoCircle illustration">
+<code>; The following is the code used to draw the above image.
+; Notice that distanceToCircle is used to calculate the distance
+; along the turtle's current heading to the nearest intersection
+; with each circle.
+
+make "circles [
+	[-140 0 22 "red]
+	[-80 5 12 "green]
+	[0 0 22 "green]
+	[140 7 10 "blue]
+	[140 -7 10 "blue]
+]
+repeat count :circles [
+	make "circleInfo item repcount :circles
+	jumpTo [first :circleInfo item 2 :circleInfo]
+	setPenColor last :circleInfo
+	circle item 3 :circleInfo
+]
+
+make "origin [0 0]
+jumpTo :origin
+setFillColor "black
+setPenColor "#8000
+repeat 150 [
+	setHeading 360 * repRatio
+	repeat count :circles [
+		make "circleInfo item repcount :circles
+		make "circleCenter [first :circleInfo item 2 :circleInfo]
+		make "circleRadius item 3 :circleInfo
+		make "result distanceToCircle :circleCenter :circleRadius
+		if :result >= 0 [
+			setPenSize 0.2
+			forward :result
+			setPenSize 0
+			circle 1
+		]
+		jumpTo :origin
+	]
+]</code>
+<code>print distanceToCircle [0 100] 10
+; prints 90 because 100 - 10 = 90
+; The circle's center, [0 100], is 100 
+; from the current turtle position, [0 0].
+
+jumpForward 50
+; moves turtle 50 units closer to the circle.
+
+print distanceToCircle [0 100] 10
+; prints 40 because the turtle is now 40 
+; units from the nearest point on the circle</code>
+<code>; The following example
+; plots points on the edge of a circle
+; using distanceToCircle to calculate the required distances
+
+; Draw the circle we're going to calculate with.
+setPenSize 0
+setFillColor "black
+; tweak these values a bit and you should find 
+; the blue dots stay positioned on the circumference 
+; of the updated circle.
+make "circleCenter [0 100]
+make "circleRadius 30
+jumpTo :circleCenter
+circle :circleRadius
+
+make "origin [0 0]
+jumpTo :origin
+setPenColor "red
+; Draw lots of points on the circle.
+; Each point's distance and position is calculated
+; using distanceToCircle. 
+repeat 200 [
+	; Throughout the loop, let heading be anything 
+	; from -90 to 90 degrees.
+	setHeading mix -90 90 repRatio
+
+	make "result distanceToCircle :circleCenter :circleRadius
+	if :result >= 0 [
+		setPenSize 0.1
+		forward :result
+		setPenSize 0
+		circle 1
+	]
+	jumpTo :origin
+]</code>
+<code>; myDistanceToCircle procedure works exactly like the distanceToCircle command.
+; The distanceToCircle command is available so you don't need to implement it yourself.
+; Reviewing this implementation could help you implement something similar using procedures, though.
+to myDistanceToCircle :center :radius
+	localmake "angle heading - (towards :center)
+	localmake "d distance :center
+	localmake "a 1
+	localmake "b -2 * :d * (cos :angle)
+	localmake "c (:d * :d) - (:radius * :radius)
+	localmake "solutions solveQuadratic :a :b :c
+	repeat count :solutions [
+		localmake "val item repcount :solutions
+		if :val >= 0 [
+			output :val
+		]
+	]
+	output -1 ; indicate no intersection found. 
+end
+
+print myDistanceToCircle [0 100] 10
+; prints 90</code>
+</div>

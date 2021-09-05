@@ -1,0 +1,42 @@
+; This draws a couple spheres
+; The spheres are drawn with lots of randomly positioned
+; circles.
+; The animation shows the little sphere orbit the
+; larger one a full 360 degrees.
+
+to dotSphere :radius :numPoints
+	localmake "oldPos pos
+	setPenSize 0
+	setFillColor "#8000
+	repeat :numPoints [
+		localmake "randomPoint [randomRatio - 0.5 randomRatio - 0.5 randomRatio - 0.5]
+		localmake "magnitude hypot :randomPoint
+		if :magnitude < 0.5 [
+			localmake "dotPos vectorAdd :oldPos vectorScale :randomPoint :radius / :magnitude
+			jumpTo :dotPos
+			circle 2
+		]
+	]
+	jumpTo :oldPos
+end
+
+make "t animation.time / animation.duration
+make "angle 360 * :t
+dotSphere 150 6000
+make "orbitRadius 300
+jumpTo [:orbitRadius * cos :angle 0 :orbitRadius * sin :angle]
+dotSphere 50 1000
+
+to animation.snapshotstyle
+	localmake "result createPList
+	output :result
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 3
+	; Edit this if you want to change the length of your animation.
+	localmake "result createPList
+	setProperty "result "duration :minutes * 60 + :seconds
+	output :result
+end

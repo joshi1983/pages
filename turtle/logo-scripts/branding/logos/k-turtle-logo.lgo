@@ -1,0 +1,88 @@
+to getKTurtleGradient :height
+	localmake "oldState turtleState
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#90dc90
+	setProperty "colorStops 1 "#067a07
+	localmake "angle 30
+	jumpRight :height * 0.5
+	left 30 
+	localmake "fromPos pos
+	jumpForward :height / cos :angle
+	localmake "result createLinearGradient :fromPos pos :colorStops "pad
+	setTurtleState :oldState
+	output :result
+end
+
+; Inspired by logo at
+; https://userbase.kde.org/File:Kturtle.png
+to kTurtleLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "bodySize :height * 0.362
+	localmake "bodyXOffset :height * 0.035
+	localmake "legDistance1 :bodySize * 0.57
+	localmake "legSize1 :bodySize - :legDistance1
+	localmake "legSize2 :legSize1 / 2
+	localmake "legDirections [[1 -1] [-1 -1] [-1 1] [1 1]]
+	localmake "width1 :height * 0.078
+	localmake "height1 :width1 * 2
+	localmake "size1 :legSize2
+	localmake "height2 :height * 0.19
+	setFillGradient getKTurtleGradient :height
+	setLineCap "round
+	setLineJoinStyle "round
+	setPenSize :height * 0.033
+	setPenColor "black
+	jumpForward :bodySize + penSize / 2
+	localmake "bodyCenter pos
+	; Draw legs
+	repeat 4 [
+		setHeading :oldHeading + repcount * 360 / 4
+		localmake "legDirection item repcount :legDirections
+		localmake "dx first :legDirection
+		localmake "dy last :legDirection
+		jumpRight :legDistance1
+		jumpForward :legDistance1
+		setHeading :oldHeading
+		jumpRight :bodyXOffset * :dx
+		polyStart
+		jumpForward :legSize1 * :dy
+		jumpRight :legSize1 * :dx
+		jumpBackward :legSize2 * :dy
+		jumpLeft :legSize2 * :dx
+		jumpBackward :legSize2 * :dy
+		polyEnd
+		jumpTo :bodyCenter
+	]
+	jumpForward :height - :bodySize - :height1 - :size1 * 2 - penSize
+	jumpRight :width1
+	polyStart
+	repeat 3 [
+		jumpForward :size1
+		jumpRight :size1
+		jumpForward :height1
+		left 90
+	]
+	jumpForward :size1
+	jumpRight :size1
+	right 180
+	repeat 4 [
+		repeat 2 [
+			jumpForward :size1
+			jumpLeft :size1
+		]
+		if repcount < 4 [
+			jumpForward :size1
+			jumpLeft :height2
+			if repcount = 2 [
+				jumpLeft :height * 0.05
+			]
+			left 90
+		]
+	]
+	jumpForward :size1
+	polyEnd
+	setTurtleState :oldState
+end
+
+kTurtleLogo 100

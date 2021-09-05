@@ -1,0 +1,139 @@
+make "treeSeparationRatio 0.28
+
+to binaryTree :leftAngle :rightAngle :len :leftShrinkRatio :rightShrinkRatio
+	if :len > 1 [
+		localmake "oldState turtleState
+		setPenSize max 0.3 :len * 0.09
+		forward :len
+		right :rightAngle
+		binaryTree :leftAngle :rightAngle :len * :rightShrinkRatio :leftShrinkRatio :rightShrinkRatio
+		left :leftAngle + :rightAngle
+		binaryTree :leftAngle :rightAngle :len * :leftShrinkRatio :leftShrinkRatio :rightShrinkRatio
+		setTurtleState :oldState
+	]
+end
+
+to drawSky :width :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "darkColor "#AA8FDB
+	localmake "colorStops createPList
+	setProperty "colorStops 0 :darkColor
+	setProperty "colorStops 0.6 "#CED6EE
+	setProperty "colorStops 1 :darkColor
+	jumpForward :height
+	setPenGradient createLinearGradient :oldPos pos :colorStops "pad
+	setPenSize :width
+	setLineCap "butt
+	backward :height
+
+	; Draw a second gradient to brighten the middle more than the sides.
+	; The effect will be subtle but a few subtle details can make
+	; things look more interesting and mysterious.
+	jumpLeft :width / 2
+	localmake "fromPos pos
+	jumpRight :width
+	localmake "sideColor "#00E5ECFF
+	localmake "colorStops createPList
+	setProperty "colorStops 0 :sideColor
+	setProperty "colorStops 0.5 "#88E8EFFF
+	setProperty "colorStops 1 :sideColor
+	setPenGradient createLinearGradient :fromPos pos :colorStops "pad
+	jumpTo :oldPos
+	forward :height
+	setTurtleState :oldState
+end
+
+to drawLand :width :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#126312
+	setProperty "colorStops 1 "#096709
+	jumpForward :height * 0.52
+	setFillGradient createLinearGradient :oldPos pos :colorStops "pad
+	jumpLeft :width / 2
+	setPenColor "green
+	setLineCap "butt
+	setPenSize :height * 0.001
+	right 90
+	forward :width ; subtle horizon line
+	jumpLeft :height * 0.03
+	right 180
+	polyStart
+	jumpForward :width * 0.8
+	arcLeft 8 :height * 3
+	left 170
+	jumpForward :width * 0.4
+	right 150
+	arcsRight [[11.6 2] [10 4] [8.1 15.5]] :height
+	setHeading :oldHeading + 90
+	jumpForward :width * (0.5 + 0.2665)
+	polyEnd
+	setTurtleState :oldState
+end
+
+to setUpForTrees :height
+	jumpForward :height * 0.52
+	jumpLeft :height * 0.403
+	setLineCap "round
+	setLineJoinStyle "round
+end
+
+to drawTreesAtPoint :height :directionSign
+	binaryTree 40 40 :height * 0.14 0.5 0.5
+	jumpRight :height * :treeSeparationRatio * :directionSign
+	localmake "leftAngle 19
+	localmake "rightAngle 30
+	localmake "leftShrink 0.85
+	localmake "rightShrink 0.65
+	if :directionSign < 0 [
+		localmake "t :leftAngle
+		localmake "leftAngle :rightAngle
+		localmake "rightAngle :t
+
+		localmake "t :leftShrink
+		localmake "leftShrink :rightShrink
+		localmake "rightShrink :t
+	]
+	binaryTree :leftAngle :rightAngle :height * 0.11 :leftShrink :rightShrink
+end
+
+to drawTrees :height
+	localmake "oldState turtleState
+	setUpForTrees :height
+	drawTreesAtPoint :height 1
+	setTurtleState :oldState
+end
+
+to drawTreeReflections :height
+	localmake "oldState turtleState
+	setUpForTrees :height
+	setPenColor "#8000
+	right 180
+	drawTreesAtPoint :height -1
+	setTurtleState :oldState
+end
+
+; Inspired by a drawing in a book called
+; LogoWorks : challenging programs in Logo
+; It was published in 1986.
+; The drawing is on page 113.
+; You can access the book at:
+; https://archive.org/details/logoworks/page/n127/mode/2up
+; Unlike the source of inspiration,
+; color and gradients were added.
+; This drawing was also widened to look more 
+; attractive in the example search. 
+to treesByWaterScene :height
+	localmake "oldState turtleState
+	localmake "width :height * 10
+	drawSky :width :height
+	drawTreeReflections :height
+	drawLand :width :height
+	drawTrees :height
+	setTurtleState :oldState
+end
+
+treesByWaterScene 100

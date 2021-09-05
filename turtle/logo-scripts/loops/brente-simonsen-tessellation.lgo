@@ -1,0 +1,97 @@
+make "colorStops createPList
+setProperty "colorStops 0 "#7fff
+setProperty "colorStops 0.5 "#7fff
+setProperty "colorStops 0.7 "#6fff
+setProperty "colorStops 1 "#0fff
+make "yellowStops createPList
+setProperty "yellowStops 0 "#ff0
+setProperty "yellowStops 0.7 "#ff0
+setProperty "yellowStops 1 "#0ff0
+
+to roundSquareOutline :size :cornerRadius
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "gap :size / 2 - :cornerRadius
+	localmake "oldPenSize penSize
+	localmake "center pos
+	localmake "outerCornerRadius :cornerRadius + :oldPenSize / 2
+	localmake "innerCornerRadius :cornerRadius - :oldPenSize / 2
+	setPenSize :size * 0.008
+	repeat 4 [
+		setHeading :oldHeading + repcount * 90
+		jumpForward :gap
+		jumpLeft :gap + :outerCornerRadius
+		arcRight 90 :outerCornerRadius
+		jumpRight :oldPenSize
+		right 180
+		arcLeft 90 :innerCornerRadius
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by image at
+; https://www.facebook.com/photo/?fbid=7900904276596517
+; which is from Brente Simonsen who's profile is at
+; https://www.facebook.com/bente.etneb
+to brenteSimonsenTeselation :height
+	localmake "oldState turtleState
+	localmake "sizeH :height * 0.1127
+	localmake "sizeV :height * 0.1129
+	localmake "cornerRadius :sizeH * 0.4
+	jumpForward :height / 2
+	localmake "center pos
+	jumpForward :sizeV * 8 / 2
+	localmake "topPos pos
+	setPenSize :height * 0.02
+	setLineCap "butt
+	setPenColor "black
+	setPenGradient createRadialGradient :center :height * 0.4 :colorStops
+	repeat 2 [
+		localmake "offset 0
+		if even? repcount [
+			localmake "offset 1
+		]
+		localmake "outerPos pos
+		repeat 9 [
+			localmake "pos1 pos
+			localmake "maxY 2 * (5 - abs 5 - repcount) - 1
+			jumpLeft (:maxY - 1) * :sizeH / 2
+			if repcount < 5 [
+				localmake "maxY :maxY + :offset
+			]
+			repeat :maxY [
+				roundRect :sizeH :sizeV :cornerRadius
+				jumpRight :sizeH
+			]
+			jumpTo :pos1
+			jumpBackward :sizeV		
+		]
+		jumpTo :outerPos
+		jumpBackward :sizeV / 2
+		jumpLeft :sizeH / 2
+	]
+	jumpTo :topPos
+	setPenGradient createRadialGradient :center :height * 0.5 :yellowStops
+	repeat 2 [
+		localmake "outerPos pos
+		repeat 9 [
+			localmake "pos1 pos
+			localmake "maxY 2 * (5 - abs 5 - repcount) - 1
+			jumpLeft (:maxY - 1) * :sizeH / 2
+			repeat :maxY [
+				roundSquareOutline :sizeH :cornerRadius
+				jumpRight :sizeH
+			]
+			jumpTo :pos1
+			jumpBackward :sizeV		
+		]
+		jumpTo :outerPos
+		jumpBackward :sizeV / 2
+		jumpLeft :sizeH / 2
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "#3c3289
+brenteSimonsenTeselation 100

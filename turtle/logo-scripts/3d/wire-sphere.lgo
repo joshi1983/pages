@@ -1,0 +1,53 @@
+to drawSphereCircles :height
+	localmake "oldState turtleState
+	localmake "center pos
+	localmake "numCircles1 12
+	localmake "numCircles2 6
+	localmake "radius :height / 2
+	localmake "angleLimit2 80
+	localmake "mainThickness :height * 0.005
+	repeat :numCircles1 [
+		setPenSize :mainThickness
+		setPenColor "navy
+		if even? repcount [
+			setPenSize penSize * 2
+			setPenColor "black
+		]
+		rollRight 360 / :numCircles1
+		circle :radius
+	]
+	pitchUp 90
+	repeat :numCircles2 [
+		setPenSize :mainThickness
+		if even? repcount [
+			setPenSize penSize * 1.5
+		]
+		localmake "angle mix :angleLimit2 -:angleLimit2 repRatio
+		localmake "smallRadius abs :radius * cos :angle
+		localmake "sign sign repRatio - 0.5
+		jumpIn :sign * sqrt :radius * :radius - :smallRadius * :smallRadius
+		circle :smallRadius
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+make "timeRatio animation.time / animation.duration
+pitchUp 30
+rollRight 360 * :timeRatio
+drawSphereCircles 100
+
+to animation.snapshotstyle
+	localmake "result createPList
+	setProperty "result "zoom.scale 5
+	output :result
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 3
+	; Edit this if you want to change the length of your animation.
+	localmake "result createPList
+	setProperty "result "duration :minutes * 60 + :seconds
+	output :result
+end

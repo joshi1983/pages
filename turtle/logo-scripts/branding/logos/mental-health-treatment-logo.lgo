@@ -1,0 +1,62 @@
+to getPuzzleGradient :size
+	localmake "oldState turtleState
+	localmake "stopColors createPList
+	setProperty "stopColors 0 "#d2fff3
+	setProperty "stopColors 1 "#fbfadb
+	left 45
+	jumpBackward :size
+	localmake "fromPos pos
+	jumpForward :size * 2
+	localmake "result createLinearGradient :fromPos pos :stopColors "pad
+	setTurtleState :oldState
+	output :result
+end
+
+; Inspired by logo at
+; https://www.youtube.com/@MentalHealthTreatment
+to mentalHealthTreatmentLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "squareCornerRadius :height * 0.05
+	localmake "size (:height + 2 * (((1 / cos 45) - 1) * :squareCornerRadius)) * cos 45
+	localmake "innerSize :height * 0.43
+	localmake "innerCornerRadius :height * 0.03
+	localmake "innerCornerRadius2 :height * 0.0125
+	localmake "size1 :height * 0.138
+	localmake "puzzleAngle 139
+	localmake "puzzleAngle2 360 - (180 - :puzzleAngle) * 2
+	localmake "puzzleRadius :innerSize * 0.14
+	jumpForward :height / 2
+	setPenSize 0
+	setFillColor "#1ab5b1
+	repeat 2 [
+		roundRect :size :size :squareCornerRadius
+		right 45
+	]
+	setHeading :oldHeading
+	setFillGradient getPuzzleGradient :height * 0.2
+	jumpRight :innerSize / 2
+	jumpBackward :innerSize / 2 - :innerCornerRadius - :height * 0.024
+	polyStart
+	jumpForward :innerSize - :innerCornerRadius * 2
+	repeat 2 [
+		arcLeft 90 :innerCornerRadius
+		jumpForward :size1
+		arcLeft :puzzleAngle :innerCornerRadius2
+		arcRight :puzzleAngle2 :puzzleRadius
+		arcLeft :puzzleAngle :innerCornerRadius2
+		jumpForward :size1
+	]
+	arcLeft 90 :innerCornerRadius
+	jumpForward :size1
+	arcRight :puzzleAngle :innerCornerRadius2
+	arcLeft :puzzleAngle2 :puzzleRadius
+	arcRight :puzzleAngle :innerCornerRadius2
+	jumpForward :size1
+	arcLeft 90 :innerCornerRadius
+	polyEnd
+	setTurtleState :oldState
+end
+
+setScreenColor "#d3f3f2
+mentalHealthTreatmentLogo 100
