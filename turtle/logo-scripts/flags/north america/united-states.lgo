@@ -1,0 +1,156 @@
+; United States of American flags
+
+to drawStripes :width :height :totalStripes
+	localmake "oldPos pos
+	localmake "redColor "#c60000
+	localmake "stripSize :height / :totalStripes
+	localmake "numRedStripes 1 + int :totalStripes / 2
+	setPenColor "white
+	setLineCap "butt
+	setPenSize :width
+	forward :height
+	setPenSize :width
+	setPenColor :redColor
+	repeat :numRedStripes [
+		backward :stripSize
+		jumpBackward :stripSize
+	]
+	jumpTo :oldPos
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_the_United_States#/media/File:Flag_of_the_United_States.svg
+;
+; Based mostly on construction sheet at:
+; https://en.wikipedia.org/wiki/Flag_of_the_United_States#/media/File:Flag_of_the_United_States_specification.svg 
+to unitedStatesOfAmericaFlag :width :height
+	localmake "oldState turtleState
+	localmake "blueWidth :width * 0.4
+	localmake "blueHeight :height * 7/13
+	localmake "G :blueWidth / 12
+	localmake "E :blueHeight / 10
+	localmake "redStripeThickness :height / 13
+	localmake "starSize :redStripeThickness * 4 / 5 / 2
+	localmake "H :G * 2
+	localmake "F :E
+	drawStripes :width :height 13
+	jumpLeft (:width - :blueWidth) / 2
+	jumpForward :height - :blueHeight
+	setPenSize :blueWidth
+	setPenColor "#00008c
+	forward :blueHeight
+	jumpLeft :blueWidth / 2 - :G
+	jumpBackward :E
+	setFillColor "white
+	setPenSize 0
+	repeat 4 [
+		repeat 6 [
+			regularStar :starSize 5
+			jumpRight :H
+		]
+		jumpLeft :H * 5.5
+		jumpBackward :F
+		repeat 5 [
+			regularStar :starSize 5
+			jumpRight :H
+		]
+		jumpLeft :H * 5.5
+		jumpBackward :F
+	]
+	repeat 6 [
+		regularStar :starSize 5
+		jumpRight :H
+	]
+	setTurtleState :oldState
+end
+
+to starSpangledBannerStar :size :isIndented
+	localmake "oldHeading heading
+	ifelse :isIndented [
+		left 90 / 5
+	] [
+		right 90 / 5
+	]
+	regularStar :size 5
+	setHeading :oldHeading
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_the_United_States#/media/File:Flag_of_the_United_States_(1795%E2%80%931818).svg
+;
+; At the time of drawing this, the lowest-right star in Wikipedia's SVG was inconsistently rotated.
+; I didn't copy that aspect because other star spangled banner flags found online show that star
+; rotated like its neighbours to the left.
+to starSpangledBannerFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 7 / 5
+	localmake "blueWidth :width * 0.452
+	localmake "blueHeight :height * 8 / 15
+	localmake "starSize :height * 0.04
+	localmake "G :blueWidth * 0.105362
+	localmake "H :blueWidth * 0.158
+	localmake "F :blueHeight / 6
+	drawStripes :width :height 15
+	jumpForward :height - :blueHeight
+	jumpLeft (:width - :blueWidth) / 2
+	stripes :blueWidth :blueHeight ["#002664]
+	setPenSize 0
+	setFillColor "white
+	jumpLeft :blueWidth / 2 - :G
+	jumpForward :F
+	repeat 2 [
+		repeat 3 [
+			starSpangledBannerStar :starSize false
+			jumpRight :H * 2
+		]
+		jumpLeft :H * 5
+		jumpForward :F
+		repeat 3 [
+			starSpangledBannerStar :starSize true
+			jumpRight :H * 2
+		]
+		jumpLeft :H * 7
+		jumpForward :F
+	]
+	repeat 3 [
+		starSpangledBannerStar :starSize false
+		jumpRight :H * 2
+	]
+
+	setTurtleState :oldState
+end
+
+to betsyRossFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 1.9
+	localmake "blueWidth :width / 3
+	localmake "blueHeight :height * 7 / 13
+	localmake "numStars 13
+	localmake "starDistance :blueHeight / 3
+	localmake "starSize :height / 14 / 2
+	drawStripes :width :height 13
+	jumpForward :height - :blueHeight
+	jumpLeft (:width - :blueWidth) / 2
+	stripes :blueWidth :blueHeight ["#002664]
+	jumpForward :blueHeight / 2
+	setPenSize 0
+	setFillColor "white
+	localmake "center pos
+	repeat :numStars [
+		jumpForward :starDistance
+		regularStar :starSize 5
+		right 360 / :numStars
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+make "height 100
+make "separation :height * 4
+jumpLeft :separation
+unitedStatesOfAmericaFlag 190 :height
+jumpRight :separation
+starSpangledBannerFlag :height
+jumpRight :separation
+betsyRossFlag :height

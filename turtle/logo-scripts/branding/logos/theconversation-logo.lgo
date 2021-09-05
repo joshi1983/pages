@@ -1,0 +1,28 @@
+; Inspired by favicon(browser tab icon) at:
+; https://theconversation.com
+to theconversationLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "thickness :height * 0.16
+	localmake "rectHeight :height * 0.722
+	localmake "rectWidth :height * 1.025
+	jumpLeft :rectWidth	
+	localmake "bottomPos pos
+	setPenColor "#d8352a
+	jumpTo :oldPos
+	jumpForward :height - (:rectHeight + :thickness) / 2
+	jumpRight :height * 0.011
+	setFillColor transparent
+	setPenSize :thickness
+	roundRect :rectWidth :rectHeight :rectHeight / 2
+	jumpBackward :rectHeight * 0.45
+	jumpLeft (:rectWidth - :rectHeight * 0.5) / 2
+	left 138.5
+	setPenSize 0
+	setFillColor penColor
+	localmake "triangleHeight distanceToLine :oldPos :bottomPos
+	isoTriangle :height * 0.2 :triangleHeight 
+	setTurtleState :oldState
+end
+
+theconversationLogo 100
