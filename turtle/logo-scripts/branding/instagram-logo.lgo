@@ -1,0 +1,114 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/File:Instagram_logo_2022.svg
+; referenced from:
+; https://en.wikipedia.org/wiki/Instagram
+
+to instagramOuterPath :size
+	localmake "oldState turtleState
+	localmake "straightLength1 :size * 0.52
+	localmake "arcRadius1 (:size - :straightLength1) / 2
+	localmake "arcRadius2 :arcRadius1 * 1.32
+	localmake "arcRadius3 :arcRadius1 * 0.905
+	jumpLeft :straightLength1 / 2
+	right 90
+	polyStart
+	repeat 4 [
+		jumpForward :straightLength1
+		arcLeft 12 :arcRadius2
+		arcLeft 66 :arcRadius3
+		arcLeft 12 :arcRadius2
+	]
+	polyEnd
+	setTurtleState :oldState
+end
+
+to instagramWhiteShapes :size
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "outerSize1 :size * 0.674
+	localmake "circleRadius1 :size * 0.158
+	localmake "size1 :size * 0.1985
+	localmake "straightLength1 :outerSize1 * 0.47
+	localmake "arcRadius1 (:outerSize1 - :straightLength1) / 2
+	localmake "penSize1 :size * 0.066
+	setFillColor transparent
+	jumpForward :size * 0.5
+	setPenColor "white
+	setPenSize :penSize1
+	circle :circleRadius1
+	jumpRight :size1
+	jumpForward :size1
+	setPenSize 0
+	setFillColor "white
+	circle :size * 0.044
+	jumpTo :oldPos
+	jumpForward :size * 0.5 - :outerSize1 / 2
+	jumpLeft :straightLength1 / 2
+	right 90
+	setPenSize :penSize1
+	repeat 4 [
+		forward :straightLength1
+		arcLeft 90 :arcRadius1
+	]
+	closePath
+	setTurtleState :oldState
+end
+
+to instagramGradient1 :size
+	localmake "oldPos pos
+	localmake "gradientRadius :size * 0.8
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#ffd500
+	setProperty "colorStops 0.05 "#ffd500
+	setProperty "colorStops 0.4 "orange
+	setProperty "colorStops 0.7 "#ff2b23
+	setProperty "colorStops 1 "#e0e
+	jumpBackward :size * 0.05
+	jumpLeft :size * 0.15
+	localmake "result createRadialGradient pos pos :gradientRadius :colorStops "pad
+	jumpTo :oldPos
+	output :result
+end
+
+to instagramGradient2 :size
+	localmake "oldPos pos
+	localmake "gradientRadius :size * 0.7
+	jumpForward :size * 1.4
+	jumpLeft :size * 0.5
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#80f
+	setProperty "colorStops 0.65 "#80f
+	setProperty "colorStops 1 "#080f
+	localmake "result createRadialGradient pos pos :gradientRadius :colorStops "pad
+	jumpTo :oldPos
+	output :result
+end
+
+to instagramGradient3 :size
+	localmake "oldPos pos
+	localmake "gradientRadius :size * 0.4
+	jumpForward :size * 0.6
+	jumpRight :size * 0.55
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#ff2b23
+	setProperty "colorStops 1 "#00ff2b23
+	localmake "result createRadialGradient pos pos :gradientRadius :colorStops "pad
+	jumpTo :oldPos
+	output :result
+end
+
+to instagramLogo :size
+	localmake "backgroundGradients [
+		instagramGradient1 :size
+		instagramGradient2 :size
+		instagramGradient3 :size
+	]
+	setPenSize 0
+	repeat count :backgroundGradients [
+		setFillGradient item repcount :backgroundGradients
+		instagramOuterPath :size
+	]
+	instagramWhiteShapes :size
+end
+
+instagramLogo 100

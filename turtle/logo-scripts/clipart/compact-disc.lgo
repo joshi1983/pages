@@ -1,0 +1,70 @@
+; Inspired by
+; https://www.pinterest.ca/pin/155303887645016568/
+to radialColors :minRadius :maxRadius :colors
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "maxAngle 130
+	localmake "numColors count :colors
+	localmake "angleStep :maxAngle / :numColors
+	localmake "angleStep2 :angleStep * 1.05
+	; angleStep2 is slightly larger than angleStep to reduce artifacts showing
+	; between each step.
+	setPenSize 0
+	right 90 - :maxAngle / 2
+	repeat :numColors [
+		jumpForward :minRadius
+		right 90
+		setFillColor item repcount :colors
+		polyStart
+		arcRight :angleStep2 :minRadius
+		left 90
+		forward :maxRadius - :minRadius
+		left 90
+		arcLeft :angleStep2 :maxRadius
+		polyEnd
+		jumpTo :oldPos
+		right 90 + :angleStep
+	]
+	setTurtleState :oldState
+end
+
+to compactDisc :radius
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "minRadius1 :radius * 0.08
+	localmake "minRadius2 :radius * 0.12
+	localmake "minRadius3 :radius * 0.25
+	localmake "minRadius4 :radius * 0.3
+	localmake "maxRadius :radius * 0.95
+	localmake "highlightArcRadius mix :minRadius1 :minRadius4 0.5
+	localmake "colors1 ["green "Sky_Blue "aqua "white "Cornsilk
+"orange "CornflowerBlue "white "AntiqueWhite "brown "navy "black "navy]
+	localmake "colors2 ["navy "black "orange "tan "white "antiqueWhite "cornFlowerBlue "white "Sky_Blue "gray]
+	setPenColor "black
+	setPenSize :radius - :minRadius1
+	setFillColor transparent
+	circle :radius - penSize * 0.5
+	setPenSize :minRadius3 - :minRadius2
+	setPenColor "gray
+	circle :minRadius3 - penSize * 0.5
+	setPenColor "white
+	setPenSize :radius * 0.02
+	setLineCap "round
+	left 90
+	jumpForward :highlightArcRadius
+	right 90
+	arcRight 60 :highlightArcRadius
+	penUp
+	arcRight 120 :highlightArcRadius
+	penDown
+	arcRight 90 :highlightArcRadius
+	jumpTo :oldPos
+	setHeading :oldHeading
+	right 180
+	radialColors :minRadius4 :maxRadius :colors2
+	right 180
+	radialColors :minRadius4 :maxRadius :colors1
+end
+
+setScreenColor "BurlyWood
+compactDisc 100

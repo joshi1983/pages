@@ -1,0 +1,38 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Puerto_Rico#/media/File:Flag_of_Puerto_Rico.svg
+; Referenced from:
+; https://en.wikipedia.org/wiki/Puerto_Rico
+
+to puertoRicoFlag :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "width :height * 3/2
+	localmake "stripeThickness :height / 5
+	localmake "angle 120
+	setLineCap "butt
+	setPenColor "#e00
+	setPenSize :width
+	forward :height
+	setPenColor "white
+	repeat 2 [
+		jumpBackward :stripeThickness
+		backward :stripeThickness
+	]
+	jumpTo :oldPos
+	jumpLeft :width / 2
+	setPenSize 0
+	setFillColor "#0050F0
+	polyStart
+	jumpForward :height
+	right :angle
+	jumpForward :height / 2 / -cos :angle
+	polyEnd
+	setHeading :oldHeading
+	setFillColor "white
+	jumpLeft :width * 0.38515
+	isotoxalStar :height * 0.1684 :height * 0.0639 5	
+	setTurtleState :oldState
+end
+
+puertoRicoFlag 100

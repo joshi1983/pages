@@ -1,0 +1,155 @@
+; Most of this is inspired by
+; https://www.pinterest.ca/pin/11118330317350054/
+
+to hexagon :radius
+	localmake "oldPos pos
+	localmake "sideLength :radius
+	jumpForward :radius
+	right 90 + 180 / 6
+	repeat 6 [
+		forward :sideLength
+		right 360 / 6
+	]
+	jumpTo :oldPos
+end
+
+to triangle :size
+	localmake "oldState turtleState
+	localmake "sideLength :size * 2 * sin 60
+	jumpForward :size
+	right 90 + 60
+	repeat 3 [
+		forward :sideLength
+		right 360 / 3
+	]
+	setTurtleState :oldState
+end
+
+to starStraightLines :size
+	localmake "oldPos pos
+	localmake "oldState turtleState
+	localmake "largeSize :size * 4 / 5
+	localmake "smallSize :size * 2 / 5
+	repeat 3 [
+		jumpBackward :largeSize
+
+		forward :largeSize * 2
+		jumpTo :oldPos
+		right 360 / 6
+	]
+	hexagon :largeSize
+	hexagon :smallSize
+	repeat 2 [
+		triangle :largeSize
+		triangle :smallSize
+		right 360 / 6
+	]
+	setTurtleState :oldState
+end
+
+to circles :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "smallRadius :size / 5
+	localmake "largeRadius :smallRadius * 3
+	setFillColor transparent
+	setPenSize :size * 0.01
+	circle :smallRadius
+	circle :largeRadius
+	repeat 6 [
+		repeat 2 [
+			jumpForward :smallRadius * 2
+			circle :smallRadius
+		]
+		jumpTo :oldPos
+		right 360 / 6
+	]
+	setHeading :oldHeading
+end
+
+to circles2 :size
+	localmake "radius :size * 0.5
+	circle :radius
+	repeat 6 [
+		circleRight :radius
+		right 360 / 6
+	]
+end
+
+to circleStar :size
+	circles :size
+	starStraightLines :size
+end
+
+to straightRingPiece :size
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "size1 :size * 0.278
+	jumpForward :size - :size1
+	localmake "pos1 pos
+	setPenSize :size * 0.01
+	localmake "previousPos pos
+	localmake "d 0
+	repeat 5 [
+		forward :size1
+		localmake "pos2 pos
+		ifelse (or (repcount = 2) (repcount = 4)) [
+			setHeading towards :previousPos
+			localmake "d distance :previousPos
+			forward :d
+		] [
+			if repcount = 5 [
+				right 180 - (180 - 360 / 5) / 2
+				forward :d
+			]
+		]
+		localmake "previousPos :pos2
+		jumpTo :pos1
+		setHeading :oldHeading + repcount * 360 / 5
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://www.pinterest.ca/pin/330451691419501772/
+to straightRing :size
+	localmake "numSides 10
+	repeat :numSides [
+		straightRingPiece :size
+		right 360 / :numSides
+	]
+end
+
+to designLabel :title
+	localmake "oldState turtleState
+	localmake "fontSize :size * 0.2
+	setPenSize 0
+	jumpBackward :size * 0.5
+	right 90
+	jumpForward :size + :fontSize
+	left 90
+	setFontSize :size * 0.2
+	setFillColor "black
+	label :title
+	setTurtleState :oldState
+end
+
+setScreenColor transparent
+make "size 100
+make "between :size * 3
+right 90
+jumpForward -:between * 1.5
+designLabel "circles2
+circles2 :size
+jumpForward :between
+designLabel "circles
+circles :size
+jumpForward :between
+designLabel "straightRing
+straightRing :size
+jumpForward :between
+designLabel "starStraightLines
+starStraightLines :size
+jumpForward :between
+designLabel "circleStar
+circleStar :size

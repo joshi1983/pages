@@ -1,0 +1,93 @@
+; Inspired by
+; https://www.pinterest.ca/pin/105482816264901265/
+
+to drawBackground :size
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "white
+	setProperty "colorStops 0.6 "white
+	setProperty "colorStops 1 screenColor
+	localmake "gradient createRadialGradient pos pos :size :colorStops "pad
+	setFillGradient :gradient
+	setPenSize 0
+	circle :size
+end
+
+to triangleCurve :size :numPoints
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "lineSize :size * 0.07 / :numPoints
+	localmake "dotSize :lineSize * 2
+	localmake "step :size / :numPoints
+	localmake "points []
+	penUp
+	repeat :numPoints [
+		forward :step
+		queue "points pos
+	]
+	setPos :oldPos
+	repeat :numPoints [
+		setHeading :oldHeading + 60
+		localmake "otherPoint item (:numPoints + 1 - repcount) :points
+		forward :step
+		localmake "tempPos pos
+		setHeading towards :otherPoint
+		penDown
+		setPenSize :lineSize
+		forward distance :otherPoint
+		setPenSize 0
+		circle :dotSize
+		jumpTo :tempPos
+		circle :dotSize
+	]
+	setPos :oldPos
+	circle :dotSize
+	setHeading :oldHeading
+end
+
+to N5 :size
+	localmake "oldHeading heading
+	localmake "oldPos pos
+	localmake "oldPenColor penColor
+	localmake "numDots 10
+	localmake "size1 :size * 0.5
+	localmake "size2 :size * cos 30
+
+	setHeading :oldHeading
+	
+	jumpForward :size
+	right 120
+	penDown
+	setPenColor fillColor
+	setPenSize :size * 0.01
+	repeat 6 [
+		forward :size
+		right 60
+	]
+	penUp
+	jumpTo :oldPos
+	setHeading :oldHeading
+	setPenColor :oldPenColor
+	repeat 6 [
+		triangleCurve :size1 :numDots
+		right 180 / 6
+		forward :size2
+		right 150
+		triangleCurve :size1 :numDots
+		left 60
+		triangleCurve :size1 :numDots
+		right 120
+		triangleCurve :size1 :numDots
+		setPos :oldPos
+		setHeading :oldHeading + repcount * 360 / 6
+	]
+
+	penUp
+	setHeading :oldHeading
+	jumpTo :oldPos
+end
+
+setPenColor "#f80 ; string/line color
+setScreenColor "#ddd
+drawBackground 150
+setFillColor "#005 ; dot color
+N5 100

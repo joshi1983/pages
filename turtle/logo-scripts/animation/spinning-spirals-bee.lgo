@@ -1,0 +1,55 @@
+; Inspired by
+; https://www.pinterest.ca/pin/35677022025469389/
+; Also similar to:
+; https://www.pinterest.ca/pin/376965431309438683/
+to spinningSpiralsBee :radius :timeRatio
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "numCircles 10
+	localmake "numAngles 8
+	localmake "angleStep 360 / :numAngles
+	localmake "radiusStep :radius / :numCircles
+	localmake "twistStep :timeRatio * :angleStep
+	setPenSize 0
+	setFillColor "white
+	circle :radius
+	setFillColor "black
+	localmake "heading1 :oldHeading
+	repeat :numCircles [
+		localmake "radius1 (:radius - :radiusStep) * (1 - repRatio)
+		localmake "radius2 :radius1 + :radiusStep
+		repeat :numAngles [
+			setHeading :heading1 + repcount * 360 / :numAngles 
+			jumpForward :radius1
+			polyStart
+			jumpForward :radiusStep
+			right 90
+			arcRight :angleStep / 2 :radius2
+			right 90
+			jumpForward :radiusStep
+			right 90
+			if :radius1 > 0 [
+				arcLeft :angleStep / 2 :radius1
+			]
+			polyEnd
+			
+			jumpTo :oldPos
+		]
+		localmake "heading1 :heading1 + :twistStep
+	]
+end
+
+setScreenColor "black
+spinningSpiralsBee 270 interpolateRatio easeInOut animation.time / animation.duration
+
+to animation.snapshotstyle
+	localmake "result createPList
+	output :result
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 3
+	; Edit this if you want to change the length of your animation.
+	output :minutes * 60 + :seconds
+end

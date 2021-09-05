@@ -1,0 +1,43 @@
+; Inspired by the logo at:
+; https://upload.wikimedia.org/wikipedia/commons/2/21/Flag_of_Vietnam.svg
+; Referenced from:
+; https://en.wikipedia.org/wiki/Vietnam
+
+to star :size
+	localmake "oldState turtleState
+	localmake "scale (cos 18) + (sin 18) / (tan 180 / 5)
+	jumpForward :size * :scale
+	right 72 / 4
+	polyStart
+	repeat 5 [
+		right 144
+		jumpForward :size
+		left 72
+		jumpForward :size
+	]
+	polyEnd
+	setTurtleState :oldState
+end
+
+to vietnamFlag :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "width :height * 3/2
+	jumpForward :height / 2
+	right 90
+	setPenSize :height
+	setPenColor "#da251d
+	jumpBackward :width / 2
+	setLineCap "butt
+	forward :width
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height / 2
+	setFillColor "yellow
+	setPenSize 0
+	star :height * 0.218
+	setTurtleState :oldState
+end
+
+vietnamFlag 200

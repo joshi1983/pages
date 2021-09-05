@@ -1,0 +1,65 @@
+; Inspired by:
+; https://interestingengineering.com/icons/android-icon-192x192.png?v=14
+; which is the logo for:
+; https://interestingengineering.com
+
+; The site have some interesting engineering-related content.
+
+to interestingEngineeringLogo :size
+	localmake "oldState turtleState
+	localmake "fontHeight :size * 0.78
+	localmake "oldHeading heading
+
+	; Draw blue background.
+	setPenSize :size
+	setPenColor "#007fc0
+	setLineCap "butt
+	forward :size
+
+	; Draw I.
+	jumpLeft :size * 0.312
+	jumpBackward (:size - :fontHeight) / 2
+	setPenSize :size * 0.16
+	setPenColor "white
+	backward :fontHeight
+
+	; Draw lower right part of E.
+	; The parallelogram
+	localmake "slantAngle 30
+	localmake "parallelogramWidth :size * 0.12
+	localmake "letterThickness :size * 0.151
+	setPenSize 0
+	setFillColor "white
+	jumpRight :size * 0.71
+	polyStart
+	jumpLeft :parallelogramWidth
+	left :slantAngle
+	jumpForward :letterThickness / cos :slantAngle
+	setHeading :oldHeading + 90
+	jumpForward :parallelogramWidth
+	polyEnd
+
+	; Draw most of E.
+	localmake "eSize1 :size * 0.093
+	localmake "eSize2 (:fontHeight - 3 * :letterThickness) / 2
+	localmake "eSize3 :size * 0.235
+	localmake "eSize4 :size * 0.317
+	jumpBackward :parallelogramWidth * 1.62
+	polyStart
+	jumpBackward :eSize1
+	jumpLeft :eSize2
+	jumpForward :eSize3
+	jumpLeft :letterThickness
+	jumpBackward :eSize3
+	jumpLeft :eSize2
+	jumpForward :eSize4
+	jumpLeft :letterThickness
+	jumpBackward :eSize4 + :letterThickness
+	jumpRight :fontHeight
+	jumpForward :letterThickness + :eSize1 + :letterThickness * tan :slantAngle
+	polyEnd
+
+	setTurtleState :oldState
+end
+
+interestingEngineeringLogo 100

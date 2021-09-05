@@ -1,0 +1,69 @@
+<p>
+Making drawings can be exciting but you may want to animate your drawing.  Maybe you want to draw something different as time changes.
+</p>
+
+<h3>Step 1</h3>
+<p>
+The quickest first step to converting your drawing into an animation is to click <strong>Edit</strong> -&gt; <strong>Set up Animation</strong> in your code editor's menu.
+It will prompt you for how long you want your animation to last.
+Clicking "Add animation setup" will add the necessary procedures to your code.
+</p>
+
+<h3>animation.setup</h3>
+<p>
+The animation.setup procedure returns the number of seconds that your animation will last.
+This procedure should have a very simple implementation that basically returns a number.
+animation.setup should always return the
+same number and therefore it should never call <span class="command">animation.time</span>.
+</p>
+
+<h3>animation.snapshotstyle</h3>
+<p>The animation.snapshotstyle procedure returns a property list that expresses zoom and camera position.
+The animation.snapshotstyle properties are used when rendering frames and snapshots from your animation.
+You will often want to call <span class="command">animation.time</span> within your 
+animation.snapshotstyle procedure to change your zoom and camera position based on time.
+</p>
+<p>
+A frame may be made out of more than one snapshot if you export an animation using simulated motion blur.
+</p>
+
+<h3>Step 2</h3>
+<p>Use animation.time.  animation.time returns the number of seconds into your animation.  Your drawing will animate 
+simply by changing how it looks based on the value of animation.time.</p>
+
+<h4>Example with rotating line</h4>
+<code class="pastable">right animation.time * 36<br>
+forward 100<br>
+; The above 2 lines represent an animation that rotates a line around the home position
+; The full 360 degree rotation will take 10 seconds.<br></code>
+<p>Without the animation procedures before, the animation will default to 10 seconds long.</p>
+
+<h4>Example Including the Procedures</h4>
+<p>Defining the animation.snapshot and animation.setup procedures will make the properties of your animation more clear.
+Below is the example after clicking <strong>Edit</strong> -&gt; <strong>Set Up Animation</strong> as described in Step 1.
+</p>
+<code class="pastable">right animation.time * 36<br>
+forward 100<br>
+; The above 2 lines represent an animation that rotates a line around the home position
+; The full 360 degree rotation will take 10 seconds.<br>
+
+; The below procedures express that the animation is 10 seconds long and that only default snapshot properties are to be used.<br>
+<br>
+to animation.snapshotstyle<br>
+&nbsp;&nbsp;localmake "result createPList<br>
+&nbsp;&nbsp;output :result<br>
+end<br>
+<br>
+to animation.setup<br>
+&nbsp;&nbsp;localmake "minutes 0<br>
+&nbsp;&nbsp;localmake "seconds 10<br>
+&nbsp;&nbsp;; Edit this if you want to change the length of your animation.<br>
+&nbsp;&nbsp;output :minutes * 60 + :seconds<br>
+end</code>
+
+<h3>More Animation Examples</h3>
+<p>Several animations can be loaded from examples.</p>
+<ol>
+	<li>Click <strong>File</strong> -&gt; <strong>Load Examples</strong></li>
+	<li>Type 'animation' to filter down to animations.</li>
+</ol>

@@ -1,0 +1,47 @@
+; Inspired by
+; https://www.pinterest.ca/pin/346988346281088204/
+;
+; A similar design is also at:
+; https://n-o-r-t-h-e-r-n.tumblr.com/post/136202134695
+
+to waveGrower :size :tRatio
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "colors ["darkRed "navy "green]
+	localmake "numCycles count :colors
+	localmake "numLinesPerCycle 32
+	repeat :numCycles [
+		localmake "outerRatio 0.5 + 0.5 * sin :numCycles * 360 * (repcount * 0.25 / :numCycles + :tRatio)
+		localmake "size1 :size * (0.37 + :outerRatio * 0.2)
+		localmake "size2 :size * 0.4
+		localmake "endDotSize :size * (0.015 * :outerRatio + 0.005)
+		setPenColor item repcount :colors
+		setFillColor penColor
+
+		repeat :numLinesPerCycle [
+			jumpTo :oldPos
+			jumpForward :size1
+			circle :endDotSize
+			forward :size2
+			circle :endDotSize
+			right 360 / :numLinesPerCycle
+		]
+		right 360 / :numLinesPerCycle / :numCycles
+	]
+	setTurtleState :oldState
+end
+
+waveGrower 100 animation.time / animation.duration
+
+to animation.snapshotstyle
+	localmake "result createPList
+	setProperty "result "zoom.scale 2.5
+	output :result
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 3
+	; Edit this if you want to change the length of your animation.
+	output :minutes * 60 + :seconds
+end

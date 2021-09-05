@@ -1,0 +1,186 @@
+; Inspired by:
+; https://upload.wikimedia.org/wikipedia/commons/6/66/Netscape_logo.svg
+; Referenced by:
+; https://en.wikipedia.org/wiki/Netscape
+
+; The JavaScript programming language was invented as a feature of Netscape.
+; Netscape has been unsupported for many years but a lot of its code was
+; adopted, rewritten, and maintained in Firefox.
+; In a way, Firefox is the newer brand of Netscape.
+
+to tShape :height
+	localmake "oldState turtleState
+	localmake "width :height * 0.2
+	localmake "size1 :width * 0.14
+	localmake "size2 :width * 0.2
+	localmake "size3 :height * 0.86
+	localmake "size4 :height * 0.0598
+	localmake "arcAngle1 13
+	localmake "arcAngle2 65
+	localmake "arcAngle3 12
+	localmake "arcRadius1 :width * 0.9
+	localmake "arcRadius2 :width * 0.57
+	localmake "arcRadius3 :width * 0.5
+	setPenSize 0
+	polyStart
+	jumpForward :size1
+	right 90
+	jumpForward :size2
+	arcLeft :arcAngle1 :arcRadius1
+	arcLeft :arcAngle2 :arcRadius2
+	arcLeft :arcAngle3 :arcRadius3
+	jumpForward :size3
+	jumpRight :size4 ; symmetry
+	jumpBackward :size3
+	right 180
+	arcLeft :arcAngle3 :arcRadius3
+	arcLeft :arcAngle2 :arcRadius2
+	arcLeft :arcAngle1 :arcRadius1
+	jumpForward :size2
+	jumpRight :size1
+	polyEnd
+	setTurtleState :oldState
+end
+
+to tShapBackground :fontHeight
+	localmake "oldState turtleState
+	localmake "width :fontHeight * 0.2
+	localmake "size1 :width * 0.14
+	localmake "size2 :width * 0.2
+	localmake "size3 :fontHeight * 0.8
+	localmake "arcAngle1 13
+	localmake "arcAngle2 65
+	localmake "arcAngle3 12
+	localmake "arcRadius1 :width * 0.9
+	localmake "arcRadius2 :width * 0.57
+	localmake "arcRadius3 :width * 0.5
+	setFillColor "#c3dcda
+	left 50
+	polyStart
+	jumpForward :width * 0.07
+	right 50
+	jumpForward :size1
+	right 90
+	jumpForward :size2
+	arcLeft :arcAngle1 :arcRadius1
+	arcLeft :arcAngle2 :arcRadius2
+	arcLeft :arcAngle3 :arcRadius3
+	jumpForward :size3
+	jumpRight :width * 0.08
+	jumpBackward :fontHeight * 0.9
+	polyEnd
+	setTurtleState :oldState
+end
+
+to diagonalShape :fontHeight
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "width :fontHeight * 0.2
+	localmake "size1 :width * 0.11
+	localmake "size2 :width * 0.3
+	localmake "angle1 48.4
+	localmake "angle2 83
+	localmake "arcAngle1 :angle1 + :angle2 - 90
+	localmake "arcRadius1 :width * 0.5
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#c3dcda
+	setProperty "colorStops 1 "#fff
+	jumpLeft :width * 0.5
+	localmake "pos1 pos
+	left :angle1 + :angle2
+	jumpForward :width * 0.2
+	setFillGradient createLinearGradient :pos1 pos :colorStops "pad
+	jumpTo :oldPos
+	setHeading :oldHeading
+	polyStart
+	jumpForward :size1
+	left :angle2
+	jumpForward :size2
+	arcRight :arcAngle1 :arcRadius1
+	jumpForward :fontHeight * 0.982
+	localmake "heading1 heading
+	setHeading :oldHeading + 5.5
+	jumpLeft :fontHeight * 0.171
+	jumpBackward :fontHeight * 0.063
+	setHeading :heading1 + 180
+	jumpForward :fontHeight * 1
+	polyEnd
+	setTurtleState :oldState
+end
+
+to netscapeLogo :radius
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "fontHeight :radius * 0.975
+	localmake "size1 :radius * 0.41
+	localmake "size2 :radius * 0.4005
+	localmake "radius1 :radius * 0.8962
+	setPenSize :radius * 0.033
+	setPenColor "#a2a4a4
+	jumpForward :radius
+	localmake "pos1 pos
+	setFillColor "#7fc0c4
+	circle :radius - penSize / 2
+	setFillColor "#007c85
+	setPenSize 0
+	circle :radius1
+	localmake "center pos
+
+	setFillColor "white
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :radius * 1.51
+	jumpRight :radius * 0.51
+	right 180
+	tShape :fontHeight
+
+	jumpTo :center
+	setHeading :oldHeading
+	jumpBackward :size1
+	jumpRight sqrt :radius1 * :radius1 - :size1 * :size1
+	left 75
+	setFillColor "black
+	polyStart
+	arcLeft 30.70873 :radius * 3
+	left 102.225085
+	arcLeft 124.82 :radius1
+	polyEnd
+
+	setFillColor "white
+	jumpTo :pos1
+	setHeading :oldHeading
+	jumpBackward :size2
+	jumpRight sqrt :radius1 * :radius1 - :size2 * :size2
+	left 72.7
+	polyStart
+	arcLeft 32.207 :radius * 2.92
+	left 99
+	arcLeft 7 :radius1
+	left 76.8
+	arcRight 12 :radius * 2.5
+	arcRight 10 :radius * 2.3
+	arcRight 2.6659 :radius * 14
+	left 69.281
+	arcLeft 1.1616 :radius1	
+	polyEnd
+
+	setFillColor "white
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :radius * 0.52
+	jumpLeft :radius * 0.633
+	tShapBackground :fontHeight
+	tShape :fontHeight
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :radius * 1.502
+	jumpLeft :radius * 0.633
+	right 180
+	diagonalShape :fontHeight
+	setTurtleState :oldState
+end
+
+netscapeLogo 50

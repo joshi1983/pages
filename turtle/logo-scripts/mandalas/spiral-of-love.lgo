@@ -1,0 +1,204 @@
+make "darkPinkLeafColor "#C81E3A
+
+to getSpiralOfLoveBackgroundGradient :radius
+	localmake "colorStops createPList
+	setProperty "colorStops 0 mix "navy transparent 0.2
+	setProperty "colorStops 1 mix "navy transparent 0.001
+	output createRadialGradient pos pos :radius :colorStops "pad
+end
+
+to leaf :size :angle
+	localmake "oldHeading heading
+	localmake "arcRadius :size / 2 / sin :angle
+	left :angle
+	polyStart
+	arcRight :angle * 2 :arcRadius
+	right 180 - :angle * 2
+	arcRight :angle * 2 :arcRadius
+	polyEnd
+	setHeading :oldHeading
+end
+
+to shrinkingArcRight :angle :radius
+	localmake "oldState turtleState
+	localmake "oldPenSize penSize
+	localmake "angle1 2 * arcSin :oldPenSize / :radius
+	localmake "angle2 :angle - :angle1
+	localmake "arcRadius1 :radius - penSize / 2
+	localmake "arcRadius2 :radius + penSize / 2
+	setPenSize 0
+	setFillColor penColor
+	jumpLeft :oldPenSize * 0.5
+	polyStart
+	arcRight :angle :arcRadius1
+	right 180 - :angle1
+	arcLeft :angle2 :arcRadius2
+	polyEnd
+	setTurtleState :oldState
+end
+
+to leafShadow :len
+	localmake "darkest "#bbb
+	localmake "brightest "#ddd
+	localmake "numIterations 3
+	localmake "maxAngle 50
+	localmake "minAngle 35
+	repeat :numIterations [
+		localmake "ratio repRatio
+		setFillColor mix :darkest :brightest :ratio
+		localmake "angle mix :minAngle :maxAngle :ratio
+		leaf :len :angle
+	]
+end
+
+to pinkLeaf :len
+	localmake "oldState turtleState
+	setFillColor "#FFA8BE
+	setPenColor :darkPinkLeafColor
+	leaf :len 30
+	setFillColor mix fillColor "white 0.5
+	setPenSize 0
+	leaf :len 15
+	setTurtleState :oldState
+end
+
+to purpleLeaf :len
+	localmake "oldState turtleState
+	localmake "purpleColor "#BD00BD
+	localmake "darkRedColor "#6B0000
+	setFillColor :purpleColor
+	setPenColor :darkRedColor
+	leaf :len 30
+	setFillColor mix fillColor "white 0.5
+	setPenSize 0
+	leaf :len 15
+	setTurtleState :oldState
+end
+
+to button :radius
+	localmake "darkRedColor "#6B0000
+	setPenColor :darkRedColor
+	setFillColor "#f00
+	circle :radius
+end
+
+to spiralPart1 :size
+	localmake "oldState turtleState
+	pinkLeaf :size
+	jumpForward :size
+	left 360 * 3 / 6
+	repeat 5 [
+		right 360 / 6
+		ifelse repcount = 4 [
+			pinkLeaf :size
+		] [
+			purpleLeaf :size
+		]
+	]
+	jumpBackward :size
+	left 60
+	pinkLeaf :size
+	jumpForward :size
+	right 30
+	setPenColor :darkPinkLeafColor
+	shrinkingArcRight 60 :size
+
+	setTurtleState :oldState
+end
+
+to darkTriangles :leafSize
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	setFillColor "black
+	setPenSize 0
+	repeat 2 [
+		right 60
+		jumpForward :leafSize
+		left 60
+		polyStart
+		repeat 2 [
+			right 120
+			jumpForward :leafSize
+		]
+		polyEnd
+		jumpTo :oldPos
+		left 60
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://www.pinterest.fr/pin/707698528975064561/
+to spiralOfLove :size
+	localmake "oldState turtleState
+	localmake "leafSize :size * 0.43
+	localmake "buttonSize :size * 0.02
+	localmake "penSize1 :size * 0.05
+	localmake "penSize2 :size * 0.01
+	setPenColor "#4C0080
+	setPenSize :penSize1
+	setFillGradient getSpiralOfLoveBackgroundGradient :size
+	circle :size - :penSize1 * 0.5 - :penSize2 * 0.5
+	setFillColor transparent
+	setPenSize :penSize2
+	setPenColor "#808
+	circle :size - :penSize1 - :penSize2 * 0.5
+	circle :size - :penSize2 * 0.5
+	darkTriangles :leafSize
+	setLineJoinStyle "round
+	setPenSize 0
+	localmake "darkest "#5000
+	localmake "brightest "#1000
+	localmake "numIterations 3
+	localmake "maxAngle 50
+	localmake "minAngle 35
+	repeat :numIterations [
+		localmake "ratio repRatio
+		setFillColor mix :darkest :brightest :ratio
+		localmake "angle mix :minAngle :maxAngle :ratio
+		repeat 6 [
+			leaf :leafSize :angle
+			right 360 / 6
+		]
+	]
+	setPenSize :penSize2
+	repeat 6 [
+		spiralPart1 :leafSize
+		right 360 / 6
+	]
+
+	; draw buttons in the spiral parts.
+	repeat 6 [
+		jumpForward :leafSize
+		button :buttonSize
+		jumpBackward :leafSize
+		right 360 / 6
+	]
+
+	; draw button at very center.
+	button :buttonSize
+
+	setTurtleState :oldState
+end
+
+to framingGradient :width :height
+	localmake "oldState turtleState
+	localmake "radius1 :width / 2
+	localmake "colorStops createPList
+	localmake "threshold :height / :width
+	setProperty "colorStops 0 "#0fff
+	setProperty "colorStops :threshold * 0.99 "#0fff
+	setProperty "colorStops :threshold * 1.01 "#5008
+	setProperty "colorStops (mix :threshold 1 0.5) mix :darkPinkLeafColor transparent 0.2
+	setProperty "colorStops 1 "#0008
+	setPenGradient createRadialGradient pos pos :radius1 :colorStops "pad
+	jumpBackward :height / 2
+	setPenSize :width
+	setLineCap "butt
+	forward :height
+	setTurtleState :oldState
+end
+
+make "radius 100
+framingGradient 1500 :radius * 2
+spiralOfLove :radius

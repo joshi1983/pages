@@ -1,0 +1,56 @@
+; Inspired by
+; https://p5art.tumblr.com/post/133742199703/morph-glc-code
+
+make "colors ["red "yellow  "lime "blue "purple]
+
+to regularPolygon :numSides :size
+	localmake "oldState turtleState
+	localmake "len :size * 2 * sin 180 / :numSides
+	jumpForward :size
+	right 90 + 180 / :numSides
+	if :numSides > 2 [
+		polyStart
+		repeat :numSides [
+			jumpForward :len
+			right 360 / :numSides
+		]
+		polyEnd
+	]
+	setTurtleState :oldState
+end
+
+to polygonCircle :largeRadius :smallRadius :angle
+	localmake "oldPos pos
+	setPenSize :smallRadius * 0.05
+	setPenColor "white
+	setFillColor "red
+	localmake "ratio (:angle * 10 / 360)
+	localmake "ratio :ratio - int :ratio
+	localmake "ratio interpolateRatio easeInOut :ratio
+	right :ratio * 36
+	repeat 10 [
+		localmake "ratio1 (repcount - 1 + :ratio) / 10
+		localmake "numSides 3 + abs (repcount + :ratio - 6)
+		jumpForward :largeRadius - :smallRadius
+		setFillColor mixItems :colors :ratio1
+		regularPolygon :numSides :smallRadius
+		jumpTo :oldPos
+		right 360 / 10
+	]
+end
+
+setScreenColor "black
+polygonCircle 100 20 animation.time * 36
+
+to animation.snapshotstyle
+	localmake "result createPList
+	setProperty "result "zoom.scale 2.4
+	output :result
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 10
+	; Edit this if you want to change the length of your animation.
+	output :minutes * 60 + :seconds
+end

@@ -1,0 +1,55 @@
+; Inspired by:
+; https://www.pinterest.ca/pin/836262224571910087/
+
+to fillCurvedPath :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "size1 :size * 0.297
+	localmake "size2 :size * 0.2
+	localmake "angle1 150
+	localmake "angle2 :angle1 - 360 / 6
+	jumpForward :size
+	right 90
+	arcRight :angle1 * -0.5 :size1
+	penUp
+	polyStart
+	repeat 6 [
+		arcRight :angle1 :size1
+		arcLeft :angle2 :size2
+	]
+	polyEnd
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to wavingSpiral :size
+	localmake "numContours 80
+	localmake "step :size / :numContours
+	setPenSize 0
+	repeat :numContours [
+		ifelse even? repcount [
+			setFillColor "white
+		] [
+			setFillColor "black
+		]
+		fillCurvedPath :size
+		localmake "size :size - :step
+		right 0.6 * animation.time
+	]
+end
+
+setFillColor "red
+wavingSpiral 150
+
+to animation.snapshotstyle
+	localmake "result createPList
+	setProperty "result "zoom.scale 4
+	output :result
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 5
+	; Edit this if you want to change the length of your animation.
+	output :minutes * 60 + :seconds
+end

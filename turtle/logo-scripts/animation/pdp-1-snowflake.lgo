@@ -1,0 +1,154 @@
+; Inspired by graphics program at:
+; https://youtu.be/1EWQYAfuMYw?t=337
+; 5:37 to 8:35 shows the snowflake animation.
+; It was a program written by an MIT student for the PDP-1 computer.
+; The original program would have been written in machine code.
+ 
+; PDP-1 was sold from 1959 to 1969.
+; You can learn more about PDP-1 by watching the rest of the video or visiting:
+; https://en.wikipedia.org/wiki/PDP-1
+
+; Even 19 years later, the newer PDP-11(not PDP-1) was usually programmed with machine code.
+; https://youtu.be/XV-7J5y1TQc?t=215 shows how the much newer PDP-11 
+; could load a program's machine code and execute a program.
+
+to powerCurves :size :dotSize :timeRatio
+	localmake "oldPos pos
+	localmake "size1 :size * 0.5
+	localmake "size2 :size
+	localmake "numSamples 20
+	localmake "timeRatio max 0.00001 :timeRatio * 3 
+	repeat 6 [
+		jumpForward :size1
+		jumpLeft :size2 / 2
+		localmake "pos1 pos
+		repeat :numSamples [
+			localmake "ratio (repcount - 1) / :numSamples
+			jumpForward :size2 * power (abs (:ratio - 0.5)) 1 / :timeRatio
+			jumpRight :size2 * :ratio
+			circle :dotSize
+			jumpTo :pos1
+		]
+		jumpTo :oldPos
+		right 360 / 6
+	]
+end
+
+to snowflake1 :size :dotSize :timeRatio
+	setPenSize :dotSize
+	setPenColor fillColor
+	localmake "largeSize :size * (0.8 + 0.2 * :timeRatio)
+	localmake "smallSize :largeSize * 0.6
+	localmake "largeSize2 :largeSize * (0.5 + 0.8 * :timeRatio)
+	localmake "smallSize2 :largeSize * 0.5
+	setFillColor transparent
+	right :timeRatio * 60
+	isotoxalStar :largeSize :smallSize 6
+	right 180 / 6
+	isotoxalStar :largeSize2 :smallSize2 6
+end
+
+to snowflake2 :size :dotSize :numRepeats :timeRatio
+	localmake "oldPos pos
+	repeat :numRepeats [
+		localmake "ratio repRatio
+		localmake "ratio :timeRatio / 6 + :ratio
+		localmake "ratio :ratio * 6 - (int :ratio * 6)
+		localmake "angle :ratio * 360
+		localmake "radius :size * 0.4 / cos :angle
+		jumpForward :radius
+		circle :dotSize
+		jumpTo :oldPos
+		right 360 / :numRepeats
+	]
+	powerCurves :size :dotSize :timeRatio
+end
+
+to snowflake3 :size :dotSize :numRepeats :timeRatio
+	localmake "oldPos pos
+	repeat :numRepeats [
+		localmake "ratio :timeRatio / 6 + repRatio
+		localmake "ratio :ratio * 6 - (int :ratio * 6)
+		localmake "radius :size * (0.6 + 0.4 * sin 360 * :ratio)
+		jumpForward :radius
+		circle :dotSize
+		jumpTo :oldPos
+		right 360 / :numRepeats
+	]
+end
+
+to snowflake4 :size :dotSize :numRepeats :timeRatio
+	localmake "oldPos pos
+	localmake "minRadius :size * 0.05
+	localmake "maxRadius :size
+	repeat :numRepeats [
+		localmake "ratio repRatio
+		localmake "ratio :timeRatio / 6 + :ratio
+		localmake "ratio :ratio * 6 - (int :ratio * 6)
+		localmake "angle :ratio * 360
+		localmake "radius mix :minRadius :maxRadius clamp (0.5 * tan :angle) / 2 0 1
+		jumpForward :radius
+		circle :dotSize
+		jumpTo :oldPos
+		right 360 / :numRepeats
+	]
+	powerCurves :size :dotSize 1 - :timeRatio
+end
+
+to snowflake :size :timeRatio
+	localmake "oldState turtleState
+	localmake "numRepeats 100
+	localmake "dotSize :size * 0.01
+	ifelse :timeRatio < 0.5 [
+		ifelse :timeRatio < 0.25 [
+			snowflake1 :size :dotSize :timeRatio * 4
+		] [
+			snowflake2 :size :dotSize :numRepeats (:timeRatio - 0.25) * 4
+		]
+	] [
+		ifelse :timeRatio < 0.75 [
+			snowflake3 :size :dotSize :numRepeats (:timeRatio - 0.5) * 4
+		] [
+			snowflake4 :size :dotSize :numRepeats (:timeRatio - 0.75) * 4
+		]
+	]
+	setTurtleState :oldState
+end
+
+to ratioToColor :ratio
+	if :ratio >= 0.8 [
+		localmake "ratio (:ratio - 0.8) * 5
+		output mix "#fff "#8ff clamp :ratio 0 1
+	]
+	localmake "ratio :ratio / 0.8 ; scale from 0..0.8 to 0..1.
+	output mix "#8f0 transparent :ratio
+end
+
+to drawWithMotionTrails :size :timeRatio
+	localmake "numTrails 20
+	setPenSize 0
+	setPenColor "white
+	repeat :numTrails [
+		localmake "ratio repcount / :numTrails
+		setFillColor ratioToColor :ratio
+		snowflake :size :timeRatio + :ratio * 0.1 - 0.1
+	]
+end
+
+setScreenColor "black
+make "timeRatio animation.time / animation.duration
+make "timeRatio interpolateRatio easeOut :timeRatio
+drawWithMotionTrails 100 :timeRatio
+
+to animation.snapshotstyle
+	localmake "result createPList
+	setProperty "result "zoom.scale 2
+	output :result
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 10
+	; Edit this if you want to change the length of your animation.
+	output :minutes * 60 + :seconds
+end

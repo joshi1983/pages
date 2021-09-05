@@ -1,0 +1,289 @@
+to isoscelesRightTriangle :height
+	localmake "oldState turtleState
+	localmake "sideLength1 :height / cos 45
+	localmake "sideLength2 :sideLength1 * sqrt 2
+	setPenSize 0
+	jumpForward :height
+	right 135
+	polyStart
+	jumpForward :sideLength1
+	right 180 - 45
+	jumpForward :sideLength2
+	polyEnd
+	
+	setTurtleState :oldState
+end
+
+to createForwardGradient :len :colors
+	localmake "colorStops createPList
+	setProperty "colorStops 0 item 1 :colors
+	setProperty "colorStops 1 item 2 :colors
+	jumpForward :len
+	localmake "fromPos pos
+	jumpBackward :len
+	output createLinearGradient :fromPos pos :colorStops "pad
+end
+
+to calcChordCurvedCorner  :radius :arcRadius1 :angle1
+	localmake "perpendicularDistance :radius * sin ((45 - :angle1))
+	localmake "innerRadius :radius - :arcRadius1
+	localmake "angle2 arcSin (:arcRadius1 - :perpendicularDistance) / :innerRadius
+	localmake "arcAngle 90 + :angle2
+	localmake "chordLength1 sqrt (:radius * :radius - :perpendicularDistance * :perpendicularDistance )
+	localmake "size1 :chordLength1 + :innerRadius * sin (180 - :arcAngle)
+	localmake "arcAngle2 2 * arcSin :chordLength1 / :radius
+	output [:perpendicularDistance :size1 :chordLength1 :arcAngle2 :arcAngle]
+end
+
+; Inspired by
+; https://www.pinterest.ca/pin/600667669065347896/
+; which it says was designed by Kakha Kakhadzen
+to circleArrow :radius
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angle1 28
+	localmake "arcRadius1 :radius * 0.4
+	localmake "chordValues calcChordCurvedCorner :radius :arcRadius1 :angle1
+	localmake "perpendicularDistance item 1 :chordValues
+	localmake "halfPerp :perpendicularDistance * 0.5
+	localmake "size1 item 2 :chordValues
+	localmake "chordLength1 item 3 :chordValues
+	localmake "arcAngle2 item 4 :chordValues
+	localmake "arcAngle item 5 :chordValues
+	localmake "size2 :radius * 0.2
+	localmake "chordValues2 calcChordCurvedCorner :radius :arcRadius1 ((arcCos :size2 / :radius) - 45)
+	localmake "chordLength2 item 3 :chordValues2
+	localmake "straightLineLength1 (item 2 :chordValues2) - :chordLength2
+	localmake "size3 :straightLineLength1 - (:perpendicularDistance * 0.5) 
+	localmake "arcAngle3 item 5 :chordValues2
+	localmake "colors [["#ffdb34 "#ffc20b] ["#f22979 "#ff2b80]]
+
+	setPenSize 0
+	circle :radius
+	right 45
+	jumpRight :chordLength1
+	jumpBackward :perpendicularDistance
+	right 180 + 45 - :angle1
+	setFillColor "#7B0094
+	polyStart
+	arcRight :arcAngle2 :radius
+	polyEnd
+	jumpTo :oldPos
+	setHeading :oldHeading
+
+	jumpForward :radius
+	right 90
+	arcRight :angle1 :radius
+	right 90 + 45 - :angle1
+	setFillGradient createForwardGradient :chordLength1 ["#FF7300 "#DA5807]
+	polyStart
+	jumpForward :size1
+	arcLeft :arcAngle :arcRadius1
+	right 180
+	arcRight :arcAngle + 45 + :angle1 :radius
+	polyEnd
+	repeat count :colors [
+		jumpTo :oldPos
+		setHeading :oldHeading + (repcount - 1) * 180
+		jumpRight :size2
+		jumpForward :halfPerp
+		setFillGradient createForwardGradient :radius - :halfPerp item repcount :colors
+		polyStart
+		forward :size3
+		ifelse repcount = 1 [
+			arcLeft :arcAngle3 :arcRadius1
+			right 180
+			arcRight :arcAngle3 - arcSin (:halfPerp / :radius) :radius
+		] [
+			arcRight :arcAngle3 :arcRadius1
+			right 180
+			arcLeft :arcAngle3 - arcSin (:halfPerp / :radius) :radius
+		]
+		polyEnd
+		localmake "size2 -:size2
+	]
+
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://www.pinterest.ca/pin/46302702405929936/
+to arcArrowSquare :size
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "triangleHeight :size * 0.44
+	localmake "size1 :size - :triangleHeight
+	localmake "arcRadius :size1
+	setFillColor "black
+	; draw the arrow heads
+	repeat 4 [
+		jumpForward :size1
+		isoscelesRightTriangle :triangleHeight
+		jumpTo :oldPos
+		right 90
+	]
+
+	; draw the 2 arcs.
+	setLineCap "round
+	; round caps so we don't just barely meet the arrow heads.
+	; we want to overlap with them so
+	; floating point error and special cases don't visualize as a
+	; faint line between the triangle and the arcs.
+	setPenSize :size * 0.33
+	repeat 2 [
+		jumpForward :size1
+		right 180
+		arcLeft 90 :arcRadius
+		jumpTo :oldPos
+		right 90
+	]
+	setTurtleState :oldState
+end
+
+to corner45 :sideLength
+	right 135
+	jumpForward :sideLength
+	backward :sideLength	
+	right 90
+	forward :sideLength
+
+	; restore original position and heading.
+	jumpBackward :sideLength
+	right 135
+end
+
+; Inspired by
+; https://www.pinterest.ca/pin/857232110335901921/
+to oppositeArrowsSquare :size
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	setPenSize :size * 0.3
+	setPenColor "black
+	localmake "size1 :size - penSize
+	localmake "size2 :size - penSize * 0.5 / cos 45
+	jumpRight :size1
+	setLineCap "butt
+	setLineJoinStyle "miter
+	right 90
+	backward :size1 * 2
+	jumpTo :oldPos
+	jumpForward :size2
+	corner45 :size * 0.73
+	jumpBackward :size2 * 2
+	right 180
+	corner45 (:size / cos 45) - penSize * 0.5
+	
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://www.pinterest.ca/pin/41799102782714768/
+to resize :size
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	setPenSize :size * 0.2
+	localmake "size1 (:size - penSize * 0.5) / cos 45
+	localmake "size2 :size1 * 0.85
+	localmake "arrowHeadSize :size2 * 0.45
+	repeat 4 [
+		setHeading :oldHeading + 45 + repcount * 360 / 4
+		jumpForward :size1
+		corner45 :arrowHeadSize
+		jumpBackward penSize * 0.5
+		backward :size2 - penSize
+		jumpBackward penSize * 0.5
+		right 180
+		corner45 :arrowHeadSize
+		jumpTo :oldPos
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://www.pinterest.ca/pin/137570963594807913/
+to arrowsToUnification :size
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "arrowWidth :size * 0.3
+	localmake "size1 :size * 0.5
+	localmake "size2 :size - :size1 - :arrowWidth * 0.5
+	localmake "size3 :size - :arrowWidth * 0.5
+	localmake "size4 :size1
+	localmake "arrowHeadHeight :size * 0.4
+	localmake "cornerCurveAngle 45
+	localmake "arcRadius :arrowWidth * 0.5 / sin :cornerCurveAngle
+	setFillColor "black
+	setPenColor "black
+	setLineJoinStyle "round
+	setLineCap "round
+	setPenSize 0
+	repeat 4 [
+		setHeading :oldHeading + repcount * 90
+		jumpBackward :size1
+		isoscelesRightTriangle :arrowHeadHeight
+		setPenSize :arrowWidth
+		backward :size2
+		left 90
+		forward :size3
+		right 90
+		forward :size4
+
+		; Draw the curved negative space around the neighbouring arrow's corner
+		setPenSize 0
+		jumpLeft :arrowWidth * 0.5
+		polyStart
+		jumpRight :arrowWidth
+		jumpForward :arrowWidth * 0.5
+		left 90
+		jumpForward :arrowWidth * 0.5
+		arcRight :cornerCurveAngle :arcRadius
+		polyEnd
+
+		jumpTo :oldPos
+	]
+
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://www.pinterest.ca/pin/19140367157426866/
+to circlesAndArrows :size
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "arrowHeadHeight :size * 0.25
+	localmake "arrowHeadWidth :arrowHeadHeight * 2
+	localmake "arrowWidth :arrowHeadWidth * 0.25
+	localmake "arcRadius (:size + (:arrowHeadWidth - :arrowWidth) * 0.5) * 0.5
+	localmake "arcAngle 304
+	setFillColor "black
+	repeat 2 [
+		setHeading :oldHeading + repcount * 180
+		jumpRight :arrowHeadWidth * 0.5
+		setPenSize 0
+		isoscelesRightTriangle :arrowHeadHeight
+		right 180
+		setPenSize :arrowWidth
+		arcRight :arcAngle :arcRadius
+		jumpTo :oldPos
+	]
+	setTurtleState :oldState
+end
+
+make "size 100
+make "separation :size * 4
+jumpLeft :separation * 2.5
+circleArrow :size
+jumpRight :separation
+arcArrowSquare :size
+jumpRight :separation
+oppositeArrowsSquare :size
+jumpRight :separation
+resize :size
+jumpRight :separation
+arrowsToUnification :size
+jumpRight :separation
+circlesAndArrows :size

@@ -1,0 +1,65 @@
+; Inspired by
+; https://www.pinterest.ca/pin/314407617747514124/
+;
+; The video shows a drawing with 5 sides.
+; The following generalizes for any 
+; positive integer number of sides.
+
+to regularPolygon :numSides :radius
+	localmake "oldState turtleState
+	localmake "sideLength 2 * :radius * sin 180 / :numSides 
+	jumpForward :radius
+	right 90 + 180 / :numSides
+	if :numSides > 2 [
+		polyStart
+	]
+	repeat :numSides [
+		forward :sideLength
+		right 360 / :numSides
+	]
+	if :numSides > 2 [
+		polyEnd
+	]
+	setTurtleState :oldState
+end
+
+to regularCircles :numSides :largeRadius :smallRadius
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	repeat :numSides [
+		setHeading :oldHeading + repcount * 360 / :numSides
+		jumpForward :largeRadius
+		left 90 + 180 / :numSides
+		jumpForward :smallRadius
+		left 90
+		arcLeft 270 - 180 / :numSides :smallRadius
+		jumpTo :oldPos
+	]
+	setTurtleState :oldState
+end
+
+to fullPolygonDrawing :numSides :size
+	localmake "smallRadius :size * ((sin 180 / :numSides) / (1 + sin 180 / :numSides))
+	localmake "size1 :size - :smallRadius
+	setPenSize :size * 0.02
+	setPenColor "blue
+	setFillColor "red
+	regularPolygon :numSides :size
+	setFillColor "white
+	regularPolygon :numSides :size1
+	setPenSize :size * 0.08
+	setPenColor "black
+	setFillColor transparent
+	regularCircles :numSides :size1 :smallRadius
+	circle :size
+end
+
+make "size 100
+make "separation :size * 3
+make "numRepeats 8
+jumpLeft (:numRepeats - 1) * 0.5 * :separation
+repeat :numRepeats [
+	fullPolygonDrawing repcount  :size
+	jumpRight :separation
+]

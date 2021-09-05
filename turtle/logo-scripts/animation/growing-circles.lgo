@@ -1,0 +1,50 @@
+; Inspired by:
+; https://www.pinterest.ca/pin/414401603188043367/
+
+to drawCircles :numRepeats :circleRadius :gap
+	localmake "oldState turtleState
+	localmake "step :circleRadius * 2 + :gap
+	localmake "size :step * (:numRepeats - 1)
+	jumpForward :size / 2
+	jumpLeft :size / 2
+	repeat :numRepeats [
+		repeat :numRepeats [
+			circle :circleRadius
+			jumpBackward :step
+		]
+		jumpForward :step * :numRepeats
+		jumpRight :step
+	]
+	setTurtleState :oldState
+end
+
+to growingCircles :size :ratio
+	localmake "ratio clamp :ratio 0 1
+	localmake "circleRadius :size / 7
+	localmake "gap :circleRadius * 2 * :ratio
+	localmake "circleRadius2 :gap / 2
+	localmake "gap2 :circleRadius - :circleRadius2
+	setPenSize 0
+	setFillColor mix "#0fff "#ffff :ratio
+	drawCircles 7 :circleRadius :gap
+	setFillColor "white
+	drawCircles 3 :circleRadius :gap
+	if :circleRadius2 > 0 [
+		drawCircles 7 :circleRadius2 :gap2
+	]
+end
+
+setScreenColor "black
+growingCircles 200 interpolateRatio easeInOut animation.time / animation.duration
+
+to animation.snapshotstyle
+	localmake "result createPList
+	output :result
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 1
+	; Edit this if you want to change the length of your animation.
+	output :minutes * 60 + :seconds
+end
