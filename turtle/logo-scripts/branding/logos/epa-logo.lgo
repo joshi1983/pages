@@ -1,0 +1,56 @@
+; Inspired by logo at:
+; https://en.wikipedia.org/wiki/United_States_Environmental_Protection_Agency#/media/File:EPA_logo.svg
+to epaLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "bottomAngleDelta 3
+	localmake "bottomArcRadius :height / 2
+	localmake "bottomLeafAngle 90 - :bottomAngleDelta / 2
+	localmake "separation :bottomArcRadius * 2 * sin :bottomAngleDelta / 2
+	localmake "bottomLeafLength :bottomArcRadius * 2 * sin :bottomLeafAngle / 2
+	localmake "topRadius1 0.311
+	localmake "topArcAngle1 89.7
+	localmake "topTinyRadius 0.0915
+	localmake "len1 0.279
+	localmake "halfTopGap :topRadius1 * (sin :topArcAngle1) - :len1
+	localmake "topTinyArcAngle1 arcSin :halfTopGap / :topTinyRadius
+	localmake "topTinyArcAngle2 180 - :topTinyArcAngle1
+	localmake "topArcs1 [[90 0] [:topArcAngle1 :topRadius1]
+		[180 - :topArcAngle1 0] [:len1] [180 - :topTinyArcAngle1 0]
+		[-:topTinyArcAngle2 :topTinyRadius]
+	]
+	localmake "topTinyArcAngle 90
+	localmake "topArcAngle2 12
+	localmake "tinyWaveChordLength :topRadius1 / 2 * cos :topArcAngle2
+	localmake "tinyWaveRadius :tinyWaveChordLength / 2 / sin :topTinyArcAngle / 2
+	localmake "topArcs2 [
+		[90 + :topTinyArcAngle / 2 0]
+		[-:topTinyArcAngle :tinyWaveRadius]
+		[:topTinyArcAngle 0]
+		[-:topTinyArcAngle :tinyWaveRadius]
+		[:topTinyArcAngle / 2 + 90 + :topArcAngle2 0]
+		[90 - :topArcAngle2 :topRadius1]
+	]
+	setPenSize 0
+	setFillColor "#0071bc
+	jumpLeft :separation / 2
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		localmake "angle 90 - (:bottomAngleDelta + :bottomLeafAngle) / 2
+		setHeading :oldHeading + :sign * :angle
+		arcPair :bottomLeafLength :bottomLeafAngle		
+		setHeading :oldHeading
+		jumpRight :separation
+	]
+	jumpTo :oldPos
+	drawArcLineShape [0 1
+		combine :topArcs1 reverse :topArcs1
+	] :height
+	drawArcLineShape [0 1 - :topRadius1 * (1 + sin :topArcAngle2)
+		combine :topArcs2 reverse :topArcs2
+	] :height
+	setTurtleState :oldState
+end
+
+epaLogo 100
