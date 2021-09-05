@@ -1,0 +1,11 @@
+; Similar to QB64 function at:
+; https://qb64.com/wiki/_RGBA.html
+to _rgba32 :redValue :greenValue :blueValue :alpha
+	localmake "redValue clamp :redValue 0 255
+	localmake "greenValue clamp :greenValue 0 255
+	localmake "blueValue clamp :blueValue 0 255
+	output ( bitOr :redValue
+		( bitShiftLeft :greenValue 8 )
+		(bitShiftLeft :blueValue 16 )
+		(bitShiftLeft :alpha 24))
+end

@@ -1,0 +1,32 @@
+! Invert complex matrix
+! 1+i off diagonal, 1+2i on diagonal
+!
+! **NOTE:** type 'do complex' in the command window before running
+
+DECLARE COMPLEX A, B, c           ! A and B are complex matrices, c is a complex number
+DECLARE PUBLIC c_det$             ! Value of the determinant
+DECIMALS 4                        ! Set four decimal places
+
+DIM A(3,3), B(3,3)
+
+LET c = 1 + i
+MAT B = c                         ! Matrix of all 1+i
+
+MAT A = IDN
+MAT A = i*A
+MAT A = A + B                     ! Add a diagonal matrix of i
+PRINT "Original matrix"
+MAT PRINT A
+
+MAT B = INV(A)                    ! Invert
+PRINT "Its inverse"
+MAT PRINT B                       ! Print Inverse
+PRINT "... and determinant"
+PRINT c_det$                      ! Print determinant
+PRINT
+
+MAT B = A*B                       ! Multiply original times inverse
+PRINT "Original * inverse"
+MAT PRINT B                       ! Should be the identify
+
+END

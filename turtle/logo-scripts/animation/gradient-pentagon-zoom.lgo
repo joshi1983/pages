@@ -1,0 +1,85 @@
+make "scaleFactor 0.812
+
+to setGradient :len
+	localmake "colorStops createPList2 [
+		[0 "#4c68a7] [0.1 "#a1c6fd] [0.12 "#9FFFE0] [0.15 "#fee]
+		[0.7 "#444] [1 transparent]
+	]
+	localmake "fromPos pos
+	jumpBackward :len
+	setFillGradient createLinearGradient :fromPos pos :colorStops "pad
+	jumpTo :fromPos
+end
+
+; Inspired by an image at:
+; https://www.facebook.com/share/p/1AL9MEyBJc/
+to pentagon :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "radius :height / (1 + cos 180 / 5)
+	localmake "numSizes 24
+	setPenSize 0
+	jumpForward :height - :radius
+	localmake "center pos
+	repeat :numSizes [
+		localmake "sign sign (modulo repcount 2) - 0.5
+ 		localmake "len :radius * 2 * sin 180 / 5
+		repeat 5 [
+			setHeading :oldHeading + repcount * 360 / 5
+			ifelse :sign > 0 [
+				jumpForward :radius
+				left 90 - 180 / 5
+				setGradient :len
+				polyStart
+				jumpBackward :len
+				left 95
+				jumpForward :radius * 0.282
+				polyEnd
+			] [
+				right 12.9
+				jumpForward :radius
+				right 90 - 180 / 5
+				setGradient :len
+				polyStart
+				jumpBackward :radius * 1.1755
+				right 95.5
+				jumpForward :radius * 0.265
+				polyEnd
+			]
+			jumpTo :center
+		]
+		localmake "radius :radius * :scaleFactor
+	]
+	setTurtleState :oldState
+end
+
+to getZoomScale
+	localmake "t interpolateRatio easeInOut animation.clampedTimeRatio
+	localmake "exponent 5 + :t * 83
+	localmake "exponentLimit 12
+	if :exponent > :exponentLimit [
+		localmake "exponent :exponent - 2 * floor ((:exponent - :exponentLimit) / 2)
+	]
+	output power 1 / 0.812 :exponent
+end
+
+setScreenColor "black
+pentagon 100
+
+to animation.snapshotstyle
+	localmake "scale getZoomScale
+
+	output createPList2 [
+		["position.y 44.7]
+		["zoom.scale :scale]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 10
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

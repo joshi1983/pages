@@ -1,0 +1,67 @@
+! DemWin3
+
+! Explore relationship between physical and logical windows.
+
+LIBRARY "TrueCtrl.trc"
+
+DIM win(2)
+
+CALL TC_Init
+
+CALL TC_SetRectUsers (0, .2, .8, .7, .9)
+CALL TC_Show (0)
+CALL TC_Win_Active (0)
+PRINT "Press 1 or 2 to target the physical window."
+PRINT "Press 3, 4, 5, or 6 to target a logical window."
+PRINT "Press ESC to quit."
+
+LET options$ = "CLOSE|SIZE|TITLE"
+CALL TC_Win_Create (win(1), options$, .1, .6, .2, .6)
+CALL TC_Win_SetTitle (win(1), "Window #1")
+CALL TC_Win_Create (win(2), options$, .4, .9, .3, .7)
+CALL TC_Win_SetTitle (win(2), "Window #2")
+CALL TC_Show (win(1))
+CALL TC_Show (win(2))
+
+CALL TC_Win_Switch (win(1))   ! Target and make active
+OPEN #3: screen .1, .4, .1, .9
+OPEN #4: screen .6, .9, .1, .9
+
+CALL TC_Win_Switch (win(2))
+OPEN #5: screen .1, .9, .1, .4
+OPEN #6: screen .1, .9, .6, .9
+
+DO
+   CALL TC_Event (0, event$, window, x1, x2)
+
+   IF event$ = "HIDE" and window = 0 then EXIT DO
+   IF event$ = "KEYPRESS" then
+
+      IF x1 = 27 then EXIT DO
+
+      SELECT CASE x1
+      CASE 49, 50
+           ! Target the default logical window associated
+           ! with the physical window.
+           CALL TC_Win_Target (win(x1-48))
+
+      CASE 51, 52, 53, 54
+           ! Target a logical window contained within
+           ! some physical window.
+           WINDOW #X1-48
+
+      CASE ELSE
+      END SELECT
+
+      SET COLOR x1-48     ! Set a different color for each window.
+      BOX AREA 0, 1, 0, 1
+
+   END IF
+
+LOOP
+
+CALL TC_Free (win(1))
+CALL TC_Free (win(2))
+CALL TC_Cleanup
+
+END

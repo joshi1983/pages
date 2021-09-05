@@ -1,0 +1,78 @@
+make "thicknessFactor 0.05
+
+to drawTriangle :height
+	localmake "oldState turtleState
+	localmake "angle 4
+	localmake "innerHeight :height - penSize * (0.5 + 0.5 / sin 30)
+	localmake "radius :innerHeight / (1 + sin 30)
+	jumpForward :height - :radius
+	left :angle
+	regularPolygon :radius 3
+
+	setTurtleState :oldState
+end
+
+to drawSquare :height
+	localmake "oldState turtleState
+	localmake "angle 2
+	localmake "rotationOffset :height * sin :angle
+	jumpForward :height / 2 + :rotationOffset
+	left :angle
+	square :height
+	setTurtleState :oldState
+end
+
+; Inspired by:
+; https://www.jukeboxprint.com/blog/the-making-of-the-squid-game-business-card?srsltid=AfmBOop9oVEisk2RQl7vgR-gJlwAENoS-jvua7KrcA-DMhyTRdAeyvdb
+to squidGameAddressCard :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "separation :height * 1.1
+	localmake "triangleHeight :height * 15.5 / 16.5
+	localmake "squareHeight :height * 15.35 / 16.5
+	setPenSize :height * :thicknessFactor
+	setPenColor "black
+	setFillColor transparent
+	jumpLeft :separation
+	jumpForward :height / 2
+	circle (:height - penSize) / 2
+
+	jumpTo :oldPos
+	drawTriangle :triangleHeight
+
+	jumpRight :separation
+	drawSquare :squareHeight
+	setTurtleState :oldState
+end
+
+to squidGameAddressCardNoRotations :height
+	localmake "oldState turtleState
+	localmake "separation :height * 1.1
+	setPenColor "black
+	setPenSize :height * :thicknessFactor
+	localmake "circleRadius (:height - penSize) / 2
+	localmake "triangleHeight :height - penSize * (0.5 + 0.5 / sin 30)
+	localmake "triangleWidth :triangleHeight * 2 * tan 30
+	localmake "squareSize :height - penSize
+	setFillColor transparent
+	jumpLeft :separation
+	jumpForward :height / 2
+	circle :circleRadius
+	jumpBackward :circleRadius
+	jumpRight :separation
+	setLineJoinStyle "miter
+	isoTriangle :triangleWidth :triangleHeight
+
+	jumpRight :separation
+	jumpForward :squareSize / 2
+	square :squareSize
+
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 5
+jumpLeft :separation / 2
+squidGameAddressCard :height
+jumpRight :separation
+squidGameAddressCardNoRotations :height

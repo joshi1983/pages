@@ -1,0 +1,45 @@
+; Inspired by
+; https://www.pinterest.ca/pin/379146862391843817/
+; Also shown at:
+; https://svgsilh.com/image/155684.html
+
+to hexStripe :size
+	localmake "oldState turtleState
+	localmake "arcRadius1 :size * 0.55
+	localmake "arcRadius2 :arcRadius1 * 0.954188895
+	setPenSize 0
+	left 2
+	polyStart
+	arcRight 140 :arcRadius1
+	left 150
+	arcLeft 200 :arcRadius2
+	polyEnd
+
+	setTurtleState :oldState
+end
+
+to hexStripeSpiral :size
+	localmake "oldState turtleState
+	repeat 6 [
+		hexStripe :size
+		right 60
+	]
+	setTurtleState :oldState
+end
+
+to tiledSpiralPattern :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "size1 :size / 3
+	hexStripeSpiral :size1
+	repeat 6 [
+		setHeading :oldHeading + repcount * 360 / 6
+		jumpForward :size1 * 2
+		left 57.13
+		hexStripeSpiral :size1
+		jumpTo :oldPos
+	]
+end
+
+setFillColor "black
+tiledSpiralPattern 100

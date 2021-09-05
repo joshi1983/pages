@@ -1,0 +1,66 @@
+; Inspired by logo at:
+; https://en.wikipedia.org/wiki/File:Elm_logo.svg
+to elmLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "gap :height * 0.0405
+	localmake "gap2 :gap / cos 45
+	localmake "elmBlue "#60B5CC
+	localmake "elmGray "#5A6378
+	localmake "elmGreen "#7FD13B
+	localmake "elmOrange "#F0AD00
+	localmake "width1 :height - :gap2
+	localmake "height1 :width1 / 2
+	localmake "width2 :height / 2 - :gap2 * 1.5
+	localmake "height2 :width2 / 2
+	localmake "squareSize :height1 / 2 / cos 45
+	localmake "width3 (:height / 2 - :gap2) * (cos 45) * 2
+	localmake "height3 :width3 / 2
+	localmake "parallelogramWidth :squareSize / cos 45
+	setPenSize 0
+	setFillColor :elmBlue
+	isoTriangle :width1 :height1
+
+	jumpRight :height / 2
+	jumpForward :height / 2 + :gap2
+	right 45
+	jumpLeft :height3
+	isoTriangle :width3 :height3	
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpLeft :height / 2
+	jumpForward :height / 2
+	right 90
+	setFillColor :elmGray
+	isoTriangle :width1 :height1
+	jumpForward :height / 2
+	setFillColor :elmOrange
+	jumpLeft :height2 + :gap2 / 2
+	right 90
+	isoTriangle :width2 :height2
+
+	jumpTo :oldPos
+	jumpBackward (:width2 + :gap2) / 2
+	jumpLeft :height / 2
+	right 90
+	isoTriangle :width2 :height2
+
+	jumpRight :height2 + :gap2
+	right 45
+	jumpForward :squareSize / 2
+	left 90
+	stripes :squareSize :squareSize [:elmGreen]
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height
+	jumpLeft :parallelogramWidth / 2
+	right 180
+	setFillColor :elmGreen
+	parallelogram :parallelogramWidth :squareSize - :gap2 / 2 -45
+	setTurtleState :oldState
+end
+
+elmLogo 100

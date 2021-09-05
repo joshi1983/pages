@@ -1,0 +1,71 @@
+; Inspired by logo at:
+; https://commons.wikimedia.org/wiki/File:Neovim-logo.svg
+to neovimLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "darkBlueColor "#3776c0
+	localmake "darkGreenColor "#438136
+	localmake "lightGreenColor "#7bb442
+	localmake "blueStops createPList2 [
+		[0 :darkBlueColor] [1 "#5dc0ef]
+	]
+	localmake "rightColorStops createPList2 [
+		[0 :darkGreenColor]
+		[1 :lightGreenColor]
+	]
+	localmake "width :height * 0.822
+	localmake "thickness :height * 0.212
+	localmake "thickness2 :height * 0.22
+	localmake "angle 33.3
+	localmake "angle2 :angle - 45
+	localmake "diagonalLength (:height - :thickness2  * cos 45) / cos :angle
+	localmake "sideHeight :height - :thickness * 2
+	localmake "triangleWidth :thickness * 2
+	jumpForward :height
+	localmake "top pos
+	setFillGradient createLinearGradient :oldPos pos :blueStops "pad
+	jumpBackward :height / 2
+	localmake "center pos
+	jumpLeft :width / 2
+	right 90
+	setPenSize 0
+	isoTrapezoid :sideHeight :height :thickness
+	localmake "pos1 pos
+	jumpLeft :sideHeight / 2
+	localmake "sideLeftTop pos
+
+	jumpTo :pos1
+	jumpForward :thickness
+	jumpLeft :height / 2 - :triangleWidth
+	setFillColor :darkBlueColor
+	localmake "pos1 pos
+	jumpLeft :triangleWidth
+	localmake "pos2 pos
+	jumpTo :pos1
+	left 90 + :angle
+	polyStart
+	jumpForward distanceToLine :pos2 :sideLeftTop
+	setHeading towards :pos2
+	jumpForward distance :pos2
+	polyEnd
+	
+	setFillGradient createLinearGradient :oldPos :top :rightColorStops "pad
+	jumpTo :center
+	setHeading :oldHeading - 90
+	jumpBackward :width / 2
+	isoTrapezoid :sideHeight :height :thickness
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height / 2
+	right 45
+	jumpBackward :thickness2 / 2
+	setFillColor mix "#81bb66 transparent 0.8
+	left :angle2
+	parallelogram :diagonalLength :thickness2 :angle2
+
+	setTurtleState :oldState
+end
+
+neovimLogo 100

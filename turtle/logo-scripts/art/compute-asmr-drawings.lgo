@@ -1,0 +1,168 @@
+; Inspired by drawing at:
+; https://www.youtube.com/watch?v=GmPk11FqSGc
+; Compute ASMR used Blitz Basic to make a similar drawing
+; on an Amiga computer.
+;
+; Compute ASMR's channel is at:
+; https://www.youtube.com/@ComputeASMR
+;
+; You can learn more about Blitz Basic at:
+; https://en.wikipedia.org/wiki/Blitz_BASIC
+to rosette :numPoints :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "points []
+	setPenSize :height * 0.0025
+	localmake "radius (:height - penSize) / 2
+	setPenColor "black
+	setLineCap "round
+	setLineJoinStyle "round
+	jumpForward :height / 2
+	localmake "center pos
+	repeat :numPoints [
+		setHeading :oldHeading + repcount * 360 / :numPoints
+		jumpForward :radius
+		queue2 "points pos
+		jumpTo :center
+	]
+	for ["i 1 :numPoints - 1] [
+		for ["j :i + 1 :numPoints] [
+			jumpTo item :i :points
+			setPos item :j :points
+		]
+	]
+	setTurtleState :oldState
+end
+
+to drawSnowFlakes :width :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "flakeRadius (:width + :height) * 0.002
+	setPenSize 0
+	setFillColor "white
+	repeat 200 [
+		jumpForward :height * randomRatio
+		jumpRight :width * (randomRatio - 0.5)
+		circle :flakeRadius
+		jumpTo :oldPos
+	]
+	setTurtleState :oldState
+end
+
+to drawHouse :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "baseHeight :height * 0.65
+	localmake "roofHeight :height - :baseHeight
+	localmake "doorWidth :height * 0.3
+	localmake "doorHeight :baseHeight * 0.8
+	localmake "windowSize :height * 0.2
+	stripes :height :baseHeight ["yellow]
+	jumpLeft :height * 0.2
+	stripes :doorWidth :doorHeight ["black]
+
+	jumpTo :oldPos
+	jumpRight :height * 0.2
+	jumpForward :baseHeight * 0.5
+	stripes :windowSize :windowSize ["aqua]
+
+	jumpTo :oldPos
+	jumpForward :baseHeight
+	setPenSize 0
+	setFillColor "brown
+	isoTriangle :height * 1.2 :roofHeight
+	setTurtleState :oldState
+end
+
+to drawSnowMan :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "baseRadius :height * 0.29
+	localmake "headRadius :height * 0.2
+	localmake "hatSize1 :headRadius * 0.6
+	localmake "hatSize2 :headRadius * 1.1
+	localmake "eyeSeparation :headRadius * 0.75
+	jumpForward :baseRadius
+	setPenSize 0
+	setFillColor "white
+	circle :baseRadius
+	jumpForward :baseRadius + :headRadius * 0.55
+	circle :headRadius
+	localmake "headCenter pos
+	right 25
+	jumpForward :headRadius * 1.57
+	right 180
+	setFillColor "violet
+	isoTrapezoid :hatSize1 :hatSize2 :headRadius * 0.8
+
+	; draw the buttons.
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :baseRadius * 1.08
+	setFillColor "orange
+	repeat 2 [
+		circle :height * 0.04
+		jumpForward :height * 0.105
+	]
+
+	jumpTo :headCenter
+	jumpLeft :eyeSeparation / 2
+	setFillColor "black
+	repeat 2 [
+		circle :height * 0.04
+		jumpRight :eyeSeparation
+	]
+
+	jumpTo :headCenter
+	jumpBackward :headRadius * 0.5
+	localmake "lipsMiddle pos
+	setPenSize :headRadius * 0.04
+	setPenColor "black
+	setLineCap "round
+	setLineJoinStyle "round
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		setHeading :oldHeading + 73 * :sign
+		forward  :headRadius * 0.6
+		jumpTo :lipsMiddle
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by:
+; https://www.youtube.com/watch?v=IrdN0S2f4ME
+;
+; Compute ASMR uses MSX Basic for his version.
+to snowmanDrawing :height
+	localmake "oldState turtleState
+	localmake "width :height * 3 / 2
+	localmake "horizonHeight :height / 4
+	localmake "skyHeight :height - :horizonHeight
+	setPenSize :width
+	setLineCap "butt
+	setPenColor "blue
+	forward :horizonHeight
+	localmake "horizonMiddle pos
+	setPenColor "skyBlue
+	forward :skyHeight
+
+	jumpTo :horizonMiddle
+	drawSnowFlakes :width :skyHeight
+
+	jumpLeft :width * 0.27
+	drawHouse :height * 0.26
+
+	jumpTo :horizonMiddle
+	jumpBackward :height * 0.055
+	jumpRight :height * 0.12
+	drawSnowMan :height * 0.68
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 4 
+jumpLeft :separation / 2
+rosette 20 :height
+jumpRight :separation
+snowmanDrawing :height

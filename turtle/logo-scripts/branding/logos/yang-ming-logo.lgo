@@ -1,0 +1,58 @@
+; Inspired by logo at:
+; https://en.wikipedia.org/wiki/Yang_Ming_Marine_Transport_Corporation#/media/File:Yang_Ming_logo.gif
+;
+; The logo also appears at:
+; https://www.yangming.com
+to yangMingLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "ymRed "#d8000f
+	localmake "ymBlue "#004ea2
+	localmake "width :height * 0.9
+	localmake "blueThickness :height * 0.15
+	localmake "topVAngle 52
+	localmake "topVAngle2 90 - :topVAngle
+	localmake "innerLineLen 0.25
+	localmake "innerLines1 [
+		[:topVAngle 0] [:innerLineLen] [180 - :topVAngle 0] [0.3]
+		[90 0] [:innerLineLen * sin :topVAngle]
+	]
+	stripes :width :height ["white]
+	stripes :height * 0.25 :height [:ymRed]
+	setPenSize 0
+	setFillColor :ymRed
+	drawArcLineShape [0 0.18
+		combine :innerLines1 reverse :innerLines1
+	] :height
+
+	jumpForward :height * 0.92
+	right 180
+	isoTriangle :width :width / 2 * tan :topVAngle
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	setPenSize :blueThickness
+	setPenColor :ymBlue
+	setLineCap "round
+	jumpForward penSize / 2
+	forward :height * 0.47
+	setPenSize 0
+	setFillColor penColor
+	repeat 2 [
+		parallelogram :blueThickness :height * 0.5 :topVAngle2 * sign repcount - 1.5
+	]
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+
+	jumpForward :height / 2
+	setLineJoinStyle "miter
+	setFillColor transparent
+	setPenSize :height * 0.115
+	setPenColor :ymRed
+	rect :width - penSize :height - penSize
+	setTurtleState :oldState
+end
+
+yangMingLogo 100

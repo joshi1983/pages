@@ -1,0 +1,18 @@
+; copied from: https://resources.terrapinlogo.com/logolib/samebirthday.html 
+TO SameBirthday :number
+      IF :number > 50 [
+          PR "|Large numbers of people approach 100% probility that two will have the same birthday but never quite get to 100% because there is always a chance that two people will not have the same birthday no matter how large the group|
+          STOP
+      ]
+      IF :number < 2 [
+          PR "|There must at least be 2 people in the room to make a comparison|
+          STOP
+      ]
+      ; calculate the probability factor by counting down from 364 to (366 - number)
+      ; use 366 because the number starts at 2
+      LMAKE "factor 1
+      FOR (LIST "N 364 (366 - :number) -1) [
+          LMAKE "factor :factor * (:N / 365)
+      ]
+      (PR "|If| :number "|people are in the same room, there is a probability of| 100 * (1 - :factor) "|% that two people will have the same birthday|)
+  END

@@ -1,0 +1,162 @@
+!
+! Communications Support Toolkit
+! Version 5.0
+! Copyright (c) 1996 by True BASIC, Inc.
+! All Rights Reserved.
+!
+! This version of the Communications Support Toolkit will work only
+! with Version 5.1 and later of True BASIC. It relies on the built-in
+! functions comopen() and comlib(), which do most of the work. This 
+! module is chiefly to give call sequence compatibility with old 
+! versions of the toolkit.
+!
+EXTERNAL
+
+SUB Com_Open(#1, port, speed, opt$)
+    !
+    ! Just need to call builtin.
+    !
+    CALL Comopen(0,#1,port,speed,opt$)
+END SUB ! Com_Open
+
+SUB Com_Switch(port)
+    !
+    ! Just need to call builtin.
+    !
+    CALL Comlib(1,port,0,"")
+END SUB ! Com_Switch
+
+SUB Com_Control(opt$)
+    !
+    ! Just need to call builtin.
+    !
+    CALL Comlib(2,0,0,opt$)
+END SUB ! Com_Control
+
+SUB Send(s$)
+    local sent
+    !
+    ! Just need to call builtin.
+    !
+    CALL Comlib(3,sent,0,s$)
+END SUB ! Send
+
+SUB Send_Line(s$)
+    local sent
+    !
+    ! Need to append CR/LF and call builtin.
+    !
+    CALL Comlib(3,sent,0,s$&chr$(13)&chr$(10))
+END SUB ! Send_Line
+
+SUB Send_CR(s$)
+    local sent
+    !
+    ! Need to append CR and call builtin.
+    !
+    CALL Comlib(3,sent,0,s$&chr$(13))
+END SUB ! Send_CR
+
+SUB Send_Break
+    !
+    ! Break is method 7.
+    !
+    CALL Comlib (7, 0, 0, "")
+END SUB ! Send_Break
+
+SUB Receive(buf$)
+    !
+    ! Just need to call builtin.
+    !
+    CALL Comlib(4,0,0,buf$)
+END SUB ! Receive(buf$)
+
+SUB Receive_Line(buf$)
+    LOCAL scan$,p,work$
+    !
+    ! Scan for CR, retrieve that far.
+    ! If no CR, read all and loop.
+    !
+    LET buf$ = ""
+    LET scan$ = chr$(13)
+
+    DO
+        CALL Comlib(6,p,0,scan$)
+        IF p = -1 THEN
+           CALL Comlib(4,0,0,work$)
+        ELSE
+           CALL Comlib(4,p+1,0,work$) ! Retrieve up to and including CR
+           LET work$[p+1:p+1] = ""  ! Get rid of CR
+        END IF
+        LET buf$ = buf$ & work$
+    LOOP UNTIL p >= 0
+END SUB ! Receive_Line
+
+SUB Wait_Line(wtime, f, buf$)
+    LOCAL scan$,p,work$,stime
+    !
+    ! Scan for CR, retrieve that far.
+    ! If no CR, read all and loop.
+    !
+    LET buf$ = ""
+    LET scan$ = chr$(13)
+    LET stime = time
+    LET f = 1
+
+    DO
+        CALL Comlib(6,p,0,scan$)
+        IF p = -1 THEN
+           CALL Comlib(4,0,0,work$)
+        ELSE
+           CALL Comlib(4,p+1,0,work$) ! Retrieve up to and including CR
+           LET work$[p+1:p+1] = ""  ! Get rid of CR
+           LET f = 0
+        END IF
+        LET buf$ = buf$ & work$
+    LOOP UNTIL p >= 0 or time-stime >= wtime
+END SUB ! Wait_Line
+
+SUB Wait_Prompt(p$, wtime, f, buf$)
+    LOCAL scan$,p,work$,stime
+    !
+    ! Scan for CR, retrieve that far.
+    ! If no CR, read all and loop.
+    !
+    LET buf$ = ""
+    LET scan$ = p$
+    LET stime = time
+    LET f = 1
+
+    DO
+        CALL Comlib(6,p,0,scan$)
+        IF p >= 0 THEN
+           CALL Comlib(4,p+len(scan$),0,work$) ! Retrieve up to and including p$
+           LET f = 0
+        END IF
+        LET buf$ = buf$ & work$
+    LOOP UNTIL p >= 0 or time-stime >= wtime
+    IF p = -1 THEN CALL Comlib(4,0,0,work$)
+END SUB ! Wait_Prompt
+
+DEF Com_Buf(type)
+    !
+    ! Call builtin and return value in result.
+    ! It is a special version of the COM_STATUS function.
+    !
+    CALL Comlib(5,result,type,"BUF")
+    LET Com_Buf = result
+END DEF ! Com_Buf
+
+DEF Com_Status(type$)
+    !
+    ! Call builtin and return value in result.
+    ! Note that this version adds a result value
+    ! possibility of -1, indicating that the information
+    ! requested is not available in the given
+    ! operating system.
+    !
+    CALL Comlib(5,result,0,type$)
+    LET Com_Status = result
+END DEF ! Com_Status
+
+! End of library
