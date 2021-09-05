@@ -1,0 +1,26 @@
+REM copied from https://www.theinfozones.com/2015/10/to-convert-hexadecimal-number-into-its.html#google_vignette
+1:
+CLS
+A = 0
+D = 0
+P = 0
+INPUT "Enter hexadecimal number"; h$
+FOR i = LEN(h$) TO 1 STEP -1
+    a$ = MID$(h$, i, 1)
+    IF a$ = "A" THEN a$ = "10"
+    IF a$ = "B" THEN a$ = "11"
+    IF a$ = "C" THEN a$ = "12"
+    IF a$ = "D" THEN a$ = "13"
+    IF a$ = "E" THEN a$ = "14"
+    IF a$ = "F" THEN a$ = "15"
+    A = VAL(a$) * 16 ^ P
+    D = D + A
+    P = P + 1
+NEXT i
+PRINT "The equivalent decimal number is "; D
+INPUT "type Y to continue"; y$
+IF y$ = "Y" THEN
+    GOTO 1:
+ELSE
+END IF
+END

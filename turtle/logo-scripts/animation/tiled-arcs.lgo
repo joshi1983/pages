@@ -1,0 +1,115 @@
+make "arcRadiusFactor 1.19
+make "thicknessFactor 0.02
+make "angle1 73
+make "arcAngle 106.5
+
+to drawArcs :startGap
+	localmake "oldState turtleState
+	localmake "center pos
+	localmake "oldHeading heading
+	localmake "arcRadius :startGap * :arcRadiusFactor
+	setPenSize :startGap * :thicknessFactor
+	repeat 6 [
+		setHeading :oldHeading + repcount * 360 / 6
+		jumpForward :startGap
+		right :angle1
+		arcRight :arcAngle :arcRadius
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+to drawArcsPartial :startGap :timeRatio
+	localmake "oldState turtleState
+	localmake "center pos
+	localmake "oldHeading heading
+	localmake "arcRadius :startGap * :arcRadiusFactor
+	localmake "numArcs 1 + 6 * :timeRatio
+	localmake "finalIteration int :numArcs
+	localmake "thicknessFactor1 :thicknessFactor * mix 1 2 :timeRatio
+	setPenSize :startGap * :thicknessFactor1
+	repeat :numArcs [
+		setHeading :oldHeading + repcount * 360 / 6
+		localmake "arcAngle2 :arcAngle
+		if repcount >= :finalIteration [
+			localmake "arcAngle2 :arcAngle * (:numArcs - :finalIteration)
+		]
+		jumpForward :startGap
+		right :angle1
+		if :arcAngle2 > 0 [
+			arcRight :arcAngle2 :arcRadius
+		]
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by:
+; https://www.facebook.com/photo/?fbid=10162218601628035
+to tiledArcs :height :timeRatio
+	localmake "oldState turtleState
+	localmake "separation :height * 0.275
+	localmake "vSeparation :separation * cos 30
+	localmake "startGap :height * 0.159
+	localmake "numRows 10
+	localmake "numColumns 13
+	jumpForward :vSeparation * 2
+	setLineCap "round
+	if :timeRatio < 0.9 [
+		setPenColor "white
+		if :timeRatio > 0.5 [
+			setPenColor mix "white transparent 1 - (:timeRatio - 0.5) / 0.4
+		]
+		drawArcsPartial :startGap clamp :timeRatio * 2 0 1
+	]
+	if :timeRatio > 0.5 [
+		jumpBackward :vSeparation * 4
+		jumpLeft :separation * 6
+		ifelse :timeRatio < 0.9 [
+			setPenColor mix "white transparent (:timeRatio - 0.5) / 0.4
+		] [
+			setPenColor "white
+		]
+		repeat :numRows [
+			localmake "pos1 pos
+			repeat :numColumns [
+				drawArcs :startGap
+				jumpRight :separation
+			]
+			jumpTo :pos1
+			jumpForward :vSeparation
+			jumpRight :separation / 2 * sign (remainder repcount 2) - 0.5
+		]
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "#1d5aaa
+tiledArcs 100 animation.clampedTimeRatio
+
+to animation.snapshotstyle
+	localmake "timeRatio animation.clampedTimeRatio
+	localmake "zoom 10
+	ifelse :timeRatio > 0.9 [
+		localmake "zoom 3
+	] [
+		if :timeRatio > 0.5 [
+			localmake "timeRatio interpolateRatio easeOut interpolateRatio easeInOut (:timeRatio - 0.5) / 0.4
+			localmake "zoom mix 3 10 :timeRatio
+		]
+	]
+	output createPList2 [
+		["position.y 48]
+		["zoom.scale :zoom]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 7
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+		["thumbnailTime 3.49]
+	]
+end

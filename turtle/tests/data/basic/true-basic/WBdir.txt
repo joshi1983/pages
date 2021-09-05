@@ -1,0 +1,79 @@
+MODULE WBdir                      ! 1992/12/05
+
+    ! SUB WB_dir (l$(), options$)
+    ! SUB InterpretDirOptions (option$(), dir$, temp$)
+
+    LIBRARY "{WB_c}WButilit.trc"
+    LIBRARY "{WB_c}ExecLib.trc"
+
+    PRIVATE InterpretDirOptions
+
+    OPTION TYPO
+
+    SUB WB_dir (l$(), options$)
+
+        LOCAL option$(0)
+        LOCAL temp$, n$(0), size(0), dlm$(0), tlm$(0), typ$(0), typ(0), vol$
+        LOCAL dir$, olddir$, uboundn, k, format$, name$, ln, outline$
+        LOCAL totalsize, ubn, fulldir$
+
+        LET format$ = ">########################   ##,###,###   ########   ########"
+
+        CALL WB_Decode (options$, option$())
+        CALL InterpretDirOptions (option$(), dir$, temp$)
+
+        IF dir$ = "current directory" then
+           CALL Exec_ReadDir (temp$, n$(), size(), dlm$(), tlm$(), typ$(), vol$)
+           LET dir$ = ""
+        ELSE                      ! Must be a remote directory
+           CALL WB_MakeLegalDir (dir$)
+           CALL Exec_AskDir (olddir$)
+           CALL Exec_ChDir (dir$)
+           CALL Exec_AskDir (fulldir$)
+           CALL Exec_ReadDir (temp$, n$(), size(), dlm$(), tlm$(), typ$(), vol$)
+           CALL Exec_ChDir (olddir$)
+        END IF
+        IF dir$ <> "" then
+           CALL WB_More ("Directory of " & fulldir$)
+        END IF
+        LET outline$ = using$(format$, "file name", "      size", " date lm", " time lm")
+        CALL WB_More (outline$)
+        LET totalsize = 0
+        LET ubn = ubound(n$())
+        FOR k = 1 to ubn
+            LET totalsize = totalsize + size(k)
+            LET name$ = n$(k)
+            LET ln = len(name$)
+            LET name$ = name$[ln-19:ln]
+            LET outline$ = using$(format$, name$, size(k), dlm$(k), tlm$(k))
+            CALL WB_More (outline$)
+        NEXT k
+        LET outline$ = using$(format$, "Total size", totalsize, ubn, "files   ")
+        CALL WB_More (outline$)
+
+    END SUB
+
+    SUB InterpretDirOptions (option$(), dir$, temp$)
+
+        LOCAL nopts, i
+
+        LET nopts = ubound(option$)
+        IF nopts >= 3 then
+           CALL WB_Error ("Dir error. USAGE: do dir [, [-dDIR] [-tTEMP]]")
+        END IF
+
+        LET dir$ = "current directory"
+        LET temp$ = ""
+        FOR i = 1 to nopts
+            IF option$(i)[1:2] = "-d" then
+               LET dir$ = option$(i)[3:1000]
+            ELSE IF option$(i)[1:2] = "-t" then
+               LET temp$ = option$(i)[3:1000]
+            ELSE
+               CALL WB_Error ("Error Dir. USAGE: do column [, [-dDIR] [-tTEMP]]")
+            END IF
+        NEXT i
+
+    END SUB
+
+END MODULE

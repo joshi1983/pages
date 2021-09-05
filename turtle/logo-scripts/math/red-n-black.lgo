@@ -1,0 +1,19 @@
+; Inspired by image at:
+; https://ca.pinterest.com/pin/339318153195611191
+to redNBlack :height
+	localmake "oldState turtleState
+	localmake "colors ["red "black]
+	setPenSize 0
+	jumpForward :height / 2
+	repeat 20 [
+		localmake "index 1 + modulo repcount count :colors
+		setFillColor item :index :colors
+		square :height
+		localmake "height :height * cos 45
+		right 45
+	]
+
+	setTurtleState :oldState
+end
+
+redNBlack 100

@@ -1,0 +1,32 @@
+; Inspired by logo at:
+; https://www.upside.com
+to upsideLogo :height
+	localmake "oldState turtleState
+	localmake "triangleHeight :height * 0.49
+	localmake "thickness :height * 0.24
+	localmake "intersectRatio 0.45
+	localmake "innerArcRadius :triangleHeight * :intersectRatio
+	localmake "arcRadius :innerArcRadius + :thickness / 2
+	localmake "uStraightHeight :height - :triangleHeight * (1 - :intersectRatio) - :arcRadius - :thickness / 2
+	setPenSize 0
+	setFillColor "#0047FF
+	jumpForward :height - :triangleHeight
+	polyStart
+	jumpForward :triangleHeight
+	jumpRight :triangleHeight
+	polyEnd
+
+	setPenSize :thickness
+	setPenColor fillColor
+	setLineCap "butt
+	jumpLeft :triangleHeight * (1 - :intersectRatio) - :thickness / 2
+	jumpBackward :triangleHeight * (1 - :intersectRatio)
+	right 180
+	forward :uStraightHeight
+	arcRight 180 :arcRadius
+	forward :uStraightHeight	
+
+	setTurtleState :oldState
+end
+
+upsideLogo 100

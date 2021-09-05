@@ -1,0 +1,36 @@
+; Inspired by logo at:
+; https://www.anl.gov
+to argonneLabLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "colors ["#0082ca "#77b300 "#cd202c]
+	localmake "cornerColors ["#0b1f8f "#007836 "#a12b2f]
+	localmake "thickness :height / 3
+	localmake "innerWidth :height / cos 30
+	localmake "outerWidth :innerWidth - :thickness * 2 * tan 30
+	localmake "midWidth (:innerWidth + :outerWidth) / 2
+	localmake "offset :thickness / 2 + :midWidth / 2 * tan 30
+	localmake "triangleWidth :thickness * 2 * tan 30
+	jumpForward :offset
+	localmake "center pos
+	setPenSize 0
+	repeat 3 [
+		setFillColor item repcount :colors
+		jumpBackward :offset
+		isoTrapezoid :outerWidth :innerWidth :thickness	
+		jumpTo :center
+		right 360 / 3
+	]
+	repeat 3 [
+		setHeading :oldHeading + (repcount - 1) * 360 / 3
+		setFillColor item repcount :cornerColors
+		jumpBackward :offset - :thickness
+		jumpRight :outerWidth / 2
+		right 180
+		isoTriangle :triangleWidth :thickness
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end 
+
+argonneLabLogo 100

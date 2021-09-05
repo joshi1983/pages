@@ -1,0 +1,53 @@
+; Inspired by logo at:
+; https://logos.fandom.com/wiki/Raycon
+to rayconLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	setPenSize 0
+	setFillColor "black
+	jumpForward :height * 0.563
+	jumpRight :height * 0.105
+	localmake "rCenter pos
+
+	jumpTo :oldPos
+	jumpForward :height / 2
+	localmake "center pos
+	left 57.4
+	jumpForward :height / 2
+	setHeading :oldHeading + 90
+	localmake "a (towards :rCenter) - (:oldHeading + 90)
+	polyStart
+	localmake "startPos pos
+	jumpForward (distance :rCenter) * cos :a
+	localmake "arcRadius distance :rCenter
+	arcRight 146.5 :arcRadius
+	left 100
+	jumpForward distanceToCircle :center :height / 2
+	setHeading (towards :center) + 90
+	arcLeft 90 :height / 2
+	localmake "arcAngle 2 * arcSin (distance :startPos) / :height
+	arcLeft :arcAngle :height / 2
+	polyEnd
+
+	jumpTo :center
+	setHeading :oldHeading - 75
+	jumpForward :height / 2
+	setHeading :oldHeading + 90
+	polyStart
+	localmake "startPos pos
+	localmake "a (towards :rCenter) - (:oldHeading + 90)
+	jumpForward (distance :rCenter) * cos :a
+	localmake "arcRadius distance :rCenter
+	print :arcRadius
+	arcRight 180 :arcRadius
+	arcLines [[0.305] [90 0] [0.133] [90 0] [0.24] [-47.3 0]] :height
+	jumpForward distanceToCircle :center :height / 2
+	setHeading (towards :center) - 90
+	localmake "arcAngle 2 * arcSin (distance :startPos) / :height
+	arcRight :arcAngle :height / 2
+	polyEnd
+	setTurtleState :oldState
+end
+
+rayconLogo 100

@@ -1,0 +1,36 @@
+! Invert Hilbert Matrix
+!
+! **NOTE:** type 'do huge' in the command window before running
+
+
+DECLARE HUGE m, r, den
+
+DIM M(1,1), R(1,1)
+
+DECLARE PUBLIC h_det$
+
+PRINT "n = ";
+INPUT n
+MAT redim M(n,n)
+
+DECIMALS int(1.1*n^2)             ! Decimals needed increases as n^2
+
+! Compute the denominator separately, convert to type HUGE,
+! so that the quotient  1/den  will be performed in HUGE.
+
+FOR i = 1 to n
+    FOR j = 1 to n
+        LET den = i+j-1
+        LET M(i,j) = 1 / den
+    NEXT j
+NEXT i
+
+LET t1 = time
+MAT R = INV(M)
+PRINT time-t1; "secs."; "    ";
+PRINT "Determinant =  1 / "; h_det$
+MAT PRINT R
+
+END
+
+

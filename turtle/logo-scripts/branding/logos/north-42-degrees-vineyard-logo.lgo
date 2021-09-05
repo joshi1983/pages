@@ -1,0 +1,148 @@
+to crescent :outerRadius :innerRadius
+	assert :outerRadius < :innerRadius
+	localmake "innerArcAngle arcSin :outerRadius / :innerRadius
+	right 90
+	polyStart
+	arcLeft 180 :outerRadius
+	left 90 + :innerArcAngle
+	arcRight :innerArcAngle * 2 :innerRadius
+	polyEnd
+end
+
+to skyArc :logoHeight
+	localmake "oldState turtleState
+	localmake "radius :logoHeight / 2
+	localmake "size1 :logoHeight * 0.017
+	localmake "angle1 arcSin :size1 / :radius
+	localmake "skyArcAngle1 173.3
+	localmake "skyArcAngle2 100
+	localmake "thickness1 :logoHeight * 0.05
+	localmake "thickness2 abs :thickness1 * cos (:skyArcAngle2 - 90)
+	localmake "size2 abs :thickness1 * cos :skyArcAngle2
+	localmake "innerRadius :radius - :thickness2
+	localmake "skyArcAngle4 arcSin :size2 / :innerRadius
+	setPenSize 0
+	setFillColor "#0066a4
+	jumpForward :radius
+	localmake "center pos
+	jumpForward :size1
+	jumpRight sqrt :radius * :radius - :size1 * :size1
+	left :angle1
+	polyStart
+	arcLeft :skyArcAngle1 :radius
+	left :skyArcAngle2
+	jumpForward :thickness1
+	setHeading (towards :center) - 90
+	arcRight :skyArcAngle1 - :skyArcAngle4 * 2 :innerRadius
+	polyEnd
+
+	setTurtleState :oldState
+end
+
+to drawStars :logoHeight
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "starsInfo [
+		[0.25 0.687 0.06]
+		[0.129 0.804 0.045]
+		[0.095 0.629 0.03]
+	]
+	repeat count :starsInfo [
+		localmake "starInfo item repcount :starsInfo
+		jumpTo :oldPos
+		jumpRight :logoHeight * first :starInfo				
+		jumpForward :logoHeight * item 2 :starInfo
+		localmake "size1 :logoHeight * last :starInfo
+		isotoxalStar :size1 :size1 * 0.18 4
+	]
+	setTurtleState :oldState
+end
+
+to drawGround :logoHeight
+	localmake "oldState turtleState
+	localmake "radius :logoHeight / 2
+	localmake "innerRadius :radius * 0.9132366
+	localmake "arcsInfo [
+		[85 13.92 93 19.5 81.8 4]
+		[69.55 12.1 78 18 67.28 4.8]
+		[48.9 19 60.7 26 47.28 4]
+	]
+	jumpForward :radius
+	localmake "center pos
+	setFillColor "white
+	jumpBackward :radius
+	right 90
+	arcLeft 88.973 :radius
+	left 80.03
+	localmake "arcRadius :radius * 6
+	localmake "startPos pos
+	polyStart
+	arcLeft 1 :arcRadius
+	; 1 degree just to get off the circle so getArcLeftAngleToCircle doesn't return 0. 
+	arcLeft (getArcLeftAngleToCircle :arcRadius :center :radius) :arcRadius
+	setHeading (towards :center) + 90
+	arcLeft 7 :radius
+	left 95.1
+	localmake "arcRadius :radius * 6.11
+	arcRight 1 :arcRadius
+	arcRight (getArcRightAngleToCircle :arcRadius :center :innerRadius) :arcRadius
+	setHeading (towards :center) - 90
+	arcRight 2.92 :innerRadius
+	repeat count :arcsInfo [
+		localmake "arcInfo item repcount :arcsInfo
+		right first :arcInfo
+		localmake "arcRadius :radius * 5.85
+		arcLeft 1 :arcRadius ; get off the circle.
+		arcLeft (getArcLeftAngleToCircle :arcRadius :center :innerRadius) :arcRadius
+		setHeading (towards :center) - 90
+		arcRight item 2 :arcInfo :innerRadius
+		left item 3 :arcInfo
+		jumpForward distanceToCircle :center :radius
+		setHeading (towards :center) + 90
+		arcLeft item 4 :arcInfo :radius
+		left item 5 :arcInfo
+		localmake "arcRadius :radius * 5.8
+		arcRight 2 :arcRadius
+		arcRight (getArcRightAngleToCircle :arcRadius :center :innerRadius) :arcRadius
+		setHeading (towards :center) - 90
+		arcRight item 6 :arcInfo :innerRadius
+	]
+	setHeading (towards :center) - 90
+	arcRight 61.5 :innerRadius
+	left 37
+	jumpForward distanceToCircle :center :radius
+	setHeading (towards :center) + 90
+	localmake "angle 2 * arcSin (distance :startPos) / 2 / :radius
+	arcLeft :angle :radius
+	polyEnd
+
+	setTurtleState :oldState
+end
+
+; Inspired by logo at
+; https://north42degrees.com/
+to north42DegreesWineryLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	skyArc :height
+	setPenSize 0
+	setFillColor "#cfcfd0
+
+	; Draw the moon.
+	jumpForward :height * 0.645
+	jumpLeft :height * 0.33
+	right 48
+	crescent :height * 0.172 :height * 0.1735
+
+	setHeading :oldHeading
+	jumpTo :oldPos
+	drawStars :height
+
+	drawGround :height
+
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+north42DegreesWineryLogo 100

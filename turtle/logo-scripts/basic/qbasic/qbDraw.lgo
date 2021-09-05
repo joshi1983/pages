@@ -1,0 +1,139 @@
+to qbDrawCommandA :vals
+	right 90 * first :vals
+end
+
+to qbDrawCommandC :vals
+	setPenColor first :vals
+end
+
+to qbDrawCommandD :vals :scale
+	backward :scale * first :vals
+end
+
+to qbDrawCommandE :vals :scale
+	right 45
+	forward :scale * ( 1 / cos 45 ) * first :vals
+	left 45
+end
+
+to qbDrawCommandF :vals :scale
+	right 135
+	forward :scale * ( 1 / cos 45 ) * first :vals
+	left 135
+end
+
+to qbDrawCommandG :vals :scale
+	left 135
+	forward :scale * ( 1 / cos 45 ) * first :vals
+	right 135
+end
+
+to qbDrawCommandH :vals :scale
+	left 45
+	forward :scale * ( 1 / cos 45 ) * first :vals
+	right 45
+end
+
+to qbDrawCommandL :vals :scale
+	left 90
+	forward :scale * first :vals
+	right 90
+end
+
+to qbDrawCommandM :vals :scale
+	jumpTo vectorScale :vals :scale
+end
+
+to qbDrawCommandP :vals
+	setFillColor first :vals
+	setPenColor item 2 :vals
+end
+
+to qbDrawCommandR :vals :scale
+	right 90
+	forward :scale * first :vals
+	left 90
+end
+
+to qbDrawCommandT :vals :scale
+	setHeading :scale * first :vals
+end
+
+to qbDrawCommandU :vals :scale
+	forward :scale * first :vals
+end
+
+to qbDrawCommandGetValues :commandSubstring
+	localmake "result [ ]
+	localmake "valStrings split :commandSubstring ','
+	repeat count :valStrings [
+		localmake "s lowerCase item repcount :valStrings
+		
+		if and not empty? :s 'a' = first :s [
+			localmake "s butFirst :s
+		]
+		if and not empty? :s '=' = first :s [
+			localmake "s butFirst :s
+		]
+		if not empty? :s [
+			localmake "num parseNumber :s
+			queue2 "result :num
+		]
+	]
+	output :result
+end
+
+; Similar to QBasic's draw subroutine
+to qbDraw :drawString
+	localmake "oldState turtleState
+	setHeading 0
+	localmake "scale 1
+	localmake "commands 'DEFGHLMRTU'
+	localmake "noScaleCommands 'ACP'
+	localmake "drawString upperCase :drawString
+
+	; Insert a space before each recognizable command letter.
+	for ["i count :drawString 1] [
+		localmake "ch item :i :drawString
+		if or substring? :ch :commands substring? :ch :noScaleCommands [
+			localmake "prev substring :drawString 1 :i - 1
+			localmake "after substring :drawString :i count :drawString
+			localmake "drawString (word :prev ' ' :after)
+		]
+	]
+	
+	localmake "commandSubstrings ( split :drawString )
+	if 1 < count :commandSubstrings [
+		for ["i count :commandSubstrings 2 -1] [
+			localmake "s item :i :commandSubstrings
+			localmake "prev item :i - 1 :commandSubstrings
+			if or ',' = first :s ',' = last :prev [
+				; merge adjacent substrings.
+				setItem :i - 1 "commandSubstrings word :prev :s
+				setItem :i "commandSubstrings ''
+			]
+		]
+	]
+	repeat count :commandSubstrings [
+		localmake "commandSubstring item repcount :commandSubstrings
+		if not empty? :commandSubstring [
+			localmake "ch upperCase first :commandSubstring
+			localmake "vals qbDrawCommandGetValues butFirst :commandSubstring
+			if not empty? :vals [
+				ifelse :ch = "S [
+					localmake "scale ( first :vals ) / 4
+				] [
+					localmake "name word "qbDrawCommand :ch
+					ifelse substring? :ch :noScaleCommands [
+						( invoke :name :vals )
+					] [
+						if substring? :ch :commands [
+							( invoke :name :vals :scale )
+						]
+					]
+				]
+			]
+		]
+	]
+	setTurtleState :oldState
+end

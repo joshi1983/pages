@@ -1,0 +1,32 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/Databricks#/media/File:Databricks_Logo.png
+to dataBricksLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "widthRatio1 0.462
+	localmake "widthRatio2 0.415
+	localmake "polyPoints [
+		[0 0] [-:widthRatio1 0.261] [-:widthRatio1 0.2914] [-0.44 0.3039]
+		[0 0.055] [:widthRatio2 0.2874] [:widthRatio2 0.3826] [0 0.1514]
+		[-:widthRatio1 0.4127] [-:widthRatio1 0.592] [-0.44 0.6044]
+		[0 0.357] [:widthRatio2 0.5893] [:widthRatio2 0.6829] [0 0.4515]
+		[-:widthRatio1 0.7119] [-:widthRatio1 0.7409] [0 1] [0.352 0.803]
+		[0.352 0.78] [0.322 0.764] [0 0.946] [-0.388 0.725]
+		[0 0.507] [0.442 0.753] [:widthRatio1 0.743] [:widthRatio1 0.5611]
+		[0 0.3] [-:widthRatio2 0.532] [-:widthRatio2 0.438] [0 0.205] [0.442 0.4535]
+		[:widthRatio1 0.442] [:widthRatio1 0.2608]
+	]
+	repeat count :polyPoints [
+		localmake "point item repcount :polyPoints
+		jumpRight :height * first :point
+		jumpForward :height * last :point
+		setItem repcount "polyPoints pos
+		jumpTo :oldPos
+	]
+	setFillColor "#ff3927
+	setPenSize 0
+	polygon :polyPoints
+	setTurtleState :oldState
+end
+
+dataBricksLogo 100

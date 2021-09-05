@@ -1,0 +1,101 @@
+make "lighthouseRed "#ff6766
+make "lighthouseBlack "#012d3d
+
+to lightRays :logoHeight
+	localmake "thickness1 :logoHeight * 0.037
+	localmake "width :logoHeight * 0.284
+	localmake "angle 24.5
+	localmake "width1 :width / cos :angle
+	jumpForward :logoHeight * 0.8091
+	jumpLeft :logoHeight * 0.146
+	setPenSize 0
+	setFillColor :lighthouseRed
+	left 90
+	parallelogram :thickness1 :width1 :angle
+	parallelogram :thickness1 :width1 -:angle
+end
+
+; draws the house-like shape with steeped roof at the top
+; of the lighthouse
+to lighthouseTop :boxHeight
+	localmake "lightboxWidth :boxHeight * 0.57
+	localmake "oldPenSize penSize
+	localmake "baseHeight :boxHeight * 0.55
+	setFillColor transparent
+	isoTrapezoid :lightboxWidth :lightboxWidth :baseHeight
+	jumpForward :baseHeight - penSize / 2
+	setPenSize 0
+	setFillColor :lighthouseBlack
+	isoTriangle :boxHeight :boxHeight - :baseHeight + :oldPenSize / 2
+end
+
+; Inspired by logo at
+; https://www.lighthouselabs.ca/
+; Their facebook page also shows the logo at:
+; https://www.facebook.com/lighthouselabsvancouver
+to lighthouseLabsLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "thickness :height * 0.03
+	localmake "thickness2 :height * 0.026
+	localmake "baseWidth :height * 0.243
+	localmake "baseTopWidth :height * 0.165
+	localmake "baseHeight :height * 0.7
+	localmake "baseAngle arcTan (:baseWidth - :baseTopWidth) / 2 / :baseHeight
+	stripes :height * 0.388 :thickness [:lighthouseRed]
+	jumpForward :thickness + :thickness2 / 2
+	localmake "basePoint pos
+	setFillColor "white
+	setPenColor :lighthouseBlack
+	setPenSize :thickness2
+	isoTrapezoid :baseWidth :baseTopWidth :baseHeight
+
+	; door
+	stripes :height * 0.04 :height * 0.065 [penColor]
+
+	; lower dark diagonal shape on base
+	localmake "size1 :height * 0.083
+	jumpForward :size1
+	jumpLeft 0.5 * mix :baseTopWidth :baseWidth :size1 / :baseHeight
+	right 63
+	setPenSize 0
+	setFillColor :lighthouseBlack
+	polyStart
+	jumpForward :height * 0.25510352
+	setHeading :oldHeading - :baseAngle
+	jumpForward :height * 0.221
+	setHeading :oldHeading - 117.6
+	jumpForward :height * 0.228
+	polyEnd
+
+	; upper dark diagonal shape on base
+	jumpTo :basePoint
+	setHeading :oldHeading
+	localmake "size1 :height * 0.487
+	jumpForward :size1
+	jumpLeft 0.5 * mix :baseTopWidth :baseWidth :size1 / :baseHeight
+	right 63
+	polyStart
+	jumpForward :height * 0.206
+	setHeading :oldHeading - :baseAngle
+	jumpForward :height * 0.12
+	setHeading :oldHeading
+	jumpLeft :baseTopWidth
+	polyEnd
+
+	jumpTo :basePoint
+	jumpForward :baseHeight - :thickness2 / 2
+	stripes :height * 0.25 :thickness2 [:lighthouseBlack]
+
+	jumpForward :thickness
+	setPenSize :thickness2
+	lighthouseTop :height * 0.24
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	lightRays :height
+	setTurtleState :oldState
+end
+
+lighthouseLabsLogo 100

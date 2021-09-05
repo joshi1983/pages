@@ -1,0 +1,106 @@
+to drawTriangles :triangleSize :numTriangles :angle1 :color1 :color2
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "outerAngle :angle1 * 2
+	localmake "edgeThickness :triangleSize * 0.08
+	localmake "trapWidth1 :triangleSize * :numTriangles
+	localmake "trapWidth2 :trapWidth1 - :edgeThickness * 2 * tan :angle1
+	jumpForward :trapWidth1 / 2
+	left 90
+	setFillColor :color1
+	isoTrapezoid :trapWidth1 :trapWidth2 :edgeThickness
+	setFillColor :color2
+	localmake "triangleSize :trapWidth2 / :numTriangles
+	localmake "largeRadius :triangleSize * 0.15
+	localmake "smallRadius :largeRadius * 0.4
+	localmake "tinyRadius :smallRadius * 0.7
+	localmake "numEdgeCircles 4
+	localmake "edgeSeparation (:trapWidth1 + :trapWidth2) / (:numEdgeCircles * :numTriangles * 2)
+	jumpTo :oldPos
+	setHeading :oldHeading - :angle1
+	jumpForward :edgeThickness / 2 / sin :angle1
+	setHeading :oldHeading
+	jumpForward :edgeSeparation / 2
+	repeat :numTriangles * :numEdgeCircles [
+		circle :tinyRadius
+		jumpForward :edgeSeparation
+	]
+	jumpTo :oldPos
+	setHeading :oldHeading - :angle1
+	jumpForward :edgeThickness / sin :angle1
+	setHeading :oldHeading
+	localmake "size1 :triangleSize / 2 / cos :angle1
+	repeat :numTriangles [
+		localmake "pos1 pos
+		setFillColor :color1
+		localmake "corners [pos]
+		left :angle1
+		polyStart
+		jumpForward :size1
+		queue2 "corners pos
+		right :outerAngle
+		jumpForward :size1		
+		polyEnd
+		queue2 "corners pos
+		setFillColor :color2
+		localmake "midPoint mix (first :corners) (last :corners) 0.5
+		jumpTo mix :midPoint (item 2 :corners) 0.55
+		localmake "largeCirclePos pos
+		circle :largeRadius
+		jumpTo mix (first :corners) :largeCirclePos 0.5
+		circle :smallRadius
+		jumpTo mix (last :corners) :largeCirclePos 0.5
+		circle :smallRadius
+		jumpTo :pos1
+		setHeading :oldHeading
+		jumpForward :triangleSize
+	]
+end
+
+; Inspired by
+; https://thewallpapers.net/desktop/13640/the-crescent-star-silbury-hill-england-1999
+; It looks like this crop circle was discovered in 1999 in Silbury Hill, England.
+to crescentStarCropCircles :height :color1 :color2
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "angle1 28
+	localmake "size1a :height / sqrt 2
+	localmake "size1 :size1a * tan :angle1
+	localmake "size2 hypot [:size1 :size1a]
+	localmake "angle2 135
+	localmake "angle2b 180 - :angle2 - :angle1
+	localmake "angle3 :angle1 + :angle2b
+	localmake "size3 :size1a / cos :angle2b
+	localmake "angle4a 45 - :angle1
+	localmake "angle4b 45 - :angle2b
+	localmake "x :height * (tan :angle4a) * (tan :angle4b) / ((tan :angle4a) + tan :angle4b)
+	localmake "numTriangles 4
+	localmake "size4 :x / :numTriangles / sin :angle4a
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	right 45
+	repeat 4 [
+		setHeading :oldHeading + (repcount - 0.5) * 360 / 4
+		jumpLeft :size1
+		right :angle1
+		localmake "heading1 heading
+		setFillColor :color1
+		polyStart
+		jumpForward :size2
+		localmake "pos1 pos
+		right :angle2
+		jumpForward :size3
+		polyEnd
+		jumpTo :pos1
+		setHeading :heading1 + 180
+		drawTriangles :size4 :numTriangles :angle3 :color2 :color1
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+make "color1 "#FFF8D6
+make "color2 "#B57D1C
+setScreenColor :color2
+crescentStarCropCircles 100 :color1 :color2

@@ -1,0 +1,45 @@
+to drawT :fontHeight
+	localmake "oldState turtleState
+	localmake "thicknessRatio 0.198
+	localmake "topThickness :fontHeight * 0.1435
+	stripes :fontHeight * :thicknessRatio :fontHeight [fillColor]
+	jumpForward :fontHeight - :topThickness
+	stripes :fontHeight * 0.782 :topThickness [fillColor]
+	setTurtleState :oldState
+end
+
+to drawD :fontHeight
+	localmake "oldState turtleState
+	localmake "width :fontHeight * 0.798
+	localmake "outerArcs [[0.45] [-15 0.455] [-30 0.265] [-20 0.25] [-15 0.58] 
+	[-10 1.15396791]]
+	localmake "innerArcs [[0.2] [-25 0.17] [-40 0.13] [-20 0.47] [-5 1.39434645]]
+	jumpForward :fontHeight
+	jumpLeft :width / 2
+	setPenSize 0
+	polyStart
+	right 90
+	arcLines :outerArcs :fontHeight
+	arcLines reverse :outerArcs :fontHeight
+	arcLines [[-90 0] [0.805] [-90 0] [0.2] [-90 0] [0.663] [90 0]] :fontHeight
+	arcLines :innerArcs -:fontHeight
+	arcLines reverse :innerArcs -:fontHeight
+	jumpForward :fontHeight * 0.2
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Toronto-Dominion_Bank#/media/File:Toronto-Dominion_Bank_logo.svg
+to tdLogo :height
+	localmake "oldState turtleState
+	setFillColor "white
+	jumpLeft :height * 0.286
+	drawT :height
+	jumpRight :height * 0.554
+	drawD :height
+	setTurtleState :oldState
+end
+
+setScreenColor "#54b948
+tdLogo 100

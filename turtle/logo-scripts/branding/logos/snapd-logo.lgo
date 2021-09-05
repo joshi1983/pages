@@ -1,0 +1,64 @@
+; Inspired by logo at:
+; https://www.comeoutplayguide.com/product-page/snapd-windsor
+to snapdLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "thickness :height * 0.022
+	localmake "shellRadius :height * 0.33
+	localmake "arcRadius :height * 0.3
+	localmake "shellColor "#615c58
+	localmake "feetDistance :height * 0.36
+	localmake "turtleHeadLines1 [
+		[0.34] [-80 0.2] [-32.5 0.02]
+	]
+	jumpForward :height * 0.465
+	localmake "center pos
+	setLineCap "round
+	setPenSize :height * 0.155
+	setPenColor "#d9382e
+	repeat 2 [
+		setHeading :oldHeading + 3 + 103.5 * repcount
+		jumpBackward :feetDistance
+		forward :feetDistance * 2
+		jumpTo :center
+	]
+	setFillColor penColor
+	setPenSize 0
+	setHeading :oldHeading - 27
+	drawArcLineShape [-0.05 0
+		combine :turtleHeadLines1 reverse :turtleHeadLines1
+	] :height
+
+	setFillColor :shellColor
+	setPenColor "white
+	setPenSize :thickness
+	circle :shellRadius
+	repeat 6 [
+		setHeading :oldHeading + 27 + repcount * 360 / 6
+		jumpForward :height * 0.06
+		left 108
+		if repcount = 3 [
+			localmake "tailStartPos pos
+			localmake "tailStartHeading heading
+		]
+		localmake "angle getArcRightAngleToCircle :arcRadius :center :shellRadius
+		arcRight :angle :arcRadius
+		jumpTo :center
+	]
+	setPenSize 0
+	jumpTo :tailStartPos
+	setHeading :tailStartHeading
+	jumpRight :thickness / 2
+	polyStart
+	arcLines [[-80 1 - :thickness / 2 / :arcRadius] [-11 2]
+		[-148 0.02] [30 1.5]
+	] :arcRadius
+	polyEnd
+
+	jumpTo :center
+	setFillColor "white
+	circle :height * 0.057
+	setTurtleState :oldState
+end
+
+snapdLogo 100

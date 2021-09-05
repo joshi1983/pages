@@ -1,0 +1,167 @@
+to drawLeaf :height
+	localmake "size1 :height * 0.038
+	right 90
+	jumpForward :size1 * 0.5
+	setPenSize 0
+	polyStart
+	localmake "largeRatio 0.018
+	localmake "smallRatio 0.01
+	localmake "arcs [[92 0] [0.22] [-102 :largeRatio]
+	[0.225] [120 0] [0.09] [-70.5 :smallRatio] [0.305] [117 0]
+	[0.064] [-85 :smallRatio] [0.154] [119 0] [0.14] [-77 :smallRatio]
+	[0.064] [113 0] [0.15] [-147 :largeRatio] [0.26] [128 0] [0.095]
+	[-88 :smallRatio] [0.1785308]]
+	arcLines :arcs :height
+	; This is the point of symmetry in the flag.
+	left 180 - 29.5 * 2
+	arcLines reverse :arcs :height
+	jumpForward :size1
+	polyEnd
+end
+
+; Canadian flag
+; made to look like:
+; https://upload.wikimedia.org/wikipedia/commons/d/d9/Flag_of_Canada_%28Pantone%29.svg
+to canadaFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 2
+	localmake "redColor "#d52b1e
+	jumpForward :height / 2
+	localmake "center pos
+	right 90
+	jumpBackward :width * 0.5
+	setPenColor :redColor
+	setPenSize :height
+	setLineCap "butt
+	forward :width * 0.25
+	setPenColor "white
+	forward :width * 0.5
+	setPenColor :redColor
+	forward :width * 0.25
+	jumpTo :center
+	left 90
+	jumpBackward :height * (0.5 - 0.08)
+	setFillColor :redColor
+	drawLeaf :height * 0.836
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://commons.wikimedia.org/wiki/File:Flag_of_Acadia.svg
+to acadiaFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 3 / 2
+	localmake "colors ["#013896 "#fff "#cf142b]
+	localmake "starSize1 :height * 0.185
+	right 90
+	jumpLeft :height / 2
+	jumpBackward :width / 2
+	stripes :height :width :colors
+	setFillColor "gold
+	setPenSize 0
+	jumpForward :width / 6
+	jumpLeft :height / 5
+	left 90
+	regularStar :starSize1 5
+	setTurtleState :oldState
+end
+
+to canadaPearsonPennantLeaf :height
+	localmake "oldState turtleState
+	localmake "lines1 [
+		[-135 0] [0.2] [45 0] [0.21] [135 0]
+		[0.07] [-90 0] [0.15] [90 0] [0.073]
+		[-90 0] [0.29] [135 0] [0.08] [-109 0]
+		[0.24] [127 0] [0.24] [-108 0] [0.08]
+		[135 0] [0.21] [-134 0] [0.32] [135 0]
+		[0.08] [-110 0] [0.27754] [64 0]
+	]
+	setPenSize 0
+	setFillColor penColor
+	drawArcLineShape [0 -0.36
+		combine :lines1 reverse :lines1
+	] :height
+	setTurtleState :oldState
+end
+
+; Inspired by flag at:
+; https://en.wikipedia.org/wiki/Flag_of_Canada#/media/File:Canada_Pearson_Pennant_1964.svg
+to canadaPearsonPennantFlag :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "width :height * 2
+	localmake "blueStripWidth :height / 3
+	localmake "thickness :height * 0.04
+	localmake "leafAngle 60
+	stripes :width :height ["white]
+	jumpLeft (:width - :blueStripWidth) / 2
+	repeat 2 [
+		stripes :blueStripWidth :height ["#2163d1]
+		jumpRight :width - :blueStripWidth
+	]
+	jumpTo :oldPos
+	setPenColor "red
+	setLineCap "butt
+	setPenSize :thickness
+	jumpForward :height * 0.104
+	forward :height * 0.115
+	localmake "startPos pos
+	left :leafAngle
+	repeat 3 [
+		forward :height * 0.46
+		if repcount = 2 [
+			jumpForward :height * 0.008
+		]
+		canadaPearsonPennantLeaf :height * 0.415
+		jumpTo :startPos
+		right :leafAngle
+	]
+	
+	setTurtleState :oldState
+end
+
+to drawGeorgeStanleyLeaf :flagHeight
+	localmake "lines [
+		[-90 0] [0.016] [91.6 0] [0.1615] [-114 0]
+		[0.055] [7.6 0] [0.145] [116 0] [0.06]
+		[-53 0] [0.08] [92 0] [0.067] [-94 0]
+		[0.217] [130 0] [0.04] [-102 0] [0.131]
+		[117.3 0] [0.12] [-100 0] [0.045] [133 0]
+		[0.153] [-134 0] [0.205] [134 0] [0.047]
+		[-111.4 0] [0.192354] [66.9 0]
+	]
+	setPenSize 0
+	drawArcLineShape [0 0.0965
+		combine :lines reverse :lines
+	] :flagHeight
+end
+
+; Inspired by:
+; https://en.wikipedia.org/wiki/Flag_of_Canada#/media/File:Flag_of_Canada_(1964).svg
+to georgeStanleyCanadaFlag :height
+	localmake "oldState turtleState
+	localmake "separation :height * 3 / 2
+	localmake "flagRed "#eb0000
+	stripes :height * 1.5 :height ["white]
+	setFillColor :flagRed
+	drawGeorgeStanleyLeaf :height
+	jumpLeft :separation / 2
+	repeat 2 [
+		stripes :height / 2 :height [:flagRed]
+		jumpRight :separation
+	]
+
+	setTurtleState :oldState
+end
+
+setScreenColor "#ddd
+make "height 100
+make "separation :height * 4
+jumpLeft :separation * 1.5
+canadaFlag :height
+jumpRight :separation
+acadiaFlag :height
+jumpRight :separation
+canadaPearsonPennantFlag :height
+jumpRight :separation
+georgeStanleyCanadaFlag :height
