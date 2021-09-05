@@ -1,0 +1,117 @@
+make "syrianGreen "#007a3d
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Syria#/media/File:Flag_of_the_United_Arab_Republic_(1958%E2%80%931971),_Flag_of_Syria_(1980%E2%80%932024).svg
+; Referenced from:
+; https://en.wikipedia.org/wiki/Flag_of_Syria
+to syriaUntil2024Flag :height
+	localmake "oldState turtleState
+	localmake "width :height * 9 / 6
+	localmake "starSeparation :height / 2
+	localmake "starSize2 :height * 0.1381935
+	stripes :width :height ["black "white "#ce1126]
+	setPenSize 0
+	jumpForward (:height - :starSize2 * (1 - cos 180 / 5)) / 2
+	jumpRight :starSeparation / 2
+	setFillColor :syrianGreen
+	repeat 2 [
+		regularStar :starSize2 5
+		jumpLeft :starSeparation
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by:
+; https://upload.wikimedia.org/wikipedia/commons/8/8c/Flag_of_Syria_%281963%E2%80%931972%29.svg
+to syria1963To1972Flag :height
+	localmake "oldState turtleState
+	localmake "width :height * 2
+	localmake "starRadius :height * 0.132481
+	localmake "starSeparation :height / 2
+	stripes :width :height ["black "white "#ce1126]
+	setPenSize 0
+	setFillColor :syrianGreen
+	jumpForward (:height - :starRadius * (1 - cos 180 / 5)) / 2
+	jumpRight :starSeparation
+	repeat 3 [
+		regularStar :starRadius 5
+		jumpLeft :starSeparation
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by:
+; https://upload.wikimedia.org/wikipedia/commons/1/14/Flag_of_the_Syrian_revolution.svg
+; This was the flag of Syrian opposition or Syrian independence.
+; It became the official flag after a revolution in 2024.
+to syrianOppositionFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 3 / 2
+	localmake "starSeparation :width / 4
+	localmake "starRadius :height * 0.1381935
+	stripes :width :height ["black "white :syrianGreen]
+	setPenSize 0
+	jumpForward  (:height - :starRadius * (1 - cos 180 / 5)) / 2
+	setFillColor "#ce1126
+	jumpRight :starSeparation
+	repeat 3 [
+		regularStar :starRadius 5
+		jumpLeft :starSeparation
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Syria#/media/File:Flag_of_Kingdom_of_Syria_(1920-03-08_to_1920-07-24).svg
+; Referenced from:
+; https://en.wikipedia.org/wiki/Flag_of_Syria
+to kingdomOfSyriaFlag :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "width :height * 2
+	localmake "colors ["white :syrianGreen "black]
+	localmake "angle arcTan :width / :height
+	localmake "starSize1 :height * 0.179
+	localmake "starSize2 :height * 0.077
+	stripes :width :height :colors
+	jumpLeft :width / 2
+	setPenSize 0
+	setFillColor "#ce1126
+	polyStart
+	jumpForward :height
+	right 180 - :angle
+	jumpForward (hypot [:height :width]) / 2
+	polyEnd
+	setHeading :oldHeading
+	jumpLeft :height * 0.6234
+	jumpForward :height * 0.007
+	setFillColor "white
+	isotoxalStar :starSize1 :starSize2 7
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Syria#/media/File:Flag_of_Syria_French_mandate.svg
+to syriaFrenchStateFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 3 / 2
+	stripes :width :height [:syrianGreen "white :syrianGreen]
+	jumpForward :height * 3 / 4
+	left 90
+	stripes :height / 2 :width / 2 ["#cd1226 "white "#002654]
+	setTurtleState :oldState
+end
+
+setScreenColor "#eee
+make "height 100
+make "separation :height * 3
+jumpLeft :separation * 2
+syriaUntil2024Flag :height
+jumpRight :separation
+syria1963To1972Flag :height
+jumpRight :separation
+syrianOppositionFlag :height
+jumpRight :separation
+kingdomOfSyriaFlag :height
+jumpRight :separation
+syriaFrenchStateFlag :height
