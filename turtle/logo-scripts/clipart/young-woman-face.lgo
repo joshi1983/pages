@@ -1,0 +1,251 @@
+; Inspired by: 
+; https://www.pinterest.ca/pin/374643262755711894/
+; Also at:
+; https://publicdomainvectors.org/en/free-clipart/Face-of-a-young-woman/85584.html
+
+make "eyeColor "#3b99b2
+make "upperLipColor "#d55629
+make "lowerLipColor "#c74627
+make "generalSkinColor "#f29e72
+make "skinColorHighlight "#f5b589
+make "skinNoseShadow "#d45626
+
+to leftEye :faceHeight
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	jumpForward :faceHeight * 0.57
+	jumpLeft :faceHeight * 0.138
+	localmake "upperRightCorner pos
+	setFillColor "#f7ffff
+	setPenSize 0
+	left 44
+	polyStart
+	arcLines [[23 0.35] [105 0] [0.1] [44 0] [20 0.15]
+	[50 0.04] [33 0.06]] :faceHeight
+	polyEnd
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :faceHeight * 0.6
+	jumpLeft :faceHeight * 0.218
+	setHeading :oldHeading
+	setFillColor :eyeColor
+	ellipse :faceHeight * 0.038 :faceHeight * 0.06
+	jumpLeft :faceHeight * 0.008
+	setFillColor "black
+	ellipse :faceHeight * 0.017 :faceHeight * 0.024
+	setFillColor "white
+	jumpRight :faceHeight * 0.014
+	jumpBackward :faceHeight * 0.004
+	ellipse :faceHeight * 0.012 :faceHeight * 0.02
+
+	jumpTo :upperRightCorner
+	setHeading :oldHeading - 10
+	setFillColor :skinColorHighlight
+	polyStart
+	arcLeft 26 :faceHeight * 0.45
+	jumpLeft :faceHeight * 0.091
+	polyEnd
+
+	setHeading towards :upperRightCorner
+	jumpForward :faceHeight * 0.051
+	setFillColor "black
+	left 16
+	polyStart
+	arcRight 32 :faceHeight * 0.22
+	right 167
+	arcLeft 25 :faceHeight * 0.276
+	polyEnd
+	setTurtleState :oldState
+end
+
+to leftEyeBrow :faceHeight
+	localmake "oldState turtleState
+	jumpForward :faceHeight * 0.788
+	jumpLeft :faceHeight * 0.224
+	setFillColor "black
+	setPenColor "white
+	setPenSize 0
+	right 102
+	polyStart
+	arcsRight [[20 0.165] [115 0.05] [98 0.005] [-35 0.14]] :faceHeight
+	polyEnd
+	setTurtleState :oldState
+end
+
+to rightEye :faceHeight
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	jumpForward :faceHeight * 0.572
+	jumpLeft :faceHeight * 0.025
+	localmake "upperLeftCorner pos
+	setPenSize 0
+	setFillColor "white
+	right 53
+	polyStart
+	arcsRight [[51 0.28] [107 0] [15 0.5] [82 0.08]
+	[20 0.2]] :faceHeight
+	polyEnd
+
+	jumpTo :upperLeftCorner 
+	setHeading :oldHeading
+	jumpRight :faceHeight * 0.106
+	jumpForward :faceHeight * 0.015
+	setFillColor :eyeColor
+	ellipse :faceHeight * 0.05 :faceHeight * 0.06
+	setFillColor "black
+	ellipse :faceHeight * 0.02 :faceHeight * 0.025
+	jumpRight :faceHeight * 0.015
+	jumpForward :faceHeight * 0.009
+	setFillColor "white
+	ellipse :faceHeight * 0.015 :faceHeight * 0.018
+
+	; eyelid
+	jumpTo :upperLeftCorner 
+	setHeading :oldHeading + 10
+	setFillColor :skinColorHighlight
+	polyStart
+	arcsRight [[15 0.4] [105 0.07] [11.3 0.4] [130 0]
+	[-39 0.3]] :faceHeight
+	polyEnd
+
+	; lashes
+	jumpTo :upperLeftCorner 
+	setHeading :oldHeading + 55
+	jumpForward :faceHeight * 0.023
+	setFillColor "black
+	polyStart
+	arcsRight [[43 0.215] [25 0.12] [87.9 0] [12 0.5]
+	[-175 0] [-16.7 0.44] [-86 0] [-50 0.15] [-25 0.18]] :faceHeight
+	polyEnd
+	setTurtleState :oldState
+end
+
+to noseShadow :faceHeight
+	localmake "oldState turtleState
+	jumpForward :faceHeight * 0.36
+	jumpLeft :faceHeight * 0.158
+	setFillColor :skinNoseShadow
+	right 155
+	setPenSize 0
+	polyStart
+	arcsLeft [[104 0.048] [-50 0] [20 0.1] [37 0.042] [-160 0]
+	[-26 0.07] [-62 0.03] [54 0] [-30 0.08] [-90 0.042]] :faceHeight
+	polyEnd
+	setTurtleState :oldState
+end
+
+to teeth :faceHeight
+	localmake "oldState turtleState
+	jumpForward :faceHeight * 0.223
+	jumpLeft :faceHeight * 0.095
+	setPenSize 0
+	setFillColor "white
+	circle :faceHeight * 0.045
+	setTurtleState :oldState
+end
+
+to lowerLip :faceHeight
+	localmake "oldState turtleState
+	jumpForward :faceHeight * 0.2
+	jumpLeft :faceHeight * 0.008
+	right 40
+	setPenSize 0
+	setFillColor :lowerLipColor
+	polyStart
+	arcsLeft [[144 0.012] [-35 0.2] [146 0.012] [103 0.0935]] :faceHeight
+	polyEnd
+	setTurtleState :oldState
+end
+
+to upperLip :faceHeight
+	localmake "oldState turtleState
+	setPenSize 0
+	setFillColor :upperLipColor
+	jumpForward :faceHeight * 0.22
+	jumpLeft :faceHeight * 0.01
+	right 78
+	polyStart
+	arcsLeft [[169 0.014] [-61 0.053] [130 0.026] [-136 0]
+	[122 0.026] [-25 0.053] [110 0.014] [35 0.043] [25 0.06]
+	[-57 0.042] [55 0.056]] :faceHeight
+	polyEnd
+	setTurtleState :oldState
+end
+
+to faceBackground :faceHeight
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	jumpForward :faceHeight * 0.31
+	jumpRight :faceHeight * 0.23
+	setFillColor :generalSkinColor
+	setPenSize 0
+	left 145
+	polyStart
+	arcsRight [[25 0.75] [60 0.07] [14 0.2] [27 0.72]
+	[40 0.32] [22 1]] :faceHeight
+	setHeading :oldHeading + 90
+	jumpForward :faceHeight * 0.35
+	polyEnd
+	setTurtleState :oldState
+end
+
+to neck :faceHeight
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	setPenSize 0
+	jumpRight :faceHeight * 0.22
+	jumpBackward :faceHeight * 0.15
+	setPenColor "white
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#d58152
+	setProperty "colorStops 0.99 "#d58152
+	setProperty "colorStops 1 "#c8754b
+	setFillGradient createRadialGradient pos :faceHeight * 0.26 :colorStops
+	jumpTo :oldPos
+	jumpRight :faceHeight * 0.022
+	right 40
+	polyStart
+	arcLines [[57 0.07] [0.1] [-72 0] [0.28] [-139 0]
+	[25 0.5] [34.85 0.2]] :faceHeight
+	polyEnd
+	setTurtleState :oldState
+end
+
+to hair :faceHeight
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	jumpForward :faceHeight * 0.286
+	jumpRight :faceHeight * 0.138
+	setPenSize 0
+	setFillColor "black
+	right 38
+	polyStart
+	arcsRight [[-68 0.43] [-50 0] [-40 0.19] [-33 0.1]
+	[95 0.005] [50 0.065] [65 0.03] [28 0.13] [-158 0]
+	[37 0.3] [-98 0] [-58 0.47] [160 0] [83 0.4]] :faceHeight
+	setHeading :oldHeading + 90
+	jumpForward :faceHeight * 0.45
+	jumpRight :faceHeight * 0.67
+	polyEnd
+	setTurtleState :oldState
+end
+
+to youngWomanFace :size
+	localmake "oldState turtleState
+	neck :size
+	faceBackground :size
+	leftEye :size
+	leftEyeBrow :size
+	rightEye :size
+	noseShadow :size
+	teeth :size
+	lowerLip :size
+	upperLip :size
+	hair :size
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+youngWomanFace 100
