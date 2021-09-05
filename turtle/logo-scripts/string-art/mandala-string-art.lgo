@@ -1,0 +1,155 @@
+; Inspired by
+; https://www.pinterest.ca/pin/506795764329735861/
+
+to calcStarSettings :largeRadius :smallRadius :numPoints
+	localmake "angle1 180 / :numPoints
+	localmake "len1 :smallRadius * sin :angle1
+	localmake "len2 :smallRadius * cos :angle1
+	localmake "size1 hypot [:len1 (:largeRadius - :len2)]
+	localmake "angle2 90 - arcCos :len1 / :size1
+	localmake "angle3 180 - 2 * (:angle1 + :angle2)
+	output [:angle2 :angle3 :size1]
+end
+
+to star :largeSize :smallSize :numPoints
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "oldPenSize penSize
+	localmake "oldFillColor fillColor
+	localmake "settings calcStarSettings :largeSize :smallSize :numPoints
+	localmake "angle1 item 1 :settings
+	localmake "angle2 item 2 :settings
+	localmake "size1 item 3 :settings
+	jumpForward :largeSize
+	penDown
+	localmake "vertices []
+	repeat :numPoints [
+		right 180 - :angle1
+		forward :size1
+		queue "vertices pos
+		left :angle2
+		forward :size1
+		queue "vertices pos
+		left :angle1
+	]
+	right 180 / :numPoints
+	penUp
+	setPenSize 0
+	setFillColor "white
+	repeat count :vertices [
+		setPos item repcount :vertices
+		circle 0.4
+	]
+	setFillColor :oldFillColor
+	setPenSize :oldPenSize
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to starStringRange1 :largeRadius1 :largeRadius2 :fixedRadius :numStrings :numPoints
+	repeat :numStrings [
+		localmake "ratio repRatio
+		localmake "largeRadius mix :largeRadius1 :largeRadius2 :ratio
+		star :largeRadius :fixedRadius :numPoints
+	]
+end
+
+to starStringRange2 :radius1 :radius2 :minScale :numStrings :numPoints
+	localmake "radius1Min :radius1 * :minScale
+	localmake "radius2Min :radius2 * :minScale
+	repeat :numStrings [
+		localmake "ratio repRatio
+		localmake "radius1_ mix :radius1 :radius1Min :ratio
+		localmake "radius2_ mix :radius2 :radius2Min :ratio
+		star :radius1_ :radius2_ :numPoints
+	]
+end
+
+to polarPosition :heading :radius
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	setHeading :heading
+	jumpForward :radius
+	localmake "result pos
+	penUp
+	jumpTo :oldPos
+	setHeading :oldHeading
+	output :result
+end
+
+to fanLines :largeRadius :smallRadius :numStrings :numPoints
+	localmake "oldHeading heading
+	localmake "oldPos pos
+	repeat :numPoints [
+		localmake "ratio (repcount - 1) / :numPoints
+		localmake "heading1 :oldHeading + :ratio * 360
+		localmake "p1 polarPosition :heading1 :largeRadius
+		localmake "p2 polarPosition :heading1 + (360 / :numPoints) :largeRadius 
+
+		penUp
+		jumpTo :oldPos
+		setHeading :heading1 + 180 / :numPoints
+		jumpForward :smallRadius
+		localmake "fixedPoint pos
+		repeat :numStrings [
+			localmake "ratio repRatio
+			localmake "toPoint mix :p1 :p2 :ratio
+			setPos :fixedPoint
+			setHeading towards :toPoint
+			penDown
+			forward distance :toPoint
+			penUp
+		]
+		setPos :oldPos
+	]
+end
+
+to mandalaStringArt :size
+	localmake "oldPos pos
+	localmake "numPoints1 8
+	localmake "numPoints2 16
+	localmake "numPoints3 32
+	localmake "numStrings 16
+	localmake "size1 :size * 0.85
+	localmake "size2 :size * 0.62
+	localmake "size3 :size * 0.051
+	localmake "size4 :size * 0.17
+	localmake "size5 :size * 0.035
+	localmake "alternatingColors [ "#f80 "#0ed]
+	localmake "alternatingScaleFactor 0.75
+	localmake "color1 "#44dfff
+	setPenSize :size * 0.003
+	setPenColor :color1
+	starStringRange1 :size :size1 :size1 :numStrings :numPoints1
+	right 360 / 16
+	starStringRange1 :size :size1 :size1 :numStrings :numPoints1
+	localmake "alternatingScale 1
+	repeat 4 [
+		setPenColor item (1 + remainder repcount 2) :alternatingColors
+
+		starStringRange2 :size1 *:alternatingScale :size2 * :alternatingScale :alternatingScaleFactor  :numStrings * :alternatingScale :numPoints2
+		localmake "alternatingScale :alternatingScale * :alternatingScaleFactor
+	]
+	setPenColor "white
+	starStringRange2 :size1 *:alternatingScale :size1 * :alternatingScale :alternatingScaleFactor * 0.95  :numStrings * 0.5 :numPoints1
+	fanLines :size1 :size2 :numStrings :numPoints2
+	penDown
+	setPenColor :color1
+	setPenSize :size * 0.005
+	repeat :numPoints3 [
+		jumpTo :oldPos
+		jumpForward :size3
+		right 90
+		jumpForward :size4
+		backward :size4 * 2
+		right 360 / :numPoints3
+	]
+	jumpTo :oldPos
+	setFillColor transparent
+	setPenColor "#fc0
+	setPenSize :size5 * 0.75
+	circle :size5
+end
+
+setScreenColor "black
+mandalaStringArt 150
