@@ -1,0 +1,42 @@
+to getCPUGradient :height
+	localmake "oldState turtleState
+	localmake "colorStops createPList2 [
+		[0 "aqua] [1 "lime]
+	]
+	jumpBackward :height / 2
+	localmake "fromPos pos
+	jumpForward :height
+	localmake "result createLinearGradient :fromPos pos :colorStops "pad
+	setTurtleState :oldState
+	output :result
+end
+
+; Inspired by logo at:
+; https://emu8086.en.lo4d.com/windows
+to emu8086Logo :height
+	localmake "oldState turtleState
+	localmake "pinLength :height / 8
+	localmake "rectSize :height - :pinLength * 2
+	localmake "pinSeparation :rectSize / 4
+	setPenSize :height * 0.06
+	setPenColor "black
+	setLineJoinStyle "miter
+	jumpForward :height / 2
+	localmake "center pos
+	setFillGradient getCPUGradient :rectSize
+	square :rectSize
+	repeat 4 [
+		jumpForward :rectSize / 2
+		jumpLeft :pinSeparation * 1.5
+		repeat 4 [
+			stripes penSize :pinLength [penColor]
+			jumpRight :pinSeparation
+		]
+		jumpTo :center
+		right 90
+	]
+
+	setTurtleState :oldState
+end
+
+emu8086Logo 100

@@ -1,0 +1,47 @@
+; Inspired by
+; https://www.pinterest.ca/pin/10836855341071636
+to spiralOfCirclesWaving :height :timeRatio
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "numArms 12
+	localmake "numCirclesPerArm 40
+	localmake "maxTwistAngle 40 * (radSin pi * 2 * :timeRatio)
+	localmake "minRadius :height * 0.005
+	localmake "maxRadius :height * 0.08
+	setPenSize :height * 0.002
+	localmake "maxCircleDistance :height / 2 - :minRadius - penSize / 2
+	localmake "minCircleDistance :height * 0.11
+	jumpForward :height / 2
+	localmake "center pos
+	repeat :numArms [
+		localmake "armStartAngle :oldHeading + repcount * 360 / :numArms
+		repeat :numCirclesPerArm [
+			jumpTo :center
+			setHeading :armStartAngle + :maxTwistAngle * interpolateRatio easeIn repRatio
+			jumpForward mix :maxCircleDistance :minCircleDistance repRatio
+			circle mix :minRadius :maxRadius repRatio
+		]
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+setPenColor "white
+spiralOfCirclesWaving 100 animation.clampedTimeRatio
+
+to animation.snapshotstyle
+	output createPList2 [
+		["zoom.scale 6]
+		["position.y 50]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 2
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+		["thumbnailTime 0.5]
+	]
+end
