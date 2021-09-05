@@ -1,0 +1,25 @@
+; Inspired by logo at:
+; https://meta.miraheze.org
+to mirahezeLogo :height
+	localmake "oldState turtleState
+	localmake "radius :height * 0.16
+	localmake "gap :height / 2 - :radius * cos 180 / 6
+	setPenSize 0
+	jumpForward :height / 2
+	localmake "center pos
+	setFillColor "#8e7650
+	right 180 / 6
+	regularPolygon :radius 6
+	setFillColor "#ffc200
+	left 180 / 6
+	repeat 6 [
+		jumpForward :gap
+		right 180 / 6
+		regularPolygon :radius 6
+		jumpTo :center
+		right 180 / 6
+	]
+	setTurtleState :oldState
+end
+
+mirahezeLogo 100

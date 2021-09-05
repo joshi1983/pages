@@ -1,0 +1,51 @@
+; Inspired by logo at:
+; https://en.wikipedia.org/wiki/Reebok#/media/File:Reebok_delta_logo.svg
+to reebokDeltaLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "startGap :height * 0.368
+	localmake "angle1 93
+	localmake "angle2 180 - 60 - :angle1
+	localmake "len2 :height * 0.04
+	localmake "len3 :height * 0.39
+	jumpForward :startGap
+	localmake "center pos
+	jumpForward :height - :startGap
+	; get a few points for use in calculating len1 and len4.
+	localmake "top pos
+	jumpRight :height
+	localmake "topPos2 pos
+	setPenSize 0
+	setFillColor "#d01931
+	repeat 3 [
+		localmake "heading1 :oldHeading + 60 + (repcount - 1) * 360 / 3
+		setHeading :heading1
+		if 1 = repcount [
+			; move the turtle around to get the exact line lengths needed for
+			; the last 2 shapes.
+			jumpTo :center
+			jumpForward :startGap
+			localmake "pos1 pos
+			left 90
+			localmake "len1 distanceToLine :top :topPos2
+			jumpForward :len1
+			left 60
+			jumpForward :len2
+			left :angle1
+			jumpForward :len3
+			left :angle2
+			localmake "len4 distanceToLine :center :pos1
+			localmake "lines1 [[90 0] [:len1] [60 0] [:len2]
+				[:angle1 0] [:len3] [:angle2 0] [:len4]
+			]
+		]
+		jumpTo :center
+		setHeading :heading1
+		drawArcLineShape [0 :startGap
+			combine :lines1 reverse :lines1
+		] 1
+	]
+	setTurtleState :oldState
+end
+
+reebokDeltaLogo 100

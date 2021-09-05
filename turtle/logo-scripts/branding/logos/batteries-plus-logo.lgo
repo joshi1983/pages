@@ -1,0 +1,41 @@
+; Inspired by logo at:
+; https://www.batteriesplus.com
+to batteriesPlusLogo :height
+	localmake "oldState turtleState
+	localmake "gapFactor 0.14
+	localmake "radiusFactor 0.11
+	localmake "radius :height * :radiusFactor
+	localmake "lines1 [
+		[-90 0] [:radius / :height] [90 0]
+		[1 / 2 - :radiusFactor - :gapFactor]
+		[90 :radiusFactor]
+	]
+	localmake "lines2 [
+		[1/2] [180 :radiusFactor]
+		[1/2 - :radiusFactor * 2]
+		[-45 0]
+	]
+	setFillColor "#5dca19
+	setPenSize 0
+	jumpForward :height / 2
+	localmake "center pos
+	repeat 2 [
+		left 90
+		drawArcLineShape [0 :gapFactor
+			combine :lines1 reverse :lines1
+		] :height
+		jumpTo :center
+	]
+	setFillColor "#ff6d0f
+	drawArcLineShape [:radiusFactor :radiusFactor
+		(combine [[90 0]] :lines2
+		reverse :lines2)
+	] :height
+	left 135
+	jumpForward :height * 0.4
+	setPenSize 0
+	circle :radius
+	setTurtleState :oldState
+end
+
+batteriesPlusLogo 100

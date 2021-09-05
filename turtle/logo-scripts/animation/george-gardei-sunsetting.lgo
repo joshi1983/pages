@@ -1,0 +1,129 @@
+; A simpler example related to this is called
+; George Gardei Sunset.
+;
+; This one adds significantly more code to define an animation.
+; If this code is too complicated, see the George Gardei Sunset first.
+
+make "mountainLines [[0.15] [17 0] [0.2] [-30 0] [0.26] [25 0]
+		[0.27458033] [33 0] [2.72] [40 0] [0.05] [-12 0] [0.31] [20 0]
+		[0.1] [-93 0] [0.22] [-10 0] [0.117715088] [55 0] [0.18]]
+
+to drawStarField :width :height :timeRatio
+	localmake "oldState turtleState
+	localmake "numStars 100
+	localmake "starSize :height * 0.02
+	localmake "oldPos pos
+	setFillColor "white
+	setPenSize 0
+	repeat :numStars [
+		jumpRight :width * (randomRatio - 0.5)
+		localmake "y :height * (randomRatio * 2 - :timeRatio)
+		localmake "starSize1 :starSize * mix 0.4 1 randomRatio
+		jumpForward :y
+		if and :y > 0 :y < :height [
+			isotoxalStar :starSize1 :starSize1 * 0.3 8
+		]
+		jumpTo :oldPos
+	]
+	setTurtleState :oldState
+end
+
+to getBackgroundGradient :height :timeRatio
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "colorStops createPList2 [
+		[0 mix "#222 "#4c0 :timeRatio]
+		[1 mix "#222 "#888 :timeRatio]
+	]
+	jumpForward :height * 0.6
+	localmake "result createLinearGradient :oldPos pos :colorStops "pad
+	setTurtleState :oldState
+	output :result
+end
+
+to drawBackground :height :timeRatio
+	localmake "oldState turtleState
+	localmake "width :height * 4
+
+	if :timeRatio > 0.4 [
+		drawStarField :width :height :timeRatio				
+	]
+
+	setFillGradient getBackgroundGradient :height :timeRatio
+	setPenSize 0
+	drawArcLineShape [-2 0
+		combine [[0.57] [-135 0]] :mountainLines 
+	] :height
+	setTurtleState :oldState
+end
+
+; Inspired by the final drawing at:
+; https://youtu.be/mvgsV6raUzw?t=611
+;
+; This animates the sun going down.
+to georgeGardeiSunsetting :height :timeRatio
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "sunRadius :height * 0.28
+	localmake "sunY (:height - :sunRadius) * (1 - 1.5 * :timeRatio)
+	localmake "skyColorStops createPList2 [
+		[0 "#8cf] [0.14 "#def] [0.2 "#dfb] [0.25 "#ff8] [0.33 "yellow] 
+		[0.45 "orange] [0.7 "red] [1 "#0000]
+	]
+	localmake "timeRatioC 1.5 - :timeRatio * 2.5
+	drawBackground :height :timeRatio
+	jumpForward :height * :timeRatioC
+	localmake "fromPos pos
+	jumpForward :height
+	setPenSize 0
+	setFillGradient createLinearGradient :fromPos pos :skyColorStops "pad
+	jumpTo :oldPos
+	drawArcLineShape [-2 1
+		(combine [[180 0] [0.43] [45 0]] :mountainLines [[90 0]
+		[1]])
+	] :height
+
+	setFillColor "white
+	jumpTo :oldPos
+	jumpForward :sunY
+	ifelse :sunY > :sunRadius [
+		circle :sunRadius
+	] [
+		if :sunY > -:sunRadius [
+			localmake "angle 90 + arcSin :sunY / :sunRadius
+			right :angle
+			jumpForward :sunRadius
+			left 90
+			if :angle > 0 [
+				polyStart
+				arcLeft :angle * 2 :sunRadius
+				polyEnd
+			]
+		]
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+rerandom ; Set the randomization seed so the
+; pseudorandomized star positions and sizes stay 
+; in place throughout the animation.
+
+make "timeRatio animation.clampedTimeRatio
+georgeGardeiSunsetting 100 :timeRatio
+
+to animation.snapshotstyle
+	output createPList2 [
+		["position.y 50]
+		["zoom.scale 2]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 10
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

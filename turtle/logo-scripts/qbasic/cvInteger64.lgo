@@ -1,0 +1,17 @@
+; Similar to _cv function from QB64 specifically when the type is _INTEGER64.
+; QB64's _CV function is documented at:
+; https://qb64.com/wiki/_CV
+to cvInteger64 :s
+	assert 8 = count :s
+	localmake "result 0
+
+	; Avoid bitShiftLeft, bitOr because those commands don't 
+	; work well with integers over 32 bits.
+	; We'll use * and + operators instead.
+	repeat 8 [
+		localmake "result :result * 256
+		localmake "byteVal ascii item repcount :s
+		localmake "result :result + :byteVal
+	]
+	output :result
+end
