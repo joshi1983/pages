@@ -1,0 +1,59 @@
+to halfTipi :arcRadius :sign
+	localmake "oldState turtleState
+	localmake "arcsInfo [
+		[-15 1]
+		[49 0.03]
+		[10 0.55]
+		[20 0.25]
+		[7 3]
+		[7 0.5]
+		[164 0.026]
+		[8.5 0.5]
+		[-110 0.005]
+		[5 0.5]
+		[148 0.035]
+		[5 0.69]
+	]
+	setPenSize 0
+	left 90 * :sign
+	polyStart
+	ifelse :sign > 0 [
+		arcsRight :arcsInfo :arcRadius
+	] [
+		arcsLeft :arcsInfo :arcRadius
+	]
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/File:Pine_Ridge_Flag.svg
+; Flag of the Pine Ridge Indian Reservation,
+; South Dakota, USA
+to pineRidgeFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 2
+	localmake "oldHeading heading
+	localmake "innerRadius :height * 0.245
+	localmake "numPairs 8
+	localmake "pairSeparationAngle 360 / :numPairs * 0.95
+	stripes :width :height ["#a50021]
+	setPenSize 0.1
+	jumpForward :height / 2
+	localmake "center pos
+	setFillColor "white
+	repeat :numPairs [
+		setHeading :oldHeading + repcount * 360 / :numPairs		
+		right :pairSeparationAngle / 2
+		jumpForward :innerRadius
+		halfTipi :innerRadius 1
+		jumpTo :center
+		left :pairSeparationAngle
+		jumpForward :innerRadius
+		halfTipi :innerRadius -1
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+pineRidgeFlag 100

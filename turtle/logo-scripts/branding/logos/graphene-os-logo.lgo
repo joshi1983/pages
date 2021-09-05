@@ -1,0 +1,41 @@
+to grapheneOSLogoCustomColor :height
+	localmake "oldState turtleState
+	localmake "hexRadius :height * 0.307
+	jumpForward :height / 2
+	setLineCap "butt
+	setPenSize :height * 0.025
+	setFillColor transparent
+	regularPolygon :hexRadius 6
+	localmake "center pos
+	setFillColor penColor
+	repeat 6 [
+		jumpForward :hexRadius
+		circle :height * 0.058
+		forward :height / 2 - :hexRadius
+		jumpTo :center
+		right 360 / 6
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://commons.wikimedia.org/wiki/File:GrapheneOS_Logo.svg
+to grapheneBlackForegroundLogo :height
+	setPenColor "black
+	grapheneOSLogoCustomColor :height
+end
+
+; Inspired by the logo in the upper-left corner at
+; https://grapheneos.org
+to grapheneBlackBackgroundLogo :height
+	stripes :height * 3 :height ["black]
+	setPenColor "#64b5f6
+	grapheneOSLogoCustomColor :height
+end
+
+make "height 100
+make "separation :height * 5
+jumpLeft :separation * 0.5
+grapheneBlackForegroundLogo :height
+jumpRight :separation
+grapheneBlackBackgroundLogo :height

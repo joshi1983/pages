@@ -1,0 +1,47 @@
+; Inspired by:
+; https://www.pinterest.ca/pin/390546598920799942/
+to upperLip :height
+	localmake "oldState turtleState
+	jumpForward :height * 0.4685
+	jumpLeft :height * 0.82
+	left 70
+	polyStart
+	localmake "arcsInfo1 [[-130 0.014] [20 0.8] [0.24] [-38 0.41] [-53 0.208743853]
+	[41 0.07]
+	]
+	arcLines :arcsInfo1 :height
+	arcLines reverse :arcsInfo1 :height
+
+	localmake "arcsInfo2 [[-30 0.04] [-23 0.42] [12 1.3] [48 0.31] [-27 0.329464112]]
+	arcLines :arcsInfo2 :height
+	arcLines reverse :arcsInfo2 :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+to lowerLip :height
+	localmake "oldState turtleState
+	jumpForward :height * 0.421
+	jumpLeft :height * 0.72
+	right 70
+	polyStart
+	localmake "arcsInfo1 [[-10 0.25] [10 0.9] [-9 1] [-12 0.45]
+	[-15 0.6] [16 0.45905422]]
+	arcLines :arcsInfo1 :height
+	arcLines reverse :arcsInfo1 :height
+	localmake "arcsInfo2 [[-133 0.008] [17 0.6] [-6 1.9] [-38 0.692589935]]
+	arcLines :arcsInfo2 :height
+	arcLines reverse :arcsInfo2 :height
+
+	polyEnd
+	setTurtleState :oldState
+end
+
+to lips :height
+	setPenSize 0
+	setFillColor "#D71414
+	upperLip :height
+	lowerLip :height
+end
+
+lips 100

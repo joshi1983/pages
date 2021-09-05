@@ -1,0 +1,60 @@
+; Inspired by:
+; https://ca.pinterest.com/pin/24418022976020788
+to branchingCircles :height
+	localmake "oldState turtleState
+	localmake "colorStops createPList2 [
+		[0 "#0fff] [1 "#3fff]
+	]
+	localmake "shrinkRatio mix 0.01 0.95 interpolateRatio easeInOut animation.timeRatio
+	localmake "numScales 12
+	localmake "offset 1
+	setFillColor transparent
+	jumpForward :height / 2
+	localmake "center pos
+	localmake "gap :offset
+	localmake "radius :offset
+	repeat :numScales [
+		localmake "gap :gap + :radius
+		localmake "radius :radius * :shrinkRatio
+	]
+	localmake "startRadius :height / :gap / 2
+	localmake "gap :startRadius
+	localmake "radius :startRadius
+	localmake "numCircles 3
+	setPenColor "white
+	repeat :numScales [
+		setPenSize max :height * 0.0002 :radius * 0.04
+		repeat :numCircles [
+			jumpForward :gap
+			setFillGradient createRadialGradient pos :radius :colorStops
+			circle :radius
+			jumpTo :center
+			right 360 / :numCircles
+		]
+		localmake "gap :gap + :radius
+		localmake "radius :radius * :shrinkRatio
+		localmake "numCircles :numCircles * 2
+		right 360 / 2 / :numCircles
+	]
+
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+branchingCircles 100
+
+to animation.snapshotstyle
+	output createPList2 [
+		["position.y 50]
+		["zoom.scale 6]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 5
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

@@ -1,0 +1,112 @@
+make "skinColor "#9c6
+
+to drawLegAndFoot :height
+	localmake "oldState turtleState
+	jumpLeft :height * 0.125
+	polyStart
+	arcLines [[0.6] [90 0.1] [-180 0.14] [0.3] [-90 0.05] [0.93]] :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+to drawLegs :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "oldPenSize penSize
+	localmake "legLength :height * 0.38
+	jumpForward :height * 0.37
+	jumpLeft :height * 0.395
+	repeat 2 [
+		setHeading :oldHeading + 160
+		localmake "pos1 pos
+		right 20
+		setPenSize :oldPenSize
+		drawLegAndFoot :legLength
+		left 45
+		drawLegAndFoot :legLength
+		right 20
+		jumpForward :height * 0.064
+		setPenSize 0
+		; hide the black line between the legs.
+		circle :height * 0.06
+		jumpTo :pos1
+		setHeading :oldHeading
+		jumpRight :height * 0.51
+		jumpForward :height * 0.25
+	]
+	setTurtleState :oldState
+end
+
+to drawHead :height
+	localmake "oldState turtleState
+	localmake "radius1 :height * 0.07
+	localmake "eyeSeparation :height * 0.08
+	jumpForward :height * 0.7
+	jumpRight :height * 0.33
+	right 53
+	circlePair :radius1 :radius1 :height * 0.32
+	jumpBackward :height * 0.01
+	setFillColor "black
+	left 35
+	jumpLeft :eyeSeparation / 2
+	setPenSize 0
+	repeat 2 [
+		ellipse :height * 0.025 :height * 0.01
+		jumpRight :eyeSeparation
+	]
+	setTurtleState :oldState
+end
+
+to drawTail :height
+	localmake "oldState turtleState
+	jumpLeft :height * 0.485
+	jumpForward :height * 0.29
+	polyStart
+	arcLines [[134 0] [0.1] [-85 0.055] [-15 0.1] [-153 0.012] [90 0.1]] :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+to drawShell :height
+	localmake "oldState turtleState
+	localmake "arcsInfo [[90 0] [-5 4.7] [-82 0.05] [-93 0.49]]
+	jumpForward :height * 0.4
+	jumpLeft :height * 0.11
+	setFillColor "#050
+	left 25
+	polyStart
+	arcLines :arcsInfo :height
+	arcLines reverse :arcsInfo :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by the turtle shown in the header at:
+; https://el.media.mit.edu/logo-foundation/what_is_logo/logo_primer.html
+; I(Josh Greig) wrote this code to look similar but made a few little changes 
+; that I'll explain.
+; The original image had a couple extra marks near the head of 
+; the turtle that I couldn't confidently recognize.
+; I added some funny looking turtle eyes that just might be part 
+; of what the marks indicated.
+; A dark mark went above the head but I didn't draw anything similar to that 
+; because it looked a bit like a tiny mistakenen pen or pencil stroke. 
+to mitLogoFoundationTurtle :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	jumpRight :height * 0.4
+	stripes :height * 0.7 :height * 0.25 ["black]
+	jumpTo :oldPos
+	setPenSize :height * 0.007
+	setPenColor "black
+	setFillColor :skinColor
+	jumpForward :height * 0.006
+	drawLegs :height
+	drawHead :height
+	drawTail :height
+	drawShell :height
+	setTurtleState :oldState
+end
+
+setScreenColor "#ffc
+mitLogoFoundationTurtle 100

@@ -1,0 +1,64 @@
+; Inspired by logo at:
+; https://fortisgroup.ca
+to fortisGroupLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angle1 34.2
+	localmake "angle2 27
+	localmake "thickness1 :height * 0.228
+	localmake "thickness2 :thickness1 * 1.08
+	localmake "fullSlantedHeight :height * 0.885
+	setPenSize 0
+	setFillColor "white
+	jumpRight :height * 0.255
+	left 90
+	jumpRight :thickness1 / 2
+	parallelogram :thickness1 :fullSlantedHeight :angle1
+	right 180
+	parallelogram :thickness1 :thickness2 -:angle2
+	jumpLeft :thickness1 / 2
+	left :angle2
+	jumpForward :thickness2
+	localmake "fCorner1 pos
+	setHeading :oldHeading - 90 + :angle1
+	jumpForward :height * 0.124
+	localmake "slantedHeading1 heading
+	setHeading :oldHeading
+	localmake "fCorner2 pos
+	jumpForward :height
+	localmake "pos2 pos
+
+	jumpTo :fCorner2
+	setHeading :slantedHeading1
+	polyStart
+	jumpForward :height * 0.25
+	setHeading :oldHeading + 90 - :angle2
+	jumpForward distanceToLine :fCorner2 :pos2
+	polyEnd
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height
+	jumpRight :height * 0.222
+	localmake "top pos
+	left 90 + :angle2
+	jumpForward distanceToLine :fCorner1 :fCorner2
+	localmake "pos1 pos
+	
+	jumpTo :top
+	setHeading :oldHeading
+	polyStart
+	; less than :thickness1 to create a 
+	; subtle illusion of perspective.
+	jumpBackward :thickness1 * 0.95
+	left 90 + :angle2
+	jumpForward distanceToLine :fCorner1 :fCorner2
+	jumpTo :pos1
+	polyEnd
+
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+fortisGroupLogo 100

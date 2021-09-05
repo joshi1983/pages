@@ -1,0 +1,105 @@
+to channel4Logo :height :color
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "thicknessRatio 0.094
+	localmake "thickness :height * :thicknessRatio
+	localmake "thickness2 :height * 0.121
+	localmake "rects [
+		[-0.003 0 0.2884 false] [-0.139 0 0.094 false]
+		[0.0862 :thicknessRatio / 2 0.2122 true]
+		[0.222 0.378 0.148 true] [-0.37 0.378 0.414 true]
+	]
+	localmake "slantedTopShapes [
+		[0.133 0.136 0.73] [-0.003 0.467 0.4775]
+	]
+	localmake "angle1 39
+	localmake "leftAngle 180 - :angle1
+	setFillColor :color
+	repeat count :rects [
+		localmake "rectInfo item repcount :rects
+		localmake "rectHeight :height * item 3 :rectInfo
+		localmake "rotated? last :rectInfo
+		jumpRight :height * first :rectInfo
+		jumpForward :height * item 2 :rectInfo
+		if :rotated? [
+			right 90
+		]
+		stripes :thickness :rectHeight [fillColor]
+		jumpTo :oldPos
+		setHeading :oldHeading
+	]
+	setPenSize 0
+	repeat count :slantedTopShapes [
+		localmake "shapeInfo item repcount :slantedTopShapes
+		localmake "longHeight :height * last :shapeInfo
+		jumpRight :height * (first :shapeInfo) + :thickness / 2
+		jumpForward :height * item 2 :shapeInfo
+		polyStart
+		jumpForward :longHeight
+		left :leftAngle
+		jumpForward :thickness / sin :angle1
+		setHeading :oldHeading
+		jumpBackward :longHeight - :thickness / tan :angle1
+		polyEnd		
+		jumpTo :oldPos
+		setHeading :oldHeading
+	]
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpLeft :height * 0.3433
+	jumpForward :height * 0.4667
+	polyStart
+	jumpRight :thickness2
+	right :angle1
+	jumpForward :height * 0.207
+	setHeading :oldHeading
+	jumpForward :thickness2 / tan :angle1
+	polyEnd
+	right :angle1
+	jumpForward :height * 0.2721
+	jumpRight :height * 0.0087
+	polyStart
+	jumpForward :height * 0.0215
+	jumpRight :height * 0.1039
+	jumpBackward :height * 0.149
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Channel_4#/media/File:Channel_4_(On_Demand)_2023.svg
+to channel4GreenLogo :height
+	channel4Logo :height "#aaff89
+end
+
+; Inspired by a logo at
+; https://1000logos.net/channel-4-logo/
+; which suggests the circled version was used from 1996 to 1999.
+to channel4BlackCircleLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "innerHeight :height * 0.67
+	jumpForward (:height - :innerHeight) / 2
+	channel4Logo :innerHeight "#000
+	jumpTo :oldPos
+	jumpForward :height / 2
+	setPenColor "black
+	setFillColor transparent
+	setPenSize :height * 0.062
+	circle (:height - penSize) / 2
+	setTurtleState :oldState
+end
+
+to channel4BlackLogo :height
+	channel4Logo :height "#000
+end
+
+make "height 100
+make "separation :height * 3
+jumpLeft :separation
+channel4GreenLogo :height
+jumpRight :separation
+channel4BlackCircleLogo :height
+jumpRight :separation
+channel4BlackLogo :height

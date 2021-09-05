@@ -1,0 +1,13 @@
+; Converts the specified integer value to octal notation.
+; Similar to QBasic's oct$ function
+to octalString :intVal
+	localmake "result "
+	while :intVal <> 0 [
+		localmake "digitVal bitAnd :intVal 7
+		; Get a digit from '0' to '7'.
+		localmake "char char (ascii "0 ) + :digitVal
+		localmake "intVal bitShiftRight :intVal 3
+		localmake "result word :char :result
+	]
+	output :result
+end

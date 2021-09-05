@@ -1,0 +1,35 @@
+; Inspired by logo at
+; https://www.youtube.com/@streamfilms.
+to streamFilmsLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "angle1 10
+	localmake "arcAngle 134
+	localmake "arcRadius :height * 0.425
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	setFillColor "white
+	repeat 2 [
+		localmake "heading1 :oldHeading + repcount * 360 / 2
+		setHeading :heading1
+		jumpForward :height / 2
+		jumpRight :height * 0.22
+		right 90
+		arcRight :angle1 :arcRadius
+		left 180
+		polyStart
+		arcLeft :arcAngle :arcRadius
+		polyEnd
+		jumpTo :center
+		setHeading :heading1
+		jumpLeft :height * 0.256
+		jumpForward :height * 0.377
+		circle :height * 0.09
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "#fb3d3d
+streamFilmsLogo 100
