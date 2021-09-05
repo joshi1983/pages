@@ -1,0 +1,43 @@
+; Inspired by
+; https://www.youtube.com/@OGS.Official
+to ogsLogo :height
+	localmake "oldState turtleState
+	localmake "width1 :height * 2.19
+	localmake "radius :height / 2
+	localmake "oldHeading heading
+	localmake "sArcLinesInfo [
+	[168 1] [80 0] [0.95] [-90 0] [0.2]
+	[-90 0] [0.9]]
+	jumpForward :height / 2
+	jumpLeft :width1 / 2
+	setPenColor "white
+	setFillColor transparent
+	setPenSize :height * 0.32
+	circle (:height - penSize) / 2
+	jumpRight :width1 / 2
+	localmake "center pos
+	jumpRight :radius
+	setPenSize 0
+	arcLeft 6 :radius
+	setFillColor penColor
+	polyStart
+	arcLeft 350 :radius
+	setHeading :oldHeading
+	jumpLeft :radius * 0.89
+	jumpBackward :radius * 0.35
+	jumpLeft :radius * 0.21
+	jumpForward :radius * 0.5244
+	polyEnd
+	jumpTo :center
+	jumpRight :width1 / 2 + :radius
+	arcLeft 22 :radius
+	polyStart
+	arcLines :sArcLinesInfo :radius
+	left 111.9398
+	arcLines :sArcLinesInfo :radius
+	polyEnd
+	setTurtleState :oldState
+end
+
+setScreenColor "#0b5753
+ogsLogo 100

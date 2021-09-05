@@ -1,0 +1,20 @@
+to drawEllipticalArcSpiral
+	setPenSize 15
+	repeat 30 [
+		localmake "angle repcount * 8
+		localmake "startAngle repcount * 15
+
+		; every other arc is going to be black to make the pattern 
+		; stand out better.
+		; remainder is used to check if repcount is even.
+		ifelse even? repcount [
+			setPenColor repcount
+		] [
+			setPenColor "black
+		]
+
+		ellipseArc :angle repcount * 15 repcount * 8 :startAngle
+	]
+end
+
+drawEllipticalArcSpiral

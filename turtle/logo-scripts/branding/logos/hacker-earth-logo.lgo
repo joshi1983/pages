@@ -1,0 +1,32 @@
+; Inspired by logo at
+; https://www.hackerearth.com
+; Also shown at
+; https://commons.wikimedia.org/wiki/File:HackerEarth_logo.png
+to hackerEarthLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "arcRadius1 0.011
+	localmake "letterHInfo [
+		[-0.745] [180 0] [90 :arcRadius1] [0.09] [90 :arcRadius1]
+		[0.333] [-180 0.1035] [0.333] [90 :arcRadius1] [0.09] 
+		[90 :arcRadius1] [0.333] [34 0.225] [65 0.172] [39 0.18]
+		[-138 0.0032] [0.2676796]
+	]
+	jumpForward :height / 2
+	setPenSize 0
+	setFillColor "#2c3454
+	roundRect :height * 0.87 :height :height * 0.065
+	jumpBackward :height * 0.37222
+	stripes :height * 0.5382 :height * 0.05326 ["white]
+
+	jumpTo :oldPos
+	jumpForward :height
+	jumpLeft :height * 0.2157006
+	setFillColor "white
+	polyStart
+	arcLines :letterHInfo :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+hackerEarthLogo 100
