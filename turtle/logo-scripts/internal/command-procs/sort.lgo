@@ -1,0 +1,55 @@
+to sortRecursive :listValue :lessOrEqualProc :startIndex :endIndex
+	if :startIndex >= :endIndex [
+		stop
+	]
+	if :startIndex = :endIndex - 1 [
+		localmake "val1 item :startIndex :listValue
+		localmake "val2 item :endIndex :listValue
+		localmake "compareResult? (invoke :lessOrEqualProc :val1 :val2)
+		if not :compareResult? [
+			; swap.
+			setItem :startIndex "listValue :val2
+			setItem :endIndex "listValue :val1
+		]
+		stop
+	]
+	localmake "midIndex max :startIndex + 1 (int (:startIndex + :endIndex) / 2)
+	sortRecursive :listValue :lessOrEqualProc :startIndex :midIndex
+	sortRecursive :listValue :lessOrEqualProc :midIndex + 1 :endIndex
+
+	; merge the partitions.
+	localmake "i :startIndex
+	localmake "j :midIndex + 1
+	localmake "tempList []
+	repeat :endIndex + 1 - :startIndex  [
+		ifelse :j > :endIndex [
+			localmake "minVal item :i :listValue
+			localmake "i :i + 1
+		] [
+			localmake "compareResult? false
+			if :i <= :midIndex [
+				localmake "val1 item :i :listValue
+				localmake "val2 item :j :listValue
+				localmake "compareResult? (invoke :lessOrEqualProc :val1 :val2)
+			]
+			ifelse :compareResult? [
+				localmake "minVal :val1
+				localmake "i :i + 1
+			] [
+				localmake "minVal item :j :listValue
+				localmake "j :j + 1
+			]
+		]
+		queue2 "tempList :minVal
+	]
+	; copy from tempList into listValue.
+	repeat count :tempList [
+		setItem :startIndex - 1 + repcount "listValue item repcount :tempList
+	]
+end
+
+to sort :listValue :lessOrEqualProc
+	localmake "result clone :listValue
+	sortRecursive :result :lessOrEqualProc 1 count :listValue
+	output :result
+end

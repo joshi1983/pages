@@ -1,0 +1,24 @@
+; Inspired by logo at:
+; https://nationalpublicdata.com
+to nationalPublicDataLogo :height
+	localmake "oldState turtleState
+	localmake "blueColor "#0A97C7
+	localmake "greenColor "#52E591
+	localmake "colors [
+		[:blueColor 0.5]
+		[:greenColor 0.384]
+		["#E1E1E1  0.267]
+		[:blueColor 0.18]
+		[:greenColor 0.095]
+	]
+	jumpForward :height / 2
+	setPenSize 0
+	repeat count :colors [
+		localmake "pair item repcount :colors
+		setFillColor first :pair
+		circle :height * last :pair
+	]
+	setTurtleState :oldState
+end
+
+nationalPublicDataLogo 100

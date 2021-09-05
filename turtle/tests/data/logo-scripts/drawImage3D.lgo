@@ -1,0 +1,26 @@
+to DrawImage3D
+; Save our initial position and orientation
+make "savepos3d posxyz
+make "saveori3d orientation
+; Go to start of image to scan
+setxyz 200 200 0
+setorientation [0 0 0]
+; Scan "2D" image while still in 3D
+repeat item 1 :size ~
+   [
+   repeat item 2 :size ~
+      [
+      ; Draw the pixel we are on in the 3D cube
+      DrawDot3D pixel
+      ; Next dot to scan
+      fd 1
+      ]
+   ; Next line to scan
+   bk item 2 :size
+   rt 90
+   fd 1
+   lt 90
+   ; Next line to draw in 3D cube
+   NextLine3D :size
+   ]
+end

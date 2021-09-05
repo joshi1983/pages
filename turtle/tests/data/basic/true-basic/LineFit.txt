@@ -1,0 +1,28 @@
+!
+!  LINEFIT.  Show how to add fitted lines to data.
+!  We draw a least-squares line, then least-absolute-deviation.
+!
+LIBRARY "Stat2Lib.trc"
+
+DIM d(20), x(20), y(20)
+
+CALL SetTitle ("Least-Squares vs. Resistant Line Fit")
+CALL ReserveLegend
+
+MAT READ x, y
+CALL SetLS (1)
+CALL PlotScat (x, y, 6, 0, "black")
+
+CALL SetLineFit ("median")
+CALL AddLinFitPlot (x, y, 2, "black")
+
+CALL AddLegend ("Least-Square Fit", 2, 1, "black")
+CALL AddLegend ("Median Fit", 2, 2, "black")
+CALL DrawLegend
+
+DATA 0.127, 0.178, 0.218, 0.239, 0.300, 0.464, 0.414, 0.469, 0.459, 0.448, 0.599
+DATA 0.538, 0.703, 0.788, 0.865, 0.416, 0.265, 0.934, 0.263, 0.631
+DATA 0.369, 0.390, 0.445, 0.477, 0.485, 0.555, 0.549, 0.616, 0.587, 0.584, 0.651
+DATA 0.625, 0.718, 0.782, 0.846, 0.573, 0.465, 0.567, 0.718, 0.695
+
+END

@@ -1,0 +1,29 @@
+/**
+ * copied from:
+ * https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_doc_examples.htm
+ *
+ * Sanitizes a given input string by removing or replacing certain
+ * characters such as {@code <script>}
+ * @param inputString The raw string provided by a user or external source. 
+ * This string might contain malicious or unexpected characters,
+ * like a {@literal <script>} tag or a backslash {@literal \}.
+ * @return The sanitized string after processing.
+ * @example
+ * {@code
+ * String badInput = 'Hello, <script>alert(\'xss\')</script> World!';
+ * String safeOutput = SecurityUtils.sanitizeInput(badInput);
+ * System.debug('Sanitized Output: ' + safeOutput);
+ * } * @see {@link String#escapeHtml4} for a similar built-in method.
+ * {@hidden NOTE TO MAINTAINERS: This method should be updated if
+ * new security threats are identified. The current regex
+ * is designed to handle common XSS patterns but may not
+ * be exhaustive. The last major update was in v2.1.}
+ * @since 2.0
+ */
+global static String sanitizeInput(String inputString) {
+  // simple example for demonstration purposes
+  String sanitized = inputString;
+  sanitized = sanitized.replace('<script>', '').replace('</script>', '');
+  sanitized = sanitized.replace('&#40;','(').replace('&#41;',')');
+  return sanitized;
+}

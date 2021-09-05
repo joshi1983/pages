@@ -1,0 +1,30 @@
+; Inspired by a video at 
+; https://www.youtube.com/watch?v=3F5-USpL2Xk
+
+to polygonSpiral :startSize :step :numSides
+	if :startSize > :step [
+		forward :startSize
+		right 360 / :numSides
+		polygonSpiral :startSize - :step :step :numSides
+	]
+end
+
+to polygonSpirals :initialSize
+	localmake "oldHeading heading
+	localmake "step :initialSize * 0.03
+	localmake "limit 8
+	repeat :limit [
+		localmake "previousPos pos
+		setPenSize :initialSize * (0.003 + 0.05 * repcount / :limit)
+		polygonSpiral :initialSize :step 2 + repcount
+		jumpTo :previousPos
+		setHeading :oldHeading
+		right 90
+		jumpForward :initialSize * (0.8 + repcount * 0.3)
+		setHeading :oldHeading
+	]
+end
+
+setPenColor "black
+setPenSize 2
+polygonSpirals 30

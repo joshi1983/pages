@@ -1,0 +1,26 @@
+; Inspired by logo at:
+; https://en.wikipedia.org/wiki/Sparkassen-Finanzgruppe#/media/File:Sparkassen_Finanzgruppe_Logo.svg
+to sparkassenFinanzGruppeLogo :height
+	localmake "oldState turtleState
+	localmake "radius1Factor 0.128
+	localmake "radius1 :height * :radius1Factor
+	localmake "len1 0.2535
+	localmake "len2 0.585
+	localmake "arcs1 [[:len1] [90 :radius1Factor] [0.2825]
+		[90 0] [:len2] [-90 0] [0.077] [-90 0] [:len2] [90 0]
+		[0.051] [90 :radius1Factor] [:len1]
+	]
+	localmake "sShape [0 0
+		(combine [[-90 0]] :arcs1 :arcs1)
+	]
+	setPenSize 0
+	setFillColor "white
+	drawArcLineShape :sShape :height
+
+	jumpForward :height - :radius1
+	circle :radius1
+	setTurtleState :oldState
+end
+
+setScreenColor "red
+sparkassenFinanzGruppeLogo 100

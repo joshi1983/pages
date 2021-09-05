@@ -1,0 +1,26 @@
+!
+!  HISTAREA.  Show counts vs. area histograms.
+!  Create from simulated normal distribution.
+!
+LIBRARY "Stat2Lib.trc"
+
+DIM int$(5),d(100),freq(0,0)
+
+MAT READ int$
+DATA 0:.3,.3:.45,.45:.55,.55:.7,.7:1
+
+CALL SimNormal (100, .5, .25, d)  ! Create a normal dataset
+CALL SetAxes (0)
+
+CALL DataToIrrFreq (int$(), d(), freq(,))   ! Convert to freq table
+
+OPEN #1: screen 0, .49, 0, 1
+CALL SetTitle ("Counts")
+CALL PlotHistFromFreq (freq(,), "")    ! Plot counts-histogram
+
+OPEN #2: screen .5, 1, 0, 1
+CALL SetHist ("rel")
+CALL SetTitle ("Relative Area")
+CALL PlotHistFromFreq (freq(,), "")    ! Plot relative-histogram
+
+END

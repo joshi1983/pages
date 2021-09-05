@@ -1,0 +1,39 @@
+to drawAccessLocatorCircle :radius
+	localmake "colorStops createPList2 [
+		[0 "#99a3ac] [1 "#102e6b]
+	]
+	setFillGradient createRadialGradient pos :radius :colorStops
+	circle :radius
+end
+
+; Inspired by logo at
+; https://app.accesslocator.com
+;
+; That project's source code is available at:
+; https://github.com/hhaccessibility/hhaccessibility.github.io
+to accessLocatorLogo :height
+	localmake "oldState turtleState
+	setPenSize 0
+	setFillColor "#102e6b
+	drawArcLineShape [0.37 0 [
+		[87 0] [-20 0.25] [-20 0.39] [-8 0.45]
+		[-10 0.665] [-9 0.7] [-4 1.6] [150 0]
+		[-40 0.415] [-20 0.35] [-20 0.52] [-3 0.7]
+		[-152 0] [20 0.6] [20 0.83] [20 1.22] [1.99849755 3.78]
+		[-172 0] [5 1.9] [8 2.6] [15 1.2] [25.4 0.565]
+	]] :height
+	setFillColor "#99a3ac
+	drawArcLineShape [-0.08304 0.32457
+		[
+		[-62 0] [18 0.32] [20 0.51] [16 0.5] [9 1] [4.7 0.6]
+		[-145 0] [-20 0.15] [-15 0.45] [-6.48 2.2] [74.5 0]
+		[-20 0.6] [-8 0.98] [-150 0] [20 1.65]
+		]
+	] :height
+	jumpForward :height * 0.5706
+	jumpRight :height * 0.3372
+	drawAccessLocatorCircle :height * 0.112
+	setTurtleState :oldState
+end
+
+accessLocatorLogo 100

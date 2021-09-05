@@ -1,0 +1,163 @@
+# copied from https://www.facebook.com/groups/2057165187928233/permalink/4457160901261971
+# In case that page becomes unavailable, it was
+# uploaded by Michel Vilain( https://www.facebook.com/michel.vilain.37/ )
+# to a group titled BASIC Programming Language.
+#
+# 2-D  isosurface noise 
+#******************************************
+# Side by side OpenSimplex and Perlin noise
+#******************************************
+gosub ScreenSetup
+gosub Variables
+gosub ComputeNoise
+include "math.kbs"
+# Draw routine
+t = 0
+while true
+   for j = 0 to rows - 1
+      for i = 0 to cols - 1
+      	#OpenSimplexNoise
+         x = vOSN[i, j] + t
+         #Isobars yellow to black
+		 b = (Abs(Int(x * 25.6))) Mod 256
+		 color RGB(b, b * 0.9, b * 0.2)
+         rect i * cell, (j+2*rows) * cell, cell, cell
+         #Isobars black & white
+         x = x - 360 * floor(x / 360)
+         m = x - 25 * int(x / 25)      # float-safe "mod 25"
+         if m > 5 and m < 15 then
+            color black
+         else
+            color white
+         endif
+         rect i * cell, (j+rows) * cell, cell, cell
+         #isobars plasma
+		 color hsv(x,100,100)
+         rect i * cell, j * cell, cell, cell
+         #Perlin2D Noise
+         x = vPer[i, j] + t
+         #Isobars yellow to black
+		 b = (Abs(Int(x * 25.6))) Mod 256
+		 color RGB(b, b * 0.9, b * 0.2)
+         rect (i+cols) * cell, (j+2*rows) * cell, cell, cell
+         #Isobars black & white
+         x = x - 360 * floor(x / 360)
+         m = x - 25 * int(x / 25)      # float-safe "mod 25"
+         if m > 5 and m < 15 then
+            color black
+         else
+            color white
+         endif
+         rect (i+cols) * cell, (j+rows) * cell, cell, cell
+         #isobars plasma
+		 color hsv(x,100,100)
+         rect (i+cols) * cell, j * cell, cell, cell
+      next i
+   next j
+   refresh
+   t = t + inc                         # speed of the flow
+   if t >= 100 or t<=0 then inc = -inc 
+end while
+refresh
+end
+
+#Setup
+ScreenSetup:
+Fastgraphics 	# write to video buffer.
+width = 500
+height = 750
+graphsize width, height
+color grey
+rect(0,0,width,height)
+refresh
+return
+
+#variable setup
+Variables:
+cell=1	# 1 = full resolution, 2-4 = much faster
+scale = 0.0075
+global setSeed
+# for repeatable results, give setSeed a fixed value between 1 and 10000
+setSeed =  1234
+cols = (width/2) / cell
+rows = (height/3) / cell
+dim vOSN[cols, rows]
+dim vPer[cols, rows]
+inc = 2	#flow speed
+return
+
+#precompute the 'static' noisefield
+ComputeNoise:
+for j = 0 to rows - 1
+   for i = 0 to cols - 1
+      n = noise(i * cell * scale, j * cell * scale)
+      vOSN[i, j] = (n + 1) * 127.5
+      n = Perlin2D(i * cell *scale*2.5, j * cell * scale)
+      vPer[i, j] = (n + 1) * 127.5
+   next i
+next j
+OSN_min=minarr(vOSN)
+OSN_max=maxarr(vOSN)
+Per_min=minarr(vPer)
+Per_max=maxarr(vPer)
+# stretch both fields to 0..255
+for j = 0 to rows - 1
+   for i = 0 to cols - 1
+      vOSN[i, j] = (vOSN[i, j] - OSN_min) / (OSN_max - OSN_min) * 255
+      vPer[i, j] = (vPer[i, j] - Per_min) / (Per_max - Per_min) * 255
+   next i
+next j
+return
+
+function Perlin2D(x, y)
+    octaves = 1
+    persistence = 1
+    total = 0
+    amplitude = 1
+    frequency = 1
+    maxValue = 0
+    for o = 1 to octaves
+      total = total + SinglePerlin2D(x * frequency, y * frequency) * amplitude
+      maxValue = maxValue + amplitude
+      amplitude = amplitude * persistence
+      frequency = frequency * 2
+    next o
+    Perlin2D = total / maxValue
+end function
+
+function SinglePerlin2D(x, y)
+    # Grid cell coordinates
+    x0 = int(x)
+    y0 = int(y)
+    x1 = x0 + 1
+    y1 = y0 + 1
+    # Local position inside cell
+    dx = x - x0
+    dy = y - y0
+    # Gradients at four corners
+    g00 = GradientDot(x0, y0, dx,     dy)
+    g10 = GradientDot(x1, y0, dx-1,   dy)
+    g01 = GradientDot(x0, y1, dx,     dy-1)
+    g11 = GradientDot(x1, y1, dx-1,   dy-1)
+    # Fade curves
+    u = dx*dx*dx*(dx*(dx*6 - 15) + 10)
+    v = dy*dy*dy*(dy*(dy*6 - 15) + 10)
+    # Interpolate along x
+    ix0 = g00 + u*(g10 - g00)
+    ix1 = g01 + u*(g11 - g01)
+    # Interpolate along y
+    SinglePerlin2D = ix0 + v*(ix1 - ix0)
+end function
+
+function GradientDot(ix, iy, x, y)
+    # Hash based on integer coords + seed
+    n = sin((ix*127.1 + iy*311.7 + setSeed) ) * 43758.5453
+    r = n - int(n)
+    # Angle in radians
+    angle = r * 6.28318
+    # Unit gradient vector
+    gx = cos(angle)
+    gy = sin(angle)
+    # Dot product with distance vector
+    GradientDot = gx*x + gy*y
+end function

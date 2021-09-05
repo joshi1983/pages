@@ -1,0 +1,39 @@
+PROGRAM DemInptM
+
+! This program demonstrates how to use the several-line Input Dialog Box.
+
+! Note that the default output window is not shown until the
+! first output is directed to it.
+
+LIBRARY "TrueDial.trc"
+
+LET title$ = "Customer Record"
+LET message$ = "Enter your name, address, etc."
+LET buttons$ = "Ok|Cancel|Quit"
+
+DIM labels$(5), text$(5)
+MAT READ labels$
+DATA Name, Address, Town, State, Zip
+
+DO
+
+   MAT text$ = nul$
+   CALL TD_InputM (title$, message$, buttons$, labels$(), text$(), 1, 1, result)
+
+   SELECT CASE result
+   CASE 1                         ! Ok
+        PRINT "You just entered: "
+        MAT PRINT text$
+        PAUSE 1
+   CASE 2                         ! Cancel
+        PRINT "You just canceled"
+        PAUSE 1
+   CASE 3                         ! Quit
+        PRINT "You just quit"
+        PAUSE 1
+        EXIT DO
+   END SELECT
+
+LOOP
+
+END

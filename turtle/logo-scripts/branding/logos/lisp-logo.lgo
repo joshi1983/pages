@@ -1,0 +1,68 @@
+to lispSymbol :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "size1 :height * 0.143
+	setPenSize 0
+	left 40
+	polyStart
+	arcRight 20 :height * 0.75
+	arcRight 25 :height * 0.38
+	arcRight 20 :height * 0.73
+	arcRight 4.4 :height * 5.5
+	setHeading :oldHeading
+	jumpLeft :size1
+	left 150
+	arcLeft 10.5 :height * 3
+	right 135.7
+	arcRight 10.1 :height * 3
+	setHeading :oldHeading
+	jumpLeft :size1
+	right 163.5
+	arcLeft 15.5 :height * 4.1
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://commons.wikimedia.org/wiki/File:Lisp_logo.svg
+to lispLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "outlineWidth :height * 0.012
+	localmake "radius1 :height / 2 - :outlineWidth / 2
+	localmake "yinYangArcRadius :height / 4
+	localmake "yinYangArcAngle 180
+	setFillColor "white
+	setPenSize :outlineWidth
+	setPenColor "black
+	jumpForward :height / 2
+	localmake "center pos
+	circle :radius1
+	left 45
+	jumpForward :height / 2
+	right 90
+	setFillColor "black
+	setPenSize 0
+	polyStart
+	arcRight :yinYangArcAngle :yinYangArcRadius
+	arcLeft :yinYangArcAngle :yinYangArcRadius
+	right 180
+	arcRight 180 :height / 2
+	polyEnd
+	jumpTo :center
+	setHeading :oldHeading
+	localmake "colors ["white "black]
+	repeat 2 [
+		setFillColor item repcount :colors
+		setHeading :oldHeading + (repcount + 0.5) * 180
+		jumpLeft :height * 0.3
+		jumpForward :height * 0.09
+		right 90
+		lispSymbol :height * 0.512
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "#888
+lispLogo 100

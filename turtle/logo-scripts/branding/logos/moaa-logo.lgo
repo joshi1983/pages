@@ -1,0 +1,48 @@
+; Inspired by logo at:
+; https://www.moaa.org
+to militaryOfficersAssociationOfAmericaLogo :height
+	localmake "oldState turtleState
+	localmake "separation :height * 0.283
+	localmake "thickness :height * 0.142
+	localmake "parallelogramHeight :height * 0.1165
+	localmake "bottomAngle 58.5
+	localmake "slantedThickness :thickness / sin :bottomAngle
+	localmake "startHeight :height - (:separation + :thickness) / tan :bottomAngle
+	localmake "height1Step :separation / tan :bottomAngle
+	setPenSize 0
+	setFillColor "#67130b
+	jumpForward :height
+	jumpLeft :separation * 1.5
+	right 180
+	localmake "downHeading heading
+	repeat 4 [
+		parallelogram :thickness :parallelogramHeight  -47
+		jumpLeft :separation
+	]
+	jumpRight :separation * 4
+	setFillColor "#b4131d
+	localmake "height1 :startHeight
+	repeat 4 [
+		localmake "pos1 pos
+		jumpLeft :thickness / 2
+		polyStart
+		jumpRight :thickness
+		jumpForward :height1
+		left :bottomAngle
+		jumpForward :slantedThickness
+		polyEnd
+		jumpTo :pos1
+		ifelse repcount = 2 [
+			localmake "height1Step -:height1Step
+			localmake "height1 :height
+			localmake "bottomAngle 180 - :bottomAngle
+		] [
+			localmake "height1 :height1 + :height1Step
+		]
+		setHeading :downHeading
+		jumpLeft :separation
+	]
+	setTurtleState :oldState
+end
+
+militaryOfficersAssociationOfAmericaLogo 100

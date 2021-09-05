@@ -1,0 +1,46 @@
+; Inspired by drawing at:
+; https://ca.pinterest.com/pin/736197870313149726
+; In case that link breaks, 
+; the uploader was Slava Antipov(https://ca.pinterest.com/antipslava/).
+to circleInTriangle :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "thickness :height * 0.009
+	localmake "numSides 3
+	; I tried to make other code handle other integer values for numSides.
+	; Not all of the code below works correctly if numSides <> 3, though.
+
+	localmake "height1 :height - :thickness * (1 + 1 / sin 30) / 2
+	localmake "outerRadius :height1 / (1 + cos 60)
+	localmake "innerRadius :height * 0.11
+	localmake "numAngles 64
+	setPenColor "black
+	setPenSize :thickness
+	setLineJoinStyle "miter
+	setLineCap "butt
+	jumpForward :thickness / 2 + :outerRadius * cos 180 / :numSides
+	localmake "center pos
+	regularPolygon :outerRadius :numSides
+	circle :innerRadius
+	localmake "lines []
+	repeat :numSides [
+		setHeading :oldHeading + (repcount - 1) * 360 / :numSides
+		localmake "line []
+		repeat 2 [
+			jumpForward :outerRadius
+			queue2 "line pos
+			jumpTo :center
+			right 360 / :numSides
+		]
+		queue2 "lines :line
+	]
+	repeat :numAngles [
+		setHeading :oldHeading + repcount * 360 / :numAngles
+		jumpForward :innerRadius
+		forward distanceToLines :lines
+		jumpTo :center
+	]	
+	setTurtleState :oldState
+end
+
+circleInTriangle 100

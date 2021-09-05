@@ -1,0 +1,37 @@
+; Inspired by logo at
+; https://lloydslist.com
+to lloydListLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "width1 :height * 0.28
+	localmake "width2 :height - :width1
+	localmake "angle1 33
+	localmake "angle2 34
+	localmake "angle3 23
+	localmake "angle4 270 - 236.5110
+	localmake "thickness :height * 0.19
+	localmake "thickness2 (:thickness / cos :angle1) * cos :angle3
+	localmake "width3 :width2 - :thickness * 2 * tan :angle1
+	localmake "width4 :height * 0.65
+	localmake "width5 :width4 + :thickness2 * 2 * tan :angle3
+	localmake "parallelogramLength (:width4 * cos :angle2) / cos :angle4
+	setPenSize 0
+	jumpLeft :height * 0.176
+	jumpForward :width1 + :width2 / 2
+	setFillColor "#697186
+	left 90
+	isoTrapezoid :width2 :width3 :thickness
+	jumpRight :width2 / 2
+	left 90 - :angle2
+	jumpLeft :width4 / 2
+	setFillColor "#0191d8
+	isoTrapezoid :width4 :width5 :thickness2
+	jumpLeft :width4 / 2
+	setHeading :oldHeading - 90
+	jumpLeft :width1 / 2
+	setFillColor "#006fb3
+	parallelogram :width1 :parallelogramLength -:angle4
+	setTurtleState :oldState
+end
+
+lloydListLogo 100

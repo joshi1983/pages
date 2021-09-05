@@ -1,0 +1,35 @@
+; Inspired by
+; https://commons.wikimedia.org/wiki/File:Vue.js_Logo_2.svg
+to vueJSLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "colors ["#41b883 "#34495e]
+	localmake "stepSizes [0.23090922 0.2130708]
+	localmake "angle 30
+	localmake "size1 :height / cos :angle
+	left :angle
+	jumpForward :size1
+	setPenSize 0
+	repeat count :colors [
+		localmake "sideStep :height * item repcount :stepSizes
+		localmake "thickness :sideStep * cos :angle
+		setHeading :oldHeading - :angle
+		localmake "size2 :size1 - :thickness * ((tan :angle) + 1 / tan :angle)
+		setFillColor item repcount :colors
+		polyStart
+		jumpBackward :size1
+		right :angle * 2
+		jumpForward :size1
+		setHeading :oldHeading
+		jumpLeft :sideStep
+		right :angle
+		jumpBackward :size2
+		left :angle * 2
+		jumpForward :size2
+		polyEnd
+		localmake "size1 :size2
+	]
+	setTurtleState :oldState
+end
+
+vueJSLogo 100

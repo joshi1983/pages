@@ -1,0 +1,71 @@
+to drawArc :radius
+	localmake "oldState turtleState
+	setPenSize 0
+	jumpBackward :radius * 1.04
+	polyStart
+	arcLines [[-95 0] [180 1.022] [-90 0] [0.04]
+	[-90 0] [0.65] [-20 0] [-140 1.15]] :radius
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://www.pinterest.ca/pin/7459155627455135/
+to circularCropCircles :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "shrinkFactor 0.56
+	localmake "lightColor "#ffd
+	localmake "maxTinyRadius :height * 0.35 * (1 - :shrinkFactor)
+	localmake "minTinyRadius :height * 0.01
+	localmake "circleThicknessRatio 0.04
+	localmake "tinyRadiusRatios []
+	repeat 6 [
+		localmake "tinyRadius mix :minTinyRadius :maxTinyRadius power repRatio 0.65
+		queue2 "tinyRadiusRatios :tinyRadius / :height
+	]
+	jumpForward :height / 2
+	localmake "center pos
+	localmake "radius :height * (1 - :circleThicknessRatio / 2) / 2 
+	setPenColor :lightColor
+	repeat 4 [
+		setHeading :oldHeading - 55 + repcount * 20
+		localmake "circleThickness :radius * :circleThicknessRatio
+		setPenSize :circleThickness
+		setFillColor transparent
+		circle :radius
+		localmake "midRadius :radius * (1 + :shrinkFactor) / 2
+		localmake "heading1 heading
+		repeat 3 [
+			setHeading :heading1 + repcount * 360 / 3
+			setPenSize 0
+			setFillColor :lightColor
+			repeat count :tinyRadiusRatios [
+				localmake "tinyRadius :radius * item repcount :tinyRadiusRatios
+				jumpForward :midRadius
+				circle :tinyRadius
+				if repcount = 1 [
+					drawArc (:radius * (1 - :shrinkFactor) - :circleThickness) / 2
+				]
+				jumpTo :center
+				if repRatio <> 1 [ 
+					localmake "tinyRadiusNext :radius * item 1 + repcount :tinyRadiusRatios
+					localmake "angle 2 * arcSin ((:tinyRadius + :tinyRadiusNext) / 2 + :midRadius * 0.02) / :midRadius
+					left :angle
+				]
+			]
+		]
+		localmake "radius :radius * :shrinkFactor
+	]
+	setPenSize :radius * :circleThicknessRatio
+	setFillColor transparent
+	circle :radius
+	localmake "radius :radius * :shrinkFactor
+	setFillColor :lightColor
+	circle :radius
+
+	setTurtleState :oldState
+end
+
+setScreenColor "#160
+circularCropCircles 100

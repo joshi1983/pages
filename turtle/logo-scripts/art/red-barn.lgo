@@ -1,0 +1,95 @@
+to drawRoofLines :height :roofLine :widthFactor1
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "numLines 50
+	setPenSize :height * 0.004
+	setPenColor "black
+	repeat :numLines [
+		localmake "fromPos pos
+		setHeading :oldHeading + 90
+		arcLines reverse :roofLine :height
+		jumpTo :fromPos
+		setHeading :oldHeading
+		jumpRight :height * :widthFactor1 / :numLines
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by a drawing in a book called
+; Explorer's guide to Commodore Logo
+; The book was published in 1985.
+; The drawing was at the bottom of page 14.
+; 
+; A scanned version of the book is at:
+; https://archive.org/details/explorers-guide-to-commodore-logo/page/n31/mode/2up
+to redBarn :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "width :height * 4 / 3
+	localmake "angle1 20
+	localmake "angle2 30
+	localmake "roofLine [
+		[-:angle1 0] [1 / 3 / cos :angle1]
+		[-:angle2 0] [1 / 6 / cos (:angle1 + :angle2)]
+		[:angle1 + :angle2 - 90 0]
+	]
+	localmake "outline1 [
+		[0.5]
+	]
+	repeat count :roofLine [
+		queue2 "outline1 item repcount :roofLine
+	]
+	localmake "widthFactor1 0.7
+	localmake "outline (combine :outline1 [[:widthFactor1]] reverse :outline1)
+	localmake "thinPenSize :height * 0.005
+	jumpLeft :width / 2
+	localmake "startPos pos
+	setPenSize 0
+	setFillColor "#C14447
+	drawArcLineShape [0 0
+		:outline
+	] :height
+
+	setFillColor mix fillColor "white 0.8
+	drawArcLineShape [0 0
+		combine :outline1 reverse :outline1
+	] :height
+
+	; draw the roofing.
+	arcLines :outline1 :height
+	localmake "topLeftPos pos
+	setHeading :oldHeading
+	drawRoofLines :height :roofLine :widthFactor1
+
+	jumpTo :startPos
+	setHeading :oldHeading
+	setPenSize :thinPenSize
+	localmake "height1 :height - penSize
+	setPenColor "black
+	setLineCap "butt
+	setLineJoinStyle "round
+	jumpForward penSize / 2
+	setFillColor transparent
+
+	drawArcLineShape [0 0
+		:outline
+	] :height1
+
+	setFillColor transparent
+	setPenSize :height * 0.015
+	jumpRight (penSize - :thinPenSize) / 2
+	localmake "height1 :height - penSize
+	arcLines :outline :height1
+
+	jumpTo :topLeftPos
+	setHeading :oldHeading + 90
+	arcLines reverse :outline1 :height1
+
+	jumpTo :topLeftPos
+	jumpForward :height1 * 5 / 6
+	setLineJoinStyle "miter
+	rect :height1 / 6 :height1 / 3 
+	setTurtleState :oldState
+end
+
+redBarn 100

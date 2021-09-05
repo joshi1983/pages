@@ -1,0 +1,67 @@
+make "n1 15
+make "a 0.9
+make "m 9.9 * interpolateRatio easeInOut interpolateRatio easeIn animation.timeRatio
+; m depends on animation time so the animation ends with :m=9.9.
+ 
+make "n2 12
+make "b 1.53
+make "n3 14
+
+; This should implement a formula at:
+; https://ca.pinterest.com/pin/27232772741276046
+; 
+; I(Josh Greig) don't know why but the plot looks very different from
+; that pinterest image.  The source image shows a much larger empty inner space.
+; Maybe I didn't copy the algebra correctly.
+to getR :theta
+	localmake "angle :m / 4 * :theta
+	localmake "value (power (abs 1/:a * radCos :angle) :n2) +
+		power (abs 1/:b * radSin :angle) :n3
+	localmake "value :n1 * sqrt :value
+	output 1/:value
+end
+
+; Inspired by an image at:
+; https://ca.pinterest.com/pin/27232772741276046
+to plotMath :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "numPoints 5000
+	localmake "points []
+	localmake "scale :height * 0.2
+	jumpForward :height / 2
+	localmake "center pos
+	setLineJoinStyle "round
+	setPenSize :height * 0.005
+	repeat :numPoints [
+		localmake "theta repRatio * pi * 10
+		setHeading :oldHeading + :theta * 180 / pi
+		localmake "r :scale * getR :theta
+		jumpForward :r
+		queue2 "points pos
+		jumpTo :center		
+	]
+	jumpTo first :points
+	for ["i 2 :numPoints] [
+		setPos item :i :points
+	]
+	setTurtleState :oldState
+end
+
+plotMath 100
+
+to animation.snapshotstyle
+	output createPList2 [
+		["position.y 50]
+		["zoom.scale 7]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 10
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

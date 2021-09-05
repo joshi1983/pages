@@ -1,0 +1,21 @@
+; Inspired by
+; https://commons.wikimedia.org/wiki/File:Worldcommunitygrid.png
+; The logo is also at:
+; https://www.worldcommunitygrid.org
+to worldCommunityGridLogo :height
+	localmake "oldState turtleState
+	localmake "radii [1 0.685 0.395]
+	setPenSize :height * 0.045
+	localmake "radius (:height - penSize) / 2
+	jumpForward :height / 2
+	left 135
+	jumpForward :radius
+	setPenColor "black
+	right 90
+	repeat 3 [
+		circleRight :radius * item repcount :radii
+	]	
+	setTurtleState :oldState
+end
+
+worldCommunityGridLogo 100

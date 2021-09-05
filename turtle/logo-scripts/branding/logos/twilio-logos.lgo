@@ -1,0 +1,41 @@
+make "twilioRed "#F22F46
+
+to twilioLogoCustomColor :height
+	localmake "oldState turtleState
+	localmake "offset :height * 0.12333
+	localmake "littleRadius :height * 0.10333
+	setPenSize :height * 2 / 15
+	jumpForward :height / 2
+	circle (:height - penSize) / 2
+	localmake "center pos
+	setFillColor penColor
+	setPenSize 0
+	repeat 4 [
+		jumpRight :offset
+		jumpForward :offset
+		circle :littleRadius
+		jumpTo :center
+		right 360 / 4
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Twilio#/media/File:Twilio-logo-red.svg
+to twilioRedLogo :height
+	setPenColor :twilioRed
+	twilioLogoCustomColor :height
+end
+
+to twilioWhiteLogo :height
+	stripes :height * 3 :height [:twilioRed]
+	setPenColor "white
+	twilioLogoCustomColor :height
+end
+
+make "height 100
+make "separation :height * 5
+jumpLeft :separation * 0.5
+twilioRedLogo :height
+jumpRight :separation
+twilioWhiteLogo :height

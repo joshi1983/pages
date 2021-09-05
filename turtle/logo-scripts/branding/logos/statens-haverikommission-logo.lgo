@@ -1,0 +1,63 @@
+to drawSHKShape :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "angle 12
+	localmake "baseWidth :height * 1.08
+	localmake "baseHeight :height * 0.315
+	localmake "upperBaseWidth :baseWidth + :baseHeight * 2 * tan :angle
+	localmake "circleRadius :height * 0.317
+	localmake "circleSeparation (:baseWidth + (:height - :circleRadius) * 2 * (tan :angle)) / 2
+	setPenSize 0
+	isoTrapezoid :baseWidth :upperBaseWidth :baseHeight
+	jumpForward :height - :circleRadius
+	circle :circleRadius
+	jumpLeft :circleSeparation
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		setHeading :oldHeading + :sign * :angle
+		drawArcLineShape [0 -1
+			[[-90 0] [180 1]]
+		] -:sign * :circleRadius
+		setHeading :oldHeading
+		jumpRight :circleSeparation * 2
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://shk.se
+; SHK is short for Statens Haverikommission.
+; It is a Swedish accident investigation board.
+to shkLogo :height :color
+	localmake "oldState turtleState
+	localmake "innerHeight :height * 0.44
+	localmake "separation :height * 0.78
+	setFillColor :color
+	drawSHKShape :innerHeight
+	jumpForward :height - :innerHeight
+	jumpLeft :separation / 2
+	repeat 2 [
+		drawSHKShape :innerHeight
+		jumpRight :separation
+	]
+	setTurtleState :oldState
+end
+
+; Similar to the favicon(the little browser tab icon) at:
+; https://shk.se
+to shkBlackOnWhiteLogo :height
+	localmake "oldState turtleState
+	localmake "innerHeight :height * 0.8
+	stripes :height * 1.5 :height ["white]
+	jumpForward (:height - :innerHeight) / 2
+	shkLogo :innerHeight "black
+	setTurtleState :oldState
+end
+
+setScreenColor "#18335b
+make "height 100
+make "separation :height * 4
+jumpLeft :separation / 2
+shkLogo :height "white
+jumpRight :separation
+shkBlackOnWhiteLogo :height

@@ -1,0 +1,70 @@
+; Inspired by logo at:
+; https://milkeninstitute.org
+to milkenInstituteLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "step :height * 0.106
+	localmake "thickness :height * 0.037
+	localmake "radius :height / 2
+	localmake "lens vectorScale [0.473 0.512] :height
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	setFillColor "#06c
+	circle :radius
+	setPenColor "white
+	setFillColor penColor
+	setLineCap "butt
+	setLineJoinStyle "miter
+	repeat 2 [
+		localmake "heading1 :oldHeading + 90 + repcount * 360 / 2
+		setHeading :heading1
+		jumpForward :step / 2
+		jumpRight :step / 2
+		setPenSize :thickness
+		localmake "startPos pos
+		repeat 2 [
+			localmake "len item repcount :lens
+			setHeading :heading1
+			jumpBackward :step
+			jumpLeft :step
+			localmake "pos1 pos
+			jumpForward :len
+			backward :len
+			right 90
+			forward :len
+			jumpTo :pos1
+		]
+		setHeading :heading1
+		jumpTo :startPos
+		jumpLeft :thickness / 2
+		jumpForward :thickness / 2
+		localmake "startPos1 pos
+		jumpForward distanceToCircle :center :radius
+		localmake "startPos2 pos
+		jumpTo :startPos1
+		jumpRight :thickness
+		jumpBackward :thickness
+		localmake "startPos3 pos
+		setPenSize 0
+		polyStart
+		jumpForward distanceToCircle :center :radius
+		localmake "arcAngle 2 * arcSin (distance :startPos2) / 2 / :radius
+		setHeading (towards :center) + 90
+		arcLeft :arcAngle :radius
+		setHeading towards :startPos1
+		localmake "len1 distance :startPos1
+		jumpForward :len1
+		left 90
+		jumpForward distanceToCircle :center :radius
+		setHeading (towards :center) - 90
+		arcLeft :arcAngle :radius
+		setHeading towards :startPos3
+		jumpForward distance :startPos3		
+		polyEnd
+		jumpTo :center
+	]	
+	setTurtleState :oldState
+end
+
+milkenInstituteLogo 100

@@ -1,0 +1,26 @@
+; Inspired by logo at:
+; https://www.gadgetaccess.com/wp-content/uploads/2019/11/acunetix.jpg
+;
+; This might be an old logo for software at:
+; https://www.acunetix.com
+; The logo appears in some of their software but
+; I don't see the logo on their website as I write this comment in November 2025.
+to acunetixLogo :height
+	localmake "oldState turtleState
+	localmake "arcAngle 226
+	localmake "thickness :height * 0.36
+	localmake "arcRadius (:height - :thickness)	/ (1 - cos :arcAngle / 2 )
+	jumpForward :height - :thickness / 2 - :arcRadius
+	setPenSize :thickness
+	setLineCap "round
+	setPenColor "#e13a4e
+	right 180 - :arcAngle / 2
+	arc :arcAngle :arcRadius
+
+	setPenSize 0
+	setFillColor penColor
+	circle :thickness / 2
+	setTurtleState :oldState
+end
+
+acunetixLogo 100

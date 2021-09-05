@@ -1,0 +1,58 @@
+! DemListB
+! Demonstrates the List Button control
+
+LIBRARY "TrueCtrl.trc"
+
+READ xl, xr, yb, yt
+DATA .72, .90, .17, .58
+
+DIM t$(5)
+MAT READ t$
+DATA apples, bananas, pears, peaches, grapes
+
+
+CALL TC_Init
+
+CALL TC_Show (0)                  ! Show the default window
+CALL TC_Win_Switch (0)            ! Move it to the front
+CALL TC_win_setfont(0,"TIMES",14,"BOLD")
+
+CALL TC_PushBtn_Create (stop, "QUIT", xl, xr, -99999,.78)
+PLOT TEXT, AT xl+0.09,yt+0.04: "Select a fruit"
+CALL TC_ListBtn_Create (lbid, t$(), xl, xr, yb, yt)
+
+REM: create a logical window for plotting images
+ASK PIXELS xpix,ypix
+SET WINDOW 0,xpix-1,ypix-1,0
+
+
+DO
+   CALL TC_Event (0, event$, window, x1, x2)
+
+   IF event$ = "HIDE" then EXIT DO
+   IF event$ = "KEYPRESS" and x1 = 27 then EXIT DO
+
+   IF event$ = "CONTROL SINGLE" then
+      IF x2 = lbid then
+         CALL TC_ListBtn_Get (lbid, selection)
+          CLEAR
+
+         LET fruit$= "You are currently selecting: " & t$(selection)
+         PRINT fruit$
+         LET imagefile$=t$(selection) & ".jpg"
+         CALL read_image("JPEG",boxstring$,imagefile$)
+         BOX SHOW boxstring$ at 150,300
+         PAUSE .5
+
+      END IF
+   ELSEIF event$="CONTROL DESELECTED" then
+      IF x2=stop then
+         EXIT DO
+      END IF
+   END IF
+
+LOOP
+
+CALL TC_Cleanup
+
+END

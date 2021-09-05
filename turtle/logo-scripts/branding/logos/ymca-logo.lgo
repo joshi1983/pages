@@ -1,0 +1,43 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/YMCA#/media/File:Ymca_logo_2011-06-28.png
+to ymcaLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "triangleWidth :height * 0.415
+	localmake "triangleHeight :triangleWidth * cos 30
+	localmake "pWidth :height * 0.302
+	setPenSize :height * 0.115
+	localmake "sideStep :height * 0.51
+	localmake "pHeight (:triangleHeight + penSize * (0.5 + 0.5 / cos 60)) / cos 30
+	localmake "gap :sideStep - (:pWidth + :triangleWidth + penSize / tan 30) / 2
+	localmake "pHeight :pHeight + :gap / 2 / sin 30
+	localmake "topHeight :pHeight * cos 30
+	localmake "baseHeight :height - :topHeight
+	localmake "baseWidth :pWidth * 1.1
+	setFillColor transparent
+	setPenColor "#ef3e41
+	setLineJoinStyle "miter
+	jumpForward :height - penSize / 2
+	jumpRight :height * 0.175
+	right 180
+	isoTriangle :triangleWidth :triangleHeight
+	jumpBackward penSize / 2
+	localmake "p1 pos
+	setPenSize 0
+	setFillColor "black
+	jumpRight :sideStep - :pWidth / 2
+	localmake "p2 pos
+	left 30
+	polyStart
+	jumpForward :pHeight
+	setHeading :oldHeading
+	jumpBackward :baseHeight
+	jumpLeft :baseWidth
+	jumpForward :baseHeight
+	left arcTan (:pWidth - :baseWidth + :topHeight * tan 30) / :topHeight
+	jumpForward distanceToLine :p1 :p2
+	polyEnd
+	setTurtleState :oldState
+end
+
+ymcaLogo 100

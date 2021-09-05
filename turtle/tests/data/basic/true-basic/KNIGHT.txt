@@ -1,0 +1,117 @@
+!  Knight's tour.
+
+SET WINDOW -3, 13, 0, 11
+SET BACK "black"
+SET COLOR "green"
+CLEAR
+
+DIM move(8,2)                     ! Legal moves
+DIM board(-1 to 10,-1 to 10)      ! Board status
+
+CALL Initdraw                     ! Board & knight
+CALL Initial                      ! Tables
+RANDOMIZE
+
+LET x, y = 1                      ! Initial position
+FOR t = 2 to 64
+    CALL NextMove (x, y, newx, newy)   ! Find new position
+    BOX SHOW k0$ at x+.1,y+.1     ! Shadow knight to old
+    BOX SHOW k$ at newx+.1,newy+.1     ! Knight to new
+    PAUSE .2                      ! Otherwise too fast
+    LET x = newx                  ! Now the position
+    LET y = newy
+
+NEXT t
+
+SUB Initial                       ! Set up tables
+
+    MAT READ move                 ! Legal (x,y) changes
+    DATA 2,1,2,-1,1,2,1,-2,-1,2,-1,-2,-2,1,-2,-1
+
+    FOR x = -1 to 10              ! Mark positions off board
+        FOR y = -1 to 0
+            LET board(x,y), board(y,x) = -1
+        NEXT y
+        FOR y = 9 to 10
+            LET board(x,y), board(y,x) = -1
+        NEXT y
+    NEXT x
+
+    FOR x = 1 to 8                ! Moves possible from here
+        FOR y = 1 to 8
+            LET count = 0
+            FOR m = 1 to 8        ! Try 8 legal possibilities
+                LET x1 = x+move(m,1)
+                LET y1 = y+move(m,2)
+                IF board(x1,y1)>=0 then LET count = count + 1   ! On board
+
+            NEXT m
+            LET board(x,y) = count     ! Possible moves
+
+        NEXT y
+
+    NEXT x
+
+END SUB
+
+SUB NextMove (x ,y, x2, y2)       ! Find hardest to get to
+
+    DIM opt(8,2)                  ! Optimal moves
+
+    LET board(x,y) = -1           ! Can't move there anymore
+    LET bmin = 9                  ! For minimum calculation
+    FOR m = 1 to 8                ! 8 possibles
+        LET x1 = x+move(m,1)
+        LET y1 = y+move(m,2)
+        LET b = board(x1,y1) - 1  ! Now one less possible move
+        LET board(x1,y1) = b
+        IF b >= 0 and b<bmin then      ! Possible move, new low
+           LET bmin = b
+           LET new = 1
+           LET opt(new,1) = x1
+           LET opt(new,2) = y1
+
+        ELSEIF b>=0 and b = bmin then  ! Tie
+           LET new = new + 1
+           LET opt(new,1) = x1
+           LET opt(new,2) = y1
+
+        END IF
+
+    NEXT m
+
+    LET nm = int(new*rnd+1)       ! Pick at random
+    LET x2 = opt(nm,1)
+    LET y2 = opt(nm,2)
+
+END SUB
+
+SUB Initdraw                      ! Draw board and knight
+
+    SET TEXT JUSTIFY "center","base"
+    PLOT TEXT, AT 5,9.5: "Knight's Tour"
+
+    FOR x = 1 to 9                ! Board
+        PLOT x,1;x,9
+        PLOT 1,x;9,x
+    NEXT x
+
+    SET COLOR "green"             ! Outline of knight
+    DRAW Knight with shift(1,1)
+    BOX KEEP 1.1,1.9,1.1,1.9 in k0$    ! Save for show
+    SET COLOR "red"               ! Red knight
+    FLOOD 1.5,1.5
+    BOX KEEP 1.1,1.9,1.1,1.9 in k$     ! Save it also
+
+END SUB
+
+PICTURE Knight                    ! Picture of knight
+
+    PLOT .2,.1;.8,.1;.8,.2;
+    PLOT .7,.25;.7,.3;.8,.4;.65,.7;.6,.9;.55,.9;
+    PLOT .5,.82;.2,.75;.2,.6;.3,.6;.4,.55;
+    PLOT .25,.45;.2,.37;.3,.3;.3,.25;.2,.2;.2,.1
+
+END PICTURE
+
+END

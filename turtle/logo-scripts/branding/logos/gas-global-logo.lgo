@@ -1,0 +1,24 @@
+; Inspired by logo at:
+; https://www.gasglobal.com
+to gasGlobalLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "arcAngle 277
+	setLineCap "round
+	setPenSize :height * 0.175
+	setPenColor "#a48f5e
+	jumpForward :height / 2
+	localmake "center pos
+	right 90
+	jumpBackward :height * 0.02
+	forward :height * 0.34
+
+	jumpTo :center
+	setHeading :oldHeading - (:arcAngle - 180) / 2
+	; The outer area is a little thicker.
+	setPenSize penSize * 1.04
+	arc :arcAngle (:height - penSize) / 2
+	setTurtleState :oldState
+end
+
+gasGlobalLogo 100

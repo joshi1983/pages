@@ -1,0 +1,54 @@
+; Inspired by image at:
+; https://www.facebook.com/share/p/1FR1xPN1Jk/
+to lickingForeheadLips :height :t
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "positionKeyframes [
+		[-0.06 0.42 180 0]
+		[-0.06 0.42 200 0.02]
+		[0.0024 0.43 180 0.03]
+		[0.069 0.44 160 0.04]
+		[0.12 0.43 110 0.01]
+		[0.08 0.438 60 0.01]
+		[0 0.43 -10 0.02]
+		[-0.025 0.425 -70 0.01]
+		[-0.025 0.425 -70 0]
+	]
+	localmake "tongueState mixItems2 :positionKeyframes :t
+	localmake "thickness :height * 0.03
+	image :height :height 'weblogo://logo-scripts/images/forehead-face.jpg'
+
+	jumpRight :height * first :tongueState
+	jumpForward :height * item 2 :tongueState
+	setHeading :oldHeading + item 3 :tongueState
+	setLineCap "butt
+	localmake "length :height * last :tongueState
+	setPenColor "#800
+	setPenSize :thickness
+	forward :length
+	if :thickness > 0 [
+		setPenSize 0
+		setFillColor penColor
+		ellipse :thickness / 2 min :thickness / 2 :length
+	]
+	setTurtleState :oldState
+end
+
+make "t animation.clampedTimeRatio
+lickingForeheadLips 100 :t
+
+to animation.snapshotstyle
+	output createPList2 [
+		["position.y 50]
+		["zoom.scale 6.5]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 3
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

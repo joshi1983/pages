@@ -1,0 +1,47 @@
+; Inspired by animation at:
+; https://www.facebook.com/share/v/1HiecDkPRk
+to windowsLogoAnimation :height :t
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "colors ["#0a0 "#fffe54 "#0000ad "#ab0000]
+	localmake "separation :height * 0.27
+	localmake "sectionHeight 2 * (:height / 2 - :separation)
+	localmake "angle mix 45 90 (1 + cos :t * 360) / 2
+	localmake "sectionSize1 :sectionHeight / 2 / sin :angle 
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	repeat count :colors [
+		setHeading :oldHeading + (repcount - 1) * 360 / 4
+		setFillColor item repcount :colors
+		jumpForward :separation
+		setHeading :oldHeading
+		jumpBackward :sectionHeight / 2
+		left :angle
+		jumpRight :sectionSize1 / 2
+		parallelogram :sectionSize1 :sectionSize1 (:angle - 45) * 2
+		jumpTo :center
+	]
+
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+make "t interpolateRatio easeInOut animation.timeRatio
+windowsLogoAnimation 100 :t
+
+to animation.snapshotstyle
+	output createPList2 [
+		["position.y 50]
+		["zoom.scale 5]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 3
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

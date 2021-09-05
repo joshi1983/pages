@@ -1,0 +1,65 @@
+make "denmarkRed "#c8102e
+
+to denmarkFlagCustomWidth :width :height
+	localmake "oldState turtleState
+	localmake "size1 :width / 2 - :height * 28 / 56
+	stripes :width :height [:denmarkRed]
+	setLineCap "butt
+	setPenSize :height * 4 / 28
+	setPenColor "white
+	jumpLeft :size1
+	forward :height
+	jumpBackward :height / 2
+	jumpLeft :width / 2 - :size1
+	right 90
+	forward :width
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Denmark#/media/File:Flag_of_Denmark.svg
+to denmarkFlag :height
+	localmake "width :height * 37 / 28
+	denmarkFlagCustomWidth :width :height
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Denmark#/media/File:Flag_of_Denmark_(state).svg
+to denmarkWarFlag :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "sideWidth :height * 45 / 56
+	localmake "sideWidth2 :sideWidth * 1.1
+	localmake "sideWidthOverlap :sideWidth2 - :sideWidth
+; If there was no overlap,
+; there would be a faint vertical line that we don't want.
+; A little overlap is used to prevent the faint line.
+	localmake "totalWidth :height * 107 / 56
+	localmake "width :totalWidth - :sideWidth
+	jumpLeft :sideWidth / 2
+	denmarkFlagCustomWidth :width :height
+	jumpTo :oldPos
+	jumpRight :totalWidth / 2
+	setPenSize 0
+	setFillColor :denmarkRed
+	polyStart
+	jumpLeft :sideWidth2
+	jumpForward :height * 12 / 28
+	jumpRight :sideWidthOverlap
+	polyEnd
+	jumpForward :height * 4 / 28
+	polyStart
+	jumpLeft :sideWidthOverlap
+	jumpForward :height * 12 / 28
+	jumpRight :sideWidth2
+	polyEnd
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+make "height 100
+make "separation :height * 4
+jumpLeft :separation * 0.5
+denmarkFlag :height
+jumpRight :separation
+denmarkWarFlag :height

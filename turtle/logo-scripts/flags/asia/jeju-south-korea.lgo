@@ -1,0 +1,43 @@
+; Inspired by flag at:
+; https://commons.wikimedia.org/wiki/Gallery_of_flags_with_triangles#/media/File:Flag_of_Jeju_Province_(1969%E2%80%932009).svg
+to jejuSouthKoreaFlag :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "width :height * 3 / 2
+	localmake "path [
+		[-30 1.3] [-36 0.8] [-110 0] [25 0.8] [40 0.45]
+		[40 0.3] [40 0.46] [54 0.42] [29 0.55]
+	]
+	localmake "numSides 3
+	localmake "path2 []
+	localmake "pathInfo arcLinesInfo :path
+	localmake "goalLength 2 * sin 180 / :numSides
+	localmake "headingOffset -360 / :numSides + (first :pathInfo)
+	localmake "whiteRadius :height * 0.177
+	repeat :numSides [
+		localmake "path2 (combine :path2 :path [[:headingOffset 0]])
+	]
+	stripes :width :height ["white]
+	jumpLeft :width / 2
+	setPenSize 0
+	setFillColor "#07f
+	polyStart
+	jumpRight :width
+	jumpForward :height
+	polyEnd
+
+	jumpTo :oldPos
+	jumpLeft :height * 0.426
+	jumpForward :height * 0.677
+	setFillColor "#ff4a31
+	circle :height * 0.2
+	setFillColor "white
+	right 17
+	drawArcLineShape [0 1
+		combine [[-105.5 0]] :path2
+	] :whiteRadius * :goalLength / item 2 :pathInfo
+	setTurtleState :oldState
+end
+
+setScreenColor "#ddd
+jejuSouthKoreaFlag 100

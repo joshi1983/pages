@@ -1,0 +1,71 @@
+; Copied from http://www.sonic.net/~nbs/webturtle/webturtle.cgi?file=tablecloth
+; Tablecloth Pattern
+; Nigel D. Ford
+; November 27, 2002
+
+; A pattern using recursive polygons
+; A=Angle
+; L=Length
+; S=Sides
+
+COLOR 2
+LET L 100
+LET M -1
+LET S 4
+; Try other sizes for S (3 to 6)
+
+GO PATTERN
+
+END
+
+;**********************************
+
+# POLYGON
+; Draws shape at centre with S sides
+; Angle calulated automatically
+
+LET A 360/S
+REPEAT S
+  DRAW L
+  RIGHT A
+NEXT
+RETURN
+
+;**********************************
+
+# PATTERN
+; Draw a polygon with
+; smaller polygons around it
+
+REMEMBER
+COLOR +1
+THICK 2
+; Try changing previous line to
+; THICK L/2
+
+; Move to bottom left of polygon
+MOVE M*L/2
+LEFT 90
+MOVE L/2
+RIGHT 90
+GO POLYGON
+GOBACK
+; Move to centre of polygon
+
+; Create smaller polygons
+IF L > 1
+  REPEAT S
+    REMEMBER
+    MOVE L
+    PUSH L
+    LET L L/3
+    GO PATTERN
+    POP L
+    MOVE M*L
+    GOBACK
+    RIGHT A
+  NEXT
+ENDIF
+
+COLOR -1
+RETURN

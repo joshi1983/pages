@@ -1,0 +1,66 @@
+; copied from https://turtlespaces.org/news/example-my-gosh-its-full-of-stars/
+TO star :radius :points :size :filled
+  ;takes number number number boolean (true or false)
+  ;eg star 10 9 40 false
+  ;or star 20 5 50 true
+
+  pu dropanchor tether
+  ;pull up the turtle pen, drop the 'anchor' to set the 'anchor point' to the current position, and do not change it if the turtle's rotation changes (tether)
+  ;the anchor point is the point the orbit primitives orbit around
+
+  if :filled [polyspot :radius :points * 2
+    if oddp :points [rt 360 / :points / 4]]
+  ;if creating a filled star, create a polygon to fill in the center
+  ;if the star has an odd number of points, we need to turn a little
+
+  pullout :radius
+  ;pull out from the anchor point, which is currently the turtle's position
+
+  repeat :points [
+    ;repeat once for each point:
+
+    pu make "position position
+    ;set the :position container to the current turtle position
+
+    orbitleft 360 / :points / 2
+    ;orbit around the anchor point (in this case the center) to the left
+    ;a fraction of 360 degrees divided by the number of points divided by 2
+
+    pullout :size
+    ;pull the turtle out from the center of the star (anchor point)
+
+    setvectors direction :position
+    ;point the turtle toward the previous position
+
+    if not :filled [pd line distance position :position]
+    ;if not making a filled star, create a line in front of the turtle of
+    ;the length required for its end to be the previous turtle position.
+
+    if :filled [frag]
+    ;if creating a filled star, create a 'fragment' based on the last three
+    ;turtle positions
+
+    pu make "position position
+    ;set the :position container to the current position
+
+    pullin :size
+    ;pull the turtle in toward the center of the star (anchor point)
+
+    orbitleft 360 / :points / 2
+    ;orbit to the left again a similar amound to the last orbitleft
+
+    setvectors direction :position
+    ;point toward the previous position
+
+    if not :filled [pd line distance position :position]
+    ;create a line if not a filled star similarly to the previous line
+
+    if :filled [frag]
+    ;create a fragment if a filled star similarly to the previous frag
+
+  ]
+END
+
+TO starscape
+  reset ht snappy:setposition [0 0 0] snappy:dropanchor repeat 200 [pu home randvec fd 1000 + random 1000 up 90 snappy:setvectors direction myrtle:position randfc randpc randps randfs star 10 + random 100 3 + random 20 10 + random 90 randbool]
+END

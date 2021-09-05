@@ -1,0 +1,30 @@
+' copied from https://www.dotnetperls.com/class-vbnet
+Class A
+    Public _value As Integer
+
+    Public Sub Display()
+        Console.WriteLine(_value)
+    End Sub
+End Class
+
+Class B : Inherits A
+    Public Sub New(ByVal value As Integer)
+        MyBase._value = value
+    End Sub
+End Class
+
+Class C : Inherits A
+    Public Sub New(ByVal value As Integer)
+        MyBase._value = value * 2
+    End Sub
+End Class
+
+Module Module1
+    Sub Main()
+        Dim b As B = New B(5)
+        b.Display()
+
+        Dim c As C = New C(5)
+        c.Display()
+    End Sub
+End Module

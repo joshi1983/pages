@@ -1,0 +1,117 @@
+to roundedRect :width :height :cornerRadius
+	localmake "oldState turtleState
+	localmake "innerWidth :width - :cornerRadius * 2
+	localmake "innerHeight :height - :cornerRadius * 2
+	jumpLeft :innerWidth / 2
+	left 90
+	polyStart
+	repeat 2 [
+		arcRight 90 :cornerRadius
+		jumpForward :innerHeight
+		arcRight 90 :cornerRadius
+		jumpForward :innerWidth
+	]
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/HackerRank#/media/File:HackerRank_Icon-1000px.png
+; HackerRank.com is a nice place to practice 
+; programming with questions similar to ones 
+; sometimes used in programming contests.
+to hackerRankLogo :height
+	localmake "oldState turtleState
+	localmake "cornerRadius :height * 0.015
+	localmake "width1 :height * 0.75
+	localmake "hWidth1 :height * 0.25
+	localmake "hSeparation :height * 0.5
+	setPenSize 0
+	setFillColor "#00ea64
+	jumpRight :height * 0.435
+	roundedRect :width1 :height :cornerRadius
+
+	; Draw the 2 horizontal shapes of the letter H.
+	jumpLeft :height * 0.623
+	setFillColor "white
+	roundedRect :hWidth1 :height :cornerRadius
+	jumpLeft :hSeparation
+	roundedRect :hWidth1 :height :cornerRadius
+
+	jumpRight :hSeparation / 2
+	jumpForward (:height - :hWidth1) / 2
+	stripes :hSeparation :hWidth1 [fillColor]
+
+	setTurtleState :oldState
+end
+
+to hexSegment :length
+	localmake "arcsInfo1 [
+		[20 0.1]
+		[8 2]
+	]
+	localmake "arcsInfo (combine :arcsInfo1 [[4 5.440406]] reverse :arcsInfo1)
+	arcsLeft :arcsInfo :length
+end
+
+to hackerRankOldLogoBackground :height
+	localmake "oldPos pos
+	localmake "hexSegmentLength :height / 2
+	localmake "colorStops createPList2 [
+		[0 "#159943] [1 "#3DD673]
+	]
+	setPenSize 0
+	jumpForward :height
+	setFillGradient createLinearGradient :oldPos pos :colorStops "pad
+	jumpTo :oldPos
+	right 90
+	polyStart
+	repeat 6 [
+		hexSegment :hexSegmentLength
+	]
+	polyEnd
+end
+
+; I think this was an official logo for hackerrank.com
+; a few years ago.  
+; It shows in lots of hackerrank search results.
+; One place where this older logo can be found is at:
+; https://golden.com/wiki/HackerRank-R4XVA8
+; A similar shape is also at:
+; https://fontawesome.com/icons/hackerrank?f=brands&s=solid
+to hackerRankOldLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "thickness :height * 0.08
+	localmake "hLetterWidth1 :height * 0.232
+	setPenSize 0
+	hackerRankOldLogoBackground :height
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpLeft :hLetterWidth1 / 2
+	jumpForward :height * 0.3
+	setPenColor "white
+	setPenSize :thickness
+	arrow :height * 0.51 48 :height * 0.052
+	jumpRight :hLetterWidth1
+	right 180
+	jumpForward :height * 0.115
+	arrow :height * 0.51 48 :height * 0.052
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.45
+	stripes :hLetterWidth1 :height * 0.065 ["white]
+
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+make "height 100
+make "separation :height * 3
+jumpLeft :separation / 2
+hackerRankLogo :height
+jumpRight :separation
+hackerRankOldLogo :height

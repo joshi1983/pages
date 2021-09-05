@@ -1,0 +1,25 @@
+; Inspired by logo at:
+; https://www.youtube.com/@replicantphish
+to replicantPhishLogo :height
+	localmake "oldState turtleState
+	localmake "backgroundColorStops createPList2 [
+		[0 "yellow] [1 "#db4]
+	]
+	jumpForward :height
+	jumpRight :height / 2
+	setFillGradient createRadialGradient pos :height :backgroundColorStops
+	jumpBackward :height / 2
+	jumpLeft :height / 2
+	setPenSize 0
+	square :height
+
+	setPenSize :height * 0.08
+	setLineJoinStyle "miter
+	setPenColor "black
+	setFillColor transparent
+	square :height * 0.58
+
+	setTurtleState :oldState
+end
+
+replicantPhishLogo 100

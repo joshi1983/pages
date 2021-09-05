@@ -1,0 +1,44 @@
+; Inspired by a logo at:
+; https://www.youtube.com/@LogicallyAnswered
+to logicallyAnsweredLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "height1 :height * 0.642
+	localmake "thickness :height * 0.09
+	localmake "width1 :height * 0.25
+	localmake "angle 30
+	localmake "isoShrink :thickness * 2 * tan :angle
+	localmake "topWidth :width1 - :isoShrink
+	localmake "width2 :height1 / cos :angle
+	localmake "innerWidth2 :width2 - :isoShrink
+	localmake "width3 :width2 - :thickness * 1.3 / cos :angle
+	localmake "bottomWidth :height * 0.288
+	setPenSize 0
+	jumpForward :height * 0.375
+	setFillColor "#ffd300
+	jumpRight :height * 0.12
+	isoTrapezoid :width1 :topWidth :thickness
+
+	jumpTo :oldPos
+	jumpForward :height * 0.89
+	localmake "top pos
+	left 90 + :angle
+	jumpLeft :width2 / 2
+	isoTrapezoid :width2 :innerWidth2 :thickness
+
+	jumpTo :top
+	setHeading :oldHeading + 90 + :angle
+	jumpRight :width2 - :width3 / 2
+	setFillColor "white
+	isoTrapezoid :width3 :width3 - :isoShrink :thickness
+	jumpRight :width3 / 2
+	left 90 + :angle
+	jumpRight :bottomWidth / 2
+	parallelogram :bottomWidth :thickness / cos :angle :angle	
+
+	setTurtleState :oldState
+end
+
+setScreenColor "#222
+logicallyAnsweredLogo 100

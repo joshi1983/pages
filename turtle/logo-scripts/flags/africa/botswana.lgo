@@ -1,0 +1,77 @@
+make "flagBlue "#6DA9D2
+
+to stripesWithVariableLength :width :height :stripesInfo
+	localmake "oldState turtleState
+	setPenSize :width
+	setLineCap "butt
+	repeat count :stripesInfo [
+		localmake "stripeInfo item repcount :stripesInfo
+		setPenColor item 2 :stripeInfo
+		forward :height * item 1 :stripeInfo
+	]
+	setTurtleState :oldState
+end
+
+; Follows construction sheet at:
+; https://en.wikipedia.org/wiki/Flag_of_Botswana#/media/File:Flag_of_Botswana_(construction_sheet).svg
+; Colors are from:
+; https://en.wikipedia.org/wiki/Flag_of_Botswana
+to botswanaFlag :height
+	localmake "width :height * 3 / 2
+	localmake "stripesInfo [
+		[9 / 24 :flagBlue]
+		[1 / 24 "white]
+		[4 / 24 "black]
+		[1 / 24 "white]
+		[9 / 24 :flagBlue]
+	]
+	stripesWithVariableLength :width :height :stripesInfo
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Botswana#/media/File:Ensign_of_the_Botswana_Defence_Force_Air_Wing.svg
+to botswanaDefenseForceAirWingFlag :height
+	localmake "width :height * 3 / 2
+	localmake "stripesInfo [
+		[9 / 24 "#078249]
+		[1 / 24 "white]
+		[4 / 24 "#f9121b]
+		[1 / 24 "white]
+		[9 / 24 "#078249]
+	]
+	stripesWithVariableLength :width :height :stripesInfo
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Botswana#/media/File:Roundel_of_Botswana.svg
+to botswanaDefenseForceAirWingRoundel :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "colors [:flagBlue "white "black]
+	localmake "stripeSize :height * 2 / 9
+	setPenSize 0
+	repeat count :colors [
+		localmake "sideLength :height / cos 30
+		setFillColor item repcount :colors
+		left 30
+		polyStart
+		repeat 3 [
+			jumpForward :sideLength
+			right 360 / 3
+		]
+		polyEnd
+		setHeading :oldHeading
+		jumpForward :stripeSize
+		localmake "height :height - :stripeSize * 1.5
+	]
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 4
+jumpLeft :separation
+botswanaFlag :height
+jumpRight :separation
+botswanaDefenseForceAirWingFlag :height
+jumpRight :separation
+botswanaDefenseForceAirWingRoundel :height
