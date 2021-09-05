@@ -1,0 +1,179 @@
+; Inspired by:
+; https://avatars.githubusercontent.com/u/1264973
+; Referenced from:
+; https://github.com/RobotsAndPencils
+; Also referenced from:
+; https://www.robotsandpencils.com/
+
+make "logoAngle1 5
+
+to robotHead :headHeight
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "radarDistance :headHeight * 0.37
+	localmake "radarRadius :headHeight * 0.08
+	localmake "eyeSeparation :headHeight * 0.46
+	localmake "lineThickness1 :headHeight * 0.037 
+	localmake "arcAngle1 24
+	localmake "arcAngle2 30
+	localmake "arcAngle3 180 - (:arcAngle1 + :arcAngle2) * 2
+	localmake "arcRadius1 :headHeight * 0.9
+	localmake "arcRadius2 :headHeight * 0.61
+	localmake "arcRadius3 :headHeight * 0.53
+	setPenSize :headHeight * 0.9
+	setLineCap "butt
+	; Go back a bit so the neck shape overlaps slightly with the body.
+	; Exactly zero overlap can cause faint artifact lines from 
+	; antialiasing erroneously letting some of the background colour fade into the edge.
+	jumpBackward :headHeight * 0.01
+	forward :headHeight * 0.09
+	localmake "pos1 pos
+	jumpForward :headHeight * 0.82
+	setPenSize :radarDistance
+	forward :lineThickness1
+	jumpBackward :lineThickness1 / 2
+	localmake "radarPos1 pos
+	jumpTo :pos1
+	jumpLeft :headHeight * 0.59
+	setPenSize :lineThickness1
+	arcRight :arcAngle1 :arcRadius1	
+	arcRight :arcAngle2 :arcRadius2
+	arcRight :arcAngle3 :arcRadius3
+	arcRight :arcAngle2 :arcRadius2
+	arcRight :arcAngle1 :arcRadius1	
+	closePath
+	setLineCap "round
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :headHeight * 0.8
+	forward :headHeight * 0.2 - penSize / 2
+	setPenSize 0
+	jumpTo :radarPos1
+	jumpRight :radarDistance / 2
+	setFillColor penColor
+	circle :radarRadius
+	jumpLeft :radarDistance
+	circle :radarRadius
+	jumpTo :oldPos
+	jumpForward :headHeight * 0.382
+	jumpRight :eyeSeparation / 2
+	circle :headHeight * 0.06
+	setPenSize :lineThickness1
+	setFillColor transparent
+	circle :headHeight * 0.161
+	jumpLeft :eyeSeparation
+	circle :headHeight * 0.105
+	setTurtleState :oldState
+end
+
+to robotBody :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "torsoHeight :height * 0.735
+	localmake "torsoSlantWidth1 :torsoHeight * 2 * sin :logoAngle1
+	localmake "sizes [
+		:height * 0.45
+		:height * 0.27
+	]
+	localmake "wheelRadius :height * 0.105
+	localmake "lineThickness :height * 0.033
+	localmake "wheelSeparation :wheelRadius * 2 + :lineThickness * 0.5
+	jumpForward :wheelRadius * 2 + :lineThickness
+	setPenSize :wheelSeparation * 3
+	backward :wheelRadius + :lineThickness / 2
+	jumpLeft :wheelSeparation * 1.5
+	setPenSize :lineThickness
+	setFillColor screenColor
+	repeat 4 [
+		circle :wheelRadius
+		jumpRight :wheelSeparation
+	]
+	setFillColor transparent
+	jumpTo :oldPos
+	jumpForward :wheelRadius * 2 + :lineThickness
+	localmake "torsoBasePosition pos
+	repeat count :sizes [
+		localmake "size item repcount :sizes
+		jumpTo :torsoBasePosition
+		isoTrapezoid :size * 2 :size * 2 + :torsoSlantWidth1 :torsoHeight
+		setHeading :oldHeading
+	]
+	jumpTo :oldPos
+	jumpForward :height * 0.36
+	drawHeart :height * 0.55
+	setTurtleState :oldState
+end
+
+to drawHeart :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "triangleAngle1 39
+	localmake "width1 :height * 0.25
+	localmake "slantedHeight :height * 0.55
+	localmake "triangleWidth1 :width1 + (:slantedHeight * sin :logoAngle1) 
+	localmake "triangleInnerAngle1 90 - :triangleAngle1 + :logoAngle1
+	localmake "topInnerAngle 180 - :triangleInnerAngle1 * 2
+	localmake "triangleSideLength :triangleWidth1 / sin :topInnerAngle / 2
+	localmake "trapezoidWidth1 :triangleWidth1 * 0.7
+	localmake "trapezoidWidth2 :triangleWidth1 * 0.2
+	localmake "trapezoidSideLength1 (:trapezoidWidth1 - :trapezoidWidth2) / cos :triangleInnerAngle1
+	localmake "heartAngle1 52
+	localmake "heartSize1 :height * 0.215
+	localmake "heartArcRadius :height * 0.103
+	localmake "heartAngle2 arcTan :heartArcRadius * 2 / :heartSize1
+	localmake "heartAngle3 :heartAngle1 - :heartAngle2
+	localmake "heartSize2 (hypot [:heartArcRadius * 2 :heartSize1]) * sin :heartAngle3 / sin :heartAngle1
+	setFillColor penColor
+	setPenSize 0
+	jumpLeft :width1
+	left :logoAngle1
+	polyStart
+	jumpForward :slantedHeight
+	right :triangleAngle1
+	jumpForward :triangleSideLength
+	right 180 - :topInnerAngle
+	jumpForward :triangleSideLength
+	right :triangleAngle1
+	jumpForward :slantedHeight
+	polyEnd
+	setFillColor screenColor
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :slantedHeight * cos :logoAngle1
+	jumpLeft :trapezoidWidth1
+	right 90 - :triangleInnerAngle1
+	polyStart
+	jumpForward :trapezoidSideLength1
+	setHeading :oldHeading + 90
+	jumpForward :trapezoidWidth2 * 2
+	right :triangleInnerAngle1
+	jumpForward :trapezoidSideLength1
+	polyEnd
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.105
+	left :heartAngle1
+	polyStart
+	jumpForward :heartSize1
+	arcRight 180 :heartArcRadius
+	jumpForward :heartSize2
+	setHeading :oldHeading + :heartAngle1
+	jumpForward :heartSize2
+	arcRight 180 :heartArcRadius
+	polyEnd
+	setTurtleState :oldState
+end
+
+to robotsAndPencilsLogo :height
+	setPenColor "white
+	robotBody :height * 0.53
+	jumpForward :height * 0.53
+	robotHead :height * 0.47
+end
+
+setScreenColor "black
+setPenColor "white
+robotsAndPencilsLogo 100
