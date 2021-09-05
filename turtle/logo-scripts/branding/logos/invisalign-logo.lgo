@@ -1,0 +1,36 @@
+; Inspired by logo at:
+; https://www.invisalign.com
+to invisalignLogo :height
+	localmake "oldState turtleState
+	localmake "c "#3a3531
+	localmake "colors [[ 0.43 mix :c transparent 0.3]
+		[0.68 mix :c transparent 0.6]]
+	localmake "colorStopsList []
+	localmake "ratio 0
+	repeat count :colors [
+		localmake "pair item repcount :colors
+		localmake "color last :pair
+		queue2 "colorStopsList [:ratio :color]
+		queue2 "colorStopsList :pair
+		localmake "ratio 0.01 + first :pair
+	]
+	queue2 "colorStopsList [:ratio :c]
+	localmake "colorStops createPList2 :colorStopsList
+	localmake "gap 0.1
+	localmake "angle 72
+	localmake "arcRadius (0.5 - :gap) / 2 / sin :angle / 2
+	localmake "arcs [[:angle / 2 0] [-:angle :arcRadius]]
+	localmake "petalShape [0 :gap
+		(combine :arcs [[:angle - 180 0]] reverse :arcs)
+	]	
+	jumpForward :height / 2
+	setPenSize 0
+	setFillGradient createRadialGradient pos :height / 2 :colorStops
+	repeat 8 [
+		drawArcLineShape :petalShape :height
+		right 360 / 8
+	]
+	setTurtleState :oldState
+end
+
+invisalignLogo 100

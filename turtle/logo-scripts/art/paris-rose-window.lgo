@@ -1,0 +1,121 @@
+; Inspired by
+; https://www.pinterest.ca/pin/102668066497881539/
+
+to radiatingLines :upSize :downSize :numLines
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	penDown
+	repeat :numLines [
+		setHeading :oldHeading + repcount * 360 / :numLines
+		jumpForward :upSize
+		forward :downSize
+		jumpTo :oldPos
+	]
+	setHeading :oldHeading
+end
+
+to fourLeafPattern :size
+	localmake "oldState turtleState
+	localmake "angle 180
+	localmake "size1 :size * 0.5
+	jumpForward :size * 2
+	left 90
+	penUp
+	arcLeft :angle * 0.5 :size1
+	left 180
+	penDown
+	repeat 4 [
+		arcRight :angle :size1
+		left :angle - 90
+	]
+	closePath
+	setTurtleState :oldState
+end
+
+to parisGothicRoseWindow :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "numOuterSegments 24
+	localmake "numInnerSegments :numOuterSegments / 2
+	localmake "thickness1 :size * 0.05
+	localmake "thickness2 :size * 0.02
+	localmake "thickness3 :size * 0.007
+	localmake "tinyCircleRadius :size * 0.08
+	localmake "innerCircleRadius :size * 0.33
+	localmake "midCircleRadius :size * 0.72
+	localmake "outerArcAngle1 120
+	localmake "outerArcAngle2 :outerArcAngle1 - 360 / :numOuterSegments
+	localmake "innerArcAngle1 120
+	localmake "innerArcAngle2 :innerArcAngle1 - 360 / :numInnerSegments
+	localmake "outerArcsLargeRadius :size * 0.96
+	localmake "outerArcRadius1 :outerArcsLargeRadius * 0.09324
+	localmake "outerArcRadius2 :outerArcRadius1 * 0.6
+	localmake "innerArcsLargeRadius :size * 0.52
+	localmake "innerArcRadius1 :innerArcsLargeRadius * 0.1861753
+	localmake "innerArcRadius2 :innerArcRadius1 * 0.6
+	localmake "outerArcsLargeInnerRadius :size * 0.896518
+	localmake "size1 :size * 0.15
+	localmake "size2 :outerArcsLargeInnerRadius - :innerArcsLargeRadius
+	localmake "size3 :size * 0.05
+	localmake "size4 :size1 * 0.8
+	localmake "size5 :outerArcsLargeInnerRadius - :size4
+	setPenSize :thickness1
+	setFillColor "#9df
+	circle :size
+	setFillColor transparent
+	setPenSize :thickness3
+	circle :tinyCircleRadius
+	circle :innerCircleRadius
+	circle :midCircleRadius
+	setPenSize :thickness2
+	circle :size1
+	jumpForward :outerArcsLargeRadius
+	left 90
+	penUp
+	arcLeft :outerArcAngle1 * 0.5 :outerArcRadius1
+	right 180
+	setPenSize :thickness2
+	penDown
+	repeat :numOuterSegments [
+		arcRight :outerArcAngle1 :outerArcRadius1
+		arcLeft :outerArcAngle2 :outerArcRadius2
+	]
+	closePath
+	jumpTo :oldPos
+	setHeading :oldHeading - 180 / :numOuterSegments
+	jumpForward :innerArcsLargeRadius
+	left 90
+	penUp
+	arcLeft :outerArcAngle1 * 0.5 :innerArcRadius1
+	right 180
+	penDown
+	repeat :numOuterSegments [
+		arcRight :innerArcAngle1 :innerArcRadius1
+		arcLeft :innerArcAngle2 :innerArcRadius2
+	]
+	closePath
+	jumpTo :oldPos
+	setHeading :oldHeading + 180 / :numOuterSegments
+	radiatingLines :size4 :size5 :numInnerSegments
+	setHeading :oldHeading - 180 / :numOuterSegments
+	radiatingLines :innerArcsLargeRadius :size2 :numInnerSegments
+	setHeading :oldHeading
+	setPenSize :thickness3
+	radiatingLines :midCircleRadius :size3 :numOuterSegments
+	repeat :numOuterSegments [
+		jumpTo :oldPos
+		right 360 / :numOuterSegments
+		jumpForward :midCircleRadius + :size3
+		fourLeafPattern :size * 0.08
+	]
+	setHeading :oldHeading - 180 / :numOuterSegments
+	repeat :numInnerSegments [
+		jumpTo :oldPos
+		right 360 / :numInnerSegments
+		jumpForward :innerCircleRadius
+		fourLeafPattern :size * 0.08
+	]
+end
+
+setScreenColor "black
+parisGothicRoseWindow 150

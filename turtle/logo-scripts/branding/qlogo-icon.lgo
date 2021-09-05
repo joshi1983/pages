@@ -1,0 +1,205 @@
+make "qAngle 37.2
+make "shadeRadiusFactor 0.487
+make "qInnerRadius 0.83
+make "shadowDarkColor "#8000
+
+to drawCircleShadow :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "shadeRadius :height * :shadeRadiusFactor
+	localmake "shadeColorStops createPList2 [
+		[:qInnerRadius :shadowDarkColor] [1 transparent]
+	]
+	setFillGradient createRadialGradient pos :shadeRadius :shadeColorStops
+	right 180 - :qAngle
+	jumpForward :qInnerRadius * :shadeRadius
+	localmake "startPos pos
+	right 45
+	jumpForward 10
+	localmake "endLinePos pos
+	jumpTo :startPos
+	left 90
+	polyStart
+	localmake "len distanceToCircle :oldPos :shadeRadius
+	jumpForward :len
+	setHeading (towards :oldPos) + 90
+	arcLeft 180 :shadeRadius ; arc past the first line intersection.
+	localmake "arcAngle getArcLeftAngleToLine :shadeRadius :startPos :endLinePos
+	arcLeft :arcAngle :shadeRadius
+	polyEnd
+
+	setTurtleState :oldState
+	output [:len :startPos]
+end
+
+to drawQPointShadows :shadeInfo
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "shadeColorStops createPList2 [
+		[0 transparent] [0.5 :shadowDarkColor] [1 transparent]
+	]
+	localmake "len1 first :shadeInfo
+	localmake "len2 :len1 * cos 45
+	localmake "startPos last :shadeInfo
+	localmake "qAngle2 95
+	jumpTo :startPos
+	right 90 - :qAngle
+	jumpRight :len2
+	jumpBackward :len2
+	localmake "fromPos pos
+	jumpForward :len2 * 2
+	localmake "upperRightPos pos
+	setFillGradient createLinearGradient :fromPos pos :shadeColorStops "pad
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpRight 100
+	localmake "bottomPos1 pos
+	jumpTo :fromPos
+	setHeading :oldHeading + 180 - :qAngle
+	localmake "len3 distanceToLine :oldPos :bottomPos1
+	jumpForward :len3
+	localmake "bottomPos3 pos
+	left :qAngle2
+	jumpForward :len2
+	localmake "bottomPos2 pos
+	right 62
+	jumpForward distanceToLine :oldPos :bottomPos1
+	localmake "bottomPos4 pos
+	polygon [:startPos :fromPos :bottomPos3 :bottomPos2 
+		:bottomPos4 :upperRightPos]
+	jumpTo :bottomPos2
+	setHeading :oldHeading + 180
+	jumpForward distanceToLine :oldPos :bottomPos1
+	localmake "shadeColorStops createPList2 [
+		[0 :shadowDarkColor] [1 transparent]
+	]
+	setFillGradient createLinearGradient :bottomPos2 pos :shadeColorStops "pad
+	polygon [:bottomPos3 :bottomPos2 
+		:bottomPos4]
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to fillQBackground :center :height
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "gap 0.042
+	localmake "width1 :height * 0.1
+	localmake "colorStops createPList2 [
+		[0 "#5a9bbd] [1 "#3b7ea1]
+	]
+	localmake "letterColorStops createPList2 [
+		[0 "#efedea] [1 "#ddd5c7]
+	]
+	jumpForward :height * 0.5
+	jumpRight :height * 0.2
+	setFillGradient createRadialGradient pos :height * 0.4 :colorStops
+	localmake "qLetterGradient createRadialGradient pos :height * 0.4 :letterColorStops
+	jumpTo :oldPos
+	jumpRight 100
+	localmake "pos2 pos
+	jumpTo :center
+	circle :height * (:shadeRadiusFactor - :gap)
+	right 180 - :qAngle
+	jumpForward distanceToLine :oldPos :pos2
+	setHeading :oldHeading
+	left :qAngle
+	jumpForward :height * 0.032
+	setHeading :oldHeading
+	parallelogram :width1 :height * 0.5 -:qAngle
+	jumpTo :oldPos
+	setFillGradient :qLetterGradient
+	drawArcLineShapes [
+		[-0.224 0.05
+			[[-90 0] [0.111] [66.5 0] [0.143] [-25.8 0] [0.35] [90 0] [0.07]
+			[91 0] [0.2] [-156.5 0] [0.5525] [115 0] [0.111] [65 0] [0.088]
+			]
+		]
+		[0.098 0.75
+			[[25 0] [40 0.15] [40 0.11] [38 0.43] [20 0.52] [20 0.3] [50 0.12]
+			[55 0.085] [43 0.5] [90 0] [0.025] [70 0] [0.15] [-15 0.35]
+			[-40 0.06] [-47 0.03] [-38 0.1] [-45 0.38] [-40 0.12]
+			[-50 0.06] [-40 0.25]]
+		]
+	] :height
+	setHeading :oldHeading
+end
+
+to drawBackgroundShapes :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	jumpForward :height * (1 - :shadeRadiusFactor)
+	jumpLeft :height * 0.002
+	localmake "center pos
+	setPenSize 0
+	localmake "shadeInfo drawCircleShadow :height
+	jumpTo :oldPos
+	drawQPointShadows :shadeInfo
+	fillQBackground :center :height
+
+	setTurtleState :oldState
+end
+
+to drawTurtle :height
+	localmake "oldState turtleState
+	localmake "legAngle 35
+	localmake "legStartSeparation :height * 0.035
+	localmake "headLines1 [[21 0] [0.23] [-60.7 0] [0.12904]]
+	localmake "headColorStops createPList2 [
+		[0 "#0f0] [1 "#2b4e30]
+	]
+	jumpForward :height * 0.46
+	jumpRight :height * 0.21
+	right 44.9
+	stripes 0.001 :height ["red]
+	localmake "turtleStartPos pos
+	localmake "turtleHeading heading
+	jumpRight :legStartSeparation / 2
+	setPenSize 0
+	setFillColor "green
+	repeat 2 [
+		setHeading :turtleHeading - 180 + (repcount - 1.5) * :legAngle * 2
+		isoTriangle :height * 0.1 :height * 0.15
+		setHeading :turtleHeading
+		jumpLeft :legStartSeparation
+	]
+	jumpTo :turtleStartPos
+	setHeading :turtleHeading
+	jumpForward :height * 0.065
+	localmake "startPos2 pos
+	setFillColor "yellow
+	jumpRight :height * 0.225
+	localmake "redColorStops createPList2 [
+		[0 "red] [1 "#523232]
+	]
+	setFillGradient createRadialGradient pos :height * 0.14 :redColorStops
+	jumpTo :startPos2
+	isoTrapezoid :height * 0.55 :height * 0.32 :height * 0.055
+
+	jumpTo :turtleStartPos
+	jumpForward :height * 0.263
+	setFillGradient createRadialGradient pos :height * 0.14 :headColorStops
+	jumpTo :turtleStartPos
+	drawArcLineShape [0 -0.05
+		(combine :headLines1 [[-100.6 0]] reverse :headLines1)
+	] :height
+
+	jumpTo :turtleStartPos
+	jumpForward :height * 0.03
+	setFillColor "#333369
+	left 180 / 5
+	regularPolygon :height * 0.115 5
+	setTurtleState :oldState
+end
+
+; Inspired by icon at:
+; https://github.com/jasonsikes/QLogo/blob/master/icons/qlogo_icon_1024.png
+to qlogoIcon :height
+	localmake "oldState turtleState
+	drawBackgroundShapes :height
+	drawTurtle :height
+	setTurtleState :oldState
+end
+
+setScreenColor transparent
+qlogoIcon 100
