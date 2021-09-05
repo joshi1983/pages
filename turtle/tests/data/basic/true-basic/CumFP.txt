@@ -1,0 +1,20 @@
+!
+!  CUMFP.  Show frequency polygon and its cumulative counterpart.
+!
+LIBRARY "Stat2Lib.trc"
+
+DIM data(0)
+
+CALL SimNormal (250, .5, .2, data)     ! Create dataset
+CALL SetNormal (1)                ! Superimpose normal curve
+CALL SetHist ("%")                ! Do as percentage
+
+OPEN #1: screen 0, .49, 0, 1      ! Straight frequency polygon
+CALL SetTitle ("Frequency Polygon")
+CALL PlotFP (data, 0, 1, .1, 10, 0, "")
+
+OPEN #2: screen .5, 1, 0, 1       ! Cumulative frequency polygon
+CALL SetTitle ("Cumulative Version")
+CALL PlotCumFP (data, 0, 1, .1, 10, 0, "")
+
+END

@@ -1,0 +1,51 @@
+; Inspired by logo at:
+; https://www.kintonramen.com/
+to kintonRamenLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angle 30
+	localmake "radius :height * 1.111
+	localmake "startAngle arcCos (:radius - :height) / :radius
+	localmake "len1 :radius * sin :startAngle
+	jumpForward :radius
+	localmake "center pos
+	setPenSize 0
+	setFillColor "#fbdc05
+	jumpTo :oldPos
+	jumpForward :height * 0.8875
+	right 180 - :angle
+	polyStart
+	jumpForward distanceToCircle :center :radius
+	setHeading (towards :center) - 90
+	localmake "chordLength distance :oldPos
+	localmake "arcAngle1 2 * 2 * arcSin :chordLength / 2 / :radius
+	arcRight :arcAngle1 :radius
+	polyEnd
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height
+	localmake "midPos2 pos
+	jumpRight :len1
+	localmake "topRightPos pos
+	setHeading (towards :center) - 90
+	polyStart
+	arcRight :arcAngle1 :radius
+	setHeading :oldHeading - :angle
+	jumpForward distanceToLine :midPos2 :topRightPos
+	polyEnd
+	jumpTo :midPos2
+	setHeading :oldHeading
+	jumpLeft :len1
+	setHeading (towards :center) + 90
+	polyStart
+	arcLeft :arcAngle1 :radius
+	setHeading :oldHeading + :angle
+	jumpForward distanceToLine :midPos2 :topRightPos
+	polyEnd
+	
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+kintonRamenLogo 100

@@ -1,0 +1,51 @@
+to drawFunnyEyes :height
+	localmake "oldState turtleState
+	localmake "width :height * 3
+	localmake "squareSize :height / 2
+	stripes :width :height ["white]
+	stripes :squareSize :squareSize ["black]
+	jumpLeft (:width - :squareSize) / 2
+	jumpForward :squareSize
+	stripes :squareSize :squareSize ["black]
+	
+	setTurtleState :oldState
+end
+
+; Inspired by an image at:
+; https://lam-programming.weebly.com/ass-turtle-drawing.html
+to pinkRobot :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	setLineJoinStyle "miter
+	setLineCap "butt
+	setPenColor "green
+	setPenSize :height * 0.05
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		jumpLeft :sign * :height * 0.066
+		stripes :height * 0.05 :height * 0.5 ["tan]
+		jumpLeft :sign * :height * 0.035
+		stripes :height * 0.15 :height * 0.062 ["purple]
+		jumpForward :height * 0.683
+		arcLines [[90 0] [0.2] [-90 0] [0.14]] :sign * :height
+		jumpTo :oldPos
+	]
+	jumpForward :height * 0.575
+	stripes :height * 0.05 :height * 0.3 ["tan]
+	setPenSize 0
+	setFillColor "#FF889D
+	rect :height * 0.3 :height * 0.44
+	jumpForward :height * 0.35
+	setFillColor "#f46
+	rect :height * 0.24 :height * 0.15
+	jumpForward :height * 0.01
+	drawFunnyEyes :height * 0.035
+	jumpBackward :height * 0.055
+	jumpLeft :height * 0.01
+	right 6
+	setFillColor "black
+	rect :height * 0.12 :height * 0.02
+	setTurtleState :oldState
+end
+
+pinkRobot 100

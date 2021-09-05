@@ -1,0 +1,99 @@
+MODULE WBmkdir                    ! 1992/12/05
+
+    ! SUB WB_Mkdir (l$(), options$)
+
+    DECLARE PUBLIC mach$
+
+    LIBRARY "{WB_c}ExecLib.trc"
+    LIBRARY "{WB_c}WButilit.trc"
+
+    SUB WB_Mkdir (l$(), options$)
+
+        LOCAL i, option$(0)
+
+        CALL WB_Decode (options$, option$())
+
+        FOR i = 1 to ubound(option$())
+            WHEN EXCEPTION IN
+                 CALL Exec_Mkdir (option$(i))
+                 IF mach$ = "MAC" then
+                    PRINT "Just created folder: " & option$(i)
+                 ELSE
+                    PRINT "Just created directory: " & option$(i)
+                 END IF
+            USE
+                 IF mach$ = "MAC" then
+                    CALL WB_Error ("Mkdir error. Bad folder name: " & option$(i))
+                 ELSE
+                    CALL WB_Error ("Mkdir error. Bad directory name: " & option$(i))
+                 END IF
+            END WHEN
+        NEXT i
+
+    END SUB
+
+END MODULE
+
+MODULE WBmkscr
+
+    ! SUB WB_Mkscr (l$(), options$)
+    ! SUB ScanString (string$, fields$(), n)
+    ! SUB InsertLine (l$, f$(), n)
+
+    PRIVATE ScanString, InsertLine
+
+    SUB WB_Mkscr (l$(), options$)
+
+        LOCAL i, fields$(0), n
+
+        CALL ScanString (options$, fields$(), n)
+
+        FOR i = 1 to ubound(l$)
+            CALL InsertLine (l$(i), fields$(), n)
+        NEXT i
+
+        SET NAME "Result"
+
+    END SUB
+
+    SUB ScanString (string$, fields$(), n)
+
+        LOCAL p1, p2, l
+
+        LET string$ = trim$(string$)
+        IF string$[1:1] = """" then LET string$[1:1] = ""
+        LET l = len(string$)
+        IF string$[l:l] = """" then LET string$[l:l] = ""
+
+        MAT Redim fields$(10)
+
+        LET n = 0
+        LET p1 = 0
+        DO
+           LET p2 = pos(string$, "?", p1) - 1
+           IF p2 = -1 then
+              LET n = n + 1
+              LET fields$(n) = string$[p1:maxnum]
+              EXIT DO
+           END IF
+           LET n = n + 1
+           LET fields$(n) = string$[p1:p2]
+           LET p1 = p2 + 2
+        LOOP
+        MAT Redim fields$(n)
+
+    END SUB
+
+    SUB InsertLine (l$, f$(), n)
+
+        LOCAL s$, i
+
+        LET s$ = f$(1)
+        FOR i = 2 to n
+            LET s$ = s$ & l$ & f$(i)
+        NEXT i
+        LET l$ = s$
+
+    END SUB
+
+END MODULE

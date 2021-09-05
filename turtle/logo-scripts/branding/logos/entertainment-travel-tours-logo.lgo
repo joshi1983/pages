@@ -1,0 +1,78 @@
+make "fontThicknessFactor1 0.16
+
+to drawE :fontHeight
+	localmake "oldState turtleState
+	jumpRight :fontHeight * 0.29
+	setPenSize :fontHeight * :fontThicknessFactor1
+	setPenColor fillColor
+	setLineCap "butt
+	setLineJoinStyle "miter
+	jumpForward penSize / 2
+	arcLines [[90 0] [0.47] [-90 0]
+	[(:fontHeight - penSize) / :fontHeight]
+	[-90 0] [0.46]] :fontHeight
+	jumpRight (:fontHeight - penSize) * 0.48
+	jumpBackward :fontHeight * 0.03
+	backward :fontHeight * 0.4
+	setTurtleState :oldState
+end
+
+to drawT :fontHeight
+	localmake "oldState turtleState
+	stripes :fontHeight * 0.2 :fontHeight [fillColor]	
+
+	jumpForward :fontHeight * (1 - :fontThicknessFactor1)
+	stripes :fontHeight * 0.65 :fontHeight * :fontThicknessFactor1 [fillColor]	
+
+	setTurtleState :oldState
+end
+
+to drawETT :fontHeight
+	localmake "oldState turtleState
+	jumpLeft :fontHeight * 0.79
+	drawE :fontHeight
+	repeat 2 [
+		jumpRight :fontHeight * 0.77
+		drawT :fontHeight
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://entertainmentcoach.ca
+to entertainmentTravelToursLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "radius :height / 2
+	setFillColor "white
+	jumpForward :height / 2
+	localmake "center pos
+	setPenSize 0
+	repeat 6 [
+		localmake "heading1 :oldHeading + repcount * 360 /6
+		localmake "heading2 :heading1 + 7
+		setHeading :heading2
+		jumpForward :radius
+		localmake "startPos pos
+		setHeading :heading1 + 30
+		jumpForward :height
+		localmake "guidePoint1 pos
+
+		jumpTo :startPos
+		setHeading :heading2 + 90
+		polyStart
+		arcRight 55 :radius
+		setHeading :heading1 - 90
+		jumpForward distanceToLine :startPos :guidePoint1
+		polyEnd		
+		jumpTo :center
+	]
+	setHeading :oldHeading
+	jumpBackward :height * 0.094
+	drawETT :height * 0.165
+
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+entertainmentTravelToursLogo 100

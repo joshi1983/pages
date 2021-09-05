@@ -1,0 +1,97 @@
+// Clover.bas
+// Translated from TRS-80 GBASIC CLOVER/BAS
+// pBasic translation: March 2026
+
+CLS
+CLR
+
+// --- Setup (lines 20-35) ---
+// P = horz centre; Q = vert offset; XP = horz radius
+// YP = vert amplitude; YR = aspect ratio; ZP = depth radius
+
+var P : Float = 630
+var Q : Float = 500
+var XP : Float = 284
+var XR : Float = 1.5 * 3.1415927
+var YP : Float = 87
+var YR : Float = 1.0
+var ZP : Float = 126
+var stetch : Float = 1.3
+
+var XF : Float = 0
+var YF : Float = 0
+var ZF : Float = 0
+XF = XR / XP
+YF = YP / YR
+ZF = XR / ZP
+
+// --- Working variables ---
+var ZI : Float = 0
+var ZT : Float = 0
+var ZZ : Float = 0
+var XL : Float = 0
+var XI : Float = 0
+var XT : Float = 0
+var XX : Float = 0
+var YY : Float = 0
+var X1 : Float = 0
+var Y1 : Float = 0
+var inRange : Int = 0
+
+// Scale and centre parameters
+var SF : Float = 1.64        // uniform scale factor
+var OX : Float = 300         // X offset (X already fills width with SF=1.64)
+var OY : Float = 265         // Y offset to centre vertically
+
+print "Render Start "; 
+print time
+
+// --- Outer loop: FOR ZI = -Q TO Q-1 (line 40) ---
+ZI = -Q
+while (ZI <= Q - 1) {
+
+    // Guard: IF ZI < -ZP OR ZI > ZP THEN skip (line 40)
+    inRange = 1
+    if ZI < -ZP then inRange = 0
+    if ZI > ZP then inRange = 0
+
+    // Inner body only when in range (line 45)
+    while (inRange == 1) {
+
+        ZT = ZI * XP / ZP
+        ZZ = ZI
+        var sqrtArg : Float = 0
+		sqrtArg = XP * XP - ZT * ZT
+		//if sqrtArg < 0 then sqrtArg = 0
+		XL = INT(0.5 + SQRT(sqrtArg))
+		
+        // Inner XI loop: FOR XI = -XL TO XL STEP 0.625 (line 45)
+        XI = -XL
+        while (XI <= XL) {
+
+            XT = SQRT(XI * XI + ZT * ZT) * XF
+            XX = XI
+            YY = (SIN(XT) + 0.4 * SIN(3 * XT)) * YF
+
+            // Plot subroutine (lines 60-65)
+            X1 = (XX + ZZ) * 1.6 + P
+            Y1 = YY - ZZ + Q
+			
+			POINT(X1, 999 - Y1)
+			LINE(X1, 1000 - Y1, X1, 999, 0, 0, 0, 1)
+			
+            XI = XI + 0.625
+        }
+
+        // Exit the inRange while after one pass — this is not a real loop,
+        // it is used as a conditional block to skip the inner body.
+        inRange = 0
+    }
+	
+    ZI = ZI + 1
+}
+
+print "Render Complete "; 
+print time
+
+end
