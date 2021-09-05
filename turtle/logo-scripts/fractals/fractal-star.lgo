@@ -1,0 +1,59 @@
+; made to look similar to drawing at:
+; https://benice-equation.blogspot.com/2012/12/fractal-star.html
+
+make "colors [ "white "#7f00ff]
+
+to drawStar :size
+	localmake "oldState turtleState
+	setPenSize 0
+	jumpForward :size * 1.4
+	left 162
+	polyStart
+	repeat 5 [
+		forward :size
+		right 72
+		forward :size
+		left 144
+	]
+	polyEnd
+	setTurtleState :oldState
+end
+
+to drawFractalStar :size :colorIndex
+	if :size > 1 [
+		localmake "mainStarSize :size / 3
+		localmake "minorStarSize :size / 9
+		localmake "radius1 :size * 0.7
+		localmake "radius2 :size * 0.35
+		localmake "oldState turtleState
+		if :colorIndex <= 0 [
+			localmake "colorIndex :colorIndex + count :colors
+		]
+		setFillColor item :colorIndex :colors
+		drawStar :mainStarSize
+
+		drawFractalStar :mainStarSize :colorIndex - 1
+		right 36 * 2
+		repeat 5 [
+			forward :radius1
+			drawFractalStar :mainStarSize :colorIndex - 1
+			backward :radius1
+			right 360 / 5
+		]
+		right 36
+		repeat 5 [
+			forward :radius2
+			left 36
+			drawFractalStar :minorStarSize :colorIndex
+			right 36
+			backward :radius2
+			right 360 / 5
+		]
+
+		setTurtleState :oldState
+	]
+end
+
+setScreenColor "black
+setPenSize 0
+drawFractalStar 100 1

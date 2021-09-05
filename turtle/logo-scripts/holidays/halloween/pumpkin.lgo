@@ -1,0 +1,189 @@
+to orangeGradient :size
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#FF811A
+	setProperty "colorStops 1 ["#6A3901 easeInCirc]
+	output createRadialGradient pos pos :size :colorStops "pad
+end
+
+to yellowGradient :size
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "white
+	setProperty "colorStops 1 ["yellow easeInCirc]
+	output createRadialGradient pos pos :size :colorStops "pad
+end
+
+to getLeafArcRadius :size :angle
+	output :size * 0.5  / sin :angle
+end
+
+to leaf1 :size :angle
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angle :angle * 2
+	localmake "arcRadius getLeafArcRadius :size :angle * 0.5
+	setLineJoinStyle "round
+	left :angle * 0.5
+	arcRight :angle :arcRadius
+	right 180 - :angle
+	arcRight :angle :arcRadius
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to getLeafWidth :ratio :angle_
+	localmake "ratio 2 * abs (0.5 - :ratio)
+	; ratio is now between 0 and 1.
+	localmake "x1 sin :angle_
+	localmake "x :ratio * :x1
+	localmake "y2 abs cos :angle_
+	localmake "y sqrt (1 - :x * :x)
+	localmake "result 2 * (:y - :y2)
+	output :result
+end
+
+to eye :size :orangeGradient :yellowGradient
+	localmake "eyeOpenAngle 45
+	localmake "size1 :size * 0.205
+	localmake "size2 :size * 0.05
+	setFillGradient :yellowGradient
+	setPenColor "brown
+	filledLeaf :size :eyeOpenAngle
+	jumpForward :size * 0.5
+	setFillGradient :orangeGradient
+	circle :size1
+	setFillGradient :yellowGradient
+	circle :size2
+end
+
+to filledLeaf :size :angle
+	polyStart
+	leaf1 :size :angle
+	polyEnd
+end
+
+to eyeBrows :eyeSize
+	localmake "oldPos pos
+	localmake "eyebrowLen :eyeSize * 0.8
+	localmake "thickness :eyeSize * 0.05
+	localmake "gap :eyeSize * 0.2
+	jumpLeft :gap
+	polyStart
+	jumpForward :thickness
+	jumpLeft :eyebrowLen
+	polyEnd
+	jumpTo :oldPos
+	jumpRight :gap
+	polyStart
+	jumpForward :thickness
+	jumpRight :eyebrowLen
+	polyEnd
+	jumpTo :oldPos
+end
+
+to eyes :eyeSize :yellowGradient
+	localmake "oldHeading heading
+	localmake "oldPos pos
+	localmake "oldGradient fillGradient
+	localmake "eyeAngle 75
+	localmake "gap :eyeSize * 0.1
+	jumpRight :gap
+	right :eyeAngle
+	eye :eyeSize :oldGradient :yellowGradient
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpLeft :gap
+	setHeading :oldHeading - :eyeAngle
+	eye :eyeSize :oldGradient :yellowGradient
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :eyeSize * 0.45 ; move up to eyebrow-level.
+	eyeBrows :eyeSize
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to greenLeafs :size
+	localmake "oldHeading heading
+	localmake "oldPos pos
+	setPenColor "#17AB17
+	setFillColor "#007000
+	setHeading :oldHeading + 60
+	filledLeaf :size 30
+	setHeading :oldHeading - 60
+	filledLeaf :size 30
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to perpendicularLine :len
+	localmake "oldHeading heading
+	localmake "oldPos pos
+	localmake "middleNotchSize penSize * 0.3
+	jumpBackward :middleNotchSize
+	forward :middleNotchSize * 2
+	jumpBackward :middleNotchSize
+	right 90
+	jumpForward :len * 0.5
+	backward :len
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to mouth :size :yellowGradient
+	localmake "oldHeading heading
+	localmake "angle 30
+	localmake "oldPenSize penSize
+	jumpLeft :size * 0.5
+	localmake "pos1 pos
+	right 90
+	setFillGradient :yellowGradient
+	filledLeaf :size :angle
+	localmake "teethCracks [0.1 0.3 0.7 0.9]
+	setHeading :oldHeading + 90
+	setLineJoinStyle "round
+	setPenSize :size * 0.02
+	localmake "arcRadius getLeafArcRadius :size :angle
+	repeat count :teethCracks [
+		localmake "crack item repcount :teethCracks
+		localmake "len :size * :crack
+		jumpTo :pos1
+		jumpForward :len
+		perpendicularLine (:arcRadius * getLeafWidth :crack :angle)
+	]
+	setPenSize :oldPenSize
+end
+
+to face :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "eyeSize :size * 0.8
+	localmake "leafSize :size * 0.4
+	localmake "yellowGradient yellowGradient :size
+	setPenColor "brown
+	setFillGradient orangeGradient :size
+	circle :size
+	jumpBackward :size
+	repeat 3 [
+		localmake "angle (1 - repcount / 4) * 100
+		leaf1 :size * 2 :angle
+	]
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :size * 0.1
+	eyes :eyeSize :yellowGradient
+	jumpTo :oldPos
+	jumpBackward :size * 0.5
+	mouth :size :yellowGradient
+
+	setPenColor "#17AB17
+	setFillColor "green
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :size
+	greenLeafs :leafSize
+end
+
+setScreenColor "black
+face 100

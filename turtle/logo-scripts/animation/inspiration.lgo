@@ -1,0 +1,109 @@
+; Inspired by:
+; https://www.pinterest.ca/pin/29836416270057959/
+
+; Draws a dark green grid at 45 degree diagonal 
+to backgroundGrid :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "numRepeats 50
+	localmake "len :size / sin 45
+	localmake "step :size / :numRepeats
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#0080
+	setProperty "colorStops 0.5 "#f080
+	setProperty "colorStops 1 "#0080
+	jumpBackward :size * 0.5
+	localmake "fromPos pos
+	jumpForward :size
+	setPenGradient createLinearGradient :fromPos pos :colorStops "pad
+	setPenSize :size * 0.002
+
+	; draw diagonal lines toward the upper right.
+	repeat :numRepeats [
+		ifelse even? repcount [
+			setPenSize :size * 0.002
+		] [
+			setPenSize :size * 0.001
+		]
+		jumpTo :oldPos
+		setHeading :oldHeading
+		jumpBackward :size * 0.5
+		jumpRight repcount * :step - :size
+		right 45
+		forward :len
+
+		jumpTo :oldPos
+		setHeading :oldHeading
+		jumpBackward :size * 0.5
+		jumpRight repcount * :step
+		left 45
+		forward :len
+	]
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+; Sets the gradient for each of the moving points
+to setRadialGradient :radius :ratio
+	localmake "c1 "#FBFF00
+	ifelse :ratio < 0.5 [
+		localmake "c mix :c1 "white 2 * :ratio
+	] [
+		localmake "c mix "#BB00FF :c1 2 * :ratio - 1
+	]
+	localmake "colorStops createPList
+	setProperty "colorStops 0 :c
+	setProperty "colorStops 1 [mix :c transparent 0.01 easeBounceOut]
+	setFillGradient createRadialGradient pos pos :radius :colorStops "pad
+end
+
+; Draws the moving points
+to graphBezier :t :points :direction
+	localmake "numPoints 20
+	localmake "minSize 0.3
+	localmake "maxSize 10
+	setPenSize 0
+	setFillColor "#8000
+	repeat :numPoints [
+		localmake "ratio repcount / :numPoints
+		localmake "size mix :maxSize :minSize sin 180 * :ratio
+		localmake "p bezier :points 0.5 + 0.5 * cos 180 * (:t + :ratio)
+		setItem 1 "p :direction * item 1 :p
+		setItem 2 "p :direction * item 2 :p
+		jumpTo :p
+		setRadialGradient :size :ratio
+		circle :size
+	]
+end
+
+; Bezier points for 1 of the 2 loops.
+make "points [
+	[0 0]
+	[-100 100]
+	[100 100]
+	[0 0]
+]
+
+setScreenColor "black
+make "t 0.5 + 2 * animation.time / 3
+make "size 200
+backgroundGrid :size
+
+; Draw the upper loop.
+graphBezier :t :points 1
+
+; Draw the lower loop.
+graphBezier :t :points -1
+
+to animation.snapshotstyle
+	localmake "result createPList
+	setProperty "result "zoom.scale 3
+	output :result
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 3
+	; Edit this if you want to change the length of your animation.
+	output :minutes * 60 + :seconds
+end

@@ -1,0 +1,95 @@
+; Inspired by
+; https://www.pinterest.ca/pin/147985537743650440/
+
+to flamePath :size
+	localmake "oldState turtleState
+	localmake "angle1 40
+	localmake "angle2 30
+	localmake "size1 :size * 0.7
+	localmake "size2 :size * 1.005
+	polyStart
+	arcLeft :angle1 :size1
+	arcRight :angle2 :size2
+	right 172
+	arcLeft :angle2 :size2
+	arcRight :angle1 :size1
+	polyEnd
+	setTurtleState :oldState
+end
+
+to flamePath2 :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angle1 40
+	localmake "angle2 30
+	localmake "size1 :size * 0.7
+	localmake "size2 :size * 1.005
+	polyStart
+	arcRight :angle1 :size1
+	arcLeft :angle2 :size2
+	right 170
+	arcRight :angle2 :size2
+	arcLeft :angle1 :size1
+	polyEnd
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to scaleRatio :ratio1 :brightestRatio :deltaRatio
+	localmake "ratio2 :ratio1 * :deltaRatio
+	localmake "ratio3 (:ratio1 - :brightestRatio) / (1 - :brightestRatio)
+	output mix :ratio1 :ratio2 :ratio3
+end
+
+to ringOfFire :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "size :size * 1.075
+	localmake "colors ["black "black "#f00 "#ff6 "#fff "#ff6 "#f00 "#000]
+	localmake "ratio 0.85
+	localmake "radius1 :size * :ratio
+	localmake "radius2 :size
+	localmake "brightestRadius 0.86
+	localmake "colorStops createPList
+	setProperty "colorStops 0 item 1 :colors
+	setProperty "colorStops 0.75 item 2 :colors
+	setProperty "colorStops 0.8 item 3 :colors
+	setProperty "colorStops 0.85 item 4 :colors
+	setProperty "colorStops :brightestRadius item 5 :colors
+	setProperty "colorStops 0.87 item 6 :colors
+	setProperty "colorStops 0.92 item 7 :colors
+	setProperty "colorStops 1 item 8 :colors
+	localmake "gradient createRadialGradient pos pos :radius1 :colorStops "pad
+	setFillGradient :gradient
+	setPenSize 0
+	circle :radius1
+	localmake "colorStops createPList
+	setProperty "colorStops 0 item 1 :colors
+	setProperty "colorStops 0.75 * :ratio item 2 :colors
+	setProperty "colorStops 0.8 * :ratio item 3 :colors
+	setProperty "colorStops 0.85 * :ratio item 4 :colors
+	setProperty "colorStops :brightestRadius * :ratio item 5 :colors
+	setProperty "colorStops (scaleRatio 0.86 :brightestRadius :ratio) item 5 :colors
+	setProperty "colorStops (scaleRatio 0.87 :brightestRadius :ratio) item 6 :colors
+	setProperty "colorStops (scaleRatio 0.92 :brightestRadius :ratio) item 7 :colors
+	setProperty "colorStops 1 item 8 :colors
+	localmake "gradient createRadialGradient pos pos :radius2 :colorStops "pad
+	setFillGradient :gradient
+	localmake "numFlames 64
+	repeat :numFlames [
+		jumpForward :brightestRadius * :ratio * :size
+		left 5
+		flamePath :size * (0.12 + 0.08 * (remainder repcount 2))
+		right 15
+		if 0 = remainder repcount 3 [
+			flamePath2 :size * 0.22
+		]
+		right 15
+		flamePath :size * 0.2
+		jumpTo :oldPos
+		setHeading :oldHeading + repcount * 360 / :numFlames
+	]
+end
+
+setScreenColor "black
+ringOfFire 200

@@ -1,0 +1,48 @@
+; Made following instructions at:
+; https://upload.wikimedia.org/wikipedia/commons/2/2b/Flag_of_Somalia_%28construction%29.jpg
+; and
+; https://en.wikipedia.org/wiki/Flag_of_Somalia
+
+to star :size
+	localmake "oldState turtleState
+	localmake "scale (cos 18) + (sin 18) / (tan 180 / 5)
+	jumpForward :size * :scale
+	right 72 / 4
+	polyStart
+	repeat 5 [
+		right 144
+		jumpForward :size
+		left 72
+		jumpForward :size
+	]
+	polyEnd
+	setTurtleState :oldState
+end
+
+to somaliaFlag :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "width :height * 3 / 2
+	localmake "d :height * 13 / 27
+	localmake "starSize1 :d * sin 90 - 18
+	localmake "starSize2 :starSize1 / (2 + 2 * sin 18)
+	; fill background.
+	setPenColor "#4189dd
+	jumpForward :height / 2
+	localmake "center pos
+	jumpLeft :width / 2
+	setPenSize :height
+	setLineCap "butt
+	right 90
+	forward :width
+
+	setFillColor "white
+	setPenSize 0
+	jumpTo :center
+	setHeading :oldHeading
+	star :starSize2
+
+	setTurtleState :oldState
+end
+
+somaliaFlag 100

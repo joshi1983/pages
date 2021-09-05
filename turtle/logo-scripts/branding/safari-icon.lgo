@@ -1,0 +1,127 @@
+; Inspired by
+; https://upload.wikimedia.org/wikipedia/commons/5/52/Safari_browser_logo.svg
+; Referenced from:
+; https://en.wikipedia.org/wiki/Safari_(web_browser)
+
+to safariNotches :radius
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "numNotches 60
+	localmake "penSize1 :radius * 0.03
+	localmake "radius1 :radius - :penSize1 / 2
+	setPenSize :penSize1
+	setLineCap "round
+	repeat :numNotches [
+		localmake "len1 :radius * 0.175
+		if even? repcount [
+			localmake "len1 :len1 * 0.43
+		]
+		jumpForward :radius1
+		backward :len1
+		jumpTo :oldPos
+		right 360 / :numNotches
+	]
+	setTurtleState :oldState
+end
+
+to safariBlueBackground :radius
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	setFillColor "#107ddd
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#08c0e8
+	setProperty "colorStops 0.5 "#12aff1
+	setProperty "colorStops 1 "#107ddd
+	jumpForward :radius * 0.2
+	setFillGradient createRadialGradient pos pos :radius :colorStops "pad
+	jumpTo :oldPos
+	setPenSize 0
+	circle :radius
+	setTurtleState :oldState
+end
+
+to safariGrayBackground :radius
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#fff
+	setProperty "colorStops 1 "#bdbdbd
+	jumpBackward :radius
+	localmake "fromPos pos
+	jumpForward :radius * 2
+	setFillGradient createLinearGradient pos :fromPos :colorStops "pad
+	setPenColor "#aaa
+	setPenSize :radius * 0.001
+	jumpTo :oldPos
+	circle :radius
+	setTurtleState :oldState
+end
+
+to safariShadow :radius
+	localmake "oldState turtleState
+	localmake "colorStops createPList
+	setProperty "colorStops 0.5 "#f000
+	setProperty "colorStops 0.93 "#3000
+	setProperty "colorStops 1 "#0000
+	setFillGradient createRadialGradient pos pos :radius :colorStops "pad
+	setPenSize 0
+	circle :radius
+	setTurtleState :oldState
+end
+
+to safariNeedle :size
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "size1 :size / 2
+	localmake "angle1 46.15
+	localmake "angle2 170.2
+	localmake "angle3 270 - :angle2
+	localmake "size2 -:size1 / cos :angle2
+	localmake "size3 :size1 * tan 180 - :angle2
+	setPenSize 0
+	right :angle1
+	setFillColor "#ff5150
+	polyStart
+	jumpForward :size * 0.5
+	left :angle2
+	jumpForward :size2
+	polyEnd
+	setFillColor "#c13d3d
+	jumpTo :oldPos
+	left :angle3
+	polyStart
+	jumpForward :size3
+	left :angle3
+	jumpForward :size2
+	polyEnd
+	jumpTo :oldPos
+	left :angle2
+	setFillColor "#f1f1f1
+	polyStart
+	jumpForward :size1
+	right :angle2
+	jumpForward :size2
+	polyEnd
+	setFillColor "#b6b6b6
+	jumpTo :oldPos
+	right :angle3
+	polyStart
+	jumpForward :size3
+	right :angle3
+	jumpForward :size2
+	polyEnd
+	setTurtleState :oldState
+end
+
+to safariIcon :size
+	jumpForward :size * 0.48
+	safariShadow :size * 0.48
+	jumpForward :size * 0.043
+	safariGrayBackground :size * 0.475
+	safariBlueBackground :size * 0.437
+	setPenColor "#f4f2f3
+	safariNotches :size * 0.415
+	safariNeedle :size * 0.842
+end
+
+safariIcon 100

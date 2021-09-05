@@ -1,0 +1,728 @@
+to emojiBackground :radius
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "arcRadius1 :radius * 1.5
+	localmake "arcRadius2 :radius * 0.28
+	localmake "arcRadius3 :radius * 0.9094244
+	localmake "angle1 25
+	localmake "angle2 100
+	localmake "angle3 110
+	localmake "coreColor "#FDF03F
+	localmake "outerColor1 "orange
+	localmake "outerColor2 "#FF7B00
+	localmake "colorStops createPList
+	setProperty "colorStops 0 :coreColor
+	setProperty "colorStops 0.75 mix :coreColor :outerColor1 0.8
+	setProperty "colorStops 0.95 :outerColor1
+	setProperty "colorStops 1 :outerColor2
+	setFillGradient createRadialGradient pos pos :radius :colorStops "pad
+	setPenSize :radius * 0.002
+	setPenColor "brown
+	circle :radius
+
+	; darken the upper part of the circle.
+	localmake "colorStops createPList
+	setProperty "colorStops 0 mix :outerColor1 transparent 0.3
+	setProperty "colorStops 1 transparent
+	jumpForward :radius
+	localmake "fromPos pos
+	jumpBackward :radius * 1.4
+	setFillGradient createLinearGradient :fromPos pos :colorStops "pad
+	setPenSize 0
+	jumpTo :oldPos
+	circle :radius
+
+	; Draw some reflected light from above.
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#0fff
+	setProperty "colorStops 1 "#dfff
+	jumpForward :radius
+	localmake "fromPos pos
+	jumpBackward :radius * 1.2
+	setFillGradient createLinearGradient  pos :fromPos :colorStops "pad
+	jumpTo :oldPos
+	right 90
+	polyStart
+	arcLeft :angle1 :arcRadius1
+	arcLeft :angle2 :arcRadius2
+	arcLeft :angle3 :arcRadius3
+	arcLeft :angle2 :arcRadius2
+	arcLeft :angle1 :arcRadius1
+	polyEnd
+	setTurtleState :oldState
+end
+
+to fillHeart :height
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "size1 :height * 0.7
+
+	; Some trigonometry used to calculate exact sizes for symmetry.
+	localmake "arcRadius (:height - :size1 * cos 45) / (1 + cos 45)
+	localmake "size2 (:size1 - :arcRadius * 2) 
+	right 45
+	polyStart
+	jumpForward :size1
+	arcLeft 180 :arcRadius
+	jumpForward :size2
+	right 90
+	jumpForward :size2
+	arcLeft 180 :arcRadius
+	polyEnd
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to redHeart :height
+	localmake "oldPos pos
+	localmake "height1 :height * 0.98
+	localmake "height2 :height * 0.95
+	setFillColor "#dfff
+	jumpTo :oldPos
+	jumpBackward :height * 0.5
+	fillHeart :height2
+
+	setFillColor "#8840
+	jumpTo :oldPos
+	jumpBackward :height * 0.43
+	fillHeart :height1
+
+	setFillColor "black
+	jumpTo :oldPos
+	jumpBackward :height * 0.45
+	fillHeart :height1
+
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "red
+	setProperty "colorStops 0.4 "#E00000
+	setProperty "colorStops 0.8 "darkRed
+	setProperty "colorStops 1 "#750000
+	setFillGradient createRadialGradient :oldPos :oldPos :height2 * 0.7 :colorStops "pad
+	jumpTo :oldPos
+	jumpBackward :height2 * 0.5
+	fillHeart :height2
+	jumpTo :oldPos
+end
+
+to fillSmile :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angle1 33
+	localmake "angle2 40
+	localmake "angle3 136.
+	localmake "angle4 58
+	localmake "arcRadius1 :size * 1.532
+	localmake "arcRadius2 :size * 0.4
+	localmake "arcRadius3 :size * 0.02
+	localmake "arcRadius4 :size * 2.0013
+	right 90
+	polyStart
+	arcLeft :angle1 :arcRadius1
+	arcLeft :angle2 :arcRadius2
+	arcLeft :angle3 :arcRadius3
+	arcRight :angle4 :arcRadius4
+	arcLeft :angle3 :arcRadius3
+	arcLeft :angle2 :arcRadius2
+	arcLeft :angle1 :arcRadius1
+	polyEnd
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to redSmile :size
+	localmake "oldPos pos
+
+	setPenSize 0
+	setFillColor "#dfff
+	jumpBackward :size * 0.01
+	fillSmile :size
+
+	setFillColor "#8840
+	jumpTo :oldPos
+	jumpForward :size * 0.02
+	fillSmile :size
+
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#610000
+	setProperty "colorStops 1 "#DB0000
+	jumpTo :oldPos
+	jumpForward :size * 0.3
+	setFillGradient createLinearGradient pos :oldPos :colorStops "pad
+	jumpTo :oldPos
+	fillSmile :size
+end
+
+to filledSquintyEye1 :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "arcRadius1 :size * 0.5
+	localmake "arcRadius2 :size * 2.293
+	localmake "arcRadius3 :size * 0.4915
+	localmake "angle1 95
+	localmake "angle2 171.23
+	localmake "angle3 30.09
+	localmake "angle4 73.68
+	
+	right 90
+	polyStart
+	arcRight :angle1 :arcRadius1
+	left :angle2
+	arcLeft :angle3 :arcRadius2
+	arcLeft :angle4 * 2 :arcRadius3
+	arcLeft :angle3 :arcRadius2
+	left :angle2
+	arcRight :angle1 :arcRadius1
+	polyEnd
+	
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to coloredSquintyEye1 :size
+	setFillColor "#CC8500
+	filledSquintyEye1 :size
+end
+
+to loveEmoji :size
+	localmake "oldPos pos
+	localmake "eyeSeparation :size * 0.4
+	localmake "eyeSize :size * 0.55
+	emojiBackground :size
+	jumpForward :size * 0.25
+	jumpRight :eyeSeparation
+	redHeart :eyeSize
+	jumpLeft 2 * :eyeSeparation
+	redHeart :eyeSize
+	jumpTo :oldPos
+	jumpBackward :size * 0.55
+	redSmile :size * 0.55
+	jumpTo :oldPos
+end
+
+to upperLip :height
+	localmake "oldState turtleState
+	localmake "size1 :height * 0.24
+	localmake "arcAngle1 130
+	localmake "arcAngle2 20
+	localmake "arcAngle3 38
+	localmake "arcAngle4 53
+	localmake "arcAngle5 82
+	localmake "arcAngle6 30
+	localmake "arcAngle7 23
+	localmake "arcAngle8 12
+	localmake "arcAngle9 48
+	localmake "arcAngle10 54
+	localmake "arcRadius1 :height * 0.014
+	localmake "arcRadius2 :height * 0.8
+	localmake "arcRadius3 :height * 0.41
+	localmake "arcRadius4 :height * 0.208743853
+	localmake "arcRadius5 :height * 0.07
+	localmake "arcRadius6 :height * 0.04
+	localmake "arcRadius7 :height * 0.42
+	localmake "arcRadius8 :height * 1.3
+	localmake "arcRadius9 :height * 0.31
+	localmake "arcRadius10 :height * 0.329464112
+	jumpForward :height * 0.4685
+	jumpLeft :height * 0.82
+	left 70
+	polyStart
+	arcRight :arcAngle1 :arcRadius1
+	arcLeft :arcAngle2 :arcRadius2
+	jumpForward :size1
+	arcRight :arcAngle3 :arcRadius3
+	arcRight :arcAngle4 :arcRadius4
+	arcLeft :arcAngle5 :arcRadius5 ; symmetry
+
+	arcRight :arcAngle4 :arcRadius4
+	arcRight :arcAngle3 :arcRadius3
+	jumpForward :size1
+	arcLeft :arcAngle2 :arcRadius2
+	arcRight :arcAngle1 :arcRadius1
+	arcRight :arcAngle6 :arcRadius6
+	arcRight :arcAngle7 :arcRadius7
+	arcLeft :arcAngle8 :arcRadius8
+	arcLeft :arcAngle9 :arcRadius9
+	arcRight :arcAngle10 :arcRadius10 ; symmetry
+	arcLeft :arcAngle9 :arcRadius9
+	arcLeft :arcAngle8 :arcRadius8
+	arcRight :arcAngle7 :arcRadius7
+	arcRight :arcAngle6 :arcRadius6
+	polyEnd
+	setTurtleState :oldState
+end
+
+to lowerLip :height
+	localmake "oldState turtleState
+	localmake "arcAngle1 10
+	localmake "arcAngle2 10
+	localmake "arcAngle3 9
+	localmake "arcAngle4 12
+	localmake "arcAngle5 15
+	localmake "arcAngle6 32
+	localmake "arcAngle7 133
+	localmake "arcAngle8 17
+	localmake "arcAngle9 6
+	localmake "arcAngle10 76
+	localmake "arcRadius1 :height * 0.25
+	localmake "arcRadius2 :height * 0.9
+	localmake "arcRadius3 :height * 1
+	localmake "arcRadius4 :height * 0.45
+	localmake "arcRadius5 :height * 0.6
+	localmake "arcRadius6 :height * 0.45905422
+	localmake "arcRadius7 :height * 0.008
+	localmake "arcRadius8 :height * 0.6
+	localmake "arcRadius9 :height * 1.9
+	localmake "arcRadius10 :height * 0.692589935
+	jumpForward :height * 0.421
+	jumpLeft :height * 0.72
+	right 70
+	polyStart
+	arcRight :arcAngle1 :arcRadius1
+	arcLeft :arcAngle2 :arcRadius2
+	arcRight :arcAngle3 :arcRadius3
+	arcRight :arcAngle4 :arcRadius4
+	arcRight :arcAngle5 :arcRadius5
+	arcLeft :arcAngle6 :arcRadius6 ; symmetry
+	arcRight :arcAngle5 :arcRadius5
+	arcRight :arcAngle4 :arcRadius4
+	arcRight :arcAngle3 :arcRadius3
+	arcLeft :arcAngle2 :arcRadius2
+	arcRight :arcAngle1 :arcRadius1
+	arcRight :arcAngle7 :arcRadius7
+	arcLeft :arcAngle8 :arcRadius8
+	arcRight :arcAngle9 :arcRadius9
+	arcRight :arcAngle10 :arcRadius10 ; symmetry
+	arcRight :arcAngle9 :arcRadius9
+	arcLeft :arcAngle8 :arcRadius8
+	arcRight :arcAngle7 :arcRadius7
+	polyEnd
+	setTurtleState :oldState
+end
+
+; Inspired by:
+; https://www.pinterest.ca/pin/390546598920799942/
+to redLips :height
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angle1 65
+	localmake "angle2 2 * (90 - :angle1)
+	localmake "angle3 63
+	localmake "size1 :height * 0.83
+	localmake "size2 :size1 / sin :angle1
+	localmake "size3 :size1 / sin :angle3
+	setPenSize 0
+	setFillColor "black
+	jumpLeft :size1
+	jumpForward :height * 0.48
+	polyStart
+	right :angle1
+	jumpForward :size2
+	right :angle2
+	jumpForward :size2
+	setHeading :oldHeading + 180 + :angle3
+	jumpForward :size3	
+	circle 0.1
+	polyEnd
+	jumpTo :oldPos
+	setHeading :oldHeading
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#D71414
+	setProperty "colorStops 0.3 "#cc1010
+	setProperty "colorStops 1 "#610000
+	jumpForward :height
+	localmake "topPos pos
+	jumpBackward :height * 0.5
+	setFillGradient createLinearGradient :topPos pos :colorStops "pad
+	jumpTo :oldPos
+	upperLip :height
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#FBACAC
+	setProperty "colorStops 0.4 "#D71414
+	setProperty "colorStops 1 "#cc1010
+	jumpForward :height * 0.5
+	setFillGradient createLinearGradient pos :oldPos :colorStops "pad
+	jumpTo :oldPos
+	lowerLip :height
+end
+
+to bigLipsEmoji :size
+	localmake "oldPos pos
+	localmake "eyeSize :size * 0.12
+	localmake "eyeSeparation :size * 0.45
+
+	emojiBackground :size
+	jumpForward :size * 0.27
+	jumpRight :eyeSeparation
+	blackEye :eyeSize
+	jumpLeft :eyeSeparation * 2
+	blackEye :eyeSize
+
+	jumpTo :oldPos
+	jumpBackward :size * 0.65
+	redLips :size * 0.5
+
+	jumpTo :oldPos
+end
+
+to setBlushGradient :radius
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#5f00
+	setProperty "colorStops 0.5 "#3f00
+	setProperty "colorStops 1 "#0f00
+	setFillGradient createRadialGradient pos pos :radius :colorStops "pad
+end
+
+to blush :size
+	localmake "oldPos pos
+	localmake "eyeSize :size * 0.4
+	localmake "eyeSeparation :size * 0.4
+	localmake "blushSeparation :size * 0.65
+	localmake "blushSize :size * 0.25
+	emojiBackground :size
+	setPenSize 0
+	jumpBackward :size * 0.05
+	jumpRight :blushSeparation
+	setBlushGradient :blushSize
+	circle :blushSize
+	jumpLeft :blushSeparation * 2
+	setBlushGradient :blushSize
+	circle :blushSize
+	
+	jumpTo :oldPos
+	jumpForward :size * 0.3
+	jumpRight :eyeSeparation
+	coloredSquintyEye1 :eyeSize
+	jumpLeft :eyeSeparation * 2
+	coloredSquintyEye1 :eyeSize
+	jumpTo :oldPos
+	jumpBackward :size * 0.6
+	redSmile :size * 0.55
+
+	jumpTo :oldPos
+end
+
+to fillSunglasses :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "arcRadius1 :size * 0.08
+	localmake "arcRadius2 :size * 1.6
+	localmake "arcRadius3 :size * 0.18
+	localmake "arcRadius4 :size * 1
+	localmake "arcRadius5 :size * 4
+	localmake "arcRadius6 :size * 0.421003915
+	localmake "arcRadius7 :size * 0.16
+	localmake "angle1 85
+	localmake "angle2 15
+	localmake "angle3 55
+	localmake "angle4 30
+	localmake "angle5 55
+	localmake "angle6 35
+	localmake "angle7 70
+	localmake "angle8 9
+	localmake "angle9 26
+	localmake "angle10 30
+	right 90
+	polyStart
+	arcRight :angle1 :arcRadius1
+	arcLeft :angle2 :arcRadius2
+	arcLeft :angle3 :arcRadius3
+	arcLeft :angle4 :arcRadius4
+	arcLeft :angle5 :arcRadius3
+	arcLeft :angle6 :arcRadius4
+	arcLeft :angle7 :arcRadius1
+	arcLeft :angle8 :arcRadius5
+	arcLeft :angle9 :arcRadius6
+	arcRight :angle10 * 2 :arcRadius7 ; reflection point
+	arcLeft :angle9 :arcRadius6
+	arcLeft :angle8 :arcRadius5
+	arcLeft :angle7 :arcRadius1
+	arcLeft :angle6 :arcRadius4
+	arcLeft :angle5 :arcRadius3
+	arcLeft :angle4 :arcRadius4
+	arcLeft :angle3 :arcRadius3
+	arcLeft :angle2 :arcRadius2
+	arcRight :angle1 :arcRadius1
+	polyEnd
+	
+	; restore original turtle position and heading
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to sunglasses :size
+	localmake "oldPos pos
+
+	emojiBackground :size
+	setPenSize 0
+
+	setFillColor "white
+	jumpForward :size * 0.34
+	fillSunglasses :size * 0.85
+
+	jumpBackward :size * 0.015
+	setFillColor "black
+	fillSunglasses :size * 0.85
+	jumpTo :oldPos
+	jumpBackward :size * 0.6
+	redSmile :size * 0.55
+	
+	jumpTo :oldPos
+end
+
+to blackEye :size
+	setFillColor "black
+	circle :size
+end
+
+to smile :size
+	localmake "oldPos pos
+	localmake "eyeSize :size * 0.12
+	localmake "eyeSeparation :size * 0.45
+
+	emojiBackground :size
+	jumpForward :size * 0.27
+	jumpRight :eyeSeparation
+	blackEye :eyeSize
+	jumpLeft :eyeSeparation * 2
+	blackEye :eyeSize
+
+	jumpTo :oldPos
+	jumpBackward :size * 0.6
+	redSmile :size * 0.55
+
+	jumpTo :oldPos
+end
+
+to flatLips :size
+	localmake "oldState turtleState
+	localmake "angle 13
+	localmake "arcRadius :size * 3.5
+	setLineCap "round
+	right 90
+	setPenSize 0
+	arcRight :angle :arcRadius
+	setPenSize :size * 0.19
+	right 180
+	arcLeft :angle * 2 :arcRadius
+
+	setTurtleState :oldState
+end
+
+to coloredFlatLips :size
+	localmake "oldState turtleState
+	jumpBackward :size * 0.07
+	setPenColor "white
+	flatLips :size
+	jumpForward :size * 0.14
+	setPenColor "black
+	flatLips :size
+	setPenColor "darkRed
+	jumpBackward :size * 0.07
+	flatLips :size
+	setTurtleState :oldState
+end
+
+to tuckerCarlsonHair :size
+	localmake "oldState turtleState
+	localmake "arcRadius1 :size * 0.5
+	localmake "arcRadius2 :size * 1.03
+	localmake "arcRadius3 :size * 0.59
+
+	jumpLeft :size
+	setPenSize 0
+	left 35
+	setFillColor "#4D1300
+	polyStart
+	arcRight 50 :arcRadius1
+	arcRight 115 :arcRadius2
+	left 35
+	arcRight 122 :arcRadius3
+	right 80
+	arcRight 50 :size * 0.5
+	arcRight 8 :size * 2
+	left 70
+	arcLeft 10 :size * 2
+	arcLeft 30 :size * 0.5
+	arcRight 40 :size * 0.4
+	arcLeft 60 :size * 0.3
+	arcRight 65 :size * 0.35
+	left 104
+	arcRight 30 :size * 0.9
+	polyEnd
+
+	setTurtleState :oldState
+end
+
+to confusedEyeLeft :size
+	localmake "oldState turtleState
+	setFillColor "#A36A00
+	right 90
+	setPenSize 0
+	polyStart
+	arcLeft 30 :size * 2
+	arcLeft 60 :size * 0.17
+	left 60
+	arcLeft 40 :size * 0.6
+	arcLeft 16.3 :size * 0.2
+	arcLeft 21 :size * 2.16
+	polyEnd
+	
+	setTurtleState :oldState
+end
+
+to confusedEyeRight :size
+	localmake "oldState turtleState
+	setFillColor "#A36A00
+	left 90
+	setPenSize 0
+	polyStart
+	arcRight 30 :size * 2
+	arcRight 60 :size * 0.17
+	right 60
+	arcRight 40 :size * 0.6
+	arcRight 16.3 :size * 0.2
+	arcRight 21 :size * 2.16
+	polyEnd
+	
+	setTurtleState :oldState
+end
+
+to confusedBlush :size
+	setBlushGradient :size
+	circle :size
+end
+
+; Inspired by Tucker Carlson's confused/angry face
+; This is a similar image:
+; https://www.pinterest.ca/pin/777715429389580233/
+; This expression is frequently used by Tucker 
+; when listening to guests on his show.
+to confused :size
+	localmake "oldPos pos
+	localmake "eyeSeparation :size * 0.65
+	localmake "eyeSize :size * 0.45
+	localmake "blushSize :size * 0.3
+	localmake "blushSeparation :size * 0.6
+	emojiBackground :size
+	tuckerCarlsonHair :size
+	jumpBackward :size * 0.35
+	jumpRight :blushSeparation
+	confusedBlush :blushSize
+	jumpLeft :blushSeparation * 2
+	confusedBlush :blushSize
+
+	jumpTo :oldPos
+	jumpBackward :size * 0.5
+	coloredFlatLips :size * 0.28
+	jumpTo :oldPos
+	jumpRight :eyeSeparation
+	confusedEyeRight :eyeSize
+	jumpLeft :eyeSeparation * 2
+	confusedEyeLeft :eyeSize
+	jumpTo :oldPos
+end
+
+to dashedTatoo :len :width :numDashes
+	localmake "oldState turtleState
+	localmake "dashLength :len / 2 / :numDashes
+	setPenSize :width
+	repeat :numDashes [
+		forward :dashLength
+		jumpForward :dashLength
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://www.etsy.com/ca/listing/644078565/6ix9ine-temporary-tattoos-set-6ix9ine
+to tatoodFace :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "eyeSize :size * 0.12
+	localmake "eyeSeparation :size * 0.45
+
+	setFillColor transparent
+	setPenSize :size * 0.01
+	setPenColor "black
+	emojiBackground :size
+	jumpForward :size * 0.45
+	setFontSize :size * 0.5
+	right 90
+	label "69
+	setHeading :oldHeading
+	jumpTo :oldPos
+	jumpRight :size * 0.8
+	jumpBackward :size * 0.3
+	setFontSize :size * 0.3
+	right 30
+	label "13
+
+	; eyebrow tatoo
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :size * 0.5
+	jumpLeft :size * 0.3
+	left 90
+	dashedTatoo :size * 0.3 :size * 0.1 20
+
+	; Draw cross tatoo in center
+	repeat 2 [
+		jumpTo :oldPos
+		setHeading :oldHeading + repcount * 90
+		jumpBackward :size * 0.1
+		forward :size * 0.2
+	]
+
+	; Draw beard-like tatoo.
+	repeat 21 [
+		jumpTo :oldPos
+		setHeading :oldHeading + 120 + (repcount - 1) * 120 / 20
+		jumpForward :size * 0.7
+		forward :size * 0.3
+	]
+
+	jumpTo :oldPos
+	setHeading :oldHeading - 90
+	jumpLeft :size * 0.05
+	jumpForward :size * 0.4
+	repeat 5 [
+		localmake "pos1 pos
+		arcRight 150 :size * 0.3 * (6 - repcount) / 5
+		jumpTo :pos1
+		setHeading :oldHeading - 90
+		jumpLeft :size * 0.02
+		jumpForward :size * 0.13
+	]
+	
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :size * 0.27
+	jumpRight :eyeSeparation
+	blackEye :eyeSize
+	jumpLeft :eyeSeparation * 2
+	blackEye :eyeSize
+
+	jumpTo :oldPos
+	jumpBackward :size * 0.6
+	redSmile :size * 0.55
+
+	jumpTo :oldPos
+end
+
+make "size 100
+make "separation :size * 3.5
+jumpLeft :separation * 3
+loveEmoji :size
+jumpRight :separation
+bigLipsEmoji :size
+jumpRight :separation
+blush :size
+jumpRight :separation
+sunglasses :size
+jumpRight :separation
+smile :size
+jumpRight :separation
+confused :size
+jumpRight :separation
+tatoodFace :size

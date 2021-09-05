@@ -1,0 +1,82 @@
+; Inspired by
+; https://commons.wikimedia.org/wiki/File:Metatrons_cube.svg
+; Referenced from: 
+; https://commons.wikimedia.org/wiki/Category:Metatron%27s_Cube
+
+to metatronsCube :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "size1 :height * 0.383
+	localmake "size2 :size1 / 2
+	localmake "size3 2 * :size1 * cos 30
+	localmake "size4 :size2 * 2 * cos 30
+	localmake "circleRadius1 :height * 0.087
+	jumpForward :height / 2
+	setFillColor transparent
+	setPenColor "white
+	setPenSize :height * 0.01
+	isotoxalStar :size1 :size1 3
+	localmake "center pos
+	circle :circleRadius1
+	setLineJoinStyle "miter
+	repeat 6 [
+		forward :size1
+		circle :circleRadius1
+		jumpBackward :size2
+		circle :circleRadius1
+		jumpTo :center
+		right 360 / 6
+	]
+	setPenSize :height * 0.005
+	isotoxalStar :size2 :size2 3
+	repeat 2 [
+		setHeading :oldHeading + repcount * 60
+		jumpForward :size1
+		right 150
+		polyStart
+		repeat 2 [
+			jumpForward :size3
+			right 120
+		]
+		polyEnd
+		jumpTo :center
+	]
+	repeat 2 [
+		setHeading :oldHeading + repcount * 60
+		jumpForward :size2
+		right 150
+		polyStart
+		repeat 2 [
+			jumpForward :size4
+			right 120
+		]
+		polyEnd
+		jumpTo :center
+	]
+	setLineCap "round
+	repeat 6 [
+		setHeading :oldHeading + repcount * 360 / 6
+		jumpForward :size2
+		localmake "points [pos]
+		jumpTo :center
+		left 120
+		jumpForward :size2
+		queue2 "points pos
+
+		jumpTo :center
+		left 120
+		jumpForward :size1
+		localmake "fromPos pos
+		repeat count :points [
+			localmake "pos1 item repcount :points
+			setHeading towards :pos1
+			forward distance :pos1
+			jumpTo :fromPos
+		]
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+metatronsCube 100

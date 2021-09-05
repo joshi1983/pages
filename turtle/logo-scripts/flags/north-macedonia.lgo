@@ -1,0 +1,102 @@
+; Follows guidelines at
+; https://en.wikipedia.org/wiki/Flag_of_North_Macedonia
+
+to isoscelesTriangle :width :height
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "len1 hypot [(:width * 0.5) :height]
+	localmake "angle1 arcCos :height / :len1
+	localmake "angle2 180 - :angle1 * 2
+	localmake "angle3 180 - arcSin :height / :len1
+	left 90
+	jumpForward :width * 0.5
+	right :angle3
+	penUp
+	polyStart
+	jumpForward :len1
+	right :angle2
+	jumpForward :len1
+	polyEnd
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to drawV :width :thickness :height
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "len1 hypot [:width * 0.5 :height]
+	localmake "len2 hypot [(:width * 0.5 - :thickness) :height]
+	localmake "angle1 arcSin :height / :len1
+	localmake "angle2 180 - :angle1
+	localmake "angle3 arcSin :height / :len2
+	localmake "angle4 90 - :angle3
+	left 90 - :angle1
+	setPenSize 0
+	polyStart
+	jumpForward :len1
+	right :angle2
+	jumpForward :thickness
+	right :angle3
+	polyEnd
+
+	jumpTo :oldPos
+	setHeading :oldHeading + :angle4
+	polyStart
+	jumpForward :len2
+	right :angle3
+	jumpForward :thickness
+	right :angle2
+	polyEnd
+
+	setHeading :oldHeading
+	jumpTo :oldPos
+end
+
+to drawCross :width :thickness :height
+	repeat 2 [
+		drawV :width :thickness :height * 0.5
+		right 180
+	]
+end
+
+to northMacedoniaFlag :length
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "height :length * 0.5
+	localmake "rayWidth1 :height * 0.2
+	localmake "d :height * 2 / 7
+	localmake "circlePenSize :d / 8
+	localmake "redColor "#d91b21
+	localmake "yellowColor "#f8ea2a
+	right 90
+	jumpBackward :length * 0.5
+	penDown
+	setPenColor :redColor
+	setPenSize :height
+	forward :length
+	right 180
+	setFillColor :yellowColor
+	setPenSize 0
+	isoscelesTriangle :rayWidth1 :length * 0.5
+	jumpForward :length
+	right 180
+	isoscelesTriangle :rayWidth1 :length * 0.5
+	jumpForward :length * 0.5
+	right 90
+	jumpForward :height * 0.5
+	right 180
+	isoscelesTriangle :rayWidth1 :height * 0.5
+	jumpForward :height
+	right 180
+	isoscelesTriangle :rayWidth1 :height * 0.5
+	jumpTo :oldPos
+	drawCross :length :height * 0.3 :height
+
+	jumpTo :oldPos
+	setPenSize :circlePenSize
+	circle :d / 2 + :circlePenSize
+	setHeading :oldHeading
+end
+
+setScreenColor "black
+northMacedoniaFlag 200

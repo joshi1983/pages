@@ -1,0 +1,68 @@
+to arcSettings :size
+	localmake "numRepeats 200
+	localmake "arcAngle 30
+	localmake "arcRadius 0.2
+	localmake "scaleFactor 1 + (ln (:size / :arcRadius)) / (:numRepeats - 1)
+	output [:numRepeats :arcAngle :arcRadius :scaleFactor]
+end
+
+to arcs :size
+	localmake "arcSettings arcSettings :size
+	localmake "numRepeats item 1 :arcSettings
+	localmake "arcAngle item 2 :arcSettings
+	localmake "arcRadius item 3 :arcSettings
+	localmake "scaleFactor item 4 :arcSettings
+	jumpLeft :arcRadius
+	repeat :numRepeats [
+		arcRight :arcAngle :arcRadius
+		localmake "arcRadius :arcRadius * :scaleFactor
+	]
+end
+
+; Inspired by
+; https://www.pinterest.ca/pin/9570217949630077/
+to hypnoticSpiralRotation :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "arcSettings arcSettings :size
+	localmake "numRepeats item 1 :arcSettings
+	localmake "arcAngle item 2 :arcSettings
+	localmake "scaleFactor item 4 :arcSettings
+	localmake "size2 :size / (power :scaleFactor (360 * 0.5 / :arcAngle))
+	localmake "arcSettings2 arcSettings :size2
+	localmake "arcRadius item 3 :arcSettings2
+	localmake "scaleFactor2 item 4 :arcSettings2
+	setPenSize 0
+	setFillColor "black
+	arcs :size2
+	localmake "pos2 pos
+	localmake "heading2 heading	
+	jumpTo :oldPos
+	setHeading :oldHeading
+	polyStart
+	arcs :size
+	jumpTo :pos2
+	setHeading :heading2 + 180
+	localmake "arcRadius :arcRadius * power :scaleFactor2 :numRepeats
+	repeat :numRepeats [
+		localmake "arcRadius :arcRadius / :scaleFactor2
+		arcLeft :arcAngle :arcRadius
+	]	
+	polyEnd
+end
+
+left 360 * animation.time / animation.duration
+hypnoticSpiralRotation 100
+
+to animation.snapshotstyle
+	localmake "result createPList
+	setProperty "result "zoom.scale 10
+	output :result
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 1
+	; Edit this if you want to change the length of your animation.
+	output :minutes * 60 + :seconds
+end

@@ -1,0 +1,171 @@
+; Inspired by the bulb shown at:
+; https://en.wikipedia.org/wiki/OpenOffice.org#/media/File:OOo_App_Chooser.png
+; Referenced from:
+; https://en.wikipedia.org/wiki/OpenOffice.org
+; OpenOffice is a free alternative to Microsoft Office.
+; LibreOffice is a newer free alternative.
+
+make "circleRadiusRatio 0.46
+make "circleCenterRatio 0.525
+make "birdAngle1 35
+make "birdArcAngle1 55
+make "birdArcRadius1Ratio 0.42
+make "birdArcAngle2 9
+make "birdArcRadius2Ratio 0.9
+make "birdAngle2 160
+make "birdArcAngle3 58
+make "birdArcRadius3Ratio 0.5
+make "birdAngle3 61
+
+to shadow :shadowHeight
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "width1 :shadowHeight * 3
+	localmake "darkColor "#4000
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#0000
+	setProperty "colorStops 0.5 :darkColor
+	setProperty "colorStops 1 "#0000
+	jumpForward :shadowHeight
+	setPenGradient createLinearGradient :oldPos pos :colorStops "pad
+	setPenSize :width1
+	setLineCap "butt
+	backward :shadowHeight
+	localmake "colorStops createPList
+	setProperty "colorStops 0 :darkColor
+	setProperty "colorStops 1 "#0000
+	jumpRight :width1 / 2
+	jumpForward :shadowHeight / 2
+	setFillGradient createRadialGradient pos pos :shadowHeight / 2 :colorStops "pad
+	jumpBackward :shadowHeight / 2
+	setPenSize 0
+	right 90
+	polyStart
+	arcLeft 180 :shadowHeight / 2
+	polyEnd
+	jumpForward :width1
+	jumpLeft :shadowHeight / 2	
+	setFillGradient createRadialGradient pos pos :shadowHeight / 2 :colorStops "pad
+	jumpLeft :shadowHeight / 2
+	polyStart
+	arcRight 180 :shadowHeight / 2
+	polyEnd
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :shadowHeight * 3.3
+	localmake "colorStops createPList
+	setProperty "colorStops 0 :darkColor
+	setProperty "colorStops 0.95 :darkColor
+	setProperty "colorStops 1 "#0000
+	setFillGradient createRadialGradient pos pos :shadowHeight * 3 :colorStops "pad
+	circle :shadowHeight * 3
+	setTurtleState :oldState
+end
+
+to highlight :logoHeight
+	localmake "oldState turtleState
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#afff
+	setProperty "colorStops 0.8 "#1fff
+	setProperty "colorStops 1 "#0fff
+	jumpForward :logoHeight
+	localmake "fromPos pos
+	jumpBackward :logoHeight * 0.55
+	setFillGradient createLinearGradient :fromPos pos :colorStops "pad
+	jumpForward (distance :fromPos) / 2
+	setPenSize 0
+	ellipse :logoHeight * 0.35 :logoHeight * 0.24
+	setTurtleState :oldState
+end
+
+to birdPoly :birdSize
+	right :birdAngle1
+	polyStart
+	arcRight :birdArcAngle1 :birdArcRadius1Ratio * :birdSize
+	arcRight :birdArcAngle2 :birdArcRadius2Ratio * :birdSize
+	left :birdAngle2
+	arcLeft :birdArcAngle3 :birdArcRadius3Ratio * :birdSize
+	right :birdAngle3 ; point of symmetry
+	arcLeft :birdArcAngle3 :birdArcRadius3Ratio * :birdSize
+	left :birdAngle2
+	arcRight :birdArcAngle2 :birdArcRadius2Ratio * :birdSize
+	arcRight :birdArcAngle1 :birdArcRadius1Ratio * :birdSize
+	polyEnd
+end
+
+to smallBird :logoHeight
+	localmake "oldState turtleState
+	localmake "birdSize :logoHeight * 0.56
+	jumpForward :logoHeight * 0.637
+	jumpRight :logoHeight * 0.11
+	left 2
+	birdPoly :birdSize
+	setTurtleState :oldState
+end
+
+to bigBird :logoHeight
+	localmake "oldState turtleState
+	localmake "circleRadius :logoHeight * :circleRadiusRatio
+	localmake "birdSize :logoHeight * 1
+	jumpForward :logoHeight * 0.26
+	jumpLeft :logoHeight * 0.121
+	right :birdAngle1 - 4
+	polyStart
+	arcRight :birdArcAngle1 :birdArcRadius1Ratio * :birdSize
+	arcRight :birdArcAngle2 :birdArcRadius2Ratio * :birdSize
+	left :birdAngle2
+	arcLeft :birdArcAngle3 :birdArcRadius3Ratio * :birdSize
+	right :birdAngle3 - 5
+	arcLeft 37.63 :birdArcRadius3Ratio * :birdSize
+	left 84.7
+	arcLeft 9 :circleRadius
+	left 74.5
+	arcRight 47 :birdArcRadius1Ratio * :birdSize
+	polyEnd
+	setTurtleState :oldState
+end
+
+to circleWithBirds :logoHeight
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "circleRadius :logoHeight * :circleRadiusRatio
+	; Light center with dark edge
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#509bd0
+	setProperty "colorStops 1 "#206cb7
+	jumpForward :logoHeight * :circleCenterRatio
+	setFillGradient createRadialGradient pos pos :circleRadius :colorStops "pad
+	setPenSize 0
+	localmake "centerPos pos
+	circle :circleRadius
+
+	; darken the left and right sides of the circle a bit.
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#3005
+	setProperty "colorStops 0.2 "#1005
+	setProperty "colorStops 0.5 "#0005
+	setProperty "colorStops 0.8 "#1005
+	setProperty "colorStops 1 "#3005
+	jumpLeft :circleRadius
+	localmake "fromPos pos
+	jumpRight :circleRadius * 2
+	setFillGradient createLinearGradient :fromPos pos :colorStops "pad	
+	jumpTo :centerPos
+	circle :circleRadius
+
+	setFillColor "white
+	jumpTo :oldPos
+	smallBird :logoHeight
+	bigBird :logoHeight
+	setTurtleState :oldState
+end
+
+to openOfficeLogo :height
+	shadow :height * 0.125
+	circleWithBirds :height
+	highlight :height
+end
+
+setScreenColor "#eee
+openOfficeLogo 100

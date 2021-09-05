@@ -1,0 +1,133 @@
+; Many jerusalem crosses are shown at:
+; https://en.wikipedia.org/wiki/Jerusalem_cross
+; This one is made to resemble the one from the flag:
+; https://en.wikipedia.org/wiki/Flag_of_Russia#/media/File:Jerusalem_cross_flag_of_Russia_1693.jpg
+to jerusalemCross :size
+	localmake "oldPos pos
+	localmake "size1 :size * 0.27
+	localmake "size2 :size * 0.29
+	localmake "size3 :size * 0.09
+	localmake "size4 :size * 0.1
+	localmake "size5 :size1
+	setPenSize :size * 0.2
+	setLineCap "butt
+	repeat 4 [
+		localmake "heading1 heading
+		forward :size
+		jumpBackward :size1
+		jumpLeft :size2
+		right 90
+		forward :size2 * 2
+		jumpRight :size3
+		jumpForward :size4
+		forward :size5 * 2
+		jumpBackward :size5
+		jumpLeft :size5
+		right 90
+		forward :size5 * 2
+		setHeading :heading1 + 90
+		jumpTo :oldPos
+	]
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Russia#/media/File:Jerusalem_cross_flag_of_Russia_1693.jpg
+; The drawing doesn't indicate any color but I'm going with a black cross
+; for strong contrast.
+to jerusalemCrossFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 618 / 399
+	setLineCap "butt
+	setPenColor "white
+	setPenSize :width
+	forward :height
+	jumpLeft :height * 0.145
+	jumpBackward :height / 2
+	setPenColor "black
+	jerusalemCross :height * 0.36
+	setTurtleState :oldState
+end
+
+to stripes :width :height :colors
+	localmake "oldState turtleState
+	setLineCap "butt
+	setPenSize :width
+	repeat count :colors [
+		setPenColor item repcount :colors
+		forward :height / count :colors
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Russia#/media/File:Flag_of_the_Russian_Empire_(black-yellow-white).svg
+to russianEmpireFlag :height
+	localmake "width :height * 9 / 6
+	localmake "colors ["white "#ffcd01 "black]
+	stripes :width :height :colors
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Russia#/media/File:Flag_of_Russia_(construction_sheet).svg
+to russianFlag :height
+	localmake "width :height * 9 / 6
+	localmake "colors ["#DA291C "#0032A0 "white]
+	stripes :width :height :colors
+end
+
+to isoTriangle :width :height
+	localmake "oldState turtleState
+	localmake "angle arcTan :height / (:width / 2)
+	jumpRight :width / 2
+	setPenSize 0
+	polyStart
+	jumpLeft :width
+	right 90 - :angle
+	jumpForward :height / sin :angle
+	polyEnd
+	setTurtleState :oldState
+end
+
+to halfRussiaNavalInsignia :height
+	localmake "oldState turtleState
+	localmake "width :height * 9 / 6
+	localmake "ratio1 0.82
+	localmake "ratio2 :ratio1 / 2
+	setFillColor "white
+	isoTriangle :width * :ratio1 :height * :ratio2
+	jumpRight :width / 2
+	jumpForward :height / 2
+	left 90
+	isoTriangle :height * :ratio1 :width * :ratio2
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Russia#/media/File:Naval_ensign_of_Russia.svg
+to russiaNavalInsignia :height
+	localmake "oldState turtleState
+	localmake "width :height * 9 / 6
+	setPenSize :width
+	setLineCap "butt
+	setPenColor "#0032a0
+	setPenSize :width
+	forward :height
+	right 180
+	halfRussiaNavalInsignia :height
+	jumpForward :height
+	right 180
+	halfRussiaNavalInsignia :height
+	setTurtleState :oldState
+end
+
+setScreenColor "#ddd
+make "size 100
+make "separation :size * 3
+jumpLeft :separation * 1.5
+jerusalemCrossFlag :size
+jumpRight :separation
+russianEmpireFlag :size
+jumpRight :separation
+russianFlag :size
+jumpRight :separation
+russiaNavalInsignia :size

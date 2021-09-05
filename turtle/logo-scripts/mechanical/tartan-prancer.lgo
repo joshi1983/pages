@@ -1,0 +1,784 @@
+; Inspired by the Tarton Prancer
+; Advertised here:
+; https://www.youtube.com/watch?v=uFHehn0UOLU
+
+; Drawn to look like:
+; https://s.yimg.com/cd/resizer/2.0/FIT_TO_WIDTH-w955/70f9db6fc063bfff3d52108b6ae204abca09c869.jpg
+make "bumperColor "black
+make "numWheelNuts 5
+
+to frontBumper :bumperHeight
+	localmake "oldState turtleState
+	localmake "angle1 10
+	localmake "arcAngle 33
+	localmake "arcRadius1 :bumperHeight * 0.05
+	localmake "arcRadius2 :bumperHeight * 0.07
+	localmake "arcRadius3 :bumperHeight
+	localmake "size1 (:bumperHeight - :arcRadius1) / cos :angle1
+	localmake "size2 :bumperHeight * 1.01
+	localmake "size3 :bumperHeight * 0.4
+	right :angle1
+	setFillColor :bumperColor
+	setPenSize 0
+	polyStart
+	jumpForward :size1
+	arcLeft 90 :arcRadius1
+	left :angle1
+	jumpForward :size2
+	arcLeft 90 :arcRadius2
+	jumpForward :size3
+	arcLeft :arcAngle :arcRadius3
+	polyEnd
+	setTurtleState :oldState
+end
+
+to rearBumper :bumperHeight
+	localmake "oldState turtleState
+	localmake "arcRadius1 :bumperHeight * 0.04
+	localmake "arcRadius2 :bumperHeight * 6
+	localmake "arcRadius3 :bumperHeight * 0.06
+	localmake "arcRadius4 :bumperHeight * 2
+	localmake "angle1 20
+	localmake "arcAngle1 7
+	localmake "arcAngle2 90 - :arcAngle1
+	localmake "arcAngle3 14.5
+	localmake "size1 :bumperHeight - :arcRadius1
+	localmake "size2 :bumperHeight * 0.39
+	localmake "size3 :bumperHeight * 0.04
+	setFillColor :bumperColor
+	setPenSize 0
+	polyStart
+	jumpForward :size1
+	arcRight 90 :arcRadius1
+	arcRight :arcAngle1 :arcRadius2
+	arcRight :arcAngle2 :arcRadius3
+	jumpForward :size2
+	jumpRight :size3
+	right :angle1
+	arcRight :arcAngle3 :arcRadius4
+	polyEnd
+	setTurtleState :oldState
+end
+
+to wheelBackground1 :radius
+	localmake "oldState turtleState
+	localmake "size1 :radius * 1.1
+	localmake "arcAngle1 40
+	localmake "arcAngle2 100
+	localmake "arcRadius1 :radius * 1.6
+	localmake "arcRadius2 :radius * 0.93
+	jumpLeft :size1
+	setFillColor "black
+	polyStart
+	arcRight :arcAngle1 :arcRadius1
+	arcRight :arcAngle2 :arcRadius2
+	arcRight :arcAngle1 :arcRadius1
+	polyEnd
+	setTurtleState :oldState
+end
+
+to wheelBackground2 :radius
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	setPenColor "#222
+	setPenSize :radius * 0.23
+	setFillColor transparent
+	circle :radius - penSize / 2
+	setPenColor "black
+	circle :radius * 0.5
+	setPenColor "#ccc
+	setPenSize :radius * 0.12
+	circle :radius * 0.69
+	setPenSize :radius * 0.12
+	setPenColor "#6E6453
+	setFillColor "#4A4A4A
+	circle :radius * 0.35
+	setPenSize 0
+	setFillColor "#ddd
+	circle :radius * 0.23
+	setPenColor "#ddd
+	setPenSize :radius * 0.19
+	setLineCap "round
+	repeat :numWheelNuts [
+		forward :radius * 0.65		
+		jumpTo :oldPos
+		right 360 / :numWheelNuts
+	]
+	setTurtleState :oldState
+end
+
+to wheelArchHighlight :radius
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "arcAngle1 30
+	localmake "arcAngle2 118
+	localmake "gradientRadius :radius * 1.65
+	localmake "size1 :gradientRadius * 0.9
+	localmake "arcRadius1 :gradientRadius * 1.4
+	localmake "arcRadius2 :gradientRadius * 0.8
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#0fff
+	setProperty "colorStops 0.72 "#0fff
+	setProperty "colorStops 0.83 "#4fff
+	setProperty "colorStops 1 "#0fff
+	jumpForward :radius * 0.15
+	setFillGradient createRadialGradient pos pos :gradientRadius :colorStops "pad
+	jumpTo :oldPos
+	setPenSize 0
+	jumpLeft :size1
+	polyStart
+	arcRight :arcAngle1 :arcRadius1
+	arcRight :arcAngle2 :arcRadius2
+	arcRight :arcAngle1 :arcRadius1
+	polyEnd
+	setTurtleState :oldState
+end
+
+to wheel :radius :rotationAngle
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "nutDistance :radius * 0.17
+	localmake "nutRadius :radius * 0.03
+	wheelArchHighlight :radius
+	wheelBackground1 :radius
+	left :rotationAngle
+	wheelBackground2 :radius
+	setPenSize :radius * 0.02
+	setPenColor "black
+	circle :radius * 0.07
+	setPenSize :radius * 0.003
+	circle :radius * 0.185
+	repeat :numWheelNuts [
+		jumpForward :nutDistance
+		setPenColor "#444
+		setPenSize :radius * 0.01
+		setFillColor "#eee
+		circle :nutRadius
+		jumpTo :oldPos
+		right 360 / :numWheelNuts
+	]
+	setTurtleState :oldState
+end
+
+to bottom :size
+	localmake "oldState turtleState
+	setPenColor "black
+	jumpLeft :size
+	setPenSize :size * 0.05
+	right 90
+	forward :size * 1.7
+	jumpForward :size * 0.13
+	jumpRight :size * 0.018
+	left 3
+	forward :size * 0.3
+	setTurtleState :oldState
+end
+
+to setSidingGradient1 :size
+	localmake "oldPos pos
+	localmake "radius :size * 1.37
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#007fc2
+	setProperty "colorStops 0.88 "#007fc2
+	setProperty "colorStops 0.97 "#9BD1EE
+	setProperty "colorStops 1 "#CEEDFD
+	jumpBackward :size * 0.3
+	setFillGradient createRadialGradient pos pos :radius :colorStops "pad
+	jumpTo :oldPos
+end
+
+to setSidingGradient2 :size
+	localmake "oldPos pos
+	jumpForward :size * 0.46
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#0fff
+	setProperty "colorStops 0.7 "#0fff
+	setProperty "colorStops 1 "#4affffff
+	setFillGradient createLinearGradient :oldPos pos :colorStops "pad
+	
+	jumpTo :oldPos
+end
+
+to siding :size
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "oldPos pos
+	localmake "arcAngle1 72
+	localmake "arcAngle2 15.7
+	localmake "arcAngle3 75
+	localmake "arcRadius1 :size * 0.13
+	localmake "arcRadius2 :size * 0.5
+	setSidingGradient1 :size
+	repeat 2 [
+		jumpLeft :size * 1.27
+		setPenSize 0
+		right 1.5
+		polyStart
+		jumpForward :size * 0.31
+		arcRight :arcAngle1 :arcRadius1
+		arcRight :arcAngle2 :arcRadius2
+		jumpForward :size * 2.07
+		arcRight :arcAngle2 :arcRadius2
+		arcRight :arcAngle3 :arcRadius1
+		jumpForward :size * 0.3
+		right 77
+		jumpForward :size * 0.15
+		right 10
+		jumpForward :size * 0.31
+		jumpRight :size * 0.04
+		jumpForward :size * 0.37
+		jumpLeft :size * 0.01
+		right 10
+		jumpForward :size * 0.055
+		left 7
+		jumpForward :size * 1.47
+		jumpLeft :size * 0.015
+		jumpForward :size * 0.1
+		jumpRight :size * 0.02
+		polyEnd
+		jumpTo :oldPos
+		setHeading :oldHeading
+		setSidingGradient2 :size
+	]
+	setTurtleState :oldState
+end
+
+to windows :size
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	setFillColor "#2008
+	setPenSize 0
+	jumpLeft :size * 1.07
+	right 53
+	polyStart
+	arcRight 15 :size * 2.5
+	setHeading :oldHeading + 89.5
+	jumpForward :size * 1.35
+	right 40
+	arcRight 22 :size
+	polyEnd
+	setTurtleState :oldState
+end
+
+to steeringWheel :steeringWheelSize
+	localmake "oldState turtleState
+	setLineCap "round
+	setPenColor "#888
+	setPenSize :steeringWheelSize * 0.35
+	right 63
+	forward :steeringWheelSize * 0.95
+	jumpForward penSize * 0.5
+	right 90
+	jumpBackward :steeringWheelSize
+	setPenColor "#666
+	setPenSize :steeringWheelSize * 0.25
+	forward :steeringWheelSize * 2
+	setTurtleState :oldState
+end
+
+to thinWindowFrames :size
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	jumpForward :size * 0.01
+	jumpLeft :size * 0.67
+	right 15
+	setPenSize :size * 0.03
+	setPenColor "#444
+	setLineCap "butt
+	forward :size * 0.19
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpRight :size * 0.77
+	jumpForward :size * 0.05
+	setPenSize :size * 0.015
+	left 15
+	arcLeft 15 :size
+
+	setTurtleState :oldState
+end
+
+to upperFrontShape :size
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+
+	jumpLeft :size * 0.925
+	setHeading :oldHeading + 53
+	setPenSize :size * 0.03
+	setPenColor "#334
+	setLineCap "round
+	arcRight 18 :size * 1.8
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#223
+	setProperty "colorStops 1 "#ccc
+	jumpLeft :size * 0.9
+	jumpBackward :size * 0.01
+	localmake "pos1 pos
+	jumpLeft :size * 0.13	
+	setFillGradient createLinearGradient :pos1 pos :colorStops "pad
+	setPenSize 0
+	jumpTo :pos1
+	jumpForward :size * 0.015
+	left 88
+	polyStart
+	arcRight 18 :size * 0.32
+	left 58
+	jumpForward :size * 0.035
+	left 121.5
+	arcLeft 18 :size * 0.42
+	polyEnd
+	jumpTo :pos1
+	setHeading :oldHeading + 88.7
+	setPenColor "#334
+	setPenSize :size * 0.028
+	forward :size * 1.92
+	setTurtleState :oldState
+end
+
+to upperSiding :size
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "arcAngle1 18
+	localmake "arcAngle2 5.14
+	localmake "arcRadius1 :size * 1.85
+	localmake "arcRadius2 :size * 14
+	upperFrontShape :size
+	thinWindowFrames :size
+	jumpLeft :size * 0.95
+	localmake "pos1 pos
+	setFillColor "#334
+	setPenSize 0
+	right 52
+	polyStart
+	arcRight :arcAngle1 :arcRadius1
+	right 17
+	arcRight :arcAngle2 :arcRadius2
+	right 32
+	arcRight 30.3 :size * 0.68
+	jumpTo :pos1
+	setHeading :oldHeading + 90.9
+	arcLeft 2.2 :size * 18.9
+	jumpLeft :size * 0.03
+	right 1.4
+	arcLeft 3.3 :size * 18.9
+	arcLeft 115 :size * 0.02
+	arcLeft 29 :size * 0.4
+	arcLeft 30 :size * 0.1
+	arcLeft 8.7 :size * 8
+	polyEnd
+
+	jumpTo :oldPos
+	setHeading :oldHeading - 12
+	jumpForward :size * 0.011
+	jumpLeft :size * 0.025
+	polyStart
+	arcLeft 16.1 :size * 0.8
+	arcRight 120 :size * 0.03
+	left 180
+	arcLeft 8 :size * 1.55
+	left 177
+	arcRight 81 :size * 0.03
+	arcRight 5.25 :size * 2.5
+	polyEnd
+
+	; near rear of the Tartan
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpRight :size * 0.33
+	jumpForward :size * 0.02
+	polyStart
+	right 90
+	arcLeft 102 :size * 0.03
+	arcLeft 5.4 :size * 2
+	arcLeft 75 :size * 0.04
+	right 180
+	arcRight 4.9 :size * 1.57
+	right 180
+	arcLeft 112 :size * 0.021
+	arcRight 5 :size * 2
+	arcLeft 77 :size * 0.03
+	jumpForward :size * 0.45
+	jumpRight :size * 0.04
+	polyEnd
+
+	setTurtleState :oldState
+end
+
+to roof :size
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "colorStops createPList
+	setProperty "colorStops 0.993 "#0c73b6
+	setProperty "colorStops 1 "#fff
+	localmake "gradientRadius :size * 8
+	jumpBackward :gradientRadius * 0.987
+	jumpRight :gradientRadius * 0.06
+	setFillGradient createRadialGradient pos pos :gradientRadius :colorStops "pad
+	jumpTo :oldPos
+	jumpLeft :size * 0.57
+	setPenSize 0
+	right 73
+	polyStart
+	arcRight 17 :size * 2
+	arcRight 3 :size * 12
+	arcRight 10 :size
+	arcRight 30 :size * 0.1
+	right 130
+	jumpForward :size * 0.04
+	right 9.5
+	arcLeft 6 :size * 12
+	polyEnd
+	setTurtleState :oldState
+end
+
+to frontMirror :size
+	localmake "oldState turtleState
+	jumpForward :size * 0.633
+	jumpLeft :size * 0.705
+	setPenSize 0
+	setFillColor "#aaa
+	polyStart
+	arcRight 10 :size * 0.33
+	arcRight 75 :size * 0.045
+	arcRight 90 :size * 0.01
+	arcRight 15 :size * 0.3
+	arcRight 90 :size * 0.01 
+	polyEnd
+	setFillColor "#499ed7
+	polyStart
+	arcRight 66 :size * 0.0435
+	arcRight 30 :size * 0.06
+	arcRight 66 :size * 0.0435
+	right 135
+	arcLeft 70 :size * 0.08
+	polyEnd
+	setTurtleState :oldState
+end
+
+to rearMirror :size
+	localmake "oldState turtleState
+	jumpForward :size * 0.685
+	jumpRight :size * 0.685
+	setPenSize 0
+	setFillColor "#499ed7
+	polyStart
+	jumpForward :size * 0.045
+	arcRight 80 :size * 0.03
+	arcRight 15 :size * 0.13
+	arcRight 86 :size * 0.037
+	jumpForward :size * 0.034
+	polyEnd
+	setTurtleState :oldState
+end
+
+to mirrors :size
+	frontMirror :size
+	rearMirror :size
+end
+
+to doorHandle :size
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	setPenSize :size * 0.2
+	setLineCap "round
+	setPenColor "#000
+	repeat 2 [
+		forward :size
+		setPenColor "#ccc
+		jumpTo :oldPos
+		setPenSize penSize * 0.85
+	]
+	jumpForward :size * 0.95
+	setPenSize 0
+	setFillColor "gray
+	circle :size * 0.065
+	setTurtleState :oldState
+end
+
+to doorHandles :size
+	localmake "oldState turtleState
+	localmake "handleSize :size * 0.09
+	jumpForward :size * 0.58
+	jumpLeft :size * 0.26
+	right 89
+	doorHandle :handleSize
+	jumpForward :size * 0.22
+	right 180
+	doorHandle :handleSize
+	right 180
+	jumpForward :size * 0.35
+	doorHandle :handleSize
+	setTurtleState :oldState
+end
+
+to brandLabel :size
+	localmake "oldState turtleState
+	jumpForward :size * 0.25
+	jumpLeft :size * 0.6
+	setFillColor "#ddd
+	setPenSize 0
+	right 90
+	setFontSize :size * 0.028
+	label "PRANCER
+	setTurtleState :oldState
+end
+
+to doorLines :size
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	jumpForward :size * 0.28
+	jumpLeft :size * 0.71
+	setPenSize :size * 0.002
+	setLineCap "round
+	left 4
+	arcRight 8 :size * 2.5
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpLeft :size * 0.157
+	jumpForward :size * 0.19
+	right 5
+	arcLeft 8.2 :size * 3
+	arcLeft 5 :size * 0.05
+	arcLeft 15 :size * 1.2
+	arcRight 50 :size * 0.02
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpRight 0.37 * :size
+	jumpForward 0.19 * :size
+	arcRight 31.5 :size * 0.4
+	left 30
+	arcLeft 7 :size * 2.1
+	left 7
+	arcLeft 8 :size * 2
+	arcLeft 20 :size * 0.1
+	setTurtleState :oldState
+end
+
+to trunkLine :size
+	localmake "oldState turtleState
+	jumpRight :size * 1.17
+	jumpForward :size * 0.45
+	left 1
+	setPenSize :size * 0.001
+	arcLeft 6 :size * 0.8
+	arcLeft 50 :size * 0.13
+	arcLeft 27 :size * 0.16
+	right 57
+	arcLeft 26 :size * 0.75
+	arcLeft 35 :size * 0.15
+	setTurtleState :oldState
+end
+
+to gasCaps :size
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	jumpForward :size * 0.545
+	jumpRight :size * 0.545
+	setPenSize :size * 0.0005
+	forward :size * 0.06
+	right 89.2
+	forward :size * 0.272
+	right 81
+	forward :size * 0.05
+	arcRight 95 :size * 0.008
+	arcRight 3 :size
+	arcRight 2.5 :size * 5
+	closePath
+	
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :size * 0.545
+	jumpRight :size * 0.645
+	left 10
+	forward :size * 0.062
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :size * 0.5465
+	jumpRight :size * 0.737
+	left 12
+	forward :size * 0.0625
+	setTurtleState :oldState
+end
+
+to circlePart :height :width
+	localmake "oldState turtleState
+	localmake "stripThickness :height * 0.25
+	setFillColor "#444
+	setPenSize 0
+	ellipse :width / 2 :height / 2
+	setPenColor "#ccc
+	setPenSize :width
+	jumpBackward :stripThickness * 0.5
+	forward :stripThickness
+	setTurtleState :oldState
+end
+
+to circleParts :size
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "height :size * 0.05
+	localmake "width :height * 0.5
+	jumpForward :size * 0.362
+	jumpLeft :size * 1.225
+	circlePart :height :width
+
+	jumpTo :oldPos
+	jumpForward :size * 0.385
+	jumpRight :size * 1.212
+	circlePart :height :width
+	setTurtleState :oldState
+end
+
+to frontLightPath :size
+	forward :size * 0.095
+	right 90
+	forward :size * 0.045
+	left 72
+	forward :size * 0.06
+	left 112
+	forward :size * 0.135
+	left 62
+	setPenSize 0
+	arcLeft 20 :size * 0.2
+	arcLeft 4.8 :size
+end
+
+to rearLightPath :size
+	forward :size * 0.095
+	left 90
+	forward :size * 0.06
+	right 75
+	forward :size * 0.06
+	right 107
+	forward :size * 0.16
+	right 69
+	setPenSize 0
+	arcRight 20 :size * 0.2
+	arcRight 4.8 :size
+end
+
+to setFillLightGradient :len
+	localmake "oldPos pos
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#f8f8f8
+	setProperty "colorStops 0.45 "#ddd
+	setProperty "colorStops 0.451 "#e47816
+	setProperty "colorStops 1 "#e47816
+	jumpForward :len
+	setFillGradient createLinearGradient :oldPos pos :colorStops "pad
+	jumpTo :oldPos
+end
+
+to lights :size
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+
+	; front lights
+	jumpForward :size * 0.5
+	jumpLeft :size * 1.27
+	right 90
+	setFillLightGradient :size * 0.16
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :size * 0.403
+	jumpLeft :size * 1.18
+
+	setPenSize :size * 0.005
+	setPenColor "black
+	polyStart
+	frontLightPath :size 
+	polyEnd
+
+	; rear lights
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :size * 0.4
+	jumpRight :size * 1.27
+	left 90
+	setFillLightGradient :size * 0.16
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :size * 0.43
+	jumpRight :size * 1.17
+
+	setPenSize :size * 0.005
+	polyStart
+	rearLightPath :size
+	polyEnd
+	setTurtleState :oldState
+end
+
+to tartanPrancer :size :rotationAngle
+	localmake "oldPos pos
+	localmake "wheelRadius :size * 0.175
+	jumpTo :oldPos
+	jumpForward :size * 0.62
+	jumpLeft :size * 0.63
+	steeringWheel :size * 0.075
+	jumpTo :oldPos
+	jumpForward :size * 0.6
+	windows :size
+	jumpTo :oldPos
+	jumpForward :size * 0.17
+	bottom :size
+	jumpTo :oldPos
+	jumpForward :size * 0.18
+	siding :size
+	jumpTo :oldPos
+	jumpLeft :size * 0.903
+	jumpForward :size * 0.18
+	wheel :wheelRadius :rotationAngle
+	jumpTo :oldPos
+	jumpForward :size * 0.17
+	jumpLeft :size * 1.15
+	frontBumper :size * 0.155
+	jumpTo :oldPos
+	jumpRight :size * 1.115
+	jumpForward :size * 0.14
+	rearBumper :size * 0.21
+	jumpTo :oldPos
+	jumpRight :size * 0.62
+	jumpForward :size * 0.175
+	wheel :wheelRadius :rotationAngle
+	jumpTo :oldPos
+	jumpForward :size * 0.63
+	upperSiding :size
+	jumpTo :oldPos
+	jumpForward :size * 0.9
+	roof :size
+	jumpTo :oldPos
+	mirrors :size
+	doorHandles :size
+	doorLines :size
+	trunkLine :size
+	gasCaps :size
+	circleParts :size
+	brandLabel :size
+	lights :size
+end
+
+tartanPrancer 100 1000 * animation.time / animation.duration
+
+to animation.snapshotstyle
+	localmake "result createPList
+	setProperty "result "zoom.scale 3.3
+	setProperty "result "position.y 50
+	output :result
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 2
+	; Edit this if you want to change the length of your animation.
+	output :minutes * 60 + :seconds
+end

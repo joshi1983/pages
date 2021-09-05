@@ -1,0 +1,41 @@
+; the start looks similar to:
+; https://pythonturtle.academy/curvy-leaf/
+
+to curvyLeaf :size :delta
+	if :size > 5 [
+		localmake "originalPos pos
+		localmake "originalHeading heading
+		forward :size * 0.2
+		left 80
+		curvyLeaf :size * 0.3 :delta
+		right 80
+		forward :size * 0.05
+		right 80
+		curvyLeaf :size * 0.25 0-:delta
+		setHeading :originalHeading + :delta
+		curvyLeaf :size * 0.9 :delta
+		setHeading :originalHeading
+		jumpTo :originalPos
+		
+	]
+end
+
+setScreenColor "white
+setPenColor "green
+setPenSize 1
+curvyLeaf 200 animation.time * 10
+
+to animation.snapshotstyle
+	localmake "result createPList
+	setProperty "result "position.y 230 - animation.time * 54
+	setProperty "result "position.x 40 + animation.time * 7
+	setProperty "result "zoom.scale 1 + animation.time * 0.72
+	output :result
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 3
+	; Edit this if you want to change the length of your animation.
+	output :minutes * 60 + :seconds
+end

@@ -1,0 +1,68 @@
+; Inspired by logo at:
+; https://archive.org/
+
+to pillar :height
+	localmake "oldState turtleState
+	localmake "angle1 68.8
+	localmake "arcAngle1 16.5
+	localmake "arcAngle2 9.4
+	localmake "arcRadius1 :height * 0.23
+	localmake "arcRadius2 :height * 6
+	left 90
+	arcRight :arcAngle1 :arcRadius1
+	polyStart
+	repeat 2 [
+		right :angle1
+		arcRight :arcAngle2 :arcRadius2
+		right :angle1
+		arcRight :arcAngle1 * 2 :arcRadius1
+	]
+	polyEnd
+	setTurtleState :oldState
+end
+
+to internetArchiveLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angle1 42
+	localmake "angle2 118.8
+	localmake "size1 :height * 0.407
+	localmake "size2 :height * 0.038
+	localmake "size3 (:size1 + :size2 * sin :angle1) / (sin :angle2 - :angle1)
+	localmake "pillarHeight :height * 0.5835
+	localmake "pillarSeparation :height * 0.23
+	setPenColor "black
+	setFillColor "black
+	setPenSize :height * 0.8822
+	forward :height * 0.0458
+	jumpForward :height * 0.0242
+	setPenSize :height * 0.8164
+	forward :height * 0.063
+	jumpForward :height * 0.6267
+	forward :height * 0.0873
+	jumpForward :height * 0.025
+	jumpLeft :size1
+	setPenSize 0
+	polyStart
+	left :angle1
+	jumpForward :size2
+	right :angle2
+	jumpForward :size3
+	right 180 - 2 * (:angle2 - :angle1)
+	jumpForward :size3
+	right :angle2
+	jumpForward :size2
+	polyEnd
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpForward :height * 0.1585
+	jumpLeft :pillarSeparation * 1.5
+	repeat 4 [
+		pillar :pillarHeight
+		jumpRight :pillarSeparation
+	]
+	setTurtleState :oldState
+end
+
+internetArchiveLogo 100

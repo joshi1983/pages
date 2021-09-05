@@ -1,0 +1,408 @@
+; Inspired by
+; https://www.pinterest.ca/pin/830421618776212818/
+
+to whiteSpikes :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "numSpikes 20
+	localmake "angleOfSharpness 1
+	localmake "size1 2 * :size * sin :angleOfSharpness
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#888
+	setProperty "colorStops 1 "white
+	localmake "gradient createRadialGradient pos pos :size :colorStops "pad
+	setFillGradient :gradient
+	setPenSize 0
+	repeat :numSpikes [
+		setHeading :oldHeading + (repcount + 0.5) * 360 / :numSpikes
+		jumpTo :oldPos
+		jumpForward :size
+		right 180 - :angleOfSharpness
+		polyStart
+		jumpForward :size
+		right :angleOfSharpness + 90
+		jumpForward :size1
+		polyEnd
+	]
+	setFillColor "black
+	localmake "size :size * 0.8
+	localmake "size1 2 * :size * sin :angleOfSharpness
+	repeat :numSpikes [
+		setHeading :oldHeading + (repcount + 0.5) * 360 / :numSpikes
+		jumpTo :oldPos
+		jumpForward :size
+		right 180 - :angleOfSharpness
+		polyStart
+		jumpForward :size
+		right :angleOfSharpness + 90
+		jumpForward :size1
+		polyEnd
+	]
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to outerArcs :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "size1 :size * 0.947
+	localmake "angle1 10.5
+	localmake "angle2 15
+	localmake "angle3 30
+	localmake "angle4 91.2
+	localmake "angle5 18.3948
+	localmake "angle6 31.2
+	localmake "angle7 2
+	localmake "angle8 145
+	localmake "angle9 20
+	localmake "angle10 22.2
+	localmake "arcRadius1 :size * 4.1
+	localmake "arcRadius2 :size * 0.45
+	localmake "arcRadius3 :size * 0.17
+	localmake "arcRadius4 :size * 0.026822
+	localmake "arcRadius5 :size * 2.9
+	localmake "numArcs 20
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "black
+	setProperty "colorStops 0.75 "black
+	setProperty "colorStops 0.95 "#61D7FF
+	setProperty "colorStops 0.99 "#CCF2FF
+	setProperty "colorStops 1 "white
+	localmake "gradient createRadialGradient pos pos :size1 :colorStops "pad
+	setPenSize 0.1
+	setPenColor "#8fff
+	setFillGradient :gradient
+	repeat :numArcs [
+		setHeading :oldHeading + repcount * 360 / :numArcs - 20
+		setPos :oldPos
+		polyStart
+		arcRight :angle1 :arcRadius1
+		arcRight :angle2 :arcRadius2
+		arcRight :angle3 :arcRadius3
+		arcRight :angle4 :arcRadius4 ; contains reflection point
+		arcRight :angle3 :arcRadius3
+		arcRight :angle2 :arcRadius2
+		arcRight :angle1 :arcRadius1
+		polyEnd
+	]
+	setPenSize 0
+	setFillColor "#8000
+	; dark stripes
+	repeat :numArcs [
+		localmake "middleHeading :oldHeading + (repcount - 1) * 360 / :numArcs - :angle9
+		setHeading :middleHeading
+		setPos :oldPos
+		polyStart
+		arcRight :angle5 :arcRadius5
+		right :angle6
+		arcRight :angle7 :arcRadius3
+		right :angle8
+		arcLeft :angle5 :arcRadius5
+		polyEnd
+		setHeading :middleHeading + :angle10
+		jumpTo :oldPos
+		polyStart
+		arcLeft :angle5 :arcRadius5
+		left :angle6
+		arcLeft :angle7 :arcRadius3
+		left :angle8
+		arcRight :angle5 :arcRadius5
+		polyEnd
+	]
+	; restore original position and heading.
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to leaf :size :angle
+	localmake "oldHeading heading
+	localmake "arcRadius :size / 2 / sin :angle
+	left :angle
+	polyStart
+	arcRight :angle * 2 :arcRadius
+	right 180 - :angle * 2
+	arcRight :angle * 2 :arcRadius
+	polyEnd
+	setHeading :oldHeading
+end
+
+to forwardLeaf :angle :forwardDistance :color :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	left :angle
+	forward :forwardDistance
+	setFillColor :color
+	leaf :size 30
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to tinyLeafs :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "numAngles 20
+	localmake "size1 :size * 0.385
+	localmake "size2 :size * 0.47
+	localmake "size3 :size * 0.17
+	localmake "angle1 20
+	localmake "longLeafSize :size * 0.08
+	localmake "longLeafAngle 25
+	localmake "tinyLeafSize :size * 0.04
+	localmake "tinyLeafSize2 :size * 0.03
+	localmake "tinyLeafSize3 :size * 0.04
+	localmake "leafSize4 :size * 0.06
+	setPenSize 0
+	repeat :numAngles [
+		jumpTo :oldPos
+
+		setHeading :oldHeading + repcount * 360 / :numAngles
+		jumpForward :size1
+		setFillColor "#8972FD
+		leaf :size * 0.12 20
+		left :angle1
+		setFillColor "#D74B0F
+		leaf :longLeafSize :longLeafAngle
+		right :angle1 * 2
+		leaf :longLeafSize :longLeafAngle
+		left :angle1
+		jumpForward :size * 0.08
+		left :angle1
+		setFillColor "#B3ADFF
+		leaf :tinyLeafSize :longLeafAngle
+		right :angle1 * 2
+		leaf :tinyLeafSize :longLeafAngle
+		left :angle1
+		jumpBackward :size3
+		right 90
+		jumpBackward :leafSize4 * 0.5
+		setFillColor "brown
+		leaf :leafSize4 20
+
+		jumpTo :oldPos
+		setHeading :oldHeading + (repcount + 0.5) * 360 / :numAngles
+		jumpForward :size2
+		right 180
+		forwardLeaf 40 :tinyLeafSize3 "aqua :tinyLeafSize2
+		forwardLeaf 15 :tinyLeafSize2 "brown :tinyLeafSize
+		forwardLeaf 0 :tinyLeafSize2 "brown :tinyLeafSize
+		forwardLeaf -15 :tinyLeafSize2 "brown :tinyLeafSize
+		forwardLeaf -40 :tinyLeafSize3 "aqua :tinyLeafSize2
+	]
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to redPeddles :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "numPeddles 20
+	localmake "size1 :size * 0.3
+	localmake "size2 :size * 0.76
+	localmake "leafSize :size2 - :size1
+	localmake "leafSize2 :leafSize * 0.95
+	localmake "colorStops createPList	
+	setProperty "colorStops 0 "#a00
+	setProperty "colorStops 1 "black
+	setFillGradient createRadialGradient pos pos :size * 0.1 :colorStops "repeat
+	setPenSize 0
+	repeat :numPeddles [
+		jumpForward :size1
+		leaf :leafSize 30
+		setPos :oldPos
+		right 360 / :numPeddles
+	]
+	setHeading :oldHeading
+	setLineJoinStyle "round
+	setFillColor transparent
+	repeat :numPeddles [
+		forward :size1
+		setPenSize :size * 0.01
+		setPenColor "white
+		leaf :leafSize2 15
+		setPenSize penSize * 0.8
+		setPenColor "black
+		leaf :leafSize2 15
+		setPenSize 0
+		jumpTo :oldPos
+		right 360 / :numPeddles	
+	]
+end
+
+to blueCircles :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "numCircles 20
+	localmake "size1 :size * 0.5
+	localmake "angle1 360 / :numCircles
+	localmake "angle2 34
+	localmake "angle3 180 + :angle1 - :angle2 * 2
+	localmake "chordLength :size1 * 2 * sin :angle1 / 2
+	localmake "arcRadius :chordLength / 2 / cos :angle2 - :angle1 * 0.5
+	localmake "size2 :arcRadius + :size1 * (cos :angle1/2) - :arcRadius * ((sin :angle2 - :angle1 / 2) )
+	localmake "gradientPosDistance :size * 0.452
+	localmake "gradientRadius :size2 - :gradientPosDistance
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "black
+	setProperty "colorStops 0.2 "black
+	setProperty "colorStops 0.8 "#50d
+	setProperty "colorStops 0.85 "#8000FF
+	setProperty "colorStops 1 "white
+	setPenSize 0
+	repeat :numCircles [
+		setHeading :oldHeading + (repcount + 0.5) * :angle1
+		jumpTo :oldPos
+		forward :gradientPosDistance
+		setFillGradient createRadialGradient pos pos :gradientRadius :colorStops "pad
+		jumpTo :oldPos
+		setHeading :oldHeading + repcount * :angle1
+		polyStart
+		jumpForward :size1
+		right :angle2
+		arcRight :angle3 :arcRadius
+		polyEnd
+	]
+	; darken the core area.
+	jumpTo :oldPos
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "black
+	setProperty "colorStops 0.8 "black
+	setProperty "colorStops 1 transparent
+	setFillGradient createRadialGradient pos pos :size1 :colorStops "pad
+	circle :size1
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to coreGradient :size
+	localmake "coreRadius :size * 0.38
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "black
+	setProperty "colorStops 0.2 "#CC3D00
+	setProperty "colorStops 0.285 "#F37139
+	setProperty "colorStops 0.295 "#FFEAD1
+	setProperty "colorStops 0.31 "#f77843	
+	setProperty "colorStops 0.32 "#f77843
+	setProperty "colorStops 0.38 "#FFAD8A
+	setProperty "colorStops 0.4 "#FFD5B3
+	setProperty "colorStops 0.42 "#FDE8AF
+	setProperty "colorStops 0.55 "#FCFDAF
+	setProperty "colorStops 0.8 "#ff8d61
+	setProperty "colorStops 0.9 "#F96124
+	setProperty "colorStops 1 "black
+	setFillGradient createRadialGradient pos pos :coreRadius :colorStops "pad
+	setPenSize 0
+	circle :coreRadius
+end
+
+to coreSpikes :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "numSpikes 20
+	localmake "coreRadius :size * 0.385
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#333
+	setProperty "colorStops 0.9 "white
+	setProperty "colorStops 0.95 "#400
+	setProperty "colorStops 1 "black
+	setFillGradient createRadialGradient pos pos :coreRadius :colorStops "pad
+	setPenSize 0
+	repeat :numSpikes [
+		setPos :oldPos
+		setHeading :oldHeading + (repcount + 0.45) * 360 / :numSpikes
+		polyStart
+		forward :coreRadius
+		right 90
+		arcRight 2 :coreRadius
+		polyEnd
+	]
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to whiteArcs :size
+	localmake "numArcs 20
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angle1 45
+	localmake "angle2 95
+	localmake "angle3 25
+	localmake "angle4 137
+	localmake "angle5 15
+	localmake "angle6 101.2
+	localmake "angle7 28
+	localmake "arcRadius1 :size * 0.03
+	localmake "arcRadius2 :size * 0.01
+	localmake "arcRadius3 :size * 0.1
+	localmake "arcRadius4 :size * 0.05
+	localmake "arcRadius5 :size * 0.006
+	localmake "arcRadius6 :size * 0.11
+	localmake "size1 :size * 0.36
+	setPenSize 0
+	setFillColor "white
+	repeat :numArcs [
+		setHeading :oldHeading + (repcount - 0.4) * 360 / :numArcs
+		jumpTo :oldPos
+		jumpForward :size1
+		polyStart
+		arcRight :angle1 :arcRadius1
+		arcRight :angle2 :arcRadius2
+		arcRight :angle3 :arcRadius3
+		left :angle4 ; point of reflection
+		arcRight :angle3 :arcRadius3
+		arcRight :angle2 :arcRadius2
+		arcRight :angle1 :arcRadius1
+		right 160
+		arcLeft :angle5 :arcRadius4
+		arcLeft :angle6 :arcRadius5
+		arcLeft :angle7 :arcRadius6
+		right 135.8 ; reflection point
+		arcLeft :angle7 :arcRadius6
+		arcLeft :angle6 :arcRadius5
+		arcLeft :angle5 :arcRadius4
+		polyEnd
+	]
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to brownArcs :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "radius1 :size * 0.28
+	localmake "arcRadius :size * 0.1
+	localmake "arcRadius2 :size * 0.09
+	localmake "numArcs 20
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#E1AB60
+	setProperty "colorStops 0.4 "#E1AB60
+	setProperty "colorStops 1 "#7D3B17
+	setPenGradient createRadialGradient pos pos :radius1 :colorStops "pad
+	setPenSize :size * 0.003
+	repeat :numArcs [
+		
+		setHeading :oldHeading + repcount * 360 / :numArcs
+		jumpTo :oldPos
+		jumpForward :radius1
+		
+		left 90
+		ellipseArc 180 :arcRadius :arcRadius2 0
+	]
+	jumpTo :oldPos
+	setHeading :oldHeading
+end
+
+to kaleidoscope22Flower :size
+	outerArcs :size
+	redPeddles :size
+	whiteSpikes :size
+	blueCircles :size
+	coreGradient :size
+	tinyLeafs :size
+	brownArcs :size
+	coreSpikes :size
+	whiteArcs :size
+end
+
+setScreenColor "black
+kaleidoscope22Flower 150

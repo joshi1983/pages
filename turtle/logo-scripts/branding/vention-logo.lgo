@@ -1,0 +1,34 @@
+; Inspired by logo at:
+; https://vention.io/
+to ventionLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "circleRadius :height * 0.075
+	localmake "thickness :height * 0.33
+	localmake "size1 :height * 0.868
+	localmake "angle 39.5
+	setLineCap "round
+	setLineJoinStyle "round
+	jumpForward :thickness / 2
+	setFillColor "white
+	left :angle
+	jumpForward :size1
+	setPenSize :thickness
+	backward :size1
+	right :angle * 2
+	forward :size1
+	setPenSize 0
+	circle :circleRadius
+	jumpBackward :size1
+	localmake "pos1 pos
+	left :angle * 2
+	jumpForward :size1
+	circle :circleRadius
+	jumpTo :pos1
+	setHeading :oldHeading
+	jumpForward :height * 0.05
+	circle :circleRadius	
+	setTurtleState :oldState	
+end
+
+ventionLogo 100

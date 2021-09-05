@@ -1,0 +1,108 @@
+make "colors ["#0057b7 "#ffd700]
+
+to stripes :width :height :colors
+	setLineCap "butt
+	setPenSize :width
+	repeat count :colors [
+		setPenColor item repcount :colors
+		forward :height / count :colors
+	]
+end
+
+; Based on instruction sheet at:
+; https://en.wikipedia.org/wiki/Flag_of_Ukraine
+to ukraineFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 3 / 2
+	stripes :width :height :colors
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Ukraine#/media/File:Hanging_flag_of_Ukraine.svg
+to ukraineFlagHanging :height
+	localmake "oldState turtleState
+	localmake "width :height * 240 / 600
+	jumpRight :width / 2
+	jumpForward :height / 2
+	left 90
+	stripes :height :width :colors
+	setTurtleState :oldState
+end
+
+to ukraineNavyCorner :length :turnLength
+	localmake "oldState turtleState
+	forward :length
+	right 90
+	forward :turnLength
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Ukraine#/media/File:Naval_ensign_of_Ukraine.svg
+to ukraineNavyEnsignia :height
+	localmake "oldState turtleState
+	localmake "width :height * 3 / 2
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "stripeSize1 :height * 0.1
+	localmake "stripeGap :height * 0.025
+	localmake "size1 :stripeGap + :stripeSize1 / 2
+	localmake "subflagHeight :height / 2 - :size1
+	localmake "subflagWidth :width / 2 - :size1 
+	localmake "thinStripeThickness :stripeGap
+	localmake "size2 :size1 + :thinStripeThickness / 2
+	localmake "height1 :height / 2 - :size2
+	localmake "width1 :width / 2 - :size2
+	localmake "blueColor "#005bbb
+	localmake "colors2 [:blueColor "#ffd700]
+	setPenSize :width
+	setPenColor "white
+	setLineCap "butt
+	forward :height
+	setPenColor :blueColor
+	setPenSize :stripeSize1
+	backward :height
+	jumpForward (:height - :stripeSize1) / 2
+	setPenSize :width
+	forward :stripeSize1
+	jumpForward (:height - :stripeSize1) / 2 
+	right 180
+	jumpRight :subflagWidth / 2 + :stripeGap + :stripeSize1 / 2
+	stripes :subflagWidth :subflagHeight :colors2
+
+	setPenSize :stripeGap
+	setPenColor :blueColor
+	jumpTo :oldPos
+	setHeading :oldHeading
+	jumpLeft :size2
+	ukraineNavyCorner :height1 -:width1
+	jumpRight :size2 * 2
+	ukraineNavyCorner :height1 :width1
+	jumpForward :height
+	right 180
+	ukraineNavyCorner :height1 -:width1
+
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://en.wikipedia.org/wiki/Flag_of_Ukraine#/media/File:OUN-r_Flag_1941.svg
+to ukraineInsurgentArmyFlag :height
+	localmake "oldState turtleState
+	localmake "width :height * 3 / 2
+	stripes :width :height ["black "#c00]
+	setTurtleState :oldState
+end
+
+setScreenColor "#ddd
+make "height 100
+make "separation :height * 2.5
+jumpLeft :separation * 1.5
+ukraineFlag :height
+jumpRight :separation
+ukraineFlagHanging :height
+jumpRight :separation
+ukraineNavyEnsignia :height
+jumpRight :separation
+ukraineInsurgentArmyFlag :height

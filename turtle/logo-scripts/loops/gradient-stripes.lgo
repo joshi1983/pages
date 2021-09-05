@@ -1,0 +1,63 @@
+
+make "colors ["#f00 "#ff0 "#0f0 "#0ff "#00f "#f0f]
+
+to shadedParallelogram :angle :width :length
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#b000
+	setProperty "colorStops 0.1 "#6000
+	setProperty "colorStops 0.2 "#3000
+	setProperty "colorStops 0.3 "#1000
+	setProperty "colorStops 0.5 "#0000
+	setProperty "colorStops 1 "#0000
+	right 90 + :angle
+	jumpForward :width / cos :angle
+	setFillGradient createLinearGradient :oldPos pos :colorStops "pad
+	setHeading :oldHeading
+	jumpTo :oldPos
+	polyStart
+	jumpRight :width
+	left 180 - :angle
+	jumpForward :length
+	setHeading :oldHeading
+	jumpLeft :width
+	polyEnd
+end
+
+to colourStripes :width :height
+	localmake "oldHeading heading
+	localmake "numStripes max 3 3 * :width / :height
+	localmake "step :width / :numStripes
+	localmake "angle 30
+	localmake "slantLength :height / cos :angle
+	localmake "numStripesPerCycle count :colors
+	jumpLeft :width / 2
+	setPenSize 0
+	repeat :numStripes [
+		ifelse even? repcount [
+			ifelse even? repcount / 2 [
+				setFillColor "#444
+			] [
+				setFillColor "white
+			]
+		] [
+			localmake "ratio (remainder repcount / 2 :numStripesPerCycle) / :numStripesPerCycle
+			setFillColor mixItems :colors :ratio
+		]
+		localmake "pos1 pos
+		polyStart
+		jumpRight :step
+		right :angle
+		jumpForward :slantLength
+		setHeading :oldHeading
+		jumpLeft :step
+		polyEnd
+		shadedParallelogram :angle :step :slantLength
+
+		jumpTo :pos1
+		jumpRight :step
+	]
+end
+
+colourStripes 1000 100
