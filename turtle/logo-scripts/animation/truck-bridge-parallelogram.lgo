@@ -1,0 +1,309 @@
+; Inspired by
+; https://www.youtube.com/watch?v=i7nQOsQeqg4
+
+to wheel :radius :wheelRotationDistance
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "penSize1 :radius * 0.3
+	localmake "radius1 :radius - :penSize1 / 2
+	localmake "size1 :radius * 0.3
+	localmake "size2 :radius * 0.05
+	setPenSize :penSize1
+	setPenColor "black
+	setFillColor "#ddd
+	circle :radius1
+	setFillColor "black
+	setPenSize 0
+	circle :radius * 0.1
+	left :wheelRotationDistance / :radius / (2 * pi) * 360
+	setFillColor "#888
+	repeat 4 [
+		jumpForward :size1
+		circle :size2
+		jumpTo :oldPos
+		right 90
+	]
+	setTurtleState :oldState
+end
+
+to fuelTankGradient :height
+	localmake "oldPos pos
+	localmake "colorStops createPList2 [
+		[0 "#444] [0.05 "#888] [0.2 "#ccc] [0.8 "#ddd] [1 "#fff]
+	]
+	jumpForward :height
+	localmake "result createLinearGradient :oldPos pos :colorStops "pad
+	jumpTo :oldPos
+	output :result
+end
+
+to wheelArch :size
+	localmake "arcAngle1 20
+	localmake "arcAngle2 180 - 2 * :arcAngle1
+	localmake "arcRadius1 :size * 1.4
+	localmake "arcRadius2 :size * 0.6
+	arcRight :arcAngle1 :arcRadius1
+	arcRight :arcAngle2 :arcRadius2
+	arcRight :arcAngle1 :arcRadius1
+end
+
+to truckBody :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "windowAngle 10
+	localmake "windowHeight :height * 0.26
+	localmake "windowBottomWidth :height * 0.4
+	localmake "windowTopWidth :windowBottomWidth - :windowHeight * tan :windowAngle
+	localmake "cabinTopWidth :windowTopWidth * 1.1
+	localmake "tankHeight :height * 0.23
+
+	; represent engine
+	setPenSize :height * 0.4
+	setPenColor "#666
+	jumpForward :height * 0.15
+	forward :height * 0.3
+	setPenSize :height * 0.02
+	jumpLeft :height * 0.32
+	forward :height * 0.5
+
+	; the main beam at the bottom of the truck frame
+	jumpTo :oldPos
+	setPenSize :height * 1.9
+	setPenColor "#988
+	jumpLeft :height * 0.73
+	jumpForward :height * 0.12
+	forward :height * 0.18
+
+	jumpTo :oldPos
+	jumpForward :height * 0.12
+	jumpRight :height * 0.2
+	setPenSize 0
+	setFillColor "white
+	polyStart
+	arcLines [[-90 0] [90 0.04] [0.12] [90 0.04] [-90 0] [0.21] [70 0.06]
+		[20 1.2]] :height
+	localmake "windowPos1 pos
+	jumpForward :windowBottomWidth
+	right 90
+	jumpForward :windowHeight
+	jumpRight :windowTopWidth
+	left :windowAngle
+	localmake "windowPos2 pos
+	arcLeft 90 - :windowAngle :height * 0.0985
+	jumpForward :cabinTopWidth
+	jumpLeft :height * 0.8813856
+	jumpBackward :cabinTopWidth * 1.42
+	right 90
+	wheelArch :height * 0.35
+	polyEnd
+
+	; cabin windows
+	jumpTo :windowPos1
+	setHeading towards :windowPos2
+	setFillColor "#3000
+	polyStart
+	jumpForward distance :windowPos2
+	setHeading :oldHeading - 90
+	jumpForward :windowTopWidth
+	jumpLeft :windowHeight
+	polyEnd
+
+	setHeading :oldHeading
+	jumpTo :oldPos
+	setPenSize :height * 0.5
+	jumpForward :height * 0.1
+	jumpLeft :height * 0.5
+	setPenGradient fuelTankGradient :tankHeight
+	forward :tankHeight
+	setTurtleState :oldState
+end
+
+to trailer :height :wheelRadius :angle :wheelRotationDistance
+	localmake "oldState turtleState
+	localmake "width :height * 2.6
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "diagonalHeight :height * 0.15
+	localmake "width1 :width * 0.62
+	localmake "width2 :width - :width1 - :diagonalHeight
+	localmake "beamSize1 :height * 0.07
+	localmake "height1 :height - :wheelRadius * 2 - :beamSize1
+	jumpForward :wheelRadius
+	localmake "pos1 pos
+	jumpForward :height - :wheelRadius - :height1
+	setLineJoinStyle "round
+	setPenColor "white
+	setPenSize :height * 0.04
+	left :angle
+	forward :height1
+	setHeading :oldHeading - 90
+	forward :width
+	left 90 + :angle
+	forward :height1
+
+	setHeading :oldHeading
+	jumpTo :pos1
+	jumpLeft :width
+	setLineCap "butt
+	setLineJoinStyle "miter
+	setPenSize :height * 0.01
+	setPenColor "#444
+	setFillColor "#888
+	right 90
+	polyStart
+	jumpForward :width1
+	left 45
+	jumpForward :diagonalHeight / cos 45
+	localmake "beamPos1 pos
+	right 45
+	jumpForward :width2
+	jumpLeft :beamSize1
+	jumpBackward :width
+	polyEnd
+
+	jumpTo :beamPos1
+	setHeading :oldHeading - 90
+	forward :width1 + :diagonalHeight
+	
+	setHeading :oldHeading
+	jumpTo :oldPos
+	jumpForward :wheelRadius
+	jumpLeft :height * 2
+	wheel :wheelRadius :wheelRotationDistance
+	jumpLeft :wheelRadius * 2.5
+	wheel :wheelRadius :wheelRotationDistance
+	setTurtleState :oldState
+end
+
+to truck :height :trailerAngle :wheelRotationDistance
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "wheelRadius1 :height * 0.14
+	localmake "wheelRadius2 :wheelRadius1 * 0.9
+	jumpLeft :height * 0.65
+	trailer :height :wheelRadius2 :trailerAngle :wheelRotationDistance
+	jumpTo :oldPos
+	truckBody :height * 0.75
+	jumpForward :wheelRadius1
+	wheel :wheelRadius1 :wheelRotationDistance
+	jumpLeft :height * 1
+	jumpBackward :wheelRadius1 - :wheelRadius2
+	wheel :wheelRadius2 :wheelRotationDistance
+	jumpLeft :height * 0.3
+	wheel :wheelRadius2 :wheelRotationDistance
+	setTurtleState :oldState	
+end
+
+to bridge :clearanceHeight :width
+	localmake "oldState turtleState
+	localmake "thickness :clearanceHeight * 0.5
+	jumpForward :clearanceHeight
+	setPenSize :width
+	setPenColor "black
+	forward :thickness
+	setPenColor "#2000
+	backward :thickness + :clearanceHeight
+	setPenSize 0
+	setFillColor "yellow
+	jumpForward :clearanceHeight + :thickness * 0.3
+	right 90
+	jumpBackward :width * 0.35
+	setFontSize :clearanceHeight * 0.3
+	label "bridge
+	setTurtleState :oldState	
+end
+
+to tree :size :shrinkRatio :angle
+	ifelse :size > 3 [
+		localmake "oldState turtleState
+		localmake "branchSize :size * 0.5
+		localmake "size1 :size * :shrinkRatio
+		setPenSize :branchSize * 0.04
+		forward :branchSize
+		right :angle
+		tree :size1 :shrinkRatio :angle
+		left :angle * 2
+		tree :size1 :shrinkRatio :angle
+		setTurtleState :oldState
+	] [
+		setFillColor "#7EB110
+		setPenSize 0
+		circle 1
+	]
+end
+
+to landscape :size
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "trees [
+		[-6.5 0.6 0.5 40]
+		[-5 0.8 0.6 30]
+		[-3.5 0.7 0.7 22]
+		[-1.1 0.7 0.7 30]
+		[1.5 0.8 0.65 22]
+	]
+	repeat count :trees [
+		localmake "treeInfo item repcount :trees
+		localmake "treeSize :size * item 2 :treeInfo
+		localmake "treeRatio item 3 :treeInfo
+		localmake "angle item 4 :treeInfo
+		jumpRight :size * item 1 :treeInfo
+		tree :treeSize :treeRatio :angle
+		jumpTo :oldPos
+	]
+	setPenSize :size * 14
+	setPenColor "#ddd
+	backward :size * 0.1
+	localmake "pos1 pos
+	jumpBackward :size * 0.2
+	localmake "colorStops createPList2 [
+		[0 "#0080] [1 "#f080]
+	]
+	setPenGradient createLinearGradient pos :pos1 :colorStops "pad
+	forward :size * 0.2
+	setTurtleState :oldState	
+end
+
+to truckAndBridge :size :timeRatio
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "truckHeight :size * 1
+	localmake "clearanceHeight :size * 0.95
+	localmake "width :clearanceHeight * 1.2
+	localmake "truckOffset :size * 7 * (0.5 - :timeRatio)
+	localmake "collisionTimeRatio 0.505
+	localmake "trailerAngle 0
+	setLineCap "butt
+	if :timeRatio > :collisionTimeRatio [
+		localmake "ratio1 min 1 (:timeRatio - :collisionTimeRatio) * 5
+		localmake "trailerAngle min 25 100 * :ratio1
+		localmake "trailerAngle :trailerAngle * (1 + interpolateRatio easeBounceOut :ratio1)
+	]
+	landscape :size
+	jumpLeft :truckOffset
+	truck :truckHeight :trailerAngle :truckOffset
+	jumpTo :oldPos
+	bridge :clearanceHeight :width
+	setTurtleState :oldState	
+end
+
+setScreenColor "#88C7C8
+jumpBackward 40
+truckAndBridge 100 animation.timeRatio
+
+to animation.snapshotstyle
+	output createPList2 [
+		["zoom.scale 1.8]
+		["position.x 700 * animation.timeRatio - 500]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 4
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end
