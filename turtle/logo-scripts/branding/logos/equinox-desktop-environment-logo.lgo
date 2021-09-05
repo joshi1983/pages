@@ -1,0 +1,42 @@
+; Inspired by logo at:
+; https://it.wikipedia.org/wiki/Equinox_Desktop_Environment#/media/File:EDElogo.svg
+to equinoxDesktopEnvironmentLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "angle 29.2
+	localmake "topLines [
+		[:angle + 90 0] 
+		[0.253] [-98 0]
+		[-50 0.3] [-32 0.2168165]
+	]
+	setLineJoinStyle "miter
+	setPenSize :height * 0.115
+	localmake "squareSize (:height - penSize)
+	setPenColor "black
+	jumpForward :height / 2
+	setFillColor "white
+	rect :squareSize :squareSize
+
+	setPenSize 0
+	jumpTo :oldPos
+	setFillColor penColor
+	drawArcLineShape [-0.02 0.54 
+		combine :topLines reverse :topLines
+	] :height
+	jumpForward :height
+	right 180
+	jumpForward :height * 0.547
+	jumpLeft :height * 0.032
+	drawArcLineShape [0 0
+		combine :topLines reverse :topLines
+	] :height
+
+	setPenSize :height * 0.1
+	left :angle
+	jumpForward penSize / 2
+	left 90
+	forward :height * 0.4
+	setTurtleState :oldState
+end
+
+equinoxDesktopEnvironmentLogo 100

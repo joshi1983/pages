@@ -1,0 +1,44 @@
+; Inspired by an image at:
+; https://docs.kogics.net/tutorials/lessons-level1-sup/linear-radial-gradients.html
+to drawBlueCircle :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "backgroundStops createPList2 [
+		[0 "red] [1 "yellow]
+	]
+	localmake "foregroundStops createPList2 [
+		[0 "black] [0.6 "blue] [1 "black]
+	]
+	localmake "angle1 15
+	localmake "len1 0.3
+	localmake "len2 0.22
+	localmake "line1 [
+		[:len1] [-36 0] [:len2] [-69.1383 0]
+	]
+	localmake "numAngles 20
+	localmake "backgroundWidth :height * 5
+	jumpLeft :backgroundWidth / 2
+	localmake "left pos
+	jumpRight :backgroundWidth
+	setFillGradient createLinearGradient :left pos :backgroundStops "pad
+	setPenSize 0
+	jumpTo :oldPos
+	jumpForward :height / 2
+	rect :backgroundWidth :height
+	setFillGradient createRadialGradient pos :height / 2 :foregroundStops
+	circle :height * 0.48
+
+	setPenSize :height * 0.01
+	setPenColor "black
+	setLineJoinStyle "round
+	setFillColor transparent
+	repeat :numAngles [
+		drawArcLineShape [0 0
+			(combine [[:angle1 0]] :line1 reverse :line1)
+		] :height
+		right 360 / :numAngles
+	]
+	setTurtleState :oldState
+end
+
+drawBlueCircle 100

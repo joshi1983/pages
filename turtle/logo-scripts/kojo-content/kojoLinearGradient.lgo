@@ -1,0 +1,11 @@
+; Similar to Kojo's ColorMaker.linearGradient function
+to kojoLinearGradient :x1 :y1 :color1 :x2 :y2 :color2 :cyclic?
+	localmake "colorStops createPList2 [
+		[0 :color1] [1 :color2]
+	]
+	localmake "spreadMethod "pad
+	if :cyclic? [
+		localmake "spreadMethod "repeat
+	]
+	output createLinearGradient [:x1 :y1] [:x2 :y2] :colorStops :spreadMethod
+end

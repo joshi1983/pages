@@ -1,0 +1,201 @@
+make "shapePink "#f48 
+make "shapeYellow "yellow
+make "shapeBlue "#08f
+
+to drawPinkSquare :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "height1 :height * cos 45
+	localmake "lines1 [
+		[135 0] [0.27] [10 0] [98.1279 0.52] [26.8721 0]
+	]
+	localmake "dotSeparation :height * 0.072
+	setPenSize 0
+	setFillColor :shapePink
+	right 45
+	square :height1
+	setFillColor "white
+	repeat 4 [
+		jumpForward :height1 * 0.354
+		repeat 3 [
+			localmake "startPos pos
+			jumpLeft (repcount - 1) / 2 * :dotSeparation
+			repeat repcount [
+				circle :height * 0.01
+				jumpRight :dotSeparation
+			]
+			jumpTo :startPos
+			jumpForward :height * 0.037
+		]
+		jumpTo :oldPos
+		right 360 / 4
+	]
+	left 45
+	repeat 4 [
+		drawArcLineShape [0 1
+			combine :lines1 reverse :lines1
+		] :height / 2
+		right 360 / 4
+	]
+	setFillColor :shapePink
+	repeat 4 [
+		drawArcLineShape [0.1 0
+			[[38 0] [0.33] [-70 0] [0.19] [65 0] [0.18]
+			[-65 0] [0.18] [63 0] [0.16] [-65 0] [0.1625] [-101 0]
+			[0.03] [-79 0] [0.09] [64 0] [0.165] [-60.5 0] [0.18]
+			[62 0] [0.18] [-64.5 0] [0.17] [62 0] [0.29]]
+		] :height / 2
+		right 360 / 4
+	]
+	setTurtleState :oldState
+end
+
+to drawInnerSquare :height
+	localmake "oldState turtleState
+	localmake "pinkSize :height / 2
+	localmake "whiteSize :height / 3
+	localmake "offset (:pinkSize - :whiteSize) / 2
+	localmake "center pos
+	setPenSize 0
+	repeat 4 [
+		localmake "index 1 + modulo repcount 2
+		setFillColor item :index [ :shapeBlue :shapeYellow]		
+		jumpForward :height / 4
+		jumpRight :height / 4
+		square :height / 2
+		jumpTo :center
+		right 360 / 4
+	]
+	setFillColor :shapePink
+	repeat 2 [
+		jumpLeft :offset
+		jumpForward :offset
+		square :pinkSize
+		jumpTo :center
+		right 360 / 2
+	]
+	setFillColor "white
+	square :whiteSize
+	setTurtleState :oldState
+end
+
+to drawApple :height
+	localmake "oldState turtleState
+	stripes :height :height [:shapeYellow]
+	jumpForward :height / 2
+	setPenSize 0
+	setFillColor :shapePink
+	drawArcLineShape [0 0
+		[[0.24] [-110 0.16] [-150 0] [90 0.2]]
+	] :height
+	circle :height * 0.3
+	setFillColor :shapeYellow
+	jumpRight :height * 0.25
+	circle :height * 0.2
+	
+	setTurtleState :oldState
+end
+
+to drawArcs :arcRadius :sign
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angle 90 * :sign
+	setPenColor "white
+	setPenSize :arcRadius * 0.15
+	arcLeft :angle :arcRadius
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	setPenColor "#0b0
+	setPenSize :arcRadius * 0.08
+	arcLeft :angle :arcRadius
+	setTurtleState :oldState
+end
+
+to drawBackgroundSquare :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "appleSize :height * 0.14
+	localmake "appleSeparation :height - :appleSize
+	localmake "sunSize :height * 0.15
+	localmake "sunSeparation :height - :sunSize
+	localmake "sunOffset :sunSize * 0.2
+	localmake "sunOffset2 :sunSize * 0.41
+	localmake "sunArcRadius :sunSize * 1.45
+	setFillColor "#0bf
+	square :height
+
+	jumpBackward :height / 2	
+	jumpLeft :appleSeparation / 2
+	repeat 2 [
+		drawApple :appleSize
+		jumpRight :appleSeparation
+	]
+	jumpTo :oldPos
+	jumpForward (:height - :sunSize) / 2
+	jumpLeft :sunSeparation / 2
+	setLineCap "butt
+	repeat 2 [
+		localmake "startPos pos
+		localmake "sign sign repcount - 1.5
+		setFillColor :shapeBlue
+		setPenSize 0
+		square :sunSize
+		setFillColor :shapeYellow
+		jumpBackward :sunOffset
+		jumpLeft :sunOffset * :sign
+		circle :sunSize * 0.42
+		setPenSize :sunSize * 0.2
+		setPenColor "white
+		jumpTo :startPos
+		jumpRight :sunSize / 2 * :sign
+		jumpBackward :sunOffset2
+		left 90 * :sign
+		drawArcs :sunArcRadius :sign
+
+		jumpTo :startPos
+		setHeading :oldHeading
+		jumpForward :sunSize / 2
+		jumpLeft :sunOffset2 * :sign
+		setHeading :oldHeading + 180
+		drawArcs :sunArcRadius -:sign
+
+		jumpTo :startPos
+		setHeading :oldHeading
+		jumpRight :sunSeparation
+	]
+	setTurtleState :oldState
+end
+
+to drawWhiteSquare :height
+	localmake "oldState turtleState
+	setPenSize 0
+	setFillColor "white
+	square :height
+	drawBackgroundSquare :height * 0.88
+
+	setTurtleState :oldState
+end
+
+; Inspired by a drawing on the cover of a book.
+; The book is called Graphics for the Macintosh : an idea book.
+; The book was published in 1985.
+;
+; A digital version of the book is at:
+; https://archive.org/details/graphicsformacin0000gril
+to graphicsForTheMacintoshCover :height
+	localmake "oldState turtleState
+	jumpForward :height / 2
+	drawWhiteSquare :height * 0.84
+	setFillColor :shapeBlue
+
+	drawPinkSquare :height
+	drawInnerSquare :height * 0.15
+
+	setTurtleState :oldState
+end
+
+setScreenColor "#58c
+graphicsForTheMacintoshCover 100

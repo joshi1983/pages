@@ -1,0 +1,405 @@
+to getRobotGradient :height
+	localmake "oldState turtleState
+	left 50
+	jumpForward :height * 0.01
+	localmake "fromPos pos
+	localmake "c "#cef
+	localmake "grayThickness 0.55
+	localmake "colorStops createPList2 [
+		[0 :c] [:grayThickness :c] [:grayThickness + 0.01 "white] [1 "white]
+	]
+	jumpForward :height * 0.16
+	localmake "gradient createLinearGradient :fromPos pos :colorStops "repeat
+	setTurtleState :oldState
+	output :gradient
+end
+
+to drawRobotTorsoDots :width :height
+	localmake "oldState turtleState
+	localmake "numCols 16
+	localmake "dotRadius :height * 0.015
+	localmake "step (:width + :height) / 2 / :numCols
+	localmake "numRows int :height / :step
+	setPenSize 0
+	setFillColor penColor
+	jumpLeft (:numCols - 1) * :step / 2
+	jumpBackward :step * 0.5
+	repeat :numRows [
+		repeat :numCols [
+			circle :dotRadius
+			jumpRight :step
+		]
+		jumpLeft :step * :numCols
+		jumpBackward :step
+	]
+
+	setTurtleState :oldState
+end
+
+to drawGradientGrill :width :numStrips :height :time
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "colorStops createPList2 [
+		[0 "red] [0.5 "#ff0]
+	]
+	jumpLeft :width / 2 + :width * 15 * :time
+	localmake "left pos
+	jumpRight :width
+	setFillGradient createLinearGradient :left pos :colorStops "repeat
+
+	jumpTo :oldPos
+	rect :width :height
+	jumpBackward :height / 2
+	jumpLeft :width / 2
+	repeat :numStrips [
+		stripes penSize :height [penColor]
+		jumpRight :width / :numStrips
+	]
+	setTurtleState :oldState
+end
+
+to drawRobotHead :width :height :time
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "hairHeight :height * 0.135
+	localmake "nostrilSeparation :height * 0.1
+	localmake "eyeSeparation :width * 0.46
+	localmake "thickness penSize
+	localmake "eyeRadius :height * 0.155
+	localmake "eyeLine [
+		[90 0] [-20 0.1] [-30 0.2] [-20 2]
+		[-82 0] [-28 1]
+	]
+	jumpForward :height - :hairHeight / 2
+	drawGradientGrill :width 12 :hairHeight :time
+	jumpTo :oldPos
+	jumpForward :height * 0.28
+	drawGradientGrill :width * 0.6 6 :height * 0.11 :time
+
+	jumpTo :oldPos
+	jumpForward :height * 0.64
+	jumpLeft :eyeSeparation / 2
+	setFillColor "white
+	repeat 2 [
+		setPenSize :thickness
+		setFillColor "white
+		circle :eyeRadius
+		setFillColor "black
+		setPenSize 0
+		right :time * 360 * 2
+		repeat 4 [
+			drawArcLineShape [0 0.25
+				combine :eyeLine reverse :eyeLine
+			] :eyeRadius
+			right 360 / 4
+		]
+		setHeading :oldHeading
+		jumpRight :eyeSeparation
+	]
+
+	jumpTo :oldPos
+	jumpForward :height * 0.45
+	jumpLeft :nostrilSeparation / 2
+	setPenSize 0
+	setFillColor penColor
+	repeat 2 [
+		circle :height * 0.033
+		jumpRight :nostrilSeparation
+	]
+	setTurtleState :oldState
+end
+
+to drawRobot :height :time
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "armWidth 0.15
+	localmake "torsoWidth 0.49
+	localmake "torsoHeight 0.4
+	localmake "outline [
+		[:torsoHeight] [-90 0] [:armWidth]
+		[90 0] [1 - :torsoHeight] [-90 0]
+		[:torsoWidth / 2]
+	]
+	localmake "outline2 combine :outline reverse :outline
+	localmake "totalWidthFactor :armWidth * 2 + :torsoWidth
+	setPenSize 0
+	setFillGradient getRobotGradient :height
+	drawArcLineShape [-:totalWidthFactor / 2 0
+		:outline2
+	] :height
+	setLineCap "butt
+	setPenColor "black
+	setPenSize :height * 0.02
+	setLineJoinStyle "miter
+	jumpLeft :height * :totalWidthFactor / 2
+	arcLines :outline2 :height
+	jumpRight :height * :armWidth
+	right 180
+	repeat 2 [
+		stripes penSize :height * :torsoHeight [penColor]
+		jumpLeft :height * :torsoWidth
+	]
+	jumpTo :oldPos
+	jumpForward :height * :torsoHeight - penSize / 2
+	stripes :height * :totalWidthFactor penSize [penColor]
+	drawRobotTorsoDots :torsoWidth * :height :height * :torsoHeight
+	drawRobotHead :height * :torsoWidth :height * (1 - :torsoHeight) :time
+	setTurtleState :oldState
+end
+
+to drawShirt :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "radius 0.28
+	localmake "width 1.5
+	localmake "line [
+		[1 - :radius] [-90 :radius]
+		[:width / 2 - :radius]
+	]
+	localmake "spotWidth :height * 0.1
+	localmake "rinkleSpots [
+		[-0.45 0.28] [-0.49 0.45]
+		[0.2 0.7] [0.6 0.78]
+		[0.65 0.28]
+	]
+	localmake "rinkleArcAngle 40
+	localmake "rinkleArcRadius :height * 0.3
+	localmake "outline combine :line reverse :line
+	setFillColor "#6A18F3
+	setPenSize 0
+	drawArcLineShape [-:width / 2 0
+		:outline
+	] :height
+	setLineCap "butt
+	setPenColor "black
+	setPenSize :height * 0.05
+	jumpLeft :height * :width / 2
+	arcLines :outline :height
+
+	setLineCap "round
+	repeat count :rinkleSpots [
+		localmake "rinkleInfo item repcount :rinkleSpots
+		jumpTo :oldPos
+		setHeading :oldHeading
+		jumpRight :height * first :rinkleInfo
+		jumpForward :height * last :rinkleInfo
+		right 50
+		localmake "spot pos
+		localmake "spotHeading heading
+		setPenSize 0
+		arcRight :rinkleArcAngle / 2 :rinkleArcRadius
+		right 180
+		setPenSize :height * 0.055
+		arcLeft :rinkleArcAngle :rinkleArcRadius
+		jumpTo :spot
+		setHeading :spotHeading
+		jumpRight :height * 0.08
+		jumpBackward :spotWidth / 2
+		forward :spotWidth
+	]
+	setTurtleState :oldState
+end
+
+to drawNeckAndColar :size
+	localmake "oldState turtleState
+	localmake "line [
+		[90 0] [-80 0.65] [-45 0]
+		[50 0.5] [-105 0] [0.566738]
+	]
+	localmake "neckLine [
+		[90 0] [-70 0.6] [-20 0] [0.25]
+		[-90 0] [0.5638155]
+	]
+	setFillColor "#9af
+	setPenSize :size * 0.1
+	setLineJoinStyle "round
+	drawArcLineShape [0 -0.6
+		combine :line reverse :line 
+	] :size
+
+	setFillColor "#fca
+	drawArcLineShape [0 -0.3
+		combine :neckLine reverse :neckLine
+	] :size
+	setTurtleState :oldState
+end
+
+to drawGlasses :width :t
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "thickness :width * 0.08
+	localmake "eyeSeparation :width * 0.45
+	localmake "pupilRadius1 :width * 0.05
+	localmake "openRatio 1
+	localmake "t2 abs 0.5 - :t
+	localmake "blinkDuration 0.07
+	if :t2 < :blinkDuration [
+		localmake "openRatio :t2 / :blinkDuration
+		localmake "pupilRadius1 :pupilRadius1 * mix 1 1.5 :openRatio
+	]
+	localmake "pupilRadius2 :pupilRadius1 * mix 1 0.2 :openRatio
+	jumpLeft :width / 2
+	right 90
+	setPenSize :thickness
+	setLineCap "round
+	forward :width
+	jumpTo :oldPos
+	jumpBackward :eyeSeparation / 2
+	repeat 2 [
+		setFillColor "white
+		setPenSize :thickness
+		ellipse :width * 0.17 :width * 0.13
+		setPenSize 0
+		setFillColor "black
+		ellipse :pupilRadius2 :pupilRadius1	
+		jumpForward :eyeSeparation
+	]
+	setTurtleState :oldState
+end
+
+to drawHair :height
+	localmake "oldState turtleState
+	setPenSize :height * 0.04
+	setLineJoinStyle "round
+	setFillColor "#fe0
+	drawArcLineShape [-0.3 0.35
+		[[-40 0.1] [70 0.06] [-90 0.05] [90 0.06] [-90 0.04]
+		[-45 0.33] [80 0] [0.05] [-73 0] [-18 0.8] [-80 0]
+		[0.06] [93 0.03] [0.06] [-83 0] [0.15] [-38 0] [70 0.2]
+		[110 0] [40 0.2] [-55 0] [100 0.07] [-80 0] [40 0.2]
+		[-20 0] [40 0.2] [-20 0] [50 0.18] [-45 0] [130 0.1]
+		[-80 0] [0.11] [120 0.08] [-120 0] [0.05] [65 0.06] [0.05]
+		[-35 0] [90 0.05] [0.02] [-90 0] [125 0.08] [0.02] [-110 0]
+		[120 0.085] [0.01] [-100 0] [90 0.06] [-30 0.13] [20 0.3]]
+	] :height
+	setTurtleState :oldState
+end
+
+to drawLips :width
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "lipArcAngle 45
+	localmake "lipArcRadius :width * 1.3
+	jumpForward :width * 0.2
+	left 90
+	setPenSize 0
+	arcRight :lipArcAngle / 2 :lipArcRadius
+	setPenSize :width * 0.18
+	right 180
+	setLineCap "round
+	arcLeft :lipArcAngle :lipArcRadius
+
+	jumpTo :oldPos
+	setHeading :oldHeading
+	; Draw a lip shadow slightly asymmetric.
+	jumpLeft :width * 0.05
+	setPenSize 0
+	setFillColor penColor
+	right 5
+	ellipse :width * 0.2 :width * 0.08
+
+	setTurtleState :oldState
+end
+
+to drawNose :height
+	localmake "oldState turtleState
+	setPenSize :height * 0.15	
+	setLineCap "round
+	setLineJoinStyle "round
+	jumpBackward :height * 0.4
+	jumpLeft :height * 0.3
+	arcLines [
+		[-100 0] [0.2] [-90 0]
+		[0.28] [180 0.12] [-130 0] [0.12] [110 0.13]
+		[40 0.35] [180 0] [0.1] [-160 0.1] [0.13] [150 0.03]
+		[-180 0.12]
+	] :height
+	setTurtleState :oldState
+end
+
+to drawHead :height :t
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "radius1 :height * 0.32
+	localmake "radius2 :height * 0.45
+	localmake "blushSeparation :height * 0.29
+	localmake "c "#fa6
+	localmake "blushColorStops createPList2 [
+		[0 mix :c transparent 0.6] [1 [mix :c transparent 0 easeInOut]]
+	]
+	jumpForward :height * 0.45
+	setPenSize :height * 0.05
+	setFillColor "#fec
+	localmake "center pos
+	ellipse :radius1 :radius2
+	; draw blush on the cheeks using gradients.
+	repeat 2 [
+		jumpRight :blushSeparation * (repcount - 1.5)
+		jumpBackward :height * 0.17
+		setFillGradient createRadialGradient pos :height * 0.2 :blushColorStops
+		jumpTo :center
+		ellipse :radius1 :radius2
+	]
+
+	jumpForward :height * 0.05
+	drawNose :height * 0.22
+
+	drawGlasses :height * 0.6 :t
+
+	jumpTo :oldPos
+	jumpForward :height * 0.155
+	drawLips :height * 0.2
+
+	jumpTo :oldPos
+	drawHair :height
+	setTurtleState :oldState
+end
+
+to drawMan :height :t
+	localmake "oldState turtleState
+	localmake "shirtHeight :height * 0.44
+	drawShirt :shirtHeight
+	jumpForward :shirtHeight
+	drawNeckAndColar :height * 0.2
+	drawHead :height - :shirtHeight :t
+	setTurtleState :oldState
+end
+
+; Inspired by a cover for a book named
+; BASIC Computer Games
+; by David H. Ahl
+; Published in 1979
+;
+; A scanned version of the book is at:
+; https://archive.org/details/ahl-1978-basic-computer-games
+to drawManWithRobot :height :t
+	localmake "oldState turtleState
+	jumpRight :height * 0.31
+	drawMan :height :t
+	jumpLeft :height * 0.608
+	drawRobot :height * 0.95 :t
+
+	setTurtleState :oldState
+end
+
+make "t animation.clampedTimeRatio
+drawManWithRobot 100 :t
+
+to animation.snapshotstyle
+	output createPList2 [
+		["position.y 50]
+		["zoom.scale 5]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 5
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end
