@@ -1,0 +1,49 @@
+; Inspired by
+; https://en.wikipedia.org/wiki/File:Flag_of_Tennessee.svg
+; Referenced from:
+; https://en.wikipedia.org/wiki/Flag_of_Tennessee
+; A construction sheet can be found at:
+; https://www.crwflags.com/fotw/flags/us-tn%27.html
+to tennesseeFlag :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "width :height * 5 / 3
+	localmake "blueStripWidth :height * 0.1041666
+	localmake "whiteStripWidth :height * 0.02083355
+	localmake "starSize1 :height * 0.118
+	localmake "starRotation 180 / 5
+	localmake "blueColor "#002d65
+	setLineCap "butt
+	setPenColor "#c00
+	setPenSize :width
+	forward :height
+	jumpRight (:width - :blueStripWidth) / 2
+	setPenSize :blueStripWidth
+	setPenColor :blueColor
+	backward :height
+	jumpLeft (:blueStripWidth + :whiteStripWidth) / 2
+	setPenColor "white
+	setPenSize :whiteStripWidth
+	forward :height
+	jumpTo :oldPos
+	jumpLeft (:blueStripWidth + :whiteStripWidth) / 2
+	jumpForward :height / 2
+	setFillColor :blueColor
+	circle :height * 0.2605
+	setPenSize 0
+	setFillColor "white
+	localmake "center pos
+	right 78
+	repeat 3 [
+		jumpForward :height * 0.1285
+		left :starRotation
+		regularStar :starSize1 5
+		right :starRotation
+		jumpTo :center
+		right 360 / 3
+	]
+	setTurtleState :oldState
+end
+
+setScreenColor "#eee
+tennesseeFlag 100

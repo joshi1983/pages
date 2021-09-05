@@ -1,0 +1,60 @@
+; This isn't complete.
+; What I was wanting to do to complete this was
+; get the polygon rotating around the curve like in the source of inspiration.
+;
+; 
+
+to angleToRadiusRegularHexagon :angle
+	localmake "angle abs :angle
+	localmake "angle :angle - 60 * (int :angle / 60)
+	output (cos :angle) - (tan 30 - :angle) * sin :angle
+end
+
+to angleToRadius1 :angle
+	localmake "angle :angle * 4
+	localmake "minResult 0.19
+	localmake "maxResult 0.355
+	localmake "ratio (1 + cos :angle) / 2
+	localmake "ratio interpolateRatio easeOutQuad :ratio
+	output mix :minResult :maxResult :ratio
+end
+
+to angleToRadius2 :angle
+	output 0.2 * angleToRadiusRegularHexagon :angle
+end
+
+to polarToPoints :angleToRadiusProc :numPoints
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "center pos
+	localmake "points []
+	repeat :numPoints [
+		localmake "angle repcount * 360 / :numPoints
+		localmake "radius :height * (invoke :angleToRadiusProc :angle)
+		setHeading :oldHeading + :angle
+		jumpForward :radius
+		queue2 "points pos
+		jumpTo :center
+	]
+	setTurtleState :oldState
+	output :points
+end
+
+; Inspired by:
+; https://www.patreon.com/posts/basic-after-tao-131335652?fbclid=IwY2xjawK4h3NleHRuA2FlbQIxMABicmlkETFXWUtkVE5aNXY5T1hOdmhuAR6WspCaQXM5jahvpmkcZX0I6izbZuk_urfHCSqDCR593G2CQ2bILT1EQWIZZQ_aem_mhm3acQ9YMmhfiBlYpqvUg
+to spirographic :height
+	localmake "oldState turtleState
+	jumpForward :height / 2
+	localmake "points polarToPoints "angleToRadius1 200
+	setPenColor "blue
+	setPenSize :height * 0.005
+	polygon :points
+	localmake "points2 polarToPoints "angleToRadius2 200
+	
+	polygon :points2
+
+	setTurtleState :oldState
+end
+
+make "time animation.clampedTimeRatio
+spirographic 100

@@ -1,0 +1,47 @@
+; Inspired by images at:
+; https://www.facebook.com/share/p/1CugQmGKFo
+; The images were made using BASIC code from Mark Stasak.
+;
+; The following WebLogo code was translated 
+; and adapted by me, Josh Greig.
+
+setScreenColor "black
+make "s 0
+make "t interpolateRatio easeInOut interpolateRatio easeOut animation.timeRatio
+make "hueFactor (1 + sin 360 * 5 * :t) / 2
+make "nSlices 5 + floor 7 * (1 + sin 360 * :t)
+make "stepVal 12 + 7 * (1 + cos 360 * 2 * :t)
+setPenBlendMode "lighter
+for [ "i 0 2000 :stepVal ] [
+	setPenColor hsvToRGB
+		(1 + radSin :i / :hueFactor) / 2
+		1
+		1
+	repeat :nSlices [
+		jumpTo [
+			(radCos 2 * pi * repRatio ) * :i 
+			( -radSin 2 * pi * repRatio ) * :i
+		]
+		make "r :i * 2 * :hueFactor
+		if :r > 0 [
+			circle :r
+		]
+	]
+]
+
+to animation.snapshotstyle
+	output createPList2 [
+		["zoom.scale 0.5]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 5
+	localmake "duration :minutes * 60 + :seconds
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :duration]
+		["thumbnailTime :duration * 0.8722]
+	]
+end

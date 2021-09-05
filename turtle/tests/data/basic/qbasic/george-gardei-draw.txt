@@ -1,0 +1,608 @@
+REM copied from a video at:
+REM https://www.youtube.com/watch?v=mvgsV6raUzw
+REM The link George gave was:
+REM https://drive.google.com/file/d/1xytlpL66r6bj72hxjoBzf8YEB2TbyJ7A/view?usp=sharing
+REM I did not open any EXE files from the linked zip out of caution but this is the contained draw.bas.
+
+$ExeIcon:'icons\draw.ico'
+_Title "DRAWER v 1.0"
+
+
+DECLARE FUNCTION CLEARMEM! (OP!(), X1!(), Y1!(), X2!(), Y2!(), COLR!(), vcount!)
+DECLARE FUNCTION redraw (OP(), X1(), Y1(), X2(), Y2(), COLR(), vcount)
+DECLARE FUNCTION drawcursor! (x!, y!, prevX!, prevY!)
+
+Dim OP(1000) '  1-Line, 2-Box, 3-Filled Box, 4-Circle, 5-Elipse, 6-Fill, 7 Pset
+Dim X1(1000)
+Dim X2(1000)
+Dim Y1(1000)
+Dim Y2(1000)
+Dim COLR(1000)
+        
+Dim BOP As Integer
+Dim BX1 As Integer
+Dim BY1 As Integer
+Dim BX2 As Integer
+Dim BY2 As Integer
+Dim BCOLR As Integer
+
+Screen 13
+
+Locate 2, 2
+Print "DRAWER v 1.0, George W. Gardei"
+Locate 4, 2
+Print "Press L to Load a File"
+Locate 5, 2
+Print "Press H for Help"
+
+' Initalize Starting varaibles
+
+curX = 320 / 2
+curY = 200 / 2
+linecolor = 1
+drawline = 0
+drawbox = 0
+drawcircle = 0
+pendown = 0
+Fill = 0
+curStep = 1
+palc = 0
+palStart = 0 'pallet start color
+palend = 32 'pallet end color
+palShown = 0
+radius = 15
+PenX = 0
+PenY = 0
+
+
+
+cur = drawcursor(curX, curY, prevX, prevY)
+
+Do While Key$ <> Chr$(27)
+
+    Line (0, 0)-(318, 199), linecolor, B
+ 
+    Key$ = InKey$
+
+    prevX = curX
+    prevY = curY
+
+    Select Case UCase$(Key$)
+
+        Case "*" ' Toggle Step
+            R = redraw(OP(), X1(), Y1(), X2(), Y2(), COLR(), vcount)
+            palShown = 0
+       
+            Select Case curStep
+                Case 1
+                    curStep = 2
+                Case 2
+                    curStep = 5
+                Case 5
+                    curStep = 10
+                Case 10
+                    curStep = 1
+            End Select
+
+            Locate 23, 2
+            Print " Step Set : " + Str$(curStep) + "  "
+
+        Case "8" ' UP
+            palShown = 0
+            curY = curY - curStep
+       
+            If pendown = 0 Then
+                R = redraw(OP(), X1(), Y1(), X2(), Y2(), COLR(), vcount)
+                cur = drawcursor(curX, curY, prevX, prevY)
+            End If
+       
+        Case "2" ' DOWN
+            palShown = 0
+            curY = curY + curStep
+      
+            If pendown = 0 Then
+                R = redraw(OP(), X1(), Y1(), X2(), Y2(), COLR(), vcount)
+                cur = drawcursor(curX, curY, prevX, prevY)
+            End If
+
+        Case "4" ' LEFT
+            palShown = 0
+            curX = curX - curStep
+       
+            If pendown = 0 Then
+                R = redraw(OP(), X1(), Y1(), X2(), Y2(), COLR(), vcount)
+                cur = drawcursor(curX, curY, prevX, prevY)
+            End If
+
+        Case "5" ' Center cursor
+            If pendown = 0 Then
+                palShown = 0
+                curX = 320 / 2
+                curY = 200 / 2
+                R = redraw(OP(), X1(), Y1(), X2(), Y2(), COLR(), vcount)
+                cur = drawcursor(curX, curY, prevX, prevY)
+            End If
+
+        Case "6" ' RIGHT
+            palShown = 0
+            curX = curX + curStep
+
+            If pendown = 0 Then
+                R = redraw(OP(), X1(), Y1(), X2(), Y2(), COLR(), vcount)
+                cur = drawcursor(curX, curY, prevX, prevY)
+            End If
+
+        Case "7" ' LEFT\UP
+            palShown = 0
+            curX = curX - curStep
+            curY = curY - curStep
+       
+            If pendown = 0 Then
+                R = redraw(OP(), X1(), Y1(), X2(), Y2(), COLR(), vcount)
+                cur = drawcursor(curX, curY, prevX, prevY)
+            End If
+
+        Case "9" ' RIGHT\UP
+            palShown = 0
+            curX = curX + curStep
+            curY = curY - curStep
+       
+            If pendown = 0 Then
+                R = redraw(OP(), X1(), Y1(), X2(), Y2(), COLR(), vcount)
+                cur = drawcursor(curX, curY, prevX, prevY)
+            End If
+
+        Case "1" ' LEFT\DOWN
+            palShown = 0
+            curX = curX - curStep
+            curY = curY + curStep
+       
+            If pendown = 0 Then
+                R = redraw(OP(), X1(), Y1(), X2(), Y2(), COLR(), vcount)
+                cur = drawcursor(curX, curY, prevX, prevY)
+            End If
+
+        Case "3" ' RIGHT\DOWN
+            palShown = 0
+            curX = curX + curStep
+            curY = curY + curStep
+       
+            If pendown = 0 Then
+                R = redraw(OP(), X1(), Y1(), X2(), Y2(), COLR(), vcount)
+                cur = drawcursor(curX, curY, prevX, prevY)
+            End If
+
+        Case "Q" ' Draw
+            palShown = 0
+            If pendown = 0 Then
+                pendown = 1
+                drawline = 0
+                drawcircle = 0
+                drawbox = 0
+
+                '  R = redraw(OP(), X1(), Y1(), X2(), Y2(), COLR(), vCount)
+
+       
+            Else
+                pendown = 0
+      
+                R = redraw(OP(), X1(), Y1(), X2(), Y2(), COLR(), vcount)
+       
+            End If
+
+        Case "E" ' DrawBox
+            palShown = 0
+            If drawbox = 0 Then
+                Fill = 0
+                pendown = 0
+                drawline = 0
+                drawcircle = 0
+                drawbox = 1
+                startX = curX
+                startY = curY
+            Else
+                ' check fill
+                vcount = vcount + 1
+                 
+                If Fill = 0 Then
+                    OP(vcount) = 2
+                Else
+                    OP(vcount) = 3
+                End If
+                 
+                X1(vcount) = startX
+                X2(vcount) = curX
+                Y1(vcount) = startY
+                Y2(vcount) = curY
+                COLR(vcount) = linecolor
+
+                drawbox = 0
+                Fill = 0
+
+                R = redraw(OP(), X1(), Y1(), X2(), Y2(), COLR(), vcount)
+
+            End If
+
+        Case "F" ' Fill
+            palShown = 0
+            If Fill = 0 Then
+                Fill = 1
+            
+                If drawline = 0 And drawbox = 0 Then
+                    Paint (curX, curY), linecolor, linecolor
+              
+                    vcount = vcount + 1
+                    OP(vcount) = 6
+                    X1(vcount) = curX
+                    Y1(vcount) = curY
+                    Y2(vcount) = linecolor
+                    COLR(vcount) = linecolor
+
+                End If
+
+            Else
+                Fill = 0
+            End If
+
+
+        Case "W" ' Start
+            palShown = 0
+            If drawline = 0 Then
+                Fill = 0
+                startX = curX
+                startY = curY
+                pendown = 0
+                drawbox = 0
+                drawcircle = 0
+                drawline = 1
+            Else
+                vcount = vcount + 1
+                OP(vcount) = 1
+                X1(vcount) = startX
+                X2(vcount) = curX
+                Y1(vcount) = startY
+                Y2(vcount) = curY
+                COLR(vcount) = linecolor
+
+                drawline = 0
+                R = redraw(OP(), X1(), Y1(), X2(), Y2(), COLR(), vcount)
+            End If
+
+        Case "R" ' Draw Circle
+            palShown = 0
+            If drawcircle = 0 Then
+                startX = curX
+                startY = curY
+                drawbox = 0
+                drawcircle = 1
+                drawline = 0
+                pendown = 0
+            Else
+                drawcircle = 0
+                If radius > 0 Then
+                    vcount = vcount + 1
+                    OP(vcount) = 4
+                    X1(vcount) = startX
+                    Y1(vcount) = startY
+                    X2(vcount) = radius
+                    COLR(vcount) = linecolor
+                End If
+            End If
+
+        Case "V" ' Pick Color
+            R = redraw(OP(), X1(), Y1(), X2(), Y2(), COLR(), vcount)
+            linecolor = Point(curX, curY)
+
+
+        Case "C" ' Color
+            If linecolor < palStart Then
+                linecolor = palStart
+            End If
+
+            linecolor = linecolor + 1
+
+            If linecolor > palend Then
+                linecolor = palStart
+            End If
+
+        Case "X" ' Pallet
+
+            If palShown = 0 Then
+                palc = palStart
+            End If
+
+            If palc = 256 Then
+                palc = 0
+            End If
+
+            palStart = palc
+
+            For y = 1 To 2
+                For x = 1 To 16
+                    Line (x * 10, 160 + (y * 10))-((x * 10) + 10, 160 + (y * 10) + 10), palc, BF
+                    Line (x * 10, 160 + (y * 10))-((x * 10) + 10, 160 + (y * 10) + 10), 15, B
+                    palc = palc + 1
+                Next x
+            Next y
+       
+            palend = palc 'pallet end color
+            palShown = 1
+
+
+        Case "U" ' Undo Last edit
+            If vcount <> 0 Then
+                OP(vcount) = 0
+                X1(vcount) = 0
+                X2(vcount) = 0
+                Y1(vcount) = 0
+                Y2(vcount) = 0
+                COLR(vcount) = 0
+                vcount = vcount - 1
+                R = redraw(OP(), X1(), Y1(), X2(), Y2(), COLR(), vcount)
+      
+            End If
+     
+        Case "S" ' Save
+            palShown = 0
+
+            Locate 23, 2
+            Input "Save Filename : ", File$
+     
+            If UCase$(Right$(File$, 4)) <> ".DRW" Then
+                File$ = File$ + ".DRW"
+            End If
+
+            Open File$ For Binary As #1
+     
+            ' Write file header
+            BOP = -1 ' header record
+            BX1 = 13 ' graphics mode
+            BY1 = vcount ' itemcount
+       
+            Put #1, , BOP
+            Put #1, , BX1
+            Put #1, , BY1
+
+
+            For n = 1 To vcount
+                BOP = OP(n)
+                BX1 = X1(n)
+                BY1 = Y1(n)
+                BX2 = X2(n)
+                BY2 = Y2(n)
+                BCOLR = COLR(n)
+    
+
+                Put #1, , BOP
+                Put #1, , BX1
+                Put #1, , BY1
+                Put #1, , BX2
+                Put #1, , BY2
+                Put #1, , BCOLR
+
+            Next n
+     
+            Close #1
+
+            Locate 23, 2
+            Print "Saved.         "
+
+        Case "L"
+            palShown = 0
+        
+            Locate 23, 2
+            Input "Load Filename : ", File$
+
+            If UCase$(Right$(File$, 4)) <> ".DRW" Then
+                File$ = File$ + ".DRW"
+            End If
+
+            Open File$ For Binary As #1
+                    
+            ' Need to Clear out array
+
+            M = CLEARMEM(OP(), X1(), Y1(), X2(), Y2(), COLR(), vcount)
+
+            ' Get the file header
+        
+            Seek #1, 1
+            Get #1, , BOP
+            Get #1, , BX1
+            Get #1, , BY1
+        
+            vcount = BY1
+            Screen BX1
+
+            For n = 1 To vcount
+                Get #1, , BOP
+                Get #1, , BX1
+                Get #1, , BY1
+                Get #1, , BX2
+                Get #1, , BY2
+                Get #1, , BCOLR
+
+                OP(n) = BOP
+                X1(n) = BX1
+                Y1(n) = BY1
+                X2(n) = BX2
+                Y2(n) = BY2
+                COLR(n) = BCOLR
+        
+            Next n
+
+            Close #1
+            ' INPUT a
+            R = redraw(OP(), X1(), Y1(), X2(), Y2(), COLR(), vcount)
+
+        Case "H" ' Help
+            palShown = 0
+       
+            ' R = redraw(op(), x1(), Y1(), X2(), Y2(), colr(), vCount)
+            Line (3, 3)-(318, 190), 0, BF
+            Locate 2, 10
+            Print "N - New"
+            Locate 3, 10
+            Print "X - Color Pallet"
+            Locate 4, 10
+            Print "C - Toggle Color,"
+            Locate 5, 10
+            Print "V - Pick Color"
+            Locate 6, 10
+            Print "Q - Draw"
+            Locate 7, 10
+            Print "W - Draw Line (ON/OFF)"
+            Locate 8, 10
+            Print "E - Draw Box (ON/OFF)"
+            Locate 9, 10
+            Print "R - Draw Circle (ON/OFF)"
+            Locate 10, 10
+            Print "F - Fill"
+            Locate 11, 10
+            Print "U - Undo Last"
+            Locate 12, 10
+            Print "O - Refresh Screen"
+            Locate 13, 10
+            Print "L - Load File"
+            Locate 14, 10
+            Print "S - Save File"
+            Locate 15, 10
+            Print "I - Info"
+            Locate 16, 10
+            Print "Z - Refresh Screen"
+            Locate 17, 10
+            Print "ESC - Quit"
+            Locate 19, 5
+            Print "4-LEFT  8-UP  2-DOWN  6-RIGHT"
+            Locate 20, 12
+            Print "*-Step  5-Center"
+
+        Case "N" ' new
+            palShown = 0
+            M = CLEARMEM(OP(), X1(), Y1(), X2(), Y2(), COLR(), vcount)
+            File$ = ""
+            vcount = 0
+            R = redraw(OP(), X1(), Y1(), X2(), Y2(), COLR(), vcount)
+ 
+
+        Case "Z" ' Redraw
+            palShown = 0
+            R = redraw(OP(), X1(), Y1(), X2(), Y2(), COLR(), vcount)
+
+        Case "I" ' Info
+            palShown = 0
+            R = redraw(OP(), X1(), Y1(), X2(), Y2(), COLR(), vcount)
+            Locate 2, 2
+            Print "DRAWER v 1.0, George W. Gardei"
+            Locate 3, 2
+            Print "Current File : " + UCase$(File$)
+            Locate 4, 2
+            Print "Current Draw Elements : " + Str$(vcount)
+            Locate 6, 2
+            Print "Cursor Location (" + Str$(curX) + " , " + Str$(curY) + ")"
+      
+    End Select
+
+    If drawline = 1 Then
+        Line (startX, startY)-(prevX, prevY), 0
+        Line (startX, startY)-(curX, curY), linecolor
+    End If
+
+    If drawbox = 1 Then
+        Line (startX, startY)-(prevX, prevY), 0, B
+        If Fill = 0 Then
+            Line (startX, startY)-(curX, curY), linecolor, B
+        Else
+            Line (startX, startY)-(curX, curY), linecolor, BF
+        End If
+    End If
+
+    If drawcircle = 1 Then
+        If startX - curX > 0 Then
+            radius = startX - curX
+            Circle (startX, startY), radius, linecolor
+        End If
+    End If
+
+    If pendown = 1 Then
+      
+        If PenX <> curX Or PenY <> curY Then
+              
+            vcount = vcount + 1
+
+            PenX = curX
+            PenY = curY
+
+            PSet (curX, curY), linecolor
+
+            OP(vcount) = 7
+            X1(vcount) = curX
+            Y1(vcount) = curY
+                     
+            COLR(vcount) = linecolor
+        End If
+    End If
+
+
+Loop
+
+Function CLEARMEM (OP(), X1(), Y1(), X2(), Y2(), COLR(), vcount)
+        
+    For n = 1 To vcount
+        OP(n) = 0
+        X1(n) = 0
+        Y1(n) = 0
+        X2(n) = 0
+        Y2(n) = 0
+        COLR(n) = 0
+    Next n
+
+End Function
+
+Function drawcursor (x, y, prevX, prevY)
+
+    '        LINE (prevX - 1, prevY)-(prevX + 1, prevY), 0
+    '        LINE (prevX, prevY - 1)-(prevX, prevY + 1), 0
+    c = Point(x, y)
+
+    If c = 15 Then
+        c = 0
+    Else
+        c = 15
+    End If
+
+    'GET (x - 1, y)-(x + 1, y)
+    Line (x - 1, y)-(x + 1, y), c
+    Line (x, y - 1)-(x, y + 1), c
+
+End Function
+
+Function redraw (OP(), X1(), Y1(), X2(), Y2(), COLR(), vcount)
+
+    ' Clear the screen
+    Line (1, 1)-(320, 200), 0, BF
+
+    '   FOR y = 1 TO 20
+    '   FOR x = 1 TO 30
+    '        PSET (x * 10, y * 10), 19
+    '   NEXT x
+    '   NEXT y
+
+
+    For n = 1 To vcount
+        Select Case OP(n)
+            Case 1
+                Line (X1(n), Y1(n))-(X2(n), Y2(n)), COLR(n)
+            Case 2
+                Line (X1(n), Y1(n))-(X2(n), Y2(n)), COLR(n), B
+            Case 3
+                Line (X1(n), Y1(n))-(X2(n), Y2(n)), COLR(n), BF
+            Case 4
+                Circle (X1(n), Y1(n)), X2(n), COLR(n)
+            Case 6
+                Paint (X1(n), Y1(n)), COLR(n), Y2(n)
+            Case 7
+                PSet (X1(n), Y1(n)), COLR(n)
+        End Select
+    Next n
+
+End Function

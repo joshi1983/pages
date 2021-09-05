@@ -1,0 +1,63 @@
+make "wvOrange "#ff6b00
+
+to drawCross :height
+	localmake "lines1 [
+		[-3 0] [0.3] [-8 1.5] [-15 0.17] [-30 0.09]
+		[-20 0.15] [-7 0.8] [-2 1] [-1.3 5] [173 0]
+		[-2 3] [-5 1] [-10 0.5] [-30 0.1] [-13 0.15]
+		[-9 0.2] [-13.58 0.45] [0.13300573] [85.88 0]
+	]
+	localmake "shape [0 -0.63
+		combine :lines1 reverse :lines1
+	]
+	drawArcLineShape :shape :height
+end
+
+; Inspired by logo at:
+; https://www.facebook.com/photo/?fbid=1102935421874820
+to worldVisionLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "crossHeight :height * 0.76
+	jumpForward :height * 0.6
+	localmake "crossCenter pos
+	setPenGradient createRadialGradient pos :height * 0.4 createPList2 [
+		[0 "#fff] [1 :wvOrange]
+	]
+	jumpTo :oldPos
+	setLineCap "butt
+	setPenSize :height
+	forward :height
+	jumpTo :crossCenter
+	setPenSize 0
+
+	setPenColor mix :wvOrange transparent 0.05
+	setLineJoinStyle "round
+	setFillColor transparent
+	repeat 20 [
+		setPenSize :height * 0.13 * repcount / 20		
+		drawCross :crossHeight * 1.1
+	]
+	setFillColor "white
+	drawCross :crossHeight
+	setTurtleState :oldState
+end
+
+; They have another version of the logo at:
+; https://www.worldvision.org
+to worldVisionLogo2 :height
+	localmake "oldState turtleState
+	stripes :height :height [:wvOrange]	
+	setPenSize 0
+	jumpForward :height * 0.6
+	setFillColor "white
+	drawCross :height * 0.76
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 4
+jumpLeft :separation / 2
+worldVisionLogo :height
+jumpRight :separation
+worldVisionLogo2 :height

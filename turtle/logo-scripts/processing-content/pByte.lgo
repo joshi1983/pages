@@ -1,0 +1,23 @@
+; Implemented to be similar to:
+; https://processing.org/reference/byteconvert_.html
+to pByte :value
+	if string? :value [
+		localmake "value ascii first :value
+	]
+	if integer? :value [
+		if :value < 0 [
+			localmake "value :value + 256 * int :value / 256
+		]
+		if :value >= 128 [
+			output :value - 256 * (1 + int :value / 256)
+		]
+	]
+	if boolean? :value [
+		ifelse true = :value [
+			output 1
+		] [
+			output 0
+		]
+	]
+	output :value
+end

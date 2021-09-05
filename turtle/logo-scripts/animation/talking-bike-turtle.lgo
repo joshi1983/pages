@@ -1,0 +1,138 @@
+; This animation was made to bring a requested bicycle part to life
+; in a photo editing facebook group.
+;
+; An exported video from this program was shared at:
+; https://www.facebook.com/reel/1308548804090484
+;
+; You can find links to the images in the code below in image command calls.
+; The corresponding audio is at:
+; weblogo://logo-scripts/images/bike-turtle/i-am-a-turtle.m4a
+
+make "blinkBaseline 0.4
+make "blinkRatio :blinkBaseline
+make "blinkDuration 0.7
+make "blinkStartTime 2.6
+if and (animation.time > :blinkStartTime) (animation.time < :blinkStartTime + :blinkDuration) [
+	make "blinkAngle 360 * (animation.time - :blinkStartTime) / :blinkDuration
+	make "blinkRatio :blinkBaseline + (1 - cos :blinkAngle) * (1 - :blinkBaseline) / 2
+]
+make "wideStartTime 7.2
+make "wideDuration 1.5
+if and (animation.time > :wideStartTime) (animation.time < :wideStartTime + :wideDuration) [
+	make "ratio (animation.time - :wideStartTime) / :wideDuration
+	make "ratio interpolateRatio easeOut :ratio
+	make "wideAngle 360 * :ratio
+	make "blinkRatio :blinkBaseline * (1 + cos :wideAngle) / 2
+]
+
+; This is pairs of time with jaw opening amounts.
+; This tries to synchronize jaw movements of the turtle with pronunciation of words.
+make "jawStates [
+	[0 0.1]
+	[0.5 0.1] ; le
+	[0.7 0.5] ; e
+	[0.8 0.5] ; e
+	[0.85 0] ; t
+
+	[0.9 0.5] ; u
+	[0.95 0.1] ; s
+
+	[1 0.1] ; g
+	[1.05 0.5] ; e
+	[1.09 0] ; t
+
+	[1.1 0.1] ; pause
+
+	[1.3 0.2] ; w
+	[1.4 0.7] ; o
+
+	[1.5 0] ; n
+
+	[1.6 0.3] ; th
+
+	[1.7 0.7] ; i
+
+
+	[1.9 0.3] ; ng
+
+	; cl
+	[2 0.1]
+
+	[2.5 0.6] ; ear
+
+	[3 0.1] ; pause
+	[3.4 0.1]
+
+	[3.5 1] ; I  aa
+
+	[4.2 1] ; I  aa
+
+	[4.4 0.2] ; pause
+
+	[4.8 0.7] ; a
+	[5 0.8] ; a
+	[5.2 0] ; m
+	[5.5 0] ; m
+
+	[5.8 1] ; a
+	[6.2 1] ; a
+
+	[6.5 0] ; pause
+	[7.3 0] ;t
+	[7.35 1] ; u
+	[7.8 1] ; u
+
+	[7.9 0.8] ; r
+	[8 0]	;t
+	[8.1 0]	;t
+	[8.2 1] ;le
+
+	[8.8 0.1]
+	[10 0.1]
+]
+
+to getJawRatio
+	for ["i 2 (count :jawStates)] [
+		localmake "next item :i :jawStates
+		localmake "nextT first :next
+		if :nextT > animation.time [
+			localmake "prev item :i - 1 :jawStates
+			localmake "prevVal last :prev
+			localmake "nextVal last :next
+			localmake "prevT first :prev
+			localmake "ratio (animation.time - :prevT) / (:nextT - :prevT)
+			output mix :nextVal :prevVal :ratio
+		]
+	]
+	output last last :jawStates
+end
+
+make "jawRatio getJawRatio
+make "height 100
+image :height * 945 / 1179 :height 'weblogo://logo-scripts/images/bike-turtle/turtle.jpg'
+jumpTo [0 2 - :jawRatio * 7]
+make "height 100
+image :height * 945 / 1179 :height 'weblogo://logo-scripts/images/bike-turtle/turtle-jaw.png'
+
+jumpTo [1.5 0]
+make "height 5.4
+make "blinkRatio mix 1.6 0.2 :blinkRatio
+make "height1 :blinkRatio * :height
+jumpForward 65 + :height - :height1
+image :height * 494 / 65 :height1 'weblogo://logo-scripts/images/bike-turtle/turtle-eyes.png'
+
+to animation.snapshotstyle
+	output createPList2 [
+		["position.y 50]
+		["zoom.scale 8.5]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 10
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+	]
+end

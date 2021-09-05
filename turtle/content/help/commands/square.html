@@ -1,0 +1,37 @@
+<code>square 50
+; Draws a square with width 50 and height 50</code>
+<code>; Behaves exactly like square command.
+; The square command is available so you don't need to implement it yourself.
+; Reviewing this implementation could help you implement something similar using procedures, though.
+to mySquare :size
+	rect :size :size
+end
+
+; mySquare2 also does the same as the square command but implemented using regularPolygon.
+to mySquare2 :size
+	right 45
+	regularPolygon :size / 2 / cos 45 4
+	left 45 ; restore original heading.
+end
+
+; mySquare3 also does the same as the square command but implemented using polyStart, polyEnd... 
+to mySquare3 :size
+	localmake "oldPos pos
+	jumpBackward :size / 2
+	jumpLeft :size / 2
+	polyStart
+	repeat 4 [
+		jumpForward :size
+		right 90
+	]
+	polyEnd	
+	jumpTo :oldPos
+end
+
+mySquare 50
+jumpBackward 100
+setPenColor "red
+mySquare2 50
+jumpBackward 100
+setPenColor "blue
+mySquare3 50</code>

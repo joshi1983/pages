@@ -1,0 +1,80 @@
+; Inspired by logo at:
+; https://www.youtube.com/@ComputerClan
+to computerClanLogo :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "colorStops createPList2 [
+		[0 "#ffaa36] [0.4 "violet]
+		[0.8 "#7b8ae5] [1 "#75e7ff]
+	]
+	localmake "thickness :height * 0.061
+	localmake "outerRadius (:height - :thickness) / 2
+	localmake "innerRadius 0.18
+	localmake "midRadius (:innerRadius * :height + :outerRadius) / 2
+	localmake "angle1 128
+	localmake "angle1_ 74
+	localmake "arcs1 [
+		[-:angle1 :innerRadius] [:angle1_ 0]
+	]
+	jumpForward :height / 2
+	localmake "center pos
+	left 15
+	jumpBackward :height * 0.3
+	localmake "fromPos pos
+	jumpForward :height * 0.4
+	localmake "gradient createLinearGradient :fromPos pos :colorStops "pad
+
+	setLineCap "butt
+	jumpTo :center
+	setPenSize 0
+	setFillGradient :gradient
+	circle :thickness
+	setPenSize :thickness
+	setPenGradient :gradient
+	setLineJoinStyle "miter
+	setFillColor transparent
+	setHeading :oldHeading
+	jumpLeft :innerRadius * :height
+	localmake "startPos pos
+	arcLines :arcs1 :height
+	localmake "len1 distanceToCircle :center :outerRadius
+	queue2 "arcs1 [:len1 / :height]
+	forward :len1
+	localmake "endHeading1 heading
+	jumpTo :startPos
+	setHeading :oldHeading + 180
+	arcLines :arcs1 -:height
+	localmake "endPos pos
+	localmake "endHeading heading
+
+	jumpBackward :outerRadius - :midRadius
+	setHeading (towards :center) - 90
+	arcRight 251 :midRadius
+	jumpRight penSize / 2
+	setHeading :endHeading1
+	setPenSize 0
+	setFillGradient :gradient
+	polyStart
+	jumpForward distanceToCircle :center :midRadius + :thickness / 2
+	setHeading (towards :center) + 90
+	arcLeft 10 :midRadius + :thickness / 2
+	polyEnd
+
+	jumpTo :endPos
+	setHeading :endHeading
+	jumpBackward :thickness / 2
+	jumpRight :thickness / 2
+	polyStart
+	jumpForward distanceToCircle :center :height / 2
+	setHeading (towards :center) + 90
+	arcLeft 353 :height / 2
+	setHeading :endHeading + 180
+	jumpForward distanceToCircle :center :height / 2 - :thickness
+	setHeading (towards :center) - 90
+	arcRight 340 :height / 2 - :thickness
+	polyEnd
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+computerClanLogo 100
