@@ -1,0 +1,77 @@
+to drawArms :armLength1
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "armLines [
+		[-49 0] [1] [88 0] [0.768] [30 0] [0.2]
+	]
+	arcLines :armLines :armLength1
+	jumpTo :oldPos
+	setHeading :oldHeading
+	arcLines :armLines -:armLength1
+
+	setTurtleState :oldState
+end
+
+to drawLegs :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "footLen1 :height * 0.133
+	localmake "footLen2 :height * 0.045
+	right 180
+	forward :height * 0.45
+	right 6
+	forward :height * 0.41
+	left 10
+	jumpForward :footLen1 / 2
+	ellipse :footLen2 / 2 :footLen1 / 2
+
+	jumpTo :oldPos
+	setHeading :oldHeading + 154
+	forward :height * 0.33
+	right 55
+	forward :height * 0.25
+	left 45
+	jumpForward :footLen1 / 2
+	ellipse :footLen2 / 2 :footLen1 / 2
+	
+	setTurtleState :oldState
+end
+
+; Inspird by a figure in a book called
+; Terrapin Logo 3.0 For Apple II
+; The book was published in 1983.
+; The figure is on page G-36.
+;
+; You can find a digital version of the book and page at:
+; https://archive.org/details/TerrapinLogo3.0ForAppleII/page/n77/mode/2up
+to stickDancer :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "skirtRadius :height * 0.21
+	localmake "numSkirtLines 12
+	localmake "headHeight :height * 0.17
+	localmake "headWidth :height * 0.12
+	jumpForward :height * 0.53
+	setPenColor "green
+	setLineCap "round
+	setLineJoinStyle "round
+	setPenSize :height * 0.008
+	localmake "center pos
+	drawLegs :height * 0.53
+	repeat :numSkirtLines [
+		setHeading :oldHeading + 90 * mix 3 1 repRatio
+		forward :skirtRadius
+		jumpTo :center
+	]
+	setHeading :oldHeading
+	forward :height * 0.16
+	drawArms :height * 0.231
+	forward :height * 0.09
+	jumpForward :headHeight / 2
+	ellipse :headWidth / 2 :headHeight / 2
+	setTurtleState :oldState
+end
+
+stickDancer 100

@@ -1,0 +1,60 @@
+to drawS :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "angle1 66
+	jumpForward :height / 2
+	localmake "center pos
+	setLineCap "butt
+	setPenSize :height * 0.15
+	repeat 2 [
+		arcLines [
+			[:angle1 0] [0.13] [-:angle1 0.13]
+			[0.16] [-90 0.1] [0.155] [-90 0.13]
+			[0.07]
+		] :height		
+		setHeading :oldHeading + repcount * 180
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+to drawC :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading	
+	jumpForward :height / 2
+	jumpLeft :height * 0.2
+	localmake "startPos pos
+	setLineCap "butt
+	setPenSize :height * 0.15
+	repeat 2 [
+		localmake "sign sign repcount - 1.5
+		arcLines [
+			[0.32] [-90 0.1] [0.18] [-90 0.1] [0.1]
+		] -:height * :sign
+		setHeading :oldHeading + repcount * 180
+		jumpTo :startPos
+	]
+	setTurtleState :oldState
+end
+
+; Inspired by logo at:
+; https://www.youtube.com/@SourceCompiler
+to sourceCompilerLogo :height
+	localmake "oldState turtleState
+	localmake "fontHeight :height * 0.4
+	localmake "squareSize :height * 0.623
+	jumpForward :height / 2
+	setFillColor transparent
+	setPenColor "#0ff6ff
+	setPenSize :height * 0.01
+	roundRect :squareSize :squareSize :height * 0.04
+	jumpBackward :fontHeight / 2
+	jumpLeft :height * 0.12
+	drawS :fontHeight
+	jumpRight :height * 0.25
+	drawC :fontHeight
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+sourceCompilerLogo 100

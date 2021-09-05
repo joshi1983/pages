@@ -1,0 +1,83 @@
+; This animation was inspired by a program for the 
+; TRS-80 pocket computer.
+; It shows someone could put multiple lines together
+; to imagine a Christmas Tree.
+
+make "lines [
+'MERRY CHRISTMAS'
+'   AND'
+'HAPPY NEW YEAR'
+'    *   (TREE)'
+'   ***'
+'  *****'
+' *******'
+'    *   (TRUNK)'
+'   ***  (STAND)'
+]
+
+to drawScreen :height :time
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "lineHeight :height * 0.15
+	localmake "lineHeight2 :lineHeight * 1.05
+	localmake "width :height * 1.58
+	localmake "offsetY :height * 0.57
+	localmake "numVisibleLines :time * 9
+	localmake "numVisibleLinesInt ceiling :numVisibleLines
+	localmake "ratio1 clamp 1 + :numVisibleLinesInt - :numVisibleLines 0 1
+	jumpForward :offsetY + :lineHeight2 * (:numVisibleLinesInt + :ratio1 - 1)
+	jumpLeft :height * 0.285
+	setPenSize 0
+	localmake "startPos pos
+	setFontSize :lineHeight * 0.7
+	setFontFamily "monospace
+	repeat :numVisibleLinesInt [
+		localmake "blendRatio 1
+		if repcount = :numVisibleLinesInt [
+			localmake "ratio1 1 + :numVisibleLines - :numVisibleLinesInt
+			localmake "blendRatio interpolateRatio easeInOut clamp :ratio1 * 2 0 1
+		]
+		localmake "blendRatio :blendRatio * (0.2 + repcount / (:numVisibleLinesInt + 5))
+		setFillColor mix "#ef0 transparent clamp :blendRatio 0 1
+		setHeading :oldHeading
+		jumpTo :startPos
+		jumpBackward (:lineHeight2) * repcount
+		roundRect :width :lineHeight :height * 0.035
+		localmake "line item repcount :lines
+		setFillColor "black
+		jumpLeft :width * 0.45
+		right 90
+		jumpRight :lineHeight * 0.2
+		label :line
+	]
+	setTurtleState :oldState
+end
+
+make "time animation.clampedTimeRatio
+setScreenColor mix "black "#6a96b0 interpolateRatio easeInOut clamp :time * 5 0 1
+make "time clamp :time * 1.15 0 1
+jumpBackward :time * 80
+drawScreen 100 :time
+
+to animation.snapshotstyle
+	output createPList2 [
+		["position.y 35]
+		["position.x -20]
+		["zoom.scale 3]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 9 * 0.86
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+		["thumbnailTime 6]
+	]
+end
+make "height 165
+jumpBackward :height * 0.13
+make "ratio 1 - clamp :time * 5 0 1
+make "height 100
+imageAlpha :height * 543 / 220 :height 'weblogo://logo-scripts/images/trs-80-pocket-computer.png' :ratio

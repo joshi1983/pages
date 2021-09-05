@@ -1,0 +1,46 @@
+; Inspired by logo at:
+; https://www.youtube.com/@ApexSpaceflight
+to apexSpaceflightLogo :height
+	localmake "oldState turtleState
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "thickness :height * 0.136
+	localmake "angle 28.6
+	localmake "letterWidth :height * 0.66
+	localmake "letterSideLength :letterWidth / 2 / sin :angle
+	localmake "innerLength :letterSideLength - :thickness * ((tan 90 - 2 * :angle) + tan :angle)
+	localmake "innerLengthRatio :innerLength / :height
+	localmake "baseThicknessRatio :thickness / :height / cos :angle
+	localmake "topThicknessRatio :thickness / :height / cos 90 - :angle * 2
+	localmake "capWidthRatio 0.032
+	localmake "topThicknessRatio2 :topThicknessRatio - :capWidthRatio / 2 / sin :angle
+	localmake "colorStops createPList2 [
+		[0 "#101920] [1 "#003060]
+	]
+	jumpForward :height
+	setPenGradient createLinearGradient :oldPos pos :colorStops "pad
+	setLineCap "butt
+	setPenSize :height
+	backward :height
+	setPenSize 0
+	setFillColor "white
+	jumpForward :height * 0.206
+	localmake "letterBase pos
+	jumpRight :letterWidth / 2
+	polyStart
+	arcLines [[90 0] [:baseThicknessRatio] [:angle - 90 0] [:innerLengthRatio]
+	[-:angle * 2 0] [:topThicknessRatio2] [:angle - 90 0] [:capWidthRatio]] :height
+	polyEnd
+
+	jumpTo :letterBase
+	setHeading :oldHeading
+	jumpLeft :letterWidth / 2
+	polyStart
+	arcLines [[-90 0] [:baseThicknessRatio] [90 - :angle 0] [0.265]
+	[:angle * 2 0] [:topThicknessRatio]] :height
+	polyEnd
+	setTurtleState :oldState
+end
+
+setScreenColor "black
+apexSpaceflightLogo 100

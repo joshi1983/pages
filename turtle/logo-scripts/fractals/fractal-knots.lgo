@@ -1,0 +1,134 @@
+make "knotShapes [
+	[-0.41 0 [[3 0] [-40 0.52] [-34.5 0.27] [86 0] [0.053]
+	[95 0] [45 0.37] [25.02 0.7]]]
+
+	[-0.118 0.492 [[-89 0] [-45 0.18] [-24.5 0.26] [-64 0]
+	[-34 0.09] [-92 0] [50 0.155] [31 0.1]]]
+
+	[0.02 0.247 [[-87 0] [27 0.13] [-130 0] [-40 0.22]
+	[-30 0.38] [-26 0.49] [-77 0] [-8.5 0.3] [-92 0]
+	[30 0.5] [45 0.24]]]
+
+	[-0.475 0.086 [[-14 0.2] [82 0] [-24.55 0.673] [91.2 0]
+	[0.0411] [88.5 0] [24 0.76]]]
+
+	[-0.265 0.734 [[-135 0] [-30 0.49] [0.126] [27 0.11] [-66 0]
+	[35 0.1] [-140 0] [-37 0.2] [0.125] [32 0.4]]]
+
+	[-0.012 0.258 [[10 0] [-14 0.2] [-90 0] [25 0.15] [30 0.07] [33.7 0.17]
+	[-85 0] [-14 0.2] [-86 0] [-20 0.3] [-50 0.13]]]
+
+	[0.183 0.5 [[-11 0] [-35.2 0.39] [90 0] [0.04] [92 0] [29.5 0.52]]]
+
+	[0.412 0 [[3.2 0.9] [-75 0] [0.06] [-105 0] [-4.97 0.8]]]
+
+	[0.455 0.14 [[10 0] [25 0.53] [20 0.4] [30 0.23] [34 0.25]
+	[110 0] [-18 0.15] [92 0] [-40 0.13] [-40 0.25] [-35 0.45]]]
+
+	[-0.038 0.18 [[37 0] [-73 0.19] [-95 0] [-14 0.2] [-64 0] [58 0.16]]]
+
+	[0.01 0.123 [[-125 0] [50 0.455] [32.8 0.72] [90 0] [0.039] [88 0]
+	[-35 0.69] [-44 0.405]]]
+]
+
+to drawBranches :branchesData :cutoff
+	localmake "oldState turtleState
+	repeat count :branchesData [
+		localmake "branchInfo item repcount :branchesData
+		localmake "height first :branchInfo
+		localmake "opacity 1
+		localmake "ratio (:height - :cutoff) / :cutoff
+		if :ratio < 1 [
+			localmake "opacity :ratio ;/ cos 45
+		]
+		jumpTo item 2 :branchInfo
+		setHeading last :branchInfo
+		setFillColor mix "#fffada transparent :opacity
+		localmake "width :height * 2
+		setPenSize 0
+		isoTriangle :width :height
+		setFillColor mix "black transparent :opacity
+		drawArcLineShapes :knotShapes :height
+		setFillColor transparent
+		setPenSize :height * 0.005
+		setPenColor mix "#8a7709 transparent :opacity
+		isoTriangle :width :height
+	]
+	setTurtleState :oldState
+end
+
+to getBranches :height :cutoffHeight :direction :results
+	if :height < :cutoffHeight [
+		stop
+	]
+	if 4 = abs :direction [
+		stop
+	]
+	localmake "oldState turtleState
+	localmake "width :height * 2
+	localmake "newWidth :width * cos 45
+	localmake "newHeight :height * cos 45
+
+	queue2 "results [:height pos heading]
+
+	jumpForward :height
+	localmake "top pos
+	right 45
+	jumpRight :newWidth / 2
+	getBranches :newHeight :cutoffHeight :direction + 1 :results
+	jumpTo :top
+	jumpBackward :newWidth / 2
+	left 90
+	getBranches :newHeight :cutoffHeight :direction - 1 :results
+	setTurtleState :oldState
+end
+
+to firstLessOrEqual? :branch1 :branch2
+	output (first :branch1) <= (first :branch2)
+end
+
+; Inspired by an image from a paper titled: 
+; Fractal Tilings Based on Dissections of Polyominoes
+; by Robert W. Fathauer
+; Tessellations Company
+; 3913 E. Bronco Trail
+; Phoenix, AZ 85044, USA
+; E-mail: tessellations@cox.net
+; The paper was found at:
+; https://archive.bridgesmathart.org/2006/bridges2006-293.pdf
+to fractalKnots :height :timeRatio
+	localmake "oldState turtleState
+	localmake "startSizeRatio 0.253
+	localmake "startSize :height * 0.253
+	localmake "cutoff :height * mix 0.004 :startSizeRatio :timeRatio
+	jumpForward :height / 2
+	left 90
+	localmake "branchesData []
+	repeat 2 [
+		getBranches :startSize :cutoff 0 :branchesData
+		right 180
+	]
+	localmake "branchesData (sort :branchesData "firstLessOrEqual?) 
+	drawBranches :branchesData :cutoff
+	setTurtleState :oldState
+end
+
+make "timeRatio interpolateRatio easeOutCirc animation.clampedTimeRatio
+fractalKnots 100 :timeRatio
+
+to animation.snapshotstyle
+	output createPList2 [
+		["position.y 50]
+		["zoom.scale 7]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 5
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+		["thumbnailTime 4]
+	]
+end

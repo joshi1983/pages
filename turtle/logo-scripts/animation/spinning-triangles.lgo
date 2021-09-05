@@ -1,0 +1,50 @@
+; Inspired by:
+; https://ca.pinterest.com/pin/139189444711096603
+; That indicates the name Clayton Shonkwinkler.
+;
+; That name almost matches an associate professor from
+; Colorado State University
+; who has some other drawings/animations at:
+; https://www.math.colostate.edu/~clayton/art/
+; It is likely the same artist but I didn't confirm and 
+; the spelling of the last name is a little different.
+to spinningTriangle :height :timeRatio
+	localmake "oldState turtleState
+	localmake "gap :height * 0.4
+	localmake "maxNumTriangles 200
+	localmake "numTriangles :maxNumTriangles * :timeRatio
+	jumpForward :height * 0.4855
+	right 90
+	localmake "heading1 heading
+	localmake "center pos
+	setFillColor transparent
+	setPenSize :height * 0.003
+	setLineJoinStyle "miter
+	repeat :numTriangles [
+		setHeading :heading1 - 360 * repcount / :maxNumTriangles
+		jumpForward :gap
+		left 30 + 360 * repcount / :maxNumTriangles
+		regularPolygon :height * 0.1115 3
+		jumpTo :center
+	]
+	setTurtleState :oldState
+end
+
+spinningTriangle 100 animation.timeRatio
+
+to animation.snapshotstyle
+	output createPList2 [
+		["position.y 50]
+		["zoom.scale 6]
+	]
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 5
+	; Edit this if you want to change the length of your animation.
+	output createPList2 [
+		["duration :minutes * 60 + :seconds]
+		["thumbnailTime 3]
+	]
+end

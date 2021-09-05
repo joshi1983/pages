@@ -1,0 +1,41 @@
+make "circaRed "#ba2241
+
+; Inspired by logo at:
+; https://www.cira.ca
+to ciraLogo :height :backgroundColor :foregroundColor
+	localmake "oldState turtleState
+	localmake "outerArcRadius :height * 0.396
+	localmake "separation :height * 0.33
+	localmake "radius :height * 0.072
+	jumpForward :height / 2
+	setPenSize 0
+	setFillColor :backgroundColor
+	roundRect :height :height :outerArcRadius
+	jumpRight :separation / 2
+	jumpBackward :separation / 2
+	setPenSize :height * 0.07
+	left 90
+	setPenColor :foregroundColor
+	setFillColor :foregroundColor
+	repeat 3 [
+		circle :radius
+		forward :separation
+		right 90
+	]	
+	circle :radius
+	setTurtleState :oldState
+end
+
+to circaDarkBackgroundLogo :height
+	localmake "oldState turtleState
+	stripes :height * 3 :height [:circaRed]
+	ciraLogo :height "white :circaRed
+	setTurtleState :oldState
+end
+
+make "height 100
+make "separation :height * 5
+jumpLeft :separation / 2
+ciraLogo :height :circaRed "white
+jumpRight :separation
+circaDarkBackgroundLogo :height

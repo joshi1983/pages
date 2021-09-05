@@ -1,0 +1,86 @@
+to outlineCircle :radius :thickness
+	localmake "oldState turtleState
+	setFillColor transparent
+	setPenSize :thickness
+	circle :radius
+	setTurtleState :oldState
+end
+
+to outlinedCircle :radius1 :radius2 :outlineThickness
+	localmake "oldState turtleState
+	circle :radius1
+	outlineCircle :radius2 :outlineThickness
+	setTurtleState :oldState
+end
+
+; Inspired by
+; https://www.pinterest.ca/pin/428967933272321296/
+; I guess the original designer is an alien.
+to wiltshire2003CropCircles :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "cutColor penColor
+	localmake "outerThickness :height * 0.038
+	localmake "outlineThickness :height * 0.001
+	localmake "outlineRadius (:height - :outerThickness) / 2
+	localmake "outerCirclesRadius :height * 0.065
+	localmake "outerCircleDistance :outlineRadius - :outerThickness / 2 - :outerCirclesRadius
+	localmake "lineThickness :height * 0.01
+	localmake "middleRadius1 :height * 0.035
+	localmake "hexagonSize1 :height * 0.27
+	localmake "hexagonSize2 :hexagonSize1 * sin 180 / 6
+	localmake "innerRadius :height * 0.07
+	localmake "innerCircleDistance :height * 0.12
+	localmake "outlineRadius1 :outerCircleDistance + :outerCirclesRadius
+		- :hexagonSize1 - :outlineThickness / 2
+	localmake "middleRadius2 :hexagonSize2 / 2
+	setPenColor :cutColor
+	setPenSize :outerThickness
+	setFillColor transparent
+	jumpForward :height / 2
+	localmake "center pos
+	circle :outlineRadius
+	setFillColor :cutColor
+	right 180 / 6
+	repeat 6 [
+		setHeading :oldHeading + (repcount + 0.5) * 360 / 6
+		jumpForward :innerCircleDistance
+		setPenSize 0
+		circle :innerRadius
+		setPenSize :lineThickness
+		forward :outerCircleDistance - :innerCircleDistance
+		setPenSize 0
+		circle :outerCirclesRadius
+		jumpBackward :outerCircleDistance - :hexagonSize1
+		outlinedCircle :middleRadius1 :middleRadius2 :outlineThickness
+		outlineCircle :outlineRadius1 :outlineThickness
+		right 180 / 6
+		jumpRight :hexagonSize2
+		outlinedCircle :middleRadius1 :middleRadius2 :outlineThickness
+
+		jumpTo :center
+	]
+	setPenSize :lineThickness
+	setFillColor transparent
+	left 180 / 6
+	regularPolygon :hexagonSize1 6
+
+	setFillColor :cutColor
+	circle :innerRadius
+
+	setPenSize :outlineThickness
+	setPenColor screenColor
+	setFillColor transparent
+	repeat 6 [
+		setHeading :oldHeading + (repcount + 0.5) * 360 / 6
+		jumpForward :innerCircleDistance
+		circle :innerRadius
+		jumpTo :center
+	]
+
+	setTurtleState :oldState
+end
+
+setScreenColor "#786332
+setPenColor "#FFEF9E
+wiltshire2003CropCircles 100

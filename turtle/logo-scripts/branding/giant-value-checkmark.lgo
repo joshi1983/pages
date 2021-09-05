@@ -1,0 +1,30 @@
+; Inspired by a logo at:
+; https://www.gianttiger.com/collections/brand-giant-value
+; The checkmark is used by Giant Tiger, a Canadian store.
+to giantValueCheckmark :height
+	localmake "oldState turtleState
+	localmake "radius :height / 2
+	setPenSize 0
+	setFillColor "#e80028
+	jumpForward :height / 2
+	circle :radius
+	localmake "center pos
+	right 39
+	jumpForward :radius
+	localmake "pos1 pos
+	setFillColor "white
+	polyStart
+	arcLines [[170 0] [29 1.49] [-150 0] [37 0.5] [81 0]] :height
+	jumpForward distanceToCircle :center :radius
+	arcLines [[120 0] [-28 1] [113 0] [-18 1.7] [-5 1.3]] :height
+	localmake "arcRadius :height * 0.5
+	localmake "arcAngle getArcRightAngleToCircle :arcRadius :center :radius
+	arcRight :arcAngle :arcRadius
+	localmake "arcAngle 2 * arcSin (distance :pos1) / 2 / :radius
+	setHeading (towards :pos1) + :arcAngle / 2
+	arcLeft :arcAngle :radius
+	polyEnd
+	setTurtleState :oldState
+end
+
+giantValueCheckmark 100
