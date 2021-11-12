@@ -457,7 +457,8 @@ $(function() {
     function onMouseUp() {
         isMouseDown = false;
     }
-   
+
+    $('#ok-button').click(okClicked);
     $('.wire').click(wireClicked);
     $('.filled').click(filledClicked);
     $('.help').click(helpClicked);
