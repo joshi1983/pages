@@ -4,6 +4,7 @@ import { CommandBoxMessages } from './CommandBoxMessages.js';
 import { CommandBoxParseLogger } from '../parsing/loggers/CommandBoxParseLogger.js';
 import { compile } from '../parsing/compile.js';
 import { compositeAction } from './command-input/compositeAction.js';
+import { highlightLogoSyntaxInTextarea } from './syntax-highlighter/highlightLogoSyntaxInTextarea.js';
 import { Keys } from './Keys.js';
 import { fixCode } from './code-editor/code-fixer/fixCode.js';
 import { LogoParser } from '../parsing/LogoParser.js';
@@ -50,6 +51,8 @@ input.addEventListener('keydown', function(event) {
 		tryRunCode();
 	}
 });
+
+highlightLogoSyntaxInTextarea(input);
 
 runButton.addEventListener('click', tryRunCode);
 
