@@ -1,4 +1,5 @@
 import { AlphaColour } from '../../../AlphaColour.js';
+import { EllipseShape } from '../../vector/shapes/EllipseShape.js';
 import { PathShape } from '../../vector/shapes/PathShape.js';
 import { TextShape } from '../../vector/shapes/TextShape.js';
 import { Vector } from '../../vector/Vector.js';
@@ -33,6 +34,8 @@ function isDrawableShapeType(shape) {
 function isRotated(shape) {
 	if (shape instanceof TextShape)
 		return false; // No problem rotating TextShape.
+	if (shape instanceof EllipseShape)
+		return false;
 	if (shape.rotationRadians === undefined)
 		return false;
 	return shape.rotationRadians !== 0 &&
