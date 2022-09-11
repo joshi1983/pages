@@ -1,4 +1,8 @@
+import { CircleShape } from '../vector/shapes/CircleShape.js';
 import { Colour } from '../../Colour.js';
+import { createJSPDFRotationMatrix } from './pdf/createJSPDFRotationMatrix.js';
+import { createJSPDFTranslationMatrix } from './pdf/createJSPDFTranslationMatrix.js';
+import { getBestOrientation } from './pdf/getBestOrientation.js';
 import { getJSPDFOptions } from './pdf/getJSPDFOptions.js';
 import { getJSPDFStyle } from './pdf/getJSPDFStyle.js';
 import { getTextRenderMode } from './pdf/getTextRenderMode.js';
@@ -9,8 +13,10 @@ import { lineJoinStyleToJSPDFJoin } from './pdf/lineJoinStyleToJSPDFJoin.js';
 import { MathCommands } from '../../command-groups/MathCommands.js';
 import { pathToJSPDFLines } from './pdf/pathToJSPDFLines.js';
 import { setFont } from './pdf/setFont.js';
+import { ShapeStyle } from '../vector/shapes/style/ShapeStyle.js';
 import { Transparent } from '../../Transparent.js';
 import { Vector2D } from '../vector/Vector2D.js';
+import { Vector3D } from '../vector/Vector3D.js';
 import { Vector2DDrawer } from '../vector/Vector2DDrawer.js';
 await Colour.asyncInit();
 
@@ -66,10 +72,38 @@ export class PDFDrawer extends Vector2DDrawer {
 	}
 
 	drawEllipse(ellipse) {
+		const circleStyle = new ShapeStyle();
+		circleStyle.setPenWidth(0.02);
+		this.drawCircle(new CircleShape(ellipse.position, 0.1, circleStyle));
+		this.drawCircle(new CircleShape(ellipse.position, ellipse.radius1, circleStyle));
+		this.drawCircle(new CircleShape(ellipse.position, ellipse.radius2, circleStyle));
+		circleStyle.setPenColor(new Colour('red'));
+		this.drawCircle(new CircleShape(ellipse.position, Math.hypot(this.width * 0.5, this.height *0.5), circleStyle));
 		this.updateStrokeStyle(ellipse.style);
 		this.updateFillStyle(ellipse.style);
-		const p = this.transformPoint(ellipse.position);
-		this.doc.ellipse(p.getX(), p.getY(), ellipse.radius1, ellipse.radius2, getJSPDFStyle(ellipse.style));
+		const angle = ellipse.rotationRadians;
+		const oppositeRotation = createJSPDFRotationMatrix(this.doc.Matrix, -angle);
+		console.log('angle = ' + angle + ', rotation = ' + oppositeRotation.rotation);
+		let p2 = ellipse.position.getXYVector();
+		p2.setY(-p2.getY());
+		p2 = p2.plus(new Vector2D(this.width*0.5, this.height * 0.5));
+
+		const rotatedP2 = oppositeRotation.applyToPoint({'x': p2.getX(), 'y': p2.getY()});
+		p2 = new Vector2D(rotatedP2.x, rotatedP2.y);//.plus(new Vector2D(this.width*0.5, this.height *0.5));
+		console.log('p2 = ' + p2);
+		const matrices = [
+			createJSPDFRotationMatrix(this.doc.Matrix, angle)//,
+			//createJSPDFTranslationMatrix(this.doc.Matrix, p2)
+		];
+		matrices.forEach(m => this.doc.setCurrentTransformationMatrix(m));
+		//	const p2 = Vector2D.rotate(p, ellipse.rotationRadians);
+		//p2 = ellipse.position;
+		this.doc.setLineWidth(0.03);
+		this.doc.line(p2.getX() - 15, p2.getY(), p2.getX() + 15, p2.getY());
+		this.doc.line(p2.getX(), p2.getY() - 15, p2.getX(), p2.getY() + 15);
+		this.doc.setLineWidth(0.1);
+		this.doc.ellipse(p2.getX(), p2.getY(), ellipse.radius1, ellipse.radius2, getJSPDFStyle(ellipse.style));
+		matrices.reverse().forEach(m => this.doc.setCurrentTransformationMatrix(m.inversed()));
 	}
 
 	drawLine(line) {
@@ -111,6 +145,7 @@ export class PDFDrawer extends Vector2DDrawer {
 		if (this.doc === undefined)
 			this.clear();
 		else {
+			// Change page dimensions without removing all the current shapes.
 			const mediaBox = this.doc.getCurrentPageInfo().pageContext.mediaBox;
 			mediaBox.topRightX = width * 72;
 			mediaBox.topRightY = height * 72;
