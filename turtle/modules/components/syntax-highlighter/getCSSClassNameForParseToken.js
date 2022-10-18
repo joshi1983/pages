@@ -12,7 +12,7 @@ typeToClassName[ParseTreeTokenType.PROCEDURE_START_KEYWORD] = 'keyword';
 typeToClassName[ParseTreeTokenType.UNARY_OPERATOR] = 'unary-operator';
 typeToClassName[ParseTreeTokenType.NEW_LINE] = null; // indicate not to set a class
 
-const valMap = {
+export const valMap = {
 	'[': 'square-bracket',
 	']': 'square-bracket',
 	'(': 'curved-bracket',

@@ -39,7 +39,7 @@ export class StringUtils {
 	static getLengthOfEqualEnding(s1, s2, minIndex1) {
 		if (minIndex1 === undefined)
 			minIndex1 = 0;
-		const len = Math.min(s1.length, s2.length, s1.length - minIndex1);
+		const len = Math.min(s1.length, s2.length, s1.length - minIndex1, s2.length - minIndex1);
 		for (let i = 1; i <= len; i++) {
 			if (s1[s1.length - i] !== s2[s2.length - i])
 				return i - 1;

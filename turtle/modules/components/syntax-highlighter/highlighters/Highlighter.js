@@ -48,6 +48,12 @@ export class Highlighter {
 		return parseInt(lineGroupID.substring(index + 1));
 	}
 
+	static isLineGroup(lineGroup) {
+		return lineGroup.tagName === 'SPAN' && lineGroup.classList.length === 0 &&
+			lineGroup.hasAttribute('id') &&
+			lineGroup.getAttribute('id').indexOf('-highlighter-lines-from-') !== -1;
+	}
+
 	// removeLineGroups also removes the innerText corresponding with the line groups.
 	static removeLineGroups(container, startLineIndex, innerTextLengthToRemove, linesPerGroup) {
 		if (linesPerGroup === undefined)

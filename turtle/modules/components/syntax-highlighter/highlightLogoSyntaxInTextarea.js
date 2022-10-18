@@ -4,7 +4,9 @@ import { codeToElement } from './codeToElement.js';
 import { codeToHTML } from './codeToHTML.js';
 import { Highlighter } from './highlighters/Highlighter.js';
 import { ParseTreeToken } from '../../parsing/ParseTreeToken.js';
+import { parseTreeToProcNameSet } from './parseTreeToProcNameSet.js';
 import { RateLimiter } from '../../RateLimiter.js';
+import { setInnerTextSyntaxHighlighted } from './setInnerTextSyntaxHighlighted.js';
 import { textareaContextMenu } from './textareaContextMenu.js';
 
 var syntaxhighlighterCount = 0;
@@ -17,6 +19,7 @@ export function highlightLogoSyntaxInTextarea(textarea, context) {
 	const preInfo = codeToElement(textarea.value, undefined, undefined, id);
 	const pre = preInfo.element;
 	let tree = preInfo.tree;
+	let procNameSet = undefined;
 	let allTokens = ParseTreeToken.flatten(tree);
 	const div = document.createElement('div');
 	const parent = textarea.parentNode;
@@ -32,6 +35,11 @@ export function highlightLogoSyntaxInTextarea(textarea, context) {
 	parent.replaceChild(div, textarea);
 	div.appendChild(textarea);
 	var latestValue = textarea.value + ' ';
+	var latestValueQuick = latestValue;
+
+	function refreshProcNameSet() {
+		procNameSet = parseTreeToProcNameSet(tree);
+	}
 
 	function refreshTextareaWidth() {
 		const preBox = pre.getBoundingClientRect();
@@ -42,6 +50,7 @@ export function highlightLogoSyntaxInTextarea(textarea, context) {
 	function refreshPre() {
 		const newValue = textarea.value;
 		if (newValue !== latestValue) {
+			console.log('refreshPre processing change');
 			const htmlInfo = codeToHTML(newValue, undefined, undefined, id);
 			if (htmlInfo === undefined)
 				pre.innerText = newValue;
@@ -49,14 +58,28 @@ export function highlightLogoSyntaxInTextarea(textarea, context) {
 				pre.innerHTML = htmlInfo.html;
 				Highlighter.process(pre);
 				tree = htmlInfo.tree;
+				procNameSet = undefined;
 				allTokens = ParseTreeToken.flatten(tree);
 			}
 			latestValue = newValue;
+			latestValueQuick = newValue;
+			refreshTextareaWidth();
+		}
+	}
+	function refreshPreQuick() {
+		const newValue = textarea.value;
+		if (newValue !== latestValue && newValue !== latestValueQuick) {
+			if (procNameSet === undefined)
+				refreshProcNameSet();
+			console.log('refreshPreQuick processing change');
+			setInnerTextSyntaxHighlighted(newValue, pre, procNameSet);
+			latestValueQuick = newValue;
 			refreshTextareaWidth();
 		}
 	}
 	function refreshPreTimeout() {
-		RateLimiter.run(id, refreshPre, 50); // give it time for the textarea's value to change.
+		RateLimiter.run(id + '-quick', refreshPreQuick, 20); // give it time for the textarea's value to change.
+		RateLimiter.run(id, refreshPre, 500);
 	}
 	['change', 'cut', 'keyup', 'paste', 'propertychange'].forEach(function(key) {
 		textarea.addEventListener(key, refreshPreTimeout);

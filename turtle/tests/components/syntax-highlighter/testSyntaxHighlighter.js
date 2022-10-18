@@ -9,7 +9,9 @@ import { testGetURLMatches } from './testGetURLMatches.js';
 import { testHighlightLogoSyntaxInCodeElement } from './testHighlightLogoSyntaxInCodeElement.js';
 import { testHighlightLogoSyntaxInTextarea } from './testHighlightLogoSyntaxInTextarea.js';
 import { testHighlighters } from './highlighters/testHighlighters.js';
-import { testMoveChangesToDOM } from './testMoveChangesToDOM.js';
+import { testInnerText } from './inner-text/testInnerText.js';
+import { testSetInnerTextSyntaxHighlighted } from './testSetInnerTextSyntaxHighlighted.js';
+import { testSetInnerTextSyntaxHighlightedWithCodeToHTML } from './testSetInnerTextSyntaxHighlightedWithCodeToHTML.js';
 
 export function testSyntaxHighlighter(logger) {
 	testCodeToElement(prefixWrapper('testCodeToElement', logger));
@@ -22,5 +24,7 @@ export function testSyntaxHighlighter(logger) {
 	testHighlightLogoSyntaxInCodeElement(prefixWrapper('testHighlightLogoSyntaxInCodeElement', logger));
 	testHighlightLogoSyntaxInTextarea(prefixWrapper('testHighlightLogoSyntaxInTextarea', logger));
 	testHighlighters(prefixWrapper('testHighlighters', logger));
-	testMoveChangesToDOM(prefixWrapper('testMoveChangesToDOM', logger));
+	testInnerText(prefixWrapper('testInnerText', logger));
+	testSetInnerTextSyntaxHighlighted(prefixWrapper('testSetInnerTextSyntaxHighlighted', logger));
+	testSetInnerTextSyntaxHighlightedWithCodeToHTML(prefixWrapper('testSetInnerTextSyntaxHighlightedWithCodeToHTML', logger));
 };

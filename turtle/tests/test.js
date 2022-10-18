@@ -1,6 +1,6 @@
-import { bindDocumentFocusTests } from './bindDocumentFocusTests.js';
+//import { bindDocumentFocusTests } from './bindDocumentFocusTests.js';
 import { prefixWrapper } from './helpers/prefixWrapper.js';
-import { testAlphaColour } from './testAlphaColour.js';
+/*import { testAlphaColour } from './testAlphaColour.js';
 import { testArrayUtils } from './testArrayUtils.js';
 import { testAssets } from './assets/testAssets.js';
 import { testBinarySearch } from './testBinarySearch.js';
@@ -20,7 +20,8 @@ import { testCommandsJSONHyperlinks } from './testCommandsJSONHyperlinks.js';
 import { testCommandsJSONLengthRangeInfo } from './testCommandsJSONLengthRangeInfo.js';
 import { testCommandsJSONOrderByPrimaryName } from './testCommandsJSONOrderByPrimaryName.js';
 import { testComponents } from './components/testComponents.js';
-import { testDeepEquality } from './testDeepEquality.js';
+*/import { testComponents } from './components/testComponents.js';
+/*import { testDeepEquality } from './testDeepEquality.js';
 import { testDebugging } from './debugging/testDebugging.js';
 import { testDelay } from './testDelay.js';
 import { testDrawing } from './drawing/testDrawing.js';
@@ -44,7 +45,7 @@ import { testStringUtils } from './testStringUtils.js';
 import { testTransparent } from './testTransparent.js';
 import { testUnsupportedCommandsJSON } from './testUnsupportedCommandsJSON.js';
 import { testValueToString } from './testValueToString.js';
-import { testValueWrapper } from './testValueWrapper.js';
+import { testValueWrapper } from './testValueWrapper.js';*/
 
 function replaceSpecialChars(msg) {
 	msg = msg.replace(/ /g, '&nbsp;');
@@ -69,7 +70,7 @@ function runTests() {
 		return prefixWrapper(prefix, log);
 	}
 
-	bindDocumentFocusTests(namedLog('documentFocusTests'));
+	/*bindDocumentFocusTests(namedLog('documentFocusTests'));
 	testAlphaColour(namedLog('testAlphaColour'));
 	testArrayUtils(namedLog('testArrayUtils'));
 	testAssets(namedLog('testAssets'));
@@ -89,8 +90,8 @@ function runTests() {
 	testCommandsJSONHyperlinks(namedLog("testCommandsJSONHyperlinks"));
 	testCommandsJSONLengthRangeInfo(namedLog("testCommandsJSONLengthRangeInfo"));
 	testCommandsJSONOrderByPrimaryName(namedLog("testCommandsJSONOrderByPrimaryName"));
-	testComponents(namedLog("testComponents"));
-	testDeepEquality(namedLog('testDeepEquality'));
+	*/testComponents(namedLog("testComponents"));
+	/*testDeepEquality(namedLog('testDeepEquality'));
 	testDebugging(namedLog('testDebugging'));
 	testDelay(namedLog('testDelay'));
 	testDrawing(namedLog('testDrawing'));
@@ -114,7 +115,7 @@ function runTests() {
 	testTransparent(namedLog('testTransparent'));
 	testUnsupportedCommandsJSON(namedLog('testUnsupportedCommandsJSON'));
 	testValueToString(namedLog('testValueToString'));
-	testValueWrapper(namedLog('testValueWrapper'));
+	testValueWrapper(namedLog('testValueWrapper'));*/
 	log('All synchronous tests are complete.');
 }
 

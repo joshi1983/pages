@@ -77,6 +77,28 @@ function testRemoveLineGroups(logger) {
 	});
 }
 
+function testRemoveLineGroupsUsingHTML(logger) {
+	const cases = [
+		{
+			'inHTML': '<span id="set-inner-text-test-highlighter-lines-from-0">fd 4</span>',
+			'startLineIndex': 0,
+			'innerTextLengthToRemove': 1,
+			'outHTML': '<span id="set-inner-text-test-highlighter-lines-from-0">fd 4</span>',
+			'result': false
+		}
+	];
+	const numLinesPerGroup = 10;
+	cases.forEach(function(caseInfo, index) {
+		const plogger = prefixWrapper(`Case ${index}`, logger);
+		const container = document.createElement('pre');
+		container.setAttribute('id', 'test-container-id');
+		container.innerHTML = caseInfo.inHTML;
+		const result = Highlighter.removeLineGroups(container, caseInfo.startLineIndex, caseInfo.innerTextLengthToRemove, numLinesPerGroup);
+		if (container.innerHTML !== caseInfo.outHTML)
+			plogger(`Expected HTML to become: "${caseInfo.outHTML}" but got "${container.innerHTML}"`);
+	});
+}
+
 function testUndoAddLinesToContainer(logger) {
 	const cases = [
 		'', 'hello world', 'hello <strong>w</strong>orld'
@@ -105,5 +127,6 @@ export function testHighlighter(logger) {
 	testGetLineNumberFromLineGroupID(prefixWrapper('testGetLineNumberFromLineGroupID', logger));
 	testProcess(prefixWrapper('testProcessAllLines', logger));
 	testRemoveLineGroups(prefixWrapper('testRemoveLineGroups', logger));
+	testRemoveLineGroupsUsingHTML(prefixWrapper('testRemoveLineGroupsUsingHTML', logger));
 	testUndoAddLinesToContainer(prefixWrapper('testUndoAddLinesToContainer', logger));
 };
