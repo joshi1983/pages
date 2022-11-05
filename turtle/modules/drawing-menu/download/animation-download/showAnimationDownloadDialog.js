@@ -48,15 +48,13 @@ function notifyProcessingFrame(frameIndex, totalFrames) {
 	progressBarElement.value = frameIndex * 100 / totalFrames;
 }
 
-function refreshDuration() {
+async function refreshDuration() {
 	if (Code.latestProgram === undefined) {
 		CommandBoxParseLogger.resetErrorCounter();
-		Code.refreshProgram(CommandBoxParseLogger);
+		await Code.refreshProgram(CommandBoxParseLogger);
 	}
-	return getAnimationSetup(Code.latestProgram).then(function(_durationSeconds) {
-		durationSeconds = _durationSeconds;
-		updateFrameCount();
-	});
+	durationSeconds = getAnimationSetup(Code.latestProgram);
+	updateFrameCount();
 }
 
 function downloadAnimationClicked() {

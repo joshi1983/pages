@@ -1,7 +1,9 @@
 import { BufferedParseLogger } from '../../parsing/loggers/BufferedParseLogger.js';
+import { Code } from './Code.js';
 import { CodeEditor } from '../CodeEditor.js';
 import { CommandBoxMessages } from '../CommandBoxMessages.js';
 import { CommandBoxParseLogger } from '../../parsing/loggers/CommandBoxParseLogger.js';
+import { convertObjectToParseTree } from '../../parsing/serialization/convertObjectToParseTree.js';
 import { fixCode } from './code-fixer/fixCode.js';
 import { getProceduresMap } from '../../parsing/parse-tree-analysis/getProceduresMap.js';
 import { LogoParser } from '../../parsing/LogoParser.js';
@@ -12,27 +14,28 @@ const menuItem = CodeEditor.editor.querySelector('#editor-fix-code');
 const codeFixCache = new Map();
 const parseLogger = new BufferedParseLogger();
 
-function getFixedCode() {
+async function getFixedCode() {
 	const originalCode = CodeEditor.getSourceCode();
-	if (!codeFixCache.has(originalCode)) {
+	await Code.refreshTree();
+	if (!codeFixCache.has(originalCode) && Code.tree_ !== undefined &&
+	Code.isTreeUpToDateAndParsedWithoutError()) {
 		codeFixCache.clear();
 		parseLogger.reset();
-		const tempParseLogger = new ParseLogger();
-		const tree = LogoParser.getParseTree(originalCode, tempParseLogger);
+		const tree = convertObjectToParseTree(Code.tree_); // create deep clone.
 		let fixedCode = originalCode;
-		if (!tempParseLogger.hasLoggedErrors()) {
-			const proceduresMap = getProceduresMap(tree);
-			fixedCode = fixCode(originalCode, parseLogger, proceduresMap);
-			refreshAnimationSetupFromTree(tree);
-		}
+		const proceduresMap = getProceduresMap(tree);
+		fixedCode = fixCode(originalCode, parseLogger, proceduresMap, tree);
+		refreshAnimationSetupFromTree(tree);
 		codeFixCache.set(originalCode, fixedCode);
 	}
+	else
+		codeFixCache.set(originalCode, originalCode);
 	return codeFixCache.get(originalCode);
 }
 
-function itemClicked() {
+async function itemClicked() {
 	CommandBoxMessages.clearErrorsTipsAndWarnings(); // don't confuse the user with old error messages.
-	const code = getFixedCode();
+	const code = await getFixedCode();
 	CodeEditor.setSourceCode(code);
 	parseLogger.sendAllMessagesTo(CommandBoxParseLogger);
 	CodeEditor.restore();
@@ -45,13 +48,19 @@ function refreshDisabled() {
 	if (CodeEditor.isVisible === false)
 		return;
 	let title = 'Automatically fix coding mistakes';
-	if (getFixedCode() === CodeEditor.getSourceCode()) {
-		title += ' (No applicable fixes available)';
-		menuItem.setAttribute('disabled', '');
-	}
-	else
-		menuItem.removeAttribute('disabled');
-	menuItem.setAttribute('title', title);
+	getFixedCode().then(function(fixedCode) {
+		if (fixedCode === CodeEditor.getSourceCode()) {
+			title += ' (No applicable fixes available)';
+			menuItem.setAttribute('disabled', '');
+		}
+		else
+			menuItem.removeAttribute('disabled');
+		menuItem.setAttribute('title', title);
+	}).catch(function(e) {
+		if (e !== 'cancel') {
+			console.error('error thrown in autoFixCodeMenuItem refreshDisabled. e=', e);
+		}
+	});
 }
 
 menuItem.addEventListener('click', itemClicked);

@@ -1,4 +1,5 @@
 import { Command } from '../../../parsing/Command.js';
+import { convertParseTreeTokensToScanTokens } from '../../../parsing/convertParseTreeTokensToScanTokens.js';
 import { FormatLogger } from './FormatLogger.js';
 import { isInstructionList } from '../../../parsing/parse-tree-analysis/isInstructionList.js';
 import { isInstructionListChild } from '../../../parsing/parse-tree-analysis/getInstructionListChildToken.js';
@@ -152,15 +153,27 @@ function formatTreeRoot(treeRoot, scannedTokens) {
 	return logger.getString();
 }
 
-export function formatCode(code) {
+export function formatCode(code, treeRoot, treeHasNoErrors) {
 	if (typeof code !== 'string')
 		throw new Error('code must be a string');
+	if (typeof treeHasNoErrors !== 'boolean' && treeRoot !== undefined)
+		throw new Error('Any time the treeRoot is specified, the treeHasNoErrors must also be true or false.  treeHasNoErrors was specified as ' + treeHasNoErrors);
 
-	const scannedTokens = LogoScanner.scan(code);
-	const parseLogger = new ParseLogger();
-	const noCommentTokens = scannedTokens.filter(t => !t.isComment());
-	const treeRoot = LogoParser.getParseTree(noCommentTokens, parseLogger);
-	if (parseLogger.hasLoggedErrors())
+	if (treeRoot !== undefined && treeHasNoErrors === false)
+		return code.trim(); // no need to process anymore.
+
+	let scannedTokens;
+	if (treeRoot === undefined)
+		scannedTokens = LogoScanner.scan(code);
+	else
+		scannedTokens = convertParseTreeTokensToScanTokens(treeRoot);
+	let parseLogger;
+	if (treeRoot === undefined) {
+		parseLogger = new ParseLogger();
+		const noCommentTokens = scannedTokens.filter(t => !t.isComment());
+		treeRoot = LogoParser.getParseTree(noCommentTokens, parseLogger);
+	}
+	if (parseLogger !== undefined && parseLogger.hasLoggedErrors())
 		return code.trim();
 	else {
 		return formatTreeRoot(treeRoot, scannedTokens);

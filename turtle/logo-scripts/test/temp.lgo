@@ -1,137 +1,326 @@
-; Inspired by
-; https://www.pinterest.ca/pin/677791812685057542/
+; Inspired by 
+; https://www.pinterest.ca/pin/766245324117763152/
 
-make "borderThickness 0.005
 
-to poly2 :size
+to shadow :size
 	localmake "oldPos pos
-	localmake "oldHeading heading
-	localmake "angle1 360 / 7
-	localmake "angle2 :angle1 * 2
-	left :angle1
-	localmake "heading2 heading
-	polyStart
-	forward :size
-	right :angle2
-	forward :size
-	setHeading :heading2 + 180
-	forward :size
-	polyEnd
-	penUp
-	setPos :oldPos
-	setHeading :oldHeading	
-end
-
-to yellowTile :size
-	localmake "oldPos pos
-	localmake "oldHeading heading
-	localmake "angle1 360 / 7
-	localmake "angle2 180 - :angle1
-	setPenSize :size * :borderThickness
-	setFillColor "#ffe73f
-	polyStart
-	forward :size
-	right :angle1
-	forward :size
-	right :angle2
-	forward :size
-	polyEnd
-	penUp
-	setPos :oldPos
-	setHeading :oldHeading
-end
-
-to redTile :size
-	localmake "oldPos pos
-	localmake "oldHeading heading
-	localmake "angle1 360 / 16
-	localmake "angle2 180 - :angle1
-	setPenSize :size * :borderThickness
-	setFillColor "red
-	polyStart
-	forward :size
-	right :angle1
-	forward :size
-	right :angle2
-	forward :size
-	polyEnd
-	penUp
-	setPos :oldPos
-	setHeading :oldHeading
-end
-
-to blackTile :size
+	localmake "colorStops plistCreate
+	setProperty "colorStops 0 "#009425
+	setProperty "colorStops 0.8 "#008002
+	setProperty "colorStops 1 "transparent
+	forward :size * 0.2
+	setFillGradient createRadialGradient pos pos :size :colorStops "pad
 	setPenSize 0
-	setFillColor "black
-	poly2 :size
+	circle :size
+	setPos :oldPos
 end
 
-to blueTile :size
-	setPenSize :size * :borderThickness
-	setFillColor "#069dec
-	poly2 :size
-end
-
-to blueTile2 :size
-	
-end
-
-; Inspired by
-; https://www.pinterest.ca/pin/677791812685057542/
-to fractile1 :size
+to swirlRight1 :size
 	localmake "oldPos pos
 	localmake "oldHeading heading
-	localmake "size1 :size * 0.255
-	localmake "angle1 360 / 7
-	repeat 7 [
-		setHeading :oldHeading + repcount * :angle1
-		setPos :oldPos
-		yellowTile :size1
-		forward :size1
-		blackTile :size1
-		right :angle1
-		forward :size1
-		right :angle1
-		repeat 3 [
-			left :angle1
-			yellowTile :size1
-		]
-		repeat 2 [
-			right :angle1
-			forward :size1
-			blueTile :size1
-			back :size1
-		]
-	]
+	localmake "angle1 110
+	localmake "angle2 30
+	localmake "angle3 40
+	localmake "angle4 110
+	localmake "angle5 75
+	localmake "angle6 80
+	localmake "angle7 190
+	localmake "angle8 190
+	localmake "angle9 100
+	localmake "angle10 70
+	localmake "angle11 105
+	localmake "angle12 40
+	localmake "angle13 128.5
+	localmake "arcRadius1 :size * 0.32
+	localmake "arcRadius2 :size * 0.6
+	localmake "arcRadius3 :size * 0.52
+	localmake "arcRadius4 :size * 0.09
+	localmake "arcRadius5 :size * 0.15
+	localmake "arcRadius6 :size * 0.04
+	localmake "arcRadius7 :size * 0.03
+	localmake "arcRadius8 :size * 0.045
+	localmake "arcRadius9 :size * 0.07
+	localmake "arcRadius10 :size * 0.2
+	localmake "arcRadius11 :size * 0.1
+	localmake "arcRadius12 :size * 0.7
+	localmake "arcRadius13 :size * 0.3392
+	setPenSize 0
+	polyStart
+	arcRight :angle1 :arcRadius1
+	arcRight :angle2 :arcRadius2
+	arcLeft :angle3 :arcRadius3
+	arcLeft :angle4 :arcRadius4
+	arcLeft :angle5 :arcRadius5
+	arcLeft :angle6 :arcRadius6
+	arcLeft :angle7 :arcRadius7
+	right 170
+	arcRight :angle8 :arcRadius8
+	arcRight :angle9 :arcRadius9
+	arcRight :angle10 :arcRadius10
+	arcRight :angle11 :arcRadius11
+	arcRight :angle12 :arcRadius12
+	arcLeft :angle13 :arcRadius13
+	polyEnd
 	penUp
-	; restore original position and heading.
 	setPos :oldPos
 	setHeading :oldHeading
 end
 
-to seaCrabPart :size
-	
+to swirlLeft1 :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "angle1 110
+	localmake "angle2 30
+	localmake "angle3 40
+	localmake "angle4 110
+	localmake "angle5 75
+	localmake "angle6 80
+	localmake "angle7 190
+	localmake "angle8 190
+	localmake "angle9 100
+	localmake "angle10 70
+	localmake "angle11 105
+	localmake "angle12 40
+	localmake "angle13 128.5
+	localmake "arcRadius1 :size * 0.32
+	localmake "arcRadius2 :size * 0.6
+	localmake "arcRadius3 :size * 0.52
+	localmake "arcRadius4 :size * 0.09
+	localmake "arcRadius5 :size * 0.15
+	localmake "arcRadius6 :size * 0.04
+	localmake "arcRadius7 :size * 0.03
+	localmake "arcRadius8 :size * 0.045
+	localmake "arcRadius9 :size * 0.07
+	localmake "arcRadius10 :size * 0.2
+	localmake "arcRadius11 :size * 0.1
+	localmake "arcRadius12 :size * 0.7
+	localmake "arcRadius13 :size * 0.3392
+	setPenSize 0
+	polyStart
+	arcLeft :angle1 :arcRadius1
+	arcLeft :angle2 :arcRadius2
+	arcRight :angle3 :arcRadius3
+	arcRight :angle4 :arcRadius4
+	arcRight :angle5 :arcRadius5
+	arcRight :angle6 :arcRadius6
+	arcRight :angle7 :arcRadius7
+	left 170
+	arcLeft :angle8 :arcRadius8
+	arcLeft :angle9 :arcRadius9
+	arcLeft :angle10 :arcRadius10
+	arcLeft :angle11 :arcRadius11
+	arcLeft :angle12 :arcRadius12
+	arcRight :angle13 :arcRadius13
+	polyEnd
+	penUp
+	setPos :oldPos
+	setHeading :oldHeading
 end
 
-; Inspired by
-; https://www.fractiles.com/wp/wp-content/uploads/2020/06/SeaCrabTR-200x183.png
-; from https://www.fractiles.com/gallery/
-to fractile2 :size
-	localmake "size1 :size * 0.1
-	localmake "angle1 360 / 7
-	localmake "angle2 360 / 16
-	repeat 2 [
-		redTile :size1
-		right :angle2
-	]
-	repeat 2 [
-		redTile :size1
-		right :angle2 + :angle1
-		blueTile :size1
-		right :angle1
-	]
-	redTile :size1
+to swirlLeft2 :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "arcRadius1 :size * 0.85
+	localmake "arcRadius2 :size * 0.22
+	localmake "arcRadius3 :size * 0.1
+	localmake "arcRadius4 :size * 0.17
+	localmake "arcRadius5 :size * 0.37
+	localmake "arcRadius6 :size * 0.6877
+	setPenSize 0
+	polyStart
+	arcLeft 65 :arcRadius1
+	arcLeft 110 :arcRadius2
+	arcLeft 190 :arcRadius3
+	right 170
+	arcRight 200 :arcRadius4
+	arcRight 100 :arcRadius5
+	arcRight 93.8 :arcRadius6
+	polyEnd
+	setPos :oldPos
+	setHeading :oldHeading
 end
 
-setScreenColor "black
-fractile1 100
+to swirlRight2 :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "arcRadius1 :size * 0.85
+	localmake "arcRadius2 :size * 0.22
+	localmake "arcRadius3 :size * 0.1
+	localmake "arcRadius4 :size * 0.17
+	localmake "arcRadius5 :size * 0.37
+	localmake "arcRadius6 :size * 0.6877
+	setPenSize 0
+	polyStart
+	arcRight 65 :arcRadius1
+	arcRight 110 :arcRadius2
+	arcRight 190 :arcRadius3
+	left 170
+	arcLeft 200 :arcRadius4
+	arcLeft 100 :arcRadius5
+	arcLeft 93.8 :arcRadius6
+	polyEnd
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+to blueCircleShape1 :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "blueCircleRadius :size * 0.6
+	localmake "colorStops plistCreate
+	setProperty "colorStops 0 "pink
+	setProperty "colorStops 0.2 "pink
+	setProperty "colorStops 1 "#984B43
+	shadow :size
+	setPenSize 0
+	setFillGradient createRadialGradient pos pos :size :colorStops "pad
+	ellipse :size  * 0.83 :size
+	localmake "colorStops plistCreate
+	setProperty "colorStops 0 "#5454F2
+	setProperty "colorStops 0.5 "#0000D1
+	setProperty "colorStops 0.6 "blue
+	setProperty "colorStops 0.8 "#ADD8FF
+	setProperty "colorStops 0.9 "navy
+	setProperty "colorStops 1 "transparent
+	back :size * 1.05 - :blueCircleRadius
+	setFillGradient createRadialGradient pos pos :blueCircleRadius :colorStops "pad
+
+	circle :blueCircleRadius
+	setHeading :oldHeading
+	setPos :oldPos
+end
+
+to blueCircleShape2 :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "blueCircleRadius :size * 0.6
+	localmake "colorStops plistCreate
+	setProperty "colorStops 0 "pink
+	setProperty "colorStops 0.2 "pink
+	setProperty "colorStops 1 "#984B43
+	shadow :size
+	setPenSize 0
+	setFillGradient createRadialGradient pos pos :size :colorStops "pad
+	ellipse :size  * 0.83 :size
+	localmake "colorStops plistCreate
+	setProperty "colorStops 0 "#5454F2
+	setProperty "colorStops 0.45 "#0000D1
+	setProperty "colorStops 0.55 "#000080
+	setProperty "colorStops 0.75 "#E5F3FF
+	setProperty "colorStops 0.9 "#0B9E00
+	setProperty "colorStops 1 "transparent
+	back :size * 1.05 - :blueCircleRadius
+	setFillGradient createRadialGradient pos pos :blueCircleRadius :colorStops "pad
+
+	circle :blueCircleRadius
+	setHeading :oldHeading
+	setPos :oldPos
+end
+
+to ringOfWhiteCircles :largeRadius :circleRadius
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "oldPenSize penSize
+	localmake "numCircles 47
+	setPenSize 0
+	setFillColor "white
+	right 180 / :numCircles
+	repeat :numCircles [
+		setPos :oldPos
+		forward :largeRadius
+		circle :circleRadius
+		right 360 / :numCircles
+	]
+	setHeading :oldHeading
+	setPos :oldPos
+	setPenSize :oldPenSize
+end
+
+to feather1 :size
+	localmake "oldPos pos
+	penDown
+	forward :size * 0.65
+	blueCircleShape1 :size * 0.09
+	penUp
+	setPos :oldPos
+end
+
+to feather2 :size
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "swirlOffset1 :size * 0.11
+	localmake "swirlSize1 :size * 0.2
+	localmake "swirlSize2 :size * 0.072
+	localmake "swirlOffset2 :size * 0.02
+	localmake "swirlAngle1 70
+	localmake "swirlAngle2 5
+	penDown
+	forward :size * 0.75
+	blueCircleShape2 :size * 0.07
+	setFillColor "#1CCA79
+	forward :size * 0.022
+	jumpLeft :swirlOffset1
+	left :swirlAngle1
+	swirlRight1 :swirlSize1
+	right :swirlAngle1
+	jumpRight :swirlOffset1 * 2
+	right :swirlAngle1
+	swirlLeft1 :swirlSize1
+	left :swirlAngle1
+	jumpLeft :swirlOffset1 - :swirlOffset2
+	forward :size * 0.21
+	right :swirlAngle2
+	swirlRight2 :swirlSize2
+	left :swirlAngle2
+	jumpLeft :swirlOffset2 * 2
+	left :swirlAngle2
+	swirlLeft2 :swirlSize2
+	penUp
+	setPos :oldPos
+	setHeading :oldHeading
+end
+
+
+to softBackgroundGradient :size
+	localmake "colorStops plistCreate
+	setProperty "colorStops 0.28 "transparent
+	setProperty "colorStops 0.333 "#60009400
+	setProperty "colorStops 0.345 "#b0009400
+	setProperty "colorStops 0.6 "#60009400
+	setProperty "colorStops 1 "transparent
+	setFillGradient createRadialGradient pos pos :size :colorStops "pad
+	setPenSize 0
+	circle :size
+end
+
+to feathers :size
+	localmake "innerCircleRadius :size * 0.333
+	localmake "innerCircleRadius2 :size * 0.36
+	localmake "whiteCircleDistance :size * 0.405
+	localmake "whiteCircleRadius :size * 0.023
+	localmake "numFeathers 8
+	localmake "angle 180 / :numFeathers
+	softBackgroundGradient :size
+
+
+	setPenSize :size * 0.002
+	repeat :numFeathers [
+		feather1 :size
+		right :angle
+		feather2 :size
+		right :angle
+	]
+
+	ringOfWhiteCircles :whiteCircleDistance :whiteCircleRadius
+	setFillColor "transparent
+	setPenSize :size * 0.002
+	circle :innerCircleRadius2
+	setPenSize :size * 0.005
+	circle :innerCircleRadius
+end
+
+penUp
+setXY -1 -100
+;image 200 200 'local://feathers.jpg'
+home
+feathers 100

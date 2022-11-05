@@ -1,4 +1,6 @@
 import { analyzeCodeQuality } from '../../parsing/parse-tree-analysis/validation/analyzeCodeQuality.js';
+import { AsyncParser } from '../../parsing/AsyncParser.js';
+import { BufferedParseLogger } from '../../parsing/loggers/BufferedParseLogger.js';
 import { CommandBoxMessages } from '../CommandBoxMessages.js';
 import { CommandBoxParseLogger } from '../../parsing/loggers/CommandBoxParseLogger.js';
 import { compile } from '../../parsing/compile.js';
@@ -8,6 +10,8 @@ import { LogoParser } from '../../parsing/LogoParser.js';
 import { ParseLogger } from '../../parsing/loggers/ParseLogger.js';
 import { scrapeProcedures } from '../../parsing/parse-tree-analysis/scrapeProcedures.js';
 import { ToastMessages } from '../ToastMessages.js';
+
+const parser = new AsyncParser(false);
 
 class PrivateCode {
 	constructor() {
@@ -30,9 +34,16 @@ class PrivateCode {
 			return this._currentProgram;
 
 		const hiddenLogger = new ParseLogger();
-		const tree = LogoParser.getParseTree(this.sourceCode, hiddenLogger);
-		if (hiddenLogger.hasLoggedErrors())
+		let tree;
+		if (this.isTreeUpToDateAndParsedWithoutError())
+			tree = this.tree_;
+		else if (this.isTreeUpToDate())
 			return undefined;
+		else {
+			tree = LogoParser.getParseTree(this.sourceCode, hiddenLogger);
+			if (hiddenLogger.hasLoggedErrors())
+				return undefined;
+		}
 		const proceduresMap = getProceduresMap(tree);
 		const initialVariablesMap = this.executer === undefined ? new Map() : this.executer.getGlobalVariables();
 		analyzeCodeQuality(tree, hiddenLogger, proceduresMap, initialVariablesMap);
@@ -57,22 +68,30 @@ class PrivateCode {
 		return this.sourceCode;
 	}
 
+	isTreeUpToDate() {
+		return this.tree_ !== undefined && this.sourceCode === this.parsedCode;
+	}
+
+	isTreeUpToDateAndParsedWithoutError() {
+		return this.isTreeUpToDate() && this.isTreeParsedWithoutError === true;
+	}
+
 	loadFromLocalStorage() {
 		this.sourceCode = EditorLocalStorage.getCode();
 		this.filename = EditorLocalStorage.getFileName();
 	}
 
-	refreshProgram(parseLogger) {
-		parseLogger.resetErrorCounter();
-		const tree = LogoParser.getParseTree(this.sourceCode, parseLogger);
+	async refreshProgram(parseLogger) {
+		await this.refreshTree(parseLogger);
+		let	originalCode = this.sourceCode;
 		if (!parseLogger.hasLoggedErrors()) {
-			const proceduresMap = getProceduresMap(tree);
+			const proceduresMap = getProceduresMap(this.tree_);
 			const initialVariablesMap = this.executer === undefined ? new Map() : this.executer.getGlobalVariables();
-			analyzeCodeQuality(tree, parseLogger, proceduresMap, initialVariablesMap);
+			analyzeCodeQuality(this.tree_, parseLogger, proceduresMap, initialVariablesMap);
 			if (!parseLogger.hasLoggedErrors()) {
-				this.tree = tree; // used by the time setter.
+				this.tree = this.tree_; // used by the time setter.
 				const compileOptions = {'translateToJavaScript': true};
-				const program = compile(this.sourceCode, tree, parseLogger, new Map(), 
+				const program = compile(originalCode, this.tree, parseLogger, new Map(), 
 				compileOptions, initialVariablesMap);
 				if (program.instructions.length === 0) {
 					if (program.procedures.size !== 0) {
@@ -96,8 +115,31 @@ class PrivateCode {
 		return false;
 	}
 
-	run() {
-		if (this.refreshProgram(CommandBoxParseLogger)) {
+	async refreshTree(parseLogger) {
+		if (this.isTreeUpToDate()) {
+			if (parseLogger !== undefined) {
+				parseLogger.resetErrorCounter();
+				parseLogger.logAll(this.logMessages);
+			}
+			return; // already up to date so nothing to do.
+		}
+		const bufferedParseLogger = new BufferedParseLogger();
+		this.isTreeParsedWithoutError = false;
+		let originalCode = this.sourceCode;
+		// loop to manage cases where code is changed while asyncronously parsing.
+		while (!this.isTreeUpToDate()) {
+			originalCode = this.sourceCode;
+			this.tree_ = await parser.parse(originalCode, bufferedParseLogger, new Map());
+			this.parsedCode = originalCode;
+		}
+		this.isTreeParsedWithoutError = !bufferedParseLogger.hasLoggedErrors();
+		this.logMessages = bufferedParseLogger._messages.slice();
+		if (parseLogger !== undefined)
+			parseLogger.logAll(bufferedParseLogger._messages.slice());
+	}
+
+	async run() {
+		if (await this.refreshProgram(CommandBoxParseLogger)) {
 			if (this.executer.isPaused()) {
 				ToastMessages.warn('Unpaused to run code', false);
 				this.executer.startContinuousExecution();
@@ -129,6 +171,7 @@ class PrivateCode {
 			throw new Error(`setSourceCode requires a string.  Not: ${sourceCode}`);
 		if (this.sourceCode !== sourceCode) {
 			this.sourceCode = sourceCode;
+			this.tree_ = undefined;
 			this._currentProgram = undefined;
 			this._latestProgramIsUpToDate = false;
 			this.saveToLocalStorage();

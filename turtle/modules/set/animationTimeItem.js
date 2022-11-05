@@ -11,7 +11,7 @@ const graphicsScreenElement = GraphicsScreen.container;
 const item = document.getElementById('set-animation-time');
 const html = await fetchText('content/set/animation-time.html');
 
-function itemClicked() {
+async function itemClicked() {
 	let input;
 	const originalAnimationTime = Settings.animationTime;
 	let okClicked = false;
@@ -30,7 +30,7 @@ function itemClicked() {
 	input = document.getElementById('set-animation-time-seconds-input');
 	input.setAttribute('max', Settings.animationDurationSeconds);
 	input.value = Settings.animationTime;
-	LiveRedrawer.refreshProgram();
+	await LiveRedrawer.refreshProgram();
 	const isUsingAnimationTime = LiveRedrawer.isProgramUsingAnimationTime();
 	const liveRedrawCheckbox = document.getElementById('set-animation-time-live-redraw');
 	const minutes = document.getElementById('set-animation-time-minutes');
@@ -39,7 +39,7 @@ function itemClicked() {
 	function getTotalTime() {
 		return parseFloat(input.value);
 	}
-	function refreshCalculatedValues() {
+	async function refreshCalculatedValues() {
 		const inputtedSeconds = getTotalTime();
 		const mins = Math.floor(inputtedSeconds / 60);
 		const numSecs = inputtedSeconds - mins * 60;
@@ -52,7 +52,7 @@ function itemClicked() {
 
 		seconds.innerText = secs;
 		if (liveRedrawCheckbox.checked) {
-			LiveRedrawer.redrawNeeded(inputtedSeconds);
+			await LiveRedrawer.redrawNeeded(inputtedSeconds);
 		}
 		graphicsScreenElement.classList.add('animation-time-changing');
 		RateLimiter.run('animationTimeChanged', removeAnimationTimeChangeClass, 1000);
@@ -85,8 +85,9 @@ function itemClicked() {
 		if (!liveRedrawCheckbox.checked)
 			LiveRedrawer.stop();
 	});
-	refreshCalculatedValues();
-	TimeLocalStorage.saveUsed();
+	refreshCalculatedValues().then(function() {
+		TimeLocalStorage.saveUsed();
+	});
 }
 
 item.addEventListener('click', itemClicked);

@@ -7,9 +7,9 @@ import { ParseLogger } from '../../parsing/loggers/ParseLogger.js';
 import { Settings } from '../../Settings.js';
 import { ToastMessages } from '../ToastMessages.js';
 
-function refreshAnimationSetup() {
+async function refreshAnimationSetup() {
 	const parseLogger = new ParseLogger();
-	Code.refreshProgram(parseLogger);
+	await Code.refreshProgram(parseLogger);
 	if (parseLogger.hasLoggedErrors() === false) {
 		refreshAnimationSetupFromTree(Code.tree);
 	}
