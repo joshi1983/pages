@@ -28,16 +28,16 @@ class PrivateLiveRedrawer {
 		return isUsingAnimationTime(tree);
 	}
 
-	redrawNeeded(newAnimationTime) {
+	async redrawNeeded(newAnimationTime) {
 		this._needRedraw = true;
 		this.newAnimationTime = newAnimationTime;
 		if (offscreenExecuter === undefined)
-			this.refreshProgram();
+			await this.refreshProgram();
 		startTimer();
 	}
 
-	refreshProgram() {
-		Code.refreshProgram(new ParseLogger());
+	async refreshProgram() {
+		await Code.refreshProgram(new ParseLogger());
 		if (Code.latestProgram !== undefined) {
 			this.program = Code.latestProgram;
 			if (offscreenExecuter === undefined) {

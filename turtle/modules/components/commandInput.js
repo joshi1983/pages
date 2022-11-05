@@ -28,7 +28,7 @@ function tryRunCode() {
 		const initialVariables = executer.executionContext === undefined ? new Map() : executer.executionContext.globalVariables;
 		analyzeCodeQuality(tree, CommandBoxParseLogger, proceduresMap, initialVariables);
 		if (CommandBoxParseLogger.hasLoggedErrors()) {
-			const fixed = fixCode(c, new ParseLogger(), proceduresMap);
+			const fixed = fixCode(c, new ParseLogger(), proceduresMap, tree);
 			if (fixed !== c) {
 				CommandBoxParseLogger.tip(`Try this instead: <code class="commander-pastable">${fixed}</code>`, tree, true);
 			}

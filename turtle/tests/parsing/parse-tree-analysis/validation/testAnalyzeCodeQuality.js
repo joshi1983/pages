@@ -36,6 +36,7 @@ function testThatBadCodeLogsErrors(logger) {
 setProperty 0 "black
 setPenSize 0.1`,
 		'print 1)',
+		'print :oldHeading + repcount:angle1',
 		'print mix :x :y 1',
 		`to p
 end
