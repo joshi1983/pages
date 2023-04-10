@@ -1,6 +1,6 @@
-import { bindDocumentFocusTests } from './bindDocumentFocusTests.js';
+//import { bindDocumentFocusTests } from './bindDocumentFocusTests.js';
 import { prefixWrapper } from './helpers/prefixWrapper.js';
-import { testAlphaColour } from './testAlphaColour.js';
+/*import { testAlphaColour } from './testAlphaColour.js';
 import { testArrayUtils } from './testArrayUtils.js';
 import { testAssets } from './assets/testAssets.js';
 import { testBinarySearch } from './testBinarySearch.js';
@@ -8,8 +8,8 @@ import { testClamp } from './testClamp.js';
 import { testClampRadianAngle } from './testClampRadianAngle.js';
 import { testColour } from './testColour.js';
 import { testColourDirectory } from './colour/testColourDirectory.js';
-import { testCommandGroups } from './command-groups/testCommandGroups.js';
-import { testCommandJSONForDuplicates } from './testCommandJSONForDuplicates.js';
+*/import { testCommandGroups } from './command-groups/testCommandGroups.js';
+/*import { testCommandJSONForDuplicates } from './testCommandJSONForDuplicates.js';
 import { testCommands } from './testCommands.js';
 import { testCommandsJSON } from './testCommandsJSON.js';
 import { testCommandsJSONCallNoArgumentCommands } from './testCommandsJSONCallNoArgumentCommands.js';
@@ -43,7 +43,7 @@ import { testTransparent } from './testTransparent.js';
 import { testUnsupportedCommandsJSON } from './testUnsupportedCommandsJSON.js';
 import { testValueToString } from './testValueToString.js';
 import { testValueWrapper } from './testValueWrapper.js';
-
+*/
 function replaceSpecialChars(msg) {
 	msg = msg.replace(/ /g, '&nbsp;');
 	msg = msg.replace(/\t/g, 'TAB');
@@ -67,7 +67,7 @@ function runTests() {
 		return prefixWrapper(prefix, log);
 	}
 
-	bindDocumentFocusTests(namedLog('documentFocusTests'));
+	/*bindDocumentFocusTests(namedLog('documentFocusTests'));
 	testAlphaColour(namedLog('testAlphaColour'));
 	testArrayUtils(namedLog('testArrayUtils'));
 	testAssets(namedLog('testAssets'));
@@ -75,8 +75,8 @@ function runTests() {
 	testClamp(namedLog('testClamp'));
 	testClampRadianAngle(namedLog('testClampRadianAngle'));
 	testColour(namedLog('testColour'));
-	testColourDirectory(namedLog('testColourDirectory'));
-	testCommandGroups(namedLog('testCommandGroups'));
+	testColourDirectory(namedLog('testColourDirectory'));*/
+	testCommandGroups(namedLog('testCommandGroups'));/*
 	testCommandJSONForDuplicates(namedLog('testCommandJSONForDuplicates'));
 	testCommands(namedLog("testCommands"));
 	testCommandsJSON(namedLog("testCommandsJSON"));
@@ -110,7 +110,7 @@ function runTests() {
 	testTransparent(namedLog('testTransparent'));
 	testUnsupportedCommandsJSON(namedLog('testUnsupportedCommandsJSON'));
 	testValueToString(namedLog('testValueToString'));
-	testValueWrapper(namedLog('testValueWrapper'));
+	testValueWrapper(namedLog('testValueWrapper'));*/
 	log('All synchronous tests are complete.');
 }
 

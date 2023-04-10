@@ -53,6 +53,7 @@ export class MathCommands {
 		this.equalp = equalp;
 		this.factorial = factorial;
 		this.nChooseK = nChooseK;
+		this.solveQuadratic = solveQuadratic;
 	}
 
 	and() {
@@ -255,10 +256,6 @@ export class MathCommands {
 			return solveQuadratic(b, c, d);
 		else
 			return solveCubic(a, b, c, d);
-	}
-
-	solveQuadratic(a, b, c) {
-		return solveQuadratic(a, b, c);
 	}
 
 	solveQuartic(a, b, c, d, e) {
