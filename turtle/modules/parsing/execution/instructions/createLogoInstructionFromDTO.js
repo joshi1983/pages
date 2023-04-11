@@ -1,3 +1,4 @@
+import { AsyncCallCommandInstruction } from './AsyncCallCommandInstruction.js';
 import { BinaryOperatorInstruction } from './BinaryOperatorInstruction.js';
 import { CallCommandInstruction } from './CallCommandInstruction.js';
 import { CallHighOrderInstruction } from './CallHighOrderInstruction.js';
@@ -21,6 +22,7 @@ import { VariableReadInstruction } from './VariableReadInstruction.js';
 
 // Every LogoInstruction subclass should be listed below.
 const instructionClasses = [
+	AsyncCallCommandInstruction,
 	BinaryOperatorInstruction,
 	CallCommandInstruction,
 	CallHighOrderInstruction,

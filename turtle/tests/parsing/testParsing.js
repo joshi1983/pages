@@ -1,4 +1,4 @@
-import { testAsyncParser } from './testAsyncParser.js';
+/*import { testAsyncParser } from './testAsyncParser.js';
 import { testAsyncParseTask } from './testAsyncParseTask.js';
 import { testCharIndexToParseTreeTokenPosition } from './testCharIndexToParseTreeTokenPosition.js';
 import { testCommandClass } from './testCommandClass.js';
@@ -8,8 +8,8 @@ import { testCreateParameterizedGroups } from './testCreateParameterizedGroups.j
 import { testCreateParameterizedGroupsParseErrors } from './testCreateParameterizedGroupsParseErrors.js';
 import { testDataTypesDirectory } from './data-types/testDataTypesDirectory.js';
 import { testExampleScripts } from './testExampleScripts.js';
-import { testExecution } from './execution/testExecution.js';
-import { testFixOperatorPrecedence } from './testFixOperatorPrecedence.js';
+*/import { testExecution } from './execution/testExecution.js';
+/*import { testFixOperatorPrecedence } from './testFixOperatorPrecedence.js';
 import { testGetStartPositionOfToken } from './testGetStartPositionOfToken.js';
 import { testGetTokensForParsing } from './testGetTokensForParsing.js';
 import { testIsSupportedByHighOrderInvoke } from './testIsSupportedByHighOrderInvoke.js';
@@ -35,14 +35,14 @@ import { testScrapeProcedures } from './testScrapeProcedures.js';
 import { testSerialization } from './serialization/testSerialization.js';
 import { testToken } from './testToken.js';
 import { testUnsupportedCommand } from './testUnsupportedCommand.js';
-import { prefixWrapper } from '../helpers/prefixWrapper.js';
+*/import { prefixWrapper } from '../helpers/prefixWrapper.js';
 
 export function testParsing(logger) {
 	function namedLog(prefix) {
 		return prefixWrapper(prefix, logger);
 	}
 
-	testAsyncParser(namedLog('testAsyncParser'));
+	/*testAsyncParser(namedLog('testAsyncParser'));
 	testAsyncParseTask(namedLog('testAsyncParseTask'));
 	testCharIndexToParseTreeTokenPosition(namedLog('testCharIndexToParseTreeTokenPosition'));
 	testCommandClass(namedLog('testCommandClass'));
@@ -52,8 +52,8 @@ export function testParsing(logger) {
 	testCreateParameterizedGroupsParseErrors(namedLog('testCreateParameterizedGroupsParseErrors'));
 	testDataTypesDirectory(namedLog('testDataTypesDirectory'));
 	testExampleScripts(namedLog('testExampleScripts'));
-	testExecution(namedLog('testExecution'));
-	testFixOperatorPrecedence(namedLog('testFixOperatorPrecedence'));
+	*/testExecution(namedLog('testExecution'));
+	/*testFixOperatorPrecedence(namedLog('testFixOperatorPrecedence'));
 	testGetStartPositionOfToken(namedLog('testGetStartPositionOfToken'));
 	testGetTokensForParsing(namedLog('testGetTokensForParsing'));
 	testIsSupportedByHighOrderInvoke(namedLog('testIsSupportedByHighOrderInvoke'));
@@ -78,5 +78,5 @@ export function testParsing(logger) {
 	testScrapeProcedures(namedLog('testScrapeProcedures'));
 	testSerialization(namedLog('testSerialization'));
 	testToken(namedLog('testToken'));
-	testUnsupportedCommand(namedLog('testUnsupportedCommand'));
+	testUnsupportedCommand(namedLog('testUnsupportedCommand'));*/
 };

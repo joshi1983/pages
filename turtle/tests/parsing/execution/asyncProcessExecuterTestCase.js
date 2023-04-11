@@ -1,4 +1,4 @@
-import { checkMessages } from './checkMessages.js';
+import { asyncCheckMessages } from './asyncCheckMessages.js';
 import { compile } from '../../../modules/parsing/compile.js';
 import { compileCase } from './compileCase.js';
 import { compileOptionsArray } from './compileOptionsArray.js';
@@ -7,11 +7,11 @@ import { LogoProgramExecuter } from '../../../modules/parsing/execution/LogoProg
 import { prefixWrapper } from '../../helpers/prefixWrapper.js';
 import { validateProgram } from '../../helpers/parsing/validateProgram.js';
 
-export function processExecuterTestCase(caseInfo, index, logger) {
+export async function asyncProcessExecuterTestCase(caseInfo, index, logger) {
 	const info = compileCase(caseInfo, index, logger);
 	if (info === undefined)
 		return;
-	compileOptionsArray.forEach(function(compileOptions) {
+	compileOptionsArray.forEach(async function(compileOptions) {
 		const program = compile(caseInfo.code, info.tree, info.testLogger, undefined, compileOptions, new Map());
 		const prefixLogger = prefixWrapper('Failed with code ' + caseInfo.code + ', index ' + index + ', compileOptions: ' + JSON.stringify(compileOptions), info.plogger);
 		if (validateProgram(program, prefixLogger))
@@ -22,12 +22,12 @@ export function processExecuterTestCase(caseInfo, index, logger) {
 			console.error(e);
 			prefixLogger(`exception thrown. e=${e.details}`);
 		});
-		let problemFound = checkMessages(executer, turtleInfo, caseInfo, prefixLogger);
+		let problemFound = await asyncCheckMessages(executer, turtleInfo, caseInfo, prefixLogger);
 		if (!problemFound) {
 			turtleInfo = createPrintCountTestTurtle();
 			executer.turtle = turtleInfo.turtle;
 			executer.restart();
-			problemFound = checkMessages(executer, turtleInfo, caseInfo, prefixLogger);
+			problemFound = await asyncCheckMessages(executer, turtleInfo, caseInfo, prefixLogger);
 		}
 		if (problemFound) {
 			prefixLogger('program instructions = ' + JSON.stringify(program.instructions.map(i => i.toDTO())));

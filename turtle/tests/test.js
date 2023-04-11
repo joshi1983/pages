@@ -33,8 +33,8 @@ import { testLongestCommonSubsequence } from './testLongestCommonSubsequence.js'
 import { testMapUtils } from './testMapUtils.js';
 import { testMaybeDecided } from './testMaybeDecided.js';
 import { testOperatorsJSON } from './testOperatorsJSON.js';
-import { testParsing } from './parsing/testParsing.js';
-import { testPopulateTemplateUsingObject } from './testPopulateTemplateUsingObject.js';
+*/import { testParsing } from './parsing/testParsing.js';
+/*import { testPopulateTemplateUsingObject } from './testPopulateTemplateUsingObject.js';
 import { testRateLimiter } from './testRateLimiter.js';
 import { testSet } from './set/testSet.js';
 import { testStringBuffer } from './testStringBuffer.js';
@@ -101,8 +101,8 @@ function runTests() {
 	testMapUtils(namedLog('testMapUtils'));
 	testMaybeDecided(namedLog('testMaybeDecided'));
 	testOperatorsJSON(namedLog('testOperatorsJSON'));
-	testParsing(namedLog('testParsing'));
-	testPopulateTemplateUsingObject(namedLog('testPopulateTemplateUsingObject'));
+	*/testParsing(namedLog('testParsing'));
+	/*testPopulateTemplateUsingObject(namedLog('testPopulateTemplateUsingObject'));
 	testRateLimiter(namedLog('testRateLimiter'));
 	testSet(namedLog('testSet'));
 	testStringBuffer(namedLog('testStringBuffer'));

@@ -4,6 +4,7 @@ import { testErrorCasesValidationAtRuntime } from './testErrorCasesValidationAtR
 import { testExecuteLogoProcedure } from './testExecuteLogoProcedure.js';
 import { testInstructions } from './instructions/testInstructions.js';
 import { testLogoProgramExecuter } from './testLogoProgramExecuter.js';
+import { testLogoProgramExecuterAsync } from './testLogoProgramExecuterAsync.js';
 import { testLogoProgramExecuterBreakpoints } from './testLogoProgramExecuterBreakpoints.js';
 import { testLogoProgramExecuterInvokeUsingPrint } from './testLogoProgramExecuterInvokeUsingPrint.js';
 import { testLogoProgramExecuterUsingPrint } from './testLogoProgramExecuterUsingPrint.js';

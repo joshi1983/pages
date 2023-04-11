@@ -6,6 +6,7 @@ import { Procedure } from '../../../../modules/parsing/Procedure.js';
 
 export function testCreateLogoInstructionFromDTO(logger) {
 	const cases = [
+		{'name': 'async-call-cmd', 'commandName': 'readJson', 'numArgs': 1},
 		{'name': 'binary-operator', 'symbol': '+'},
 		{'name': 'call-cmd', 'commandName': 'forward', 'numArgs': 1},
 		{'name': 'call-proc', 'procName': 'proc1'},

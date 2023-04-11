@@ -39,6 +39,14 @@ export class LogoProgramExecuter extends EventDispatcher {
 				this.isHalted = true;
 				super._dispatchEvent('execution-stopped', {'cause': 'halted-normal'});
 			}
+			else if (instruction.isAsync) {
+				this.isAwaiting = true;
+				const outer = this;
+				instruction.execute(this.executionContext).then(function() {
+					outer.isAwaiting = false;
+				});
+				this.executionContext.instructionIndex++;
+			}
 			else {
 				instruction.execute(this.executionContext);
 				if (!instruction.isControllingInstructionIndex)
@@ -55,7 +63,97 @@ export class LogoProgramExecuter extends EventDispatcher {
 		}
 	}
 
+	/*
+	Very similar to executeInstruction() but returns a promise for any asyncronous instructions.
+	*/
+	async executeInstructionAsync() {
+		const instruction = this.executionContext.getNextInstruction();
+		try {
+			if (instruction === undefined) {
+				this.isHalted = true;
+				super._dispatchEvent('execution-stopped', {'cause': 'halted-normal'});
+			}
+			else if (instruction.isAsync) {
+				await instruction.execute(this.executionContext);
+				this.executionContext.instructionIndex++;
+			}
+			else {
+				instruction.execute(this.executionContext);
+				if (!instruction.isControllingInstructionIndex)
+					this.executionContext.instructionIndex++;
+			}
+		}
+		catch (e) {
+			this.pauseContinuousExecution();
+			this.isHalted = true;
+			super._dispatchEvent('exception', {
+				'e': e,
+				'instruction': instruction
+			});
+		}
+	}
+
+	async executeInstructionsAsync(numInstructions) {
+		if (this.isAwaiting)
+			return;
+		let promise;
+		if (!this.isHalted) {
+			/*
+			The following for-loops are nearly duplicated for the small performance benefit of 
+			avoiding the breakpoint check repeatedly when there are no breakpoints.
+			*/
+			if (this.breakpoints.size === 0) {
+				for (var i = 0; i < numInstructions; i++) {
+					promise = this.executeInstructionAsync();
+					if (this.isAwaiting) {
+						this.isAwaiting = true;
+						await promise;
+						this.isAwaiting = false;
+					}
+					if (this.isHalted === true) {
+						this.instructionExecutionCount += i;
+						break;
+					}
+				}
+			}
+			else {
+				for (var i = 0; i < numInstructions; i++) {
+					promise = this.executeInstructionAsync();
+					if (this.isAwaiting) {
+						this.isAwaiting = true;
+						await promise;
+						this.isAwaiting = false;
+					}
+					if (this.isHalted === true) {
+						this.instructionExecutionCount += i;
+						break;
+					}
+					else if (this.breakpoints.has(this.executionContext.instructionIndex)) {
+						const bucket = this.breakpoints.get(this.executionContext.instructionIndex);
+						let matchFound = false;
+						for (let j = 0; j < bucket.length; j++) {
+							const breakpoint = bucket[j];
+							if (breakpoint.isMatched(this.executionContext)) {
+								super._dispatchEvent('breakpoint', {});
+								this.pauseContinuousExecution();
+								matchFound = true;
+								break;
+							}
+						}
+						if (matchFound === true)
+							break;
+					}
+				}
+			}
+			if (this.isHalted === false) {
+				this.instructionExecutionCount += numInstructions;
+			}
+		}
+	}
+
 	executeInstructionsSync(numInstructions) {
+		if (this.isAwaiting)
+			return;
 		if (!this.isHalted) {
 			/*
 			The following for-loops are nearly duplicated for the small performance benefit of 
@@ -64,6 +162,8 @@ export class LogoProgramExecuter extends EventDispatcher {
 			if (this.breakpoints.size === 0) {
 				for (var i = 0; i < numInstructions; i++) {
 					this.executeInstruction();
+					if (this.isAwaiting)
+						break;
 					if (this.isHalted === true) {
 						this.instructionExecutionCount += i;
 						break;
@@ -73,6 +173,8 @@ export class LogoProgramExecuter extends EventDispatcher {
 			else {
 				for (var i = 0; i < numInstructions; i++) {
 					this.executeInstruction();
+					if (this.isAwaiting === true)
+						break;
 					if (this.isHalted === true) {
 						this.instructionExecutionCount += i;
 						break;
@@ -112,7 +214,7 @@ export class LogoProgramExecuter extends EventDispatcher {
 	}
 
 	isPausedOrHalted() {
-		return this.isPaused() || this.isHalted;
+		return this.isPaused() || this.isAwaiting || this.isHalted;
 	}
 
 	// In other words, halt.
