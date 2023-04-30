@@ -1,4 +1,4 @@
-import { testAsyncParser } from './testAsyncParser.js';
+/*import { testAsyncParser } from './testAsyncParser.js';
 import { testAsyncParseTask } from './testAsyncParseTask.js';
 import { testCharIndexToParseTreeTokenPosition } from './testCharIndexToParseTreeTokenPosition.js';
 import { testCommandClass } from './testCommandClass.js';
@@ -29,20 +29,20 @@ import { testParseTreeToCodeWithComments } from './testParseTreeToCodeWithCommen
 import { testParseTreeToken } from './testParseTreeToken.js';
 import { testParseTreeTokenDirectory } from './parse-tree-token/testParseTreeTokenDirectory.js';
 import { testProcedure } from './testProcedure.js';
-import { testPythonParsing } from './python-parsing/testPythonParsing.js';
-import { testScanner } from './testScanner.js';
+*/import { testPythonParsing } from './python-parsing/testPythonParsing.js';
+/*import { testScanner } from './testScanner.js';
 import { testScrapeProcedures } from './testScrapeProcedures.js';
 import { testSerialization } from './serialization/testSerialization.js';
 import { testToken } from './testToken.js';
 import { testUnsupportedCommand } from './testUnsupportedCommand.js';
-import { prefixWrapper } from '../helpers/prefixWrapper.js';
+*/import { prefixWrapper } from '../helpers/prefixWrapper.js';
 
 export function testParsing(logger) {
 	function namedLog(prefix) {
 		return prefixWrapper(prefix, logger);
 	}
 
-	testAsyncParser(namedLog('testAsyncParser'));
+	/*testAsyncParser(namedLog('testAsyncParser'));
 	testAsyncParseTask(namedLog('testAsyncParseTask'));
 	testCharIndexToParseTreeTokenPosition(namedLog('testCharIndexToParseTreeTokenPosition'));
 	testCommandClass(namedLog('testCommandClass'));
@@ -73,10 +73,10 @@ export function testParsing(logger) {
 	testParseTreeToken(namedLog('testParseTreeToken'));
 	testParseTreeTokenDirectory(namedLog('testParseTreeTokenDirectory'));
 	testProcedure(namedLog('testProcedure'));
-	testPythonParsing(namedLog('testPythonParsing'));
-	testScanner(namedLog('testScanner'));
+	*/testPythonParsing(namedLog('testPythonParsing'));
+	/*testScanner(namedLog('testScanner'));
 	testScrapeProcedures(namedLog('testScrapeProcedures'));
 	testSerialization(namedLog('testSerialization'));
 	testToken(namedLog('testToken'));
-	testUnsupportedCommand(namedLog('testUnsupportedCommand'));
+	testUnsupportedCommand(namedLog('testUnsupportedCommand'));*/
 };

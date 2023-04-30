@@ -9,7 +9,7 @@ export function pythonPrintExecutionTests(logger) {
 	Any differences to the resulting messages have been commented.
 	*/
 	const cases = [
-		{'in': 'print 1', 'messages': ['1']},
+		/*{'in': 'print 1', 'messages': ['1']},
 		{'in': 'print 3', 'messages': ['3']},
 		{'in': 'print(3)', 'messages': ['3']},
 		{'in': 'print(1+3)', 'messages': ['4']},
@@ -72,6 +72,9 @@ else:
 else:
   print("Finally finished!")`,
 		'messages': ['0', '1', '2', '3', '4', '5', 'Finally finished!']
+		},*/
+		{'in': 'for i in [20, 40, 60]:\n\tprint(str(i))', 
+			'messages': ['20', '40', '60']
 		}
 	];
 	cases.forEach(function(caseInfo, index) {

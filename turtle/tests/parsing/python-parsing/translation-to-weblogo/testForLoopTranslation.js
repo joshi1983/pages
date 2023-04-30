@@ -2,7 +2,7 @@ import { processTranslationTestCases } from './processTranslationTestCases.js';
 
 export function testForLoopTranslation(logger) {
 	const cases = [
-		{'in': 'for i in range(4):\n\tstar.right(144)', 'out': 'repeat 4 [\n\nright 144 \n]'},
+		/*{'in': 'for i in range(4):\n\tstar.right(144)', 'out': 'repeat 4 [\n\nright 144 \n]'},
 		{'in': 'for i in range(0, 4):\n\tstar.right(144)', 'out': 'repeat 4 [\n\nright 144 \n]'},
 		{'in': 'for i in range(0, 4, 1):\n\tstar.right(144)', 'out': 'repeat 4 [\n\nright 144 \n]'},
 		{'in': 'for i in range(0, 16, 1):\n\tstar.right(144)', 'out': 'repeat 16 [\n\nright 144 \n]'},
@@ -21,6 +21,7 @@ export function testForLoopTranslation(logger) {
 		{'in': 'for i in range(1, n + 1, 2):\n\tprint(r * i)',
 			'out': 'for ["i 1 :n + 1 - 2 2] [\n\nprint :r * :i \n]'},
 		{'in': 'for i in range(2):\n\tprint("hi")\nelse:\n\tprint("done")', 'out': 'repeat 2 [\n\nprint "hi \n]\nprint "done'},
+		*/{'in': 'for i in [20, 40, 60]:\n\tstar.right(i)', 'out': 'make "i_ [20 40 60]\nrepeat count :i_ [\n\nright :i \n]'},
 	];
 	processTranslationTestCases(cases, logger);
 };

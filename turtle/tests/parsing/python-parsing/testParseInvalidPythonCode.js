@@ -9,6 +9,10 @@ export async function testParseInvalidPythonCode(logger) {
 	'bla)',
 	'x=',
 	'x=#',
+	`import turtle
+side = 10
+reverseDirection = 200
+print(side % (reverseDirection * 2) == 0)`
 	];
 	cases.forEach(function(code, index) {
 		const plogger = prefixWrapper(`Case ${index}, code=${code}`, logger);

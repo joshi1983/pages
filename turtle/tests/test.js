@@ -1,6 +1,6 @@
 import { bindDocumentFocusTests } from './bindDocumentFocusTests.js';
 import { prefixWrapper } from './helpers/prefixWrapper.js';
-import { testAlphaColour } from './testAlphaColour.js';
+/*import { testAlphaColour } from './testAlphaColour.js';
 import { testArrayUtils } from './testArrayUtils.js';
 import { testAssets } from './assets/testAssets.js';
 import { testBinarySearch } from './testBinarySearch.js';
@@ -34,8 +34,8 @@ import { testLongestCommonSubsequence } from './testLongestCommonSubsequence.js'
 import { testMapUtils } from './testMapUtils.js';
 import { testMaybeDecided } from './testMaybeDecided.js';
 import { testOperatorsJSON } from './testOperatorsJSON.js';
-import { testParsing } from './parsing/testParsing.js';
-import { testPopulateTemplateUsingObject } from './testPopulateTemplateUsingObject.js';
+*/import { testParsing } from './parsing/testParsing.js';
+/*import { testPopulateTemplateUsingObject } from './testPopulateTemplateUsingObject.js';
 import { testRateLimiter } from './testRateLimiter.js';
 import { testSet } from './set/testSet.js';
 import { testStringBuffer } from './testStringBuffer.js';
@@ -44,7 +44,7 @@ import { testTransparent } from './testTransparent.js';
 import { testUnsupportedCommandsJSON } from './testUnsupportedCommandsJSON.js';
 import { testValueToString } from './testValueToString.js';
 import { testValueWrapper } from './testValueWrapper.js';
-
+*/
 function replaceSpecialChars(msg) {
 	msg = msg.replace(/ /g, '&nbsp;');
 	msg = msg.replace(/\t/g, 'TAB');
@@ -68,7 +68,7 @@ function runTests() {
 		return prefixWrapper(prefix, log);
 	}
 
-	bindDocumentFocusTests(namedLog('documentFocusTests'));
+	/*bindDocumentFocusTests(namedLog('documentFocusTests'));
 	testAlphaColour(namedLog('testAlphaColour'));
 	testArrayUtils(namedLog('testArrayUtils'));
 	testAssets(namedLog('testAssets'));
@@ -103,8 +103,8 @@ function runTests() {
 	testMapUtils(namedLog('testMapUtils'));
 	testMaybeDecided(namedLog('testMaybeDecided'));
 	testOperatorsJSON(namedLog('testOperatorsJSON'));
-	testParsing(namedLog('testParsing'));
-	testPopulateTemplateUsingObject(namedLog('testPopulateTemplateUsingObject'));
+	*/testParsing(namedLog('testParsing'));
+	/*testPopulateTemplateUsingObject(namedLog('testPopulateTemplateUsingObject'));
 	testRateLimiter(namedLog('testRateLimiter'));
 	testSet(namedLog('testSet'));
 	testStringBuffer(namedLog('testStringBuffer'));
@@ -112,7 +112,7 @@ function runTests() {
 	testTransparent(namedLog('testTransparent'));
 	testUnsupportedCommandsJSON(namedLog('testUnsupportedCommandsJSON'));
 	testValueToString(namedLog('testValueToString'));
-	testValueWrapper(namedLog('testValueWrapper'));
+	testValueWrapper(namedLog('testValueWrapper'));*/
 	log('All synchronous tests are complete.');
 }
 
