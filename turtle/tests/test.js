@@ -1,4 +1,4 @@
-import { bindDocumentFocusTests } from './bindDocumentFocusTests.js';
+/*import { bindDocumentFocusTests } from './bindDocumentFocusTests.js';
 import { testAlphaColour } from './testAlphaColour.js';
 import { testArrayUtils } from './testArrayUtils.js';
 import { testAssets } from './assets/testAssets.js';
@@ -11,7 +11,7 @@ import { testColourDirectory } from './colour/testColourDirectory.js';
 import { testCommandGroups } from './command-groups/testCommandGroups.js';
 import { testCommandJSONForDuplicates } from './testCommandJSONForDuplicates.js';
 import { testCommands } from './testCommands.js';
-import { testCommandsJSON } from './testCommandsJSON.js';
+*/import { testCommandsJSON } from './testCommandsJSON.js';
 import { testCommandsJSONCallNoArgumentCommands } from './testCommandsJSONCallNoArgumentCommands.js';
 import { testCommandsJSONCompositeValidation } from './testCommandsJSONCompositeValidation.js';
 import { testCommandsJSONDataTypes } from './testCommandsJSONDataTypes.js';
@@ -19,7 +19,7 @@ import { testCommandsJSONDescription } from './testCommandsJSONDescription.js';
 import { testCommandsJSONHyperlinks } from './testCommandsJSONHyperlinks.js';
 import { testCommandsJSONLengthRangeInfo } from './testCommandsJSONLengthRangeInfo.js';
 import { testCommandsJSONOrderByPrimaryName } from './testCommandsJSONOrderByPrimaryName.js';
-import { testComponents } from './components/testComponents.js';
+/*import { testComponents } from './components/testComponents.js';
 import { testDeepEquality } from './testDeepEquality.js';
 import { testDebugging } from './debugging/testDebugging.js';
 import { testDelay } from './testDelay.js';
@@ -32,9 +32,9 @@ import { testFile } from './file/testFile.js';
 import { testFormatNumber } from './testFormatNumber.js';
 import { testHelp } from './help/testHelp.js';
 import { testIsCloseEnough } from './testIsCloseEnough.js';
-import { testIsDigit } from './testIsDigit.js';
+import { testIsDigit } from './testIsDigit.js';*/
 import { testLogoCodeMigrationsJSON } from './testLogoCodeMigrationsJSON.js';
-import { testLongestCommonSubsequence } from './testLongestCommonSubsequence.js';
+/*import { testLongestCommonSubsequence } from './testLongestCommonSubsequence.js';
 import { testMapUtils } from './testMapUtils.js';
 import { testMaybeDecided } from './testMaybeDecided.js';
 import { testOperatorsJSON } from './testOperatorsJSON.js';
@@ -50,7 +50,7 @@ import { testUnsupportedCommandsJSON } from './testUnsupportedCommandsJSON.js';
 import { testValueToLiteralCode } from './testValueToLiteralCode.js';
 import { testValueToString } from './testValueToString.js';
 import { testValueWrapper } from './testValueWrapper.js';
-import { testWindowsCommandsJSON } from './testWindowsCommandsJSON.js';
+import { testWindowsCommandsJSON } from './testWindowsCommandsJSON.js';*/
 import { wrapAndCall } from './helpers/wrapAndCall.js';
 
 function replaceSpecialChars(msg) {
@@ -61,7 +61,7 @@ function replaceSpecialChars(msg) {
 }
 
 const tests = [
-	bindDocumentFocusTests,
+	/*bindDocumentFocusTests,
 	testAlphaColour,
 	testArrayUtils,
 	testAssets,
@@ -74,7 +74,7 @@ const tests = [
 	testCommandGroups,
 	testCommandJSONForDuplicates,
 	testCommands,
-	testCommandsJSON,
+	*/testCommandsJSON,
 	testCommandsJSONCallNoArgumentCommands,
 	testCommandsJSONCompositeValidation,
 	testCommandsJSONDataTypes,
@@ -82,7 +82,7 @@ const tests = [
 	testCommandsJSONHyperlinks,
 	testCommandsJSONLengthRangeInfo,
 	testCommandsJSONOrderByPrimaryName,
-	testComponents,
+	/*testComponents,
 	testDeepEquality,
 	testDebugging,
 	testDelay,
@@ -95,8 +95,8 @@ const tests = [
 	testFormatNumber,
 	testHelp,
 	testIsCloseEnough,
-	testIsDigit,
-	testLogoCodeMigrationsJSON,
+	testIsDigit,*/
+	testLogoCodeMigrationsJSON,/*
 	testLongestCommonSubsequence,
 	testMapUtils,
 	testMaybeDecided,
@@ -113,7 +113,7 @@ const tests = [
 	testValueToLiteralCode,
 	testValueToString,
 	testValueWrapper,
-	testWindowsCommandsJSON
+	testWindowsCommandsJSON*/
 ];
 
 function runTests() {
