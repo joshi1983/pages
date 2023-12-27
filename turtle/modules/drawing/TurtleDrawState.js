@@ -15,6 +15,7 @@ import { optimizeClosedPath } from './vector/drawing_optimization/optimizeClosed
 import { Orientation } from './vector/Orientation.js';
 import { Orientation2D } from './vector/Orientation2D.js';
 import { PathShape } from './vector/shapes/PathShape.js';
+import { ProceduralRasterRectangleShape } from './vector/shapes/ProceduralRasterRectangleShape.js';
 import { RasterRectangleShape } from './vector/shapes/RasterRectangleShape.js';
 import { sanitizeArcProperties } from './turtle-draw-state/sanitizeArcProperties.js';
 import { setTurtleState } from './turtle-draw-state/setTurtleState.js';
@@ -357,6 +358,13 @@ export class TurtleDrawState extends EventDispatcher {
 			this.isInPolygon = true;
 		}
 		this.polyPoints = [new Vector3D(this.position)];
+	}
+
+	proceduralImage(procedureName, width, height, initialVariables) {
+		return new ProceduralRasterRectangleShape(
+			new Vector3D(this.position), width, height,
+			this.orientation.headingRadians, procedureName,
+			initialVariables, this.style.deepClone());
 	}
 
 	reset() {

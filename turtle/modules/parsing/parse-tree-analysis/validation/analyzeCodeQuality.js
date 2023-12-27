@@ -44,6 +44,7 @@ import { validateOutputAndStopCalls } from './validateOutputAndStopCalls.js';
 import { validateOverwrittenParameters } from './validateOverwrittenParameters.js';
 import { validatePenUp } from './validatePenUp.js';
 import { validatePolyCommandUsage } from './validatePolyCommandUsage.js';
+import { validateProceduralImageCalls } from './validateProceduralImageCalls.js';
 import { validateProcedureInProcedure } from './validateProcedureInProcedure.js';
 import { validateProcedureNames } from './validateProcedureNames.js';
 import { validateProcedureParametersNotNull } from './validateProcedureParametersNotNull.js';
@@ -105,6 +106,7 @@ const validators = [
 	validateOutputAndStopCalls,
 	validateOverwrittenParameters,
 	validatePolyCommandUsage,
+	validateProceduralImageCalls,
 	validateProcedureInProcedure,
 	validateProcedureNames,
 	validateProcedureParametersNotNull,

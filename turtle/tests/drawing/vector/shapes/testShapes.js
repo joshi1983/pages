@@ -8,6 +8,9 @@ import { testLineSegmentShape } from './testLineSegmentShape.js';
 import { testMath } from './math/testMath.js';
 import { testPathShape } from './testPathShape.js';
 import { testPathShapeWithCurves } from './testPathShapeWithCurves.js';
+import { testProceduralRasterRectangleShape } from './testProceduralRasterRectangleShape.js';
+import { testProceduralRasterRectangleDirectory } from
+	'./procedural-raster-rectangle/testProceduralRasterRectangleDirectory.js';
 import { testRasterRectangleShape } from './testRasterRectangleShape.js';
 import { testSphereShape } from './testSphereShape.js';
 import { testStyle } from './style/testStyle.js';
@@ -26,6 +29,8 @@ export function testShapes(logger) {
 		testMath,
 		testPathShape,
 		testPathShapeWithCurves,
+		testProceduralRasterRectangleShape,
+		testProceduralRasterRectangleDirectory,
 		testRasterRectangleShape,
 		testSphereShape,
 		testStyle,

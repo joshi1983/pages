@@ -21,10 +21,6 @@ async function asyncInit() {
 }
 const initPromise = asyncInit();
 
-/*
-Some helpful examples are at:
-http://cs.brown.edu/courses/bridge/1997/Resources/LogoTutorial.html
-*/
 export class LogoParser {
 	static asyncInit() {
 		return initPromise;
