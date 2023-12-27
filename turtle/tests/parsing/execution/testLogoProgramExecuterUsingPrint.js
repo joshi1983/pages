@@ -394,7 +394,13 @@ p`, 'messages': ['10']},
 end
 
 make "z 30
-p`, 'messages': ['30', '10']}
-	];
+p`, 'messages': ['30', '10']},
+		{'code': `to getColour :x :y
+	output [:x * 255 / 100 :y * 255 / 100 0]
+end
+
+proceduralImage "getColour 100 100
+print "hi`, 'messages': ['hi']}
+		];
 	processExecuterTestCases(cases, logger);
 };

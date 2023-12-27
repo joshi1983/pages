@@ -1,4 +1,5 @@
 import { testBreakpoint } from './testBreakpoint.js';
+import { testDeepCloneVariables } from './testDeepCloneVariables.js';
 import { testErrorCasesValidationAtRuntime } from './testErrorCasesValidationAtRuntime.js';
 import { testExecuteLogoProcedure } from './testExecuteLogoProcedure.js';
 import { testExecuterWithParsedOptimizations } from './testExecuterWithParsedOptimizations.js';
@@ -18,6 +19,7 @@ import { wrapAndCall } from '../../helpers/wrapAndCall.js';
 export function testExecution(logger) {
 	wrapAndCall([
 		testBreakpoint,
+		testDeepCloneVariables,
 		testErrorCasesValidationAtRuntime,
 		testExecuteLogoProcedure,
 		testExecuterWithParsedOptimizations,

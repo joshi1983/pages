@@ -488,6 +488,19 @@ After adding a JavaScript parser,
 	https://github.com/ycatch/p5.turtle.js
 	- add autofixes for CodeHeart TurtleScript at https://casual-effects.com/codeheart/turtle/
 
+Fast pixels to do:
+DONE: - Create a new Image type of shape that is linked to a procedure name.
+DONE: - implement unit tests on the new image shape to set pixels.
+DONE: - Do we need a new execution mode or LogoInstruction to support these images?
+	- Yes, a JavaScriptFunctionCallInstruction.
+- Add a module for filling a Rect that extends EventDispatcher.
+	- Have an event for completion which can then be listened to for redrawing GraphicsScreen.
+	- Have a method for aborting a redraw.  This would be important when user changes GraphicsScreen resolution faster than it can finish processing a Rect.
+- If more than 2 or 3 Rect instances are on a specific ProceduralImage or ProceduralRasterRectangleShape, select and remove the Rect that is least helpful for the current GraphicsScreen state.
+- Define a cache for a few different resolutions or sampled rectangles within the image.
+- Create a drawing using this new type of image that draws a mandelbrot fractal.
+- test the new fractal drawing by dragging the view around, zoom in, zoom out...
+
 Possible names:
 A project named WebLogo is at: http://weblogo.berkeley.edu/ but it looks dead and is not related to the Logo programming language.
 

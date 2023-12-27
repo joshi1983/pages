@@ -152,6 +152,7 @@ export class AsyncParseTask {
 			const nextIndex = getIndexOfMaximumPriority();
 			currentTask = parseTasks[nextIndex];
 			parseTasks.splice(nextIndex, 1); // remove task.
+
 			myWorker.onmessage = function(e) {
 				const tree = e.data.tree === undefined ? undefined : convertObjectToParseTree(e.data.tree);
 				const result = {

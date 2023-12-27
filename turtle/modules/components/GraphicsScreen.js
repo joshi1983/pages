@@ -123,6 +123,7 @@ setTimeout(function() {
 	import('./graphics-screen/mouseWheelZoom.js');
 	import('./graphics-screen/moveCameraOnDrag.js');
 	import('./graphics-screen/multitouchZoom.js');
+	import('./graphics-screen/rectDrawer.js');
 	import('./graphics-screen/showGridDuringHover.js');
 }, 0);
 
