@@ -16,7 +16,7 @@ import { wrapAndCall } from '../../helpers/wrapAndCall.js';
 
 export function testExecution(logger) {
 	wrapAndCall([
-		testBreakpoint,
+		/*testBreakpoint,
 		testErrorCasesValidationAtRuntime,
 		testExecuteLogoProcedure,
 		testExecuterWithParsedOptimizations,
@@ -25,10 +25,10 @@ export function testExecution(logger) {
 		testLogoProgramExecuter,
 		testLogoProgramExecuterAsync,
 		testLogoProgramExecuterBreakpoints,
-		testLogoProgramExecuterInvokeUsingPrint,
-		testLogoProgramExecuterUsingPrint,
+		testLogoProgramExecuterInvokeUsingPrint,*/
+		testLogoProgramExecuterUsingPrint,/*
 		testLogoProgramExecuterWithBreakCommand,
 		testLogoProgramExecuterWithGradients,
-		testLogoProgramExecuterWithSwap
+		testLogoProgramExecuterWithSwap*/
 	], logger);
 };

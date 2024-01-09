@@ -1,6 +1,7 @@
 import { testIsCommandCall } from './testIsCommandCall.js';
 import { testIsContextGlobalVariableRead } from './testIsContextGlobalVariableRead.js';
 import { testIsContextGlobalVariablesGetCall } from './testIsContextGlobalVariablesGetCall.js';
+import { testIsContextGlobalVariablesSetCall } from './testIsContextGlobalVariablesSetCall.js';
 import { testIsContextLocalVariablesGet } from './testIsContextLocalVariablesGet.js';
 import { testIsContextLocalVariablesSet } from './testIsContextLocalVariablesSet.js';
 import { testIsContextReadVariableCall } from './testIsContextReadVariableCall.js';
@@ -44,6 +45,7 @@ export function testTokenClassifiers(logger) {
 		testIsCommandCall,
 		testIsContextGlobalVariableRead,
 		testIsContextGlobalVariablesGetCall,
+		testIsContextGlobalVariablesSetCall,
 		testIsContextLocalVariablesGet,
 		testIsContextLocalVariablesSet,
 		testIsContextReadVariableCall,

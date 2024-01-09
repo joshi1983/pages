@@ -7,6 +7,7 @@ import { getClosestOfType } from '../../../../../generic-parsing-utilities/getCl
 import { getEndingMakeStatement } from './getEndingMakeStatement.js';
 import { getWebLogoVariablesFromJS } from './getWebLogoVariablesFromJS.js';
 import { isLocalVariablesDeclaration } from '../token-classifiers/isLocalVariablesDeclaration.js';
+import { isUnsafeToReplaceReferencesWithJSVariable } from './isUnsafeToReplaceReferencesWithJSVariable.js';
 import { isVariableAssignmentRightSideToken } from '../token-classifiers/isVariableAssignmentRightSideToken.js';
 import { mayBeFinalVariableAssignment } from '../token-classifiers/mayBeFinalVariableAssignment.js';
 import { mayBeLastVariableAssignmentForWebLogoVariable } from '../token-classifiers/mayBeLastVariableAssignmentForWebLogoVariable.js';
@@ -90,6 +91,8 @@ export function moveVariableDeclarationsToStart(allTokens, variables, isLocalVar
 		let variable = values[i];
 		if (variable.assignTokens.length === 0)
 			continue;
+		if (isUnsafeToReplaceReferencesWithJSVariable(variable))
+			continue;
 		const firstAssign = variable.getFirstAssignToken();
 		const jsName = assignTokenToJSVarName(firstAssign);
 		declarations.append(`let ${jsName} = ${assignTokenToReadJSCode(firstAssign)};\n`);
@@ -132,6 +135,8 @@ export function moveVariableDeclarationsToStart(allTokens, variables, isLocalVar
 	// remove the assign tokens.
 	for (const info of variables.values()) {
 		if (info.assignTokens.length === 0)
+			continue;
+		if (isUnsafeToReplaceReferencesWithJSVariable(info))
 			continue;
 		// remove any assignment tokens after the very first one.
 		const firstAssignToken = info.getFirstAssignToken();

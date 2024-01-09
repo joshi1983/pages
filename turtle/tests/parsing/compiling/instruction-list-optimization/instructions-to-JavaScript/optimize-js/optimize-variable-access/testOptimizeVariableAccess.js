@@ -7,6 +7,7 @@ import { testGetVariableCountsFromParseTree } from './testGetVariableCountsFromP
 import { testGetWebLogoVariablesFromJS } from './testGetWebLogoVariablesFromJS.js';
 import { testInitializeLocalVariables } from './testInitializeLocalVariables.js';
 import { testIsNeedingToMoveDeclarations } from './testIsNeedingToMoveDeclarations.js';
+import { testIsUnsafeToReplaceReferencesWithJSVariable } from './testIsUnsafeToReplaceReferencesWithJSVariable.js';
 import { testIsWebLogoVariableAlwaysLocalAtEnd } from './testIsWebLogoVariableAlwaysLocalAtEnd.js';
 import { testMoveVariableDeclarationsToStart } from './testMoveVariableDeclarationsToStart.js';
 import { testNeedsEndingMake } from './testNeedsEndingMake.js';
@@ -25,6 +26,7 @@ export function testOptimizeVariableAccess(logger) {
 		testGetWebLogoVariablesFromJS,
 		testInitializeLocalVariables,
 		testIsNeedingToMoveDeclarations,
+		testIsUnsafeToReplaceReferencesWithJSVariable,
 		testIsWebLogoVariableAlwaysLocalAtEnd,
 		testMoveVariableDeclarationsToStart,
 		testNeedsEndingMake,

@@ -178,7 +178,14 @@ if (!(colorindex > 0)) {
 context.turtle.setFillColor(this.convertToAlphaColourOrTransparent(context.list.item(colorindex ,context.globalVariables.get("colors"))));
 context.valueStack.push(context.readVariable("size") * 0.38197);
 context.valueStack.push(colorindex - 1);
-localVariables.set("colorindex", colorindex);`}
+localVariables.set("colorindex", colorindex);`},
+{'in': `context.make("x",1);
+context.localmake("x",2);`,
+// We don't want to change this because this could be setting a global x 
+// variable to 1 and a local x variable to 2.
+// We don't want to change this in a way that could change that effect.
+'changed': false
+}
 	];
 	testInOutPairs(cases, optimizeVariableAccessInJavaScript, logger);
 };

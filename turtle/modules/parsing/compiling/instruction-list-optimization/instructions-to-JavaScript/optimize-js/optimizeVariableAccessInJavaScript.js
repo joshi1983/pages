@@ -10,6 +10,8 @@ import { getVariableReadRootToken } from './optimize-variable-access/getVariable
 import { getVariableCountsFromParseTree } from './optimize-variable-access/getVariableCountsFromParseTree.js';
 import { getWebLogoVariablesFromJS } from './optimize-variable-access/getWebLogoVariablesFromJS.js';
 import { isContextReadVariableCall } from './token-classifiers/isContextReadVariableCall.js';
+import { isUnsafeToReplaceReferencesWithJSVariableFromCounts } from './optimize-variable-access/isUnsafeToReplaceReferencesWithJSVariableFromCounts.js';
+import { isUnsafeToReplaceReferencesWithJSVariable } from './optimize-variable-access/isUnsafeToReplaceReferencesWithJSVariable.js';
 import { MaybeDecided } from '../../../../../MaybeDecided.js';
 import { parse } from '../../../../js-parsing/parse.js';
 import { parseTreeTokensToCode } from '../../../../js-parsing/parseTreeTokensToCode.js';
@@ -36,6 +38,8 @@ export function optimizeVariableAccessInJavaScript(jsCode) {
 	let after = '';
 	const varsToAdd = [];
 	for (const [varName, info] of counts) {
+		if (isUnsafeToReplaceReferencesWithJSVariableFromCounts(info))
+			continue;
 		if (info.readTokens.length > 1 || info.writeTokens.length > 1) {
 			varsToAdd.push(varName);
 		}
@@ -59,6 +63,9 @@ export function optimizeVariableAccessInJavaScript(jsCode) {
 	const newNames = getNewVariableNamesFor(varsToAdd, parseResult.root, tokensToIgnore);
 	for (let i = 0; i < varsToAdd.length; i++) {
 		const oldName = varsToAdd[i];
+		const webLogoVarInfo = webLogoVariables.get(oldName);
+		if (webLogoVarInfo !== undefined && isUnsafeToReplaceReferencesWithJSVariable(webLogoVarInfo))
+			continue;
 		const info = counts.get(oldName);
 		prefix += `let ${newNames[i]} = `;
 		if (info.isAlwaysLocal === MaybeDecided.Yes) {
