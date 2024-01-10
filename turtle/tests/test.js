@@ -100,8 +100,8 @@ const tests = [
 	testLongestCommonSubsequence,
 	testMapUtils,
 	testMaybeDecided,
-	testOperatorsJSON,
-	*/testParsing,
+	testOperatorsJSON,*/
+	testParsing,
 	/*testPopulateTemplateUsingObject,
 	testRateLimiter,
 	testSet,

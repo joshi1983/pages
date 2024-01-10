@@ -2,7 +2,7 @@ import { processExecuterTestCases } from './processExecuterTestCases.js';
 
 export function testLogoProgramExecuterUsingPrint(logger) {
 	const cases = [
-		/*{'code': 'print 1', 'messages': ['1']},
+		{'code': 'print 1', 'messages': ['1']},
 		{'code': 'print 1E1', 'messages': ['10']},
 		{'code': 'print 1.2E1', 'messages': ['12']},
 		{'code': 'print 1.2E+1', 'messages': ['12']},
@@ -131,11 +131,11 @@ export function testLogoProgramExecuterUsingPrint(logger) {
 		{
 			'code': 'make "x []\nqueue2 "X 5\nprint count :x\nprint item 1 :X',
 			'messages': ['1', '5']
-		},*/
+		},
 		{
 			'code': 'make "x []\nqueue "X 5\nqueue "X 8\nprint count :x\nprint dequeue "X\nprint dequeue "x\nprint count :X',
 			'messages': ['2', '5', '8', '0']
-		},/*
+		},
 		{
 			'code': 'make "x []\nqueue "X 5\nmake "y :x\nprint dequeue "X\nprint count :y',
 			'messages': ['5', '1']
@@ -388,7 +388,7 @@ p`, 'messages': ['10']},
 end
 
 make "z 30
-p`, 'messages': ['30', '10']}*/
+p`, 'messages': ['30', '10']}
 	];
 	processExecuterTestCases(cases, logger);
 };

@@ -27,6 +27,8 @@ function writesLocal(token) {
 }
 
 export function isUnsafeToReplaceReferencesWithJSVariable(varInfo) {
+	if (varInfo.varReferences.length !== 0)
+		return true;
 	if (varInfo.isAlwaysGlobal === MaybeDecided.Yes ||
 	varInfo.isAlwaysLocal === MaybeDecided.Yes)
 		return false;

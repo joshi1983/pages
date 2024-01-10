@@ -10,19 +10,10 @@ import { messageToDivNoProcessLinks } from '../../modules/components/messageToDi
 import { showCompilerOptionsReport } from './showCompilerOptionsReport.js';
 import { showExecutionReport } from './showExecutionReport.js';
 
-let webLogoCode = `make "colors [ "white]
-
-to drawFractalStar :size :colorIndex
-	if :size > 1 [
-		if :colorIndex <= 0 [
-			localmake "colorIndex :colorIndex + 1
-		]
-		setFillColor item :colorIndex :colors
-		drawFractalStar :size * 0.38197  :colorIndex - 1
-	]
-end
-
-drawFractalStar 2 1`;
+let webLogoCode = `make "treadColor "black
+make "frameColor "skyBlue
+make "frameShadeColor mix :frameColor "black 0.6
+make "seatColor "black`;
 
 let instructionsContainer;
 let lineNumbersContainer;

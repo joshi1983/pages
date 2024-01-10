@@ -28,6 +28,7 @@ import { testIsNoContextGlobalVariableRead } from './testIsNoContextGlobalVariab
 import { testIsNoContextValueStackPop } from './testIsNoContextValueStackPop.js';
 import { testIsNoContextValueStackPush } from './testIsNoContextValueStackPush.js';
 import { testIsNotToken } from './testIsNotToken.js';
+import { testIsReadWriteReference } from './testIsReadWriteReference.js';
 import { testIsScopeAgnosticVariableRead } from './testIsScopeAgnosticVariableRead.js';
 import { testIsUselessVariableDeclaration } from './testIsUselessVariableDeclaration.js';
 import { testIsValueStackLength } from './testIsValueStackLength.js';
@@ -72,6 +73,7 @@ export function testTokenClassifiers(logger) {
 		testIsNoContextValueStackPop,
 		testIsNoContextValueStackPush,
 		testIsNotToken,
+		testIsReadWriteReference,
 		testIsScopeAgnosticVariableRead,
 		testIsUselessVariableDeclaration,
 		testIsValueStackLength,

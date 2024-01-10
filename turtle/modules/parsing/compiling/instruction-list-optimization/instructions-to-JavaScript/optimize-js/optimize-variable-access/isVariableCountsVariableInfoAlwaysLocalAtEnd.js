@@ -13,5 +13,6 @@ export function isVariableCountsVariableInfoAlwaysLocalAtEnd(varInfo) {
 	const webLogoVarInfo = new WebLogoVariableInfo('unknown');
 	webLogoVarInfo.readTokens = varInfo.readTokens;
 	webLogoVarInfo.makeTokens = varInfo.writeTokens;
+	webLogoVarInfo.varReferences = varInfo.varReferences;
 	return isWebLogoVariableAlwaysLocalAtEnd(webLogoVarInfo);
 };

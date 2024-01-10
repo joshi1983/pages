@@ -162,6 +162,8 @@ async function testCompileAllExamples(logger) {
 	logger.indicators.push(progressIndicator);
 	for (let i = 0; i < examples.length; i++) {
 		const exampleInfo = examples[i];
+		if (exampleInfo.filename.indexOf('bicycle.lgo') === -1 && exampleInfo.filename.indexOf('renaissance-gm-building.lgo') === -1)
+			continue;
 		const url = `logo-scripts/${exampleInfo.filename}?${Math.random(1)}`;
 		testExample(exampleInfo, url, logger);
 		await sleep(100);

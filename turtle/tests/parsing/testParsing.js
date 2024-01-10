@@ -7,8 +7,8 @@ import { testCommandClass } from './testCommandClass.js';
 import { testCreateParameterizedGroups } from './testCreateParameterizedGroups.js';
 import { testCreateParameterizedGroupsParseErrors } from './testCreateParameterizedGroupsParseErrors.js';
 import { testDataTypesDirectory } from './data-types/testDataTypesDirectory.js';
-import { testExampleScripts } from './testExampleScripts.js';
-*/import { testExecution } from './execution/testExecution.js';
+*/import { testExampleScripts } from './testExampleScripts.js';
+import { testExecution } from './execution/testExecution.js';
 /*import { testFixOperatorPrecedence } from './testFixOperatorPrecedence.js';
 import { testGenericParsingUtilities } from './generic-parsing-utilities/testGenericParsingUtilities.js';
 import { testGetStartPositionOfToken } from './testGetStartPositionOfToken.js';
@@ -50,8 +50,8 @@ export function testParsing(logger) {
 		testCreateParameterizedGroups,
 		testCreateParameterizedGroupsParseErrors,
 		testDataTypesDirectory,
-		testExampleScripts,
-		*/testExecution,
+		*/testExampleScripts,
+		testExecution,
 		/*testFixOperatorPrecedence,
 		testGenericParsingUtilities,
 		testGetStartPositionOfToken,

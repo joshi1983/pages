@@ -5,5 +5,6 @@ export function isUnsafeToReplaceReferencesWithJSVariableFromCounts(varCountsInf
 	const varInfo = new WebLogoVariableInfo('unknown');
 	varInfo.makeTokens = varCountsInfo.writeTokens;
 	varInfo.readTokens = varCountsInfo.readTokens;
+	varInfo.varReferences = varCountsInfo.varReferences;
 	return isUnsafeToReplaceReferencesWithJSVariable(varInfo);
 };

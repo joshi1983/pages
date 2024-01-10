@@ -266,7 +266,12 @@ end
 rainingWithoutCloud 100 animation.time / animation.duration
 print "hi`,
 'messages': ['11.25', '20.65631', '1', '11.25', '20.65631', '1',
-'11.25', '20.65631', '0.3', 'hi']}
+'11.25', '20.65631', '0.3', 'hi']},
+	{'code': `make "treadColor "black
+make "frameColor "skyBlue
+make "frameShadeColor mix :frameColor "black 0.6
+make "seatColor "black
+print "hi`, 'messages': ['hi']}
 	];
 	processExecuterTestCases(cases, logger);
 };

@@ -12,6 +12,7 @@ export class WebLogoVariableInfo {
 		this.assignTokens = [];
 		this.makeTokens = [];
 		this.readTokens = [];
+		this.varReferences = [];
 		this.jsVarNames = new Set();
 		this.setTokens = [];
 		if (assignToken !== undefined)

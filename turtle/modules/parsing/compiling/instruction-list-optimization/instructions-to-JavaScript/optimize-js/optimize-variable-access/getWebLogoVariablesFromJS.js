@@ -1,5 +1,6 @@
 import { evaluateStringLiteral } from '../../../../../js-parsing/evaluateStringLiteral.js';
 import { getClosestOfType } from '../../../../../generic-parsing-utilities/getClosestOfType.js';
+import { getWebLogoVariableNameFromVariableReference } from './getWebLogoVariableNameFromVariableReference.js';
 import { isAfterOrSame } from '../../../../../generic-parsing-utilities/isAfterOrSame.js';
 import { isContextReadVariableCall } from '../token-classifiers/isContextReadVariableCall.js';
 import { isGlobalVariablesSetCall } from '../token-classifiers/isGlobalVariablesSetCall.js';
@@ -8,6 +9,7 @@ import { isJSVariableAssignment } from '../token-classifiers/isJSVariableAssignm
 import { isJSVariableDeclareAssignment } from '../token-classifiers/isJSVariableDeclareAssignment.js';
 import { isLocalmakeAssignment } from '../token-classifiers/isLocalmakeAssignment.js';
 import { isLocalVariablesSetCall } from '../token-classifiers/isLocalVariablesSetCall.js';
+import { isReadWriteReference } from '../token-classifiers/isReadWriteReference.js';
 import { isWebLogoVariableAlwaysLocal } from './isWebLogoVariableAlwaysLocal.js';
 import { isWebLogoVariableAlwaysLocalAtEnd } from './isWebLogoVariableAlwaysLocalAtEnd.js';
 import { isVariableAssignment } from '../token-classifiers/isVariableAssignment.js';
@@ -78,6 +80,7 @@ export function getWebLogoVariablesFromJS(allTokens) {
 	const identifiers = allTokens.filter(isIdentifierReadToken);
 	const varReads = allTokens.filter(isVariableReadToken);
 	const setCalls = allTokens.filter(isSetCall);
+	const varReferences = allTokens.filter(isReadWriteReference);
 	const result = new Map();
 	jsVariableDeclareAssignments.forEach(function(assignToken) {
 		const name = getWebLogoVariableNameFromAssignToken(assignToken);
@@ -120,6 +123,15 @@ export function getWebLogoVariablesFromJS(allTokens) {
 		const info = result.get(webLogoVarName);
 		if (info !== undefined) {
 			info.readTokens.push(varReadToken);
+		}
+	});
+	varReferences.forEach(function(varReference) {
+		const webLogoVarName = getWebLogoVariableNameFromVariableReference(varReference);
+		if (webLogoVarName === undefined)
+			return;
+		const info = result.get(webLogoVarName);
+		if (info !== undefined) {
+			info.varReferences.push(varReference);
 		}
 	});
 	setCalls.forEach(function(setCallToken) {

@@ -23,6 +23,8 @@ function convertMakeAssignmentToJavaScriptAssignment(stringLiteralToken, newVarN
 	const index = argList.children.indexOf(stringLiteralToken);
 	const commaToken = argList.children[index + 1];
 	const rightSideValToken = argList.children[index + 2];
+	if (rightSideValToken === undefined)
+		throw new Error(`rightSideValToken not expected to be undefined. index=${index}, argList.children.length = ${argList.children.length}`);
 	const varNameToken = stringLiteralToken;
 	varNameToken.val = newVarName;
 	varNameToken.type = ParseTreeTokenType.IDENTIFIER;
