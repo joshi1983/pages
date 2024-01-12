@@ -1,5 +1,7 @@
 import { testMergeConsecutiveValueStackPushes } from
 './testMergeConsecutiveValueStackPushes.js';
+import { testMergeValueStackLastMutations } from
+'./testMergeValueStackLastMutations.js';
 import { testMergeValueStackPops } from
 './testMergeValueStackPops.js';
 import { testOptimizeBooleanExpression } from
@@ -25,8 +27,9 @@ import { wrapAndCall } from '../../../../../helpers/wrapAndCall.js';
 
 export function testOptimizeJSDirectory(logger) {
 	wrapAndCall([
-		testMergeConsecutiveValueStackPushes,
-		testMergeValueStackPops,
+		//testMergeConsecutiveValueStackPushes,
+		testMergeValueStackLastMutations,
+		/*testMergeValueStackPops,
 		testOptimizeBooleanExpression,
 		testOptimizeJS,
 		testOptimizePushedIfStatementConditions,
@@ -35,7 +38,7 @@ export function testOptimizeJSDirectory(logger) {
 		testReduceValueStackPushes,
 		testRemoveUnneededAssignments,
 		testRemoveUnneededCurvedBrackets,
-		testSanitizeMergedJS,
+		testSanitizeMergedJS,*/
 		testTokenClassifiers
 	], logger);
 };

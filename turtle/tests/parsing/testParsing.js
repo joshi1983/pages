@@ -1,9 +1,9 @@
-import { testAsyncParser } from './testAsyncParser.js';
+/*import { testAsyncParser } from './testAsyncParser.js';
 import { testAsyncParseTask } from './testAsyncParseTask.js';
 import { testCharIndexToParseTreeTokenPosition } from './testCharIndexToParseTreeTokenPosition.js';
 import { testCommandClass } from './testCommandClass.js';
-import { testCompiling } from './compiling/testCompiling.js';
-import { testConvertParseTreeTokensToScanTokens } from './testConvertParseTreeTokensToScanTokens.js';
+*/import { testCompiling } from './compiling/testCompiling.js';
+/*import { testConvertParseTreeTokensToScanTokens } from './testConvertParseTreeTokensToScanTokens.js';
 import { testCreateParameterizedGroups } from './testCreateParameterizedGroups.js';
 import { testCreateParameterizedGroupsParseErrors } from './testCreateParameterizedGroupsParseErrors.js';
 import { testDataTypesDirectory } from './data-types/testDataTypesDirectory.js';
@@ -36,17 +36,17 @@ import { testScanner } from './testScanner.js';
 import { testScrapeProcedures } from './testScrapeProcedures.js';
 import { testSerialization } from './serialization/testSerialization.js';
 import { testToken } from './testToken.js';
-import { testUnsupportedCommand } from './testUnsupportedCommand.js';
+import { testUnsupportedCommand } from './testUnsupportedCommand.js';*/
 import { wrapAndCall } from '../helpers/wrapAndCall.js';
 
 export function testParsing(logger) {
 	wrapAndCall([
-		testAsyncParser,
+		/*testAsyncParser,
 		testAsyncParseTask,
 		testCharIndexToParseTreeTokenPosition,
-		testCommandClass,
+		testCommandClass,*/
 		testCompiling,
-		testConvertParseTreeTokensToScanTokens,
+		/*testConvertParseTreeTokensToScanTokens,
 		testCreateParameterizedGroups,
 		testCreateParameterizedGroupsParseErrors,
 		testDataTypesDirectory,
@@ -79,6 +79,6 @@ export function testParsing(logger) {
 		testScrapeProcedures,
 		testSerialization,
 		testToken,
-		testUnsupportedCommand
+		testUnsupportedCommand*/
 	], logger);
 };

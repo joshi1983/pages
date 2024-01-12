@@ -223,6 +223,16 @@ context.make("framecolor","skyBlue");
 context.make("frameshadecolor",context.math.mix(context.globalVariables.get("framecolor"),"black",0.6));
 context.make("seatcolor","black");`,
 'changed': false
+},
+{'in': `context.valueStack.push("v",10,context.globalVariables.get("x"));
+context.valueStack[context.valueStack.length - 1] = context.valueStack[context.valueStack.length - 1] * 0.01 ;`,
+'out': `context.valueStack.push("v",10,context.globalVariables.get("x") * 0.01);`
+},
+{'in': `context.valueStack.push("v",10,context.globalVariables.get("x"));
+context.valueStack[context.valueStack.length - 1] = context.valueStack[context.valueStack.length - 1] * 0.01 ;
+context.valueStack.push(context.globalVariables.get("y"));
+context.valueStack[context.valueStack.length - 1] = context.valueStack[context.valueStack.length - 1] * 0.01 ;`,
+'out': `context.valueStack.push("v",10,context.globalVariables.get("x") * 0.01, context.globalVariables.get("y") * 0.01);`
 }
 	];
 	testInOutPairs(cases, optimizeJSWrapped, logger);

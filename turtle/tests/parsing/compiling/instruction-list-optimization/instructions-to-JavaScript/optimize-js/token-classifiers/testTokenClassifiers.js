@@ -16,6 +16,7 @@ import { testIsJSVariableAssignment } from './testIsJSVariableAssignment.js';
 import { testIsJSVariableDeclareAssignment } from './testIsJSVariableDeclareAssignment.js';
 import { testIsLastContextValueStackElementExpression } from './testIsLastContextValueStackElementExpression.js';
 import { testIsLastNoContextValueStackElementExpression } from './testIsLastNoContextValueStackElementExpression.js';
+import { testIsLastValueStackElementAssignment } from './testIsLastValueStackElementAssignment.js';
 import { testIsLastValueStackElementExpression } from './testIsLastValueStackElementExpression.js';
 import { testIsLocalmakeAssignment } from './testIsLocalmakeAssignment.js';
 import { testIsLocalVariableRead } from './testIsLocalVariableRead.js';
@@ -63,6 +64,7 @@ export function testTokenClassifiers(logger) {
 		testIsJSVariableDeclareAssignment,
 		testIsLastContextValueStackElementExpression,
 		testIsLastNoContextValueStackElementExpression,
+		testIsLastValueStackElementAssignment,
 		testIsLastValueStackElementExpression,
 		testIsLocalmakeAssignment,
 		testIsLocalVariableRead,

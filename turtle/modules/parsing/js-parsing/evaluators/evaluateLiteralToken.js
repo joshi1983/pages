@@ -11,6 +11,9 @@ const tokenEvaluators = new Map([
 	[ParseTreeTokenType.STRING_LITERAL, evaluateStringLiteralToken]
 ]);
 
+/*
+Returns undefined when unable to evaluate the token completely.
+*/
 export function evaluateLiteralToken(token) {
 	const evaluator = tokenEvaluators.get(token.type);
 	if (evaluator === undefined)

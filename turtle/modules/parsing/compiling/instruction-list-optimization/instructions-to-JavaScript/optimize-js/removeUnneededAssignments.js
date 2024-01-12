@@ -36,6 +36,5 @@ export function removeUnneededAssignments(jsCode) {
 
 		token.remove(); // remove the unneeded assignment
 	});
-	const allTokens = flatten(parseResult.root);
-	return parseTreeTokensToCode(allTokens);
+	return parseTreeTokensToCode(flatten(parseResult.root));
 };
