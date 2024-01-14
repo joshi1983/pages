@@ -4,6 +4,7 @@ import { getCommandPath } from './getCommandPath.js';
 import { getInstructionParamArgInfo } from './getInstructionParamArgInfo.js';
 import { instructionToJavaScript } from './instructionToJavaScript.js';
 import { MapUtils } from '../../../../MapUtils.js';
+import { translateSpecialCommandCall } from './commands/translateSpecialCommandCall.js';
 import { wrapWithTypeConverter } from './wrapWithTypeConverter.js';
 await Command.asyncInit();
 
@@ -18,7 +19,6 @@ export function callCommandInstructionToJavaScript(instructions, index, info, pu
 	if (instruction.command === undefined)
 		throw new Error(`instructions ${index} does not have a command property.  instruction = ${instruction}`);
 
-	let result = `${getCommandPath(instruction.command)}(`;
 	let pushIndex = index - 1;
 	let actualParams = [];
 	const namedFunctionsMap = new Map();
@@ -39,7 +39,11 @@ export function callCommandInstructionToJavaScript(instructions, index, info, pu
 		actualParams.push(code);
 		pushIndex = getArgPushIndex(instructions, pushIndex, 1);
 	}
-	result += actualParams.reverse().join(',') + ')';
+	actualParams = actualParams.reverse();
+	let result = translateSpecialCommandCall(instruction.command, actualParams);
+	if (result === undefined) {
+		result = `${getCommandPath(instruction.command)}(${actualParams.join(',')})`;
+	}
 	if (pushResult) {
 		result = 'context.valueStack.push(' + result + ');';
 	}
