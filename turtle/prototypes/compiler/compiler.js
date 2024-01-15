@@ -10,10 +10,62 @@ import { messageToDivNoProcessLinks } from '../../modules/components/messageToDi
 import { showCompilerOptionsReport } from './showCompilerOptionsReport.js';
 import { showExecutionReport } from './showExecutionReport.js';
 
-let webLogoCode = `make "treadColor "black
-make "frameColor "skyBlue
-make "frameShadeColor mix :frameColor "black 0.6
-make "seatColor "black`;
+let webLogoCode = `to backgroundGradient :radius :sunRatio
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "white
+	setProperty "colorStops :sunRatio * 0.8 "yellow
+	setProperty "colorStops :sunRatio "orange
+	setProperty "colorStops :sunRatio * 1.01 "red
+	setProperty "colorStops 1 "#505
+	setFillGradient createRadialGradient pos :radius :colorStops
+	backgroundVerticalGradient :radius
+end
+
+to backgroundVerticalGradient :radius
+	localmake "oldPos pos
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "#0ff8
+	setProperty "colorStops 0.4 "#1ff8
+	setProperty "colorStops 0.5 "#5ffb
+	setProperty "colorStops 0.6 "#1ff8
+	setProperty "colorStops 1 "#0ff8
+jumpForward 100
+	setFillGradient createLinearGradient :oldPos pos :colorStops "pad
+	circle :radius
+end
+
+to setSkyPenGradient :radius :sunRatio
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "white
+	setProperty "colorStops mix :sunRatio 1 0.5 "yellow
+	setProperty "colorStops 1 "red
+	setPenGradient createRadialGradient pos :radius :colorStops
+end
+
+to drawSunReflection :radius
+	localmake "oldPos pos
+	localmake "oldHeading heading
+	localmake "numLines 32
+	localmake "colorStops createPList
+	setProperty "colorStops 0 "purple
+	setProperty "colorStops 0.3 "purple
+	setProperty "colorStops 0.44 "yellow
+	setProperty "colorStops 0.5 "white
+	setProperty "colorStops 0.56 "yellow
+	setProperty "colorStops 0.7 "purple
+	setProperty "colorStops 1 "purple
+	localmake "fromPos pos
+	setFillGradient createLinearGradient :fromPos pos :colorStops "pad
+	repeat :numLines [
+		localmake "ratio power (repcount - 1) / :numLines 3
+		setHeading :oldHeading
+		setPos :oldPos
+		backward :radius * 0.95 * :ratio
+		right 90
+		backward :radius * ((0.008 * random 10) - 0.04)
+		ellipse :radius * (0.007 - 0.004 * (1 - :ratio)) :radius * (0.2 - 0.18 * :ratio)
+	]
+end`;
 
 let instructionsContainer;
 let lineNumbersContainer;

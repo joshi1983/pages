@@ -10,6 +10,7 @@ import { testOptimizeJS } from
 './testOptimizeJS.js';
 import { testOptimizePushedIfStatementConditions } from
 './testOptimizePushedIfStatementConditions.js';
+import { testOptimizeMapInitializations } from './testOptimizeMapInitializations.js';
 import { testOptimizeSetProperty } from './testOptimizeSetProperty.js';
 import { testOptimizeVariableAccess } from
 './optimize-variable-access/testOptimizeVariableAccess.js';
@@ -33,6 +34,7 @@ export function testOptimizeJSDirectory(logger) {
 		testMergeValueStackPops,
 		testOptimizeBooleanExpression,
 		testOptimizeJS,
+		testOptimizeMapInitializations,
 		testOptimizePushedIfStatementConditions,
 		testOptimizeSetProperty,
 		testOptimizeVariableAccess,

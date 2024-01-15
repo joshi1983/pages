@@ -1,6 +1,5 @@
 import { flatten } from '../../../../generic-parsing-utilities/flatten.js';
 import { getAllDescendentsAsArray } from '../../../../generic-parsing-utilities/getAllDescendentsAsArray.js';
-import { getSortedFirstTokenFromArray } from '../../../../generic-parsing-utilities/getSortedFirstTokenFromArray.js';
 import { getSortedLastDescendentTokenOf } from '../../../../generic-parsing-utilities/getSortedLastDescendentTokenOf.js';
 import { insertColIndexSpanAt } from '../../../../generic-parsing-utilities/insertColIndexSpanAt.js';
 import { isLastValueStackElementExpression } from './token-classifiers/isLastValueStackElementExpression.js';
@@ -14,6 +13,7 @@ import { ParseTreeToken } from '../../../../generic-parsing-utilities/ParseTreeT
 import { parseTreeTokensToCode } from '../../../../js-parsing/parseTreeTokensToCode.js';
 import { ParseTreeTokenType } from '../../../../js-parsing/ParseTreeTokenType.js';
 import { removeSemicolonsImmediatelyAfter } from './removeSemicolonsImmediatelyAfter.js';
+import { setLineIndexForAllDescendents } from './setLineIndexForAllDescendents.js';
 import { wrapInCurvedBrackets } from './wrapInCurvedBrackets.js';
 
 function getPreviousTokenOfInterest(token) {
@@ -79,17 +79,6 @@ function isBinaryStartingWithLastValueStackExpression(token) {
 	if (containsUnmovableToken(token.children[1]))
 		return false;
 	return true;
-}
-
-function setLineIndexForAllDescendents(token, lineIndex, colIndex) {
-	const descendents = getAllDescendentsAsArray(token);
-	descendents.push(token);
-	const firstToken = getSortedFirstTokenFromArray(descendents);
-	const colIndexOffset = colIndex - firstToken.colIndex + 1;
-	descendents.forEach(function(t) {
-		t.lineIndex = lineIndex;
-		t.colIndex += colIndexOffset;
-	});
 }
 
 function merge(token) {

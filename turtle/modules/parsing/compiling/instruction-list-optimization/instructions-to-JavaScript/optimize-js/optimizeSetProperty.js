@@ -1,5 +1,9 @@
 import { flatten } from
 '../../../../generic-parsing-utilities/flatten.js';
+import { isSetPropertyCallOnIdentifier } from
+'./token-classifiers/isSetPropertyCallOnIdentifier.js';
+import { optimizeMapInitializations } from
+'./optimizeMapInitializations.js';
 import { parse } from
 '../../../../js-parsing/parse.js';
 import { ParseTreeToken } from
@@ -8,21 +12,6 @@ import { ParseTreeTokenType } from
 '../../../../js-parsing/ParseTreeTokenType.js';
 import { parseTreeTokensToCode } from
 '../../../../js-parsing/parseTreeTokensToCode.js';
-import { tokenToCommandInfo } from
-'./token-classifiers/tokenToCommandInfo.js';
-
-function isOfInterest(token) {
-	const info = tokenToCommandInfo(token);
-	if (info === undefined)
-		return false;
-	if (info.primaryName !== 'setProperty')
-		return false;
-	const argList = token.children[1];
-	const mapToken = argList.children[1];
-	if (mapToken.type !== ParseTreeTokenType.IDENTIFIER || mapToken.children.length !== 0)
-		return false;
-	return true;
-}
 
 /*
 Converts something like context.plist.setProperty(result, "x", 3)
@@ -44,9 +33,10 @@ function convertSetPropertyToSet(token) {
 }
 
 export function optimizeSetProperty(jsCode) {
+	jsCode = optimizeMapInitializations(jsCode);
 	const parseResult = parse(jsCode);
 	const allTokens = flatten(parseResult.root);
-	const interestingTokens = allTokens.filter(isOfInterest);
+	const interestingTokens = allTokens.filter(isSetPropertyCallOnIdentifier);
 	if (interestingTokens.length === 0)
 		return jsCode;
 	interestingTokens.forEach(convertSetPropertyToSet);
