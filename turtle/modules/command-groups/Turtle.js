@@ -1,3 +1,4 @@
+import { arcLines } from './helpers/arcLines.js';
 import { arcsLeft } from './helpers/arcsLeft.js';
 import { arcsRight } from './helpers/arcsRight.js';
 import { arrow } from './helpers/arrow.js';
@@ -61,6 +62,10 @@ export class Turtle extends EventDispatcher {
 		const shape = this.drawState.arcLeft(radius, angleDegrees * MathCommands.degToRadianScale);
 		if (this.drawState.isPenDown && shape.style.isPenVisible() && shape.isVisible())
 			this.drawing.addForegroundShape(shape);
+	}
+
+	arcLines(arcLinesInfo, scale) {
+		arcLines(this, arcLinesInfo, scale);
 	}
 
 	arcRight(angleDegrees, radius) {

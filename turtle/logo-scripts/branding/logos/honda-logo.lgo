@@ -3,11 +3,8 @@ to drawHondaLogoOutline :height
 	localmake "outlineThickness :height * 0.05
 	localmake "bottomWidth :height * 0.5
 	localmake "topWidth :height * 0.54354017
-	localmake "sideHeight :height * 0.3266
-	localmake "outlineBottomArcsInfo [
-		[12 0.5] [60 0.24] [12 0.5]
-	]
-	localmake "outlineTopArcsInfo [
+	localmake "outlineArcLinesInfo [
+		[12 0.5] [60 0.24] [12 0.5] [0.3266 -1]
 		[18 0.52] [60 0.22] [18 0.52]
 	]
 	setPenSize :outlineThickness
@@ -16,13 +13,9 @@ to drawHondaLogoOutline :height
 	right 90
 	jumpForward :bottomWidth / 2
 	polyStart
-	arcsLeft :outlineBottomArcsInfo :height
-	jumpForward :sideHeight
-	arcsLeft :outlineTopArcsInfo :height
+	arcLines :outlineArcLinesInfo :height
 	jumpForward :topWidth
-	arcsLeft :outlineTopArcsInfo :height
-	jumpForward :sideHeight
-	arcsLeft :outlineBottomArcsInfo :height
+	arcLines reverse :outlineArcLinesInfo :height
 	polyEnd
 	setTurtleState :oldState
 end

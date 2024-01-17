@@ -6,25 +6,18 @@ end
 
 to dynatraceShape :height :xSign :rotation
 	localmake "oldState turtleState
-	localmake "arcsInfo1 [
+	localmake "arcLinesInfo [
 		[3 2.5] [4 2.1] [6.54 2.65] [65.5 0.0958]
-		[-164 0] [0.4 2.5] [-46.4 0.09]
-	]
-	localmake "arcsInfo2 [
+		[-164 0] [0.4 2.5] [-46.4 0.09] [0.404 -1]
 		[-47 0.095] [-7.19 4.1615]
 	]
-	localmake "size1 :height * 0.404
 	dynatraceMove :height :xSign :rotation
 	setPenSize 0
 	polyStart
 	ifelse :xSign > 0 [
-		arcsLeft :arcsInfo1 :height
-		jumpForward :size1
-		arcsLeft :arcsInfo2 :height
+		arcLines :arcLinesInfo :height
 	] [
-		arcsRight :arcsInfo1 :height
-		jumpForward :size1
-		arcsRight :arcsInfo2 :height
+		arcLines :arcLinesInfo -:height
 	]
 	polyEnd
 	setTurtleState :oldState

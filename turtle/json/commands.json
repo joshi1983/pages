@@ -151,6 +151,29 @@
 	"returnTypes": null
 },
 {
+	"primaryName": "arcLines",
+	"names": [],
+	"args": [
+		{
+			"name": "arcLinesInfo",
+			"types": "list<list<num>>"
+		},
+		{
+			"name": "scale",
+			"types": "num",
+			"errorCases": [0]
+		}
+	],
+	"commandGroup": "turtle",
+	"searchKeywords": ["path"],
+	"description": "<p>Follows a path made of arcs and straight lines.  This is similar to <span class=\"command\">arcsLeft</span> except that straight lines can also be represented in arcLinesInfo.</p><p>Each pair of numbers in arcLinesInfo can represent 1 of 3 actions.</p><ol><li>A <strong>straight line</strong> is represented by a [length (negative number)] pair.</li><li>An arc is represented by [(degrees left) (a positive arc radius)]</li><li>A <strong>turn left</strong> is represented by a [(degrees left) 0] pair.</li></ol><p><span class=\"command\">Reverse</span> the arcLines list to change direction of the arcs and lines.  You can achieve another kind of reversal by negating the scale value.</p>",
+	"testCases": [
+		{"in": [[[1, 1], [1, 0], [1, -1]], 1], "returnValues": null}
+	],
+	"isIndependentlyUseful": true,
+	"returnTypes": null
+},
+{
 	"primaryName": "arcRight",
 	"names": ["arc2"],
 	"hintNames": ["arcr"],
@@ -213,7 +236,7 @@
 	],
 	"commandGroup": "turtle",
 	"searchKeywords": ["path"],
-	"description": "<p>Draws and follows any number of arcs defined in the given arcsInfo.</p><p>arcsInfo is a list of pairs of numbers.  The first of the pair is the arc angle in degrees.  If the angle is positive, the arc is to the left.  If the angle is negative, the arc is to the right.  The second of the pair is a number which is multiplied by the specified scale to calculate arc radius. If the arc radius is specified as 0, no arc will be drawn and the heading will just be adjusted left or right.</p>",
+	"description": "<p>Draws and follows any number of arcs defined in the given arcsInfo.</p><p>arcsInfo is a list of pairs of numbers.  The first of the pair is the arc angle in degrees.  If the angle is positive, the arc is to the left.  If the angle is negative, the arc is to the right.  The second of the pair is a number which is multiplied by the specified scale to calculate arc radius. If the arc radius is specified as 0, no arc will be drawn and the heading will just be adjusted left or right.</p><p>If you want to include straight lines in the path, consider using <span class=\"command\">the arcLines command</span> instead.</p>",
 	"testCases": [
 		{"in": [[], 1], "returnValue": null},
 		{"in": [[[10, 1]], 1], "returnValue": null}
@@ -237,7 +260,7 @@
 	],
 	"commandGroup": "turtle",
 	"searchKeywords": ["path"],
-	"description": "<p>Draws and follows any number of arcs defined in the given arcsInfo.</p><p>arcsInfo is a list of pairs of numbers.  The first of the pair is the arc angle in degrees.  If the angle is positive, the arc is to the right.  If the angle is negative, the arc is to the left.  The second of the pair is a number which is multiplied by the specified scale to calculate arc radius.</p><p><span class=\"command\">arcsLeft</span> is a similar command except the arc direction is reversed. If the arc radius is specified as 0, no arc will be drawn and the heading will just be adjusted left or right.</p>",
+	"description": "<p>Draws and follows any number of arcs defined in the given arcsInfo.</p><p>arcsInfo is a list of pairs of numbers.  The first of the pair is the arc angle in degrees.  If the angle is positive, the arc is to the right.  If the angle is negative, the arc is to the left.  The second of the pair is a number which is multiplied by the specified scale to calculate arc radius.</p><p><span class=\"command\">arcsLeft</span> is a similar command except the arc direction is reversed. If the arc radius is specified as 0, no arc will be drawn and the heading will just be adjusted left or right.</p><p>If you want to include straight lines in the path, consider using <span class=\"command\">the arcLines command</span> instead.</p>",
 	"testCases": [
 		{"in": [[], 1], "returnValue": null},
 		{"in": [[[10, 1]], 1], "returnValue": null}

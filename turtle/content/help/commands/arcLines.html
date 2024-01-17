@@ -1,0 +1,31 @@
+<code>; myArcLines procedure works exactly like the arcLines command.
+; The arcLines command is available so you don't need to implement it yourself.
+; Reviewing this implementation could help you implement something similar using procedures, though.
+to myArcLines :arcLinesInfo :scale
+	localmake "sign sign :scale
+	localmake "scale abs :scale
+	repeat count :arcLinesInfo [
+		localmake "arcLineInfo item repcount :arcLinesInfo
+		localmake "arcRadius :scale * last :arcLineInfo
+		ifelse :arcRadius &lt; 0 [
+			jumpForward :scale * first :arcLineInfo
+		] [
+			ifelse :arcRadius = 0 [
+				left :sign * first :arcLineInfo
+			] [
+				arcLeft :sign * first :arcLineInfo :arcRadius
+			]
+		]
+	]
+end
+
+make "arcLinesInfo [
+	[45 1] 
+	[-45 1]
+]
+myArcsLines :arcLinesInfo 100
+
+setPenColor "red
+setHeading 0
+jumpTo [100 0]
+arcsLeft :arcLinesInfo 100</code>
