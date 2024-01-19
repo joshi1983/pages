@@ -37,6 +37,7 @@ export function showLoadExampleDialog(s) {
 		'onResize': exampleWidthChanged
 	}).then(function() {
 		ScriptExampleExecutionScheduler.stop();
+		ScriptExampleDisplayRepository.decreasePriorityForAllExamples();
 		isFileExampleDialogShowing = false;
 	});
 	isFileExampleDialogShowing = true;
@@ -44,14 +45,36 @@ export function showLoadExampleDialog(s) {
 	input.value = s;
 	setScriptExampleQuery(s);
 	const resultsContainer = document.getElementById('file-load-example-search-results');
+	let matchedResults;
+	function resultVisibilityUpdated() {
+		if (matchedResults !== undefined) {
+			const pixelOffset = resultsContainer.scrollTop;
+			const firstResultElement = resultsContainer.firstElementChild;
+			ScriptExampleDisplayRepository.decreasePriorityForAllExamples();
+			if (firstResultElement !== null) {
+				const containerHeight = resultsContainer.getBoundingClientRect().height;
+				const displayItemHeight = firstResultElement.getBoundingClientRect().height;
+				const index = Math.floor(pixelOffset / displayItemHeight);
+				const numItemsVisible = 1 + Math.ceil(containerHeight / displayItemHeight);
+				const maxIndex = Math.min(matchedResults.length - 1, index + numItemsVisible);
+				for (let i = index; i <= maxIndex; i++) {
+					const visibleItem = matchedResults[i];
+					const item = ScriptExampleDisplayRepository.get(visibleItem.filename);
+					item.increasePriority();
+				}
+			}
+		}
+	}
+	resultsContainer.addEventListener('scroll', resultVisibilityUpdated);
 	function updateSearchResults() {
 		const query = sanitizeQuery(input.value);
 		setScriptExampleQuery(query);
-		const matchedResults = getMatchedResults(query);
+		matchedResults = getMatchedResults(query);
 		matchedResults.sort(compareByName);
 		if (!searchResultsChanged(resultsContainer, matchedResults)) {
 			return; // nothing to do.
 		}
+		resultVisibilityUpdated();
 		const divs = [];
 		resultsContainer.innerHTML = '';
 		matchedResults.forEach(function(example) {

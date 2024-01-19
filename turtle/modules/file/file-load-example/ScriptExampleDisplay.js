@@ -7,6 +7,7 @@ import { fetchText } from '../../fetchText.js';
 import { handleCompactKeywords } from './handleCompactKeywords.js';
 import { LogoProgramExecuter } from '../../parsing/execution/LogoProgramExecuter.js';
 import { ParseLogger } from '../../parsing/loggers/ParseLogger.js';
+import { PriorityTextFetcher } from '../../PriorityTextFetcher.js';
 import { treeToThumbnailSettings } from './treeToThumbnailSettings.js';
 import { Turtle } from '../../command-groups/Turtle.js';
 import { Vector2DDrawing } from '../../drawing/vector/Vector2DDrawing.js';
@@ -27,10 +28,15 @@ export class ScriptExampleDisplay {
 			this._initializeDOM();
 		this.url = url;
 		const outer = this;
-		this.downloadPromise = fetchText('logo-scripts/' + url).then(function(code) {
+		this.textFetcher = new PriorityTextFetcher('logo-scripts/' + url, PriorityTextFetcher.LOW_PRIORITY);
+		this.parsePromise = this.textFetcher.promise.then(function(code) {
 			outer.parseLogger = new ParseLogger();
 			outer.code = code;
-			return parser.parse(code, AsyncParseTask.LOW_PRIORITY, outer.parseLogger, proceduresMap).then(function(tree) {
+			let priority = AsyncParseTask.LOW_PRIORITY;
+			if (outer.textFetcher.priority === PriorityTextFetcher.HIGH_PRIORITY)
+				priority = AsyncParseTask.HIGH_PRIORITY;
+			// FIXME: create AsyncParseTask.
+			return parser.parse(code, priority, outer.parseLogger, proceduresMap).then(function(tree) {
 				if (outer.parseLogger.hasLoggedErrors()) {
 					if (outer.div !== undefined)
 						outer.div.innerHTML = 'Parse failed';
@@ -59,6 +65,14 @@ export class ScriptExampleDisplay {
 			canvases.push(canvas);
 		}
 		this.canvases = canvases;
+	}
+
+	decreasePriority() {
+		this.textFetcher.priority = PriorityTextFetcher.LOW_PRIORITY;
+	}
+
+	increasePriority() {
+		this.textFetcher.priority = PriorityTextFetcher.HIGH_PRIORITY;
 	}
 
 	isReadyToRun() {

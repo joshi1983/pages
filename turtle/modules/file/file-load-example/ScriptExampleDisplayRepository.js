@@ -18,6 +18,12 @@ class PrivateScriptExampleDisplayRepository {
 		return allTreesAvailablePromise;
 	}
 
+	decreasePriorityForAllExamples() {
+		for (const display of examplesMap.values()) {
+			display.decreasePriority();
+		}
+	}
+
 	get(url, runImmediately) {
 		if (typeof url !== 'string')
 			throw new Error('url must be a string.  Not: ' + url);

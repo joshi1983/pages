@@ -2,6 +2,7 @@
 Responsible for scheduling the execution of example programs and 
 giving priority to ones that are visible.
 */
+import { PriorityTextFetcher } from '../../PriorityTextFetcher.js';
 import { ScriptExampleDisplay } from './ScriptExampleDisplay.js';
 import { ScriptExampleDisplayRepository } from './ScriptExampleDisplayRepository.js';
 const minInstructions = 100;
@@ -42,10 +43,17 @@ class PrivateScriptExampleExecutionScheduler {
 
 	_getReadyToRun() {
 		const result = [];
+		const isSomeHighPriority = this.examples.some(e => 
+			e.textFetcher.priority === PriorityTextFetcher.HIGH_PRIORITY &&
+			e.isReadyToRun());
 		// Avoiding the filter method because it is a little slower here.
 		for (let i = 0; i < this.examples.length; i++) {
-			if (this.examples[i].isReadyToRun())
-				result.push(this.examples[i]);
+			const example = this.examples[i];
+			if (example.isReadyToRun() && (
+			isSomeHighPriority === false ||
+			example.textFetcher.priority === PriorityTextFetcher.HIGH_PRIORITY
+			))
+				result.push(example);
 		}
 		return result;
 	}
@@ -62,7 +70,6 @@ class PrivateScriptExampleExecutionScheduler {
 	refreshPriorities(filteredExamples) {
 		if (!(filteredExamples instanceof Array))
 			throw new Error('filteredExamples must be an Array');
-
 		this.examples = filteredExamples.map(e => ScriptExampleDisplayRepository.get(e.filename, true));
 		this._start();
 	}

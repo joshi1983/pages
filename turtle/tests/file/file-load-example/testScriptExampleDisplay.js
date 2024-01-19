@@ -8,7 +8,7 @@ export function testScriptExampleDisplay(logger) {
 		const type = typeof scriptDisplay.isReadyToRun();
 		if (type !== 'boolean')
 			logger('isReadyToRun expected to return boolean but got ' + type);
-		scriptDisplay.downloadPromise.then(function() {
+		scriptDisplay.parsePromise.then(function() {
 			const div = scriptDisplay.div;
 			const content = div.textContent;
 			if (content.toLowerCase().indexOf('failed') !== -1)
