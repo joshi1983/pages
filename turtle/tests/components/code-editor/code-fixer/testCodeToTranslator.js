@@ -6,6 +6,8 @@ import { bbcBasicExamples } from
 '../../../helpers/parsing/basic/bbcBasicExamples.js';
 import { billNyeExamples } from
 '../../../helpers/parsing/billNyeExamples.js';
+import { cheerfulNetherlandsLogoExamples } from
+'../../../helpers/parsing/cheerfulNetherlandsLogoExamples.js';
 import { cgjenningsExamples } from
 '../../../helpers/parsing/cgjenningsExamples.js';
 import { codeHeartTurtleScriptExamples } from
@@ -67,6 +69,8 @@ import { translateBBCBasicToWebLogo } from
 '../../../../modules/parsing/basic/bbc-basic/translation-to-weblogo/translateBBCBasicToWebLogo.js';
 import { translateToWebLogo as translateCanvas2d } from
 '../../../../modules/components/code-editor/code-fixer/fixers/canvas-2d/translateToWebLogo.js';
+import { translateCheerfulToWebLogo } from
+'../../../../modules/components/code-editor/code-fixer/fixers/cheerful-netherlands-logo/translateCheerfulToWebLogo.js';
 import { translate as translateFMSLogoCode } from
 '../../../../modules/parsing/fms-logo/translation-to-weblogo/translate.js';
 import { translate as translateKTurtle } from
