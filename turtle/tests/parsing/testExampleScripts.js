@@ -5,18 +5,22 @@ import { fetchJson } from '../../modules/fetchJson.js';
 import { fetchText } from '../../modules/fetchText.js';
 import { formatCode } from '../../modules/components/code-editor/format/formatCode.js';
 import { getProceduresMap } from '../../modules/parsing/parse-tree-analysis/getProceduresMap.js';
+import { getStringComparisonDetails } from '../helpers/getStringComparisonDetails.js';
 import { getTestExecuterForCode } from '../helpers/getTestExecuterForCode.js';
 import { harmonizeCase } from '../../modules/components/code-editor/harmonize-case/harmonizeCase.js';
 import { LogoParser } from '../../modules/parsing/LogoParser.js';
 import { prefixWrapper } from '../helpers/prefixWrapper.js';
 import { ProgressIndicator } from '../helpers/ProgressIndicator.js';
+import { sanitizeLineBreaks } from '../helpers/sanitizeLineBreaks.js';
 import { SetUtils } from '../../modules/SetUtils.js';
 import { sleep } from '../helpers/sleep.js';
 import { TestParseLogger } from '../helpers/TestParseLogger.js';
 import { wrapAndCall } from '../helpers/wrapAndCall.js';
 import { validateVector2DDrawing } from '../helpers/drawing/vector/validateVector2DDrawing.js';
+import { ZippedExamples } from '../../modules/file/file-load-example/ZippedExamples.js';
 const examples = await fetchJson('json/scriptExamples.json');
 const copyrightenExamples = await fetchJson('tests/data/copyrightenScripts.json');
+await ZippedExamples.asyncInit();
 copyrightenExamples.forEach(function(exampleInfo) {
 	exampleInfo.searchKeywords = [];
 });
@@ -109,6 +113,26 @@ function testJSONFormat(logger) {
 	});
 }
 
+function checkZipConsistency(fetchedContent, url, logger) {
+	const index = url.indexOf('?');
+	if (index !== -1)
+		url = url.substring(0, index); // remove the cache-buster portion of the URL.
+	const prefixToRemove = 'logo-scripts/';
+	if (url.startsWith(prefixToRemove))
+		url = url.substring(prefixToRemove.length);
+	if (copyrightenExamples.some(cr => cr.filename === url))
+		return; // We don't expect copyrighten examples to be in the zip.
+	let zippedCode = ZippedExamples.getContentForFilename(url);
+	if (zippedCode === undefined)
+		logger(`Expected zipped code for URL: ${url} but found none.  Consider running "gulp zip" from command line.`);
+	else {
+		zippedCode = sanitizeLineBreaks(zippedCode);
+		fetchedContent = sanitizeLineBreaks(fetchedContent);
+		if (zippedCode !== fetchedContent)
+			logger(`Expected zipped code for URL to match the fetched code.  Consider running "gulp zip" from command line.  fetchedContent = ${fetchedContent}.  Zipped content: ${zippedCode}.  Comparison details: ${getStringComparisonDetails(fetchedContent, zippedCode)}`);
+	}
+}
+
 function testExample(exampleInfo, url, logger) {
 	const compileOptionsArray = [
 		{'translateToJavaScript': false},
@@ -121,6 +145,7 @@ function testExample(exampleInfo, url, logger) {
 	fetchText(url).then(function(exampleContent) {
 		let harmonizeChecked = false;
 		const plogger = prefixWrapper(`URL: ${url}`, logger);
+		checkZipConsistency(exampleContent, url, plogger);
 		validateExampleCodeBasic(exampleContent, plogger);
 		const parseLogger = compileCode(exampleContent, true, exampleInfo, plogger);
 		if (!parseLogger.hasLoggedErrorsOrWarnings()) {
