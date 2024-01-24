@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>WebLogo</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		
+		<link rel="icon" type="image/png" href="images/logo-32px.png">
+
+		<link rel="stylesheet" href="css/style.css">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css">
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+		<script src="lib/libgif-js/libgif.js"></script>
+		<script src="lib/jsgif/jsgif.min.js"></script>
+		<script src="https://stuk.github.io/jszip/dist/jszip.js" type="text/javascript"></script>
+		<script type="module" src="modules/script.js"></script>
+	</head>
+	<body>
+		<div id="container">
+			<nav id="menu-bar">
+				<ul>
+					<li>File
+						<ul>
+							<li id="file-new" title="Remove all code to start a new program">New</li>
+							<li id="file-assets" title="Manage assets saved in the browser">Assets</li>
+							<li id="file-load" title="Load Logo program from a file">Load</li>
+							<li id="file-load-example" title="Load a Logo program from our library">Load Example</li>
+							<li id="file-download" title="Download Logo program code">Download</li>
+							<li id="file-edit" title="Edit the code">Edit</li>
+						</ul>
+					</li>
+					<li>Drawing
+						<ul>
+							<li id="drawing-clear">New</li>
+							<li id="drawing-download">Download</li>
+							<li id="drawing-shapes">Shapes</li>
+						</ul>
+					</li>
+					<li id="set-menu">Set
+						<ul>
+							<li id="set-pen-up-down"></li>
+							<li id="set-pen-size">Pen Size</li>
+							<li id="set-pen-color"><div class="sample-colour"></div>Pen Color</li>
+							<li id="set-fill-color"><div class="sample-colour"></div>Fill Color</li>
+							<li id="set-screen-color"><div class="sample-colour"></div>Screen Color</li>
+							<li id="set-turtle-visibility"><span class="menu-item-logo"></span><span id="set-turtle-visibility-caption">Hide Turtle</span></li>
+							<li id="set-animation-time"><span class="fa fa-clock"></span>Animation Time</li>
+						</ul>
+					</li>
+					<li>Zoom
+						<ul>
+							<li id="zoom-in" title="Zoom in on the drawing">In</li>
+							<li id="zoom-out" title="Zoom out of the drawing">Out</li>
+							<li id="zoom-normal" title="Restore the initial zoom on the drawing">Normal</li>
+						</ul>
+					</li>
+					<li>Debugging
+						<ul>
+							<li><label class="clickable"><input type="checkbox" id="debugging-commander" checked>Show Commander</label></li>
+							<li><label class="clickable"><input type="checkbox" id="debugging-debugger">Show Debugger</label></li>
+							<li><label class="clickable"><input type="checkbox" id="debugging-show-status">Show Status</label></li>
+							<li id="debugging-execution-speed-item" class="select-container">
+								<select name="execution-speed"
+									id="debugging-execution-speed" 
+									title="Select how fast you want the Logo code to execute"></select>
+							</li>
+						</ul>
+					</li>
+					<li>Help
+						<ul>
+							<li id="help-index"><span class="weblogo-menu-icon"></span>Index</li>
+							<li id="help-tutorial"><span class="weblogo-menu-icon fa fa-graduation-cap"></span>Tutorial</li>
+							<li id="help-about"><span class="weblogo-menu-icon menu-item-logo"></span>About</li>
+						</ul>
+					</li>
+				</ul>
+			</nav>
+			<div id="graphics-screen" class="unselectable">
+				<div id="graphics-screen-help" class="fa fa-question" data-helpid="graphics-screen"></div>
+				<div id="cursor-status">
+					<button id="cursor-status-turtle-camera" title="Center the camera on the turtle"></button>
+					<button id="cursor-status-home-camera" title="Center the camera on origin" class="hidden"></button>
+					<span id="cursor-status-coordinates"></span>
+				</div>
+			</div>
+			<div id="command-box">
+				<div id="toast-message-container">
+				</div>
+				<div class="commander-container">
+					<div class="commander-title-bar">
+						<h2>Commander</h2>
+						<button class="fa fa-ban" id="commander-clear-text"></button>
+						<button class="fa fa-question" data-helpid="commander"></button>
+					</div>
+					<div id="command-box-and-buttons">
+						<div id="command-box-messages">
+						</div>
+						<div id="commander-buttons">
+							<button id="commander-pause">Pause</button>
+							<button id="commander-status">Status</button>
+							<button id="commander-debugger">Debug</button>
+							<button id="commander-edit-all">Edall</button>
+						</div>
+					</div>
+					<div class="command-inputs">
+						<input id="command-input" spellcheck="false" placeholder="Type single-line commands here" autofocus>
+						<button id="command-input-run" title="Execute the commands to the left">Run</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
