@@ -1,11 +1,13 @@
 import { testIsLikelyCheerfulNetherlandsLogo } from './testIsLikelyCheerfulNetherlandsLogo.js';
-import { testTranslateToWebLogo } from './testTranslateToWebLogo.js';
+import { testProcessVariableReferences } from './testProcessVariableReferences.js';
+import { testTranslateCheerfulToWebLogo } from './testTranslateCheerfulToWebLogo.js';
 import { wrapAndCall } from
 '../../../../../helpers/wrapAndCall.js';
 
 export function testCheerfulNetherlandsLogo(logger) {
 	wrapAndCall([
 		testIsLikelyCheerfulNetherlandsLogo,
-		testTranslateToWebLogo,
+		testProcessVariableReferences,
+		testTranslateCheerfulToWebLogo,
 	], logger);
 };

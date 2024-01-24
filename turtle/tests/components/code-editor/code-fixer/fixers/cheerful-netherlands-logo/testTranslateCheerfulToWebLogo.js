@@ -2,14 +2,14 @@ import { cheerfulNetherlandsExamplesAll } from
 '../../../../../helpers/parsing/cheerfulNetherlandsLogoExamples.js';
 import { testInOutPairs } from
 '../../../../../helpers/testInOutPairs.js';
-import { translateToWebLogo } from
-'../../../../../../modules/components/code-editor/code-fixer/fixers/cheerful-netherlands-logo/translateToWebLogo.js';
+import { translateCheerfulToWebLogo } from
+'../../../../../../modules/components/code-editor/code-fixer/fixers/cheerful-netherlands-logo/translateCheerfulToWebLogo.js';
 import { wrapAndCall } from
 '../../../../../helpers/wrapAndCall.js';
 
 function testTranslateExamples(logger) {
 	cheerfulNetherlandsExamplesAll.forEach(function(content) {
-		translateToWebLogo(content);
+		translateCheerfulToWebLogo(content);
 	});
 }
 
@@ -32,10 +32,10 @@ DOE`, 'out':
 end`
 }
 	];
-	testInOutPairs(cases, translateToWebLogo, logger);
+	testInOutPairs(cases, translateCheerfulToWebLogo, logger);
 }
 
-export function testTranslateToWebLogo(logger) {
+export function testTranslateCheerfulToWebLogo(logger) {
 	wrapAndCall([
 		testTranslateExamples,
 		testWithSpecificExpectedOutputs
