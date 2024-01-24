@@ -3,15 +3,15 @@ import { AsyncParseTask } from '../../parsing/AsyncParseTask.js';
 import { Camera } from '../../drawing/vector/Camera.js';
 import { CanvasVector2DDrawer } from '../../drawing/drawers/CanvasVector2DDrawer.js';
 import { compile } from '../../parsing/compile.js';
-import { fetchText } from '../../fetchText.js';
 import { handleCompactKeywords } from './handleCompactKeywords.js';
 import { LogoProgramExecuter } from '../../parsing/execution/LogoProgramExecuter.js';
 import { ParseLogger } from '../../parsing/loggers/ParseLogger.js';
-import { PriorityTextFetcher } from '../../PriorityTextFetcher.js';
 import { treeToThumbnailSettings } from './treeToThumbnailSettings.js';
 import { Turtle } from '../../command-groups/Turtle.js';
 import { Vector2DDrawing } from '../../drawing/vector/Vector2DDrawing.js';
+import { ZippedExamples } from './ZippedExamples.js';
 
+await ZippedExamples.asyncInit();
 const parser = new AsyncParser(true);
 const w = 417;
 const h = 40;
@@ -27,18 +27,14 @@ export class ScriptExampleDisplay {
 		if (runImmediately)
 			this._initializeDOM();
 		this.url = url;
+		const code = ZippedExamples.getContentForFilename(url);
 		const outer = this;
-		this.textFetcher = new PriorityTextFetcher('logo-scripts/' + url, PriorityTextFetcher.LOW_PRIORITY);
 		function setAsyncParseTask(asyncParseTask) {
 			outer.asyncParseTask = asyncParseTask;
 		}
-		this.parsePromise = this.textFetcher.promise.then(function(code) {
-			outer.parseLogger = new ParseLogger();
-			outer.code = code;
-			let priority = AsyncParseTask.LOW_PRIORITY;
-			if (outer.textFetcher.priority === PriorityTextFetcher.HIGH_PRIORITY)
-				priority = AsyncParseTask.HIGH_PRIORITY;
-			const promise = parser.parse(code, priority, outer.parseLogger, proceduresMap, setAsyncParseTask);
+		this.parseLogger = new ParseLogger();
+		const promise = parser.parse(code, AsyncParseTask.LOW_PRIORITY, outer.parseLogger, proceduresMap, setAsyncParseTask);
+		this.parsePromise = promise.then(function(code) {
 			return promise.then(function(tree) {
 				if (outer.parseLogger.hasLoggedErrors()) {
 					if (outer.div !== undefined)
@@ -71,14 +67,12 @@ export class ScriptExampleDisplay {
 	}
 
 	decreasePriority() {
-		this.textFetcher.priority = PriorityTextFetcher.LOW_PRIORITY;
 		if (this.asyncParseTask !== undefined && this.asyncParseTask.priority !== AsyncParseTask.LOW_PRIORITY) {
 			this.asyncParseTask.priority = AsyncParseTask.LOW_PRIORITY;
 		}
 	}
 
 	increasePriority() {
-		this.textFetcher.priority = PriorityTextFetcher.HIGH_PRIORITY;
 		if (this.asyncParseTask !== undefined && this.asyncParseTask.priority !== AsyncParseTask.HIGH_PRIORITY) {
 			this.asyncParseTask.priority = AsyncParseTask.HIGH_PRIORITY;
 		}
