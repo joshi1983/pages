@@ -1,3 +1,4 @@
+import { AsyncParseTask } from '../../parsing/AsyncParseTask.js';
 import { CachedParseTree } from '../../parsing/parse-tree-analysis/CachedParseTree.js';
 import { fetchJson } from '../../fetchJson.js';
 import { RateLimiter } from '../../RateLimiter.js';
@@ -46,6 +47,15 @@ class PrivateScriptExampleDisplayRepository {
 	}
 
 	resized() {
+		// start with high priority.
+		for (const [key, value] of examplesMap) {
+			if (value.asyncParseTask.priority === AsyncParseTask.HIGH_PRIORITY) {
+				// draw using timeout to help the UI stay responsive since the redraw can be slow.
+				RateLimiter.run('ScriptExampleDisplayRepository-' + key, function() {
+					value.resized();
+				}, 100);
+			}
+		}
 		for (const [key, value] of examplesMap) {
 			// draw using timeout to help the UI stay responsive since the redraw can be slow.
 			RateLimiter.run('ScriptExampleDisplayRepository-' + key, function() {
