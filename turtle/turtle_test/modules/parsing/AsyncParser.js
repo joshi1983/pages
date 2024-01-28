@@ -1,14 +1,6 @@
-import { AsyncParseTask } from './AsyncParseTask.js';
 import { isNumber } from '../isNumber.js';
 import { LogoParser } from './LogoParser.js';
 await LogoParser.asyncInit();
-const asyncParseTaskStatus = await AsyncParseTask.asyncInit();
-
-export function asyncParser(text, parseLogger, proceduresMap, priority) {
-	return new Promise(function(resolve, reject) {
-		new AsyncParseTask(text, proceduresMap, resolve, reject, priority);
-	});
-};
 
 function parseSync(text, parseLogger, proceduresMap) {
 	return LogoParser.getParseTree(text, parseLogger, proceduresMap);
@@ -68,14 +60,7 @@ export class AsyncParser {
 				outer.currentTask = undefined;
 				_reject(problemDetails);
 			}
-			if (asyncParseTaskStatus.isFailing)
-				_resolve(parseSync(text, parseLogger, proceduresMap));
-			else {
-				outer.currentTask = new AsyncParseTask(text, proceduresMap, resolve, reject, priority);
-				if (setAsyncParseTask !== undefined) {
-					setAsyncParseTask(outer.currentTask);
-				}
-			}
+			_resolve(parseSync(text, parseLogger, proceduresMap));
 		});
 	}
 };
