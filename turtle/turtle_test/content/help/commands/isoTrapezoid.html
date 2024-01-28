@@ -1,0 +1,31 @@
+<div class="svg-container">
+	<img src="content/help/commands/images/isoTrapezoid.svg" alt="IsoTrapezoid diagram and examples">
+
+<code>setFillColor "red
+isoTrapezoid 200 400 100
+; Draws a red trapezoid with:
+; - a horizontal length at y=0 of 200
+; - a horizontal length at y=100 of 400
+; - the black pen strokes are centred on the trapezoid's outer edge</code>
+<code>; Behaves exactly like isoTrapezoid command.
+; The isoTrapezoid command is available so you don't need to implement it yourself.
+; Reviewing this implementation could help you implement something similar using procedures, though.
+to myIsoTrapezoid :startWidth :endWidth :height
+	localmake "oldState turtleState
+	localmake "oldHeading heading
+	localmake "slantedLength hypot [:height (:endWidth - :startWidth) / 2]
+	localmake "angle arcTan2 :height (:endWidth - :startWidth) / 2
+	jumpRight :startWidth / 2
+	polyStart
+	jumpLeft :startWidth
+	left :angle
+	jumpForward :slantedLength
+	setHeading :oldHeading
+	jumpRight :endWidth
+	polyEnd
+	setTurtleState :oldState
+end
+
+setFillColor "red
+myIsoTrapezoid 200 400 100</code>
+</div>
