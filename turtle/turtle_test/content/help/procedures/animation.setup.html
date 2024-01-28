@@ -1,0 +1,47 @@
+<h3>animation.setup</h3>
+<p>
+The animation.setup procedure returns a property list defining information about the animation as a whole.
+animation.setup should never call <span class="command">animation.time</span> or try to draw anything.
+</p>
+
+<h4>Properties</h4>
+<ul>
+	<li><strong>duration</strong> is the number of seconds of duration</li>
+	<li><strong>thumbnailTime</strong> is the number of seconds to the best still frame to depict the animation.
+	This time is the same frame initially shown in <strong>File</strong> -&gt; <strong>Load Example</strong></li>
+</ul>
+
+<h4>Don't</h4>
+<p>The animation.setup is not to be used for anything except defining properties for the overall animation listed above.
+Keep that clear by avoiding the following mistakes.</p>
+<ul>
+	<li>Don't use a case for property names other than the ones specified above.
+	For example, don't use DURATION instead of duration because the property names in a property list are case-sensitive.</li>
+	<li>Don't add parameters to the animation.setup procedure since it should never have any.</li>
+	<li>Don't call <span class="command">animation.duration</span> within animation.setup.  The result of animation.duration is the same as the duration property of animation.setup's procedure.
+	Calling <span class="command">animation.duration</span> is both asking for an endless cycle and serves no sensible purpose.</li>
+	<li>Don't call <span class="command">animation.time</span> within animation.setup.  animation.setup should behave the same way irrespective of time.
+	Calling <span class="command">animation.time</span> within animation.setup is a bit like asking what happened before the existence of time.
+	</li>
+	<li>Don't try to draw anything in animation.setup.  Don't call commands like <span class="command">forward</span> in animation.setup.
+	You don't need a procedure to draw something.
+	You can call procedures for drawing but just avoid the names "animation.setup" and "animation.snapshotstyle".</li>
+</ul>
+
+<h4>Example</h4>
+<p>The following indicates the animation is 10 seconds long.</p>
+<code class="pastable">to animation.setup
+	localmake "minutes 0
+	localmake "seconds 10
+	; Edit this if you want to change the length of your animation.
+	localmake "result createPList
+	setProperty "result "duration :minutes * 60 + :seconds
+	output :result
+end</code>
+
+<p>Note that you can quickly add code for animation.setup by clicking
+<strong>Edit</strong> -&gt; <strong>Set up Animation</strong> from the
+<span data-helpid="code-editor">Code Editor</span>.</p>
+
+<p>See also <span data-helpid="animation.snapshotstyle">animation.snapshotstyle</span>.  
+<span data-helpid="animation.snapshotstyle">animation.snapshotstyle</span> is another special procedure related to animation.</p>
