@@ -1,0 +1,503 @@
+{
+	"name": "RM Nimbus Logo",
+	"description": "A Logo interpreter for the RM Nimbus computer",
+	"externalLink": "https://archive.org/details/nimbusrmlogopn143941985/page/n371/mode/2up",
+	"generalComment": "RM Nimbus tends to end a lot of commands with q instead of p that return true or false.  WebLogo and most other Logo tools end with p to stand for 'predicate'.",
+	"commands": [{
+		"primaryName": "abs",
+		"to": "abs"
+	}, {
+		"primaryName": "acos",
+		"to": "arcCos"
+	}, {
+		"primaryName": "add",
+		"to": "sum"
+	}, {
+		"primaryName": "alias",
+		"description": "Gives the procedure named by word1, a new name word2.  The original name will still be understood. Any editing on word2 will change word1 also. This is the only way to re-use the name of a primitive. If word1 is the name of a primitive then calls to word2 will actually invoke word1.",
+		"reason": "In WebLogo, procedures are easily copied and edited in the Code Editor so this alias would add needless and confusing complexity.  Also, making aliases for commands would make it hard to trust that commands do what documentation says they should do.  For example, alias 'backward' to 'forward' and in a big Logo program, people are left confused and possibly angry or frustrated at how 'forward' moves the turtle backward.  The alias seems like a bit too much invitation for bad programming practices like #define is criticized for in c++."
+	}, {
+		"primaryName": "amongq",
+		"names": ["memberq"],
+		"to": "member?"
+	}, {
+		"primaryName": "and",
+		"to": "and"
+	}, {
+		"primaryName": "closefile",
+		"description": "closes a file"
+	}, {
+		"primaryName": "colour",
+		"description": "Returns the colour of the turtle sprite/graphic(not pen colour).  Returns the same value setc sets.",
+		"reason": "Not supported in WebLogo for the same reason as setc."
+	}, {
+		"primaryName": "cs",
+		"to": "clearScreen"
+	}, {
+		"primaryName": "fence",
+		"description": "Forces the turtle to stay within the visible part of the graphics."
+	}, {
+		"primaryName": "first",
+		"to": "first"
+	}, {
+		"primaryName": "goto",
+		"description": "Jumps to a specified code label.",
+		"reason": "Use of goto statements are considered unstructured programming and is generally discouraged in modern software development.  Supporting such a command only to discourage its use would be counterproductive and even a bit hypocritical.  If-statements, ifelse, for, repeat, while, defining procedures... are encouraged instead.  Any code using a goto can always be converted to better structured code that does not."
+	}, {
+		"primaryName": "greaterq",
+		"names": ["geq"],
+		"description": "Compares 2 values and determines if the left side is greater than the right",
+		"reason": "Can be converted to the > operator but not to a command.  WebLogo has no greater command just because the operator is a clearer and more concise way to do the comparison."
+	}, {
+		"primaryName": "grievance",
+		"description": "Returns the text of the message given by Logo in reply to the most recent error. Learn more at https://archive.org/details/nimbusrmlogopn143941985/page/n237/mode/2up",
+		"reason": "In WebLogo, runtime error messages are printed immediately.  There is no need to do exception handling.  There also is no point in handling errors programmatically with a command."
+	}, {
+		"primaryName": "heading",
+		"to": "heading"
+	}, {
+		"primaryName": "hideturtle",
+		"names": ["ht"],
+		"to": "hideTurtle"
+	}, {
+		"primaryName": "if",
+		"to": "if"
+	}, {
+		"primaryName": "implode",
+		"description": "Returns the word made by concatenating (joining) all the words in its input list.  Learn more at https://archive.org/details/nimbusrmlogopn143941985/page/n243/mode/2up",
+		"reason": "No big reason not to have this as a command in WebLogo other than it not finding a use in any of the 700+ current examples.  WebLogo's commands like word, combine, and sentence do similar jobs but take each part as a separate parameter instead of taking a single list input.  RMLogo seems like the one of the only Logo programming tools to support this implode command too."
+	}, {
+		"primaryName": "int",
+		"to": "int"
+	}, {
+		"primaryName": "join",
+		"to": "combine",
+		"description": "Returns a word or list by joining the first and second inputs"
+	}, {
+		"primaryName": "keyq",
+		"description": "If a key has been struck, keyq returns true and the key can be read using key. false is otherwise returned. If Logo is reading a command file, keyq will still test the keyboard.",
+		"reason": "WebLogo programs are not intended to be user-interactive."
+	}, {
+		"primaryName": "label",
+		"to": "label"
+	}, {
+		"primaryName": "last",
+		"to": "last"
+	}, {
+		"primaryName": "left",
+		"names": ["lt"],
+		"to": "left"
+	}, {
+		"primaryName": "lowercase",
+		"to": "lowercase"
+	}, {
+		"primaryName": "make",
+		"to": "make"
+	}, {
+		"primaryName": "moan",
+		"description": "Reproduces the last error. All processes are stopped.  You can catch error when moan is run; if you do then no message is printed and the process that caught the error continues after the catch."
+	}, {
+		"primaryName": "multiple",
+		"description": "Turns parallel processing back on after single has been used. multiple is the default state."
+	}, {
+		"primaryName": "multiply",
+		"names": ["mul"],
+		"to": "product",
+		"description": "Returns the product of its inputs"
+	}, {
+		"primaryName": "near",
+		"description": "Returns a list of the turtles which are within eight screen units of the centre of the current turtle.  If your process is addressing more than one turtle, near refers to the lowest numbered one (normally the earliest one created)."
+	}, {
+		"primaryName": "nodes",
+		"description": "Returns a number indicating the amount of unused memory in Logo's workspace.  For a more accurate measure of free work space, use gc before nodes"
+	}, {
+		"primaryName": "nodribble",
+		"description": "When the dribble primitive is used, everything you type is written to a command file. nodribble closes the command file and your typing stops being recorded. You can replay the command file using consult or replay.  Learn more at https://archive.org/details/nimbusrmlogopn143941985/page/n269/mode/2up"
+	}, {
+		"primaryName": "nodriver",
+		"description": "Unloads any floor turtle driver which is present in Logo.  More can be learned at https://archive.org/details/nimbusrmlogopn143941985/page/n269/mode/2up",
+		"reason": "WebLogo has no drivers.  I'm not sure what the mentioned floor driver is for."
+	}, {
+		"primaryName": "nofence",
+		"description": "When the fence primitive has been used, an error is reported if the turtle hits the edge of the screen.",
+		"reason": "We never want to prevent turtles from going out of the visible part of the graphics screen.  Users can zoom and scroll anywhere they want independently of what the WebLogo program is drawing or where the turtle is going."
+	}, {
+		"primaryName": "nosense",
+		"description": "Switches off the sensing for all turtles controlled by a particular process",
+		"reason": "WebLogo has no turtle sensors.  This might be related to collision detection and reaction which WebLogo also doesn't do."
+	}, {
+		"primaryName": "not",
+		"to": "not"
+	}, {
+		"primaryName": "nowrap",
+		"description": "Sets the turtle to go off the graphics screen instead of wrapping around",
+		"reason": "WebLogo never wraps and it is best to stay that way.  Users can scroll or zoom to see parts of the drawing they don't immediately see as the turtle moves out of it."
+	}, {
+		"primaryName": "numberq",
+		"to": "number?"
+	}, {
+		"primaryName": "objects",
+		"description": "Returns a list of all the Logo words which have had properties assigned to them using assert"
+	}, {
+		"primaryName": "outfile",
+		"description": "Creates the file filename and opens it for output. Any existing file with the same name is deleted. Returns true if the file is successfully opened and false otherwise"
+	}, {
+		"primaryName": "outfiles",
+		"description": "Returns a list of the names of files currently open for output"
+	}, {
+		"primaryName": "pc",
+		"to": "penColor"
+	}, {
+		"primaryName": "pennormal",
+		"to": "pennormal"
+	}, {
+		"primaryName": "penreverse",
+		"names": ["px"],
+		"description": "Lowers the turtle's pen.  When the turtle moves, it draws lines where there are none, and erases existing lines in the same colour that it crosses over.",
+		"reason": "WebLogo doesn't support a similar command for the same reasons WebLogo doesn't support penErase."
+	}, {
+		"primaryName": "pi",
+		"to": "pi"
+	}, {
+		"primaryName": "pick",
+		"to": "random",
+		"description": "Returns a pseudo-random integer in the range 1 to number inclusive.  WebLogo's random command isn't a perfect translation since it returns 0..(number - 1) inclusive but it seemed close enough to be worth automatically translating to."
+	}, {
+		"primaryName": "po",
+		"description": "Prints out the definition of the procedures named in wl on the screen.  Learn more at https://archive.org/details/nimbusrmlogopn143941985/page/n285/mode/2up",
+		"reason": "WebLogo's Code Editor makes it easy to see all procedures in a clearer order and format than could be printed from a command like this.  "
+	}, {
+		"primaryName": "point",
+		"description": "Returns a number which tells you which colour the point list is currently painted. list is a coordinate pair.  Learn more at https://archive.org/details/nimbusrmlogopn143941985/page/n285/mode/2up"
+	}, {
+		"primaryName": "pos",
+		"to": "pos"
+	}, {
+		"primaryName": "power",
+		"to": "power"
+	}, {
+		"primaryName": "print",
+		"to": "print"
+	}, {
+		"primaryName": "putfirst",
+		"names": ["pf"],
+		"to": "fput"
+	}, {
+		"primaryName": "putlast",
+		"names": ["pl"],
+		"to": "lput"
+	}, {
+		"primaryName": "random",
+		"to": "randomRatio",
+		"description": "Returns a random number from 0 to 1.  Takes no parameters.  Learn more at https://archive.org/details/nimbusrmlogopn143941985/page/n291/mode/2up"
+	}, {
+		"primaryName": "readfilec",
+		"names": ["rfc"],
+		"description": "Reads the next character from the named file and returns it.  The file must have been opened for input.  If there is no more data in the file, readfiled throws endfile.  If this is not caught, it returns the word endfile as its result. Learn more at https://archive.org/details/nimbusrmlogopn143941985/page/n291/mode/2up"
+	}, {
+		"primaryName": "readfiled",
+		"names": ["rfd"],
+		"description": "Reads the next data item(a number word or list) from the named file and returns it.  The file must have been opened for input.  If there is no more data in the file, readfiled throws endfile.  If this is not caught, it returns the word endfile as its result. Learn more at https://archive.org/details/nimbusrmlogopn143941985/page/n293/mode/2up"
+	}, {
+		"primaryName": "readfilel",
+		"names": ["rfl"],
+		"description": "Reads the next line from the named file and returns a Logo list.  The file must have been opened for input.  If there is no more data in the file, readfilel throws endfile.  If this is not caught, it returns the word endfile as its result. Learn more at https://archive.org/details/nimbusrmlogopn143941985/page/n293/mode/2up"
+	}, {
+		"primaryName": "readlist",
+		"names": ["rl"],
+		"description": "Reads information typed at the keyboard until you press <ENTER>, then returns what you typed as a Logo list.  Learn more at https://archive.org/details/nimbusrmlogopn143941985/page/n295/mode/2up",
+		"reason": "Not supported by WebLogo because WebLogo doesn't use any user-input from keyboards"
+	}, {
+		"primaryName": "remainder",
+		"names": ["rem"],
+		"to": "remainder"
+	}, {
+		"primaryName": "rename",
+		"description": "Renames the procedure word1, giving it the new name word2. The old name is lost.  You can't rename a primitive or a buried procedure.  Learn more at https://archive.org/details/nimbusrmlogopn143941985/page/n297/mode/2up",
+		"reason": "You can rename procedures in WebLogo's Code Editor in different ways."
+	}, {
+		"primaryName": "renamefile",
+		"description": "Renames the file filename1 to filename2. Returns true if the operation succeeded and false otherwise.",
+		"reason": "WebLogo has no access to the file system of a computer.  The closest WebLogo could do is rename assets but a command for that wouldn't help WebLogo's focus on creating great drawings and animation."
+	}, {
+		"primaryName": "repeat",
+		"to": "repeat"
+	}, {
+		"primaryName": "replay",
+		"description": "Replays a sequence of commands held in the file filename.  The commands are displayed on the screen and the prompt changes from 1: to 1<.  Even if an error occurs in the file, the commands continue to be replayed."
+	}, {
+		"primaryName": "result",
+		"to": "output"
+	}, {
+		"primaryName": "reverseq",
+		"description": "Returns true if the turtle's pen is plotting in reverse mode. penreverse or px causes the turtle pen to plot in reverse or exclusive OR mode.",
+		"reason": "WebLogo has no reverse mode so this command would be pointless."
+	}, {
+		"primaryName": "right",
+		"names": ["rt"],
+		"to": "right"
+	}, {
+		"primaryName": "rubber",
+		"description": "Selects the pen colour which matches the background. The turtle rubs out any lines it crosses. The line-drawing algorithm used means that forward and backward do not necessarily trace exactly the same screen path. For perfect rubbing out, you should start in the same place and retrace your steps exactly. rubber is equivalent to setpc bg",
+		"reason": "It could be translated to setPenColor screenColor.  A separate command for it seems not worth adding to WebLogo.  In the very rare case where you want pen color to match screen color, run those 2 commands."
+	}, {
+		"primaryName": "run",
+		"description": "Runs an instruction list"
+	}, {
+		"primaryName": "say",
+		"to": "print",
+		"description": "Prints the contents of nwl on the screen, followed by a carriage return. say prints lists without their outermost brackets. say also sends special characters to the screen."
+	}, {
+		"primaryName": "scrap",
+		"description": "Procedures named by wl are deleted from memory. If wl is a list and one of the procedures named does not existm none will be scrapped.",
+		"reason": "The Code Editor is where you edit or remove procedures in WebLogo.  There is no need for a command to remove procedures when you can remove them like you would edit a text or word processing document.  Commands to edit code in WebLogo would be confusing and mind-bending like dreams within dreams in Inception.  Programming shouldn't feel like watching Inception if you can avoid it."
+	}, {
+		"primaryName": "sentence",
+		"names": ["se"],
+		"to": "sentence"
+	}, {
+		"primaryName": "setbg",
+		"to": "setScreenColor"
+	}, {
+		"primaryName": "setc",
+		"description": "Changes the colour in which the turtle is painted on the screen to number. The numbers associated with colours are listed under the description of colour. This colour is not necessarily the same as the turtle's pen colour. Nor will the turtle always appear as the colour you specify it to be. The turtle is plotted in exclusive OR mode(mixing colours where they coincide on screen) so you must consider the background colour when choosing the turtle colour. A black background however, will guarantee an accurate turtle colour.",
+		"reason": "It seems useless in WebLogo.  Setting the turtle's color may make programming more fun for kids and beginners in Nimbus RM Logo but it doesn't seem worth supporting in WebLogo.  WebLogo visualizes the pen color in how it draws the triangle depicting the turtle.  That communicates something informative and useful.  Letting code control the color of the turtle means the turtle color can't be trusted as much to represent something more useful like pen color.  If similar code was possible in WebLogo, it would also means code is essentially wasted communicating something that doesn't help produce a better drawing or animation."
+	}, {
+		"primaryName": "setdir",
+		"description": "Sets the turtle's movement heading to angle.  The drawing heading is not affected. More can be learned at https://archive.org/details/nimbusrmlogopn143941985/page/n313/mode/2up",
+		"reason": "I don't understand how this is different from seth and useful.  I'd have to spend more time reading documentation and examples to understand why setdir exists as apposed to just seth."
+	}, {
+		"primaryName": "seth",
+		"to": "setHeading"
+	}, {
+		"primaryName": "setpc",
+		"to": "setPenColor"
+	}, {
+		"primaryName": "setPoint",
+		"description": "Plots a point in colour number at the position given in list.  list is a coordinate pair",
+		"reason": "Not supported in WebLogo because the size of the point is unclear.  It is similar to the dot command from other Logo programming tools and dot is not supported by WebLogo for the same reason"
+	}, {
+		"primaryName": "setPos",
+		"to": "setPos"
+	}, {
+		"primaryName": "setShape",
+		"description": "The shape must have previously been defined in a defineshape command.  Shapes can be used to find out the defined turtle shapes.",
+		"reason": "Changing shape of the turtle also doesn't seem benefitial overall in WebLogo.  WebLogo illustrates direction and pen color in the turtle graphic that it always uses.  The image also strongly resembles the WebLogo logo.  Letting code control the turtle's appearance seems distracting from the focus of creating the best drawings and animations."
+	}, {
+		"primaryName": "setSpeed",
+		"description": "Sets turtle's speed",
+		"reason": "Code can't control its own speed in WebLogo or even know what speed it is at because that doesn't help it make drawings or animations."
+	}, {
+		"primaryName": "setX",
+		"to": "setX"
+	}, {
+		"primaryName": "setY",
+		"to": "setY"
+	}, {
+		"primaryName": "shape",
+		"description": "Returns the name of the turtle's shape. If more than one turtle is receiving commands from this process, the result refers to the most recently created turtle.  If the turtle's shape is the default shape, shape returns the empty word"
+	}, {
+		"primaryName": "shapedef",
+		"description": "Returns the definition of the shape word",
+		"reasons": "WebLogo doesn't maintain a list of shapes except in the drawing."
+	}, {
+		"primaryName": "shapes",
+		"description": "Returns a list of the shapes that Logo knows about at that time.  This doesn't include the default shape.",
+		"reasons": "WebLogo doesn't maintain a list of shapes except in the drawing."
+	}, {
+		"primaryName": "share",
+		"to": "quotient"
+	}, {
+		"primaryName": "showturtle",
+		"names": ["st"],
+		"to": "showTurtle"
+	}, {
+		"primaryName": "sin",
+		"to": "sin"
+	}, {
+		"primaryName": "single",
+		"description": "The process which issues single turns off parallel processing until it either issues a multiple command or ends.",
+		"reason": "This looks related to either having multiple turtles or having some type of concurrency.  WebLogo has no more than one turtle and the only concurrency that may eventually be helpful would happen implicitly as part of compiler and interpreter optimizations.  For example, proceduralImage might be drawn with some help from multiple workers or GPU shaders that compute multiple pixels in parallel.  This could happen without WebLogo commands to explicitly dictate how that would work."
+	}, {
+		"primaryName": "speed",
+		"description": "Returns the turtle's current speed",
+		"reason": "Code can't control its own speed in WebLogo or even know what speed it is at because that doesn't help it make drawings or animations."
+	}, {
+		"primaryName": "sqt",
+		"to": "sqrt"
+	}, {
+		"primaryName": "stamp",
+		"description": "Prints a copy of the current turtle shape onto the graphics screen at the turtle's current position.  The copy will have the current turtle's body colour."
+	}, {
+		"primaryName": "stop",
+		"to": "stop",
+		"description": "Logo stops executing the procedure in which stop occurs and either continues running the procedure which called it or returns to the prompt."
+	}, {
+		"primaryName": "subtract",
+		"names": ["sub"],
+		"to": "difference"
+	}, {
+		"primaryName": "tan",
+		"to": "tan"
+	}, {
+		"primaryName": "tell",
+		"description": "Tells Logo which turtles you want it to talk to.  If a turtle with the given number or name does not exist, it will be created.  Up to eight tutles can exist at a time.",
+		"reason": "WebLogo doesn't support more than 1 turtle so there's no reason to have a command like this."
+	}, {
+		"primaryName": "text",
+		"description": "Returns the definition of a procedure as a list. The text returned on the screen is in the same form as the input to define.",
+		"reason": "WebLogo lets you edit procedures in a Code Editor that lists all the procedures and their implementations.  There is no need for commands to help with code-editing.  Commands are exclusively for describing how to create drawings and animations.  Other features in WebLogo cover debugging and editing code so you don't need to programmatically edit your code like you're in the movie Inception."
+	}, {
+		"primaryName": "textscreen",
+		"names": ["ts"],
+		"description": "Allows the whole screen to be used for text",
+		"reason": "WebLogo lets you maximize the Code Editor, hide the Code Editor, hide the Graphics Screen and resize the Commander to fill the screen.  You can do all this using menu options and button clicks.  There is no need for related commands."
+	}, {
+		"primaryName": "throw",
+		"description": "Used with the catch primitive",
+		"reason": "WebLogo hasn't needed try-catch for any of the 700+ examples created so far.  I don't want to add exception-handling just because most older Logo interpreters supported them because exception-handling can be challenging for beginner programmers to do properly."
+	}, {
+		"primaryName": "titles",
+		"description": "Returns a list of all the procedures in memory except those which are buried"
+	}, {
+		"primaryName": "told",
+		"description": "Returns the names or numbers of any turtles that the current process is 'talking' to. If a turtle has a name, told will return it, otherwise it returns the number"
+	}, {
+		"primaryName": "touch",
+		"description": "Returns the colour of the background directly beneath the pen of the first turtle created."
+	}, {
+		"primaryName": "towards",
+		"description": "Returns a list containing the distance and heading to the specified point",
+		"reason": "WebLogo has a command with the exact same name 'towards' but it returns only the heading direction( a number).  It is tempting to say translate 'towards' from Nimbus Logo to 'towards' in WebLogo but it'll almost always cause problems because of that difference."
+	}, {
+		"primaryName": "trace",
+		"description": "Tells Logo to give a message every time the procedures named by wl are called.",
+		"reason": "Breakpoints, pause, and debugger features in WebLogo fill a similar role."
+	}, {
+		"primaryName": "turtles",
+		"description": "Checks which turtles have been created and returns their names and numbers in the form of a list"
+	}, {
+		"primaryName": "type",
+		"to": "type"
+	}, {
+		"primaryName": "unbload",
+		"description": "Removes the Logo extensions that were loaded from the file(s) named in wl",
+		"reason": "WebLogo has no Logo extensions that can be loaded from a disk"
+	}, {
+		"primaryName": "unbug",
+		"description": "Cancels the effect of a bug.  The named variable need not exist."
+	}, {
+		"primaryName": "unequalq",
+		"names": ["ueq"],
+		"description": "Checks if 2 values are not equal",
+		"reason": "Similar to not equal?.  WebLogo has no notequal? command because the <> operator is shorter, easier to write and read."
+	}, {
+		"primaryName": "unless",
+		"description": "Executes list unless the expression a is true.  This primitive is equal to if not a list.",
+		"reason": "unless is basically an if-statement where the condition is logically negated.  You can use an if-statement instead and cause less confusion.  'unless' is supported by Nimbus Logo but no other Logo interpreter or programming language I've seen so it is a bit odd which would add more confusion to people using it or seeing it used."
+	}, {
+		"primaryName": "unmake",
+		"description": "If the input is a word, the variable named by the word is erased. If the input is a list, each variable named in the list is erased. unmake made will remove all variables. You will get an error if you try to unmake a non-existent variable.",
+		"reason": "It doesn't seem useful.  If you want smaller scopes, use local variables in procedures and shorten the procedures.  You can also reduce the number of variables used by using loops such as repeat instead of for since repeat does not introduce a new variable."
+	}, {
+		"primaryName": "untrace",
+		"description": "Cancels the effect of trace on the procedures named by wl.  You cannot untrace the procedures named by wl unless they exist."
+	}, {
+		"primaryName": "unwalk",
+		"description": "Undoes the effects of calling walk on specified procedures",
+		"reason": "WebLogo has breakpoints and other alternatives instead of walk so unwalk is not useful for similar reasons."
+	}, {
+		"primaryName": "uppercase",
+		"to": "uppercase"
+	}, {
+		"primaryName": "upq",
+		"description": "Returns true if the turtle's pen is up and false if it is down",
+		"reason": "WebLogo has a penDown? command.  not penDown? is a good translation but that is 2 commands so setting 'to' to that would not be consistent."
+	}, {
+		"primaryName": "value",
+		"description": "Returns the value associated with the name word. value has the same effect as putting a colon(:) before a name; it returns the contents.  Unlike the colon, it can be recursive."
+	}, {
+		"primaryName": "valueq",
+		"description": "Returns true if word is the name of a variable, otherwise it returns false."
+	}, {
+		"primaryName": "vanish",
+		"description": "Turtles controlled by the process disappear.  They are no longer maintained by Logo."
+	}, {
+		"primaryName": "walk",
+		"description": "When any of the procedures named by wl are called, Logo prints each line before executing it and waits for you to press a key before continuing.  This is useful in debugging.",
+		"reason": "Breakpoints in WebLogo fill a similar role.  You could breakpoints on every line in a procedure if you want to stop on every line.  You could also slow the execution speed a lot."
+	}, {
+		"primaryName": "whenever",
+		"description": "Whenever is intended for parallel processing.  The expression a is evaluated continuously and, when it becomes true, Logo executes the command list.  Logo waits for a to become true again before running list again."
+	}, {
+		"primaryName": "while",
+		"to": "while"
+	}, {
+		"primaryName": "wordq",
+		"to": "word?"
+	}, {
+		"primaryName": "wrap",
+		"description": "Sets the turtle to wrap around instead of going off the graphics screen",
+		"reason": "WebLogo never wraps and it is best to stay that way.  Users can scroll or zoom to see parts of the drawing they don't immediately see as the turtle moves out of it."
+	}, {
+		"primaryName": "wrapq",
+		"description": "Returns true if the graphics screen is currently wrapped",
+		"reason": "WebLogo never wraps so such a command would always return false and therefore be useless."
+	}, {
+		"primaryName": "xCor",
+		"to": "xCor"
+	}, {
+		"primaryName": "xor",
+		"to": "xor"
+	}, {
+		"primaryName": "yCor",
+		"to": "yCor"
+	}],
+	"keywords": [],
+	"operators": [
+		{
+			"symbol": "#",
+			"description": "As a binary operator, gets the nth value from a list.  Operands are a list and a 1-based list index. # as a binary operator is exactly the same as what the item command does in WebLogo.  The # operator as a unary operator calculates length of a list like WebLogo's count command.  The operator is documented at https://archive.org/details/nimbusrmlogopn143941985/page/n369/mode/2up"
+		},
+		{
+			"symbol": "%",
+			"description": "Gets the remainder after division.  Operands are integers. % is exactly the same as what the remainder command does in WebLogo.  The operator is documented at https://archive.org/details/nimbusrmlogopn143941985/page/n373/mode/2up"
+		},
+		{
+			"symbol": "&&",
+			"description": "A binary operator that concatenates 2 values into 1 string. It is like sentence command in both RMLogo and WebLogo.  The operator is documented with an example at https://archive.org/details/nimbusrmlogopn143941985/page/n309/mode/2up"
+		},
+		{
+			"symbol": "++",
+			"description": "A binary operator that joins lists or words.  It is similar to WebLogo's combine command.  Learn more at https://archive.org/details/nimbusrmlogopn143941985/page/n247/mode/2up"
+		},
+		{
+			"symbol": "+>",
+			"description": "A binary operator that adds an element to the beginning of a list and returns the result.  This is the same as RMLogo's putfirst command.  Learn more at https://archive.org/details/nimbusrmlogopn143941985/page/n289/mode/2up"
+		},
+		{
+			"symbol": "//",
+			"description": "The // binary operator calculates the same as WebLogo's quotient command.  The operator is documented at https://archive.org/details/nimbusrmlogopn143941985/page/n325/mode/2up"
+		},
+		{
+			"symbol": "<+",
+			"description": "A binary operator that adds an element to the end of a list and returns the result.  This is the same as RMLogo's putlast command.  Learn more at https://archive.org/details/nimbusrmlogopn143941985/page/n289/mode/2up"
+		},
+		{
+			"symbol": "<-",
+			"description": "A binary operator that assigns a value to a variable.  This is the same as RMLogo's make command.  Learn more at https://archive.org/details/nimbusrmlogopn143941985/page/n263/mode/2up"
+		},
+		{
+			"symbol": "||",
+			"description": "Represents xor.  The documentation shows no example using this || symbol which makes it difficult to determine if the || is more like a command name and placed before both parameters or is in-fix or between operands like an operator.  The operator is documented at https://archive.org/details/nimbusrmlogopn143941985/page/n367/mode/2up"
+		},
+		{
+			"symbol": "~",
+			"description": "A unary operator that performs a logical not operation.  It is the same as the not command in WebLogo and RMLogo.  Learn more at https://archive.org/details/nimbusrmlogopn143941985/page/n273/mode/2up"
+		},
+		{
+			"symbol": "~=",
+			"description": "Checks if 2 values are not equal.  It is unclear if ~= is to be between its inputs like a binary operator or before both of them like an unconventional command name. The operator is documented at https://archive.org/details/nimbusrmlogopn143941985/page/n347/mode/2up"
+		}
+	]
+}
