@@ -1,0 +1,63 @@
+<code>; The following code graphs the curve for:
+; y = :a * :x*:x*:x*:x + :b * :x*:x*:x +
+; :c * :x*:x + :d * :x + :e.
+;
+; It marks the x-axis intersections with red circles.
+; solveQuartic :a :b :c :d :e is used
+; to calculate the x values.
+
+; adjust the a, b, and c values to see
+; the red points adjust correctly.
+make "a 1 + animation.time * 0.1
+make "b 2 + animation.time
+make "c -5
+make "d 4 + animation.time * 10
+make "e -5 + animation.time * 4
+
+to quartic :x
+	output :a * :x*:x*:x*:x + :b * :x*:x*:x +
+		:c * :x*:x + :d * :x + :e
+end
+
+; transforms the x-value to display it more clearly
+to mathXToDrawingX :x
+	output :x * 20
+end
+
+; Graph the curve.
+setFillColor "black
+repeat 100 [
+	make "x (repcount - 50) * 0.2
+	jumpTo [(mathXToDrawingX :x) quartic :x]
+	circle 3
+]
+
+; Show the solved intersection between
+; the curve and the x-axis.
+make "xWhenYIsZero solveQuartic :a :b :c :d :e
+setFillColor "red
+repeat count :xWhenYIsZero [
+	make "x item repcount :xWhenYIsZero
+	jumpTo [(mathXToDrawingX :x) 0]
+	circle 8
+	penUp
+	; move away from dot enough to
+	; make text more readable.
+	setY yCor + 15
+	penDown
+	label str :x
+]
+
+to animation.snapshotstyle
+	localmake "result createPList
+	output :result
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 10
+	; Edit this if you want to change the length of your animation.
+	localmake "result createPList
+	setProperty "result "duration :minutes * 60 + :seconds
+	output :result
+end</code>
