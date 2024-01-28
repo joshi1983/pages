@@ -1,0 +1,27 @@
+<code>arcsLeft [
+	[45 1] 
+	[-45 1]
+] 100
+; Draws the same as
+; arcLeft 45 100
+; arcLeft -45 100 ; which is the same as arcRight 45 100</code>
+<code>; myArcsLeft procedure works exactly like the arcsLeft command.
+; The arcsLeft command is available so you don't need to implement it yourself.
+; Reviewing this implementation could help you implement something similar using procedures, though.
+to myArcsLeft :arcsInfo :scale
+	repeat count :arcsInfo [
+		localmake "arcInfo item repcount :arcsInfo
+		localmake "arcAngle first :arcInfo
+		localmake "arcRadius :scale * last :arcInfo
+		ifelse :arcRadius = 0 [
+			left :arcAngle
+		] [
+			arcLeft :arcAngle :arcRadius
+		]
+	]
+end
+
+myArcsLeft [
+	[45 1] 
+	[-45 1]
+] 100</code>
