@@ -1,0 +1,63 @@
+<h3>animation.snapshotstyle</h3>
+<p>The animation.snapshotstyle procedure returns a property list that expresses zoom and camera position for a snapshot.
+</p>
+<p>
+animation.snapshotstyle will usually call <span class="command">animation.time</span>
+animation.snapshotstyle procedure to calculate properties of the snapshot with respect to time.
+You might also call <span class="command">animation.duration</span> to see when your animation ends.
+</p>
+
+<h4>Properties</h4>
+<ul>
+	<li><strong>position.x</strong> is the x-coordinate of center of the snapshot's rectangle.
+		The default for position.x is 0.
+		For 3D animation, this would be the camera's x-coordinate.</li>
+	<li><strong>position.y</strong> is the y-coordinate of center of the snapshot's rectangle.
+		The default for position.y is 0.
+		For 3D animation, this would be the camera's y-coordinate.</li>
+	<li><strong>position.z</strong> is the z-coordinate of center of the snapshot's rectangle.
+		The default for position.z is 0.
+		This is useful for 3D animations.</li>
+	<li><strong>zoom.scale</strong> is the scale factor used for the snapshot.
+		The default for zoom.scale is 1.
+		zoom.scale must be greater than 0.
+		<ul>
+			<li>1 is default.</li>
+			<li>2 would mean the snapshot spans only half as wide or tall as it would with a zoom.scale of 1.</li>
+		</ul>
+	</li>
+</ul>
+
+<h4>Don't</h4>
+<p>The animation.setup is not to be used for anything except defining properties for the overall animation listed above.
+Keep that clear by avoiding the following mistakes.</p>
+<ul>
+	<li>Don't use a case for property names other than the ones specified above.
+	For example, don't use Position.X instead of position.x because the property names in a property list are case-sensitive.</li>
+	<li>Don't add parameters to the animation.snapshotstyle procedure since it should never have any.</li>
+	<li>Don't try to draw anything in animation.snapshotstyle.  
+	Don't call commands like <span class="command">forward</span> in animation.snapshotstyle.
+	You don't need a procedure to draw something.
+	You can call procedures for drawing but just avoid the names "animation.setup" and "animation.snapshotstyle".</li>
+</ul>
+
+<h4>Examples</h4>
+<p>The following example implements animation.snapshotstyle to return an empty property list.  
+This causes only default values to be used.</p>
+<code class="pastable">to animation.snapshotstyle
+	localmake "result createPList
+	output :result
+end</code>
+<p>The following example zooms in and moves the snapshot frame throughout the animation.</p>
+<code class="pastable">to animation.snapshotstyle
+	localmake "animationTimeRatio animation.time / animation.duration
+	localmake "scaleFactor 1 + :animationTimeRatio
+	localmake "result createPList
+	setProperty "result "zoom.scale :scaleFactor * 10
+	setProperty "result "position.x :scaleFactor * 5
+	setProperty "result "position.y :scaleFactor * 5
+	output :result
+end</code>
+
+<p>See also <span data-helpid="animation.setup">animation.setup</span>.  
+<span data-helpid="animation.setup">animation.setup</span> is another special procedure related to animation.</p>
