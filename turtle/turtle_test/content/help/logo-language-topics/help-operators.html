@@ -1,0 +1,52 @@
+<header>
+	<nav class="menu">
+		<ul>
+			<li><a href="#help-operators-arithmatic">Arithmatic</a></li>
+			<li><a href="#help-operators-unary">Unary</a></li>
+			<li><a href="#help-operators-comparison">Comparison</a></li>
+			<li><a href="#help-operators-precedence">Precedence</a></li>
+		</ul>
+	</nav>
+</header>
+<div class="help-operators-body">
+	<p>The Logo programming language supports two general types of operators.
+	</p>
+	<ol>
+		<li>Operators that compare and evaluate to either true or false.  These are symbols like &gt;, &lt;.</li>
+		<li>Operators that evaluate to numbers.  These are arithmatic operators like +, -, *, /.</li>
+	</ol>
+
+	<h2 id="help-operators-arithmatic">Arithmatic Binary Operators</h2>
+	<div id="num-operators" class="spreadsheet"></div>
+	
+	<h2 id="help-operators-unary">Unary Operators</h2>
+	<p>A unary operator is an operator that takes 1 input.  For example, the negative sign.  A unary operator appears before its input in a Logo program similar to how a command appears before its input.</p>
+	<div id="unary-operators" class="spreadsheet"></div>
+
+	<h2 id="help-operators-comparison">Comparison Operators</h2>
+	<p>Comparison operators are useful for <span class="command">if</span>, <span class="command">ifelse</span>, and <span class="command">while-loop</span> commands.</p>
+	<div id="bool-operators" class="spreadsheet"></div>
+
+	<h2 id="help-operators-precedence">Precedence</h2>
+	<p>Precedence determines the order in which operators are processed.</p>
+	<p>If you ever want more control over the order of operations in evaluating your expressions, use curved brackets ( ).  The brackets are always evaluated before anything else.</p>
+	<p>The higher the precedence, the earlier the operator is evaluated.  At equal precedence, operators are evaluated left to right.</p>
+	<div id="operator-precedence" class="spreadsheet"></div>
+	<p>All possible command and procedure parameters are evaluated before invoking the command or procedure.  Let's look at some examples to make this clearer.
+	</p>
+	<ul>
+		<li>
+		<code>print 3 &gt; 2</code> prints true.  It is the same as <code>print (3 &gt; 2)</code>.  It isn't the same order as <code>(print 3) &gt; 2</code>. A little off topic but <code>(print 3) &gt; 2</code> would also cause an error since print never returns a valid input to the &gt; operator.
+		</li>
+		<li><p>
+		<code>if sum 3 2 &gt; 0 [ print "hi ]</code> won't run.  
+		It is the same as <code>if sum 3 (2 &gt; 0) [ print "hi ]</code>.
+		It can't run because &gt; returns either true or false which is not a valid input for the sum command.
+		An extra reason for it to not run is that sum returns a number and the if-statement's condition must be boolean(either true or false).</p>
+		<p>If you run into a situation like this and hate the order of operation, use brackets to take more control over the order.
+		Consider something like:
+		<code>if (sum 3 2) &gt; 0 [ print "hi ]</code> which will run and print hi because (sum 3 2) will evaluate to 5 and 5 &gt; 0 evaluates to true.
+		</li>
+		<li><code>print 3 + 2</code> prints 5.  It is the same as <code>print (3 + 2)</code>.</li>
+	</ul>
+</div>

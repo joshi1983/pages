@@ -1,0 +1,30 @@
+; Similar to Python Turtle's circle function on the Turtle class
+; steps are assumed to be infinity.
+to pyCircle :radius :extent
+	ifelse :radius < 0 [
+		localmake "radius -:radius
+		arcRight :extent :radius
+	] [
+		ifelse :radius = 0 [
+			left :extent
+		] [
+			if :extent <> 0 [
+				ifelse :extent < 0 [
+					right 180
+					arcRight -:extent :radius
+					right 180
+				] [
+					ifelse (abs :extent) >= 360 [
+						circleLeft :radius
+						localmake "oldPenSize penSize
+						setPenSize 0
+						arcLeft :extent :radius
+						setPenSize :oldPenSize
+					] [
+						arcLeft :extent :radius
+					]
+				]
+			]
+		]
+	]
+end
