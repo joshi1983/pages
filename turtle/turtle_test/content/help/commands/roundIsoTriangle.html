@@ -1,0 +1,58 @@
+<div class="svg-container">
+	<img src="content/help/commands/images/roundIsoTriangle.svg" alt="roundIsoTriangle examples">
+<code>isoTriangle 200 100
+; Draws an isosceles triangle with sharp corners.
+
+roundIsoTriangle 200 100 20
+; Draws a triangle of the same size except corners with radius 20 are removed</code>
+<code>; This code draws the shapes shown above.
+make "height 44
+make "baseWidth 95
+make "cornerRadius 15
+make "separation :height * 1.8
+setFillColor "black
+isoTriangle :baseWidth :height
+setFillColor "white
+setPenColor "green
+roundIsoTriangle :baseWidth :height :cornerRadius
+jumpRight :separation
+setFillColor "#888
+roundIsoTriangle :baseWidth :height :cornerRadius
+jumpRight :separation * 0.8
+roundIsoTriangle :baseWidth :height :cornerRadius * 0.5
+jumpRight :separation
+roundIsoTriangle :baseWidth :height :cornerRadius * 0.25</code>
+<code>; Behaves exactly like roundIsoTriangle command.
+; The roundIsoTriangle command is available so you don't need to implement it yourself.
+; Reviewing this implementation could help you implement something similar using procedures, though.
+to myRoundIsoTriangle :baseWidth :height :cornerRadius
+	localmake "oldState turtleState
+	localmake "baseAngles arcTan :height / (:baseWidth / 2)
+	localmake "baseArcAngle 180 - :baseAngles
+	localmake "topAngle 180 - 2 * :baseAngles
+	localmake "baseCornerGap :cornerRadius * tan 90 - :baseAngles / 2
+	localmake "topCornerGap :cornerRadius * tan 90 - :topAngle / 2
+	localmake "baseWidthInner :baseWidth - 2 * :baseCornerGap
+	localmake "sideLength1 :height / sin :baseAngles
+	localmake "sideLength :sideLength1 - :baseCornerGap - :topCornerGap
+	right 90
+	jumpForward :baseWidthInner / 2
+	polyStart
+	arcLeft :baseArcAngle :cornerRadius
+	jumpForward :sideLength
+	arcLeft 180 - :topAngle :cornerRadius
+	jumpForward :sideLength
+	arcLeft :baseArcAngle :cornerRadius
+	polyEnd
+	setTurtleState :oldState
+end
+
+isoTriangle 200 100
+; Draws an isosceles triangle with sharp corners.
+
+myRoundIsoTriangle 200 100 20
+; Draws an isosceles triangle with:
+; rounded corners of radius 20 removed.
+; base width of 200
+; height of 100</code>
+</div>
