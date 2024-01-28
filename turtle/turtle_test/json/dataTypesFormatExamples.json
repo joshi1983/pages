@@ -1,0 +1,106 @@
+[
+	{"name": "bool", "description": "Any boolean value.  There are only 2",
+		"examples": [true, false],
+		"notExamples": [1, 0, [], "hi"]
+	},
+	{"name": "alphacolor",
+		"description": "Any color.  This includes both opaque and semitransparent colors.",
+		"examples": ["#8fff", "#0fff", "red", "blue", "white", "black", "#123", "#112233", "#f00", "#F00", 1, 2],
+		"notExamples": ["hello", [], true, false],
+		"subsetTypes": ["color", "colorlist", "colorstring", "int", "alphacolorlist", "alphacolorstring"]
+	},
+	{"name": "alphacolorstring",
+		"description": "Any string describing a semitransparent color.  This does not include any colorstring values.",
+		"examples": ["#8fff", "#0fff"],
+		"notExamples": ["red", "white", "hello", true, false]
+	},
+	{"name": "alphacolorlist", "description": "Any list that can describe a semitransparent color.  Every element must be a number and the length must be 4.",
+		"examples": [[0, 0, 0, 0], [128, 255, 0, 255]],
+		"notExamples": ["red", [0, 0, 0], ["hi", 0, 0, 0], "hi", true, false]
+	},
+	{"name": "color", "description": "Any opaque(not semitransparent) color.",
+		"examples": [[0, 0, 0], "red", "blue", "white", "black", "#123", "#112233", "#f00", "#F00", 1, 2],
+		"notExamples": [[0, 0, 0, 0], "#1234", "hi", true, false],
+		"subsetTypes": ["colorlist", "colorstring", "int"]
+	},
+	{"name": "colorlist", "description": "A list of 3 numbers that can describe an opaque color.",
+		"examples": [[255, 255, 255], [0, 0, 0]],
+		"notExamples": [[0, 0, 0, 0], "red", "hi", true, false]
+	},
+	{"name": "colorstring",
+		"description": "A string that can describe an opaque color.<ul><li>This could be a recognized color name like \"red.</li><li>This could also be a hexadecimal(base 16) color code similar to the format used by HTML, CSS, and JavaScript such as #FF88FF or #F8F.</li></ul>",
+		"examples": ["red", "blue", "white", "black", "#123", "#112233", "#f00", "#F00"],
+		"notExamples": ["#1234", [], true, false]
+	},
+	{"name": "cproc",
+		"description": "A command or procedure's name.",
+		"examples": ["fd", "FD", "forward", "Forward", "setXY", "setXYZ", "penUp"],
+		"notExamples": ["#1234", [], true, false],
+		"subsetTypes": ["cproc:0", "cproc:1", "cproc:2", "cproc:3"]
+	},
+	{"name": "cproc:1",
+		"description": "A command or procedure's name that has exactly 1 parameter.",
+		"examples": ["fd", "forward"],
+		"notExamples": ["setXY", "setXYZ", "","#1234", [], true, false]
+	},
+	{"name": "easing",
+		"description": "Any easing function value.  These can be created by easing commands such as <span class=\"command\">easeInOut</span>, <span class=\"command\">easeIn</span>, <span class=\"command\">easeOut</span>...",
+		"examples": [],
+		"notExamples": ["hi", [], 1, 3.14, true, false]
+	},
+	{"name": "gradient",
+		"description": "Any gradient.  These can be created by commands such as <span class=\"command\">createLinearGradient</span>, <span class=\"command\">createRadialGradient</span>, and used by commands like <span class=\"command\">setFillGradient</span>, <span class=\"command\">setPenGradient</span>.",
+		"examples": [],
+		"notExamples": ["hi", [], 1, 3.14, true, false]
+	},
+	{"name": "int", "description": "Any integer number positive, 0, or negative",
+		"examples": [-1, 0, 1, 9],
+		"notExamples": [3.14, -3.14, "34", true, false]
+	},
+	{"name": "instructionlist", "description": "An instruction list.  This is used by WebLogo to describe inputs for commands like <span class=\"command\">repeat</span>, <span class=\"command\">for</span>, <span class=\"command\">while</span>, <span class=\"command\">if</span>, <span class=\"command\">ifelse</span>... but it is not something you can store in a variable or pass to a procedure.",
+		"examples": [],
+		"notExamples": [1, "hi", [], true, false]
+	},
+	{"name": "num", "description": "Any real or integer number positive, 0, or negative",
+		"examples": [-1, 0, 1, 3.14, -3.14, 4],
+		"notExamples": [[], "3", "3.14"],
+		"subsetTypes": ["int"],
+		"seeAlso": ["number?"]
+	},
+	{"name": "list", "description": "A list of any type of elements and with any length",
+		"examples": [[], [1, 2], ["Hello", "World", []]],
+		"notExamples": ["hello", 3, true, false],
+		"subsetTypes": ["colorlist", "alphacolorlist", "list<num>", "list<string>"],
+		"seeAlso": ["list?"]
+	},
+	{"name": "list|string", "description": "A list of any type of elements and with any length or any string. The pipe operator, |, can be interpretted like 'or' or 'union'.",
+		"examples": [[], [1, 2], "hello"],
+		"notExamples": [3, 3.14, true, false],
+		"subsetTypes": ["string", "list", "list<num>", "list<string>", "colorlist", "alphacolorlist", "colorstring", "alphacolorstring"]
+	},
+	{"name": "list<num>", "description": "A list of numbers with any length",
+		"examples": [[], [123], [1, 2], [1.24, 3]],
+		"notExamples": [["1", 2], ["hello", 3]],
+		"subsetTypes": ["colorlist", "alphacolorlist"]
+	},
+	{"name": "list<string>", "description": "A list of strings with any length",
+		"examples": [[], ["hello"], ["hello", "world"]],
+		"notExamples": [[1, 2], ["hello", 3]]
+	},
+	{"name": "plist",
+		"description": "Any property list.  Property lists can be created using the <span class=\"command\">createPList</span> command.",
+		"examples": [],
+		"notExamples": [[], [1, 2, 3], "#123"]
+	},
+	{"name": "string", "description": "Any string.  This is a type you'd represent using quotes or apostrophes.",
+		"examples": ["hello", "world", "hi", "Hi"],
+		"notExamples": [1, 3.14, [], [1, 2, 3], true, false],
+		"subsetTypes": ["alphacolorstring", "colorstring", "cproc"],
+		"seeAlso": ["string?"]
+	},
+	{"name": "transparent",
+		"description": "This is the most specific data type since it contains only 1 value.  This is indicated by the <span class=\"command\">transparent</span> command.",
+		"examples": [],
+		"notExamples": ["hi", "transparent", [], [0, 0, 0, 0], true, false]
+	}
+]
