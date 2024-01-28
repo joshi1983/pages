@@ -1,0 +1,107 @@
+<div class="svg-container">
+	<img src="content/help/commands/images/isotoxalStar.svg" alt="IsotoxalStar diagram and examples">
+<code>setFillColor "red
+
+isotoxalStar 50 19 2
+; Draws a diamond-like shape
+jumpRight 125
+
+isotoxalStar 50 50 2
+; Draws a square
+; In other words, a 4-sided regular polygon.
+; 4 sides because 100 = 100 and
+; 2 * :numPoints
+; = 2 * 2
+; = 4
+jumpRight 125
+
+isotoxalStar 50 10 3
+; Draws a 3-point shape
+jumpRight 125
+
+isotoxalStar 50 19 5
+; Draws a 5 point star
+jumpRight 125
+
+isotoxalStar 50 19 8
+; Draws an 8 point star
+jumpRight 125
+
+isotoxalStar 50 50 3
+; draws a hexagon(6-sided regular polygon)
+; 6 because 6 = 2 * 3</code>
+
+<code>; myIsotoxalStar procedure works exactly like the isotoxalStar command.
+; The isotoxalStar command is available so you don't need to implement it yourself.
+; Reviewing this implementation could help you implement something similar using procedures, though.
+to myIsotoxalStar :radius1 :radius2 :numPoints
+	localmake "oldState turtleState
+	if :radius1 &lt; :radius2 [
+		; swap radius1 with radius2.
+		localmake "temp :radius1
+		localmake "radius1 :radius2
+		localmake "radius2 :temp
+		right 180 / :numPoints
+	]
+	localmake "angle1 180 / :numPoints
+	localmake "len1 :radius2 * sin :angle1
+	localmake "len2 :radius2 * cos :angle1
+	localmake "size1 hypot [:len1 :radius1 - :len2]
+	localmake "angle2 90 - arcCos :len1 / :size1
+	localmake "angle3 180 - 2 * (:angle1 + :angle2)
+	jumpForward :radius1
+	polyStart
+	repeat :numPoints [
+		right 180 - :angle2
+		jumpForward :size1
+		left :angle3
+		jumpForward :size1
+		left :angle2
+	]
+	polyEnd
+	setTurtleState :oldState
+end
+
+; animation.time is used so you can interactively
+; change this variable and see that the command and procedure draw the same way.
+; To adjust time:
+; 1. Click Set -&gt; Animation Time.
+; 2. Drag the progress bar around in the Animation Time dialog
+; and watch the drawing change behind the dialog.
+; This is the same for any animation.
+make "radius1 1 + animation.time * 10
+make "radius2 50
+make "numPoints 5
+
+circle :radius1
+circle :radius2
+
+setFillColor "red
+
+isotoxalStar :radius1 :radius2 :numPoints
+
+setFillColor "#8ff0
+myIsotoxalStar :radius1 :radius2 :numPoints
+
+; The yellow is roughly 50% opaque so
+; if we see orange instead of yellow and
+; nothing looks misaligned, they're overlapping perfectly.
+
+setFillColor transparent
+circle :radius1
+circle :radius2
+
+to animation.snapshotstyle
+	localmake "result createPList
+	output :result
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 10
+	; Edit this if you want to change the length of your animation.
+	localmake "result createPList
+	setProperty "result "duration :minutes * 60 + :seconds
+	output :result
+end</code>
+</div>
