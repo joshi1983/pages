@@ -119,7 +119,6 @@ setTimeout(function() {
 	import('./graphics-screen/cameraToTurtleButton.js');
 	import('./graphics-screen/CursorStatus.js');
 	import('./graphics-screen/CursorRefresher.js');
-	import('./graphics-screen/DownscalingRedrawer.js');
 	import('./graphics-screen/mouseWheelZoom.js');
 	import('./graphics-screen/moveCameraOnDrag.js');
 	import('./graphics-screen/multitouchZoom.js');
