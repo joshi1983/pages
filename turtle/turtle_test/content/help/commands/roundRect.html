@@ -1,0 +1,38 @@
+<code>rect 100 50
+setFillColor "black
+roundRect 100 50 10
+; Draws a rectangle with straight edges lined up
+; precisely with the rectangle.
+; Corners are rounded to a radius of 10.
+
+jumpRight 200
+setFillColor "red
+roundRect 50 100 25
+; Draws a rounded rectangle filled with red and outlined
+; with a black line.</code>
+<code>; Behaves exactly like roundRect command.
+; The roundRect command is available so you don't need to implement it yourself.
+; Reviewing this implementation could help you implement something similar using procedures, though.
+to myRoundRect :width :height :cornerRadius
+	ifelse :cornerRadius &lt;= 0 [
+		rect :width :height
+	] [
+		localmake "oldState turtleState
+		localmake "innerWidth :width - :cornerRadius * 2
+		localmake "innerHeight :height - :cornerRadius * 2
+		jumpBackward :height / 2
+		jumpRight :innerWidth / 2
+		right 90
+		polyStart
+		repeat 2 [
+			arcLeft 90 :cornerRadius
+			jumpForward :innerHeight
+			arcLeft 90 :cornerRadius
+			jumpForward :innerWidth
+		]
+		polyEnd
+		setTurtleState :oldState
+	]
+end
+
+myRoundRect 100 50 20</code>
