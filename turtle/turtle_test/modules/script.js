@@ -1,2 +1,9 @@
-import { Settings } from './Settings.js';
-import { TabIndexManager } from './components/TabIndexManager.js';
+function init() {
+	import('./Settings.js');
+	import('./components/TabIndexManager.js');
+}
+
+if (document.readyState === 'loading')
+	document.addEventListener('DOMContentLoaded', init);
+else
+	init();
