@@ -1,16 +1,21 @@
-const cleanCSS = require('gulp-clean-css');
 const gulp = require('gulp');
-const minHTML = require('gulp-htmlmin');
-const rename = require('gulp-rename');
-const replace = require('gulp-string-replace');
-const zip = require('gulp-zip');
 
 gulp.task('minify-css',() => {
+	const cleanCSS = require('gulp-clean-css');
   return gulp.src('./css/style.css')
     .pipe(cleanCSS())
     .pipe(gulp.dest('./dist'));
 });
+gulp.task('build-js', () => {
+	const uglify = require('gulp-uglifyes');
+	return gulp.src('./modules/script.js')
+		.pipe(uglify({mangle: false,ecma: 6}))
+		.pipe(gulp.dest('./dist'));
+});
 gulp.task('build-index', () => {
+	const replace = require('gulp-string-replace');
+	const minHTML = require('gulp-htmlmin');
+	const rename = require('gulp-rename');
 	return gulp.src('./index-dev.html')
 		.pipe(replace('"css', '"dist'))
 		.pipe(minHTML({'collapseWhitespace': true}))
@@ -33,6 +38,7 @@ gulp.task('js-filenames', () => {
 	return printJSFilenames();
 });
 gulp.task('zip', () => {
+	const zip = require('gulp-zip');
 	const examples = require('./json/scriptExamples.json');
 	// Based on an answer at:
 	// https://stackoverflow.com/questions/22685174/how-to-zip-up-zip-files-using-gulp-zip
