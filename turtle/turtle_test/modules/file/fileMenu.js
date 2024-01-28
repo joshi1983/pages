@@ -1,0 +1,13 @@
+console.log('fileMenu.js loaded');
+import('./fileAssets.js');
+console.log('fileAssets.js loaded');
+import('./fileDownload.js');
+console.log('fileDownload.js loaded');
+import('./fileEdit.js');
+console.log('fileEdit.js loaded');
+import('./fileLoad.js');
+console.log('fileLoad.js loaded');
+import('./fileLoadExample.js');
+console.log('fileLoadExample.js loaded');
+import('./fileNew.js');
+console.log('fileNew.js loaded');
