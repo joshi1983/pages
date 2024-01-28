@@ -1,0 +1,26 @@
+<p>An image can be added to a drawing using the <span class="command">image</span> or 
+<span class="command">imageAlpha</span> commands.
+An HTTP or HTTPS protocol URL for the source parameter of those commands
+often adds a "tainted" image to the drawing.
+In other words, the image becomes troublesome for some features of WebLogo to work with.
+</p>
+<p>
+If you want more technical details, this "tainted" image is more of a "tainted" HTML5 canvas caused by
+drawing an unsafe or tainted image onto the canvas.
+The security issue that causes canvases to become tainted is explained in detail at 
+<a target="_empty" 
+href="https://developer.mozilla.org/en-US/docs/Web/HTML/CORS_enabled_image">https://developer.mozilla.org/en-US/docs/Web/HTML/CORS_enabled_image</a></p>
+
+<p>Some features won't work on drawings with tainted images.</p>
+<ul>
+	<li><strong>Drawing</strong> -&gt; <strong>Download</strong> feature from working 
+for JPG, PNG, WebP formats due to an underlying browser security feature.</li>
+	<li>Since you can't download raster images from drawings containing tainted images, you also can't export animations that contain tainted images.</li>
+	<li>Under <strong>Set</strong> -&gt; <strong>Set Time</strong>, the Live Redraw will stop working</li>
+</ul>
+<h3>Workarounds</h3>
+<p>You can also an image as an asset and reference it using a url like
+local://myimage.png assuming you have a PNG image asset named myimage.png.
+This is usually the best workaround since it keeps your code small.  
+Click <strong>File</strong> -&gt; <strong>Assets</strong> to access the asset manager.</p>
+<p>You can work around this by using base-64 data URL's.  The drawback is your URL will become very long.</p>

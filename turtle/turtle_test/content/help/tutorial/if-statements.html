@@ -1,0 +1,38 @@
+<p>
+You may want code that decides whether or not to run an instruction list.
+</p>
+<p>The following will print only if x is less than 10.  Replace 5 and run again to see for yourself.</p>
+<code class="pastable">make "x 5<br>
+if :x &lt; 10 [<br>
+&nbsp;&nbsp;print ["x "is "less "than 10]<br>
+]<br>
+print "done</code>
+
+<p>You can also choose between 1 of 2 instruction lists by using the <span class="command">ifelse command</span>.
+The following example always prints a message regarding x.</p>
+<p>
+If x &lt; 10, it prints "x is less than 10.<br>
+Else, it prints "x is not less than 10".
+</p>
+
+<code class="pastable">make "x 5<br>
+ifelse :x &lt; 10 [<br>
+&nbsp;&nbsp;print ["x "is "less "than 10]<br>
+] [<br>
+&nbsp;&nbsp;print ["x "is "not "less "than 10]<br>
+]</code>
+<h3>Example Printing Random Even/Odd Messages</h3>
+<p>The following example uses the <span class="command">ifelse command</span> to print whether a randomly selected number is even or odd.</p>
+<p>The example makes use of a few new commands:</p>
+<ul>
+	<li><span class="command">random command</span> returns a random integer between 0 and a specified maximum.</li>
+	<li><span class="command">remainder command</span> returns the remainder after division.  
+	<code>remainder 4 2</code> is 0 indicating 4 is even.  <code>remainder 5 2</code> is 1 indicating 5 is odd.</li>
+</ul>
+<code class="pastable">make "randomNumber random 100<br>
+ifelse (remainder :randomNumber 2) = 0 [<br>
+&nbsp;&nbsp;print [:randomNumber "is "even]<br>
+] [<br>
+&nbsp;&nbsp;print [:randomNumber "is "odd]<br>
+]<br>
+</code>
