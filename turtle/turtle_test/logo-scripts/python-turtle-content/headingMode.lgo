@@ -1,0 +1,23 @@
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; The following variable and procedures are for converting
+; Python Turtle's mode and angle modes.
+make "headingUnitsPerCycle 360
+
+to pyDegrees :unitsPerCycle
+	make "headingUnitsPerCycle :unitsPerCycle
+end
+
+to pyScaleAngleToDegrees :angleUnits
+	output :angleUnits * 360 / :headingUnitsPerCycle
+end
+
+to pySetHeading :newHeading
+	setHeading 90 + pyScaleAngleToDegrees :newHeading
+end
+
+to pyHeading
+	output (heading - 90) * :headingUnitsPerCycle / 360
+end
+
+setHeading 90
+;;;;;;;;;;;;;;;;; End of headingMode procedures ;;;;;;;;;;;

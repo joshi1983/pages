@@ -1,0 +1,62 @@
+<code>make "point1 [10 10]
+make "point2 [0 20]
+print distanceToLine :point1 :point2
+; prints 20</code>
+<code>; The following example generates a random line
+; and uses distanceToLine to plot red dots along it.
+; The red dots are plotted from a single random turtle position
+; using many different headings.
+
+make "p1 [randomRatio * 100 randomRatio * 100]
+make "p2 [randomRatio * 100 randomRatio * 100]
+
+; Draw the random line.
+jumpTo :p1
+setHeading towards :p2
+jumpBackward 300
+setPenSize 2
+forward 600
+
+; Jump the turtle to a random point.
+make "turtlePos [randomRatio * 100 randomRatio * 100]
+jumpTo :turtlePos
+circle 2
+setPenSize 0.1
+setPenColor "green
+setFillColor "red
+repeat 100 [
+	; set a random heading
+	setHeading repRatio * 360
+	make "d distanceToLine :p1 :p2
+	forward :d
+	circle 1
+	jumpTo :turtlePos
+]</code>
+<code>; myDistanceToLine procedure works similar to the distanceToLine command.
+; myDistanceToLine is different in that myDistanceToLine always returns a positive number even if the
+; direction to intersect with the line is backwards.
+;
+; Reviewing this implementation could help you implement something similar using procedures.
+to myDistanceToLine :point1 :point2
+	localmake "oldPos pos
+	localmake "oldHeading heading
+
+	; try to get pos1 the same length as point1.
+	ifelse 2 = count :point1 [
+		localmake "pos1 xyCor
+	] [
+		localmake "pos1 pos
+	]
+	localmake "d linePointDistance :point1 :point2 :pos1
+	jumpTo :point1
+	localmake "angle abs (:oldHeading - (towards :point2))
+	localmake "result :d / abs sin :angle
+	jumpTo :oldPos
+	setHeading :oldHeading
+	output :result
+end
+
+make "point1 [10 10]
+make "point2 [0 20]
+print myDistanceToLine :point1 :point2
+; prints 20</code>
