@@ -1,0 +1,93 @@
+.dialog-backdrop {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100vh;
+	background-color: #888;
+	opacity: 0.2;
+	transition: opacity 0.1s;
+	z-index: 10; /* overlap the status window and debugger window */
+	cursor: pointer;
+}
+
+.dialog {
+	display: flex;
+	flex-direction: column;
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	box-sizing: border-box;
+	z-index: 11; /* overlap the dialog-backdrop */
+	background-color: #fff;
+	padding: 8px;
+}
+
+.dialog.maximized {
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100vh;
+}
+
+.dialog, #status, #debugger {
+	box-shadow: 0 0 10px #000;
+}
+
+.dialog h2 {
+	margin-top: 5px;
+	margin-bottom: 0;
+}
+
+.dialog p {
+	margin-top: 8px;
+}
+
+.dialog-footer {
+	text-align: center;
+	padding-top: 6px;
+}
+
+.dialog-body {
+	flex-grow: 1;
+	overflow: hidden;
+	display: flex;
+	flex-direction: column;
+}
+
+.window-title-bar, #code-editor .title-bar {
+	display: flex;
+	width: 100%;
+}
+
+.window-title-bar > div {
+	flex-shrink: 0; /* do not wrap to new lines */
+}
+
+.window-title-bar #dialog-title {
+	white-space: nowrap;
+	overflow-x: hidden;
+	text-overflow: ellipsis; /* Indicate continuing content with a trailing ... */
+}
+
+#dialog-title, .window-title,
+#code-editor .title-bar .code-editor-title {
+	font-weight: bold;
+	font-size: 1.2em;
+	flex-grow: 1;
+}
+
+.window-title-bar div > span,
+#code-editor .title-bar div > span {
+	cursor: pointer;
+	color: #888;
+	transition: color 0.1s;
+}
+
+.window-title-bar div > span:hover, #code-editor .title-bar div > span:hover {
+	color: #000;
+}
+
+.dialog-group-icon:not(['class']) {
+	display: none;
+}
