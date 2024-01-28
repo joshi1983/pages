@@ -1,0 +1,41 @@
+<code>; Use Set => Animation Time to see the projection result
+; change as the onToVector is rotated 360 degrees.
+make "angle animation.time * 360 / animation.duration
+make "fromVector [100 200]
+make "onToVector [100 * cos :angle 100 * sin :angle]
+make "projectResult vectorProject :onToVector :fromVector
+
+to drawVectors
+	localmake "oldPenSize penSize
+	setPenSize :oldPenSize * 0.5
+	setPenColor "black
+	jumpTo :projectResult
+	setPos :fromVector
+
+	jumpTo [0 0]
+	setPenColor "green
+	setPenSize :oldPenSize * 2
+	setPos :projectResult
+	jumpTo [0 0]
+	setPenSize :oldPenSize
+	setPenColor "blue
+	setPos :fromVector
+	jumpTo [0 0]
+	setPenColor "red
+	setPos :onToVector
+end
+
+drawVectors
+
+to animation.snapshotstyle
+	localmake "result createPList
+	output :result
+end
+
+to animation.setup
+	localmake "minutes 0
+	localmake "seconds 10
+	localmake "result createPList
+	setProperty "result "duration :minutes * 60 + :seconds
+	output :result
+end</code>
