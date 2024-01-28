@@ -1,0 +1,29 @@
+<code>regularPolygon 100 5
+; Draws a pentagon
+; The outline is black because penColor is initially black.
+
+jumpRight 200
+setFillColor "red
+regularPolygon 100 6
+; Draws a hexagon filled with red
+; and a black outline</code>
+<code>; myRegularPolygon procedure works exactly like the regularPolygon command.
+; The regularPolygon command is available so you don't need to implement it yourself.
+; Reviewing this implementation could help you implement something similar using procedures, though.
+to myRegularPolygon :radius :numSides
+	assert :numSides >= 2
+	localmake "oldState turtleState
+	localmake "len :radius * 2 * sin 180 / :numSides
+	jumpForward :radius
+	right 90 + 180 / :numSides
+	polyStart
+	repeat :numSides [
+		jumpForward :len
+		right 360 / :numSides
+	]
+	polyEnd
+	setTurtleState :oldState
+end
+
+myRegularPolygon 100 5
+; Draws a pentagon</code>
