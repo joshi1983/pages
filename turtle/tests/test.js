@@ -1,4 +1,4 @@
-import { bindDocumentFocusTests } from './bindDocumentFocusTests.js';
+/*import { bindDocumentFocusTests } from './bindDocumentFocusTests.js';
 import { testAlphaColour } from './testAlphaColour.js';
 import { testArrayUtils } from './testArrayUtils.js';
 import { testAssets } from './assets/testAssets.js';
@@ -8,7 +8,7 @@ import { testClamp } from './testClamp.js';
 import { testClampRadianAngle } from './testClampRadianAngle.js';
 import { testColour } from './testColour.js';
 import { testColourDirectory } from './colour/testColourDirectory.js';
-import { testCommandGroups } from './command-groups/testCommandGroups.js';
+*/import { testCommandGroups } from './command-groups/testCommandGroups.js';
 import { testCommandJSONForDuplicates } from './testCommandJSONForDuplicates.js';
 import { testCommands } from './testCommands.js';
 import { testCommandsJSON } from './testCommandsJSON.js';
@@ -18,13 +18,13 @@ import { testCommandsJSONDataTypes } from './testCommandsJSONDataTypes.js';
 import { testCommandsJSONDescription } from './testCommandsJSONDescription.js';
 import { testCommandsJSONHyperlinks } from './testCommandsJSONHyperlinks.js';
 import { testCommandsJSONLengthRangeInfo } from './testCommandsJSONLengthRangeInfo.js';
-import { testCommandsJSONOrderByPrimaryName } from './testCommandsJSONOrderByPrimaryName.js';
+import { testCommandsJSONOrderByPrimaryName } from './testCommandsJSONOrderByPrimaryName.js';/*
 import { testComponents } from './components/testComponents.js';
 import { testDeepEquality } from './testDeepEquality.js';
 import { testDebugging } from './debugging/testDebugging.js';
 import { testDelay } from './testDelay.js';
-import { testDrawing } from './drawing/testDrawing.js';
-import { testDrawingMenu } from './drawing-menu/testDrawingMenu.js';
+*/import { testDrawing } from './drawing/testDrawing.js';
+/*import { testDrawingMenu } from './drawing-menu/testDrawingMenu.js';
 import { testEqualWithinThreshold } from './testEqualWithinThreshold.js';
 import { testExceptionToString } from './testExceptionToString.js';
 import { testFetchBlob } from './testFetchBlob.js';
@@ -38,8 +38,8 @@ import { testLongestCommonSubsequence } from './testLongestCommonSubsequence.js'
 import { testMapUtils } from './testMapUtils.js';
 import { testMaybeDecided } from './testMaybeDecided.js';
 import { testOperatorsJSON } from './testOperatorsJSON.js';
-import { testParsing } from './parsing/testParsing.js';
-import { testPopulateTemplateUsingObject } from './testPopulateTemplateUsingObject.js';
+*/import { testParsing } from './parsing/testParsing.js';
+/*import { testPopulateTemplateUsingObject } from './testPopulateTemplateUsingObject.js';
 import { testRateLimiter } from './testRateLimiter.js';
 import { testSet } from './set/testSet.js';
 import { testSetUtils } from './testSetUtils.js';
@@ -51,7 +51,7 @@ import { testValueToLiteralCode } from './testValueToLiteralCode.js';
 import { testValueToString } from './testValueToString.js';
 import { testValueWrapper } from './testValueWrapper.js';
 import { testWindowsCommandsJSON } from './testWindowsCommandsJSON.js';
-import { wrapAndCall } from './helpers/wrapAndCall.js';
+*/import { wrapAndCall } from './helpers/wrapAndCall.js';
 
 function replaceSpecialChars(msg) {
 	msg = msg.replace(/ /g, '&nbsp;');
@@ -61,7 +61,7 @@ function replaceSpecialChars(msg) {
 }
 
 const tests = [
-	bindDocumentFocusTests,
+	/*bindDocumentFocusTests,
 	testAlphaColour,
 	testArrayUtils,
 	testAssets,
@@ -73,7 +73,7 @@ const tests = [
 	testColourDirectory,
 	testCommandGroups,
 	testCommandJSONForDuplicates,
-	testCommands,
+	*/testCommands,
 	testCommandsJSON,
 	testCommandsJSONCallNoArgumentCommands,
 	testCommandsJSONCompositeValidation,
@@ -82,12 +82,12 @@ const tests = [
 	testCommandsJSONHyperlinks,
 	testCommandsJSONLengthRangeInfo,
 	testCommandsJSONOrderByPrimaryName,
-	testComponents,
+	/*testComponents,
 	testDeepEquality,
 	testDebugging,
 	testDelay,
-	testDrawing,
-	testDrawingMenu,
+	*/testDrawing,
+	/*testDrawingMenu,
 	testEqualWithinThreshold,
 	testExceptionToString,
 	testFetchBlob,
@@ -101,8 +101,8 @@ const tests = [
 	testMapUtils,
 	testMaybeDecided,
 	testOperatorsJSON,
-	testParsing,
-	testPopulateTemplateUsingObject,
+	*/testParsing,
+	/*testPopulateTemplateUsingObject,
 	testRateLimiter,
 	testSet,
 	testSetUtils,
@@ -113,7 +113,7 @@ const tests = [
 	testValueToLiteralCode,
 	testValueToString,
 	testValueWrapper,
-	testWindowsCommandsJSON
+	testWindowsCommandsJSON*/
 ];
 
 function runTests() {

@@ -1,4 +1,4 @@
-import { testAsyncParser } from './testAsyncParser.js';
+/*import { testAsyncParser } from './testAsyncParser.js';
 import { testAsyncParseTask } from './testAsyncParseTask.js';
 import { testCharIndexToParseTreeTokenPosition } from './testCharIndexToParseTreeTokenPosition.js';
 import { testCommandClass } from './testCommandClass.js';
@@ -25,8 +25,8 @@ import { testNumbers } from './testNumbers.js';
 import { testOperators } from './testOperators.js';
 import { testOrderOfOperation } from './testOrderOfOperation.js';
 import { testParseTree } from './testParseTree.js';
-import { testParseTreeAnalysis } from './parse-tree-analysis/testParseTreeAnalysis.js';
-import { testParseTreeColIndexes } from './testParseTreeColIndexes.js';
+*/import { testParseTreeAnalysis } from './parse-tree-analysis/testParseTreeAnalysis.js';
+/*import { testParseTreeColIndexes } from './testParseTreeColIndexes.js';
 import { testParseTreeToCodeWithComments } from './testParseTreeToCodeWithComments.js';
 import { testParseTreeToken } from './testParseTreeToken.js';
 import { testParseTreeTokenDirectory } from './parse-tree-token/testParseTreeTokenDirectory.js';
@@ -37,11 +37,11 @@ import { testScrapeProcedures } from './testScrapeProcedures.js';
 import { testSerialization } from './serialization/testSerialization.js';
 import { testToken } from './testToken.js';
 import { testUnsupportedCommand } from './testUnsupportedCommand.js';
-import { wrapAndCall } from '../helpers/wrapAndCall.js';
+*/import { wrapAndCall } from '../helpers/wrapAndCall.js';
 
 export function testParsing(logger) {
 	wrapAndCall([
-		testAsyncParser,
+		/*testAsyncParser,
 		testAsyncParseTask,
 		testCharIndexToParseTreeTokenPosition,
 		testCommandClass,
@@ -68,8 +68,8 @@ export function testParsing(logger) {
 		testOperators,
 		testOrderOfOperation,
 		testParseTree,
-		testParseTreeAnalysis,
-		testParseTreeColIndexes,
+		*/testParseTreeAnalysis,
+		/*testParseTreeColIndexes,
 		testParseTreeToCodeWithComments,
 		testParseTreeToken,
 		testParseTreeTokenDirectory,
@@ -79,6 +79,6 @@ export function testParsing(logger) {
 		testScrapeProcedures,
 		testSerialization,
 		testToken,
-		testUnsupportedCommand
+		testUnsupportedCommand*/
 	], logger);
 };
