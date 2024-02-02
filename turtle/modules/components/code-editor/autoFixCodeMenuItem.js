@@ -5,8 +5,10 @@ import { CommandBoxParseLogger } from '../../parsing/loggers/CommandBoxParseLogg
 import { EventQueue } from '../EventQueue.js';
 import { fixCode } from './code-fixer/fixCode.js';
 import { hasUnsafeErrorMessages } from './code-fixer/hasUnsafeErrorMessages.js';
+import { isLikelyLogo3D } from '../../components/code-editor/code-fixer/fixers/logo-3d/isLikelyLogo3D.js';
 import { isLikelyPythonCode } from '../../parsing/python-parsing/isLikelyPythonCode.js';
 import { getProceduresMap } from '../../parsing/parse-tree-analysis/getProceduresMap.js';
+import { logo3DToWebLogo } from '../../components/code-editor/code-fixer/fixers/logo-3d/logo3DToWebLogo.js';
 import { LogoParser } from '../../parsing/LogoParser.js';
 import { ParseLogger } from '../../parsing/loggers/ParseLogger.js';
 import { refreshAnimationSetupFromTree } from './refreshAnimationSetupFromTree.js';
@@ -23,9 +25,12 @@ function getFixedCode() {
 	if (!codeFixCache.has(originalCode)) {
 		codeFixCache.clear();
 		let intermediateCode = originalCode;
+		parseLogger.reset();
 		if (isLikelyPythonCode(intermediateCode) && isPythonParserLoaded)
 			intermediateCode = translatePythonCodeToWebLogo(intermediateCode);
-		parseLogger.reset();
+		else if (isLikelyLogo3D(intermediateCode)) {
+			intermediateCode = logo3DToWebLogo(intermediateCode, parseLogger);
+		}
 		const tempParseLogger = new BufferedParseLogger();
 		const tree = LogoParser.getParseTree(intermediateCode, tempParseLogger);
 		let fixedCode = intermediateCode;

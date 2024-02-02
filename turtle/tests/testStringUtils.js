@@ -14,6 +14,16 @@ function testCapitalizeFirstLetter(logger) {
 	testInOutPairs(cases, StringUtils.capitalizeFirstLetter, logger);
 }
 
+function testClearEnglishListPhrase(logger) {
+	const cases = [
+		{'in': ['Bob'], 'out': 'Bob'},
+		{'in': ['Bob', 'John'], 'out': 'Bob and John'},
+		{'in': ['Bob', 'John', 'Tim'], 'out': 'Bob, John and Tim'},
+		{'in': ['Bob', 'John', 'Tim', 'Zoro'], 'out': 'Bob, John, Tim and Zoro'},
+	];
+	testInOutPairs(cases, StringUtils.clearEnglishListPhrase, logger);
+}
+
 function testContainsAny(logger) {
 	const cases = [
 		{'inArgs': ['', []], 'out': false},
@@ -132,6 +142,7 @@ function testReplacePairs(logger) {
 export function testStringUtils(logger) {
 	wrapAndCall([
 		testCapitalizeFirstLetter,
+		testClearEnglishListPhrase,
 		testContainsAny,
 		testCountChar,
 		testEscapeHTML,

@@ -8,6 +8,25 @@ export class StringUtils {
 			return s.charAt(0).toUpperCase() + s.substring(1);
 	}
 
+	static clearEnglishListPhrase(container) {
+		if (!(container instanceof Array))
+			container = Array.from(container);
+		if (container.length === 1)
+			return container[0];
+		container.sort();
+		const result = new StringBuffer();
+		for (let i = 0; i < container.length; i++) {
+			if (i !== 0) {
+				if (container.length - 1 > i)
+					result.append(', ');
+				else
+					result.append(' and ');
+			}
+			result.append(container[i]);
+		}
+		return result.toString();
+	}
+
 	static containsAny(s, substrings) {
 		for (let i = 0; i < substrings.length; i++) {
 			if (s.indexOf(substrings[i]) !== -1)
