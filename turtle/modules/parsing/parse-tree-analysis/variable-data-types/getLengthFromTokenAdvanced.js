@@ -20,7 +20,9 @@ export function getLengthFromTokenAdvanced(token, tokenValues) {
 	}
 	else if (token.type === ParseTreeTokenType.PARAMETERIZED_GROUP) {
 		const info = Command.getCommandInfo(token.val);
-		if (info !== undefined && info.returnLengthInfo !== undefined) {
+		if (info !== undefined && (info.returnLengthInfo !== undefined || info.returnTypes === 'colorlist')) {
+			if (info.returnTypes === 'colorlist')
+				return 3;
 			const lengthInfo = info.returnLengthInfo;
 			if (lengthInfo.max === lengthInfo.min)
 				return lengthInfo.max;

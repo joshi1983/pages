@@ -9,7 +9,9 @@ await Command.asyncInit();
 const commandNamesOfInterest = new Set();
 Command.getAllCommandsInfo().forEach(function(info) {
 	const length = info.returnLengthInfo;
-	if (length !== undefined) {
+	if (info.returnTypes === 'colorlist')
+		SetUtils.addAll(commandNamesOfInterest, Command.getLowerCaseCommandNameSet(info));
+	else if (length !== undefined) {
 		if (length.min === length.max) {
 			SetUtils.addAll(commandNamesOfInterest, Command.getLowerCaseCommandNameSet(info));
 		}
@@ -56,7 +58,10 @@ export function analyzeLengthsBasic(cachedParseTree, procedureCallsMayChangeLeng
 	filter(token => commandNamesOfInterest.has(token.val.toLowerCase())).
 	forEach(function(callToken) {
 		const info = Command.getCommandInfo(callToken.val);
-		result.set(callToken, info.returnLengthInfo.min);
+		if (info.returnTypes === 'colorlist')
+			result.set(callToken, 3);
+		else
+			result.set(callToken, info.returnLengthInfo.min);
 	});
 	analyzeListCommandCalls(cachedParseTree, result);
 	return result;

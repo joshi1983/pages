@@ -4,6 +4,8 @@ import { CommandBoxMessages } from '../CommandBoxMessages.js';
 import { CommandBoxParseLogger } from '../../parsing/loggers/CommandBoxParseLogger.js';
 import { EventQueue } from '../EventQueue.js';
 import { fixCode } from './code-fixer/fixCode.js';
+import { formatCode } from './format/formatCode.js';
+import { harmonizeCase } from './harmonize-case/harmonizeCase.js';
 import { hasUnsafeErrorMessages } from './code-fixer/hasUnsafeErrorMessages.js';
 import { isLikelyLogo3D } from '../../components/code-editor/code-fixer/fixers/logo-3d/isLikelyLogo3D.js';
 import { isLikelyPythonCode } from '../../parsing/python-parsing/isLikelyPythonCode.js';
@@ -25,11 +27,13 @@ function getFixedCode() {
 	if (!codeFixCache.has(originalCode)) {
 		codeFixCache.clear();
 		let intermediateCode = originalCode;
+		let adjustAesthetics = false;
 		parseLogger.reset();
 		if (isLikelyPythonCode(intermediateCode) && isPythonParserLoaded)
 			intermediateCode = translatePythonCodeToWebLogo(intermediateCode);
 		else if (isLikelyLogo3D(intermediateCode)) {
 			intermediateCode = logo3DToWebLogo(intermediateCode, parseLogger);
+			adjustAesthetics = true;
 		}
 		const tempParseLogger = new BufferedParseLogger();
 		const tree = LogoParser.getParseTree(intermediateCode, tempParseLogger);
@@ -38,6 +42,12 @@ function getFixedCode() {
 			const proceduresMap = getProceduresMap(tree);
 			fixedCode = fixCode(intermediateCode, parseLogger, proceduresMap);
 			refreshAnimationSetupFromTree(tree);
+		}
+		if (adjustAesthetics) {
+			fixedCode = harmonizeCase(fixedCode);
+			fixedCode = formatCode(fixedCode);
+			parseLogger.tip('Performed a couple extra improvements to readability.  '+
+			'Harmonized case and command name alternatives.  Also formatted whitespaces.', tree, false);
 		}
 		codeFixCache.set(originalCode, fixedCode);
 		if (originalCode !== fixedCode)

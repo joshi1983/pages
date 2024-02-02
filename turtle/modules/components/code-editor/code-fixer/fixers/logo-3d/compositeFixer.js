@@ -1,3 +1,4 @@
+import { clashingProcedureNameFixer } from '../clashingProcedureNameFixer.js';
 import { geosphereFixer } from './geosphereFixer.js';
 import { gotoFixer } from './gotoFixer.js';
 import { ifElseStatementFixer } from './ifElseStatementFixer.js';
@@ -15,7 +16,8 @@ timeoutFixer,
 geosphereFixer,
 ifElseStatementFixer,
 removeUnusedMarkCalls,
-gotoFixer
+gotoFixer,
+clashingProcedureNameFixer
 ];
 
 export function compositeFixer(cachedParseTree, fixLogger) {

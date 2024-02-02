@@ -1,5 +1,5 @@
 import { commaFixer } from '../../../../../modules/components/code-editor/code-fixer/fixers/commaFixer.js';
-import { processTestCase } from './processTestCase.js';
+import { processTestCases } from './processTestCases.js';
 
 export function testCommaFixer(logger) {
 	const cases = [
@@ -16,8 +16,5 @@ export function testCommaFixer(logger) {
 		{'code': 'print ["Hello, "world]', 'logged': false},
 		{'code': 'print [,]', 'to': 'print []', 'logged': true},
 	];
-	cases.forEach(function(caseInfo, index) {
-		caseInfo.index = index;
-		processTestCase(caseInfo, commaFixer, logger);
-	});
+	processTestCases(cases, commaFixer, logger);
 };

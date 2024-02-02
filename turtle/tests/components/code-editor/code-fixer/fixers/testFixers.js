@@ -2,6 +2,7 @@ import { testAnimationSetupFixer } from './testAnimationSetupFixer.js';
 import { testAnimationSnapshotStyleFixer } from './testAnimationSnapshotStyleFixer.js';
 import { testAutoRemoveFixer } from './testAutoRemoveFixer.js';
 import { testBooleanExpressionAsListFixer } from './testBooleanExpressionAsListFixer.js';
+import { testClashingProcedureNameFixer } from './testClashingProcedureNameFixer.js';
 import { testCodeRemoval } from './code-removal/testCodeRemoval.js';
 import { testColourStringLiteralFixer } from './testColourStringLiteralFixer.js';
 import { testCommaFixer } from './testCommaFixer.js';
@@ -55,6 +56,7 @@ const tests = [
 	testAnimationSnapshotStyleFixer,
 	testAutoRemoveFixer,
 	testBooleanExpressionAsListFixer,
+	testClashingProcedureNameFixer,
 	testCodeRemoval,
 	testColourStringLiteralFixer,
 	testCommaFixer,
