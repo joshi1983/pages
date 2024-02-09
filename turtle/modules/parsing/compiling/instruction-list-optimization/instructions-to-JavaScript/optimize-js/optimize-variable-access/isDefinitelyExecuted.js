@@ -1,4 +1,4 @@
-import { declaringTypes } from './declaringTypes.js';
+import { declaringTypes } from '../../../../../js-parsing/parsing/declaringTypes.js';
 import { ParseTreeTokenType } from '../../../../../js-parsing/ParseTreeTokenType.js';
 import { SetUtils } from '../../../../../../SetUtils.js';
 

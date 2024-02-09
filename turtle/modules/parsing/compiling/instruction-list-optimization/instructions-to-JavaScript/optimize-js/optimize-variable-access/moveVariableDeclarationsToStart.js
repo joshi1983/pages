@@ -1,7 +1,7 @@
 import { assignTokenToJSVarName } from './assignTokenToJSVarName.js';
 import { convertAssignmentCommandToJavaScriptAssignment } from './convertAssignmentCommandToJavaScriptAssignment.js';
 import { convertSetCallToJavaScriptAssignment } from './convertSetCallToJavaScriptAssignment.js';
-import { declaringTypes } from './declaringTypes.js';
+import { declaringTypes } from '../../../../../js-parsing/parsing/declaringTypes.js';
 import { flatten } from '../../../../../generic-parsing-utilities/flatten.js';
 import { getClosestOfType } from '../../../../../generic-parsing-utilities/getClosestOfType.js';
 import { getEndingMakeStatement } from './getEndingMakeStatement.js';

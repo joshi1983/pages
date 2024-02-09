@@ -1,3 +1,4 @@
+import { addCodeBlockIfNeeded } from './addCodeBlockIfNeeded.js';
 import { addToken } from './addToken.js';
 import { endsWithCurlyRightBracket } from './endsWithCurlyRightBracket.js';
 import { ParseTreeTokenType } from '../ParseTreeTokenType.js';
@@ -12,7 +13,9 @@ function isGoodPrevious(token) {
 	if (!goodPreviousTypes.has(token.type))
 		return false;
 	if (token.type === ParseTreeTokenType.CODE_BLOCK) {
-		if (endsWithCurlyRightBracket(token))
+		if (token.children.length !== 0 && (
+		token.children[0].type !== ParseTreeTokenType.CURLY_LEFT_BRACKET ||
+		endsWithCurlyRightBracket(token)))
 			return false;
 		return token.children.length === 0 || token.children[0].type === ParseTreeTokenType.CURLY_LEFT_BRACKET;
 	}
@@ -28,6 +31,8 @@ function getGoodPrevious(token) {
 }
 
 export function processIf(previousToken, nextToken) {
+	if (addCodeBlockIfNeeded(previousToken, nextToken))
+		return;
 	if (previousToken.type === ParseTreeTokenType.ELSE)
 		previousToken.type = ParseTreeTokenType.ELSE_IF;
 	previousToken = getGoodPrevious(previousToken);

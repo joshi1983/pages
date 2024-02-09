@@ -1,45 +1,30 @@
-import { getExpectedChildrenLengthForToken } from './getExpectedChildrenLengthForToken.js';
+import { isCompleteExpression } from './isCompleteExpression.js';
 import { ParseTreeTokenType } from '../ParseTreeTokenType.js';
 
-const expressionTokenTypes = new Set([
-	ParseTreeTokenType.BINARY_OPERATOR,
-	ParseTreeTokenType.BOOLEAN_LITERAL,
-	ParseTreeTokenType.CONDITIONAL_TERNARY,
-	ParseTreeTokenType.CURVED_BRACKET_EXPRESSION,
-	ParseTreeTokenType.DOT,
-	ParseTreeTokenType.EXPRESSION_DOT,
-	ParseTreeTokenType.EXPRESSION_INDEX_EXPRESSION,
-	ParseTreeTokenType.FUNCTION_CALL,
-	ParseTreeTokenType.IDENTIFIER,
-	ParseTreeTokenType.NUMBER_LITERAL,
-	ParseTreeTokenType.REGULAR_EXPRESSION_LITERAL,
-	ParseTreeTokenType.STRING_LITERAL,
-	ParseTreeTokenType.TEMPLATE_LITERAL,
-	ParseTreeTokenType.UNARY_OPERATOR
-]);
-
-function isCompleteExpressionToken(token) {
+function isCompleteExpressionToken(token, notAboveTernary) {
 	if (token === null)
 		return false;
-	const expectedChildCount = getExpectedChildrenLengthForToken(token);
-	if (expectedChildCount !== undefined && expectedChildCount > token.children.length)
+	if (notAboveTernary &&
+	token.type === ParseTreeTokenType.CONDITIONAL_TERNARY) {
 		return false;
-	if (expressionTokenTypes.has(token.type)) {
-		return true;
 	}
 	if (token.parentNode !== null) {
 		const parent = token.parentNode;
 		if (parent.type === ParseTreeTokenType.CONDITIONAL_TERNARY) {
 			if (token.type === ParseTreeTokenType.QUESTION_MARK ||
 			token.type === ParseTreeTokenType.COLON)
-			return true;
+				return true;
 		}
 	}
+	if (isCompleteExpression(token))
+		return true;
 	return false;
 }
 
-export function getTopCompleteExpressionToken(token) {
-	while (isCompleteExpressionToken(token.parentNode))
+export function getTopCompleteExpressionToken(token, notAboveTernary) {
+	if (notAboveTernary === undefined)
+		notAboveTernary = false;
+	while (isCompleteExpressionToken(token.parentNode, notAboveTernary))
 		token = token.parentNode;
 	return token;
 };

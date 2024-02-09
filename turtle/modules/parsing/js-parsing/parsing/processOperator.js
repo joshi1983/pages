@@ -71,7 +71,7 @@ export function processOperator(previousToken, nextToken) {
 		if (previousToken.parentNode === null)
 			previousToken.appendChild(nextToken);
 		else {
-			previousToken = getTopCompleteExpressionToken(previousToken);
+			previousToken = getTopCompleteExpressionToken(previousToken, true);
 			if (previousToken.type === ParseTreeTokenType.CURVED_BRACKET_EXPRESSION &&
 			!endsWithClosingCurvedBracket(previousToken)) {
 				if (previousToken.children.length === 2) {

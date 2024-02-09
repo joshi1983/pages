@@ -9,6 +9,10 @@ const goodPreviousTypes = new Set([
 ]);
 
 function isGoodPrevious(token) {
+	if (token.type === ParseTreeTokenType.CODE_BLOCK &&
+	token.children.length !== 0 &&
+	token.children[0].type !== ParseTreeTokenType.CURLY_LEFT_BRACKET)
+		return false;
 	if (goodPreviousTypes.has(token.type))
 		return true;
 	return false;

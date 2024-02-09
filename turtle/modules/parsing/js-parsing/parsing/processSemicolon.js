@@ -45,8 +45,16 @@ export function processSemicolon(previousToken, nextToken) {
 	while (!isGoodPrevious(previousToken))
 		previousToken = previousToken.parentNode;
 
-	if (isAddedToCaseOrDefaultCodeBlock(previousToken) || shouldAppendChildToCodeBlockOrClassBody(previousToken))
+
+	if (isAddedToCaseOrDefaultCodeBlock(previousToken) || shouldAppendChildToCodeBlockOrClassBody(previousToken)) {
 		previousToken.appendChild(nextToken);
+	}
 	else
 		addToken(previousToken, nextToken);
+
+	const token = nextToken.parentNode;
+	if (token.type === ParseTreeTokenType.CODE_BLOCK &&
+	token.children.length !== 0 &&
+	token.children[0].type !== ParseTreeTokenType.CURLY_LEFT_BRACKET)
+		return token;
 };

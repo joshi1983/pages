@@ -174,6 +174,32 @@ return true`, 'numTopChildren': 2
 else
 	msg = \`bye\`+'hi'
 f()`, 'numTopChildren': 2},
+	{'code': `function p() {
+	if (true)
+		throw new Error();
+	const result = 1;
+	{
+	}
+	return result;
+}`, 'numTopChildren': 1, 'treeInfo': {
+			'type': ParseTreeTokenType.TREE_ROOT,
+				'children': [
+					{'val': 'function', 'children': [
+						{'val': 'p'},
+						{'val': null, 'type': ParseTreeTokenType.ARG_LIST},
+						{'val': null, 'type': ParseTreeTokenType.CODE_BLOCK, 'children': [
+							{'val': '{'},
+							{'val': 'if'},
+							{'val': 'const'},
+							{'val': ';'},
+							{'val': null},
+							{'val': 'return'},
+							{'val': ';'},
+							{'val': '}'}
+						]}
+					]}
+				]
+			}}
 	];
 	processParseTestCases(cases, logger);
 };

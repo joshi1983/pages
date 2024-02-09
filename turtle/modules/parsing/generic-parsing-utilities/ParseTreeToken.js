@@ -100,7 +100,7 @@ export class ParseTreeToken {
 		this.children.splice(index, 1);
 	}
 
-	replaceChild(oldChild, newChild) {
+	replaceChild(oldChild, newChild, dontRemoveNewChildFromItsParent) {
 		if (newChild === this)
 			throw new Error(`newChild can not be added as a child of itself.  That would introduce a cycle.`);
 		if (oldChild === newChild)
@@ -114,7 +114,7 @@ export class ParseTreeToken {
 		const index = this.children.indexOf(oldChild);
 		if (index === -1)
 			throw new Error(`Unable to replaceChild because the oldChild is not currently a child of this.`);
-		if (newChild.parentNode !== null)
+		if (newChild.parentNode !== null && dontRemoveNewChildFromItsParent !== true)
 			newChild.parentNode.removeChild(newChild);
 		newChild.parentNode = this;
 		oldChild.parentNode = null;

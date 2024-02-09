@@ -29,10 +29,6 @@ const parseTreeExplorerButton = debuggerElement.querySelector('#debugger-show-pa
 const repcountStackParent = debuggerElement.querySelector('#debugger-repcount-stack-parent');
 const repcountStackContainer = debuggerElement.querySelector('#debugger-repcount-stack-container');
 const repcountStackItems = new RepcountStackItems(Settings.executer.executionContext.repcountStack);
-makeCollapsible(globalVariablesParent, refreshGlobalVariables);
-makeCollapsible(callStackParent, refreshCallStack);
-makeCollapsible(repcountStackParent, refreshRepcountStack);
-
 
 function refreshCallStack(forceRefresh) {
 	if (forceRefresh === true || !callStackParent.classList.contains("collapsed"))
@@ -57,6 +53,10 @@ function refreshGlobalVariables(forceRefresh) {
 		}
 	}
 }
+
+makeCollapsible(globalVariablesParent, refreshGlobalVariables);
+makeCollapsible(callStackParent, refreshCallStack);
+makeCollapsible(repcountStackParent, refreshRepcountStack);
 
 function refreshScope() {
 	refreshGlobalVariables();

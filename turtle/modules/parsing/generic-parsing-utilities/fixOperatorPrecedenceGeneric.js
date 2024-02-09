@@ -8,24 +8,30 @@ binaryOperatorType - should be an integer indicating the binary operator parse t
 compareOperatorPrecedence - is a function that compares precedence of operators specified by symbol string.
 	The returned value should be a number that is less than 0 for less than, 0 for equal...
 */
-export function fixOperatorPrecedenceGeneric(unfilteredTokens, binaryOperatorType, compareOperatorPrecedence) {
+export function fixOperatorPrecedenceGeneric(unfilteredTokens, binaryOperatorTypes, compareOperatorPrecedence) {
+	if (typeof binaryOperatorTypes === 'number')
+		binaryOperatorTypes = new Set([binaryOperatorTypes]);
+	else if (binaryOperatorTypes instanceof Array)
+		binaryOperatorTypes = new Set(binaryOperatorTypes);
+	else if (!(binaryOperatorTypes instanceof Set))
+		throw new Error(`binaryOperatorTypes must be a number, Array, or Set but got ${binaryOperatorTypes}`);
 	const binaryOperatorTokens = unfilteredTokens.filter(function(token) {
-		return token.type === binaryOperatorType &&
+		return binaryOperatorTypes.has(token.type) &&
 			token.children.length === 2 &&
-			(token.children[0].type === binaryOperatorType ||
-			token.children[1].type === binaryOperatorType);
+			(binaryOperatorTypes.has(token.children[0].type) ||
+			binaryOperatorTypes.has(token.children[1].type));
 	});
 	var continueLoop = true;
 	while (continueLoop) {
 		continueLoop = false;
 		binaryOperatorTokens.forEach(function(token) {
-			if (token.children[0].type === binaryOperatorType &&
+			if (binaryOperatorTypes.has(token.children[0].type) &&
 				compareOperatorPrecedence(token.children[0].val, token.val) < 0 &&
 				token.children[0].children.length === 2) {
 					leftRotate(token);
 					continueLoop = true;
 			}
-			if (token.children[1].type === binaryOperatorType &&
+			if (binaryOperatorTypes.has(token.children[1].type) &&
 				compareOperatorPrecedence(token.children[1].val, token.val) < 0 &&
 				token.children[1].children.length === 2) {
 					rightRotate(token);

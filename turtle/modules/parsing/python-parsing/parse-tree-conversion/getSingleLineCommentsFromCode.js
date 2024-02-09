@@ -16,6 +16,6 @@ The caller must await for parser.js's asyncInit() before calling getSingleLineCo
 export function getSingleLineCommentsFromCode(code) {
 	if (!code.endsWith('\n'))
 		code += '\n'; // working around a bug where comments on the last line
-	const result = PythonLexer(code);
+	const result = window.PythonLexer(code);
 	return result.filter(token => token.value.startsWith('#')).map(convertCommentInfoToParseTreeToken);
 };

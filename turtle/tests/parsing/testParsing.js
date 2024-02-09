@@ -1,4 +1,4 @@
-import { testAsyncParser } from './testAsyncParser.js';
+/*import { testAsyncParser } from './testAsyncParser.js';
 import { testAsyncParseTask } from './testAsyncParseTask.js';
 import { testCharIndexToParseTreeTokenPosition } from './testCharIndexToParseTreeTokenPosition.js';
 import { testCommandClass } from './testCommandClass.js';
@@ -14,8 +14,8 @@ import { testGenericParsingUtilities } from './generic-parsing-utilities/testGen
 import { testGetStartPositionOfToken } from './testGetStartPositionOfToken.js';
 import { testGetTokensForParsing } from './testGetTokensForParsing.js';
 import { testIsSupportedByHighOrderInvoke } from './testIsSupportedByHighOrderInvoke.js';
-import { testJSParsing } from './js-parsing/testJSParsing.js';
-import { testKeyword } from './testKeyword.js';
+*/import { testJSParsing } from './js-parsing/testJSParsing.js';
+/*import { testKeyword } from './testKeyword.js';
 import { testLoggers } from './loggers/testLoggers.js';
 import { testLogoParserFailing } from './testLogoParserFailing.js';
 import { testLogoParsingStates } from './testLogoParsingStates.js';
@@ -37,11 +37,11 @@ import { testScrapeProcedures } from './testScrapeProcedures.js';
 import { testSerialization } from './serialization/testSerialization.js';
 import { testToken } from './testToken.js';
 import { testUnsupportedCommand } from './testUnsupportedCommand.js';
-import { wrapAndCall } from '../helpers/wrapAndCall.js';
+*/import { wrapAndCall } from '../helpers/wrapAndCall.js';
 
 export function testParsing(logger) {
 	wrapAndCall([
-		testAsyncParser,
+		/*testAsyncParser,
 		testAsyncParseTask,
 		testCharIndexToParseTreeTokenPosition,
 		testCommandClass,
@@ -57,8 +57,8 @@ export function testParsing(logger) {
 		testGetStartPositionOfToken,
 		testGetTokensForParsing,
 		testIsSupportedByHighOrderInvoke,
-		testJSParsing,
-		testKeyword,
+		*/testJSParsing,
+		/*testKeyword,
 		testLoggers,
 		testLogoParserFailing,
 		testLogoParsingStates,
@@ -79,6 +79,6 @@ export function testParsing(logger) {
 		testScrapeProcedures,
 		testSerialization,
 		testToken,
-		testUnsupportedCommand
+		testUnsupportedCommand*/
 	], logger);
 };

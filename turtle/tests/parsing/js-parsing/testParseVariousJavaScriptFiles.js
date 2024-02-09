@@ -1,5 +1,7 @@
 import { analyzeQuality } from
 '../../../modules/parsing/js-parsing/parsing/parse-tree-analysis/validation/analyzeQuality.js';
+import { CachedParseTree } from
+'../../../modules/parsing/js-parsing/parsing/parse-tree-analysis/CachedParseTree.js';
 import { delay } from '../../../modules/delay.js';
 import { fetchText } from
 '../../../modules/fetchText.js';
@@ -11,6 +13,8 @@ import { prefixWrapper } from
 '../../helpers/prefixWrapper.js';
 import { ProgressIndicator } from
 '../../helpers/ProgressIndicator.js';
+import { validateModule } from
+'../../../modules/parsing/js-parsing/parsing/parse-tree-analysis/validation/validating-modules/validateModule.js';
 
 export async function testParseVariousJavaScriptFiles(logger) {
 	const cases = [
@@ -1671,8 +1675,12 @@ export async function testParseVariousJavaScriptFiles(logger) {
 			plogger(`Expected an object but got ${parseResult}`);
 		const parseLogger = new BufferedParseLogger();
 		analyzeQuality(parseResult.root, parseLogger);
+		if (url.startsWith('modules/')) {
+			const cachedParseTree = new CachedParseTree(parseResult.root);
+			validateModule(cachedParseTree, parseLogger);
+		}
 		if (parseLogger.hasLoggedErrors()) {
-			plogger(`No errors expected but some found.  The messages were ${parseLogger.getMessages().map(m => m.msg).join(',')}`);
+			plogger(`No errors expected but some found.  The messages were ${parseLogger.getMessages().map(m => m.msg + `: line ${m.token.lineIndex}`).join(',')}`);
 		}
 		await delay(50);
 		indicator.setProgressRatio(index / cases.length);

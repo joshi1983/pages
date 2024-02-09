@@ -1,4 +1,4 @@
-import { ParseTreeTokenType } from '../../../../../js-parsing/ParseTreeTokenType.js';
+import { ParseTreeTokenType } from '../ParseTreeTokenType.js';
 
 const declaringTypes = new Set([
 	ParseTreeTokenType.CONST,

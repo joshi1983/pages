@@ -1,3 +1,5 @@
+import { isNumber } from '../../../../../isNumber.js';
+
 export function getUnaryOperatorValue(token, tokenValues) {
 	const childValueTokens = token.children;
 	if (childValueTokens.length !== 1)

@@ -1,4 +1,4 @@
-import { declaringTypes } from '../optimize-variable-access/declaringTypes.js';
+import { declaringTypes } from '../../../../../js-parsing/parsing/declaringTypes.js';
 import { flatten } from '../../../../../generic-parsing-utilities/flatten.js';
 import { getAllDescendentsAsArray } from '../../../../../generic-parsing-utilities/getAllDescendentsAsArray.js';
 import { isJSVariableAssignment } from '../token-classifiers/isJSVariableAssignment.js';

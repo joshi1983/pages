@@ -1,4 +1,4 @@
-import { declaringTypes } from './optimize-variable-access/declaringTypes.js';
+import { declaringTypes } from '../../../../js-parsing/parsing/declaringTypes.js';
 import { flatten } from '../../../../generic-parsing-utilities/flatten.js';
 import { getDescendentsOfType } from '../../../../generic-parsing-utilities/getDescendentsOfType.js';
 import { parse } from '../../../../js-parsing/parse.js';

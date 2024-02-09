@@ -69,6 +69,45 @@ export function testParseTernaryOperator(logger) {
 		{'code': 'true ? o.f()[1][2]() : titleInfo', 'numTopChildren': 1},
 		{'code': 'true ? o.f()[1][2]() : titleInfo.x()[3][4]()', 'numTopChildren': 1},
 		{'code': 'true ? o.f()[1][2]().y : titleInfo.x()[3][4]().z', 'numTopChildren': 1},
+		{'code': "x === '' ? 'empty' : 'non-empty'", 'numTopChildren': 1, 'treeInfo': wrapSingleTreeInfoObject({
+			'val': null, 'type': ParseTreeTokenType.CONDITIONAL_TERNARY,
+			'children': [
+				{'val': '===', 'children': [
+					{'val': 'x'},
+					{'val': "''"}
+				]},
+				{'val': '?'},
+				{'val': "'empty'"},
+				{'val': ':'},
+				{'val': "'non-empty'"}
+			]
+		})},
+		{'code': "x => x === '' ? '' : ' ' + x", 'numTopChildren': 1, 'treeInfo': wrapSingleTreeInfoObject({
+			'val': '=>', 'type': ParseTreeTokenType.BINARY_OPERATOR,
+			'children': [
+				{'val': 'x'},
+				{'val': null, 'type': ParseTreeTokenType.CONDITIONAL_TERNARY, 'children': [
+					{'val': '==='},
+					{'val': '?'},
+					{'val': "''"},
+					{'val': ':'},
+					{'val': "+"}
+				]}
+			]
+		})},
+		{'code': "y = x === '' ? '' : ' ' + x", 'numTopChildren': 1, 'treeInfo': wrapSingleTreeInfoObject({
+			'val': '=', 'type': ParseTreeTokenType.ASSIGNMENT_OPERATOR,
+			'children': [
+				{'val': 'y'},
+				{'val': null, 'type': ParseTreeTokenType.CONDITIONAL_TERNARY, 'children': [
+					{'val': '==='},
+					{'val': '?'},
+					{'val': "''"},
+					{'val': ':'},
+					{'val': "+"}
+				]}
+			]
+		})}
 	];
 	processParseTestCases(cases, logger);
 };
