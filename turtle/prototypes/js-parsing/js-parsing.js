@@ -7,7 +7,10 @@ import { parseTreeTokenToElement } from '../../modules/debugging/parse-tree-expl
 import { ParseTreeTokenType } from '../../modules/parsing/js-parsing/ParseTreeTokenType.js';
 
 let jsCode = await fetchText('modules/parsing/parse-tree-analysis/validation/validateProcedureParametersNotNull.js');
-jsCode = `(enumKey, index) => AnimationDownloadMode[enumKey] = index`;
+jsCode = `try {
+} catch (e) {
+}
+isDownscaling = false;`;
 /*
 DONE: modules/help/showOperatorsHelp.js
 DONE: modules/parsing/LogoParser.js

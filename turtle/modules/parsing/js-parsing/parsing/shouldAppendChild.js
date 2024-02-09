@@ -29,6 +29,11 @@ const parentChildTypes = new Map([
 	[ParseTreeTokenType.STRING_LITERAL, [
 		ParseTreeTokenType.DOT,
 		ParseTreeTokenType.INDEX_EXPRESSION
+	]],
+	[ParseTreeTokenType.TRY, [
+		ParseTreeTokenType.CODE_BLOCK,
+		ParseTreeTokenType.CATCH,
+		ParseTreeTokenType.FINALLY
 	]]
 ]);
 Array.from(parentChildTypes.keys()).forEach(function(key) {
@@ -67,6 +72,8 @@ export function shouldAppendChild(fromToken, newToken) {
 	if (fromToken.type === ParseTreeTokenType.IF && fromToken.children.length > 0)
 		return false;
 	if (numChildrenExpected !== undefined && numChildrenExpected <= fromToken.children.length)
+		return false;
+	if (fromToken.type === ParseTreeTokenType.TRY)
 		return false;
 
 	return true;

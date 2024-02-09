@@ -160,6 +160,10 @@ function f() {
 };`, 'error': false},
 	{'code': `(x => x === '' ? '' : ' ' + x)('hi')`, 'error': false},
 	{'code': `const [borderWidth, borderHeight] = [1,2];`, 'error': false},
+	{'code': `function A() {
+	f();
+}
+function f() {}`, 'error': false}
 	];
 	processTestCases(cases, validateUndefinedIdentifiers, logger);
 };

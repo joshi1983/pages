@@ -22,6 +22,7 @@ import { validateIndexExpression } from './validateIndexExpression.js';
 import { validateRegularExpressionLiteral } from './validateRegularExpressionLiteral.js';
 import { validateSquareBracket } from './validateSquareBracket.js';
 import { validateStringLiteral } from './validateStringLiteral.js';
+import { validateTry } from './validateTry.js';
 import { validateUnrecognized } from './validateUnrecognized.js';
 import { validateWhile } from './validateWhile.js';
 
@@ -53,6 +54,7 @@ const validators = new Map([
 	[ParseTreeTokenType.SQUARE_RIGHT_BRACKET, validateSquareBracket],
 	[ParseTreeTokenType.STRING_LITERAL, validateStringLiteral],
 	[ParseTreeTokenType.TEMPLATE_LITERAL, validateStringLiteral], // same checks as for a string
+	[ParseTreeTokenType.TRY, validateTry],
 	[ParseTreeTokenType.UNRECOGNIZED, validateUnrecognized],
 	[ParseTreeTokenType.WHILE, validateWhile],
 ]);

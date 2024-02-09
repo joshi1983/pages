@@ -82,7 +82,7 @@ export function isCodeBlockExpected(token) {
 	if (isTokenBeforeClassMethodCodeBlock(token))
 		return true;
 	if (codeBlockPreviousTypes.has(token.type))
-		return true;
+		return token.children.length === 0;
 	if (token.parentNode !== null && codeBlockParentTypes.has(token.parentNode.type) &&
 	token.type === ParseTreeTokenType.CURVED_BRACKET_EXPRESSION)
 		return true;

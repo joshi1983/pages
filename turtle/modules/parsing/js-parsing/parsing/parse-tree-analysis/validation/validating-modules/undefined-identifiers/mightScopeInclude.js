@@ -1,6 +1,7 @@
 import { declaringTypes } from '../../../../declaringTypes.js';
 import { getClosestOfTypes } from '../../../../../../generic-parsing-utilities/getClosestOfTypes.js';
 import { getLastTokenForScope } from '../../../getLastTokenForScope.js';
+import { hasAncestor } from '../../../../../../generic-parsing-utilities/hasAncestor.js';
 import { isAfterOrSame } from '../../../../../../generic-parsing-utilities/isAfterOrSame.js';
 import { ParseTreeTokenType } from '../../../../../ParseTreeTokenType.js';
 
@@ -19,7 +20,16 @@ function getAssignedToToken(descendentToken) {
 	return null;
 }
 
+function hasWideScope(definingToken) {
+	if (definingToken.parentNode.type === ParseTreeTokenType.FUNCTION)
+		return true;
+	return false;
+}
+
 export function mightScopeInclude(identifierToken) {
+	if (identifierToken.val === 'downloadClicked') {
+		console.log('identifierToken.val=' + identifierToken.val);
+	}
 	const excluded = new Set();
 	let tok = getAssignedToToken(identifierToken);
 	if (tok !== null)
@@ -29,6 +39,10 @@ export function mightScopeInclude(identifierToken) {
 		if (excluded.has(definingToken))
 			return false;
 		if (nearestCodeBlock !== null) {
+			if (hasWideScope(definingToken)) {
+				if (hasAncestor(nearestCodeBlock, definingToken))
+					return true;
+			}
 			const nearestCodeBlockForDefiningToken = getClosestOfTypes(definingToken, [ParseTreeTokenType.CODE_BLOCK, ParseTreeTokenType.TREE_ROOT]);
 			if (nearestCodeBlockForDefiningToken === nearestCodeBlock) {
 				if (isAfterOrSame(definingToken, identifierToken))

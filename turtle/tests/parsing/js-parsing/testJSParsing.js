@@ -82,7 +82,7 @@ export function testJSParsing(logger) {
 		testParseWebLogoJavaScript,
 		testParseWith,
 		testParseWhileLoops,
-		//testParsing,
+		testParsing,
 		testReservedWord,
 		testReservedWordsJSON,
 		testScanning

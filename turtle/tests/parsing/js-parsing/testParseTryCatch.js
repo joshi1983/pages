@@ -95,7 +95,11 @@ export function testParseTryCatch(logger) {
 					]
 				}
 			]
-		}}
+		}},
+		{'code': `try {
+} catch (e) {
+}
+isDownscaling = false;`, 'numTopChildren': 3}
 	];
 	processParseTestCases(cases, logger);
 };

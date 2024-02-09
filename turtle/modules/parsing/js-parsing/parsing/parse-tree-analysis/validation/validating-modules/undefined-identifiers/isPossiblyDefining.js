@@ -1,7 +1,32 @@
 import { declaringTypes } from '../../../../declaringTypes.js';
 import { definingParentTypesOfInterest } from './definingParentTypesOfInterest.js';
 import { getClosestOfType } from '../../../../../../generic-parsing-utilities/getClosestOfType.js';
+import { MaybeDecided } from '../../../../../../../MaybeDecided.js';
 import { ParseTreeTokenType } from '../../../../../ParseTreeTokenType.js';
+
+function isArgListContainingDefiningTokens(parent) {
+	const grandParent = parent.parentNode;
+	if (grandParent !== null) {
+		if (grandParent.type === ParseTreeTokenType.FUNCTION_CALL)
+			return MaybeDecided.No;
+		else if (grandParent.type === ParseTreeTokenType.FUNCTION ||
+		grandParent.type === ParseTreeTokenType.CATCH)
+			return MaybeDecided.Yes;
+		else if (grandParent.type === ParseTreeTokenType.BINARY_OPERATOR &&
+		grandParent.val === '=>')
+			return MaybeDecided.Yes;
+		else if (grandParent.type === ParseTreeTokenType.IDENTIFIER) {
+			const greatGrandparent = grandParent.parentNode;
+			if (greatGrandparent !== null && (
+			greatGrandparent.type === ParseTreeTokenType.CLASS_BODY ||
+			greatGrandparent.type === ParseTreeTokenType.STATIC ||
+			greatGrandparent.type === ParseTreeTokenType.CATCH ||
+			greatGrandparent.type === ParseTreeTokenType.ASYNC))
+				return MaybeDecided.Yes;
+		}
+	}
+	return MaybeDecided.Maybe;
+}
 
 export function isPossiblyDefining(token) {
 	const parent = token.parentNode;
@@ -15,6 +40,17 @@ export function isPossiblyDefining(token) {
 			if (index === 0)
 				return true;
 		}
+	}
+	else if (parent.type === ParseTreeTokenType.UNARY_OPERATOR) {
+		if (parent.val === '...') {
+			const grandParent = parent.parentNode;
+			if (grandParent !== null && grandParent.type === ParseTreeTokenType.ARG_LIST) {
+				const argListResult = isArgListContainingDefiningTokens(grandParent);
+				if (argListResult === MaybeDecided.Yes)
+					return true;
+			}
+		}
+		return false;
 	}
 	else if (parent.type === ParseTreeTokenType.ARRAY_LITERAL) {
 		const grandParent = parent.parentNode;
@@ -39,26 +75,11 @@ export function isPossiblyDefining(token) {
 		}
 	}
 	else if (parent.type === ParseTreeTokenType.ARG_LIST) {
-		const grandParent = parent.parentNode;
-		if (grandParent !== null) {
-			if (grandParent.type === ParseTreeTokenType.FUNCTION_CALL)
-				return false;
-			else if (grandParent.type === ParseTreeTokenType.FUNCTION ||
-			grandParent.type === ParseTreeTokenType.CATCH)
-				return true;
-			else if (grandParent.type === ParseTreeTokenType.BINARY_OPERATOR &&
-			grandParent.val === '=>')
-				return true;
-			else if (grandParent.type === ParseTreeTokenType.IDENTIFIER) {
-				const greatGrandparent = grandParent.parentNode;
-				if (greatGrandparent !== null && (
-				greatGrandparent.type === ParseTreeTokenType.CLASS_BODY ||
-				greatGrandparent.type === ParseTreeTokenType.STATIC ||
-				greatGrandparent.type === ParseTreeTokenType.CATCH ||
-				greatGrandparent.type === ParseTreeTokenType.ASYNC))
-					return true;
-			}
-		}
+		const argListResult = isArgListContainingDefiningTokens(parent);
+		if (argListResult === MaybeDecided.Yes)
+			return true;
+		else if (argListResult === MaybeDecided.No)
+			return false;
 	}
 	else if (parent.type === ParseTreeTokenType.CURLY_BRACKET_EXPRESSION) {
 		const grandParent = parent.parentNode;

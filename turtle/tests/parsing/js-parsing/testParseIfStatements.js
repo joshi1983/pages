@@ -199,7 +199,13 @@ f()`, 'numTopChildren': 2},
 						]}
 					]}
 				]
-			}}
+			}},
+	{'code': `try {}
+catch () {}
+if (true) {
+}
+else
+	f2();`, 'numTopChildren': 2}
 	];
 	processParseTestCases(cases, logger);
 };
