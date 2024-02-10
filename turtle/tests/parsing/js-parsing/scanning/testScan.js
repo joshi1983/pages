@@ -27,6 +27,8 @@ export function testScan(logger) {
 		{'code': '..', 'len': 2}, // invalid token.  2 dots are the closest we can get to valid tokens.
 		{'code': '...', 'len': 1}, // spread operator
 		{'code': 'x/3', 'len': 3},
+		{'code': 'x/y', 'len': 3},
+		{'code': 'x/y/z', 'len': 5},
 		{'code': 'x / 3', 'len': 3},
 		{'code': 'x // 3', 'len': 2, 'tokens': [
 			{'colIndex': 0},
@@ -148,6 +150,10 @@ export function testScan(logger) {
 		{'code': '/!@#$%^&()%&[]{}|/', 'len': 1}, // weird looking regular expression
 		{'code': '/^[0-9A-F]+$/i', 'len': 1},
 		{'code': '/(http|https):\\/\\/[^ "/]+\\.[^ \n"\\]\']+/g', 'len': 1},
+		{'code': '/\\srpt\\s+\\d/, // some comment', 'len': 3},
+		{'code': '//\n/', 'len': 2},
+		{'code': '//\n/h/', 'len': 2},
+		{'code': '//\n/\\srpt/', 'len': 2}, // comment followed by a regex
 		{'code': 'return /^[0-9A-F]+$/i', 'len': 2},
 		{'code': 'return /^[0-9A-F]+$/i.', 'len': 3, 'tokens': [
 			{'colIndex': 5},

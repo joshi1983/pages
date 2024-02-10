@@ -1,3 +1,4 @@
+import { indexOfRegExEnd } from './indexOfRegExEnd.js';
 import { isCompleteNumberLiteral } from './isCompleteNumberLiteral.js';
 import { isValidIdentifier } from './isValidIdentifier.js';
 import { Token } from './Token.js';
@@ -51,7 +52,24 @@ function spreadSanitizer(tokens, index) {
 	}
 }
 
-const sanitizers = [plusMinusSanitizer, spreadSanitizer];
+function regularExpressionSanitizer(tokens, index) {
+	const regexEndIndex = indexOfRegExEnd(tokens, index);
+	if (regexEndIndex > index) {
+		const lastToken = tokens[regexEndIndex];
+		let s = '';
+		for (let i = index; i <= regexEndIndex; i++) {
+			s += tokens[i].s;
+		}
+		const newRegexToken = new Token(s, lastToken.colIndex, lastToken.lineIndex);
+		tokens.splice(index, regexEndIndex + 1 - index, newRegexToken);
+	}
+}
+
+const sanitizers = [
+plusMinusSanitizer,
+regularExpressionSanitizer,
+spreadSanitizer
+];
 
 export function sanitizeTokens(tokens) {
 	for (let i = 0; i < tokens.length; i++) {

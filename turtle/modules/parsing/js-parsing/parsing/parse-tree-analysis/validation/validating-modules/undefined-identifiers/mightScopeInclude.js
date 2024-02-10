@@ -27,9 +27,6 @@ function hasWideScope(definingToken) {
 }
 
 export function mightScopeInclude(identifierToken) {
-	if (identifierToken.val === 'downloadClicked') {
-		console.log('identifierToken.val=' + identifierToken.val);
-	}
 	const excluded = new Set();
 	let tok = getAssignedToToken(identifierToken);
 	if (tok !== null)

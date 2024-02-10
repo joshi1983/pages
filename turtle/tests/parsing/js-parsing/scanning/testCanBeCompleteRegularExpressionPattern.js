@@ -10,7 +10,13 @@ export function testCanBeCompleteRegularExpressionPattern(logger) {
 	{'in': '[01]]', 'out': false},
 	{'in': '[01)', 'out': false},
 	{'in': '01]', 'out': false},
-	{'in': '(http|https):\\/\\/[^ "/]+\\.[^ \n"\\]\']+', 'out': true}
+	{'in': '(http|https):\\/\\/[^ "/]+\\.[^ \n"\\]\']+', 'out': true},
+	{'in': '\\s', 'out': true},
+	{'in': '\\srpt', 'out': true},
+	{'in': '\\srpt\\', 'out': false},
+	{'in': '\\srpt\\s', 'out': true},
+	{'in': '\\srpt\\s+', 'out': true},
+	{'in': '\\srpt\\s+\\d', 'out': true},
 	];
 	testInOutPairs(cases, canBeCompleteRegularExpressionPattern, logger);
 };

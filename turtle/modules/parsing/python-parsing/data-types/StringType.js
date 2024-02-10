@@ -1,7 +1,7 @@
 import { DataType } from './DataType.js';
 import { ParseTreeTokenType } from '../ParseTreeTokenType.js';
 
-const nonTupleTypes = new Set([
+const nonStringTypes = new Set([
 ParseTreeTokenType.BOOLEAN_LITERAL,
 ParseTreeTokenType.LIST_LITERAL,
 ParseTreeTokenType.NUMBER_LITERAL,

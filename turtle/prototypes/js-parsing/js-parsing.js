@@ -1,10 +1,12 @@
 import { analyzeQuality } from
 '../../modules/parsing/js-parsing/parsing/parse-tree-analysis/validation/analyzeQuality.js';
 import { BufferedParseLogger } from '../../modules/parsing/loggers/BufferedParseLogger.js';
+import { CachedParseTree } from '../../modules/parsing/js-parsing/parsing/parse-tree-analysis/CachedParseTree.js';
 import { fetchText } from '../../modules/fetchText.js';
 import { parse } from '../../modules/parsing/js-parsing/parse.js';
 import { parseTreeTokenToElement } from '../../modules/debugging/parse-tree-explorer/parseTreeTokenToElement.js';
 import { ParseTreeTokenType } from '../../modules/parsing/js-parsing/ParseTreeTokenType.js';
+import { validateModule } from '../../modules/parsing/js-parsing/parsing/parse-tree-analysis/validation/validating-modules/validateModule.js';
 
 let jsCode = await fetchText('modules/parsing/parse-tree-analysis/validation/validateProcedureParametersNotNull.js');
 jsCode = `try {
@@ -22,6 +24,7 @@ DONE: modules/parsing/parse-tree-analysis/validation/validateProcedureParameters
 let qualityMessagesContainer;
 let lineNumbersContainer;
 let parseTreeContainer;
+let isValidatingAsModule;
 
 function refreshLineNumbers(code) {
 	const numLines = code.split('\n').length;
@@ -52,6 +55,10 @@ function compareLineNumber(msg1, msg2) {
 function refereshQualityMessageContainerForParseTree(root) {
 	const logger = new BufferedParseLogger();
 	analyzeQuality(root, logger);
+	if (isValidatingAsModule) {
+		const cachedParseTree = new CachedParseTree(root);
+		validateModule(cachedParseTree, logger);
+	}
 	qualityMessagesContainer.innerHTML = '';
 	const messages = logger.getMessages();
 	messages.sort(compareLineNumber);
@@ -79,6 +86,18 @@ function refreshOutputsForCode(code) {
 	refreshParseTree(parseResult.root);
 }
 
+function bindValidateAsModuleCheckbox(refreshOutputs) {
+	const validateAsModuleCheckbox = document.getElementById('validate-es-module');
+	function refreshValue() {
+		isValidatingAsModule = validateAsModuleCheckbox.checked;
+	}
+	validateAsModuleCheckbox.addEventListener('change', function() {
+		refreshValue();
+		refreshOutputs();
+	});
+	refreshValue();
+}
+
 function init() {
 	const textarea = document.querySelector('textarea');
 	qualityMessagesContainer = document.getElementById('quality-messages');
@@ -87,6 +106,7 @@ function init() {
 	function refreshOutputs() {
 		refreshOutputsForCode(textarea.value);
 	}
+	bindValidateAsModuleCheckbox(refreshOutputs);
 	textarea.addEventListener('input', refreshOutputs);
 	textarea.value = jsCode;
 	refreshOutputs();
