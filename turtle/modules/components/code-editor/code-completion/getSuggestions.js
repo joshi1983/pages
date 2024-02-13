@@ -35,10 +35,11 @@ export function getSuggestions(proceduresMap, tree, position, initialVariables) 
 				if (suggestionsResult.length > 0)
 					return {
 						'strings': suggestionsResult,
+						'token': token,
 						'typedIndex': token.colIndex - position.colIndex + token.val.length
 					};
 			}
 		}
 	}
-	return {'strings': [], 'typedIndex': 0};
+	return {'strings': [], 'token': undefined, 'typedIndex': 0};
 };

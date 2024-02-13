@@ -1,3 +1,4 @@
+import { calculateSuggestionContainerPosition } from './calculateSuggestionContainerPosition.js';
 import { ClipboardHelper } from '../../../ClipboardHelper.js';
 
 /*
@@ -31,6 +32,7 @@ export class EventDelegator {
 			'lineIndex': Math.max(0, lineIndex),
 			'colIndex': pos
 		};
+		calculateSuggestionContainerPosition(this.textarea, position);
 		this.suggestionsUpdater.update(position);
 		this.cancelTimer();
 	}
@@ -43,8 +45,10 @@ export class EventDelegator {
 	}
 
 	handleEvent(event) {
-		if (event.target instanceof Element)
+		if (event.target instanceof Element &&
+		event.target.tagName === 'TEXTAREA')
 			this.textarea = event.target;
+		console.log('event=', event);
 		if (event.type === 'keyup') {
 			this.lastKeyTime = new Date().getTime();
 			this.resetTimer();

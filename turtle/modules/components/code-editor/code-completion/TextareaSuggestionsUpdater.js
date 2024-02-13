@@ -26,10 +26,14 @@ export class TextareaSuggestionsUpdater {
 		const procedures = getProceduresMap(tree);
 		const initialVariables = new Map();
 		const suggestionsInfo = getSuggestions(procedures, tree, position, initialVariables);
-		const token = suggestionsInfo.typedIndex;
+		const token = suggestionsInfo.token;
+		let typedIndex = suggestionsInfo.typedIndex;
+		if (token !== undefined && (typeof token.val === 'string') && token.children.length === 0)
+			typedIndex += token.toString().length - token.val.length;
 		const clickableNames = suggestionsInfo.strings.map(s => new ClickableName(s, function() {
 			console.log('clicked ');
-		}, suggestionsInfo.typedIndex));
+		}, typedIndex));
 		this.sContainer.setSuggestions(clickableNames);
+		this.sContainer.setPosition(position);
 	}
 };

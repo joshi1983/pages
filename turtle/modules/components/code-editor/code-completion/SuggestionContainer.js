@@ -26,6 +26,19 @@ export class SuggestionContainer {
 		document.body.removeChild(this.containerDiv);
 	}
 
+	setPosition(position) {
+		const style = this.containerDiv.style;
+		style.bottom = '';
+		style.top = '';
+		if (position.anchoringProperty === 'bottom') {
+			style.bottom = Math.round(position.bottom) + 'px';
+		}
+		else {
+			style.top = Math.round(position.top) + 'px';
+		}
+		style.maxHeight = Math.round(position.bottom - position.top) + 'px';
+	}
+
 	setSuggestions(clickableNames) {
 		this.disposeClickableNames();
 		this.clickableNames = clickableNames;
@@ -40,6 +53,7 @@ export class SuggestionContainer {
 	}
 
 	show() {
-		document.body.appendChild(this.containerDiv);
+		if (this.containerDiv.parentElement === null)
+			document.body.appendChild(this.containerDiv);
 	}
 };
