@@ -34,6 +34,10 @@ export class TextareaSuggestionsUpdater {
 			console.log('clicked ');
 		}, typedIndex));
 		this.sContainer.setSuggestions(clickableNames);
+		this.updatePosition(position);
+	}
+
+	updatePosition(position) {
 		this.sContainer.setPosition(position);
 	}
 };

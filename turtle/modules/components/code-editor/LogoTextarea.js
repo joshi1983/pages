@@ -24,10 +24,15 @@ export class LogoTextarea extends EventDispatcher {
 		this.txtarea = this.rootDiv.querySelector('textarea');
 		const suggestionContainer = new SuggestionContainer();
 		this.eventDelegator = new EventDelegator(new TextareaSuggestionsUpdater(suggestionContainer, this.txtarea));
+		const outer = this;
+		if (context.CodeEditor !== undefined) {
+			context.CodeEditor.addEventListener('layout', function(eventDetails) {
+				outer.eventDelegator.handleLayoutChange(eventDetails);
+			});
+		}
 		this.lineNumbers = new LineNumbers(this.rootDiv);
 		highlightLogoSyntaxInTextarea(this.txtarea, context);
 		this.previousValue = this.txtarea.value;
-		const outer = this;
 		this.txtarea.addEventListener('keydown', function(event) {
 			if (!event.altKey && (!event.ctrlKey || Keys.isSemicolon(event))) {
 				const start = this.selectionStart;

@@ -1,3 +1,13 @@
+function getRelativeRight(containerBox, child) {
+	const childBox = child.getBoundingClientRect();
+	return childBox.right - containerBox.left;
+}
+
+function getRelativeLeft(containerBox, child) {
+	const childBox = child.getBoundingClientRect();
+	return childBox.left - containerBox.left;
+}
+
 export class SuggestionContainer {
 	constructor() {
 		this.containerDiv = document.createElement('div');
@@ -20,10 +30,28 @@ export class SuggestionContainer {
 		this.containerDiv = undefined;
 	}
 
+	getCursorXOffset() {
+		if (this.containerDiv !== 0) {
+			const child = this.containerDiv.querySelector(':scope > div');
+			if (child !== null) {
+				const containerBox = this.containerDiv.getBoundingClientRect();
+				const typed = child.querySelector('.typed');
+				const untyped = child.querySelector('.untyped');
+				if (typed !== null)
+					return getRelativeRight(containerBox, typed);
+				if (untyped !== null)
+					return getRelativeLeft(containerBox, untyped);
+			}
+		}
+		return 0;
+	}
+
 	hide() {
 		this.disposeClickableNames();
 		this.containerDiv.innerText = '';
-		document.body.removeChild(this.containerDiv);
+		if (this.containerDiv.parentElement !== null) {
+			document.body.removeChild(this.containerDiv);
+		}
 	}
 
 	setPosition(position) {
@@ -36,6 +64,7 @@ export class SuggestionContainer {
 		else {
 			style.top = Math.round(position.top) + 'px';
 		}
+		style.left = Math.round(position.cursorX - this.getCursorXOffset()) + 'px';
 		style.maxHeight = Math.round(position.bottom - position.top) + 'px';
 	}
 

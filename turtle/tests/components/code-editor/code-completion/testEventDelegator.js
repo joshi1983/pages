@@ -25,4 +25,6 @@ export function testEventDelegator(logger) {
 	const mockSuggestionsUpdater = new MockSuggestionsUpdater();
 	const eventDelegator = new EventDelegator(mockSuggestionsUpdater);
 	eventDelegator.handleEvent(getMockKeyUpEvent());
+	if (typeof eventDelegator.handleLayoutChange !== 'function')
+		logger(`Expected handleLayoutChange to be a function but got ${eventDelegator.handleLayoutChange}`);
 };

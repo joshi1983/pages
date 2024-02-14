@@ -15,9 +15,13 @@ export class EventDelegator {
 			throw new Error(`suggestionsUpdater must be an object.  not: ${suggestionsUpdater}`);
 		this.lastKeyTime = undefined;
 		this.suggestionsUpdater = suggestionsUpdater;
+		const outer = this;
+		window.addEventListener('resize', function(event) {
+			outer.handleEvent(...arguments);
+		});
 	}
 
-	_delayReached() {
+	_delayReached(updatePositionOnly) {
 		if (this.textarea === undefined)
 			return;
 		let pos = ClipboardHelper.getCursorPosition(this.textarea);
@@ -33,8 +37,12 @@ export class EventDelegator {
 			'colIndex': pos
 		};
 		calculateSuggestionContainerPosition(this.textarea, position);
-		this.suggestionsUpdater.update(position);
-		this.cancelTimer();
+		if (updatePositionOnly === true)
+			this.suggestionsUpdater.updatePosition(position);
+		else {
+			this.suggestionsUpdater.update(position);
+			this.cancelTimer();
+		}
 	}
 
 	cancelTimer() {
@@ -49,9 +57,20 @@ export class EventDelegator {
 		event.target.tagName === 'TEXTAREA')
 			this.textarea = event.target;
 		console.log('event=', event);
-		if (event.type === 'keyup') {
+		if (event.type === 'resize')
+			this._delayReached(true);
+		else if (event.type === 'keyup') {
 			this.lastKeyTime = new Date().getTime();
 			this.resetTimer();
+		}
+	}
+
+	handleLayoutChange(eventDetails) {
+		console.log('eventDetails=', eventDetails);
+		if (eventDetails.details.isVisible === false)
+			this.suggestionsUpdater.sContainer.hide();
+		else {
+			this._delayReached(true);
 		}
 	}
 
@@ -59,7 +78,7 @@ export class EventDelegator {
 		this.cancelTimer();
 		const outer = this;
 		this.timer = setTimeout(function() {
-			outer._delayReached();
+			outer._delayReached(false);
 		}, delayInterval);
 	}
 };
