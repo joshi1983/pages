@@ -5,6 +5,7 @@ export function testTranslate(logger) {
 	const cases = [
 		{'in': '', 'out': ''},
 		{'in': '$x = 1', 'out': 'make "x 1'},
+		{'in': 'print $x + "hello"', 'out': 'print (combine :x "hello)'},
 		{'in': 'learn p $x { $x = 1}', 'out': 'to p :x\nlocalmake "x 1\nend'},
 		{'in': 'turnright 90', 'out': 'right 90'},
 		{'in': 'print "Hello"', 'out': 'print "Hello'},

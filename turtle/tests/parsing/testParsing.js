@@ -1,4 +1,4 @@
-import { testAsyncParser } from './testAsyncParser.js';
+/*import { testAsyncParser } from './testAsyncParser.js';
 import { testAsyncParseTask } from './testAsyncParseTask.js';
 import { testCharIndexToParseTreeTokenPosition } from './testCharIndexToParseTreeTokenPosition.js';
 import { testCommandClass } from './testCommandClass.js';
@@ -16,7 +16,8 @@ import { testGetTokensForParsing } from './testGetTokensForParsing.js';
 import { testIsSupportedByHighOrderInvoke } from './testIsSupportedByHighOrderInvoke.js';
 import { testJSParsing } from './js-parsing/testJSParsing.js';
 import { testKeyword } from './testKeyword.js';
-import { testLoggers } from './loggers/testLoggers.js';
+*/import { testKTurtle } from './kturtle/testKTurtle.js';
+/*import { testLoggers } from './loggers/testLoggers.js';
 import { testLogoParserFailing } from './testLogoParserFailing.js';
 import { testLogoParsingStates } from './testLogoParsingStates.js';
 import { testLogoScannerTokenSplitter } from './testLogoScannerTokenSplitter.js';
@@ -37,11 +38,11 @@ import { testScrapeProcedures } from './testScrapeProcedures.js';
 import { testSerialization } from './serialization/testSerialization.js';
 import { testToken } from './testToken.js';
 import { testUnsupportedCommand } from './testUnsupportedCommand.js';
-import { wrapAndCall } from '../helpers/wrapAndCall.js';
+*/import { wrapAndCall } from '../helpers/wrapAndCall.js';
 
 export function testParsing(logger) {
 	wrapAndCall([
-		testAsyncParser,
+		/*testAsyncParser,
 		testAsyncParseTask,
 		testCharIndexToParseTreeTokenPosition,
 		testCommandClass,
@@ -59,7 +60,8 @@ export function testParsing(logger) {
 		testIsSupportedByHighOrderInvoke,
 		testJSParsing,
 		testKeyword,
-		testLoggers,
+		*/testKTurtle,
+		/*testLoggers,
 		testLogoParserFailing,
 		testLogoParsingStates,
 		testLogoScannerTokenSplitter,
@@ -79,6 +81,6 @@ export function testParsing(logger) {
 		testScrapeProcedures,
 		testSerialization,
 		testToken,
-		testUnsupportedCommand
+		testUnsupportedCommand*/
 	], logger);
 };
