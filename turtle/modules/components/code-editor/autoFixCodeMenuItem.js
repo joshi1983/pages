@@ -7,6 +7,7 @@ import { fixCode } from './code-fixer/fixCode.js';
 import { formatCode } from './format/formatCode.js';
 import { harmonizeCase } from './harmonize-case/harmonizeCase.js';
 import { hasUnsafeErrorMessages } from './code-fixer/hasUnsafeErrorMessages.js';
+import { isLikelyCodeHeartTurtleScript } from '../../components/code-editor/code-fixer/fixers/codeheart-turtlescript/isLikelyCodeHeartTurtleScript.js';
 import { isLikelyKTurtle } from '../../parsing/kturtle/isLikelyKTurtle.js';
 import { isLikelyLogo3D } from '../../components/code-editor/code-fixer/fixers/logo-3d/isLikelyLogo3D.js';
 import { isLikelyPythonCode } from '../../parsing/python-parsing/isLikelyPythonCode.js';
@@ -16,6 +17,8 @@ import { LogoParser } from '../../parsing/LogoParser.js';
 import { ParseLogger } from '../../parsing/loggers/ParseLogger.js';
 import { refreshAnimationSetupFromTree } from './refreshAnimationSetupFromTree.js';
 import { translate as translateKTurtle } from '../../parsing/kturtle/translation-to-weblogo/translate.js';
+import { translateToWebLogo as translateCodeHeartTurtleScriptToWebLogo } from
+'../../components/code-editor/code-fixer/fixers/codeheart-turtlescript/translateToWebLogo.js';
 import { asyncInit, translatePythonCodeToWebLogo } from '../../parsing/python-parsing/translatePythonCodeToWebLogo.js';
 
 const menuItem = CodeEditor.editor.querySelector('#editor-fix-code');
@@ -39,6 +42,9 @@ function getFixedCode() {
 		}
 		else if (isLikelyKTurtle(intermediateCode)) {
 			intermediateCode  = translateKTurtle(intermediateCode);
+		}
+		else if (isLikelyCodeHeartTurtleScript(intermediateCode)) {
+			intermediateCode = translateCodeHeartTurtleScriptToWebLogo(intermediateCode);
 		}
 		const tempParseLogger = new BufferedParseLogger();
 		const tree = LogoParser.getParseTree(intermediateCode, tempParseLogger);

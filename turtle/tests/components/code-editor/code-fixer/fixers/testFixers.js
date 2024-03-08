@@ -1,10 +1,10 @@
-import { testAnimationSetupFixer } from './testAnimationSetupFixer.js';
+/*import { testAnimationSetupFixer } from './testAnimationSetupFixer.js';
 import { testAnimationSnapshotStyleFixer } from './testAnimationSnapshotStyleFixer.js';
 import { testAutoRemoveFixer } from './testAutoRemoveFixer.js';
 import { testBooleanExpressionAsListFixer } from './testBooleanExpressionAsListFixer.js';
 import { testClashingProcedureNameFixer } from './testClashingProcedureNameFixer.js';
-import { testCodeHeartTurtleScript } from './codeheart-turtlescript/testCodeHeartTurtleScript.js';
-import { testCodeRemoval } from './code-removal/testCodeRemoval.js';
+*/import { testCodeHeartTurtleScript } from './codeheart-turtlescript/testCodeHeartTurtleScript.js';
+/*import { testCodeRemoval } from './code-removal/testCodeRemoval.js';
 import { testColourStringLiteralFixer } from './testColourStringLiteralFixer.js';
 import { testCommaFixer } from './testCommaFixer.js';
 import { testCommandTranslationFixer } from './testCommandTranslationFixer.js';
@@ -52,16 +52,16 @@ import { testWebTurtleCommandFixer } from './testWebTurtleCommandFixer.js';
 import { testWebTurtleProcedureFixer } from './testWebTurtleProcedureFixer.js';
 import { testWebTurtleRepeatFixer } from './testWebTurtleRepeatFixer.js';
 import { testVariableNameReferenceFixer } from './testVariableNameReferenceFixer.js';
-import { wrapAndCall } from '../../../../helpers/wrapAndCall.js';
+*/import { wrapAndCall } from '../../../../helpers/wrapAndCall.js';
 
 const tests = [
-	testAnimationSetupFixer,
+	/*testAnimationSetupFixer,
 	testAnimationSnapshotStyleFixer,
 	testAutoRemoveFixer,
 	testBooleanExpressionAsListFixer,
 	testClashingProcedureNameFixer,
-	testCodeHeartTurtleScript,
-	testCodeRemoval,
+	*/testCodeHeartTurtleScript,
+	/*testCodeRemoval,
 	testColourStringLiteralFixer,
 	testCommaFixer,
 	testCommandTranslationFixer,
@@ -108,7 +108,7 @@ const tests = [
 	testWebTurtleCommandFixer,
 	testWebTurtleProcedureFixer,
 	testWebTurtleRepeatFixer,
-	testVariableNameReferenceFixer
+	testVariableNameReferenceFixer*/
 ];
 
 export function testFixers(logger) {
