@@ -3,7 +3,7 @@ import { DataTypes } from '../../../modules/parsing/data-types/DataTypes.js';
 import { fetchJson } from '../../../modules/fetchJson.js';
 import { isNumber } from '../../../modules/isNumber.js';
 import { prefixWrapper } from '../../helpers/prefixWrapper.js';
-const pythonTurtleFunctions = await fetchJson('json/pythonTurtle.json');
+const pythonTurtleFunctions = await fetchJson('json/logo-migrations/python/pythonTurtle.json');
 await Command.asyncInit();
 await DataTypes.asyncInit();
 

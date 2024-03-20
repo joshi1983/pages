@@ -1,5 +1,5 @@
 import { fetchJson } from '../../fetchJson.js';
-const functionsArray = await fetchJson('json/pythonTurtle.json');
+const functionsArray = await fetchJson('json/logo-migrations/python/pythonTurtle.json');
 const functionsMap = new Map();
 functionsArray.forEach(function(funcInfo, index) {
 	funcInfo.names.forEach(function(name) {

@@ -23,6 +23,8 @@ export function testFunctionCallTranslation(logger) {
 		{'in': 'abs([1,2])', 'out': 'hypot [1 2]'},
 		{'in': 'abs( (1,2) )', 'out': 'hypot [1 2]'},
 		{'in': 'abs(x)', 'out': 'abs :x'},
+		{'in': 'color("red")', 'out': 'setColors "red'},
+		{'in': 'color("aliceblue")', 'out': 'setColors "#F0F8FF'},
 		{'in': 'random.choice([1,2,3])', 'out': 'pick [1 2 3]'},
 		{'in': 'random.random()', 'out': 'randomRatio'},
 		{'in': 'dot()', 'out': 'pyDot -1 penColor'},

@@ -1,3 +1,5 @@
+import { testColours } from './testColours.js';
+import { testColoursTXT } from './testColoursTXT.js';
 import { testIsLikelyPythonCode } from './testIsLikelyPythonCode.js';
 import { testParse } from './testParse.js';
 import { testParseInvalidPythonCode } from './testParseInvalidPythonCode.js';
@@ -14,6 +16,8 @@ import { wrapAndCall } from '../../helpers/wrapAndCall.js';
 
 export function testPythonParsing(logger) {
 	wrapAndCall([
+		testColours,
+		testColoursTXT,
 		testIsLikelyPythonCode,
 		testParse,
 		testParseInvalidPythonCode,
