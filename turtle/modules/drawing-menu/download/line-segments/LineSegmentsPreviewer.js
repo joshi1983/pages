@@ -1,5 +1,5 @@
 import { Colour } from '../../../Colour.js';
-import { drawPointCloud } from './drawPointCloud.js';
+import { drawLineSegments } from './drawLineSegments.js';
 import { PerspectiveTransformer } from '../../../drawing/drawers/transformers/PerspectiveTransformer.js';
 import { lineSegmentsToBackgroundColour } from './lineSegmentsToBackgroundColour.js';
 import { RotatingTransformer } from './RotatingTransformer.js';
@@ -54,14 +54,14 @@ export class LineSegmentsPreviewer {
 			this.canvas.setAttribute('height', box.height);
 			this.perspectiveTransformer.setDimensions(box.width, box.height);
 			this._redrawNeeded = false;
-			let points = this.points;
+			let lines = this.lines;
 			if (this.rotatingTransformer !== undefined) {
 				const r = this.rotationRadius === undefined ? 200 : this.rotationRadius * 1.3;
 				this.perspectiveTransformer.position.assign(new Vector3D(0, 0, -r));
-				points = this.rotatingTransformer.getTransformedPoints(points);
-				sortLineSegments(points);
+				lines = this.rotatingTransformer.getTransformedLines(lines);
+				sortLineSegments(lines);
 			}
-			drawPointCloud(this.canvas, this.perspectiveTransformer, points, this.backgroundColour);
+			drawLineSegments(this.canvas, this.perspectiveTransformer, lines, this.backgroundColour);
 			this._lastRedrawTime = (new Date).getTime();
 			this._redrawNeeded = false;
 		}

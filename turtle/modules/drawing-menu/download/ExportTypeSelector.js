@@ -11,8 +11,10 @@ import { isAnimationExportSelectable } from './animation-download/isAnimationExp
 import { isPDFSelectable } from './pdf/isPDFSelectable.js';
 import { isPointCloudSelectable } from './point-clouds/isPointCloudSelectable.js';
 import { isPostScriptSelectable } from './post-script/isPostScriptSelectable.js';
+import { isLineSegmentsSelectable } from './line-segments/isLineSegmentsSelectable.js';
 import { isStringArtKitSelectable } from './string-art-kit/isStringArtKitSelectable.js';
 import { showAnimationDownloadDialog } from './animation-download/showAnimationDownloadDialog.js';
+import { showLineSegmentsDialog } from './line-segments/showLineSegmentsDialog.js';
 import { showPDFPreviewer } from './pdf/showPDFPreviewer.js';
 import { showPointCloudDialog } from './point-clouds/showPointCloudDialog.js';
 import { showPostScriptPreviewer } from './post-script/showPostScriptPreviewer.js';
@@ -32,6 +34,12 @@ const exportTypes = [
 		'className': 'fa fa-film',
 		'click': showAnimationDownloadDialog,
 		'isSelectable': isAnimationExportSelectable
+	},
+	{
+		'name': 'Line Segments',
+		'className': 'custom-icon line-segments-icon',
+		'click': showLineSegmentsDialog,
+		'isSelectable': isLineSegmentsSelectable
 	},
 	{
 		'name': 'PDF',
