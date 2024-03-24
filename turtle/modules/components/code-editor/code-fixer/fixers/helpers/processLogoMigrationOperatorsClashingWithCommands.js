@@ -1,5 +1,5 @@
 import { Command } from '../../../../../parsing/Command.js';
-import { isInstructionList } from '../../../../../parsing/parse-tree-analysis/isInstructionList.js';
+import { isLikelyInstructionList } from './isLikelyInstructionList.js';
 import { ParseTreeTokenType } from '../../../../../parsing/ParseTreeTokenType.js';
 import { processOperatorChildrenIfPossible } from './processOperatorChildrenIfPossible.js';
 
@@ -16,7 +16,7 @@ function isTokenOfInterest(operators) {
 		if (!symbolsLowerCase.has(token.val.toLowerCase()))
 			return false;
 		const parent = token.parentNode;
-		return !isInstructionList(parent);
+		return !isLikelyInstructionList(parent);
 	};
 }
 

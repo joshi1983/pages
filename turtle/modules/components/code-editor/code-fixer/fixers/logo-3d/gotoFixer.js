@@ -1,5 +1,7 @@
+import { getParseTokensSorted } from '../../../../../parsing/parse-tree-token/getParseTokensSorted.js';
 import { ParseTreeToken } from '../../../../../parsing/ParseTreeToken.js';
 import { ParseTreeTokenType } from '../../../../../parsing/ParseTreeTokenType.js';
+import { removeErroneousNumbersFixer } from './removeErroneousNumbersFixer.js';
 
 const markNameTokenTypes = new Set([
 ParseTreeTokenType.LEAF,
@@ -25,8 +27,7 @@ function isMarkOrOmark(token) {
 
 function getVariableNamesLowerCase(cachedParseTree) {
 	const varReadTokens = cachedParseTree.getTokensByType(ParseTreeTokenType.VARIABLE_READ);
-	const result = new Set(varReadTokens.map(t => t.val.toLowerCase()));
-	return result;
+	return new Set(varReadTokens.map(t => t.val.toLowerCase()));
 }
 
 function getSanitizedVariableName(initialVal, existingVariableNames, markVarNameFixMap) {
@@ -48,9 +49,24 @@ function getSanitizedVariableName(initialVal, existingVariableNames, markVarName
 }
 
 export function gotoFixer(cachedParseTree, fixLogger) {
+	removeErroneousNumbersFixer(cachedParseTree, fixLogger);
 	const leafs = cachedParseTree.getTokensByType(ParseTreeTokenType.LEAF);
 	const gotos = leafs.filter(isGotoOfInterest);
 	const marks = leafs.filter(isMarkOrOmark);
+	if (marks.length === 0 && gotos.length === 0)
+		return;
+	const tokens = cachedParseTree.getAllTokens();
+	getParseTokensSorted(tokens);
+	function insertGapAfter(beforeToken) {
+		const tokenIndex = tokens.indexOf(beforeToken);
+		const lineIndex = beforeToken.lineIndex;
+		for (let i = tokenIndex + 1; i < tokens.length; i++) {
+			const token = tokens[i];
+			if (token.lineIndex > lineIndex)
+				break;
+			token.colIndex ++;
+		}
+	}
 	const nameTypeMap = new Map();
 	const existingVariableNames = getVariableNamesLowerCase(cachedParseTree);
 	const markVarNameFixMap = new Map();
@@ -79,6 +95,7 @@ export function gotoFixer(cachedParseTree, fixLogger) {
 			cmdName = 'pos';
 		else
 			cmdName = 'turtleState';
+		insertGapAfter(varNameToken);
 		const posToken = new ParseTreeToken(cmdName, null, varNameToken.lineIndex, varNameToken.colIndex + 1, ParseTreeTokenType.PARAMETERIZED_GROUP);
 		markToken.appendChild(posToken);
 		cachedParseTree.tokenAdded(posToken);

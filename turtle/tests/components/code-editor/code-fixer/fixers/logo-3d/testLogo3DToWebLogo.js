@@ -13,6 +13,9 @@ export function testLogo3DToWebLogo(logger) {
 	{'in': '', 'out': `setScreenColor "black
 setColors "white
 `},
+	{'in': 'dn 90 lt 90', 'out': `setScreenColor "black
+setColors "white
+pitchDown 90 lt 90`},
 	{'in': 'arcup 10 100', 'out': `to arcUp :angle :radius
 	rollRight 90
 	arcLeft :angle :radius

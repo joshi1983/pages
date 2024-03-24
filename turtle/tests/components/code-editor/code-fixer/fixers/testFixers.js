@@ -21,6 +21,7 @@ import { testGetTokenAfter } from './testGetTokenAfter.js';
 import { testGlobalLocalmakeFixer } from './testGlobalLocalmakeFixer.js';
 import { testHelpers } from './helpers/testHelpers.js';
 import { testIfElseFixer } from './testIfElseFixer.js';
+import { testInstructionListSquareBracketsRemoveFixer } from './testInstructionListSquareBracketsRemoveFixer.js';
 import { testJumpFixer } from './testJumpFixer.js';
 import { testLeafsInDataListsToStringLiteralsFixer } from './testLeafsInDataListsToStringLiteralsFixer.js';
 import { testLocalFixer } from './testLocalFixer.js';
@@ -79,6 +80,7 @@ const tests = [
 	testGlobalLocalmakeFixer,
 	testHelpers,
 	testIfElseFixer,
+	testInstructionListSquareBracketsRemoveFixer,
 	testJumpFixer,
 	testLeafsInDataListsToStringLiteralsFixer,
 	testLocalFixer,

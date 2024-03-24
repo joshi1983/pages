@@ -6,6 +6,7 @@ export function testGotoFixer(logger) {
 		{'code': 'print "Define', 'logged': false},
 		{'code': 'mark x', 'to': 'make "x pos', 'logged': true},
 		{'code': 'omark x', 'to': 'make "x turtleState', 'logged': true},
+		{'code': 'rpt 3 [omark x] goto x', 'to': 'rpt 3 [make "x turtleState ] setTurtleState :x', 'logged': true},
 		{'code': 'omark x goto x', 'to': 'make "x turtleState setTurtleState :x', 'logged': true},
 		{'code': 'mark x goto x', 'to': 'make "x pos jumpTo :x', 'logged': true},
 		{'code': 'omark 3 goto 3', 'to': 'make "v3 turtleState setTurtleState :v3', 'logged': true},
