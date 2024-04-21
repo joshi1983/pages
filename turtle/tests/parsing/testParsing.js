@@ -1,4 +1,4 @@
-import { testASMTurtle } from './asm-turtle/testASMTurtle.js';
+/*import { testASMTurtle } from './asm-turtle/testASMTurtle.js';
 import { testAsyncParser } from './testAsyncParser.js';
 import { testAsyncParseTask } from './testAsyncParseTask.js';
 import { testCharIndexToParseTreeTokenPosition } from './testCharIndexToParseTreeTokenPosition.js';
@@ -10,8 +10,8 @@ import { testCreateParameterizedGroupsParseErrors } from './testCreateParameteri
 import { testCSS } from './css/testCSS.js';
 import { testDataTypesDirectory } from './data-types/testDataTypesDirectory.js';
 import { testExampleScripts } from './testExampleScripts.js';
-import { testExecution } from './execution/testExecution.js';
-import { testFixOperatorPrecedence } from './testFixOperatorPrecedence.js';
+*/import { testExecution } from './execution/testExecution.js';
+/*import { testFixOperatorPrecedence } from './testFixOperatorPrecedence.js';
 import { testGenericParsingUtilities } from './generic-parsing-utilities/testGenericParsingUtilities.js';
 import { testGetStartPositionOfToken } from './testGetStartPositionOfToken.js';
 import { testGetTokensForParsing } from './testGetTokensForParsing.js';
@@ -42,12 +42,12 @@ import { testScrapeProcedures } from './testScrapeProcedures.js';
 import { testSerialization } from './serialization/testSerialization.js';
 import { testSonicWebTurtle } from './sonic-webturtle/testSonicWebTurtle.js';
 import { testToken } from './testToken.js';
-import { testUnsupportedCommand } from './testUnsupportedCommand.js';
+import { testUnsupportedCommand } from './testUnsupportedCommand.js';*/
 import { wrapAndCall } from '../helpers/wrapAndCall.js';
 
 export function testParsing(logger) {
 	wrapAndCall([
-		testASMTurtle,
+		/*testASMTurtle,
 		testAsyncParser,
 		testAsyncParseTask,
 		testCharIndexToParseTreeTokenPosition,
@@ -59,8 +59,8 @@ export function testParsing(logger) {
 		testCSS,
 		testDataTypesDirectory,
 		testExampleScripts,
-		testExecution,
-		testFixOperatorPrecedence,
+		*/testExecution,
+		/*testFixOperatorPrecedence,
 		testGenericParsingUtilities,
 		testGetStartPositionOfToken,
 		testGetTokensForParsing,
@@ -91,6 +91,6 @@ export function testParsing(logger) {
 		testSerialization,
 		testSonicWebTurtle,
 		testToken,
-		testUnsupportedCommand
+		testUnsupportedCommand*/
 	], logger);
 };

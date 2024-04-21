@@ -20,7 +20,8 @@ export function getCommandGroups(turtle) {
 	result.set('async', new AsyncCommands());
 	result.set('color', new ColorCommands());
 	result.set('easing', new EasingCommands());
-	result.set('gradients', new GradientCommands());
+	if (turtle !== undefined)
+		result.set('gradients', new GradientCommands(turtle));
 	result.set('linearAlgebra', new LinearAlgebraCommands());
 	result.set('list', new ListCommands());
 	result.set('math', new MathCommands());
