@@ -9,7 +9,7 @@ export function createTestDrawing() {
 	const settings = {'animationTime': 0};
 	const result = new VectorDrawing();
 	const turtle = new Turtle(settings, result);
-	const gradients = new GradientCommands();
+	const gradients = new GradientCommands(turtle);
 	result.setScreenColor(Transparent);
 	result.setScreenColor(new Colour('#888'));
 	turtle.forward(10);

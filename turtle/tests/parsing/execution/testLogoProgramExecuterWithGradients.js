@@ -24,6 +24,11 @@ setProperty "colorStops 0 "red
 setProperty "colorStops 1 ["black easeEase]
 forward 100
 setFillGradient createLinearGradient :fromPos pos :colorStops "pad
+circle 100\nprint 1`, 'messages': ['1']},
+		{'code': `make "colorStops createPList
+setProperty "colorStops 0 "red
+setProperty "colorStops 1 ["black easeEase]
+setFillGradient createEllipticalGradient pos 100 200 :colorStops
 circle 100\nprint 1`, 'messages': ['1']}
 	];
 	processExecuterTestCases(cases, logger);
