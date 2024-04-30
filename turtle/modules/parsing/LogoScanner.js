@@ -1,6 +1,9 @@
 import { LogoScannerTokenSplitter } from './LogoScannerTokenSplitter.js';
 import { findLongestMatch, isNumeric } from './scanning/Numbers.js';
+import { isNumberPossiblyExpected } from './scanning/isNumberPossiblyExpected.js';
+import { isStartOfNumber } from './scanning/isStartOfNumber.js';
 import { isStartingENumber } from './scanning/isStartingENumber.js';
+import { isStartingStringLiteral } from './scanning/isStartingStringLiteral.js';
 import { Token } from './Token.js';
 
 export class LogoScanner {
@@ -92,6 +95,29 @@ export class LogoScanner {
 			(tokens.length > 0 && !tokens[tokens.length - 1].isCommandName()))
 			) {
 				pushToken(c);
+			}
+			else if (c === ':' && !isStartingStringLiteral(token)) {
+				colIndex--;
+				pushToken();
+				colIndex++;
+				token = c;
+			}
+			else if (c.toLowerCase() !== 'h' && c !== '.' && isNumberPossiblyExpected(tokens) &&
+			isStartOfNumber(token) && !isStartOfNumber(token + c)) {
+				const lastChar = token[token.length - 1];
+				if (lastChar.toLowerCase() === 'e') {
+					token = token.substring(0, token.length - 1);
+					colIndex -= 2;
+					pushToken();
+					token = lastChar + c;
+					colIndex += 2;
+				}
+				else {
+					colIndex--;
+					pushToken();
+					colIndex++;
+					token = c;
+				}
 			}
 			else if (/\s/g.test(c)) {
 				colIndex--;

@@ -71,7 +71,8 @@ function processToken(wCachedParseTree, fixLogger, readOptimizedCachedParseTree,
 		if (lastParamToken.children.length !== 0)
 			lastParamToken = lastParamToken.children[lastParamToken.children.length - 1];
 		// add parameter token for varName.
-		const paramToken = new ParseTreeToken(varName, null, lastParamToken.lineIndex, lastParamToken.colIndex + 1, ParseTreeTokenType.VARIABLE_READ);
+		const paramToken = new ParseTreeToken(varName, null, lastParamToken.lineIndex,
+			lastParamToken.colIndex + varName.length + 2, ParseTreeTokenType.VARIABLE_READ);
 		parameterListToken.appendChild(paramToken);
 		// loop through calls to the procedure.
 		const callTokens = procedureCallTokens.filter(p => p.val.toLowerCase() === procedureName);
@@ -90,7 +91,7 @@ function processToken(wCachedParseTree, fixLogger, readOptimizedCachedParseTree,
 			}
 			else {
 				let lastToken = getLastDescendentTokenOf(callToken);
-				const newToken = new ParseTreeToken(varName, null, lastToken.lineIndex, lastToken.colIndex + 1, ParseTreeTokenType.VARIABLE_READ);
+				const newToken = new ParseTreeToken(varName, null, lastToken.lineIndex, lastToken.colIndex + varName.length + 2, ParseTreeTokenType.VARIABLE_READ);
 				callToken.appendChild(newToken);
 				wCachedParseTree.tokenAdded(newToken);
 				if ((variable === undefined || variable.getLocalScopesAt(newToken).length === 0) &&

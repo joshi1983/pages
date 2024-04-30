@@ -4,6 +4,7 @@ import { escapeSpecialCharacters } from '../../../modules/components/syntax-high
 export function testCodeToHTML(logger) {
 	const cases = [
 		{'in': '', 'out': ''},
+		{'in': 'forward:x', 'out': '<span class="parameterized-group">forward</span><span class="variable-read">:x</span>'},
 		{'in': '; https://www.google.com',
 			'out': '<span class="comment">; <a href="https://www.google.com" target="_blank">https://www.google.com</a></span>'},
 		{'in': '; https://www.google.com and https://www.canada.gc.ca',

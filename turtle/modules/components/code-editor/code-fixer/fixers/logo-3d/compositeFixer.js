@@ -11,8 +11,10 @@ import { removeErroneousNumbersFixer } from './removeErroneousNumbersFixer.js';
 import { removeImportsFixer } from './removeImportsFixer.js';
 import { removeUnusedMarkCalls } from './removeUnusedMarkCalls.js';
 import { timeoutFixer } from './timeoutFixer.js';
+import { variableReadSpaceInsertFixer } from '../variableReadSpaceInsertFixer.js';
 
 const fixers = [
+variableReadSpaceInsertFixer,
 makeAssignFixer,
 logo3DReplacementFixer,
 procedureNameTypeFixer,

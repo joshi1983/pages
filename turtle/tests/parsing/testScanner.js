@@ -72,6 +72,19 @@ export function testScanner(logger) {
 		{'code': '-2', 'tokens': [
 			{'s': '-2', 'colIndex': 1}
 		]},
+		{'code': 'print "hi:world', 'numTokens': 2, 'tokens': [
+			{'s': 'print'},
+			{'s': '"hi:world'}
+		]},
+		{'code': 'print "hi\'world', 'numTokens': 3, 'tokens': [
+			{'s': 'print'},
+			{'s': '"hi'},
+			{'s': '\'world'}
+		]},
+		{'code': 'print \'hi:world\'', 'numTokens': 2, 'tokens': [
+			{'s': 'print'},
+			{'s': '\'hi:world\''}
+		]},
 		{'code': '[-2]', 'numTokens': 3},
 		{'code': '[ -2 ]', 'numTokens': 3},
 		{'code': '[-20]', 'numTokens': 3},
@@ -534,6 +547,20 @@ export function testScanner(logger) {
 				{'s': 'rt'},
 				{'s': '120'},
 				{'s': ']'},
+				{'s': 'end'}
+			]
+		},
+		{
+			'code': 'f:d',
+			'tokens': [
+				{'s': 'f', 'colIndex': 0},
+				{'s': ':d', 'colIndex': 2}
+			]
+		},
+		{
+			'code': '234end',
+			'tokens': [
+				{'s': '234'},
 				{'s': 'end'}
 			]
 		},

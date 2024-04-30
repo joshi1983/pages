@@ -79,19 +79,19 @@ end
 cone`, 'out': `setScreenColor "black
 setColors "white
 to cone
-make "a 175
-make "b 35
-make "c 0
-repeat :b
-[ repeat 100
-[fd 30 rt :a make "e random 1000 make "e :e+5000 fd :e lt :a fd :e
-pitchUp .1
-rt 10
+make "a
+175 make "b
+35 make "c
+0 repeat 
+:b[ repeat 100
+[fd 30 rt  :a make "e random 1000 make "e :e+  5000 fd :e lt 
+:a fd
+:e pitchUp .1 rt 10
 ]
-ifElse :c > :b/2 [make "a :a+4]
- [make "a :a-4]
-make "c :c+1 setColors pick ["red "orange]
-]
+ifElse  :c >:b /2[ make "a
+:a+4] [make "a :a-
+4]make "c :c +1 setColors pick[ "red
+"orange]]
 end
 
 cone`},

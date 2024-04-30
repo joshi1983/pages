@@ -17,10 +17,10 @@ function testCompositeFixerInOut(logger) {
 		{'code': 'fd -d\nlt 90', 'logged': false},
 		// d is a leaf but since it isn't declared as a variable, recognized as a command and isn't defined as a procedure.
 		// it is left as a leaf because we can't know what it should become.
-		{'code': `goto j up 90 fd
+		{'code': `goto j up 90 fd 
 1 dn 90 lt 90 fd 1 rt 90 omark 
-j`, 'to': `setTurtleState :j pitchUp 90 fd
-1 pitchDown 90 lt 90 fd 1 rt 90 make 
+j`, 'to': `setTurtleState     
+:j pitchUp 90 fd 1 pitchDown 90 lt 90 fd 1 rt 90 make 
 "j turtleState`, 'logged': true},
 
 		{'code': '#timeout=250', 'to': '', 'logged': true},
@@ -41,13 +41,13 @@ rpt 7
 fd 50
 lt 90 pd
 make d=d-65
-]`, 'to': `make "d :dd
-repeat 7
+]`, 'to': `make "d
+:dd repeat 7
 [
 fd 50
 lt 90 pd
-make "d :d-65
-]`, 'logged': true, 'ignoreParseErrors': true},
+make "d :d-
+65]`, 'logged': true, 'ignoreParseErrors': true},
 		{'code': `rpt 1
 [fd -5 lt 90]`, 'to': `repeat 1
 [fd -5 lt 90]`, 'logged': true},

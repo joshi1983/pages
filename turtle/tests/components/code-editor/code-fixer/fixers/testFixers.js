@@ -60,6 +60,7 @@ import { testWebTurtleCommandFixer } from './testWebTurtleCommandFixer.js';
 import { testWebTurtleProcedureFixer } from './testWebTurtleProcedureFixer.js';
 import { testWebTurtleRepeatFixer } from './testWebTurtleRepeatFixer.js';
 import { testVariableNameReferenceFixer } from './testVariableNameReferenceFixer.js';
+import { testVariableReadSpaceInsertFixer } from './testVariableReadSpaceInsertFixer.js';
 import { wrapAndCall } from '../../../../helpers/wrapAndCall.js';
 
 const tests = [
@@ -124,7 +125,8 @@ const tests = [
 	testWebTurtleCommandFixer,
 	testWebTurtleProcedureFixer,
 	testWebTurtleRepeatFixer,
-	testVariableNameReferenceFixer
+	testVariableNameReferenceFixer,
+	testVariableReadSpaceInsertFixer
 ];
 
 export function testFixers(logger) {

@@ -1,4 +1,5 @@
 import { getParseTokensSorted } from './parse-tree-token/getParseTokensSorted.js';
+import { mightNeedSpaceBetweenTokens } from './parse-tree-token/mightNeedSpaceBetweenTokens.js';
 import { ParseTreeToken } from './ParseTreeToken.js';
 import { ParseTreeTokenType } from './ParseTreeTokenType.js';
 import { StringBuffer } from '../StringBuffer.js';
@@ -127,7 +128,7 @@ function processChangedTokens(treeRoot, originalCode) {
 				if (mayNeedSpace && isSpaceImportantForTokenPair(parseTokens[tokenIndex - 1], token))
 					result.append(' ');
 				result.append(singleTokenToString(token));
-				mayNeedSpace = true;
+				mayNeedSpace = mightNeedSpaceBetweenTokens(parseTokens[tokenIndex], parseTokens[tokenIndex + 1]);
 				tokenIndex++;
 			}
 			i--;
@@ -139,7 +140,7 @@ function processChangedTokens(treeRoot, originalCode) {
 		if (mayNeedSpace && isSpaceImportantForTokenPair(parseTokens[tokenIndex - 1], parseTokens[tokenIndex]))
 			result.append(' ');
 		result.append(singleTokenToString(parseTokens[tokenIndex]));
-		mayNeedSpace = true;
+		mayNeedSpace = mightNeedSpaceBetweenTokens(parseTokens[tokenIndex], parseTokens[tokenIndex + 1]);
 		tokenIndex++;
 	}
 	return result.toString();

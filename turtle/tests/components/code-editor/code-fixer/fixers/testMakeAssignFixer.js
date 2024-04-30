@@ -17,14 +17,14 @@ export function testMakeAssignFixer(logger) {
 		{'code': 'make x=4 print x', 'to': 'make "x 4 print :x', 'logged': true},
 		{'code': 'make local x=4 print x', 'to': 'localmake  "x 4 print :x', 'logged': true},
 		{'code': 'make x=4\nprint "hi',
-			'to': 'make "x 4\nprint "hi',
+			'to': 'make "x\n4 print "hi',
 			'logged': true
 		},
 		{'code': 'make local x=4', 'to': 'localmake  "x 4', 'logged': true},
 		{'code': 'make fc=random 361', 'to': 'make "fc random 361', 'logged': true, 'ignoreParseErrors': true},
 		{'code': 'make dd=dd+6', 'to': 'make "dd :dd+6', 'logged': true, 'ignoreParseErrors': true},
-		{'code': 'make dd = 1 repeat 50 []', 'to': 'make "dd  1 repeat 50 []', 'logged': true},
-		{'code': 'make dd = 1 make dd = 3', 'to': 'make "dd  1 make "dd  3', 'logged': true, 'ignoreParseErrors': true},
+		{'code': 'make dd = 1 repeat 50 []', 'to': 'make "dd   1 repeat 50[]', 'logged': true},
+		{'code': 'make dd = 1 make dd = 3', 'to': 'make "dd   1 make "dd 3', 'logged': true, 'ignoreParseErrors': true},
 	];
 	processTestCases(cases, makeAssignFixer, logger);
 };

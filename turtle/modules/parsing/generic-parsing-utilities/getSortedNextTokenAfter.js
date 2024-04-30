@@ -3,6 +3,7 @@ import { getAllDescendentsAsArray } from './getAllDescendentsAsArray.js';
 import { getSortedFirstTokenFromArray } from './getSortedFirstTokenFromArray.js';
 import { getTokensAtLine } from './getTokensAtLine.js';
 import { isStrictlyAfter } from './isStrictlyAfter.js';
+import { preferNonNullVal } from './preferNonNullVal.js';
 
 /*
 Returns the next token after the specified one compared by colIndex and lineIndex.
@@ -42,6 +43,6 @@ export function getSortedNextTokenAfter(token) {
 		}
 	}
 	if (candidateTokens.length !== 0)
-		return getSortedFirstTokenFromArray(candidateTokens);
+		return getSortedFirstTokenFromArray(candidateTokens, preferNonNullVal);
 	return null;
 };

@@ -1,4 +1,5 @@
 import { getParseTokensSorted } from '../../../../../parsing/parse-tree-token/getParseTokensSorted.js';
+import { insertColIndexSpanAt } from '../../../../../parsing/generic-parsing-utilities/insertColIndexSpanAt.js';
 import { ParseTreeToken } from '../../../../../parsing/ParseTreeToken.js';
 import { ParseTreeTokenType } from '../../../../../parsing/ParseTreeTokenType.js';
 import { removeErroneousNumbersFixer } from './removeErroneousNumbersFixer.js';
@@ -121,6 +122,7 @@ export function gotoFixer(cachedParseTree, fixLogger) {
 		gotoToken.type = ParseTreeTokenType.PARAMETERIZED_GROUP;
 		nameToken.remove();
 		gotoToken.appendChild(nameToken);
+		insertColIndexSpanAt(gotoToken, gotoToken.val.length - 'goto'.length);
 		cachedParseTree.tokenTypeChanged(gotoToken, ParseTreeTokenType.LEAF);
 		cachedParseTree.tokenTypeChanged(nameToken, oldNameType);
 		cachedParseTree.tokenValueChanged(gotoToken, oldGotoVal);

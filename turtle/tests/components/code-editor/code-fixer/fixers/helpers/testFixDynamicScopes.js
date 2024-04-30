@@ -14,7 +14,7 @@ export function testFixDynamicScopes(logger) {
 		{'code': 'to p\nprint :x\nend\nto p2\nlocalmake "x 5\np\nend',
 		'to': 'to p\n:x print :x\nend\nto p2\nlocalmake "x 5\np\n:x end', 'logged': true},
 		{'code': 'to p\nprint :x\nend\nto p2\np\nend',
-		'to': 'to p\n:x print :x\nend\nto p2\n:x p\n:x end', 'logged': true},
+		'to': 'to p\n:x print :x\nend\nto p2\n\n:x p :x end', 'logged': true},
 		{'code': 'to p\nprint :x\nend\np',
 		'to': 'to p\n:x print :x\nend\np', 'logged': true, 'ignoreParseErrors': true},
 		/* Leave the global call to p without the :x parameter since adding it will only

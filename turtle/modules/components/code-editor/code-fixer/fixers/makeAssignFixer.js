@@ -1,3 +1,4 @@
+import { insertColIndexSpanAt } from '../../../../parsing/generic-parsing-utilities/insertColIndexSpanAt.js';
 import { ParseTreeTokenType } from '../../../../parsing/ParseTreeTokenType.js';
 
 function getCompareToken(token) {
@@ -78,6 +79,7 @@ export function makeAssignFixer(cachedParseTree, fixLogger) {
 			localToken = compareToken.previousSibling;
 		makeToken.type = ParseTreeTokenType.PARAMETERIZED_GROUP;
 		varNameToken.type = ParseTreeTokenType.STRING_LITERAL;
+		insertColIndexSpanAt(varNameToken, 1); // extra character for the quotation mark.
 		varNameToken.remove();
 		valToken.remove();
 		compareToken.remove();
@@ -107,6 +109,8 @@ export function makeAssignFixer(cachedParseTree, fixLogger) {
 		filter(isVariableReadOfInterest(newVarNames));
 	varReadsOfInterest.forEach(function(varRead) {
 		varRead.type = ParseTreeTokenType.VARIABLE_READ;
+		insertColIndexSpanAt(varRead, 1);
+		varRead.colIndex++;
 		cachedParseTree.tokenTypeChanged(varRead, ParseTreeTokenType.LEAF);
 	});
 };

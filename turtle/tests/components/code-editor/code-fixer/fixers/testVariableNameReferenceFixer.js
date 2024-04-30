@@ -11,7 +11,6 @@ export function testVariableNameReferenceFixer(logger) {
 		{'code': 'make " "x', 'logged': false},
 		{'code': 'make " :x', 'logged': false},
 		{'code': 'make " x', 'logged': false},
-		{'code': 'print :x + x:y', 'logged': false},
 		{'code': 'swap "x "y', 'logged': false},
 		{'code': 'swap :x "y', 'to': 'swap "x "y', 'logged': true},
 		{'code': 'swap "x :y', 'to': 'swap "x "y', 'logged': true},

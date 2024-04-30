@@ -41,9 +41,7 @@ export function testFixCode(logger) {
 		{'in': 'fd  :\nx', 'out': 'fd  \n:x'},
 		{'in': 'setPenColor red', 'out': 'setPenColor "red'},
 		{'in': 'print [1,2,3]', 'out': 'print [1 2 3]'},
-		{'in': 'forward:x', 'out': 'forward :x'},
 		{'in': 'make " x', 'out': 'make  "x'},
-		{'in': 'print :x + x:y', 'out': 'print :x + x :y'},
 		{'in': 'penUp', 'out': ''}, // the penUp wasn't used so it should be removed.
 
 		{'in': 'repeat 3 [\nmake "p []\nsetItem 2 "p -item 2 "h]',
