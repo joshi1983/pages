@@ -1,15 +1,17 @@
-import { arc } from
-'../../../../../modules/drawing-menu/download/line-segments/shape-conversion/arc.js';
-import { ArcShape } from
-'../../../../../modules/drawing/vector/shapes/ArcShape.js';
 import { isNumber } from
 '../../../../../modules/isNumber.js';
+import { Orientation3D } from
+'../../../../../modules/drawing/vector/Orientation3D.js';
+import { orientedArc } from
+'../../../../../modules/drawing-menu/download/line-segments/shape-conversion/orientedArc.js';
+import { OrientedArcShape } from
+'../../../../../modules/drawing/vector/shapes/OrientedArcShape.js';
 import { prefixWrapper } from
 '../../../../helpers/prefixWrapper.js';
 import { Vector3D } from
 '../../../../../modules/drawing/vector/Vector3D.js';
 
-export function testArc(logger) {
+export function testOrientedArc(logger) {
 	const radius = 100;
 	const pos = new Vector3D(1, 2, 3);
 	const cases = [
@@ -28,8 +30,11 @@ export function testArc(logger) {
 		const angle = caseInfo.angle;
 		if (!isNumber(angle))
 			plogger(`Expected angle to be a number but got ${angle}`);
-		const arcShape = new ArcShape(pos, rotationRadians, radius, angle);
-		const lines = arc(arcShape, 90);
+		const orientation = new Orientation3D();
+		orientation.setPitchRadians(Math.PI / 3);
+		orientation.setHeadingRadians(rotationRadians);
+		const arcShape = new OrientedArcShape(pos, orientation, radius, angle);
+		const lines = orientedArc(arcShape, 90);
 		if (!(lines instanceof Array))
 			plogger(`Expected an Array but got ${lines}`);
 		else {
