@@ -54,8 +54,8 @@ export class OrientedArcShape extends Shape {
 			const rotationAngle = Math.atan2(rotatedNormal.getY(), rotatedNormal.getX());
 			const startPointOffset = this.getStartPoint();
 			const endPointOffset = this.getEndPoint().minus(this.position);
-			const angle = Math.PI - Math.atan2(endPointOffset.getY(), endPointOffset.getX());
-			const startAngle = rotationAngle;
+			const startAngle = rotationAngle + Math.PI / 2 + Math.atan2(endPointOffset.getY(), endPointOffset.getX());
+			const angle = 0.3;
 			const style = this.style.deepClone();
 			style.setPenWidth(this.style.getPenWidth() * (1 + Math.abs(rotatedNormal.getZ())) / 2);
 			return new EllipseArcShape(center, -rotationAngle, smallRadius, largeRadius,
