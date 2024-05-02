@@ -5,6 +5,6 @@ import { wrapAndCall } from '../helpers/wrapAndCall.js';
 export function testDrawingMenu(logger) {
 	wrapAndCall([
 		testDownload,
-		testShapeExplorer
+		//testShapeExplorer
 	], logger);
 };

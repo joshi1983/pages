@@ -123,7 +123,11 @@ export class SVGVector2DDrawer extends Vector2DDrawer {
 		drawLine(this, line);
 	}
 
-	drawOrientedCircle(circle, ctx) {
+	drawOrientedArc(arc) {
+		this.drawEllipseArc(arc.getZProjectionShape());
+	}
+
+	drawOrientedCircle(circle) {
 		this.drawEllipse(circle.getZProjectionShape());
 	}
 

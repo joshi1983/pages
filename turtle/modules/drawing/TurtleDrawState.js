@@ -15,6 +15,7 @@ import { LineSegmentShape } from './vector/shapes/LineSegmentShape.js';
 import { optimizeClosedPath } from './vector/drawing_optimization/optimizeClosedPath.js';
 import { Orientation2D } from './vector/Orientation2D.js';
 import { Orientation3D } from './vector/Orientation3D.js';
+import { OrientedArcShape } from './vector/shapes/OrientedArcShape.js';
 import { OrientedCircleShape } from './vector/shapes/OrientedCircleShape.js';
 import { PathShape } from './vector/shapes/PathShape.js';
 import { processPenUpStyle } from './turtle-draw-state/processPenUpStyle.js';
@@ -56,7 +57,12 @@ export class TurtleDrawState extends EventDispatcher {
 	arc(radius, angle) {
 		const style = this.style.deepClone();
 		style.clearFill();
-		return getSimplestShape(new ArcShape(new Vector3D(this.position), this.orientation.getHeadingRadians(), radius, angle, style));
+		if (this.orientation instanceof Orientation3D) {
+			const orientation = this.orientation.clone();
+			return new OrientedArcShape(new Vector3D(this.position), orientation, radius, angle, style);
+		}
+		return getSimplestShape(new ArcShape(new Vector3D(this.position), this.orientation.getHeadingRadians(),
+			radius, angle, style));
 	}
 
 	arc2(radius, angleRadians) {

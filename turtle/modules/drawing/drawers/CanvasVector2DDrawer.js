@@ -1,5 +1,6 @@
 import { AbstractCanvasDrawer } from './AbstractCanvasDrawer.js';
 import { AlphaColour } from '../../AlphaColour.js';
+import { CircleShape } from '../vector/shapes/CircleShape.js';
 import { Colour } from '../../Colour.js';
 import { drawPath } from './canvas/drawPath.js';
 import { drawTurtle } from '../drawTurtle.js';
@@ -7,6 +8,7 @@ import { ellipseAngleChange } from './canvas/ellipseAngleChange.js';
 import { getNumCyclesForShapeAndGradient } from '../vector/shapes/gradients/getNumCyclesForShapeAndGradient.js';
 import { LineCap } from '../vector/shapes/style/LineCap.js';
 import { LineJoinStyle } from '../vector/shapes/style/LineJoinStyle.js';
+import { ShapeStyle } from '../vector/shapes/style/ShapeStyle.js';
 import { Transparent } from '../../Transparent.js';
 import { Vector2D } from '../vector/Vector2D.js';
 import { Vector2DDrawer } from '../vector/Vector2DDrawer.js';
@@ -94,6 +96,20 @@ export class CanvasVector2DDrawer extends AbstractCanvasDrawer {
 			ctx.stroke();
 			ctx.closePath();
 		}
+	}
+
+	drawOrientedArc(orientedArcShape, ctx) {
+		const start = orientedArcShape.getStartPoint();
+		const end = orientedArcShape.getEndPoint();
+		const style = new ShapeStyle();
+		style.setPenWidth(0);
+		style.setFillColor(new Colour(100, 0, 255));
+		const radius = 8;
+		let c = new CircleShape(start, radius, style);
+		this.drawCircle(c, ctx);
+		c = new CircleShape(end, radius, style);
+		this.drawCircle(c, ctx);
+		this.drawEllipseArc(orientedArcShape.getZProjectionShape(), ctx);
 	}
 
 	drawOrientedCircle(circle, ctx) {
