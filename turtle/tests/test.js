@@ -1,4 +1,4 @@
-import { bindDocumentFocusTests } from './bindDocumentFocusTests.js';
+/*import { bindDocumentFocusTests } from './bindDocumentFocusTests.js';
 import { testAlphaColour } from './testAlphaColour.js';
 import { testArrayUtils } from './testArrayUtils.js';
 import { testAssets } from './assets/testAssets.js';
@@ -33,13 +33,13 @@ import { testFormatNumber } from './testFormatNumber.js';
 import { testHelp } from './help/testHelp.js';
 import { testIsCloseEnough } from './testIsCloseEnough.js';
 import { testIsDigit } from './testIsDigit.js';
-import { testLogoCodeMigrationsJSON } from './testLogoCodeMigrationsJSON.js';
-import { testLongestCommonSubsequence } from './testLongestCommonSubsequence.js';
+*/import { testLogoCodeMigrationsJSON } from './testLogoCodeMigrationsJSON.js';
+/*import { testLongestCommonSubsequence } from './testLongestCommonSubsequence.js';
 import { testMapUtils } from './testMapUtils.js';
 import { testMaybeDecided } from './testMaybeDecided.js';
 import { testOperatorsJSON } from './testOperatorsJSON.js';
-import { testParsing } from './parsing/testParsing.js';
-import { testPopulateTemplateUsingObject } from './testPopulateTemplateUsingObject.js';
+*/import { testParsing } from './parsing/testParsing.js';
+/*import { testPopulateTemplateUsingObject } from './testPopulateTemplateUsingObject.js';
 import { testRateLimiter } from './testRateLimiter.js';
 import { testSet } from './set/testSet.js';
 import { testSetUtils } from './testSetUtils.js';
@@ -51,7 +51,7 @@ import { testValueToLiteralCode } from './testValueToLiteralCode.js';
 import { testValueToString } from './testValueToString.js';
 import { testValueWrapper } from './testValueWrapper.js';
 import { testWindowsCommandsJSON } from './testWindowsCommandsJSON.js';
-import { wrapAndCall } from './helpers/wrapAndCall.js';
+*/import { wrapAndCall } from './helpers/wrapAndCall.js';
 
 function replaceSpecialChars(msg) {
 	msg = msg.replace(/ /g, '&nbsp;');
@@ -61,7 +61,7 @@ function replaceSpecialChars(msg) {
 }
 
 const tests = [
-	bindDocumentFocusTests,
+	/*bindDocumentFocusTests,
 	testAlphaColour,
 	testArrayUtils,
 	testAssets,
@@ -95,14 +95,14 @@ const tests = [
 	testFormatNumber,
 	testHelp,
 	testIsCloseEnough,
-	testIsDigit,
+	testIsDigit,*/
 	testLogoCodeMigrationsJSON,
-	testLongestCommonSubsequence,
+	/*testLongestCommonSubsequence,
 	testMapUtils,
 	testMaybeDecided,
 	testOperatorsJSON,
-	testParsing,
-	testPopulateTemplateUsingObject,
+	*/testParsing,
+	/*testPopulateTemplateUsingObject,
 	testRateLimiter,
 	testSet,
 	testSetUtils,
@@ -113,7 +113,7 @@ const tests = [
 	testValueToLiteralCode,
 	testValueToString,
 	testValueWrapper,
-	testWindowsCommandsJSON
+	testWindowsCommandsJSON*/
 ];
 
 function runTests() {

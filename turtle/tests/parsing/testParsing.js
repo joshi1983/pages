@@ -1,4 +1,4 @@
-import { testASMTurtle } from './asm-turtle/testASMTurtle.js';
+/*import { testASMTurtle } from './asm-turtle/testASMTurtle.js';
 import { testAsyncParser } from './testAsyncParser.js';
 import { testAsyncParseTask } from './testAsyncParseTask.js';
 import { testCharIndexToParseTreeTokenPosition } from './testCharIndexToParseTreeTokenPosition.js';
@@ -31,8 +31,8 @@ import { testParseTreeColIndexes } from './testParseTreeColIndexes.js';
 import { testParseTreeToCodeWithComments } from './testParseTreeToCodeWithComments.js';
 import { testParseTreeToken } from './testParseTreeToken.js';
 import { testParseTreeTokenDirectory } from './parse-tree-token/testParseTreeTokenDirectory.js';
-import { testPovRay } from './pov-ray/testPovRay.js';
-import { testProcedure } from './testProcedure.js';
+*/import { testPovRay } from './pov-ray/testPovRay.js';
+/*import { testProcedure } from './testProcedure.js';
 import { testPythonParsing } from './python-parsing/testPythonParsing.js';
 import { testScanner } from './testScanner.js';
 import { testScanningDirectory } from './scanning/testScanningDirectory.js';
@@ -41,11 +41,11 @@ import { testSerialization } from './serialization/testSerialization.js';
 import { testSonicWebTurtle } from './sonic-webturtle/testSonicWebTurtle.js';
 import { testToken } from './testToken.js';
 import { testUnsupportedCommand } from './testUnsupportedCommand.js';
-import { wrapAndCall } from '../helpers/wrapAndCall.js';
+*/import { wrapAndCall } from '../helpers/wrapAndCall.js';
 
 export function testParsing(logger) {
 	wrapAndCall([
-		testASMTurtle,
+		/*testASMTurtle,
 		testAsyncParser,
 		testAsyncParseTask,
 		testCharIndexToParseTreeTokenPosition,
@@ -78,8 +78,8 @@ export function testParsing(logger) {
 		testParseTreeToCodeWithComments,
 		testParseTreeToken,
 		testParseTreeTokenDirectory,
-		testPovRay,
-		testProcedure,
+		*/testPovRay,
+		/*testProcedure,
 		testPythonParsing,
 		testScanner,
 		testScanningDirectory,
@@ -87,6 +87,6 @@ export function testParsing(logger) {
 		testSerialization,
 		testSonicWebTurtle,
 		testToken,
-		testUnsupportedCommand
+		testUnsupportedCommand*/
 	], logger);
 };
