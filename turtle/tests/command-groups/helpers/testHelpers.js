@@ -10,6 +10,7 @@ import { testLinePointDistance } from './testLinePointDistance.js';
 import { testMix } from './testMix.js';
 import { testMixColourish } from './testMixColourish.js';
 import { testNChooseK } from './testNChooseK.js';
+import { testOrientationTowards } from './testOrientationTowards.js';
 import { testPlainDataToWebLogoDataStructure } from './testPlainDataToWebLogoDataStructure.js';
 import { testRandom } from './random/testRandom.js';
 import { testSolveQuartic } from './testSolveQuartic.js';
@@ -31,6 +32,7 @@ export function testHelpers(logger) {
 		testMix,
 		testMixColourish,
 		testNChooseK,
+		testOrientationTowards,
 		testPlainDataToWebLogoDataStructure,
 		testRandom,
 		testSolveQuartic,
