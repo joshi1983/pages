@@ -16,6 +16,7 @@ import { isoTriangle } from './helpers/drawing/isoTriangle.js';
 import { LineCap } from '../drawing/vector/shapes/style/LineCap.js';
 import { LineJoinStyle } from '../drawing/vector/shapes/style/LineJoinStyle.js';
 import { MathCommands } from './MathCommands.js';
+import { orientationTowards } from './helpers/orientationTowards.js';
 import { parallelogram } from './helpers/drawing/parallelogram.js';
 import { processSettings } from './helpers/processSettings.js';
 import { rect } from './helpers/drawing/rect.js';
@@ -288,6 +289,10 @@ export class Turtle extends EventDispatcher {
 
 	orientation() {
 		return this.drawState.getOrientation();
+	}
+
+	otowards(p) {
+		return orientationTowards(this, p);
 	}
 
 	parallelogram(width, slantedHeight, angleDegrees) {
