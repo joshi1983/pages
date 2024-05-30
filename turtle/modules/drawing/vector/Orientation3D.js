@@ -1,5 +1,6 @@
 import { AbstractOrientation } from './AbstractOrientation.js';
 import { clampRadianAngle } from '../../clampRadianAngle.js';
+import { getInverseOfMatrix } from './getInverseOfMatrix.js';
 import { isNumber } from '../../isNumber.js';
 import { matrixMultiplyInPlace3By3 } from './matrixMultiplyInPlace3By3.js';
 import { Vector3D } from './Vector3D.js';
@@ -51,6 +52,14 @@ export class Orientation3D extends AbstractOrientation {
 			this.cachedHeadingRadians = clampRadianAngle(this.cachedHeadingRadians);
 		}
 		return this.cachedHeadingRadians;
+	}
+
+	getInverse() {
+		const inverseM = this.getInverseOfMatrix(this.m);
+		const result = new Orientation3D();
+		result.m = inverseM;
+		result.clearCache();
+		return result;
 	}
 
 	getPitchRadians() {

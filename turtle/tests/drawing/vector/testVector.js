@@ -6,6 +6,9 @@ import { testCamera } from './testCamera.js';
 import { testDrawingBoundingBox } from './testDrawingBoundingBox.js';
 import { testDrawingOptimization } from './drawing_optimization/testDrawingOptimization.js';
 import { testEasing } from './easing/testEasing.js';
+import { testGetDeterminantFromMatrix } from './testGetDeterminantFromMatrix.js';
+import { testGetInverseOfMatrix } from './testGetInverseOfMatrix.js';
+import { testGetTransposeOfMatrix } from './testGetTransposeOfMatrix.js';
 import { testMatrix3D } from './testMatrix3D.js';
 import { testMatrixMultiplyInPlace3By3 } from './testMatrixMultiplyInPlace3By3.js';
 import { testModel3D } from './testModel3D.js';
@@ -13,6 +16,8 @@ import { testOrientation2D } from './testOrientation2D.js';
 import { testOrientation3D } from './testOrientation3D.js';
 import { testOrientation3DAdvanced } from './testOrientation3DAdvanced.js';
 import { testOrientationRotated } from './testOrientationRotated.js';
+import { testProcessToRowEchelonForm } from
+'./testProcessToRowEchelonForm.js';
 import { testShapes } from './shapes/testShapes.js';
 import { testVector2D } from './testVector2D.js';
 import { testVector2DLayer } from './testVector2DLayer.js';
@@ -31,6 +36,9 @@ export function testVector(logger) {
 		testDrawingBoundingBox,
 		testDrawingOptimization,
 		testEasing,
+		testGetDeterminantFromMatrix,
+		testGetInverseOfMatrix,
+		testGetTransposeOfMatrix,
 		testMatrix3D,
 		testMatrixMultiplyInPlace3By3,
 		testModel3D,
@@ -38,6 +46,7 @@ export function testVector(logger) {
 		testOrientation3D,
 		testOrientation3DAdvanced,
 		testOrientationRotated,
+		testProcessToRowEchelonForm,
 		testShapes,
 		testVector2D,
 		testVector2DLayer,
