@@ -91,7 +91,7 @@ class PrivateCodeEditor extends EventDispatcher {
 			if (this.isVisible) {
 				EditorLocalStorage.editorOpened();
 			}
-			super._dispatchEvent('layout', {});
+			super._dispatchEvent('layout', {'name': 'visibility-change', 'isVisible': newVisibility});
 		}
 	}
 
@@ -138,7 +138,7 @@ class PrivateCodeEditor extends EventDispatcher {
 		this.maximizeElement.style.display = 'inline-block';
 		this.restoreElement.style.display = 'none';
 		GraphicsScreen.updateCanvasDimensions();
-		super._dispatchEvent('layout', {});
+		super._dispatchEvent('layout', {'name': 'restore'});
 	}
 
 	maximize() {
@@ -148,7 +148,7 @@ class PrivateCodeEditor extends EventDispatcher {
 		this.restoreElement.style.display = 'inline-block';
 		this.maximizeElement.style.display = 'none';
 		removeHalfWidth();
-		super._dispatchEvent('layout', {});
+		super._dispatchEvent('layout', {'name': 'maximize'});
 	}
 
 	removeAllBreakpoints(reason) {
