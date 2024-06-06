@@ -131,6 +131,12 @@ function testCommandJSONForConsistencyAndValidity(logger) {
 			if (commandInfo.returnTypes === null)
 				plogger('isStaticEvaluationSafe should not be set for a command that returns null but one is indicated safe');
 		}
+		if (commandInfo.isAsync !== undefined) {
+			if (typeof commandInfo.isAsync !== 'boolean')
+				plogger(`isAsync should either be undefined or boolean but found ${commandInfo.isAsync}`);
+			if (commandInfo.groupName === 'async')
+				plogger(`isAsync is implied to be true for every command in group async.  You specified it to be ${commandInfo.isAsync}.`);
+		}
 		if (typeof commandInfo.isIndependentlyUseful !== 'boolean')
 			plogger('Command isIndependentlyUseful should be a boolean but is not at index ' + index + ', primaryName = ' + commandInfo.primaryName);
 		else if (commandInfo.isIndependentlyUseful && ['turtle', 'compiled'].indexOf(commandInfo.commandGroup) === -1) {

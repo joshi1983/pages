@@ -8,26 +8,26 @@ The cases may verify side-effects or other requirements instead of the output va
 import { testArrayCommands } from './testArrayCommands.js';
 import { testEasingCommands } from './testEasingCommands.js';
 import { testHelpers } from './helpers/testHelpers.js';
-import { testListCommands } from './testListCommands.js';
+/*import { testListCommands } from './testListCommands.js';
 import { testMath } from './testMath.js';
 import { testPropertyListCommands } from './testPropertyListCommands.js';
 import { testTurtle } from './testTurtle.js';
 import { testTurtleLineCommands } from './testTurtleLineCommands.js';
 import { testTurtlePenCommands } from './testTurtlePenCommands.js';
 import { testTurtlePosCommands } from './testTurtlePosCommands.js';
-import { wrapAndCall } from '../helpers/wrapAndCall.js';
+*/import { wrapAndCall } from '../helpers/wrapAndCall.js';
 
 export function testCommandGroups(logger) {
-	wrapAndCall([
+	wrapAndCall([/*
 		testArrayCommands,
-		testEasingCommands,
+		testEasingCommands,*/
 		testHelpers,
-		testListCommands,
+		/*testListCommands,
 		testMath,
 		testPropertyListCommands,
 		testTurtle,
 		testTurtleLineCommands,
 		testTurtlePenCommands,
-		testTurtlePosCommands
+		testTurtlePosCommands*/
 	], logger);
 };

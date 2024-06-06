@@ -18,6 +18,8 @@ export function testGetFileFormatFromArrayBuffer(logger) {
 		{'url': 'tests/data/format-classification/test.pdf', 'hintedExtension': 'jpg', 'extension': 'pdf'},
 		{'url': 'tests/data/format-classification/test.png', 'hintedExtension': 'jpg', 'extension': 'png'},
 		{'url': 'tests/data/format-classification/test.gif', 'hintedExtension': 'jpg', 'extension': 'gif'},
+		{'url': 'tests/data/format-classification/test2.gif', 'hintedExtension': 'jpg', 'extension': 'gif'},
+		{'url': 'tests/data/format-classification/test2.gif', 'hintedExtension': 'webp', 'extension': 'gif'},
 		{'url': 'tests/data/format-classification/test.webp', 'hintedExtension': 'png', 'extension': 'webp'},
 		{'url': 'tests/data/format-classification/test.jpg', 'hintedExtension': 'png', 'extension': 'jpg'},
 		{'url': 'tests/data/format-classification/test.bmp', 'hintedExtension': 'bmp', 'extension': 'bmp'},

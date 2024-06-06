@@ -6,7 +6,7 @@ await Command.asyncInit();
 export function createCallCommandInstruction(commandInfo, token, numArgs) {
 	if (numArgs === undefined)
 		numArgs = Command.getArgCount(commandInfo).defaultCount;
-	if (commandInfo.commandGroup === 'async')
+	if (commandInfo.commandGroup === 'async' || commandInfo.isAsync)
 		return new AsyncCallCommandInstruction(commandInfo, numArgs, token);
 	else
 		return new CallCommandInstruction(commandInfo, numArgs, token);

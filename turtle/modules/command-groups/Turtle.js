@@ -1,3 +1,4 @@
+import { animationImage } from './helpers/drawing/animationImage.js';
 import { arcLines } from './helpers/drawing/arcLines.js';
 import { arcsLeft } from './helpers/drawing/arcsLeft.js';
 import { arcsRight } from './helpers/drawing/arcsRight.js';
@@ -51,6 +52,15 @@ export class Turtle extends EventDispatcher {
 			outer._dispatchEvent(e.key, e.details);
 		});
 		processSettings(this);
+	}
+
+	async animation_image(width, height, url, timeRatio) {
+		const shape = await animationImage(this, width, height, url, timeRatio);
+		if (shape.isVisible()) {
+			this.drawing.addForegroundShape(shape);
+			if (this.settings.redrawNeeded !== undefined)
+				shape.addEventListener('load', this.settings.redrawNeeded);
+		}
 	}
 
 	arc(angleDegrees, radius) {

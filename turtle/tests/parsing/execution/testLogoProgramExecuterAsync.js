@@ -1,12 +1,7 @@
 import { asyncProcessExecuterTestCase } from './asyncProcessExecuterTestCase.js';
+import { getUrlBase } from '../../helpers/getUrlBase.js';
 
-let urlBase = document.location.href;
-if (urlBase.indexOf('test.html') !== -1) {
-	const index = urlBase.indexOf('test.html');
-	urlBase = urlBase.substring(0, index);
-}
-if (!urlBase.endsWith('/'))
-	urlBase += '/';
+let urlBase = getUrlBase();
 
 export function testLogoProgramExecuterAsync(logger) {
 	const cases = [
@@ -20,6 +15,9 @@ readJson '${urlBase}json/commands.json'
 make "firstCommand item 1 :data
 print getProperty "firstCommand "primaryName`,
 		'messages': ['abs']
+	},
+	{'code': `animation.image 100 100 '${urlBase}tests/data/format-classification/test2.gif' 0.5\nprint "hi`,
+		'messages': ['hi']
 	}
 	];
 	cases.forEach(function(caseInfo, index) {
