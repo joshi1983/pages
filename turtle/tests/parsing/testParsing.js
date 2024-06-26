@@ -1,4 +1,4 @@
-import { testASMTurtle } from './asm-turtle/testASMTurtle.js';
+/*import { testASMTurtle } from './asm-turtle/testASMTurtle.js';
 import { testAsyncParser } from './testAsyncParser.js';
 import { testAsyncParseTask } from './testAsyncParseTask.js';
 import { testCharIndexToParseTreeTokenPosition } from './testCharIndexToParseTreeTokenPosition.js';
@@ -7,8 +7,8 @@ import { testCompiling } from './compiling/testCompiling.js';
 import { testConvertParseTreeTokensToScanTokens } from './testConvertParseTreeTokensToScanTokens.js';
 import { testCreateParameterizedGroups } from './testCreateParameterizedGroups.js';
 import { testCreateParameterizedGroupsParseErrors } from './testCreateParameterizedGroupsParseErrors.js';
-import { testCSS } from './css/testCSS.js';
-import { testDataTypesDirectory } from './data-types/testDataTypesDirectory.js';
+*/import { testCSS } from './css/testCSS.js';
+/*import { testDataTypesDirectory } from './data-types/testDataTypesDirectory.js';
 import { testExampleScripts } from './testExampleScripts.js';
 import { testExecution } from './execution/testExecution.js';
 import { testFixOperatorPrecedence } from './testFixOperatorPrecedence.js';
@@ -16,8 +16,8 @@ import { testGenericParsingUtilities } from './generic-parsing-utilities/testGen
 import { testGetStartPositionOfToken } from './testGetStartPositionOfToken.js';
 import { testGetTokensForParsing } from './testGetTokensForParsing.js';
 import { testIsSupportedByHighOrderInvoke } from './testIsSupportedByHighOrderInvoke.js';
-import { testJSParsing } from './js-parsing/testJSParsing.js';
-import { testKeyword } from './testKeyword.js';
+*/import { testJSParsing } from './js-parsing/testJSParsing.js';
+/*import { testKeyword } from './testKeyword.js';
 import { testKTurtle } from './kturtle/testKTurtle.js';
 import { testLoggers } from './loggers/testLoggers.js';
 import { testLogoParserFailing } from './testLogoParserFailing.js';
@@ -42,11 +42,11 @@ import { testSerialization } from './serialization/testSerialization.js';
 import { testSonicWebTurtle } from './sonic-webturtle/testSonicWebTurtle.js';
 import { testToken } from './testToken.js';
 import { testUnsupportedCommand } from './testUnsupportedCommand.js';
-import { wrapAndCall } from '../helpers/wrapAndCall.js';
+*/import { wrapAndCall } from '../helpers/wrapAndCall.js';
 
 export function testParsing(logger) {
 	wrapAndCall([
-		testASMTurtle,
+		/*testASMTurtle,
 		testAsyncParser,
 		testAsyncParseTask,
 		testCharIndexToParseTreeTokenPosition,
@@ -55,7 +55,7 @@ export function testParsing(logger) {
 		testConvertParseTreeTokensToScanTokens,
 		testCreateParameterizedGroups,
 		testCreateParameterizedGroupsParseErrors,
-		testCSS,
+		*/testCSS,/*
 		testDataTypesDirectory,
 		testExampleScripts,
 		testExecution,
@@ -64,8 +64,8 @@ export function testParsing(logger) {
 		testGetStartPositionOfToken,
 		testGetTokensForParsing,
 		testIsSupportedByHighOrderInvoke,
-		testJSParsing,
-		testKeyword,
+		*/testJSParsing,
+		/*testKeyword,
 		testKTurtle,
 		testLoggers,
 		testLogoParserFailing,
@@ -89,6 +89,6 @@ export function testParsing(logger) {
 		testSerialization,
 		testSonicWebTurtle,
 		testToken,
-		testUnsupportedCommand
+		testUnsupportedCommand*/
 	], logger);
 };

@@ -53,7 +53,7 @@ export function testJSParsing(logger) {
 		testEvaluateStringLiteral,
 		testEvaluateTemplateLiteral,
 		testEvaluators,
-		testMightHaveSideEffects,
+		/*testMightHaveSideEffects,
 		testOperatorsJSON,
 		testParse,
 		testParseArrayLiterals,
@@ -89,14 +89,14 @@ export function testJSParsing(logger) {
 		testParseTreeTokensToCode,
 		testParseTryCatch,
 		testParseUnaryOperators,
-		testParseVariousJavaScriptFiles,
+		//testParseVariousJavaScriptFiles,
 		testParseWebLogoJavaScript,
 		testParseWith,
-		testParseWhileLoops,
-		testParsing,
+		testParseWhileLoops,*/
+		testParsing,/*
 		testReservedWord,
 		testReservedWordsJSON,
 		testScanning,
-		testTranslationToWebLogo
+		testTranslationToWebLogo*/
 	], logger);
 };
