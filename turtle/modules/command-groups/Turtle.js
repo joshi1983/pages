@@ -22,6 +22,7 @@ import { processSettings } from './helpers/processSettings.js';
 import { rect } from './helpers/drawing/rect.js';
 import { regularPolygon } from './helpers/drawing/regularPolygon.js';
 import { regularStar } from './helpers/drawing/regularStar.js';
+import { roundIsoStar } from './helpers/drawing/roundIsoStar.js';
 import { roundIsoTriangle } from './helpers/drawing/roundIsoTriangle.js';
 import { roundRect } from './helpers/drawing/roundRect.js';
 import { roundRegularPolygon } from './helpers/drawing/roundRegularPolygon.js';
@@ -395,6 +396,10 @@ export class Turtle extends EventDispatcher {
 
 	rollRight(angleDegrees) {
 		this.drawState.rollRight(angleDegrees * MathCommands.degToRadianScale);
+	}
+
+	roundIsoStar(radius1, radius2, numPoints, cornerRadius1, cornerRadius2) {
+		roundIsoStar(this, radius1, radius2, numPoints, cornerRadius1, cornerRadius2);
 	}
 
 	roundIsoTriangle(baseWidth, height, cornerRadius) {
