@@ -1,5 +1,6 @@
 import { BufferedParseLogger } from '../../parsing/loggers/BufferedParseLogger.js';
 import { CodeEditor } from '../CodeEditor.js';
+import { codeToTranslator } from './codeToTranslator.js';
 import { CommandBoxMessages } from '../CommandBoxMessages.js';
 import { CommandBoxParseLogger } from '../../parsing/loggers/CommandBoxParseLogger.js';
 import { EventQueue } from '../EventQueue.js';
@@ -7,33 +8,14 @@ import { fixCode } from './code-fixer/fixCode.js';
 import { formatCode } from './format/formatCode.js';
 import { harmonizeCase } from './harmonize-case/harmonizeCase.js';
 import { hasUnsafeErrorMessages } from './code-fixer/hasUnsafeErrorMessages.js';
-import { isLikelyASMTurtle } from '../../parsing/asm-turtle/isLikelyASMTurtle.js';
-import { isLikelyCodeHeartTurtleScript } from '../code-editor/code-fixer/fixers/codeheart-turtlescript/isLikelyCodeHeartTurtleScript.js';
-import { isLikelyKTurtle } from '../../parsing/kturtle/isLikelyKTurtle.js';
-import { isLikelyLogo3D } from './code-fixer/fixers/logo-3d/isLikelyLogo3D.js';
-import { isLikelyPapert } from './code-fixer/fixers/papert/isLikelyPapert.js';
-import { isLikelyPovRay } from '../../parsing/pov-ray/isLikelyPovRay.js';
-import { isLikelyPythonCode } from '../../parsing/python-parsing/isLikelyPythonCode.js';
-import { isLikelySonicWebTurtle } from '../../parsing/sonic-webturtle/isLikelySonicWebTurtle.js';
 import { getProceduresMap } from '../../parsing/parse-tree-analysis/getProceduresMap.js';
-import { logo3DToWebLogo } from './code-fixer/fixers/logo-3d/logo3DToWebLogo.js';
 import { LogoParser } from '../../parsing/LogoParser.js';
-import { papertToWebLogo } from './code-fixer/fixers/papert/papertToWebLogo.js';
 import { ParseLogger } from '../../parsing/loggers/ParseLogger.js';
 import { refreshAnimationSetupFromTree } from './refreshAnimationSetupFromTree.js';
-import { translate as translateASMTurtle } from '../../parsing/asm-turtle/translation-to-weblogo/translate.js';
-import { translate as translateKTurtle } from '../../parsing/kturtle/translation-to-weblogo/translate.js';
-import { translate as translatePovRay } from '../../parsing/pov-ray/translation-to-weblogo/translate.js';
-import { translate as translateSonicWebTurtle } from '../../parsing/sonic-webturtle/translation-to-weblogo/translate.js';
-import { translateToWebLogo as translateCodeHeartTurtleScriptToWebLogo } from
-'../../components/code-editor/code-fixer/fixers/codeheart-turtlescript/translateToWebLogo.js';
-import { asyncInit, translatePythonCodeToWebLogo } from '../../parsing/python-parsing/translatePythonCodeToWebLogo.js';
 
 const menuItem = CodeEditor.editor.querySelector('#editor-fix-code');
 const codeFixCache = new Map();
 const parseLogger = new BufferedParseLogger();
-let isPythonParserLoaded = false;
-asyncInit().then(() => isPythonParserLoaded = true);
 
 function getFixedCode() {
 	const originalCode = CodeEditor.getSourceCode();
@@ -42,31 +24,8 @@ function getFixedCode() {
 		let intermediateCode = originalCode;
 		let adjustAesthetics = false;
 		parseLogger.reset();
-		if (isLikelyPythonCode(intermediateCode) && isPythonParserLoaded)
-			intermediateCode = translatePythonCodeToWebLogo(intermediateCode);
-		else if (isLikelyLogo3D(intermediateCode)) {
-			intermediateCode = logo3DToWebLogo(intermediateCode, parseLogger);
-			adjustAesthetics = true;
-		}
-		else if (isLikelyPapert(intermediateCode)) {
-			intermediateCode = papertToWebLogo(intermediateCode, parseLogger);
-			adjustAesthetics = true;
-		}
-		else if (isLikelyKTurtle(intermediateCode)) {
-			intermediateCode  = translateKTurtle(intermediateCode);
-		}
-		else if (isLikelyCodeHeartTurtleScript(intermediateCode)) {
-			intermediateCode = translateCodeHeartTurtleScriptToWebLogo(intermediateCode);
-		}
-		else if (isLikelyASMTurtle(intermediateCode)) {
-			intermediateCode = translateASMTurtle(intermediateCode);
-		}
-		else if (isLikelyPovRay(intermediateCode)) {
-			intermediateCode = translatePovRay(intermediateCode);
-		}
-		else if (isLikelySonicWebTurtle(intermediateCode)) {
-			intermediateCode = translateSonicWebTurtle(intermediateCode);
-		}
+		[translator, adjustAesthetics] = codeToTranslator(intermediateCode);
+		intermediateCode = translator(intermediateCode);
 		const tempParseLogger = new BufferedParseLogger();
 		const tree = LogoParser.getParseTree(intermediateCode, tempParseLogger);
 		let fixedCode = intermediateCode;
