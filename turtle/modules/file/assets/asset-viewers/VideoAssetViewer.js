@@ -22,7 +22,7 @@ export class VideoAssetViewer extends AbstractAssetViewer {
 		return this.div;
 	}
 
-	static matchesExtension(extension) {
+	static async matchesExtension(extension) {
 		return videoExtensions.has(extension);
 	}
 };

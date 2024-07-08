@@ -22,7 +22,7 @@ export class AudioAssetViewer extends AbstractAssetViewer {
 		return this.div;
 	}
 
-	static matchesExtension(extension) {
+	static async matchesExtension(extension) {
 		return audioExtensions.has(extension);
 	}
 };

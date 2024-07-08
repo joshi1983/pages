@@ -47,9 +47,10 @@ export function showExistingAssetDialog(assetFilename) {
 		deleteButton.style.display = 'none'; // hide cancel/delete button.
 	}
 	else {
-		const viewer = GeneralAssetViewer.createAssetViewer(asset);
-		const div = viewer.getDiv();
-		display.appendChild(div);
+		GeneralAssetViewer.createAssetViewer(asset).then(function(viewer) {
+			const div = viewer.getDiv();
+			display.appendChild(div);
+		});
 	}
 	return promise;
 };

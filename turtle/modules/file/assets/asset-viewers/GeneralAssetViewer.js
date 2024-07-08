@@ -1,4 +1,5 @@
 import { AbstractAssetViewer } from './AbstractAssetViewer.js';
+import { AnimatedGifAssetViewer } from './AnimatedGifAssetViewer.js';
 import { AudioAssetViewer } from './AudioAssetViewer.js';
 import { FileExtensions } from '../../../drawing-menu/download/FileExtensions.js';
 import { ImageAssetViewer } from './ImageAssetViewer.js';
@@ -6,6 +7,7 @@ import { PlainTextAssetViewer } from './PlainTextAssetViewer.js';
 import { VideoAssetViewer } from './VideoAssetViewer.js';
 
 const viewerClasses = [
+	AnimatedGifAssetViewer,
 	AudioAssetViewer,
 	ImageAssetViewer,
 	PlainTextAssetViewer,
@@ -17,11 +19,11 @@ export class GeneralAssetViewer extends AbstractAssetViewer {
 		super(asset);
 	}
 
-	static createAssetViewer(asset) {
+	static async createAssetViewer(asset) {
 		const extension = FileExtensions.getFileExtensionFromFilename(asset.filename);
 		for (let i = 0; i < viewerClasses.length; i++) {
 			const viewerClass = viewerClasses[i];
-			if (viewerClass.matchesExtension(extension))
+			if (await viewerClass.matchesExtension(extension, asset.getBase64URI()))
 				return new viewerClass(asset);
 		}
 	}
@@ -48,7 +50,7 @@ export class GeneralAssetViewer extends AbstractAssetViewer {
 		return this.div;
 	}
 
-	static matchesExtension(extension) {
+	static async matchesExtension(extension) {
 		return true;
 	}
 };

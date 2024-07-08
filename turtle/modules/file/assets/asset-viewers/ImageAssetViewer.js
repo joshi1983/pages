@@ -25,7 +25,7 @@ export class ImageAssetViewer extends AbstractAssetViewer {
 		return this.div;
 	}
 
-	static matchesExtension(extension) {
+	static async matchesExtension(extension) {
 		return imageExtensions.has(extension);
 	}
 };

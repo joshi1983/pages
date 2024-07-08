@@ -19,7 +19,7 @@ export class PlainTextAssetViewer extends AbstractAssetViewer {
 		return this.div;
 	}
 
-	static matchesExtension(extension) {
+	static async matchesExtension(extension) {
 		return textExtensions.has(extension);
 	}
 };

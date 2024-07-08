@@ -21,9 +21,10 @@ function bindUploadInput(uploadInput, filenameInput, viewerContainer, saveButton
 			reader.onload = function(readerEvt) {
 				const binaryString = readerEvt.target.result;
 				asset = new Asset(filename, btoa(binaryString));
-				const viewer = GeneralAssetViewer.createAssetViewer(asset);
-				viewerContainer.innerText = '';
-				viewerContainer.appendChild(viewer.getDiv());
+				GeneralAssetViewer.createAssetViewer(asset).then(function(viewer) {
+					viewerContainer.innerText = '';
+					viewerContainer.appendChild(viewer.getDiv());
+				});
 			};
 			reader.readAsBinaryString(file);
 			saveButton.removeAttribute('disabled');

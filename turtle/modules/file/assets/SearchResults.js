@@ -39,8 +39,8 @@ export class PrivateSearchResults extends EventDispatcher {
 		}
 		else {
 			const outer = this;
-			filteredAssets.forEach(function(asset) {
-				const viewer = GeneralAssetViewer.createAssetViewer(asset);
+			filteredAssets.forEach(async function(asset) {
+				const viewer = await GeneralAssetViewer.createAssetViewer(asset);
 				const filenameSpan = document.createElement('span');
 				filenameSpan.classList.add('asset-filename');
 				filenameSpan.innerText = asset.filename;

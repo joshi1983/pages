@@ -66,11 +66,12 @@ export function showRenameAssetDialog(assetFilename) {
 			else
 				okButton.removeAttribute('disabled');
 		}
-		const viewer = GeneralAssetViewer.createAssetViewer(asset);
-		const div = viewer.getDiv();
-		display.appendChild(div);
-		newNameInput.addEventListener('input', filenameInputRefreshed);
-		filenameInputRefreshed();
+		GeneralAssetViewer.createAssetViewer(asset).then(function(viewer) {
+			const div = viewer.getDiv();
+			display.appendChild(div);
+			newNameInput.addEventListener('input', filenameInputRefreshed);
+			filenameInputRefreshed();
+		});
 	}
 	return promise;
 };
