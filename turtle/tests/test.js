@@ -19,8 +19,8 @@ import { testCommandsJSONDescription } from './testCommandsJSONDescription.js';
 import { testCommandsJSONHyperlinks } from './testCommandsJSONHyperlinks.js';
 import { testCommandsJSONLengthRangeInfo } from './testCommandsJSONLengthRangeInfo.js';
 import { testCommandsJSONOrderByPrimaryName } from './testCommandsJSONOrderByPrimaryName.js';
-*/import { testComponents } from './components/testComponents.js';
-/*import { testDeepEquality } from './testDeepEquality.js';
+import { testComponents } from './components/testComponents.js';
+import { testDeepEquality } from './testDeepEquality.js';
 import { testDebugging } from './debugging/testDebugging.js';
 import { testDelay } from './testDelay.js';
 import { testDrawing } from './drawing/testDrawing.js';
@@ -83,8 +83,8 @@ const tests = [
 	testCommandsJSONHyperlinks,
 	testCommandsJSONLengthRangeInfo,
 	testCommandsJSONOrderByPrimaryName,
-	*/testComponents,
-	/*testDeepEquality,
+	testComponents,
+	testDeepEquality,
 	testDebugging,
 	testDelay,
 	testDrawing,
