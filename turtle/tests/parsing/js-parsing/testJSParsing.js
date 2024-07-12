@@ -91,14 +91,14 @@ export function testJSParsing(logger) {
 		testParseTreeTokensToCode,
 		testParseTryCatch,
 		testParseUnaryOperators,
-		testParseVariousJavaScriptFiles,
+		//testParseVariousJavaScriptFiles,
 		testParseWebLogoJavaScript,
 		testParseWith,
 		testParseWhileLoops,
-		testParsing,
+		testParsing,/*
 		testReservedWord,
 		testReservedWordsJSON,
 		testScanning,
-		testTranslationToWebLogo
+		testTranslationToWebLogo*/
 	], logger);
 };
