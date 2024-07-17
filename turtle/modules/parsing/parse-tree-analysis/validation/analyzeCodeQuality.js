@@ -45,6 +45,7 @@ import { validateOutstandinglyLongProcedures } from './validateOutstandinglyLong
 import { validateOverwrittenParameters } from './validateOverwrittenParameters.js';
 import { validatePenUp } from './validatePenUp.js';
 import { validatePolyCommandUsage } from './validatePolyCommandUsage.js';
+import { validateProceduralImageCalls } from './validateProceduralImageCalls.js';
 import { validateProcedureInProcedure } from './validateProcedureInProcedure.js';
 import { validateProcedureNames } from './validateProcedureNames.js';
 import { validateProcedureParametersNotNull } from './validateProcedureParametersNotNull.js';
@@ -107,6 +108,7 @@ const validators = [
 	validateOutstandinglyLongProcedures,
 	validateOverwrittenParameters,
 	validatePolyCommandUsage,
+	validateProceduralImageCalls,
 	validateProcedureInProcedure,
 	validateProcedureNames,
 	validateProcedureParametersNotNull,

@@ -513,7 +513,8 @@ end
 fillShape 100 true
 print "hi`,
 'ignoreWarnings': true,
-'messages': ['hi']}
+'messages': ['hi']
+	}
 	];
 	processExecuterTestCases(cases, logger);
 };

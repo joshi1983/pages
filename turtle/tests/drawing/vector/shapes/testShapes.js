@@ -10,6 +10,9 @@ import { testOrientedArcShape } from './testOrientedArcShape.js';
 import { testOrientedCircleShape } from './testOrientedCircleShape.js';
 import { testPathShape } from './testPathShape.js';
 import { testPathShapeWithCurves } from './testPathShapeWithCurves.js';
+import { testProceduralRasterRectangleShape } from './testProceduralRasterRectangleShape.js';
+import { testProceduralRasterRectangleDirectory } from
+	'./procedural-raster-rectangle/testProceduralRasterRectangleDirectory.js';
 import { testRasterRectangleShape } from './testRasterRectangleShape.js';
 import { testSphereShape } from './testSphereShape.js';
 import { testStyle } from './style/testStyle.js';
@@ -30,6 +33,8 @@ export function testShapes(logger) {
 		testOrientedCircleShape,
 		testPathShape,
 		testPathShapeWithCurves,
+		testProceduralRasterRectangleShape,
+		testProceduralRasterRectangleDirectory,
 		testRasterRectangleShape,
 		testSphereShape,
 		testStyle,

@@ -44,6 +44,7 @@ import { testValidateOutstandinglyLongProcedures } from './testValidateOutstandi
 import { testValidateOverwrittenParameters } from './testValidateOverwrittenParameters.js';
 import { testValidatePenUp } from './testValidatePenUp.js';
 import { testValidatePolyCommandUsage } from './testValidatePolyCommandUsage.js';
+import { testValidateProceduralImageCalls } from './testValidateProceduralImageCalls.js';
 import { testValidateProcedureInProcedure } from './testValidateProcedureInProcedure.js';
 import { testValidateProcedureNames } from './testValidateProcedureNames.js';
 import { testValidateProcedureParametersNotNull } from './testValidateProcedureParametersNotNull.js';
@@ -111,6 +112,7 @@ testValidateOutstandinglyLongProcedures,
 testValidateOverwrittenParameters,
 testValidatePenUp,
 testValidatePolyCommandUsage,
+testValidateProceduralImageCalls,
 testValidateProcedureInProcedure,
 testValidateProcedureNames,
 testValidateProcedureParametersNotNull,

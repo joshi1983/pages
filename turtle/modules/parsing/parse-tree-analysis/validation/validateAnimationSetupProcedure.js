@@ -4,7 +4,7 @@ import { dataTypesToEnglish } from '../../../help/command-details/dataTypesToEng
 import { getAllDescendentsAsArray } from '../../generic-parsing-utilities/getAllDescendentsAsArray.js';
 import { isNumber } from '../../../isNumber.js';
 import { isOutputToken } from '../isOutputToken.js';
-import { validateNoParameterMustOutputProcedure } from './validateNoParameterMustOutputProcedure.js';
+import { validateNoParameterMustOutputProcedure } from './helpers/validateNoParameterMustOutputProcedure.js';
 await DataTypes.asyncInit();
 const plistTypes = new DataTypes('plist');
 
