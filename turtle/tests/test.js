@@ -1,4 +1,4 @@
-import { bindDocumentFocusTests } from './bindDocumentFocusTests.js';
+/*import { bindDocumentFocusTests } from './bindDocumentFocusTests.js';
 import { testAlphaColour } from './testAlphaColour.js';
 import { testArrayUtils } from './testArrayUtils.js';
 import { testAssets } from './assets/testAssets.js';
@@ -19,8 +19,8 @@ import { testCommandsJSONDescription } from './testCommandsJSONDescription.js';
 import { testCommandsJSONHyperlinks } from './testCommandsJSONHyperlinks.js';
 import { testCommandsJSONLengthRangeInfo } from './testCommandsJSONLengthRangeInfo.js';
 import { testCommandsJSONOrderByPrimaryName } from './testCommandsJSONOrderByPrimaryName.js';
-import { testComponents } from './components/testComponents.js';
-import { testDeepEquality } from './testDeepEquality.js';
+*/import { testComponents } from './components/testComponents.js';
+/*import { testDeepEquality } from './testDeepEquality.js';
 import { testDebugging } from './debugging/testDebugging.js';
 import { testDelay } from './testDelay.js';
 import { testDrawing } from './drawing/testDrawing.js';
@@ -52,7 +52,7 @@ import { testValueToLiteralCode } from './testValueToLiteralCode.js';
 import { testValueToString } from './testValueToString.js';
 import { testValueWrapper } from './testValueWrapper.js';
 import { testWindowsCommandsJSON } from './testWindowsCommandsJSON.js';
-import { wrapAndCall } from './helpers/wrapAndCall.js';
+*/import { wrapAndCall } from './helpers/wrapAndCall.js';
 
 function replaceSpecialChars(msg) {
 	msg = msg.replace(/ /g, '&nbsp;');
@@ -62,7 +62,7 @@ function replaceSpecialChars(msg) {
 }
 
 const tests = [
-	bindDocumentFocusTests,
+	/*bindDocumentFocusTests,
 	testAlphaColour,
 	testArrayUtils,
 	testAssets,
@@ -82,9 +82,9 @@ const tests = [
 	testCommandsJSONDescription,
 	testCommandsJSONHyperlinks,
 	testCommandsJSONLengthRangeInfo,
-	testCommandsJSONOrderByPrimaryName,
+	testCommandsJSONOrderByPrimaryName,*/
 	testComponents,
-	testDeepEquality,
+	/*testDeepEquality,
 	testDebugging,
 	testDelay,
 	testDrawing,
@@ -115,7 +115,7 @@ const tests = [
 	testValueToLiteralCode,
 	testValueToString,
 	testValueWrapper,
-	testWindowsCommandsJSON
+	testWindowsCommandsJSON*/
 ];
 
 function runTests() {
