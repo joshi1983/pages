@@ -1,0 +1,15 @@
+; steps to reproduce the bug:
+; 1. Run this code.
+; 2. Click Drawing -> Download -> to SVG
+; 3. Look at the SVG export.  Notice that a big rounded rect shows when it shouldn't.
+make "radius 100
+make "arcAngle 70
+make "innerPeddleArcs [
+	[:arcAngle / 2 0] [-:arcAngle 0.58] [(:arcAngle - 180) / 2 0] 
+]
+setPenSize 0
+setFillColor "blue
+polyStart
+arcLines :innerPeddleArcs :radius
+arcLines reverse :innerPeddleArcs :radius
+polyEnd

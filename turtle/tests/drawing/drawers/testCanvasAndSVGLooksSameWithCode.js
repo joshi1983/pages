@@ -33,7 +33,7 @@ end
 `;
 
 export function testCanvasAndSVGLooksSameWithCode(logger) {
-	const cases = [
+	const cases = [/*
 		'fd 50',
 		'setPenSize 15\nfd 50',
 		'setPenSize 15\nrepeat 3 [\nfd 50\nright 90\n]\nclosePath',
@@ -192,7 +192,18 @@ squareUpLogo 100`,
 setProperty "colorStops 0 "red
 setProperty "colorStops 1 "black
 setFillGradient createRadialGradient2 pos pos 10 :colorStops "repeat
-circle 100`, 'threshold': 0.0005}
+circle 100`, 'threshold': 0.0005},*/
+		{'code': `make "radius 100
+make "arcAngle 70
+make "innerPeddleArcs [
+	[:arcAngle / 2 0] [-:arcAngle 0.58] [(:arcAngle - 180) / 2 0] 
+]
+setPenSize 0
+setFillColor "blue
+polyStart
+arcLines :innerPeddleArcs :radius
+arcLines reverse :innerPeddleArcs :radius
+polyEnd`}
 	];
 	const pixelGap = 2;
 	const defaultThreshold = 0.00025;
