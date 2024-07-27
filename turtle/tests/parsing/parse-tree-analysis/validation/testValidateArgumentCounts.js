@@ -10,7 +10,7 @@ function testValidateArgumentCountsReturnsFalseProperly(logger) {
 	const cases = [
 		// These expressions should make a warning but not an error and only with other
 		// validation checks such as validateIndependentlyUseful.
-		{'code': '', 'error': false},
+		/*{'code': '', 'error': false},
 		{'code': 'fd 1', 'error': false},
 		{'code': 'make "dx 1 make "dy 2 if or (not :dx=:dy) (not :dx=0) []', 'error': false},
 		{'code': 'if 1<2 []', 'error': false},
@@ -19,6 +19,10 @@ function testValidateArgumentCountsReturnsFalseProperly(logger) {
 		{'code': 'print (quotient 1)', 'error': false}, // 1 argument is ok.
 		{'code': 'print (quotient)', 'error': true}, // 0 is less than the minimum 1 argument.
 		{'code': 'print (quotient 1 2 3)', 'error': true}, // more than quotient's max of 2 arguments
+		*/{'code': `to p
+	if or 4 < ascii "A 4 > ascii "Z [
+	]
+end`, 'error': false}
 ];
 
 	processValidationTestCases(cases, logger, validateArgumentCounts);

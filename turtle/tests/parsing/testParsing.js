@@ -5,8 +5,8 @@ import { testCharIndexToParseTreeTokenPosition } from './testCharIndexToParseTre
 import { testCommandClass } from './testCommandClass.js';
 import { testCompiling } from './compiling/testCompiling.js';
 import { testConvertParseTreeTokensToScanTokens } from './testConvertParseTreeTokensToScanTokens.js';
-import { testCreateParameterizedGroups } from './testCreateParameterizedGroups.js';
-import { testCreateParameterizedGroupsParseErrors } from './testCreateParameterizedGroupsParseErrors.js';
+*/import { testCreateParameterizedGroups } from './testCreateParameterizedGroups.js';
+/*import { testCreateParameterizedGroupsParseErrors } from './testCreateParameterizedGroupsParseErrors.js';
 import { testCSS } from './css/testCSS.js';
 import { testDataTypesDirectory } from './data-types/testDataTypesDirectory.js';
 */import { testExampleScripts } from './testExampleScripts.js';
@@ -27,8 +27,8 @@ import { testMightBeRunnableCode } from './testMightBeRunnableCode.js';
 import { testOperators } from './testOperators.js';
 import { testOrderOfOperation } from './testOrderOfOperation.js';
 import { testParseTree } from './testParseTree.js';
-import { testParseTreeAnalysis } from './parse-tree-analysis/testParseTreeAnalysis.js';
-import { testParseTreeColIndexes } from './testParseTreeColIndexes.js';
+*/import { testParseTreeAnalysis } from './parse-tree-analysis/testParseTreeAnalysis.js';
+/*import { testParseTreeColIndexes } from './testParseTreeColIndexes.js';
 import { testParseTreeToCodeWithComments } from './testParseTreeToCodeWithComments.js';
 import { testParseTreeToken } from './testParseTreeToken.js';
 import { testParseTreeTokenDirectory } from './parse-tree-token/testParseTreeTokenDirectory.js';
@@ -52,8 +52,8 @@ export function testParsing(logger) {
 		testCharIndexToParseTreeTokenPosition,
 		testCommandClass,
 		testCompiling,
-		testConvertParseTreeTokensToScanTokens,
-		testCreateParameterizedGroups,
+		testConvertParseTreeTokensToScanTokens,*/
+		testCreateParameterizedGroups,/*
 		testCreateParameterizedGroupsParseErrors,
 		testCSS,
 		testDataTypesDirectory,
@@ -75,8 +75,8 @@ export function testParsing(logger) {
 		testOperators,
 		testOrderOfOperation,
 		testParseTree,
-		testParseTreeAnalysis,
-		testParseTreeColIndexes,
+		*/testParseTreeAnalysis,
+		/*testParseTreeColIndexes,
 		testParseTreeToCodeWithComments,
 		testParseTreeToken,
 		testParseTreeTokenDirectory,

@@ -7,6 +7,7 @@ import { ParseTreeTokenType } from '../../modules/parsing/ParseTreeTokenType.js'
 import { prefixWrapper } from '../helpers/prefixWrapper.js';
 import { scrapeProceduresFromParseTreeTokens } from '../../modules/parsing/parse-tree-analysis/scrapeProceduresFromParseTreeTokens.js';
 import { TestParseLogger } from '../helpers/TestParseLogger.js';
+import { wrapAndCall } from '../helpers/wrapAndCall.js';
 await LogoParser.asyncInit();
 
 function stringifyTokens(tokens) {
@@ -133,6 +134,11 @@ function testWithCodeSnippets(logger) {
 			'totalParameterizedTokens': 2,
 			'numFirstLevelTokens': 1
 		},
+		{'code': `to p
+	if or 4 < ascii "A 4 > ascii "Z [
+	]
+end`, 'totalParameterizedTokens': 4,
+	'numFirstLevelTokens': 1}
 	];
 	cases.forEach(function(caseInfo) {
 		const log = prefixWrapper('Failure while processing code: ' + caseInfo.code, logger);
@@ -228,7 +234,67 @@ function testWithTokens(logger) {
 				{'val': 'end', 'colIndex': 15, 'type': ParseTreeTokenType.PROCEDURE_END_KEYWORD},
 			]}
 		]
-	}];
+	}, {
+// Simulate something like:
+//to p
+//	if or 4 < ascii "A 4 > ascii "Z [
+//	]
+//end
+		'in':[
+			{'val': 'to', 'colIndex': 1, 'type': ParseTreeTokenType.PROCEDURE_START_KEYWORD, 'children': [
+				{'val': 'p', 'colIndex': 3, 'type': ParseTreeTokenType.LEAF},
+				{'val': null, 'colIndex': 4, 'type': ParseTreeTokenType.LIST},
+				{'val': null, 'colIndex': 4, 'type': ParseTreeTokenType.LIST, 'children': [
+					{'val': 'if', 'colIndex': 5, 'type': ParseTreeTokenType.LEAF},
+					{'val': 'or', 'colIndex': 8, 'type': ParseTreeTokenType.LEAF},
+					{'val': '<', 'colIndex': 12, 'type': ParseTreeTokenType.BINARY_OPERATOR, 'children': [
+						{'val': 4, 'colIndex': 10, 'originalString': '4', 'type': ParseTreeTokenType.NUMBER_LITERAL},
+						{'val': 'ascii', 'colIndex': 18, 'type': ParseTreeTokenType.LEAF}
+					]},
+					{'val': 'A', 'colIndex': 21, 'type': ParseTreeTokenType.STRING_LITERAL},
+					{'val': '>', 'colIndex': 12, 'type': ParseTreeTokenType.BINARY_OPERATOR, 'children': [
+						{'val': 4, 'colIndex': 10, 'originalString': '4', 'type': ParseTreeTokenType.NUMBER_LITERAL},
+						{'val': 'ascii', 'colIndex': 18, 'type': ParseTreeTokenType.LEAF}
+					]},
+					{'val': 'Z', 'colIndex': 21, 'type': ParseTreeTokenType.STRING_LITERAL},
+					{'val': null, 'colIndex': 17, 'type': ParseTreeTokenType.LIST, 'children': [
+						{'val': '[', 'colIndex': 17, 'type': ParseTreeTokenType.LEAF},
+						{'val': ']', 'colIndex': 18, 'type': ParseTreeTokenType.LEAF}
+					]},
+				]},
+				{'val': 'end', 'colIndex': 15, 'type': ParseTreeTokenType.PROCEDURE_END_KEYWORD},
+			]}
+		],
+		'out': [
+			{'val': 'to', 'colIndex': 1, 'type': ParseTreeTokenType.PROCEDURE_START_KEYWORD, 'children': [
+				{'val': 'p', 'colIndex': 3, 'type': ParseTreeTokenType.LEAF},
+				{'val': null, 'colIndex': 4, 'type': ParseTreeTokenType.LIST},
+				{'val': null, 'colIndex': 4, 'type': ParseTreeTokenType.LIST, 'children': [
+					{'val': 'if', 'colIndex': 5, 'type': ParseTreeTokenType.PARAMETERIZED_GROUP, 'children': [
+						{'val': 'or', 'colIndex': 8, 'type': ParseTreeTokenType.LEAF},
+							{'val': '<', 'colIndex': 12, 'type': ParseTreeTokenType.BINARY_OPERATOR, 'children': [
+								{'val': 4, 'colIndex': 10, 'originalString': '4', 'type': ParseTreeTokenType.NUMBER_LITERAL},
+								{'val': 'ascii', 'colIndex': 18, 'type': ParseTreeTokenType.PARAMETERIZED_GROUP,
+								'children': [
+									{'val': 'A', 'colIndex': 21, 'type': ParseTreeTokenType.STRING_LITERAL},
+								]}
+							]},
+							{'val': '>', 'colIndex': 12, 'type': ParseTreeTokenType.BINARY_OPERATOR, 'children': [
+								{'val': 4, 'colIndex': 10, 'originalString': '4', 'type': ParseTreeTokenType.NUMBER_LITERAL},
+								{'val': 'ascii', 'colIndex': 18, 'type': ParseTreeTokenType.LEAF,
+								'children': [
+									{'val': 'Z', 'colIndex': 21, 'type': ParseTreeTokenType.STRING_LITERAL}
+								]}
+							]}
+						]},
+						{'val': null, 'colIndex': 17, 'type': ParseTreeTokenType.LIST, 'children': [
+							{'val': '[', 'colIndex': 17, 'type': ParseTreeTokenType.LEAF},
+							{'val': ']', 'colIndex': 18, 'type': ParseTreeTokenType.LEAF}
+						]}
+					]},
+				{'val': 'end', 'colIndex': 15, 'type': ParseTreeTokenType.PROCEDURE_END_KEYWORD},
+			]},
+	]}];
 	cases.filter(caseInfo => caseInfo.out !== undefined).forEach(function(caseInfo) {
 		const parseLogger = new TestParseLogger(logger, '');
 		const inTree = configToParseTreeToken(caseInfo.in);
@@ -243,8 +309,10 @@ function testWithTokens(logger) {
 }
 
 export function testCreateParameterizedGroups(logger) {
-	testGetNumberOfArguments(logger);
-	testProcessLeafToken(logger);
-	testWithCodeSnippets(logger);
-	testWithTokens(logger);
+	wrapAndCall([
+		testGetNumberOfArguments,
+		testProcessLeafToken,
+		testWithCodeSnippets,
+		testWithTokens
+	], logger);
 };
