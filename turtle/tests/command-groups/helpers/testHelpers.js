@@ -2,6 +2,7 @@ import { testDistanceToLine } from './testDistanceToLine.js';
 import { testDrawing } from './drawing/testDrawing.js';
 import { testFactorial } from './testFactorial.js';
 import { testGetArcLeftAngleToCircle } from './testGetArcLeftAngleToCircle.js';
+import { testGetArcRightAngleToCircle } from './testGetArcRightAngleToCircle.js';
 import { testIo } from './io/testIo.js';
 import { testLinePointDistance } from './testLinePointDistance.js';
 import { testMix } from './testMix.js';
@@ -19,6 +20,7 @@ export function testHelpers(logger) {
 		testDrawing,
 		testFactorial,
 		testGetArcLeftAngleToCircle,
+		testGetArcRightAngleToCircle,
 		testIo,
 		testLinePointDistance,
 		testMix,
