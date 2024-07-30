@@ -27,8 +27,8 @@ import { testMightBeRunnableCode } from './testMightBeRunnableCode.js';
 import { testOperators } from './testOperators.js';
 import { testOrderOfOperation } from './testOrderOfOperation.js';
 import { testParseTree } from './testParseTree.js';
-*/import { testParseTreeAnalysis } from './parse-tree-analysis/testParseTreeAnalysis.js';
-/*import { testParseTreeColIndexes } from './testParseTreeColIndexes.js';
+import { testParseTreeAnalysis } from './parse-tree-analysis/testParseTreeAnalysis.js';
+import { testParseTreeColIndexes } from './testParseTreeColIndexes.js';
 import { testParseTreeToCodeWithComments } from './testParseTreeToCodeWithComments.js';
 import { testParseTreeToken } from './testParseTreeToken.js';
 import { testParseTreeTokenDirectory } from './parse-tree-token/testParseTreeTokenDirectory.js';
@@ -75,8 +75,8 @@ export function testParsing(logger) {
 		testOperators,
 		testOrderOfOperation,
 		testParseTree,
-		*/testParseTreeAnalysis,
-		/*testParseTreeColIndexes,
+		testParseTreeAnalysis,
+		testParseTreeColIndexes,
 		testParseTreeToCodeWithComments,
 		testParseTreeToken,
 		testParseTreeTokenDirectory,

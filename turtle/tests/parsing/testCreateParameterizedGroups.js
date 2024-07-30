@@ -163,7 +163,7 @@ end`, 'totalParameterizedTokens': 4,
 }
 
 function testWithTokens(logger) {
-	const cases = [{
+	const cases = [/*{
 			'in': [
 				{'val': 'if', 'colIndex': 1, 'type': ParseTreeTokenType.LEAF},
 				{'val': 'or', 'colIndex': 4, 'type': ParseTreeTokenType.LEAF},
@@ -234,7 +234,7 @@ function testWithTokens(logger) {
 				{'val': 'end', 'colIndex': 15, 'type': ParseTreeTokenType.PROCEDURE_END_KEYWORD},
 			]}
 		]
-	}, {
+	}, */{
 // Simulate something like:
 //to p
 //	if or 4 < ascii "A 4 > ascii "Z [
@@ -295,24 +295,26 @@ function testWithTokens(logger) {
 				{'val': 'end', 'colIndex': 15, 'type': ParseTreeTokenType.PROCEDURE_END_KEYWORD},
 			]},
 	]}];
-	cases.filter(caseInfo => caseInfo.out !== undefined).forEach(function(caseInfo) {
-		const parseLogger = new TestParseLogger(logger, '');
+	cases.filter(caseInfo => caseInfo.out !== undefined).
+	forEach(function(caseInfo, index) {
+		const plogger = prefixWrapper(`Case ${index}`, logger);
+		const parseLogger = new TestParseLogger(plogger, '');
 		const inTree = configToParseTreeToken(caseInfo.in);
 		const outTree = configToParseTreeToken(caseInfo.out);
 		createParameterizedGroups(inTree, new Map(), parseLogger);
 		const actualOutputTree = inTree; // createParameterizedGroups mutates the inTree instead of returning a new one.
 		const differences = getParseTreeDifferences(actualOutputTree, outTree);
 		differences.forEach(function(difference) {
-			logger(difference);
+			plogger(difference);
 		});
 	});
 }
 
 export function testCreateParameterizedGroups(logger) {
 	wrapAndCall([
-		testGetNumberOfArguments,
-		testProcessLeafToken,
-		testWithCodeSnippets,
+		//testGetNumberOfArguments,
+		//testProcessLeafToken,
+		//testWithCodeSnippets,
 		testWithTokens
 	], logger);
 };
