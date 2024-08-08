@@ -87,9 +87,11 @@ export function processLeafToken(token, procedures, parseLogger, isLookingDeeper
 			parameters.push(currentToken);
 		}
 	}
-	token.type = ParseTreeTokenType.PARAMETERIZED_GROUP;
 	parameters.forEach(function(parameter) {
 		parameter.remove();
+	});
+	token.type = ParseTreeTokenType.PARAMETERIZED_GROUP;
+	parameters.forEach(function(parameter) {
 		token.appendChild(parameter);
 	});
 	return true;
