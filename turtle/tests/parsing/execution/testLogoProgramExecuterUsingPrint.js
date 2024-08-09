@@ -394,7 +394,95 @@ p`, 'messages': ['10']},
 end
 
 make "z 30
-p`, 'messages': ['30', '10']}
+p`, 'messages': ['30', '10']},
+	{'code': `to p
+	localmake "result -1
+	localmake "d distanceToLine pos pos
+	if :d > 0 [
+		if or :result < 0 :d < :result [
+			localmake "result :d
+		]
+	]
+	output :result
+end
+
+p
+print "hi`, 'messages': ['hi']},
+	{'code': `to p
+	localmake "result -1
+	localmake "line [pos pos]
+	localmake "d distanceToLine first :line last :line
+	if :d > 0 [
+		if or :result < 0 :d < :result [
+			localmake "result :d
+		]
+	]
+	output :result
+end
+
+p
+print "hi`, 'messages': ['hi']},
+	{'code': `to p
+	localmake "lines [[pos pos]]
+	localmake "result -1
+	repeat count :lines [
+		localmake "line item repcount :lines
+		localmake "d distanceToLine first :line last :line
+		if :d > 0 [
+			if or :result < 0 :d < :result [
+				localmake "result :d
+			]
+		]
+	]
+	output :result
+end
+
+p
+print "hi`, 'messages': ['hi']},
+	{'code': `to getClosestLineIntersection :lines
+	localmake "result -1
+	repeat count :lines [
+		localmake "line item repcount :lines
+		localmake "d distanceToLine first :line last :line
+		if :d > 0 [
+			if or :result < 0 :d < :result [
+				localmake "result :d
+			]
+		]
+	]
+	output :result
+end
+
+make "x getClosestLineIntersection [[pos pos]]
+print "hi`, 'messages': ['hi']},
+	{'code': `to getClosestLineIntersection :lines
+	localmake "result -1
+	repeat count :lines [
+		localmake "line item repcount :lines
+		localmake "d distanceToLine first :line last :line
+		if :d > 0 [
+			if or :result < 0 :d < :result [
+				localmake "result :d
+			]
+		]
+	]
+	output :result
+end
+
+to drawBase :height
+	localmake "radiatingRadius :height * 0.12 + 1
+	localmake "innerLines [[pos pos]]
+	repeat 2 [
+		localmake "d getClosestLineIntersection :innerLines
+		if :d > :radiatingRadius [
+			jumpForward :d
+			backward :d - :radiatingRadius
+		]
+	]
+end
+
+drawBase 100
+print "hi`, 'messages': ['hi']}
 	];
 	processExecuterTestCases(cases, logger);
 };
