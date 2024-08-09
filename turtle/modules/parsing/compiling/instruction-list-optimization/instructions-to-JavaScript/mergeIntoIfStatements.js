@@ -1,4 +1,5 @@
 import { getConditionValueExpressionFrom } from './getConditionValueExpressionFrom.js';
+import { getDeclarationsFromInstruction } from './getDeclarationsFromInstruction.js';
 import { isJumpSafeInterval } from './isJumpSafeInterval.js';
 import { JumpIfTrueInstruction } from '../../../execution/instructions/JumpIfTrueInstruction.js';
 import { JavaScriptInstruction } from '../../../execution/instructions/JavaScriptInstruction.js';
@@ -18,7 +19,8 @@ export function mergeIntoIfStatements(instructions) {
 			let wrappedCode = instructionToSkipOver.code;
 			if (!wrappedCode.trim().endsWith(';'))
 				wrappedCode += ';';
-			const newCode = `if (${conditionValExpression}) {\n${wrappedCode}\n}`;
+			const prefix = getDeclarationsFromInstruction(pushConditionInstruction);
+			const newCode = `${prefix}if (${conditionValExpression}) {\n${wrappedCode}\n}`;
 			const newIndex = i - 1 - conditionValExpressionResult.numToRemove;
 			instructionToSkipOver.setCode(newCode);
 			instructions[newIndex] = instructionToSkipOver;
