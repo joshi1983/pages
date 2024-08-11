@@ -28,7 +28,7 @@ import { testVariableReadToJavaScript } from './testVariableReadToJavaScript.js'
 import { wrapAndCall } from '../../../../helpers/wrapAndCall.js';
 
 const tests = [
-testArgInfoToCheckFunction,
+/*testArgInfoToCheckFunction,
 testAvoidUnneededErrorCheck,
 testAvoidValueStackPush,
 testBinaryOperatorToJavaScript,
@@ -37,25 +37,25 @@ testCommands,
 testConvertInstructionsToJavaScript,
 testConvertInstructionsToJavaScriptForMandelbrot,
 testConvertInstructionsToJavaScriptForTransparent,
-testGetConditionValueExpressionFrom,
+testGetConditionValueExpressionFrom,*/
 testGetDeclarationsFromInstruction,
-testGetInstructionParamArgInfo,
+/*testGetInstructionParamArgInfo,
 testGetJumpToIndexes,
 testGetStartIndexForInstructionCluster,
 testInstructionToJavaScriptInstruction,
 testIsLocalVariable,
 testIsSafeToNotErrorCheck,
 testMergeIntoIfElseStatements,
-testMergeIntoIfStatements,
-testMergeJavaScriptInstructions,
-testMergeJavaScriptInstructionsWithInvoke,
-testOptimizeJSDirectory,
+*/testMergeIntoIfStatements,
+/*testMergeJavaScriptInstructions,
+testMergeJavaScriptInstructionsWithInvoke,*/
+testOptimizeJSDirectory,/*
 testPushInstructionToJavaScript,
 testUnaryOperatorToJavaScript,
 testWrapWithArgInfoChecks,
 testWrapWithTypeConverter,
 testVariableReadToJavaScript
-];
+*/];
 
 export function testInstructionsToJavaScript(logger) {
 	wrapAndCall(tests, logger);

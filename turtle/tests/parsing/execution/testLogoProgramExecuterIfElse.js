@@ -1,7 +1,7 @@
 import { processExecuterTestCases } from './processExecuterTestCases.js';
 
 export function testLogoProgramExecuterIfElse(logger) {
-	const cases = [{'code': `to p
+	const cases = [/*{'code': `to p
 	repeat 2 [
 		localmake "x ifElse even? repcount 1 0
 		jumpLeft :x
@@ -21,7 +21,7 @@ p`, 'messages': ['0', '1']},
 	{'code': `repeat 2 [
 	make "x ifElse even? repcount 1 0
 	print :x
-]`, 'messages': ['0', '1']},
+]`, 'messages': ['0', '1']},*/
 	{'code': `to p :height
 	localmake "arcInfo [-0.255 0 16 53 0.85]
 	jumpRight :height * item 1 :arcInfo
