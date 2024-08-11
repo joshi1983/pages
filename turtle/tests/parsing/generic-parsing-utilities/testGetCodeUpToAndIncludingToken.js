@@ -22,6 +22,8 @@ export function testGetCodeUpToAndIncludingToken(logger) {
 		{'code': 'fd(\n1);', 'token': {'val': '1'}, 'out': 'fd(\n1'},
 		{'code': 'fd(\n1);', 'token': {'val': '('}, 'out': 'fd('},
 		{'code': 'fd(\n1);', 'token': {'val': 'fd'}, 'out': 'fd'},
+		{'code': `fd(\n1\n);`, 'token': {'val': ';'}, 'out': 'fd(\n1\n);'},
+		{'code': `fd(\n1\n)\n;`, 'token': {'val': ';'}, 'out': 'fd(\n1\n)\n;'},
 	];
 	cases.forEach(function(caseInfo, index) {
 		const plogger = prefixWrapper(`Case ${index}, code=${caseInfo.code}`, logger);

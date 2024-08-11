@@ -8,13 +8,10 @@ export function getCodeUpToAndIncludingToken(code, token) {
 		if (index === -1)
 			return code;
 		else {
-			result.append(code.substring(curIndex, index));
-			curIndex = index;
+			result.append(code.substring(curIndex, index + 1));
+			curIndex = index + 1;
 		}
 	}
-	let offset = 1;
-	if (!result.isEmpty())
-		offset++;
-	result.append(code.substring(curIndex, curIndex + token.colIndex + offset));
+	result.append(code.substring(curIndex, curIndex + token.colIndex + 1));
 	return result.toString();
 };

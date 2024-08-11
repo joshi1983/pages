@@ -57,6 +57,25 @@ context.make("animationratio",1 - context.readVariable("animationratio") );
 }`,
 		'codeIndex': 0,
 		'afterLength': 2
+	},
+	{
+		'instructionsDTO': [
+			{'name': 'javascript', 
+			'code': `const localVariables = context.getCurrentExecutingProcedure().localVariables;
+let result = localVariables.get("result");
+context.valueStack.push(!( result < 0 || localVariables.get("d") < result ))`},
+			{'name': 'jump-if-true', 'newIndex': 3},
+			{'name': 'javascript', 'code': 'context.localmake("result",context.getCurrentExecutingProcedure().localVariables.get("d"))'},
+			{'name': 'javascript', 'code': 'context.valueStack.push(context.readVariable("result"))'}
+		],
+		'expectedCode': `const localVariables = context.getCurrentExecutingProcedure().localVariables;
+let result = localVariables.get("result");
+let d = localVariables.get("d");
+if (result < 0 || d < result) {
+	result = d;
+}`,
+		'codeIndex': 0,
+		'afterLength': 1
 	}
 	];
 	processIfMergeTestCases(cases, mergeIntoIfStatements, logger);

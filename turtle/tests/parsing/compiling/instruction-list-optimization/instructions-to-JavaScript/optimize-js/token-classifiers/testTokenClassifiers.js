@@ -4,12 +4,14 @@ import { testIsContextGlobalVariablesGetCall } from './testIsContextGlobalVariab
 import { testIsContextGlobalVariablesSetCall } from './testIsContextGlobalVariablesSetCall.js';
 import { testIsContextLocalVariablesGet } from './testIsContextLocalVariablesGet.js';
 import { testIsContextLocalVariablesSet } from './testIsContextLocalVariablesSet.js';
+import { testIsContextMakeCall } from './testIsContextMakeCall.js';
 import { testIsContextReadVariableCall } from './testIsContextReadVariableCall.js';
 import { testIsContextValueStackLength } from './testIsContextValueStackLength.js';
 import { testIsContextValueStackPop } from './testIsContextValueStackPop.js';
 import { testIsContextValueStackPush } from './testIsContextValueStackPush.js';
 import { testIsContextValueStackPushThroughAssignment } from './testIsContextValueStackPushThroughAssignment.js';
 import { testIsContextValueStackReference } from './testIsContextValueStackReference.js';
+import { testIsDynamicVariableNameMakeAssignment } from './testIsDynamicVariableNameMakeAssignment.js';
 import { testIsGlobalVariablesGetCall } from './testIsGlobalVariablesGetCall.js';
 import { testIsGlobalVariablesSetCall } from './testIsGlobalVariablesSetCall.js';
 import { testIsIdentifierReadToken } from './testIsIdentifierReadToken.js';
@@ -55,12 +57,14 @@ export function testTokenClassifiers(logger) {
 		testIsContextGlobalVariablesSetCall,
 		testIsContextLocalVariablesGet,
 		testIsContextLocalVariablesSet,
+		testIsContextMakeCall,
 		testIsContextReadVariableCall,
 		testIsContextValueStackLength,
 		testIsContextValueStackPop,
 		testIsContextValueStackPush,
 		testIsContextValueStackPushThroughAssignment,
 		testIsContextValueStackReference,
+		testIsDynamicVariableNameMakeAssignment,
 		testIsGlobalVariablesGetCall,
 		testIsGlobalVariablesSetCall,
 		testIsIdentifierReadToken,

@@ -7,6 +7,8 @@ import { testCommands } from './commands/testCommands.js';
 import { testConvertInstructionsToJavaScript } from './testConvertInstructionsToJavaScript.js';
 import { testConvertInstructionsToJavaScriptForMandelbrot } from './testConvertInstructionsToJavaScriptForMandelbrot.js';
 import { testConvertInstructionsToJavaScriptForTransparent } from './testConvertInstructionsToJavaScriptForTransparent.js';
+import { testGetConditionValueExpressionFrom } from './testGetConditionValueExpressionFrom.js';
+import { testGetDeclarationsFromInstruction } from './testGetDeclarationsFromInstruction.js';
 import { testGetInstructionParamArgInfo } from './testGetInstructionParamArgInfo.js';
 import { testGetJumpToIndexes } from './testGetJumpToIndexes.js';
 import { testGetStartIndexForInstructionCluster } from './testGetStartIndexForInstructionCluster.js';
@@ -35,6 +37,8 @@ testCommands,
 testConvertInstructionsToJavaScript,
 testConvertInstructionsToJavaScriptForMandelbrot,
 testConvertInstructionsToJavaScriptForTransparent,
+testGetConditionValueExpressionFrom,
+testGetDeclarationsFromInstruction,
 testGetInstructionParamArgInfo,
 testGetJumpToIndexes,
 testGetStartIndexForInstructionCluster,

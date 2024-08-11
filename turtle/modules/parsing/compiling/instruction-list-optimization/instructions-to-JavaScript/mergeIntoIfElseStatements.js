@@ -1,4 +1,6 @@
+import { containsDynamicVariableAssignment } from './containsDynamicVariableAssignment.js';
 import { getConditionValueExpressionFrom } from './getConditionValueExpressionFrom.js';
+import { getDeclarationsFromInstruction } from './getDeclarationsFromInstruction.js';
 import { isJumpSafeInterval } from './isJumpSafeInterval.js';
 import { JavaScriptInstruction } from '../../../execution/instructions/JavaScriptInstruction.js';
 import { JumpIfTrueInstruction } from '../../../execution/instructions/JumpIfTrueInstruction.js';
@@ -28,12 +30,14 @@ export function mergeIntoIfElseStatements(instructions) {
 		conditionalJumpInstruction instanceof JumpIfTrueInstruction &&
 		conditionalJumpInstruction.jumpToIndex === i &&
 		jumpInstruction.jumpToIndex === i + 1 &&
-		isJumpSafeInterval(instructions, i - 4, i)) {
+		isJumpSafeInterval(instructions, i - 4, i) &&
+		!containsDynamicVariableAssignment(pushConditionInstruction.code)) {
 			const conditionValExpressionResult = getConditionValueExpressionFrom(pushConditionInstruction, false);
 			const conditionValExpression = conditionValExpressionResult.jsCode;
 			let wrappedCode = formatSemicolons(instructionToSkipOver.code);
 			let wrappedCode1 = formatSemicolons(elseInstruction.code);
-			const newCode = sanitizeMergedJS(`if (${conditionValExpression}) {\n${wrappedCode1}\n} else {\n${wrappedCode}\n}`);
+			const prefix = getDeclarationsFromInstruction(pushConditionInstruction);
+			const newCode = sanitizeMergedJS(`${prefix}if (${conditionValExpression}) {\n${wrappedCode1}\n} else {\n${wrappedCode}\n}`);
 			const newIndex = i - 3 - conditionValExpressionResult.numToRemove;
 			instructionToSkipOver.setCode(newCode);
 			instructions[newIndex] = instructionToSkipOver;
