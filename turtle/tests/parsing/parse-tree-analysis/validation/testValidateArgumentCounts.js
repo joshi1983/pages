@@ -5,6 +5,7 @@ import { processValidationTestCases } from './processValidationTestCases.js';
 import { getProceduresMap } from '../../../../modules/parsing/parse-tree-analysis/getProceduresMap.js';
 import { TestParseLogger } from '../../../helpers/TestParseLogger.js';
 import { validateArgumentCounts } from '../../../../modules/parsing/parse-tree-analysis/validation/validateArgumentCounts.js';
+import { wrapAndCall } from '../../../helpers/wrapAndCall.js';
 
 function testValidateArgumentCountsReturnsFalseProperly(logger) {
 	const cases = [
@@ -19,6 +20,10 @@ function testValidateArgumentCountsReturnsFalseProperly(logger) {
 		{'code': 'print (quotient 1)', 'error': false}, // 1 argument is ok.
 		{'code': 'print (quotient)', 'error': true}, // 0 is less than the minimum 1 argument.
 		{'code': 'print (quotient 1 2 3)', 'error': true}, // more than quotient's max of 2 arguments
+		{'code': `to p
+	if or 4 < ascii "A 4 > ascii "Z [
+	]
+end`, 'error': false}
 ];
 
 	processValidationTestCases(cases, logger, validateArgumentCounts);
@@ -45,6 +50,8 @@ function testArgCountReturnsTrueProperly(logger) {
 }
 
 export function testValidateArgumentCounts(logger) {
-	testArgCountReturnsTrueProperly(logger);
-	testValidateArgumentCountsReturnsFalseProperly(logger);
+	wrapAndCall([
+		testArgCountReturnsTrueProperly,
+		testValidateArgumentCountsReturnsFalseProperly
+	], logger);
 };

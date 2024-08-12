@@ -1,6 +1,20 @@
 import { Command } from './Command.js';
+import { isInstructionList } from './parse-tree-analysis/isInstructionList.js';
 import { ParseTreeToken } from './ParseTreeToken.js';
 import { ParseTreeTokenType } from './ParseTreeTokenType.js';
+import { SetUtils } from '../SetUtils.js';
+
+const firstProcessedArgumentTokenTypes = new Set([
+ParseTreeTokenType.BOOLEAN_LITERAL,
+ParseTreeTokenType.LONG_STRING_LITERAL,
+ParseTreeTokenType.NUMBER_LITERAL,
+ParseTreeTokenType.STRING_LITERAL,
+ParseTreeTokenType.VARIABLE_READ
+]);
+const parentNodeTypesToProcessFirst = new Set([
+ParseTreeTokenType.BINARY_OPERATOR,
+ParseTreeTokenType.UNARY_OPERATOR
+]);
 
 export async function asyncInit() {
 	await Command.asyncInit();
@@ -126,6 +140,24 @@ function sanitizeParameterGroups(parseTreeToken, procedures, parseLogger) {
 	}
 }
 
+function shouldBeProcessedFirst(procedures) {
+	return function(token) {
+		const numArgs = getNumberOfArguments(token, procedures);
+		if (numArgs === 0)
+			return false;
+		if (numArgs === 1 && token.parentNode !== null && parentNodeTypesToProcessFirst.has(token.parentNode.type)) {
+			const parentNext = token.parentNode.nextSibling;
+			if (parentNext === null || !isInstructionList(parentNext.parentNode))
+				return false;
+			if (firstProcessedArgumentTokenTypes.has(parentNext.type))
+				return true;
+			if (parentNext.children.length === 0 && parentNext.type === ParseTreeTokenType.PARAMETERIZED_GROUP)
+				return true;
+		}
+		return false;
+	};
+}
+
 export function createParameterizedGroups(parseTreeToken, procedures, parseLogger) {
 	if (procedures === undefined)
 		procedures = new Map();
@@ -137,15 +169,21 @@ export function createParameterizedGroups(parseTreeToken, procedures, parseLogge
 			!isProcedureNameToken(token) &&
 			(procedures.has(token.val.toLowerCase()) || Command.getCommandInfo(token.val) !== undefined);
 	});
+	const firstToProcessTokens = startTokens.filter(shouldBeProcessedFirst(procedures));
+	processLeafTokens(firstToProcessTokens, procedures, parseLogger, false);
+	const processedSet = new Set(firstToProcessTokens);
 	const unusedReturnValueTokens = startTokens.filter(function(token) {
+		if (processedSet.has(token))
+			return false;
 		return (token.parentNode.parentNode !== null &&
 			token.parentNode.parentNode.type === ParseTreeTokenType.PROCEDURE_START_KEYWORD);
 	});
 	processLeafTokens(unusedReturnValueTokens, procedures, parseLogger, false);
-
+	SetUtils.addAll(processedSet, unusedReturnValueTokens);
 	const remainingTokens = startTokens.filter(function(token) {
-		return token.type === ParseTreeTokenType.LEAF &&
-			unusedReturnValueTokens.indexOf(token) === -1;
+		if (processedSet.has(token))
+			return false;
+		return token.type === ParseTreeTokenType.LEAF;
 	});
 	processLeafTokens(remainingTokens, procedures, parseLogger, false);
 	sanitizeParameterGroups(parseTreeToken, procedures, parseLogger);

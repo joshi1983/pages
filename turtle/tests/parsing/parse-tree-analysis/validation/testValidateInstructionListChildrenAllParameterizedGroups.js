@@ -27,7 +27,12 @@ export function testValidateInstructionListChildrenAllParameterizedGroups(logger
 		{'code': 'to p\nifelse 1 < 2 [\nfd 100\n] [\n4 * 5]\nend', 'error': true},
 		{'code': 'to p :x\nfd :x\nright 90\nend\n(invoke "p)', 'error': false},
 		// invoke within curved brackets should be acceptable as a direct child of an instruction list.
-		{'code': 'print "hi - 4', 'error': true} // the '-' should be unary here so it would not be grouped under the print.
+		{'code': 'print "hi - 4', 'error': true}, // the '-' should be unary here so it would not be grouped under the print.
+		{'code': `to p
+	if or 4 < ascii "A 4 > ascii "Z [
+		print "hi
+	]
+end`, 'error': false}
 	];
 	processValidationTestCases(cases, logger, validateInstructionListChildrenAllParameterizedGroups);
 };
