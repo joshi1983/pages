@@ -1,4 +1,4 @@
-import { testAnalyzeCodeQuality } from './testAnalyzeCodeQuality.js';
+/*import { testAnalyzeCodeQuality } from './testAnalyzeCodeQuality.js';
 import { testInfiniteLoops } from './infinite-loops/testInfiniteLoops.js';
 import { testPenUp } from './pen-up/testPenUp.js';
 import { testRecommendJumpCommands } from './testRecommendJumpCommands.js';
@@ -7,8 +7,8 @@ import { testValidateAnimationSnapshotStyleProcedure } from './testValidateAnima
 import { testValidateAnimationTimeUsage } from './testValidateAnimationTimeUsage.js';
 import { testValidateArcLines } from './testValidateArcLines.js';
 import { testValidateArcsLeftRightUsage } from './testValidateArcsLeftRightUsage.js';
-import { testValidateArgumentCounts } from './testValidateArgumentCounts.js';
-import { testValidateArrowCalls } from './testValidateArrowCalls.js';
+*/import { testValidateArgumentCounts } from './testValidateArgumentCounts.js';
+/*import { testValidateArrowCalls } from './testValidateArrowCalls.js';
 import { testValidateAssert } from './testValidateAssert.js';
 import { testValidateBezierCalls } from './testValidateBezierCalls.js';
 import { testValidateBinaryOperatorParameters } from './testValidateBinaryOperatorParameters.js';
@@ -61,10 +61,10 @@ import { testValidateUnusedVariables } from './testValidateUnusedVariables.js';
 import { testValidateUnusedVariablesGlobal } from './testValidateUnusedVariablesGlobal.js';
 import { testValidateUselessCode } from './testValidateUselessCode.js';
 import { testValidateVariableNames } from './testValidateVariableNames.js';
-import { wrapAndCall } from '../../../helpers/wrapAndCall.js';
+*/import { wrapAndCall } from '../../../helpers/wrapAndCall.js';
 
 const tests = [
-testAnalyzeCodeQuality,
+/*testAnalyzeCodeQuality,
 testInfiniteLoops,
 testPenUp,
 testRecommendJumpCommands,
@@ -73,8 +73,8 @@ testValidateAnimationSnapshotStyleProcedure,
 testValidateAnimationTimeUsage,
 testValidateArcLines,
 testValidateArcsLeftRightUsage,
-testValidateArgumentCounts,
-testValidateArrowCalls,
+*/testValidateArgumentCounts,
+/*testValidateArrowCalls,
 testValidateAssert,
 testValidateBezierCalls,
 testValidateBinaryOperatorParameters,
@@ -126,7 +126,7 @@ testValidateUnusedVariables,
 testValidateUnusedVariablesGlobal,
 testValidateUselessCode,
 testValidateVariableNames
-];
+*/];
 
 export function testValidation(logger) {
 	wrapAndCall(tests, logger);

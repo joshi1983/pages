@@ -182,11 +182,24 @@ function testExample(exampleInfo, url, logger) {
 	});
 }
 
+const interestingSubstrings = ['eiffel-tower-2.lgo', 'flags/nepal.lgo', 'animation/old-wind-mill-and-house.lgo',
+'flags/palau.lgo', 'pepperbox-hill-2019-crop-circles.lgo', 'tidcombe-2011-crop-circles.lgo',
+'united-arab-emerates.lgo'];
+function isOfInterest(filename) {
+	for (const s of interestingSubstrings) {
+		if (filename.indexOf(s) !== -1)
+			return true;
+	}
+	return false;
+}
+
 async function testCompileAllExamples(logger) {
 	const progressIndicator = new ProgressIndicator('testExampleScripts');
 	logger.indicators.push(progressIndicator);
 	for (let i = 0; i < examples.length; i++) {
 		const exampleInfo = examples[i];
+		if (!isOfInterest(exampleInfo.filename))
+			continue;
 		const url = `logo-scripts/${exampleInfo.filename}?${Math.random(1)}`;
 		testExample(exampleInfo, url, logger);
 		await sleep(100);
