@@ -25,6 +25,7 @@ export async function downloadAnimation(program, width, height, settings) {
 			if (settings.isCancelled())
 				break;
 			const canvas = await getRasterFrame(program, width, height, t, duration, settings);
+			settings.notifyFrameCanvas(frameIndex, canvas);
 			await downloadFrame(canvas, frameIndex, settings);
 		}
 		frameIndex++;

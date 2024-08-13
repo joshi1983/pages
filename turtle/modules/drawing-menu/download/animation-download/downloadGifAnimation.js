@@ -21,6 +21,7 @@ export async function downloadGifAnimation(program, width, height, settings) {
 		if (settings.isCancelled())
 			break;
 		const canvas = await getRasterFrame(program, width, height, t, duration, settings);
+		settings.notifyFrameCanvas(frameIndex, canvas);
 		const ctx = canvas.getContext('2d');
 		encoder.addFrame(ctx);
 		frameIndex++;

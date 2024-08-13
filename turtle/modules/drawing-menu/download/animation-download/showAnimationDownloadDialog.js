@@ -19,6 +19,7 @@ import { getPreferredFrameSequenceFormatMime } from './getPreferredFrameSequence
 import { getPrefixTitle } from './modes/getPrefixTitle.js';
 import { getProgramCompiledForAnimation } from './getProgramCompiledForAnimation.js';
 import { getResolutionDropdown } from './getResolutionDropdown.js';
+import { getThumbnailDimensions } from './getThumbnailDimensions.js';
 import { isSupportedAnimationFrameFormat } from './isSupportedAnimationFrameFormat.js';
 import { manageModes } from './modes/manageModes.js';
 import { Resolutions } from '../Resolutions.js';
@@ -45,6 +46,8 @@ var isDownloadCancelled;
 var durationSeconds = 10;
 var predownloadStage;
 var startFrameIndexInput;
+var frameThumbnailCanvas;
+var lastThumbnailPaintTime;
 
 function refreshGifFilename() {
 	const elements = document.querySelectorAll('.animation-download-gif-filename');
@@ -77,6 +80,19 @@ function notifyProcessingFrame(frameIndex, totalFrames) {
 	progressFrameIndexElement.innerText = '' + frameIndex;
 	updateFrameCount(totalFrames);
 	progressBarElement.value = frameIndex * 100 / totalFrames;
+}
+
+function notifyFrameCanvas(frameIndex, canvas) {
+	const newTime = Date.now();
+	// If less than 1 second passed since last canvas draw, just return.
+	if (lastThumbnailPaintTime === undefined || newTime - lastThumbnailPaintTime > 1000) {
+		lastThumbnailPaintTime = newTime;
+		const timeElapsed = lastThumbnailPaintTime;
+		const thumbnailDimensions = getThumbnailDimensions(frameThumbnailCanvas, canvas);
+		const ctx = frameThumbnailCanvas.getContext('2d');
+		ctx.drawImage(canvas, 0, 0, thumbnailDimensions.width, thumbnailDimensions.height);
+		progressReportElement.classList.add('showing-thumbnail');
+	}
 }
 
 function notifyMessage(msg) {
@@ -117,6 +133,7 @@ function getSettings() {
 		'prefix': prefix,
 		'notifyProcessingFrame': notifyProcessingFrame,
 		'notifyProcessingSnapshot': notifyProcessingSnapshot,
+		'notifyFrameCanvas': notifyFrameCanvas,
 		'notifyMessage': notifyMessage,
 		'startFrameIndex': parseInt(startFrameIndexInput.value),
 	};
@@ -235,6 +252,7 @@ export function showAnimationDownloadDialog() {
 	downloadButton = document.getElementById('dialog-footer-ok');
 	predownloadStage = document.getElementById('animation-download-predownload-stage');
 	startFrameIndexInput = document.getElementById('animation-download-start-frame-index');
+	frameThumbnailCanvas = document.getElementById('animation-download-frame-thumbnail');
 	motionBlurSnapshotsPerFrameDropdown = document.getElementById('animation-download-motion-blur-samples-per-frame');
 	Resolutions.addOptionsToSelect(resolutionDropdown);
 	FileExtensions.addOptionsToSelect(fileFormatDropdown, isSupportedAnimationFrameFormat);
