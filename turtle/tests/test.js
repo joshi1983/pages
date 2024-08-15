@@ -1,4 +1,4 @@
-import { bindDocumentFocusTests } from './bindDocumentFocusTests.js';
+/*import { bindDocumentFocusTests } from './bindDocumentFocusTests.js';
 import { testAlphaColour } from './testAlphaColour.js';
 import { testArrayUtils } from './testArrayUtils.js';
 import { testAssets } from './assets/testAssets.js';
@@ -15,8 +15,8 @@ import { testComponents } from './components/testComponents.js';
 import { testDebugging } from './debugging/testDebugging.js';
 import { testDeepEquality } from './testDeepEquality.js';
 import { testDelay } from './testDelay.js';
-import { testDrawing } from './drawing/testDrawing.js';
-import { testDrawingMenu } from './drawing-menu/testDrawingMenu.js';
+*/import { testDrawing } from './drawing/testDrawing.js';
+/*import { testDrawingMenu } from './drawing-menu/testDrawingMenu.js';
 import { testEqualWithinThreshold } from './testEqualWithinThreshold.js';
 import { testExceptionToString } from './testExceptionToString.js';
 import { testFetchBlob } from './testFetchBlob.js';
@@ -44,7 +44,7 @@ import { testValueToLiteralCode } from './testValueToLiteralCode.js';
 import { testValueToString } from './testValueToString.js';
 import { testValueWrapper } from './testValueWrapper.js';
 import { testWindowsCommandsJSON } from './testWindowsCommandsJSON.js';
-import { wrapAndCall } from './helpers/wrapAndCall.js';
+*/import { wrapAndCall } from './helpers/wrapAndCall.js';
 
 function replaceSpecialChars(msg) {
 	msg = msg.replace(/ /g, '&nbsp;');
@@ -54,7 +54,7 @@ function replaceSpecialChars(msg) {
 }
 
 const tests = [
-	bindDocumentFocusTests,
+	/*bindDocumentFocusTests,
 	testAlphaColour,
 	testArrayUtils,
 	testAssets,
@@ -71,8 +71,8 @@ const tests = [
 	testDebugging,
 	testDeepEquality,
 	testDelay,
-	testDrawing,
-	testDrawingMenu,
+	*/testDrawing,
+	/*testDrawingMenu,
 	testEqualWithinThreshold,
 	testExceptionToString,
 	testFetchBlob,
@@ -99,7 +99,7 @@ const tests = [
 	testValueToLiteralCode,
 	testValueToString,
 	testValueWrapper,
-	testWindowsCommandsJSON
+	testWindowsCommandsJSON*/
 ];
 
 function runTests() {

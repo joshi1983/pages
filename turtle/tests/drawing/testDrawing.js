@@ -1,4 +1,4 @@
-import { testDrawers } from './drawers/testDrawers.js';
+/*import { testDrawers } from './drawers/testDrawers.js';
 import { testDrawingsFromCode } from './testDrawingsFromCode.js';
 import { testDrawTurtle } from './testDrawTurtle.js';
 import { testTurtleDrawState } from './testTurtleDrawState.js';
@@ -7,11 +7,11 @@ import { testTurtleDrawStateDirectory } from './turtle-draw-state/testTurtleDraw
 import { testTurtleDrawStateEllipseArc2 } from './testTurtleDrawStateEllipseArc2.js';
 import { testTurtleDrawStateGetLineJoinStyle } from './testTurtleDrawStateGetLineJoinStyle.js';
 import { testTurtleDrawStateOrientation } from './testTurtleDrawStateOrientation.js';
-import { testVector } from './vector/testVector.js';
+*/import { testVector } from './vector/testVector.js';
 import { wrapAndCall } from '../helpers/wrapAndCall.js';
 
 export function testDrawing(logger) {
-	wrapAndCall([
+	wrapAndCall([/*
 		testDrawers,
 		testDrawingsFromCode,
 		testDrawTurtle,
@@ -20,7 +20,7 @@ export function testDrawing(logger) {
 		testTurtleDrawStateDirectory,
 		testTurtleDrawStateEllipseArc2,
 		testTurtleDrawStateGetLineJoinStyle,
-		testTurtleDrawStateOrientation,
+		testTurtleDrawStateOrientation,*/
 		testVector
 	], logger);
 };

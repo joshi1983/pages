@@ -1,4 +1,5 @@
 import { BoundingBox } from '../BoundingBox.js';
+import { getMiterJoinPointBetweenLines } from './math/getMiterJoinPointBetweenLines.js';
 import { LineJoinStyle } from './style/LineJoinStyle.js';
 import { LineSegmentShape } from './LineSegmentShape.js';
 import { Shape } from './Shape.js';
@@ -41,6 +42,9 @@ export class PathShape extends Shape {
 						previousPoint = previousPoint.getEndPoint();
 					const lineSegment = new LineSegmentShape(previousPoint, element, this.style);
 					result.include(lineSegment.getBoundingBox());
+					const miterJoinPoint = getMiterJoinPointBetweenLines(this, i);
+					if (miterJoinPoint !== undefined)
+						result.include(miterJoinPoint);
 				}
 			}
 			else
