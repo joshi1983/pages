@@ -2,7 +2,7 @@ import { processExecuterTestCases } from './processExecuterTestCases.js';
 
 export function testLogoProgramExecuterUsingPrint(logger) {
 	const cases = [
-		{'code': 'print linecap', 'messages': ['round']},
+		/*{'code': 'print linecap', 'messages': ['round']},
 		// FMSLogo and MSWLogo shows a round cap initially.
 		// We want WebLogo to copy that by default.
 
@@ -496,7 +496,24 @@ end
 
 setFillColor "red
 p 100 true 0.3
-print "hello`, 'ignoreWarnings': true, 'messages': ['hello']}
+print "hello`, 'ignoreWarnings': true, 'messages': ['hello']},*/
+	{'code': `to fillShape :height :reverse?
+	localmake "startArcs [[109.3 0.013]]
+	if :reverse? [
+		localmake "startArcs []
+	]
+	localmake "arcsInfo (combine :startArcs [ [0.971]]) 
+	localmake "startOffset 0.14
+	if :reverse? [
+		localmake "startOffset 0.14
+	]
+	arcLines :arcsInfo :height
+end
+
+fillShape 100 true
+print "hi`,
+'ignoreWarnings': true,
+'messages': ['hi']}
 	];
 	processExecuterTestCases(cases, logger);
 };

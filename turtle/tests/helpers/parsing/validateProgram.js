@@ -67,8 +67,14 @@ function validateInstructionsArray(instructions, logger) {
 export function validateProgram(program, logger) {
 	if (typeof logger !== 'function')
 		throw new Error(`logger must be a function but got ${logger}`);
+	if (!(program.instructions instanceof Array))
+		throw new Error(`program.instructions must be an Array but got ${program.instructions}`);
 	let errorFound = validateInstructionsArray(program.instructions, logger);
 	for (const [name, procedure] of program.procedures.entries()) {
+		if (typeof procedure !== 'object')
+			throw new Error(`procedure must be an object but got ${procedure}`);
+		if (!(procedure.instructions instanceof Array))
+			throw new Error(`Expected procedure.instructions to be an Array but got ${procedure.instructions}`);
 		if (validateInstructionsArray(procedure.instructions, logger))
 			errorFound = true;
 	}

@@ -229,6 +229,42 @@ context.valueStack[context.valueStack.length - 1] = context.valueStack[context.v
 'out': `context.valueStack[context.valueStack.length - 0] = context.repcount();
 context.valueStack[context.valueStack.length - 1] = (context.valueStack[context.valueStack.length - 1] - 1)/2
 ;`
+},
+{
+	'in': `const localVariables = context.getCurrentExecutingProcedure().localVariables;
+context.localmake("startarcs",[[109.3,0.013]]);
+
+if ( context.getCurrentExecutingProcedure().localVariables.get("reverse?")) {
+context.localmake("startarcs",[]);
+}
+
+localVariables. set("arcsinfo",context.list.combine( localVariables.get("startarcs"),[[0.971]]));
+localVariables. set("startoffset",0.14);
+
+
+if ( localVariables.get("reverse?")) {
+context.localmake("startoffset",0.14);
+}
+context.turtle.arcLines(context.readVariable("arcsinfo"),context.getCurrentExecutingProcedure().localVariables.get("height"));`,
+'out': `const localVariables = context.getCurrentExecutingProcedure().localVariables;
+let reverse = localVariables.get("reverse?");
+let startarcs = localVariables.get([[109.3,0.013]]);
+let startoffset = localVariables.get("startoffset");
+
+if (reverse ) {
+startarcs=[];
+}
+
+localVariables. set("arcsinfo",context.list.combine( localVariables.get("startarcs"),[[0.971]]));
+localVariables. set("startoffset",0.14);
+
+
+if (reverse ) {
+startoffset=0.14;
+}
+context.turtle.arcLines(localVariables. get("arcsinfo"), localVariables.get("height"));
+localVariables.set("startarcs", startarcs);
+localVariables.set("startoffset", startoffset);`
 }
 	];
 	testInOutPairs(cases, optimizeJSWrapped, logger);

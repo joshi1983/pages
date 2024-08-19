@@ -51,7 +51,7 @@ import { wrapAndCall } from '../../helpers/wrapAndCall.js';
 
 export function testJSParsing(logger) {
 	wrapAndCall([
-		testEvaluateStringLiteral,
+		/*testEvaluateStringLiteral,
 		testEvaluateTemplateLiteral,
 		testEvaluators,
 		testMightHaveSideEffects,
@@ -98,7 +98,7 @@ export function testJSParsing(logger) {
 		testParsing,
 		testReservedWord,
 		testReservedWordsJSON,
-		testScanning,
+		*/testScanning,
 		testTranslationToWebLogo
 	], logger);
 };

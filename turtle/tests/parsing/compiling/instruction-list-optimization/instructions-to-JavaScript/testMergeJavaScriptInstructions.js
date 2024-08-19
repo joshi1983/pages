@@ -45,7 +45,7 @@ context.make("animationratio", animationratio);`
 			'outLength': 1,
 			'checks': [
 			]
-		}
+		},
 	];
 	cases.forEach(function(caseInfo, index) {
 		mergeJavaScriptInstructions(caseInfo.in);
