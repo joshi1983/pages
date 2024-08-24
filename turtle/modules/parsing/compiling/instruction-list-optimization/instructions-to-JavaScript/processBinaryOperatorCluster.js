@@ -5,6 +5,17 @@ import { JavaScriptInstruction } from '../../../execution/instructions/JavaScrip
 import { removeInstructions } from '../removeInstructions.js';
 import { wrapWithBracketsIfNeeded } from './wrapWithBracketsIfNeeded.js';
 
+function involvesMultipleBranches(instructions, index) {
+	/*
+	FIXME: look for execution branching leading up to this operator.
+	We don't want to process the operator in only 1 of multiple execution branches.
+
+	Also: call this from isBinaryOperatorCluster or processBinaryOperatorCluster 
+	to make some use of this function.
+	*/
+	return false;
+}
+
 export function isBinaryOperatorCluster(instructions, index) {
 	const instruction = instructions[index];
 	if (index < 2 || !(instruction instanceof BinaryOperatorInstruction))

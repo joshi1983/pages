@@ -28,6 +28,53 @@ function testIfElseExprConversion(logger) {
 		logger(`Expected a JavaScriptInstruction but got ${instructions[0]}`);
 }
 
+function testIfElse2ExprConversion(logger) {
+	const proceduresMap = new Map();
+	/*
+This test case simulates the optimization of WebLogo code like this:
+
+make "radius 1
+repeat 2 [
+	make "gap :radius * ifelse (even? repcount) 0.5 0.4
+	print :gap
+]*/
+	const instructionsDTO = [
+		/*0*/{'name': 'push', 'value': 'radius', 'isCloningValue': false},
+		/*1*/{'name': 'push', 'value': 1, 'isCloningValue': false},
+		/*2*/{'name': 'call-cmd', 'commandName': 'make', 'numArgs': 2},
+		/*3*/{'name': 'pop'},
+		/*4*/{'name': 'push', 'value': 2, 'isCloningValue': false},
+		/*5*/{'name': 'push-max-repcount', 'value': 2, 'isCloningValue': false},
+		/*6*/{'name': 'push', 'value': 'gap', 'isCloningValue': false},
+		/*7*/{'name': 'read-variable', 'variableName': 'radius'},
+		/*8*/{'name': 'call-cmd', 'commandName': 'repcount', 'numArgs': 0},
+		/*9*/{'name': 'call-cmd', 'commandName': 'evenp', 'numArgs': 1},
+		/*10*/{'name': 'jump-if-true', 'newIndex': 13},
+		/*11*/{'name': 'push', 'value': 0.4, 'isCloningValue': false},
+		/*12*/{'name': 'jump', 'newIndex': 14},
+		/*13*/{'name': 'push', 'value': 0.5, 'isCloningValue': false},
+		/*14*/{'name': 'binary-operator', 'symbol': '*'},
+		/*15*/{'name': 'call-cmd', 'commandName': 'make', 'numArgs': 2},
+		/*16*/{'name': 'pop'},
+		/*17*/{'name': 'read-variable', 'variableName': 'gap'},
+		/*18*/{'name': 'call-cmd', 'commandName': 'print', 'numArgs': 1},
+		/*19*/{'name': 'pop'},
+		/*20*/{'name': 'increment-repcount'},
+		/*21*/{'name': 'jump-if-true', 'newIndex': 6},
+		/*22*/{'name': 'pop-repcount'}
+	];
+	const instructions = instructionsDTOToInstructions(instructionsDTO, new Map());
+	convertInstructionsToJavaScript(instructions, [], false, {});
+	/*
+	FIXME: make sure that the * operator is applied to both 0.4 and 0.5 or neither of them.
+	
+	*/
+	if (instructions.length !== 7)
+		logger(`Expected 7 instructions but got ${instructions.length}`);
+	else if (!(instructions[0] instanceof JavaScriptInstruction))
+		logger(`Expected a JavaScriptInstruction but got ${instructions[0]}`);
+}
+
 function testMakeConversion(logger) {
 	const instructionsDTO = [
 		{"name":"push","value":"x", 'isCloningValue': false},
@@ -84,6 +131,7 @@ function testMandelbrotConversion1() {
 export function testConvertInstructionsToJavaScript(logger) {
 	wrapAndCall([
 		testIfElseExprConversion,
+		testIfElse2ExprConversion,
 		testMandelbrotConversion1,
 		testMakeConversion
 	], logger);

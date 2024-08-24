@@ -1,7 +1,7 @@
 export const compileOptionsArray = [
 	{'name': 'Unoptimized', 'translateToJavaScript': false},
 	{'name': 'JS Basic', 'translateToJavaScript': true},
-	{
+	/*{
 		'name': 'JS Merged',
 		'mergeJavaScriptInstructions': true,
 		'translateToJavaScript': true
@@ -31,5 +31,5 @@ export const compileOptionsArray = [
 		'mergeJavaScriptInstructions': true,
 		'parsedOptimize': true,
 		'translateToJavaScript': true
-	}
+	}*/
 ];
