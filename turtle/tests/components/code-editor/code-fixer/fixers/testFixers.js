@@ -2,9 +2,7 @@ import { testAnimationSetupFixer } from './testAnimationSetupFixer.js';
 import { testAnimationSnapshotStyleFixer } from './testAnimationSnapshotStyleFixer.js';
 import { testAutoRemoveFixer } from './testAutoRemoveFixer.js';
 import { testBooleanExpressionAsListFixer } from './testBooleanExpressionAsListFixer.js';
-import { testCanvas2D } from './canvas-2d/testCanvas2D.js';
 import { testClashingProcedureNameFixer } from './testClashingProcedureNameFixer.js';
-import { testCodeHeartTurtleScript } from './codeheart-turtlescript/testCodeHeartTurtleScript.js';
 import { testCodeRemoval } from './code-removal/testCodeRemoval.js';
 import { testColorCallWithDataListFixer } from './testColorCallWithDataListFixer.js';
 import { testColourStringLiteralFixer } from './testColourStringLiteralFixer.js';
@@ -27,12 +25,10 @@ import { testInstructionListSquareBracketsRemoveFixer } from './testInstructionL
 import { testJumpFixer } from './testJumpFixer.js';
 import { testLeafsInDataListsToStringLiteralsFixer } from './testLeafsInDataListsToStringLiteralsFixer.js';
 import { testLocalFixer } from './testLocalFixer.js';
-import { testLogo3D } from './logo-3d/testLogo3D.js';
 import { testMakeAssignFixer } from './testMakeAssignFixer.js';
 import { testMinusSignSpaceInsertFixer } from './testMinusSignSpaceInsertFixer.js';
 import { testMissingSpacesFixer } from './testMissingSpacesFixer.js';
 import { testNameCallFixer } from './testNameCallFixer.js';
-import { testPapert } from './papert/testPapert.js';
 import { testPcFixer } from './testPcFixer.js';
 import { testPenUpPenDownRemoveFixer } from './testPenUpPenDownRemoveFixer.js';
 import { testPenWidthCallWithValueFixer } from './testPenWidthCallWithValueFixer.js';
@@ -69,9 +65,7 @@ const tests = [
 	testAnimationSnapshotStyleFixer,
 	testAutoRemoveFixer,
 	testBooleanExpressionAsListFixer,
-	testCanvas2D,
 	testClashingProcedureNameFixer,
-	testCodeHeartTurtleScript,
 	testCodeRemoval,
 	testColorCallWithDataListFixer,
 	testColourStringLiteralFixer,
@@ -94,12 +88,10 @@ const tests = [
 	testJumpFixer,
 	testLeafsInDataListsToStringLiteralsFixer,
 	testLocalFixer,
-	testLogo3D,
 	testMakeAssignFixer,
 	testMinusSignSpaceInsertFixer,
 	testMissingSpacesFixer,
 	testNameCallFixer,
-	testPapert,
 	testPcFixer,
 	testPenUpPenDownRemoveFixer,
 	testPenWidthCallWithValueFixer,

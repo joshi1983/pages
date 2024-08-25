@@ -1,14 +1,6 @@
 import { AbstractAssetViewer } from './AbstractAssetViewer.js';
-import { isAvifReadSupported } from '../../../drawing-menu/download/avif/isAvifReadSupported.js';
 
-const imageExtensions = new Set(['avif', 'gif', 'jfif', 'jpg', 'jpeg', 'png', 'svg', 'webp']);
-isAvifReadSupported().then(function(bool) {
-	if (bool === false) {
-		// We don't want to depict the image as a broken link
-		// if the browser can't render AVIF images.
-		imageExtensions.remove('avif');
-	}
-});
+const imageExtensions = new Set(['gif', 'jfif', 'jpg', 'jpeg', 'png', 'svg', 'webp']);
 export class ImageAssetViewer extends AbstractAssetViewer {
 	constructor(asset) {
 		super(asset);

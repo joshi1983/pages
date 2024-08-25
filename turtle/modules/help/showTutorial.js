@@ -4,7 +4,6 @@ import { fetchJson } from '../fetchJson.js';
 import { fetchText } from '../fetchText.js';
 import { PushStates } from '../components/PushStates.js';
 import { showTutorialPage } from './showTutorialPage.js';
-import { setTutorialFromLocalStorage } from './tutorialLocalStorage.js';
 const pages = await fetchJson('json/tutorial.json');
 const indexHTML = await fetchText('content/help/tutorial/index.html');
 
@@ -32,6 +31,5 @@ export function showTutorial(autoPushState) {
 	pages.forEach(function(pageInfo) {
 		ul.appendChild(pageInfoToLi(pageInfo));
 	});
-	setTutorialFromLocalStorage(-1);
 };
 

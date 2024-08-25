@@ -88,16 +88,7 @@ setTimeout(function() {
 	console.log('CommanderPauseButton should be complete');
 	import('./components/commandInput.js');
 	console.log('commandInput.js should be complete');
-	import('./file/fileMenu.js');
-	import('./drawing-menu/download/DrawingDownload.js');
-	import('./drawing-menu/ShapeExplorer.js');
-	import('./debugging/commanderVisibilityMenuItem.js');
-	import('./debugging/Debugger.js');
-	import('./debugging/executionSpeedMenuItem.js');
 	import('./components/LayoutManager.js');
-	import('./help/Help.js');
-	import('./components/popStateListener.js');
-	import('./components/code-editor/refreshAnimationSetupFromTree.js');
 }, 0);
 
 

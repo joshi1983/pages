@@ -4,7 +4,6 @@ import { processExampleCount } from './processExampleCount.js';
 import { processHelpIds } from './processHelpIds.js';
 import { processPastableCode } from './processPastableCode.js';
 import { processRestrictedInvokeCommands } from './command-details/processRestrictedInvokeCommands.js';
-import { processPointCloudFileFormatsTable } from './processPointCloudFileFormatsTable.js';
 import { showDedicatedColorHelp } from './showDedicatedColorHelp.js';
 await Command.asyncInit();
 
@@ -65,5 +64,4 @@ export function processHelpLinks(e, syntaxHighlightCodeElements) {
 	processExampleCount(e);
 	processHelpIds(e instanceof Element ? e : undefined);
 	processPastableCode(e, syntaxHighlightCodeElements);
-	processPointCloudFileFormatsTable(e);
 }

@@ -9,7 +9,6 @@ import { testHelpUrlToEnglish } from './testHelpUrlToEnglish.js';
 import { testHelpUrlToFormalName } from './testHelpUrlToFormalName.js';
 import { testIndexSearch } from './index-search/testIndexSearch.js';
 import { testProcessExampleCount } from './testProcessExampleCount.js';
-import { testProcessPointCloudFileFormatsTable } from './testProcessPointCloudFileFormatsTable.js';
 import { testTutorialJSON } from './testTutorialJSON.js';
 import { wrapAndCall } from '../helpers/wrapAndCall.js';
 
@@ -26,7 +25,6 @@ export function testHelp(logger) {
 		testHelpUrlToFormalName,
 		testIndexSearch,
 		testProcessExampleCount,
-		testProcessPointCloudFileFormatsTable,
 		testTutorialJSON
 	], logger);
 };

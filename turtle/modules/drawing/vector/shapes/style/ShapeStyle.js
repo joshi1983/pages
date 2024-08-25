@@ -237,7 +237,6 @@ export class ShapeStyle extends EventDispatcher {
 			this.material.fill.color = c;
 		else
 			this.material.fill.color = c;
-		this.dispatchChange('fill-color');
 	}
 
 	setFillGradient(gradient, forceChange) {
@@ -267,7 +266,6 @@ export class ShapeStyle extends EventDispatcher {
 			throw new Error('newLineCap must be an integer.  Not: ' + newLineCap);
 		if (newLineCap !== this.pen.lineCap) {
 			this.pen.lineCap = newLineCap;
-			this.dispatchChange('line-cap');
 		}
 	}
 
@@ -276,14 +274,12 @@ export class ShapeStyle extends EventDispatcher {
 			throw new Error('newLineJoinStyle must be a number');
 		if (newLineJoinStyle !== this.pen.lineJoinStyle) {
 			this.pen.lineJoinStyle = newLineJoinStyle;
-			this.dispatchChange('line-join-style');
 		}
 	}
 
 	setMiterLimit(newLimit) {
 		if (newLimit !== this.pen.miterLimit) {
 			this.pen.miterLimit = newLimit;
-			this.dispatchChange('miter-limit');
 		}
 	}
 

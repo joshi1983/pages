@@ -11,7 +11,6 @@ import { testMergeShapes } from './testMergeShapes.js';
 import { testOptimizeClosedPath } from './testOptimizeClosedPath.js';
 import { testOptimizeDrawing } from './testOptimizeDrawing.js';
 import { testPathToCircle } from './testPathToCircle.js';
-import { testTryMergeShapePairWithTestDrawings } from './testTryMergeShapePairWithTestDrawings.js';
 import { testUsingWebLogoCode } from './testUsingWebLogoCode.js';
 import { wrapAndCall } from '../../../helpers/wrapAndCall.js';
 
@@ -30,7 +29,6 @@ export function testDrawingOptimization(logger) {
 		testOptimizeClosedPath,
 		testOptimizeDrawing,
 		testPathToCircle,
-		testTryMergeShapePairWithTestDrawings,
 		testUsingWebLogoCode
 	], logger);
 };

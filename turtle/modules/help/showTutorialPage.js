@@ -4,7 +4,6 @@ import { fetchJson } from '../fetchJson.js';
 import { fetchText } from '../fetchText.js';
 import { processHelpLinks } from './processHelpLinks.js';
 import { PushStates } from '../components/PushStates.js';
-import { setTutorialFromLocalStorage } from './tutorialLocalStorage.js';
 const wrapperHTML = await fetchText('content/help/tutorial/page-wrapper.html');
 const pages = await fetchJson('json/tutorial.json');
 const pageMap = new Map();
@@ -52,7 +51,6 @@ function showTutorialHTML(content, pageInfo) {
 	else
 		navLink(next, pageInfo.index + 1);
 	index.addEventListener('click', showTutorialIndex);
-	setTutorialFromLocalStorage(pageInfo.index);
 }
 
 export function showTutorialPage(filename, autoPushState) {
