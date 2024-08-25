@@ -37,6 +37,7 @@ https://bugzilla.mozilla.org/show_bug.cgi?id=1589935
 The problem comes down to Firefox not supporting the { type: "module" } used in getOrCreateWorker().  Edge and Chrome do support it.
 */
 function isWebworkerModuleError(problemDetails) {
+	return true;
 	return typeof problemDetails === 'object' &&
 		typeof problemDetails.message === 'string' &&
 		problemDetails.message.indexOf('import declarations may only appear at top level of a module') !== -1;
