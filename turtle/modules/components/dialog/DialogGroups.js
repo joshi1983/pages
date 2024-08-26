@@ -9,10 +9,14 @@ export class DialogGroups {
 		// setTimeout is used to prevent JavaScript dependency cycles.
 		// showIndexSearchDialog depends on DialogGroups and vice versa.
 		setTimeout(async function() {
-			const showIndexSearchDialog = (await import('../../help/showIndexSearchDialog.js')).showIndexSearchDialog;
-			const showAssetIndex = (await import('../../file/assets/showAssetIndex.js')).showAssetIndex;
-			groups.get(DialogGroups.HELP).click = showIndexSearchDialog;
-			groups.get(DialogGroups.ASSETS).click = showAssetIndex;
+			import('../../help/showIndexSearchDialog.js').then(function(showIndexModule) {
+				const showIndexSearchDialog = showIndexModule.showIndexSearchDialog;
+				groups.get(DialogGroups.HELP).click = showIndexSearchDialog;
+			});
+			import('../../file/assets/showAssetIndex.js').then(function(showAssetModule) {
+				const showAssetIndex = showAssetModule.showAssetIndex;
+				groups.get(DialogGroups.ASSETS).click = showAssetIndex;
+			});
 		}, 0);
 	}
 
