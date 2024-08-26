@@ -1,5 +1,4 @@
 import { absoluteUrl } from '../../../../modules/parsing/parse-tree-analysis/string-formats/absoluteUrl.js';
-import { AssetRepository } from '../../../../modules/assets/AssetRepository.js';
 import { getImageDataUrl } from '../../../helpers/getImageDataUrl.js';
 import { processStringFormatTestCases } from './processStringFormatTestCases.js';
 
@@ -38,20 +37,6 @@ export function testAbsoluteUrl(logger) {
 		's': 'hello.txt',
 		'error': true // no protocol
 	},
-	{
-		's': 'local://hello.txt',
-		'error': false
-	},
-	{
-		's': `local:${filename}`,
-		'error': true
-	}
 	];
-	let asset;
-	if (AssetRepository.getAssetByFilename(filename) === undefined) {
-		asset = AssetRepository.getOrCreateAssetByFilename(filename);
-	}
 	processStringFormatTestCases(cases, logger, absoluteUrl);
-	if (asset !== undefined)
-		AssetRepository.remove(asset);
 };

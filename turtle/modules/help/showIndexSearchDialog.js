@@ -1,11 +1,11 @@
-import { Dialog } from '../components/Dialog.js';
+//import { Dialog } from '../components/Dialog.js';
 import { DialogGroups } from '../components/dialog/DialogGroups.js';
 import { fetchText } from '../fetchText.js';
 import { indexSearchTopics } from './index-search/indexSearchTopics.js';
-import { Keys } from '../components/Keys.js';
+/*import { Keys } from '../components/Keys.js';
 import { PushStates } from '../components/PushStates.js';
 import { sanitizeQuery } from '../components/sanitizeQuery.js';
-const indexSearchHTML = await fetchText('content/help/index-search.html');
+*/const indexSearchHTML = await fetchText('content/help/index-search.html');
 
 function getMatchesForQuery(query) {
 	return indexSearchTopics.filter(function(c) {
@@ -25,7 +25,7 @@ function getMatchesForQuery(query) {
 }
 
 function updateSearchResults(input, resultsContainer) {
-	const query = sanitizeQuery(input.value);
+	/*const query = sanitizeQuery(input.value);
 	const matches = getMatchesForQuery(query);
 	resultsContainer.innerHTML = '';
 	matches.forEach(function(m) {
@@ -50,11 +50,11 @@ function updateSearchResults(input, resultsContainer) {
 		}
 		r.addEventListener('click', m.click);
 		resultsContainer.appendChild(r);
-	});
+	});*/
 }
 
 export function showIndexSearchDialog(autoPushState, optionalQueryString) {
-	if (typeof optionalQueryString !== 'string')
+	/*if (typeof optionalQueryString !== 'string')
 		optionalQueryString = '';
 	if (autoPushState !== false) {
 		PushStates.add(function() {
@@ -76,16 +76,16 @@ export function showIndexSearchDialog(autoPushState, optionalQueryString) {
 	});
 	input.focus();
 	input.addEventListener('keypress', function(e) {
-		/*
-		If there is exactly 1 search result when the user hits ENTER key, open that result.
-		*/
+		
+		//If there is exactly 1 search result when the user hits ENTER key, open that result.
+		
 		if (Keys.isEnterKey(e)) {
 			const matches = getMatchesForQuery(sanitizeQuery(input.value));
 			if (matches.length === 1) {
 				matches[0].click();
 			}
 		}
-	});
+	});*/
 };
 
 const helpItem = document.getElementById('help-index');

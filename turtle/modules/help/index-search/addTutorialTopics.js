@@ -8,6 +8,7 @@ const tutorialTopics = tutorialPages.map(function(pageInfo) {
 	function click() {
 		showTutorialPage(pageInfo.filename);
 	}
+	
 	return new IndexSearchTopic(IndexSearchTopic.TopicTypeTutorial, {
 		'primaryName': pageInfo.name
 	}, click);

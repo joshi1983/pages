@@ -1,23 +1,27 @@
-import { addCommandTopics } from './addCommandTopics.js';
+// importing addCommandTopics.js is definitely a cause of the bug but it may not be the only one.
+/*import { addCommandTopics } from './addCommandTopics.js';
 import { addDataTypeTopics } from './addDataTypeTopics.js';
 import { addGeneralHelpTopics } from './addGeneralHelpTopics.js';
-import { addGlossaryTopics } from './addGlossaryTopics.js';
+*/
+
+// at least 1 import below causes the bug.
+/*import { addGlossaryTopics } from './addGlossaryTopics.js';
 import { addOperatorTopics } from './addOperatorTopics.js';
 import { addSpecialTopics } from './addSpecialTopics.js';
 import { addTutorialTopics } from './addTutorialTopics.js';
-
+*/
 function compareByPrimaryName(topic1, topic2) {
 	return topic1.primaryName.toLowerCase().localeCompare(topic2.primaryName.toLowerCase());
 }
 
 const indexSearchTopics = [];
-addCommandTopics(indexSearchTopics);
+/*addCommandTopics(indexSearchTopics);
 addDataTypeTopics(indexSearchTopics);
 addGeneralHelpTopics(indexSearchTopics);
 addGlossaryTopics(indexSearchTopics);
 addOperatorTopics(indexSearchTopics);
 addSpecialTopics(indexSearchTopics);
 addTutorialTopics(indexSearchTopics);
-
+*/
 indexSearchTopics.sort(compareByPrimaryName);
 export { indexSearchTopics };

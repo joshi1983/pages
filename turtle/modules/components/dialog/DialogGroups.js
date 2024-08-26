@@ -1,5 +1,6 @@
 let groups = new Map();
 
+console.log(`About to export DialogGroups class.`);
 export class DialogGroups {
 	static HELP = 0;
 	static CONFIRMATION = 2;
@@ -7,12 +8,21 @@ export class DialogGroups {
 	static loadDependencies() {
 		// setTimeout is used to prevent JavaScript dependency cycles.
 		// showIndexSearchDialog depends on DialogGroups and vice versa.
-		setTimeout(async function() {
+		console.log('about to start setTimeout.');
+		setTimeout(function() {
+			console.log(`about to import showIndexSearchDialog module`);
 			import('../../help/showIndexSearchDialog.js').then(function(showIndexModule) {
-				const showIndexSearchDialog = showIndexModule.showIndexSearchDialog;
-				groups.get(DialogGroups.HELP).click = showIndexSearchDialog;
+				console.log(`got showIndexSearchDialog module and now setting click on groups map.`);
+				/*const showIndexSearchDialog = showIndexModule.showIndexSearchDialog;
+				const obj = groups.get(DialogGroups.HELP);
+				console.log(`obj = ${obj}`, obj);
+				if (obj !== null && typeof obj === 'object')
+					obj.click = showIndexSearchDialog;
+				*/console.log(`set the key-value pair in the groups Map.`);
 			});
+			console.log(`The import call was invoked.  Now, waiting for the then call back to be invoked.`);
 		}, 0);
+		console.log(`setTimeout was called.  Now, we'll wait for an interval of 0 miliseconds.`);
 	}
 
 	static getInfoForGroup(id) {
@@ -39,3 +49,4 @@ groups.set(DialogGroups.CONFIRMATION, {
 	'icon': 'dialog-icon confirmation',
 	'iconTitle': 'Confirmation'
 });
+console.log(`About to export DialogGroups class.`);

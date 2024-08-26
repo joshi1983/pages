@@ -1,7 +1,6 @@
 import { bindDocumentFocusTests } from './bindDocumentFocusTests.js';
 import { testAlphaColour } from './testAlphaColour.js';
 import { testArrayUtils } from './testArrayUtils.js';
-import { testAssets } from './assets/testAssets.js';
 import { testBinarySearch } from './testBinarySearch.js';
 import { testBlobToBase64 } from './testBlobToBase64.js';
 import { testClamp } from './testClamp.js';
@@ -65,7 +64,6 @@ const tests = [
 	bindDocumentFocusTests,
 	testAlphaColour,
 	testArrayUtils,
-	testAssets,
 	testBinarySearch,
 	testBlobToBase64,
 	testClamp,

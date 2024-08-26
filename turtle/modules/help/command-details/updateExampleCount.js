@@ -1,6 +1,3 @@
-import { getMatchedResults } from '../../file/file-load-example/getMatchedResults.js';
-import { ScriptExampleDisplayRepository } from '../../file/file-load-example/ScriptExampleDisplayRepository.js';
- 
 // Avoid dependency cycle.
 let latestQuery;
 let showLoadExampleDialog = function(query) {

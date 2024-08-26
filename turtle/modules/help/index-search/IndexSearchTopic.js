@@ -1,3 +1,5 @@
+const typesInfo = [];
+
 export class IndexSearchTopic {
 	static TopicTypeCommand = 0;
 	static TopicTypeOperator = 1;
@@ -25,15 +27,22 @@ export class IndexSearchTopic {
 	}
 
 	getIconClasses() {
-		return typesInfo[this.type].iconClass;
+		const info = typesInfo[this.type];
+		if (info === undefined)
+			return '';
+		else
+			return info.iconClass;
 	}
 
 	getTypeTitle() {
-		return typesInfo[this.type].title;
+		const info = typesInfo[this.type];
+		if (info === undefined)
+			return '';
+		else
+			return info.title;
 	}
 };
 
-const typesInfo = [];
 typesInfo[IndexSearchTopic.TopicTypeBreakpoint] = {
 	'iconClass': 'breakpoint-icon',
 	'title': 'breakpoint'

@@ -6,7 +6,6 @@ import { Code } from '../components/code-editor/Code.js';
 import { Dialog } from '../components/Dialog.js';
 import { EditorLocalStorage } from '../components/code-editor/EditorLocalStorage.js';
 import { fetchText } from '../fetchText.js';
-import { wasScriptExampleUsed } from '../file/file-load-example/ScriptExampleLocalStorage.js';
 const wrapperHTML = await fetchText('content/help/tips/tip-wrapper.html');
 
 function showTip(id) {
@@ -33,9 +32,7 @@ function isSetTimeTipAppropriate() {
 }
 
 function initialTip() {
-	if (!wasScriptExampleUsed())
-		showTip('examples');
-	else if (!EditorLocalStorage.wasEditorOpened())
+	if (!EditorLocalStorage.wasEditorOpened())
 		showTip('code-editor');
 	else if (!EditorLocalStorage.wereBreakpointsUsed())
 		showTip('breakpoints');

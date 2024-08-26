@@ -82,9 +82,9 @@ setTimeout(function() {
 	console.log('DialogGroups loadDependencies() should be complete');
 	import('./zoom/initializeZoomMenu.js');
 	console.log('initializeZoomMenu should be complete');
-	import('./components/commander-buttons/ClearTextButton.js');
+	//import('./components/commander-buttons/ClearTextButton.js');
 	console.log('ClearTextButton should be complete');
-	import('./components/commander-buttons/CommanderPauseButton.js');
+	//import('./components/commander-buttons/CommanderPauseButton.js');
 	console.log('CommanderPauseButton should be complete');
 	import('./components/commandInput.js');
 	console.log('commandInput.js should be complete');
