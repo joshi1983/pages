@@ -1,11 +1,11 @@
 import { GlossaryRepository } from '../../components/GlossaryRepository.js';
 import { IndexSearchTopic } from './IndexSearchTopic.js';
-import { showGlossaryTerm } from '../showGlossaryTerm.js';
+//import { showGlossaryTerm } from '../showGlossaryTerm.js';
 
 export function addGlossaryTopics(topics) {
-	GlossaryRepository.getAllTermsData().forEach(function(info) {
+	/*GlossaryRepository.getAllTermsData().forEach(function(info) {
 		function click() {
-			showGlossaryTerm(info.name, true);
+			//showGlossaryTerm(info.name, true);
 		}
 
 		let searchKeywords = [];
@@ -15,5 +15,5 @@ export function addGlossaryTopics(topics) {
 			'primaryName': info.name,
 			'searchKeywords': searchKeywords
 		}, click));
-	});
+	});*/
 };

@@ -5,8 +5,8 @@ import { addGeneralHelpTopics } from './addGeneralHelpTopics.js';
 */
 
 // at least 1 import below causes the bug.
-/*import { addGlossaryTopics } from './addGlossaryTopics.js';
-import { addOperatorTopics } from './addOperatorTopics.js';
+import { addGlossaryTopics } from './addGlossaryTopics.js';
+/*import { addOperatorTopics } from './addOperatorTopics.js';
 import { addSpecialTopics } from './addSpecialTopics.js';
 import { addTutorialTopics } from './addTutorialTopics.js';
 */
