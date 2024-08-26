@@ -1,7 +1,6 @@
 import { Code } from './code-editor/Code.js';
 import { ColorSelectorDialog } from './ColorSelectorDialog.js';
 import { CommandDetails } from '../help/CommandDetails.js';
-import { convertToAsset } from './syntax-highlighter/context-menu/convertToAsset.js';
 import { Dialog } from './Dialog.js';
 import { EditorLocalStorage } from './code-editor/EditorLocalStorage.js';
 import { EventDispatcher } from '../EventDispatcher.js';
@@ -67,7 +66,6 @@ class PrivateCodeEditor extends EventDispatcher {
 							'CommandDetails': CommandDetails,
 							'ColorSelectorDialog': ColorSelectorDialog,
 							'CommandBoxMessages': CommandBoxMessages,
-							'convertToAsset': convertToAsset,
 							'Dialog': Dialog,
 							'showMenuDialog': showMenuDialog,
 							'ToastMessages': ToastMessages

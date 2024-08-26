@@ -1,4 +1,3 @@
-import { AssetRepository } from '../../../assets/AssetRepository.js';
 import { blobToBase64 } from '../../../blobToBase64.js';
 import { fetchBlob } from '../../../fetchBlob.js';
 import { RateLimiter } from '../../../RateLimiter.js';
@@ -51,12 +50,7 @@ export class ShortTermBase64Cache {
 		if (url.startsWith('data:'))
 			return url;
 		if (url.startsWith('local:')) {
-			let filename = url.substring('local:'.length);
-			while (filename.startsWith('/'))
-				filename = filename.substring(1);
-			const asset = AssetRepository.getAssetByFilename(filename);
-			if (asset !== undefined)
-				return asset.getBase64URI();
+			throw new Error(`Unsupported protocol: local: in url: ${url}`);
 		}
 		let item = cache.get(url);
 		if (item === undefined) {

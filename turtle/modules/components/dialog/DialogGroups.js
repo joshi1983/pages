@@ -2,7 +2,6 @@ let groups = new Map();
 
 export class DialogGroups {
 	static HELP = 0;
-	static ASSETS = 1;
 	static CONFIRMATION = 2;
 
 	static loadDependencies() {
@@ -12,10 +11,6 @@ export class DialogGroups {
 			import('../../help/showIndexSearchDialog.js').then(function(showIndexModule) {
 				const showIndexSearchDialog = showIndexModule.showIndexSearchDialog;
 				groups.get(DialogGroups.HELP).click = showIndexSearchDialog;
-			});
-			import('../../file/assets/showAssetIndex.js').then(function(showAssetModule) {
-				const showAssetIndex = showAssetModule.showAssetIndex;
-				groups.get(DialogGroups.ASSETS).click = showAssetIndex;
 			});
 		}, 0);
 	}
@@ -36,13 +31,6 @@ groups.set(DialogGroups.HELP, {
 	'height': 330,
 	'icon': 'dialog-icon help-index',
 	'iconTitle': 'Help index'
-});
-
-groups.set(DialogGroups.ASSETS, {
-	'width': 450,
-	'height': 330,
-	'icon': 'dialog-icon asset-index',
-	'iconTitle': 'Asset Index'
 });
 
 groups.set(DialogGroups.CONFIRMATION, {

@@ -1,6 +1,4 @@
-import { AssetRepository } from '../../../assets/AssetRepository.js';
-
-const supportedProtocolsArray = ['data', 'http', 'https', 'local'];
+const supportedProtocolsArray = ['data', 'http', 'https'];
 const supportedProtocols = new Set(supportedProtocolsArray);
 
 function hasProtocol(s) {
@@ -14,12 +12,6 @@ export function getProtocol(s) {
 		return s.substring(0, index).toLowerCase();
 };
 
-function checkLocalStorage(s) {
-	s = s.substring('local://'.length);
-	if (AssetRepository.getAssetByFilename(s) === undefined)
-		return `No asset found with name: "${s}"`;
-}
-
 export function absoluteUrl(s, extendedChecks) {
 	if (!hasProtocol(s))
 		return 'missing protocol.  A protocol must be specified at the beginning such as https://';
@@ -30,6 +22,4 @@ export function absoluteUrl(s, extendedChecks) {
 		return `Unsupported protocol "${protocol}".  The protocol must be one of ${supportedProtocolsArray.join(',')}`;
 	if (protocol.startsWith('http') && s.indexOf('.') === -1)
 		return 'host name missing.  An IP address, domain name, or any other host name must be specified such as github.com';
-	if (protocol === 'local' && extendedChecks !== false)
-		return checkLocalStorage(s);
 }

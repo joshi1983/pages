@@ -86,7 +86,6 @@ export function highlightLogoSyntaxInTextarea(textarea, context) {
 	});
 
 	const context2 = Object.assign({
-		'convertToAsset': context.convertToAsset,
 		'textarea': textarea,
 		'getTree': function() {
 			const parseLogger = new ParseLogger();

@@ -1,12 +1,11 @@
 import { isAnyTextSelected } from './isAnyTextSelected.js';
 import { ColorClickProcessor } from './context-menu/ColorClickProcessor.js';
 import { CommandLinkProcessor } from './context-menu/CommandLinkProcessor.js';
-import { ConvertToAssetProcessor } from './context-menu/ConvertToAssetProcessor.js';
 import { HyperlinkProcessor } from './context-menu/HyperlinkProcessor.js';
 import { ProcedureCallProcessor } from './context-menu/ProcedureCallProcessor.js';
 
 export const processors = [HyperlinkProcessor, ColorClickProcessor, CommandLinkProcessor,
-ConvertToAssetProcessor, ProcedureCallProcessor
+ProcedureCallProcessor
 ];
 
 function handlerToMenuOption(elements, context) {

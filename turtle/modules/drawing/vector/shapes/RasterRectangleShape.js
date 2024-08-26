@@ -1,4 +1,3 @@
-import { AssetRepository } from '../../../assets/AssetRepository.js';
 import { EventDispatcher } from '../../../EventDispatcher.js';
 import { getProtocol } from '../../../parsing/parse-tree-analysis/string-formats/absoluteUrl.js';
 import { LineCap } from './style/LineCap.js';
@@ -11,10 +10,7 @@ export class RasterRectangleShape extends Shape {
 		super(position, style);
 		this.eventDispatcher = new EventDispatcher(['load']);
 		if (getProtocol(dataUrl) === 'local') {
-			const asset = AssetRepository.getAssetByFilename(dataUrl.substring('local://'.length));
-			if (asset !== undefined) {
-				dataUrl = asset.getBase64URI();
-			}
+			throw new Error(`Unsupported protocol: local.`);
 		}
 		this.dataUrl = dataUrl;
 		this.width = width;
