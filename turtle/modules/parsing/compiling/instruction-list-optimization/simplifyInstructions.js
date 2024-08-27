@@ -1,4 +1,3 @@
-import { convertInstructionsToJavaScript } from './instructions-to-JavaScript/convertInstructionsToJavaScript.js';
 import { optimizeOptionalForStepCalculation } from './optimizeOptionalForStepCalculation.js';
 import { removeAlwaysSkippedInstructions } from './removeAlwaysSkippedInstructions.js';
 import { removeNotImmediatelyAfterComparison } from './removeNotImmediatelyAfterComparison.js';
@@ -34,6 +33,4 @@ export function simplifyInstructions(instructions, parameters, isForProcedure, c
 		removeRepeatZeroIterationCheck(instructions);
 		optimizeOptionalForStepCalculation(instructions);
 	}
-	if (compileOptions.translateToJavaScript === true)
-		convertInstructionsToJavaScript(instructions, parameters, isForProcedure, compileOptions);
 };
