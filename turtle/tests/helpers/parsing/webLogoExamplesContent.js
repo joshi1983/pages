@@ -1,12 +1,11 @@
 import { fetchJson } from '../../../modules/fetchJson.js';
-import { ZippedExamples } from '../../../modules/file/file-load-example/ZippedExamples.js';
+import { fetchText } from '../../../modules/fetchText.js';
 const exampleScripts = await fetchJson('json/scriptExamples.json');
-await ZippedExamples.asyncInit();
 
 const webLogoExamplesContent = [];
 for (const exampleInfo of exampleScripts) {
 	const filename = exampleInfo.filename;
-	const content = ZippedExamples.getContentForFilename(filename);
+	const content = await fetchText('./logo-scripts/' + filename);
 	if (typeof content === 'string')
 		webLogoExamplesContent.push(content);
 }

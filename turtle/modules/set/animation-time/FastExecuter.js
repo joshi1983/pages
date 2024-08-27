@@ -13,7 +13,6 @@ import { Vector2DDrawing } from '../../drawing/vector/Vector2DDrawing.js';
 const parser = new AsyncParser();
 const fastCompileOptions = {
 	'translateToJavaScript': true,
-	'mergeJavaScriptInstructions': true,
 	'forProduction': true,
 	'parsedOptimize': true
 };

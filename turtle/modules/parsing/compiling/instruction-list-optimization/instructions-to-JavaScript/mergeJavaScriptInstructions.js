@@ -3,7 +3,6 @@ import { JavaScriptInstruction } from '../../../execution/instructions/JavaScrip
 import { LogoInstruction } from '../../../execution/instructions/LogoInstruction.js';
 import { MapUtils } from '../../../../MapUtils.js';
 import { removeInstructions } from '../removeInstructions.js';
-import { sanitizeMergedJS } from './optimize-js/sanitizeMergedJS.js';
 import { StringBuffer } from '../../../../StringBuffer.js';
 
 function mergeJavaScriptInstructionsCluster(instructions, index) {

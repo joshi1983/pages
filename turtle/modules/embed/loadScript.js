@@ -34,7 +34,6 @@ export async function loadScript(script) {
 		const tree = LogoParser.getParseTree(code, logger, extraProcedures);
 		const compileOptions = {
 			'translateToJavaScript': true,
-			'mergeJavaScriptInstructions': true,
 			'forProduction': true
 		};
 		const initialVariables = new Map();

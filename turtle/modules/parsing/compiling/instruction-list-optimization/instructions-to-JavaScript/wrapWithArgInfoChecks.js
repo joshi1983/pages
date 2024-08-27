@@ -1,5 +1,4 @@
 import { argInfoToCheckFunction, needsArgInfoCheck } from './argInfoToCheckFunction.js';
-import { isSafeToNotErrorCheck } from './isSafeToNotErrorCheck.js';
 let counter = 0;
 
 /*
@@ -17,10 +16,6 @@ export function wrapWithArgInfoChecks(code, argInfo, commandPrimaryName, token) 
 	else
 		paramName = `Parameter ${argInfo.name} in command ${commandPrimaryName}`;
 	const func = argInfoToCheckFunction(argInfo, paramName, token);
-	if (isSafeToNotErrorCheck(code, func))
-		return {'code': code,
-		'namedFunctionsMap': new Map()
-		};
 	const funcName = `errorCaseCheck${counter++}`;
 	return {
 		'code': `this.${funcName}(${code})`,

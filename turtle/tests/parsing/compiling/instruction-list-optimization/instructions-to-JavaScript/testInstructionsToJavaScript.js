@@ -15,12 +15,8 @@ import { testGetJumpToIndexes } from './testGetJumpToIndexes.js';
 import { testGetStartIndexForInstructionCluster } from './testGetStartIndexForInstructionCluster.js';
 import { testInstructionToJavaScriptInstruction } from './testInstructionToJavaScriptInstruction.js';
 import { testIsLocalVariable } from './testIsLocalVariable.js';
-import { testIsSafeToNotErrorCheck } from './testIsSafeToNotErrorCheck.js';
-import { testMergeIntoIfElseStatements } from './testMergeIntoIfElseStatements.js';
-import { testMergeIntoIfStatements } from './testMergeIntoIfStatements.js';
 import { testMergeJavaScriptInstructions } from './testMergeJavaScriptInstructions.js';
 import { testMergeJavaScriptInstructionsWithInvoke } from './testMergeJavaScriptInstructionsWithInvoke.js';
-import { testOptimizeJSDirectory } from './optimize-js/testOptimizeJSDirectory.js';
 import { testProcessBinaryOperatorCluster } from './testProcessBinaryOperatorCluster.js';
 import { testPushInstructionToJavaScript } from './testPushInstructionToJavaScript.js';
 import { testUnaryOperatorToJavaScript } from './testUnaryOperatorToJavaScript.js';
@@ -47,12 +43,8 @@ testGetJumpToIndexes,
 testGetStartIndexForInstructionCluster,
 testInstructionToJavaScriptInstruction,
 testIsLocalVariable,
-testIsSafeToNotErrorCheck,
-testMergeIntoIfElseStatements,
-testMergeIntoIfStatements,
 testMergeJavaScriptInstructions,
 testMergeJavaScriptInstructionsWithInvoke,
-testOptimizeJSDirectory,
 testProcessBinaryOperatorCluster,
 testPushInstructionToJavaScript,
 testUnaryOperatorToJavaScript,

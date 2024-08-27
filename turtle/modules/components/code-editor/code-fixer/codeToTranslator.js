@@ -1,5 +1,3 @@
-
-
 const translatorPairs = new Map([
 ]);
 const defaultResult = [(code) => code, false];

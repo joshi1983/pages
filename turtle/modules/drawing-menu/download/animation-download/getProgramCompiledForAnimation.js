@@ -15,7 +15,6 @@ export async function getProgramCompiledForAnimation() {
 		return; // indicate failure.
 	const compileOptions = {
 		'translateToJavaScript': true,
-		'mergeJavaScriptInstructions': true,
 		'forProduction': true
 	};
 	const initialVariables = new Map();

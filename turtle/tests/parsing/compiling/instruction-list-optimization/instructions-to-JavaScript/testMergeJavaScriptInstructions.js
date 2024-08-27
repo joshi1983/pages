@@ -1,4 +1,5 @@
-import { JavaScriptInstruction } from '../../../../../modules/parsing/execution/instructions/JavaScriptInstruction.js';
+import { JavaScriptInstruction } from
+'../../../../../modules/parsing/execution/instructions/JavaScriptInstruction.js';
 import { mergeJavaScriptInstructions } from '../../../../../modules/parsing/compiling/instruction-list-optimization/instructions-to-JavaScript/mergeJavaScriptInstructions.js';
 import { ParseTreeToken } from '../../../../../modules/parsing/ParseTreeToken.js';
 import { ParseTreeTokenType } from '../../../../../modules/parsing/ParseTreeTokenType.js';

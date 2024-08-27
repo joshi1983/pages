@@ -1,20 +1,14 @@
 import { CallCommandInstruction } from '../../../execution/instructions/CallCommandInstruction.js';
 import { canBeConverted } from './canBeConverted.js';
 import { convertExtraInstructionsToJavaScript } from './convertExtraInstructionsToJavaScript.js';
-import { finalOptimizeInstructions } from './optimize-js/final-optimize/finalOptimizeInstructions.js';
 import { getStartIndexForInstructionCluster } from './getStartIndexForInstructionCluster.js';
 import { instructionToJavaScript } from './instructionToJavaScript.js';
 import { isJumpSafeInterval } from './isJumpSafeInterval.js';
 import { JavaScriptInstruction } from '../../../execution/instructions/JavaScriptInstruction.js';
-import { mergeIntoIfStatements } from './mergeIntoIfStatements.js';
-import { mergeIntoIfElseStatements } from './mergeIntoIfElseStatements.js';
-import { mergeJavaScriptInstructions } from './mergeJavaScriptInstructions.js';
-import { parsedOptimizeInstructions } from './optimize-js/parsedOptimizeInstructions.js';
 import { PopInstruction } from '../../../execution/instructions/PopInstruction.js';
 import { processBinaryOperatorCluster, isBinaryOperatorCluster } from './processBinaryOperatorCluster.js';
 import { processPushCluster, isPushClusterInstruction } from './processPushCluster.js';
 import { removeInstructions } from '../removeInstructions.js';
-import { sanitizeMergedJS } from './optimize-js/sanitizeMergedJS.js';
 import { shouldPush } from './shouldPush.js';
 
 function shouldRemovePop(instructions, i) {
@@ -81,8 +75,6 @@ export function convertInstructionsToJavaScript(instructions, parameters, isForP
 			let numInstructions;
 			while (true) {
 				numInstructions = instructions.length;
-				mergeIntoIfStatements(instructions);
-				mergeIntoIfElseStatements(instructions);
 				if (numInstructions === instructions.length)
 					break;
 			}

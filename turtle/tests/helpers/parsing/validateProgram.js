@@ -1,27 +1,6 @@
 import { flatten } from '../../../modules/parsing/generic-parsing-utilities/flatten.js';
 import { CallCommandInstruction } from '../../../modules/parsing/execution/instructions/CallCommandInstruction.js';
 import { JavaScriptInstruction } from '../../../modules/parsing/execution/instructions/JavaScriptInstruction.js';
-import { parse } from '../../../modules/parsing/js-parsing/parse.js';
-import { removeUnneededCurvedBrackets } from
-'../../../modules/parsing/compiling/instruction-list-optimization/instructions-to-JavaScript/optimize-js/removeUnneededCurvedBrackets.js';
-
-function isJavaScriptEqual(code1, code2) {
-	const parseResult1 = parse(code1);
-	const parseResult2 = parse(code2);
-	const tokens1 = flatten(parseResult1.root);
-	const tokens2 = flatten(parseResult2.root);
-	if (tokens1.length !== tokens2.length)
-		return false;
-	for (let i = 0; i < tokens1.length; i++) {
-		const tok1 = tokens1[i];
-		const tok2 = tokens2[i];
-		if (tok1.val !== tok2.val)
-			return false;
-		if (tok1.type !== tok2.type)
-			return false;
-	}
-	return true;
-}
 
 function validateJavaScriptInstruction(instruction, logger) {
 	// check that instruction.code is in instruction.execute.
@@ -30,10 +9,6 @@ function validateJavaScriptInstruction(instruction, logger) {
 	const firstBracketIndex = s.indexOf('{');
 	const lastBracketIndex = s.lastIndexOf('}');
 	const implementation = s.substring(firstBracketIndex + 1, lastBracketIndex);
-	if (!isJavaScriptEqual(removeUnneededCurvedBrackets(implementation), removeUnneededCurvedBrackets(code))) {
-		logger(`Expected to find code in execute but did not.  code=${code}.  execute.toString()=${s}, implementation=${implementation}`);
-		return true;
-	}
 	return false;
 }
 

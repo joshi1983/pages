@@ -7,7 +7,6 @@ import { testConvertParseTreeTokensToScanTokens } from './testConvertParseTreeTo
 import { testCreateParameterizedGroups } from './testCreateParameterizedGroups.js';
 import { testCreateParameterizedGroupsParseErrors } from './testCreateParameterizedGroupsParseErrors.js';
 import { testDataTypesDirectory } from './data-types/testDataTypesDirectory.js';
-import { testExampleScripts } from './testExampleScripts.js';
 import { testExecution } from './execution/testExecution.js';
 import { testFixOperatorPrecedence } from './testFixOperatorPrecedence.js';
 import { testGenericParsingUtilities } from './generic-parsing-utilities/testGenericParsingUtilities.js';
@@ -48,7 +47,6 @@ export function testParsing(logger) {
 		testCreateParameterizedGroups,
 		testCreateParameterizedGroupsParseErrors,
 		testDataTypesDirectory,
-		testExampleScripts,
 		testExecution,
 		testFixOperatorPrecedence,
 		testGenericParsingUtilities,

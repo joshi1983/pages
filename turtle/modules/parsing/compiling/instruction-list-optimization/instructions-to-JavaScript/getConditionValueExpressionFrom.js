@@ -1,5 +1,4 @@
 import { JavaScriptInstruction } from '../../../execution/instructions/JavaScriptInstruction.js';
-import { optimizePushedIfStatementConditions } from './optimize-js/optimizePushedIfStatementConditions.js';
 import { PushInstruction } from '../../../execution/instructions/PushInstruction.js';
 import { pushInstructionToJavaScript } from './pushInstructionToJavaScript.js';
 

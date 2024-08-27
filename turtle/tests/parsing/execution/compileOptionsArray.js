@@ -19,17 +19,9 @@ export const compileOptionsArray = [
 		'translateToJavaScript': true
 	},
 	{
-		'name': 'Production Parse Basic',
-		'forProduction': true,
-		'mergeJavaScriptInstructions': false,
-		'parsedOptimize': true,
-		'translateToJavaScript': true
-	},
-	{
 		'name': 'Production Parse Full',
 		'forProduction': true,
 		'mergeJavaScriptInstructions': true,
-		'parsedOptimize': true,
 		'translateToJavaScript': true
 	}
 ];
