@@ -1,4 +1,4 @@
-import { fetchJson } from '../fetchJson.js';
+//import { fetchJson } from '../fetchJson.js';
 //const data = await fetchJson('json/glossary.json');
 const termsMap = new Map();
 /*data.forEach(function(info) {
