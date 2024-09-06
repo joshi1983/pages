@@ -12,31 +12,47 @@ const speeds = [maximumSpeedMode, new FastSpeed(), new MediumSpeed(), new Slow()
 	new VerySlow(), new SuperDuperSlow()];
 const speedItem = document.getElementById('debugging-execution-speed');
 const speedNamesMap = new Map();
-speedItem.addEventListener('change', function() {
-	const newSpeedMode = speedNamesMap.get(speedItem.value);
-	Settings.executer.setSpeedMode(newSpeedMode);
-	if (newSpeedMode !== maximumSpeedMode)
+let currentMode;
+
+function clickedOption(event) {
+	const msg = event.target.innerText;
+	currentMode = speedNamesMap.get(msg);
+	Settings.executer.setSpeedMode(currentMode);
+	if (currentMode !== maximumSpeedMode)
 		disableAutorun(`Autorun was disabled because running anything slower than ${maximumSpeedMode.name} is too slow to automatically rerun.`);
-	ToastMessages.success('Execution speed set to ' + newSpeedMode.name, false);
-});
+	ToastMessages.success('Execution speed set to ' + currentMode.name, false);
+	updateSelectedUIElement();
+}
 
 speeds.forEach(function(speedInfo, index) {
-	const option = document.createElement('option');
+	const option = document.createElement('a');
 	option.innerText = speedInfo.name;
 	speedNamesMap.set(speedInfo.name, speedInfo);
 	if (index === 0)
-		option.setAttribute('selected', 'selected');
+		option.classList.add('selected');
 
+	option.addEventListener('click', clickedOption);
 	speedItem.appendChild(option);
 });
 
 export function isUsingMaximumSpeed() {
-	const speedMode = speedNamesMap.get(speedItem.value);
-	return speedMode === maximumSpeedMode;
+	return currentMode === maximumSpeedMode;
 };
 
+function updateSelectedUIElement() {
+	const options = speedItem.querySelectorAll(':scope > a');
+	for (let i = 0; i < options.length; i++) {
+		const node = options[i];
+		if (currentMode.name === node.innerText)
+			node.classList.add('selected');
+		else
+			node.classList.remove('selected');
+	}
+}
+
 export function switchToMaximumSpeed(extraMsg) {
-	speedItem.value = maximumSpeedMode.name;
+	currentMode = maximumSpeedMode;
 	Settings.executer.setSpeedMode(maximumSpeedMode);
+	updateSelectedUIElement();
 	ToastMessages.success('Execution speed set to ' + maximumSpeedMode.name + extraMsg, false);
 };
