@@ -22,6 +22,7 @@ export class OptionList extends EventDispatcher {
 		if (e === null)
 			throw new Error(`Unable to find element with id ${id}`);
 		const selectedIndex = getInitialIndex(optionsInfo);
+		e.classList.add('option-list');
 		this.e = e;
 		this.selectedOption;
 		this.itemsInfo = optionsInfo;
@@ -73,6 +74,10 @@ export class OptionList extends EventDispatcher {
 		this.items.forEach(function(item) {
 			item.remove();
 		});
+		this.items = undefined;
+		this.itemsInfo = undefined;
+		this.e.classList.remove('option-list');
+		this.e = undefined;
 	}
 
 	setSelectedInnerText(innerText) {

@@ -48,5 +48,5 @@ export function isUsingMaximumSpeed() {
 };
 
 export function switchToMaximumSpeed(extraMsg) {
-	options.setSelectedInnerText(currentMode.name);
+	options.setSelectedInnerText(maximumSpeedMode.name);
 };
