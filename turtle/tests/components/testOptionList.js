@@ -32,6 +32,8 @@ export function testOptionList(logger) {
 	div.setAttribute('id', id);
 	body.appendChild(div);
 	const optionList = new OptionList(id, optionsData);
+	if (!div.classList.contains('option-list'))
+		logger(`Expected to find option-list class on the containing element but did not find it.`);
 	let selectCount = 0;
 	optionList.addEventListener('selection-changed', function(eventInfo) {
 		selectCount++;
@@ -53,5 +55,8 @@ export function testOptionList(logger) {
 		optionList.setSelectedInnerText(lastChild.innerText);
 	}
 	optionList.dispose();
+	if (div.classList.contains('option-list'))
+		logger(`After dispose, expected to not find option-list class on the containing element but found it anyway.`);
+	
 	div.remove();
 };
