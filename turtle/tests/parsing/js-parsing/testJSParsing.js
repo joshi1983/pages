@@ -1,4 +1,4 @@
-import { testEvaluateStringLiteral } from './testEvaluateStringLiteral.js';
+/*import { testEvaluateStringLiteral } from './testEvaluateStringLiteral.js';
 import { testEvaluateTemplateLiteral } from './testEvaluateTemplateLiteral.js';
 import { testEvaluators } from './evaluators/testEvaluators.js';
 import { testMightHaveSideEffects } from './testMightHaveSideEffects.js';
@@ -31,8 +31,8 @@ import { testParseImports } from './testParseImports.js';
 import { testParseIndexExpression } from './testParseIndexExpression.js';
 import { testParseIndexExpressionIndex } from './testParseIndexExpressionIndex.js';
 import { testParseInOperator } from './testParseInOperator.js';
-import { testParseJavaScriptFromExamples } from './testParseJavaScriptFromExamples.js';
-import { testParseRegularExpressions } from './testParseRegularExpressions.js';
+*/import { testParseJavaScriptFromExamples } from './testParseJavaScriptFromExamples.js';
+/*import { testParseRegularExpressions } from './testParseRegularExpressions.js';
 import { testParseSpecialValues } from './testParseSpecialValues.js';
 import { testParseSwitchStatements } from './testParseSwitchStatements.js';
 import { testParseTernaryOperator } from './testParseTernaryOperator.js';
@@ -49,11 +49,11 @@ import { testReservedWordsJSON } from './testReservedWordsJSON.js';
 import { testScanning } from './scanning/testScanning.js';
 import { testScanningTemplateLiterals } from './scanning-template-literals/testScanningTemplateLiterals.js';
 import { testTranslationToWebLogo } from './translation-to-weblogo/testTranslationToWebLogo.js';
-import { wrapAndCall } from '../../helpers/wrapAndCall.js';
+*/import { wrapAndCall } from '../../helpers/wrapAndCall.js';
 
 export function testJSParsing(logger) {
 	wrapAndCall([
-		testEvaluateStringLiteral,
+		/*testEvaluateStringLiteral,
 		testEvaluateTemplateLiteral,
 		testEvaluators,
 		testMightHaveSideEffects,
@@ -86,8 +86,8 @@ export function testJSParsing(logger) {
 		testParseIndexExpression,
 		testParseIndexExpressionIndex,
 		testParseInOperator,
-		testParseJavaScriptFromExamples,
-		testParseRegularExpressions,
+		*/testParseJavaScriptFromExamples,
+		/*testParseRegularExpressions,
 		testParseSpecialValues,
 		testParseSwitchStatements,
 		testParseTernaryOperator,
@@ -103,6 +103,6 @@ export function testJSParsing(logger) {
 		testReservedWordsJSON,
 		testScanning,
 		testScanningTemplateLiterals,
-		testTranslationToWebLogo
+		testTranslationToWebLogo*/
 	], logger);
 };

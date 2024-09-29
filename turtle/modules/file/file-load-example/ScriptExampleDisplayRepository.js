@@ -57,6 +57,7 @@ class PrivateScriptExampleDisplayRepository {
 }
 
 const ScriptExampleDisplayRepository = new PrivateScriptExampleDisplayRepository();
+let allTreesPromise;
 
 function getAllTreesAvailablePromise() {
 	console.log('getAllTreesAvailablePromise started');
@@ -64,10 +65,13 @@ function getAllTreesAvailablePromise() {
 		let remainingExamples = examples.map(exampleInfo => exampleInfo.filename);
 		let interval;
 		function update() {
-			remainingExamples = remainingExamples.filter(filename =>
+			const someMissingParseTrees = remainingExamples.some(filename =>
 				ScriptExampleDisplayRepository.getParseTree(filename) === undefined
 			);
-			if (remainingExamples.length === 0 && interval !== undefined) {
+			console.log(`someMissingParseTrees=${someMissingParseTrees}, len=${remainingExamples.filter(filename =>
+				ScriptExampleDisplayRepository.getParseTree(filename) === undefined
+			).length}`);
+			if (!someMissingParseTrees && interval !== undefined) {
 				console.log('getAllTreesAvailablePromise resolving');
 				clearInterval(interval);
 				interval = undefined;
@@ -75,7 +79,7 @@ function getAllTreesAvailablePromise() {
 			}
 		}
 
-		interval = setInterval(update, 1000);
+		interval = setInterval(update, 100);
 	});
 }
 allTreesAvailablePromise = getAllTreesAvailablePromise();

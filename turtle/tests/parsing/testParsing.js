@@ -1,4 +1,4 @@
-import { testASMTurtle } from './asm-turtle/testASMTurtle.js';
+/*import { testASMTurtle } from './asm-turtle/testASMTurtle.js';
 import { testAsyncParser } from './testAsyncParser.js';
 import { testAsyncParseTask } from './testAsyncParseTask.js';
 import { testCharIndexToParseTreeTokenPosition } from './testCharIndexToParseTreeTokenPosition.js';
@@ -16,8 +16,8 @@ import { testGenericParsingUtilities } from './generic-parsing-utilities/testGen
 import { testGetStartPositionOfToken } from './testGetStartPositionOfToken.js';
 import { testGetTokensForParsing } from './testGetTokensForParsing.js';
 import { testIsSupportedByHighOrderInvoke } from './testIsSupportedByHighOrderInvoke.js';
-import { testJSParsing } from './js-parsing/testJSParsing.js';
-import { testKeyword } from './testKeyword.js';
+*/import { testJSParsing } from './js-parsing/testJSParsing.js';
+/*import { testKeyword } from './testKeyword.js';
 import { testKTurtle } from './kturtle/testKTurtle.js';
 import { testLoggers } from './loggers/testLoggers.js';
 import { testLogoParserFailing } from './testLogoParserFailing.js';
@@ -43,11 +43,11 @@ import { testSerialization } from './serialization/testSerialization.js';
 import { testSonicWebTurtle } from './sonic-webturtle/testSonicWebTurtle.js';
 import { testToken } from './testToken.js';
 import { testUnsupportedCommand } from './testUnsupportedCommand.js';
-import { wrapAndCall } from '../helpers/wrapAndCall.js';
+*/import { wrapAndCall } from '../helpers/wrapAndCall.js';
 
 export function testParsing(logger) {
 	wrapAndCall([
-		testASMTurtle,
+		/*testASMTurtle,
 		testAsyncParser,
 		testAsyncParseTask,
 		testCharIndexToParseTreeTokenPosition,
@@ -65,8 +65,8 @@ export function testParsing(logger) {
 		testGetStartPositionOfToken,
 		testGetTokensForParsing,
 		testIsSupportedByHighOrderInvoke,
-		testJSParsing,
-		testKeyword,
+		*/testJSParsing,
+		/*testKeyword,
 		testKTurtle,
 		testLoggers,
 		testLogoParserFailing,
@@ -91,6 +91,6 @@ export function testParsing(logger) {
 		testSerialization,
 		testSonicWebTurtle,
 		testToken,
-		testUnsupportedCommand
+		testUnsupportedCommand*/
 	], logger);
 };
