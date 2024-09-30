@@ -1,5 +1,9 @@
 import { isNumber } from '../../modules/isNumber.js';
 
+// This interval is used to reduce slow DOM changes when they'd otherwise slow
+// test progress significantly.
+const minimumUpdateInterval = 500;
+
 export class ProgressIndicator {
 	constructor(name) {
 		if (typeof name !== 'string')
@@ -25,40 +29,50 @@ export class ProgressIndicator {
 	}
 
 	setMessage(s) {
-		if (this.messageElement !== undefined)
-			this.messageElement.innerText = s;
+		if (this.messageElement !== undefined) {
+			const t = Date.now();
+			if (this.lastMessageUpdateTime === undefined || t - this.lastMessageUpdateTime > minimumUpdateInterval) {
+				this.messageElement.innerText = s;
+				this.lastMessageUpdateTime = t;
+			}
+		}
 	}
 
 	setProgressRatio(ratio) {
 		if (!isNumber(ratio))
 			throw new Error(`ratio must be a number but got ${ratio}`);
-		this.ratio = ratio;
-		if (this.container !== undefined) {
-			if (this.progress === undefined) {
-				this.div = document.createElement('div');
-				this.div.classList.add('progress-viewer');
-				const topRow = document.createElement('div');
-				topRow.classList.add('top-row');
-				const span = document.createElement('span');
-				span.appendChild(document.createTextNode(`${this.name}`));
-				span.classList.add('progress-indicator-name');
-				topRow.appendChild(span);
-				const progressContainer = document.createElement('div');
-				progressContainer.classList.add('progress-container');
-				this.progressSpan = document.createElement('span');
-				this.progress = document.createElement('progress');
-				this.progress.setAttribute('max', 100);
-				progressContainer.appendChild(this.progressSpan);
-				progressContainer.appendChild(this.progress);
-				topRow.appendChild(progressContainer);
-				this.div.appendChild(topRow);
-				this.messageElement = document.createElement('div');
-				this.messageElement.classList.add('message-element');
-				this.div.appendChild(this.messageElement);
-				this.container.append(this.div);
+		const t = Date.now();
+		if (this.lastProgressUpdateTime === undefined ||
+		t - this.lastProgressUpdateTime > minimumUpdateInterval) {
+			this.ratio = ratio;
+			if (this.container !== undefined) {
+				if (this.progress === undefined) {
+					this.div = document.createElement('div');
+					this.div.classList.add('progress-viewer');
+					const topRow = document.createElement('div');
+					topRow.classList.add('top-row');
+					const span = document.createElement('span');
+					span.appendChild(document.createTextNode(`${this.name}`));
+					span.classList.add('progress-indicator-name');
+					topRow.appendChild(span);
+					const progressContainer = document.createElement('div');
+					progressContainer.classList.add('progress-container');
+					this.progressSpan = document.createElement('span');
+					this.progress = document.createElement('progress');
+					this.progress.setAttribute('max', 100);
+					progressContainer.appendChild(this.progressSpan);
+					progressContainer.appendChild(this.progress);
+					topRow.appendChild(progressContainer);
+					this.div.appendChild(topRow);
+					this.messageElement = document.createElement('div');
+					this.messageElement.classList.add('message-element');
+					this.div.appendChild(this.messageElement);
+					this.container.append(this.div);
+				}
+				this.progress.value = 100 * ratio;
+				this.progressSpan.innerText = `${(ratio * 100).toFixed(2)}%`;
+				this.lastProgressUpdateTime = t;
 			}
-			this.progress.value = 100 * ratio;
-			this.progressSpan.innerText = `${(ratio * 100).toFixed(2)}%`;
 		}
 	}
 

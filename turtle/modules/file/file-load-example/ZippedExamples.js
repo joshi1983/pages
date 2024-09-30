@@ -23,6 +23,10 @@ export class ZippedExamples {
 		return promise;
 	}
 
+	static getFilenames() {
+		return Array.from(examplesData.keys());
+	}
+
 	static getContentForFilename(filename) {
 		return examplesData.get(filename);
 	}
