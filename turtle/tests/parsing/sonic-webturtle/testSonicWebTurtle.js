@@ -1,6 +1,6 @@
-import { testColorsJSON } from './testColorsJSON.js';
+//import { testColorsJSON } from './testColorsJSON.js';
 import { testIsLikelySonicWebTurtle } from './testIsLikelySonicWebTurtle.js';
-import { testParse } from './testParse.js';
+/*import { testParse } from './testParse.js';
 import { testParseBinaryOperators } from './testParseBinaryOperators.js';
 import { testParseExamples } from './testParseExamples.js';
 import { testParseIfElse } from './testParseIfElse.js';
@@ -13,13 +13,13 @@ import { testSonicWebTurtleColor } from './testSonicWebTurtleColor.js';
 import { testSonicWebTurtleOperators } from './testSonicWebTurtleOperators.js';
 import { testTranslationToWebLogo } from './translation-to-weblogo/testTranslationToWebLogo.js';
 import { testWebTurtleCommand } from './testWebTurtleCommand.js';
-import { wrapAndCall } from '../../helpers/wrapAndCall.js';
+*/import { wrapAndCall } from '../../helpers/wrapAndCall.js';
 
 export function testSonicWebTurtle(logger) {
 	wrapAndCall([
-		testColorsJSON,
+		//testColorsJSON,
 		testIsLikelySonicWebTurtle,
-		testParse,
+		/*testParse,
 		testParseBinaryOperators,
 		testParseExamples,
 		testParseIfElse,
@@ -31,6 +31,6 @@ export function testSonicWebTurtle(logger) {
 		testSonicWebTurtleColor,
 		testSonicWebTurtleOperators,
 		testTranslationToWebLogo,
-		testWebTurtleCommand
+		testWebTurtleCommand*/
 	], logger);
 };

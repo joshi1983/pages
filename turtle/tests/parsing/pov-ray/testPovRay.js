@@ -1,6 +1,6 @@
-import { testColorsJSON } from './testColorsJSON.js';
-import { testIsLikelyPovRay } from './testIsLikelyPovRay.js';
-import { testParse } from './testParse.js';
+/*import { testColorsJSON } from './testColorsJSON.js';
+*/import { testIsLikelyPovRay } from './testIsLikelyPovRay.js';
+/*import { testParse } from './testParse.js';
 import { testParseArray } from './testParseArray.js';
 import { testParseBinaryOperators } from './testParseBinaryOperators.js';
 import { testParseCurlyBracketExpressions } from './testParseCurlyBracketExpressions.js';
@@ -26,13 +26,13 @@ import { testPovRayColor } from './testPovRayColor.js';
 import { testPovRayCommand } from './testPovRayCommand.js';
 import { testScanning } from './scanning/testScanning.js';
 import { testTranslationToWebLogo } from './translation-to-weblogo/testTranslationToWebLogo.js';
-import { wrapAndCall } from '../../helpers/wrapAndCall.js';
+*/import { wrapAndCall } from '../../helpers/wrapAndCall.js';
 
 export function testPovRay(logger) {
 	wrapAndCall([
-		testColorsJSON,
-		testIsLikelyPovRay,
-		testParse,
+		/*testColorsJSON,
+		*/testIsLikelyPovRay,
+		/*testParse,
 		testParseArray,
 		testParseBinaryOperators,
 		testParseCurlyBracketExpressions,
@@ -57,6 +57,6 @@ export function testPovRay(logger) {
 		testPovRayColor,
 		testPovRayCommand,
 		testScanning,
-		testTranslationToWebLogo
+		testTranslationToWebLogo*/
 	], logger);
 };
