@@ -4,6 +4,7 @@ import { testOperatorsJSON } from './testOperatorsJSON.js';
 import { testParse } from './testParse.js';
 import { testParseAttributeSelector } from './testParseAttributeSelector.js';
 import { testParseCalc } from './testParseCalc.js';
+import { testParseImportant } from './testParseImportant.js';
 import { testParseMediaQuery } from './testParseMediaQuery.js';
 import { testParseRGB } from './testParseRGB.js';
 import { testParseSelector } from './testParseSelector.js';
@@ -19,6 +20,7 @@ export function testCSS(logger) {
 		testParse,
 		testParseAttributeSelector,
 		testParseCalc,
+		testParseImportant,
 		testParseMediaQuery,
 		testParseRGB,
 		testParseSelector,

@@ -1,6 +1,15 @@
 import { checkTreeInfo } from './checkTreeInfo.js';
 import { prefixWrapper } from '../prefixWrapper.js';
 
+export function wrapSingleTreeInfoObject(obj) {
+	return {
+		'val': null,
+		'children': [
+			obj
+		]
+	};
+};
+
 export function processParseTestCases(cases, parse, ParseTreeTokenType, logger) {
 	cases.forEach(function(caseInfo, index) {
 		const plogger = prefixWrapper(`Case ${index}, code=${caseInfo.code}`, logger);

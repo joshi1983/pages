@@ -29,6 +29,7 @@ const enumKeys = [
 	'FUNCTION_CALL',
 	'ID_SELECTOR',
 	'IDENTIFIER',
+	'IMPORTANT', // For example, color: red !important;
 	'NUMBER_LITERAL',
 	'NUMBER_UNIT_LITERAL', // a number with a unit like 40px
 	'PSEUDO_CLASS', // for example, ::before, :target, :nth-child

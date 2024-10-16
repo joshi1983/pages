@@ -3,7 +3,8 @@ import { processParseTestCases, wrapSingleTreeInfoObject } from './processParseT
 
 export function testParseDeclarations(logger) {
 	const cases = [
-		{'code': 'String x = "hi";', 'numTopChildren': 2, 'maxDepth': 4, 'treeInfo': {
+		{'code': 'String x = "hi";', 'numTopChildren': 2, 'maxDepth': 4, 
+		'treeInfo': {
 			'type': ParseTreeTokenType.TREE_ROOT,
 			'children': [
 				{'val': null, 'type': ParseTreeTokenType.DECLARATION, 'children': [
@@ -26,7 +27,8 @@ export function testParseDeclarations(logger) {
 				]}
 			]}
 		)},
-		{'code': 'int x=-4', 'numTopChildren': 1, 'maxDepth': 4, 'treeInfo': wrapSingleTreeInfoObject({
+		{'code': 'int x=-4', 'numTopChildren': 1, 'maxDepth': 4,
+		'treeInfo': wrapSingleTreeInfoObject({
 			'val': null, 'type': ParseTreeTokenType.DECLARATION, 'children': [
 					{'type': ParseTreeTokenType.DATA_TYPE, 'val': 'int', 'children': []},
 					{'type': ParseTreeTokenType.ASSIGNMENT_OPERATOR, 'val': '=', 'children': [
@@ -35,7 +37,8 @@ export function testParseDeclarations(logger) {
 					]}
 				]})
 		},
-		{'code': 'int red = 0, green = 1', 'numTopChildren': 1, 'treeInfo': wrapSingleTreeInfoObject(
+		{'code': 'int red = 0, green = 1', 'numTopChildren': 1,
+		'treeInfo': wrapSingleTreeInfoObject(
 			{'val': null, 'type': ParseTreeTokenType.DECLARATION, 'children': [
 				{'type': ParseTreeTokenType.DATA_TYPE, 'val': 'int', 'children': []},
 				{'type': ParseTreeTokenType.ASSIGNMENT_OPERATOR, 'val': '=', 'children': [
@@ -49,7 +52,8 @@ export function testParseDeclarations(logger) {
 				]}
 			]})
 		},
-		{'code': 'int[] x;', 'numTopChildren': 2, 'maxDepth': 5, 'treeInfo': {
+		{'code': 'int[] x;', 'numTopChildren': 2, 'maxDepth': 5,
+		'treeInfo': {
 			'type': ParseTreeTokenType.TREE_ROOT,
 			'children': [
 				{'val': null, 'type': ParseTreeTokenType.DECLARATION, 'children': [
@@ -65,7 +69,8 @@ export function testParseDeclarations(logger) {
 			]
 		}
 		},
-		{'code': 'A[] m', 'numTopChildren': 1, 'treeInfo': wrapSingleTreeInfoObject({
+		{'code': 'A[] m', 'numTopChildren': 1,
+		'treeInfo': wrapSingleTreeInfoObject({
 			'type': ParseTreeTokenType.DECLARATION, 'val': null, 'children': [
 				{'val': 'A', 'type': ParseTreeTokenType.DATA_TYPE, 'children': [
 					{'val': null, 'type': ParseTreeTokenType.DIMENSION_INDICATOR, 'children': [
@@ -76,7 +81,8 @@ export function testParseDeclarations(logger) {
 				{'val': 'm'}
 			]
 		})},
-		{'code': 'int[] data = {0, 1, 3, 4};', 'numTopChildren': 2, 'treeInfo': {
+		{'code': 'int[] data = {0, 1, 3, 4};', 'numTopChildren': 2,
+		'treeInfo': {
 			'val': null,
 			'type': ParseTreeTokenType.TREE_ROOT,
 			'children': [
@@ -106,7 +112,8 @@ export function testParseDeclarations(logger) {
 				{'val': ';', 'type': ParseTreeTokenType.SEMICOLON},
 			]
 		}},
-		{'code': 'processing.A x', 'numTopChildren': 1, 'treeInfo': wrapSingleTreeInfoObject({
+		{'code': 'processing.A x', 'numTopChildren': 1,
+		'treeInfo': wrapSingleTreeInfoObject({
 			'type': ParseTreeTokenType.DECLARATION,
 			'val': null,
 			'children': [
@@ -122,7 +129,8 @@ export function testParseDeclarations(logger) {
 			]
 		})
 		},
-		{'code': 'processing.A[] x', 'numTopChildren': 1, 'treeInfo': wrapSingleTreeInfoObject({
+		{'code': 'processing.A[] x', 'numTopChildren': 1,
+		'treeInfo': wrapSingleTreeInfoObject({
 			'type': ParseTreeTokenType.DECLARATION,
 			'val': null,
 			'children': [
@@ -142,7 +150,8 @@ export function testParseDeclarations(logger) {
 			]
 		})
 		},
-		{'code': 'final int x = 3;', 'numTopChildren': 2, 'treeInfo': {
+		{'code': 'final int x = 3;', 'numTopChildren': 2,
+		'treeInfo': {
 			'type': ParseTreeTokenType.TREE_ROOT,
 			'val': null,
 			'children': [

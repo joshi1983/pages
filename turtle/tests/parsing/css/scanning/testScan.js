@@ -71,6 +71,8 @@ export function testScan(logger) {
 	{'code': '.selected||td', 'tokens': ['.selected', '||', 'td']},
 	{'code': '"\\""', 'tokens': ['"\\""']},
 	{'code': "'\\''", 'tokens': ["'\\''"]},
+	{'code': '!important', 'tokens': ['!important']},
+	{'code': 'background-color: red !important;', 'tokens': ['background-color', ':', 'red', '!important', ';']}
 	];
 	processScanTestCases(cases, scan, logger);
 };
