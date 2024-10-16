@@ -2,6 +2,8 @@ import { and } from './and.js';
 import { bitAnd } from './bitAnd.js';
 import { bitNot } from './bitNot.js';
 import { bitOr } from './bitOr.js';
+import { bitShiftLeft } from './bitShiftLeft.js';
+import { bitShiftRight } from './bitShiftRight.js';
 import { bitXor } from './bitXor.js';
 import { count } from './count.js';
 import { createPList } from './createPList.js';
@@ -19,28 +21,13 @@ import { product } from './product.js';
 import { stringp } from './stringp.js';
 import { sum } from './sum.js';
 
-export const commandsMap = new Map([
-['and', and],
-['bitAnd', bitAnd],
-['bitNot', bitNot],
-['bitOr', bitOr],
-['bitXor', bitXor],
-['count', count],
-['createPList', createPList],
-['emptyp', emptyp],
-['evenp', evenp],
-['first', first],
-['item', item],
-['listp', listp],
-['max', max],
-['min', min],
-['not', not],
-['oddp', oddp],
-['or', or],
-['product', product],
-['stringp', stringp],
-['sum', sum],
-]);
+export const commandsMap = new Map();
+[and, bitAnd, bitNot, bitOr, bitShiftLeft, bitShiftRight, bitXor, count, 
+createPList, emptyp, evenp, first, item, listp, max, min, not, 
+oddp, or, product, stringp, sum].forEach(function(func) {
+	commandsMap.set(func.name, func);
+});
+
 
 // Any commands that have extra error checks in their implementations atan
 // modules/command-groups should be in this set.
