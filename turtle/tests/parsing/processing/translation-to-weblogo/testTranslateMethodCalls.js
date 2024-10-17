@@ -37,6 +37,7 @@ export function testTranslateMethodCalls(logger) {
 		{'in': 'p()', 'out': 'p'},
 		{'in': 'line(0, 0, segLength, 0);', 'outContains': 'pLine2D 0 0 :segLength 0'},
 		{'in': 'line(0, 0, segLength, 0);', 'outContains': 'to pLine2D '},
+		{'in': 'binary(#ff0201)', 'outContains': 'pBinary "#ff0201'}
 	];
 	testInOutPairs(cases, translate, logger);
 };

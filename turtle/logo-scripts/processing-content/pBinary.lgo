@@ -1,6 +1,15 @@
 ; Implemented to be similar to:
 ; https://processing.org/reference/binary_.html
 to pBinary :value
+	if string? :value [
+		if '#' = first :value [
+			localmake "result ''
+			for ["i 2 count :value] [
+				localmake "result word "result pHexDigitToBinary item :i :value
+			]
+			output :result
+		]
+	]
 	if integer? :value [
 		localmake "signPrefix ''
 		if :value < 0 [

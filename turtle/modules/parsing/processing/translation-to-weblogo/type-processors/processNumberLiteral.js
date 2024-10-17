@@ -3,7 +3,7 @@ export function processNumberLiteral(token, result) {
 	if (s.startsWith('0x'))
 		result.append('' + parseInt(s.substring(2), 16));
 	else if (s.startsWith('#'))
-		result.append('' + parseInt(s.substring(1), 16));
+		result.append('"' + s);
 	else
 		result.append(s);
 };

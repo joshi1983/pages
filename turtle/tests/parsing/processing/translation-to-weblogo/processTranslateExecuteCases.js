@@ -30,7 +30,7 @@ export function processTranslateExecuteCases(cases, logger) {
 			console.error(e);
 			plogger(`Exception thrown: ${e}`);
 		});
-		executer.executeInstructionsSync(100);
+		executer.executeInstructionsSync(1000);
 		checkMessagesEquality(messages, caseInfo.messages, plogger);
 	});
 };

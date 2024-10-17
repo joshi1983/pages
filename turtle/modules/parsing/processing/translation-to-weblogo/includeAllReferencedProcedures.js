@@ -21,6 +21,8 @@ const toProcs = methodsData.filter(c => c.toProc !== undefined).map(c => c.toPro
 for (const opInfo of Operators.getAll())
 	if (opInfo.toProc !== undefined)
 		toProcs.push(opInfo.toProc);
+
+toProcs.push('pHexDigitToBinary');
 const dependencyMap = new Map();
 const procsMap = new Map();
 for (let i = 0; i < toProcs.length; i++) {
