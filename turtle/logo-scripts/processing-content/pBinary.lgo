@@ -8,10 +8,10 @@ to pBinary :value
 			localmake "value -:value
 		]
 		localmake "digits ''
-		while :value <> 0 [
+		while and :value <> 0 :value <> -1 [
 			localmake "digit str remainder :value 2
 			localmake "digits word :digit :digits
-			localmake "value int :value / 2
+			localmake "value bitShiftRight :value 1
 		]
 		output word :signPrefix :digits
 	]

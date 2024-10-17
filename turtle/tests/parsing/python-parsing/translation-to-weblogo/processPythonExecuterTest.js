@@ -1,10 +1,19 @@
-import { LogoProgramExecuter } from '../../../../modules/parsing/execution/LogoProgramExecuter.js';
-import { asyncInit, parse } from '../../../../modules/parsing/python-parsing/parse.js';
-import { prefixWrapper } from '../../../helpers/prefixWrapper.js';
-import { testCodeToProgram } from '../../../helpers/testCodeToProgram.js';
-import { asyncInit as tokenToWebLogoCodeAsyncInit, tokenToWebLogoCode } from '../../../../modules/parsing/python-parsing/translation-to-weblogo/tokenToWebLogoCode.js';
-import { Turtle } from '../../../../modules/command-groups/Turtle.js';
-import { Vector2DDrawing } from '../../../../modules/drawing/vector/Vector2DDrawing.js';
+import { checkMessagesEquality } from
+'../../../helpers/checkMessagesEquality.js';
+import { LogoProgramExecuter } from
+'../../../../modules/parsing/execution/LogoProgramExecuter.js';
+import { asyncInit, parse } from
+'../../../../modules/parsing/python-parsing/parse.js';
+import { prefixWrapper } from
+'../../../helpers/prefixWrapper.js';
+import { testCodeToProgram } from
+'../../../helpers/testCodeToProgram.js';
+import { asyncInit as tokenToWebLogoCodeAsyncInit, tokenToWebLogoCode } from
+'../../../../modules/parsing/python-parsing/translation-to-weblogo/tokenToWebLogoCode.js';
+import { Turtle } from
+'../../../../modules/command-groups/Turtle.js';
+import { Vector2DDrawing } from
+'../../../../modules/drawing/vector/Vector2DDrawing.js';
 
 const compileOptions = 	{
 	'translateToJavaScript': true,
@@ -48,14 +57,5 @@ export async function processPythonExecuterTest(caseInfo, logger) {
 	executer.executeInstructionsSync(100);
 	// 100 should be enough instructions for all test programs to complete.
 
-	if (messages.length !== caseInfo.messages.length)
-		plogger(`Expected ${caseInfo.messages.length} but got ${messages.length}`);
-	else {
-		for (let i = 0; i < caseInfo.messages.length; i++) {
-			if (caseInfo.messages[i] !== messages[i]) {
-				plogger(`Index ${i}, expected ${caseInfo.messages[i]} but got ${messages[i]}`);
-				break;
-			}
-		}
-	}
+	checkMessagesEquality(messages, caseInfo.messages, plogger);
 };

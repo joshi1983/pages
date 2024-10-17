@@ -15,6 +15,8 @@ import { testTranslateDeclarations } from
 './testTranslateDeclarations.js';
 import { testTranslateExamples } from
 './testTranslateExamples.js';
+import { testTranslateExecutePrint } from
+'./testTranslateExecutePrint.js';
 import { testTranslateMethodCalls } from
 './testTranslateMethodCalls.js';
 import { testTranslateMethods } from
@@ -37,6 +39,7 @@ export function testTranslationToWebLogo(logger) {
 		testTranslateConditionalTernary,
 		testTranslateDeclarations,
 		testTranslateExamples,
+		testTranslateExecutePrint,
 		testTranslateMethodCalls,
 		testTranslateMethods,
 		testTranslateTry,
