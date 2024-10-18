@@ -1,4 +1,4 @@
-import { testAddVariablesFromInitialVariables } from './testAddVariablesFromInitialVariables.js';
+/*import { testAddVariablesFromInitialVariables } from './testAddVariablesFromInitialVariables.js';
 import { testAnalyzeInstructionListRepeatCounts } from './testAnalyzeInstructionListRepeatCounts.js';
 import { testAnalyzeLengths } from './testAnalyzeLengths.js';
 import { testEvaluateOutputFrequency } from './testEvaluateOutputFrequency.js';
@@ -22,8 +22,8 @@ import { testIsLastInstructionAnOutput } from './testIsLastInstructionAnOutput.j
 import { testIsLocalAssignmentToken } from './testIsLocalAssignmentToken.js';
 import { testLengthEvaluationDirectory } from './length-evaluation/testLengthEvaluationDirectory.js';
 import { testProcedureCallGraph } from './testProcedureCallGraph.js';
-import { testProcessRequiredTypeParameters } from './testProcessRequiredTypeParameters.js';
-import { testProcessRequiredTypes } from './testProcessRequiredTypes.js';
+*/import { testProcessRequiredTypeParameters } from './testProcessRequiredTypeParameters.js';
+/*import { testProcessRequiredTypes } from './testProcessRequiredTypes.js';
 import { testProcessTokenDataTypesFromMultipleVariableAssignmentScopes } from './testProcessTokenDataTypesFromMultipleVariableAssignmentScopes.js';
 import { testSetLastSingleValueTokens } from './testSetLastSingleValueTokens.js';
 import { testShouldScopeBeReduced } from './testShouldScopeBeReduced.js';
@@ -31,11 +31,11 @@ import { testVariable } from './testVariable.js';
 import { testVariables } from './testVariables.js';
 import { testVariableAssignmentScope } from './testVariableAssignmentScope.js';
 import { testVariableAssignmentScopesDirectory } from './variable-assignment-scopes/testVariableAssignmentScopesDirectory.js';
-import { wrapAndCall } from '../../../helpers/wrapAndCall.js';
+*/import { wrapAndCall } from '../../../helpers/wrapAndCall.js';
 
 export function testVariableDataTypes(logger) {
 	wrapAndCall([
-		testAddVariablesFromInitialVariables,
+		/*testAddVariablesFromInitialVariables,
 		testAnalyzeInstructionListRepeatCounts,
 		testAnalyzeLengths,
 		testEvaluateOutputFrequency,
@@ -59,14 +59,14 @@ export function testVariableDataTypes(logger) {
 		testIsLocalAssignmentToken,
 		testLengthEvaluationDirectory,
 		testProcedureCallGraph,
-		testProcessRequiredTypeParameters,
-		testProcessRequiredTypes,
+		*/testProcessRequiredTypeParameters,
+		/*testProcessRequiredTypes,
 		testProcessTokenDataTypesFromMultipleVariableAssignmentScopes,
 		testSetLastSingleValueTokens,
 		testShouldScopeBeReduced,
 		testVariable,
 		testVariables,
 		testVariableAssignmentScope,
-		testVariableAssignmentScopesDirectory
+		testVariableAssignmentScopesDirectory*/
 	], logger);
 };

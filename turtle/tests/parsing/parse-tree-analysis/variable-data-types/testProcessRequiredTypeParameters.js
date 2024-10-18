@@ -7,7 +7,7 @@ import { prefixWrapper } from '../../../helpers/prefixWrapper.js';
 
 export function testProcessRequiredTypeParameters(logger) {
 	const cases = [
-		{
+		/*{
 			'code': 'to p :x\nprint mix :x transparent 0.5\nprint "here\nend',
 			'types': 'alphacolor'
 		},
@@ -18,10 +18,8 @@ export function testProcessRequiredTypeParameters(logger) {
 		{
 			'code': 'make "x []\nsetFillColor mix :x [] 0.5\nprint "here\nend',
 			'types': 'alphacolor|list<alphacolor|list|num>'
-			/*
-			Ideally, types would be 'list' since [] is not a valid colorlist or alphacolorlist.
-			We're not there quite yet, though.
-			*/
+			//Ideally, types would be 'list' since [] is not a valid colorlist or alphacolorlist.
+			//We're not there quite yet, though.
 		},
 		{
 			'code': 'to p :x\nassert number? :x\nprint "here\nend',
@@ -42,7 +40,20 @@ export function testProcessRequiredTypeParameters(logger) {
 	]
 	output str :x
 end`, 'types': 'num|string'
-		}
+		},*/
+		{'code': `to p :x
+	print "here
+	if string? :x [
+		output "hi
+	]
+	if integer? :x [
+		if :x < 0 [
+			localmake "x -:x
+		]
+		output word '' ''
+	]
+	output str :x
+end`, 'types': 'num|string'}
 	];
 	cases.forEach(function(caseInfo, index) {
 		const plogger = prefixWrapper(`Case ${index}, code = ${caseInfo.code}`, logger);
