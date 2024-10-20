@@ -47,7 +47,8 @@ export function testParseTernaryOperator(logger) {
 		'type': ParseTreeTokenType.TREE_ROOT,
 			'children': [
 				{'val': null, 'type': ParseTreeTokenType.METHOD_CALL, 'children': [
-					{'val': 'console', 'children': [
+					{'val': null, 'type': ParseTreeTokenType.EXPRESSION_DOT, 'children': [
+						{'val': 'console', 'children': []},
 						{'val': '.', 'children': [
 							{'val': 'log', 'children': [
 							]}

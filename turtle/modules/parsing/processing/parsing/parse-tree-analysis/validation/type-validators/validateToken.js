@@ -10,6 +10,7 @@ import { validateDataType } from './validateDataType.js';
 import { validateDeclaration } from './validateDeclaration.js';
 import { validateDot } from './validateDot.js';
 import { validateElse } from './validateElse.js';
+import { validateExpressionDot } from './validateExpressionDot.js';
 import { validateExtends } from './validateExtends.js';
 import { validateFor } from './validateFor.js';
 import { validateForLoopSettings } from './validateForLoopSettings.js';
@@ -38,6 +39,7 @@ const validators = new Map([
 	[ParseTreeTokenType.DECLARATION, validateDeclaration],
 	[ParseTreeTokenType.DOT, validateDot],
 	[ParseTreeTokenType.ELSE, validateElse],
+	[ParseTreeTokenType.EXPRESSION_DOT, validateExpressionDot],
 	[ParseTreeTokenType.EXTENDS, validateExtends],
 	[ParseTreeTokenType.FOR, validateFor],
 	[ParseTreeTokenType.FOR_LOOP_SETTINGS, validateForLoopSettings],

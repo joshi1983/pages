@@ -1,7 +1,6 @@
 import { ParseTreeTokenType } from '../../../../ParseTreeTokenType.js';
 
 const singleChildTypes = new Set([
-	ParseTreeTokenType.DOT,
 	ParseTreeTokenType.GENERIC_TYPE_EXPRESSION,
 	ParseTreeTokenType.UNARY_OPERATOR
 ]);

@@ -1,6 +1,7 @@
 import { ParseTreeTokenType } from '../../../../ParseTreeTokenType.js';
 
 const nonCommaChildTypes = new Set([
+	
 	ParseTreeTokenType.ASSIGNMENT_OPERATOR,
 	ParseTreeTokenType.IDENTIFIER
 ]);
@@ -15,10 +16,12 @@ export function validateDeclaration(token, parseLogger) {
 		if (parent.type === ParseTreeTokenType.ARG_LIST && children.length > 2)
 			parseLogger.error(`Expected children length to be exactly 2 for DECLARATION within ARG_LIST but found ${children.length}`, token);
 
-		if (first.type !== ParseTreeTokenType.DATA_TYPE) {
+		if (first.type !== ParseTreeTokenType.DATA_TYPE &&
+		first.type !== ParseTreeTokenType.ARRAY_DATATYPE_EXPRESSION &&
+		first.type !== ParseTreeTokenType.EXPRESSION_DOT) {
 			if (first.type !== ParseTreeTokenType.IDENTIFIER ||
 			first.children.length === 0)
-				parseLogger.error(`Expected first child of DECLARATION to be a DATA_TYPE or IDENTIFIER(with children) but found ${ParseTreeTokenType.getNameFor(first.type)}`, first);
+				parseLogger.error(`Expected first child of DECLARATION to be a DATA_TYPE, ARRAY_DATATYPE_EXPRESSION, EXPRESSION_DOT, or IDENTIFIER(with children) but found ${ParseTreeTokenType.getNameFor(first.type)}`, first);
 		}
 		for (let i = 1; i < children.length; i++) {
 			const child = children[i];

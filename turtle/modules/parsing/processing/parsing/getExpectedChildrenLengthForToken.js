@@ -35,6 +35,7 @@ const typesWith2Children = new Set([
 	ParseTreeTokenType.BINARY_OPERATOR,
 	ParseTreeTokenType.CONSTRUCTOR,
 	ParseTreeTokenType.DO, // 1. code block and then 2. while.
+	ParseTreeTokenType.EXPRESSION_DOT,
 	ParseTreeTokenType.EXPRESSION_INDEX_EXPRESSION,
 	ParseTreeTokenType.METHOD_CALL
 ]);

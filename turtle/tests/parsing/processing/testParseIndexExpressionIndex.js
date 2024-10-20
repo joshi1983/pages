@@ -7,7 +7,8 @@ export function testParseIndexExpressionIndex(logger) {
 		'type': ParseTreeTokenType.EXPRESSION_INDEX_EXPRESSION,
 		'val': null,
 		'children': [
-			{'type': ParseTreeTokenType.IDENTIFIER, 'val': 'context', 'children': [
+			{'type': ParseTreeTokenType.EXPRESSION_DOT, 'val': null, 'children': [
+				{'type': ParseTreeTokenType.IDENTIFIER, 'val': 'context', 'children': []},
 				{'type': ParseTreeTokenType.DOT, 'val': '.', 'children': [
 					{'type': ParseTreeTokenType.IDENTIFIER, 'val': 'valueStack', 'children': []}
 				]}

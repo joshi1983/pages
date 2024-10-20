@@ -20,7 +20,8 @@ export function testParseSwitchStatements(logger) {
 							{'val': ':'},
 							{'type': ParseTreeTokenType.CODE_BLOCK, 'val': null, 'children': [
 								{'val': null, 'type': ParseTreeTokenType.METHOD_CALL, 'children': [
-									{'val': 'o', 'type': ParseTreeTokenType.IDENTIFIER, 'children': [
+									{'val': null, 'type': ParseTreeTokenType.EXPRESSION_DOT, 'children': [
+										{'val': 'o', 'type': ParseTreeTokenType.IDENTIFIER, 'children': []},
 										{'val': '.', 'children': [
 											{'val': 'y', 'type': ParseTreeTokenType.IDENTIFIER, 'children': [
 											]}
@@ -96,7 +97,8 @@ export function testParseSwitchStatements(logger) {
 						{'val': '{'},
 						{'val': 'case', 'type': ParseTreeTokenType.CASE, 'children': [
 							{'val': null, 'type': ParseTreeTokenType.METHOD_CALL, 'children': [
-								{'val': 'o', 'type': ParseTreeTokenType.IDENTIFIER, 'children': [
+								{'val': null, 'type': ParseTreeTokenType.EXPRESSION_DOT, 'children': [
+									{'val': 'o', 'type': ParseTreeTokenType.IDENTIFIER, 'children': []},
 									{'val': '.', 'children': [
 										{'val': 'y', 'type': ParseTreeTokenType.IDENTIFIER}
 									]}

@@ -6,7 +6,9 @@ import { shouldAppendChild } from './shouldAppendChild.js';
 
 const expressionDotPreviousTypes = new Set([
 	ParseTreeTokenType.CURVED_BRACKET_EXPRESSION,
+	ParseTreeTokenType.DATA_TYPE,
 	ParseTreeTokenType.EXPRESSION_INDEX_EXPRESSION,
+	ParseTreeTokenType.IDENTIFIER,
 	ParseTreeTokenType.METHOD_CALL,
 ]);
 const goodExpressionDotChildTypes = new Set([

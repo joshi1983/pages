@@ -81,16 +81,18 @@ export function testParseMethodCalls(logger) {
 				{
 					'type': ParseTreeTokenType.METHOD_CALL,
 					'children': [
-						{
-							'type': ParseTreeTokenType.IDENTIFIER,
-							'val': 'x',
-							'children': [
-								{'type': ParseTreeTokenType.DOT, 'val': '.',
-									'children': [
-										{'type': ParseTreeTokenType.IDENTIFIER, 'val': 'y', 'children': [
-										]},
-									]
-								}
+						{'type': ParseTreeTokenType.EXPRESSION_DOT, 'val': null, 'children': [
+							{
+								'type': ParseTreeTokenType.IDENTIFIER,
+								'val': 'x',
+							'children': []
+							},
+							{'type': ParseTreeTokenType.DOT, 'val': '.',
+								'children': [
+									{'type': ParseTreeTokenType.IDENTIFIER, 'val': 'y', 'children': [
+									]},
+								]
+							}
 							]
 						},
 						{'type': ParseTreeTokenType.ARG_LIST, 'val': null,

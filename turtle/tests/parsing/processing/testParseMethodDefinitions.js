@@ -43,7 +43,8 @@ export function testParseMethodDefinitions(logger) {
 		{'code': 'float[] cortToPolar(){return x;}', 'treeInfo': wrapSingleTreeInfoObject({
 			'type': ParseTreeTokenType.METHOD,
 			'children': [
-				{'val': 'float', 'type': ParseTreeTokenType.DATA_TYPE, 'children': [
+				{'val': null, 'type': ParseTreeTokenType.ARRAY_DATATYPE_EXPRESSION, 'children': [
+					{'val': 'float', 'type': ParseTreeTokenType.DATA_TYPE, 'children': []},
 					{'val': null, 'type': ParseTreeTokenType.ARRAY_DIMENSION_INDICATOR, 'children': [
 						{'val': '['},
 						{'val': ']'},

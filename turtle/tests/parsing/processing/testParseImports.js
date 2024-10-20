@@ -10,10 +10,11 @@ export function testParseImports(logger) {
 						'type': ParseTreeTokenType.IMPORT,
 						'val': 'import',
 						'children': [
-							{'type': ParseTreeTokenType.IDENTIFIER, 'val': 'processing',
-							'children': [
+							{'type': ParseTreeTokenType.EXPRESSION_DOT, 'val': null, 'children': [
+								{'type': ParseTreeTokenType.IDENTIFIER, 'val': 'processing', 'children': []},
 								{'type': ParseTreeTokenType.DOT, 'val': '.', 'children': [
-									{'type': ParseTreeTokenType.IDENTIFIER, 'val': 'pdf', 'children': [
+									{'type': ParseTreeTokenType.EXPRESSION_DOT, 'val': null, 'children': [
+										{'type': ParseTreeTokenType.IDENTIFIER, 'val': 'pdf', 'children': []},
 										{'type': ParseTreeTokenType.DOT, 'val': '.', 'children': [
 											{'type': ParseTreeTokenType.WILDCARD, 'val': '*', 'children': []}
 										]}
@@ -68,8 +69,8 @@ export function testParseImports(logger) {
 			'val': 'import',
 			'type': ParseTreeTokenType.IMPORT,
 			'children': [
-				{'val': 'package', 'type': ParseTreeTokenType.IDENTIFIER,
-				'children': [
+				{'type': ParseTreeTokenType.EXPRESSION_DOT, 'val': null, 'children': [
+					{'val': 'package', 'type': ParseTreeTokenType.IDENTIFIER, 'children': []},
 					{'val': '.', 'type': ParseTreeTokenType.DOT,
 					'children': [
 						{'val': key,

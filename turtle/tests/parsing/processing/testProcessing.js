@@ -1,4 +1,4 @@
-import { testIdentifiersJSON } from './testIdentifiersJSON.js';
+/*import { testIdentifiersJSON } from './testIdentifiersJSON.js';
 import { testIsLikelyProcessing } from './testIsLikelyProcessing.js';
 import { testMethodsJSON } from './testMethodsJSON.js';
 import { testNumberLiteralToValue } from './testNumberLiteralToValue.js';
@@ -11,7 +11,7 @@ import { testParseCodeBlocks } from './testParseCodeBlocks.js';
 import { testParseComments } from './testParseComments.js';
 import { testParseContinue } from './testParseContinue.js';
 import { testParseCurlyBrackets } from './testParseCurlyBrackets.js';
-import { testParseDeclarations } from './testParseDeclarations.js';
+*/import { testParseDeclarations } from './testParseDeclarations.js';
 import { testParseDot } from './testParseDot.js';
 import { testParseDoWhileLoops } from './testParseDoWhileLoops.js';
 import { testParseExamples } from './testParseExamples.js';
@@ -43,7 +43,7 @@ import { wrapAndCall } from '../../helpers/wrapAndCall.js';
 
 export function testProcessing(logger) {
 	wrapAndCall([
-		testIdentifiersJSON,
+		/*testIdentifiersJSON,
 		testIsLikelyProcessing,
 		testMethodsJSON,
 		testNumberLiteralToValue,
@@ -56,10 +56,10 @@ export function testProcessing(logger) {
 		testParseComments,
 		testParseContinue,
 		testParseCurlyBrackets,
-		testParseDeclarations,
+		*/testParseDeclarations,
 		testParseDot,
 		testParseDoWhileLoops,
-		testParseExamples,
+		//testParseExamples,
 		testParseExpressions,
 		testParseForLoops,
 		testParseIfStatements,

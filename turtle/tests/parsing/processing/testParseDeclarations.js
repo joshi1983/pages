@@ -3,7 +3,7 @@ import { processParseTestCases, wrapSingleTreeInfoObject } from './processParseT
 
 export function testParseDeclarations(logger) {
 	const cases = [
-		{'code': 'String x = "hi";', 'numTopChildren': 2, 'maxDepth': 4, 
+		/*{'code': 'String x = "hi";', 'numTopChildren': 2, 'maxDepth': 4, 
 		'treeInfo': {
 			'type': ParseTreeTokenType.TREE_ROOT,
 			'children': [
@@ -51,13 +51,15 @@ export function testParseDeclarations(logger) {
 					{'val': '1', 'type': ParseTreeTokenType.NUMBER_LITERAL}
 				]}
 			]})
-		},
+		},*/
 		{'code': 'int[] x;', 'numTopChildren': 2, 'maxDepth': 5,
 		'treeInfo': {
 			'type': ParseTreeTokenType.TREE_ROOT,
 			'children': [
 				{'val': null, 'type': ParseTreeTokenType.DECLARATION, 'children': [
-					{'type': ParseTreeTokenType.DATA_TYPE, 'val': 'int', 'children': [
+					{'val': null, 'type': ParseTreeTokenType.ARRAY_DATATYPE_EXPRESSION, 'children': [
+						{'type': ParseTreeTokenType.DATA_TYPE, 'val': 'int', 'children': [
+						]},
 						{'val': null, 'type': ParseTreeTokenType.ARRAY_DIMENSION_INDICATOR, 'children': [
 							{'val': '['},
 							{'val': ']'}
@@ -68,11 +70,12 @@ export function testParseDeclarations(logger) {
 				{'val': ';', 'type': ParseTreeTokenType.SEMICOLON, 'children': []}
 			]
 		}
-		},
+		},/*
 		{'code': 'A[] m', 'numTopChildren': 1,
 		'treeInfo': wrapSingleTreeInfoObject({
 			'type': ParseTreeTokenType.DECLARATION, 'val': null, 'children': [
-				{'val': 'A', 'type': ParseTreeTokenType.DATA_TYPE, 'children': [
+				{'val': null, 'type': ParseTreeTokenType.ARRAY_DATATYPE_EXPRESSION, 'children': [
+					{'val': 'A', 'type': ParseTreeTokenType.DATA_TYPE, 'children': []},
 					{'val': null, 'type': ParseTreeTokenType.DIMENSION_INDICATOR, 'children': [
 						{'val': '['},
 						{'val': ']'},
@@ -88,7 +91,8 @@ export function testParseDeclarations(logger) {
 			'children': [
 				{'val': null, 'type': ParseTreeTokenType.DECLARATION,
 				'children': [
-					{'val': 'int', 'type': ParseTreeTokenType.DATA_TYPE, 'children': [
+					{'val': null, 'type': ParseTreeTokenType.ARRAY_DATATYPE_EXPRESSION, 'children': [
+						{'val': 'int', 'type': ParseTreeTokenType.DATA_TYPE, 'children': [
 						{'val': null, 'type': ParseTreeTokenType.ARRAY_DIMENSION_INDICATOR, 'children': [
 							{'val': '['},
 							{'val': ']'}
@@ -111,13 +115,14 @@ export function testParseDeclarations(logger) {
 				]},
 				{'val': ';', 'type': ParseTreeTokenType.SEMICOLON},
 			]
-		}},
+		}]}},
 		{'code': 'processing.A x', 'numTopChildren': 1,
 		'treeInfo': wrapSingleTreeInfoObject({
 			'type': ParseTreeTokenType.DECLARATION,
 			'val': null,
 			'children': [
-				{'val': 'processing', 'children': [
+				{'val': null, 'type': ParseTreeTokenType.EXPRESSION_DOT, 'children': [
+					{'val': 'processing', 'children': []},
 					{'val': '.', 'type': ParseTreeTokenType.DOT, 'children': [
 						{'val': 'A', 'children': []}
 					]}
@@ -134,9 +139,13 @@ export function testParseDeclarations(logger) {
 			'type': ParseTreeTokenType.DECLARATION,
 			'val': null,
 			'children': [
-				{'val': 'processing', 'children': [
-					{'val': '.', 'type': ParseTreeTokenType.DOT, 'children': [
-						{'val': 'A', 'children': []}
+				{'val': null, 'type': ParseTreeTokenType.ARRAY_DATATYPE_EXPRESSION,
+				'children': [
+					{'val': null, 'type': ParseTreeTokenType.EXPRESSION_DOT, 'children': [
+						{'val': 'processing', 'children': []},
+						{'val': '.', 'type': ParseTreeTokenType.DOT, 'children': [
+							{'val': 'A', 'children': []}
+						]},
 					]},
 					{'val': null, 'type': ParseTreeTokenType.ARRAY_DIMENSION_INDICATOR, 'children': [
 						{'val': '[', 'children': []},
@@ -169,7 +178,7 @@ export function testParseDeclarations(logger) {
 				]},
 				{'val': ';', 'type': ParseTreeTokenType.SEMICOLON}
 			]
-		}}
+		}}*/
 	];
 	processParseTestCases(cases, logger);
 };

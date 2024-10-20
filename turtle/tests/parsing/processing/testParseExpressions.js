@@ -17,7 +17,23 @@ export function testParseExpressions(logger) {
 			'type': ParseTreeTokenType.BOOLEAN_LITERAL
 		})},
 		{'code': '!true', 'numTopChildren': 1, 'maxDepth': 3},
-		{'code': 'obj[3].rgb', 'numTopChildren': 1},
+		{'code': 'obj[3].rgb', 'numTopChildren': 1, 'treeInfo': wrapSingleTreeInfoObject({
+			'type': ParseTreeTokenType.EXPRESSION_DOT,
+			'val': null,
+			'children': [
+				{'val': null, 'type': ParseTreeTokenType.EXPRESSION_INDEX_EXPRESSION, 'children': [
+					{'val': 'obj', 'type': ParseTreeTokenType.IDENTIFIER},
+					{'val': null, 'type': ParseTreeTokenType.INDEX_EXPRESSION, 'children': [
+						{'val': '[', 'type': ParseTreeTokenType.SQUARE_LEFT_BRACKET, 'children': []},
+						{'val': '3', 'type': ParseTreeTokenType.NUMBER_LITERAL, 'children': []},
+						{'val': ']', 'type': ParseTreeTokenType.SQUARE_RIGHT_BRACKET, 'children': []},
+					]},
+				]},
+				{'val': '.', 'children': [
+					{'val': 'rgb', 'type': ParseTreeTokenType.IDENTIFIER, 'children': []}
+				]}
+			]
+		})},
 		{'code': 'i++', 'numTopChildren': 1, 'maxDepth': 3, 'treeInfo': {
 				'type': ParseTreeTokenType.TREE_ROOT,
 				'children': [{
@@ -56,11 +72,13 @@ export function testParseExpressions(logger) {
 			'children': [
 				{'type': ParseTreeTokenType.ARRAY_INSTANCE_EXPRESSION, 'val': null,
 				'children': [
-					{'val': 'package1', 'type': ParseTreeTokenType.IDENTIFIER, 'children': [
+					{'val': null, 'type': ParseTreeTokenType.EXPRESSION_DOT, 'children': [
+						{'val': 'package1', 'type': ParseTreeTokenType.IDENTIFIER, 'children': []},
 						{'val': '.', 'type': ParseTreeTokenType.DOT, 'children': [
 							{'val': 'A', 'children': []},
 						]}
-					]},
+						]
+					},
 					{'val': null, 'type': ParseTreeTokenType.INDEX_EXPRESSION, 'children': [
 						{'val': '[', 'type': ParseTreeTokenType.SQUARE_LEFT_BRACKET, 'children': []},
 						{'val': '3', 'type': ParseTreeTokenType.NUMBER_LITERAL, 'children': []},

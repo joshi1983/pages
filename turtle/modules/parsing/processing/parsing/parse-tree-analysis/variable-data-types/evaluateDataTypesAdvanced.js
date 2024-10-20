@@ -9,7 +9,7 @@ const evaluators = new Map([
 	[ParseTreeTokenType.BINARY_OPERATOR, evaluateBinaryOperatorDataType],
 	[ParseTreeTokenType.CONDITIONAL_TERNARY, evaluateConditionalTernaryDataType],
 	[ParseTreeTokenType.CURVED_BRACKET_EXPRESSION, evaluateCurvedBracketExpressionDataType],
-	[ParseTreeTokenType.IDENTIFIER, evaluateIdentifierDataType]
+	[ParseTreeTokenType.EXPRESSION_DOT, evaluateExpressionDotDataType]
 ]);
 
 function evaluateConditionalTernaryDataType(token, tokenTypesMap) {
@@ -50,8 +50,12 @@ function evaluateBinaryOperatorDataType(token, tokenTypesMap) {
 		return plusTypes(token, tokenTypesMap);
 }
 
-function evaluateIdentifierDataType(token, tokenTypesMap) {
-	const children = token.children;
+function evaluateExpressionDotDataType(token, tokenTypesMap) {
+	let children = token.children;
+	if (children.length !== 2)
+		return;
+
+	children = children[1].children;
 	const info = getIdentifierDescendentInfo(children);
 	if (info !== undefined) {
 		if (info.type !== undefined)
@@ -69,7 +73,7 @@ export function evaluateDataTypesAdvanced(cachedParseTree, result) {
 		ParseTreeTokenType.BINARY_OPERATOR,
 		ParseTreeTokenType.CONDITIONAL_TERNARY,
 		ParseTreeTokenType.CURVED_BRACKET_EXPRESSION,
-		ParseTreeTokenType.IDENTIFIER
+		ParseTreeTokenType.EXPRESSION_DOT
 	]);
 	let continueEvaluating = true;
 	while (continueEvaluating) {

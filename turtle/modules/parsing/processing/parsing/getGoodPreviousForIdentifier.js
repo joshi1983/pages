@@ -6,6 +6,7 @@ import { getClosestOfType } from '../../generic-parsing-utilities/getClosestOfTy
 import { ParseTreeTokenType } from '../ParseTreeTokenType.js';
 
 const badPreviousTypes = new Set([
+	ParseTreeTokenType.ARRAY_DATATYPE_EXPRESSION,
 	ParseTreeTokenType.ARRAY_DIMENSION_INDICATOR,
 	ParseTreeTokenType.BOOLEAN_LITERAL,
 	ParseTreeTokenType.CURVED_BRACKET_EXPRESSION,

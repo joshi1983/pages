@@ -9,6 +9,7 @@ export class ParseTreeTokenType {
 
 const enumKeys = [
 	'ARG_LIST', // for example (1, 3, 4)
+	'ARRAY_DATATYPE_EXPRESSION', // For example int[]
 	'ARRAY_DIMENSION_INDICATOR', // For example []
 	'ARRAY_INSTANCE_EXPRESSION', // For example int[3] from new int[3];
 	'ASSIGNMENT_OPERATOR', // =, +=, -=...

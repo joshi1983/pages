@@ -1,5 +1,7 @@
 import { addToken } from './addToken.js';
 import { endsWithSquareRightBracket } from './endsWithSquareRightBracket.js';
+import { ParseTreeToken } from
+'../../generic-parsing-utilities/ParseTreeToken.js';
 import { ParseTreeTokenType } from '../ParseTreeTokenType.js';
 import { shouldBeConvertedToDataType } from './shouldBeConvertedToDataType.js';
 
@@ -13,6 +15,39 @@ const eIESkippableTypes = new Set([
 	ParseTreeTokenType.DATA_TYPE,
 	ParseTreeTokenType.IDENTIFIER
 ]);
+
+function isPossibleParentForArrayDataTypeExpression(token) {
+	if (token.parentNode === null)
+		return true;
+	if (token.type === ParseTreeTokenType.DATA_TYPE ||
+	token.type === ParseTreeTokenType.IDENTIFIER ||
+	token.type === ParseTreeTokenType.EXPRESSION_DOT ||
+	token.type === ParseTreeTokenType.DOT)
+		return false;
+	return true;
+}
+
+// assumes squareGroupToken.type is ParseTreeTokenType.ARRAY_DIMENSION_INDICATOR
+function addArrayDataTypeExpressionIfNeeded(squareGroupToken) {
+	if (squareGroupToken.type !== ParseTreeTokenType.ARRAY_DIMENSION_INDICATOR)
+		return;
+	const parent = squareGroupToken.parentNode;
+	if (parent.type === ParseTreeTokenType.ARRAY_DATATYPE_EXPRESSION)
+		return; // not needed
+	let token = parent;
+	while (!isPossibleParentForArrayDataTypeExpression(token))
+		token = token.parentNode;
+	if (token !== null) {
+		const arrayDataTypeExpression = 
+			new ParseTreeToken(null, token.lineIndex, token.colIndex, ParseTreeTokenType.ARRAY_DATATYPE_EXPRESSION);
+		squareGroupToken.remove();
+		const prev = token.children[token.children.length - 1];
+		prev.remove();
+		arrayDataTypeExpression.appendChild(prev);
+		arrayDataTypeExpression.appendChild(squareGroupToken);
+		token.appendChild(arrayDataTypeExpression);
+	}
+}
 
 function getClosestGroupNeedingToClose(token) {
 	while (token !== null &&
@@ -61,9 +96,11 @@ export function processSquareRightBracket(previousToken, nextToken) {
 			}
 		}
 		squareGroupToken.appendChild(nextToken);
+		addArrayDataTypeExpressionIfNeeded(squareGroupToken);
 		const parent = squareGroupToken.parentNode;
 		if (parent !== null) {
 			if (parent.type === ParseTreeTokenType.DATA_TYPE ||
+			parent.type === ParseTreeTokenType.ARRAY_DATATYPE_EXPRESSION ||
 			parent.type === ParseTreeTokenType.IDENTIFIER)
 				return parent;
 		}

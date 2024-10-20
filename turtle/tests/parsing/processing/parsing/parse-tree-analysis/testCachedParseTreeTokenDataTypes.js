@@ -155,9 +155,9 @@ export function testCachedParseTreeTokenDataTypes(logger) {
 	{'code': 'println(x.length)', 'checks': [
 		{
 			'token': {
-				'val': 'x',
-				'type': ParseTreeTokenType.IDENTIFIER,
-				'hasChildVal': '.'
+				'hasChildVal': 'x',
+				'type': ParseTreeTokenType.EXPRESSION_DOT,
+				'hasParentType': ParseTreeTokenType.ARG_LIST
 			},
 			'out': 'int'
 		}

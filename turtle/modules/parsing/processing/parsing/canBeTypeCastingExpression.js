@@ -9,6 +9,7 @@ export function canBeTypeCastingExpression(token) {
 		return false;
 	const middleChild = children[1];
 	if (middleChild.type !== ParseTreeTokenType.DATA_TYPE &&
+	middleChild.type !== ParseTreeTokenType.ARRAY_DATATYPE_EXPRESSION &&
 	middleChild.type !== ParseTreeTokenType.IDENTIFIER)
 		return false;
 	return true;

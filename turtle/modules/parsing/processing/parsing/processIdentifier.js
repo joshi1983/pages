@@ -32,6 +32,8 @@ function shouldBecomeDeclaration(previousToken) {
 		const lastChild = previousToken.children[previousToken.children.length - 1];
 		if (lastChild === undefined)
 			return false;
+		if (lastChild.type === ParseTreeTokenType.ARRAY_DATATYPE_EXPRESSION)
+			return true;
 		if (lastChild.type === ParseTreeTokenType.IDENTIFIER &&
 		lastChild.children.length !== 0 &&
 		lastChild.children[0].type === ParseTreeTokenType.DOT)
@@ -39,8 +41,14 @@ function shouldBecomeDeclaration(previousToken) {
 	}
 	if (parent === null || parent.type === ParseTreeTokenType.DECLARATION)
 		return false;
-	if (previousToken.type === ParseTreeTokenType.DATA_TYPE)
+	if (previousToken.type === ParseTreeTokenType.DATA_TYPE ||
+	previousToken.type === ParseTreeTokenType.ARRAY_DATATYPE_EXPRESSION)
 		return true;
+	if (previousToken.type === ParseTreeTokenType.EXPRESSION_DOT &&
+	previousToken.children.length === 2) {
+		const dot = previousToken.children[1];
+		return dot.children.length !== 0;
+	}
 	if (previousToken.type === ParseTreeTokenType.FOR_LOOP_SETTINGS &&
 	previousToken.children.length === 2 &&
 	canBecomeDataTypeTypes.has(previousToken.children[1].type) &&
