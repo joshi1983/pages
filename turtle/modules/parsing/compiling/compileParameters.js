@@ -1,15 +1,23 @@
-import { addInstructionsForSpecialCommand } from './addInstructionsForSpecialCommand.js';
-import { BinaryOperatorInstruction } from '../execution/instructions/BinaryOperatorInstruction.js';
-import { CallProcedureInstruction } from '../execution/instructions/CallProcedureInstruction.js';
-import { createCallCommandInstruction } from './createCallCommandInstruction.js';
+import { addInstructionsForSpecialCommand } from
+'./addInstructionsForSpecialCommand.js';
+import { BinaryOperatorInstruction } from
+'../execution/instructions/BinaryOperatorInstruction.js';
+import { CallProcedureInstruction } from
+'../execution/instructions/CallProcedureInstruction.js';
+import { createCallCommandInstruction } from
+'./createCallCommandInstruction.js';
 import { Command } from '../Command.js';
 import { compileDataListLiteral } from './compileDataListLiteral.js';
+import { evaluateStringLiteralVal } from
+'../parse-tree-analysis/evaluateStringLiteralVal.js';
 import { PushInstruction } from '../execution/instructions/PushInstruction.js';
 import { ParseTreeToken } from '../ParseTreeToken.js';
 import { ParseTreeTokenType } from '../ParseTreeTokenType.js';
 import { shouldValueBeCloned } from './shouldValueBeCloned.js';
-import { UnaryOperatorInstruction } from '../execution/instructions/UnaryOperatorInstruction.js';
-import { VariableReadInstruction } from '../execution/instructions/VariableReadInstruction.js';
+import { UnaryOperatorInstruction } from
+'../execution/instructions/UnaryOperatorInstruction.js';
+import { VariableReadInstruction } from
+'../execution/instructions/VariableReadInstruction.js';
 await Command.asyncInit();
 
 function mustBeLowerCase(token) {
@@ -38,6 +46,9 @@ export function getInstructionsFromToken(token, procedures, result, logger) {
 	token.type === ParseTreeTokenType.NUMBER_LITERAL ||
 	token.type === ParseTreeTokenType.BOOLEAN_LITERAL) {
 		let val = token.val;
+		if (token.type === ParseTreeTokenType.LONG_STRING_LITERAL ||
+		token.type === ParseTreeTokenType.STRING_LITERAL)
+			val = evaluateStringLiteralVal(token.val);
 		if (mustBeLowerCase(token))
 			val = val.toLowerCase();
 		result.push(new PushInstruction(val, token, shouldValueBeCloned(val)));

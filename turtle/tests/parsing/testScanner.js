@@ -596,6 +596,30 @@ export function testScanner(logger) {
 				{'s': 'end'},
 				{'s': '1a'}
 			]
+		},
+		{
+			'code': '`hello`',
+			'tokens': ['`hello`']
+		},
+		{
+			'code': '\'\'',
+			'tokens': ['\'\'']
+		},
+		{
+			'code': '\'it\\\'s\'',
+			'tokens': [{'s': '\'it\\\'s\'', 'colIndex': 6, 'lineIndex': 0}]
+		},
+		{
+			'code': '\'it\\\'\n\'',
+			'tokens': [
+				{'s': '\'it\\\'\n\'', 'colIndex': 0, 'lineIndex': 1}
+			]
+		},
+		{
+			'code': '"it\\\'s',
+			'tokens': [
+				{'s': '"it\\\'s', 'colIndex': 5, 'lineIndex': 0}
+			]
 		}
 	];
 	cases.forEach(function(caseInfo, index) {

@@ -1,4 +1,5 @@
 import { Command } from '../../Command.js';
+import { evaluateStringLiteralVal } from '../evaluateStringLiteralVal.js';
 import { getCommandGroups } from '../../../command-groups/getCommandGroups.js';
 import { ParseTreeTokenType } from '../../ParseTreeTokenType.js';
 await Command.asyncInit();
@@ -43,7 +44,11 @@ export function getTokenValueBasic(token) {
 		if (token.children[1].type === ParseTreeTokenType.NUMBER_LITERAL && token.children[1].val === 0)
 			return 0;
 	}
-	else if ([ParseTreeTokenType.NUMBER_LITERAL, ParseTreeTokenType.STRING_LITERAL,
-		ParseTreeTokenType.BOOLEAN_LITERAL, ParseTreeTokenType.LONG_STRING_LITERAL].indexOf(token.type) !== -1)
+	else if (token.type === ParseTreeTokenType.LONG_STRING_LITERAL ||
+	token.type === ParseTreeTokenType.STRING_LITERAL) {
+		return evaluateStringLiteralVal(token.val);
+	}
+	else if ([ParseTreeTokenType.NUMBER_LITERAL,
+		ParseTreeTokenType.BOOLEAN_LITERAL].indexOf(token.type) !== -1)
 		return token.val;
 };

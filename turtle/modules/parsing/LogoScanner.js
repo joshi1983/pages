@@ -59,12 +59,31 @@ export class LogoScanner {
 				if (i === text.length)
 					pushToken();
 			}
+			else if (c === '\\' && isStartingStringLiteral(token) &&
+			i < text.length - 1) {
+				token += c;
+				c = text[++i];
+				token += c;
+				if (c === '\n') {
+					lineIndex++;
+					colIndex = 0;
+					continue;
+				}
+				else
+					colIndex++;
+			}
 			else if (c === '\'') { // long string literal
 				colIndex--;
 				pushToken();
 				for (;i < text.length; i++) {
 					c = text.charAt(i);
-					if (c !== '\'' || token === '') {
+					if (c === '\\' && i < text.length - 1) {
+						token += c;
+						c = text[++i];
+						token += c;
+						colIndex++;
+					}
+					else if (c !== '\'' || token === '') {
 						token += c;
 					}
 					else {

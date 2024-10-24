@@ -13,7 +13,9 @@ const cases = [
 {'val': 'hello\nworld', 'numLines': 2},
 {'val': 'hello\nworld\n', 'isComplete': true, 'numLines': 3, 'spanCount': 3},
 {'val': 'hello\nworld\n', 'isComplete': false, 'numLines': 3, 'spanCount': 2},
-{'val': 'hi', 'type': ParseTreeTokenType.STRING_LITERAL, 'numLines': 1}
+{'val': 'hi', 'type': ParseTreeTokenType.STRING_LITERAL, 'numLines': 1},
+{'val': 'it\'s', 'numLines': 1},
+{'val': 'it\'\n', 'type': ParseTreeTokenType.LONG_STRING_LITERAL, 'numLines': 2}
 ];
 
 function caseToToken(caseInfo) {

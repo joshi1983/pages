@@ -9,6 +9,7 @@ function testCommander(logger) {
 	// test various cases for the Commander.
 	// Validation in the Commander should be a little different since it is only part of the program's code.
 	const cases = [
+		{'code': 'print \'it\\\'s\'', 'logged': false},
 		{'code': 'fd 100', 'logged': false},
 		{'code': 'penUp', 'logged': false},
 		{'code': 'penDown', 'logged': false},

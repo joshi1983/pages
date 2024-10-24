@@ -54,6 +54,9 @@ repeat 2 [
 			{'val': null, 'type': ParseTreeTokenType.LIST, 'hasParentVal': 'Make', 'result': []},
 			{'val': 2, 'type': ParseTreeTokenType.NUMBER_LITERAL, 'result': 2}
 		]},
+		{'code': '\'it\\\'s\'', 'subcases': [
+			{'type': ParseTreeTokenType.LONG_STRING_LITERAL, 'result': 'it\'s'}
+		]}
 	];
 	cases.forEach(function(caseInfo, index) {
 		const cachedParseTree = getCachedParseTreeFromCode(caseInfo.code, logger);

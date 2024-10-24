@@ -6,7 +6,7 @@ function testWithVariousCodes(logger) {
 		'', 'fd 100', 'fd', '[', ']', '{',
 		'to p :x\nend', 'repeat 5 [\nfd 10 right 20]',
 		'; hello', ';hello', 'fd 100; hello',
-		'print (sum 1 2 3)',
+		'print (sum 1 2 3)','print \'it\\\'s\'',
 		'\nimageAlpha 100 100 \'local://twitter.svg\' 0.5\n',
 	];
 	codes.forEach(function(code) {
