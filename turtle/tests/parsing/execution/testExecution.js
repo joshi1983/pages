@@ -1,4 +1,5 @@
 import { testBreakpoint } from './testBreakpoint.js';
+import { testDeepCloneVariables } from './testDeepCloneVariables.js';
 import { testErrorCasesValidationAtRuntime } from './testErrorCasesValidationAtRuntime.js';
 import { testExecuteLogoProcedure } from './testExecuteLogoProcedure.js';
 import { testExecuterWithParsedOptimizations } from './testExecuterWithParsedOptimizations.js';
@@ -18,12 +19,14 @@ import { testLogoProgramExecuterUsingPrint } from './testLogoProgramExecuterUsin
 import { testLogoProgramExecuterWithBreakCommand } from './testLogoProgramExecuterWithBreakCommand.js';
 import { testLogoProgramExecuterWithGradients } from './testLogoProgramExecuterWithGradients.js';
 import { testLogoProgramExecuterWithSwap } from './testLogoProgramExecuterWithSwap.js';
+import { testLogoProgramFastPixels } from './testLogoProgramFastPixels.js';
 import { testOrientation3DCompatibility } from './testOrientation3DCompatibility.js';
 import { wrapAndCall } from '../../helpers/wrapAndCall.js';
 
 export function testExecution(logger) {
 	wrapAndCall([
 		testBreakpoint,
+		testDeepCloneVariables,
 		testErrorCasesValidationAtRuntime,
 		testExecuteLogoProcedure,
 		testExecuterWithParsedOptimizations,
@@ -43,6 +46,7 @@ export function testExecution(logger) {
 		testLogoProgramExecuterWithBreakCommand,
 		testLogoProgramExecuterWithGradients,
 		testLogoProgramExecuterWithSwap,
+		testLogoProgramFastPixels,
 		testOrientation3DCompatibility,
 	], logger);
 };

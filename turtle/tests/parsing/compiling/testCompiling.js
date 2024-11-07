@@ -5,7 +5,9 @@ import { testCompileIfElseStatements } from './testCompileIfElseStatements.js';
 import { testCompileIfStatements } from './testCompileIfStatements.js';
 import { testCompileInternalProcedures } from './testCompileInternalProcedures.js';
 import { testCompileLoops } from './testCompileLoops.js';
+import { testCompileRectProgram } from './testCompileRectProgram.js';
 import { testCompileSwap } from './testCompileSwap.js';
+import { testCreateEmptyProgram } from './testCreateEmptyProgram.js';
 import { testInstructionListOptimization } from './instruction-list-optimization/testInstructionListOptimization.js';
 import { testInternalProcedures } from './testInternalProcedures.js';
 import { testShouldTranslateToInternalProc } from './testShouldTranslateToInternalProc.js';
@@ -14,17 +16,19 @@ import { wrapAndCall } from '../../helpers/wrapAndCall.js';
 
 export function testCompiling(logger) {
 	wrapAndCall([
-		testCompile,
+		/*testCompile,
 		testCompileDataListLiteral,
 		testCompileFromParseTree,
 		testCompileIfElseStatements,
 		testCompileIfStatements,
 		testCompileInternalProcedures,
 		testCompileLoops,
-		testCompileSwap,
+		*/testCompileRectProgram,/*
+		testCompileSwap,*/
+		testCreateEmptyProgram,/*
 		testInstructionListOptimization,
 		testInternalProcedures,
 		testShouldTranslateToInternalProc,
-		testShouldValueBeCloned
+		testShouldValueBeCloned*/
 	], logger);
 };

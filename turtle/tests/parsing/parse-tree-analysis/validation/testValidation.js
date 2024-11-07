@@ -55,6 +55,7 @@ import { testValidatePenUp } from './testValidatePenUp.js';
 import { testValidatePolyCommandUsage } from './testValidatePolyCommandUsage.js';
 import { testValidatePolygonCalls } from './testValidatePolygonCalls.js';
 import { testValidatePreventPathJoin } from './testValidatePreventPathJoin.js';
+import { testValidateProceduralImageCalls } from './testValidateProceduralImageCalls.js';
 import { testValidateProcedureInProcedure } from './testValidateProcedureInProcedure.js';
 import { testValidateProcedureNames } from './testValidateProcedureNames.js';
 import { testValidateProcedureParametersNotNull } from './testValidateProcedureParametersNotNull.js';
@@ -135,6 +136,7 @@ testValidatePenUp,
 testValidatePolygonCalls,
 testValidatePolyCommandUsage,
 testValidatePreventPathJoin,
+testValidateProceduralImageCalls,
 testValidateProcedureInProcedure,
 testValidateProcedureNames,
 testValidateProcedureParametersNotNull,

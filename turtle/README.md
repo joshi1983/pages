@@ -551,25 +551,6 @@ After adding a JavaScript parser,
 	- Add to AutoFix feature a translation of some examples from:
 	https://github.com/ycatch/p5.turtle.js
 
-internal-procs:
-	DONE: - create code for a map procedure.
-	- turn the earlier made map procedure implementation into a new map command in WebLogo.
-		DONE: - add content/help/commands/map.html examples.
-		DONE: - add execution test cases.
-		DONE: - add a test that compiles code using 'map' command and verifies that the map procedure is defined within it.
-		DONE: - get new internalProc command group recognized by the compile function.
-		DONE: - get internalProc command group passing commands.json tests.
-		DONE: - get execution tests to pass.
-	DONE: - add referenced internal procedures when calling the compile function.
-	DONE: - test the debugger features.  Indicate the internal procedures with different styles in the call stack.
-	DONE: - test calls to internal procedures with breakpoints.
-	DONE: - show the internal code in details for the command in the help feature.
-	- test that a breakpoint on a line in the code editor doesn't cause execution to stop
-		at the corresponding line number in the internal procedures.
-	- add validator to check that procedures passed to the map command always return something.  
-		- They should always use the output command and never use stop or return without running output.
-	- add other procedures such as sort, binarySearch.
-	- add a feature to show the internal procedure implementations in the Code Editor.
 
 fix another bug involving commander:
 To reproduce the bug:
@@ -598,6 +579,38 @@ For a glossary term with definitionHTML is specified, make the contained command
 	Processing the links would involve dependencies that are very difficult to include in automated tests.
 	If there's an issue, we should isolate dependencies and potentially add modules 
 
+internal-procs:
+	DONE: - create code for a map procedure.
+	- turn the earlier made map procedure implementation into a new map command in WebLogo.
+		DONE: - add content/help/commands/map.html examples.
+		DONE: - add execution test cases.
+		DONE: - add a test that compiles code using 'map' command and verifies that the map procedure is defined within it.
+		DONE: - get new internalProc command group recognized by the compile function.
+		DONE: - get internalProc command group passing commands.json tests.
+		DONE: - get execution tests to pass.
+	DONE: - add referenced internal procedures when calling the compile function.
+	DONE: - test the debugger features.  Indicate the internal procedures with different styles in the call stack.
+	DONE: - test calls to internal procedures with breakpoints.
+	DONE: - show the internal code in details for the command in the help feature.
+	- test that a breakpoint on a line in the code editor doesn't cause execution to stop
+		at the corresponding line number in the internal procedures.
+	- add validator to check that procedures passed to the map command always return something.  
+		- They should always use the output command and never use stop or return without running output.
+	- add other procedures such as sort, binarySearch.
+	- add a feature to show the internal procedure implementations in the Code Editor.
+
+Fast pixels to do:
+DONE: - Create a new Image type of shape that is linked to a procedure name.
+DONE: - implement unit tests on the new image shape to set pixels.
+DONE: - Do we need a new execution mode or LogoInstruction to support these images?
+	- Yes, a JavaScriptFunctionCallInstruction.
+- Add a module for filling a Rect that extends EventDispatcher.
+	- Have an event for completion which can then be listened to for redrawing GraphicsScreen.
+	- Have a method for aborting a redraw.  This would be important when user changes GraphicsScreen resolution faster than it can finish processing a Rect.
+- If more than 2 or 3 Rect instances are on a specific ProceduralImage or ProceduralRasterRectangleShape, select and remove the Rect that is least helpful for the current GraphicsScreen state.
+- Define a cache for a few different resolutions or sampled rectangles within the image.
+- Create a drawing using this new type of image that draws a mandelbrot fractal.
+- test the new fractal drawing by dragging the view around, zoom in, zoom out...
 
 Possible names:
 A project named WebLogo is at: http://weblogo.berkeley.edu/ but it looks dead and is not related to the Logo programming language.

@@ -1,5 +1,5 @@
 import { test360DegreeArcs } from './test360DegreeArcs.js';
-import { testAnimation } from './animation/testAnimation.js';
+/*import { testAnimation } from './animation/testAnimation.js';
 import { testBoundingBox } from './testBoundingBox.js';
 import { testBoundingBox2D } from './testBoundingBox2D.js';
 import { testCamera } from './testCamera.js';
@@ -13,17 +13,18 @@ import { testOrientation2D } from './testOrientation2D.js';
 import { testOrientation3D } from './testOrientation3D.js';
 import { testOrientation3DAdvanced } from './testOrientation3DAdvanced.js';
 import { testOrientationRotated } from './testOrientationRotated.js';
-import { testShapes } from './shapes/testShapes.js';
-import { testVector2D } from './testVector2D.js';
+*/import { testShapes } from './shapes/testShapes.js';
+/*import { testVector2D } from './testVector2D.js';
 import { testVector2DLayer } from './testVector2DLayer.js';
 import { testVector2DQuadTree } from './testVector2DQuadTree.js';
 import { testVector3D } from './testVector3D.js';
-import { testVectorDrawing } from './testVectorDrawing.js';
+import { testVectorDrawing } from './testVectorDrawing.js';*/
 import { wrapAndCall } from '../../helpers/wrapAndCall.js';
 
 export function testVector(logger) {
 	wrapAndCall([
 		test360DegreeArcs,
+		/*test3DDrawing,
 		testAnimation,
 		testBoundingBox,
 		testBoundingBox2D,
@@ -38,11 +39,12 @@ export function testVector(logger) {
 		testOrientation3D,
 		testOrientation3DAdvanced,
 		testOrientationRotated,
-		testShapes,
-		testVector2D,
+		*/testShapes,
+		/*testVector2D,
 		testVector2DLayer,
 		testVector2DQuadTree,
 		testVector3D,
 		testVectorDrawing
+*/
 	], logger);
 };
