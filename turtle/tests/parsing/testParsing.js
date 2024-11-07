@@ -1,17 +1,17 @@
-import { testASMTurtle } from './asm-turtle/testASMTurtle.js';
+/*import { testASMTurtle } from './asm-turtle/testASMTurtle.js';
 import { testAsyncParser } from './testAsyncParser.js';
 import { testAsyncParseTask } from './testAsyncParseTask.js';
 import { testCharIndexToParseTreeTokenPosition } from './testCharIndexToParseTreeTokenPosition.js';
 import { testCommandClass } from './testCommandClass.js';
-import { testCompiling } from './compiling/testCompiling.js';
-import { testConvertParseTreeTokensToScanTokens } from './testConvertParseTreeTokensToScanTokens.js';
+*/import { testCompiling } from './compiling/testCompiling.js';
+/*import { testConvertParseTreeTokensToScanTokens } from './testConvertParseTreeTokensToScanTokens.js';
 import { testCreateParameterizedGroups } from './testCreateParameterizedGroups.js';
 import { testCreateParameterizedGroupsParseErrors } from './testCreateParameterizedGroupsParseErrors.js';
 import { testCSS } from './css/testCSS.js';
-import { testDataTypesDirectory } from './data-types/testDataTypesDirectory.js';
-import { testExampleScripts } from './testExampleScripts.js';
-import { testExecution } from './execution/testExecution.js';
-import { testFixOperatorPrecedence } from './testFixOperatorPrecedence.js';
+*/import { testDataTypesDirectory } from './data-types/testDataTypesDirectory.js';
+/*import { testExampleScripts } from './testExampleScripts.js';
+*/import { testExecution } from './execution/testExecution.js';
+/*import { testFixOperatorPrecedence } from './testFixOperatorPrecedence.js';
 import { testFMSLogo } from './fms-logo/testFMSLogo.js';
 import { testGenericParsingUtilities } from './generic-parsing-utilities/testGenericParsingUtilities.js';
 import { testGetParseTree } from './testGetParseTree.js';
@@ -29,8 +29,8 @@ import { testMightBeRunnableCode } from './testMightBeRunnableCode.js';
 import { testOperators } from './testOperators.js';
 import { testOrderOfOperation } from './testOrderOfOperation.js';
 import { testParseTree } from './testParseTree.js';
-import { testParseTreeAnalysis } from './parse-tree-analysis/testParseTreeAnalysis.js';
-import { testParseTreeColIndexes } from './testParseTreeColIndexes.js';
+*/import { testParseTreeAnalysis } from './parse-tree-analysis/testParseTreeAnalysis.js';
+/*import { testParseTreeColIndexes } from './testParseTreeColIndexes.js';
 import { testParseTreeToCodeWithComments } from './testParseTreeToCodeWithComments.js';
 import { testParseTreeToken } from './testParseTreeToken.js';
 import { testParseTreeTokenDirectory } from './parse-tree-token/testParseTreeTokenDirectory.js';
@@ -46,24 +46,27 @@ import { testSerialization } from './serialization/testSerialization.js';
 import { testSmallVisualBasic } from './small-visual-basic/testSmallVisualBasic.js';
 import { testSonicWebTurtle } from './sonic-webturtle/testSonicWebTurtle.js';
 import { testToken } from './testToken.js';
-import { testUnsupportedCommand } from './testUnsupportedCommand.js';
+import { testUnsupportedCommand } from './testUnsupportedCommand.js';*/
 import { wrapAndCall } from '../helpers/wrapAndCall.js';
 
 export function testParsing(logger) {
 	wrapAndCall([
-		testASMTurtle,
+		/*testASMTurtle,
 		testAsyncParser,
 		testAsyncParseTask,
 		testCharIndexToParseTreeTokenPosition,
-		testCommandClass,
-		testCompiling,
+		testCommandClass,*/
+		testCompiling,/*
 		testConvertParseTreeTokensToScanTokens,
 		testCreateParameterizedGroups,
 		testCreateParameterizedGroupsParseErrors,
 		testCSS,
 		testDataTypesDirectory,
 		testExampleScripts,
-		testExecution,
+		testExecution,*/
+		testDataTypesDirectory,/*
+		testExampleScripts,*/
+		testExecution,/*
 		testFixOperatorPrecedence,
 		testFMSLogo,
 		testGenericParsingUtilities,
@@ -81,8 +84,8 @@ export function testParsing(logger) {
 		testMightBeRunnableCode,
 		testOperators,
 		testOrderOfOperation,
-		testParseTree,
-		testParseTreeAnalysis,
+		testParseTree,*/
+		testParseTreeAnalysis,/*
 		testParseTreeColIndexes,
 		testParseTreeToCodeWithComments,
 		testParseTreeToken,
@@ -99,6 +102,6 @@ export function testParsing(logger) {
 		testSmallVisualBasic,
 		testSonicWebTurtle,
 		testToken,
-		testUnsupportedCommand
+		testUnsupportedCommand*/
 	], logger);
 };

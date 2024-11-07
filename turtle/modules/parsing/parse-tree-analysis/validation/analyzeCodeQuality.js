@@ -49,6 +49,7 @@ import { validateOverwrittenParameters } from './validateOverwrittenParameters.j
 import { validatePenUp } from './validatePenUp.js';
 import { validatePolyCommandUsage } from './validatePolyCommandUsage.js';
 import { validatePolygonCalls } from './validatePolygonCalls.js';
+import { validateProceduralImageCalls } from './validateProceduralImageCalls.js';
 import { validateProcedureInProcedure } from './validateProcedureInProcedure.js';
 import { validateProcedureNames } from './validateProcedureNames.js';
 import { validateProcedureParametersNotNull } from './validateProcedureParametersNotNull.js';
@@ -118,6 +119,7 @@ const validators = [
 	validateOverwrittenParameters,
 	validatePolyCommandUsage,
 	validatePolygonCalls,
+	validateProceduralImageCalls,
 	validateProcedureInProcedure,
 	validateProcedureNames,
 	validateProcedureParametersNotNull,
