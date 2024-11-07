@@ -53,6 +53,7 @@ import { testValidateOverwrittenParameters } from './testValidateOverwrittenPara
 import { testValidatePenUp } from './testValidatePenUp.js';
 import { testValidatePolyCommandUsage } from './testValidatePolyCommandUsage.js';
 import { testValidatePolygonCalls } from './testValidatePolygonCalls.js';
+import { testValidateProceduralImageCalls } from './testValidateProceduralImageCalls.js';
 import { testValidateProcedureInProcedure } from './testValidateProcedureInProcedure.js';
 import { testValidateProcedureNames } from './testValidateProcedureNames.js';
 import { testValidateProcedureParametersNotNull } from './testValidateProcedureParametersNotNull.js';
@@ -131,6 +132,7 @@ testValidateOverwrittenParameters,
 testValidatePenUp,
 testValidatePolygonCalls,
 testValidatePolyCommandUsage,
+testValidateProceduralImageCalls,
 testValidateProcedureInProcedure,
 testValidateProcedureNames,
 testValidateProcedureParametersNotNull,

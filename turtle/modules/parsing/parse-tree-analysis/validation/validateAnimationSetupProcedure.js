@@ -8,7 +8,7 @@ import { isNumber } from '../../../isNumber.js';
 import { isOutputToken } from '../isOutputToken.js';
 import { keyTypesMap } from
 '../../../components/code-editor/quality-report/AnimationSetupTest.js';
-import { validateNoParameterMustOutputProcedure } from './validateNoParameterMustOutputProcedure.js';
+import { validateNoParameterMustOutputProcedure } from './helpers/validateNoParameterMustOutputProcedure.js';
 await DataTypes.asyncInit();
 const plistTypes = new DataTypes('plist');
 const restrictedCommandNames = ['animation.clampedTimeRatio',
