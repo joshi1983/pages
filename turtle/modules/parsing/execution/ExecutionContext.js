@@ -1,4 +1,5 @@
 import { getCommandGroups } from '../../command-groups/getCommandGroups.js';
+import { proceduralImage } from './proceduralImage.js';
 
 export class ExecutionContext {
 	constructor(turtle, logoProgram) {
@@ -19,6 +20,7 @@ export class ExecutionContext {
 		this.valueStack = [];
 		this.instructionIndex = 0;
 		this.logoProgram = logoProgram;
+		this.proceduralImage = proceduralImage;
 	}
 
 	dequeue(varName) {

@@ -4,7 +4,7 @@ import { getDescendentsOfType } from '../../generic-parsing-utilities/getDescend
 import { isNumber } from '../../../isNumber.js';
 import { isOutputToken } from '../isOutputToken.js';
 import { ParseTreeTokenType } from '../../ParseTreeTokenType.js';
-import { validateNoParameterMustOutputProcedure } from './validateNoParameterMustOutputProcedure.js';
+import { validateNoParameterMustOutputProcedure } from './helpers/validateNoParameterMustOutputProcedure.js';
 await DataTypes.asyncInit();
 const plistTypes = new DataTypes('plist');
 const numberKeys = ['position.x', 'position.y', 'position.z', 'zoom.scale'];

@@ -51,6 +51,7 @@ import { validatePenUp } from './validatePenUp.js';
 import { validatePolyCommandUsage } from './validatePolyCommandUsage.js';
 import { validatePolygonCalls } from './validatePolygonCalls.js';
 import { validatePreventPathJoin } from './validatePreventPathJoin.js';
+import { validateProceduralImageCalls } from './validateProceduralImageCalls.js';
 import { validateProcedureInProcedure } from './validateProcedureInProcedure.js';
 import { validateProcedureNames } from './validateProcedureNames.js';
 import { validateProcedureParametersNotNull } from './validateProcedureParametersNotNull.js';
@@ -122,6 +123,7 @@ const validators = [
 	validatePolyCommandUsage,
 	validatePolygonCalls,
 	validatePreventPathJoin,
+	validateProceduralImageCalls,
 	validateProcedureInProcedure,
 	validateProcedureNames,
 	validateProcedureParametersNotNull,

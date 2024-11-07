@@ -119,6 +119,32 @@ export class CanvasVector2DDrawer extends AbstractCanvasDrawer {
 		drawPath(this, path, ctx);
 	}
 
+	drawProceduralRasterRectangle(shape, ctx) {
+		if (ctx === undefined)
+			ctx = this.foreground;
+
+		let translatedPos = this.getTranslatedPosition(shape.position);
+		if (shape.opacity < 1) {
+			ctx.globalAlpha = shape.opacity;
+		}
+		const rects = shape.rects.filter(i => i.image !== undefined);
+		if (rects.length !== 0)
+			console.log(`rects.length = ${rects.length}`);
+		for (let i = 0; i < rects.length; i++) {
+			const rect = rects[i];
+			ctx.save();
+			ctx.translate(
+				translatedPos.getX() + rect.offsetXRatio * shape.width,
+				translatedPos.getY() + rect.offsetYRatio * shape.height);
+			ctx.rotate(shape.rotationRadians);
+			const w = shape.width * rect.widthRatio;
+			const h = shape.height * rect.heightRatio;
+			ctx.drawImage(rect.image, -w * 0.5, -h, w, h);
+			ctx.restore();
+		}
+		ctx.globalAlpha = 1;
+	}
+
 	drawRasterRectangle(shape, ctx) {
 		if (shape.image === undefined)
 			return; // nothing to do.  We can't draw the image.
