@@ -1,5 +1,6 @@
 import { ArrayUtils } from '../ArrayUtils.js';
 import { DataTypes } from './data-types/DataTypes.js';
+import { expandDataTypeInformation, expandDataTypeInfoInit } from './expandDataTypeInformation.js';
 import { fetchJson } from '../fetchJson.js';
 import { ParseTreeToken } from './ParseTreeToken.js';
 import { sanitizeCompositeValidation } from './sanitizeCompositeValidation.js';
@@ -10,6 +11,7 @@ let hintCommandMap;
 async function asyncInit() {
 	commands = await fetchJson('json/commands.json');
 	await DataTypes.asyncInit();
+	await expandDataTypeInfoInit();
 	commandMap = new Map();
 	hintCommandMap = new Map();
 
@@ -27,6 +29,7 @@ async function asyncInit() {
 				argInfo.sanitization = 'convertToStepPosition';
 		});
 		sanitizeCompositeValidation(commandInfo);
+		expandDataTypeInformation(commandInfo);
 	});
 }
 const initPromise = asyncInit();

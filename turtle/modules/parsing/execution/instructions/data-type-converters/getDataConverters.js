@@ -69,8 +69,8 @@ export function getDataConverters(command, numArgs, parseTreeToken) {
 					wrapperFunc = errorCaseCheckFunc;
 				else {
 					const originalWrapperFunc = wrapperFunc;
-					wrapperFunc = function(val) {
-						return errorCaseCheckFunc(originalWrapperFunc(val));
+					wrapperFunc = function(val, context) {
+						return errorCaseCheckFunc(originalWrapperFunc(val, context));
 					};
 				}
 			}
