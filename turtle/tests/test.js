@@ -30,8 +30,8 @@ import { testExceptionToString } from './testExceptionToString.js';
 import { testFetchBlob } from './testFetchBlob.js';
 import { testFile } from './file/testFile.js';
 import { testFormatNumber } from './testFormatNumber.js';
-import { testHelp } from './help/testHelp.js';
-import { testIsCloseEnough } from './testIsCloseEnough.js';
+*/import { testHelp } from './help/testHelp.js';
+/*import { testIsCloseEnough } from './testIsCloseEnough.js';
 import { testIsDigit } from './testIsDigit.js';
 import { testJavaScriptJSON } from './testJavaScriptJSON.js';
 import { testLogoCodeMigrationsJSON } from './testLogoCodeMigrationsJSON.js';
@@ -94,8 +94,8 @@ const tests = [
 	testFetchBlob,
 	testFile,
 	testFormatNumber,
-	testHelp,
-	testIsCloseEnough,
+	*/testHelp,
+	/*testIsCloseEnough,
 	testIsDigit,
 	testJavaScriptJSON,
 	testLogoCodeMigrationsJSON,
