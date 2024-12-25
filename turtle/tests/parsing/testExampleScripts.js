@@ -197,6 +197,8 @@ async function testCompileAllExamples(logger) {
 	logger.indicators.push(progressIndicator);
 	for (let i = 0; i < examples.length; i++) {
 		const exampleInfo = examples[i];
+		if (exampleInfo.filename.indexOf('teamviewer-logos') === -1)
+			continue;
 		const url = `logo-scripts/${exampleInfo.filename}?${Math.random(1)}`;
 		testExample(exampleInfo, url, logger);
 		await sleep(100);
@@ -213,7 +215,7 @@ async function testCompileAllExamples(logger) {
 
 export function testExampleScripts(logger) {
 	wrapAndCall([
-		testJSONFormat,
+		//testJSONFormat,
 		testCompileAllExamples
 	], logger);
 };

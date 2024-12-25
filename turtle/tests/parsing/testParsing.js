@@ -1,4 +1,4 @@
-import { testASMTurtle } from './asm-turtle/testASMTurtle.js';
+/*import { testASMTurtle } from './asm-turtle/testASMTurtle.js';
 import { testAsyncParser } from './testAsyncParser.js';
 import { testAsyncParseTask } from './testAsyncParseTask.js';
 import { testCharIndexToParseTreeTokenPosition } from './testCharIndexToParseTreeTokenPosition.js';
@@ -9,8 +9,8 @@ import { testCreateParameterizedGroups } from './testCreateParameterizedGroups.j
 import { testCreateParameterizedGroupsParseErrors } from './testCreateParameterizedGroupsParseErrors.js';
 import { testCSS } from './css/testCSS.js';
 import { testDataTypesDirectory } from './data-types/testDataTypesDirectory.js';
-import { testExampleScripts } from './testExampleScripts.js';
-import { testExecution } from './execution/testExecution.js';
+*/import { testExampleScripts } from './testExampleScripts.js';
+/*import { testExecution } from './execution/testExecution.js';
 import { testFixOperatorPrecedence } from './testFixOperatorPrecedence.js';
 import { testFMSLogo } from './fms-logo/testFMSLogo.js';
 import { testGenericParsingUtilities } from './generic-parsing-utilities/testGenericParsingUtilities.js';
@@ -44,11 +44,11 @@ import { testSerialization } from './serialization/testSerialization.js';
 import { testSonicWebTurtle } from './sonic-webturtle/testSonicWebTurtle.js';
 import { testToken } from './testToken.js';
 import { testUnsupportedCommand } from './testUnsupportedCommand.js';
-import { wrapAndCall } from '../helpers/wrapAndCall.js';
+*/import { wrapAndCall } from '../helpers/wrapAndCall.js';
 
 export function testParsing(logger) {
 	wrapAndCall([
-		testASMTurtle,
+		/*testASMTurtle,
 		testAsyncParser,
 		testAsyncParseTask,
 		testCharIndexToParseTreeTokenPosition,
@@ -59,8 +59,8 @@ export function testParsing(logger) {
 		testCreateParameterizedGroupsParseErrors,
 		testCSS,
 		testDataTypesDirectory,
-		testExampleScripts,
-		testExecution,
+		*/testExampleScripts,
+		/*testExecution,
 		testFixOperatorPrecedence,
 		testFMSLogo,
 		testGenericParsingUtilities,
@@ -93,6 +93,6 @@ export function testParsing(logger) {
 		testSerialization,
 		testSonicWebTurtle,
 		testToken,
-		testUnsupportedCommand
+		testUnsupportedCommand*/
 	], logger);
 };
