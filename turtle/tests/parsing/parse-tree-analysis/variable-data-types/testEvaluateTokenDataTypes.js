@@ -236,28 +236,49 @@ print p "red`, 'tokenTypeChecks': [
 		'types': 'string'
 	}
 ]
-	},{'code': `to p :value
-	if integer? :value [
-		localmake "value abs :value
+	},{'code': `to p :x
+	if integer? :x [
+		localmake "x abs :x
 		localmake "result ''
 		output :result
 	]
-	if boolean? :value [
-		output ifelse :value '1' '0'
+	if boolean? :x [
+		output ifelse :x '1' '0'
 	]
-	output :value
+	output :x
 end`, 'tokenTypeChecks': [
 	{
-		'val': 'value',
+		'val': 'x',
 		'type': ParseTreeTokenType.VARIABLE_READ,
 		'hasParentVal': 'abs',
 		'types': 'int'
 	},
 	{
-		'val': 'value',
+		'val': 'x',
 		'type': ParseTreeTokenType.VARIABLE_READ,
 		'hasParentVal': 'ifelse',
 		'types': 'bool'
+	}
+]},
+{'code': `to p :num :x
+	if list? :num [
+		if list? :x [
+			output []
+		]
+	]
+	localmake "result "
+	localmake "i 0
+	while :i < :x [
+		localmake "i :i + 1
+	]
+	output :result
+end`, 'tokenTypeChecks': [
+	{
+		'val': 'x',
+		'type': ParseTreeTokenType.VARIABLE_READ,
+		'hasParentVal': '<',
+		'types': 'alphacolor|list|num|string'
+		// 'list|num' would be ok too.
 	}
 ]}
 ];

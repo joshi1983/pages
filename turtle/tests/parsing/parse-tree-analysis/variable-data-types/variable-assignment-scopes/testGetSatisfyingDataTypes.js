@@ -7,6 +7,7 @@ await DataTypes.asyncInit();
 
 export function testGetSatisfyingDataTypes(logger) {
 	const cases = [
+		{'code': 'color? :x', 'types': 'color'},
 		{'code': 'string? :x', 'types': 'string'},
 		{'code': 'number? :x', 'types': 'num'},
 		{'code': 'boolean? :x', 'types': 'bool'},
@@ -17,6 +18,8 @@ export function testGetSatisfyingDataTypes(logger) {
 		{'code': 'or list? :x (1 < 2)', 'types': undefined},
 		{'code': '(or list? :x list? :x (1 < 2))', 'types': undefined},
 		{'code': 'or (1 < 2) list? :x', 'types': undefined},
+		{'code': 'and color? :x number? :x', 'types': 'int'},
+		{'code': 'and number? :x color? :x', 'types': 'int'},
 	];
 	cases.forEach(function(caseInfo, index) {
 		const plogger = prefixWrapper(`Case ${index}, code=${caseInfo.code}`, logger);

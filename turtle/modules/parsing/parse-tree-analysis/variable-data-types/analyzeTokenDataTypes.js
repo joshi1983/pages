@@ -1,35 +1,12 @@
 import { DataTypes } from '../../data-types/DataTypes.js';
 import { getOutputTypesForProcedureBasic } from './getOutputTypesForProcedureBasic.js';
+import { getTokenDataTypesBasic } from './getTokenDataTypesBasic.js';
 import { getTokenTypesBasic } from './getTokenTypesBasic.js';
 import { getTokenTypesAdvanced } from './getTokenTypesAdvanced.js';
+import { getTokensByType } from '../../generic-parsing-utilities/getTokensByType.js';
 import { ParseTreeTokenType } from '../../ParseTreeTokenType.js';
 import { processTokenDataTypesFromMultipleVariableAssignmentScopes } from './processTokenDataTypesFromMultipleVariableAssignmentScopes.js';
-import { shouldBeEvaluatedAdvanced } from './shouldBeEvaluatedAdvanced.js';
-
-function shouldBeEvaluatedForDataTypes(cachedParseTree, variables) {
-	return function(token) {
-		if (token.type === ParseTreeTokenType.PARAMETERIZED_GROUP) {
-			return true; // any procedure or command call can be evaluated to data types.
-		}
-		if (token.type === ParseTreeTokenType.VARIABLE_READ) {
-			const variable = variables.getVariableByName(token.val);
-			if (variable === undefined)
-				return false;
-			const procedure = cachedParseTree.getProcedureAtToken(token);
-			const scopes = variable.getScopesAt(token, procedure);
-			if (scopes.length === 1) {
-				const scope = scopes[0];
-				if (scope !== undefined && scope.conditionalRanges.length !== 0) {
-					const conditionalRange = scope.getConditionalRangeAt(token);
-					if (conditionalRange === undefined)
-						return false;
-				}
-			}
-		}
-		// If a value can not be evaluated for a constant value, a data type also can't be evaluated.
-		return shouldBeEvaluatedAdvanced(token);
-	};
-};
+import { shouldBeEvaluatedForDataTypes } from './shouldBeEvaluatedForDataTypes.js';
 
 function processAdvancedPass(tokensRemaining, variables, result) {
 	let somethingChanged = true;
@@ -49,23 +26,26 @@ function processAdvancedPass(tokensRemaining, variables, result) {
 }
 
 export function analyzeTokenDataTypes(cachedParseTree, tokenValueMap, variables) {
-	const result = new Map();
 	const procedures = cachedParseTree.getProceduresMap();
 	const extraInfo = {
 		'procedures': procedures
 	};
-	// compute data types off known token values.
-	for (const [key, value] of tokenValueMap) {
-		result.set(key, DataTypes.getTypesCompatibleWithValue(value, extraInfo));
+	const result = getTokenDataTypesBasic(tokenValueMap, cachedParseTree, extraInfo, variables);
+	for (const varReadToken of getTokensByType(cachedParseTree,
+		ParseTreeTokenType.VARIABLE_READ)) {
+		const variable = variables.getVariableByName(varReadToken.val.toLowerCase());
+		if (variable === undefined)
+			continue;
+		const procedure = cachedParseTree.getProcedureAtToken(varReadToken);
+		const scopes = variable.getScopesAt(varReadToken, procedure);
+		if (scopes.length === 1) {
+			const scope = scopes[0];
+			result.set(varReadToken, scope.assignedTypes);
+		}
 	}
 	let tokensRemaining = cachedParseTree.getAllTokens().
 		filter(shouldBeEvaluatedForDataTypes(cachedParseTree, variables)).
 		filter(t => !result.has(t));
-	tokensRemaining.forEach(function(token) {
-		const types = getTokenTypesBasic(token, true, extraInfo);
-		if (types !== undefined)
-			result.set(token, types);
-	});
 	tokensRemaining = processAdvancedPass(tokensRemaining, variables, result);
 	// compute data types for procedure calls.
 	for (const [key, procedure] of procedures) {
