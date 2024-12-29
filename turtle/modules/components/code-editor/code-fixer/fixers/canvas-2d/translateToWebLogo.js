@@ -10,6 +10,7 @@ import { processJavaLikeCommentToken } from
 import { processToken } from './type-processors/processToken.js';
 
 export function translateToWebLogo(code) {
+	// Translate usage of HTML5 Canvas 2D context to WebLogo
 	const parseResult = parse(code);
 	const result = new CommentDumpingStringBuffer(parseResult.comments, processJavaLikeCommentToken);
 	if (isDefaultLineCapNeeded(parseResult.root))

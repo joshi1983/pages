@@ -41,6 +41,7 @@ import { testScanner } from './testScanner.js';
 import { testScanningDirectory } from './scanning/testScanningDirectory.js';
 import { testScrapeProcedures } from './testScrapeProcedures.js';
 import { testSerialization } from './serialization/testSerialization.js';
+import { testSmallVisualBasic } from './small-visual-basic/testSmallVisualBasic.js';
 import { testSonicWebTurtle } from './sonic-webturtle/testSonicWebTurtle.js';
 import { testToken } from './testToken.js';
 import { testUnsupportedCommand } from './testUnsupportedCommand.js';
@@ -91,6 +92,7 @@ export function testParsing(logger) {
 		testScanningDirectory,
 		testScrapeProcedures,
 		testSerialization,
+		testSmallVisualBasic,
 		testSonicWebTurtle,
 		testToken,
 		testUnsupportedCommand

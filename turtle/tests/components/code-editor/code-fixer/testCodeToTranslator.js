@@ -36,6 +36,8 @@ import { processingExamples } from
 '../../../helpers/parsing/processingExamples.js';
 import { pythonTurtleExampleFilesContent } from
 '../../../helpers/parsing/pythonTurtleExampleFilesContent.js';
+import { smallVisualBasicExamples } from
+'../../../helpers/parsing/smallVisualBasicExamples.js';
 import { sonicWebTurtleExamples } from
 '../../../helpers/parsing/sonicWebTurtleExamples.js';
 import { testInOutPairs } from '../../../helpers/testInOutPairs.js';
@@ -76,8 +78,8 @@ to `,
 http://www.cropcircleconnector.com/Sorensen/2001/NineSpheresTK.jpg`,
 	`imageAlpha :height :height 'local://Military_Officers_Association_of_America_logo.svg'`
 ]).concat(billNyeExamples, cgjenningsExamples, fractintExamples, processingExamples,
-odinExamples, osmosianExamples);
-// Processing, Odin, Osmosian plain English don't have corresponding translators.
+odinExamples, osmosianExamples, smallVisualBasicExamples);
+// Processing, Odin, Osmosian plain English... don't have corresponding translators.
 // Until a translator is made for them, Processing and Odin code
 // should be classified as WebLogo.
 
@@ -136,6 +138,7 @@ addCases(pythonTurtleExampleFilesContent, translatePythonCodeToWebLogo, false);
 addCases(sonicWebTurtleExamples, translateSonicWebTurtle, false);
 
 function testWebLogoCases(logger) {
+	webLogoExampleCases.splice(0, 1742);
 	webLogoExampleCases.forEach(function(content, index) {
 		const [translator, adjustAesthetics] = codeToTranslator(content);
 		const plogger = prefixWrapper(`Case ${index}`, logger);

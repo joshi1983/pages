@@ -25,6 +25,7 @@ import { sanitize } from './sanitization/sanitize.js';
 import { stopRemoveFixer } from '../../../components/code-editor/code-fixer/fixers/stopRemoveFixer.js';
 
 export function translate(code) {
+	// Translate ASM Turtle code to WebLogo.
 	const parseResult = parse(code);
 	const result = new CommentDumpingStringBuffer(parseResult.comments, processComment);
 	const settings = {

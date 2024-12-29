@@ -20,6 +20,7 @@ import { removeUnneededCurvedBrackets } from
 '../../../components/code-editor/code-fixer/fixers/helpers/removeUnneededCurvedBrackets.js';
 
 export function translate(code) {
+	// Translate Java-like Processing code to WebLogo.
 	const parseResult = parse(code);
 	const settings = {
 		'cachedParseTree': new CachedParseTree(parseResult.root)

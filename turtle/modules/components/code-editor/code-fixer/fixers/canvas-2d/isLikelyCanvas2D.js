@@ -65,7 +65,12 @@ const unlikelyPatterns = [
 // A couple indicators of Sonic WebLogo:
 /(^|\s)end\s*$/i,
 /(^|\s)repeat\s+\d+\s+[a-z]/i,
+
+// indicators of Small Visual Basic:
+/(^|\s)(Colors|GraphicsWindow|GW)[\s]*\.[\s]*[a-z]/i,
+/(^|\s)Turtle\s*\.\s*(Angle|CreateFigure|DirectTurn|FillFigure|Hide|MoveTo|PenDown|PenUp|Show|Speed|TurnRight|UseAnimation|Width)/,
 ];
+
 const unlikelyPatternsOutsideJavaScriptComments = [
 /(^|\s)to($|\s)/i,
 ];

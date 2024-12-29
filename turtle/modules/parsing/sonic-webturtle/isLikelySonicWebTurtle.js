@@ -35,6 +35,10 @@ const antiExpressions = [
 
 // some indicators of Osmosian plain English
 /(^|\n)to([ \t]+[a-z]+)+:\r?\n/i,
+
+// some indicators of Small Visual Basic
+/(^|\s)(Colors|GraphicsWindow|GW|Turtle)[\s]*\.[\s]*[a-z]/i
+
 ];
 const likelyExpressions = [
 /(^|\s)color\s+[\+-][0-9]+\s/i,

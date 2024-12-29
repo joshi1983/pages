@@ -22,6 +22,7 @@ import { processToken } from './type-processors/processToken.js';
 import { stopRemoveFixer } from '../../../components/code-editor/code-fixer/fixers/stopRemoveFixer.js';
 
 export function translate(code) {
+	// Translate Sonic WebTurtle code to WebLogo.
 	const parseResult = parse(code);
 	const result = new CommentDumpingStringBuffer(parseResult.comments, processComment);
 	const settings = {
