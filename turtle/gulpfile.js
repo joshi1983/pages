@@ -34,6 +34,7 @@ gulp.task('indexes', () => {
 	indexFiles('./tests/data/osmosian-plain-english', 'txt');
 	indexFiles('./tests/data/pov-ray', 'txt');
 	indexFiles('./tests/data/processing', 'txt');
+	indexFiles('./tests/data/small-visual-basic', 'txt');
 	return Promise.resolve();
 });
 gulp.task('js-filenames', () => {
