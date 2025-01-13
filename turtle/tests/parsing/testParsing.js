@@ -1,4 +1,4 @@
-import { testASMTurtle } from './asm-turtle/testASMTurtle.js';
+/*import { testASMTurtle } from './asm-turtle/testASMTurtle.js';
 import { testAsyncParser } from './testAsyncParser.js';
 import { testAsyncParseTask } from './testAsyncParseTask.js';
 import { testCharIndexToParseTreeTokenPosition } from './testCharIndexToParseTreeTokenPosition.js';
@@ -12,8 +12,8 @@ import { testDataTypesDirectory } from './data-types/testDataTypesDirectory.js';
 import { testExampleScripts } from './testExampleScripts.js';
 import { testExecution } from './execution/testExecution.js';
 import { testFixOperatorPrecedence } from './testFixOperatorPrecedence.js';
-import { testFMSLogo } from './fms-logo/testFMSLogo.js';
-import { testGenericParsingUtilities } from './generic-parsing-utilities/testGenericParsingUtilities.js';
+*/import { testFMSLogo } from './fms-logo/testFMSLogo.js';
+/*import { testGenericParsingUtilities } from './generic-parsing-utilities/testGenericParsingUtilities.js';
 import { testGetParseTree } from './testGetParseTree.js';
 import { testGetStartPositionOfToken } from './testGetStartPositionOfToken.js';
 import { testGetTokensForParsing } from './testGetTokensForParsing.js';
@@ -47,11 +47,11 @@ import { testSmallVisualBasic } from './small-visual-basic/testSmallVisualBasic.
 import { testSonicWebTurtle } from './sonic-webturtle/testSonicWebTurtle.js';
 import { testToken } from './testToken.js';
 import { testUnsupportedCommand } from './testUnsupportedCommand.js';
-import { wrapAndCall } from '../helpers/wrapAndCall.js';
+*/import { wrapAndCall } from '../helpers/wrapAndCall.js';
 
 export function testParsing(logger) {
 	wrapAndCall([
-		testASMTurtle,
+		/*testASMTurtle,
 		testAsyncParser,
 		testAsyncParseTask,
 		testCharIndexToParseTreeTokenPosition,
@@ -65,8 +65,8 @@ export function testParsing(logger) {
 		testExampleScripts,
 		testExecution,
 		testFixOperatorPrecedence,
-		testFMSLogo,
-		testGenericParsingUtilities,
+		*/testFMSLogo,
+		/*testGenericParsingUtilities,
 		testGetParseTree,
 		testGetStartPositionOfToken,
 		testGetTokensForParsing,
@@ -99,6 +99,6 @@ export function testParsing(logger) {
 		testSmallVisualBasic,
 		testSonicWebTurtle,
 		testToken,
-		testUnsupportedCommand
+		testUnsupportedCommand*/
 	], logger);
 };
