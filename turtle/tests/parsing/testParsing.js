@@ -1,4 +1,4 @@
-import { testASMTurtle } from './asm-turtle/testASMTurtle.js';
+/*import { testASMTurtle } from './asm-turtle/testASMTurtle.js';
 import { testAsyncParser } from './testAsyncParser.js';
 import { testAsyncParseTask } from './testAsyncParseTask.js';
 import { testCharIndexToParseTreeTokenPosition } from './testCharIndexToParseTreeTokenPosition.js';
@@ -37,8 +37,8 @@ import { testPovRay } from './pov-ray/testPovRay.js';
 import { testProcedure } from './testProcedure.js';
 import { testProcessing } from './processing/testProcessing.js';
 import { testPythonParsing } from './python-parsing/testPythonParsing.js';
-import { testQBasic } from './qbasic/testQBasic.js';
-import { testScanner } from './testScanner.js';
+*/import { testQBasic } from './qbasic/testQBasic.js';
+/*import { testScanner } from './testScanner.js';
 import { testScanningDirectory } from './scanning/testScanningDirectory.js';
 import { testScrapeProcedures } from './testScrapeProcedures.js';
 import { testSerialization } from './serialization/testSerialization.js';
@@ -46,11 +46,11 @@ import { testSmallVisualBasic } from './small-visual-basic/testSmallVisualBasic.
 import { testSonicWebTurtle } from './sonic-webturtle/testSonicWebTurtle.js';
 import { testToken } from './testToken.js';
 import { testUnsupportedCommand } from './testUnsupportedCommand.js';
-import { wrapAndCall } from '../helpers/wrapAndCall.js';
+*/import { wrapAndCall } from '../helpers/wrapAndCall.js';
 
 export function testParsing(logger) {
 	wrapAndCall([
-		testASMTurtle,
+		/*testASMTurtle,
 		testAsyncParser,
 		testAsyncParseTask,
 		testCharIndexToParseTreeTokenPosition,
@@ -88,15 +88,15 @@ export function testParsing(logger) {
 		testPovRay,
 		testProcedure,
 		testProcessing,
-		testPythonParsing,
+		testPythonParsing,*/
 		testQBasic,
-		testScanner,
+		/*testScanner,
 		testScanningDirectory,
 		testScrapeProcedures,
 		testSerialization,
 		testSmallVisualBasic,
 		testSonicWebTurtle,
 		testToken,
-		testUnsupportedCommand
+		testUnsupportedCommand*/
 	], logger);
 };

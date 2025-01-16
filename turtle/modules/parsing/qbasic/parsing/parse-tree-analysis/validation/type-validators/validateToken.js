@@ -1,6 +1,7 @@
 import { ParseTreeTokenType } from '../../../../ParseTreeTokenType.js';
 import { validateBinaryOperator } from './validateBinaryOperator.js';
 import { validateCodeBlock } from './validateCodeBlock.js';
+import { validateComma } from './validateComma.js';
 import { validateDim } from './validateDim.js';
 import { validateDot } from './validateDot.js';
 import { validateExit } from './validateExit.js';
@@ -19,6 +20,7 @@ import { validateWend } from './validateWend.js';
 const validators = new Map([
 	[ParseTreeTokenType.BINARY_OPERATOR, validateBinaryOperator],
 	[ParseTreeTokenType.CODE_BLOCK, validateCodeBlock],
+	[ParseTreeTokenType.COMMA, validateComma],
 	[ParseTreeTokenType.DIM, validateDim],
 	[ParseTreeTokenType.DOT, validateDot],
 	[ParseTreeTokenType.EXIT, validateExit],
