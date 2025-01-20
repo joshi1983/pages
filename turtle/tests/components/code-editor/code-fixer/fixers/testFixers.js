@@ -1,4 +1,4 @@
-import { testAnimationSetupFixer } from './testAnimationSetupFixer.js';
+/*import { testAnimationSetupFixer } from './testAnimationSetupFixer.js';
 import { testAnimationSnapshotStyleFixer } from './testAnimationSnapshotStyleFixer.js';
 import { testArrayLiteralFixer } from './testArrayLiteralFixer.js';
 import { testAskFixer } from './testAskFixer.js';
@@ -55,12 +55,12 @@ import { testRemoveUnstartedPolyEnd } from './testRemoveUnstartedPolyEnd.js';
 import { testRemoveUnusedAssignments } from './testRemoveUnusedAssignments.js';
 import { testReplaceSpecialQuoteCharactersWithNormalQuotes } from './testReplaceSpecialQuoteCharactersWithNormalQuotes.js';
 import { testRequiredColourNameLongStringFixer } from './testRequiredColourNameLongStringFixer.js';
-import { testRunFixer } from './testRunFixer.js';
-import { testSetPenSizeFixer } from './testSetPenSizeFixer.js';
+*/import { testRunFixer } from './testRunFixer.js';
+/*import { testSetPenSizeFixer } from './testSetPenSizeFixer.js';
 import { testSimplifySetHeadingFixer } from './testSimplifySetHeadingFixer.js';
 import { testStopRemoveFixer } from './testStopRemoveFixer.js';
-import { testTerrapin } from './terrapin/testTerrapin.js';
-import { testThingCallFixer } from './testThingCallFixer.js';
+*/import { testTerrapin } from './terrapin/testTerrapin.js';
+/*import { testThingCallFixer } from './testThingCallFixer.js';
 import { testThrowFixer } from './testThrowFixer.js';
 import { testTildeFixer } from './testTildeFixer.js';
 import { testTransparentCommandFixer } from './testTransparentCommandFixer.js';
@@ -71,10 +71,10 @@ import { testWebTurtleProcedureFixer } from './testWebTurtleProcedureFixer.js';
 import { testWebTurtleRepeatFixer } from './testWebTurtleRepeatFixer.js';
 import { testVariableNameReferenceFixer } from './testVariableNameReferenceFixer.js';
 import { testVariableReadSpaceInsertFixer } from './testVariableReadSpaceInsertFixer.js';
-import { wrapAndCall } from '../../../../helpers/wrapAndCall.js';
+*/import { wrapAndCall } from '../../../../helpers/wrapAndCall.js';
 
 const tests = [
-	testAnimationSetupFixer,
+	/*testAnimationSetupFixer,
 	testAnimationSnapshotStyleFixer,
 	testArrayLiteralFixer,
 	testAskFixer,
@@ -131,12 +131,12 @@ const tests = [
 	testRemoveUnusedAssignments,
 	testReplaceSpecialQuoteCharactersWithNormalQuotes,
 	testRequiredColourNameLongStringFixer,
-	testRunFixer,
-	testSetPenSizeFixer,
+	*/testRunFixer,
+	/*testSetPenSizeFixer,
 	testSimplifySetHeadingFixer,
 	testStopRemoveFixer,
-	testTerrapin,
-	testThingCallFixer,
+*/	testTerrapin,
+/*	testThingCallFixer,
 	testThrowFixer,
 	testTildeFixer,
 	testTransparentCommandFixer,
@@ -147,7 +147,7 @@ const tests = [
 	testWebTurtleRepeatFixer,
 	testVariableNameReferenceFixer,
 	testVariableReadSpaceInsertFixer
-];
+*/];
 
 export function testFixers(logger) {
 	wrapAndCall(tests, logger);

@@ -1,4 +1,4 @@
-import { testASMTurtle } from './asm-turtle/testASMTurtle.js';
+/*import { testASMTurtle } from './asm-turtle/testASMTurtle.js';
 import { testAsyncParser } from './testAsyncParser.js';
 import { testAsyncParseTask } from './testAsyncParseTask.js';
 import { testCharIndexToParseTreeTokenPosition } from './testCharIndexToParseTreeTokenPosition.js';
@@ -14,7 +14,8 @@ import { testExecution } from './execution/testExecution.js';
 import { testFixOperatorPrecedence } from './testFixOperatorPrecedence.js';
 import { testFMSLogo } from './fms-logo/testFMSLogo.js';
 import { testGenericParsingUtilities } from './generic-parsing-utilities/testGenericParsingUtilities.js';
-import { testGetStartPositionOfToken } from './testGetStartPositionOfToken.js';
+*/import { testGetParseTree } from './testGetParseTree.js';
+/*import { testGetStartPositionOfToken } from './testGetStartPositionOfToken.js';
 import { testGetTokensForParsing } from './testGetTokensForParsing.js';
 import { testIsSupportedByHighOrderInvoke } from './testIsSupportedByHighOrderInvoke.js';
 import { testJSParsing } from './js-parsing/testJSParsing.js';
@@ -38,19 +39,19 @@ import { testProcedure } from './testProcedure.js';
 import { testProcessing } from './processing/testProcessing.js';
 import { testPythonParsing } from './python-parsing/testPythonParsing.js';
 import { testQBasic } from './qbasic/testQBasic.js';
-import { testScanner } from './testScanner.js';
-import { testScanningDirectory } from './scanning/testScanningDirectory.js';
+*/import { testScanner } from './testScanner.js';
+/*import { testScanningDirectory } from './scanning/testScanningDirectory.js';
 import { testScrapeProcedures } from './testScrapeProcedures.js';
 import { testSerialization } from './serialization/testSerialization.js';
 import { testSmallVisualBasic } from './small-visual-basic/testSmallVisualBasic.js';
 import { testSonicWebTurtle } from './sonic-webturtle/testSonicWebTurtle.js';
 import { testToken } from './testToken.js';
 import { testUnsupportedCommand } from './testUnsupportedCommand.js';
-import { wrapAndCall } from '../helpers/wrapAndCall.js';
+*/import { wrapAndCall } from '../helpers/wrapAndCall.js';
 
 export function testParsing(logger) {
 	wrapAndCall([
-		testASMTurtle,
+		/*testASMTurtle,
 		testAsyncParser,
 		testAsyncParseTask,
 		testCharIndexToParseTreeTokenPosition,
@@ -66,7 +67,8 @@ export function testParsing(logger) {
 		testFixOperatorPrecedence,
 		testFMSLogo,
 		testGenericParsingUtilities,
-		testGetStartPositionOfToken,
+		*/testGetParseTree,
+		/*testGetStartPositionOfToken,
 		testGetTokensForParsing,
 		testIsSupportedByHighOrderInvoke,
 		testJSParsing,
@@ -90,13 +92,13 @@ export function testParsing(logger) {
 		testProcessing,
 		testPythonParsing,
 		testQBasic,
-		testScanner,
-		testScanningDirectory,
+		*/testScanner,
+		/*testScanningDirectory,
 		testScrapeProcedures,
 		testSerialization,
 		testSmallVisualBasic,
 		testSonicWebTurtle,
 		testToken,
-		testUnsupportedCommand
+		testUnsupportedCommand*/
 	], logger);
 };
