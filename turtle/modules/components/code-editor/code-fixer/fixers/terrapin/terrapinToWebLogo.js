@@ -26,6 +26,7 @@ import { runAllFixers } from
 import { runFixer } from '../runFixer.js';
 import { sanitizeMigrationInfo } from
 '../helpers/sanitizeMigrationInfo.js';
+import { scan } from './scan.js';
 import { slashFixer } from './slashFixer.js';
 import { stopRemoveFixer } from '../stopRemoveFixer.js';
 import { thenFixer } from './thenFixer.js';
@@ -50,7 +51,8 @@ function treeToCode(tree, code) {
 
 export function terrapinToWebLogo(code, parseLogger) {
 	const tempParseLogger = new ParseLogger();
-	let tree = LogoParser.getParseTree(code, tempParseLogger);
+	const scanTokens = scan(code);
+	let tree = LogoParser.getParseTree(scanTokens, tempParseLogger);
 	if (tree === undefined)
 		return code; // the code is unfixable if it can't be parsed.
 	let proceduresMap = getProceduresMap(tree);

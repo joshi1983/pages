@@ -4,6 +4,8 @@ import { testIsLikelyTerrapin } from
 './testIsLikelyTerrapin.js';
 import { testMinusFixer } from
 './testMinusFixer.js';
+import { testScan } from
+'./testScan.js';
 import { testSlashFixer } from './testSlashFixer.js';
 import { testTerrapinToWebLogo } from './testTerrapinToWebLogo.js';
 import { testTerrapinToWebLogoWithExamples } from
@@ -17,6 +19,7 @@ export function testTerrapin(logger) {
 		testForFixer,
 		testIsLikelyTerrapin,
 		testMinusFixer,
+		testScan,
 		testSlashFixer,
 		testTerrapinToWebLogo,
 		testTerrapinToWebLogoWithExamples,

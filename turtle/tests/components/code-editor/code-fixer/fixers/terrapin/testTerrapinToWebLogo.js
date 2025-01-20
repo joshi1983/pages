@@ -14,6 +14,8 @@ export function testTerrapinToWebLogo(logger) {
 	'out': `if :SHIP.POS <= 1 [
 	print "hi
 ]`},
+	{'in': 'PR "|Welcome to my project.|',
+	'out': `print 'Welcome to my project.'`}
 	];
 	testInOutPairs(cases, terrapinToWebLogo, logger);
 };
