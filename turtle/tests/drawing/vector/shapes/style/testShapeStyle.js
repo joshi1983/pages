@@ -1,6 +1,7 @@
 import { AlphaColour } from '../../../../../modules/AlphaColour.js';
 import { Colour } from '../../../../../modules/Colour.js';
 import { createRadialGradient } from '../../../../helpers/createRadialGradient.js';
+import { FontWeight } from '../../../../../modules/drawing/vector/shapes/style/FontWeight.js';
 import { LineJoinStyle } from '../../../../../modules/drawing/vector/shapes/style/LineJoinStyle.js';
 import { prefixWrapper } from '../../../../helpers/prefixWrapper.js';
 import { RadialGradient } from '../../../../../modules/drawing/vector/shapes/gradients/RadialGradient.js';
@@ -16,6 +17,8 @@ function testDefaultShapeStyle(logger) {
 		logger('Expected default pen width to be 1 but got ' + defaultShapeStyle.getPenWidth());
 	if (defaultShapeStyle.getFillColor() !== Transparent)
 		logger('Expected default fill color to be transparent but got ' + defaultShapeStyle.getFillColor());
+	if (defaultShapeStyle.getFontWeight() !== FontWeight.Normal)
+		logger('Expected default font weight to be normal but got ' + defaultShapeStyle.getFontWeight());
 	if (defaultShapeStyle.getLineJoinStyle() !== LineJoinStyle.Miter)
 		logger(`Expected defaultShapeStyle.getLineJoinStyle() to return ${LineJoinStyle.Miter} but got ${s.getLineJoinStyle()} `+
 		`which has the name ${LineJoinStyle.getNameFor(defaultShapeStyle.getLineJoinStyle())}`);
@@ -61,6 +64,7 @@ function testConstructor(logger) {
 	else if (!s.material.fill.color.equals(new Colour('black')))
 		logger('Expected material.fill to be black but got ' + s.material.fill.color);
 	s.setFontSize(16);
+	s.setFontWeight(FontWeight.Bold);
 	s.setFontFamily('Courier');
 	if (typeof s.getFont() !== 'string')
 		logger('getFont() expected to return a string but got something else.  Result = ' + s.getFont());
@@ -74,6 +78,7 @@ function testDeepClone(logger) {
 	c.setPenColor(new Colour('#123'));
 	c.setFillColor(new Colour('#567'));
 	c.setMiterLimit(16);
+	c.setFontWeight(FontWeight.Bold);
 	const clone = c.deepClone();
 	if (clone.getPenWidth() !== 5)
 		logger('clone pen width expected to be 5 but got ' + clone.getPenWidth());
@@ -81,11 +86,14 @@ function testDeepClone(logger) {
 		logger('clone pen width expected to be #112233 but got ' + clone.getPenColor());
 	if (!clone.getFillColor().equals(new Colour('#567')))
 		logger('clone fill color expected to be #556677 but got ' + clone.getFillColor());
+	if (clone.getFontWeight() !== FontWeight.Bold)
+		logger('clone font weight expected to be bold but got ' + clone.getFontWeight());
 	if (clone.getMiterLimit() !== 16)
 		logger(`cloned miterLimit expected to be 16 but got ${clone.getMiterLimit()}`);
 	c.setPenWidth(6);
 	c.setPenColor(new Colour('#234'));
 	c.setFillColor(new Colour('#890'));
+	c.setFontWeight(FontWeight.Normal);
 	c.setMiterLimit(20);
 	if (clone.getPenWidth() !== 5)
 		logger('After mutating original copy, clone pen width expected to be 5(not 6) but got ' + clone.getPenWidth());
@@ -93,6 +101,8 @@ function testDeepClone(logger) {
 		logger('After mutating original copy, clone pen width expected to be #112233(not #223344) but got ' + clone.getPenColor());
 	if (!clone.getFillColor().equals(new Colour('#567')))
 		logger('After mutating original copy, clone fill color expected to be #556677(not #889900) but got ' + clone.getFillColor());
+	if (clone.getFontWeight() !== FontWeight.Bold)
+		logger('After mutating original copy, clone font weight expected to be bold but got ' + clone.getFontWeight());
 	if (clone.getMiterLimit() !== 16)
 		logger(`After mutating original copy, clone miterLimit expected to still be 16 but got ${clone.getMiterLimit()}`);
 }

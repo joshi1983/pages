@@ -6,6 +6,9 @@ export function testLogoProgramExecuterUsingPrint(logger) {
 		// FMSLogo and MSWLogo shows a round cap initially.
 		// We want WebLogo to copy that by default.
 
+		{'code': 'print fontWeight', 'messages': ['normal']},
+		{'code': 'setFontWeight "bold print fontWeight', 'messages': ['bold']},
+
 		{'code': 'print 1', 'messages': ['1']},
 		{'code': 'print 1E1', 'messages': ['10']},
 		{'code': 'print 1.2E1', 'messages': ['12']},

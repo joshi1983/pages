@@ -5,6 +5,7 @@ import { convertToColourOrTransparent } from './data-type-converters/convertToCo
 import { convertToDataTypes } from './data-type-converters/convertToDataTypes.js';
 import { convertToStepPosition } from './data-type-converters/convertToStepPosition.js';
 import { easeClasses } from '../../../drawing/vector/easing/easeClasses.js';
+import { FontWeight } from '../../../drawing/vector/shapes/style/FontWeight.js';
 import { LineCap } from '../../../drawing/vector/shapes/style/LineCap.js';
 import { LogoInstruction } from './LogoInstruction.js';
 import { StepPosition } from '../../../drawing/vector/easing/StepPosition.js';
@@ -46,6 +47,7 @@ export class JavaScriptInstruction extends LogoInstruction {
 		this.convertToColourOrTransparent = convertToColourOrTransparent;
 		this.convertToStepPosition = convertToStepPosition;
 		this.dataTypes = convertToDataTypes;
+		this.fontWeight = FontWeight.parse;
 		this.lineCap = LineCap.parse;
 		this.validateBool = validateBool;
 		this.validateListOrString = validateListOrString;

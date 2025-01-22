@@ -13,6 +13,7 @@ import { distanceToLine } from './helpers/distanceToLine.js';
 import { drawArcLineShape } from './helpers/drawing/drawArcLineShape.js';
 import { drawArcLineShapes } from './helpers/drawing/drawArcLineShapes.js';
 import { EventDispatcher } from '../EventDispatcher.js';
+import { FontWeight } from '../drawing/vector/shapes/style/FontWeight.js';
 import { getArcLeftAngleToCircle } from './helpers/getArcLeftAngleToCircle.js';
 import { getArcLeftAngleToLine } from './helpers/getArcLeftAngleToLine.js';
 import { getArcRightAngleToCircle } from './helpers/getArcRightAngleToCircle.js';
@@ -212,6 +213,10 @@ export class Turtle extends EventDispatcher {
 
 	fontSize() {
 		return this.drawState.getFontSize();
+	}
+
+	fontWeight() {
+		return FontWeight.getNameFor(this.drawState.getFontWeight());
 	}
 
 	forward(distance) {
@@ -495,6 +500,12 @@ export class Turtle extends EventDispatcher {
 
 	setFontSize(newSize) {
 		this.drawState.setFontSize(newSize);
+	}
+
+	setFontWeight(newFontWeight) {
+		if (!Number.isInteger(newFontWeight))
+			throw new Error('newFontWeight must be integer.  Not: ' + newFontWeight);
+		this.drawState.setFontWeight(newFontWeight);
 	}
 
 	setHeading(newHeadingDegrees) {

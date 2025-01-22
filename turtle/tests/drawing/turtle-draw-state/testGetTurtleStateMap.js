@@ -7,7 +7,7 @@ export function testGetTurtleStateMap(logger) {
 	if (!(result instanceof Map))
 		logger(`Expected a Map but got ${result}`);
 	else {
-		const expectedStringKeys = ['fontFamily', 'lineCap', 'lineJoinStyle'];
+		const expectedStringKeys = ['fontFamily', 'fontWeight', 'lineCap', 'lineJoinStyle'];
 		expectedStringKeys.forEach(function(stringKey) {
 			if (typeof result.get(stringKey) !== 'string')
 				logger(`Expected a string for ${stringKey} but got ${result.get(stringKey)}`);

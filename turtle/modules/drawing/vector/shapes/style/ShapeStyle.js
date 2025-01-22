@@ -1,6 +1,7 @@
 import { AlphaColour } from '../../../../AlphaColour.js';
 import { Colour } from '../../../../Colour.js';
 import { EventDispatcher } from '../../../../EventDispatcher.js';
+import { FontWeight } from './FontWeight.js';
 import { Gradient } from '../gradients/Gradient.js';
 import { isNumber } from '../../../../isNumber.js';
 import { LineCap } from './LineCap.js';
@@ -31,7 +32,8 @@ export class ShapeStyle extends EventDispatcher {
 		};
 		this.font = {
 			'size': 30,
-			'family': 'Arial'
+			'family': 'Arial',
+			'weight': FontWeight.Normal
 		};
 		this.material = {
 			'fill': {
@@ -68,8 +70,10 @@ export class ShapeStyle extends EventDispatcher {
 				const font = objectProperties.font;
 				if (typeof font.family === 'string')
 					this.setFontFamily(font.family);
-				if (typeof font.size === 'number')
+				if (isNumber(font.size))
 					this.setFontSize(font.size);
+				if (Number.isInteger(font.weight))
+					this.setFontWeight(font.weight);
 			}
 			if (typeof objectProperties.material === 'object') {
 				const material = objectProperties.material;
@@ -93,6 +97,7 @@ export class ShapeStyle extends EventDispatcher {
 		this.setFillGradient(shapeStyle.getFillGradient());
 		this.setFontSize(shapeStyle.getFontSize());
 		this.setFontFamily(shapeStyle.getFontFamily());
+		this.setFontWeight(shapeStyle.getFontWeight());
 		this.setPenColor(shapeStyle.getPenColor());
 		this.setPenGradient(shapeStyle.getPenGradient());
 	}
@@ -170,7 +175,8 @@ export class ShapeStyle extends EventDispatcher {
 	}
 
 	getFont() {
-		return this.font.size + 'px ' + this.font.family;
+		return FontWeight.getNameFor(this.font.weight) +
+			' ' + this.font.size + 'px ' + this.font.family;
 	}
 
 	getFontFamily() {
@@ -179,6 +185,10 @@ export class ShapeStyle extends EventDispatcher {
 
 	getFontSize() {
 		return this.font.size;
+	}
+
+	getFontWeight() {
+		return this.font.weight;
 	}
 
 	getLineCap() {
@@ -256,10 +266,17 @@ export class ShapeStyle extends EventDispatcher {
 	}
 
 	setFontSize(newSize) {
-		if (typeof newSize !== 'number')
+		if (!isNumber(newSize))
 			throw new Error('font size must be a number.  Not: ' + newSize);
 
 		this.font.size = newSize;
+	}
+
+	setFontWeight(newWeight) {
+		if (!Number.isInteger(newWeight))
+			throw new Error(`font weight must be an integer.  Not: ` + newWeight);
+		
+		this.font.weight = newWeight;
 	}
 
 	setLineCap(newLineCap) {

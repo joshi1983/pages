@@ -1,4 +1,5 @@
 import { convertToStepPosition } from '../../../execution/instructions/data-type-converters/convertToStepPosition.js';
+import { FontWeight } from '../../../../drawing/vector/shapes/style/FontWeight.js';
 import { JavaScriptInstruction } from '../../../execution/instructions/JavaScriptInstruction.js';
 import { LineCap } from '../../../../drawing/vector/shapes/style/LineCap.js';
 import { ParseTreeToken } from '../../../ParseTreeToken.js';
@@ -108,6 +109,10 @@ export function wrapWithTypeConverter(code, argInfo, forProduction, primaryName,
 	if (typeof sanitization === 'string') {
 		if (isStringLiteral(code) && sanitization === 'convertToStepPosition') {
 			code = '' + convertToStepPosition(JSON.parse(code));
+			sanitizationHandled = true;
+		}
+		else if (isStringLiteral(code) && sanitization === 'fontWeight') {
+			code = '' + FontWeight.parse(JSON.parse(code));
 			sanitizationHandled = true;
 		}
 		else if (isStringLiteral(code) && sanitization === 'lineCap') {

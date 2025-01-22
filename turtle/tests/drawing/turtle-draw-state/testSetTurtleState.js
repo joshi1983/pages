@@ -1,4 +1,5 @@
 import { Colour } from '../../../modules/Colour.js';
+import { FontWeight } from '../../../modules/drawing/vector/shapes/style/FontWeight.js';
 import { getTurtleStateMap } from '../../../modules/drawing/turtle-draw-state/getTurtleStateMap.js';
 import { LineCap } from '../../../modules/drawing/vector/shapes/style/LineCap.js';
 import { LineJoinStyle } from '../../../modules/drawing/vector/shapes/style/LineJoinStyle.js';
@@ -17,6 +18,7 @@ function advancedTest(logger) {
 	const turtleDrawState = new TurtleDrawState();
 	turtleDrawState.setLineJoinStyle("round");
 	turtleDrawState.setLineCap(LineCap.Square);
+	turtleDrawState.setFontWeight(FontWeight.Bold);
 	turtleDrawState.setPenWidth(4);
 	turtleDrawState.setPenColor(new Colour("red"));
 	turtleDrawState.setFillColor(new Colour("blue"));
@@ -24,6 +26,7 @@ function advancedTest(logger) {
 
 	turtleDrawState.setLineJoinStyle("miter");
 	turtleDrawState.setLineCap(LineCap.Butt);
+	turtleDrawState.setFontWeight(FontWeight.Normal);
 	turtleDrawState.setPenWidth(8);
 	turtleDrawState.setPenColor(new Colour("black"));
 	turtleDrawState.setFillColor(new Colour("white"));
@@ -40,6 +43,8 @@ function advancedTest(logger) {
 		logger(`Expected line join style of ${LineJoinStyle.Round} but got ${turtleDrawState.getLineJoinStyle()}`);
 	if (turtleDrawState.getLineCap() !== LineCap.Square)
 		logger(`Expected line cap of ${LineCap.Square} but got ${turtleDrawState.getLineCap()}`);
+	if (turtleDrawState.getFontWeight() !== FontWeight.Bold)
+		logger(`Expected font weight of ${FontWeight.Bold} but got ${turtleDrawState.getFontWeight()}`);
 	if (turtleDrawState.isPenDown !== true)
 		logger(`Expected isPenDown to be true but got ${turtleDrawState.isPenDown}`);
 }

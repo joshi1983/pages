@@ -248,6 +248,10 @@ export class TurtleDrawState extends EventDispatcher {
 		return this.style.getFontSize();
 	}
 
+	getFontWeight() {
+		return this.style.getFontWeight();
+	}
+
 	// Returns heading measured in radians
 	getHeading() {
 		return this.orientation.getHeadingRadians();
@@ -467,6 +471,10 @@ export class TurtleDrawState extends EventDispatcher {
 
 	setFontSize(newSize) {
 		this.style.setFontSize(newSize);
+	}
+
+	setFontWeight(newFontWeight) {
+		this.style.setFontWeight(newFontWeight);
 	}
 
 	// Sets heading in radians

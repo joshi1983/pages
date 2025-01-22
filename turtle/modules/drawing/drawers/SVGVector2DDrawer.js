@@ -5,6 +5,7 @@ import { drawEllipse } from './svg/drawEllipse.js';
 import { drawLine } from './svg/drawLine.js';
 import { drawPath } from './svg/drawPath.js';
 import { encodeUrl } from './svg/encodeUrl.js';
+import { FontWeight } from '../vector/shapes/style/FontWeight.js';
 import { formatDegreeAngle } from '../vector/shapes/math/formatDegreeAngle.js';
 import { formatOpacity } from './svg/formatOpacity.js';
 import { getEllipseDiagonalRadius } from '../vector/shapes/math/getEllipseDiagonalRadius.js';
@@ -143,7 +144,10 @@ export class SVGVector2DDrawer extends Vector2DDrawer {
 	}
 
 	drawText(textShape) {
-		const basicAttributes = `font-size="${textShape.style.getFontSize()}" font-family="${textShape.style.getFontFamily()}" ${this.getStyleAttributes(textShape.style, true)}`;
+		const style = textShape.style;
+		let basicAttributes = `font-size="${style.getFontSize()}" font-family="${style.getFontFamily()}" ${this.getStyleAttributes(style, true)}`;
+		if (style.getFontWeight() !== FontWeight.Normal)
+			basicAttributes = `font-weight="${FontWeight.getNameFor(style.getFontWeight())}" ` + basicAttributes;
 		let transformAttributes = 'transform="' + this.getTranslation(textShape.position);
 		transformAttributes += 'scale(1 -1) ';
 		const rotationAngleDegrees = textShape.rotationRadians * 180 / Math.PI - 90;
