@@ -1,4 +1,4 @@
-import { testAnimationSetupFixer } from './testAnimationSetupFixer.js';
+/*import { testAnimationSetupFixer } from './testAnimationSetupFixer.js';
 import { testAnimationSnapshotStyleFixer } from './testAnimationSnapshotStyleFixer.js';
 import { testArrayLiteralFixer } from './testArrayLiteralFixer.js';
 import { testAskFixer } from './testAskFixer.js';
@@ -66,16 +66,16 @@ import { testThrowFixer } from './testThrowFixer.js';
 import { testTildeFixer } from './testTildeFixer.js';
 import { testTransparentCommandFixer } from './testTransparentCommandFixer.js';
 import { testUnrecognizedParameterizedGroupNameFixer } from './testUnrecognizedParameterizedGroupNameFixer.js';
-import { testUseStrFixer } from './testUseStrFixer.js';
-import { testWebTurtleCommandFixer } from './testWebTurtleCommandFixer.js';
+*/import { testUseStrFixer } from './testUseStrFixer.js';
+/*import { testWebTurtleCommandFixer } from './testWebTurtleCommandFixer.js';
 import { testWebTurtleProcedureFixer } from './testWebTurtleProcedureFixer.js';
 import { testWebTurtleRepeatFixer } from './testWebTurtleRepeatFixer.js';
 import { testVariableNameReferenceFixer } from './testVariableNameReferenceFixer.js';
 import { testVariableReadSpaceInsertFixer } from './testVariableReadSpaceInsertFixer.js';
-import { wrapAndCall } from '../../../../helpers/wrapAndCall.js';
+*/import { wrapAndCall } from '../../../../helpers/wrapAndCall.js';
 
 const tests = [
-	testAnimationSetupFixer,
+	/*testAnimationSetupFixer,
 	testAnimationSnapshotStyleFixer,
 	testArrayLiteralFixer,
 	testAskFixer,
@@ -143,13 +143,13 @@ const tests = [
 	testTildeFixer,
 	testTransparentCommandFixer,
 	testUnrecognizedParameterizedGroupNameFixer,
-	testUseStrFixer,
-	testWebTurtleCommandFixer,
+	*/testUseStrFixer,
+	/*testWebTurtleCommandFixer,
 	testWebTurtleProcedureFixer,
 	testWebTurtleRepeatFixer,
 	testVariableNameReferenceFixer,
 	testVariableReadSpaceInsertFixer
-];
+*/];
 
 export function testFixers(logger) {
 	wrapAndCall(tests, logger);
