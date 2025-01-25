@@ -4,6 +4,7 @@ import { testExecuteIfStatements } from './testExecuteIfStatements.js';
 import { testExecuteWhile } from './testExecuteWhile.js';
 import { testTranslate } from
 './testTranslate.js';
+import { testTranslateDoUntil } from './testTranslateDoUntil.js';
 import { testTranslateDoWhile } from './testTranslateDoWhile.js';
 import { testTranslateIfStatements } from './testTranslateIfStatements.js';
 import { testTranslationToWebLogoExecutePrint } from
@@ -20,6 +21,7 @@ export function testTranslationToWebLogo(logger) {
 			testExecuteIfStatements,
 			testExecuteWhile,
 			testTranslate,
+			testTranslateDoUntil,
 			testTranslateDoWhile,
 			testTranslateIfStatements,
 			testTranslationToWebLogoExecutePrint,
