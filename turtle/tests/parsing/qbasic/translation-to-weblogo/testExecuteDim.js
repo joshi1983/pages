@@ -14,6 +14,24 @@ name$(3) = "Sunil"
 PRINT name$(0), name$(3)
 END`,
 	'messages': ['Ramesh\tSunil']},
+	/*{'code': `TYPE TestType
+    dataElement AS _BYTE
+END TYPE
+
+DIM a(4) AS TestType
+
+a(1).dataElement = 3
+print a(1).dataElement`,
+		'messages': ['3']
+	},
+
+	// mostly copied from code at: https://en.wikibooks.org/wiki/QBasic/Arrays_and_Types#mw-content-text
+	{'code': `DIM player1 AS playertype
+player1.name = "Bob"
+player1.score = 92
+print player1.name
+print player1.score`,
+	'messages': ['Bob', '92']},*/
 	];
 	processTranslateExecuteCases(cases, logger);
 };
