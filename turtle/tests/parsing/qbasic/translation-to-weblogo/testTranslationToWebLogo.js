@@ -12,7 +12,9 @@ import { testExecuteStringFunctions } from './testExecuteStringFunctions.js';
 import { testExecuteSwap } from './testExecuteSwap.js';
 import { testExecuteWhile } from './testExecuteWhile.js';
 import { testGetReferencedCustomTypes } from './testGetReferencedCustomTypes.js';
+import { testGetSingleScreenNumber } from './testGetSingleScreenNumber.js';
 import { testIsArrayOfCustomTypeUsed } from './testIsArrayOfCustomTypeUsed.js';
+import { testShouldIgnoreScreenCalls } from './testShouldIgnoreScreenCalls.js';
 import { testTranslate } from './testTranslate.js';
 import { testTranslateBadExamples } from './testTranslateBadExamples.js';
 import { testTranslateContains } from './testTranslateContains.js';
@@ -57,7 +59,9 @@ export function testTranslationToWebLogo(logger) {
 			testExecuteSwap,
 			testExecuteWhile,
 			testGetReferencedCustomTypes,
+			testGetSingleScreenNumber,
 			testIsArrayOfCustomTypeUsed,
+			testShouldIgnoreScreenCalls,
 			testTranslate,
 			testTranslateBadExamples,
 			testTranslateContains,

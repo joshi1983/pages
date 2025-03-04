@@ -1,3 +1,4 @@
+import { testColorsJSON } from './testColorsJSON.js';
 import { testEvaluation } from './evaluation/testEvaluation.js';
 import { testGetFunctionsMap } from './testGetFunctionsMap.js';
 import { testIsLikelyQBasic } from './testIsLikelyQBasic.js';
@@ -50,6 +51,7 @@ import { wrapAndCall } from
 
 export function testQBasic(logger) {
 	wrapAndCall([
+		testColorsJSON,
 		testEvaluation,
 		testGetFunctionsMap,
 		testIsLikelyQBasic,

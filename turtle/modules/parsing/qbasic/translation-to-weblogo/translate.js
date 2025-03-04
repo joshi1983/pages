@@ -21,6 +21,8 @@ import { removeUnusedAssignments } from
 '../../../components/code-editor/code-fixer/fixers/removeUnusedAssignments.js';
 import { removeUnneededCurvedBrackets } from
 '../../../components/code-editor/code-fixer/fixers/helpers/removeUnneededCurvedBrackets.js';
+import { shouldIgnoreScreenCalls } from
+'./shouldIgnoreScreenCalls.js';
 import { translateDataSections } from './translateDataSections.js';
 import { undefinedBooleanLiteralFixer } from
 '../../../components/code-editor/code-fixer/fixers/undefinedBooleanLiteralFixer.js';
@@ -33,6 +35,7 @@ export function translate(code) {
 	const parseResult = parse(code);
 	const result = new CommentDumpingStringBuffer(parseResult.comments, processCommentToken);
 	const options = {
+		'ignoreScreenCalls': shouldIgnoreScreenCalls(parseResult.root),
 		'identifierRenameMap': getIdentifierRenameMap(parseResult.root),
 		'variables': getAnalyzedVariables(parseResult.root)
 	};

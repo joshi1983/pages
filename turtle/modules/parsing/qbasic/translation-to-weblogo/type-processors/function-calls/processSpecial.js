@@ -12,13 +12,14 @@ import { preset, getToName as presetToName } from './preset.js';
 import { pset, getToName as psetToName } from './pset.js';
 import { read } from './read.js';
 import { restore } from './restore.js';
+import { screen } from './screen.js';
 import { space$, getToName as space$ToName } from './space$.js';
 import { stop } from './stop.js';
 import { swap } from './swap.js';
 import { tab, getToName as tabToName } from './tab.js';
 
 const specials = [circle, color, input, left$, line, line_input, mid$, point,
-	preset, pset, read, restore, space$, stop, swap, tab];
+	preset, pset, read, restore, screen, space$, stop, swap, tab];
 const specialsNameSet = new Set(specials.map(s => s.name));
 const translateToNames = new Map([
 	['circle', circleToName],

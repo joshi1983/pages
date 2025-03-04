@@ -1,14 +1,10 @@
+import { mightBeDataValue } from
+'../../../parsing/parse-tree-analysis/variable-data-types/mightBeDataValue.js';
 import { ParseTreeTokenType } from '../../../ParseTreeTokenType.js';
 import { processTokens } from '../helpers/processTokens.js';
 
-const ignoredTypes = new Set([
-	ParseTreeTokenType.COMMA,
-	ParseTreeTokenType.CURVED_LEFT_BRACKET,
-	ParseTreeTokenType.CURVED_RIGHT_BRACKET
-]);
-
 function filterToValueTokens(argList) {
-	return argList.children.filter(t => !ignoredTypes.has(t.type));
+	return argList.children.filter(mightBeDataValue);
 }
 
 export function getToName(token) {
@@ -21,6 +17,8 @@ export function getToName(token) {
 		name = 'qbCircleCoordsRadius';
 	else if (ch.length === 3)
 		name = 'qbCircleCoordsRadiusColor';
+	else if (ch.length >= 6)
+		name = 'qbCircle6';
 	else
 		name = 'qbCircle5';
 	return name;

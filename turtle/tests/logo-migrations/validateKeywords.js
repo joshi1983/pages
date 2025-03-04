@@ -17,8 +17,10 @@ export function validateKeywords(fullInfoObject, logger) {
 			}
 			else if (typeof keywordInfo.to !== 'string' && keywordInfo.to !== null)
 				plogger(`Expected to to be a string but got ${keywordInfo.to}`);
-			if (typeof keywordInfo.to === 'string' && Keyword.getKeywordInfo(keywordInfo.to) === undefined)
-				plogger(`Expected to find information on keyword ${keywordInfo.to} but found none in WebLogo.`);
+			if (typeof keywordInfo.to === 'string' && Keyword.getKeywordInfo(keywordInfo.to) === undefined) {
+				if (keywordInfo.to !== '' || keywordInfo.description === undefined)
+					plogger(`Expected to find information on keyword ${keywordInfo.to} but found none in WebLogo.`);
+			}
 		});
 	}
 };

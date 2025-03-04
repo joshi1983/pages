@@ -53,6 +53,8 @@ loop`,
 	'outContains': ['qbDraw ', ' word ', 'TA=', ':angle'],
 	'notContains': ['varptr', 'VARPTR']
 	},
+	{'in': 'screen 12\ndraw "C12 U10"',
+	'outContains': ['make "screen 12', 'qbDraw']}
 	];
 	cases.forEach(function(caseInfo, index) {
 		const plogger = prefixWrapper(`Case ${index}, in=${caseInfo.in}`, logger);
