@@ -15,6 +15,9 @@ const commandGetReturnTypes = {
 	},
 	'butFirst': butFirstAndButLast,
 	'butLast': butFirstAndButLast,
+	'clone': function(types1) {
+		return types1;
+	},
 	'difference': function(num1Types, num2Types) {
 		if (num1Types === 'int' && num2Types === 'int')
 			return 'int';

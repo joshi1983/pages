@@ -102,6 +102,21 @@ function testCommandReturnTypes(logger) {
 			'result': 'list<num>|string'
 		},
 		{
+			'command': 'clone',
+			'in': ['list'],
+			'result': 'list'
+		},
+		{
+			'command': 'clone',
+			'in': ['list<int>'],
+			'result': 'list<int>'
+		},
+		{
+			'command': 'clone',
+			'in': ['plist'],
+			'result': 'plist'
+		},
+		{
 			'command': 'duplicate',
 			'in': ['int', 'int'],
 			'result': 'list<int>'

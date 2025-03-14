@@ -1,4 +1,10 @@
 export class PropertyListCommands {
+	clone(val) {
+		if (val instanceof Array)
+			return val.slice();
+		else
+			return new Map(val);
+	}
 
 	createPList() {
 		return new Map();

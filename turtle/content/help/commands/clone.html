@@ -1,0 +1,36 @@
+<code>print clone []
+; prints []
+
+make "plist1 createPList2 [["x 3]]
+print clone :plist1
+; prints [x:=3]
+
+make "y :plist1
+; :plist1 and :y are the same.
+; They don't just happen to be equal.
+; They are 2 variable names for the same value.
+; This point is important when you mutate the property list.
+
+setProperty "y "x 4
+; running setProperty "plist1 "x 4 would have the exact same effect.
+
+print :y
+; prints [x:=4] as you'd most likely expect
+
+print :plist1
+; prints [x:=4]
+; This is something you might not expect.
+; This demonstrates how :x and :plist1 are the same.
+
+make "clonedPList1 clone :plist1
+setProperty "clonedPList1 "x 5
+; no other variable references clonedPList1's value 
+; so this mutation won't show up like the 
+; setProperty call several lines previous.
+
+print :clonedPList1
+; prints [x:=5] as you'd expect.
+
+print :plist1
+; prints [x:=4]
+; Notice that the :plist1 was not changed.</code>
