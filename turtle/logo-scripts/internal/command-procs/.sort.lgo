@@ -1,0 +1,37 @@
+to sort2Recursive :listValue :greaterProc :startIndex :endIndex
+	if :startIndex >= :endIndex [
+		stop
+	]
+	localmake "midIndex max :startIndex + 1 (int mix :startIndex :endIndex 0.5)
+	sort2Recursive :listValue :greaterPoc :startIndex :midIndex
+	sort2Recursive :listValue :greaterPoc :midIndex + 1 :endIndex
+
+	; merge the partitions.
+	localmake "index1 :startIndex
+	localmake "index2 :midIndex + 1
+	forever [
+		localmake "val1 item :index1 :listValue
+		localmake "val2 item :index2 :listValue
+		localmake "compareResult? (invoke :greaterProc :val1 :val2)
+		ifelse :compareResult? [
+			; swap.
+			setItem :index1 :listValue :val2
+			setItem :index2 :listValue :val1
+			localmake "index1 :index1 + 1
+			if :index1 > :midIndex [
+				break
+			]
+		] [
+			localmake "index2 :index2 + 1
+			if :index2 > :endIndex [
+				break
+			]
+		]
+	]
+end
+
+to sort2 :listValue :greaterProc
+	localmake "result clone :listValue
+	sort2Recursive :result :greaterPoc 1 count :listValue
+	output :result
+end
