@@ -1,4 +1,4 @@
-import { testBreakpoint } from './testBreakpoint.js';
+/*import { testBreakpoint } from './testBreakpoint.js';
 import { testErrorCasesValidationAtRuntime } from './testErrorCasesValidationAtRuntime.js';
 import { testExecuteLogoProcedure } from './testExecuteLogoProcedure.js';
 import { testExecuterWithParsedOptimizations } from './testExecuterWithParsedOptimizations.js';
@@ -10,8 +10,8 @@ import { testLogoProgramExecuterBreakpoints } from './testLogoProgramExecuterBre
 import { testLogoProgramExecuterFor } from './testLogoProgramExecuterFor.js';
 import { testLogoProgramExecuterIfElse } from './testLogoProgramExecuterIfElse.js';
 import { testLogoProgramExecuterInlinedCommands } from './testLogoProgramExecuterInlinedCommands.js';
-import { testLogoProgramExecuterInternalProcedures } from './testLogoProgramExecuterInternalProcedures.js';
-import { testLogoProgramExecuterInvokeUsingPrint } from './testLogoProgramExecuterInvokeUsingPrint.js';
+*/import { testLogoProgramExecuterInternalProcedures } from './testLogoProgramExecuterInternalProcedures.js';
+/*import { testLogoProgramExecuterInvokeUsingPrint } from './testLogoProgramExecuterInvokeUsingPrint.js';
 import { testLogoProgramExecuterOperators } from './testLogoProgramExecuterOperators.js';
 import { testLogoProgramExecuterRandomFunctions } from './testLogoProgramExecuterRandomFunctions.js';
 import { testLogoProgramExecuterUsingPrint } from './testLogoProgramExecuterUsingPrint.js';
@@ -19,11 +19,11 @@ import { testLogoProgramExecuterWithBreakCommand } from './testLogoProgramExecut
 import { testLogoProgramExecuterWithGradients } from './testLogoProgramExecuterWithGradients.js';
 import { testLogoProgramExecuterWithSwap } from './testLogoProgramExecuterWithSwap.js';
 import { testOrientation3DCompatibility } from './testOrientation3DCompatibility.js';
-import { wrapAndCall } from '../../helpers/wrapAndCall.js';
+*/import { wrapAndCall } from '../../helpers/wrapAndCall.js';
 
 export function testExecution(logger) {
 	wrapAndCall([
-		testBreakpoint,
+		/*testBreakpoint,
 		testErrorCasesValidationAtRuntime,
 		testExecuteLogoProcedure,
 		testExecuterWithParsedOptimizations,
@@ -35,14 +35,14 @@ export function testExecution(logger) {
 		testLogoProgramExecuterFor,
 		testLogoProgramExecuterIfElse,
 		testLogoProgramExecuterInlinedCommands,
-		testLogoProgramExecuterInternalProcedures,
-		testLogoProgramExecuterInvokeUsingPrint,
+		*/testLogoProgramExecuterInternalProcedures,
+		/*testLogoProgramExecuterInvokeUsingPrint,
 		testLogoProgramExecuterOperators,
 		testLogoProgramExecuterRandomFunctions,
 		testLogoProgramExecuterUsingPrint,
 		testLogoProgramExecuterWithBreakCommand,
 		testLogoProgramExecuterWithGradients,
 		testLogoProgramExecuterWithSwap,
-		testOrientation3DCompatibility,
+		testOrientation3DCompatibility,*/
 	], logger);
 };

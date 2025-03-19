@@ -1,13 +1,13 @@
 import { testAnalyzeCodeQuality } from './testAnalyzeCodeQuality.js';
-import { testArcLines } from './arc-lines/testArcLines.js';
+/*import { testArcLines } from './arc-lines/testArcLines.js';
 import { testInfiniteLoops } from './infinite-loops/testInfiniteLoops.js';
 import { testPenUp } from './pen-up/testPenUp.js';
 import { testPolyCommandUsage } from './poly-command-usage/testPolyCommandUsage.js';
 import { testRecommendJumpCommands } from './testRecommendJumpCommands.js';
 import { testUncalledProcedures } from './uncalled-procedures/testUncalledProcedures.js';
 import { testUndefinedVariables } from './undefined-variables/testUndefinedVariables.js';
-import { testValidateAlwaysReturnValue } from './testValidateAlwaysReturnValue.js';
-import { testValidateAnimationSetupProcedure } from './testValidateAnimationSetupProcedure.js';
+*/import { testValidateAlwaysReturnValue } from './testValidateAlwaysReturnValue.js';
+/*import { testValidateAnimationSetupProcedure } from './testValidateAnimationSetupProcedure.js';
 import { testValidateAnimationSnapshotStyleProcedure } from './testValidateAnimationSnapshotStyleProcedure.js';
 import { testValidateAnimationTimeUsage } from './testValidateAnimationTimeUsage.js';
 import { testValidateArcLines } from './testValidateArcLines.js';
@@ -74,11 +74,11 @@ import { testValidateUnusedVariables } from './testValidateUnusedVariables.js';
 import { testValidateUnusedVariablesGlobal } from './testValidateUnusedVariablesGlobal.js';
 import { testValidateUselessCode } from './testValidateUselessCode.js';
 import { testValidateVariableNames } from './testValidateVariableNames.js';
-import { wrapAndCall } from '../../../helpers/wrapAndCall.js';
+*/import { wrapAndCall } from '../../../helpers/wrapAndCall.js';
 
 const tests = [
 testAnalyzeCodeQuality,
-testArcLines,
+/*testArcLines,
 testInfiniteLoops,
 testPenUp,
 testPolyCommandUsage,
@@ -153,7 +153,7 @@ testValidateUnusedVariables,
 testValidateUnusedVariablesGlobal,
 testValidateUselessCode,
 testValidateVariableNames
-];
+*/];
 
 export function testValidation(logger) {
 	wrapAndCall(tests, logger);

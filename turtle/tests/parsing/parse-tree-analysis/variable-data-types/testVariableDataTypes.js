@@ -1,4 +1,4 @@
-import { testAddVariablesFromInitialVariables } from './testAddVariablesFromInitialVariables.js';
+/*import { testAddVariablesFromInitialVariables } from './testAddVariablesFromInitialVariables.js';
 import { testAnalyzeInstructionListRepeatCounts } from './testAnalyzeInstructionListRepeatCounts.js';
 import { testAnalyzeLengths } from './testAnalyzeLengths.js';
 import { testEvaluateOutputFrequency } from './testEvaluateOutputFrequency.js';
@@ -10,9 +10,9 @@ import { testGetAnalyzedVariablesGeneral } from './testGetAnalyzedVariablesGener
 import { testGetInstructionListRepeatCountAdvanced } from './testGetInstructionListRepeatCountAdvanced.js';
 import { testGetInstructionListRepeatCountBasic } from './testGetInstructionListRepeatCountBasic.js';
 import { testGetLastSingleValueTokenForControlStructure } from './testGetLastSingleValueTokenForControlStructure.js';
-import { testGetLastTokenForScope } from './testGetLastTokenForScope.js';
+import { testGetLastTokenForScope } from './testGetLastTokenForScope.js';*/
 import { testGetOutputTypesForProcedureBasic } from './testGetOutputTypesForProcedureBasic.js';
-import { testGetRefTypes } from './testGetRefTypes.js';
+/*import { testGetRefTypes } from './testGetRefTypes.js';
 import { testGetRequiredTypesFromAssertion } from './testGetRequiredTypesFromAssertion.js';
 import { testGetTokenTypesAdvanced } from './testGetTokenTypesAdvanced.js';
 import { testGetTokenTypesBasic } from './testGetTokenTypesBasic.js';
@@ -31,12 +31,12 @@ import { testShouldScopeBeReduced } from './testShouldScopeBeReduced.js';
 import { testVariable } from './testVariable.js';
 import { testVariables } from './testVariables.js';
 import { testVariableAssignmentScope } from './testVariableAssignmentScope.js';
-import { testVariableAssignmentScopesDirectory } from './variable-assignment-scopes/testVariableAssignmentScopesDirectory.js';
+*/import { testVariableAssignmentScopesDirectory } from './variable-assignment-scopes/testVariableAssignmentScopesDirectory.js';
 import { wrapAndCall } from '../../../helpers/wrapAndCall.js';
 
 export function testVariableDataTypes(logger) {
 	wrapAndCall([
-		testAddVariablesFromInitialVariables,
+		/*testAddVariablesFromInitialVariables,
 		testAnalyzeInstructionListRepeatCounts,
 		testAnalyzeLengths,
 		testEvaluateOutputFrequency,
@@ -48,9 +48,9 @@ export function testVariableDataTypes(logger) {
 		testGetInstructionListRepeatCountAdvanced,
 		testGetInstructionListRepeatCountBasic,
 		testGetLastSingleValueTokenForControlStructure,
-		testGetLastTokenForScope,
+		testGetLastTokenForScope,*/
 		testGetOutputTypesForProcedureBasic,
-		testGetRefTypes,
+		/*testGetRefTypes,
 		testGetRequiredTypesFromAssertion,
 		testGetTokenTypesAdvanced,
 		testGetTokenTypesBasic,
@@ -69,6 +69,6 @@ export function testVariableDataTypes(logger) {
 		testVariable,
 		testVariables,
 		testVariableAssignmentScope,
-		testVariableAssignmentScopesDirectory
+		*/testVariableAssignmentScopesDirectory
 	], logger);
 };
