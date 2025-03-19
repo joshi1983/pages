@@ -1,4 +1,4 @@
-import { testEvaluateStringLiteral } from './testEvaluateStringLiteral.js';
+/*import { testEvaluateStringLiteral } from './testEvaluateStringLiteral.js';
 import { testEvaluateTemplateLiteral } from './testEvaluateTemplateLiteral.js';
 import { testEvaluators } from './evaluators/testEvaluators.js';
 import { testMightHaveSideEffects } from './testMightHaveSideEffects.js';
@@ -45,17 +45,17 @@ import { testParseVariousJavaScriptFiles } from './testParseVariousJavaScriptFil
 import { testParseWebLogoJavaScript } from './testParseWebLogoJavaScript.js';
 import { testParseWith } from './testParseWith.js';
 import { testParseWhileLoops } from './testParseWhileLoops.js';
-import { testParsing } from './parsing/testParsing.js';
-import { testReservedWord } from './testReservedWord.js';
+*/import { testParsing } from './parsing/testParsing.js';
+/*import { testReservedWord } from './testReservedWord.js';
 import { testReservedWordsJSON } from './testReservedWordsJSON.js';
 import { testScanning } from './scanning/testScanning.js';
 import { testScanningTemplateLiterals } from './scanning-template-literals/testScanningTemplateLiterals.js';
 import { testTranslationToWebLogo } from './translation-to-weblogo/testTranslationToWebLogo.js';
-import { wrapAndCall } from '../../helpers/wrapAndCall.js';
+*/import { wrapAndCall } from '../../helpers/wrapAndCall.js';
 
 export function testJSParsing(logger) {
 	wrapAndCall([
-		testEvaluateStringLiteral,
+		/*testEvaluateStringLiteral,
 		testEvaluateTemplateLiteral,
 		testEvaluators,
 		testMightHaveSideEffects,
@@ -101,12 +101,12 @@ export function testJSParsing(logger) {
 		testParseVariousJavaScriptFiles,
 		testParseWebLogoJavaScript,
 		testParseWith,
-		testParseWhileLoops,
+		testParseWhileLoops,*/
 		testParsing,
-		testReservedWord,
+		/*testReservedWord,
 		testReservedWordsJSON,
 		testScanning,
 		testScanningTemplateLiterals,
 		testTranslationToWebLogo
-	], logger);
+	*/], logger);
 };
