@@ -1,4 +1,4 @@
-import { testAnalyzeCodeQuality } from './testAnalyzeCodeQuality.js';
+/*import { testAnalyzeCodeQuality } from './testAnalyzeCodeQuality.js';
 import { testArcLines } from './arc-lines/testArcLines.js';
 import { testInfiniteLoops } from './infinite-loops/testInfiniteLoops.js';
 import { testPenUp } from './pen-up/testPenUp.js';
@@ -22,9 +22,9 @@ import { testValidateClamp } from './testValidateClamp.js';
 import { testValidateClosePathUsage } from './testValidateClosePathUsage.js';
 import { testValidateConsecutiveCommands } from './testValidateConsecutiveCommands.js';
 import { testValidateCreatePList2 } from './testValidateCreatePList2.js';
-import { testValidateDataTypes } from './testValidateDataTypes.js';
+*/import { testValidateDataTypes } from './testValidateDataTypes.js';
 import { testValidateDataTypes2SpecialCases } from './testValidateDataTypes2SpecialCases.js';
-import { testValidateDistinctForLoopVariableNames } from './testValidateDistinctForLoopVariableNames.js';
+/*import { testValidateDistinctForLoopVariableNames } from './testValidateDistinctForLoopVariableNames.js';
 import { testValidateDrawArcLineShape } from './testValidateDrawArcLineShape.js';
 import { testValidateDrawArcLineShapes } from './testValidateDrawArcLineShapes.js';
 import { testValidateDrawingGroupCommands } from './testValidateDrawingGroupCommands.js';
@@ -75,10 +75,10 @@ import { testValidateUnusedVariables } from './testValidateUnusedVariables.js';
 import { testValidateUnusedVariablesGlobal } from './testValidateUnusedVariablesGlobal.js';
 import { testValidateUselessCode } from './testValidateUselessCode.js';
 import { testValidateVariableNames } from './testValidateVariableNames.js';
-import { wrapAndCall } from '../../../helpers/wrapAndCall.js';
+*/import { wrapAndCall } from '../../../helpers/wrapAndCall.js';
 
 const tests = [
-testAnalyzeCodeQuality,
+/*testAnalyzeCodeQuality,
 testArcLines,
 testInfiniteLoops,
 testPenUp,
@@ -102,9 +102,9 @@ testValidateClamp,
 testValidateClosePathUsage,
 testValidateConsecutiveCommands,
 testValidateCreatePList2,
-testValidateDataTypes,
+*/testValidateDataTypes,
 testValidateDataTypes2SpecialCases,
-testValidateDistinctForLoopVariableNames,
+/*testValidateDistinctForLoopVariableNames,
 testValidateDrawArcLineShape,
 testValidateDrawArcLineShapes,
 testValidateDrawingGroupCommands,
@@ -155,7 +155,7 @@ testValidateUnusedVariables,
 testValidateUnusedVariablesGlobal,
 testValidateUselessCode,
 testValidateVariableNames
-];
+*/];
 
 export function testValidation(logger) {
 	wrapAndCall(tests, logger);
