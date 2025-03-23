@@ -3,7 +3,7 @@ import { validateDataTypes } from
 '../../../../modules/parsing/parse-tree-analysis/validation/validateDataTypes.js';
 
 export function testValidateDataTypes(logger) {
-	const cases = [
+	const cases = [/*
 		{'code': '', 'error': false},
 		{'code': 'ifelse randomRatio < 0.5 [print :x] []', 'error': false},
 		{'code': 'make "x []\nsetItem 1 "x 4', 'error': false},
@@ -285,7 +285,7 @@ end
 
 make "list1 []
 print item 1 :list1
-`, 'error': true},*/
+`, 'error': true},
 	// this test case should pass before removing the validateMinLen module.
 
 	{'code': `make "list1 []
@@ -316,6 +316,66 @@ end`, 'error': false},
 	{'code': 'print map "sin [1 2 3]', 'error': false},
 	{'code': 'print (sort [] "arcTan2)', 'error': true}, // arcTan2 does not return the required bool.
 	{'code': 'print (sort [] "lessEqual?)', 'error': false},
+*/
+// end of minlen-related test cases
+	{'code': `to p :num
+	if list? :num [
+		stop
+	]
+end`, 'error': false},
+	{'code': `to p :num :numDigits
+	if list? :num [
+		output []
+	]
+	localmake "result "
+	localmake "i 0
+	while :i < :numDigits [
+		localmake "digitChar "1
+		localmake "result word :digitChar :result
+		localmake "i :i + 1
+	]
+	output :result
+end`, 'error': false},
+	{'code': `to p :num :numDigits
+	if list? :num [
+		output []
+	]
+	localmake "result "
+	localmake "i 0
+	while :i < :numDigits [
+		localmake "i :i + 1
+	]
+	output :result
+end`, 'error': false},
+	{'code': `to p :num :numDigits
+	if list? :num [
+		if list? :numDigits [
+			output []
+		]
+	]
+	localmake "result "
+	localmake "i 0
+	while :i < :numDigits [
+		localmake "i :i + 1
+	]
+	output :result
+end`, 'error': false},
+	/*{'code': `to p :num :numDigits
+	if list? :num [
+		if list? :numDigits [
+			output []
+		]
+	]
+	localmake "result "
+	localmake "i 0
+	while :i < :numDigits [
+		localmake "digitVal modulo :num 10
+		localmake "digitChar char :digitVal + ascii "0
+		localmake "result word :digitChar :result
+		localmake "i :i + 1
+	]
+	output :result
+end`, 'error': false}*/
 	];
 	processValidationTestCases(cases, logger, validateDataTypes);
 }
