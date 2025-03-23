@@ -15,6 +15,7 @@ import { evaluatePossiblyUsedInProcedure } from './evaluatePossiblyUsedInProcedu
 import { evaluateTokensBasic } from './evaluateTokensBasic.js';
 import { evaluateTokensWithVariables } from './evaluateTokensWithVariables.js';
 import { getAllVariables } from './getAllVariables.js';
+import { getTokenDataTypesBasic } from './getTokenDataTypesBasic.js';
 import { ParseTreeTokenType } from '../../ParseTreeTokenType.js';
 import { processRequiredTypeParameters } from './processRequiredTypeParameters.js';
 import { propogateSwappedValues } from './variable-assignment-scopes/propogateSwappedValues.js';
@@ -26,13 +27,30 @@ import { tightenRequiredTypesForScopesWithConditionalRanges } from
 './variable-assignment-scopes/tightenRequiredTypesForScopesWithConditionalRanges.js';
 import { updateAssignTokenProcedureForVariableAssignmentScopes } from
 './updateAssignTokenProcedureForVariableAssignmentScopes.js';
+import { updateAssignedTypesForParameters } from
+'./variable-assignment-scopes/updateAssignedTypesForParameters.js';
 await Command.asyncInit();
 await DataTypes.asyncInit();
 
 function tightenTypes(cachedParseTree, variables) {
 	const basicTokenValuesMap = evaluateTokensBasic(cachedParseTree);
+	function log(prefix) {
+		const x = variables.getVariableByName('x');
+		if (x !== undefined) {
+			let scopeDetails = '';
+			if (x.scopes.length !== 0) {
+				const scope = x.scopes[x.scopes.length - 1];
+				scopeDetails = `assignedTypes=${scope.assignedTypes}, requiredTypes=${scope.requiredTypes}`;
+			}
+			console.log(`tightenTypes after ${prefix} x.scopes.length=${x.scopes.length}, x.scopes[last] details: ${scopeDetails}`);
+		}
+	}
 	evaluateTokensWithVariables(cachedParseTree, basicTokenValuesMap, variables);
+	log(`evaluateTokensWithVariables`);
+
 	addScopesForPropertyLists(variables, cachedParseTree, basicTokenValuesMap);
+	log(`addScopesForPropertyLists`);
+
 	const extraInfo = {
 		'procedures': cachedParseTree.getProceduresMap()
 	};
@@ -69,28 +87,79 @@ function tightenTypes(cachedParseTree, variables) {
 		}
 	});
 	processRequiredTypeParameters(cachedParseTree, tokenToTypes, variables);
+	log(`processRequiredTypeParameters`);
+
 	adjustSubtypesForLists(cachedParseTree, variables, tokenToTypes);
+	log(`adjustSubtypesForLists`);
+
 	tightenTokenDataTypesAfterAdjustSubtypesForLists(cachedParseTree, variables, tokenToTypes);
+	log(`tightenTokenDataTypesAfterAdjustSubtypesForLists`);
+
+	return tokenToTypes;
 }
 
 export function getAnalyzedVariables(cachedParseTree) {
 	// add all variables and formal parameters.
 	const result = getAllVariables(cachedParseTree);
+	function log(prefix) {
+		const x = result.getVariableByName('x');
+		if (x !== undefined) {
+			let scopeDetails = '';
+			if (x.scopes.length !== 0) {
+				const scope = x.scopes[x.scopes.length - 1];
+				scopeDetails = `assignedTypes=${scope.assignedTypes}, requiredTypes=${scope.requiredTypes}`;
+			}
+			console.log(`after ${prefix} x.scopes.length=${x.scopes.length}, x.scopes[last] details: ${scopeDetails}`);
+		}
+	}
+	
 	addVariablesFromInitialVariables(cachedParseTree, result);
-	addScopesForParameters(result, cachedParseTree);
+	log('addVariablesFromInitialVariables');
+
+	const tokenValuesBasic = evaluateTokensBasic(cachedParseTree);
+	const extraInfo = {
+		'procedures': cachedParseTree.getProceduresMap()
+	};
+	const tokenTypesBasic = getTokenDataTypesBasic(tokenValuesBasic, cachedParseTree, extraInfo, result);
+	addScopesForParameters(result, cachedParseTree, tokenTypesBasic);
+	log('addScopesForParameters');
+
 	addVariableAssignmentScopes(cachedParseTree, result);
+	log('addVariableAssignmentScopes');
+
 	addScopesForSwap(result, cachedParseTree);
+	log('addScopesForSwap');
 
 	addConditionalRangesToScopes(cachedParseTree, result.getAllScopesAsArray());
-	updateAssignTokenProcedureForVariableAssignmentScopes(cachedParseTree.getProceduresMap(), result);
-	tightenGlobalVariableAssignmentScopesAssignedInProcedure(cachedParseTree, result);
-	analyzeVariableAssignmentScopeApplicableTokens(result);
-	evaluatePossiblyUsedInProcedure(cachedParseTree, result);
-	analyzeTokenBasic(cachedParseTree.root, cachedParseTree, result, undefined);
-	tightenRequiredTypesForScopesWithConditionalRanges(cachedParseTree, result);
-	propogateSwappedValues(cachedParseTree, result);
+	log('addConditionalRangesToScopes');
 
-	tightenTypes(cachedParseTree, result);
+	updateAssignTokenProcedureForVariableAssignmentScopes(cachedParseTree.getProceduresMap(), result);
+	log('updateAssignTokenProcedureForVariableAssignmentScopes');
+
+	tightenGlobalVariableAssignmentScopesAssignedInProcedure(cachedParseTree, result);
+	log('tightenGlobalVariableAssignmentScopesAssignedInProcedure');
+
+	analyzeVariableAssignmentScopeApplicableTokens(result);
+	log('tightenGlobalVariableAssignmentScopesAssignedInProcedure');
+
+	evaluatePossiblyUsedInProcedure(cachedParseTree, result);
+	log('evaluatePossiblyUsedInProcedure');
+
+	analyzeTokenBasic(cachedParseTree.root, cachedParseTree, result, undefined);
+	log('analyzeTokenBasic');
+
+	tightenRequiredTypesForScopesWithConditionalRanges(cachedParseTree, result);
+	log('tightenRequiredTypesForScopesWithConditionalRanges');
+
+	propogateSwappedValues(cachedParseTree, result);
+	log('propogateSwappedValues');
+
+	const tokenToTypes = tightenTypes(cachedParseTree, result);
+	log('tightenTypes');
+
+	updateAssignedTypesForParameters(cachedParseTree, result, tokenToTypes);
+	log('updateAssignedTypesForParameters');
+	console.log('##########################################################');
 
 	return result;
 };

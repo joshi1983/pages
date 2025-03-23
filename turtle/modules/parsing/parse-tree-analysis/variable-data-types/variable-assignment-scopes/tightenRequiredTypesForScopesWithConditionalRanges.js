@@ -2,6 +2,8 @@ import { DataTypes } from
 '../../../data-types/DataTypes.js';
 import { getRequiredTypesForForSettingsToken } from
 './getRequiredTypesForForSettingsToken.js';
+import { getRequiredTypesFromStart } from
+'./required-types/getRequiredTypesFromStart.js';
 import { intersectRequiredTypesForBinaryOperatorToken } from
 './intersectRequiredTypesForBinaryOperatorToken.js';
 import { intersectRequiredTypesForParameterizedGroupToken } from
@@ -60,10 +62,11 @@ export function getDataTypesForScopeWithConditionalRanges(cachedParseTree, scope
 	return result;
 };
 
-export function tightenRequiredTypesForScopesWithConditionalRanges(cachedParseTree, variables) {
+export function tightenRequiredTypesForScopesWithConditionalRanges(cachedParseTree, variables, tokenTypesMap) {
 	const scopesOfInterest = variables.getAllScopesAsArray().filter(isScopeOfInterest);
 	for (const scope of scopesOfInterest) {
-		const types = getDataTypesForScopeWithConditionalRanges(cachedParseTree, scope);
-		scope.requiredTypes.intersectWith(types);
+		const [u, i] = getRequiredTypesFromStart(cachedParseTree, 
+		scope.variable.name, scope.assignToken, tokenTypesMap, new DataTypes('*'));
+		scope.requiredTypes = new DataTypes(DataTypes.union(u.types, i.types));
 	}
 };

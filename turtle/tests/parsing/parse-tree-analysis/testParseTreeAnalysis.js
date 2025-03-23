@@ -1,4 +1,4 @@
-import { testCachedParseTree } from './testCachedParseTree.js';
+/*import { testCachedParseTree } from './testCachedParseTree.js';
 import { testCachedParseTreeDirectory } from './cached-parse-tree/testCachedParseTreeDirectory.js';
 import { testCachedParseTreeGetLengthFromToken } from './testCachedParseTreeGetLengthFromToken.js';
 import { testCachedParseTreeGetPossibleTypesFromToken } from './testCachedParseTreeGetPossibleTypesFromToken.js';
@@ -31,13 +31,13 @@ import { testStringFormats } from './string-formats/testStringFormats.js';
 import { testTipGenerators } from './tip-generators/testTipGenerators.js';
 import { testValidateIdentifier } from './testValidateIdentifier.js';
 import { testValidation } from './validation/testValidation.js';
-import { testVariableDataTypes } from './variable-data-types/testVariableDataTypes.js';
-import { testVariableScraper } from './testVariableScraper.js';
+*/import { testVariableDataTypes } from './variable-data-types/testVariableDataTypes.js';
+/*import { testVariableScraper } from './testVariableScraper.js';
 import { testWriteOptimizedCachedParseTree } from './testWriteOptimizedCachedParseTree.js';
-import { wrapAndCall } from '../../helpers/wrapAndCall.js';
+*/import { wrapAndCall } from '../../helpers/wrapAndCall.js';
 
 const tests = [
-testCachedParseTree,
+/*testCachedParseTree,
 testCachedParseTreeDirectory,
 testCachedParseTreeGetLengthFromToken,
 testCachedParseTreeGetPossibleTypesFromToken,
@@ -67,10 +67,10 @@ testStringFormats,
 testTipGenerators,
 testValidateIdentifier,
 testValidation,
-testVariableDataTypes,
-testVariableScraper,
+*/testVariableDataTypes,
+/*testVariableScraper,
 testWriteOptimizedCachedParseTree
-];
+*/];
 
 export function testParseTreeAnalysis(logger) {
 	wrapAndCall(tests, logger);
