@@ -1,8 +1,11 @@
 import { analyzeTokenTypesForProcedureCPROCs } from './variable-assignment-scopes/analyzeTokenTypesForProcedureCPROCs.js';
 import { DataTypes } from '../../data-types/DataTypes.js';
 import { getOutputTypesForProcedureBasic } from './getOutputTypesForProcedureBasic.js';
+import { getTokenDataTypesBasic } from './getTokenDataTypesBasic.js';
+import { getTokensByType } from '../../generic-parsing-utilities/getTokensByType.js';
 import { getTokenTypesBasic } from './getTokenTypesBasic.js';
 import { getTokenTypesAdvanced } from './getTokenTypesAdvanced.js';
+import { ParseTreeTokenType } from '../../ParseTreeTokenType.js';
 import { processTokenDataTypesFromMultipleVariableAssignmentScopes } from './processTokenDataTypesFromMultipleVariableAssignmentScopes.js';
 import { shouldBeEvaluatedForDataTypes } from './shouldBeEvaluatedForDataTypes.js';
 
@@ -24,23 +27,26 @@ function processAdvancedPass(tokensRemaining, variables, result) {
 }
 
 export function analyzeTokenDataTypes(cachedParseTree, tokenValueMap, variables) {
-	const result = new Map();
 	const procedures = cachedParseTree.getProceduresMap();
 	const extraInfo = {
 		'procedures': procedures
 	};
-	// compute data types off known token values.
-	for (const [key, value] of tokenValueMap) {
-		result.set(key, DataTypes.getTypesCompatibleWithValue(value, extraInfo));
+	const result = getTokenDataTypesBasic(tokenValueMap, cachedParseTree, extraInfo, variables);
+	for (const varReadToken of getTokensByType(cachedParseTree,
+		ParseTreeTokenType.VARIABLE_READ)) {
+		const variable = variables.getVariableByName(varReadToken.val.toLowerCase());
+		if (variable === undefined)
+			continue;
+		const procedure = cachedParseTree.getProcedureAtToken(varReadToken);
+		const scopes = variable.getScopesAt(varReadToken, procedure);
+		if (scopes.length === 1) {
+			const scope = scopes[0];
+			result.set(varReadToken, scope.assignedTypes);
+		}
 	}
 	let tokensRemaining = cachedParseTree.getAllTokens().
 		filter(shouldBeEvaluatedForDataTypes(cachedParseTree, variables)).
 		filter(t => !result.has(t));
-	tokensRemaining.forEach(function(token) {
-		const types = getTokenTypesBasic(token, true, extraInfo);
-		if (types !== undefined)
-			result.set(token, types);
-	});
 	tokensRemaining = processAdvancedPass(tokensRemaining, variables, result);
 	// compute data types for procedure calls.
 	for (const [key, procedure] of procedures) {
