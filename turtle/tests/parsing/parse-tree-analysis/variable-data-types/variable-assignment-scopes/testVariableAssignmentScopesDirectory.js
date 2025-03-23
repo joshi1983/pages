@@ -8,11 +8,14 @@ import { testGetAnalyzedVariablesParameters } from './testGetAnalyzedVariablesPa
 import { testGetAnalyzedVariableAssignmentScopes } from './testGetAnalyzedVariableAssignmentScopes.js';
 import { testGetAnalyzedVariableAssignmentScopesSpecialCases } from
 './testGetAnalyzedVariableAssignmentScopesSpecialCases.js';
+import { testGetAssignedDataTypesForParameter } from './testGetAssignedDataTypesForParameter.js';
 import { testGetRequiredTypesForForSettingsToken } from
 './testGetRequiredTypesForForSettingsToken.js';
 import { testGetSatisfyingDataTypes } from './testGetSatisfyingDataTypes.js';
 import { testMightQueue2MutateManyVariables } from './testMightQueue2MutateManyVariables.js';
 import { testProcessMutationsOfSingleValueLists } from './testProcessMutationsOfSingleValueLists.js';
+import { testProcessMutationsOfSingleValueLists } from './testProcessMutationsOfSingleValueLists.js';
+import { testRequiredTypes } from './required-types/testRequiredTypes.js';
 import { testTightenRequiredTypesForScopesWithConditionalRanges } from
 './testTightenRequiredTypesForScopesWithConditionalRanges.js';
 import { testTightenTokenDataTypesAfterAdjustSubtypesForLists } from
@@ -31,10 +34,12 @@ export function testVariableAssignmentScopesDirectory(logger) {
 		testGetAnalyzedVariablesParameters,
 		testGetAnalyzedVariableAssignmentScopes,
 		testGetAnalyzedVariableAssignmentScopesSpecialCases,
+		testGetAssignedDataTypesForParameter,
 		testGetRequiredTypesForForSettingsToken,
 		testGetSatisfyingDataTypes,
 		testMightQueue2MutateManyVariables,
 		testProcessMutationsOfSingleValueLists,
+		testRequiredTypes,
 		testTightenRequiredTypesForScopesWithConditionalRanges,
 		testTightenTokenDataTypesAfterAdjustSubtypesForLists,
 		testTypePredicateMap

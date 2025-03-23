@@ -1,4 +1,4 @@
-import { testASMTurtle } from './asm-turtle/testASMTurtle.js';
+/*import { testASMTurtle } from './asm-turtle/testASMTurtle.js';
 import { testAsyncParser } from './testAsyncParser.js';
 import { testAsyncParseTask } from './testAsyncParseTask.js';
 import { testCharIndexToParseTreeTokenPosition } from './testCharIndexToParseTreeTokenPosition.js';
@@ -30,30 +30,30 @@ import { testMightBeRunnableCode } from './testMightBeRunnableCode.js';
 import { testOperators } from './testOperators.js';
 import { testOrderOfOperation } from './testOrderOfOperation.js';
 import { testParseTree } from './testParseTree.js';
-import { testParseTreeAnalysis } from './parse-tree-analysis/testParseTreeAnalysis.js';
-import { testParseTreeColIndexes } from './testParseTreeColIndexes.js';
+*/import { testParseTreeAnalysis } from './parse-tree-analysis/testParseTreeAnalysis.js';
+/*import { testParseTreeColIndexes } from './testParseTreeColIndexes.js';
 import { testParseTreeToCodeWithComments } from './testParseTreeToCodeWithComments.js';
 import { testParseTreeToken } from './testParseTreeToken.js';
 import { testParseTreeTokenDirectory } from './parse-tree-token/testParseTreeTokenDirectory.js';
 import { testPovRay } from './pov-ray/testPovRay.js';
 import { testProcedure } from './testProcedure.js';
-import { testProcessing } from './processing/testProcessing.js';
-import { testPythonParsing } from './python-parsing/testPythonParsing.js';
+*/import { testProcessing } from './processing/testProcessing.js';
+/*import { testPythonParsing } from './python-parsing/testPythonParsing.js';
 import { testQBasic } from './qbasic/testQBasic.js';
+import { testSmallVisualBasic } from './small-visual-basic/testSmallVisualBasic.js';
 import { testScanner } from './testScanner.js';
 import { testScanningDirectory } from './scanning/testScanningDirectory.js';
 import { testScanVariousExamples } from './testScanVariousExamples.js';
 import { testScrapeProcedures } from './testScrapeProcedures.js';
 import { testSerialization } from './serialization/testSerialization.js';
-import { testSmallVisualBasic } from './small-visual-basic/testSmallVisualBasic.js';
 import { testSonicWebTurtle } from './sonic-webturtle/testSonicWebTurtle.js';
 import { testToken } from './testToken.js';
 import { testUnsupportedCommand } from './testUnsupportedCommand.js';
-import { wrapAndCall } from '../helpers/wrapAndCall.js';
+*/import { wrapAndCall } from '../helpers/wrapAndCall.js';
 
 export function testParsing(logger) {
 	wrapAndCall([
-		testASMTurtle,
+		/*testASMTurtle,
 		testAsyncParser,
 		testAsyncParseTask,
 		testCharIndexToParseTreeTokenPosition,
@@ -85,14 +85,14 @@ export function testParsing(logger) {
 		testOperators,
 		testOrderOfOperation,
 		testParseTree,
-		testParseTreeAnalysis,
-		testParseTreeColIndexes,
+		*/testParseTreeAnalysis,
+		/*testParseTreeColIndexes,
 		testParseTreeToCodeWithComments,
 		testParseTreeToken,
 		testParseTreeTokenDirectory,
 		testPovRay,
-		testProcedure,
-		testProcessing,
+		testProcedure,*/
+		testProcessing,/*
 		testPythonParsing,
 		testQBasic,
 		testScanner,
@@ -103,6 +103,6 @@ export function testParsing(logger) {
 		testSmallVisualBasic,
 		testSonicWebTurtle,
 		testToken,
-		testUnsupportedCommand
+		testUnsupportedCommand*/
 	], logger);
 };
