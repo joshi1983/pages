@@ -267,6 +267,27 @@ end`, 'tokenTypeChecks': [
 		'hasParentVal': 'ifelse',
 		'types': 'bool'
 	}
+]},
+{'code': `to p :num :x
+	if list? :num [
+		if list? :x [
+			output []
+		]
+	]
+	localmake "result "
+	localmake "i 0
+	while :i < :x [
+		localmake "i :i + 1
+	]
+	output :result
+end`, 'tokenTypeChecks': [
+	{
+		'val': 'x',
+		'type': ParseTreeTokenType.VARIABLE_READ,
+		'hasParentVal': '<',
+		'types': 'alphacolor|list|num|string'
+		// 'list|num' would be ok too.
+	}
 ]}
 ];
 	cases.forEach(function(caseInfo, index) {
