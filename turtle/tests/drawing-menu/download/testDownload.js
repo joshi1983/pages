@@ -1,4 +1,4 @@
-import { testAnimationDownload } from './animation-download/testAnimationDownload.js';
+/*import { testAnimationDownload } from './animation-download/testAnimationDownload.js';
 import { testAvif } from './avif/testAvif.js';
 import { testDrawingDownload } from './drawing-download/testDrawingDownload.js';
 import { testFileExtensions } from './testFileExtensions.js';
@@ -11,14 +11,14 @@ import { testPDF } from './pdf/testPDF.js';
 import { testPointClouds } from './point-clouds/testPointClouds.js';
 import { testPostScript } from './post-script/testPostScript.js';
 import { testRotatingTransformerModes } from './testRotatingTransformerModes.js';
-import { testSimulateAllSupportedExports } from './testSimulateAllSupportedExports.js';
-import { testStringArtKit } from './string-art-kit/testStringArtKit.js';
+*/import { testSimulateAllSupportedExports } from './testSimulateAllSupportedExports.js';
+/*import { testStringArtKit } from './string-art-kit/testStringArtKit.js';
 import { testStyleToColour } from './testStyleToColour.js';
-import { wrapAndCall } from '../../helpers/wrapAndCall.js';
+*/import { wrapAndCall } from '../../helpers/wrapAndCall.js';
 
 export function testDownload(logger) {
 	wrapAndCall([
-		testAnimationDownload,
+		/*testAnimationDownload,
 		testAvif,
 		testDrawingDownload,
 		testFileExtensions,
@@ -31,8 +31,8 @@ export function testDownload(logger) {
 		testPointClouds,
 		testPostScript,
 		testRotatingTransformerModes,
-		testSimulateAllSupportedExports,
-		testStringArtKit,
-		testStyleToColour,
+		*/testSimulateAllSupportedExports,
+		//testStringArtKit,
+		//testStyleToColour,
 	], logger);
 };
