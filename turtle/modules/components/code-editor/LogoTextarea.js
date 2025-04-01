@@ -1,11 +1,14 @@
 import { Comments } from './logo-textarea/Comments.js';
+import { EventDelegator } from './code-completion/EventDelegator.js';
 import { EventDispatcher } from '../../EventDispatcher.js';
 import { fetchText } from '../../fetchText.js';
 import { highlightLogoSyntaxInTextarea } from '../syntax-highlighter/highlightLogoSyntaxInTextarea.js';
 import { Keys } from '../Keys.js';
 import { LineNumbers } from './logo-textarea/LineNumbers.js';
 import { SelectionUtils } from '../SelectionUtils.js';
+import { SuggestionContainer } from './code-completion/SuggestionContainer.js';
 import { Tabs } from './logo-textarea/Tabs.js';
+import { TextareaSuggestionsUpdater } from './code-completion/TextareaSuggestionsUpdater.js';
 const html = await fetchText('content/components/code-editor/logo-textarea.html');
 
 function getNewContainerElement() {
@@ -18,11 +21,18 @@ export class LogoTextarea extends EventDispatcher {
 	constructor(context) {
 		super(['change', 'select']);
 		this.rootDiv = getNewContainerElement();
-		this.lineNumbers = new LineNumbers(this.rootDiv);
 		this.txtarea = this.rootDiv.querySelector('textarea');
+		const suggestionContainer = new SuggestionContainer();
+		this.eventDelegator = new EventDelegator(new TextareaSuggestionsUpdater(suggestionContainer, this.txtarea));
+		const outer = this;
+		if (context.CodeEditor !== undefined) {
+			context.CodeEditor.addEventListener('layout', function(eventDetails) {
+				outer.eventDelegator.handleLayoutChange(eventDetails);
+			});
+		}
+		this.lineNumbers = new LineNumbers(this.rootDiv);
 		highlightLogoSyntaxInTextarea(this.txtarea, context);
 		this.previousValue = this.txtarea.value;
-		const outer = this;
 		this.txtarea.addEventListener('keydown', function(event) {
 			if (!event.altKey && (!event.ctrlKey || Keys.isSemicolon(event))) {
 				const start = this.selectionStart;
@@ -64,7 +74,8 @@ export class LogoTextarea extends EventDispatcher {
 			}
 		});
 		['change', 'cut', 'keyup', 'paste', 'propertychange'].forEach(function(eventKey) {
-			outer.txtarea.addEventListener(eventKey, function() {
+			outer.txtarea.addEventListener(eventKey, function(event_) {
+				outer.eventDelegator.handleEvent(event_);
 				setTimeout(function() {
 					if (outer.previousValue !== outer.txtarea.value) {
 						outer.dispatchChanged();
