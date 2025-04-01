@@ -1,3 +1,4 @@
+import { testCodeCompletion } from './code-completion/testCodeCompletion.js';
 import { testCodeFixer } from './code-fixer/testCodeFixer.js';
 import { testFormat } from './format/testFormat.js';
 import { testGetSourceCodeWithTokenValueReplacement } from './testGetSourceCodeWithTokenValueReplacement.js';
@@ -11,6 +12,7 @@ import { wrapAndCall } from '../../helpers/wrapAndCall.js';
 
 export function testCodeEditor(logger) {
 	wrapAndCall([
+		testCodeCompletion,
 		testCodeFixer,
 		testFormat,
 		testGetSourceCodeWithTokenValueReplacement,
