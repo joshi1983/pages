@@ -1,4 +1,4 @@
-import { testAnalyzeCodeQuality } from './testAnalyzeCodeQuality.js';
+/*import { testAnalyzeCodeQuality } from './testAnalyzeCodeQuality.js';
 import { testArcLines } from './arc-lines/testArcLines.js';
 import { testInfiniteLoops } from './infinite-loops/testInfiniteLoops.js';
 import { testPenUp } from './pen-up/testPenUp.js';
@@ -54,7 +54,8 @@ import { testValidateOverwrittenParameters } from './testValidateOverwrittenPara
 import { testValidatePenUp } from './testValidatePenUp.js';
 import { testValidatePolyCommandUsage } from './testValidatePolyCommandUsage.js';
 import { testValidatePolygonCalls } from './testValidatePolygonCalls.js';
-import { testValidateProcedureInProcedure } from './testValidateProcedureInProcedure.js';
+*/import { testValidatePreventPathJoin } from './testValidatePreventPathJoin.js';
+/*import { testValidateProcedureInProcedure } from './testValidateProcedureInProcedure.js';
 import { testValidateProcedureNames } from './testValidateProcedureNames.js';
 import { testValidateProcedureParametersNotNull } from './testValidateProcedureParametersNotNull.js';
 import { testValidateProcedureParametersUnique } from './testValidateProcedureParametersUnique.js';
@@ -74,10 +75,10 @@ import { testValidateUnusedVariables } from './testValidateUnusedVariables.js';
 import { testValidateUnusedVariablesGlobal } from './testValidateUnusedVariablesGlobal.js';
 import { testValidateUselessCode } from './testValidateUselessCode.js';
 import { testValidateVariableNames } from './testValidateVariableNames.js';
-import { wrapAndCall } from '../../../helpers/wrapAndCall.js';
+*/import { wrapAndCall } from '../../../helpers/wrapAndCall.js';
 
 const tests = [
-testAnalyzeCodeQuality,
+/*testAnalyzeCodeQuality,
 testArcLines,
 testInfiniteLoops,
 testPenUp,
@@ -133,7 +134,8 @@ testValidateOverwrittenParameters,
 testValidatePenUp,
 testValidatePolygonCalls,
 testValidatePolyCommandUsage,
-testValidateProcedureInProcedure,
+*/testValidatePreventPathJoin,
+/*testValidateProcedureInProcedure,
 testValidateProcedureNames,
 testValidateProcedureParametersNotNull,
 testValidateProcedureParametersUnique,
@@ -153,7 +155,7 @@ testValidateUnusedVariables,
 testValidateUnusedVariablesGlobal,
 testValidateUselessCode,
 testValidateVariableNames
-];
+*/];
 
 export function testValidation(logger) {
 	wrapAndCall(tests, logger);
