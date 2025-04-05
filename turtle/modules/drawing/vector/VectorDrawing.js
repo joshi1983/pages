@@ -12,19 +12,15 @@ import { Vector2DLayer } from './Vector2DLayer.js';
 export class VectorDrawing extends EventDispatcher {
 	constructor(otherDrawing) {
 		super(['change', 'addForegroundShape', 'clearScreen', 'setScreenColor']);
-		if (otherDrawing instanceof VectorDrawing) {
-			this.background = new Vector2DLayer(otherDrawing.background);
-			this.setDimensions(otherDrawing.width, otherDrawing.height);
-		}
-		else {
-			this.background = new Vector2DLayer();
-			this.background.setFillColor(new Colour('#fff'));
+		if (otherDrawing === undefined) {
+			this.screenColor = new Colour('#fff');
 			this.setDimensions(100, 100);
 		}
+		else {
+			this.setScreenColor(otherDrawing.screenColor);
+			this.setDimensions(otherDrawing.width, otherDrawing.height);
+		}
 		const outer = this;
-		this.background.addEventListener('change', function(e) {
-			outer._dispatchEvent('change', e.details);
-		});
 		this.turtleDisplay = new Vector2DLayer();
 		this.foreground = new Vector2DLayer();
 		if (otherDrawing !== undefined) {
@@ -52,8 +48,7 @@ export class VectorDrawing extends EventDispatcher {
 	}
 
 	clearScreen() {
-		this.background.clear();
-		this.background.setFillColor(new Colour('#fff'));
+		this.setScreenColor(new Colour('#fff'));
 		this._dispatchEvent('clearScreen', {});
 		this.foreground.clear();
 		this.turtleDisplay.clear();
@@ -77,7 +72,6 @@ export class VectorDrawing extends EventDispatcher {
 	disconnect() {
 		this.foreground.disconnect();
 		this.turtleDisplay.disconnect();
-		this.background.disconnect();
 		this.foreground = undefined;
 		this.removeAllEventListeners();
 		this.turtleDisplay = undefined;
@@ -122,7 +116,7 @@ export class VectorDrawing extends EventDispatcher {
 	}
 
 	getScreenColor() {
-		return this.background.getFillColor();
+		return this.screenColor;
 	}
 
 	/*
@@ -141,7 +135,10 @@ export class VectorDrawing extends EventDispatcher {
 	}
 
 	hasAnythingToClear() {
-		return this.background.hasAnythingToClear() || this.foreground.hasAnythingToClear();
+		if (this.screenColor === Transparent ||
+		!this.screenColor.equals(new Colour('#fff')))
+			return true;
+		return this.foreground.hasAnythingToClear();
 	}
 
 	hasTaintedShapes() {
@@ -176,7 +173,9 @@ export class VectorDrawing extends EventDispatcher {
 	setScreenColor(c) {
 		if (!(c instanceof Colour) && c !== Transparent)
 			throw new Error(`setScreenColor requires c to be a Colour or Transparent and can not be null for a complete drawing.  c was specified as ${c}`);
-		this.background.setFillColor(c);
-		super._dispatchEvent('setScreenColor', {});
+		if (c !== this.screenColor) {
+			this.screenColor = c;
+			super._dispatchEvent('setScreenColor', {});
+		}
 	}
 };
