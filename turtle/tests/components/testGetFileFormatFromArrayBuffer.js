@@ -1,6 +1,7 @@
 import { blobToArrayBuffer } from '../../modules/blobToArrayBuffer.js';
 import { fetchBlob } from '../../modules/fetchBlob.js';
 import { getFileFormatFromArrayBuffer } from '../../modules/components/getFileFormatFromArrayBuffer.js';
+import { PCX } from '../../modules/components/image-formats/PCX.js';
 import { prefixWrapper } from '../helpers/prefixWrapper.js';
 
 export function testGetFileFormatFromArrayBuffer(logger) {
@@ -15,6 +16,7 @@ export function testGetFileFormatFromArrayBuffer(logger) {
 		{'url': 'tests/data/format-classification/test.avif', 'hintedExtension': 'avif', 'extension': 'avif'},
 		{'url': 'tests/data/format-classification/test.avif', 'hintedExtension': 'jpg', 'extension': 'avif'},
 		{'url': 'tests/data/format-classification/test.eps', 'hintedExtension': 'jpg', 'extension': 'eps'},
+		{'url': 'tests/data/format-classification/test.pcx', 'hintedExtension': 'pcx', 'extension': 'pcx'},
 		{'url': 'tests/data/format-classification/test.pdf', 'hintedExtension': 'jpg', 'extension': 'pdf'},
 		{'url': 'tests/data/format-classification/test.png', 'hintedExtension': 'jpg', 'extension': 'png'},
 		{'url': 'tests/data/format-classification/test.gif', 'hintedExtension': 'jpg', 'extension': 'gif'},
@@ -42,6 +44,10 @@ export function testGetFileFormatFromArrayBuffer(logger) {
 		const blob = await fetchBlob(caseInfo.url);
 		const data = await blobToArrayBuffer(blob);
 		const result = getFileFormatFromArrayBuffer(data, caseInfo.hintedExtension);
+		const byteArray = new Uint8Array(data);
+		if (PCX.isPossibleMatch(byteArray) !== (caseInfo.hintedExtension === 'pcx'))
+			plogger(`Expected a different result from PCX.isPossibleMatch but found ${PCX.isPossibleMatch(byteArray)}`);
+
 		if (typeof result !== 'string')
 			plogger(`Expected result to be a string but got ${result}`);
 		else if (result !== caseInfo.extension)

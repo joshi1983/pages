@@ -1,6 +1,7 @@
 import { ArrayUtils } from '../ArrayUtils.js';
 import { fetchJson } from '../fetchJson.js';
 import { FileExtensions } from '../drawing-menu/download/FileExtensions.js';
+import { PCX } from './image-formats/PCX.js';
 import { StringBuffer } from '../StringBuffer.js';
 const fileFormats = await fetchJson('json/fileExtensions.json');
 
@@ -52,6 +53,8 @@ function byteArrayToString(data) {
 function isPossibleFormatForData(format, data) {
 	if (format.fileExtension === 'mp3')
 		return mayBeMp3(data);
+	if (format.fileExtension === 'pcx')
+		return PCX.isPossibleMatch(data);
 	const checks = format.rawDataSignature;
 	for (let i = 0; i < checks.length; i++) {
 		if (!matchesSignatureCheck(checks[i], data))
