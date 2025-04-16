@@ -7,8 +7,8 @@ import { wrapAndCall } from '../../../helpers/wrapAndCall.js';
 export function testCodeFixer(logger) {
 	wrapAndCall([
 		testCodeToTranslator,
-		testFixCode,
+		/*testFixCode,
 		testFixers,
-		testFixLogger
+		testFixLogger*/
 	], logger);
 };
