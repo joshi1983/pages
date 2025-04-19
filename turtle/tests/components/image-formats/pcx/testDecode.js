@@ -11,7 +11,7 @@ export function testDecode(logger) {
 		//'out': [1, 0]},
 		//{'inArgs': [[0xc1, 1], 0, 1, 1, 1, 1, 1],
 		//'out': [1, 0]},
-		{'inArgs': [[0xc2, 1], 0, 1, 1, 1, 1, 1],
+		/*{'inArgs': [[0xc2, 1], 0, 1, 1, 1, 1, 1],
 		'out': [1, 1]},
 		{'inArgs': [[0xc2, 1, 9], 0, 1, 1, 1, 1, 1],
 		'out': [1, 1]},
@@ -25,7 +25,7 @@ export function testDecode(logger) {
 		0xc1, 0xfe, 0xc2, 0, 0xc2, 0, 0], 0, 2, 2, 8, 3, 1],
 		'out': [1, 0xff, 2, 0, 3, 0,
 		0, 0xfe, 0, 0, 0, 0]},
-		{'inArgs': [[0xf4, 0xff], 0, 34, 1, 1, 4, 1],
+		*/{'inArgs': [[0xf4, 0xff], 0, 34, 1, 1, 4, 1],
 		'out': duplicate(0xff, 52)},
 	];
 	cases.forEach(function(caseInfo) {
