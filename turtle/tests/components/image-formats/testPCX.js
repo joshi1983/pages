@@ -48,7 +48,7 @@ async function testWithFiles(logger) {
 			'width': 872, 'height': 436,
 			'paletteLength': 16,
 			'pixelChecks': [
-				//{'x': 0, 'y': 0, 'colour': '#728aa6'},
+				{'x': 0, 'y': 0, 'colour': '#728aa6'},
 			]
 		},
 		{

@@ -15,6 +15,10 @@ export function testDecode(logger) {
 		'out': [1, 1]},
 		{'inArgs': [[0xc2, 1, 9], 0, 1, 1, 1, 1, 1],
 		'out': [1, 1]},
+
+		{'inArgs': [[0, 0, 0], 0, 1, 1, 8, 3, 1],
+		'out': [0, 0, 0]}, // similar to data in black-single-pixel.pcx
+
 		{'inArgs': [[1, 0xc1, 0xff, 2, 0, 3, 0], 0, 2, 1, 8, 3, 1],
 		'out': [1, 0xff, 2, 0, 3, 0]},
 		{'inArgs': [[1, 0xc1, 0xff, 2, 0, 3, 0, 0,
