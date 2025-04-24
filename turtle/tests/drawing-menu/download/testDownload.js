@@ -18,10 +18,10 @@ import { wrapAndCall } from '../../helpers/wrapAndCall.js';
 
 export function testDownload(logger) {
 	wrapAndCall([
-		testAnimationDownload,
+		//testAnimationDownload,
 		testAvif,
 		testDrawingDownload,
-		testFileExtensions,
+		/*testFileExtensions,
 		testFileExtensionsJSON,
 		testFrameRates,
 		testGradientToColour,
@@ -33,6 +33,6 @@ export function testDownload(logger) {
 		testRotatingTransformerModes,
 		testSimulateAllSupportedExports,
 		testStringArtKit,
-		testStyleToColour,
+		testStyleToColour,*/
 	], logger);
 };

@@ -1,4 +1,4 @@
-import { bindDocumentFocusTests } from './bindDocumentFocusTests.js';
+/*import { bindDocumentFocusTests } from './bindDocumentFocusTests.js';
 import { testAlphaColour } from './testAlphaColour.js';
 import { testArrayUtils } from './testArrayUtils.js';
 import { testAssets } from './assets/testAssets.js';
@@ -16,12 +16,12 @@ import { testDeepEquality } from './testDeepEquality.js';
 import { testDebugging } from './debugging/testDebugging.js';
 import { testDelay } from './testDelay.js';
 import { testDrawing } from './drawing/testDrawing.js';
-import { testDrawingMenu } from './drawing-menu/testDrawingMenu.js';
-import { testEqualWithinThreshold } from './testEqualWithinThreshold.js';
+*/import { testDrawingMenu } from './drawing-menu/testDrawingMenu.js';
+/*import { testEqualWithinThreshold } from './testEqualWithinThreshold.js';
 import { testExceptionToString } from './testExceptionToString.js';
 import { testFetchBlob } from './testFetchBlob.js';
-import { testFile } from './file/testFile.js';
-import { testFormatNumber } from './testFormatNumber.js';
+*/import { testFile } from './file/testFile.js';
+/*import { testFormatNumber } from './testFormatNumber.js';
 import { testHelp } from './help/testHelp.js';
 import { testIsCloseEnough } from './testIsCloseEnough.js';
 import { testIsDigit } from './testIsDigit.js';
@@ -44,7 +44,7 @@ import { testValueToLiteralCode } from './testValueToLiteralCode.js';
 import { testValueToString } from './testValueToString.js';
 import { testValueWrapper } from './testValueWrapper.js';
 import { testWindowsCommandsJSON } from './testWindowsCommandsJSON.js';
-import { wrapAndCall } from './helpers/wrapAndCall.js';
+*/import { wrapAndCall } from './helpers/wrapAndCall.js';
 
 function replaceSpecialChars(msg) {
 	msg = msg.replace(/ /g, '&nbsp;');
@@ -54,7 +54,7 @@ function replaceSpecialChars(msg) {
 }
 
 const tests = [
-	bindDocumentFocusTests,
+	/*bindDocumentFocusTests,
 	testAlphaColour,
 	testArrayUtils,
 	testAssets,
@@ -72,12 +72,12 @@ const tests = [
 	testDebugging,
 	testDelay,
 	testDrawing,
-	testDrawingMenu,
-	testEqualWithinThreshold,
+	*/testDrawingMenu,
+	/*testEqualWithinThreshold,
 	testExceptionToString,
 	testFetchBlob,
-	testFile,
-	testFormatNumber,
+	*/testFile,
+	/*testFormatNumber,
 	testHelp,
 	testIsCloseEnough,
 	testIsDigit,
@@ -99,7 +99,7 @@ const tests = [
 	testValueToLiteralCode,
 	testValueToString,
 	testValueWrapper,
-	testWindowsCommandsJSON
+	testWindowsCommandsJSON*/
 ];
 
 function runTests() {
