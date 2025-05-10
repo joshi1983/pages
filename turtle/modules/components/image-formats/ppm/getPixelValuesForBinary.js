@@ -36,13 +36,13 @@ export function getPixelValuesForBinary(byteArray, maxValue, width) {
 		const result = [];
 		for (let i = 0; i < byteArray.length; i++) {
 			const byteValue = byteArray[i];
-			if (!skippedValues.has(byteValue)) {
+			//if (!skippedValues.has(byteValue)) {
 				let val = byteValue;
 				if (numBytesPerValue === 2) {
 					val = byteValue | (byteArray[++i] << 8);
 				}
 				result.push(val);
-			}
+			//}
 		}
 		return result;
 	}

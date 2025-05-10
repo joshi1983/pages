@@ -49,8 +49,8 @@ export function testPPM(logger) {
 			'pixelDataStartIndex': 51,
 			'maxValue': 255,
 			'pixelChecks': [
-				//{'x': 0, 'y': 0, 'colour': '#0a2020'},
-				//{'x': 3, 'y': 3, 'colour': '#efbfbd'}
+				{'x': 0, 'y': 0, 'colour': '#0a2020'},
+				{'x': 3, 'y': 3, 'colour': '#efbfbd'}
 			]
 		},
 		{
