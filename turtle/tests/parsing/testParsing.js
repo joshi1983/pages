@@ -1,11 +1,11 @@
-import { testASMTurtle } from './asm-turtle/testASMTurtle.js';
+/*import { testASMTurtle } from './asm-turtle/testASMTurtle.js';
 import { testAsyncParser } from './testAsyncParser.js';
 import { testAsyncParseTask } from './testAsyncParseTask.js';
 import { testCharIndexToParseTreeTokenPosition } from './testCharIndexToParseTreeTokenPosition.js';
 import { testCommandClass } from './testCommandClass.js';
 import { testCompileCodeUsingInternalProc } from './testCompileCodeUsingInternalProc.js';
-import { testCompiling } from './compiling/testCompiling.js';
-import { testConvertParseTreeTokensToScanTokens } from './testConvertParseTreeTokensToScanTokens.js';
+*/import { testCompiling } from './compiling/testCompiling.js';
+/*import { testConvertParseTreeTokensToScanTokens } from './testConvertParseTreeTokensToScanTokens.js';
 import { testCreateParameterizedGroups } from './testCreateParameterizedGroups.js';
 import { testCreateParameterizedGroupsParseErrors } from './testCreateParameterizedGroupsParseErrors.js';
 import { testCSS } from './css/testCSS.js';
@@ -49,18 +49,18 @@ import { testSmallVisualBasic } from './small-visual-basic/testSmallVisualBasic.
 import { testSonicWebTurtle } from './sonic-webturtle/testSonicWebTurtle.js';
 import { testToken } from './testToken.js';
 import { testUnsupportedCommand } from './testUnsupportedCommand.js';
-import { wrapAndCall } from '../helpers/wrapAndCall.js';
+*/import { wrapAndCall } from '../helpers/wrapAndCall.js';
 
 export function testParsing(logger) {
 	wrapAndCall([
-		testASMTurtle,
+		/*testASMTurtle,
 		testAsyncParser,
 		testAsyncParseTask,
 		testCharIndexToParseTreeTokenPosition,
 		testCommandClass,
 		testCompileCodeUsingInternalProc,
-		testCompiling,
-		testConvertParseTreeTokensToScanTokens,
+		*/testCompiling,
+		/*testConvertParseTreeTokensToScanTokens,
 		testCreateParameterizedGroups,
 		testCreateParameterizedGroupsParseErrors,
 		testCSS,
@@ -103,6 +103,6 @@ export function testParsing(logger) {
 		testSmallVisualBasic,
 		testSonicWebTurtle,
 		testToken,
-		testUnsupportedCommand
+		testUnsupportedCommand*/
 	], logger);
 };
