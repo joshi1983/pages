@@ -6,6 +6,7 @@ import { testCompileIfStatements } from './testCompileIfStatements.js';
 import { testCompileInternalProcedures } from './testCompileInternalProcedures.js';
 import { testCompileLoops } from './testCompileLoops.js';
 import { testCompileSwap } from './testCompileSwap.js';
+import { testCompleteTranslation } from './complete-translation/testCompleteTranslation.js';
 import { testInstructionListOptimization } from './instruction-list-optimization/testInstructionListOptimization.js';
 import { testInternalProcedures } from './testInternalProcedures.js';
 import { testShouldTranslateToInternalProc } from './testShouldTranslateToInternalProc.js';
@@ -22,6 +23,7 @@ export function testCompiling(logger) {
 		testCompileInternalProcedures,
 		testCompileLoops,
 		testCompileSwap,
+		testCompleteTranslation,
 		testInstructionListOptimization,
 		testInternalProcedures,
 		testShouldTranslateToInternalProc,
