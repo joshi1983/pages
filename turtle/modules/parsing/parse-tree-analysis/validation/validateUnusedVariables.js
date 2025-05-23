@@ -3,6 +3,8 @@ import { Command } from '../../Command.js';
 import { CommandCalls } from '../CommandCalls.js';
 import { compareParseTokens } from '../compareParseTokens.js';
 import { getAllDescendentsAsArray } from '../../generic-parsing-utilities/getAllDescendentsAsArray.js';
+import { getDescendentsOfType } from '../../generic-parsing-utilities/getDescendentsOfType.js';
+import { getLastDescendentTokenOf } from '../../generic-parsing-utilities/getLastDescendentTokenOf.js';
 import { getParseTokensSorted } from '../../parse-tree-token/getParseTokensSorted.js';
 import { getTokensByType } from '../../generic-parsing-utilities/getTokensByType.js';
 import { isMutationCommand } from '../variable-data-types/isMutationCommand.js';
@@ -18,6 +20,71 @@ refCommandNames.forEach(function(primaryName) {
 	for (index = 0; index < info.args.length && info.args[index].refTypes === undefined; index++);
 	primaryNameToVarIndex.set(info.primaryName, index);
 });
+
+function isBreakCall(token) {
+	return CommandCalls.tokenMatchesPrimaryName(token, 'break');
+}
+
+function isMainProcedureInstructionList(token) {
+	return token.type === ParseTreeTokenType.LIST &&
+		token.parentNode !== null &&
+		token.parentNode.type === ParseTreeTokenType.PROCEDURE_START_KEYWORD &&
+		token.parentNode.children.indexOf(token) === 3;
+}
+
+function getLastPossibleToTokenFrom(varName, token) {
+	if (token.type === ParseTreeTokenType.PROCEDURE_END_KEYWORD &&
+	token.val.toLowerCase() === 'end')
+		return token;
+	if (isMainProcedureInstructionList(token)) {
+		if (token.nextSibling === null)
+			return getLastDescendentTokenOf(token);
+		return token.nextSibling;
+	}
+	if (token.type === ParseTreeTokenType.PARAMETERIZED_GROUP) {
+		const info = Command.getCommandInfo(token.val);
+		if (info !== undefined) {
+			if (info.primaryName === 'make' || info.primaryName === 'localmake') {
+				const firstChild = token.children[0];
+				if (firstChild !== undefined && firstChild.isStringLiteral() &&
+				firstChild.val.toLowerCase() === varName)
+					return token;
+			}
+		}
+	}
+	let next = token;
+	while (next.nextSibling === null) {
+		if (isMainProcedureInstructionList(next))
+			break;
+		if (next.parentNode === null)
+			return getLastDescendentTokenOf(next);
+		else
+			next = next.parentNode;
+	}
+	if (next.nextSibling !== null)
+		next = next.nextSibling;
+	if (next === token)
+		return token;
+	return getLastPossibleToTokenFrom(varName, next);
+}
+
+function getLastPossibleToToken(scope) {
+	let result = scope.toToken;
+	const assignToken = scope.assignToken;
+	let token = result;
+	console.log(`result = ${result}`);
+	while (token.parentNode !== null) {
+		if (token.parentNode === assignToken.parentNode) {
+			// if a break is found, return token.nextSibling.
+			if (token.nextSibling !== null &&
+			getDescendentsOfType(token, ParseTreeTokenType.PARAMETERIZED_GROUP).some(isBreakCall))
+				return getLastPossibleToTokenFrom(scope.variable.name, token.nextSibling);
+			break;
+		}
+		token = token.parentNode;
+	}
+	return result;
+}
 
 function tokenToVariableName(token) {
 	if (token.type === ParseTreeTokenType.VARIABLE_READ)
@@ -124,7 +191,8 @@ function isScopeOfInterest(varReadTokens, lastToken, proceduresStrictlyFromTree)
 			return true;
 		const fromOtherVariable = mightAffectOtherVariable(scope.assignToken);
 		let fromIndex = binarySearch(varReadTokens, compareParseTokens, scope.fromToken, true);
-		let toIndex = Math.min(varReadTokens.length - 1, binarySearch(varReadTokens, compareParseTokens, scope.toToken, true));
+		let toToken = getLastPossibleToToken(scope);
+		let toIndex = Math.min(varReadTokens.length - 1, binarySearch(varReadTokens, compareParseTokens, toToken, true));
 		for (let i = fromIndex; i <= toIndex; i++) {
 			const tokenPair = varReadTokens[i];
 			const varName = tokenToVariableName(tokenPair.token);
@@ -134,7 +202,8 @@ function isScopeOfInterest(varReadTokens, lastToken, proceduresStrictlyFromTree)
 				// If the variable is not a parameter, only a variable read matters.
 				if (scope.isParameter === false && isStrictlyVariableReadToken(tokenPair.token) === false)
 					continue;
-				if (scope.contains(tokenPair.token, tokenPair.procedure))
+				if (scope.contains(tokenPair.token, tokenPair.procedure) ||
+				compareParseTokens(tokenPair.token, toToken) <= 0)
 					return false;
 			}
 		}

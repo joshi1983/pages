@@ -99,6 +99,18 @@ end
 p
 print :x
 `, 'warn': false},
+		{'code': `to p :timeRatio
+	localmake "circles []
+	repeat 1 [
+		if :timeRatio <= 0 [
+			break ; might skip the localmake "circles [1] line.
+		]
+		localmake "circles [1]
+	]
+	if not empty? :circles [
+		print 1
+	]
+end`, 'warn': false}
 	];
 	cases.forEach(caseInfo => caseInfo.error = false);
 	// the validator should never add an error message.  Only warnings.
