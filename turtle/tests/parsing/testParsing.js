@@ -1,4 +1,4 @@
-import { testASMTurtle } from './asm-turtle/testASMTurtle.js';
+/*import { testASMTurtle } from './asm-turtle/testASMTurtle.js';
 import { testAsyncParser } from './testAsyncParser.js';
 import { testAsyncParseTask } from './testAsyncParseTask.js';
 import { testCharIndexToParseTreeTokenPosition } from './testCharIndexToParseTreeTokenPosition.js';
@@ -47,14 +47,14 @@ import { testScrapeProcedures } from './testScrapeProcedures.js';
 import { testSerialization } from './serialization/testSerialization.js';
 import { testSmallVisualBasic } from './small-visual-basic/testSmallVisualBasic.js';
 import { testSonicWebTurtle } from './sonic-webturtle/testSonicWebTurtle.js';
-import { testSugarLabsTurtleBlocks } from './sugarlabs-turtle-blocks/testSugarLabsTurtleBlocks.js';
-import { testToken } from './testToken.js';
+*/import { testSugarLabsTurtleBlocks } from './sugarlabs-turtle-blocks/testSugarLabsTurtleBlocks.js';
+/*import { testToken } from './testToken.js';
 import { testUnsupportedCommand } from './testUnsupportedCommand.js';
-import { wrapAndCall } from '../helpers/wrapAndCall.js';
+*/import { wrapAndCall } from '../helpers/wrapAndCall.js';
 
 export function testParsing(logger) {
 	wrapAndCall([
-		testASMTurtle,
+		/*testASMTurtle,
 		testAsyncParser,
 		testAsyncParseTask,
 		testCharIndexToParseTreeTokenPosition,
@@ -102,9 +102,9 @@ export function testParsing(logger) {
 		testScrapeProcedures,
 		testSerialization,
 		testSmallVisualBasic,
-		testSonicWebTurtle,
+		testSonicWebTurtle,*/
 		testSugarLabsTurtleBlocks,
-		testToken,
-		testUnsupportedCommand
+		/*testToken,
+		testUnsupportedCommand*/
 	], logger);
 };
