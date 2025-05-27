@@ -11,8 +11,8 @@ import { testColourDirectory } from './colour/testColourDirectory.js';
 import { testCommandGroups } from './command-groups/testCommandGroups.js';
 import { testCommands } from './testCommands.js';
 import { testCommandsJSON } from './commands-json/testCommandsJSON.js';
-*/import { testComponents } from './components/testComponents.js';
-/*import { testDebugging } from './debugging/testDebugging.js';
+import { testComponents } from './components/testComponents.js';
+import { testDebugging } from './debugging/testDebugging.js';
 import { testDeepEquality } from './testDeepEquality.js';
 import { testDelay } from './testDelay.js';
 import { testDrawing } from './drawing/testDrawing.js';
@@ -67,8 +67,8 @@ const tests = [
 	testCommandGroups,
 	testCommands,
 	testCommandsJSON,
-	*/testComponents,
-	/*testDebugging,
+	testComponents,
+	testDebugging,
 	testDeepEquality,
 	testDelay,
 	testDrawing,
