@@ -11,7 +11,7 @@ const absoluteMaxResult = 1000;
 export function getNumCyclesForShapeAndGradient(shape, gradient) {
 	if (gradient.spreadMethod === SpreadMethod.Pad)
 		return 1;
-	else {
+	else if (shape !== undefined) {
 		const box = shape.getBoundingBox();
 		let gradientCycleSize;
 		if (gradient instanceof RadialGradient)
