@@ -4,7 +4,6 @@ import { Colour } from '../../Colour.js';
 import { drawPath } from './canvas/drawPath.js';
 import { drawTurtle } from '../drawTurtle.js';
 import { ellipseAngleChange } from './canvas/ellipseAngleChange.js';
-import { getNumCyclesForShapeAndGradient } from '../vector/shapes/gradients/getNumCyclesForShapeAndGradient.js';
 import { LineCap } from '../vector/shapes/style/LineCap.js';
 import { LineJoinStyle } from '../vector/shapes/style/LineJoinStyle.js';
 import { processBlendModesForCanvasContextFill } from './canvas/processBlendModesForCanvasContextFill.js';
@@ -200,8 +199,7 @@ export class CanvasVector2DDrawer extends AbstractCanvasDrawer {
 				ctx.strokeStyle = penColor.to6DigitHTMLCode();
 		}
 		else {
-			const numCycles = getNumCyclesForShapeAndGradient(shape, penGradient);
-			ctx.strokeStyle = penGradient.createFromCanvas2DContext(ctx, this.width / 2, this.height / 2, numCycles);
+			ctx.strokeStyle = penGradient.createFromCanvas2DContext(ctx, this.width / 2, this.height / 2, shape);
 		}
 		ctx.lineWidth = shapeStyle.getPenWidth();
 		const lineCap = shapeStyle.getLineCap();
@@ -226,8 +224,7 @@ export class CanvasVector2DDrawer extends AbstractCanvasDrawer {
 			}
 		}
 		else {
-			const numCycles = getNumCyclesForShapeAndGradient(shape, fillGradient);
-			ctx.fillStyle = fillGradient.createFromCanvas2DContext(ctx, this.width / 2, this.height / 2, numCycles);
+			ctx.fillStyle = fillGradient.createFromCanvas2DContext(ctx, this.width / 2, this.height / 2, shape);
 		}
 	}
 }

@@ -1,3 +1,4 @@
+import { getNumCyclesForShapeAndGradient } from './getNumCyclesForShapeAndGradient.js';
 import { Gradient } from './Gradient.js';
 import { SpreadMethod } from './SpreadMethod.js';
 import { StringBuffer } from '../../../../StringBuffer.js';
@@ -16,9 +17,8 @@ export class RadialGradient extends Gradient {
 		this.radius = radius;
 	}
 
-	createFromCanvas2DContext(ctx, dx, dy, numSpreadCycles) {
-		if (typeof numSpreadCycles !== 'number')
-			numSpreadCycles = 20;
+	createFromCanvas2DContext(ctx, dx, dy, shape) {
+		const numSpreadCycles = getNumCyclesForShapeAndGradient(shape, this);
 		let radiusToUse = this.radius;
 		let focusToUse = this.focus;
 		if (this.spreadMethod !== SpreadMethod.Pad) {

@@ -1,3 +1,4 @@
+import { getNumCyclesForShapeAndGradient } from './getNumCyclesForShapeAndGradient.js';
 import { Gradient } from './Gradient.js';
 import { SpreadMethod } from './SpreadMethod.js';
 import { StringBuffer } from '../../../../StringBuffer.js';
@@ -15,9 +16,8 @@ export class LinearGradient extends Gradient {
 		this.to = to;
 	}
 
-	createFromCanvas2DContext(ctx, dx, dy, numSpreadCycles) {
-		if (numSpreadCycles === undefined)
-			numSpreadCycles = 1;
+	createFromCanvas2DContext(ctx, dx, dy, shape) {
+		let numSpreadCycles = getNumCyclesForShapeAndGradient(shape, this);
 		let from = this.from;
 		let to = this.to;
 		if (this.spreadMethod !== SpreadMethod.Pad) {
