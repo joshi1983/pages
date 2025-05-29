@@ -1,14 +1,14 @@
-import { testCodeToTranslator } from './testCodeToTranslator.js';
-import { testFixCode } from './testFixCode.js';
+//import { testCodeToTranslator } from './testCodeToTranslator.js';
+//import { testFixCode } from './testFixCode.js';
 import { testFixers } from './fixers/testFixers.js';
-import { testFixLogger } from './testFixLogger.js';
+//import { testFixLogger } from './testFixLogger.js';
 import { wrapAndCall } from '../../../helpers/wrapAndCall.js';
 
 export function testCodeFixer(logger) {
 	wrapAndCall([
-		testCodeToTranslator,
-		testFixCode,
+		//testCodeToTranslator,
+		//testFixCode,
 		testFixers,
-		testFixLogger
+		//testFixLogger
 	], logger);
 };

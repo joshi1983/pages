@@ -9,6 +9,7 @@ import { testRemoveUnneededCurvedBrackets } from './testRemoveUnneededCurvedBrac
 import { testRemoveUnusedParameters } from './testRemoveUnusedParameters.js';
 import { testSanitization } from './sanitization/testSanitization.js';
 import { testSanitizeColourString } from './testSanitizeColourString.js';
+import { testScanWithMigration } from './testScanWithMigration.js';
 import { wrapAndCall } from '../../../../../helpers/wrapAndCall.js';
 
 export function testHelpers(logger) {
@@ -24,5 +25,6 @@ export function testHelpers(logger) {
 		testRemoveUnusedParameters,
 		testSanitization,
 		testSanitizeColourString,
+		testScanWithMigration,
 	], logger);
 };
