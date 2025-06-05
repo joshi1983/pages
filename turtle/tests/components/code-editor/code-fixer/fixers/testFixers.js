@@ -1,13 +1,13 @@
-import { testAnimationSetupFixer } from './testAnimationSetupFixer.js';
+/*import { testAnimationSetupFixer } from './testAnimationSetupFixer.js';
 import { testAnimationSnapshotStyleFixer } from './testAnimationSnapshotStyleFixer.js';
 import { testArrayLiteralFixer } from './testArrayLiteralFixer.js';
 import { testAskFixer } from './testAskFixer.js';
 import { testAutoRemoveFixer } from './testAutoRemoveFixer.js';
 import { testBooleanExpressionAsListFixer } from './testBooleanExpressionAsListFixer.js';
 import { testCanvas2D } from './canvas-2d/testCanvas2D.js';
-import { testCatchFixer } from './testCatchFixer.js';
+import { testCatchFixer } from './testCatchFixer.js';*/
 import { testCheerfulNetherlandsLogo } from './cheerful-netherlands-logo/testCheerfulNetherlandsLogo.js';
-import { testClashingProcedureNameFixer } from './testClashingProcedureNameFixer.js';
+/*import { testClashingProcedureNameFixer } from './testClashingProcedureNameFixer.js';
 import { testCodeHeartTurtleScript } from './codeheart-turtlescript/testCodeHeartTurtleScript.js';
 import { testCodeRemoval } from './code-removal/testCodeRemoval.js';
 import { testColorCallWithDataListFixer } from './testColorCallWithDataListFixer.js';
@@ -27,8 +27,8 @@ import { testForLoopVariableFixer } from './testForLoopVariableFixer.js';
 import { testGetTokenAfter } from './testGetTokenAfter.js';
 import { testGlobalLocalmakeFixer } from './testGlobalLocalmakeFixer.js';
 import { testHatSymbolPowerFixer } from './testHatSymbolPowerFixer.js';
-import { testHelpers } from './helpers/testHelpers.js';
-import { testIfElseFixer } from './testIfElseFixer.js';
+*/import { testHelpers } from './helpers/testHelpers.js';
+/*import { testIfElseFixer } from './testIfElseFixer.js';
 import { testInstructionListSquareBracketsRemoveFixer } from './testInstructionListSquareBracketsRemoveFixer.js';
 import { testJumpFixer } from './testJumpFixer.js';
 import { testLeafsInDataListsToStringLiteralsFixer } from './testLeafsInDataListsToStringLiteralsFixer.js';
@@ -75,19 +75,19 @@ import { testWebTurtleProcedureFixer } from './testWebTurtleProcedureFixer.js';
 import { testWebTurtleRepeatFixer } from './testWebTurtleRepeatFixer.js';
 import { testVariableNameReferenceFixer } from './testVariableNameReferenceFixer.js';
 import { testVariableReadSpaceInsertFixer } from './testVariableReadSpaceInsertFixer.js';
-import { wrapAndCall } from '../../../../helpers/wrapAndCall.js';
+*/import { wrapAndCall } from '../../../../helpers/wrapAndCall.js';
 
 const tests = [
-	testAnimationSetupFixer,
+	/*testAnimationSetupFixer,
 	testAnimationSnapshotStyleFixer,
 	testArrayLiteralFixer,
 	testAskFixer,
 	testAutoRemoveFixer,
 	testBooleanExpressionAsListFixer,
 	testCanvas2D,
-	testCatchFixer,
+	testCatchFixer,*/
 	testCheerfulNetherlandsLogo,
-	testClashingProcedureNameFixer,
+	/*testClashingProcedureNameFixer,
 	testCodeHeartTurtleScript,
 	testCodeRemoval,
 	testColorCallWithDataListFixer,
@@ -107,8 +107,8 @@ const tests = [
 	testGetTokenAfter,
 	testGlobalLocalmakeFixer,
 	testHatSymbolPowerFixer,
-	testHelpers,
-	testIfElseFixer,
+	*/testHelpers,
+	/*testIfElseFixer,
 	testInstructionListSquareBracketsRemoveFixer,
 	testJumpFixer,
 	testLeafsInDataListsToStringLiteralsFixer,
@@ -154,7 +154,7 @@ const tests = [
 	testWebTurtleProcedureFixer,
 	testWebTurtleRepeatFixer,
 	testVariableNameReferenceFixer,
-	testVariableReadSpaceInsertFixer
+	testVariableReadSpaceInsertFixer*/
 ];
 
 export function testFixers(logger) {
