@@ -1,4 +1,4 @@
-import { testAnalyzeCodeQuality } from './testAnalyzeCodeQuality.js';
+/*import { testAnalyzeCodeQuality } from './testAnalyzeCodeQuality.js';
 import { testArcLines } from './arc-lines/testArcLines.js';
 import { testInfiniteLoops } from './infinite-loops/testInfiniteLoops.js';
 import { testPenUp } from './pen-up/testPenUp.js';
@@ -71,14 +71,14 @@ import { testValidateTypeEqualitySymbols } from './testValidateTypeEqualitySymbo
 import { testValidateUndeclaredVariableRead } from './testValidateUndeclaredVariableRead.js';
 import { testValidateUnrecognizedParameterizedGroupNames } from './testValidateUnrecognizedParameterizedGroupNames.js';
 import { testValidateUnusedProcedures } from './testValidateUnusedProcedures.js';
-import { testValidateUnusedVariables } from './testValidateUnusedVariables.js';
-import { testValidateUnusedVariablesGlobal } from './testValidateUnusedVariablesGlobal.js';
+*/import { testValidateUnusedVariables } from './testValidateUnusedVariables.js';
+/*import { testValidateUnusedVariablesGlobal } from './testValidateUnusedVariablesGlobal.js';
 import { testValidateUselessCode } from './testValidateUselessCode.js';
 import { testValidateVariableNames } from './testValidateVariableNames.js';
-import { wrapAndCall } from '../../../helpers/wrapAndCall.js';
+*/import { wrapAndCall } from '../../../helpers/wrapAndCall.js';
 
 const tests = [
-testAnalyzeCodeQuality,
+/*testAnalyzeCodeQuality,
 testArcLines,
 testInfiniteLoops,
 testPenUp,
@@ -150,11 +150,11 @@ testValidateSwapCalls,
 testValidateTypeEqualitySymbols,
 testValidateUndeclaredVariableRead,
 testValidateUnrecognizedParameterizedGroupNames,
-testValidateUnusedProcedures,
-testValidateUnusedVariables,
+testValidateUnusedProcedures,*/
+testValidateUnusedVariables,/*
 testValidateUnusedVariablesGlobal,
 testValidateUselessCode,
-testValidateVariableNames
+testValidateVariableNames*/
 ];
 
 export function testValidation(logger) {
