@@ -3,6 +3,7 @@ import { processBasicTo } from './processBasicTo.js';
 import { processKeywords } from './processKeywords.js';
 import { processOperators } from './processOperators.js';
 import { processRemoveInMigration } from './processRemoveInMigration.js';
+import { processRepeatToQBasic } from './processRepeatToQBasic.js';
 import { scan } from '../qbasic/scanning/scan.js';
 import { scanTokensToCode } from './scanTokensToCode.js';
 
@@ -22,9 +23,12 @@ if (migrationData.operators !== undefined) {
 
 export function translateBBCBasicToQBasic(code) {
 	const scanTokens = scan(code);
+	processRepeatToQBasic(scanTokens);
 	processRemoveInMigration(scanTokens, migrationData);
 	processKeywords(scanTokens, migrationData);
 	processBasicTo(scanTokens, functionsMap);
 	processOperators(scanTokens, operatorsMap);
-	return scanTokensToCode(scanTokens);
+	const result = scanTokensToCode(scanTokens);
+	console.log(`returning ${result}`);
+	return result;
 };

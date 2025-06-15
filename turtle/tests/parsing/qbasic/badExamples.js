@@ -9,6 +9,10 @@ badExamples.push(
 'do while',
 'do until',
 'do loop',
+`do
+220 T = TIME - T
+290 loop while not FALSE`,
+'DO 180 count = 1',
 'end def',
 'end function',
 'end if',
@@ -41,7 +45,7 @@ case 1 to print "hi"
 end select`,
 'sub sub',
 `SUB sub()
-    SELECT CASE curLevel`
+    SELECT CASE curLevel`,
 );
 
 export { badExamples };

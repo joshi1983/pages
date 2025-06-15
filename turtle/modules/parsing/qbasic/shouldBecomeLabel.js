@@ -5,6 +5,7 @@ import { ParseTreeTokenType } from './ParseTreeTokenType.js';
 
 const typesNotExpectingNumbers = new Set([
 	ParseTreeTokenType.CODE_BLOCK,
+	ParseTreeTokenType.DO,
 	ParseTreeTokenType.LET,
 	ParseTreeTokenType.TREE_ROOT
 ]);
