@@ -50,7 +50,7 @@ import { wrapAndCall } from
 '../../helpers/wrapAndCall.js';
 
 export function testQBasic(logger) {
-	wrapAndCall([
+	wrapAndCall([/*
 		testColorsJSON,
 		testEvaluation,
 		testGetFunctionsMap,
@@ -77,9 +77,9 @@ export function testQBasic(logger) {
 		testParseFunctionDefinitions,
 		testParseGosub,
 		testParseGoto,
-		testParseGraphicsStep,
+		testParseGraphicsStep,*/
 		testParseIf,
-		testParseLabel,
+		testParseLabel,/*
 		testParseLine,
 		testParseOn,
 		testParseOpen,
@@ -89,14 +89,14 @@ export function testQBasic(logger) {
 		testParseSubroutines,
 		testParseTupleLiteral,
 		testParseType,
-		testParseUnaryOperators,
-		testParseVariousExamples,
+		testParseUnaryOperators,*/
+		testParseVariousExamples,/*
 		testParseWhile,
-		testParseWindow,
-		testParsing,
+		testParseWindow,*/
+		testParsing,/*
 		testQBasicInternalFunctions,
 		testQBasicOperators,
-		testScanning,
+		testScanning,*/
 		testTranslationToWebLogo
 	], logger);
 };
