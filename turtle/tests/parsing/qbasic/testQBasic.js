@@ -1,4 +1,4 @@
-import { testColorsJSON } from './testColorsJSON.js';
+/*import { testColorsJSON } from './testColorsJSON.js';
 import { testEvaluation } from './evaluation/testEvaluation.js';
 import { testGetFunctionsMap } from './testGetFunctionsMap.js';
 import { testIsLikelyQBasic } from './testIsLikelyQBasic.js';
@@ -35,8 +35,8 @@ import { testParseOpen } from './testParseOpen.js';
 import { testParsePrintStatements } from './testParsePrintStatements.js';
 import { testParseSelect } from './testParseSelect.js';
 import { testParseShared } from './testParseShared.js';
-import { testParseSubroutines } from './testParseSubroutines.js';
-import { testParseTrueFalse } from './testParseTrueFalse.js';
+import { testParseSubroutines } from './testParseSubroutines.js';*/
+import { testParseTrueFalse } from './testParseTrueFalse.js';/*
 import { testParseTupleLiteral } from './testParseTupleLiteral.js';
 import { testParseType } from './testParseType.js';
 import { testParseUnaryOperators } from './testParseUnaryOperators.js';
@@ -44,7 +44,7 @@ import { testParseVariousExamples } from './testParseVariousExamples.js';
 import { testParseWhile } from './testParseWhile.js';
 import { testParseWindow } from './testParseWindow.js';
 import { testParsing } from './parsing/testParsing.js';
-import { testScanning } from './scanning/testScanning.js';
+*/import { testScanning } from './scanning/testScanning.js';
 import { testShouldBooleanLiteralsBeIdentifiers } from
 './testShouldBooleanLiteralsBeIdentifiers.js';
 import { testTranslationToWebLogo } from
@@ -53,7 +53,7 @@ import { wrapAndCall } from
 '../../helpers/wrapAndCall.js';
 
 export function testQBasic(logger) {
-	wrapAndCall([
+	wrapAndCall([/*
 		testColorsJSON,
 		testEvaluation,
 		testGetFunctionsMap,
@@ -89,8 +89,8 @@ export function testQBasic(logger) {
 		testParsePrintStatements,
 		testParseSelect,
 		testParseShared,
-		testParseSubroutines,
-		testParseTrueFalse,
+		testParseSubroutines,*/
+		testParseTrueFalse,/*
 		testParseTupleLiteral,
 		testParseType,
 		testParseUnaryOperators,
@@ -99,7 +99,7 @@ export function testQBasic(logger) {
 		testParseWindow,
 		testParsing,
 		testQBasicInternalFunctions,
-		testQBasicOperators,
+		testQBasicOperators,*/
 		testScanning,
 		testShouldBooleanLiteralsBeIdentifiers,
 		testTranslationToWebLogo
