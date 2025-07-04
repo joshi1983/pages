@@ -25,7 +25,11 @@ print A `},
 		{'in': 'print 10', 'out': 'print 10 '},
 		{'in': 'print &10', 'out': 'print &H10 '},
 		{'in': 'print ~&10', 'out': 'print "10" '},
-		{'in': 'print ~10', 'out': 'print hex$ 10 '}
+		{'in': 'print ~10', 'out': 'print hex$ 10 '},
+		{'in': `DEF PROC_p(i)
+IF i=0 ENDPROC
+print "hi"
+ENDPROC`, 'outContains': 'IF i=0 then'}
 	];
 	testInOutPairs(cases, translateBBCBasicToQBasic, logger);
 };
