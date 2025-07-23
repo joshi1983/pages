@@ -1,5 +1,3 @@
-import { isLikelyAppleSoftBasic } from
-'../../../parsing/basic/applesoft-basic/isLikelyAppleSoftBasic.js';
 import { isLikelyASMTurtle } from
 '../../../parsing/asm-turtle/isLikelyASMTurtle.js';
 import { isLikelyBBCBasic } from
@@ -36,8 +34,6 @@ import { logo3DToWebLogo } from './fixers/logo-3d/logo3DToWebLogo.js';
 import { logoInterpreterToWebLogo } from './fixers/logo-interpreter/logoInterpreterToWebLogo.js';
 import { papertToWebLogo } from './fixers/papert/papertToWebLogo.js';
 import { terrapinToWebLogo } from './fixers/terrapin/terrapinToWebLogo.js';
-import { translateAppleSoftBasicToWebLogo } from
-'../../../parsing/basic/applesoft-basic/translation-to-weblogo/translateAppleSoftBasicToWebLogo.js';
 import { translate as translateASMTurtle } from
 '../../../parsing/asm-turtle/translation-to-weblogo/translate.js';
 import { translateCheerfulToWebLogo } from
@@ -67,7 +63,6 @@ let isPythonParserLoaded = false;
 asyncInit().then(() => isPythonParserLoaded = true);
 
 const translatorPairs = new Map([
-	[isLikelyAppleSoftBasic, [translateAppleSoftBasicToWebLogo, false]],
 	[isLikelyASMTurtle, [translateASMTurtle, false]],
 	[isLikelyBBCBasic, [translateBBCBasicToWebLogo, false]],
 	[isLikelyCanvas2D, [translateCanvas2DToWebLogo, false]],

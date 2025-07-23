@@ -1,5 +1,3 @@
-import { applesoftExamples } from
-'../../../helpers/parsing/basic/applesoftExamples.js';
 import { asmTurtleExamples } from
 '../../../helpers/parsing/asmTurtleExamples.js';
 import { bbcBasicExamples } from
@@ -61,8 +59,6 @@ import { terrapinExamples } from
 import { terrapinToWebLogo } from
 '../../../../modules/components/code-editor/code-fixer/fixers/terrapin/terrapinToWebLogo.js';
 import { testInOutPairs } from '../../../helpers/testInOutPairs.js';
-import { translateAppleSoftBasicToWebLogo } from
-'../../../../modules/parsing/basic/applesoft-basic/translation-to-weblogo/translateAppleSoftBasicToWebLogo.js';
 import { translate as translateASMTurtle } from
 '../../../../modules/parsing/asm-turtle/translation-to-weblogo/translate.js';
 import { translateBBCBasicToWebLogo } from
@@ -117,7 +113,6 @@ const nonWebLogoTranslators = new Set([
 	logo3DToWebLogo,
 	papertToWebLogo,
 	terrapinToWebLogo,
-	translateAppleSoftBasicToWebLogo,
 	translateASMTurtle,
 	translateBBCBasicToWebLogo,
 	translateCanvas2d,
@@ -162,7 +157,6 @@ const filteredCodeHeartTurtleScriptExamples = codeHeartTurtleScriptExamples.filt
 	}
 });
 
-addCases(applesoftExamples, translateAppleSoftBasicToWebLogo, false);
 addCases(asmTurtleExamples, translateASMTurtle, false);
 addCases(bbcBasicExamples, translateBBCBasicToWebLogo, false);
 addCases(cheerfulNetherlandsLogoExamples, translateCheerfulToWebLogo, false);
