@@ -7,6 +7,7 @@ import { PushFromStackInstruction } from '../../../execution/instructions/PushFr
 import { pushFromStackInstructionToJavaScript } from './pushFromStackInstructionToJavaScript.js';
 import { PushInstruction } from '../../../execution/instructions/PushInstruction.js';
 import { pushInstructionToJavaScript } from './pushInstructionToJavaScript.js';
+import { shouldValueBeTranslatedToJavaScriptCode } from './shouldValueBeTranslatedToJavaScriptCode.js';
 import { unaryOperatorToJavaScript } from './unaryOperatorToJavaScript.js';
 import { UnaryOperatorInstruction } from '../../../execution/instructions/UnaryOperatorInstruction.js';
 import { variableReadToJavaScript } from './variableReadToJavaScript.js';
@@ -28,8 +29,10 @@ export function instructionToJavaScript(instructions, index, info, compileOption
 		code = wrapResult.code;
 		namedFunctionsMap = wrapResult.namedFunctionsMap;
 	}
-	else if (instruction instanceof PushInstruction)
-		code = pushInstructionToJavaScript(instruction);
+	else if (instruction instanceof PushInstruction) {
+		if (shouldValueBeTranslatedToJavaScriptCode(instruction.value))
+			code = pushInstructionToJavaScript(instruction);
+	}
 	else if (instruction instanceof PushFromStackInstruction)
 		code = pushFromStackInstructionToJavaScript(instruction);
 	else if (instruction instanceof UnaryOperatorInstruction) {

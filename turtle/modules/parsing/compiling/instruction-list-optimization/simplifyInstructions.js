@@ -16,6 +16,9 @@ export function simplifyInstructions(instructions, parameters, isForProcedure, c
 	if (typeof compileOptions.translateToJavaScript !== 'boolean')
 		throw new Error('compileOptions.translateToJavaScript must be either true or false.  Got: ' + compileOptions.translateToJavaScript);
 
+	const startTime = Date.now();
+	let printCount = 0;
+	let i = 0;
 	let previousLength = instructions.length + 1;
 	// + 1 to make the comparison condition true for first iteration.
 	while (previousLength !== instructions.length) {
@@ -33,7 +36,18 @@ export function simplifyInstructions(instructions, parameters, isForProcedure, c
 		removeAlwaysSkippedInstructions(instructions);
 		removeRepeatZeroIterationCheck(instructions);
 		optimizeOptionalForStepCalculation(instructions);
+		i++;
+		const duration1 = Date.now() - startTime;
+		if (duration1 > 1000 && printCount < 3) {
+			printCount++;
+			console.log(`In while loop, i=${i}, duration1=${duration1}`);
+		}
 	}
-	if (compileOptions.translateToJavaScript === true)
+	if (compileOptions.translateToJavaScript === true) {
 		convertInstructionsToJavaScript(instructions, parameters, isForProcedure, compileOptions);
+		const duration2 = Date.now() - startTime;
+		if (duration2 > 1000) {
+			console.log(`after convertInstructionsToJavaScript, duration2=${duration2}`);
+		}
+	}
 };
