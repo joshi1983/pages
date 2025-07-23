@@ -23,6 +23,7 @@ export function fixCode(code, fixLogger, proceduresMap, tree, extraFixers, first
 	if (tree !== undefined && !(tree instanceof ParseTreeToken))
 		throw new Error('tree must either be undefined or be a ParseTreeToken.  Not: ' + tree);
 
+	let startTime = Date.now();
 	let allFixers_;
 	if (extraFixers instanceof Array) {
 		if (firstFixers !== undefined)
@@ -34,5 +35,7 @@ export function fixCode(code, fixLogger, proceduresMap, tree, extraFixers, first
 	}
 	else
 		allFixers_ = allFixers;
-	return wrappedFix(code, runAllFixers(allFixers_), fixLogger, proceduresMap, tree);
+	const result = wrappedFix(code, runAllFixers(allFixers_), fixLogger, proceduresMap, tree);
+	console.log(`Delay is ${Date.now() - startTime}ms`);
+	return result;
 };

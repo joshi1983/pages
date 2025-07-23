@@ -82,6 +82,7 @@ const translatorPairs = new Map([
 const defaultResult = [(code) => code, false];
 
 export function codeToTranslator(code) {
+	let startTime = Date.now();
 	let result = defaultResult;
 	if (isLikelyPythonCode(code) && isPythonParserLoaded) {
 		result = [translatePythonCodeToWebLogo, false];
@@ -96,10 +97,13 @@ export function codeToTranslator(code) {
 			Ideally, only 1 category or classification will be matched so we
 			can be pretty confident that the changes are appropriate.
 			*/
-			if (result !== defaultResult)
+			if (result !== defaultResult) {
+				console.log(`delay is ${Date.now() - startTime}ms`);
 				return defaultResult;
+			}
 			result = resultPair;
 		}
 	}
+	console.log(`delay is ${Date.now() - startTime}ms`);
 	return result;
 };
