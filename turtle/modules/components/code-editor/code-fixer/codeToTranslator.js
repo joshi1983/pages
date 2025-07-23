@@ -96,6 +96,7 @@ const defaultResult = [(code) => code, false];
 
 export function codeToTranslator(code) {
 	code = StringUtils.sanitizeLineBreaks(code);
+	let startTime = Date.now();
 	let result = defaultResult;
 	if (isLikelyPythonCode(code)) {
 		result = [newTranslatePythonCodeToWebLogo, false];
@@ -110,10 +111,13 @@ export function codeToTranslator(code) {
 			Ideally, only 1 category or classification will be matched so we
 			can be pretty confident that the changes are appropriate.
 			*/
-			if (result !== defaultResult)
+			if (result !== defaultResult) {
+				console.log(`delay is ${Date.now() - startTime}ms`);
 				return defaultResult;
+			}
 			result = resultPair;
 		}
 	}
+	console.log(`delay is ${Date.now() - startTime}ms`);
 	return result;
 };
