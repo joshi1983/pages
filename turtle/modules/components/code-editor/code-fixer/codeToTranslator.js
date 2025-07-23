@@ -1,5 +1,3 @@
-import { isLikelyAppleSoftBasic } from
-'../../../parsing/basic/applesoft-basic/isLikelyAppleSoftBasic.js';
 import { isLikelyASMTurtle } from
 '../../../parsing/asm-turtle/isLikelyASMTurtle.js';
 import { isLikelyBBCBasic } from
@@ -43,8 +41,6 @@ import { logoInterpreterToWebLogo } from './fixers/logo-interpreter/logoInterpre
 import { papertToWebLogo } from './fixers/papert/papertToWebLogo.js';
 import { StringUtils } from '../../../StringUtils.js';
 import { terrapinToWebLogo } from './fixers/terrapin/terrapinToWebLogo.js';
-import { translateAppleSoftBasicToWebLogo } from
-'../../../parsing/basic/applesoft-basic/translation-to-weblogo/translateAppleSoftBasicToWebLogo.js';
 import { translate as translateASMTurtle } from
 '../../../parsing/asm-turtle/translation-to-weblogo/translate.js';
 import { translateCheerfulToWebLogo } from
@@ -77,7 +73,6 @@ import { newTranslatePythonCodeToWebLogo } from
 '../../../parsing/python-parsing/newTranslatePythonCodeToWebLogo.js';
 
 const translatorPairs = new Map([
-	[isLikelyAppleSoftBasic, [translateAppleSoftBasicToWebLogo, false]],
 	[isLikelyASMTurtle, [translateASMTurtle, false]],
 	[isLikelyBBCBasic, [translateBBCBasicToWebLogo, false]],
 	[isLikelyCanvas2D, [translateCanvas2DToWebLogo, false]],
