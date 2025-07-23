@@ -28,6 +28,7 @@ function shouldRemovePop(instructions, i) {
 }
 
 export function convertInstructionsToJavaScript(instructions, parameters, isForProcedure, compileOptions) {
+	const startTime = Date.now();
 	for (let i = instructions.length - 1; i >= 0; i--) {
 		const instruction = instructions[i];
 		if (isPushClusterInstruction(instruction)) {
@@ -70,12 +71,24 @@ export function convertInstructionsToJavaScript(instructions, parameters, isForP
 			}
 		}
 	}
+	const afterForDuration = Date.now() - startTime;
+	if (afterForDuration > 1000) {
+		console.log(`afterForDuration = ${afterForDuration}ms`);
+	}
 	if (compileOptions.mergeJavaScriptInstructions === true) {
 		convertExtraInstructionsToJavaScript(instructions, isForProcedure, compileOptions);
 		mergeJavaScriptInstructions(instructions);
+		const afterForMergeJavaScriptInstructions = Date.now() - startTime;
+		if (afterForMergeJavaScriptInstructions > 1000) {
+			console.log(`afterForMergeJavaScriptInstructions = ${afterForMergeJavaScriptInstructions}ms`);
+		}
 	}
 	if (compileOptions.parsedOptimize) {
 		parsedOptimizeInstructions(instructions, isForProcedure);
+		const afterparsedOptimizeInstructionsDuration = Date.now() - startTime;
+		if (afterparsedOptimizeInstructionsDuration > 1000) {
+			console.log(`afterparsedOptimizeInstructionsDuration = ${afterparsedOptimizeInstructionsDuration}ms`);
+		}
 		if (compileOptions.forProduction) {
 			let numInstructions;
 			while (true) {
@@ -85,9 +98,22 @@ export function convertInstructionsToJavaScript(instructions, parameters, isForP
 				if (numInstructions === instructions.length)
 					break;
 			}
-			if (compileOptions.mergeJavaScriptInstructions)
+			const afterWhileDuration = Date.now() - startTime;
+			if (afterWhileDuration > 1000) {
+				console.log(`afterWhileDuration = ${afterWhileDuration}ms`);
+			}
+			if (compileOptions.mergeJavaScriptInstructions) {
 				mergeJavaScriptInstructions(instructions);
+				const afterWhileDuration = Date.now() - startTime;
+				if (afterWhileDuration > 1000) {
+					console.log(`afterWhileDuration = ${afterWhileDuration}ms`);
+				}
+			}
 			parsedOptimizeInstructions(instructions, isForProcedure);
+			const afterparsedOptimizeInstructions = Date.now() - startTime;
+			if (afterparsedOptimizeInstructions > 1000) {
+				console.log(`afterparsedOptimizeInstructions = ${afterparsedOptimizeInstructions}ms`);
+			}
 		}
 		finalOptimizeInstructions(instructions, isForProcedure);
 	}

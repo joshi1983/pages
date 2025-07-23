@@ -5,6 +5,8 @@ import { callCommandInstructionToJavaScriptInstruction } from './callCommandInst
 import { isLocalVariable } from './isLocalVariable.js';
 import { PushInstruction } from '../../../execution/instructions/PushInstruction.js';
 import { pushInstructionToJavaScriptInstruction } from './pushInstructionToJavaScriptInstruction.js';
+import { shouldValueBeTranslatedToJavaScriptCode } from
+'./shouldValueBeTranslatedToJavaScriptCode.js';
 import { unaryOperatorInstructionToJavaScriptInstruction } from './unaryOperatorInstructionToJavaScriptInstruction.js';
 import { UnaryOperatorInstruction } from '../../../execution/instructions/UnaryOperatorInstruction.js';
 import { variableReadInstructionToJavaScriptInstruction } from './variableReadInstructionToJavaScriptInstruction.js';
@@ -19,7 +21,8 @@ export function instructionToJavaScriptInstruction(instructions, index, info, co
 	else if (instruction instanceof CallCommandInstruction) {
 		return callCommandInstructionToJavaScriptInstruction(instruction, false, compileOptions);
 	}
-	else if (instruction instanceof PushInstruction)
+	else if (instruction instanceof PushInstruction &&
+	shouldValueBeTranslatedToJavaScriptCode(instruction.value))
 		return pushInstructionToJavaScriptInstruction(instruction);
 	else if (instruction instanceof UnaryOperatorInstruction)
 		return unaryOperatorInstructionToJavaScriptInstruction(instruction);

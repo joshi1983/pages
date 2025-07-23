@@ -13,6 +13,7 @@ function mergeJavaScriptInstructionsCluster(instructions, index) {
 		minI = rigidIndexes[rigidIndexes.length - 1];
 	if (minI === index)
 		return;
+	const startTime = Date.now();
 	let code = '';
 	let i;
 	const namedFunctionsMap = new Map();
@@ -36,8 +37,15 @@ function mergeJavaScriptInstructionsCluster(instructions, index) {
 			break;
 		}
 	}
+	const afterForLoopDuration = Date.now() - startTime;
+	if (afterForLoopDuration > 1000)
+		console.log(`afterForLoopDuration took ${afterForLoopDuration}ms. index=${index}`);
 	if (i < index - 1) {
+		const preSanitizedCode = code;
 		code = sanitizeMergedJS(code);
+		const aftersanitizeMergedJSDuration = Date.now() - startTime;
+		if (aftersanitizeMergedJSDuration > 1000)
+			console.log(`aftersanitizeMergedJSDuration took ${aftersanitizeMergedJSDuration}ms. index=${index}, code=${code}, preSanitizedCode=${preSanitizedCode}`);
 		const newInstruction = new JavaScriptInstruction(code, instructions[i + 1].parseTreeToken, namedFunctionsMap);
 		instructions[i + 1] = newInstruction;
 		removeInstructions(instructions, i + 2, index - i - 1);
