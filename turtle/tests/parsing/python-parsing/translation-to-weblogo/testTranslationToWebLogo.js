@@ -3,6 +3,8 @@ import { testAssignmentTranslation } from './testAssignmentTranslation.js';
 import { testBinaryOperatorTranslation } from './testBinaryOperatorTranslation.js';
 import { testConstantTranslation } from './testConstantTranslation.js';
 import { testDiscardedCodeTranslation } from './testDiscardedCodeTranslation.js';
+import { testExecuteLiteralValues } from './testExecuteLiteralValues.js';
+import { testExecuteOperators } from './testExecuteOperators.js';
 import { testForLoopTranslation } from './testForLoopTranslation.js';
 import { testFunctionCallTranslation } from './testFunctionCallTranslation.js';
 import { testFunctionDefinitionTranslation } from './testFunctionDefinitionTranslation.js';
@@ -24,6 +26,8 @@ export function testTranslationToWebLogo(logger) {
 		testBinaryOperatorTranslation,
 		testConstantTranslation,
 		testDiscardedCodeTranslation,
+		testExecuteLiteralValues,
+		testExecuteOperators,
 		testForLoopTranslation,
 		testFunctionCallTranslation,
 		testFunctionDefinitionTranslation,
