@@ -1,12 +1,16 @@
 import { ArrayUtils } from '../../../modules/ArrayUtils.js';
+import { AsyncParser } from '../../../modules/parsing/AsyncParser.js';
+import { AsyncParseTask } from '../../../modules/parsing/AsyncParseTask.js';
 import { compile } from '../../../modules/parsing/compile.js';
 import { JavaScriptInstruction } from '../../../modules/parsing/execution/instructions/JavaScriptInstruction.js';
+import { LogoParser } from '../../../modules/parsing/LogoParser.js';
+import { prefixWrapper } from '../../helpers/prefixWrapper.js';
 import { ProgressIndicator } from '../../helpers/ProgressIndicator.js';
 import { processParseTestCases } from './processParseTestCases.js';
-import { ScriptExampleDisplayRepository } from '../../../modules/file/file-load-example/ScriptExampleDisplayRepository.js';
 import { TestParseLogger } from '../../helpers/TestParseLogger.js';
 import { ZippedExamples } from '../../../modules/file/file-load-example/ZippedExamples.js';
-await ZippedExamples.asyncInit();
+await LogoParser.asyncInit();
+const parser = new AsyncParser(true);
 
 const compileOptions = {
 	'forProduction': true,
@@ -35,30 +39,29 @@ export async function testParseJavaScriptFromExamples(logger) {
 	const cases = [];
 	const indicator = new ProgressIndicator('testParseJavaScriptFromExamples');
 	logger.indicators.push(indicator);
-	indicator.setMessage('Waiting for all trees to be available');
-	const allDisplaysMap = await ScriptExampleDisplayRepository.allTreesAvailable();
+	indicator.setMessage('Waiting for all code to be available');
+	await ZippedExamples.asyncInit();
 	indicator.setMessage('All trees available');
-	if (!(allDisplaysMap instanceof Map))
-		logger(`Expected to resolve to a Map but found ${allDisplaysMap}`);
 	let i = 0;
-	for (const [url, display] of allDisplaysMap) {
+	const filenames = ZippedExamples.getFilenames();
+	for (const filename of filenames) {
 		const proceduresMap = new Map();
-		const code = ZippedExamples.getContentForFilename(display.url);
+		const code = ZippedExamples.getContentForFilename(filename);
 		if (typeof code !== 'string') {
-			indicator.setMessage(`Failed because a non-string code was found at url ${url}`);
+			indicator.setMessage(`Failed because a non-string code was found at filename ${filename}`);
 			indicator.completed();
-			throw new Error(`display.code expected to be a string but got ${code}. url=${url}`);
+			throw new Error(`display.code expected to be a string but got ${code}. filename=${filename}`);
 		}
-		const parseLogger = new TestParseLogger(logger, code);
-		display.parsePromise.then(function() {
-			const program = compile(code, display.tree, parseLogger, new Map(),
-				compileOptions, proceduresMap);
-			const jsInstructions = getAllJSInstructions(program);
-			ArrayUtils.pushAll(cases, jsInstructions.map(jsInstructionToCaseInfo));
-			i++;
-			indicator.setProgressRatio(i / allDisplaysMap.size);
-			indicator.setMessage(`Processed ${url} ${i} of ${allDisplaysMap.size}`);
-		});
+		const plogger = prefixWrapper(`File: ${filename}`, logger);
+		const parseLogger = new TestParseLogger(plogger, code);
+		const tree = await parser.parse(code, AsyncParseTask.HIGH_PRIORITY, parseLogger, proceduresMap);
+		const program = compile(code, tree, parseLogger, new Map(),
+			compileOptions, proceduresMap);
+		const jsInstructions = getAllJSInstructions(program);
+		ArrayUtils.pushAll(cases, jsInstructions.map(jsInstructionToCaseInfo));
+		i++;
+		indicator.setProgressRatio(i / filenames.length);
+		indicator.setMessage(`Processed ${filename} ${i} of ${filenames.length}`);
 	}
 	indicator.completed();
 	processParseTestCases(cases, logger);
