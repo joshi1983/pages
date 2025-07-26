@@ -54,6 +54,8 @@ export function testFunctionCallTranslation(logger) {
 		{'in': 'import math\nprint math.cos(1)', 'out': 'print radCos 1'},
 		{'in': 'import math\nprint math.sin(1)', 'out': 'print radSin 1'},
 		{'in': 'import math\nprint math.tan(1)', 'out': 'print radTan 1'},
+		{'in': 'hsv_to_rgb(h, 1, 1)', 'outContains': 'pyHSVToRGB :h 1 1'},
+		{'in': 'color(hsv_to_rgb(h, 1, 1))', 'outContains': 'pyHSVToRGB :h 1 1'}
 	];
 	processTranslationTestCases(cases, logger);
 };

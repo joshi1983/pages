@@ -1,8 +1,8 @@
 /*import { testASMTurtle } from './asm-turtle/testASMTurtle.js';
 import { testAsyncParser } from './testAsyncParser.js';
 import { testAsyncParseTask } from './testAsyncParseTask.js';
-*/import { testBasic } from './basic/testBasic.js';
-/*import { testCharIndexToParseTreeTokenPosition } from './testCharIndexToParseTreeTokenPosition.js';
+import { testBasic } from './basic/testBasic.js';
+import { testCharIndexToParseTreeTokenPosition } from './testCharIndexToParseTreeTokenPosition.js';
 import { testCommandClass } from './testCommandClass.js';
 import { testCompileCodeUsingInternalProc } from './testCompileCodeUsingInternalProc.js';
 import { testCompiling } from './compiling/testCompiling.js';
@@ -39,8 +39,8 @@ import { testParseTreeTokenDirectory } from './parse-tree-token/testParseTreeTok
 import { testPovRay } from './pov-ray/testPovRay.js';
 import { testProcedure } from './testProcedure.js';
 import { testProcessing } from './processing/testProcessing.js';
-import { testPythonParsing } from './python-parsing/testPythonParsing.js';
-import { testScanner } from './testScanner.js';
+*/import { testPythonParsing } from './python-parsing/testPythonParsing.js';
+/*import { testScanner } from './testScanner.js';
 import { testScanningDirectory } from './scanning/testScanningDirectory.js';
 import { testScanVariousExamples } from './testScanVariousExamples.js';
 import { testScrapeProcedures } from './testScrapeProcedures.js';
@@ -56,8 +56,8 @@ export function testParsing(logger) {
 		/*testASMTurtle,
 		testAsyncParser,
 		testAsyncParseTask,
-		*/testBasic,
-		/*testCharIndexToParseTreeTokenPosition,
+		testBasic,
+		testCharIndexToParseTreeTokenPosition,
 		testCommandClass,
 		testCompileCodeUsingInternalProc,
 		testCompiling,
@@ -94,8 +94,8 @@ export function testParsing(logger) {
 		testPovRay,
 		testProcedure,
 		testProcessing,
-		testPythonParsing,
-		testScanner,
+		*/testPythonParsing,
+		/*testScanner,
 		testScanningDirectory,
 		testScanVariousExamples,
 		testScrapeProcedures,

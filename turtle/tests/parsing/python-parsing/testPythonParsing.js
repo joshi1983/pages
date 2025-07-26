@@ -1,4 +1,4 @@
-import { testColours } from './testColours.js';
+/*import { testColours } from './testColours.js';
 import { testColoursTXT } from './testColoursTXT.js';
 import { testIsLikelyPythonCode } from './testIsLikelyPythonCode.js';
 import { testParse } from './testParse.js';
@@ -11,12 +11,12 @@ import { testParseWithParseTreeTokenTypes } from './testParseWithParseTreeTokenT
 import { testParseVariousPythonScriptsWithoutJavaScriptError } from './testParseVariousPythonScriptsWithoutJavaScriptError.js';
 import { testPythonTurtleJSON } from './testPythonTurtleJSON.js';
 import { testRefactoring } from './refactoring/testRefactoring.js';
-import { testTranslationToWebLogo } from './translation-to-weblogo/testTranslationToWebLogo.js';
+*/import { testTranslationToWebLogo } from './translation-to-weblogo/testTranslationToWebLogo.js';
 import { wrapAndCall } from '../../helpers/wrapAndCall.js';
 
 export function testPythonParsing(logger) {
 	wrapAndCall([
-		testColours,
+		/*testColours,
 		testColoursTXT,
 		testIsLikelyPythonCode,
 		testParse,
@@ -28,7 +28,7 @@ export function testPythonParsing(logger) {
 		testParseWithParseTreeTokenTypes,
 		testParseVariousPythonScriptsWithoutJavaScriptError,
 		testPythonTurtleJSON,
-		testRefactoring,
+		testRefactoring,*/
 		testTranslationToWebLogo
 	], logger);
 };
