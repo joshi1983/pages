@@ -12,7 +12,7 @@ import { testInOutPairs } from
 const nonExamples = [];
 const arrays = [povRayExamples, processingExamples];
 for (const array of arrays) {
-	ArrayUtils.pushAll(nonExamples, nonExamples);
+	ArrayUtils.pushAll(nonExamples, array);
 }
 
 export function testIsLikelyHPGL(logger) {
