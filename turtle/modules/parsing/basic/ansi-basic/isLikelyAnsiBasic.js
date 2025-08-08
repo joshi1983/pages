@@ -23,6 +23,12 @@ const likelyExpressions = [
 /([\s:]|^)PLOT[ \t]+LINES[ \t]*:/i,
 /([\s:]|^)SET[ \t]+LINE[ \t]+COLOR[ \t]+/i,
 /([\s:]|^)SET[ \t]+WINDOW[ \t]+\d+[ \t]*,[ \t]*\d+[ \t]*,[ \t]*\d+[ \t]*,[ \t]*\d+/i,
+
+// indicators of DECIMAL BASIC
+// We're considering DECIMAL BASIC to be a version of ANSI BASIC.
+/(\n|^)[ \t]*(\d+[ \t]+)?external[ \t]+picture[ \t]+[a-z_]/i,
+/(\n|^)[ \t]*(\d+[ \t]+)?end[ \t]+picture(\s|$)/i,
+/(\n|^)[ \t]*(\d+[ \t]+)?option[ \t]+angle[ \t]+degrees(\s|$)/i
 ];
 
 export function isLikelyAnsiBasic(code) {
