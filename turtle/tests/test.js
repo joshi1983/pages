@@ -16,8 +16,8 @@ import { testDebugging } from './debugging/testDebugging.js';
 import { testDeepEquality } from './testDeepEquality.js';
 import { testDelay } from './testDelay.js';
 import { testDrawing } from './drawing/testDrawing.js';
-import { testDrawingMenu } from './drawing-menu/testDrawingMenu.js';
-import { testEqualWithinThreshold } from './testEqualWithinThreshold.js';
+*/import { testDrawingMenu } from './drawing-menu/testDrawingMenu.js';
+/*import { testEqualWithinThreshold } from './testEqualWithinThreshold.js';
 import { testExceptionToString } from './testExceptionToString.js';
 import { testFetchBlob } from './testFetchBlob.js';
 import { testFile } from './file/testFile.js';
@@ -72,8 +72,8 @@ const tests = [
 	testDeepEquality,
 	testDelay,
 	testDrawing,
-	testDrawingMenu,
-	testEqualWithinThreshold,
+	*/testDrawingMenu,
+	/*testEqualWithinThreshold,
 	testExceptionToString,
 	testFetchBlob,
 	testFile,
