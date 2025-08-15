@@ -165,6 +165,18 @@ function testReplacePairs(logger) {
 	testInOutPairs(cases, StringUtils.replacePairs, logger);
 }
 
+function testSanitizeLineBreaks(logger) {
+	const cases = [
+		{'in': '', 'out': ''},
+		{'in': '\r', 'out': '\n'},
+		{'in': '\r\r', 'out': '\n\n'},
+		{'in': '\r\n', 'out': '\r\n'}, // no change should happen for Windows-style line breaks
+		{'in': '\0', 'out': '\n'},
+		{'in': '\0\0', 'out': '\n\n'}
+	];
+	testInOutPairs(cases, StringUtils.sanitizeLineBreaks, logger);
+}
+
 export function testStringUtils(logger) {
 	wrapAndCall([
 		testCapitalizeFirstLetter,
@@ -179,6 +191,7 @@ export function testStringUtils(logger) {
 		testIndexOfNthOccurrance,
 		testIsWhitespace,
 		testRemoveFileExtension,
-		testReplacePairs
+		testReplacePairs,
+		testSanitizeLineBreaks
 	], logger);
 };

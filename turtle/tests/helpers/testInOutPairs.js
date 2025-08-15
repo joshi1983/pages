@@ -1,3 +1,4 @@
+import { addCopyButton } from './addCopyButton.js';
 import { assertEquals } from './assertEquals.js';
 import { DeepEquality } from '../../modules/DeepEquality.js';
 import { escapeHTML } from './escapeHTML.js';
@@ -49,6 +50,7 @@ function processResult(result, caseInfo, options, logger, index, inVal) {
 		const inValSpan = document.createElement('span');
 		inValSpan.classList.add('in-out-value-span');
 		inValSpan.innerText = inVal;
+		addCopyButton(inValSpan, inVal);
 		prefixSpan.appendChild(inValSpan);
 		const plogger = prefixWrapper(prefixSpan, logger);
 		if (options !== undefined && options.jsonStringifyAll) {

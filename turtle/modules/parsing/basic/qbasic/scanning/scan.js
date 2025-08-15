@@ -2,27 +2,14 @@ import { isComment } from './isComment.js';
 import { isMarkingEndOfToken } from './isMarkingEndOfToken.js';
 import { isMarkingEndOfTokenWithPrevious } from './isMarkingEndOfTokenWithPrevious.js';
 import { isStringLiteral } from './isStringLiteral.js';
+import { StringUtils } from '../../../../StringUtils.js';
 import { splitSpecialTokens } from './splitSpecialTokens.js';
 import { Token } from '../../../generic-parsing-utilities/Token.js';
 
 const generalDelimiters = new Set(';,{}[]()|+*:'.split(''));
 
-function replaceNullCharactersWithNewLine(s) {
-	if (s.indexOf('\n') === -1)
-		return s.replace(/\0/g, '\n');
-	else
-		return s;
-}
-
-function sanitizeLineBreaks(s) {
-	s = replaceNullCharactersWithNewLine(s);
-	if (s.indexOf('\n') === -1)
-		s = s.replace(/\r/g, '\n');
-	return s;
-}
-
 export function scan(code) {
-	code = sanitizeLineBreaks(code);
+	code = StringUtils.sanitizeLineBreaks(code);
 	const result = [];
 	let token = '';
 	let lineIndex = 0;

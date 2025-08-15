@@ -1,6 +1,8 @@
 const trigFunctions = new Set([
-	'acs', 'asn', 'atn', 'cos', 'sin', 'tan'
+	'acs', 'asn', 'atn', 'cos', 'rotate', 'sin', 'tan'
 ]);
+// rotate is not really a trigonometry function but it involves 
+// reading an angle parameter like the others so the angle unit is important.
 
 export { trigFunctions };
 

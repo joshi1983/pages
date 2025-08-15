@@ -20,11 +20,11 @@ const unlikelyExpressions = [
 
 const likelyExpressions = [
 /(\s|^)endproc(\s|$)/i,
-/(\s|^)gcol\s+(on\s+)?[1-9][0-9]*(\,\s*\d+)/i,
-/(^|\s)mode\s+\d/i,
-/(^|\s)origin\s+\d+\s*\,/i,
+/(\s|^)gcol[ \t]+(on\s+)?[1-9][0-9]*(\,\s*\d+)/i,
+/(^|\s)mode[ \t]+\d/i,
+/(^|\s)origin[ \t]+\d+\s*\,/i,
 /(^|\s)REPEAT\s+UNTIL\s+/i,
-/(^|\s)vdu\s+\d/i,
+/(^|\s)vdu[ \t]+\d/i,
 ];
 
 export function isLikelyBBCBasic(code) {

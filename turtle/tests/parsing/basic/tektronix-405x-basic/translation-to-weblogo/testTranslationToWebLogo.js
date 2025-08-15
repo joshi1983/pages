@@ -8,8 +8,12 @@ import { testExecuteTrigFunctions } from
 './testExecuteTrigFunctions.js';
 import { testReplaceTrigFunctionNames } from
 './testReplaceTrigFunctionNames.js';
+import { testTranslateBadTektronixCode } from
+'./testTranslateBadTektronixCode.js';
 import { testTranslateVariousExamplesToQBASIC } from
 './testTranslateVariousExamplesToQBASIC.js';
+import { testTranslateVariousFunctions } from
+'./testTranslateVariousFunctions.js';
 import { wrapAndCall } from
 '../../../../helpers/wrapAndCall.js';
 
@@ -20,6 +24,8 @@ export function testTranslationToWebLogo(logger) {
 		testExecuteOperators,
 		testExecuteTrigFunctions,
 		testReplaceTrigFunctionNames,
-		testTranslateVariousExamplesToQBASIC
+		testTranslateBadTektronixCode,
+		testTranslateVariousExamplesToQBASIC,
+		testTranslateVariousFunctions
 	], logger);
 };

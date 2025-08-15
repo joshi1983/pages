@@ -1,5 +1,12 @@
 import { StringBuffer } from './StringBuffer.js';
 
+function replaceNullCharactersWithNewLine(s) {
+	if (s.indexOf('\n') === -1)
+		return s.replace(/\0/g, '\n');
+	else
+		return s;
+}
+
 export class StringUtils {
 	static capitalizeFirstLetter(s) {
 		if (s.length === 0)
@@ -138,5 +145,12 @@ export class StringUtils {
 				result.append(s[i]);
 		}
 		return result.toString();
+	}
+
+	static sanitizeLineBreaks(s) {
+		s = replaceNullCharactersWithNewLine(s);
+		if (s.indexOf('\n') === -1)
+			s = s.replace(/\r/g, '\n');
+		return s;
 	}
 };

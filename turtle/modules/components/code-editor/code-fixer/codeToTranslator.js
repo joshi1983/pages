@@ -37,6 +37,7 @@ import { isLikelyTerrapin } from
 import { logo3DToWebLogo } from './fixers/logo-3d/logo3DToWebLogo.js';
 import { logoInterpreterToWebLogo } from './fixers/logo-interpreter/logoInterpreterToWebLogo.js';
 import { papertToWebLogo } from './fixers/papert/papertToWebLogo.js';
+import { StringUtils } from '../../../StringUtils.js';
 import { terrapinToWebLogo } from './fixers/terrapin/terrapinToWebLogo.js';
 import { translateAppleSoftBasicToWebLogo } from
 '../../../parsing/basic/applesoft-basic/translation-to-weblogo/translateAppleSoftBasicToWebLogo.js';
@@ -92,6 +93,7 @@ const translatorPairs = new Map([
 const defaultResult = [(code) => code, false];
 
 export function codeToTranslator(code) {
+	code = StringUtils.sanitizeLineBreaks(code);
 	let result = defaultResult;
 	if (isLikelyPythonCode(code) && isPythonParserLoaded) {
 		result = [translatePythonCodeToWebLogo, false];
