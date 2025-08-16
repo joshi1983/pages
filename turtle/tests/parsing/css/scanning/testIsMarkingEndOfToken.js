@@ -45,6 +45,10 @@ export function testIsMarkingEndOfToken(logger) {
 	{'inArgs': ['<', 'x'], 'out': true},
 	{'inArgs': ['<', '5'], 'out': true},
 	{'inArgs': ['<=', 'x'], 'out': true},
+	{'inArgs': ['(', '.'], 'out': true},
+	{'inArgs': ['.', '.'], 'out': false},
+	{'inArgs': ['../fa-brands-400.', 'e'], 'out': false},
+	{'inArgs': ['-', '.'], 'out': false}
 	];
 	testInOutPairs(cases, isMarkingEndOfToken, logger);
 };

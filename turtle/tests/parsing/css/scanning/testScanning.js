@@ -4,6 +4,7 @@ import { testIsIdentifierStart } from './testIsIdentifierStart.js';
 import { testIsMarkingEndOfToken } from './testIsMarkingEndOfToken.js';
 import { testIsNumberLengthUnitLiteral } from './testIsNumberLengthUnitLiteral.js';
 import { testIsNumberUnitLiteral } from './testIsNumberUnitLiteral.js';
+import { testIsQuotedStringLiteralStart } from './testIsQuotedStringLiteralStart.js';
 import { testIsStartOfPseudoClass } from './testIsStartOfPseudoClass.js';
 import { testIsStringLiteralStart } from './testIsStringLiteralStart.js';
 import { testScan } from './testScan.js';
@@ -17,6 +18,7 @@ export function testScanning(logger) {
 		testIsMarkingEndOfToken,
 		testIsNumberLengthUnitLiteral,
 		testIsNumberUnitLiteral,
+		testIsQuotedStringLiteralStart,
 		testIsStartOfPseudoClass,
 		testIsStringLiteralStart,
 		testScan

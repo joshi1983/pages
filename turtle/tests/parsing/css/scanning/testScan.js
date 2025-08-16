@@ -4,7 +4,7 @@ import { scan } from '../../../../modules/parsing/css/scanning/scan.js';
 export function testScan(logger) {
 	const cases = [
 	{'code': '', 'len': 0},
-	{'code': '/* hi */', 'tokens': [{'s': '/* hi */', 'colIndex': 7}]},
+	{'code': '/* hi *\/', 'tokens': [{'s': '/* hi *\/', 'colIndex': 7}]},
 	{'code': '12.34', 'tokens': ['12.34']},
 	{'code': '-12.34', 'tokens': ['-12.34']},
 	{'code': '50%', 'tokens': [{'s': '50%', 'colIndex': 2, 'lineIndex': 0}]},
@@ -100,7 +100,20 @@ export function testScan(logger) {
 		{'s': 'sign', 'colIndex': 3},
 		{'s': '(', 'colIndex': 4},
 		{'s': '-1', 'colIndex': 6},
-		{'s': ')', 'colIndex': 7}]}
+		{'s': ')', 'colIndex': 7}]},
+	{'code': '(../bla.eot)',
+		'tokens': [
+		'(',
+		{'s': '../bla.eot', 'colIndex': 10},
+		{'s': ')', 'colIndex': 11}
+	]},
+	{'code': '(../fa-brands-400.eot)',
+		'tokens': [
+		'(', '../fa-brands-400.eot', ')'
+	]},
+	{'code': '.fa-lg{vertical-align:-.0667em}',
+		'tokens': ['.fa-lg', '{', 'vertical-align', ':', '-.0667em', '}'
+	]}
 	];
 	processScanTestCases(cases, scan, logger);
 };

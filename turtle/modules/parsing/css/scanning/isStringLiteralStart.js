@@ -1,4 +1,7 @@
+import { isQuotedStringLiteralStart } from './isQuotedStringLiteralStart.js';
+
 export function isStringLiteralStart(s) {
-	const ch = s[0];
-	return ch === '"' || ch === '\'';
+	if (s.startsWith('..'))
+		return true;
+	return isQuotedStringLiteralStart(s);
 };

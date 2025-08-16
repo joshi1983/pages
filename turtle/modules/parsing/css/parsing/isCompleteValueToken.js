@@ -1,3 +1,4 @@
+import { doesPseudoClassExpectParameters } from './doesPseudoClassExpectParameters.js';
 import { ParseTreeTokenType } from '../ParseTreeTokenType.js';
 
 const noChildTypes = new Set([
@@ -59,7 +60,9 @@ function isCompleteDeclaration(token) {
 }
 
 function isCompletePseudoClass(token) {
-	if (token.children.length >= 1)
+	if (!doesPseudoClassExpectParameters(token.val))
+		return true;
+	if (token.children.length >= 1) // for example :not
 		return true;
 }
 

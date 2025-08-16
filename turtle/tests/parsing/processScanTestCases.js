@@ -5,7 +5,7 @@ export function processScanTestCases(cases, scan, logger) {
 		if (caseInfo.len === undefined && caseInfo.tokens instanceof Array)
 			caseInfo.len = caseInfo.tokens.length;
 		const result = scan(caseInfo.code);
-		const plogger = prefixWrapper(`Case ${index}`, logger);
+		const plogger = prefixWrapper(`Case ${index}, code=${caseInfo.code}`, logger);
 		if (!(result instanceof Array))
 			plogger(`Expected result to be an Array but got ${result}`);
 		else if (result.length !== caseInfo.len) {

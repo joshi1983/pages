@@ -31,7 +31,8 @@ function getGoodPrevious(prev) {
 function shouldAddPropertyValuePair(prev) {
 	if (prev.type === ParseTreeTokenType.DECLARATION_BLOCK) {
 		const parent = prev.parentNode;
-		if (parent !== null && parent.type === ParseTreeTokenType.AT_RULE)
+		if (parent !== null && parent.type === ParseTreeTokenType.AT_RULE &&
+		parent.val !== '@font-face')
 			return false;
 		return true;
 	}

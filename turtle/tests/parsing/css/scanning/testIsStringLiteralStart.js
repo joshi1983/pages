@@ -11,7 +11,8 @@ export function testIsStringLiteralStart(logger) {
 	{'in': '"hi"', 'out': true},
 	{'in': '\'', 'out': true},
 	{'in': '\'hi', 'out': true},
-	{'in': '\'hi\'', 'out': true}
+	{'in': '\'hi\'', 'out': true},
+	{'in': '../hello.css', 'out': true} // no quotes but still a string literal in CSS.
 	];
 	testInOutPairs(cases, isStringLiteralStart, logger);
 };

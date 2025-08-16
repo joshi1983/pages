@@ -66,6 +66,23 @@ export function testParseSelector(logger) {
 		]
 	}
 	},
+	{
+		'code': ':active {',
+		'parseSettings': {},
+		'treeInfo': {
+			'type': ParseTreeTokenType.TREE_ROOT,
+			'children': [
+				{'val': null, 'type': ParseTreeTokenType.RULE_SET, 'children': [
+					{'val': null, 'type': ParseTreeTokenType.SELECTOR, 'children': [
+						{'val': ':active', 'type': ParseTreeTokenType.PSEUDO_CLASS, 'children': []}
+					]},
+					{'val': null, 'type': ParseTreeTokenType.DECLARATION_BLOCK, 'children': [
+						{'val': '{'}
+					]}
+				]}
+			]
+		}
+	},
 	{'code': '.my-class', 'numTopChildren': 1, 'numComments': 0,
 	'parseSettings': {},
 	'treeInfo': {

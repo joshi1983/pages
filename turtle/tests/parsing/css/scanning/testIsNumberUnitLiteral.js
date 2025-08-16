@@ -17,6 +17,7 @@ export function testIsNumberUnitLiteral(logger) {
 	{'in': '-3px', 'out': true},
 	{'in': '3%', 'out': true},
 	{'in': '123%', 'out': true},
+	{'in': '-.0667em', 'out': true},
 	{'in': '4em', 'out': true},
 	{'in': '3rem', 'out': true},
 	{'in': '123rem', 'out': true},

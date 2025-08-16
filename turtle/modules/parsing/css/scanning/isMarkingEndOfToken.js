@@ -12,6 +12,8 @@ function isDigit(ch) {
 
 export function isMarkingEndOfToken(s, nextChar) {
 	if (!isDigit(nextChar) && !isSelectorValueStart(nextChar)) {
+		if (s.endsWith('.') && nextChar === '.')
+			return false;
 		if (s === '.' || s === '#')
 			return true;
 	}

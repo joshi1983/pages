@@ -1,6 +1,7 @@
 import { isCommentStart } from './isCommentStart.js';
 import { isCommentComplete } from './isCommentComplete.js';
 import { isMarkingEndOfToken } from './isMarkingEndOfToken.js';
+import { isQuotedStringLiteralStart } from './isQuotedStringLiteralStart.js';
 import { isStringLiteralStart } from './isStringLiteralStart.js';
 import { sanitizeTokens } from './sanitizeTokens.js';
 import { Token } from '../../generic-parsing-utilities/Token.js';
@@ -20,13 +21,20 @@ export function scan(code) {
 		const ch = code[i];
 		if (isStringLiteralStart(token)) {
 			const isEscaping = token.endsWith('\\');
-			token += ch;
-			if (ch === '\n') {
-				colIndex = 0;
-				lineIndex++;
-			}
-			if (ch === token[0] && !isEscaping) {
+			if (!isEscaping && !isQuotedStringLiteralStart(token) && ch === ')') {
+				colIndex--;
 				pushToken();
+				colIndex++;
+				token = ch;
+			}
+			else {
+				token += ch;
+				if (ch === '\n') {
+					colIndex = 0;
+					lineIndex++;
+				}
+				if (isQuotedStringLiteralStart(token) && ch === token[0] && !isEscaping)
+					pushToken();
 			}
 		}
 		else if (isCommentStart(token) || isCommentStart(token + ch)) {

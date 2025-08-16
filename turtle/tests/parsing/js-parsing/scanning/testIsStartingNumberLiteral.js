@@ -14,6 +14,7 @@ export function testIsStartingNumberLiteral(logger) {
 		{'in': '1.12e-4', 'out': true},
 		{'in': '1.12e5', 'out': true},
 		{'in': '-', 'out': true},
+		{'in': '-.', 'out': true}, // for example, '-.3'
 		{'in': '- ', 'out': false},
 		{'in': '- 1', 'out': false},
 		{'in': '-1', 'out': true},
