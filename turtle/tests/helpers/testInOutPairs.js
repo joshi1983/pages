@@ -49,8 +49,9 @@ function processResult(result, caseInfo, options, logger, index, inVal) {
 		prefixSpan.appendChild(caseSpan);
 		const inValSpan = document.createElement('span');
 		inValSpan.classList.add('in-out-value-span');
-		inValSpan.innerText = inVal;
-		addCopyButton(inValSpan, inVal);
+		inValSpan.innerText = '' + inVal;
+		if (typeof inVal === 'string')
+			addCopyButton(inValSpan, inVal);
 		prefixSpan.appendChild(inValSpan);
 		const plogger = prefixWrapper(prefixSpan, logger);
 		if (options !== undefined && options.jsonStringifyAll) {
