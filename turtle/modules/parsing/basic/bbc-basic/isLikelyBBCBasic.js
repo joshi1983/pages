@@ -2,6 +2,8 @@ import { matchesARegex } from
 '../../../components/code-editor/code-fixer/fixers/helpers/matchesARegex.js';
 import { naiveStripComments } from '../../naiveStripComments.js';
 import { naiveStripQBasicComments } from '../qbasic/naiveStripQBasicComments.js';
+import { stripBASICCommentsAndEmptyStringLiterals } from
+'../helpers/stripBASICCommentsAndEmptyStringLiterals.js';
 
 const unlikelyExpressions = [
 // some indicators of WebLogo and other Logo versions
@@ -16,6 +18,9 @@ const unlikelyExpressions = [
 /(^|\s)screen\s+[\d_a-z]/i,
 /(^|\s)line[ \t]+input[ \t]+"/i,
 /(^|\s)locate[ \t]+[1-9][0-9]*[ \t]*\,[ \t]*([a-z][a-z_]*|[1-9][0-9]*)/i,
+
+// indicator of Tektronix 405x BASIC
+/(^|\s)go[ \t]+to(\s|$)/i,
 ];
 
 const likelyExpressions = [
@@ -31,7 +36,7 @@ export function isLikelyBBCBasic(code) {
 	const trimmedCode = naiveStripComments(code);
 	if (matchesARegex(unlikelyExpressions, naiveStripQBasicComments(trimmedCode)))
 		return false;
-	if (matchesARegex(likelyExpressions, code))
+	if (matchesARegex(likelyExpressions, stripBASICCommentsAndEmptyStringLiterals(code)))
 		return true;
 	return false;
 };
