@@ -30,6 +30,19 @@ function convertToWhileWend(doWhile) {
 	loopToken.type = ParseTreeTokenType.WEND;
 }
 
+/*
+do while condition
+	instructions
+loop
+is essentially the same as:
+while condition
+	instructions
+wend.
+
+Since they do the same thing, converting one to the other simplifies and makes more reliable
+the later translation work on these structures.  1 loop structure is simpler and more likely to get bug-free than
+2 equal loop structures.
+*/
 export function replaceDoWhileLoopWithWhileWend(root) {
 	const doWhileLoops = getDescendentsOfType(root, ParseTreeTokenType.DO_WHILE).
 		filter(isOfInterest);

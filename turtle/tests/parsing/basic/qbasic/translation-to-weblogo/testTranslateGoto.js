@@ -40,6 +40,12 @@ print "bye`},
 		// is intended to keep the program's output visible.  It is like pausing the program.
 		// In WebLogo, we don't want to do that.  
 		// The trailing trivial infinite loop is best translated to no code in WebLogo.
+	},{
+		'in': `100 print "hi"
+IF inkey$<>"" then goto 100`,
+		'out': `do.while [
+	print "hi
+] "a <> "`
 	}
 	];
 	testInOutPairs(cases, translateQBASICToWebLogo, logger);

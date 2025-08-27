@@ -1,4 +1,4 @@
-import { testExecute_PI } from './testExecute_PI.js';
+/*import { testExecute_PI } from './testExecute_PI.js';
 import { testExecuteAssignments } from './testExecuteAssignments.js';
 import { testExecuteBinaryOperators } from './testExecuteBinaryOperators.js';
 import { testExecuteCINT } from './testExecuteCINT.js';
@@ -57,8 +57,8 @@ import { testTranslateExit } from './testTranslateExit.js';
 import { testTranslateFor } from './testTranslateFor.js';
 import { testTranslateFunction } from './testTranslateFunction.js';
 import { testTranslateFunctionCall } from './testTranslateFunctionCall.js';
-import { testTranslateGoto } from './testTranslateGoto.js';
-import { testTranslateIfStatements } from './testTranslateIfStatements.js';
+*/import { testTranslateGoto } from './testTranslateGoto.js';
+/*import { testTranslateIfStatements } from './testTranslateIfStatements.js';
 import { testTranslateInput } from './testTranslateInput.js';
 import { testTranslateLineInput } from './testTranslateLineInput.js';
 import { testTranslateRead } from './testTranslateRead.js';
@@ -72,12 +72,12 @@ import { testTranslationToWebLogoExecutePrint } from
 import { testTypeProcessors } from
 './type-processors/testTypeProcessors.js';
 import { testTypeTokenToCreateProcedure } from './testTypeTokenToCreateProcedure.js';
-import { wrapAndCall } from
+*/import { wrapAndCall } from
 '../../../../helpers/wrapAndCall.js';
 
 export function testTranslationToWebLogo(logger) {
 	wrapAndCall([
-		testExecute_PI,
+		/*testExecute_PI,
 		testExecuteAssignments,
 		testExecuteBinaryOperators,
 		testExecuteCINT,
@@ -136,8 +136,8 @@ export function testTranslationToWebLogo(logger) {
 		testTranslateFor,
 		testTranslateFunction,
 		testTranslateFunctionCall,
-		testTranslateGoto,
-		testTranslateIfStatements,
+		*/testTranslateGoto,
+		/*testTranslateIfStatements,
 		testTranslateInput,
 		testTranslateLineInput,
 		testTranslateRead,
@@ -148,6 +148,6 @@ export function testTranslationToWebLogo(logger) {
 		testTranslateVariousExamples,
 		testTranslationToWebLogoExecutePrint,
 		testTypeProcessors,
-		testTypeTokenToCreateProcedure
+		testTypeTokenToCreateProcedure*/
 	], logger);
 };

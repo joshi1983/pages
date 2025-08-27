@@ -12,7 +12,7 @@ function getPreviousLabel(token) {
 
 function isOfInterest(token) {
 	const nameToken = token.children[0];
-	if (nameToken === undefined)
+	if (nameToken === undefined || nameToken.type !== ParseTreeTokenType.IDENTIFIER)
 		return false;
 	if (nameToken.val === null || nameToken.val.toLowerCase() !== 'goto')
 		return false;
