@@ -33,7 +33,7 @@ export class PPM {
 					maxValue = maxVal1;
 			}
 		}
-		const pixelDataStartIndex = getPixelStartByteIndex(s, byteArray, width * height, versionNumber);
+		const pixelDataStartIndex = getPixelStartByteIndex(s, byteArray, width * height, width, versionNumber);
 		return {
 			'version': versionNumber,
 			'pixelDataStartIndex': pixelDataStartIndex,

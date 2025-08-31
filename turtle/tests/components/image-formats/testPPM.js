@@ -3,12 +3,19 @@ import { PPM } from
 import { processFilesBasic } from './processFilesBasic.js';
 
 export function testPPM(logger) {
+	/*
+	These test cases aren't asserting pixelDataStartIndex values
+	because that would make the tests too brittle.
+	
+	On a different computer, the line breaks might be represented by \r\n instead of just \n which can
+	make different pixelDataStartIndex values be correct.
+	The pixelChecks should detect any problems with incorrect pixelDataStartIndex values anyway.
+	*/
 	const cases = [
 		{
 			'filename': 'image-formats/ppm/blackAndWhiteP1File.ppm',
 			'width': 24, 'height': 7,
 			'version': 1,
-			'pixelDataStartIndex': 39,
 			'maxValue': 1,
 			'pixelChecks': [
 				{'x': 0, 'y': 0, 'colour': '#fff'},
@@ -20,7 +27,6 @@ export function testPPM(logger) {
 			'filename': 'image-formats/ppm/colorP3File.ppm',
 			'width': 4, 'height': 4,
 			'version': 3,
-			'pixelDataStartIndex': 146,
 			'maxValue': 15,
 			'pixelChecks': [
 				{'x': 0, 'y': 0, 'colour': '#000'},
@@ -33,7 +39,6 @@ export function testPPM(logger) {
 			'filename': 'image-formats/ppm/colorP3FileOnePixelPerLine.ppm',
 			'width': 4, 'height': 4,
 			'version': 3,
-			'pixelDataStartIndex': 140,
 			'maxValue': 15,
 			'pixelChecks': [
 				{'x': 0, 'y': 0, 'colour': '#000'},
@@ -46,7 +51,6 @@ export function testPPM(logger) {
 			'filename': 'image-formats/ppm/colorP6File.ppm',
 			'width': 4, 'height': 4,
 			'version': 6,
-			'pixelDataStartIndex': 51,
 			'maxValue': 255,
 			'pixelChecks': [
 				// Loading colorP6File.ppm with GIMP 2.10.4
@@ -66,7 +70,6 @@ export function testPPM(logger) {
 			'filename': 'image-formats/ppm/feep.ppm',
 			'width': 4, 'height': 4,
 			'version': 3,
-			'pixelDataStartIndex': 25,
 			'maxValue': 15,
 			'pixelChecks': [
 				{'x': 0, 'y': 0, 'colour': '#000'},
@@ -79,7 +82,6 @@ export function testPPM(logger) {
 			'filename': 'image-formats/ppm/feep2P.ppm',
 			'width': 24, 'height': 7,
 			'version': 2,
-			'pixelDataStartIndex': 39,
 			'maxValue': 15,
 			'pixelChecks': [
 				{'x': 0, 'y': 0, 'colour': '#000'},
@@ -105,7 +107,6 @@ export function testPPM(logger) {
 			'version': 4,
 			'width': 6, 'height': 10,
 			'maxValue': 1,
-			'pixelDataStartIndex': 99,
 			'pixelChecks': [
 				{'x': 0, 'y': 0, 'colour': '#fff'},
 				{'x': 3, 'y': 0, 'colour': '#fff'},
@@ -119,7 +120,6 @@ export function testPPM(logger) {
 			'version': 6,
 			'width': 6, 'height': 10,
 			'maxValue': 255,
-			'pixelDataStartIndex': 104,
 			'pixelChecks': [
 				{'x': 0, 'y': 0, 'colour': '#fff'},
 				{'x': 3, 'y': 0, 'colour': '#fff'},
@@ -133,7 +133,6 @@ export function testPPM(logger) {
 			'version': 6,
 			'width': 6, 'height': 10,
 			'maxValue': 255,
-			'pixelDataStartIndex': 100,
 			'pixelChecks': [
 				{'x': 0, 'y': 0, 'colour': '#fff'},
 				{'x': 3, 'y': 0, 'colour': '#fff'},
@@ -146,7 +145,6 @@ export function testPPM(logger) {
 			'filename': 'image-formats/ppm/one-by-one.ppm',
 			'width': 1, 'height': 1,
 			'version': 6,
-			'pixelDataStartIndex': 12,
 			'maxValue': 255,
 			'pixelChecks': [
 				{'x': 0, 'y': 0, 'colour': '#EFBFBD'}
