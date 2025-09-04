@@ -5408,6 +5408,7 @@ ATNDeserializer.prototype.readUUID = function() {
 	var bb = [];
 	for(var i=7;i>=0;i--) {
 		var int = this.readInt();
+		console.log(`readInt returned ${int}`);
 		/* jshint bitwise: false */
 		bb[(2*i)+1] = int & 0xFF;
 		bb[2*i] = (int >> 8) & 0xFF;
