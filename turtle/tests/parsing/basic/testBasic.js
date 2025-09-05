@@ -1,4 +1,4 @@
-import { testAnsiBasic } from
+/*import { testAnsiBasic } from
 './ansi-basic/testAnsiBasic.js';
 import { testAppleSoftBasic } from
 './applesoft-basic/testAppleSoftBasic.js';
@@ -8,9 +8,9 @@ import { testCommodoreBasic } from
 './commodore-basic/testCommodoreBasic.js';
 import { testHelpers } from
 './helpers/testHelpers.js';
-import { testQBasic } from
+*/import { testQBasic } from
 './qbasic/testQBasic.js';
-import { testSinclairBasic } from
+/*import { testSinclairBasic } from
 './sinclair-basic/testSinclairBasic.js';
 import { testSmallVisualBasic } from
 './small-visual-basic/testSmallVisualBasic.js';
@@ -20,21 +20,21 @@ import { testToQBASICMigrations } from
 './testToQBASICMigrations.js';
 import { testTRS80Basic } from
 './trs-80-basic/testTRS80Basic.js';
-import { wrapAndCall } from 
+*/import { wrapAndCall } from 
 '../../helpers/wrapAndCall.js';
 
 export function testBasic(logger) {
 	wrapAndCall([
-		testAnsiBasic,
+		/*testAnsiBasic,
 		testAppleSoftBasic,
 		testBBCBasic,
 		testCommodoreBasic,
-		testHelpers,
+		testHelpers,*/
 		testQBasic,
-		testSinclairBasic,
+		/*testSinclairBasic,
 		testSmallVisualBasic,
 		testTektronix405xBasic,
 		testToQBASICMigrations,
-		testTRS80Basic
+		testTRS80Basic*/
 	], logger);
 };

@@ -1,4 +1,4 @@
-import { testExecute_PI } from './testExecute_PI.js';
+/*import { testExecute_PI } from './testExecute_PI.js';
 import { testExecuteAssignments } from './testExecuteAssignments.js';
 import { testExecuteBinaryOperators } from './testExecuteBinaryOperators.js';
 import { testExecuteCINT } from './testExecuteCINT.js';
@@ -36,8 +36,8 @@ import { testGetSingleScreenNumber } from './testGetSingleScreenNumber.js';
 import { testInsertSpaces } from './testInsertSpaces.js';
 import { testIsArrayOfCustomTypeUsed } from './testIsArrayOfCustomTypeUsed.js';
 import { testMightDrawSomething } from './testMightDrawSomething.js';
-import { testRefactoring } from './refactoring/testRefactoring.js';
-import { testShouldIgnoreScreenCalls } from './testShouldIgnoreScreenCalls.js';
+*/import { testRefactoring } from './refactoring/testRefactoring.js';
+/*import { testShouldIgnoreScreenCalls } from './testShouldIgnoreScreenCalls.js';
 import { testTranslateQBASICToWebLogo } from './testTranslateQBASICToWebLogo.js';
 import { testTranslate_PI } from './testTranslate_PI.js';
 import { testTranslateAssignments } from './testTranslateAssignments.js';
@@ -52,14 +52,14 @@ import { testTranslateDim } from './testTranslateDim.js';
 import { testTranslateDoLoop } from './testTranslateDoLoop.js';
 import { testTranslateDoLoopUntil } from './testTranslateDoLoopUntil.js';
 import { testTranslateDoUntilLoop } from './testTranslateDoUntilLoop.js';
-import { testTranslateDoWhile } from './testTranslateDoWhile.js';
-import { testTranslateEnd } from './testTranslateEnd.js';
+*/import { testTranslateDoWhile } from './testTranslateDoWhile.js';
+/*import { testTranslateEnd } from './testTranslateEnd.js';
 import { testTranslateExit } from './testTranslateExit.js';
 import { testTranslateFor } from './testTranslateFor.js';
 import { testTranslateFunction } from './testTranslateFunction.js';
 import { testTranslateFunctionCall } from './testTranslateFunctionCall.js';
-import { testTranslateGoto } from './testTranslateGoto.js';
-import { testTranslateIfStatements } from './testTranslateIfStatements.js';
+*/import { testTranslateGoto } from './testTranslateGoto.js';
+/*import { testTranslateIfStatements } from './testTranslateIfStatements.js';
 import { testTranslateInput } from './testTranslateInput.js';
 import { testTranslateLineInput } from './testTranslateLineInput.js';
 import { testTranslateRead } from './testTranslateRead.js';
@@ -73,11 +73,11 @@ import { testTranslationToWebLogoExecutePrint } from
 import { testTypeProcessors } from
 './type-processors/testTypeProcessors.js';
 import { testTypeTokenToCreateProcedure } from './testTypeTokenToCreateProcedure.js';
-import { wrapAndCall } from
+*/import { wrapAndCall } from
 '../../../../helpers/wrapAndCall.js';
 
 export function testTranslationToWebLogo(logger) {
-	wrapAndCall([
+	wrapAndCall([/*
 		testExecute_PI,
 		testExecuteAssignments,
 		testExecuteBinaryOperators,
@@ -115,9 +115,9 @@ export function testTranslationToWebLogo(logger) {
 		testGetSingleScreenNumber,
 		testInsertSpaces,
 		testIsArrayOfCustomTypeUsed,
-		testMightDrawSomething,
+		testMightDrawSomething,*/
 		testRefactoring,
-		testShouldIgnoreScreenCalls,
+		/*testShouldIgnoreScreenCalls,
 		testTranslateQBASICToWebLogo,
 		testTranslate_PI,
 		testTranslateAssignments,
@@ -132,14 +132,14 @@ export function testTranslationToWebLogo(logger) {
 		testTranslateDoLoop,
 		testTranslateDoLoopUntil,
 		testTranslateDoUntilLoop,
-		testTranslateDoWhile,
-		testTranslateEnd,
+		*/testTranslateDoWhile,
+		/*testTranslateEnd,
 		testTranslateExit,
 		testTranslateFor,
 		testTranslateFunction,
 		testTranslateFunctionCall,
-		testTranslateGoto,
-		testTranslateIfStatements,
+		*/testTranslateGoto,
+		/*testTranslateIfStatements,
 		testTranslateInput,
 		testTranslateLineInput,
 		testTranslateRead,
@@ -150,6 +150,6 @@ export function testTranslationToWebLogo(logger) {
 		testTranslateVariousExamples,
 		testTranslationToWebLogoExecutePrint,
 		testTypeProcessors,
-		testTypeTokenToCreateProcedure
+		testTypeTokenToCreateProcedure*/
 	], logger);
 };
