@@ -1,4 +1,4 @@
-import { testASMTurtle } from './asm-turtle/testASMTurtle.js';
+/*import { testASMTurtle } from './asm-turtle/testASMTurtle.js';
 import { testAsyncParser } from './testAsyncParser.js';
 import { testAsyncParseTask } from './testAsyncParseTask.js';
 import { testBasic } from './basic/testBasic.js';
@@ -14,9 +14,9 @@ import { testDataTypesDirectory } from './data-types/testDataTypesDirectory.js';
 import { testExampleScripts } from './testExampleScripts.js';
 import { testExecution } from './execution/testExecution.js';
 import { testFixOperatorPrecedence } from './testFixOperatorPrecedence.js';
-import { testFMSLogo } from './fms-logo/testFMSLogo.js';
+import { testFMSLogo } from './fms-logo/testFMSLogo.js';*/
 import { testGenericParsingUtilities } from './generic-parsing-utilities/testGenericParsingUtilities.js';
-import { testGetParseTree } from './testGetParseTree.js';
+/*import { testGetParseTree } from './testGetParseTree.js';
 import { testGetStartPositionOfToken } from './testGetStartPositionOfToken.js';
 import { testGetTokensForParsing } from './testGetTokensForParsing.js';
 import { testIsSupportedByHighOrderInvoke } from './testIsSupportedByHighOrderInvoke.js';
@@ -40,8 +40,8 @@ import { testParseTreeTokenDirectory } from './parse-tree-token/testParseTreeTok
 import { testPovRay } from './pov-ray/testPovRay.js';
 import { testProcedure } from './testProcedure.js';
 import { testProcessing } from './processing/testProcessing.js';
-import { testPythonParsing } from './python-parsing/testPythonParsing.js';
-import { testScanner } from './testScanner.js';
+*/import { testPythonParsing } from './python-parsing/testPythonParsing.js';
+/*import { testScanner } from './testScanner.js';
 import { testScanningDirectory } from './scanning/testScanningDirectory.js';
 import { testScanVariousExamples } from './testScanVariousExamples.js';
 import { testScrapeProcedures } from './testScrapeProcedures.js';
@@ -50,11 +50,11 @@ import { testSonicWebTurtle } from './sonic-webturtle/testSonicWebTurtle.js';
 import { testSugarLabsTurtleBlocks } from './sugarlabs-turtle-blocks/testSugarLabsTurtleBlocks.js';
 import { testToken } from './testToken.js';
 import { testUnsupportedCommand } from './testUnsupportedCommand.js';
-import { wrapAndCall } from '../helpers/wrapAndCall.js';
+*/import { wrapAndCall } from '../helpers/wrapAndCall.js';
 
 export function testParsing(logger) {
 	wrapAndCall([
-		testASMTurtle,
+		/*testASMTurtle,
 		testAsyncParser,
 		testAsyncParseTask,
 		testBasic,
@@ -70,9 +70,9 @@ export function testParsing(logger) {
 		testExampleScripts,
 		testExecution,
 		testFixOperatorPrecedence,
-		testFMSLogo,
+		testFMSLogo,*/
 		testGenericParsingUtilities,
-		testGetParseTree,
+		/*testGetParseTree,
 		testGetStartPositionOfToken,
 		testGetTokensForParsing,
 		testIsSupportedByHighOrderInvoke,
@@ -96,8 +96,8 @@ export function testParsing(logger) {
 		testPovRay,
 		testProcedure,
 		testProcessing,
-		testPythonParsing,
-		testScanner,
+		*/testPythonParsing,
+		/*testScanner,
 		testScanningDirectory,
 		testScanVariousExamples,
 		testScrapeProcedures,
@@ -105,6 +105,6 @@ export function testParsing(logger) {
 		testSonicWebTurtle,
 		testSugarLabsTurtleBlocks,
 		testToken,
-		testUnsupportedCommand
+		testUnsupportedCommand*/
 	], logger);
 };

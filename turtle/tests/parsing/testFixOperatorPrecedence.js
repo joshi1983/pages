@@ -1,8 +1,8 @@
 import { LogoParser } from '../../modules/parsing/LogoParser.js';
 import { fixOperatorPrecedence } from '../../modules/parsing/fixOperatorPrecedence.js';
 import { prefixWrapper } from '../helpers/prefixWrapper.js';
-import { ParseTreeTokenType } from '../../modules/parsing/ParseTreeTokenType.js';
 import { ParseTreeToken } from '../../modules/parsing/ParseTreeToken.js';
+import { ParseTreeTokenType } from '../../modules/parsing/ParseTreeTokenType.js';
 import { TestParseLogger } from '../helpers/TestParseLogger.js';
 
 export function testFixOperatorPrecedence(logger) {

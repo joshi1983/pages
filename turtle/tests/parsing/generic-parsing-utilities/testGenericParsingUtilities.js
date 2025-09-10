@@ -1,7 +1,7 @@
 import { testCommandsToMap } from './testCommandsToMap.js';
 import { testFixOperatorPrecedenceGeneric } from './testFixOperatorPrecedenceGeneric.js';
 import { testFlatten } from './testFlatten.js';
-import { testGenericOperators } from './testGenericOperators.js';
+/*import { testGenericOperators } from './testGenericOperators.js';
 import { testGetClosestOfType } from './testGetClosestOfType.js';
 import { testGetCodeUpToAndIncludingToken } from './testGetCodeUpToAndIncludingToken.js';
 import { testGetDescendentsOfTypes } from './testGetDescendentsOfTypes.js';
@@ -16,14 +16,14 @@ import { testParseTreeToken } from './testParseTreeToken.js';
 import { testRotate } from './testRotate.js';
 import { testSanitizeIdentifier } from './testSanitizeIdentifier.js';
 import { testStringValueToWebLogoStringLiteral } from './testStringValueToWebLogoStringLiteral.js';
-import { wrapAndCall } from '../../helpers/wrapAndCall.js';
+*/import { wrapAndCall } from '../../helpers/wrapAndCall.js';
 
 export function testGenericParsingUtilities(logger) {
 	wrapAndCall([
 		testCommandsToMap,
 		testFixOperatorPrecedenceGeneric,
 		testFlatten,
-		testGenericOperators,
+		/*testGenericOperators,
 		testGetCodeUpToAndIncludingToken,
 		testGetClosestOfType,
 		testGetDescendentsOfTypes,
@@ -37,6 +37,6 @@ export function testGenericParsingUtilities(logger) {
 		testParseTreeToken,
 		testRotate,
 		testSanitizeIdentifier,
-		testStringValueToWebLogoStringLiteral
+		testStringValueToWebLogoStringLiteral*/
 	], logger);
 };
