@@ -5,6 +5,8 @@ import { ParseTreeToken } from
 '../../generic-parsing-utilities/ParseTreeToken.js';
 import { ParseTreeTokenType } from
 '../ParseTreeTokenType.js';
+import { runAllSanitizers } from
+'../scanning/token-sanitizers/runAllSanitizers.js';
 import { scan } from
 '../scanning/scan.js';
 import { stringToParseTreeTokenType } from
@@ -13,6 +15,7 @@ import { stringToParseTreeTokenType } from
 export function parse(code) {
 	const root = new ParseTreeToken(null, 0, 0, ParseTreeTokenType.TREE_ROOT);
 	const allTokens = scan(code);
+	//runAllSanitizers(allTokens);
 	const filteredTokens = allTokens.filter(token => !isSingleLineComment(token.s));
 	const comments = allTokens.filter(token => isSingleLineComment(token.s));
 	let prev = root;

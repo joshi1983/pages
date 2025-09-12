@@ -44,6 +44,26 @@ export function testParseForLoop(logger) {
 				]
 			}]
 		}
+	},
+	{
+		'code': 'for _ in range(4):\n\tprint(_)\n\nprint("after loop and printing 1 time")',
+		'numTopChildren': 1,
+		'treeInfo': {
+			'children': [{
+				'val': 'for',
+				'type': ParseTreeTokenType.FOR_LOOP,
+				'children': [
+					{'val': '_', 'type': ParseTreeTokenType.IDENTIFIER, 'children': []},
+					{'val': 'in', 'type': ParseTreeTokenType.IN, 'children': []},
+					{'val': 'range', 'type': ParseTreeTokenType.FUNCTION_CALL},
+					{'val': ':', 'type': ParseTreeTokenType.COLON, 'children': []},
+					{'val': null, 'type': ParseTreeTokenType.CODE_BLOCK, 'children': [
+						{'val': 'print', 'type': ParseTreeTokenType.FUNCTION_CALL}
+					]}
+			]},
+			{'val': 'print', 'type': ParseTreeTokenType.FUNCTION_CALL}
+			]
+		}
 	}];
 	processParseTestCases(cases, logger);
 };
