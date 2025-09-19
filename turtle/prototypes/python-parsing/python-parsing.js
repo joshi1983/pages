@@ -6,8 +6,10 @@ import { translatePythonCodeToWebLogo } from
 await asyncInit();
 
 let pythonCode;
-pythonCode = `import turtle
-turtle.forward(100)`;
+pythonCode = `for _ in range(4):
+	print(_)
+
+print("after loop and printing 1 time")`;
 
 initGenericParsing(ParseTreeTokenType, parse, pythonCode, 
 	undefined, undefined, translatePythonCodeToWebLogo);
