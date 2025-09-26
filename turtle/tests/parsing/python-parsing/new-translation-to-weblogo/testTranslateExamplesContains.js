@@ -124,7 +124,7 @@ export function testTranslateExamplesContains(logger) {
 			"filename": "python-logo.py",
 			"checks": [
 				'to s_curve', 'to r_curve', 'to l_curve', 'to l_curve1',
-				'to eye', 'to sec_dot'
+				'to eye', 'to sec_dot', 'setFillColor #306998', 'setFillColor #FFD43B'
 			]
 		},
 		{
