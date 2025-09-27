@@ -31,6 +31,15 @@ export function testExecuteOrderOfOperation(logger) {
 		{'code': 'print(2 < 1 or 1 < 2)', 'messages': ['true']}, // Python 3.13 prints True
 		{'code': 'print(2 < 1 and 1 < 2)', 'messages': ['false']}, // Python 3.13 prints False
 		{'code': 'print(True == False)', 'messages': ['false']}, // Python 3.13 prints False
+		{'code': 'print(5 % 2)', 'messages': ['1']}, // Python 3.13 prints 
+		{'code': 'print(5 % 2 + 1)', 'messages': ['2']}, // Python 3.13 prints 
+		{'code': 'print(5 % 2 * 3)', 'messages': ['3']}, // Python 3.13 prints 
+		{'code': 'print(5 % 2 / 2)', 'messages': ['0.5']}, // Python 3.13 prints 
+		{'code': 'print(5 % 2 ** 2)', 'messages': ['1']}, // Python 3.13 prints 
+		{'code': 'print(5 // 2)', 'messages': ['2']}, // Python 3.13 prints 
+		{'code': 'print(15 // 2 * 2)', 'messages': ['14']}, // Python 3.13 prints 
+		{'code': 'print(5 | 2)', 'messages': ['7']}, // Python 3.13 prints 
+		{'code': 'print(5 | 2 < 5)', 'messages': ['false']}, // Python 3.13 prints 
 	];
 	processTranslateExecuteCases(cases, logger);
 };
