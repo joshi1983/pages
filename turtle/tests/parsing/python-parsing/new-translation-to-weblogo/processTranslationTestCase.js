@@ -1,4 +1,5 @@
 import { assertEquals } from '../../../helpers/assertEquals.js';
+import { formatCode } from '../../../../modules/components/code-editor/format/formatCode.js';
 import { parse } from '../../../../modules/parsing/python-parsing/parsing/parse.js';
 import { prefixWrapper } from '../../../helpers/prefixWrapper.js';
 import { tokenToWebLogoCode } from '../../../../modules/parsing/python-parsing/new-translation-to-weblogo/tokenToWebLogoCode.js';
@@ -13,7 +14,7 @@ export function processTranslationTestCase(caseInfo, logger) {
 		return;
 	}
 	try {
-		const out = tokenToWebLogoCode(parseResult.root, parseResult.comments, false);
+		const out = formatCode(tokenToWebLogoCode(parseResult.root, parseResult.comments, false));
 		if (caseInfo.outStartsWith !== undefined) {
 			if (!out.startsWith(caseInfo.outStartsWith))
 				plogger(`Expected start is ${caseInfo.outStartsWith} but got ${out.substring(0, caseInfo.outStartsWith.length)}`);

@@ -6,6 +6,8 @@ import { parse } from
 '../../../../modules/parsing/python-parsing/parsing/parse.js';
 import { prefixWrapper } from
 '../../../helpers/prefixWrapper.js';
+import { simplifyParseTree } from
+'../../../../modules/parsing/python-parsing/new-translation-to-weblogo/parse-tree-simplifiers/simplifyParseTree.js';
 import { testCodeToProgram } from
 '../../../helpers/testCodeToProgram.js';
 import { tokenToWebLogoCode } from
@@ -28,6 +30,7 @@ const settings = {
 export function processPythonExecuterTest(caseInfo, logger) {
 	const plogger = prefixWrapper(`Case ${caseInfo.index}, Python code=${caseInfo.in}`, logger);
 	const parseResult = parse(caseInfo.in);
+	simplifyParseTree(parseResult.root);
 	const weblogoCode = tokenToWebLogoCode(parseResult.root, [], true);
 	if (typeof weblogoCode !== 'string') {
 		logger(`Failed to get WebLogo code from python code ${caseInfo.in}`);

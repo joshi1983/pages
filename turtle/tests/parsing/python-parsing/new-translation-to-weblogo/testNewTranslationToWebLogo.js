@@ -4,6 +4,7 @@ import { testBinaryOperatorTranslation } from './testBinaryOperatorTranslation.j
 import { testConstantTranslation } from './testConstantTranslation.js';
 import { testDiscardedCodeTranslation } from './testDiscardedCodeTranslation.js';
 import { testExecuteAssignments } from './testExecuteAssignments.js';
+import { testExecuteForLoop } from './testExecuteForLoop.js';
 import { testExecuteLiteralValues } from './testExecuteLiteralValues.js';
 import { testExecuteOperators } from './testExecuteOperators.js';
 import { testExecuteOrderOfOperation } from './testExecuteOrderOfOperation.js';
@@ -32,6 +33,7 @@ export function testNewTranslationToWebLogo(logger) {
 		testConstantTranslation,
 		testDiscardedCodeTranslation,
 		testExecuteAssignments,
+		testExecuteForLoop,
 		testExecuteLiteralValues,
 		testExecuteOperators,
 		testExecuteOrderOfOperation,

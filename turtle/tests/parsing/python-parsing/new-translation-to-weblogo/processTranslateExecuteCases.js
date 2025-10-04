@@ -1,8 +1,8 @@
 import { processTranslateExecuteCases as processTranslateExecuteCasesGeneric } from
 '../../../helpers/parsing/processTranslateExecuteCases.js';
-import { translatePythonCodeToWebLogo } from
-'../../../../modules/parsing/python-parsing/translatePythonCodeToWebLogo.js';
+import { newTranslatePythonCodeToWebLogo } from
+'../../../../modules/parsing/python-parsing/newTranslatePythonCodeToWebLogo.js';
 
 export function processTranslateExecuteCases(cases, logger) {
-	processTranslateExecuteCasesGeneric(cases, translatePythonCodeToWebLogo, logger);
+	processTranslateExecuteCasesGeneric(cases, newTranslatePythonCodeToWebLogo, logger);
 };

@@ -24,7 +24,7 @@ function testDirectly(logger) {
 function testTranslation(logger) {
 	const cases = [
 		{'in': 'print(None)', 'out': 'print "None'},
-		{'in': '# hello\nprint(None)', 'out': '; hello\n\nprint "None'},
+		{'in': '# hello\nprint(None)', 'out': '; hello\nprint "None'},
 		{'in': '#!/usr/bin/env python\nprint(None)', 'out': 'print "None'},
 		{'in': '#!/usr/bin/python\nprint(None)', 'out': 'print "None'},
 	];
