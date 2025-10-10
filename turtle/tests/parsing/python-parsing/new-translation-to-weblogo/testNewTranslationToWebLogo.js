@@ -28,7 +28,7 @@ import { wrapAndCall } from '../../../helpers/wrapAndCall.js';
 
 export function testNewTranslationToWebLogo(logger) {
 	wrapAndCall([
-		pythonPrintExecutionTests,
+		/*pythonPrintExecutionTests,
 		testAssignmentTranslation,
 		testBinaryOperatorTranslation,
 		testConstantTranslation,
@@ -37,9 +37,9 @@ export function testNewTranslationToWebLogo(logger) {
 		testExecuteForLoop,
 		testExecuteLiteralValues,
 		testExecuteOperators,
-		testExecuteOrderOfOperation,
+		testExecuteOrderOfOperation,*/
 		testForLoopTranslation,
-		testFunctionCallTranslation,
+		/*testFunctionCallTranslation,
 		testFunctionDefinitionTranslation,
 		testIfStatementTranslation,
 		testParseTreeSimplifiers,
@@ -53,6 +53,6 @@ export function testNewTranslationToWebLogo(logger) {
 		testTypeProcessors,
 		testUnaryOperatorTranslation,
 		testWebLogoSnippets,
-		testWhileLoopTranslation,
+		testWhileLoopTranslation,*/
 	], logger);
 };

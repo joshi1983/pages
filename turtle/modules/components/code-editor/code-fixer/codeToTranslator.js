@@ -73,11 +73,8 @@ import { translateTektronix405XBasicToWebLogo } from
 '../../../parsing/basic/tektronix-405x-basic/translation-to-weblogo/translateTektronix405XBasicToWebLogo.js';
 import { translateTurtleBlocksToWebLogo } from
 '../../../parsing/sugarlabs-turtle-blocks/translation-to-weblogo/translateTurtleBlocksToWebLogo.js';
-import { asyncInit, translatePythonCodeToWebLogo } from
-'../../../parsing/python-parsing/translatePythonCodeToWebLogo.js';
-
-let isPythonParserLoaded = false;
-asyncInit().then(() => isPythonParserLoaded = true);
+import { newTranslatePythonCodeToWebLogo } from
+'../../../parsing/python-parsing/newTranslatePythonCodeToWebLogo.js';
 
 const translatorPairs = new Map([
 	[isLikelyAppleSoftBasic, [translateAppleSoftBasicToWebLogo, false]],
@@ -105,8 +102,8 @@ const defaultResult = [(code) => code, false];
 export function codeToTranslator(code) {
 	code = StringUtils.sanitizeLineBreaks(code);
 	let result = defaultResult;
-	if (isLikelyPythonCode(code) && isPythonParserLoaded) {
-		result = [translatePythonCodeToWebLogo, false];
+	if (isLikelyPythonCode(code)) {
+		result = [newTranslatePythonCodeToWebLogo, false];
 	}
 	for (const [isFunc, resultPair] of translatorPairs) {
 		if (isFunc(code)) {

@@ -70,7 +70,8 @@ export function testFunctionCallTranslation(logger) {
 		{'in': 'color(hsv_to_rgb(h, 1, 1))', 'outContains': 'pyHSVToRGB :h 1 1'},
 		{'in': `color(hsv_to_rgb(h, 1, 1))
 rt(10)`, 'outContains': ' pyHSVToRGB :h 1 1'},
-		{'in': "turtle.Screen().bgcolor('navy')", 'out': 'setScreenColor "navy'}
+		{'in': "turtle.Screen().bgcolor('navy')", 'out': 'setScreenColor "navy'},
+		{'in': "print screen.window_width()", 'out': 'print 640'}
 	];
 	testInOutPairs(cases, translatePythonCodeToWebLogo, logger);
 };

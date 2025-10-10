@@ -1,6 +1,7 @@
 import { testColours } from './testColours.js';
 import { testColoursTXT } from './testColoursTXT.js';
 import { testIsLikelyPythonCode } from './testIsLikelyPythonCode.js';
+import { testNewTranslationToWebLogo } from './new-translation-to-weblogo/testNewTranslationToWebLogo.js';
 import { testOperatorsData } from './testOperatorsData.js';
 import { testParse } from './testParse.js';
 import { testParseInvalidPythonCode } from './testParseInvalidPythonCode.js';
@@ -24,6 +25,7 @@ export function testPythonParsing(logger) {
 		testColours,
 		testColoursTXT,
 		testIsLikelyPythonCode,
+		testNewTranslationToWebLogo,
 		testOperatorsData,
 		testParse,
 		testParseInvalidPythonCode,

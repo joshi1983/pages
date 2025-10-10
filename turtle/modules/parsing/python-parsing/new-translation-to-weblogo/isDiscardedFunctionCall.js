@@ -9,7 +9,8 @@ export function isDiscardedFunctionCall(token, cachedParseTree) {
 
 	const functionName = token.val;
 	const info = PythonFunctions.getFunctionInfo(functionName);
-	if (info !== undefined && info.translateToCommand === null) {
+	if (info !== undefined && info.translateToCommand === null &&
+	info.migrateToCode === undefined) {
 		const functions = getAllFunctionDefinitions(cachedParseTree);
 		return !functions.some(f => f.name === functionName);
 	}
