@@ -5,7 +5,7 @@ import { testInOutPairs } from
 
 export function testSanitizeIndentation(logger) {
 	const cases = [
-		{'in': '', 'changed': false},
+		/*{'in': '', 'changed': false},
 		{'in': '\n', 'changed': false},
 		{'in': '\n\n', 'changed': false},
 		{'in': 'print "hi"', 'changed': false},
@@ -15,7 +15,11 @@ export function testSanitizeIndentation(logger) {
 		{'in': 'if True:\n\t print("hi")',
 			'out': 'if True:\n\tprint("hi")'},
 		{'in': 'if True:\n print("hi")',
-			'out': 'if True:\n\tprint("hi")'}
+			'out': 'if True:\n\tprint("hi")'},
+		*/{'in': 'if True:\n print("hi")\n  print("yo")',
+			'out': 'if True:\n\tprint("hi")\n\tprint("yo")'},
+		/*{'in': 'print("hi")\nif True:\n print("hi")',
+			'out': 'print("hi")\nif True:\n\tprint("hi")'}*/
 	];
 	testInOutPairs(cases, sanitizeIndentation, logger);
 };

@@ -1,6 +1,7 @@
 import { binarySearch } from
 '../../../../binarySearch.js';
 import { scan } from '../../scanning/scan.js';
+import { Token } from '../../../generic-parsing-utilities/Token.js';
 
 function lineToPrefix(line) {
 	const s = line.trim();
@@ -52,18 +53,22 @@ function replaceWhitespaces(prefix, indentChar) {
 		return indentChar.repeat(spaceCount);
 }
 
-// checks if the previous line ends with a :.  That would indicate 1 more indent than previous line.
-function shouldAddIndent(lineIndex, tokens) {
-	const startInfo = binarySearch(tokens, function(target, token) {
+function indentationBinarySearch(lineIndex, tokens) {
+	return binarySearch(tokens, function(target, token) {
 		if (token.lineIndex < target.lineIndex)
-			return -1;
-		else if (token.lineIndex > target.lineIndex)
 			return 1;
-		else if (token.s.trim() === '')
+		else if (token.lineIndex > target.lineIndex)
 			return -1;
+		else if (token.s.trim() === '')
+			return 1;
 		else
 			return 0;
 	}, {'lineIndex': lineIndex});
+}
+
+// checks if the previous line ends with a :.  That would indicate 1 more indent than previous line.
+function shouldAddIndent(lineIndex, tokens) {
+	const startInfo = indentationBinarySearch(lineIndex, tokens);
 	if (typeof startInfo === 'object')
 		return false;
 
@@ -100,10 +105,10 @@ function shouldAddIndent(lineIndex, tokens) {
 		return false; // the current line should not be indented more.
 		// the current line should have no indentation.
 
-	if (Math.abs(numIndentsAtPreviousLine - numIndentsAtLine) >= 2)
-		return false; // indentation is too different to be safely fixed.
-
 	if (scanTokenIndexEndOfPreviousLine === undefined)
+		return false;
+
+	if (numIndentsAtLine > numIndentsAtPreviousLine)
 		return false;
 
 	const token = tokens[scanTokenIndexEndOfPreviousLine];
@@ -136,6 +141,21 @@ export function sanitizeIndentation(code) {
 				if (indentChar !== '\t')
 					indentSpaces = ' '.repeat(4);
 				prefix += indentSpaces;
+				let index = indentationBinarySearch(i, tokens);
+				if ( Number.isInteger(index) ) { 
+					for (; index >= 1; index--) {
+						const tok = tokens[index];
+						const prev = tokens[index - 1];
+						if (prev.s.trim() === '' || tok.lineIndex !== prev.lineIndex)
+							break;
+					}
+					if ( index === 1 && tokens[0].s.trim() !== '' )
+						index--;
+
+					const colIndex = tokens[index].colIndex;
+					const newToken = new Token(indentSpaces, colIndex, i);
+					tokens.splice(index, 0, newToken);
+				}
 			}
 			lines[i] = prefix + afterPart;
 		}
