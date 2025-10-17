@@ -6,10 +6,10 @@ import { parse } from '../../modules/parsing/python-parsing/parsing/parse.js';
 import { ParseTreeTokenType } from '../../modules/parsing/python-parsing/ParseTreeTokenType.js';
 
 let pythonCode;
-pythonCode = `for _ in range(4):
-	print(_)
+pythonCode = `def f(arg1, *argv):
+	print(arg1)
 
-print("after loop and printing 1 time")`;
+f(0, 1)`;
 
 let sanitizeScanTokens;
 

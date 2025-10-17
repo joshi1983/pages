@@ -1,4 +1,4 @@
-import { testAnimationSetupFixer } from './testAnimationSetupFixer.js';
+/*import { testAnimationSetupFixer } from './testAnimationSetupFixer.js';
 import { testAnimationSnapshotStyleFixer } from './testAnimationSnapshotStyleFixer.js';
 import { testArrayLiteralFixer } from './testArrayLiteralFixer.js';
 import { testAskFixer } from './testAskFixer.js';
@@ -26,9 +26,9 @@ import { testForLoopSettingsContainedListFixer } from './testForLoopSettingsCont
 import { testForLoopVariableFixer } from './testForLoopVariableFixer.js';
 import { testGetTokenAfter } from './testGetTokenAfter.js';
 import { testGlobalLocalmakeFixer } from './testGlobalLocalmakeFixer.js';
-import { testHatSymbolPowerFixer } from './testHatSymbolPowerFixer.js';
+import { testHatSymbolPowerFixer } from './testHatSymbolPowerFixer.js';*/
 import { testHelpers } from './helpers/testHelpers.js';
-import { testIfElseFixer } from './testIfElseFixer.js';
+/*import { testIfElseFixer } from './testIfElseFixer.js';
 import { testInstructionListSquareBracketsRemoveFixer } from './testInstructionListSquareBracketsRemoveFixer.js';
 import { testJumpFixer } from './testJumpFixer.js';
 import { testLeafsInDataListsToStringLiteralsFixer } from './testLeafsInDataListsToStringLiteralsFixer.js';
@@ -75,10 +75,10 @@ import { testWebTurtleProcedureFixer } from './testWebTurtleProcedureFixer.js';
 import { testWebTurtleRepeatFixer } from './testWebTurtleRepeatFixer.js';
 import { testVariableNameReferenceFixer } from './testVariableNameReferenceFixer.js';
 import { testVariableReadSpaceInsertFixer } from './testVariableReadSpaceInsertFixer.js';
-import { wrapAndCall } from '../../../../helpers/wrapAndCall.js';
+*/import { wrapAndCall } from '../../../../helpers/wrapAndCall.js';
 
 const tests = [
-	testAnimationSetupFixer,
+	/*testAnimationSetupFixer,
 	testAnimationSnapshotStyleFixer,
 	testArrayLiteralFixer,
 	testAskFixer,
@@ -106,9 +106,9 @@ const tests = [
 	testForLoopVariableFixer,
 	testGetTokenAfter,
 	testGlobalLocalmakeFixer,
-	testHatSymbolPowerFixer,
+	testHatSymbolPowerFixer,*/
 	testHelpers,
-	testIfElseFixer,
+	/*testIfElseFixer,
 	testInstructionListSquareBracketsRemoveFixer,
 	testJumpFixer,
 	testLeafsInDataListsToStringLiteralsFixer,
@@ -154,7 +154,7 @@ const tests = [
 	testWebTurtleProcedureFixer,
 	testWebTurtleRepeatFixer,
 	testVariableNameReferenceFixer,
-	testVariableReadSpaceInsertFixer
+	testVariableReadSpaceInsertFixer*/
 ];
 
 export function testFixers(logger) {

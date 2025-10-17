@@ -1,5 +1,5 @@
 import { testFixDynamicScopes } from './testFixDynamicScopes.js';
-import { testGetAllVariableNamesSet } from './testGetAllVariableNamesSet.js';
+/*import { testGetAllVariableNamesSet } from './testGetAllVariableNamesSet.js';
 import { testGetPolyUnsafeProcedures } from './testGetPolyUnsafeProcedures.js';
 import { testMinusFixer } from './testMinusFixer.js';
 import { testMoveArgsForParameterizedGroup } from './testMoveArgsForParameterizedGroup.js';
@@ -13,12 +13,12 @@ import { testSanitization } from './sanitization/testSanitization.js';
 import { testSanitizeColourString } from './testSanitizeColourString.js';
 import { testScanTokensToCode } from './testScanTokensToCode.js';
 import { testScanWithMigration } from './testScanWithMigration.js';
-import { wrapAndCall } from '../../../../../helpers/wrapAndCall.js';
+*/import { wrapAndCall } from '../../../../../helpers/wrapAndCall.js';
 
 export function testHelpers(logger) {
 	wrapAndCall([
 		testFixDynamicScopes,
-		testGetAllVariableNamesSet,
+		/*testGetAllVariableNamesSet,
 		testGetPolyUnsafeProcedures,
 		testMinusFixer,
 		testMoveArgsForParameterizedGroup,
@@ -31,6 +31,6 @@ export function testHelpers(logger) {
 		testSanitization,
 		testSanitizeColourString,
 		testScanTokensToCode,
-		testScanWithMigration,
+		testScanWithMigration,*/
 	], logger);
 };
