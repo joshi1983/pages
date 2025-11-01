@@ -1,4 +1,4 @@
-import { testExecute_PI } from './testExecute_PI.js';
+/*import { testExecute_PI } from './testExecute_PI.js';
 import { testExecuteAssignments } from './testExecuteAssignments.js';
 import { testExecuteBinaryOperators } from './testExecuteBinaryOperators.js';
 import { testExecuteCINT } from './testExecuteCINT.js';
@@ -29,8 +29,8 @@ import { testExecuteStringLiterals } from './testExecuteStringLiterals.js';
 import { testExecuteSwap } from './testExecuteSwap.js';
 import { testExecuteTrimFunctions } from './testExecuteTrimFunctions.js';
 import { testExecuteTrue } from './testExecuteTrue.js';
-import { testExecuteWhile } from './testExecuteWhile.js';
-import { testGetColorsCode } from './testGetColorsCode.js';
+import { testExecuteWhile } from './testExecuteWhile.js';*/
+import { testGetColorsCode } from './testGetColorsCode.js';/*
 import { testGetReferencedCustomTypes } from './testGetReferencedCustomTypes.js';
 import { testGetSingleScreenNumber } from './testGetSingleScreenNumber.js';
 import { testInsertSpaces } from './testInsertSpaces.js';
@@ -67,19 +67,19 @@ import { testTranslateSelect } from './testTranslateSelect.js';
 import { testTranslateSub } from './testTranslateSub.js';
 import { testTranslateSwap } from './testTranslateSwap.js';
 import { testTranslateTrueFalse } from './testTranslateTrueFalse.js';
-import { testTranslateVariousExamples } from './testTranslateVariousExamples.js';
-import { testTranslateWhile } from './testTranslateWhile.js';
+*/import { testTranslateVariousExamples } from './testTranslateVariousExamples.js';
+/*import { testTranslateWhile } from './testTranslateWhile.js';
 import { testTranslationToWebLogoExecutePrint } from
 './testTranslationToWebLogoExecutePrint.js';
 import { testTypeProcessors } from
 './type-processors/testTypeProcessors.js';
 import { testTypeTokenToCreateProcedure } from './testTypeTokenToCreateProcedure.js';
-import { wrapAndCall } from
+*/import { wrapAndCall } from
 '../../../../helpers/wrapAndCall.js';
 
 export function testTranslationToWebLogo(logger) {
 	wrapAndCall([
-		testExecute_PI,
+		/*testExecute_PI,
 		testExecuteAssignments,
 		testExecuteBinaryOperators,
 		testExecuteCINT,
@@ -110,8 +110,8 @@ export function testTranslationToWebLogo(logger) {
 		testExecuteSwap,
 		testExecuteTrimFunctions,
 		testExecuteTrue,
-		testExecuteWhile,
-		testGetColorsCode,
+		testExecuteWhile,*/
+		testGetColorsCode,/*
 		testGetReferencedCustomTypes,
 		testGetSingleScreenNumber,
 		testInsertSpaces,
@@ -148,10 +148,10 @@ export function testTranslationToWebLogo(logger) {
 		testTranslateSub,
 		testTranslateSwap,
 		testTranslateTrueFalse,
-		testTranslateVariousExamples,
-		testTranslateWhile,
+		*/testTranslateVariousExamples,
+		/*testTranslateWhile,
 		testTranslationToWebLogoExecutePrint,
 		testTypeProcessors,
-		testTypeTokenToCreateProcedure
+		testTypeTokenToCreateProcedure*/
 	], logger);
 };

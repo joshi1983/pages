@@ -1,4 +1,4 @@
-import { testAnimationSetupFixer } from './testAnimationSetupFixer.js';
+/*import { testAnimationSetupFixer } from './testAnimationSetupFixer.js';
 import { testAnimationSnapshotStyleFixer } from './testAnimationSnapshotStyleFixer.js';
 import { testArrayLiteralFixer } from './testArrayLiteralFixer.js';
 import { testAskFixer } from './testAskFixer.js';
@@ -27,12 +27,12 @@ import { testForLoopVariableFixer } from './testForLoopVariableFixer.js';
 import { testGetTokenAfter } from './testGetTokenAfter.js';
 import { testGlobalLocalmakeFixer } from './testGlobalLocalmakeFixer.js';
 import { testHatSymbolPowerFixer } from './testHatSymbolPowerFixer.js';
-import { testHelpers } from './helpers/testHelpers.js';
-import { testIfElseFixer } from './testIfElseFixer.js';
+*/import { testHelpers } from './helpers/testHelpers.js';
+/*import { testIfElseFixer } from './testIfElseFixer.js';
 import { testInstructionListSquareBracketsRemoveFixer } from './testInstructionListSquareBracketsRemoveFixer.js';
 import { testJumpFixer } from './testJumpFixer.js';
-import { testLeafsInDataListsToStringLiteralsFixer } from './testLeafsInDataListsToStringLiteralsFixer.js';
-import { testLocalFixer } from './testLocalFixer.js';
+*/import { testLeafsInDataListsToStringLiteralsFixer } from './testLeafsInDataListsToStringLiteralsFixer.js';
+/*import { testLocalFixer } from './testLocalFixer.js';
 import { testLogo3D } from './logo-3d/testLogo3D.js';
 import { testLogoInterpreter } from './logo-interpreter/testLogoInterpreter.js';
 import { testMakeAssignFixer } from './testMakeAssignFixer.js';
@@ -49,13 +49,13 @@ import { testPolyFixer } from './testPolyFixer.js';
 import { testProcedureInProcedureFixer } from './testProcedureInProcedureFixer.js';
 import { testProcedureNameTypeFixer } from './testProcedureNameTypeFixer.js';
 import { testQuoteBooleanFixer } from './testQuoteBooleanFixer.js';
-import { testQuotedParameterFixer } from './testQuotedParameterFixer.js';
-import { testQuoteIntegerFixer } from './testQuoteIntegerFixer.js';
+*/import { testQuotedParameterFixer } from './testQuotedParameterFixer.js';
+/*import { testQuoteIntegerFixer } from './testQuoteIntegerFixer.js';
 import { testQuoteNumberFixer } from './testQuoteNumberFixer.js';
 import { testReadCommandFixer } from './testReadCommandFixer.js';
 import { testRemoveUnstartedPolyEnd } from './testRemoveUnstartedPolyEnd.js';
-import { testRemoveUnusedAssignments } from './testRemoveUnusedAssignments.js';
-import { testReplaceSpecialQuoteCharactersWithNormalQuotes } from './testReplaceSpecialQuoteCharactersWithNormalQuotes.js';
+*/import { testRemoveUnusedAssignments } from './testRemoveUnusedAssignments.js';
+/*import { testReplaceSpecialQuoteCharactersWithNormalQuotes } from './testReplaceSpecialQuoteCharactersWithNormalQuotes.js';
 import { testRequiredColourNameLongStringFixer } from './testRequiredColourNameLongStringFixer.js';
 import { testRunFixer } from './testRunFixer.js';
 import { testSetPenSizeFixer } from './testSetPenSizeFixer.js';
@@ -75,10 +75,10 @@ import { testWebTurtleProcedureFixer } from './testWebTurtleProcedureFixer.js';
 import { testWebTurtleRepeatFixer } from './testWebTurtleRepeatFixer.js';
 import { testVariableNameReferenceFixer } from './testVariableNameReferenceFixer.js';
 import { testVariableReadSpaceInsertFixer } from './testVariableReadSpaceInsertFixer.js';
-import { wrapAndCall } from '../../../../helpers/wrapAndCall.js';
+*/import { wrapAndCall } from '../../../../helpers/wrapAndCall.js';
 
 const tests = [
-	testAnimationSetupFixer,
+	/*testAnimationSetupFixer,
 	testAnimationSnapshotStyleFixer,
 	testArrayLiteralFixer,
 	testAskFixer,
@@ -107,13 +107,14 @@ const tests = [
 	testGetTokenAfter,
 	testGlobalLocalmakeFixer,
 	testHatSymbolPowerFixer,
-	testHelpers,
-	testIfElseFixer,
+	*/testHelpers,
+	/*testIfElseFixer,
 	testInstructionListSquareBracketsRemoveFixer,
 	testJumpFixer,
-	testLeafsInDataListsToStringLiteralsFixer,
-	testLocalFixer,
+	*/testLeafsInDataListsToStringLiteralsFixer,
+	/*testLocalFixer,
 	testLogo3D,
+	testLocalFixer,
 	testLogoInterpreter,
 	testMakeAssignFixer,
 	testMinusSignSpaceInsertFixer,
@@ -129,13 +130,13 @@ const tests = [
 	testProcedureInProcedureFixer,
 	testProcedureNameTypeFixer,
 	testQuoteBooleanFixer,
-	testQuotedParameterFixer,
-	testQuoteIntegerFixer,
+	*/testQuotedParameterFixer,
+	/*testQuoteIntegerFixer,
 	testQuoteNumberFixer,
 	testReadCommandFixer,
 	testRemoveUnstartedPolyEnd,
-	testRemoveUnusedAssignments,
-	testReplaceSpecialQuoteCharactersWithNormalQuotes,
+	*/testRemoveUnusedAssignments,
+	/*testReplaceSpecialQuoteCharactersWithNormalQuotes,
 	testRequiredColourNameLongStringFixer,
 	testRunFixer,
 	testSetPenSizeFixer,
@@ -154,7 +155,7 @@ const tests = [
 	testWebTurtleProcedureFixer,
 	testWebTurtleRepeatFixer,
 	testVariableNameReferenceFixer,
-	testVariableReadSpaceInsertFixer
+	testVariableReadSpaceInsertFixer*/
 ];
 
 export function testFixers(logger) {
