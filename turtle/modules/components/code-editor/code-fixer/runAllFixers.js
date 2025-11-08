@@ -1,3 +1,5 @@
+import { WrappedFixLogger } from './WrappedFixLogger.js';
+
 /*
 // this code is commented out for now but could be useful if a bug related to
 // a fixer corrupting the parse tree data structure happens again.
@@ -19,7 +21,11 @@ function isTreeCorrupted(cachedParseTree) {
 export function runAllFixers(allFixers) {
 	return function(cachedParseTree, fixLogger) {
 		for (const fixer of allFixers) {
-			fixer(cachedParseTree, fixLogger);
+			const wFixLogger = new WrappedFixLogger(fixLogger);
+			fixer(cachedParseTree, wFixLogger);
+			if (wFixLogger.hasLoggedAnything()) {
+				console.log(`${fixer.name} made some changes.`);
+			}
 			/*if (isTreeCorrupted(cachedParseTree)) {
 				throw new Error(`Tree corrupted after running ${fixer.name}`);
 			}*/
