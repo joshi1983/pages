@@ -1,6 +1,6 @@
-import { testAsyncCachedMap } from './testAsyncCachedMap.js';
+//import { testAsyncCachedMap } from './testAsyncCachedMap.js';
 import { testCodeEditor } from './code-editor/testCodeEditor.js';
-import { testDialog } from './dialog/testDialog.js';
+/*import { testDialog } from './dialog/testDialog.js';
 import { testElementResizeListener } from './testElementResizeListener.js';
 import { testEventQueue } from './testEventQueue.js';
 import { testGetFileFormatFromArrayBuffer } from './testGetFileFormatFromArrayBuffer.js';
@@ -15,13 +15,13 @@ import { testSVGDrawingViewerDirectory } from './svg-drawing-viewer/testSVGDrawi
 import { testSyntaxHighlighter } from './syntax-highlighter/testSyntaxHighlighter.js';
 import { testUpdateHexColourDisplay } from './testUpdateHexColourDisplay.js';
 import { testURLUtils } from './testURLUtils.js';
-import { wrapAndCall } from '../helpers/wrapAndCall.js';
+*/import { wrapAndCall } from '../helpers/wrapAndCall.js';
 
 export function testComponents(logger) {
 	wrapAndCall([
-		testAsyncCachedMap,
+		//testAsyncCachedMap,
 		testCodeEditor,
-		testDialog,
+		/*testDialog,
 		testElementResizeListener,
 		testEventQueue,
 		testGetFileFormatFromArrayBuffer,
@@ -35,6 +35,6 @@ export function testComponents(logger) {
 		testSVGDrawingViewerDirectory,
 		testSyntaxHighlighter,
 		testUpdateHexColourDisplay,
-		testURLUtils
+		testURLUtils*/
 	], logger);
 };

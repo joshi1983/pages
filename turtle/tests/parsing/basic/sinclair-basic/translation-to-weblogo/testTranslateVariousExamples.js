@@ -35,12 +35,15 @@ ArrayUtils.pushAll(examples, smallVisualBasicExamples);
 ArrayUtils.pushAll(examples, tektronix405XExamples);
 
 export function testTranslateVariousExamples(logger) {
+	//examples.splice(0, 3);
+	//examples.splice(1, 1000);
 	examples.forEach(function(code, index) {
+		console.log(`index=${index}`);
 		const plogger = prefixWrapper(`Case ${index}, code=${code}`, logger);
 		try {
-		const translated = translateSinclairBasicToWebLogo(code);
-		if (typeof translated !== 'string')
-			plogger(`Expected a string but found ${translated}`);
+			const translated = translateSinclairBasicToWebLogo(code);
+			if (typeof translated !== 'string')
+				plogger(`Expected a string but found ${translated}`);
 		}
 		catch (e) {
 			console.error(e);
