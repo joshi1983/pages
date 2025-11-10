@@ -22,7 +22,7 @@ export function processProcessTestCases(cases, processFunction, logger) {
 		if (token !== undefined) {
 			const resultBuffer = new CommentDumpingStringBuffer([], noop);
 			const tree = new CachedParseTree(parseResult.root);
-			const settings = {'cachedParseTree': tree};
+			const settings = {'cachedParseTree': tree, 'tokenProcessors': new Map()};
 			processFunction(token, resultBuffer, settings);
 			const result = resultBuffer.toString();
 			if (result !== caseInfo.out) {
