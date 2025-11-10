@@ -23,7 +23,8 @@ export function translate(code) {
 	// Translate Java-like Processing code to WebLogo.
 	const parseResult = parse(code);
 	const settings = {
-		'cachedParseTree': new CachedParseTree(parseResult.root)
+		'cachedParseTree': new CachedParseTree(parseResult.root),
+		'tokenProcessors': new Map()
 	};
 	const result = new CommentDumpingStringBuffer(parseResult.comments,
 		processJavaLikeCommentToken);

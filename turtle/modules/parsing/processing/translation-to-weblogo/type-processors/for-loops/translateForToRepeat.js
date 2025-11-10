@@ -3,11 +3,18 @@ import { forToConditionToken } from './forToConditionToken.js';
 import { forTokenToInitVariableName } from './forTokenToInitVariableName.js';
 import { forTokenToRepeatCount } from './forTokenToRepeatCount.js';
 import { forToStepValue } from './forToStepValue.js';
+import { getVariableReadsOfConcernForRepeat } from
+'./getVariableReadsOfConcernForRepeat.js';
 import { processToken } from '../processToken.js';
+
+function addRepcount(token, result, settings) {
+	result.append(' repcount ');
+}
 
 export function translateForToRepeat(forToken, result, settings) {
 	const repeatLimit = forTokenToRepeatCount(forToken);
 	const codeBlock = forTokenToCodeBlock(forToken);
+	const variableName = forTokenToInitVariableName(forToken);
 	result.append('\nrepeat ');
 	if (Number.isInteger(repeatLimit))
 		result.append(repeatLimit + ' ');
@@ -19,13 +26,15 @@ export function translateForToRepeat(forToken, result, settings) {
 			result.append(' ( ');
 
 		const conditionToken = forToConditionToken(forToken);
-		const variableName = forTokenToInitVariableName(forToken);
 		const limitToken = conditionToken.children.filter(t => t.val !== variableName)[0];
 		processToken(limitToken, result, settings);
 
 		if (isDivideByStepValueNeeded)
 			result.append(` ) /  ${stepValue}`);
 	}
-	
+	const affectedVariableReads = getVariableReadsOfConcernForRepeat(codeBlock, variableName);
+	for (const variableRead of affectedVariableReads) {
+		settings.tokenProcessors.set(variableRead, addRepcount);
+	}
 	processToken(codeBlock, result, settings);
 };

@@ -11,6 +11,8 @@ export function testTranslateFor(logger) {
 		'out': 'repeat 100 [\n]'},
 		{'in': 'for (int i = 0; i < limit; i++) {}',
 		'out': 'repeat :limit [\n]'},
+		{'in': 'for (int i = 1; i < 100; i++) {f(i);}',
+		'out': 'repeat 100 [\n\tf\n\trepcount\n]'},
 	];
 	testInOutPairs(cases, translate, logger);
 };

@@ -53,5 +53,14 @@ const typeProcessors = new Map([
 	[ParseTreeTokenType.UNARY_OPERATOR, processUnaryOperator]
 ]);
 
-const processToken = genericProcessToken(typeProcessors);
+const processToken_ = genericProcessToken(typeProcessors);
+function processToken(token, result, settings) {
+	const tokenProcessor = settings.tokenProcessors.get(token);
+	if (tokenProcessor !== undefined) {
+		tokenProcessor(...arguments);
+	}
+	else
+		processToken_(...arguments);
+}
+
 export { processToken };
