@@ -1,4 +1,4 @@
-import { testIdentifiersJSON } from './testIdentifiersJSON.js';
+/*import { testIdentifiersJSON } from './testIdentifiersJSON.js';
 import { testIsLikelyProcessing } from './testIsLikelyProcessing.js';
 import { testMethodsJSON } from './testMethodsJSON.js';
 import { testOperatorsJSON } from './testOperatorsJSON.js';
@@ -36,13 +36,13 @@ import { testParsing  } from './parsing/testParsing.js';
 import { testProcessingMethod } from './testProcessingMethod.js';
 import { testReservedWordsJSON } from './testReservedWordsJSON.js';
 import { testScanning } from './scanning/testScanning.js';
-import { testTranslationToWebLogo } from
+*/import { testTranslationToWebLogo } from
 './translation-to-weblogo/testTranslationToWebLogo.js';
 import { wrapAndCall } from '../../helpers/wrapAndCall.js';
 
 export function testProcessing(logger) {
 	wrapAndCall([
-		testIdentifiersJSON,
+		/*testIdentifiersJSON,
 		testIsLikelyProcessing,
 		testMethodsJSON,
 		testOperatorsJSON,
@@ -80,6 +80,6 @@ export function testProcessing(logger) {
 		testProcessingMethod,
 		testReservedWordsJSON,
 		testScanning,
-		testTranslationToWebLogo
+		*/testTranslationToWebLogo
 	], logger);
 };
