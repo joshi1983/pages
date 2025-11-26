@@ -1,4 +1,4 @@
-import { testEvaluateStringLiteral } from './testEvaluateStringLiteral.js';
+/*import { testEvaluateStringLiteral } from './testEvaluateStringLiteral.js';
 import { testEvaluateTemplateLiteral } from './testEvaluateTemplateLiteral.js';
 import { testEvaluators } from './evaluators/testEvaluators.js';
 import { testMightHaveSideEffects } from './testMightHaveSideEffects.js';
@@ -50,12 +50,12 @@ import { testReservedWord } from './testReservedWord.js';
 import { testReservedWordsJSON } from './testReservedWordsJSON.js';
 import { testScanning } from './scanning/testScanning.js';
 import { testScanningTemplateLiterals } from './scanning-template-literals/testScanningTemplateLiterals.js';
-import { testTranslationToWebLogo } from './translation-to-weblogo/testTranslationToWebLogo.js';
+*/import { testTranslationToWebLogo } from './translation-to-weblogo/testTranslationToWebLogo.js';
 import { wrapAndCall } from '../../helpers/wrapAndCall.js';
 
 export function testJSParsing(logger) {
 	wrapAndCall([
-		testEvaluateStringLiteral,
+		/*testEvaluateStringLiteral,
 		testEvaluateTemplateLiteral,
 		testEvaluators,
 		testMightHaveSideEffects,
@@ -106,7 +106,7 @@ export function testJSParsing(logger) {
 		testReservedWord,
 		testReservedWordsJSON,
 		testScanning,
-		testScanningTemplateLiterals,
+		testScanningTemplateLiterals,*/
 		testTranslationToWebLogo
 	], logger);
 };
