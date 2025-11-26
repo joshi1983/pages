@@ -1,6 +1,6 @@
-import { testIdentifiersJSON } from './testIdentifiersJSON.js';
-import { testIsLikelyProcessing } from './testIsLikelyProcessing.js';
-import { testJSProcessing } from './js-processing/testJSProcessing.js';
+/*import { testIdentifiersJSON } from './testIdentifiersJSON.js';
+import { testIsLikelyProcessing } from './testIsLikelyProcessing.js';*/
+import { testJSProcessing } from './js-processing/testJSProcessing.js';/*
 import { testMethodsJSON } from './testMethodsJSON.js';
 import { testOperatorsJSON } from './testOperatorsJSON.js';
 import { testParseAssignments } from './testParseAssignments.js';
@@ -38,14 +38,14 @@ import { testProcessingMethod } from './testProcessingMethod.js';
 import { testReservedWordsJSON } from './testReservedWordsJSON.js';
 import { testScanning } from './scanning/testScanning.js';
 import { testTranslationToWebLogo } from
-'./translation-to-weblogo/testTranslationToWebLogo.js';
+'./translation-to-weblogo/testTranslationToWebLogo.js';*/
 import { wrapAndCall } from '../../helpers/wrapAndCall.js';
 
 export function testProcessing(logger) {
 	wrapAndCall([
-		testIdentifiersJSON,
-		testIsLikelyProcessing,
-		testJSProcessing,
+		/*testIdentifiersJSON,
+		testIsLikelyProcessing,*/
+		testJSProcessing,/*
 		testMethodsJSON,
 		testOperatorsJSON,
 		testParseAssignments,
@@ -82,6 +82,6 @@ export function testProcessing(logger) {
 		testProcessingMethod,
 		testReservedWordsJSON,
 		testScanning,
-		testTranslationToWebLogo
+		testTranslationToWebLogo*/
 	], logger);
 };

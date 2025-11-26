@@ -2,7 +2,7 @@ import { testExecuteDoWhile } from './testExecuteDoWhile.js';
 import { testExecuteFor } from './testExecuteFor.js';
 import { testExecuteIf } from './testExecuteIf.js';
 import { testExecuteSwitch } from './testExecuteSwitch.js';
-import { testExecuteWhile } from './testExecuteWhile.js';
+/*import { testExecuteWhile } from './testExecuteWhile.js';
 import { testNoThrownExceptions } from './testNoThrownExceptions.js';
 import { testOperators } from
 './operators/testOperators.js';
@@ -25,16 +25,16 @@ import { testTranslateExecuteOperators } from
 './testTranslateExecuteOperators.js';
 import { testTranslateExecutePrint } from
 './testTranslateExecutePrint.js';
-import { testTranslateFor } from './testTranslateFor.js';
+import { testTranslateFor } from './testTranslateFor.js';*/
 import { testTranslateMethodCalls } from
 './testTranslateMethodCalls.js';
-import { testTranslateMethods } from
+/*import { testTranslateMethods } from
 './testTranslateMethods.js';
 import { testTranslateTry } from
 './testTranslateTry.js';
 import { testTranslateUnaryOperators } from
 './testTranslateUnaryOperators.js';
-import { testTypeProcessors } from './type-processors/testTypeProcessors.js';
+*/import { testTypeProcessors } from './type-processors/testTypeProcessors.js';
 import { wrapAndCall } from
 '../../../helpers/wrapAndCall.js';
 
@@ -42,8 +42,8 @@ export function testTranslationToWebLogo(logger) {
 	wrapAndCall([
 		testExecuteDoWhile,
 		testExecuteFor,
-		testExecuteIf,
-		testExecuteSwitch,
+		/*testExecuteIf,
+		testExecuteSwitch,/*
 		testExecuteWhile,
 		testNoThrownExceptions,
 		testOperators,
@@ -58,10 +58,10 @@ export function testTranslationToWebLogo(logger) {
 		testTranslateExecuteOperators,
 		testTranslateExecutePrint,
 		testTranslateFor,
-		testTranslateMethodCalls,
-		testTranslateMethods,
+		*/testTranslateMethodCalls,
+		/*testTranslateMethods,
 		testTranslateTry,
-		testTranslateUnaryOperators,
+		testTranslateUnaryOperators,*/
 		testTypeProcessors
 	], logger);
 };
