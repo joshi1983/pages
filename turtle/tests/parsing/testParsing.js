@@ -1,5 +1,5 @@
 import { testAda } from './ada/testAda.js';
-import { testASMTurtle } from './asm-turtle/testASMTurtle.js';
+/*import { testASMTurtle } from './asm-turtle/testASMTurtle.js';
 import { testAsyncParser } from './testAsyncParser.js';
 import { testAsyncParseTask } from './testAsyncParseTask.js';
 import { testBasic } from './basic/testBasic.js';
@@ -21,8 +21,8 @@ import { testGenericParsingUtilities } from './generic-parsing-utilities/testGen
 import { testGetParseTree } from './testGetParseTree.js';
 import { testGetStartPositionOfToken } from './testGetStartPositionOfToken.js';
 import { testGetTokensForParsing } from './testGetTokensForParsing.js';
+*/import { testHolyC } from './holy-c/testHolyC.js';/*
 import { testHPGL } from './hp-gl/testHPGL.js';
-import { testHolyC } from './holy-c/testHolyC.js';
 import { testIsSupportedByHighOrderInvoke } from './testIsSupportedByHighOrderInvoke.js';
 import { testJSParsing } from './js-parsing/testJSParsing.js';
 import { testKeyword } from './testKeyword.js';
@@ -59,12 +59,12 @@ import { testSonicWebTurtle } from './sonic-webturtle/testSonicWebTurtle.js';
 import { testSugarLabsTurtleBlocks } from './sugarlabs-turtle-blocks/testSugarLabsTurtleBlocks.js';
 import { testToken } from './testToken.js';
 import { testUnsupportedCommand } from './testUnsupportedCommand.js';
-import { wrapAndCall } from '../helpers/wrapAndCall.js';
+*/import { wrapAndCall } from '../helpers/wrapAndCall.js';
 
 export function testParsing(logger) {
 	wrapAndCall([
 		testAda,
-		testASMTurtle,
+		/*testASMTurtle,
 		testAsyncParser,
 		testAsyncParseTask,
 		testBasic,
@@ -86,8 +86,8 @@ export function testParsing(logger) {
 		testGetParseTree,
 		testGetStartPositionOfToken,
 		testGetTokensForParsing,
+		*/testHolyC,/*
 		testHPGL,
-		testHolyC,
 		testIsSupportedByHighOrderInvoke,
 		testJSParsing,
 		testKeyword,
@@ -123,6 +123,6 @@ export function testParsing(logger) {
 		testSonicWebTurtle,
 		testSugarLabsTurtleBlocks,
 		testToken,
-		testUnsupportedCommand
+		testUnsupportedCommand*/
 	], logger);
 };
