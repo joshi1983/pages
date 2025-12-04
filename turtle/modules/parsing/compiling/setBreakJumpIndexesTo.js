@@ -50,6 +50,7 @@ export function setBreakJumpIndexesTo(newIndex, startIndex, instructions, contai
 		instruction.jumpToIndex === 0 &&
 		isBreakToken(instruction.parseTreeToken) &&
 		isTokenApplicableTo(instruction.parseTreeToken, containerParseToken)) {
+			console.log(`Setting jumpToIndex to ${newIndex}`);
 			instruction.jumpToIndex = newIndex;
 		}
 	}

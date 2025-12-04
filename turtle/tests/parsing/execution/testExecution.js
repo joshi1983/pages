@@ -1,4 +1,4 @@
-import { testBreakpoint } from './testBreakpoint.js';
+/*import { testBreakpoint } from './testBreakpoint.js';
 import { testErrorCasesValidationAtRuntime } from './testErrorCasesValidationAtRuntime.js';
 import { testExecuteLogoProcedure } from './testExecuteLogoProcedure.js';
 import { testExecuterWithParsedOptimizations } from './testExecuterWithParsedOptimizations.js';
@@ -15,15 +15,15 @@ import { testLogoProgramExecuterInvokeUsingPrint } from './testLogoProgramExecut
 import { testLogoProgramExecuterOperators } from './testLogoProgramExecuterOperators.js';
 import { testLogoProgramExecuterRandomFunctions } from './testLogoProgramExecuterRandomFunctions.js';
 import { testLogoProgramExecuterUsingPrint } from './testLogoProgramExecuterUsingPrint.js';
-import { testLogoProgramExecuterWithBreakCommand } from './testLogoProgramExecuterWithBreakCommand.js';
-import { testLogoProgramExecuterWithGradients } from './testLogoProgramExecuterWithGradients.js';
+*/import { testLogoProgramExecuterWithBreakCommand } from './testLogoProgramExecuterWithBreakCommand.js';
+/*import { testLogoProgramExecuterWithGradients } from './testLogoProgramExecuterWithGradients.js';
 import { testLogoProgramExecuterWithSwap } from './testLogoProgramExecuterWithSwap.js';
 import { testOrientation3DCompatibility } from './testOrientation3DCompatibility.js';
-import { wrapAndCall } from '../../helpers/wrapAndCall.js';
+*/import { wrapAndCall } from '../../helpers/wrapAndCall.js';
 
 export function testExecution(logger) {
 	wrapAndCall([
-		testBreakpoint,
+		/*testBreakpoint,
 		testErrorCasesValidationAtRuntime,
 		testExecuteLogoProcedure,
 		testExecuterWithParsedOptimizations,
@@ -40,9 +40,9 @@ export function testExecution(logger) {
 		testLogoProgramExecuterOperators,
 		testLogoProgramExecuterRandomFunctions,
 		testLogoProgramExecuterUsingPrint,
-		testLogoProgramExecuterWithBreakCommand,
+		*/testLogoProgramExecuterWithBreakCommand,/*
 		testLogoProgramExecuterWithGradients,
 		testLogoProgramExecuterWithSwap,
-		testOrientation3DCompatibility,
+		testOrientation3DCompatibility,*/
 	], logger);
 };

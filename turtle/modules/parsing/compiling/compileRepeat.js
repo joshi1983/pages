@@ -39,5 +39,6 @@ export function compileRepeat(parseTreeTokens, procedures, result, logger) {
 	const breakToIndex = result.length;
 	result.push(new PopRepcountInstruction(parseTreeTokens[0]));
 	skipEntireLoopJump.jumpToIndex = result.length;
+	console.log(`Setting breakToIndex to ${breakToIndex - 2} for a repeat.`);
 	setBreakJumpIndexesTo(breakToIndex, breakToIndex - 2, result, repeatToken);
 };

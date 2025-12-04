@@ -40,6 +40,7 @@ export function compileFor(parseTreeTokens, procedures, result, logger) {
 	// end the loop.
 	result.push(new IncrementForCounterInstruction(forControlToken));
 	result.push(new JumpIfTrueInstruction(loopStartInstructionIndex, forControlToken));
+	console.log(`Setting breakToIndex to ${result.length - 1} for a for-loop.`);
 	setBreakJumpIndexesTo(result.length, result.length - 1, result, forToken);
 	result.push(new PopForcountInstruction(forControlToken));
 };
