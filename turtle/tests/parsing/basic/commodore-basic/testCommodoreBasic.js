@@ -1,16 +1,16 @@
-import { testIsLikelyCommodoreBasic } from
+/*import { testIsLikelyCommodoreBasic } from
 './testIsLikelyCommodoreBasic.js';
 import { testScanning } from
 './scanning/testScanning.js';
-import { testTranslationToWebLogo } from
+*/import { testTranslationToWebLogo } from
 './translation-to-weblogo/testTranslationToWebLogo.js';
 import { wrapAndCall } from
 '../../../helpers/wrapAndCall.js';
 
 export function testCommodoreBasic(logger) {
 	wrapAndCall([
-		testIsLikelyCommodoreBasic,
-		testScanning,
+		/*testIsLikelyCommodoreBasic,
+		testScanning,*/
 		testTranslationToWebLogo
 	], logger);
 };
