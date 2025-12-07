@@ -20,7 +20,7 @@ import { testGenericParsingUtilities } from './generic-parsing-utilities/testGen
 import { testGetParseTree } from './testGetParseTree.js';
 import { testGetStartPositionOfToken } from './testGetStartPositionOfToken.js';
 import { testGetTokensForParsing } from './testGetTokensForParsing.js';
-import { testHolyC } from './holy-c/testHolyC.js';
+*/import { testHolyC } from './holy-c/testHolyC.js';/*
 import { testIsSupportedByHighOrderInvoke } from './testIsSupportedByHighOrderInvoke.js';
 import { testJSParsing } from './js-parsing/testJSParsing.js';
 import { testKeyword } from './testKeyword.js';
@@ -80,7 +80,7 @@ export function testParsing(logger) {
 		testGetParseTree,
 		testGetStartPositionOfToken,
 		testGetTokensForParsing,
-		testHolyC,
+		*/testHolyC,/*
 		testIsSupportedByHighOrderInvoke,
 		testJSParsing,
 		testKeyword,
