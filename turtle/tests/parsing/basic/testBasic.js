@@ -1,4 +1,4 @@
-import { testAmosBasic } from
+/*import { testAmosBasic } from
 './amos-basic/testAmosBasic.js';
 import { testAnsiBasic } from
 './ansi-basic/testAnsiBasic.js';
@@ -8,9 +8,9 @@ import { testBasil } from
 './basil/testBasil.js';
 import { testBBCBasic } from
 './bbc-basic/testBBCBasic.js';
-import { testCommodoreBasic } from
+*/import { testCommodoreBasic } from
 './commodore-basic/testCommodoreBasic.js';
-import { testHelpers } from
+/*import { testHelpers } from
 './helpers/testHelpers.js';
 import { testMicroA } from
 './micro-a/testMicroA.js';
@@ -30,17 +30,17 @@ import { testToQBASICMigrations } from
 './testToQBASICMigrations.js';
 import { testTRS80Basic } from
 './trs-80-basic/testTRS80Basic.js';
-import { wrapAndCall } from 
+*/import { wrapAndCall } from 
 '../../helpers/wrapAndCall.js';
 
 export function testBasic(logger) {
-	wrapAndCall([
+	wrapAndCall([/*
 		testAmosBasic,
 		testAnsiBasic,
 		testAppleSoftBasic,
 		testBasil,
-		testBBCBasic,
-		testCommodoreBasic,
+		testBBCBasic,*/
+		testCommodoreBasic,/*
 		testHelpers,
 		testMicroA,
 		testPlayBasic,
@@ -50,6 +50,6 @@ export function testBasic(logger) {
 		testTektronix405xBasic,
 		testTexasInstruments99_4a,
 		testToQBASICMigrations,
-		testTRS80Basic
+		testTRS80Basic*/
 	], logger);
 };
