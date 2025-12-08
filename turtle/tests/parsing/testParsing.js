@@ -1,8 +1,8 @@
 /*import { testASMTurtle } from './asm-turtle/testASMTurtle.js';
 import { testAsyncParser } from './testAsyncParser.js';
 import { testAsyncParseTask } from './testAsyncParseTask.js';
-import { testBasic } from './basic/testBasic.js';
-import { testCharIndexToParseTreeTokenPosition } from './testCharIndexToParseTreeTokenPosition.js';
+*/import { testBasic } from './basic/testBasic.js';
+/*import { testCharIndexToParseTreeTokenPosition } from './testCharIndexToParseTreeTokenPosition.js';
 import { testCommandClass } from './testCommandClass.js';
 import { testCompileCodeUsingInternalProc } from './testCompileCodeUsingInternalProc.js';
 import { testCompiling } from './compiling/testCompiling.js';
@@ -58,8 +58,8 @@ export function testParsing(logger) {
 		/*testASMTurtle,
 		testAsyncParser,
 		testAsyncParseTask,
-		testBasic,
-		testCharIndexToParseTreeTokenPosition,
+		*/testBasic,
+		/*testCharIndexToParseTreeTokenPosition,
 		testCommandClass,
 		testCompileCodeUsingInternalProc,
 		testCompiling,
