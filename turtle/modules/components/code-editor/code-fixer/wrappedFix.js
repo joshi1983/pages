@@ -23,6 +23,8 @@ export function wrappedFix(code, fix, fixLogger, proceduresMap, tree) {
 		const writableCachedParseTree = new WriteOptimizedCachedParseTree(tree, proceduresMap);
 		const infiniteLoopCutoff = 5;
 		for (let i = 0; i <= infiniteLoopCutoff; i++) {
+			if (i === 4)
+				console.log(`start watching. final fixing steps are starting.`);
 			let wrappedFixLogger = new WrappedFixLogger(fixLogger);
 			fix(writableCachedParseTree, wrappedFixLogger);
 			if (wrappedFixLogger.hasLoggedAnything() === false) {
