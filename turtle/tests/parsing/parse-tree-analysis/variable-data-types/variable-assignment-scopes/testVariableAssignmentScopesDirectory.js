@@ -14,7 +14,6 @@ import { testGetRequiredTypesForForSettingsToken } from
 import { testGetSatisfyingDataTypes } from './testGetSatisfyingDataTypes.js';
 import { testMightQueue2MutateManyVariables } from './testMightQueue2MutateManyVariables.js';
 import { testProcessMutationsOfSingleValueLists } from './testProcessMutationsOfSingleValueLists.js';
-import { testProcessMutationsOfSingleValueLists } from './testProcessMutationsOfSingleValueLists.js';
 import { testRequiredTypes } from './required-types/testRequiredTypes.js';
 import { testTightenRequiredTypesForScopesWithConditionalRanges } from
 './testTightenRequiredTypesForScopesWithConditionalRanges.js';

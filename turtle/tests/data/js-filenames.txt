@@ -2717,6 +2717,7 @@ modules/parsing/parse-tree-analysis/variable-data-types/getOutputTypesForProcedu
 modules/parsing/parse-tree-analysis/variable-data-types/getProcedureFromAnyTokenInProcedure.js
 modules/parsing/parse-tree-analysis/variable-data-types/getRefTypes.js
 modules/parsing/parse-tree-analysis/variable-data-types/getRequiredTypesForTokenBasic.js
+modules/parsing/parse-tree-analysis/variable-data-types/getTokenDataTypesBasic.js
 modules/parsing/parse-tree-analysis/variable-data-types/getTokenTypesAdvanced.js
 modules/parsing/parse-tree-analysis/variable-data-types/getTokenTypesBasic.js
 modules/parsing/parse-tree-analysis/variable-data-types/getTokenValueAdvanced.js
@@ -2773,6 +2774,8 @@ modules/parsing/parse-tree-analysis/variable-data-types/variable-assignment-scop
 modules/parsing/parse-tree-analysis/variable-data-types/variable-assignment-scopes/ConditionalRange.js
 modules/parsing/parse-tree-analysis/variable-data-types/variable-assignment-scopes/filterVariableScopesDeclaredAt.js
 modules/parsing/parse-tree-analysis/variable-data-types/variable-assignment-scopes/findGlobalAssignmentScopesInProcedureAt.js
+modules/parsing/parse-tree-analysis/variable-data-types/variable-assignment-scopes/getAssignedDataTypesForParameter.js
+modules/parsing/parse-tree-analysis/variable-data-types/variable-assignment-scopes/getAssignedTypesForProcedureParameterBasic.js
 modules/parsing/parse-tree-analysis/variable-data-types/variable-assignment-scopes/getLastPossibleToToken.js
 modules/parsing/parse-tree-analysis/variable-data-types/variable-assignment-scopes/getRequiredTypesForForSettingsToken.js
 modules/parsing/parse-tree-analysis/variable-data-types/variable-assignment-scopes/getRequiredTypesFromAssertion.js
@@ -2784,10 +2787,21 @@ modules/parsing/parse-tree-analysis/variable-data-types/variable-assignment-scop
 modules/parsing/parse-tree-analysis/variable-data-types/variable-assignment-scopes/mightQueue2MutateManyVariables.js
 modules/parsing/parse-tree-analysis/variable-data-types/variable-assignment-scopes/processMutationsOfSingleValueLists.js
 modules/parsing/parse-tree-analysis/variable-data-types/variable-assignment-scopes/propogateSwappedValues.js
+modules/parsing/parse-tree-analysis/variable-data-types/variable-assignment-scopes/required-types/containsOutputOrStop.js
+modules/parsing/parse-tree-analysis/variable-data-types/variable-assignment-scopes/required-types/getRequiredTypesForIf.js
+modules/parsing/parse-tree-analysis/variable-data-types/variable-assignment-scopes/required-types/getRequiredTypesForInstructionList.js
+modules/parsing/parse-tree-analysis/variable-data-types/variable-assignment-scopes/required-types/getRequiredTypesForToken.js
+modules/parsing/parse-tree-analysis/variable-data-types/variable-assignment-scopes/required-types/getRequiredTypesFromStart.js
+modules/parsing/parse-tree-analysis/variable-data-types/variable-assignment-scopes/required-types/intersectWithAssertedTypes.js
+modules/parsing/parse-tree-analysis/variable-data-types/variable-assignment-scopes/required-types/intersectWithBinaryOperatorTypes.js
+modules/parsing/parse-tree-analysis/variable-data-types/variable-assignment-scopes/required-types/intersectWithCommandArgTypes.js
+modules/parsing/parse-tree-analysis/variable-data-types/variable-assignment-scopes/required-types/intersectWithUnaryOperatorTypes.js
+modules/parsing/parse-tree-analysis/variable-data-types/variable-assignment-scopes/required-types/isOutputOrStopCall.js
 modules/parsing/parse-tree-analysis/variable-data-types/variable-assignment-scopes/shouldScopeBeReduced.js
 modules/parsing/parse-tree-analysis/variable-data-types/variable-assignment-scopes/tightenRequiredTypesForScopesWithConditionalRanges.js
 modules/parsing/parse-tree-analysis/variable-data-types/variable-assignment-scopes/tightenTokenDataTypesAfterAdjustSubtypesForLists.js
 modules/parsing/parse-tree-analysis/variable-data-types/variable-assignment-scopes/typePredicateMap.js
+modules/parsing/parse-tree-analysis/variable-data-types/variable-assignment-scopes/updateAssignedTypesForParameters.js
 modules/parsing/parse-tree-analysis/variable-data-types/variable-scope-start/getFromLoopToken.js
 modules/parsing/parse-tree-analysis/variable-data-types/variable-scope-start/getHighestLoopToken.js
 modules/parsing/parse-tree-analysis/variable-data-types/variable-scope-start/getInstructionListTokenFromLoopToken.js
@@ -5554,6 +5568,8 @@ tests/parsing/parse-tree-analysis/variable-data-types/testVariable.js
 tests/parsing/parse-tree-analysis/variable-data-types/testVariableAssignmentScope.js
 tests/parsing/parse-tree-analysis/variable-data-types/testVariableDataTypes.js
 tests/parsing/parse-tree-analysis/variable-data-types/testVariables.js
+tests/parsing/parse-tree-analysis/variable-data-types/variable-assignment-scopes/required-types/testGetRequiredTypesFromStart.js
+tests/parsing/parse-tree-analysis/variable-data-types/variable-assignment-scopes/required-types/testRequiredTypes.js
 tests/parsing/parse-tree-analysis/variable-data-types/variable-assignment-scopes/testAddConditionalRangesToVariableAssignmentScope.js
 tests/parsing/parse-tree-analysis/variable-data-types/variable-assignment-scopes/testAddScopesForPropertyLists.js
 tests/parsing/parse-tree-analysis/variable-data-types/variable-assignment-scopes/testAddVariableAssignmentScopes.js
@@ -5563,6 +5579,7 @@ tests/parsing/parse-tree-analysis/variable-data-types/variable-assignment-scopes
 tests/parsing/parse-tree-analysis/variable-data-types/variable-assignment-scopes/testGetAnalyzedVariableAssignmentScopes.js
 tests/parsing/parse-tree-analysis/variable-data-types/variable-assignment-scopes/testGetAnalyzedVariableAssignmentScopesSpecialCases.js
 tests/parsing/parse-tree-analysis/variable-data-types/variable-assignment-scopes/testGetAnalyzedVariablesParameters.js
+tests/parsing/parse-tree-analysis/variable-data-types/variable-assignment-scopes/testGetAssignedDataTypesForParameter.js
 tests/parsing/parse-tree-analysis/variable-data-types/variable-assignment-scopes/testGetRequiredTypesForForSettingsToken.js
 tests/parsing/parse-tree-analysis/variable-data-types/variable-assignment-scopes/testGetSatisfyingDataTypes.js
 tests/parsing/parse-tree-analysis/variable-data-types/variable-assignment-scopes/testMightQueue2MutateManyVariables.js
