@@ -23,6 +23,8 @@ export function wrappedFix(code, fix, fixLogger, proceduresMap, tree) {
 		const writableCachedParseTree = new WriteOptimizedCachedParseTree(tree, proceduresMap);
 		const infiniteLoopCutoff = 5;
 		for (let i = 0; i <= infiniteLoopCutoff; i++) {
+			if (i === 4)
+				console.log(`start watching. final fixing steps are starting.`);
 			let wrappedFixLogger = new WrappedFixLogger(fixLogger);
 			fix(writableCachedParseTree, wrappedFixLogger);
 			if (wrappedFixLogger.hasLoggedAnything() === false) {
@@ -32,6 +34,7 @@ export function wrappedFix(code, fix, fixLogger, proceduresMap, tree) {
 				console.log(`fix count reached ${infiniteLoopCutoff}.  This is a strong indicator of a bug in the fixers.
 				Normally, all issues should be first in the first or second iteration.
 				A hard-coded limit of ${infiniteLoopCutoff} is set to prevent such a bug from causing an infinite loop.`);
+				console.error(`Check the call stack for this message to find out where the problem is coming from.`);
 			}
 		}
 
