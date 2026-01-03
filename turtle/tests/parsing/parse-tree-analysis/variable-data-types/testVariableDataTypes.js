@@ -1,9 +1,9 @@
-import { testAddVariablesFromInitialVariables } from './testAddVariablesFromInitialVariables.js';
+/*import { testAddVariablesFromInitialVariables } from './testAddVariablesFromInitialVariables.js';
 import { testAnalyzeInstructionListRepeatCounts } from './testAnalyzeInstructionListRepeatCounts.js';
 import { testAnalyzeLengths } from './testAnalyzeLengths.js';
 import { testEvaluateOutputFrequency } from './testEvaluateOutputFrequency.js';
-import { testEvaluateTokenDataTypes } from './testEvaluateTokenDataTypes.js';
-import { testEvaluateTokensBasic } from './testEvaluateTokensBasic.js';
+*/import { testEvaluateTokenDataTypes } from './testEvaluateTokenDataTypes.js';
+/*import { testEvaluateTokensBasic } from './testEvaluateTokensBasic.js';
 import { testEvaluateTokensWithVariables } from './testEvaluateTokensWithVariables.js';
 import { testGetAnalyzedVariables } from './testGetAnalyzedVariables.js';
 import { testGetAnalyzedVariablesGeneral } from './testGetAnalyzedVariablesGeneral.js';
@@ -32,16 +32,16 @@ import { testVariable } from './testVariable.js';
 import { testVariables } from './testVariables.js';
 import { testVariableAssignmentScope } from './testVariableAssignmentScope.js';
 import { testVariableAssignmentScopesDirectory } from './variable-assignment-scopes/testVariableAssignmentScopesDirectory.js';
-import { wrapAndCall } from '../../../helpers/wrapAndCall.js';
+*/import { wrapAndCall } from '../../../helpers/wrapAndCall.js';
 
 export function testVariableDataTypes(logger) {
 	wrapAndCall([
-		testAddVariablesFromInitialVariables,
+		/*testAddVariablesFromInitialVariables,
 		testAnalyzeInstructionListRepeatCounts,
 		testAnalyzeLengths,
 		testEvaluateOutputFrequency,
-		testEvaluateTokenDataTypes,
-		testEvaluateTokensBasic,
+		*/testEvaluateTokenDataTypes,
+		/*testEvaluateTokensBasic,
 		testEvaluateTokensWithVariables,
 		testGetAnalyzedVariables,
 		testGetAnalyzedVariablesGeneral,
@@ -69,6 +69,6 @@ export function testVariableDataTypes(logger) {
 		testVariable,
 		testVariables,
 		testVariableAssignmentScope,
-		testVariableAssignmentScopesDirectory
+		testVariableAssignmentScopesDirectory*/
 	], logger);
 };

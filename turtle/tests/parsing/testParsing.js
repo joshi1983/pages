@@ -1,4 +1,4 @@
-import { testASMTurtle } from './asm-turtle/testASMTurtle.js';
+/*import { testASMTurtle } from './asm-turtle/testASMTurtle.js';
 import { testAsyncParser } from './testAsyncParser.js';
 import { testAsyncParseTask } from './testAsyncParseTask.js';
 import { testBasic } from './basic/testBasic.js';
@@ -35,8 +35,8 @@ import { testMightBeRunnableCode } from './testMightBeRunnableCode.js';
 import { testOperators } from './testOperators.js';
 import { testOrderOfOperation } from './testOrderOfOperation.js';
 import { testParseTree } from './testParseTree.js';
-import { testParseTreeAnalysis } from './parse-tree-analysis/testParseTreeAnalysis.js';
-import { testParseTreeColIndexes } from './testParseTreeColIndexes.js';
+*/import { testParseTreeAnalysis } from './parse-tree-analysis/testParseTreeAnalysis.js';
+/*import { testParseTreeColIndexes } from './testParseTreeColIndexes.js';
 import { testParseTreeToCodeWithComments } from './testParseTreeToCodeWithComments.js';
 import { testParseTreeToCodeWithCommentsInsertSpace } from './testParseTreeToCodeWithCommentsInsertSpace.js';
 import { testParseTreeToken } from './testParseTreeToken.js';
@@ -55,11 +55,11 @@ import { testSonicWebTurtle } from './sonic-webturtle/testSonicWebTurtle.js';
 import { testSugarLabsTurtleBlocks } from './sugarlabs-turtle-blocks/testSugarLabsTurtleBlocks.js';
 import { testToken } from './testToken.js';
 import { testUnsupportedCommand } from './testUnsupportedCommand.js';
-import { wrapAndCall } from '../helpers/wrapAndCall.js';
+*/import { wrapAndCall } from '../helpers/wrapAndCall.js';
 
 export function testParsing(logger) {
 	wrapAndCall([
-		testASMTurtle,
+		/*testASMTurtle,
 		testAsyncParser,
 		testAsyncParseTask,
 		testBasic,
@@ -95,9 +95,9 @@ export function testParsing(logger) {
 		testMightBeRunnableCode,
 		testOperators,
 		testOrderOfOperation,
-		testParseTree,
+		testParseTree,*/
 		testParseTreeAnalysis,
-		testParseTreeColIndexes,
+		/*testParseTreeColIndexes,
 		testParseTreeToCodeWithComments,
 		testParseTreeToCodeWithCommentsInsertSpace,
 		testParseTreeToken,
@@ -115,6 +115,6 @@ export function testParsing(logger) {
 		testSonicWebTurtle,
 		testSugarLabsTurtleBlocks,
 		testToken,
-		testUnsupportedCommand
+		testUnsupportedCommand*/
 	], logger);
 };

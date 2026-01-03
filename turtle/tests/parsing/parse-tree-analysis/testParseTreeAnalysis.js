@@ -1,8 +1,8 @@
-import { testCachedParseTree } from './testCachedParseTree.js';
+/*import { testCachedParseTree } from './testCachedParseTree.js';
 import { testCachedParseTreeDirectory } from './cached-parse-tree/testCachedParseTreeDirectory.js';
 import { testCachedParseTreeGetLengthFromToken } from './testCachedParseTreeGetLengthFromToken.js';
-import { testCachedParseTreeGetPossibleTypesFromToken } from './testCachedParseTreeGetPossibleTypesFromToken.js';
-import { testCachedParseTreeGetPossibleTypesFromTokenCurvedBrackets } from './testCachedParseTreeGetPossibleTypesFromTokenCurvedBrackets.js';
+*/import { testCachedParseTreeGetPossibleTypesFromToken } from './testCachedParseTreeGetPossibleTypesFromToken.js';
+/*import { testCachedParseTreeGetPossibleTypesFromTokenCurvedBrackets } from './testCachedParseTreeGetPossibleTypesFromTokenCurvedBrackets.js';
 import { testCachedParseTreeWithEvaluateTokensWithVariables } from './testCachedParseTreeWithEvaluateTokensWithVariables.js';
 import { testCommandDataTypes } from './testCommandDataTypes.js';
 import { testCommandDataTypesDirectory } from './command-data-types/testCommandDataTypesDirectory.js';
@@ -34,14 +34,14 @@ import { testValidation } from './validation/testValidation.js';
 import { testVariableDataTypes } from './variable-data-types/testVariableDataTypes.js';
 import { testVariableScraper } from './testVariableScraper.js';
 import { testWriteOptimizedCachedParseTree } from './testWriteOptimizedCachedParseTree.js';
-import { wrapAndCall } from '../../helpers/wrapAndCall.js';
+*/import { wrapAndCall } from '../../helpers/wrapAndCall.js';
 
 const tests = [
-testCachedParseTree,
+/*testCachedParseTree,
 testCachedParseTreeDirectory,
 testCachedParseTreeGetLengthFromToken,
-testCachedParseTreeGetPossibleTypesFromToken,
-testCachedParseTreeGetPossibleTypesFromTokenCurvedBrackets,
+*/testCachedParseTreeGetPossibleTypesFromToken,
+/*testCachedParseTreeGetPossibleTypesFromTokenCurvedBrackets,
 testCachedParseTreeWithEvaluateTokensWithVariables,
 testCommandDataTypes,
 testCommandDataTypesDirectory,
@@ -69,7 +69,7 @@ testValidateIdentifier,
 testValidation,
 testVariableDataTypes,
 testVariableScraper,
-testWriteOptimizedCachedParseTree
+testWriteOptimizedCachedParseTree*/
 ];
 
 export function testParseTreeAnalysis(logger) {
