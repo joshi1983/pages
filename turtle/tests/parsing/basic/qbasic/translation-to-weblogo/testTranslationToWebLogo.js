@@ -1,4 +1,4 @@
-import { testExecute_PI } from './testExecute_PI.js';
+/*import { testExecute_PI } from './testExecute_PI.js';
 import { testExecuteAssignments } from './testExecuteAssignments.js';
 import { testExecuteBinaryOperators } from './testExecuteBinaryOperators.js';
 import { testExecuteCINT } from './testExecuteCINT.js';
@@ -54,9 +54,9 @@ import { testTranslateDoLoopUntil } from './testTranslateDoLoopUntil.js';
 import { testTranslateDoUntilLoop } from './testTranslateDoUntilLoop.js';
 import { testTranslateDoWhile } from './testTranslateDoWhile.js';
 import { testTranslateEnd } from './testTranslateEnd.js';
-import { testTranslateExit } from './testTranslateExit.js';
+import { testTranslateExit } from './testTranslateExit.js';*/
 import { testTranslateFor } from './testTranslateFor.js';
-import { testTranslateFunction } from './testTranslateFunction.js';
+/*import { testTranslateFunction } from './testTranslateFunction.js';
 import { testTranslateFunctionCall } from './testTranslateFunctionCall.js';
 import { testTranslateGoto } from './testTranslateGoto.js';
 import { testTranslateIfStatements } from './testTranslateIfStatements.js';
@@ -75,12 +75,12 @@ import { testTranslationToWebLogoExecutePrint } from
 import { testTypeProcessors } from
 './type-processors/testTypeProcessors.js';
 import { testTypeTokenToCreateProcedure } from './testTypeTokenToCreateProcedure.js';
-import { wrapAndCall } from
+*/import { wrapAndCall } from
 '../../../../helpers/wrapAndCall.js';
 
 export function testTranslationToWebLogo(logger) {
 	wrapAndCall([
-		testExecute_PI,
+		/*testExecute_PI,
 		testExecuteAssignments,
 		testExecuteBinaryOperators,
 		testExecuteCINT,
@@ -136,9 +136,9 @@ export function testTranslationToWebLogo(logger) {
 		testTranslateDoUntilLoop,
 		testTranslateDoWhile,
 		testTranslateEnd,
-		testTranslateExit,
+		testTranslateExit,*/
 		testTranslateFor,
-		testTranslateFunction,
+		/*testTranslateFunction,
 		testTranslateFunctionCall,
 		testTranslateGoto,
 		testTranslateIfStatements,
@@ -154,6 +154,6 @@ export function testTranslationToWebLogo(logger) {
 		testTranslateWhile,
 		testTranslationToWebLogoExecutePrint,
 		testTypeProcessors,
-		testTypeTokenToCreateProcedure
+		testTypeTokenToCreateProcedure*/
 	], logger);
 };

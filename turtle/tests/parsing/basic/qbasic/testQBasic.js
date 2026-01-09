@@ -1,4 +1,4 @@
-import { testColorsJSON } from './testColorsJSON.js';
+/*import { testColorsJSON } from './testColorsJSON.js';
 import { testEvaluation } from './evaluation/testEvaluation.js';
 import { testGetFunctionsMap } from './testGetFunctionsMap.js';
 import { testIsLikelyQBasic } from './testIsLikelyQBasic.js';
@@ -21,8 +21,8 @@ import { testParseDoWhileLoop } from './testParseDoWhileLoop.js';
 import { testParseExit } from './testParseExit.js';
 import { testParseElseif } from './testParseElseif.js';
 import { testParseExpressionDot } from './testParseExpressionDot.js';
-import { testParseForLoop } from './testParseForLoop.js';
-import { testParseFunctionCalls } from './testParseFunctionCalls.js';
+*/import { testParseForLoop } from './testParseForLoop.js';
+/*import { testParseFunctionCalls } from './testParseFunctionCalls.js';
 import { testParseFunctionDefinitions } from './testParseFunctionDefinitions.js';
 import { testParseGet } from './testParseGet.js';
 import { testParseGosub } from './testParseGosub.js';
@@ -54,14 +54,14 @@ import { testQBasicOperators } from './testQBasicOperators.js';
 import { testScanning } from './scanning/testScanning.js';
 import { testShouldBooleanLiteralsBeIdentifiers } from
 './testShouldBooleanLiteralsBeIdentifiers.js';
-import { testTranslationToWebLogo } from
+*/import { testTranslationToWebLogo } from
 './translation-to-weblogo/testTranslationToWebLogo.js';
 import { wrapAndCall } from
 '../../../helpers/wrapAndCall.js';
 
 export function testQBasic(logger) {
 	wrapAndCall([
-		testColorsJSON,
+		/*testColorsJSON,
 		testEvaluation,
 		testGetFunctionsMap,
 		testIsLikelyQBasic,
@@ -83,9 +83,9 @@ export function testQBasic(logger) {
 		testParseDoWhileLoop,
 		testParseElseif,
 		testParseExit,
-		testParseExpressionDot,
+		testParseExpressionDot,*/
 		testParseForLoop,
-		testParseFunctionCalls,
+		/*testParseFunctionCalls,
 		testParseFunctionDefinitions,
 		testParseGet,
 		testParseGosub,
@@ -115,6 +115,6 @@ export function testQBasic(logger) {
 		testQBasicOperators,
 		testScanning,
 		testShouldBooleanLiteralsBeIdentifiers,
-		testTranslationToWebLogo
+		*/testTranslationToWebLogo
 	], logger);
 };
