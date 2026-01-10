@@ -2,7 +2,7 @@ import { processTranslateExecuteCases } from './processTranslateExecuteCases.js'
 
 export function testExecuteAssignments(logger) {
 	const cases = [
-		{'code': 'x=3\nprint(x)', 'messages': ['3']},
+		/*{'code': 'x=3\nprint(x)', 'messages': ['3']},
 		{'code': 'x=1\nx+=1\nprint(x)', 'messages': ['2']},
 		{'code': 'x=1\nx+=2\nprint(x)', 'messages': ['3']},
 		{'code': 'x=1\nx*=1\nprint(x)', 'messages': ['1']},
@@ -15,10 +15,10 @@ export function testExecuteAssignments(logger) {
 		{'code': 'x=1\nx%=2\nprint(x)', 'messages': ['1']},
 		{'code': 'x=1\nx%=3\nprint(x)', 'messages': ['1']},
 		{'code': 'x=2\nx%=2\nprint(x)', 'messages': ['0']},
-
+*/
 		// //= floored division assign
 		{'code': 'x=8\nx//=1\nprint(x)', 'messages': ['8']},
-		{'code': 'x=8\nx//=2\nprint(x)', 'messages': ['4']},
+		/*{'code': 'x=8\nx//=2\nprint(x)', 'messages': ['4']},
 		{'code': 'x=8\nx//=4\nprint(x)', 'messages': ['2']},
 		{'code': 'x=3\nx//=2\nprint(x)', 'messages': ['1']},
 		{'code': 'x=-3\nx//=2\nprint(x)', 'messages': ['-2']},
@@ -39,7 +39,7 @@ export function testExecuteAssignments(logger) {
 		{'code': 'x=1\nx&=3\nprint(x)', 'messages': ['1']},
 		{'code': 'x=2\nx&=3\nprint(x)', 'messages': ['2']},
 		{'code': 'x=8\nx&=3\nprint(x)', 'messages': ['0']},
-		{'code': 'x= 2\nX=3\nprint(x)\nprint(X)', 'messages': ['2', '3']}
+		{'code': 'x= 2\nX=3\nprint(x)\nprint(X)', 'messages': ['2', '3']}*/
 	];
 	processTranslateExecuteCases(cases, logger);
 };

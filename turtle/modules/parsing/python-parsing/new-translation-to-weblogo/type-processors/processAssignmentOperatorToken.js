@@ -44,21 +44,23 @@ export function processAssignmentOperatorToken(token, result, cachedParseTree, s
 	}
 	const rightSide = token.children[1];
 	result.append('\n');
-	const varName = settings.identifierToWebLogo.get(leftSide.val);
+	const varName = leftSide.val;
+	const webLogoName = settings.identifierToWebLogo.get(leftSide.val);
+	console.log(`varName=${varName}, webLogoName=${webLogoName}`);
 	const isLocal = isVariableLocalAtToken(cachedParseTree, varName, token);
 	const makeCommand = isLocal ? 'localmake' : 'make';
 	if (leftSide.type === ParseTreeTokenType.IDENTIFIER &&
-	isSafeWebLogoIdentifier(varName)) {
-		result.append(`${makeCommand} "${varName} `);
+	isSafeWebLogoIdentifier(webLogoName)) {
+		result.append(`${makeCommand} "${webLogoName} `);
 		const binaryOperator = val.substring(0, val.length - 1);
 		const commandName = getCommandForPythonOperator(binaryOperator);
 		if (commandName !== undefined) {
-			result.append(`${commandName} :${varName} `);
+			result.append(`${commandName} :${webLogoName} `);
 		}
 		else if (val === '//=')
-			result.append(`int :${varName} / `);
+			result.append(`int :${webLogoName} / `);
 		else if (binaryOperator !== '')
-			result.append(`:${varName} ${binaryOperator} `);
+			result.append(`:${webLogoName} ${binaryOperator} `);
 		if (commandName !== undefined || (val === '=') || isSafeWithoutBrackets(rightSide)) {
 			processToken(rightSide, result, cachedParseTree, settings);
 		}
