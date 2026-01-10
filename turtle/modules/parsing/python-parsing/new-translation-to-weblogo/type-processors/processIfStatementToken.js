@@ -9,26 +9,26 @@ import { shouldRemoveCondition } from './if/shouldRemoveCondition.js';
 
 function processWithConditionRemoved(token, result, cachedParseTree) {
 	const instructionsToken = token.children[2];
-	processToken(instructionsToken, result, cachedParseTree);
+	processToken(instructionsToken, result, cachedParseTree, settings);
 }
 
-export function processIfStatementToken(token, result, cachedParseTree) {
+export function processIfStatementToken(token, result, cachedParseTree, settings) {
 	if (token.children.length < 3)
 		throw new Error(`Expected at least 3 children but got ${token.children.length}`);
 	result.processCommentsUpToToken(token);
 	if (shouldRemoveCondition(token)) {
-		processWithConditionRemoved(token, result, cachedParseTree);
+		processWithConditionRemoved(token, result, cachedParseTree, settings);
 	}
 	else if (!hasElse(token)) {
 		if (hasElif(token))
-			processIfElif(token, result, cachedParseTree);
+			processIfElif(token, result, cachedParseTree, settings);
 		else
-			processSimpleIf(token, result, cachedParseTree);
+			processSimpleIf(token, result, cachedParseTree, settings);
 	}
 	else {
 		if (hasElif(token))
-			processIfElifElse(token, result, cachedParseTree);
+			processIfElifElse(token, result, cachedParseTree, settings);
 		else
-			processIfElse(token, result, cachedParseTree);
+			processIfElse(token, result, cachedParseTree, settings);
 	}
 };

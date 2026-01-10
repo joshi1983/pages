@@ -23,13 +23,13 @@ function isIterableUnpackingOperator(token) {
 	return true;
 }
 
-function processIterableUnpackingOperator(token, result, cachedParseTree) {
+function processIterableUnpackingOperator(token, result, cachedParseTree, settings) {
 	const child = token.children[0];
 	if (child.type === ParseTreeTokenType.LIST_LITERAL) {
 		for (let i = 1; i < child.children.length - 1; i++) {
 			result.trimRight();
 			result.append(' ');
-			processToken(child.children[i], result, cachedParseTree);
+			processToken(child.children[i], result, cachedParseTree, settings);
 		}
 	}
 	else if (child.type === ParseTreeTokenType.DICTIONARY_LITERAL) {
@@ -37,10 +37,10 @@ function processIterableUnpackingOperator(token, result, cachedParseTree) {
 	}
 }
 
-export function processUnaryOperatorToken(token, result, cachedParseTree) {
+export function processUnaryOperatorToken(token, result, cachedParseTree, settings) {
 	const val = token.val;
 	if (isIterableUnpackingOperator(token)) {
-		processIterableUnpackingOperator(token, result, cachedParseTree);
+		processIterableUnpackingOperator(token, result, cachedParseTree, settings);
 		return;
 	}
 	const commandName = getCommandForPythonOperator(val);
@@ -50,5 +50,5 @@ export function processUnaryOperatorToken(token, result, cachedParseTree) {
 		result.append(val);
 	if (val !== '-')
 		result.append(' ');
-	printChildren(token, result, cachedParseTree);
+	printChildren(token, result, cachedParseTree, settings);
 };

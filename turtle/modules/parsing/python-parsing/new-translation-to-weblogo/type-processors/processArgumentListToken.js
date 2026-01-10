@@ -5,12 +5,12 @@ const bracketTypes = new Set([
 	ParseTreeTokenType.CURVED_RIGHT_BRACKET
 ]);
 
-export function processArgumentListToken(token, result, cachedParseTree) {
+export function processArgumentListToken(token, result, cachedParseTree, settings) {
 	const children = token.children;
 	for (let i = 0; i < children.length; i++) {
 		const child = children[i];
 		if (!bracketTypes.has(child)) {
-			processToken(child, result, cachedParseTree);
+			processToken(child, result, cachedParseTree, settings);
 			result.append(' ');
 		}
 	}

@@ -40,7 +40,7 @@ function getSublistInfo(subscript) {
 	};
 }
 
-function processToIndex(token, buffer, cachedParseTree) {
+function processToIndex(token, buffer, cachedParseTree, settings) {
 	if (token.type === ParseTreeTokenType.NUMBER_LITERAL) {
 		const val = parseFloat(token.val);
 		if (!isNaN(val)) {
@@ -49,38 +49,38 @@ function processToIndex(token, buffer, cachedParseTree) {
 		}
 	}
 	buffer.append('1 + ');
-	processToken(token, buffer, cachedParseTree);
+	processToken(token, buffer, cachedParseTree, settings);
 }
 
-export function processSubscriptExpressionToken(token, result, cachedParseTree) {
+export function processSubscriptExpressionToken(token, result, cachedParseTree, settings) {
 	const children = token.children;
 	const subscriptToken = children[1];
 	if (isBeingRead(token)) {
 		const sublistInfo = getSublistInfo(token.children[1]);
 		if (sublistInfo !== undefined) {
 			result.append(' sublist ');
-			processToken(token.children[0], result, cachedParseTree);
+			processToken(token.children[0], result, cachedParseTree, settings);
 			result.append(' ');
 			if (sublistInfo.fromIndexToken === null)
 				result.append('1');
 			else
-				processIndex(sublistInfo.fromIndexToken, result, cachedParseTree);
+				processIndex(sublistInfo.fromIndexToken, result, cachedParseTree, settings);
 			result.append(' ');
 			if (sublistInfo.toIndexToken === null)
 				result.append('0');
 			else {
-				processToIndex(sublistInfo.toIndexToken, result, cachedParseTree);
+				processToIndex(sublistInfo.toIndexToken, result, cachedParseTree, settings);
 			}
 		}
 		else {
 			result.append(` item `);
-			processIndex(subscriptToken, result, cachedParseTree);
+			processIndex(subscriptToken, result, cachedParseTree, settings);
 			processListExpression(token, result, ':', cachedParseTree);
 		}
 	}
 	else {
 		result.append(' setItem ');
-		processIndex(subscriptToken, result, cachedParseTree);
+		processIndex(subscriptToken, result, cachedParseTree, settings);
 		processListExpression(token, result, '"', cachedParseTree);
 	}
 };

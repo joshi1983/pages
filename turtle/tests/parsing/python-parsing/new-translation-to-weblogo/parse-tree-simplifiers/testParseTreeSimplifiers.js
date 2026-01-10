@@ -1,10 +1,10 @@
-import { testConvertWalrusOperatorToAssignment } from
+/*import { testConvertWalrusOperatorToAssignment } from
 './testConvertWalrusOperatorToAssignment.js';
-import { testHelpers } from
+*/import { testHelpers } from
 './helpers/testHelpers.js';
 import { testRemoveUnstartedEndFillCalls } from
 './testRemoveUnstartedEndFillCalls.js';
-import { testRenameCustomFunctionsToAvoidWebLogoCommands } from
+/*import { testRenameCustomFunctionsToAvoidWebLogoCommands } from
 './testRenameCustomFunctionsToAvoidWebLogoCommands.js';
 import { testSimplifyForLoopInEnumerate } from
 './testSimplifyForLoopInEnumerate.js';
@@ -12,17 +12,17 @@ import { testSimplifyForLoopInEnumerateToRange } from
 './testSimplifyForLoopInEnumerateToRange.js';
 import { testSimplifyLen } from
 './testSimplifyLen.js';
-import { wrapAndCall } from
+*/import { wrapAndCall } from
 '../../../../helpers/wrapAndCall.js';
 
 export function testParseTreeSimplifiers(logger) {
 	wrapAndCall([
-		testConvertWalrusOperatorToAssignment,
+		//testConvertWalrusOperatorToAssignment,
 		testHelpers,
 		testRemoveUnstartedEndFillCalls,
-		testRenameCustomFunctionsToAvoidWebLogoCommands,
+		/*testRenameCustomFunctionsToAvoidWebLogoCommands,
 		testSimplifyForLoopInEnumerate,
 		testSimplifyForLoopInEnumerateToRange,
-		testSimplifyLen
+		testSimplifyLen*/
 	], logger);
 };

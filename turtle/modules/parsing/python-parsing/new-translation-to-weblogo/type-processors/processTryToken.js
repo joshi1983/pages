@@ -13,13 +13,13 @@ function getHappyPathInstructionsToken(tryToken) {
 	return tryToken.children[1];
 }
 
-export function processTryToken(token, result, cachedParseTree) {
+export function processTryToken(token, result, cachedParseTree, settings) {
 	const happyInstructionsToken = getHappyPathInstructionsToken(token);
 	const finallyInstructionsToken = getFinallyInstructionsToken(token);
 	result.processCommentsUpToToken(token);
-	processToken(happyInstructionsToken, result, cachedParseTree);
+	processToken(happyInstructionsToken, result, cachedParseTree, settings);
 	if (finallyInstructionsToken !== undefined) {
 		result.append('\n');
-		processToken(finallyInstructionsToken, result, cachedParseTree);
+		processToken(finallyInstructionsToken, result, cachedParseTree, settings);
 	}
 };

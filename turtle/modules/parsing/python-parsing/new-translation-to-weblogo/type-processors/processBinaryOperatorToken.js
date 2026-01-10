@@ -21,7 +21,7 @@ function shouldValueBeSubstituted(webLogoSymbol, token, cachedParseTree) {
 	return !areInputValuesValidForBinaryOperator(webLogoSymbol, val1, val2);
 }
 
-export function processBinaryOperatorToken(token, result, cachedParseTree) {
+export function processBinaryOperatorToken(token, result, cachedParseTree, settings) {
 	const opSymbol = pythonOperatorToWebLogoOperator(token.val);
 	if (typeof opSymbol !== 'string') {
 		result.append(`; Failed to translate operator ${token.val}. Review the input code around the operator to manually translate that part to WebLogo.\n`);
@@ -43,12 +43,12 @@ export function processBinaryOperatorToken(token, result, cachedParseTree) {
 		result.append(` ${valueToWebLogoExpression(resultVal)} `);
 	}
 	else if (isSameOperatorInWebLogo(opSymbol) || opSymbol === '<>' || opSymbol === '=') {
-		processToken(leftSide, result, cachedParseTree);
+		processToken(leftSide, result, cachedParseTree, settings);
 		result.append(` ${opSymbol} `);
-		processToken(rightSide, result, cachedParseTree);
+		processToken(rightSide, result, cachedParseTree, settings);
 	}
 	else if (opSymbol === ':=') {
-		processToken(token.children[1], result, cachedParseTree);
+		processToken(token.children[1], result, cachedParseTree, settings);
 		result.append('; Some manual review is needed here because the automatic translation of Python\'s := operator\n');
 		result.append('; will not assign a value as done in Python\n');
 	}
@@ -60,9 +60,9 @@ export function processBinaryOperatorToken(token, result, cachedParseTree) {
 			if (opSymbol === 'not in')
 				result.append('not ');
 			result.append(`(${commandName} `);
-			processToken(token.children[0], result, cachedParseTree);
+			processToken(token.children[0], result, cachedParseTree, settings);
 			result.append(' ');
-			processToken(token.children[1], result, cachedParseTree);
+			processToken(token.children[1], result, cachedParseTree, settings);
 			result.append(')');
 		}
 	}

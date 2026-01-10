@@ -69,7 +69,7 @@ function shouldBreakLine(token) {
 	return false;
 }
 
-export function processFunctionCallToken(token, result, cachedParseTree) {
+export function processFunctionCallToken(token, result, cachedParseTree, settings) {
 	let functionName = token.val;
 	if (typeof functionName !== 'string')
 		throw new Error(`functionName expected to be a string but got ${functionName}`);
@@ -147,10 +147,10 @@ export function processFunctionCallToken(token, result, cachedParseTree) {
 		else if (child.type === ParseTreeTokenType.ASSIGNMENT_OPERATOR && child.val === '=' &&
 		child.children.length === 2) {
 			// For example, f(x=4) where x is the name of a parameter from the function definition.
-			processToken(child.children[1], result, cachedParseTree);
+			processToken(child.children[1], result, cachedParseTree, settings);
 		}
 		else
-			processToken(child, result, cachedParseTree);
+			processToken(child, result, cachedParseTree, settings);
 	}
 	addDefaultParameterValues(functionName, parameterValueTokens.length, result, cachedParseTree);
 	if (useBrackets)

@@ -17,7 +17,7 @@ function mightBreak(token) {
 	return token.children.some(child => mightBreak(child));
 }
 
-export function processWhileToken(token, result, cachedParseTree) {
+export function processWhileToken(token, result, cachedParseTree, settings) {
 	if (token.children.length < 3 && token.children.length > 4)
 		throw new Error(`Expected children.length to be 3 or 4 for a while token but got ${token.children.length}`);
 	const conditionToken = token.children[0];
@@ -28,10 +28,10 @@ export function processWhileToken(token, result, cachedParseTree) {
 	}
 	else {
 		result.append('while ');
-		processToken(conditionToken, result, cachedParseTree);
+		processToken(conditionToken, result, cachedParseTree, settings);
 		result.append(' [\n');
 	}
-	processToken(instructionsToken, result, cachedParseTree);
+	processToken(instructionsToken, result, cachedParseTree, settings);
 	result.append('\n]\n');
 	if (token.children.length === 4) {
 		const elseToken = token.children[3];
@@ -39,13 +39,13 @@ export function processWhileToken(token, result, cachedParseTree) {
 			const elseInstructionsToken = elseToken.children[1];
 			if (mightBreak(instructionsToken)) {
 				result.append('if not (');
-				processToken(conditionToken, result, cachedParseTree);
+				processToken(conditionToken, result, cachedParseTree, settings);
 				result.append(') [\n');
-				processToken(elseInstructionsToken, result, cachedParseTree);
+				processToken(elseInstructionsToken, result, cachedParseTree, settings);
 				result.append('\n]');
 			}
 			else {
-				processToken(elseInstructionsToken, result, cachedParseTree);
+				processToken(elseInstructionsToken, result, cachedParseTree, settings);
 			}
 		}
 		result.append('\n');

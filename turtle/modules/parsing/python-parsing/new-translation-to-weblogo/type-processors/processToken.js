@@ -67,13 +67,15 @@ typeProcessors[ParseTreeTokenType.UNARY_OPERATOR] = processUnaryOperatorToken;
 typeProcessors[ParseTreeTokenType.UNRECOGNIZED] = processUnrecognizedToken;
 typeProcessors[ParseTreeTokenType.WHILE_LOOP] = processWhileToken;
 
-export function processToken(token, buffer, cachedParseTree) {
+export function processToken(token, buffer, cachedParseTree, settings) {
 	if (!(buffer instanceof CommentDumpingStringBuffer))
 		throw new Error(`buffer must be a CommentDumpingStringBuffer.  Not: ${buffer}`);
 	if (!(cachedParseTree instanceof CachedParseTree))
 		throw new Error(`cachedParseTree must be a CachedParseTree.  Not: ${cachedParseTree}`);
 	if (typeof token !== 'object')
 		throw new Error(`token must be an object and more specifically a ParseTreeToken.  Not ${token}`);
+	if (typeof settings !== 'object')
+		throw new Error(`settings must be an object but found ${settings}`);
 	if (isDiscardedFunctionCall(token, cachedParseTree))
 		return;
 	const topFuncToken = findTopTranslatableFunctionCall(token);
@@ -82,5 +84,5 @@ export function processToken(token, buffer, cachedParseTree) {
 	}
 	const processor = typeProcessors[token.type];
 	if (processor !== undefined)
-		processor(token, buffer, cachedParseTree);
+		processor(token, buffer, cachedParseTree, settings);
 };

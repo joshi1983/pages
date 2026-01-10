@@ -55,7 +55,7 @@ function isStartTokenANumber(forLoopToken) {
 	return startToken.type === ParseTreeTokenType.NUMBER_LITERAL;
 }
 
-function handleWithFor(iteratingVarName, token, result, cachedParseTree) {
+function handleWithFor(iteratingVarName, token, result, cachedParseTree, settings) {
 	const rangeVariableToken = getRangeStopValueToken(token);
 	const instructionsToken = getInstructionsToken(token);
 	const startToken = getStartToken(token);
@@ -64,9 +64,9 @@ function handleWithFor(iteratingVarName, token, result, cachedParseTree) {
 	if (startToken === undefined)
 		result.append('0');
 	else
-		processToken(startToken, result, cachedParseTree);
+		processToken(startToken, result, cachedParseTree, settings);
 	result.append(' ');
-	processToken(rangeVariableToken, result, cachedParseTree);
+	processToken(rangeVariableToken, result, cachedParseTree, settings);
 	if (stepToken === undefined || isOneLiteral(stepToken)) {
 		if (result.endsWithAndNotAcomment('+ 1'))
 			result.removeFromTail('+ 1'.length);
@@ -75,24 +75,24 @@ function handleWithFor(iteratingVarName, token, result, cachedParseTree) {
 	}
 	else if (stepToken.type === ParseTreeTokenType.NUMBER_LITERAL) {
 		result.append(' - ');
-		processToken(stepToken, result, cachedParseTree);
+		processToken(stepToken, result, cachedParseTree, settings);
 	}
 	else {
 		result.append(' - (');
-		processToken(stepToken, result, cachedParseTree);
+		processToken(stepToken, result, cachedParseTree, settings);
 		result.append(')');
 	}
 	if (stepToken !== undefined && (stepToken.val !== '1' ||
 	stepToken.type !== ParseTreeTokenType.NUMBER_LITERAL)) {
 		result.append(' ');
-		processToken(stepToken, result, cachedParseTree);
+		processToken(stepToken, result, cachedParseTree, settings);
 	}
 	result.append(`] [\n`);
-	processToken(instructionsToken, result, cachedParseTree);
+	processToken(instructionsToken, result, cachedParseTree, settings);
 	result.append('\n]\n');
 }
 
-function handleWithRepeat(token, result, cachedParseTree) {
+function handleWithRepeat(token, result, cachedParseTree, settings) {
 	const rangeVariableToken = getRangeStopValueToken(token);
 	const instructionsToken = getInstructionsToken(token);
 	const rangeVarName = rangeVariableToken.val;
@@ -101,16 +101,16 @@ function handleWithRepeat(token, result, cachedParseTree) {
 	if (startValue !== 0)
 		result.append(` - ${startValue}`);
 	result.append(` [\n`);
-	processToken(instructionsToken, result, cachedParseTree);
+	processToken(instructionsToken, result, cachedParseTree, settings);
 	result.append('\n]\n');
 }
 
-export function processForRangeWithVariableStop(forToken, result, cachedParseTree) {
+export function processForRangeWithVariableStop(forToken, result, cachedParseTree, settings) {
 	const variableName = getForLoopVarName(forToken);
 	if (isVariableReadInLoop(variableName, forToken) || !isStartTokenANumber(forToken)) {
-		handleWithFor(variableName, forToken, result, cachedParseTree);
+		handleWithFor(variableName, forToken, result, cachedParseTree, settings);
 	}
 	else {
-		handleWithRepeat(forToken, result, cachedParseTree);
+		handleWithRepeat(forToken, result, cachedParseTree, settings);
 	}
 };

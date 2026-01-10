@@ -14,19 +14,19 @@ import { processForElse } from './for-loops/processForElse.js';
 import { processForInNewVariable } from './for-loops/processForInNewVariable.js';
 import { processToken } from './processToken.js';
 
-export function processForLoopToken(token, result, cachedParseTree) {
+export function processForLoopToken(token, result, cachedParseTree, settings) {
 	if (token.children.length < 4 && token.children.length > 6)
 		throw new Error(`for loop tokens must have 4 to 6 children but found ${token.children.length}`);
 	result.processCommentsUpToToken(token);
 	result.append('\n');
 	if (isNeedingNewVariable(token)) {
-		processForInNewVariable(token, result, cachedParseTree);
+		processForInNewVariable(token, result, cachedParseTree, settings);
 	}
 	else if (isForRangeWithVariableStop(token)) {
 		processForRangeWithVariableStop(token, result, cachedParseTree);
 	}
 	else if (isForVarInListLoop(token)) {
-		processForInListLoop(token, result, cachedParseTree);
+		processForInListLoop(token, result, cachedParseTree, settings);
 	}
 	else {
 		const variableName = getForLoopVarName(token);
@@ -40,7 +40,7 @@ export function processForLoopToken(token, result, cachedParseTree) {
 			}
 			const codeBlock = getInstructionsToken(clonedToken);
 			if (codeBlock !== undefined)
-				processToken(codeBlock, result, cachedParseTree);
+				processToken(codeBlock, result, cachedParseTree, settings);
 		}
 		else {
 			const start = getStartValue(token);
@@ -58,12 +58,12 @@ export function processForLoopToken(token, result, cachedParseTree) {
 			}
 			const codeBlock = getInstructionsToken(token);
 			if (codeBlock !== undefined)
-				processToken(codeBlock, result, cachedParseTree);
+				processToken(codeBlock, result, cachedParseTree, settings);
 		}
 		result.append('\n]');
 	}
 	if (token.children.length === 6) {
-		processForElse(token, result, cachedParseTree);
+		processForElse(token, result, cachedParseTree, settings);
 	}
 	result.append('\n');
 };

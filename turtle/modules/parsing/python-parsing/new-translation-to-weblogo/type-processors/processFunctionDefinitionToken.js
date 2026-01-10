@@ -18,7 +18,7 @@ function getInstructionsToken(definitionToken) {
 		return lastToken;
 }
 
-export function processFunctionDefinitionToken(token, result, cachedParseTree) {
+export function processFunctionDefinitionToken(token, result, cachedParseTree, settings) {
 	result.processCommentsUpToToken(token);
 	if (token.children.length < 3) {
 		result.append(`\n; Unable to translate function definition because it parsed with ${token.children.length} child nodes instead of the required minimum of 3\n`);
@@ -31,11 +31,11 @@ export function processFunctionDefinitionToken(token, result, cachedParseTree) {
 	const noBrackets = filterBracketsAndCommas(argsToken.children);
 	for (let i = 0; i < noBrackets.length; i++) {
 		result.append(' ');
-		processToken(getSimplifiedArgumentToken(noBrackets[i]), result, cachedParseTree);
+		processToken(getSimplifiedArgumentToken(noBrackets[i]), result, cachedParseTree, settings);
 	}
 	if (instructionsToken !== undefined) {
 		result.append('\n');
-		processToken(instructionsToken, result, cachedParseTree);
+		processToken(instructionsToken, result, cachedParseTree, settings);
 	}
 	const lastToken = getLastDescendentTokenOf(token);
 	result.processCommentsUpToToken(lastToken);

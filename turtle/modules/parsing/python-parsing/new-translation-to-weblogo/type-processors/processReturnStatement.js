@@ -6,13 +6,13 @@ function returnsNone(token) {
 		token.children[0].type === ParseTreeTokenType.NONE;
 }
 
-export function processReturnStatement(token, result, cachedParseTree) {
+export function processReturnStatement(token, result, cachedParseTree, settings) {
 	result.processCommentsUpToToken(token);
 	if (token.children.length === 0 || returnsNone(token))
 		result.append('\nstop\n');
 	else {
 		result.append('output ');
-		processToken(token.children[0], result, cachedParseTree);
+		processToken(token.children[0], result, cachedParseTree, settings);
 		result.append('\n');
 	}
 };

@@ -4,6 +4,7 @@ import { CommentDumpingStringBuffer } from
 import { fetchText } from '../../../fetchText.js';
 import { genericIsDependingOnFunction } from
 '../parse-tree-analysis/procedure-dependencies/genericIsDependingOnFunction.js';
+import { getIdentifierTranslationMap } from './getIdentifierTranslationMap.js';
 import { isDependingOnPyCircle } from
 '../parse-tree-analysis/procedure-dependencies/isDependingOnPyCircle.js';
 import { isDependingOnColorMode } from
@@ -80,7 +81,10 @@ export function tokenToWebLogoCode(token, comments, includeTemplateCode) {
 
 	if (token.children.length > 0)
 		result.processCommentsUpToToken(token.children[0]);
-	processToken(token, result, cachedParseTree);
+	const settings = {
+		'identifierToWebLogo': getIdentifierTranslationMap(cachedParseTree)
+	};
+	processToken(token, result, cachedParseTree, settings);
 
 	result.processAllRemainingComments();
 	let code = result.toString().trim();

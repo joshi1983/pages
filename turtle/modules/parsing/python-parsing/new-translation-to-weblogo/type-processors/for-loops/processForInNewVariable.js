@@ -21,7 +21,7 @@ function getNewVariableName(token, elementVarName, cachedParseTree) {
 /*
 Assumes isNeedingNewVariable returns true for token.
 */
-export function processForInNewVariable(token, result, cachedParseTree) {
+export function processForInNewVariable(token, result, cachedParseTree, settings) {
 	const listOrTuple = getIteratorToken(token);
 	const isInFunctionDefinition = isTokenInAFunctionDefinition(cachedParseTree, token);
 	const makeCommand = isInFunctionDefinition ? 'localmake' : 'make';
@@ -29,10 +29,10 @@ export function processForInNewVariable(token, result, cachedParseTree) {
 	const newVarName = getNewVariableName(token, elementVarName, cachedParseTree);
 	const instructionsToken = getInstructionsToken(token);
 	result.append(`${makeCommand} "${newVarName} `);
-	processToken(listOrTuple, result, cachedParseTree);
+	processToken(listOrTuple, result, cachedParseTree, settings);
 	result.append('\n');
 	result.append(`repeat count :${newVarName} [\n`);
 	result.append(`${makeCommand} "${elementVarName} item repcount :${newVarName}\n`);
-	processToken(instructionsToken, result, cachedParseTree);
+	processToken(instructionsToken, result, cachedParseTree, settings);
 	result.append('\n]\n');
 };

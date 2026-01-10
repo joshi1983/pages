@@ -13,7 +13,7 @@ export function isForVarInListLoop(forToken) {
 	return iteratorToken.type === ParseTreeTokenType.IDENTIFIER;
 }
 
-export function processForInListLoop(token, result, cachedParseTree) {
+export function processForInListLoop(token, result, cachedParseTree, settings) {
 	const listOrTupleVarName = getIteratorToken(token).val;
 	const elementVarName = getForLoopVarName(token);
 	const isInFunctionDefinition = isTokenInAFunctionDefinition(cachedParseTree, token);
@@ -21,6 +21,6 @@ export function processForInListLoop(token, result, cachedParseTree) {
 	const instructionsToken = getInstructionsToken(token);
 	result.append(`\nrepeat count :${listOrTupleVarName} [\n`);
 	result.append(`${makeCommand} "${elementVarName} item repcount :${listOrTupleVarName}\n`);
-	processToken(instructionsToken, result, cachedParseTree);
+	processToken(instructionsToken, result, cachedParseTree, settings);
 	result.append('\n]\n');
 };

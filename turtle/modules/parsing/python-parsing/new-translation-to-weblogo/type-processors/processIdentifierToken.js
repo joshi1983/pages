@@ -19,23 +19,24 @@ function isDeepMethodCall(token, result, cachedParseTree) {
 	return true;
 }
 
-export function processIdentifierToken(token, result, cachedParseTree) {
+export function processIdentifierToken(token, result, cachedParseTree, settings) {
 	if (token.children.length === 0) {
+		const toName = settings.identifierToWebLogo.get(token.val);
 		if (token.parentNode.type === ParseTreeTokenType.DOT)
-			result.append(`${token.val}`);
+			result.append(`${toName}`);
 		else
-			result.append(`:${token.val}`);
+			result.append(`:${toName}`);
 	}
 	else if (token.children[0].type === ParseTreeTokenType.SUBSCRIPT_EXPRESSION)
-		processToken(token.children[0], result, cachedParseTree);
+		processToken(token.children[0], result, cachedParseTree, settings);
 	else if (isSpecialMethodCall(token))
-		processTokens(token.children[0].children, result, cachedParseTree);
+		processTokens(token.children[0].children, result, cachedParseTree, settings);
 	else {
 		const translated = attemptProcessingAsConstant(token, result, cachedParseTree);
 		if (!translated) {
 			if (!isDeepMethodCall(token, result, cachedParseTree)) {
 				result.append(`${token.val}`);
-				processTokens(token.children, result, cachedParseTree);
+				processTokens(token.children, result, cachedParseTree, settings);
 			}
 		}
 	}

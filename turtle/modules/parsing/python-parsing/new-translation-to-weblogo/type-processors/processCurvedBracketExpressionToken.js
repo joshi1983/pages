@@ -15,7 +15,7 @@ function shouldRemoveBrackets(token) {
 	return false;
 }
 
-export function processCurvedBracketExpressionToken(token, result, cachedParseTree) {
+export function processCurvedBracketExpressionToken(token, result, cachedParseTree, settings) {
 	if (token.children.length !== 3) {
 		result.append(`\n; Failed to translate curved bracket expression\n` +
 		`; Expected 3 child nodes of the curved bracket expression but got ${token.children.length}\n` +
@@ -23,10 +23,10 @@ export function processCurvedBracketExpressionToken(token, result, cachedParseTr
 		return;
 	}
 	if (shouldRemoveBrackets(token.children[1]))
-		processToken(token.children[1], result, cachedParseTree);
+		processToken(token.children[1], result, cachedParseTree, settings);
 	else {
 		result.append('(');
-		processToken(token.children[1], result, cachedParseTree);
+		processToken(token.children[1], result, cachedParseTree, settings);
 		result.append(')');
 	}
 };

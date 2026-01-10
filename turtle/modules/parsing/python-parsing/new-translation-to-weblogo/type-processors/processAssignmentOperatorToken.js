@@ -30,7 +30,7 @@ function isSafeWithoutBrackets(token) {
 	return typesSafeWithoutBrackets.has(token.type);
 }
 
-export function processAssignmentOperatorToken(token, result, cachedParseTree) {
+export function processAssignmentOperatorToken(token, result, cachedParseTree, settings) {
 	if (token.children.length !== 2)
 		return; // weird case but it is better to give up translating this than throw an exception.
 
@@ -44,7 +44,7 @@ export function processAssignmentOperatorToken(token, result, cachedParseTree) {
 	}
 	const rightSide = token.children[1];
 	result.append('\n');
-	const varName = leftSide.val;
+	const varName = settings.identifierToWebLogo.get(leftSide.val);
 	const isLocal = isVariableLocalAtToken(cachedParseTree, varName, token);
 	const makeCommand = isLocal ? 'localmake' : 'make';
 	if (leftSide.type === ParseTreeTokenType.IDENTIFIER &&
@@ -60,22 +60,22 @@ export function processAssignmentOperatorToken(token, result, cachedParseTree) {
 		else if (binaryOperator !== '')
 			result.append(`:${varName} ${binaryOperator} `);
 		if (commandName !== undefined || (val === '=') || isSafeWithoutBrackets(rightSide)) {
-			processToken(rightSide, result, cachedParseTree);
+			processToken(rightSide, result, cachedParseTree, settings);
 		}
 		else {
 			// brackets to ensure order of operation performs the preceding 
 			// +, - or whatever operation last.
 			result.append('(');
-			processToken(rightSide, result, cachedParseTree);
+			processToken(rightSide, result, cachedParseTree, settings);
 			result.append(')');
 		}
 	}
 	else {
-		if (!processMultiVariableAssignment(token, result, cachedParseTree, isLocal)) {
+		if (!processMultiVariableAssignment(token, result, cachedParseTree, isLocal, settings)) {
 			result.append('; FIXME: translate this.  Use make or localmake somewhere:\n');
-			processToken(token.children[0], result, cachedParseTree);
+			processToken(token.children[0], result, cachedParseTree, settings);
 			result.append(val);
-			processToken(token.children[1], result, cachedParseTree);
+			processToken(token.children[1], result, cachedParseTree, settings);
 		}
 	}
 	result.append('\n');
