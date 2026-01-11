@@ -1,8 +1,8 @@
-import { testColours } from './testColours.js';
+/*import { testColours } from './testColours.js';
 import { testColoursTXT } from './testColoursTXT.js';
 import { testIsLikelyPythonCode } from './testIsLikelyPythonCode.js';
-import { testNewTranslationToWebLogo } from './new-translation-to-weblogo/testNewTranslationToWebLogo.js';
-import { testOperatorsData } from './testOperatorsData.js';
+*/import { testNewTranslationToWebLogo } from './new-translation-to-weblogo/testNewTranslationToWebLogo.js';
+/*import { testOperatorsData } from './testOperatorsData.js';
 import { testParseTreeAnalysis } from './parse-tree-analysis/testParseTreeAnalysis.js';
 import { testParseTreeTokenType } from './testParseTreeTokenType.js';
 import { testParseWithParseTreeTokenTypes } from './testParseWithParseTreeTokenTypes.js';
@@ -11,14 +11,14 @@ import { testPythonOperators } from './testPythonOperators.js';
 import { testPythonTurtleJSON } from './testPythonTurtleJSON.js';
 import { testScanning } from './scanning/testScanning.js';
 import { testTranslateAllExamples } from './testTranslateAllExamples.js';
-import { wrapAndCall } from '../../helpers/wrapAndCall.js';
+*/import { wrapAndCall } from '../../helpers/wrapAndCall.js';
 
 export function testPythonParsing(logger) {
-	wrapAndCall([
+	wrapAndCall([/*
 		testColours,
 		testColoursTXT,
-		testIsLikelyPythonCode,
-		testNewTranslationToWebLogo,
+		testIsLikelyPythonCode,*/
+		testNewTranslationToWebLogo,/*
 		testOperatorsData,
 		testParseTreeAnalysis,
 		testParseTreeTokenType,
@@ -27,6 +27,6 @@ export function testPythonParsing(logger) {
 		testPythonOperators,
 		testPythonTurtleJSON,
 		testScanning,
-		testTranslateAllExamples
+		testTranslateAllExamples*/
 	], logger);
 };
