@@ -14,14 +14,14 @@ import { testCommodoreBasic } from
 './commodore-basic/testCommodoreBasic.js';
 import { testHelpers } from
 './helpers/testHelpers.js';
-import { testIsLikelyBasic } from './testIsLikelyBasic.js';
-import { testMicroA } from
+*/import { testIsLikelyBasic } from './testIsLikelyBasic.js';
+/*import { testMicroA } from
 './micro-a/testMicroA.js';
 import { testPlayBasic } from
-'./playbasic/testPlayBasic.js';*/
+'./playbasic/testPlayBasic.js';
 import { testQBasic } from
 './qbasic/testQBasic.js';
-/*import { testSinclairBasic } from
+import { testSinclairBasic } from
 './sinclair-basic/testSinclairBasic.js';
 import { testSmallVisualBasic } from
 './small-visual-basic/testSmallVisualBasic.js';
@@ -45,12 +45,12 @@ export function testBasic(logger) {
 		testBasil,
 		testBBCBasic,
 		testCommodoreBasic,
-		testHelpers,
-		testIsLikelyBasic,
+		testHelpers,*/
+		testIsLikelyBasic,/*
 		testMicroA,
 		testPlayBasic,
-		*/testQBasic,
-		/*testSinclairBasic,
+		testQBasic,
+		testSinclairBasic,
 		testSmallVisualBasic,
 		testTektronix405xBasic,
 		testTexasInstruments99_4a,

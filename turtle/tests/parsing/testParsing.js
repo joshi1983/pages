@@ -1,8 +1,8 @@
 /*import { testASMTurtle } from './asm-turtle/testASMTurtle.js';
 import { testAsyncParser } from './testAsyncParser.js';
 import { testAsyncParseTask } from './testAsyncParseTask.js';
-import { testBasic } from './basic/testBasic.js';
-import { testBatch } from './batch/testBatch.js';
+*/import { testBasic } from './basic/testBasic.js';
+/*import { testBatch } from './batch/testBatch.js';
 import { testCharIndexToParseTreeTokenPosition } from './testCharIndexToParseTreeTokenPosition.js';
 import { testCommandClass } from './testCommandClass.js';
 import { testCompileCodeUsingInternalProc } from './testCompileCodeUsingInternalProc.js';
@@ -40,9 +40,9 @@ import { testParseTreeToCodeWithComments } from './testParseTreeToCodeWithCommen
 import { testParseTreeToCodeWithCommentsInsertSpace } from './testParseTreeToCodeWithCommentsInsertSpace.js';
 import { testParseTreeToken } from './testParseTreeToken.js';
 import { testParseTreeTokenDirectory } from './parse-tree-token/testParseTreeTokenDirectory.js';
-*/import { testPitrifiedGoTurtle } from './pitrified-go-turtle/testPitrifiedGoTurtle.js';
-/*import { testPovRay } from './pov-ray/testPovRay.js';
-import { testProcedure } from './testProcedure.js';
+import { testPitrifiedGoTurtle } from './pitrified-go-turtle/testPitrifiedGoTurtle.js';
+*/import { testPovRay } from './pov-ray/testPovRay.js';
+/*import { testProcedure } from './testProcedure.js';
 import { testProcessing } from './processing/testProcessing.js';
 import { testPythonParsing } from './python-parsing/testPythonParsing.js';
 import { testScanner } from './testScanner.js';
@@ -61,8 +61,8 @@ export function testParsing(logger) {
 		/*testASMTurtle,
 		testAsyncParser,
 		testAsyncParseTask,
-		testBasic,
-		testBatch,
+		*/testBasic,
+		/*testBatch,
 		testCharIndexToParseTreeTokenPosition,
 		testCommandClass,
 		testCompileCodeUsingInternalProc,
@@ -99,10 +99,10 @@ export function testParsing(logger) {
 		testParseTreeToCodeWithComments,
 		testParseTreeToCodeWithCommentsInsertSpace,
 		testParseTreeToken,
-		testParseTreeTokenDirectory,*/
-		testPitrifiedGoTurtle,/*
-		testPovRay,
-		testProcedure,
+		testParseTreeTokenDirectory,
+		testPitrifiedGoTurtle,
+		*/testPovRay,
+		/*testProcedure,
 		testProcessing,
 		testPythonParsing,
 		testScanner,
