@@ -6,6 +6,8 @@ import { isLikelyAppleSoftBasic } from
 '../../../parsing/basic/applesoft-basic/isLikelyAppleSoftBasic.js';
 import { isLikelyASMTurtle } from
 '../../../parsing/asm-turtle/isLikelyASMTurtle.js';
+import { isLikelyBasic } from
+'../../../parsing/basic/isLikelyBasic.js';
 import { isLikelyBasilBasic } from
 '../../../parsing/basic/basil/isLikelyBasilBasic.js';
 import { isLikelyBBCBasic } from
@@ -50,6 +52,8 @@ import { isLikelySonicWebTurtle } from
 '../../../parsing/sonic-webturtle/isLikelySonicWebTurtle.js';
 import { isLikelySugarLabsTurtleBlocks } from
 '../../../parsing/sugarlabs-turtle-blocks/isLikelySugarLabsTurtleBlocks.js';
+import { isLikelySuperLogo } from
+'./fixers/super-logo/isLikelySuperLogo.js';
 import { isLikelyTektronix405XBasic } from
 '../../../parsing/basic/tektronix-405x-basic/isLikelyTektronix405XBasic.js';
 import { isLikelyTexasInstruments99_4a } from
@@ -60,6 +64,7 @@ import { logo3DToWebLogo } from './fixers/logo-3d/logo3DToWebLogo.js';
 import { logoInterpreterToWebLogo } from './fixers/logo-interpreter/logoInterpreterToWebLogo.js';
 import { papertToWebLogo } from './fixers/papert/papertToWebLogo.js';
 import { StringUtils } from '../../../StringUtils.js';
+import { superLogoToWebLogo } from './fixers/super-logo/superLogoToWebLogo.js';
 import { terrapinToWebLogo } from './fixers/terrapin/terrapinToWebLogo.js';
 import { translate0LToWebLogo } from
 '../../../parsing/l-systems/0L/translation-to-weblogo/translate0LToWebLogo.js';
@@ -138,6 +143,7 @@ const translatorPairs = new Map([
 	[isLikelyQBasic, [translateQBASICToWebLogo, false]],
 	[isLikelySonicWebTurtle, [translateSonicWebTurtle, false]],
 	[isLikelySugarLabsTurtleBlocks, [translateTurtleBlocksToWebLogo, false]],
+	[isLikelySuperLogo, [superLogoToWebLogo, false]],
 	[isLikelyTektronix405XBasic, [translateTektronix405XBasicToWebLogo, false]],
 	[isLikelyTerrapin, [terrapinToWebLogo, false]],
 	[isLikelyTexasInstruments99_4a, [translateTI99BasicToWebLogo, false]],
@@ -164,6 +170,9 @@ export function codeToTranslator(code) {
 				return defaultResult;
 			result = resultPair;
 		}
+	}
+	if (isLikelyBasic(code)) {
+		return translateQBASICToWebLogo(code);
 	}
 	return result;
 };
