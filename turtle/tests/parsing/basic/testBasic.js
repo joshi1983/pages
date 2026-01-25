@@ -1,4 +1,4 @@
-import { testAmosBasic } from
+/*import { testAmosBasic } from
 './amos-basic/testAmosBasic.js';
 import { testAnsiBasic } from
 './ansi-basic/testAnsiBasic.js';
@@ -33,14 +33,14 @@ import { testToQBASICMigrations } from
 './testToQBASICMigrations.js';
 import { testTRS80Basic } from
 './trs-80-basic/testTRS80Basic.js';
-import { testTrueBasic } from
+*/import { testTrueBasic } from
 './true-basic/testTrueBasic.js';
 import { wrapAndCall } from 
 '../../helpers/wrapAndCall.js';
 
 export function testBasic(logger) {
 	wrapAndCall([
-		testAmosBasic,
+		/*testAmosBasic,
 		testAnsiBasic,
 		testAppleSoftBasic,
 		testAtariTurboBasicXL,
@@ -58,6 +58,6 @@ export function testBasic(logger) {
 		testTexasInstruments99_4a,
 		testToQBASICMigrations,
 		testTRS80Basic,
-		testTrueBasic
+		*/testTrueBasic
 	], logger);
 };

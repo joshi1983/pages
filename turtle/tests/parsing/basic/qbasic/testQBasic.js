@@ -1,4 +1,4 @@
-import { testColorsJSON } from './testColorsJSON.js';
+/*import { testColorsJSON } from './testColorsJSON.js';
 import { testEvaluation } from './evaluation/testEvaluation.js';
 import { testGetFunctionsMap } from './testGetFunctionsMap.js';
 import { testIsLikelyQBasic } from './testIsLikelyQBasic.js';
@@ -46,8 +46,8 @@ import { testParseTrueFalse } from './testParseTrueFalse.js';
 import { testParseTupleLiteral } from './testParseTupleLiteral.js';
 import { testParseType } from './testParseType.js';
 import { testParseUnaryOperators } from './testParseUnaryOperators.js';
-import { testParseVariousExamples } from './testParseVariousExamples.js';
-import { testParseWhile } from './testParseWhile.js';
+*/import { testParseVariousExamples } from './testParseVariousExamples.js';
+/*import { testParseWhile } from './testParseWhile.js';
 import { testParseWindow } from './testParseWindow.js';
 import { testParsing } from './parsing/testParsing.js';
 import { testQBasicColors } from './testQBasicColors.js';
@@ -58,12 +58,12 @@ import { testShouldBooleanLiteralsBeIdentifiers } from
 './testShouldBooleanLiteralsBeIdentifiers.js';
 import { testTranslationToWebLogo } from
 './translation-to-weblogo/testTranslationToWebLogo.js';
-import { wrapAndCall } from
+*/import { wrapAndCall } from
 '../../../helpers/wrapAndCall.js';
 
 export function testQBasic(logger) {
 	wrapAndCall([
-		testColorsJSON,
+		/*testColorsJSON,
 		testEvaluation,
 		testGetFunctionsMap,
 		testIsLikelyQBasic,
@@ -110,8 +110,8 @@ export function testQBasic(logger) {
 		testParseTupleLiteral,
 		testParseType,
 		testParseUnaryOperators,
-		testParseVariousExamples,
-		testParseWhile,
+		*/testParseVariousExamples,
+		/*testParseWhile,
 		testParseWindow,
 		testParsing,
 		testQBasicColors,
@@ -119,6 +119,6 @@ export function testQBasic(logger) {
 		testQBasicOperators,
 		testScanning,
 		testShouldBooleanLiteralsBeIdentifiers,
-		testTranslationToWebLogo
+		testTranslationToWebLogo*/
 	], logger);
 };

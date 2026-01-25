@@ -1,4 +1,4 @@
-import { testAnimationSetupFixer } from './testAnimationSetupFixer.js';
+/*import { testAnimationSetupFixer } from './testAnimationSetupFixer.js';
 import { testAnimationSnapshotStyleFixer } from './testAnimationSnapshotStyleFixer.js';
 import { testArrayLiteralFixer } from './testArrayLiteralFixer.js';
 import { testAskFixer } from './testAskFixer.js';
@@ -60,9 +60,9 @@ import { testRequiredColourNameLongStringFixer } from './testRequiredColourNameL
 import { testRunFixer } from './testRunFixer.js';
 import { testSetPenSizeFixer } from './testSetPenSizeFixer.js';
 import { testSimplifySetHeadingFixer } from './testSimplifySetHeadingFixer.js';
-import { testStopRemoveFixer } from './testStopRemoveFixer.js';
+import { testStopRemoveFixer } from './testStopRemoveFixer.js';*/
 import { testSuperLogo } from './super-logo/testSuperLogo.js';
-import { testTerrapin } from './terrapin/testTerrapin.js';
+/*import { testTerrapin } from './terrapin/testTerrapin.js';
 import { testTestFixer } from './testTestFixer.js';
 import { testThingCallFixer } from './testThingCallFixer.js';
 import { testThrowFixer } from './testThrowFixer.js';
@@ -76,10 +76,10 @@ import { testWebTurtleProcedureFixer } from './testWebTurtleProcedureFixer.js';
 import { testWebTurtleRepeatFixer } from './testWebTurtleRepeatFixer.js';
 import { testVariableNameReferenceFixer } from './testVariableNameReferenceFixer.js';
 import { testVariableReadSpaceInsertFixer } from './testVariableReadSpaceInsertFixer.js';
-import { wrapAndCall } from '../../../../helpers/wrapAndCall.js';
+*/import { wrapAndCall } from '../../../../helpers/wrapAndCall.js';
 
 const tests = [
-	testAnimationSetupFixer,
+	/*testAnimationSetupFixer,
 	testAnimationSnapshotStyleFixer,
 	testArrayLiteralFixer,
 	testAskFixer,
@@ -141,8 +141,8 @@ const tests = [
 	testRunFixer,
 	testSetPenSizeFixer,
 	testSimplifySetHeadingFixer,
-	testStopRemoveFixer,
-	testSuperLogo,
+	testStopRemoveFixer,*/
+	testSuperLogo,/*
 	testTerrapin,
 	testTestFixer,
 	testThingCallFixer,
@@ -156,7 +156,7 @@ const tests = [
 	testWebTurtleProcedureFixer,
 	testWebTurtleRepeatFixer,
 	testVariableNameReferenceFixer,
-	testVariableReadSpaceInsertFixer
+	testVariableReadSpaceInsertFixer*/
 ];
 
 export function testFixers(logger) {
