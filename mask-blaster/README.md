@@ -8,6 +8,8 @@ assets directory contains some images, audio, and meta data.
 
 CSS from the css directory handles showing and hiding various elements based on the current mode.
 
+lib folder contains some third-party libraries such as a MIDI player.
+
 The modules directory has all the JavaScript written specifically for this game.
 
 The tests directory will have any automated tests. Loading test.html will run all the automated tests and report any detected problems.

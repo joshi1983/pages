@@ -1,6 +1,7 @@
 import { getLoadedPromise, isLoaded } from '../components/LoadingStatus.js';
 import { Modes, setMode } from '../Modes.js';
 import { ready } from '../ready.js';
+import { asyncInit, playSound, Sounds } from '../components/Sounds.js';
 
 // When clicking on the init screen, guide the user to click 'Start Blasting'.
 // A lot of the code here is for doing that.
@@ -138,6 +139,12 @@ function init() {
 			startPlaying();
 	});
 }
+
+asyncInit().then(function() {
+	console.log('about to call playSound');
+	playSound(Sounds.INIT_SCREEN_MUSIC);
+	console.log('playSound called');
+});
 
 ready(init);
 window.addEventListener("resize", refreshToPos);
