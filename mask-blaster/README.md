@@ -1,14 +1,19 @@
-File Structure:
+# Mask Blaster
+
+Mask Blaster is a web-based game where you blast masks to save the world.
+
+## File Structure
+
+assets directory contains some images, audio, and meta data.
 
 CSS from the css directory handles showing and hiding various elements based on the current mode.
 
-The modules directory has all the JavaScript for this game.
+The modules directory has all the JavaScript written specifically for this game.
 
 The tests directory will have any automated tests. Loading test.html will run all the automated tests and report any detected problems.
+No automated tests were written yet so it is more of a placeholder.
 
-
-
-Development Plan:
+## Development Plan
 1. Get very minimal game playable.
 	DONE: - draw a mask image.
 	DONE: - get mask to move toward viewpoint.
@@ -31,16 +36,30 @@ Development Plan:
 	- This could be a wireframe appearance.
 	
 
-Sources:
-
-Sound effects and music:
+## Sources
 
 Everything in this is either fully original, adapted from sufficiently permissively copyrighten sources, or adapted under fair use.
+
+## Third Party Libraries
+
+A midi player was copied from https://github.com/fraigo/javascript-midi-player?tab=readme-ov-file.  No license is clearly mentioned on the repository 
+but the README.md instructs people how to copy and use it. It is also a public github repository.  For those reasons together, it seems 
+ok to use it.
+
+### Source images
 
 A Zardoz head mask was adapted from:
 - https://www.pinterest.com/pin/zardoz--30540103693691787/
 - The Zardoz talking head is from a movie released in 1974.
 - I consider this image to be under fair use.
+
+In Game Over screen, the exploding Earth image is from:
+https://www.needpix.com/photo/download/774026/earth-globe-explosion-collapse-setting-world-free-pictures-free-photos-free-images
+
+In Game Over screen, winning shows a beach image from:
+https://www.publicdomainpictures.net/en/view-image.php?image=21750&picture=tropical-paradise
+
+### Sound effects and music
 
 The game over loss sound came from: 
 https://mixkit.co/free-sound-effects/game-over/
@@ -48,10 +67,3 @@ https://mixkit.co/free-sound-effects/game-over/
 
 The shooting sound came from'alienshoot1.ogg' at:
 https://opengameart.org/content/space-shoot-sounds
-
-
-In Game Over screen, the exploding Earth image is from:
-https://www.needpix.com/photo/download/774026/earth-globe-explosion-collapse-setting-world-free-pictures-free-photos-free-images
-
-In Game Over screen, winning shows a beach image from:
-https://www.publicdomainpictures.net/en/view-image.php?image=21750&picture=tropical-paradise

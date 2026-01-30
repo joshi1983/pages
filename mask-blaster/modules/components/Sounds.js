@@ -69,7 +69,6 @@ export function stopSound(soundId) {
 		throw new Error(`soundId must be an integer but found ${soundId}`);
 	
 	let audio = nameToAudioMap.get(soundId);
-	audio.pause();
 	stop(audio);
 	const clones = clonesMap.get(audio);
 	if (clones !== undefined) {
