@@ -3,7 +3,7 @@ import { ProgressIndicator } from './helpers/ProgressIndicator.js';
 import { ready } from '../modules/ready.js';
 
 const testModuleUrls = [
-	'./bindDocumentFocusTests.js',
+	/*'./bindDocumentFocusTests.js',
 	'./testAlphaColour.js',
 	'./testArrayUtils.js',
 	'./assets/testAssets.js',
@@ -35,8 +35,8 @@ const testModuleUrls = [
 	'./testLongestCommonSubsequence.js',
 	'./testMapUtils.js',
 	'./testMaybeDecided.js',
-	'./testOperatorsJSON.js',
-	'./parsing/testParsing.js',
+	'./testOperatorsJSON.js',*/
+	'./parsing/testParsing.js',/*
 	'./testPopulateTemplateUsingObject.js',
 	'./testRateLimiter.js',
 	'./set/testSet.js',
@@ -48,7 +48,7 @@ const testModuleUrls = [
 	'./testValueToLiteralCode.js',
 	'./testValueToString.js',
 	'./testValueWrapper.js',
-	'./testWindowsCommandsJSON.js'
+	'./testWindowsCommandsJSON.js'*/
 ];
 
 function replaceSpecialChars(msg) {

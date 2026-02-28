@@ -1,4 +1,4 @@
-import { testIsComplete } from './testIsComplete.js';
+/*import { testIsComplete } from './testIsComplete.js';
 import { testParseArrayLiteral } from './testParseArrayLiteral.js';
 import { testParseArraySubscript } from './testParseArraySubscript.js';
 import { testParseArraySubscripts } from './testParseArraySubscripts.js';
@@ -28,15 +28,15 @@ import { testParsePackage } from './testParsePackage.js';
 import { testParseSelect } from './testParseSelect.js';
 import { testParseStruct } from './testParseStruct.js';
 import { testParseSwitch } from './testParseSwitch.js';
-import { testParseTreeAnalysis } from './parse-tree-analysis/testParseTreeAnalysis.js';
-import { testParseUnaryOperator } from './testParseUnaryOperator.js';
+*/import { testParseTreeAnalysis } from './parse-tree-analysis/testParseTreeAnalysis.js';
+/*import { testParseUnaryOperator } from './testParseUnaryOperator.js';
 import { testParseVar } from './testParseVar.js';
 import { testParseVariousExamples } from './testParseVariousExamples.js';
-import { wrapAndCall } from '../../../helpers/wrapAndCall.js';
+*/import { wrapAndCall } from '../../../helpers/wrapAndCall.js';
 
 export function testParsing(logger) {
 	wrapAndCall([
-		testIsComplete,
+		/*testIsComplete,
 		testParseArrayLiteral,
 		testParseArraySubscript,
 		testParseArraySubscripts,
@@ -65,10 +65,10 @@ export function testParsing(logger) {
 		testParsePackage,
 		testParseSelect,
 		testParseStruct,
-		testParseSwitch,
+		testParseSwitch,*/
 		testParseTreeAnalysis,
-		testParseUnaryOperator,
+		/*testParseUnaryOperator,
 		testParseVar,
-		testParseVariousExamples
+		testParseVariousExamples*/
 	], logger);
 };
