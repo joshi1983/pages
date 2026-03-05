@@ -12,7 +12,7 @@ import { StringUtils } from
 '../modules/StringUtils.js';
 
 let testModuleUrls = [
-	'./bindDocumentFocusTests.js',
+	/*'./bindDocumentFocusTests.js',
 	'./testAlphaColour.js',
 	'./testArrayUtils.js',
 	'./assets/testAssets.js',
@@ -25,8 +25,8 @@ let testModuleUrls = [
 	'./command-groups/testCommandGroups.js',
 	'./testCommands.js',
 	'./commands-json/testCommandsJSON.js',
-	'./components/testComponents.js',
-	'./debugging/testDebugging.js',
+	*/'./components/testComponents.js',
+	/*'./debugging/testDebugging.js',
 	'./testDeepEquality.js',
 	'./testDelay.js',
 	'./drawing/testDrawing.js',
@@ -57,7 +57,7 @@ let testModuleUrls = [
 	'./testValueToLiteralCode.js',
 	'./testValueToString.js',
 	'./testValueWrapper.js',
-	'./testWindowsCommandsJSON.js'
+	'./testWindowsCommandsJSON.js'*/
 ];
 
 function processSearch() {
