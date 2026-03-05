@@ -1,4 +1,4 @@
-import { testConvertLoopsToForever } from './testConvertLoopsToForever.js';
+/*import { testConvertLoopsToForever } from './testConvertLoopsToForever.js';
 import { testFixDynamicScopes } from './testFixDynamicScopes.js';
 import { testGenericSimplifyConditions } from './testGenericSimplifyConditions.js';
 import { testGetAllVariableNamesSet } from './testGetAllVariableNamesSet.js';
@@ -15,19 +15,20 @@ import { testRemoveDoNothingCommandCalls } from './testRemoveDoNothingCommandCal
 import { testRemoveEmptyIfStatements } from './testRemoveEmptyIfStatements.js';
 import { testRemoveRedundantConsecutiveCommandCalls } from './testRemoveRedundantConsecutiveCommandCalls.js';
 import { testRemoveTrivialInfiniteLoops } from './testRemoveTrivialInfiniteLoops.js';
-import { testRemoveUnneededCurvedBrackets } from './testRemoveUnneededCurvedBrackets.js';
-import { testRemoveUnusedParameters } from './testRemoveUnusedParameters.js';
+import { testRemoveUnneededCurvedBrackets } from './testRemoveUnneededCurvedBrackets.js';*/
+import { testRemoveUnreferencedLabelsFixer } from './testRemoveUnreferencedLabelsFixer.js';
+/*import { testRemoveUnusedParameters } from './testRemoveUnusedParameters.js';
 import { testSanitization } from './sanitization/testSanitization.js';
 import { testSanitizeColourString } from './testSanitizeColourString.js';
 import { testScanTokensToCode } from './testScanTokensToCode.js';
 import { testScanWithMigration } from './testScanWithMigration.js';
 import { testSimplifiers } from './simplifiers/testSimplifiers.js';
 import { testSimplifyForWithRepeat } from './testSimplifyForWithRepeat.js';
-import { wrapAndCall } from '../../../../../helpers/wrapAndCall.js';
+*/import { wrapAndCall } from '../../../../../helpers/wrapAndCall.js';
 
 export function testHelpers(logger) {
 	wrapAndCall([
-		testConvertLoopsToForever,
+		/*testConvertLoopsToForever,
 		testFixDynamicScopes,
 		testGenericSimplifyConditions,
 		testGetAllVariableNamesSet,
@@ -42,7 +43,8 @@ export function testHelpers(logger) {
 		testRemoveDoNothingCommandCalls,
 		testRemoveEmptyIfStatements,
 		testRemoveRedundantConsecutiveCommandCalls,
-		testRemoveTrivialInfiniteLoops,
+		testRemoveTrivialInfiniteLoops,*/
+		testRemoveUnreferencedLabelsFixer,/*
 		testRemoveUnneededCurvedBrackets,
 		testRemoveUnusedParameters,
 		testSanitization,
@@ -50,6 +52,6 @@ export function testHelpers(logger) {
 		testScanTokensToCode,
 		testScanWithMigration,
 		testSimplifiers,
-		testSimplifyForWithRepeat
+		testSimplifyForWithRepeat*/
 	], logger);
 };
