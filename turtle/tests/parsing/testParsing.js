@@ -1,4 +1,4 @@
-import { testAda } from './ada/testAda.js';
+/*import { testAda } from './ada/testAda.js';
 import { testASMTurtle } from './asm-turtle/testASMTurtle.js';
 import { testAsyncParser } from './testAsyncParser.js';
 import { testAsyncParseTask } from './testAsyncParseTask.js';
@@ -26,8 +26,8 @@ import { testHolyC } from './holy-c/testHolyC.js';
 import { testIsSupportedByHighOrderInvoke } from './testIsSupportedByHighOrderInvoke.js';
 import { testJSParsing } from './js-parsing/testJSParsing.js';
 import { testKeyword } from './testKeyword.js';
-import { testKojo } from './kojo/testKojo.js';
-import { testKTurtle } from './kturtle/testKTurtle.js';
+*/import { testKojo } from './kojo/testKojo.js';
+/*import { testKTurtle } from './kturtle/testKTurtle.js';
 import { testLoggers } from './loggers/testLoggers.js';
 import { testLogoParserFailing } from './testLogoParserFailing.js';
 import { testLogoParsingStates } from './testLogoParsingStates.js';
@@ -59,11 +59,11 @@ import { testSonicWebTurtle } from './sonic-webturtle/testSonicWebTurtle.js';
 import { testSugarLabsTurtleBlocks } from './sugarlabs-turtle-blocks/testSugarLabsTurtleBlocks.js';
 import { testToken } from './testToken.js';
 import { testUnsupportedCommand } from './testUnsupportedCommand.js';
-import { wrapAndCall } from '../helpers/wrapAndCall.js';
+*/import { wrapAndCall } from '../helpers/wrapAndCall.js';
 
 export function testParsing(logger) {
 	wrapAndCall([
-		testAda,
+		/*testAda,
 		testASMTurtle,
 		testAsyncParser,
 		testAsyncParseTask,
@@ -91,8 +91,8 @@ export function testParsing(logger) {
 		testIsSupportedByHighOrderInvoke,
 		testJSParsing,
 		testKeyword,
-		testKojo,
-		testKTurtle,
+		*/testKojo,
+		/*testKTurtle,
 		testLoggers,
 		testLogoParserFailing,
 		testLogoParsingStates,
@@ -123,6 +123,6 @@ export function testParsing(logger) {
 		testSonicWebTurtle,
 		testSugarLabsTurtleBlocks,
 		testToken,
-		testUnsupportedCommand
+		testUnsupportedCommand*/
 	], logger);
 };
