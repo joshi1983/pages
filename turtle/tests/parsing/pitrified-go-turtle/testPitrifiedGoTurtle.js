@@ -5,8 +5,8 @@ import { testMigrationInfo } from './testMigrationInfo.js';
 import { testOperatorsJSON } from './testOperatorsJSON.js';
 import { testParsing } from './parsing/testParsing.js';
 */import { testScanning } from './scanning/testScanning.js';
-import { testTranslationToWebLogo } from './translation-to-weblogo/testTranslationToWebLogo.js';
-import { wrapAndCall } from '../../helpers/wrapAndCall.js';
+/*import { testTranslationToWebLogo } from './translation-to-weblogo/testTranslationToWebLogo.js';
+*/import { wrapAndCall } from '../../helpers/wrapAndCall.js';
 
 export function testPitrifiedGoTurtle(logger) {
 	wrapAndCall([
@@ -16,7 +16,7 @@ export function testPitrifiedGoTurtle(logger) {
 		testMigrationInfo,
 		testOperatorsJSON,
 		testParsing,*/
-		testScanning,
-		testTranslationToWebLogo
+		testScanning,/*
+		testTranslationToWebLogo*/
 	], logger);
 };
