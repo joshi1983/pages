@@ -5,6 +5,9 @@ const typesThatMightNotNeedSpaces = new Set([
 ]);
 
 export function mightNeedSpaceBetweenTokens(token1, token2) {
+	if (token1.type === ParseTreeTokenType.UNARY_OPERATOR &&
+	token1.val === '-')
+		return false;
 	if (token2 === undefined)
 		return false;
 	if (token2.isNeedingSpaceBefore)

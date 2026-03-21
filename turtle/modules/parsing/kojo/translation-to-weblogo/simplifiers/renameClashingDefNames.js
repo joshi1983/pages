@@ -4,6 +4,8 @@ import { getDescendentsOfType } from
 '../../../generic-parsing-utilities/getDescendentsOfType.js';
 import { getDescendentsOfTypes } from
 '../../../generic-parsing-utilities/getDescendentsOfTypes.js';
+import { insertColIndexSpanAt } from
+'../../../generic-parsing-utilities/insertColIndexSpanAt.js';
 import { MigrationInfo } from
 '../../MigrationInfo.js';
 import { ParseTreeTokenType } from
@@ -111,9 +113,11 @@ export function renameClashingDefNames(root) {
 		const newName = getDistinctName(oldName, namesToAvoid);
 		const nameToken = defToNameToken(def);
 		nameToken.val = newName;
+		insertColIndexSpanAt(nameToken, newName.length - oldName.length);
 		const referencingIdentifiers = getFunctionCallsAndReferencesFor(funcRefIdentifiers, oldName);
 		for (const refIdentifier of referencingIdentifiers) {
 			refIdentifier.val = newName;
+			insertColIndexSpanAt(refIdentifier, newName.length - oldName.length);
 		}
 	});
 	return defs.length !== 0;

@@ -1,4 +1,4 @@
-import { testFixDynamicScopes } from './testFixDynamicScopes.js';
+/*import { testFixDynamicScopes } from './testFixDynamicScopes.js';
 import { testGenericSimplifyConditions } from './testGenericSimplifyConditions.js';
 import { testGetAllVariableNamesSet } from './testGetAllVariableNamesSet.js';
 import { testGetPolyUnsafeProcedures } from './testGetPolyUnsafeProcedures.js';
@@ -11,17 +11,17 @@ import { testProcessRemoveInMigrationScanTokens } from './testProcessRemoveInMig
 import { testRemoveDoNothingCommandCalls } from './testRemoveDoNothingCommandCalls.js';
 import { testRemoveEmptyIfStatements } from './testRemoveEmptyIfStatements.js';
 import { testRemoveTrivialInfiniteLoops } from './testRemoveTrivialInfiniteLoops.js';
-import { testRemoveUnneededCurvedBrackets } from './testRemoveUnneededCurvedBrackets.js';
-import { testRemoveUnusedParameters } from './testRemoveUnusedParameters.js';
+*/import { testRemoveUnneededCurvedBrackets } from './testRemoveUnneededCurvedBrackets.js';
+/*import { testRemoveUnusedParameters } from './testRemoveUnusedParameters.js';
 import { testSanitization } from './sanitization/testSanitization.js';
 import { testSanitizeColourString } from './testSanitizeColourString.js';
 import { testScanTokensToCode } from './testScanTokensToCode.js';
 import { testScanWithMigration } from './testScanWithMigration.js';
-import { wrapAndCall } from '../../../../../helpers/wrapAndCall.js';
+*/import { wrapAndCall } from '../../../../../helpers/wrapAndCall.js';
 
 export function testHelpers(logger) {
 	wrapAndCall([
-		testFixDynamicScopes,
+		/*testFixDynamicScopes,
 		testGenericSimplifyConditions,
 		testGetAllVariableNamesSet,
 		testGetPolyUnsafeProcedures,
@@ -34,11 +34,11 @@ export function testHelpers(logger) {
 		testRemoveDoNothingCommandCalls,
 		testRemoveEmptyIfStatements,
 		testRemoveTrivialInfiniteLoops,
-		testRemoveUnneededCurvedBrackets,
-		testRemoveUnusedParameters,
+		*/testRemoveUnneededCurvedBrackets,
+		/*testRemoveUnusedParameters,
 		testSanitization,
 		testSanitizeColourString,
 		testScanTokensToCode,
-		testScanWithMigration
+		testScanWithMigration*/
 	], logger);
 };

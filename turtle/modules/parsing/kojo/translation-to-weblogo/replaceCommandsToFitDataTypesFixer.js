@@ -8,6 +8,8 @@ import { getDescendentsOfType } from
 '../../generic-parsing-utilities/getDescendentsOfType.js';
 import { getProceduresMap } from
 '../../parse-tree-analysis/getProceduresMap.js';
+import { insertColIndexSpanAt } from
+'../../generic-parsing-utilities/insertColIndexSpanAt.js';
 import { ParseTreeTokenType } from
 '../../ParseTreeTokenType.js';
 
@@ -54,8 +56,11 @@ export function replaceCommandsToFitDataTypesFixer(root) {
 			if (childTypes !== undefined) {
 				const childTypesStr = DataTypes.stringify(childTypes);
 				const replacementInfo = getReplacementForCommandName(call.val);
-				if (childTypesStr === replacementInfo.dataTypes)
+				if (childTypesStr === replacementInfo.dataTypes) {
+					const oldVal = call.val;
 					call.val = replacementInfo.to;
+					insertColIndexSpanAt(call, call.val.length - oldVal.length);
+				}
 			}
 		}
 	}

@@ -139,6 +139,15 @@ function testUnchangedCode(logger) {
 		'setProperty  :\n:setFillRadialGros pos',
 		'forward :size * 0.23.5',
 		'repeat 4 ~\n[]',
+		`to Circle0 :x :y
+arcRight 45 100  
+end
+Circle0 550 -290`,
+		`setPenColor "red
+to Circle0 :x :y
+arcRight 45 100  
+end
+Circle0 550 -290`,
 		'print \'hello\nend',
 		`'s:
 ; https://www.c.pdf

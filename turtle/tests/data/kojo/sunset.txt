@@ -1,0 +1,290 @@
+// copied from:
+// https://codex.kogics.net/codesketch?sketchId=1812
+// which says it was written by Sonaly R Pawar
+cleari
+
+def gradients =
+  cm.linearMultipleGradient(
+    0, 307,
+    0,-307,
+    Seq(0,0.29,1),
+    Seq(Color(51, 16, 37),
+    Color(51, 51, 255),
+    Color(51, 0, 255)),
+    false
+    )
+
+def sky =
+  cm.radialMultipleGradient(
+    -29, 105, 550,
+    Seq(0,0.20,
+    0.40,0.6999,
+    0.89999,0.9,1
+    ),
+    Seq(Color(255, 251, 179), Color(255, 249, 76),
+    Color(255, 102, 0),Color(255, 51, 0),Color(204, 0, 51),
+    Color(186, 51, 0), Color(220, 0, 0)),
+    false)
+
+setBackground(sky)
+
+def sea = Picture.rect(300, 930)
+
+def waves = Picture.fromVertexShape { 
+  x =>
+  x.beginShape()
+  x.vertex(-100, 0)
+  x.bezierVertex(
+    -80, 90, 
+    -30, -90, 
+    10, 0
+    )
+ x.endShape()
+ }
+  
+def collection(count:Long):Picture = 
+  if (count==1) {
+    waves
+  } else {
+def iHave = waves
+  .thatsFilledWith(gradients)
+  .thatsStrokeColored(Color(0, 2, 255))
+  .thatsScaled(2.0,0.1)
+  .thatsTranslated(-365, -60)
+  
+def iGot = collection(count - 1)
+  picStack(
+    iHave,
+    iGot.thatsTranslated(0, -10)
+  )
+}
+
+def dolphin = Picture.fromVertexShape { 
+  x =>
+  x.beginShape()
+  x.vertex(25, -5)
+  x.bezierVertex(
+    -5, 0, 
+    0, 0, 
+    20, 20
+    )    
+  x.vertex(20, 20)
+  x.bezierVertex(
+    20, 85, 
+    180, 100, 
+    200, 100
+    )
+  x.vertex(200, 100)
+  x.bezierVertex(
+    260, 170, 
+    280, 180, 
+    260, 95
+    )
+  x.vertex(260, 95)
+  x.bezierVertex(
+    300, 100, 
+    490, -10, 
+    500, -50
+    )
+  x.vertex(500, -50)
+  x.bezierVertex(
+    500, -50, 
+    580, -70, 
+    590, -80
+    )
+  x.vertex(590, -80)
+  x.bezierVertex(
+    510, -90, 
+    520, -90, 
+    550, -130
+    )
+  x.vertex(550, -140)
+  x.bezierVertex(
+    530, -140, 
+    460, -70, 
+    480, -90
+    )
+  x.vertex(480, -90)
+  x.bezierVertex(
+    375, -10, 
+    329, -40, 
+    300, -40
+    )
+  x.vertex(300, -40)
+  x.bezierVertex(
+    300, -68, 
+    400, -185, 
+    250, -70
+    )
+  x.vertex(250, -70)
+  x.bezierVertex(
+    180, 30, 
+    50, -40, 
+    25, -5
+    )
+  x.endShape()
+    }
+
+def bird = Picture.fromVertexShape {
+  x =>
+  x.beginShape()
+  x.vertex(0, 100)    
+  x.bezierVertex(
+    80, 100, 
+    60, 130, 
+    120, 100
+    )
+  x.vertex(120, 100)
+  x.bezierVertex(
+    130, 140, 
+    180, 110, 
+    200, 200
+    )
+  x.vertex(200, 130)
+  x.bezierVertex(
+    190, 100, 
+    165, 100, 
+    170, 90
+    )
+  x.vertex(170, 90)
+  x.bezierVertex(
+    170, 100, 
+    200, 100, 
+    200, 85
+    )
+  x.vertex(200, 85)
+  x.bezierVertex(
+    200, 85, 
+    240, 85, 
+    200, 75
+    )
+  x.vertex(200, 75)
+  x.bezierVertex(
+    165, 35, 
+    80, 90, 
+    50, 50
+    )
+  x.vertex(50, 50)
+  x.bezierVertex(
+    50, 80, 
+    70, 78, 
+    85, 80
+    )
+  x.vertex(85, 80)
+  x.bezierVertex(
+    70, 95, 
+    30, 80, 
+    0, 100
+    )
+  x.endShape()
+    }
+
+def initState=(-460,+2)
+
+animateWithState(initState) { 
+  case (460,-2) => (460,2)
+  case (xPosition,increment) =>
+    erasePictures()
+
+sea
+  .thatsStrokeColored(Color(0, 49, 156))
+  .thatsFilledWith(gradients)
+  .thatsTranslated(-465, -350).draw
+           
+def radians = Math.toRadians(xPosition)
+def y = Math.sin(radians)
+
+bird
+  .thatsScaled(0.6,0.6)
+  .thatsFilledWith(black)
+  .thatsTranslated(xPosition, 25*y)
+  .thatsTranslated(-150, 150)
+  .draw
+
+bird
+  .thatsScaled(0.3,0.3)
+  .thatsFilledWith(black)
+  .thatsTranslated(xPosition, 20*y)
+  .thatsTranslated(-200, 150)
+  .draw
+
+bird
+  .thatsScaled(0.3,0.3)
+  .thatsFilledWith(black)
+  .thatsTranslated(xPosition, 15*y)
+  .thatsTranslated(-280, 150)
+  .draw
+
+dolphin
+  .thatsScaled(0.4,0.4)
+  .thatsFilledWith(black)
+  .withFlippedX
+  .thatsTranslated(xPosition, 60*y)
+  .thatsTranslated(-100, -50)
+  .draw
+
+dolphin
+  .thatsScaled(0.4,0.4)
+  .thatsFilledWith(black)
+  .thatsTranslated(-xPosition, 60*y)
+  .thatsTranslated(100, -50)
+  .draw
+
+collection(40)
+  .thatsStrokeColored(Color(0, 2, 255))
+  .thatsTranslated(100, 4).draw
+
+collection(40)
+  .thatsStrokeColored(Color(0, 2, 255))
+  .thatsTranslated(80, 6).draw
+
+collection(40)
+  .thatsStrokeColored(Color(0, 2, 255))
+  .thatsTranslated(140, 4).draw
+
+collection(40)
+  .thatsStrokeColored(Color(0, 2, 255))
+  .thatsTranslated(240, 3).draw
+
+collection(40)
+  .thatsStrokeColored(Color(0, 2, 255))
+  .thatsTranslated(290, 3).draw
+
+collection(40)
+  .thatsStrokeColored(Color(0, 2, 255))
+  .thatsTranslated(450, 2).draw
+
+collection(40)
+  .thatsStrokeColored(Color(0, 2, 255))
+  .thatsTranslated(480, 4).draw
+
+collection(40)
+  .thatsStrokeColored(Color(0, 2, 255))
+  .thatsTranslated(520, 4).draw
+
+collection(40)
+  .thatsStrokeColored(Color(0, 2, 255))
+  .thatsTranslated(590, 4).draw
+
+collection(40)
+  .thatsStrokeColored(Color(0, 2, 255))
+  .thatsTranslated(680, 4).draw
+
+collection(40)
+  .thatsStrokeColored(Color(0, 2, 255))
+  .thatsTranslated(790, 4).draw
+
+collection(40)
+  .thatsStrokeColored(Color(0, 2, 255))
+  .thatsTranslated(890, 4).draw
+
+def nextPosition = xPosition+increment
+                    
+  (nextPosition,increment)
+            
+  }
+  
+
+
+
+      

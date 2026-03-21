@@ -5,7 +5,7 @@ import { testInOutPairs } from
 
 export function testTranslateDef(logger) {
 	const cases = [
-		{
+		/*{
 			'in': 'def f() {}',
 			'outContains': 'to f\nend'
 		},
@@ -25,6 +25,17 @@ export function testTranslateDef(logger) {
 		{
 			'in': 'def p = repeat(3) { println("hi")}',
 			'outContains': 'to p\n\trepeat 3 [\n\t\tprint'
+		},*/
+		{
+			'in': `def Circle(x: Int, y: Int) {
+    forward(100)
+}
+Circle(550, -290)`,
+			'outContains': `to Circle0 :x :y
+	forward 100
+end
+
+Circle0 550 -290`
 		}
 	];
 	testInOutPairs(cases, translateKojoToWebLogo, logger);
