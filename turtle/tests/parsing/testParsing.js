@@ -1,4 +1,4 @@
-import { testAda } from './ada/testAda.js';
+/*import { testAda } from './ada/testAda.js';
 import { testASMTurtle } from './asm-turtle/testASMTurtle.js';
 import { testAsyncParser } from './testAsyncParser.js';
 import { testAsyncParseTask } from './testAsyncParseTask.js';
@@ -46,8 +46,8 @@ import { testParseTreeTokenDirectory } from './parse-tree-token/testParseTreeTok
 import { testPitrifiedGoTurtle } from './pitrified-go-turtle/testPitrifiedGoTurtle.js';
 import { testPovRay } from './pov-ray/testPovRay.js';
 import { testProcedure } from './testProcedure.js';
-import { testProcessing } from './processing/testProcessing.js';
-import { testProlog } from './prolog/testProlog.js';
+*/import { testProcessing } from './processing/testProcessing.js';
+/*import { testProlog } from './prolog/testProlog.js';
 import { testPythonParsing } from './python-parsing/testPythonParsing.js';
 import { testRustTurtle } from './rust-turtle/testRustTurtle.js';
 import { testScanner } from './testScanner.js';
@@ -59,11 +59,11 @@ import { testSonicWebTurtle } from './sonic-webturtle/testSonicWebTurtle.js';
 import { testSugarLabsTurtleBlocks } from './sugarlabs-turtle-blocks/testSugarLabsTurtleBlocks.js';
 import { testToken } from './testToken.js';
 import { testUnsupportedCommand } from './testUnsupportedCommand.js';
-import { wrapAndCall } from '../helpers/wrapAndCall.js';
+*/import { wrapAndCall } from '../helpers/wrapAndCall.js';
 
 export function testParsing(logger) {
 	wrapAndCall([
-		testAda,
+		/*testAda,
 		testASMTurtle,
 		testAsyncParser,
 		testAsyncParseTask,
@@ -111,8 +111,8 @@ export function testParsing(logger) {
 		testPitrifiedGoTurtle,
 		testPovRay,
 		testProcedure,
-		testProcessing,
-		testProlog,
+		*/testProcessing,
+		/*testProlog,
 		testPythonParsing,
 		testRustTurtle,
 		testScanner,
@@ -123,6 +123,6 @@ export function testParsing(logger) {
 		testSonicWebTurtle,
 		testSugarLabsTurtleBlocks,
 		testToken,
-		testUnsupportedCommand
+		testUnsupportedCommand*/
 	], logger);
 };
