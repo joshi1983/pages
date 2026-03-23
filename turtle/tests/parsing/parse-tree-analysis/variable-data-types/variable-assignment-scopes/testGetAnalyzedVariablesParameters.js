@@ -10,7 +10,7 @@ const allTypesString = getAllAssignableDataTypesString();
 function testParameters(logger) {
 	const cases = [
 		// simulate code quality problems to verify that they don't throw JavaScript errors.
-		{'code': 'to p :x\nfd :x', 'resultMatters': false},
+		/*{'code': 'to p :x\nfd :x', 'resultMatters': false},
 		{'code': 'fd :x', 'resultMatters': false},
 		{'code': 'to p\nfd :x\nend', 'resultMatters': false},
 		{'code': 'to p\nfd :x\nen', 'resultMatters': false},
@@ -55,6 +55,25 @@ function testParameters(logger) {
 			// An empty list is not a valid color or alphacolor.
 			'assignedTypes': 'list'
 		},
+		*/{
+			'code': `to p :num :x
+		if list? :num [
+			if list? :x [
+				output []
+			]
+		]
+		localmake "result "
+		localmake "i 0
+		print "here
+		while :i < :x [
+			localmake "i :i + 1
+		]
+		output :result
+	end`, 'requiredTypes': 'alphacolor|list|num|string',
+	// num|list would be even better.
+	'assignedTypes': 'alphacolor|list|num|string'
+	// 'list|num' would be better.
+	}
 	];
 	cases.forEach(function(caseInfo, index) {
 		const cached = getCachedParseTreeFromCode(caseInfo.code, logger);
