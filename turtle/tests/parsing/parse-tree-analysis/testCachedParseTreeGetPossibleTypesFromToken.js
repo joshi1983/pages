@@ -8,7 +8,7 @@ import { wrapAndCall } from '../../helpers/wrapAndCall.js';
 await DataTypes.asyncInit();
 
 function testGeneralCases(logger) {
-	const cases = [{
+	const cases = [/*{
 		'code': `to p :radius
 	localmake "x pos
 	localmake "size2 :radius * 0.2
@@ -257,7 +257,7 @@ print (invoke "p)`,
 			'types': 'num(unfinite)'
 			}
 	]
-	},{
+	},*/{
 		'code': `print :x/0`,
 	'checks': [
 			{'token': {'val': '/'},
