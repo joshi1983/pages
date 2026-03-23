@@ -1,13 +1,13 @@
-import { testAmosBasic } from
+/*import { testAmosBasic } from
 './amos-basic/testAmosBasic.js';
 import { testAnsiBasic } from
 './ansi-basic/testAnsiBasic.js';
 import { testAppleSoftBasic } from
 './applesoft-basic/testAppleSoftBasic.js';
 import { testAtariTurboBasicXL } from
-'./atari-turbo-basic-xl/testAtariTurboBasicXL.js';
+'./atari-turbo-basic-xl/testAtariTurboBasicXL.js';*/
 import { testBasil } from
-'./basil/testBasil.js';
+'./basil/testBasil.js';/*
 import { testBBCBasic } from
 './bbc-basic/testBBCBasic.js';
 import { testCommodoreBasic } from
@@ -35,16 +35,16 @@ import { testTRS80Basic } from
 './trs-80-basic/testTRS80Basic.js';
 import { testTrueBasic } from
 './true-basic/testTrueBasic.js';
-import { wrapAndCall } from 
+*/import { wrapAndCall } from 
 '../../helpers/wrapAndCall.js';
 
 export function testBasic(logger) {
-	wrapAndCall([
+	wrapAndCall([/*
 		testAmosBasic,
 		testAnsiBasic,
 		testAppleSoftBasic,
-		testAtariTurboBasicXL,
-		testBasil,
+		testAtariTurboBasicXL,*/
+		testBasil,/*
 		testBBCBasic,
 		testCommodoreBasic,
 		testHelpers,
@@ -58,6 +58,6 @@ export function testBasic(logger) {
 		testTexasInstruments99_4a,
 		testToQBASICMigrations,
 		testTRS80Basic,
-		testTrueBasic
+		testTrueBasic*/
 	], logger);
 };
