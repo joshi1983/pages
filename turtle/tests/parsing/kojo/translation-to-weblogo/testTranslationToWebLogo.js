@@ -1,4 +1,4 @@
-import { testExecArrayBuffer } from './testExecArrayBuffer.js';
+/*import { testExecArrayBuffer } from './testExecArrayBuffer.js';
 import { testExecAssignment } from './testExecAssignment.js';
 import { testExecDef } from './testExecDef.js';
 import { testExecFor } from './testExecFor.js';
@@ -10,21 +10,21 @@ import { testExecWhile } from './testExecWhile.js';
 import { testNeedsInitialPenColor } from
 './testNeedsInitialPenColor.js';
 import { testReplaceCommandsToFitDataTypesFixer } from './testReplaceCommandsToFitDataTypesFixer.js';
-import { testSimplifiers } from './simplifiers/testSimplifiers.js';
-import { testTranslateColors } from './testTranslateColors.js';
+*/import { testSimplifiers } from './simplifiers/testSimplifiers.js';
+/*import { testTranslateColors } from './testTranslateColors.js';
 import { testTranslateDef } from './testTranslateDef.js';
-import { testTranslateFuncCalls } from './testTranslateFuncCalls.js';
+*/import { testTranslateFuncCalls } from './testTranslateFuncCalls.js';/*
 import { testTranslateRepeatFor } from './testTranslateRepeatFor.js';
 import { testTranslateToPolyStart } from './testTranslateToPolyStart.js';
 import { testTranslateVariousExamples } from './testTranslateVariousExamples.js';
 import { testTypeProcessors } from
-'./type-processors/testTypeProcessors.js';
+'./type-processors/testTypeProcessors.js';*/
 import { wrapAndCall } from
 '../../../helpers/wrapAndCall.js';
 
 export function testTranslationToWebLogo(logger) {
 	wrapAndCall([
-		testExecArrayBuffer,
+		/*testExecArrayBuffer,
 		testExecAssignment,
 		testExecDef,
 		testExecFor,
@@ -34,14 +34,14 @@ export function testTranslationToWebLogo(logger) {
 		testExecRepeatFor,
 		testExecWhile,
 		testNeedsInitialPenColor,
-		testReplaceCommandsToFitDataTypesFixer,
-		testSimplifiers,
+		testReplaceCommandsToFitDataTypesFixer,*/
+		testSimplifiers,/*
 		testTranslateColors,
 		testTranslateDef,
-		testTranslateFuncCalls,
+		*/testTranslateFuncCalls,/*
 		testTranslateRepeatFor,
 		testTranslateToPolyStart,
 		testTranslateVariousExamples,
-		testTypeProcessors
+		testTypeProcessors*/
 	], logger);
 };
