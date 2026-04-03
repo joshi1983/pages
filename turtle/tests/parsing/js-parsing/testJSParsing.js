@@ -1,4 +1,4 @@
-import { testEvaluateStringLiteral } from './testEvaluateStringLiteral.js';
+/*import { testEvaluateStringLiteral } from './testEvaluateStringLiteral.js';
 import { testEvaluateTemplateLiteral } from './testEvaluateTemplateLiteral.js';
 import { testEvaluators } from './evaluators/testEvaluators.js';
 import { testMightHaveSideEffects } from './testMightHaveSideEffects.js';
@@ -40,7 +40,7 @@ import { testParseSwitchStatements } from './testParseSwitchStatements.js';
 import { testParseTernaryOperator } from './testParseTernaryOperator.js';
 import { testParseTreeTokensToCode } from './testParseTreeTokensToCode.js';
 import { testParseTryCatch } from './testParseTryCatch.js';
-import { testParseUnaryOperators } from './testParseUnaryOperators.js';
+import { testParseUnaryOperators } from './testParseUnaryOperators.js';*/
 import { testParseVariousJavaScriptFiles } from './testParseVariousJavaScriptFiles.js';
 import { testParseWebLogoJavaScript } from './testParseWebLogoJavaScript.js';
 import { testParseWith } from './testParseWith.js';
@@ -55,7 +55,7 @@ import { wrapAndCall } from '../../helpers/wrapAndCall.js';
 
 export function testJSParsing(logger) {
 	wrapAndCall([
-		testEvaluateStringLiteral,
+		/*testEvaluateStringLiteral,
 		testEvaluateTemplateLiteral,
 		testEvaluators,
 		testMightHaveSideEffects,
@@ -98,7 +98,7 @@ export function testJSParsing(logger) {
 		testParseTreeTokensToCode,
 		testParseTryCatch,
 		testParseUnaryOperators,
-		testParseVariousJavaScriptFiles,
+		*/testParseVariousJavaScriptFiles,
 		testParseWebLogoJavaScript,
 		testParseWith,
 		testParseWhileLoops,

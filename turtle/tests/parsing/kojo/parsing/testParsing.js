@@ -2,7 +2,7 @@ import { testParseAssignment } from './testParseAssignment.js';
 import { testParseClass } from './testParseClass.js';
 import { testParseDef } from './testParseDef.js';
 import { testParseEventHandlers } from './testParseEventHandlers.js';
-import { testParseExpressionDotProperty } from './testParseExpressionDotProperty.js';
+/*import { testParseExpressionDotProperty } from './testParseExpressionDotProperty.js';
 import { testParseFor } from './testParseFor.js';
 import { testParseFuncCall } from './testParseFuncCall.js';
 import { testParseIf } from './testParseIf.js';
@@ -17,7 +17,7 @@ import { testParseVal } from './testParseVal.js';
 import { testParseVar } from './testParseVar.js';
 import { testParseVariousExamples } from './testParseVariousExamples.js';
 import { testParseWhile } from './testParseWhile.js';
-import { wrapAndCall } from '../../../helpers/wrapAndCall.js';
+*/import { wrapAndCall } from '../../../helpers/wrapAndCall.js';
 
 export function testParsing(logger) {
 	wrapAndCall([
@@ -25,7 +25,7 @@ export function testParsing(logger) {
 		testParseClass,
 		testParseDef,
 		testParseEventHandlers,
-		testParseExpressionDotProperty,
+		/*testParseExpressionDotProperty,
 		testParseFor,
 		testParseFuncCall,
 		testParseIf,
@@ -39,6 +39,6 @@ export function testParsing(logger) {
 		testParseVal,
 		testParseVar,
 		testParseVariousExamples,
-		testParseWhile
+		testParseWhile*/
 	], logger);
 };

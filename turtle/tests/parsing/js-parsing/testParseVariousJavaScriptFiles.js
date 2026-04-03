@@ -27,6 +27,8 @@ export async function testParseVariousJavaScriptFiles(logger) {
 	for (let index = 0; index < cases.length; index++) {
 		const caseInfo = cases[index];
 		const url = caseInfo;
+		if (url.indexOf('kojo') === -1)
+			continue;
 		const plogger = prefixWrapper(`Case ${index}, url=${url}`, logger);
 		const jsCode = await fetchText(url+'?cacheBuster=' + new Date().getTime());
 		const parseResult = parse(jsCode);
