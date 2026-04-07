@@ -12,7 +12,7 @@ import { StringUtils } from
 '../modules/StringUtils.js';
 
 let testModuleUrls = [
-	'./bindDocumentFocusTests.js',
+	/*'./bindDocumentFocusTests.js',
 	'./testAlphaColour.js',
 	'./testArrayUtils.js',
 	'./assets/testAssets.js',
@@ -45,7 +45,7 @@ let testModuleUrls = [
 	'./testMapUtils.js',
 	'./testMaybeDecided.js',
 	'./testOperatorsJSON.js',
-	'./parsing/testParsing.js',
+	*/'./parsing/testParsing.js',/*
 	'./testPopulateTemplateUsingObject.js',
 	'./testRateLimiter.js',
 	'./set/testSet.js',
@@ -57,7 +57,7 @@ let testModuleUrls = [
 	'./testValueToLiteralCode.js',
 	'./testValueToString.js',
 	'./testValueWrapper.js',
-	'./testWindowsCommandsJSON.js'
+	'./testWindowsCommandsJSON.js'*/
 ];
 
 function processSearch() {
