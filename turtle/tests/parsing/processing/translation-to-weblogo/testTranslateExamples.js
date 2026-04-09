@@ -8,7 +8,10 @@ import { translateProcessingToWebLogo } from
 '../../../../modules/parsing/processing/translation-to-weblogo/translateProcessingToWebLogo.js';
 
 export function testTranslateExamples(logger) {
-	processingExamples.forEach(function(content, index) {
+	const examples = processingExamples.slice();
+	//examples.splice(1, 10000);
+	examples.forEach(function(content, index) {
+		console.log(`index=${index}`);
 		const plogger = prefixWrapper(`Case ${index}, code=${content}`, logger);
 		try {
 			const result = translateProcessingToWebLogo(content);

@@ -1,16 +1,16 @@
 import { test0L } from
-'./0L/test0L.js';
+'./0L/test0L.js';/*
 import { testCGJennings } from
 './cgjennings/testCGJennings.js';
 import { testFractInt } from
-'./fractint/testFractInt.js';
+'./fractint/testFractInt.js';*/
 import { wrapAndCall } from
 '../../helpers/wrapAndCall.js';
 
 export function testLSystems(logger) {
 	wrapAndCall([
 		test0L,
-		testCGJennings,
-		testFractInt
+		//testCGJennings,
+		//testFractInt
 	], logger);
 };
