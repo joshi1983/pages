@@ -8,10 +8,10 @@ export function testGoSubToSubroutines(logger) {
 		{'code': '123:', 'changed': false},
 		{'code': 'gosub 123\n123:', 'changed': false},
 		{'code': 'gosub 123\n12:return', 'changed': false},
-		/*{'code': 'gosub 123\n123:return',
+		{'code': 'gosub 123\n123:return',
 		'to': 'sub123()\nsub sub123() end sub'},
 		{'code': 'gosub 123\ngosub 123\n123:return',
-		'to': 'sub123()\nsub123()\nsub sub123() end sub'},*/
+		'to': 'sub123()\nsub123()\nsub sub123() end sub'},
 	];
 	processFixerCases(cases, goSubToSubroutines, logger);
 
