@@ -1,4 +1,6 @@
-import { clampRadianAngle } from '../../../../clampRadianAngle.js';
+import { clampRadianAngle } from
+'../../../../clampRadianAngle.js';
+import { isArcHidingPoint } from './isArcHidingPoint.js';
 import { LineCap } from '../../shapes/style/LineCap.js';
 import { mightStrokeOverlap } from './mightStrokeOverlap.js';
 import { Vector } from
