@@ -27,6 +27,16 @@ arcLeft 90 20`, 'numShapes': 1},
 ]`, 'numShapes': 2},
 // We don't want the line segments joined into a single path 
 // because the path would fill a square that we don't want.
+
+		{'code': `setLineJoinStyle "round
+setLineCap "round ; a round cap and a round join should look the same.
+; A round cap for a single arc will completely overlap the round join.
+
+arcLeft 20 100
+right 180
+arcRight 30 100 ; should hide and remove the previous arc.`,
+			'numShapes': 1
+		}
 	];
 	cases.forEach(function(caseInfo, index) {
 		const plogger = prefixWrapper(`Case ${index}`, logger);

@@ -1,4 +1,7 @@
 import { ArcShape } from '../../shapes/ArcShape.js';
+import { isArcHidingArc } from './isArcHidingArc.js';
+import { LineCap } from '../../shapes/style/LineCap.js';
+import { LineJoinStyle } from '../../shapes/style/LineJoinStyle.js';
 import { mightStrokeOverlap } from './mightStrokeOverlap.js';
 import { Vector } from '../../Vector.js';
 
@@ -8,23 +11,32 @@ function isPathStrokeHidingArc(path, arc) {
 	const elements = path.elements;
 	const end = arc.getEndPoint();
 	const start = arc.getStartPoint();
-	for (let i = 1; i < elements.length; i++) {
+	for (let i = 0; i < elements.length; i++) {
 		const e = elements[i];
 		if (!(e instanceof ArcShape))
 			continue;
-		if (Math.abs(e.angle) < Math.abs(arc.angle) || e.radius < arc.radius)
-			continue;
-		if (Vector.coordsEqualEnough(e.position.coords, arc.position.coords, errorThreshold)) {
-			if (e.rotationRadians === arc.rotationRadians)
+		if (isArcHidingArc(e, arc)) {
+			if (elements.length === 1 && path.isClosed === false)
+					return true; // if path is nothing more than the 
+						// contained e(an arc), e hides arc implies path hides arc.
+
+			if (arc.style.getLineCap() === LineCap.Butt)
+				return true; // if the arc has no line caps, 
+				// e hides arc implies the path containing e hides arc.
+
+			if (path.style.getLineCap() === LineCap.Square) {
+				// FIXME: do more thorough check that the line caps of arc are overlapped by joins and neighbours of e.
 				return true;
-			let p1 = e.getStartPoint();
-			let p2 = e.getEndPoint();
-			if (Vector.coordsEqualEnough(p1, start, errorThreshold) &&
-			Vector.coordsEqualEnough(p2, end, errorThreshold))
-				return true;
-			if (Vector.coordsEqualEnough(p2, start, errorThreshold) &&
-			Vector.coordEqualEnough(p1, end, errorThreshold))
-				return true;
+			}
+			if (arc.style.getLineCap() === LineCap.Round) {
+				if (path.style.getLineJoinStyle() === LineJoinStyle.Round && i !== 0 && i !== elements.length - 1)
+					return true;
+
+				if (path.style.getLineCap() === LineCap.Round)
+					return true;
+			}
+			// FIXME: check if neighbouring shapes and line joins can hide arc's line caps.
+			return true;
 		}
 	}
 	return false;
