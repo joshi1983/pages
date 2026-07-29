@@ -4,6 +4,7 @@ import { testScriptExampleDisplay } from './testScriptExampleDisplay.js';
 import { testScriptExampleExecutionScheduler } from './testScriptExampleExecutionScheduler.js';
 import { testSearchResultsChanged } from './testSearchResultsChanged.js';
 import { testTreeToThumbnailSettings } from './testTreeToThumbnailSettings.js';
+import { testZippedExamples } from './testZippedExamples.js';
 import { wrapAndCall } from '../../helpers/wrapAndCall.js';
 
 export function testFileLoadExample(logger) {
@@ -14,5 +15,6 @@ export function testFileLoadExample(logger) {
 		testScriptExampleExecutionScheduler,
 		testSearchResultsChanged,
 		testTreeToThumbnailSettings,
+		testZippedExamples
 	], logger);
 };
