@@ -1,3 +1,9 @@
+package.json:
+gulp-zip 5.1.0 is used instead of 6 or later to avoid problems around EcmaScript 6 module imports in the node module.
+Upon trying to use version 6, I was getting errors about require not being supported in ES6 modules and messages suggesting to rename index.js to index.cjs.
+I didn't see a better way to fix the problem than to simply downgrade to the latest version of gun-zip made with CommonJS/require calls.
+
+
 DONE: - add a way to compile repeat commands into those assembly-like commands.
 DONE: - add a function to get all global variable names from all tokens in the result from parsing.
 DONE: - add a function to get all local variable names from instructions directly in a procedure.
