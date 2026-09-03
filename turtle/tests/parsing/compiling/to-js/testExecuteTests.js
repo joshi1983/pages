@@ -16,6 +16,8 @@ export function testExecuteTests(logger) {
 		{'code': 'print and false true', 'messages': ['false']},
 		{'code': 'print and false false', 'messages': ['false']},
 		{'code': 'print and true true', 'messages': ['true']},
+		{'code': 'print aShift 3 1', 'messages': ['6']},
+		{'code': 'print aShift 3 -1', 'messages': ['1']},
 		{'code': 'print bitAnd 0 1', 'messages': ['0']},
 		{'code': 'print bitAnd 2 3', 'messages': ['2']},
 		{'code': 'print bitAnd 5 7', 'messages': ['5']},
