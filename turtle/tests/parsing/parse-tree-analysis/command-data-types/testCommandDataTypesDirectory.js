@@ -1,4 +1,5 @@
 import { testHasMinValue } from './testHasMinValue.js';
+import { testIntersectsWithNum } from './testIntersectsWithNum.js';
 import { testIsFiniteNum } from './testIsFiniteNum.js';
 import { testIsListType } from './testIsListType.js';
 import { testIsMixTransparentType } from './testIsMixTransparentType.js';
@@ -12,6 +13,7 @@ import { wrapAndCall } from '../../../helpers/wrapAndCall.js';
 export function testCommandDataTypesDirectory(logger) {
 	wrapAndCall([
 		testHasMinValue,
+		testIntersectsWithNum,
 		testIsFiniteNum,
 		testIsListType,
 		testIsMixTransparentType,

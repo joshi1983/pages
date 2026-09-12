@@ -301,7 +301,7 @@ export class DataTypes {
 		let optimizedTypes = removeContainedTypes(this.types);
 		if (DataTypes.contains(optimizedTypes, new AlphaColorType())) {
 			let canSimplifyWithAlphaColor = true;
-			let optimizedTypeNames = new Set();
+			const optimizedTypeNames = new Set();
 			optimizedTypes.forEach(t => optimizedTypeNames.add(t.name));
 			const colorSubTypeNames = ['alphacolorstring', 'alphacolorlist'];
 			colorSubTypeNames.forEach(function(typeName) {
