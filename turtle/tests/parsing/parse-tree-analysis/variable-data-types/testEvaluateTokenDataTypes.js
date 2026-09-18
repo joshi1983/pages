@@ -11,22 +11,23 @@ import { prefixWrapper } from '../../../helpers/prefixWrapper.js';
 export function testEvaluateTokenDataTypes(logger) {
 	const cases = [
 		{'code': 'fd 100', 'tokenTypeChecks': [
-			{'val': 100, 'types': 'int'},
+			{'val': 100, 'types': 'int(max=100,min=100)'},
 			{'val': 'fd', 'types': ''},
 		]},
 		{'code': 'fd :x/0', 'tokenTypeChecks': [
-			{'val': 0, 'types': 'int'},
+			{'val': 0, 'types': 'int(max=0,min=0)'},
 			{'val': '/', 'types': 'num(unfinite)'},
 		]},
 		{'code': 'make "x random 10\nfd :x/0', 'tokenTypeChecks': [
-			{'val': 0, 'types': 'int'},
+			{'val': 0, 'types': 'int(max=0,min=0)'},
 			{'val': '/', 'types': 'num(unfinite)'},
 		]},
 		{'code': 'make "x 100\nfd :x', 'tokenTypeChecks': [
-			{'val': "x", 'type': ParseTreeTokenType.VARIABLE_READ, 'types': 'int'},
+			{'val': "x", 'type': ParseTreeTokenType.VARIABLE_READ,
+			'types': 'int(max=100,min=100)'},
 		]},
 		{'code': 'fd 10 + 50', 'tokenTypeChecks': [
-			{'val': '+', 'types': 'int'}
+			{'val': '+', 'types': 'int(max=60,min=60)'}
 		]},
 		{'code': 'fd 10.23 + 50', 'tokenTypeChecks': [
 			{'val': '+', 'types': 'num(finite,max=60.230000000000004,min=60.230000000000004)'}
@@ -35,52 +36,57 @@ export function testEvaluateTokenDataTypes(logger) {
 			// Maybe we should use an error threshold around any calculated values to ensure the calculated data type includes the intended exact value.
 		]},
 		{'code': 'print sum 10 50', 'tokenTypeChecks': [
-			{'val': 'sum', 'types': 'int'}
+			{'val': 'sum', 'types': 'int(max=60,min=60)'}
 		]},
 		{'code': 'print abs -50', 'tokenTypeChecks': [
-			{'val': 'abs', 'types': 'int'}
+			{'val': 'abs', 'types': 'int(max=50,min=50)'}
 		]},
 		{'code': 'print abs -50.5', 'tokenTypeChecks': [
 			{'val': 'abs', 'types': 'num(finite,max=50.5,min=50.5)'}
 		]},
 		{'code': 'make "x 5 print -:x', 'tokenTypeChecks': [
-			{'val': 5, 'types': 'int'},
-			{'val': 'x', 'type': ParseTreeTokenType.VARIABLE_READ, 'types': 'int'},
-			{'val': '-', 'types': 'int'}
+			{'val': 5, 'types': 'int(max=5,min=5)'},
+			{'val': 'x', 'type': ParseTreeTokenType.VARIABLE_READ,
+			'types': 'int(max=5,min=5)'},
+			{'val': '-', 'types': 'int(max=-5,min=-5)'}
 		]},
 		{'code': 'to p\noutput 5\nend print p', 'tokenTypeChecks': [
-			{'val': 'p', 'type': ParseTreeTokenType.PARAMETERIZED_GROUP, 'types': 'int'}
+			{'val': 'p', 'type': ParseTreeTokenType.PARAMETERIZED_GROUP,
+			'types': 'int(max=5,min=5)'}
 		]},
 		{'code': 'to p\nlocalmake "x 5\noutput :x\nend print p', 'tokenTypeChecks': [
-			{'val': 'p', 'type': ParseTreeTokenType.PARAMETERIZED_GROUP, 'types': 'int'}
+			{'val': 'p', 'type': ParseTreeTokenType.PARAMETERIZED_GROUP,
+			'types': 'int(max=5,min=5)'}
 		]},
 		{'code': 'to p :x\nfd :x\nend\np 3 + 4\np 8 + 12', 'tokenTypeChecks': [
-			{'val': '+', 'hasChildVal': 3, 'types': 'int'},
-			{'val': '+', 'hasChildVal': 8, 'types': 'int'}
+			{'val': '+', 'hasChildVal': 3, 'types': 'int(max=7,min=7)'},
+			{'val': '+', 'hasChildVal': 8, 'types': 'int(max=20,min=20)'}
 		]},
 		{'code': 'to p :x\nfd :x\nend', 'tokenTypeChecks': [
-			{'val': 'x', 'hasParentVal': 'fd', 'type': ParseTreeTokenType.VARIABLE_READ, 'types': 'num(finite)'}
+			{'val': 'x', 'hasParentVal': 'fd', 'type': ParseTreeTokenType.VARIABLE_READ,
+			'types': 'num(finite)'}
 		]},
 		{'code': 'to p :x\nprint -:x\nend\np 3\np9', 'tokenTypeChecks': [
-			{'val': '-', 'types': 'int'}
+			{'val': '-', 'types': 'int(max=-3,min=-3)'}
 		]},
 		{'code': 'to p :x\nprint abs :x\nend\np 3\np9', 'tokenTypeChecks': [
-			{'val': 'abs', 'types': 'int'}
+			{'val': 'abs', 'types': 'int(max=3,min=3)'}
 		]},
 		{'code': 'make "x 5\nprint :x', 'tokenTypeChecks': [
-			{'val': 'x', 'type': ParseTreeTokenType.VARIABLE_READ, 'types': 'int'}
+			{'val': 'x', 'type': ParseTreeTokenType.VARIABLE_READ,
+			'types': 'int(max=5,min=5)'}
 		]},
 		{'code': 'make "x 1 print sum (-:x) 1', 'tokenTypeChecks': [
-			{'type': ParseTreeTokenType.VARIABLE_READ, 'types': 'int'},
-			{'val': '-', 'types': 'int'},
-			{'type': ParseTreeTokenType.CURVED_BRACKET_EXPRESSION, 'types': 'int'},
-			{'val': 'sum', 'types': 'int'},
+			{'type': ParseTreeTokenType.VARIABLE_READ, 'types': 'int(max=1,min=1)'},
+			{'val': '-', 'types': 'int(max=-1,min=-1)'},
+			{'type': ParseTreeTokenType.CURVED_BRACKET_EXPRESSION, 'types': 'int(max=-1,min=-1)'},
+			{'val': 'sum', 'types': 'int(max=0,min=0)'},
 		]},
 		{'code': 'print :x + 1', 'tokenTypeChecks': [
 			{'val': '+', 'types': 'num'}
 		]},
 		{'code': 'make "x 5\nprint :x + 1', 'tokenTypeChecks': [
-			{'val': '+', 'types': 'int'}
+			{'val': '+', 'types': 'int(max=6,min=6)'}
 		]},
 		{
 			'code': 'MAKE "i 0\nUNTIL :i>3 [MAKE "i :i+1 PRINT :i]',
@@ -99,7 +105,7 @@ export function testEvaluateTokenDataTypes(logger) {
 				{
 					'val': 'x',
 					'type': ParseTreeTokenType.VARIABLE_READ,
-					'types': 'int'
+					'types': 'int(max=300,min=300)'
 				}
 			]
 		},
@@ -109,7 +115,7 @@ export function testEvaluateTokenDataTypes(logger) {
 				{
 					'val': 'x',
 					'type': ParseTreeTokenType.VARIABLE_READ,
-					'types': 'int'
+					'types': 'int(max=5,min=5)'
 				}
 			]
 		},
@@ -130,7 +136,7 @@ export function testEvaluateTokenDataTypes(logger) {
 				{
 					'val': 'x',
 					'type': ParseTreeTokenType.VARIABLE_READ,
-					'types': 'int'
+					'types': 'int(max=10,min=10)'
 				}
 			]
 		},
@@ -165,13 +171,19 @@ export function testEvaluateTokenDataTypes(logger) {
 			]
 		},
 		{
-			'code': '"make "x "hello\nto p\nprint :x\np ; procedure call\nend make "x 5\np',
+			'code': `make "x "hello
+to p
+		print :x
+		p ; procedure call
+end
+make "x 5
+p`,
 			// procedure call between hello and 5 but the procedure call is in a procedure.
 			'tokenTypeChecks': [
 				{
 					'val': 'x',
 					'type': ParseTreeTokenType.VARIABLE_READ,
-					'types': 'int'
+					'types': 'int(max=5,min=5)'
 				}
 			]
 		},
@@ -182,7 +194,7 @@ export function testEvaluateTokenDataTypes(logger) {
 				{
 					'val': 'x',
 					'type': ParseTreeTokenType.VARIABLE_READ,
-					'types': 'int|string'
+					'types': 'int(max=5,min=5)|string'
 				}
 			]
 		},
