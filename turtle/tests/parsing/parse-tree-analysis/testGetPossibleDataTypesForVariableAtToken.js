@@ -11,8 +11,10 @@ const allTypesString = getAllAssignableDataTypesString();
 
 export function testGetPossibleDataTypesForVariableAtToken(logger) {
 	const cases = [
-		{'code': 'make "x 5 print "here', 'types': 'int'},
-		{'code': 'make "X 5 print "here', 'types': 'int'}, // variables are case-insensitive.
+		{'code': 'make "x 5 print "here', 'types': 'int(max=5,min=5)'},
+		{'code': 'make "X 5 print "here', 'types': 'int(max=5,min=5)'},
+			// variables are case-insensitive.
+
 		{'code': 'make "x 5.4 print "here', 'types': 'num(finite,max=5.4,min=5.4)'},
 		{'code': 'make "x true print "here', 'types': 'bool'},
 		{'code': 'make "x [] print "here', 'types': 'list'},
@@ -25,7 +27,8 @@ export function testGetPossibleDataTypesForVariableAtToken(logger) {
 
 		{'code': 'make "x []\nsetFillColor mix :x transparent 0.5\nprint "here', 'types': 'list'},
 		{'code': 'make "x []\nmake "x "here\nfd :x', 'types': 'list'},
-		{'code': 'make "y 5\nmake "x :y print "here', 'types': 'int'},
+		{'code': 'make "y 5\nmake "x :y print "here',
+			'types': 'int(max=5,min=5)'},
 
 		{'code': 'print 4 + :x\nprint "here', 'types': 'num'},
 		{'code': 'fd :x\nprint 4 + :x\nprint "here', 'types': 'num(finite)'},
@@ -36,15 +39,22 @@ export function testGetPossibleDataTypesForVariableAtToken(logger) {
 		{'code': 'print "here setpencolor :x', 'types': 'alphacolor|transparent'},
 		{'code': 'print "here setpencolor :x fd :x', 'types': 'int'},
 		{'code': 'print "here setpencolor :x make "x 10 fd :x', 'types': 'alphacolor|transparent'},
-		{'code': 'make "x 5 if 1 < 2 [print :x print "here]', 'types': 'int'},
-		{'code': 'to f\nmake "x 5 if 1 < 2 [print :x print "here]\nend', 'types': 'int'},
-		{'code': 'to f\nlocalmake "x 5 if 1 < 2 [print :x print "here]\nend', 'types': 'int'},
+		{'code': 'make "x 5 if 1 < 2 [print :x print "here]',
+			'types': 'int(max=5,min=5)'},
+		{'code': 'to f\nmake "x 5 if 1 < 2 [print :x print "here]\nend',
+			'types': 'int(max=5,min=5)'},
+		{'code': 'to f\nlocalmake "x 5 if 1 < 2 [print :x print "here]\nend',
+			'types': 'int(max=5,min=5)'},
 		{'code': 'make "x createPList print "here', 'types': 'plist'},
 		{'code': 'to f :x\nsetProperty "x "key 5\nprint "here\nend\nmake "y createPList\nf :y\nprint "here', 'types': 'plist'},
-		{'code': 'to p\nlocalmake "x 5\nprint "here\nend', 'types': 'int'},
-		{'code': 'to p\nlocalmake "y 5\nlocalmake "x :y\nprint "here\nend', 'types': 'int'},
-		{'code': 'to p :n\nlocalmake "a 0\nrepeat :n [\nlocalmake "x :a\nlocalmake "a :b\nlocalmake "b :x + :b\nprint "here]\nend', 'types': 'int'},
-		{'code': 'to FibonacciList :n\nlocalmake "a 0\nlocalmake "b 1\nlocalmake "result []\nrepeat :n [\nlocalmake "result rput :a :result\nlocalmake "x :a\nlocalmake "a :b\nlocalmake "b :x + :b\nprint "here]\noutput :result\nend', 'types': 'int'},
+		{'code': 'to p\nlocalmake "x 5\nprint "here\nend',
+			'types': 'int(max=5,min=5)'},
+		{'code': 'to p\nlocalmake "y 5\nlocalmake "x :y\nprint "here\nend',
+			'types': 'int(max=5,min=5)'},
+		{'code': 'to p :n\nlocalmake "a 0\nrepeat :n [\nlocalmake "x :a\nlocalmake "a :b\nlocalmake "b :x + :b\nprint "here]\nend',
+			'types': 'int(max=0,min=0)'},
+		{'code': 'to FibonacciList :n\nlocalmake "a 0\nlocalmake "b 1\nlocalmake "result []\nrepeat :n [\nlocalmake "result rput :a :result\nlocalmake "x :a\nlocalmake "a :b\nlocalmake "b :x + :b\nprint "here]\noutput :result\nend',
+			'types': 'int'},
 		{'code': 'make "x mix "#0fff "blue 0.4\nprint "here', 'types': 'alphacolorlist'},
 		{'code': 'to p\nlocalmake "x 1\nif true [\n\nlocalmake "x 1 - power :x 2\n]\nforward 5 * ( :x )\nprint "here\nend',
 			'types': 'int'},

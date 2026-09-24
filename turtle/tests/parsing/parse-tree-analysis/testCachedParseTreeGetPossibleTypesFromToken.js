@@ -44,7 +44,7 @@ p 100`, 'checks': [
 		'type': ParseTreeTokenType.VARIABLE_READ,
 		'hasParentVal': '*'
 	},
-	'types': 'int'
+	'types': 'int(max=100,min=100)'
 }
 ]},{
 		'code': `make "x pos\nqueue "x "hi\nprint :x`, 'checks': [
@@ -149,7 +149,7 @@ print :X
 		'token': {
 			'val': 'Y'
 		},
-		'types': 'int'
+		'types': 'int(max=0,min=0)'
 	}]
 	},{'code': 'print ifelse 1 < 2 ["red] ["blue]',
 		'checks': [
@@ -191,7 +191,7 @@ prinT "x`, 'checks': [{
 		'val': 'x',
 		'hasParentVal': 'print'
 	},
-	'types': 'int|string' // Idealy, this would be 'string' but we're not quite there yet.
+	'types': 'int(max=4,min=4)|string' // Idealy, this would be 'string' but we're not quite there yet.
 }
 	]
 	}, {
@@ -221,7 +221,7 @@ prinT "x`, 'checks': [{
 		'val': 'x',
 		'hasParentVal': 'print'
 	},
-	'types': 'int|string' // Idealy, this would be 'string' but we're not quite there yet.
+	'types': 'int(max=4,min=4)|string' // Idealy, this would be 'string' but we're not quite there yet.
 }
 	]
 	}, {
@@ -258,7 +258,7 @@ end
 print (invoke "p)`,
 	'checks': [
 			{'token': {'val': 'p', 'type': ParseTreeTokenType.STRING_LITERAL},
-			'types': 'cproc:0(returntypes=int)'
+			'types': 'cproc:0(returntypes=int(max=3,min=3))'
 			}
 	]
 	},{
@@ -305,14 +305,15 @@ repeat 2 [
 			'type': ParseTreeTokenType.VARIABLE_READ},
 			'types': 'num(finite,max=35.5,min=35.5)'},
 			{'token': {'val': 'radius', 'type': ParseTreeTokenType.VARIABLE_READ},
-			'types': 'int'
-			// In the future, radius should be given a type that tightens around 100.
-			// For now, int is good.
+			'types': 'int(max=100,min=100)'
 			},
 			{'token': {'val': 'mix'},
-			'types': 'num(finite)'},
+			'types': 'num(finite,max=100,min=35.5)'},
+			{'token': {'val': 'repRatio', 'type': ParseTreeTokenType.PARAMETERIZED_GROUP},
+			'types': 'num(finite,max=1,min=0)'
+			},
 			{'token': {'val': 'radius1', 'type': ParseTreeTokenType.VARIABLE_READ},
-			'types': 'num(finite)'
+			'types': 'num(finite,max=100,min=35.5)'
 			// Eventually after radius's types tighten around 100:
 			//'types': 'num(finite,max=100,min=35.5)'
 			}
@@ -324,6 +325,15 @@ repeat :limit [
 ]`,		'checks': [
 			{'token': {'val': 'mix'},
 			'types': 'num(finite,max=0.15,min=0.01)'
+			}
+		]
+	},{
+		'code': `make "x 123
+print (:x)`,
+		'checks': [
+			{
+				'token': {'type': ParseTreeTokenType.CURVED_BRACKET_EXPRESSION},
+				'types': 'int(max=123,min=123)'
 			}
 		]
 	}

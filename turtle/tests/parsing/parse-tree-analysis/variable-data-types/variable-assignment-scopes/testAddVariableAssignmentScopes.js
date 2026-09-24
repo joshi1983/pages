@@ -21,7 +21,7 @@ export function testAddVariableAssignmentScopes(logger) {
 		else {
 			const scope = scopes[0];
 			const types = scope.assignedTypes;
-			if (types.toString() !== 'list<int>(minlen=1)')
+			if (types.toString() !== 'list<int(max=2,min=2)>(minlen=1)')
 				logger(escapeHTML(`Expected list<int>(minlen=1) but got ${types.toString()}`));
 		}
 	}
