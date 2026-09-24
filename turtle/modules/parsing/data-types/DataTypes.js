@@ -171,11 +171,13 @@ export class DataTypes {
 	static getTypesCompatibleWithValue(val, extraInfo) {
 		if (extraInfo === undefined)
 			extraInfo = {};
-		if (Number.isInteger(val))
-			return new DataTypes('int');
+		if (Number.isInteger(val)) {
+			return new DataTypes(new Set([
+				IntegerType.tightenForValue(val)
+			]));
 			// num includes all integers too but 'int' is the
 			// tightest overall type for now.
-
+		}
 		let resultTypes = DataTypes.explodedTypesArray.filter(t => t.mayBeCompatibleWithValue(val, extraInfo)).
 		map(function(type) {
 			if (type.tightenForValue === undefined)
