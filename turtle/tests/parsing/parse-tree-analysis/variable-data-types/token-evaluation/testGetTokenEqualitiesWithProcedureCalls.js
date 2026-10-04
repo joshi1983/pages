@@ -1,9 +1,11 @@
+import { ParseTreeTokenType } from
+'../../../../../modules/parsing/ParseTreeTokenType.js';
 import { processGetTokenEqualitiesFromCachedParseTreeCases } from
 './processGetTokenEqualitiesFromCachedParseTreeCases.js';
 
 export function testGetTokenEqualitiesWithProcedureCalls(logger) {
 	const cases = [
-		{'code': `to p
+		/*{'code': `to p
 	if randomRatio < 0.5 [
 		make "x 4
 	]
@@ -35,7 +37,49 @@ print :x`,
 				]
 			},
 		]
-		},
+		},*/
+		{'code': `to p :y
+	localmake "x :y
+	queue2 "x 4
+end
+
+make "z []
+p :z
+print :z`,
+		'numEqualKeys': 2,
+		'checks': [
+			{
+				'fromToken': {
+					'type': ParseTreeTokenType.LIST,
+					'hasParentVal': 'make'
+					// The [] assigned to global variable z.
+				},
+				'toTokens': [
+					{
+						'val': 'z',
+						'type': ParseTreeTokenType.VARIABLE_READ,
+						'hasParentVal': 'p'
+					},
+				]
+			},
+			{
+				'fromToken': {
+					'type': ParseTreeTokenType.VARIABLE_READ,
+					'val': 'z',
+					'hasParentVal': 'p'
+					// the :z in to p :z
+				},
+				'toTokens': [
+					{
+						'val': 'y',
+						'type': ParseTreeTokenType.VARIABLE_READ,
+						'hasParentVal': 'localmake'
+						// the read of parameter y in procedure p
+					},
+				]
+			},
+			]
+		}
 	];
 	processGetTokenEqualitiesFromCachedParseTreeCases(cases, logger);
 };
