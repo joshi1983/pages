@@ -56,8 +56,8 @@ function testMayBeCompatibleWith(logger) {
 
 function testGetTypesCompatibleWithValue(logger) {
 	const cases = [
-		{'in': 5, 'result': 'int'},
-		{'in': -1000000, 'result': 'int'},
+		{'in': 5, 'result': 'int(max=5,min=5)'},
+		{'in': -1000000, 'result': 'int(max=-1000000,min=-1000000)'},
 		{'in': true, 'result': 'bool'},
 		{'in': false, 'result': 'bool'},
 		{'in': 3.4, 'result': 'num(finite,max=3.4,min=3.4)'},

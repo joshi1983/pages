@@ -21,7 +21,7 @@ end
 
 print (invoke "p)`,
 	'token': {'val': 'p', 'type': ParseTreeTokenType.STRING_LITERAL},
-	'out': 'cproc:0(returntypes=int)' // eventually, we want it to be cproc:0(returntypes=int).
+	'out': 'cproc:0(returntypes=int(max=3,min=3))' // eventually, we want it to be cproc:0(returntypes=int).
 }
 	];
 	cases.forEach(function(caseInfo, index) {

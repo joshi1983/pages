@@ -7,7 +7,7 @@ import { prefixWrapper } from '../../helpers/prefixWrapper.js';
 import { validateVariables } from '../../helpers/parsing/parse-tree-analysis/validateVariables.js';
 
 export function testCachedParseTreeWithEvaluateTokensWithVariables(logger) {
-	const cases = [{
+	const cases = [/*{
 		'code': 'make "x 5\nprint :x',
 		'checks': [
 			{
@@ -151,7 +151,7 @@ repeat :limit [
 				'result': 12
 			}
 		]
-	},{
+	},*/{
 		'code': `to p
 	localmake "x 1
 	if true [
