@@ -9,7 +9,7 @@ export function testGetAnalyzedVariablesGeneral(logger) {
 			{
 				'varName': 'x',
 				'scopeIndex': 0,
-				'assignedTypesStr': 'int'
+				'assignedTypesStr': 'int(max=4,min=4)'
 			}
 			]
 		},
@@ -79,7 +79,7 @@ end`,
 	 {
 		'varName': 'x',
 		'scopeIndex': 1,
-		'assignedTypesStr': 'int'
+		'assignedTypesStr': 'int(max=1,min=1)'
 	}
 	]
 }];

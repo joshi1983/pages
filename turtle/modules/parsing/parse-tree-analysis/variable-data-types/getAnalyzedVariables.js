@@ -15,6 +15,8 @@ import { evaluatePossiblyUsedInProcedure } from './evaluatePossiblyUsedInProcedu
 import { evaluateTokensBasic } from './evaluateTokensBasic.js';
 import { evaluateTokensWithVariables } from './evaluateTokensWithVariables.js';
 import { getAllVariables } from './getAllVariables.js';
+import { loosenAssignedTypesForScopesPartiallyLooped } from
+'./variable-assignment-scopes/loosenAssignedTypesForScopesPartiallyLooped.js';
 import { ParseTreeTokenType } from '../../ParseTreeTokenType.js';
 import { processMutationsOfSingleValueLists } from
 './variable-assignment-scopes/processMutationsOfSingleValueLists.js';
@@ -87,6 +89,7 @@ export function getAnalyzedVariables(cachedParseTree) {
 
 	updateAssignTokenProcedureForVariableAssignmentScopes(cachedParseTree.getProceduresMap(), result);
 	tightenGlobalVariableAssignmentScopesAssignedInProcedure(cachedParseTree, result);
+	loosenAssignedTypesForScopesPartiallyLooped(result);
 	analyzeVariableAssignmentScopeApplicableTokens(result);
 	evaluatePossiblyUsedInProcedure(cachedParseTree, result);
 	analyzeTokenBasic(cachedParseTree.root, cachedParseTree, result, undefined);
