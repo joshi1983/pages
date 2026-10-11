@@ -10,10 +10,10 @@ export function testGetOutputTypesForProcedure(logger) {
 	const cases = [
 		{'code': '', 'result': null},
 		{'code': 'stop', 'result': null},
-		{'code': 'output 5', 'result': 'int'},
+		{'code': 'output 5', 'result': 'int(max=5,min=5)'},
 		{'code': 'output "Hello', 'result': 'string'},
 		{'code': 'output []', 'result': 'list'},
-		{'code': 'if :x < 3 [\noutput 4\n]\noutput "Hello', 'result': 'int|string'}
+		{'code': 'if :x < 3 [\noutput 4\n]\noutput "Hello', 'result': 'int(max=4,min=4)|string'}
 	];
 	cases.forEach(function(caseInfo, index) {
 		const plogger = prefixWrapper(`Case ${index}`, logger);

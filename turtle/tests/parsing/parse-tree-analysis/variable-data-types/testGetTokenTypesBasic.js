@@ -7,8 +7,8 @@ export function testGetTokenTypesBasic(logger) {
 	const code = 'make "x 1 print sum (-:x) 1';
 	const cachedParseTree = getCachedParseTreeFromCode(code, logger);
 	const cases = [
-		{'val': 1, 'hasParentVal': 'make', 'typeStr': 'int'},
-		{'val': 1, 'hasParentVal': 'sum', 'typeStr': 'int'},
+		{'val': 1, 'hasParentVal': 'make', 'typeStr': 'int(max=1,min=1)'},
+		{'val': 1, 'hasParentVal': 'sum', 'typeStr': 'int(max=1,min=1)'},
 		{'val': 'x', 'hasParentVal': 'make', 'typeStr': 'string'},
 		{'val': 'sum', 'typeStr': undefined},
 		{'val': '-', 'typeStr': undefined},

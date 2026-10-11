@@ -90,7 +90,7 @@ UNTIL :i>3 [
 				'varName': 'radiusdelta',
 				'scopes': [
 					{
-						'assignedTypes': 'int',
+						'assignedTypes': 'int(max=15,min=15)',
 						'assignTokenVal': 'maKE',
 					},
 					{
@@ -112,7 +112,7 @@ UNTIL :i>3 [
 			'varName': 'x',
 			'scopes': [
 				{
-					'assignedTypes': 'int',
+					'assignedTypes': 'int(max=5,min=5)',
 					'assignTokenVal': 'maKE',
 					'fromToken': {
 						'val': 'make'
@@ -122,7 +122,7 @@ UNTIL :i>3 [
 					}
 				},
 				{
-					'assignedTypes': 'int',
+					'assignedTypes': 'int(max=10,min=10)',
 					'assignTokenVal': 'make',
 					'toToken': {
 						'val': 10
@@ -146,7 +146,7 @@ end`,
 			'varName': 'x',
 			'scopes': [
 				{
-					'assignedTypes': 'int',
+					'assignedTypes': 'int(max=6,min=5)',
 					'assignTokenVal': 'localMaKE',
 					'fromToken': {
 						'val': 'ifelse'
