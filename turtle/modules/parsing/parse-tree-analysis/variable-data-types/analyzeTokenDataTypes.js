@@ -99,6 +99,8 @@ export function analyzeTokenDataTypes(cachedParseTree, tokenValueMap, variables)
 	});
 	processTokenDataTypesFromMultipleVariableAssignmentScopes(cachedParseTree, variables, result);
 	analyzeTokenTypesForProcedureCPROCs(cachedParseTree, result);
+	processAdvancedPass(tokensRemaining, variables, result);
+	console.log(`tokensRemaining.length=${tokensRemaining.length}`);
 
 	return result;
 };

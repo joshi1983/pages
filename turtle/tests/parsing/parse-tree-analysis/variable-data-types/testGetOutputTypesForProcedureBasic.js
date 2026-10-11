@@ -11,7 +11,7 @@ export function testGetOutputTypesForProcedureBasic(logger) {
 	const cases = [
 	{
 		'code': 'to p output 3 end',
-		'types': 'int'
+		'types': 'int(max=3,min=3)'
 	},
 	];
 	cases.forEach(function(caseInfo, index) {

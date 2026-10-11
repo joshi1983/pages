@@ -36,14 +36,14 @@ export function testAdjustSubtypesForLists(logger) {
 	'',
 	'fd 100',
 	{'code': 'make "x 1', 'checks': [
-		{'varName': 'x', 'types': 'int'}
+		{'varName': 'x', 'types': 'int(max=1,min=1)'}
 	]},
 	'make "x "hi',
 	{'code': 'make "x []\nprint :x', 'types': 'list'},
 	{'code': 'make "x [1]\nprint item 1 :x', 'types': 'list<int>'},
 	{'code': 'make "x [1]\nqueue2 "x "hi', 'checks': [
-		{'varName': 'x', 'beforeTypes': 'list<int>(minlen=1)',
-		'types': 'list<int|string>(minlen=1)'}
+		{'varName': 'x', 'beforeTypes': 'list<int(max=1,min=1)>(minlen=1)',
+		'types': 'list<int(max=1,min=1)|string>(minlen=1)'}
 	]},
 	/*{'code': 'make "x [1]\nsetItem 2 "hi\nprint item 1 :x',
 	'checks': [
