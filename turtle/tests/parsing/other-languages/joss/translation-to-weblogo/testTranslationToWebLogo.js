@@ -1,3 +1,4 @@
+import { testExecIf } from './testExecIf.js';
 import { testExecLet } from './testExecLet.js';
 import { testExecSet } from './testExecSet.js';
 import { testExecSubroutine } from './testExecSubroutine.js';
@@ -8,6 +9,7 @@ import { wrapAndCall } from
 
 export function testTranslationToWebLogo(logger) {
 	wrapAndCall([
+		testExecIf,
 		testExecLet,
 		testExecSet,
 		testExecSubroutine,

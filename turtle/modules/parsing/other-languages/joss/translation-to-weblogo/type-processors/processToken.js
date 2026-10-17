@@ -9,6 +9,7 @@ import { processBinaryOperator} from './processBinaryOperator.js';
 import { processFunctionCall } from './processFunctionCall.js';
 import { processIdentifier } from './processIdentifier.js';
 import { processLet } from './processLet.js';
+import { processLineOfCode } from './processLineOfCode.js';
 import { processNumberLiteral } from './processNumberLiteral.js';
 import { processSquareBracketExpression } from './processSquareBracketExpression.js';
 import { processStringLiteral } from './processStringLiteral.js';
@@ -22,6 +23,7 @@ const typeProcessors = new Map([
 	[ParseTreeTokenType.FUNCTION_CALL, processFunctionCall],
 	[ParseTreeTokenType.IDENTIFIER, processIdentifier],
 	[ParseTreeTokenType.LET, processLet],
+	[ParseTreeTokenType.LINE_OF_CODE, processLineOfCode],
 	[ParseTreeTokenType.NUMBER_LITERAL, processNumberLiteral],
 	[ParseTreeTokenType.PERIOD, noop],
 	[ParseTreeTokenType.SEMICOLON, noop],

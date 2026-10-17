@@ -16,12 +16,21 @@ const validParentTypes = new Map([
 		ParseTreeTokenType.ARG_LIST,
 		ParseTreeTokenType.CURVED_BRACKET_EXPRESSION
 	]],
+	[ParseTreeTokenType.FOR, [
+		ParseTreeTokenType.LINE_OF_CODE
+	]],
+	[ParseTreeTokenType.IF, [
+		ParseTreeTokenType.LINE_OF_CODE
+	]],
 	[ParseTreeTokenType.SEMICOLON, [
 		ParseTreeTokenType.SQUARE_BRACKET_EXPRESSION
 	]],
 	[ParseTreeTokenType.SQUARE_RIGHT_BRACKET, [
 		ParseTreeTokenType.SQUARE_BRACKET_EXPRESSION
-	]]
+	]],
+	[ParseTreeTokenType.WHILE, [
+		ParseTreeTokenType.LINE_OF_CODE
+	]],
 ]);
 for (const [key, value] of Array.from(validParentTypes)) {
 	if (value instanceof Array)
@@ -60,7 +69,12 @@ const threeChildTypes = new Set([
 	ParseTreeTokenType.SQUARE_CASE
 ]);
 
-function isArgListComplete(token) {
+function isArgListComplete(token, next) {
+	if (next.type === ParseTreeTokenType.IF ||
+	next.type === ParseTreeTokenType.FOR ||
+	next.type === ParseTreeTokenType.WHILE)
+		return true;
+
 	const children = token.children;
 	if (children.length !== 0) {
 		const firstChild = children[0];
