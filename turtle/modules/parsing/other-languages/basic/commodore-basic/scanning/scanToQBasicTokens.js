@@ -12,6 +12,8 @@ import { removeCommasStartingParameterLists } from './scantoken-processors/remov
 import { sanitizeQuotes } from
 '../../qbasic/scanning/token-sanitizers/sanitizeQuotes.js';
 import { scan } from '../../qbasic/scanning/scan.js';
+import { splitGotoPrefix } from
+'../../qbasic/scanning/token-sanitizers/splitGotoPrefix.js';
 import { splitTokensEndingWithNumbers } from './scantoken-processors/splitTokensEndingWithNumbers.js';
 const migrateToQBasicData = await fetchJson('json/logo-migrations/basic/commodore-basic/migrationToQBasic.json');
 
@@ -22,6 +24,7 @@ const commodoreTokenProcessors = [
 	processThenGoto,
 	removeCommasStartingParameterLists,
 	sanitizeQuotes,
+	splitGotoPrefix,
 	splitTokensEndingWithNumbers
 ];
 
