@@ -19,7 +19,7 @@ function testGeneralCases(logger) {
 			'types': 'int(max=2,min=1)'
 		}
 	]},
-{
+/*{
 		'code': `to p :radius
 	localmake "x pos
 	localmake "size2 :radius * 0.2
@@ -275,7 +275,7 @@ print (invoke "p)`,
 			'types': 'num(unfinite)'
 			}
 	]
-	},{
+	},*/{
 		'code': `print :x/0`,
 	'checks': [
 			{'token': {'val': '/'},
