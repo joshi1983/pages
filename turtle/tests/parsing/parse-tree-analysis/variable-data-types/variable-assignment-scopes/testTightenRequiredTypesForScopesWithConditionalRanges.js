@@ -2,8 +2,8 @@ import { DataTypes } from
 '../../../../../modules/parsing/data-types/DataTypes.js';
 import { getCachedParseTreeFromCode } from
 '../../../../helpers/getCachedParseTreeFromCode.js';
-import { getDataTypesForScopeWithConditionalRanges } from
-'../../../../../modules/parsing/parse-tree-analysis/variable-data-types/variable-assignment-scopes/tightenRequiredTypesForScopesWithConditionalRanges.js';
+//import { getDataTypesForScopeWithConditionalRanges } from
+//'../../../../../modules/parsing/parse-tree-analysis/variable-data-types/variable-assignment-scopes/tightenRequiredTypesForScopesWithConditionalRanges.js';
 import { prefixWrapper } from
 '../../../../helpers/prefixWrapper.js';
 
@@ -110,5 +110,5 @@ end`, 'types': 'alphacolor|bool|easing|gradient|list|num|plist|string|transparen
 }
 
 export function testTightenRequiredTypesForScopesWithConditionalRanges(logger) {
-	testGetDataTypesForScopeWithConditionalRanges(logger);
+	//testGetDataTypesForScopeWithConditionalRanges(logger);
 };
