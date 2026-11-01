@@ -3,7 +3,22 @@
 ; https://processing.org/reference/nf_.html
 ; This is for cases with 2 parameters.
 to pNumberFormat2 :num :numDigits
-
+	if list? :num [
+		if and list? :numDigits (count :num) = (count :numDigits) [
+			localmake "result []
+			repeat count :num [
+				queue2 "result pNumberFormat2 (item repcount :num) (item repcount :numDigits)
+			]
+			output :result
+		]
+		if number? :numDigits [
+			localmake "result []
+			repeat count :num [
+				queue2 "result pNumberFormat2 (item repcount :num) :numDigits
+			]
+			output :result
+		]
+	]
 	localmake "result "
 	localmake "prefix "
 	if :num < 0 [

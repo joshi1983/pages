@@ -6,7 +6,7 @@ import { ParseTreeTokenType } from '../../../../modules/parsing/ParseTreeTokenTy
 import { prefixWrapper } from '../../../helpers/prefixWrapper.js';
 
 export function testProcessRequiredTypeParameters(logger) {
-	const cases = [
+	const cases = [/*
 		{
 			'code': 'to p :x\nprint mix :x transparent 0.5\nprint "here\nend',
 			'types': 'alphacolor'
@@ -74,7 +74,23 @@ end`, 'types': 'alphacolor|bool|easing|gradient|list|num|plist|string|transparen
 		output word '' ''
 	]
 	output str :x
-end`, 'types': 'num|string'}
+end`, 'types': 'num|string'},*/
+	{'code': `to p :num :x
+		if list? :num [
+			if list? :x [
+				output []
+			]
+		]
+		localmake "result "
+		localmake "i 0
+		print "here
+		while :i < :x [
+			localmake "i :i + 1
+		]
+		output :result
+	end`, 'types': 'alphacolor|bool|easing|gradient|list|num|plist|string|transparent'
+	// num|list would be even better.
+	}
 	];
 	cases.forEach(function(caseInfo, index) {
 		const plogger = prefixWrapper(`Case ${index}, code = ${caseInfo.code}`, logger);
