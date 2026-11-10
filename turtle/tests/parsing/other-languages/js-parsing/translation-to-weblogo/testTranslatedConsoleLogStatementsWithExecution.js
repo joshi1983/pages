@@ -8,8 +8,8 @@ import { prefixWrapper } from
 '../../../../helpers/prefixWrapper.js';
 import { testCodeToProgram } from
 '../../../../helpers/testCodeToProgram.js';
-import { translateToWebLogo } from
-'../../../../../modules/parsing/other-languages/js-parsing/translation-to-weblogo/translateToWebLogo.js';
+import { translateToWebLogo_ } from
+'./translateToWebLogo_.js';
 
 const compileOptions = compileOptionsArray[compileOptionsArray.length - 1];
 
@@ -57,7 +57,7 @@ export function testTranslatedConsoleLogStatementsWithExecution(logger) {
 	// if-else statements with that many parts are rare enough to not handle properly for now, though.
 	];
 	cases.forEach(function(caseInfo, index) {
-		const webLogoCode = translateToWebLogo(caseInfo.code);
+		const webLogoCode = translateToWebLogo_(caseInfo.code);
 		const plogger = prefixWrapper(`Case ${index}, code=${caseInfo.code}, translated WebLogo code is: ${webLogoCode}`, logger);
 		let isAnalyzingCodeQuality = true;
 		if (caseInfo.analyzeCodeQuality === false)

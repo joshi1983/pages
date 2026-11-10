@@ -13,9 +13,11 @@ import { processClass } from './parsing/processClass.js';
 import { processColon } from './parsing/processColon.js';
 import { processComma } from './parsing/processComma.js';
 import { processCurlyLeftBracket } from './parsing/processCurlyLeftBracket.js';
-import { processCurlyRightBracket } from './parsing/processCurlyRightBracket.js';
+import { processCurlyRightBracket,
+	asyncInit as processCurlyRightBracketAsyncInit } from './parsing/processCurlyRightBracket.js';
 import { processCurvedLeftBracket } from './parsing/processCurvedLeftBracket.js';
-import { processCurvedRightBracket } from './parsing/processCurvedRightBracket.js';
+import { processCurvedRightBracket,
+	asyncInit as processCurvedRightBracketAsyncInit } from './parsing/processCurvedRightBracket.js';
 import { processDeclaration } from './parsing/processDeclaration.js';
 import { processDefault } from './parsing/processDefault.js';
 import { processDelete } from './parsing/processDelete.js';
@@ -37,6 +39,11 @@ import { processThis } from './parsing/processThis.js';
 import { scan } from './scanning/scan.js';
 import { scanTokenToParseTreeToken } from './scanTokenToParseTreeToken.js';
 import { shouldAppendChild } from './parsing/shouldAppendChild.js';
+
+export async function asyncInit() {
+	await processCurlyRightBracketAsyncInit();
+	await processCurvedRightBracketAsyncInit();
+};
 
 const tokenTypeProcessorsMap = new Map([
 	[ParseTreeTokenType.ASSIGNMENT_OPERATOR, processOperator],

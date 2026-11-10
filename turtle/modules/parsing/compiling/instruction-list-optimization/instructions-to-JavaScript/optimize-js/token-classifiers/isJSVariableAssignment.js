@@ -1,5 +1,13 @@
-import { Operators } from '../../../../../other-languages/js-parsing/Operators.js';
-import { ParseTreeTokenType } from '../../../../../other-languages/js-parsing/ParseTreeTokenType.js';
+import { getOperatorsAsync } from
+'../../../../../other-languages/js-parsing/getOperatorsAsync.js';
+import { ParseTreeTokenType } from
+'../../../../../other-languages/js-parsing/ParseTreeTokenType.js';
+
+let Operators;
+
+export async function asyncInit() {
+	Operators = await getOperatorsAsync();
+};
 
 function isUnaryAssignmentOperator(operatorSymbol) {
 	const info = Operators.getOperatorInfo(operatorSymbol);

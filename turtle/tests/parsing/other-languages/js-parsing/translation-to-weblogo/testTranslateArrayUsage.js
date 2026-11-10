@@ -1,6 +1,6 @@
 import { testInOutPairs } from '../../../../helpers/testInOutPairs.js';
-import { translateToWebLogo } from
-'../../../../../modules/parsing/other-languages/js-parsing/translation-to-weblogo/translateToWebLogo.js';
+import { translateToWebLogo_ } from
+'./translateToWebLogo_.js';
 
 export function testTranslateArrayUsage(logger) {
 	const cases = [
@@ -8,5 +8,5 @@ export function testTranslateArrayUsage(logger) {
 		{'in': 'x = []\nx.push(3)', 'out': 'make "x [ ]\nqueue2 "x 3'},
 		{'in': 'x = []\nconsole.log(x.length)', 'out': 'make "x [ ]\nprint count :x'}
 	];
-	testInOutPairs(cases, translateToWebLogo, logger);
+	testInOutPairs(cases, translateToWebLogo_, logger);
 };

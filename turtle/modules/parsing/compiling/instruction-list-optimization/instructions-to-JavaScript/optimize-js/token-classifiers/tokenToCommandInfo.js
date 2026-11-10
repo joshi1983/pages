@@ -2,11 +2,14 @@ import { Command } from '../../../../../Command.js';
 import { ParseTreeTokenType } from '../../../../../other-languages/js-parsing/ParseTreeTokenType.js';
 
 const groupNames = new Set();
-await Command.asyncInit();
-Command.getAllCommandsInfo().forEach(function(commandInfo) {
-	if (commandInfo.commandGroup !== 'compiled')
-		groupNames.add(commandInfo.commandGroup);
-});
+
+export async function asyncInit() {
+	await Command.asyncInit();
+	Command.getAllCommandsInfo().forEach(function(commandInfo) {
+		if (commandInfo.commandGroup !== 'compiled')
+			groupNames.add(commandInfo.commandGroup);
+	});
+};
 
 export function tokenToCommandInfo(token) {
 	if (token.type !== ParseTreeTokenType.FUNCTION_CALL || token.children.length !== 2)

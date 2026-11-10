@@ -136,10 +136,10 @@ import { translateQBASICToWebLogo } from
 '../../../parsing/other-languages/basic/qbasic/translation-to-weblogo/translateQBASICToWebLogo.js';
 import { translate as translateSonicWebTurtle } from
 '../../../parsing/other-languages/sonic-webturtle/translation-to-weblogo/translate.js';
-import { translateToWebLogo as translateCanvas2DToWebLogo } from
-'./fixers/canvas-2d/translateToWebLogo.js';
-import { translateToWebLogo as translateCodeHeartTurtleScriptToWebLogo } from
-'./fixers/codeheart-turtlescript/translateToWebLogo.js';
+import { translateCanvas2DToWebLogo } from
+'./fixers/canvas-2d/translateCanvas2DToWebLogo.js';
+import { translateCodeHeartTurtleScriptToWebLogo } from
+'./fixers/codeheart-turtlescript/translateCodeHeartTurtleScriptToWebLogo.js';
 import { translateAmosBasicToWebLogo } from
 '../../../parsing/other-languages/basic/amos-basic/translation-to-weblogo/translateAmosBasicToWebLogo.js';
 import { translateBBCBasicToWebLogo } from
@@ -158,7 +158,8 @@ import { translateTektronix405XBasicToWebLogo } from
 '../../../parsing/other-languages/basic/tektronix-405x-basic/translation-to-weblogo/translateTektronix405XBasicToWebLogo.js';
 import { translateTI99BasicToWebLogo } from
 '../../../parsing/other-languages/basic/texas-instruments-99-4a/translation-to-weblogo/translateTI99BasicToWebLogo.js';
-import { translateToWebLogo as translateJavaScriptToWebLogo } from
+import { translateToWebLogo as translateJavaScriptToWebLogo,
+asyncInit as translateJavaScriptToWebLogoAsyncInit } from
 '../../../parsing/other-languages/js-parsing/translation-to-weblogo/translateToWebLogo.js';
 import { translateTuringToWebLogo } from
 '../../../parsing/other-languages/pascal/turing/translation-to-weblogo/translateTuringToWebLogo.js';
@@ -172,6 +173,8 @@ import { translateTurtleToyNetToWebLogo } from
 '../../../parsing/other-languages/turtletoy-net/translation-to-weblogo/translateTurtleToyNetToWebLogo.js';
 import { newTranslatePythonCodeToWebLogo } from
 '../../../parsing/other-languages/python/newTranslatePythonCodeToWebLogo.js';
+
+await translateJavaScriptToWebLogoAsyncInit();
 
 const translatorPairs = new Map([
 	[isLikely0L, [translate0LToWebLogo, false]],

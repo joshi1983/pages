@@ -1,7 +1,10 @@
 import { AsyncCallCommandInstruction } from '../execution/instructions/AsyncCallCommandInstruction.js';
 import { CallCommandInstruction } from '../execution/instructions/CallCommandInstruction.js';
 import { Command } from '../Command.js';
-await Command.asyncInit();
+
+export async function asyncInit() {
+	await Command.asyncInit();
+};
 
 export function createCallCommandInstruction(commandInfo, token, numArgs) {
 	if (numArgs === undefined)

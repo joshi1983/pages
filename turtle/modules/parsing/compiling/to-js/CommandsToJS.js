@@ -1,18 +1,20 @@
 import { Command } from '../../Command.js';
 import { fetchJson } from '../../../fetchJson.js';
 
-const data = await fetchJson('json/JavaScript/webLogoToJavaScript.json');
-await Command.asyncInit();
 const commandsMap = new Map();
-for (const commandInfo of data.commands) {
-	const info = Command.getCommandInfo(commandInfo.primaryName);
-	const names = Command.getLowerCaseCommandNameSet(info);
-	for (const name of names) {
-		commandsMap.set(name, commandInfo);
+export async function asyncInit() {
+	const data = await fetchJson('json/JavaScript/webLogoToJavaScript.json');
+	await Command.asyncInit();
+	for (const commandInfo of data.commands) {
+		const info = Command.getCommandInfo(commandInfo.primaryName);
+		const names = Command.getLowerCaseCommandNameSet(info);
+		for (const name of names) {
+			commandsMap.set(name, commandInfo);
+		}
+		if (commandInfo.returnTypes === undefined)
+			commandInfo.returnTypes = info.returnTypes;
 	}
-	if (commandInfo.returnTypes === undefined)
-		commandInfo.returnTypes = info.returnTypes;
-}
+};
 
 export class CommandsToJS {
 	static getCommandInfo(name) {

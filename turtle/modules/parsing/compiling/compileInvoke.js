@@ -1,5 +1,10 @@
 import { CallHighOrderInstruction } from '../execution/instructions/CallHighOrderInstruction.js';
-import { getInstructionsFromToken } from './compileParameters.js';
+import { getInstructionsFromToken,
+	asyncInit as compileParametersAsyncInit } from './compileParameters.js';
+
+export async function asyncInit() {
+	await compileParametersAsyncInit();
+};
 
 export function compileInvoke(parseTreeTokens, procedures, result, logger) {
 

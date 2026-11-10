@@ -7,11 +7,16 @@ import { isLocalVariablesDeclared } from './optimize-variable-access/isLocalVari
 import { isNeedingToMoveDeclarations } from './optimize-variable-access/isNeedingToMoveDeclarations.js';
 import { isJSVariableDeclareAssignment } from './token-classifiers/isJSVariableDeclareAssignment.js';
 import { moveVariableDeclarationsToStart } from './optimize-variable-access/moveVariableDeclarationsToStart.js';
-import { parse } from '../../../../other-languages/js-parsing/parse.js';
+import { parse,
+	asyncInit as parseAsyncInit } from '../../../../other-languages/js-parsing/parse.js';
 import { parseTreeTokensToCode } from '../../../../other-languages/js-parsing/parseTreeTokensToCode.js';
 import { ParseTreeTokenType } from '../../../../other-languages/js-parsing/ParseTreeTokenType.js';
 import { removeLocalVariablesDeclarations } from './optimize-variable-access/removeLocalVariablesDeclarations.js';
 import { removeUnneededAssignments } from './removeUnneededAssignments.js';
+
+export async function asyncInit() {
+	await parseAsyncInit();
+};
 
 function isBadBeforeSemicolon(token) {
 	if (token.type === ParseTreeTokenType.SEMICOLON)

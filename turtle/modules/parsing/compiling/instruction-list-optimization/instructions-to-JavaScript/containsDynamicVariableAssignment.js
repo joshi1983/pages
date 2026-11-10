@@ -1,6 +1,12 @@
 import { flatten } from '../../../generic-parsing-utilities/flatten.js';
 import { isDynamicVariableNameMakeAssignment } from './optimize-js/token-classifiers/isDynamicVariableNameMakeAssignment.js';
-import { parse } from '../../../other-languages/js-parsing/parse.js';
+import { parse,
+	asyncInit as parseAsyncInit } from
+'../../../other-languages/js-parsing/parse.js';
+
+export async function asyncInit() {
+	await parseAsyncInit();
+};
 
 export function containsDynamicVariableAssignment(code) {
 	if (typeof code !== 'string')

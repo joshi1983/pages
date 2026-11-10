@@ -5,7 +5,10 @@ import { directReplacements as directReplacementsString } from
 '../../../../command-groups/StringCommands.js';
 import { getMethodNameForCommand } from '../../../getMethodNameForCommand.js';
 import { MapUtils } from '../../../../MapUtils.js';
-await Command.asyncInit();
+
+export async function asyncInit() {
+	await Command.asyncInit();
+};
 
 const directReplacements = new Map();
 MapUtils.merge(directReplacements, directReplacementsMath);

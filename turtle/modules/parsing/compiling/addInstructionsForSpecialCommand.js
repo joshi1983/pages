@@ -1,20 +1,48 @@
 import { compileBreak } from './compileBreak.js';
-import { compileDequeue } from './compileDequeue.js';
-import { compileDoWhile } from './compileDoWhile.js';
-import { compileFor } from './compileFor.js';
+import { compileDequeue,
+	asyncInit as compileDequeueAsyncInit } from './compileDequeue.js';
+import { compileDoWhile,
+	asyncInit as compileDoWhileAsyncInit } from './compileDoWhile.js';
+import { compileFor,
+	asyncInit as compileForAsyncInit } from './compileFor.js';
 import { compileForever } from './compileForever.js';
-import { compileIf } from './compileIf.js';
-import { compileIfElse } from './compileIfElse.js';
-import { compileIfElseExpression } from './compileIfElseExpression.js';
-import { compileInvoke } from './compileInvoke.js';
-import { compileOutput } from './compileOutput.js';
-import { compilePush } from './compilePush.js';
-import { compileQueue } from './compileQueue.js';
-import { compileRepeat } from './compileRepeat.js';
+import { compileIf,
+	asyncInit as compileIfAsyncInit } from './compileIf.js';
+import { compileIfElse,
+	asyncInit as compileIfElseAsyncInit } from './compileIfElse.js';
+import { compileIfElseExpression,
+	asyncInit as compileIfElseExpressionAsyncInit } from './compileIfElseExpression.js';
+import { compileInvoke,
+	asyncInit as compileInvokeAsyncInit } from './compileInvoke.js';
+import { compileOutput,
+	asyncInit as compileOutputAsyncInit } from './compileOutput.js';
+import { compilePush,
+	asyncInit as compilePushAsyncInit } from './compilePush.js';
+import { compileQueue,
+	asyncInit as compileQueueAsyncInit } from './compileQueue.js';
+import { compileRepeat,
+	asyncInit as compileRepeatAsyncInit } from './compileRepeat.js';
 import { compileStop } from './compileStop.js';
-import { compileUntil } from './compileUntil.js';
-import { compileWhile } from './compileWhile.js';
+import { compileUntil,
+	asyncInit as compileUntilAsyncInit } from './compileUntil.js';
+import { compileWhile,
+	asyncInit as compileWhileAsyncInit } from './compileWhile.js';
 import { isIfElseExpressionToken } from '../parse-tree-analysis/isIfElseExpressionToken.js';
+
+const asyncInits = [compileDequeueAsyncInit,
+	compileDoWhileAsyncInit, compileForAsyncInit,
+	compileIfAsyncInit, compileIfElseAsyncInit,
+	compileInvokeAsyncInit, compileOutputAsyncInit,
+	compilePushAsyncInit, compileQueueAsyncInit,
+	compileRepeatAsyncInit, compileUntilAsyncInit,
+	compileWhileAsyncInit
+];
+
+export async function asyncInit() {
+	for (const asyncInit of asyncInits) {
+		await asyncInit();
+	}
+};
 
 const compileChildrenFunctions = new Map([
 	['dequeue', compileDequeue],

@@ -1,10 +1,18 @@
 import { analyzeQuality } from
 '../../../../modules/parsing/other-languages/js-parsing/parsing/parse-tree-analysis/validation/analyzeQuality.js';
-import { processParseTestCases as generalProcessParseTestCases } from '../../../helpers/parsing/processParseTestCases.js';
-import { parse } from '../../../../modules/parsing/other-languages/js-parsing/parse.js';
-import { ParseTreeTokenType } from '../../../../modules/parsing/other-languages/js-parsing/ParseTreeTokenType.js';
-import { prefixWrapper } from '../../../helpers/prefixWrapper.js';
-import { TestParseLogger } from '../../../helpers/TestParseLogger.js';
+import { processParseTestCases as generalProcessParseTestCases } from
+'../../../helpers/parsing/processParseTestCases.js';
+import { parse,
+asyncInit as parseAsyncInit } from
+'../../../../modules/parsing/other-languages/js-parsing/parse.js';
+import { ParseTreeTokenType } from
+'../../../../modules/parsing/other-languages/js-parsing/ParseTreeTokenType.js';
+import { prefixWrapper } from
+'../../../helpers/prefixWrapper.js';
+import { TestParseLogger } from
+'../../../helpers/TestParseLogger.js';
+
+await parseAsyncInit();
 
 function getMaxDepth(parseTreeToken) {
 	if (parseTreeToken.children.length === 0)

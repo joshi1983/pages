@@ -1,6 +1,6 @@
 import { testInOutPairs } from '../../../../helpers/testInOutPairs.js';
-import { translateToWebLogo } from
-'../../../../../modules/parsing/other-languages/js-parsing/translation-to-weblogo/translateToWebLogo.js';
+import { translateToWebLogo_ } from
+'./translateToWebLogo_.js';
 
 export function testTranslateToWebLogo(logger) {
 	const cases = [

@@ -3,9 +3,14 @@ import { getCodeUpToToken } from '../../../../parse-tree-token/getCodeUpToToken.
 import { isSafeWithoutBrackets } from './isSafeWithoutBrackets.js';
 import { isValueStackPush } from './token-classifiers/isValueStackPush.js';
 import { optimizeBooleanExpression } from './optimizeBooleanExpression.js';
-import { parse } from '../../../../other-languages/js-parsing/parse.js';
+import { parse,
+	asyncInit as parseAsyncInit } from '../../../../other-languages/js-parsing/parse.js';
 import { parseTreeTokensToCode } from '../../../../other-languages/js-parsing/parseTreeTokensToCode.js';
 import { ParseTreeTokenType } from '../../../../other-languages/js-parsing/ParseTreeTokenType.js';
+
+export async function asyncInit() {
+	await parseAsyncInit();
+};
 
 function isPushOfInterest(token) {
 	if (!isValueStackPush(token))

@@ -1,10 +1,9 @@
-import { LogoParser } from
-'../../../../../../modules/parsing/LogoParser.js';
 import { testInOutPairs } from
 '../../../../../helpers/testInOutPairs.js';
-import { translateJSProcessingToWebLogo } from
+import { translateJSProcessingToWebLogo,
+	asyncInit as translateJSProcessingToWebLogoAsyncInit } from
 '../../../../../../modules/parsing/other-languages/processing/js-processing/translation-to-weblogo/translateJSProcessingToWebLogo.js';
-await LogoParser.asyncInit();
+await translateJSProcessingToWebLogoAsyncInit();
 
 export function testTranslateFunctionCalls(logger) {
 	const cases = [

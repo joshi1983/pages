@@ -1,7 +1,12 @@
 import { JavaScriptInstruction } from '../../../../../execution/instructions/JavaScriptInstruction.js';
 import { optimizeTrailingJavaScriptInstruction } from './optimizeTrailingJavaScriptInstruction.js';
 import { optimizeWithConstantColours } from './optimizeWithConstantColours.js';
-import { removeUnneededInitialVariableReads } from './removeUnneededInitialVariableReads.js';
+import { removeUnneededInitialVariableReads,
+asyncInit as removeUnneededInitialVariableReadsAsyncInit } from './removeUnneededInitialVariableReads.js';
+
+export async function asyncInit() {
+	await removeUnneededInitialVariableReadsAsyncInit();
+};
 
 /*
 finalOptimizeInstructions performs some optimizations that undo some changes made by other optimizations.

@@ -1,6 +1,6 @@
 import { testInOutPairs } from '../../../../helpers/testInOutPairs.js';
-import { translateToWebLogo } from
-'../../../../../modules/parsing/other-languages/js-parsing/translation-to-weblogo/translateToWebLogo.js';
+import { translateToWebLogo_ } from
+'./translateToWebLogo_.js';
 
 export function testTranslateLoops(logger) {
 	const cases = [
@@ -19,5 +19,5 @@ export function testTranslateLoops(logger) {
 		{'in': 'for (var s = 0; s <= 60; s+=2)', 'out': 'for [ "s 0 60 2 ] [\n]'},
 		{'in': 'for (var s = 2; s <= 60; s*=2)', 'out': 'make "s 2\nwhile :s <= 60 [\n\tmake "s :s * 2\n]'},
 	];
-	testInOutPairs(cases, translateToWebLogo, logger);
+	testInOutPairs(cases, translateToWebLogo_, logger);
 };

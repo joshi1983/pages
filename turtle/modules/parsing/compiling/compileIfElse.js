@@ -1,7 +1,12 @@
 import { addInstructionsFromCommandList } from './addInstructionsFromCommandList.js';
-import { getInstructionsFromToken } from './compileParameters.js';
+import { getInstructionsFromToken,
+asyncInit as compileParametersAsyncInit } from './compileParameters.js';
 import { JumpIfTrueInstruction } from '../execution/instructions/JumpIfTrueInstruction.js';
 import { JumpInstruction } from '../execution/instructions/JumpInstruction.js';
+
+export async function asyncInit() {
+	await compileParametersAsyncInit();
+};
 
 export function compileIfElse(parseTreeTokens, procedures, result, logger) {
 	if (parseTreeTokens.length <= 2)

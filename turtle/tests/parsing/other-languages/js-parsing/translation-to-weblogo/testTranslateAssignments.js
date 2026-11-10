@@ -1,6 +1,6 @@
 import { testInOutPairs } from '../../../../helpers/testInOutPairs.js';
-import { translateToWebLogo } from
-'../../../../../modules/parsing/other-languages/js-parsing/translation-to-weblogo/translateToWebLogo.js';
+import { translateToWebLogo_ } from
+'./translateToWebLogo_.js';
 
 export function testTranslateAssignments(logger) {
 	const cases = [
@@ -21,5 +21,5 @@ export function testTranslateAssignments(logger) {
 		{'in': '[x, y] = [x, y];', 'out': ''}, // weird case but the code does nothing.
 		{'in': '[x, y] = [y, x];', 'out': 'swap "x "y'}
 	];
-	testInOutPairs(cases, translateToWebLogo, logger);
+	testInOutPairs(cases, translateToWebLogo_, logger);
 };

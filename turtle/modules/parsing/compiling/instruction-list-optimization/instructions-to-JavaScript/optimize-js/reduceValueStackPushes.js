@@ -11,18 +11,23 @@ import { isValueStackLengthUpdate } from './token-classifiers/isValueStackLength
 import { isValueStackPop } from './token-classifiers/isValueStackPop.js';
 import { isValueStackPush } from './token-classifiers/isValueStackPush.js';
 import { mightCauseSideEffects } from './token-classifiers/mightCauseSideEffects.js';
-import { parse } from '../../../../other-languages/js-parsing/parse.js';
+import { parse,
+	asyncInit as parseAsyncInit } from '../../../../other-languages/js-parsing/parse.js';
 import { parseTreeTokensToCode } from '../../../../other-languages/js-parsing/parseTreeTokensToCode.js';
 import { ParseTreeTokenType } from '../../../../other-languages/js-parsing/ParseTreeTokenType.js';
 import { removeSemicolonsImmediatelyAfter } from './removeSemicolonsImmediatelyAfter.js';
 import { setValueStackDecreaseAmount } from './setValueStackDecreaseAmount.js';
 
+export async function asyncInit() {
+	await parseAsyncInit();
+};
+
 const safeToMoveTypes = new Set([
-ParseTreeTokenType.BOOLEAN_LITERAL,
-ParseTreeTokenType.NULL,
-ParseTreeTokenType.NUMBER_LITERAL,
-ParseTreeTokenType.STRING_LITERAL,
-ParseTreeTokenType.UNDEFINED,
+	ParseTreeTokenType.BOOLEAN_LITERAL,
+	ParseTreeTokenType.NULL,
+	ParseTreeTokenType.NUMBER_LITERAL,
+	ParseTreeTokenType.STRING_LITERAL,
+	ParseTreeTokenType.UNDEFINED,
 ]);
 
 function isUnsafeForOptimizationDueToMutatingPushOrAssignment(token) {

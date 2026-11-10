@@ -1,9 +1,14 @@
 import { addInstructionsFromCommandList } from './addInstructionsFromCommandList.js';
 import { Command } from '../Command.js';
-import { getInstructionsFromToken } from './compileParameters.js';
+import { getInstructionsFromToken,
+	asyncInit as compileParametersAsyncInit } from './compileParameters.js';
 import { JumpIfTrueInstruction } from '../execution/instructions/JumpIfTrueInstruction.js';
 import { setBreakJumpIndexesTo } from './setBreakJumpIndexesTo.js';
-await Command.asyncInit();
+
+export async function asyncInit() {
+	await Command.asyncInit();
+	await compileParametersAsyncInit();
+};
 
 export function compileDoWhile(parseTreeTokens, procedures, result, logger) {
 	const firstInstructionIndex = result.length;

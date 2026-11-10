@@ -1,5 +1,10 @@
-import { getInstructionsFrom } from './getInstructionsFrom.js';
+import { getInstructionsFrom,
+	asyncInit as getInstructionsFromAsyncInit } from './getInstructionsFrom.js';
 import { ParseTreeToken } from '../ParseTreeToken.js';
+
+export async function asyncInit() {
+	await getInstructionsFromAsyncInit();
+};
 
 export function addInstructionsFromCommandList(commandListToken, procedures, result, logger) {
 	if (!(commandListToken instanceof ParseTreeToken))

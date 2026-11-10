@@ -6,7 +6,10 @@ import { instructionToJavaScript } from './instructionToJavaScript.js';
 import { MapUtils } from '../../../../MapUtils.js';
 import { translateSpecialCommandCall } from './commands/translateSpecialCommandCall.js';
 import { wrapWithTypeConverter } from './wrapWithTypeConverter.js';
-await Command.asyncInit();
+
+export async function asyncInit() {
+	await Command.asyncInit();
+};
 
 export function callCommandInstructionToJavaScript(instructions, index, info, pushResult, compileOptions) {
 	if (typeof compileOptions !== 'object')

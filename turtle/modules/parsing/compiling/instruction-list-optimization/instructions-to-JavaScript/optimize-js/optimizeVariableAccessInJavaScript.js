@@ -14,13 +14,19 @@ import { isContextReadVariableCall } from './token-classifiers/isContextReadVari
 import { isUnsafeToReplaceReferencesWithJSVariableFromCounts } from './optimize-variable-access/isUnsafeToReplaceReferencesWithJSVariableFromCounts.js';
 import { isUnsafeToReplaceReferencesWithJSVariable } from './optimize-variable-access/isUnsafeToReplaceReferencesWithJSVariable.js';
 import { MaybeDecided } from '../../../../../MaybeDecided.js';
-import { parse } from '../../../../other-languages/js-parsing/parse.js';
+import { parse,
+	asyncInit as parseAsyncInit } from
+	'../../../../other-languages/js-parsing/parse.js';
 import { parseTreeTokensToCode } from '../../../../other-languages/js-parsing/parseTreeTokensToCode.js';
 import { ParseTreeTokenType } from '../../../../other-languages/js-parsing/ParseTreeTokenType.js';
 import { removeLocalVariablesDeclarations } from './optimize-variable-access/removeLocalVariablesDeclarations.js';
 import { removeUselessVariableDeclarations } from './optimize-variable-access/removeUselessVariableDeclarations.js';
 import { shouldInitializeLocalVariables } from './optimize-variable-access/shouldInitializeLocalVariables.js';
 import { useLocalVariablesVariable } from './optimize-variable-access/useLocalVariablesVariable.js';
+
+export async function asyncInit() {
+	await parseAsyncInit();
+};
 
 export function optimizeVariableAccessInJavaScript(jsCode, isForProcedure) {
 	if (isForProcedure === false)

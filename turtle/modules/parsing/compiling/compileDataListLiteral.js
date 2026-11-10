@@ -1,9 +1,15 @@
 import { CallCommandInstruction } from '../execution/instructions/CallCommandInstruction.js';
 import { Command } from '../Command.js';
-import { getInstructionsFromToken } from './compileParameters.js';
+import { getInstructionsFromToken,
+	asyncInit as compileParametersAsyncInit } from './compileParameters.js';
 import { ParseTreeTokenType } from '../ParseTreeTokenType.js';
-await Command.asyncInit();
-const listCommandInfo = Command.getCommandInfo('list');
+
+let listCommandInfo;
+export async function asyncInit() {
+	await Command.asyncInit();
+	listCommandInfo = Command.getCommandInfo('list');
+	await compileParametersAsyncInit();
+};
 
 export function compileDataListLiteral(listToken, procedures, result, logger) {
 	if (typeof listToken !== 'object' || listToken instanceof Array)

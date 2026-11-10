@@ -1,5 +1,10 @@
 import { evaluateLiteralToken } from '../../../other-languages/js-parsing/evaluators/evaluateLiteralToken.js';
-import { parse } from '../../../other-languages/js-parsing/parse.js';
+import { parse,
+	asyncInit as parseAsyncInit } from '../../../other-languages/js-parsing/parse.js';
+
+export async function asyncInit() {
+	await parseAsyncInit();
+};
 
 function isThrowingError(inValue, errorCheckFunction) {
 	try {

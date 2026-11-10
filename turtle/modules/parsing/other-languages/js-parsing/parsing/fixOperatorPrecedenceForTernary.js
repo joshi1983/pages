@@ -1,5 +1,7 @@
-import { Operators } from '../Operators.js';
+import { getOperatorsAsync } from '../getOperatorsAsync.js';
 import { ParseTreeTokenType } from '../ParseTreeTokenType.js';
+
+const Operators = await getOperatorsAsync();
 
 function getGoodFirstChild(token) {
 	if (token.type === ParseTreeTokenType.BINARY_OPERATOR ||

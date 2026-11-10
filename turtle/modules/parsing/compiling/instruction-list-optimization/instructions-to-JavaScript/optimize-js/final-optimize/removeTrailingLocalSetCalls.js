@@ -3,10 +3,15 @@ import { getAllDescendentsAsArray } from '../../../../../generic-parsing-utiliti
 import { isGlobalVariablesSetCall } from '../token-classifiers/isGlobalVariablesSetCall.js';
 import { isLocalmakeCall } from '../token-classifiers/isLocalmakeCall.js';
 import { isLocalVariablesSetCall } from '../token-classifiers/isLocalVariablesSetCall.js';
-import { parse } from '../../../../../other-languages/js-parsing/parse.js';
+import { parse,
+	asyncInit as parseAsyncInit } from '../../../../../other-languages/js-parsing/parse.js';
 import { parseTreeTokensToCode } from '../../../../../other-languages/js-parsing/parseTreeTokensToCode.js';
 import { ParseTreeTokenType } from '../../../../../other-languages/js-parsing/ParseTreeTokenType.js';
 import { removeSemicolonsImmediatelyAfter } from '../removeSemicolonsImmediatelyAfter.js';
+
+export async function asyncInit() {
+	await parseAsyncInit();
+};
 
 function isSafeToRemove(token) {
 	if (isLocalVariablesSetCall(token) ||

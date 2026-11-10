@@ -1,11 +1,20 @@
-import { addInstructionsForInitialVariables } from './compiling/addInstructionsForInitialVariables.js';
+import { addInstructionsForInitialVariables,
+asyncInit as addInstructionsForInitialVariablesAsyncInit } from './compiling/addInstructionsForInitialVariables.js';
 import { addInternalProcs } from './compiling/addInternalProcs.js';
-import { getInstructionsFrom } from './compiling/getInstructionsFrom.js';
+import { getInstructionsFrom,
+	asyncInit as getInstructionsFromAsyncInit } from './compiling/getInstructionsFrom.js';
 import { getProceduresMap } from './parse-tree-analysis/getProceduresMap.js';
 import { isInternalProcedure } from './compiling/isInternalProcedure.js';
 import { LogoProgram } from './execution/LogoProgram.js';
 import { OutputNullInstruction } from './execution/instructions/OutputNullInstruction.js';
 import { simplifyInstructions } from './compiling/instruction-list-optimization/simplifyInstructions.js';
+
+export async function asyncInit() {
+	for (const f of [addInstructionsForInitialVariablesAsyncInit,
+	getInstructionsFromAsyncInit]) {
+		await f();
+	}
+}
 
 export function compile(code, tree, logger, extraProcedures, compileOptions, initialVariables) {
 	if (code !== undefined && typeof code !== 'string')

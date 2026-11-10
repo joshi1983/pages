@@ -1,5 +1,6 @@
 import { canBeBinaryOperator } from '../../generic-parsing-utilities/canBeBinaryOperator.js';
 import { canBeUnaryOperator } from '../../generic-parsing-utilities/canBeUnaryOperator.js';
+import { getOperatorsAsync } from './getOperatorsAsync.js';
 import { isAssignmentOperator } from '../../generic-parsing-utilities/isAssignmentOperator.js';
 import { isBooleanLiteral } from './scanning/isBooleanLiteral.js';
 import { isCommentPrefix } from './scanning/isCommentPrefix.js';
@@ -8,9 +9,10 @@ import { isStartingRegularExpression } from './scanning/isStartingRegularExpress
 import { isStartingStringLiteral } from './scanning/isStartingStringLiteral.js';
 import { isStartingTemplateLiteral } from './scanning/isStartingTemplateLiteral.js';
 import { isValidIdentifier } from './scanning/isValidIdentifier.js';
-import { Operators } from './Operators.js';
 import { ParseTreeToken } from '../../generic-parsing-utilities/ParseTreeToken.js';
 import { ParseTreeTokenType } from './ParseTreeTokenType.js';
+
+const Operators = await getOperatorsAsync();
 
 const sTypeMap = new Map([
 	['async', ParseTreeTokenType.ASYNC],

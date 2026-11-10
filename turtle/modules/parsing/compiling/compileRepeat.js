@@ -1,6 +1,8 @@
 import { BinaryOperatorInstruction } from '../execution/instructions/BinaryOperatorInstruction.js';
-import { getInstructionsFrom } from './getInstructionsFrom.js';
-import { getInstructionsFromToken } from './compileParameters.js';
+import { getInstructionsFrom,
+	asyncInit as getInstructionsFromAsyncInit } from './getInstructionsFrom.js';
+import { getInstructionsFromToken,
+	asyncInit as compileParametersAsyncInit } from './compileParameters.js';
 import { JumpIfTrueInstruction } from '../execution/instructions/JumpIfTrueInstruction.js';
 import { JumpInstruction } from '../execution/instructions/JumpInstruction.js';
 import { IncrementRepcountInstruction } from '../execution/instructions/IncrementRepcountInstruction.js';
@@ -10,6 +12,11 @@ import { PushFromStackInstruction } from '../execution/instructions/PushFromStac
 import { PushInstruction } from '../execution/instructions/PushInstruction.js';
 import { PushMaxRepcountInstruction } from '../execution/instructions/PushMaxRepcountInstruction.js';
 import { setBreakJumpIndexesTo } from './setBreakJumpIndexesTo.js';
+
+export async function asyncInit() {
+	await compileParametersAsyncInit();
+	await getInstructionsFromAsyncInit();
+};
 
 export function compileRepeat(parseTreeTokens, procedures, result, logger) {
 	const repeatInstructionsToken = parseTreeTokens[0];

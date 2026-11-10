@@ -1,4 +1,5 @@
-import { addInstructionsForSpecialCommand } from
+import { addInstructionsForSpecialCommand,
+asyncInit as addInstructionsForSpecialCommandAsyncInit } from
 './addInstructionsForSpecialCommand.js';
 import { BinaryOperatorInstruction } from
 '../execution/instructions/BinaryOperatorInstruction.js';
@@ -19,7 +20,11 @@ import { UnaryOperatorInstruction } from
 '../execution/instructions/UnaryOperatorInstruction.js';
 import { VariableReadInstruction } from
 '../execution/instructions/VariableReadInstruction.js';
-await Command.asyncInit();
+
+export async function asyncInit() {
+	await Command.asyncInit();
+	await addInstructionsForSpecialCommandAsyncInit();
+};
 
 function mustBeLowerCase(token) {
 	if (token.type !== ParseTreeTokenType.STRING_LITERAL || typeof token.val !== 'string' ||

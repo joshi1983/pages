@@ -1,7 +1,9 @@
 import { Command } from '../../../../../Command.js';
 import { isCommandCall } from './isCommandCall.js';
 
-await Command.asyncInit();
+export async function asyncInit() {
+	await Command.asyncInit();
+};
 
 export function mightCauseSideEffects(token) {
 	if (!isCommandCall(token))

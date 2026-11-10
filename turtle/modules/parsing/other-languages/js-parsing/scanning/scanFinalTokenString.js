@@ -1,8 +1,10 @@
 import { isCompleteRegularExpression } from './isCompleteRegularExpression.js';
 import { isStartingRegularExpression } from './isStartingRegularExpression.js';
-import { Operators } from '../Operators.js';
+import { getOperatorsAsync } from '../getOperatorsAsync.js';
 import { scan } from './scan.js';
 import { Token } from '../../../generic-parsing-utilities/Token.js';
+
+const Operators = await getOperatorsAsync();
 
 function getLongestOperatorPrefixing(s) {
 	let result = '';

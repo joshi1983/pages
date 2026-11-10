@@ -1,7 +1,12 @@
 import { flatten } from '../../../../../generic-parsing-utilities/flatten.js';
 import { isLocalVariablesToken } from '../token-classifiers/isLocalVariablesToken.js';
-import { parse } from '../../../../../other-languages/js-parsing/parse.js';
+import { parse,
+	asyncInit as parseAsyncInit } from '../../../../../other-languages/js-parsing/parse.js';
 import { parseTreeTokensToCode } from '../../../../../other-languages/js-parsing/parseTreeTokensToCode.js';
+
+export async function asyncInit() {
+	await parseAsyncInit();
+};
 
 export function initializeLocalVariables(jsCode) {
 	const parseResult = parse(jsCode);

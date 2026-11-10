@@ -5,10 +5,16 @@ import { getDecreaseAmountFromToken } from './getDecreaseAmountFromToken.js';
 import { getDescendentsOfTypes } from '../../../../generic-parsing-utilities/getDescendentsOfTypes.js';
 import { isValueStackPop } from './token-classifiers/isValueStackPop.js';
 import { isValueStackLengthUpdate } from './token-classifiers/isValueStackLengthUpdate.js';
-import { parse } from '../../../../other-languages/js-parsing/parse.js';
+import { parse,
+	asyncInit as parseAsyncInit } from
+	'../../../../other-languages/js-parsing/parse.js';
 import { parseTreeTokensToCode } from '../../../../other-languages/js-parsing/parseTreeTokensToCode.js';
 import { ParseTreeTokenType } from '../../../../other-languages/js-parsing/ParseTreeTokenType.js';
 import { setValueStackDecreaseAmount } from './setValueStackDecreaseAmount.js';
+
+export async function asyncInit() {
+	await parseAsyncInit();
+};
 
 function isValueStackLengthChange(token) {
 	return isValueStackPop(token) ||

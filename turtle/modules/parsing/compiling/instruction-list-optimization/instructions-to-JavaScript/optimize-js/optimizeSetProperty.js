@@ -4,7 +4,8 @@ import { isSetPropertyCallOnIdentifier } from
 './token-classifiers/isSetPropertyCallOnIdentifier.js';
 import { optimizeMapInitializations } from
 './optimizeMapInitializations.js';
-import { parse } from
+import { parse,
+	asyncInit as parseAsyncInit } from
 '../../../../other-languages/js-parsing/parse.js';
 import { ParseTreeToken } from
 '../../../../generic-parsing-utilities/ParseTreeToken.js';
@@ -12,6 +13,10 @@ import { ParseTreeTokenType } from
 '../../../../other-languages/js-parsing/ParseTreeTokenType.js';
 import { parseTreeTokensToCode } from
 '../../../../other-languages/js-parsing/parseTreeTokensToCode.js';
+
+export async function asyncInit() {
+	await parseAsyncInit();
+};
 
 /*
 Converts something like context.plist.setProperty(result, "x", 3)

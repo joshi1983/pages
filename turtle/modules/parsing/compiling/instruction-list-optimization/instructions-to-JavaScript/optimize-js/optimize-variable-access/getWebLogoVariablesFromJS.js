@@ -3,7 +3,9 @@ import { getWebLogoVariableNameFromVariableReference } from './getWebLogoVariabl
 import { isAfterOrSame } from '../../../../../generic-parsing-utilities/isAfterOrSame.js';
 import { isGlobalVariablesSetCall } from '../token-classifiers/isGlobalVariablesSetCall.js';
 import { isIdentifierReadToken } from '../token-classifiers/isIdentifierReadToken.js';
-import { isJSVariableAssignment } from '../token-classifiers/isJSVariableAssignment.js';
+import { isJSVariableAssignment,
+asyncInit as isJSVariableAssignmentAsyncInit } from
+'../token-classifiers/isJSVariableAssignment.js';
 import { isJSVariableDeclareAssignment } from '../token-classifiers/isJSVariableDeclareAssignment.js';
 import { isLocalVariablesSetCall } from '../token-classifiers/isLocalVariablesSetCall.js';
 import { isReadWriteReference } from '../token-classifiers/isReadWriteReference.js';
@@ -14,6 +16,10 @@ import { isVariableReadToken } from '../token-classifiers/isVariableReadToken.js
 import { MaybeDecided } from '../../../../../../MaybeDecided.js';
 import { ParseTreeTokenType } from '../../../../../other-languages/js-parsing/ParseTreeTokenType.js';
 import { WebLogoVariableInfo } from './WebLogoVariableInfo.js';
+
+export async function asyncInit() {
+	await isJSVariableAssignmentAsyncInit();
+};
 
 function isSetCall(token) {
 	return isGlobalVariablesSetCall(token) ||

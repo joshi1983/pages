@@ -1,9 +1,13 @@
 import { CallCommandInstruction } from '../execution/instructions/CallCommandInstruction.js';
 import { Command } from '../Command.js';
 import { PushInstruction } from '../execution/instructions/PushInstruction.js';
-await Command.asyncInit();
 
-const dequeueInfo = Command.getCommandInfo('dequeue');
+let dequeueInfo;
+
+export async function asyncInit() {
+	await Command.asyncInit();
+	dequeueInfo = Command.getCommandInfo('dequeue');
+};
 
 export function compileDequeue(parseTreeTokens, procedures, result, logger) {
 	// push variable name as a string.

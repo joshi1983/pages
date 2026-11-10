@@ -10,8 +10,8 @@ import { prefixWrapper } from
 '../../../../../helpers/prefixWrapper.js';
 import { TestParseLogger } from
 '../../../../../helpers/TestParseLogger.js';
-import { translateToWebLogo } from
-'../../../../../../modules/components/code-editor/code-fixer/fixers/codeheart-turtlescript/translateToWebLogo.js';
+import { translateCodeHeartTurtleScriptToWebLogo } from
+'../../../../../../modules/components/code-editor/code-fixer/fixers/codeheart-turtlescript/translateCodeHeartTurtleScriptToWebLogo.js';
 
 export function testTranslateExamples(logger) {
 	codeHeartTurtleScriptExamples.forEach(function(content, index) {

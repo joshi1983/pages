@@ -2,10 +2,16 @@ import { filterBracketsAndCommas } from
 '../../../other-languages/js-parsing/translation-to-weblogo/type-processors/helpers/filterBracketsAndCommas.js';
 import { getDescendentsOfType } from
 '../../../generic-parsing-utilities/getDescendentsOfType.js';
-import { Operators } from
-'../../../other-languages/js-parsing/Operators.js';
+import { getOperatorsAsync } from
+'../../../other-languages/js-parsing/getOperatorsAsync.js';
 import { ParseTreeTokenType } from
 '../../../other-languages/js-parsing/ParseTreeTokenType.js';
+
+let Operators;
+
+export async function asyncInit() {
+	Operators = await getOperatorsAsync();
+};
 
 function isOfInterest(expression) {
 	const children = expression.children;
