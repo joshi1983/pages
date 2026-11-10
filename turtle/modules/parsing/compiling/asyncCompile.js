@@ -2,6 +2,8 @@ import { convertMessageObjectsToParseMessages } from
 '../serialization/convertMessageObjectsToParseMessages.js';
 import { convertObjectToParseTree } from
 '../serialization/convertObjectToParseTree.js';
+import { convertObjectToLogoProgram } from
+'../serialization/convertObjectToLogoProgram.js';
 
 let worker, currentTask;
 const compileTasks = [];
@@ -30,8 +32,9 @@ function startProcessing() {
 		compileTasks.splice(nextIndex, 1); // remove task.
 		myWorker.onmessage = function(e) {
 			const program = e.data.program === undefined ? undefined :
-				convertObjectToProgram(e.data.program);
-			const tree = convertObjectToParseTree(e.data.tree);
+				convertObjectToLogoProgram(e.data.program);
+			const tree = program === undefined ? convertObjectToParseTree(e.data.tree) :
+				program.parseTree;
 			const result = {
 				'program': program,
 				'messages': convertMessageObjectsToParseMessages(e.data.messages, tree)

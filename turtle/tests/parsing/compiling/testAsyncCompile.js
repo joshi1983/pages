@@ -4,11 +4,13 @@ import { LogoProgram } from
 '../../../modules/parsing/execution/LogoProgram.js';
 import { ParseTreeToken } from
 '../../../modules/parsing/ParseTreeToken.js';
+import { prefixWrapper } from
+'../../helpers/prefixWrapper.js';
 import { ProgressIndicator } from
 '../../helpers/ProgressIndicator.js';
 
-export function testAsyncCompile(logger) {
-	const promise = asyncCompile('forward 100');
+function testWithSpecificCode(code, logger) {
+	const promise = asyncCompile(code);
 	if (!(promise instanceof Promise))
 		logger(`asyncCompile should always return a Promise but found ${promise}`);
 	else {
@@ -20,10 +22,10 @@ export function testAsyncCompile(logger) {
 			resolved = true;
 			const program = compileResult.program;
 			if (typeof program !== 'object' || program === null)
-				logger(`asyncCompile's result should resolve to an object but found ${program}`);
+				logger(`asyncCompile's result.program should resolve to an object but found ${program}`);
 			else {
 				if (!(program instanceof LogoProgram))
-					logger(`asyncCompile's result should resolve to an instance of LogoProgram but it did not. program=${program}`);
+					logger(`asyncCompile's result.program should resolve to an instance of LogoProgram but it did not. program=${program}`);
 
 				if (typeof program.code !== 'string')
 					logger(`program.code should be a string but found ${program.code}`);
@@ -51,4 +53,19 @@ export function testAsyncCompile(logger) {
 			}
 		}, maxTimeout);
 	}
+}
+
+export function testAsyncCompile(logger) {
+	const cases = [
+		'forward 100',
+		`to p
+	print "hi
+end
+
+p`
+	];
+	cases.forEach(function(code, index) {
+		const plogger = prefixWrapper(`Case ${index}, code=${code}`, logger);
+		testWithSpecificCode(code, plogger);
+	});
 };
