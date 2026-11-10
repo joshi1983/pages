@@ -11,6 +11,7 @@ import { ProgressIndicator } from
 
 function testWithSpecificCode(code, logger) {
 	const promise = asyncCompile(code);
+
 	if (!(promise instanceof Promise))
 		logger(`asyncCompile should always return a Promise but found ${promise}`);
 	else {
