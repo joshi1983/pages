@@ -1,3 +1,4 @@
+import { testAsyncCompile } from './testAsyncCompile.js';
 import { testCompile } from './testCompile.js';
 import { testCompileBreakStatement } from './testCompileBreakStatement.js';
 import { testCompileDataListLiteral } from './testCompileDataListLiteral.js';
@@ -18,6 +19,7 @@ import { wrapAndCall } from '../../helpers/wrapAndCall.js';
 
 export function testCompiling(logger) {
 	wrapAndCall([
+		testAsyncCompile,
 		testCompile,
 		testCompileBreakStatement,
 		testCompileDataListLiteral,
