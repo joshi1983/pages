@@ -18,13 +18,7 @@ async function getCompileFunction() {
 }
 
 function instructionToDTO(instruction) {
-	const result = {};
-	for (const key in instruction) {
-		const val = instruction[key];
-		if (typeof val !== 'function') {
-			result[key] = val;
-		}
-	}
+	const result = instruction.toDTO();
 	return result;
 }
 
