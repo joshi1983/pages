@@ -1,6 +1,7 @@
 import { analyzeCodeQuality } from '../../parsing/parse-tree-analysis/validation/analyzeCodeQuality.js';
 import { CommandBoxParseLogger } from '../../parsing/loggers/CommandBoxParseLogger.js';
-import { compile } from '../../parsing/compile.js';
+import { compile,
+	asyncInit as compileAsyncInit } from '../../parsing/compile.js';
 import { EditorLocalStorage } from './EditorLocalStorage.js';
 import { EventDispatcher } from '../../EventDispatcher.js';
 import { getProceduresMap } from '../../parsing/parse-tree-analysis/getProceduresMap.js';
@@ -8,6 +9,8 @@ import { LogoParser } from '../../parsing/LogoParser.js';
 import { ParseLogger } from '../../parsing/loggers/ParseLogger.js';
 import { scrapeProcedures } from '../../parsing/parse-tree-analysis/scrapeProcedures.js';
 import { ToastMessages } from '../ToastMessages.js';
+
+await compileAsyncInit();
 
 class PrivateCode extends EventDispatcher {
 	constructor() {

@@ -11,13 +11,20 @@ import { getAllReferencedProcedures } from './getAllReferencedProcedures.js';
 import { getProceduresMap } from '../../../../parse-tree-analysis/getProceduresMap.js';
 import { getProcCallsCodeSnippetFor } from './getProcCallsCodeSnippetFor.js';
 import { LogoParser } from '../../../../LogoParser.js';
-import { parse } from '../../../../other-languages/js-parsing/parse.js';
+import { parse,
+	asyncInit as parseAsyncInit } from
+	'../../../../other-languages/js-parsing/parse.js';
 import { ParseLogger } from '../../../../loggers/ParseLogger.js';
 import { processJavaLikeCommentToken } from
 '../../../../generic-parsing-utilities/processJavaLikeCommentToken.js';
 import { processToken } from './type-processors/processToken.js';
 import { removeUnneededCurvedBrackets } from
 '../../../../../components/code-editor/code-fixer/fixers/helpers/removeUnneededCurvedBrackets.js';
+
+export async function asyncInit() {
+	await LogoParser.asyncInit();
+	await parseAsyncInit();
+};
 
 export function translateJSProcessingToWebLogo(code) {
 	const parseResult = parse(code);

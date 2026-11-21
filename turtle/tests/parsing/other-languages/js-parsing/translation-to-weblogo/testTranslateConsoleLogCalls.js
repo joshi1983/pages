@@ -1,6 +1,6 @@
 import { testInOutPairs } from '../../../../helpers/testInOutPairs.js';
-import { translateToWebLogo } from
-'../../../../../modules/parsing/other-languages/js-parsing/translation-to-weblogo/translateToWebLogo.js';
+import { translateToWebLogo_ } from
+'./translateToWebLogo_.js';
 
 export function testTranslateConsoleLogCalls(logger) {
 	const cases = [
@@ -9,5 +9,5 @@ export function testTranslateConsoleLogCalls(logger) {
 		{'in': 'console.log(\'hi\')', 'out': 'print "hi'},
 		{'in': 'console.log(`hi`)', 'out': 'print "hi'},
 	];
-	testInOutPairs(cases, translateToWebLogo, logger);
+	testInOutPairs(cases, translateToWebLogo_, logger);
 };

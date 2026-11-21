@@ -12,9 +12,14 @@ import { evaluateLiteralToken } from
 '../../../../../other-languages/js-parsing/evaluators/evaluateLiteralToken.js';
 import { flatten } from '../../../../../generic-parsing-utilities/flatten.js';
 import { isThisMethodCall } from '../token-classifiers/isThisMethodCall.js';
-import { parse } from '../../../../../other-languages/js-parsing/parse.js';
+import { parse,
+	asyncInit as parseAsyncInit } from '../../../../../other-languages/js-parsing/parse.js';
 import { parseTreeTokensToCode } from
 '../../../../../other-languages/js-parsing/parseTreeTokensToCode.js';
+
+export async function asyncInit() {
+	await parseAsyncInit();
+};
 
 const alphaColourConverterNames = new Set([
 	'convertToAlphaColourOrTransparent',

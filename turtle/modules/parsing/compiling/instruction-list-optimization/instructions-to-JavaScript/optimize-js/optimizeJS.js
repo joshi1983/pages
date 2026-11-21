@@ -5,17 +5,18 @@ import { optimizeSetProperty } from './optimizeSetProperty.js';
 import { optimizeVariableAccessInJavaScript } from './optimizeVariableAccessInJavaScript.js';
 import { reduceValueStackPushes } from './reduceValueStackPushes.js';
 import { removeUnneededAssignments } from './removeUnneededAssignments.js';
-import { removeUnneededCurvedBrackets } from './removeUnneededCurvedBrackets.js';
+import { removeUnneededCurvedBrackets,
+asyncInit as removeUnneededCurvedBracketsAsyncInit } from './removeUnneededCurvedBrackets.js';
 
 const optimizers = [
-mergeConsecutiveValueStackPushes,
-mergeValueStackLastMutations,
-mergeValueStackPops,
-optimizeSetProperty,
-optimizeVariableAccessInJavaScript,
-reduceValueStackPushes,
-removeUnneededAssignments,
-removeUnneededCurvedBrackets
+	mergeConsecutiveValueStackPushes,
+	mergeValueStackLastMutations,
+	mergeValueStackPops,
+	optimizeSetProperty,
+	optimizeVariableAccessInJavaScript,
+	reduceValueStackPushes,
+	removeUnneededAssignments,
+	removeUnneededCurvedBrackets
 ];
 export function optimizeJS(code, isForProcedure) {
 	for (let i = 0; i < optimizers.length; i++) {

@@ -1,11 +1,16 @@
 import { flatten } from
 '../../../../generic-parsing-utilities/flatten.js';
 import { isUsingContext } from './isUsingContext.js';
-import { parse } from
+import { parse,
+	asyncInit as parseAsyncInit } from
 '../../../../other-languages/js-parsing/parse.js';
 import { ParseTreeTokenType } from
 '../../../../other-languages/js-parsing/ParseTreeTokenType.js';
 import { removeSemicolonsImmediatelyAfter } from './removeSemicolonsImmediatelyAfter.js';
+
+export async function asyncInit() {
+	await parseAsyncInit();
+};
 
 export function setValueStackDecreaseAmount(decreaseToken, decreaseTotal, tokensToRemove) {
 	if (decreaseTotal === 0) {

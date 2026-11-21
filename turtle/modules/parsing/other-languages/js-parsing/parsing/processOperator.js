@@ -2,8 +2,10 @@ import { addCodeBlockIfNeeded } from './addCodeBlockIfNeeded.js';
 import { addToken } from './addToken.js';
 import { endsWithClosingCurvedBracket } from './endsWithClosingCurvedBracket.js';
 import { getTopCompleteExpressionToken } from './getTopCompleteExpressionToken.js';
-import { Operators } from '../Operators.js';
+import { getOperatorsAsync } from '../getOperatorsAsync.js';
 import { ParseTreeTokenType } from '../ParseTreeTokenType.js';
+
+const Operators = await getOperatorsAsync();
 
 const badPreviousTokenTypes = new Set([
 	ParseTreeTokenType.ARG_LIST,

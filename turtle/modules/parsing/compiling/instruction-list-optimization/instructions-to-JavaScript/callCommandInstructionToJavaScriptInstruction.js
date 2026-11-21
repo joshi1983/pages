@@ -4,7 +4,10 @@ import { JavaScriptInstruction } from '../../../execution/instructions/JavaScrip
 import { getInstructionParamArgInfo } from './getInstructionParamArgInfo.js';
 import { MapUtils } from '../../../../MapUtils.js';
 import { wrapWithTypeConverter } from './wrapWithTypeConverter.js';
-await Command.asyncInit();
+
+export async function asyncInit() {
+	await Command.asyncInit();
+};
 
 export function callCommandInstructionToJavaScriptInstruction(instruction, pushResult, compileOptions) {
 	if (typeof compileOptions !== 'object')

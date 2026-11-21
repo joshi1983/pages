@@ -2,7 +2,9 @@ import { AsyncParser } from '../../parsing/AsyncParser.js';
 import { AsyncParseTask } from '../../parsing/AsyncParseTask.js';
 import { Camera } from '../../drawing/vector/Camera.js';
 import { CanvasVector2DDrawer } from '../../drawing/drawers/CanvasVector2DDrawer.js';
-import { compile } from '../../parsing/compile.js';
+import { compile,
+	asyncInit as compileAsyncInit
+	} from '../../parsing/compile.js';
 import { handleCompactKeywords } from './handleCompactKeywords.js';
 import { LogoProgramExecuter } from '../../parsing/execution/LogoProgramExecuter.js';
 import { ParseLogger } from '../../parsing/loggers/ParseLogger.js';
@@ -11,6 +13,7 @@ import { Turtle } from '../../command-groups/Turtle.js';
 import { VectorDrawing } from '../../drawing/vector/VectorDrawing.js';
 import { ZippedExamples } from './ZippedExamples.js';
 
+await compileAsyncInit();
 await ZippedExamples.asyncInit();
 const parser = new AsyncParser(true);
 const w = 417;

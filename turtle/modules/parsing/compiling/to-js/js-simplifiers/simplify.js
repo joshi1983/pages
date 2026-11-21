@@ -1,7 +1,12 @@
-import { removeUnneededCurvedBrackets } from
+import { removeUnneededCurvedBrackets,
+asyncInit as removeUnneededCurvedBracketsAsyncInit } from
 './removeUnneededCurvedBrackets.js';
 import { useFasterMathFunctions } from
 './useFasterMathFunctions.js';
+
+export async function asyncInit() {
+	await removeUnneededCurvedBracketsAsyncInit();
+};
 
 const simplifiers = [
 	removeUnneededCurvedBrackets,

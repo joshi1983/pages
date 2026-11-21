@@ -2,7 +2,10 @@ import { BinaryOperatorInstruction } from '../../execution/instructions/BinaryOp
 import { CallCommandInstruction } from '../../execution/instructions/CallCommandInstruction.js';
 import { Operators } from '../../Operators.js';
 import { removeInstructions } from './removeInstructions.js';
-await Operators.asyncInit();
+
+export async function asyncInit() {
+	await Operators.asyncInit();
+};
 
 /*
 This optimization corresponds with observing that expressions like:

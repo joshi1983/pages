@@ -3,8 +3,13 @@ import { Command } from '../Command.js';
 import { PopInstruction } from '../execution/instructions/PopInstruction.js';
 import { PushInstruction } from '../execution/instructions/PushInstruction.js';
 import { shouldValueBeCloned } from './shouldValueBeCloned.js';
-await Command.asyncInit();
-const makeInfo = Command.getCommandInfo('make');
+
+let makeInfo;
+
+export async function asyncInit() {
+	await Command.asyncInit();
+	makeInfo = Command.getCommandInfo('make');
+};
 
 export function addInstructionsForInitialVariables(rootToken, instructions, initialVariableValueMap) {
 	for (const [varName, value] of initialVariableValueMap) {

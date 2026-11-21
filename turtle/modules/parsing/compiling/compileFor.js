@@ -2,15 +2,22 @@ import { addInstructionsFromCommandList } from './addInstructionsFromCommandList
 import { BinaryOperatorInstruction } from '../execution/instructions/BinaryOperatorInstruction.js';
 import { CallCommandInstruction } from '../execution/instructions/CallCommandInstruction.js';
 import { Command } from '../Command.js';
-import { getInstructionsFromToken } from './compileParameters.js';
+import { getInstructionsFromToken,
+	asyncInit as compileParametersAsyncInit } from './compileParameters.js';
 import { IncrementForCounterInstruction } from '../execution/instructions/IncrementForCounterInstruction.js';
 import { JumpIfTrueInstruction } from '../execution/instructions/JumpIfTrueInstruction.js';
 import { PopForcountInstruction } from '../execution/instructions/PopForcountInstruction.js';
 import { PushForCountInstruction } from '../execution/instructions/PushForCountInstruction.js';
 import { PushFromStackInstruction } from '../execution/instructions/PushFromStackInstruction.js';
 import { setBreakJumpIndexesTo } from './setBreakJumpIndexesTo.js';
-await Command.asyncInit();
-const signInfo = Command.getCommandInfo('sign');
+
+let signInfo;
+
+export async function asyncInit() {
+	await Command.asyncInit();
+	signInfo = Command.getCommandInfo('sign');
+	await compileParametersAsyncInit();
+};
 
 export function compileFor(parseTreeTokens, procedures, result, logger) {
 	const forControlToken = parseTreeTokens[0];

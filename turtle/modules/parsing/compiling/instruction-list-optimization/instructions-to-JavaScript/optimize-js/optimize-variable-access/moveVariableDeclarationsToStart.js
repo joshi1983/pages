@@ -12,10 +12,15 @@ import { isVariableAssignmentRightSideToken } from '../token-classifiers/isVaria
 import { mayBeFinalVariableAssignment } from '../token-classifiers/mayBeFinalVariableAssignment.js';
 import { mayBeLastVariableAssignmentForWebLogoVariable } from '../token-classifiers/mayBeLastVariableAssignmentForWebLogoVariable.js';
 import { needsEndingMake } from './needsEndingMake.js';
-import { parse } from '../../../../../other-languages/js-parsing/parse.js';
+import { parse,
+	asyncInit as parseAsyncInit } from '../../../../../other-languages/js-parsing/parse.js';
 import { parseTreeTokensToCode } from '../../../../../other-languages/js-parsing/parseTreeTokensToCode.js';
 import { ParseTreeTokenType } from '../../../../../other-languages/js-parsing/ParseTreeTokenType.js';
 import { StringBuffer } from '../../../../../../StringBuffer.js';
+
+export async function asyncInit() {
+	await parseAsyncInit();
+};
 
 function assignTokenToReadJSCode(assignToken) {
 	const funcCall = assignToken.parentNode.children[1];

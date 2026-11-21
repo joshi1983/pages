@@ -4,8 +4,11 @@ import { javascriptProcessingExamples } from
 '../../../../../helpers/parsing/javascriptProcessingExamples.js';
 import { prefixWrapper } from
 '../../../../../helpers/prefixWrapper.js';
-import { translateJSProcessingToWebLogo } from
+import { translateJSProcessingToWebLogo,
+	asyncInit as translateJSProcessingToWebLogoAsyncInit } from
 '../../../../../../modules/parsing/other-languages/processing/js-processing/translation-to-weblogo/translateJSProcessingToWebLogo.js';
+
+await translateJSProcessingToWebLogoAsyncInit();
 
 export function testTranslateVariousExamples(logger) {
 	javascriptProcessingExamples.forEach(function(code, index) {

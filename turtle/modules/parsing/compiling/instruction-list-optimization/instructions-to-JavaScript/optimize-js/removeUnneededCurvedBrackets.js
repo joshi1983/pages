@@ -1,26 +1,31 @@
 import { flatten } from '../../../../generic-parsing-utilities/flatten.js';
 import { getDescendentsOfType } from '../../../../generic-parsing-utilities/getDescendentsOfType.js';
-import { parse } from '../../../../other-languages/js-parsing/parse.js';
+import { parse,
+asyncInit as parseAsyncInit } from '../../../../other-languages/js-parsing/parse.js';
 import { ParseTreeTokenType } from '../../../../other-languages/js-parsing/ParseTreeTokenType.js';
 import { parseTreeTokensToCode } from '../../../../other-languages/js-parsing/parseTreeTokensToCode.js';
 
+export async function asyncInit() {
+	await parseAsyncInit();
+};
+
 const interestingTypes = new Set([
-ParseTreeTokenType.ARRAY_LITERAL,
-ParseTreeTokenType.BOOLEAN_LITERAL,
-ParseTreeTokenType.CURLY_BRACKET_EXPRESSION,
-ParseTreeTokenType.CURVED_BRACKET_EXPRESSION,
-ParseTreeTokenType.EXPRESSION_DOT,
-ParseTreeTokenType.EXPRESSION_INDEX_EXPRESSION,
-ParseTreeTokenType.FUNCTION_CALL,
-ParseTreeTokenType.NUMBER_LITERAL,
-ParseTreeTokenType.REGULAR_EXPRESSION_LITERAL,
-ParseTreeTokenType.STRING_LITERAL,
-ParseTreeTokenType.TEMPLATE_LITERAL
+	ParseTreeTokenType.ARRAY_LITERAL,
+	ParseTreeTokenType.BOOLEAN_LITERAL,
+	ParseTreeTokenType.CURLY_BRACKET_EXPRESSION,
+	ParseTreeTokenType.CURVED_BRACKET_EXPRESSION,
+	ParseTreeTokenType.EXPRESSION_DOT,
+	ParseTreeTokenType.EXPRESSION_INDEX_EXPRESSION,
+	ParseTreeTokenType.FUNCTION_CALL,
+	ParseTreeTokenType.NUMBER_LITERAL,
+	ParseTreeTokenType.REGULAR_EXPRESSION_LITERAL,
+	ParseTreeTokenType.STRING_LITERAL,
+	ParseTreeTokenType.TEMPLATE_LITERAL
 ]);
 const parentTypesExpectingCurvedBracketsInChildren = new Set([
-ParseTreeTokenType.IF,
-ParseTreeTokenType.SWITCH,
-ParseTreeTokenType.WHILE,
+	ParseTreeTokenType.IF,
+	ParseTreeTokenType.SWITCH,
+	ParseTreeTokenType.WHILE,
 ]);
 
 function isOfInterest(token) {

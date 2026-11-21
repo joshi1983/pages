@@ -7,6 +7,8 @@ import { testInOutPairs } from
 import { TestParseLogger } from
 '../../../../../helpers/TestParseLogger.js';
 
+await LogoParser.asyncInit();
+
 function wrappedGetProcCallsCodeSnippetFor(logger) {
 	return function(code) {
 		const parseLogger = new TestParseLogger(logger, code);

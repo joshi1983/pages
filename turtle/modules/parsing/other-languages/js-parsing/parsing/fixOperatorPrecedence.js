@@ -3,8 +3,10 @@ import { fixOperatorPrecedenceGeneric } from
 import { fixOperatorPrecedenceForTernary } from
 './fixOperatorPrecedenceForTernary.js';
 import { flatten } from '../../../generic-parsing-utilities/flatten.js';
-import { Operators } from '../Operators.js';
+import { getOperatorsAsync } from '../getOperatorsAsync.js';
 import { ParseTreeTokenType } from '../ParseTreeTokenType.js';
+
+const Operators = await getOperatorsAsync();
 
 export function fixOperatorPrecedence(rootToken) {
 	const allTokens = flatten(rootToken);

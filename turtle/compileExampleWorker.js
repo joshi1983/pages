@@ -7,7 +7,8 @@ const compileOptions = {
 	'mergeJavaScriptInstructions': true,
 	'parsedOptimize': true
 };
-let compile, compileModulePromise;
+let compileModulePromise;
+let convertLogoProgramToSerializableObjectPromise;
 
 async function getCompileFunction() {
 	if (compileModulePromise === undefined)
@@ -17,14 +18,12 @@ async function getCompileFunction() {
 	return m.compile;
 }
 
-function instructionToDTO(instruction) {
-	const result = instruction.toDTO();
-	return result;
-}
+async function getLogoProgramToSerializableObject() {
+	if (convertLogoProgramToSerializableObjectPromise === undefined)
+		convertLogoProgramToSerializableObjectPromise = import('./modules/parsing/convertLogoProgramToSerializableObject.js');
 
-function makeLogoProgramSerializable(program) {
-	program.instructions = program.instructions.map(instructionToDTO);
-	return program;
+	const m = await convertLogoProgramToSerializableObjectPromise;
+	return m.convertLogoProgramToSerializableObject;
 }
 
 onmessage = function(e) {
@@ -32,7 +31,6 @@ onmessage = function(e) {
 	if (typeof code !== 'string')
 		console.error('code expected to be a string but got: ' + code);
 	LogoParser.asyncInit().then(async function() {
-		const compile = await getCompileFunction();
 		const logger = new BufferedParseLogger();
 		const proceduresMap = new Map();
 		const extraProcedures = new Map();
@@ -40,12 +38,22 @@ onmessage = function(e) {
 		const tree = LogoParser.getParseTree(code, logger, proceduresMap);
 		let program;
 		if (tree !== undefined) {
+			const compile = await getCompileFunction();
 			program = compile(code, tree, logger, extraProcedures,
 				compileOptions, initialVariables);
 		}
+		let serializedProgram;
+		let serializableTree;
+		if (program !== undefined) {
+			const convertLogoProgramToSerializable = await getLogoProgramToSerializableObject();
+			const serializedProgram = convertLogoProgramToSerializable(program);
+			serializableTree = serializedProgram.tree;
+		}
+		else
+			serializableTree = ;
 		postMessage({
-			'program': makeLogoProgramSerializable(program),
-			'tree': tree,
+			'program': serializedProgram,
+			'tree': serializableTree,
 			'messages': logger._messages
 		});
 	});

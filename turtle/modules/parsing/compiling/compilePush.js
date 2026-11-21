@@ -1,12 +1,19 @@
 import { CallCommandInstruction } from '../execution/instructions/CallCommandInstruction.js';
 import { Command } from '../Command.js';
-import { getInstructionsFromToken } from './compileParameters.js';
+import { getInstructionsFromToken,
+	asyncInit as getInstructionsFromTokenAsyncInit } from './compileParameters.js';
 import { PushInstruction } from '../execution/instructions/PushInstruction.js';
 import { VariableReadInstruction } from '../execution/instructions/VariableReadInstruction.js';
-await Command.asyncInit();
 
-const fputInfo = Command.getCommandInfo('fput');
-const makeInfo = Command.getCommandInfo('make');
+let fputInfo;
+let makeInfo;
+
+export async function asyncInit() {
+	await Command.asyncInit();
+	fputInfo = Command.getCommandInfo('fput');
+	makeInfo = Command.getCommandInfo('make');
+	await getInstructionsFromTokenAsyncInit();
+};
 
 export function compilePush(parseTreeTokens, procedures, result, logger) {
 	// push variable name as a string.

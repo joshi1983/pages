@@ -1,9 +1,14 @@
 import { declaringTypes } from '../../../../other-languages/js-parsing/parsing/declaringTypes.js';
 import { flatten } from '../../../../generic-parsing-utilities/flatten.js';
 import { getDescendentsOfType } from '../../../../generic-parsing-utilities/getDescendentsOfType.js';
-import { parse } from '../../../../other-languages/js-parsing/parse.js';
+import { parse,
+	asyncInit as parseAsyncInit } from '../../../../other-languages/js-parsing/parse.js';
 import { ParseTreeTokenType } from '../../../../other-languages/js-parsing/ParseTreeTokenType.js';
 import { parseTreeTokensToCode } from '../../../../other-languages/js-parsing/parseTreeTokensToCode.js';
+
+export async function asyncInit() {
+	await parseAsyncInit();
+};
 
 function isOfInterest(token) {
 	if (token.children.length !== 2 || token.val !== '=')

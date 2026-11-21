@@ -1,6 +1,6 @@
 import { testInOutPairs } from '../../../../helpers/testInOutPairs.js';
-import { translateToWebLogo } from
-'../../../../../modules/parsing/other-languages/js-parsing/translation-to-weblogo/translateToWebLogo.js';
+import { translateToWebLogo_ } from
+'./translateToWebLogo_.js';
 
 export function testTranslateFunctionDefinitions(logger) {
 	const cases = [
@@ -14,5 +14,5 @@ export function testTranslateFunctionDefinitions(logger) {
 		{'in': 'function p(x,y) {}', 'out': 'to p :x :y\nend'},
 		{'in': 'function p(x) {x = 4}', 'out': 'to p :x\n\tlocalmake "x 4\nend'},
 	];
-	testInOutPairs(cases, translateToWebLogo, logger);
+	testInOutPairs(cases, translateToWebLogo_, logger);
 };
