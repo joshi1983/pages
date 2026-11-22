@@ -1,12 +1,17 @@
 import { CommentDumpingStringBuffer } from
 '../../../generic-parsing-utilities/CommentDumpingStringBuffer.js';
 import { fixAndFormat } from './fixAndFormat.js';
-import { parse } from '../parse.js';
+import { parse,
+asyncInit as parseAsyncInit } from '../parse.js';
 import { processJavaLikeCommentToken } from
 '../../../generic-parsing-utilities/processJavaLikeCommentToken.js';
 import { processJavaScriptGeneralToken } from
 './type-processors/processJavaScriptGeneralToken.js';
 import { simplifyTree } from './simplifying/simplifyTree.js';
+
+export async function asyncInit() {
+	await parseAsyncInit();
+};
 
 let p = function() {};
 const minimalProcessToken = function() {

@@ -6,12 +6,17 @@ import { getDescendentsOfType } from
 '../../generic-parsing-utilities/getDescendentsOfType.js';
 import { getMethodNameForCommand } from
 '../../getMethodNameForCommand.js';
-import { parse } from
+import { parse,
+	asyncInit as parseAsyncInit } from
 '../../other-languages/js-parsing/parse.js';
 import { ParseTreeTokenType } from
 '../../other-languages/js-parsing/ParseTreeTokenType.js';
 import { StringBuffer } from
 '../../../StringBuffer.js';
+
+export async function asyncInit() {
+	await parseAsyncInit();
+};
 
 let identifiersOfInterestMap;
 

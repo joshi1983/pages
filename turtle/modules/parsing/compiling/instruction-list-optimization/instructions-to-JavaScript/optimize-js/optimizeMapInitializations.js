@@ -4,7 +4,8 @@ import { insertLineIndexSpanAt } from
 '../../../../generic-parsing-utilities/insertLineIndexSpanAt.js';
 import { isSetPropertyCallOnIdentifier } from
 './token-classifiers/isSetPropertyCallOnIdentifier.js';
-import { parse } from
+import { parse,
+	asyncInit as parseAsyncInit } from
 '../../../../other-languages/js-parsing/parse.js';
 import { ParseTreeToken } from
 '../../../../generic-parsing-utilities/ParseTreeToken.js';
@@ -14,6 +15,10 @@ import { parseTreeTokensToCode } from
 '../../../../other-languages/js-parsing/parseTreeTokensToCode.js';
 import { setLineIndexForAllDescendents } from
 './setLineIndexForAllDescendents.js';
+
+export async function asyncInit() {
+	await parseAsyncInit();
+};
 
 function isOfInterest(token) {
 	if (token.val !== '=' || token.type !== ParseTreeTokenType.ASSIGNMENT_OPERATOR || token.children.length !== 2)

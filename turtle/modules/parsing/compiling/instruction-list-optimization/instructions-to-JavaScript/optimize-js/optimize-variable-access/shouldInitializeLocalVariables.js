@@ -1,7 +1,12 @@
 import { flatten } from '../../../../../generic-parsing-utilities/flatten.js';
 import { isLocalVariablesDeclared } from './isLocalVariablesDeclared.js';
 import { isLocalVariablesToken } from '../token-classifiers/isLocalVariablesToken.js';
-import { parse } from '../../../../../other-languages/js-parsing/parse.js';
+import { parse,
+	asyncInit as parseAsyncInit } from '../../../../../other-languages/js-parsing/parse.js';
+
+export async function asyncInit() {
+	await parseAsyncInit();
+};
 
 export function shouldInitializeLocalVariables(jsCode) {
 	const parseResult = parse(jsCode);

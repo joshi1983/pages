@@ -1,11 +1,18 @@
 import { declaringTypes } from '../../../../../other-languages/js-parsing/parsing/declaringTypes.js';
 import { flatten } from '../../../../../generic-parsing-utilities/flatten.js';
 import { getAllDescendentsAsArray } from '../../../../../generic-parsing-utilities/getAllDescendentsAsArray.js';
-import { isJSVariableAssignment } from '../token-classifiers/isJSVariableAssignment.js';
+import { isJSVariableAssignment,
+asyncInit as isJSVariableAssignmentAsyncInit } from '../token-classifiers/isJSVariableAssignment.js';
 import { isJSVariableDeclareAssignment } from '../token-classifiers/isJSVariableDeclareAssignment.js';
-import { parse } from '../../../../../other-languages/js-parsing/parse.js';
+import { parse,
+	asyncInit as parseAsyncInit } from '../../../../../other-languages/js-parsing/parse.js';
 import { ParseTreeTokenType } from '../../../../../other-languages/js-parsing/ParseTreeTokenType.js';
 import { parseTreeTokensToCode } from '../../../../../other-languages/js-parsing/parseTreeTokensToCode.js';
+
+export async function asyncInit() {
+	await isJSVariableAssignmentAsyncInit();
+	await parseAsyncInit();
+};
 
 function isReadingVariableNamed(variableName) {
 	return function(token) {

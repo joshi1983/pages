@@ -8,9 +8,14 @@ import { getSortedLastTokenFromArray } from
 '../../../generic-parsing-utilities/getSortedLastTokenFromArray.js';
 import { JavaScriptInstruction } from
 '../../../execution/instructions/JavaScriptInstruction.js';
-import { parse } from '../../../other-languages/js-parsing/parse.js';
+import { parse,
+	asyncInit as parseAsyncInit } from '../../../other-languages/js-parsing/parse.js';
 import { ParseTreeTokenType } from
 '../../../other-languages/js-parsing/ParseTreeTokenType.js';
+
+export async function asyncInit() {
+	await parseAsyncInit();
+};
 
 function getDeclarationsFromCode(code) {
 	const parseResult = parse(code);

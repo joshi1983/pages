@@ -1,13 +1,23 @@
-import { addInstructionsForSpecialCommand } from './addInstructionsForSpecialCommand.js';
-import { createCallCommandInstruction } from './createCallCommandInstruction.js';
-import { CallProcedureInstruction } from '../execution/instructions/CallProcedureInstruction.js';
+import { addInstructionsForSpecialCommand,
+asyncInit as addInstructionsForSpecialCommandAsyncInit } from './addInstructionsForSpecialCommand.js';
+import { createCallCommandInstruction,
+asyncInit as createCallCommandInstructionAsyncInit } from './createCallCommandInstruction.js';
+import { CallProcedureInstruction } from
+'../execution/instructions/CallProcedureInstruction.js';
 import { Command } from '../Command.js';
 import { isAcceptableInstructionListChild } from '../parse-tree-analysis/isAcceptableInstructionListChild.js';
 import { ParseTreeTokenType } from '../ParseTreeTokenType.js';
 import { ParseTreeToken } from '../ParseTreeToken.js';
 import { PopInstruction } from '../execution/instructions/PopInstruction.js';
 import { pushParameters } from './compileParameters.js';
-await Command.asyncInit();
+
+export async function asyncInit() {
+	await Command.asyncInit();
+	for (const asyncInit of [addInstructionsForSpecialCommandAsyncInit,
+	createCallCommandInstructionAsyncInit]) {
+		await asyncInit();
+	}
+};
 
 export function getInstructionsFrom(parseTreeTokens, procedures, logger, result, isPoppingResults) {
 	if (isPoppingResults === undefined)

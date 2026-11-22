@@ -5,7 +5,8 @@ import { Code } from './components/code-editor/Code.js';
 import { CodeEditor } from './components/code-editor/CodeEditor.js';
 import { CommandBoxMessages } from './components/CommandBoxMessages.js';
 import { CommandBoxParseLogger } from './parsing/loggers/CommandBoxParseLogger.js';
-import { compile } from './parsing/compile.js';
+import { compile,
+	asyncInit as compileAsyncInit } from './parsing/compile.js';
 import { DialogGroups } from './components/dialog/DialogGroups.js';
 import { exceptionToString } from './exceptionToString.js';
 import { GraphicsScreen } from './components/GraphicsScreen.js';
@@ -75,6 +76,7 @@ class PrivateSettings {
 	}
 }
 
+await compileAsyncInit();
 const Settings = new PrivateSettings();
 
 ready(function() {

@@ -1,6 +1,11 @@
-import { adjustToken } from './adjustToken.js';
+import { adjustToken,
+	asyncInit as adjustTokenAsyncInit } from './adjustToken.js';
 import { endsWithClosingCurvedBracket } from './endsWithClosingCurvedBracket.js';
 import { ParseTreeTokenType } from '../ParseTreeTokenType.js';
+
+export async function asyncInit() {
+	await adjustTokenAsyncInit();
+};
 
 const curvedGroupTypes = new Set([
 	ParseTreeTokenType.ARG_LIST,

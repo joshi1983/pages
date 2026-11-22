@@ -5,16 +5,21 @@ import { getSortedFirstTokenFromArray } from '../../../../generic-parsing-utilit
 import { getSortedLastDescendentTokenOf } from '../../../../generic-parsing-utilities/getSortedLastDescendentTokenOf.js';
 import { isValueStackPush } from './token-classifiers/isValueStackPush.js';
 import { isValueStackReference } from './token-classifiers/isValueStackReference.js';
-import { parse } from '../../../../other-languages/js-parsing/parse.js';
+import { parse,
+	asyncInit as parseAsyncInit } from '../../../../other-languages/js-parsing/parse.js';
 import { ParseTreeToken } from '../../../../generic-parsing-utilities/ParseTreeToken.js';
 import { parseTreeTokensToCode } from '../../../../other-languages/js-parsing/parseTreeTokensToCode.js';
 import { ParseTreeTokenType } from '../../../../other-languages/js-parsing/ParseTreeTokenType.js';
 import { removeSemicolonsImmediatelyAfter } from './removeSemicolonsImmediatelyAfter.js';
 
+export async function asyncInit() {
+	await parseAsyncInit();
+};
+
 const nonValueTypes = new Set([
-ParseTreeTokenType.COMMA,
-ParseTreeTokenType.CURVED_LEFT_BRACKET,
-ParseTreeTokenType.CURVED_RIGHT_BRACKET,
+	ParseTreeTokenType.COMMA,
+	ParseTreeTokenType.CURVED_LEFT_BRACKET,
+	ParseTreeTokenType.CURVED_RIGHT_BRACKET,
 ]);
 
 /*

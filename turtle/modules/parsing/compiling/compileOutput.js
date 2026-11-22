@@ -1,5 +1,10 @@
-import { getInstructionsFromToken } from './compileParameters.js';
+import { getInstructionsFromToken,
+	asyncInit as compileParametersAsyncInit } from './compileParameters.js';
 import { OutputInstruction } from '../execution/instructions/OutputInstruction.js';
+
+export async function asyncInit() {
+	await compileParametersAsyncInit();
+};
 
 export function compileOutput(parseTreeTokens, procedures, result, logger) {
 	// calculate value to output

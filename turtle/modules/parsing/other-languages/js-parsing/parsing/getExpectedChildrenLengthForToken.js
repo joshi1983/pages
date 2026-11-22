@@ -1,5 +1,7 @@
-import { Operators } from '../Operators.js';
+import { getOperatorsAsync } from '../getOperatorsAsync.js';
 import { ParseTreeTokenType } from '../ParseTreeTokenType.js';
+
+const Operators = await getOperatorsAsync();
 
 // Some types should never have children.
 const noChildTypes = new Set([

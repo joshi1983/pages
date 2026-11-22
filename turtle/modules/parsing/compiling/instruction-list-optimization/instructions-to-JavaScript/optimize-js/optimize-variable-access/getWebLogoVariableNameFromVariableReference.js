@@ -5,12 +5,15 @@ import { ParseTreeTokenType } from '../../../../../other-languages/js-parsing/Pa
 import { tokenToCommandInfo } from '../token-classifiers/tokenToCommandInfo.js';
 
 const primaryNameToArgIndexMap = new Map();
-await Command.asyncInit();
-Command.getCommandsWithVariableRefTypes().forEach(function(info) {
-	const index = ArrayUtils.indexOfMatch(info.args, argInfo => argInfo.refTypes !== undefined);
-	if (index !== -1)
-		primaryNameToArgIndexMap.set(info.primaryName, index);
-});
+
+export async function asyncInit() {
+	await Command.asyncInit();
+	Command.getCommandsWithVariableRefTypes().forEach(function(info) {
+		const index = ArrayUtils.indexOfMatch(info.args, argInfo => argInfo.refTypes !== undefined);
+		if (index !== -1)
+			primaryNameToArgIndexMap.set(info.primaryName, index);
+	});
+};
 
 export function getWebLogoVariableNameFromVariableReference(token) {
 	const argList = token.children[1];

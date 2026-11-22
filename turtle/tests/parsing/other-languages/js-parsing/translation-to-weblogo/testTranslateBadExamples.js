@@ -1,8 +1,9 @@
 import { badExamples } from '../badExamples.js';
-import { genericTranslateBadExamples } from '../../../../helpers/parsing/genericTranslateBadExamples.js';
-import { translateToWebLogo } from
-'../../../../../modules/parsing/other-languages/js-parsing/translation-to-weblogo/translateToWebLogo.js';
+import { genericTranslateBadExamples } from
+'../../../../helpers/parsing/genericTranslateBadExamples.js';
+import { translateToWebLogo_ } from
+'./translateToWebLogo_.js';
 
 export function testTranslateBadExamples(logger) {
-	genericTranslateBadExamples(badExamples, translateToWebLogo, logger);
+	genericTranslateBadExamples(badExamples, translateToWebLogo_, logger);
 };

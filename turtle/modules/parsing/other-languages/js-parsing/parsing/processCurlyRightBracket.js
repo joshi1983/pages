@@ -1,8 +1,13 @@
 import { addToken } from './addToken.js';
-import { adjustToken } from './adjustToken.js';
+import { adjustToken,
+	asyncInit as adjustTokenAsyncInit } from './adjustToken.js';
 import { endsWithCurlyRightBracket } from './endsWithCurlyRightBracket.js';
 import { isTokenBeforeClassMethodCodeBlock } from './isTokenBeforeClassMethodCodeBlock.js';
 import { ParseTreeTokenType } from '../ParseTreeTokenType.js';
+
+export async function asyncInit() {
+	await adjustTokenAsyncInit();
+};
 
 const curlyBracketGroupTypes = new Set([
 	ParseTreeTokenType.CLASS_BODY,
