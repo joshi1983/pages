@@ -1,5 +1,7 @@
 import { asyncCompile } from
 '../../../modules/parsing/compiling/asyncCompile.js';
+import { exceptionToString } from
+'../../../modules/exceptionToString.js';
 import { LogoProgram } from
 '../../../modules/parsing/execution/LogoProgram.js';
 import { ParseTreeToken } from
@@ -42,7 +44,7 @@ function testWithSpecificCode(code, logger) {
 			indicator.completed();
 		}, function(e) {
 			console.error(e);
-			logger(`asyncCompile failed. e=${e}`);
+			logger(`asyncCompile failed. e=${exceptionToString(e)}`);
 			indicator.completed();
 		});
 		const maxTimeout = 30000;
