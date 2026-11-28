@@ -181,6 +181,59 @@ print turtle.pos()`,
 				}
 			]
 		},
+		{
+			'code': `x = 3
+print(x)`,
+			'checks': [
+				{
+					'token': {
+						'hasParentType': ParseTreeTokenType.ARGUMENT_LIST,
+						'val': 'x'
+					},
+					'out': 'num'
+				}
+			]
+		},
+		{
+			'code': `x = []
+print(x)`,
+			'checks': [
+				{
+					'token': {
+						'hasParentType': ParseTreeTokenType.ARGUMENT_LIST,
+						'val': 'x'
+					},
+					'out': 'list'
+				}
+			]
+		},
+		{
+			'code': `from turtle import *
+x = pos()
+print(x)`,
+			'checks': [
+				{
+					'token': {
+						'hasParentType': ParseTreeTokenType.ARGUMENT_LIST,
+						'val': 'x'
+					},
+					'out': 'list'
+				}
+			]
+		},
+		{
+			'code': `x = True
+print(x)`,
+			'checks': [
+				{
+					'token': {
+						'hasParentType': ParseTreeTokenType.ARGUMENT_LIST,
+						'val': 'x'
+					},
+					'out': 'bool'
+				}
+			]
+		},
 	];
 	cases.forEach(function(caseInfo, index) {
 		const plogger = prefixWrapper(`Case ${index}, code=${caseInfo.code}`, logger);

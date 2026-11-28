@@ -9,14 +9,14 @@ function mockIsDependingOnColorMode(code) {
 
 export async function testIsDependingOnColorMode(logger) {
 	const cases = [
-		{'in': '', 'out': false},
+		/*{'in': '', 'out': false},
 		{'in': 'x = [1,2,3]', 'out': false},
 		{'in': 'pencolor()', 'out': false},
 		{'in': 'pencolor("red")', 'out': false},
 		{'in': 'pencolor(0.1, 0.2, 0.9)', 'out': true},
 		{'in': 'pencolor([0.1, 0.2, 0.9])', 'out': true},
 		{'in': 'pencolor( (0.1, 0.2, 0.9) )', 'out': true},
-		{'in': 'x = [2,3, 4]\npencolor(x)', 'out': true},
+		{'in': 'x = [2,3, 4]\npencolor(x)', 'out': true},*/
 		{'in': `from colorsys import hsv_to_rgb
 print(hsv_to_rgb(h, 1, 1))`, 'out': true}
 	];

@@ -1,6 +1,8 @@
 import { DataTypes } from '../../data-types/DataTypes.js';
 import { getTokensByType } from '../../../../generic-parsing-utilities/getTokensByType.js';
 import { ParseTreeTokenType } from '../../ParseTreeTokenType.js';
+import { propogateTypesAssignedToVariables } from
+'./propogateTypesAssignedToVariables.js';
 import { setTypesForFunctionCalls } from './setTypesForFunctionCalls.js';
 import { setTypesFromParseTreeTokenTypes } from './setTypesFromParseTreeTokenTypes.js';
 
@@ -14,6 +16,6 @@ export function analyzeTokenDataTypes(cachedParseTree, tokenValueMap) {
 			result.set(key, DataTypes.getTypesCompatibleWithValue(value));
 	}
 	setTypesForFunctionCalls(getTokensByType(cachedParseTree, ParseTreeTokenType.FUNCTION_CALL), result);
-
+	propogateTypesAssignedToVariables(cachedParseTree.root, result);
 	return result;
 };
