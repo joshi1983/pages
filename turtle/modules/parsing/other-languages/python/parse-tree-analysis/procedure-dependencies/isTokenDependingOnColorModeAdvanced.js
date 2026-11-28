@@ -12,7 +12,7 @@ function tokenToTypesString(token, tokenTypes) {
 }
 
 export function isTokenDependingOnColorModeAdvanced(cachedParseTree, token) {
-	const functionInfo = PythonFunctions.getFunctionInfo(token.val, 'turtle');
+	const functionInfo = PythonFunctions.getFunctionInfo(token.val, ['colorsys', 'turtle']);
 	if (functionInfo === undefined)
 		return MaybeDecided.No;
 	if (functionInfo.anyParameterDependsOnColorMode !== true)
